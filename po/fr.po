@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-14 05:40-0500\n"
+"POT-Creation-Date: 2009-02-21 00:30-0500\n"
+"PO-Revision-Date: 2009-02-28 10:21-0500\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -292,7 +292,7 @@ msgstr "La batterie est pratiquement déchargée"
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d restantes"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
 msgstr "Charge complète"
 
@@ -310,14 +310,14 @@ msgid "Disconnect..."
 msgstr "Déconnexion..."
 
 #: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:246
+#: ../src/jarabe/desktop/meshbox.py:247
 msgid "Connecting..."
 msgstr "Connexion..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:113
 #: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:252
+#: ../src/jarabe/desktop/meshbox.py:253
 msgid "Connected"
 msgstr "Connecté"
 
@@ -348,25 +348,6 @@ msgstr "Mettre en sourdine"
 #: ../extensions/globalkey/screenshot.py:50
 msgid "Screenshot"
 msgstr "Capture d'écran"
-
-#: ../extensions/globalkey/viewsource.py:196
-#, python-format
-msgid "View source: %r"
-msgstr "Afficher le code source : %r"
-
-#: ../extensions/globalkey/viewsource.py:205
-#: ../src/jarabe/frame/zoomtoolbar.py:42
-msgid "Activity"
-msgstr "Activité"
-
-#: ../extensions/globalkey/viewsource.py:212
-msgid "Document"
-msgstr "Document"
-
-#: ../extensions/globalkey/viewsource.py:226
-#: ../src/jarabe/journal/objectchooser.py:141
-msgid "Close"
-msgstr "Fermer"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -540,24 +521,24 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Redémarrer sugar pour que les changements prennent effet.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:272
+#: ../src/jarabe/controlpanel/gui.py:275
 msgid "Warning"
 msgstr "Attention"
 
-#: ../src/jarabe/controlpanel/gui.py:273
+#: ../src/jarabe/controlpanel/gui.py:276
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "Relancer pour valider"
 
-#: ../src/jarabe/controlpanel/gui.py:276
+#: ../src/jarabe/controlpanel/gui.py:279
 msgid "Cancel changes"
 msgstr "Abandonner"
 
-#: ../src/jarabe/controlpanel/gui.py:281 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
 msgstr "Plus tard"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:288
 msgid "Restart now"
 msgstr "Maintenant"
 
@@ -567,14 +548,14 @@ msgstr "Accepter"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:683
-#: ../src/jarabe/frame/activitiestray.py:762
-#: ../src/jarabe/frame/activitiestray.py:790
+#: ../src/jarabe/frame/activitiestray.py:687
+#: ../src/jarabe/frame/activitiestray.py:766
+#: ../src/jarabe/frame/activitiestray.py:794
 msgid "Cancel"
 msgstr "Annuler"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:334
+#: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Ok"
 msgstr "Ok"
 
@@ -592,40 +573,40 @@ msgstr "Concentrique"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:341
+#: ../src/jarabe/desktop/favoriteslayout.py:332
 msgid "Spiral"
 msgstr "Spirale"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:408
+#: ../src/jarabe/desktop/favoriteslayout.py:399
 msgid "Box"
 msgstr "Boîte"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:449
+#: ../src/jarabe/desktop/favoriteslayout.py:440
 msgid "Triangle"
 msgstr "Triangle"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:329
 msgid "Registration Failed"
 msgstr "Echec de l'enregistrement"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:330
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "Registration Successful"
 msgstr "Enregistrement réussi"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "You are now registered with your school server."
 msgstr "Vous êtes maintenant enregistré sur le serveur de l'école"
 
-#: ../src/jarabe/desktop/favoritesview.py:666
+#: ../src/jarabe/desktop/favoritesview.py:668
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -644,12 +625,13 @@ msgstr "Confirmer la suppression : faut-il supprimer %s définitivement ?"
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
 #: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "Conserver"
 
 #: ../src/jarabe/desktop/homebox.py:76
 #: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:97 ../src/jarabe/view/palettes.py:127
+#: ../src/jarabe/journal/palettes.py:112 ../src/jarabe/view/palettes.py:153
 msgid "Erase"
 msgstr "Supprimer"
 
@@ -681,10 +663,6 @@ msgstr "Écran favoris"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/homebox.py:304
-msgid "Resume by default"
-msgstr "Reprise par défaut"
-
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
 msgstr "Type de clé :"
@@ -701,81 +679,81 @@ msgstr "WPA & WPA2 Personal"
 msgid "Wireless Security:"
 msgstr "Sécurité sans fil :"
 
-#: ../src/jarabe/desktop/meshbox.py:130
+#: ../src/jarabe/desktop/meshbox.py:131
 msgid "Connect"
 msgstr "Connecter"
 
-#: ../src/jarabe/desktop/meshbox.py:134
+#: ../src/jarabe/desktop/meshbox.py:135
 msgid "Disconnect"
 msgstr "Déconnecter"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:440
-#: ../src/jarabe/frame/activitiestray.py:707
+#: ../src/jarabe/desktop/meshbox.py:441
+#: ../src/jarabe/frame/activitiestray.py:711
 #: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:63 ../src/jarabe/view/palettes.py:62
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/jarabe/desktop/meshbox.py:445
-#: ../src/jarabe/frame/activitiestray.py:221
+#: ../src/jarabe/desktop/meshbox.py:446
+#: ../src/jarabe/frame/activitiestray.py:227
 msgid "Join"
 msgstr "Rejoindre"
 
-#: ../src/jarabe/desktop/schoolserver.py:18
+#: ../src/jarabe/desktop/schoolserver.py:34
 msgid "Cannot obtain data needed for registration."
 msgstr "Impossible d'obtenir les données nécessaires à l'enregistrement."
 
-#: ../src/jarabe/desktop/schoolserver.py:35
+#: ../src/jarabe/desktop/schoolserver.py:51
 msgid "Cannot connect to the server."
 msgstr "Impossible de se connecter au serveur."
 
-#: ../src/jarabe/desktop/schoolserver.py:40
+#: ../src/jarabe/desktop/schoolserver.py:56
 msgid "The server could not complete the request."
 msgstr "Le serveur n'a pas pu achever la requête."
 
-#: ../src/jarabe/frame/activitiestray.py:226
-#: ../src/jarabe/frame/activitiestray.py:655
+#: ../src/jarabe/frame/activitiestray.py:232
+#: ../src/jarabe/frame/activitiestray.py:659
 msgid "Decline"
 msgstr "Refuser"
 
-#: ../src/jarabe/frame/activitiestray.py:608
+#: ../src/jarabe/frame/activitiestray.py:612
 #, python-format
 msgid "%dB"
 msgstr "%do"
 
-#: ../src/jarabe/frame/activitiestray.py:610
+#: ../src/jarabe/frame/activitiestray.py:614
 #, python-format
 msgid "%dKB"
 msgstr "%dKo"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:616
 #, python-format
 msgid "%dMB"
 msgstr "%dMo"
 
-#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:633
 #, python-format
 msgid "%s of %s"
 msgstr "%s sur %s"
 
-#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:644
 #, python-format
 msgid "Transfer from %r"
 msgstr "Transfert depuis %r"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:654
 msgid "Accept"
 msgstr "Accepter"
 
-#: ../src/jarabe/frame/activitiestray.py:673
-#: ../src/jarabe/frame/activitiestray.py:780
+#: ../src/jarabe/frame/activitiestray.py:677
+#: ../src/jarabe/frame/activitiestray.py:784
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:751
+#: ../src/jarabe/frame/activitiestray.py:755
 #, python-format
 msgid "Transfer to %r"
 msgstr "Transfert vers %r"
@@ -793,7 +771,7 @@ msgstr "Ouvrir"
 msgid "Open with"
 msgstr "Ouvrir avec"
 
-#: ../src/jarabe/frame/clipboardobject.py:47
+#: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
 msgstr "%s coupure"
@@ -810,6 +788,10 @@ msgstr "Groupe"
 msgid "Home"
 msgstr "Accueil"
 
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Activity"
+msgstr "Activité"
+
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
 msgstr "Cliquer pour changer de couleur :"
@@ -822,9 +804,9 @@ msgstr "Précédent"
 msgid "Next"
 msgstr "Suivant"
 
-#: ../src/jarabe/journal/collapsedentry.py:243
+#: ../src/jarabe/journal/collapsedentry.py:258
 #: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/palettes.py:57
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "Sans titre"
 
@@ -903,14 +885,14 @@ msgstr "Tout"
 
 # TODO: Add "Start with" menu item
 #: ../src/jarabe/journal/journaltoolbox.py:347
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/palettes.py:90
 msgid "Copy"
 msgstr "Copier"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:111
+#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:135
 msgid "Start"
 msgstr "Lancer"
 
@@ -926,7 +908,7 @@ msgstr "Aucune entrée correspondante"
 msgid "Clear search"
 msgstr "Effacer la recherche"
 
-#: ../src/jarabe/journal/misc.py:92
+#: ../src/jarabe/journal/misc.py:91
 msgid "No date"
 msgstr "Sans date"
 
@@ -944,95 +926,132 @@ msgstr ""
 msgid "Show Journal"
 msgstr "Montre le Journal"
 
-#: ../src/jarabe/journal/objectchooser.py:136
+#: ../src/jarabe/journal/objectchooser.py:147
 msgid "Choose an object"
 msgstr "Choisir un objet"
 
-#: ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/objectchooser.py:152
+#: ../src/jarabe/view/viewsource.py:308
+msgid "Close"
+msgstr "Fermer"
+
+#: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
 msgstr "Reprendre avec"
 
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
 msgstr "Commencer avec"
 
-#: ../src/jarabe/journal/palettes.py:89
+#: ../src/jarabe/journal/palettes.py:98
 msgid "Send to"
 msgstr "Envoyer à"
 
-#: ../src/jarabe/journal/palettes.py:167
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr "Afficher les détails"
+
+#: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
 msgstr "Aucun ami présent"
 
-#: ../src/jarabe/journal/palettes.py:172
+#: ../src/jarabe/journal/palettes.py:190
 msgid "No valid connection found"
 msgstr "Aucune connexion valide trouvée"
 
-#: ../src/jarabe/journal/palettes.py:200
+#: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
 msgstr "Aucune activité pour reprendre l'entrée"
 
-#: ../src/jarabe/journal/palettes.py:202
+#: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
 msgstr "Acune activité pour démarrer l'entrée"
 
-#: ../src/jarabe/view/buddymenu.py:61
+#: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
 msgstr "Retirer de mes amis"
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:65
 msgid "Make friend"
 msgstr "Ajouter à mes amis"
 
-#: ../src/jarabe/view/buddymenu.py:81
+#: ../src/jarabe/view/buddymenu.py:82
 msgid "My Settings"
 msgstr "Mes paramètres"
 
-#: ../src/jarabe/view/buddymenu.py:86
+#: ../src/jarabe/view/buddymenu.py:90
 msgid "Logout"
 msgstr "Se déconnecter"
 
-#: ../src/jarabe/view/buddymenu.py:91
+#: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
 msgstr "Redémarrer"
 
-#: ../src/jarabe/view/buddymenu.py:96
+#: ../src/jarabe/view/buddymenu.py:100
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../src/jarabe/view/buddymenu.py:131
+#: ../src/jarabe/view/buddymenu.py:135
 #, python-format
 msgid "Invite to %s"
 msgstr "Inviter à %s"
 
-#: ../src/jarabe/view/palettes.py:43
+#: ../src/jarabe/view/palettes.py:47
 msgid "Starting..."
 msgstr "Démarrage..."
 
+#. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:73
+msgid "View Source"
+msgstr "Afficher la source"
+
+#: ../src/jarabe/view/palettes.py:84
 msgid "Stop"
 msgstr "Arrêter"
 
-#: ../src/jarabe/view/palettes.py:145
+#: ../src/jarabe/view/palettes.py:171
 msgid "Remove favorite"
 msgstr "Retirer le favori"
 
-#: ../src/jarabe/view/palettes.py:149
+#: ../src/jarabe/view/palettes.py:175
 msgid "Make favorite"
 msgstr "Ajouter aux favoris"
 
-#: ../src/jarabe/view/palettes.py:201
+#: ../src/jarabe/view/palettes.py:238
 msgid "Show contents"
 msgstr "Afficher les contenus"
 
-#: ../src/jarabe/view/palettes.py:223 ../src/jarabe/view/palettes.py:272
+#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d Mo de libre"
 
-#: ../src/jarabe/view/palettes.py:248
+#: ../src/jarabe/view/palettes.py:285
 msgid "Unmount"
 msgstr "Démonter"
+
+#: ../src/jarabe/view/viewsource.py:208
+msgid "Instance Source"
+msgstr "Instancie source"
+
+#: ../src/jarabe/view/viewsource.py:233
+msgid "Source"
+msgstr "Source"
+
+#: ../src/jarabe/view/viewsource.py:292
+msgid "Activity Bundle Source"
+msgstr "Source du paquet activité"
+
+#: ../src/jarabe/view/viewsource.py:299
+#, python-format
+msgid "View source: %r"
+msgstr "Afficher le code source : %r"
+
+#~ msgid "Document"
+#~ msgstr "Document"
+
+#~ msgid "Resume by default"
+#~ msgstr "Reprise par défaut"
 
 #~ msgid "Encryption Type:"
 #~ msgstr "Type d'encryptage :"

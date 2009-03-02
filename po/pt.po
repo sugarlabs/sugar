@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-22 12:50-0500\n"
-"Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
+"POT-Creation-Date: 2009-02-21 00:30-0500\n"
+"PO-Revision-Date: 2009-03-01 20:34-0500\n"
+"Last-Translator: Chris Leonard <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,7 +288,7 @@ msgstr "Resta muito pouca energia"
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d restantes"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
 msgstr "Recarregada"
 
@@ -310,14 +310,14 @@ msgstr "Desligar..."
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:246
+#: ../src/jarabe/desktop/meshbox.py:247
 msgid "Connecting..."
 msgstr "A Ligar..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:113
 #: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:252
+#: ../src/jarabe/desktop/meshbox.py:253
 msgid "Connected"
 msgstr "Ligado"
 
@@ -348,25 +348,6 @@ msgstr "Silenciar"
 #: ../extensions/globalkey/screenshot.py:50
 msgid "Screenshot"
 msgstr "Imagem do ecrã"
-
-#: ../extensions/globalkey/viewsource.py:196
-#, python-format
-msgid "View source: %r"
-msgstr "Ver o código-fonte: %r"
-
-#: ../extensions/globalkey/viewsource.py:205
-#: ../src/jarabe/frame/zoomtoolbar.py:42
-msgid "Activity"
-msgstr "Actividade"
-
-#: ../extensions/globalkey/viewsource.py:212
-msgid "Document"
-msgstr "Documento"
-
-#: ../extensions/globalkey/viewsource.py:226
-#: ../src/jarabe/journal/objectchooser.py:141
-msgid "Close"
-msgstr "Fechar"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -541,24 +522,24 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Para aplicar as alterações tens que reiniciar o açúcar (sugar).\n"
 
-#: ../src/jarabe/controlpanel/gui.py:272
+#: ../src/jarabe/controlpanel/gui.py:275
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/jarabe/controlpanel/gui.py:273
+#: ../src/jarabe/controlpanel/gui.py:276
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "As alterações feitas necessitam que reinicies"
 
-#: ../src/jarabe/controlpanel/gui.py:276
+#: ../src/jarabe/controlpanel/gui.py:279
 msgid "Cancel changes"
 msgstr "Cancelar alterações"
 
-#: ../src/jarabe/controlpanel/gui.py:281 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
 msgstr "Mais tarde"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:288
 msgid "Restart now"
 msgstr "Reiniciar agora"
 
@@ -568,14 +549,14 @@ msgstr "Finalizar"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:683
-#: ../src/jarabe/frame/activitiestray.py:762
-#: ../src/jarabe/frame/activitiestray.py:790
+#: ../src/jarabe/frame/activitiestray.py:687
+#: ../src/jarabe/frame/activitiestray.py:766
+#: ../src/jarabe/frame/activitiestray.py:794
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:334
+#: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Ok"
 msgstr "Ok"
 
@@ -591,39 +572,42 @@ msgstr "Disposição livre"
 msgid "Ring"
 msgstr "Anel"
 
+# TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:341
+#: ../src/jarabe/desktop/favoriteslayout.py:332
 msgid "Spiral"
 msgstr "Espiral"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:408
+#: ../src/jarabe/desktop/favoriteslayout.py:399
 msgid "Box"
 msgstr "Caixa"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:449
+#: ../src/jarabe/desktop/favoriteslayout.py:440
 msgid "Triangle"
 msgstr "Triângulo "
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:329
 msgid "Registration Failed"
 msgstr "O Registo Falhou"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:330
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "Registration Successful"
 msgstr "O Registo teve sucesso"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "You are now registered with your school server."
 msgstr "Estás agora registado com o teu servidor de escola."
 
-#: ../src/jarabe/desktop/favoritesview.py:666
+#: ../src/jarabe/desktop/favoritesview.py:668
 msgid "Register"
 msgstr "Registar"
 
@@ -641,12 +625,13 @@ msgstr "Confirma apagar: Queres apagar permanentemente %s?"
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
 #: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "Guardar"
 
 #: ../src/jarabe/desktop/homebox.py:76
 #: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:97 ../src/jarabe/view/palettes.py:127
+#: ../src/jarabe/journal/palettes.py:112 ../src/jarabe/view/palettes.py:153
 msgid "Erase"
 msgstr "Apagar"
 
@@ -680,10 +665,6 @@ msgstr "Vista de favoritos"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/homebox.py:304
-msgid "Resume by default"
-msgstr "Continuar por omissão"
-
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
 msgstr "Tipo de chave:"
@@ -693,7 +674,6 @@ msgid "Authentication Type:"
 msgstr "Tipo de Autenticação:"
 
 #: ../src/jarabe/desktop/keydialog.py:215
-#, fuzzy
 msgid "WPA & WPA2 Personal"
 msgstr "WPA e WPA2 pessoal"
 
@@ -701,81 +681,81 @@ msgstr "WPA e WPA2 pessoal"
 msgid "Wireless Security:"
 msgstr "Segurança da rede sem fios:"
 
-#: ../src/jarabe/desktop/meshbox.py:130
+#: ../src/jarabe/desktop/meshbox.py:131
 msgid "Connect"
 msgstr "Ligar"
 
-#: ../src/jarabe/desktop/meshbox.py:134
+#: ../src/jarabe/desktop/meshbox.py:135
 msgid "Disconnect"
 msgstr "Desligar"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:440
-#: ../src/jarabe/frame/activitiestray.py:707
+#: ../src/jarabe/desktop/meshbox.py:441
+#: ../src/jarabe/frame/activitiestray.py:711
 #: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:63 ../src/jarabe/view/palettes.py:62
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Continuar"
 
-#: ../src/jarabe/desktop/meshbox.py:445
-#: ../src/jarabe/frame/activitiestray.py:221
+#: ../src/jarabe/desktop/meshbox.py:446
+#: ../src/jarabe/frame/activitiestray.py:227
 msgid "Join"
 msgstr "Juntar-se"
 
-#: ../src/jarabe/desktop/schoolserver.py:18
+#: ../src/jarabe/desktop/schoolserver.py:34
 msgid "Cannot obtain data needed for registration."
 msgstr "Não foi possível obter os dados necessários para o registo."
 
-#: ../src/jarabe/desktop/schoolserver.py:35
+#: ../src/jarabe/desktop/schoolserver.py:51
 msgid "Cannot connect to the server."
 msgstr "Não foi possível ligar ao servidor."
 
-#: ../src/jarabe/desktop/schoolserver.py:40
+#: ../src/jarabe/desktop/schoolserver.py:56
 msgid "The server could not complete the request."
 msgstr "Não foi possível ao servidor completar o pedido."
 
-#: ../src/jarabe/frame/activitiestray.py:226
-#: ../src/jarabe/frame/activitiestray.py:655
+#: ../src/jarabe/frame/activitiestray.py:232
+#: ../src/jarabe/frame/activitiestray.py:659
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../src/jarabe/frame/activitiestray.py:608
+#: ../src/jarabe/frame/activitiestray.py:612
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:610
+#: ../src/jarabe/frame/activitiestray.py:614
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:616
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:633
 #, python-format
 msgid "%s of %s"
 msgstr "%s de %s"
 
-#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:644
 #, python-format
 msgid "Transfer from %r"
 msgstr "Transferência de %r"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:654
 msgid "Accept"
 msgstr "Aceitar"
 
-#: ../src/jarabe/frame/activitiestray.py:673
-#: ../src/jarabe/frame/activitiestray.py:780
+#: ../src/jarabe/frame/activitiestray.py:677
+#: ../src/jarabe/frame/activitiestray.py:784
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:751
+#: ../src/jarabe/frame/activitiestray.py:755
 #, python-format
 msgid "Transfer to %r"
 msgstr "Transferência para %r"
@@ -793,7 +773,7 @@ msgstr "Abrir"
 msgid "Open with"
 msgstr "Abrir com"
 
-#: ../src/jarabe/frame/clipboardobject.py:47
+#: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
 msgstr "Recorte de %s"
@@ -810,6 +790,10 @@ msgstr "Grupo"
 msgid "Home"
 msgstr "Casa"
 
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Activity"
+msgstr "Actividade"
+
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
 msgstr "Clica para mudar a cor:"
@@ -822,9 +806,9 @@ msgstr "Voltar"
 msgid "Next"
 msgstr "Próximo"
 
-#: ../src/jarabe/journal/collapsedentry.py:243
+#: ../src/jarabe/journal/collapsedentry.py:258
 #: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/palettes.py:57
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "Sem título"
 
@@ -903,14 +887,14 @@ msgstr "Qualquer coisa"
 
 # TODO: Add "Start with" menu item
 #: ../src/jarabe/journal/journaltoolbox.py:347
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/palettes.py:90
 msgid "Copy"
 msgstr "Copiar"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:111
+#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:135
 msgid "Start"
 msgstr "Iniciar"
 
@@ -926,7 +910,7 @@ msgstr "Nenhuma entrada encontrada "
 msgid "Clear search"
 msgstr "Limpar a busca"
 
-#: ../src/jarabe/journal/misc.py:92
+#: ../src/jarabe/journal/misc.py:91
 msgid "No date"
 msgstr "Sem data"
 
@@ -944,95 +928,132 @@ msgstr ""
 msgid "Show Journal"
 msgstr "Mostrar o diário"
 
-#: ../src/jarabe/journal/objectchooser.py:136
+#: ../src/jarabe/journal/objectchooser.py:147
 msgid "Choose an object"
 msgstr "Escolhe um objecto"
 
-#: ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/objectchooser.py:152
+#: ../src/jarabe/view/viewsource.py:308
+msgid "Close"
+msgstr "Fechar"
+
+#: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
 msgstr "Continuar com"
 
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
 msgstr "Iniciar com"
 
-#: ../src/jarabe/journal/palettes.py:89
+#: ../src/jarabe/journal/palettes.py:98
 msgid "Send to"
 msgstr "Enviar para"
 
-#: ../src/jarabe/journal/palettes.py:167
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr "Ver detalhes"
+
+#: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
 msgstr "Não está presente nenhum amigo"
 
-#: ../src/jarabe/journal/palettes.py:172
+#: ../src/jarabe/journal/palettes.py:190
 msgid "No valid connection found"
 msgstr "Não foi encontrada uma ligação válida"
 
-#: ../src/jarabe/journal/palettes.py:200
+#: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
 msgstr "Não existe nenhuma actividade para continuar a entrada"
 
-#: ../src/jarabe/journal/palettes.py:202
+#: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
 msgstr "Não existe nenhuma actividade para iniciar a entrada"
 
-#: ../src/jarabe/view/buddymenu.py:61
+#: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
 msgstr "Remover amigo"
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:65
 msgid "Make friend"
 msgstr "Fazer amigo"
 
-#: ../src/jarabe/view/buddymenu.py:81
+#: ../src/jarabe/view/buddymenu.py:82
 msgid "My Settings"
 msgstr "As minhas definições"
 
-#: ../src/jarabe/view/buddymenu.py:86
+#: ../src/jarabe/view/buddymenu.py:90
 msgid "Logout"
 msgstr "Terminar a sessão"
 
-#: ../src/jarabe/view/buddymenu.py:91
+#: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
 msgstr "Reiniciar"
 
-#: ../src/jarabe/view/buddymenu.py:96
+#: ../src/jarabe/view/buddymenu.py:100
 msgid "Shutdown"
 msgstr "Desligar"
 
-#: ../src/jarabe/view/buddymenu.py:131
+#: ../src/jarabe/view/buddymenu.py:135
 #, python-format
 msgid "Invite to %s"
 msgstr "Convidar para %s"
 
-#: ../src/jarabe/view/palettes.py:43
+#: ../src/jarabe/view/palettes.py:47
 msgid "Starting..."
 msgstr "A Iniciar..."
 
+#. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:73
+msgid "View Source"
+msgstr "Ver código-fonte"
+
+#: ../src/jarabe/view/palettes.py:84
 msgid "Stop"
 msgstr "Parar"
 
-#: ../src/jarabe/view/palettes.py:145
+#: ../src/jarabe/view/palettes.py:171
 msgid "Remove favorite"
 msgstr "Remover favorito"
 
-#: ../src/jarabe/view/palettes.py:149
+#: ../src/jarabe/view/palettes.py:175
 msgid "Make favorite"
 msgstr "Tornar favorito"
 
-#: ../src/jarabe/view/palettes.py:201
+#: ../src/jarabe/view/palettes.py:238
 msgid "Show contents"
 msgstr "Mostrar os conteúdos"
 
-#: ../src/jarabe/view/palettes.py:223 ../src/jarabe/view/palettes.py:272
+#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Livres"
 
-#: ../src/jarabe/view/palettes.py:248
+#: ../src/jarabe/view/palettes.py:285
 msgid "Unmount"
 msgstr "Remover"
+
+#: ../src/jarabe/view/viewsource.py:208
+msgid "Instance Source"
+msgstr "Código-fonte da instância"
+
+#: ../src/jarabe/view/viewsource.py:233
+msgid "Source"
+msgstr "Código-fonte"
+
+#: ../src/jarabe/view/viewsource.py:292
+msgid "Activity Bundle Source"
+msgstr "Código-fonte do pacote de actividade"
+
+#: ../src/jarabe/view/viewsource.py:299
+#, python-format
+msgid "View source: %r"
+msgstr "Ver o código-fonte: %r"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
+
+#~ msgid "Resume by default"
+#~ msgstr "Continuar por omissão"
 
 #~ msgid "Encryption Type:"
 #~ msgstr "Tipo de Encriptação:"

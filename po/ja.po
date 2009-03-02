@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-15 09:52-0500\n"
+"POT-Creation-Date: 2009-02-21 00:30-0500\n"
+"PO-Revision-Date: 2009-03-01 17:27-0500\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -283,7 +283,7 @@ msgstr "電池が残りわずかです"
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "残り %(hour)d:%(min).2d"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
 msgstr "充電済み"
 
@@ -305,14 +305,14 @@ msgstr "切断..."
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:246
+#: ../src/jarabe/desktop/meshbox.py:247
 msgid "Connecting..."
 msgstr "接続しています..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:113
 #: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:252
+#: ../src/jarabe/desktop/meshbox.py:253
 msgid "Connected"
 msgstr "接続しました"
 
@@ -343,25 +343,6 @@ msgstr "音を消す"
 #: ../extensions/globalkey/screenshot.py:50
 msgid "Screenshot"
 msgstr "スクリーンショット"
-
-#: ../extensions/globalkey/viewsource.py:196
-#, python-format
-msgid "View source: %r"
-msgstr "ソースを表示: %r"
-
-#: ../extensions/globalkey/viewsource.py:205
-#: ../src/jarabe/frame/zoomtoolbar.py:42
-msgid "Activity"
-msgstr "アクティビティ"
-
-#: ../extensions/globalkey/viewsource.py:212
-msgid "Document"
-msgstr "ドキュメント"
-
-#: ../extensions/globalkey/viewsource.py:226
-#: ../src/jarabe/journal/objectchooser.py:141
-msgid "Close"
-msgstr "閉じる"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -528,24 +509,24 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "変更を適用するにはsugarを再起動しなければいけません。\n"
 
-#: ../src/jarabe/controlpanel/gui.py:272
+#: ../src/jarabe/controlpanel/gui.py:275
 msgid "Warning"
 msgstr "注意"
 
-#: ../src/jarabe/controlpanel/gui.py:273
+#: ../src/jarabe/controlpanel/gui.py:276
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "変更には再起動が必要です"
 
-#: ../src/jarabe/controlpanel/gui.py:276
+#: ../src/jarabe/controlpanel/gui.py:279
 msgid "Cancel changes"
 msgstr "変更を取りやめる"
 
-#: ../src/jarabe/controlpanel/gui.py:281 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
 msgstr "あとで"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:288
 msgid "Restart now"
 msgstr "今すぐ再起動"
 
@@ -555,14 +536,14 @@ msgstr "完了"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:683
-#: ../src/jarabe/frame/activitiestray.py:762
-#: ../src/jarabe/frame/activitiestray.py:790
+#: ../src/jarabe/frame/activitiestray.py:687
+#: ../src/jarabe/frame/activitiestray.py:766
+#: ../src/jarabe/frame/activitiestray.py:794
 msgid "Cancel"
 msgstr "中止"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:334
+#: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Ok"
 msgstr "了解"
 
@@ -580,40 +561,40 @@ msgstr "円に並べる"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:341
+#: ../src/jarabe/desktop/favoriteslayout.py:332
 msgid "Spiral"
 msgstr "渦巻きに並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:408
+#: ../src/jarabe/desktop/favoriteslayout.py:399
 msgid "Box"
 msgstr "箱型に並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:449
+#: ../src/jarabe/desktop/favoriteslayout.py:440
 msgid "Triangle"
 msgstr "三角形に並べる"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:329
 msgid "Registration Failed"
 msgstr "登録失敗"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:330
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "Registration Successful"
 msgstr "登録成功"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "You are now registered with your school server."
 msgstr "あなたはスクールサーバーに登録されました"
 
-#: ../src/jarabe/desktop/favoritesview.py:666
+#: ../src/jarabe/desktop/favoritesview.py:668
 msgid "Register"
 msgstr "登録"
 
@@ -631,12 +612,13 @@ msgstr "消去の確認： %s を完全に消去しますか？"
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
 #: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "ジャーナルに保存"
 
 #: ../src/jarabe/desktop/homebox.py:76
 #: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:97 ../src/jarabe/view/palettes.py:127
+#: ../src/jarabe/journal/palettes.py:112 ../src/jarabe/view/palettes.py:153
 msgid "Erase"
 msgstr "消去する"
 
@@ -668,10 +650,6 @@ msgstr "お気に入り"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/homebox.py:304
-msgid "Resume by default"
-msgstr "デフォルトのアクティビティで再開"
-
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
 msgstr "キーのタイプ:"
@@ -688,81 +666,81 @@ msgstr "WPA と WPA2パーソナル"
 msgid "Wireless Security:"
 msgstr "無線のセキュリティ:"
 
-#: ../src/jarabe/desktop/meshbox.py:130
+#: ../src/jarabe/desktop/meshbox.py:131
 msgid "Connect"
 msgstr "接続"
 
-#: ../src/jarabe/desktop/meshbox.py:134
+#: ../src/jarabe/desktop/meshbox.py:135
 msgid "Disconnect"
 msgstr "切断"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:440
-#: ../src/jarabe/frame/activitiestray.py:707
+#: ../src/jarabe/desktop/meshbox.py:441
+#: ../src/jarabe/frame/activitiestray.py:711
 #: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:63 ../src/jarabe/view/palettes.py:62
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "再開"
 
-#: ../src/jarabe/desktop/meshbox.py:445
-#: ../src/jarabe/frame/activitiestray.py:221
+#: ../src/jarabe/desktop/meshbox.py:446
+#: ../src/jarabe/frame/activitiestray.py:227
 msgid "Join"
 msgstr "参加"
 
-#: ../src/jarabe/desktop/schoolserver.py:18
+#: ../src/jarabe/desktop/schoolserver.py:34
 msgid "Cannot obtain data needed for registration."
 msgstr "登録に必要なデータを取得できません"
 
-#: ../src/jarabe/desktop/schoolserver.py:35
+#: ../src/jarabe/desktop/schoolserver.py:51
 msgid "Cannot connect to the server."
 msgstr "サーバーに接続できません"
 
-#: ../src/jarabe/desktop/schoolserver.py:40
+#: ../src/jarabe/desktop/schoolserver.py:56
 msgid "The server could not complete the request."
 msgstr "サーバーは要求の処理を完了できませんでした"
 
-#: ../src/jarabe/frame/activitiestray.py:226
-#: ../src/jarabe/frame/activitiestray.py:655
+#: ../src/jarabe/frame/activitiestray.py:232
+#: ../src/jarabe/frame/activitiestray.py:659
 msgid "Decline"
 msgstr "断る"
 
-#: ../src/jarabe/frame/activitiestray.py:608
+#: ../src/jarabe/frame/activitiestray.py:612
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:610
+#: ../src/jarabe/frame/activitiestray.py:614
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:616
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:633
 #, python-format
 msgid "%s of %s"
 msgstr "%s の %s"
 
-#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:644
 #, python-format
 msgid "Transfer from %r"
 msgstr "%rから転送"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:654
 msgid "Accept"
 msgstr "受け入れる"
 
-#: ../src/jarabe/frame/activitiestray.py:673
-#: ../src/jarabe/frame/activitiestray.py:780
+#: ../src/jarabe/frame/activitiestray.py:677
+#: ../src/jarabe/frame/activitiestray.py:784
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:751
+#: ../src/jarabe/frame/activitiestray.py:755
 #, python-format
 msgid "Transfer to %r"
 msgstr "%rへ転送"
@@ -780,7 +758,7 @@ msgstr "開く"
 msgid "Open with"
 msgstr "次のもので開く："
 
-#: ../src/jarabe/frame/clipboardobject.py:47
+#: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
 msgstr "%sのクリッピング"
@@ -797,6 +775,10 @@ msgstr "グループ"
 msgid "Home"
 msgstr "ホーム"
 
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Activity"
+msgstr "アクティビティ"
+
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
 msgstr "クリックして色を変更:"
@@ -809,9 +791,9 @@ msgstr "戻る"
 msgid "Next"
 msgstr "進む"
 
-#: ../src/jarabe/journal/collapsedentry.py:243
+#: ../src/jarabe/journal/collapsedentry.py:258
 #: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/palettes.py:57
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "タイトル無し"
 
@@ -890,14 +872,14 @@ msgstr "すべての種類"
 
 # TODO: Add "Start with" menu item
 #: ../src/jarabe/journal/journaltoolbox.py:347
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/palettes.py:90
 msgid "Copy"
 msgstr "コピー"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:111
+#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:135
 msgid "Start"
 msgstr "開始"
 
@@ -913,7 +895,7 @@ msgstr "あてはまるものが無いです"
 msgid "Clear search"
 msgstr "検索をクリア"
 
-#: ../src/jarabe/journal/misc.py:92
+#: ../src/jarabe/journal/misc.py:91
 msgid "No date"
 msgstr "日付無し"
 
@@ -929,95 +911,132 @@ msgstr "新しいものが入るよう、ジャーナルの中身の古いもの
 msgid "Show Journal"
 msgstr "ジャーナルを表示"
 
-#: ../src/jarabe/journal/objectchooser.py:136
+#: ../src/jarabe/journal/objectchooser.py:147
 msgid "Choose an object"
 msgstr "オブジェクトを選ぶ"
 
-#: ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/objectchooser.py:152
+#: ../src/jarabe/view/viewsource.py:308
+msgid "Close"
+msgstr "閉じる"
+
+#: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
 msgstr "次のアクティビティで再開"
 
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
 msgstr "次のアクティビティで開始"
 
-#: ../src/jarabe/journal/palettes.py:89
+#: ../src/jarabe/journal/palettes.py:98
 msgid "Send to"
 msgstr "次に送る"
 
-#: ../src/jarabe/journal/palettes.py:167
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr "詳細を表示"
+
+#: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
 msgstr "お友達がいません"
 
-#: ../src/jarabe/journal/palettes.py:172
+#: ../src/jarabe/journal/palettes.py:190
 msgid "No valid connection found"
 msgstr "正しい接続がありません"
 
-#: ../src/jarabe/journal/palettes.py:200
+#: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
 msgstr "エントリを再開するアクティビティがありません"
 
-#: ../src/jarabe/journal/palettes.py:202
+#: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
 msgstr "エントリを開始するアクティビティがありません"
 
-#: ../src/jarabe/view/buddymenu.py:61
+#: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
 msgstr "お友だちの登録削除"
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:65
 msgid "Make friend"
 msgstr "お友だちを登録"
 
-#: ../src/jarabe/view/buddymenu.py:81
+#: ../src/jarabe/view/buddymenu.py:82
 msgid "My Settings"
 msgstr "私の設定"
 
-#: ../src/jarabe/view/buddymenu.py:86
+#: ../src/jarabe/view/buddymenu.py:90
 msgid "Logout"
 msgstr "ログアウト"
 
-#: ../src/jarabe/view/buddymenu.py:91
+#: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
 msgstr "再起動"
 
-#: ../src/jarabe/view/buddymenu.py:96
+#: ../src/jarabe/view/buddymenu.py:100
 msgid "Shutdown"
 msgstr "シャットダウン"
 
-#: ../src/jarabe/view/buddymenu.py:131
+#: ../src/jarabe/view/buddymenu.py:135
 #, python-format
 msgid "Invite to %s"
 msgstr "%s に招待する"
 
-#: ../src/jarabe/view/palettes.py:43
+#: ../src/jarabe/view/palettes.py:47
 msgid "Starting..."
 msgstr "起動中..."
 
+#. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:73
+msgid "View Source"
+msgstr "ソースコードを表示"
+
+#: ../src/jarabe/view/palettes.py:84
 msgid "Stop"
 msgstr "停止"
 
-#: ../src/jarabe/view/palettes.py:145
+#: ../src/jarabe/view/palettes.py:171
 msgid "Remove favorite"
 msgstr "お気に入りから削除"
 
-#: ../src/jarabe/view/palettes.py:149
+#: ../src/jarabe/view/palettes.py:175
 msgid "Make favorite"
 msgstr "お気に入りに登録"
 
-#: ../src/jarabe/view/palettes.py:201
+#: ../src/jarabe/view/palettes.py:238
 msgid "Show contents"
 msgstr "内容を表示"
 
-#: ../src/jarabe/view/palettes.py:223 ../src/jarabe/view/palettes.py:272
+#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB 空き"
 
-#: ../src/jarabe/view/palettes.py:248
+#: ../src/jarabe/view/palettes.py:285
 msgid "Unmount"
 msgstr "取りはずす"
+
+#: ../src/jarabe/view/viewsource.py:208
+msgid "Instance Source"
+msgstr "インスタンスのソースコード"
+
+#: ../src/jarabe/view/viewsource.py:233
+msgid "Source"
+msgstr "ソースコード"
+
+#: ../src/jarabe/view/viewsource.py:292
+msgid "Activity Bundle Source"
+msgstr "アクティビティバンドルのソースコード"
+
+#: ../src/jarabe/view/viewsource.py:299
+#, python-format
+msgid "View source: %r"
+msgstr "ソースを表示: %r"
+
+#~ msgid "Document"
+#~ msgstr "ドキュメント"
+
+#~ msgid "Resume by default"
+#~ msgstr "デフォルトのアクティビティで再開"
 
 #~ msgid "Encryption Type:"
 #~ msgstr "暗号タイプ:"
