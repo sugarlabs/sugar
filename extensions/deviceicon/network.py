@@ -211,11 +211,11 @@ class WirelessDeviceView(ToolButton):
         self.set_icon_widget(self._icon)
         self._icon.show()
 
+        self.set_palette_invoker(FrameWidgetInvoker(self))
         self._palette = WirelessPalette(self._name)
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
-        self._palette.props.invoker = FrameWidgetInvoker(self)
         self._palette.set_group_id('frame')
 
         props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
@@ -381,9 +381,9 @@ class WiredDeviceView(TrayIcon):
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
 
+        self.set_palette_invoker(FrameWidgetInvoker(self))
         self._palette = WiredPalette()
         self.set_palette(self._palette)
-        self._palette.props.invoker = FrameWidgetInvoker(self)
         self._palette.set_group_id('frame')
         self._palette.set_connected(speed, address)
 
