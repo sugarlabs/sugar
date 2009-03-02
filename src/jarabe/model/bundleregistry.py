@@ -208,7 +208,7 @@ class BundleRegistry(gobject.GObject):
                 ''.join(traceback.format_exception(*sys.exc_info()))))
             return None
 
-        if self.get_bundle(bundle.get_bundle_id()) is not None:
+        if self.is_installed(bundle):
             return None
 
         self._bundles.append(bundle)
@@ -305,12 +305,25 @@ class BundleRegistry(gobject.GObject):
         open(path, 'w').write(cjson.encode(favorites_data))
 
     def is_installed(self, bundle):
-        return self.get_bundle(bundle.get_bundle_id()) is not None
+        for installed_bundle in self._bundles:
+            if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
+                    bundle.get_activity_version() == \
+                        installed_bundle.get_activity_version():
+                return True
+        return False
 
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
         if self.is_installed(bundle):
             raise AlreadyInstalledException
+
+        for installed_bundle in self._bundles:
+            if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
+                    bundle.get_activity_version() == \
+                        installed_bundle.get_activity_version():
+                raise AlreadyInstalledException
+            elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
+                self.uninstall(installed_bundle, force=True)
 
         install_dir = env.get_user_activities_path()
         install_path = bundle.install(install_dir)

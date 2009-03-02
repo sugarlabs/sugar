@@ -277,12 +277,13 @@ class JournalActivity(Window):
             return
 
         if registry.is_installed(bundle):
+            logging.debug('_check_for_bundle bundle already installed')
             return
         try:
             registry.install(bundle)
-        except (ZipExtractException, RegistrationException), e:
-            logging.warning('Could not install bundle %s: %r' %
-                            (bundle.get_path(), e))
+        except (ZipExtractException, RegistrationException):
+            logging.warning('Could not install bundle %s:\n%s' % \
+                            (bundle.get_path(), traceback.format_exc()))
             return
 
         if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
