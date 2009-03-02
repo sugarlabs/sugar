@@ -37,7 +37,7 @@ from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from sugar import mime
 
-_SOURCE_FONT = pango.FontDescription('Monospace %d' % style.zoom(6))
+_SOURCE_FONT = pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
