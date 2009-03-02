@@ -526,6 +526,13 @@ class ActivityIcon(CanvasIcon):
         self.palette.popdown(immediate=True)
         if self._journal_entries:
             entry = self._journal_entries[0]
+
+            shell_model = shell.get_model()
+            activity = shell_model.get_activity_by_id(entry['activity_id'])
+            if activity:
+                activity.get_window().activate(gtk.get_current_event_time())
+                return
+
             launcher.add_launcher(entry['activity_id'],
                                   self._activity_info.get_icon(),
                                   XoColor(entry.get('icon-color', '')))

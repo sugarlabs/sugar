@@ -165,6 +165,13 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
+
+        shell_model = shell.get_model()
+        activity = shell_model.get_activity_by_id(self._activity_model.get_id())
+        if activity:
+            activity.get_window().activate(gtk.get_current_event_time())
+            return
+
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(self._bundle_id)
 
