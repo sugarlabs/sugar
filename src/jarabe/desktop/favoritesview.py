@@ -17,9 +17,10 @@
 
 import logging
 from gettext import gettext as _
-import gconf
+import math
 
 import gobject
+import gconf
 import gtk
 import hippo
 import dbus
@@ -399,7 +400,7 @@ class DatastoreListener(object):
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
-    _BORDER_WIDTH = 4
+    _BORDER_WIDTH = style.zoom(3)
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
@@ -482,31 +483,29 @@ class ActivityIcon(CanvasIcon):
         self.emit_paint_needed(0, 0, -1, -1)
 
     def do_paint_above_children(self, cr, damaged_box):
-        if self._hovering:
-            width, height = self.get_allocation()
+        if not self._hovering:
+            return
 
-            color = style.COLOR_SELECTION_GREY.get_int()
-            hippo.cairo_set_source_rgba32(cr, color)
+        width, height = self.get_allocation()
 
-            x = ActivityIcon._BORDER_WIDTH / 2
-            y = ActivityIcon._BORDER_WIDTH / 2
-            width -= ActivityIcon._BORDER_WIDTH
-            height -= ActivityIcon._BORDER_WIDTH
+        x = ActivityIcon._BORDER_WIDTH / 2
+        y = ActivityIcon._BORDER_WIDTH / 2
+        width -= ActivityIcon._BORDER_WIDTH
+        height -= ActivityIcon._BORDER_WIDTH
+        radius = width / 10
 
-            cr.move_to(0, y)
-            cr.line_to(width, y)
+        cr.move_to(x + radius, y)
+        cr.arc(x + width - radius, y + radius, radius, math.pi * 1.5,
+               math.pi * 2)
+        cr.arc(x + width - radius, x + height - radius, radius, 0,
+               math.pi * 0.5)
+        cr.arc(x + radius, y + height - radius, radius, math.pi * 0.5, math.pi)
+        cr.arc(x + radius, y + radius, radius, math.pi, math.pi * 1.5)
 
-            cr.move_to(width, 0)
-            cr.line_to(width, height + ActivityIcon._BORDER_WIDTH / 2)
-
-            cr.move_to(width, height)
-            cr.line_to(0, height)
-
-            cr.move_to(x, height)
-            cr.line_to(x, 0)
-
-            cr.set_line_width(style.zoom(ActivityIcon._BORDER_WIDTH))
-            cr.stroke()
+        color = style.COLOR_SELECTION_GREY.get_int()
+        hippo.cairo_set_source_rgba32(cr, color)
+        cr.set_line_width(ActivityIcon._BORDER_WIDTH)
+        cr.stroke()
 
     def do_get_content_height_request(self, for_width):
         height, height = CanvasIcon.do_get_content_height_request(self, 
