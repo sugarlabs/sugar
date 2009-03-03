@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2009 Aleksey Lim
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@ import gio
 import cjson
 
 from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.contentbundle import ContentBundle
 from sugar.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar import env
@@ -305,6 +307,11 @@ class BundleRegistry(gobject.GObject):
         open(path, 'w').write(cjson.encode(favorites_data))
 
     def is_installed(self, bundle):
+        # TODO treat ContentBundle in special way
+        # needs rethinking while fixing ContentBundle support
+        if isinstance(bundle, ContentBundle):
+            return bundle.is_installed()
+
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
                     bundle.get_activity_version() == \
@@ -328,10 +335,23 @@ class BundleRegistry(gobject.GObject):
         install_dir = env.get_user_activities_path()
         install_path = bundle.install(install_dir)
         
-        if not self.add_bundle(install_path):
+        # TODO treat ContentBundle in special way
+        # needs rethinking while fixing ContentBundle support
+        if isinstance(bundle, ContentBundle):
+            pass
+        elif not self.add_bundle(install_path):
             raise RegistrationException
 
     def uninstall(self, bundle, force=False):        
+        # TODO treat ContentBundle in special way
+        # needs rethinking while fixing ContentBundle support
+        if isinstance(bundle, ContentBundle):
+            if bundle.is_installed():
+                bundle.uninstall()
+            else:
+                logging.warning('Not uninstalling, bundle is not installed')
+            return
+
         act = self.get_bundle(bundle.get_bundle_id())
         if not force and \
                 act.get_activity_version() != bundle.get_activity_version():
