@@ -60,6 +60,8 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
             logging.debug('Icon without fixed_position: %r' % icon)
             return
 
+        icon.props.size = max(icon.props.size, style.STANDARD_ICON_SIZE)
+
         relative_x, relative_y = icon.fixed_position
         if relative_x < 0 or relative_y < 0:
             logging.debug('Icon out of bounds: %r' % icon)
