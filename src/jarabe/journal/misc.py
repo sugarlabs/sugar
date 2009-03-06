@@ -125,7 +125,9 @@ def _get_activities_for_mime(mime_type):
     result = registry.get_activities_for_type(mime_type)
     if not result:
         for parent_mime in mime.get_mime_parents(mime_type):
-            result.extend(registry.get_activities_for_type(parent_mime))
+            for activity in registry.get_activities_for_type(parent_mime):
+                if activity not in result:
+                    result.append(activity)
     return result
 
 def get_activities(metadata):
@@ -141,7 +143,7 @@ def get_activities(metadata):
     if mime_type:
         activities_info = _get_activities_for_mime(mime_type)
         for activity_info in activities_info:
-            if activity_info.get_bundle_id() != bundle_id:
+            if activity_info not in activities:
                 activities.append(activity_info)
 
     return activities
