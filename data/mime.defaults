@@ -19,3 +19,6 @@ application/rss+xml                   org.laptop.WebActivity
 application/ogg                       org.laptop.WebActivity
 audio/ogg                             org.laptop.WebActivity
 video/ogg                             org.laptop.WebActivity
+
+text/x-python                         org.laptop.PippyActivity
+
