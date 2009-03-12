@@ -436,8 +436,12 @@ class ActivitiesTray(HTray):
 class BaseTransferButton(ToolButton):
     """Button with a notification attached
     """
-    def __init__(self):
+    def __init__(self, file_transfer):
         ToolButton.__init__(self)
+
+        self.file_transfer = file_transfer
+        file_transfer.connect('notify::state', self.__notify_state_cb)
+
         icon = Icon()
         self.props.icon_widget = icon
         icon.show()
@@ -452,18 +456,28 @@ class BaseTransferButton(ToolButton):
             frame.remove_notification(self.notif_icon)
             self.notif_icon = None
 
+    def __notify_state_cb(self, file_transfer, pspec):
+        logging.debug('_update state: %r %r' % (file_transfer.props.state,
+                file_transfer.reason_last_change))
+        if file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
+            if file_transfer.reason_last_change == \
+               filetransfer.FT_REASON_LOCAL_STOPPED:
+                frame = jarabe.frame.get_view()
+                frame.remove_notification(self.notif_icon)
+                self.props.parent.remove(self)
+
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
     """
     def __init__(self, file_transfer):
-        BaseTransferButton.__init__(self)
+        BaseTransferButton.__init__(self, file_transfer)
 
         self._object_id = None
         self._metadata = {}
-        self._file_transfer = file_transfer
-        self._file_transfer.connect('notify::state', self.__notify_state_cb)
-        self._file_transfer.connect('notify::transferred-bytes',
-                                    self.__notify_transferred_bytes_cb)
+
+        file_transfer.connect('notify::state', self.__notify_state_cb)
+        file_transfer.connect('notify::transferred-bytes',
+                              self.__notify_transferred_bytes_cb)
 
         icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
@@ -484,7 +498,7 @@ class IncomingTransferButton(BaseTransferButton):
                                gtk.CORNER_TOP_LEFT)
 
     def create_palette(self):
-        palette = IncomingTransferPalette(self._file_transfer)
+        palette = IncomingTransferPalette(self.file_transfer)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         return palette
@@ -555,9 +569,7 @@ class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
     def __init__(self, file_transfer):
-        BaseTransferButton.__init__(self)
-
-        self._file_transfer = file_transfer
+        BaseTransferButton.__init__(self, file_transfer)
 
         icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
@@ -579,7 +591,7 @@ class OutgoingTransferButton(BaseTransferButton):
                                gtk.CORNER_TOP_LEFT)
 
     def create_palette(self):
-        palette = OutgoingTransferPalette(self._file_transfer)
+        palette = OutgoingTransferPalette(self.file_transfer)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         return palette
@@ -739,7 +751,7 @@ class IncomingTransferPalette(BaseTransferPalette):
         return file_name
 
     def __decline_activate_cb(self, menu_item):
-        self.file_transfer.decline()
+        self.file_transfer.cancel()
 
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
@@ -818,9 +830,6 @@ class OutgoingTransferPalette(BaseTransferPalette):
             self.update_progress()
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
-            # TODO: What to do here?
-            self.update_progress()
-        elif self.file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             # TODO: What to do here?
             self.update_progress()
 

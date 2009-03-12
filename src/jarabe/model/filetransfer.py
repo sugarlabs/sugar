@@ -39,6 +39,14 @@ FT_STATE_OPEN = 3
 FT_STATE_COMPLETED = 4
 FT_STATE_CANCELLED = 5
 
+FT_REASON_NONE = 0
+FT_REASON_REQUESTED = 1
+FT_REASON_LOCAL_STOPPED = 2
+FT_REASON_REMOTE_STOPPED = 3
+FT_REASON_LOCAL_ERROR = 4
+FT_REASON_LOCAL_ERROR = 5
+FT_REASON_REMOTE_ERROR = 6
+
 # FIXME: use constants from tp-python once the spec is undrafted
 CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
@@ -113,6 +121,7 @@ class BaseFileTransfer(gobject.GObject):
         self.description = None
         self.mime_type = None
         self.initial_offset = 0
+        self.reason_last_change = FT_REASON_NONE
 
     def set_channel(self, channel):
         self.channel = channel
@@ -158,6 +167,7 @@ class BaseFileTransfer(gobject.GObject):
 
     def __state_changed_cb(self, state, reason):
         logging.debug('__state_changed_cb %r %r' % (state, reason))
+        self.reason_last_change = reason
         self.props.state = state
 
     def _set_state(self, state):
@@ -195,9 +205,6 @@ class IncomingFileTransfer(BaseFileTransfer):
         channel_ft = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_ft.AcceptFile(SOCKET_ADDRESS_TYPE_UNIX,
                 SOCKET_ACCESS_CONTROL_LOCALHOST, '', 0)
-
-    def decline(self):
-        self.channel[CHANNEL].Close()
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('__notify_state_cb %r' % self.props.state)
@@ -309,11 +316,15 @@ def _new_channels_cb(connection, channels):
             new_file_transfer.send(None, file_transfer=incoming_file_transfer)
 
 def _monitor_connection(connection):
+    logging.debug('connection added %r' % connection)
     connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal('NewChannels',
             lambda channels: _new_channels_cb(connection, channels))
 
 def _connection_addded_cb(conn_watcher, connection):
     _monitor_connection(connection)
+
+def _connection_removed_cb(conn_watcher, connection):
+    logging.debug('connection removed %r' % connection)
 
 _conn_watcher = None
 
@@ -321,6 +332,7 @@ def init():
     global _conn_watcher
     _conn_watcher = connection_watcher.ConnectionWatcher()
     _conn_watcher.connect('connection-added', _connection_addded_cb)
+    _conn_watcher.connect('connection-removed', _connection_removed_cb)
 
     for connection in _conn_watcher.get_connections():
         _monitor_connection(connection)
