@@ -4,6 +4,14 @@ Building this package for Debian
 This source package need no special handling for normal package builds.
 
 
+Developing this package for Debian
+----------------------------------
+
+The source of this package is developed using Git and the helper tool
+git-buildpackage, with all official releases tagged and signed.  This is
+documented below /usr/share/doc/git-buildpackage/manual-html/ .
+
+
 Maintaining packaging build routines
 ------------------------------------
 
