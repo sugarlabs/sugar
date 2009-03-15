@@ -1,2 +1,2 @@
-vcs/git+pristine-tar
-cdbs/upstream-tarball
+git+tarball
+cdbs/misc
