@@ -4,6 +4,16 @@ Building this package for Debian
 This source package need no special handling for normal package builds.
 
 
+Developing this package for Debian
+----------------------------------
+
+Setting DEB_MAINTAINER_MODE=1 enables additional build routines helpful
+during development of the package, but unfit for normal builds.  This
+typically includes the CDBS feature of auto-updating debian/control with
+CDBS-related build-dependencies, which is forbidden by Debian Policy as
+build environment must not change during automated builds.
+
+
 Maintaining packaging build routines
 ------------------------------------
 
