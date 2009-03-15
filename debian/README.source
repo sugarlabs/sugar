@@ -12,6 +12,23 @@ git-buildpackage, with all official releases tagged and signed and
 binary diffs of tarballs stored using pristine-tar.  This is documented
 below /usr/share/doc/git-buildpackage/manual-html/ .
 
+A custom build target shows current upstream and packaging versions:
+
+    debian/rules print-version
+
+Current upstream tarball can be prepared using this other build target:
+
+    debian/rules get-orig-source
+
+To switch to newer upstream source, first add a dummy changelog entry
+and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
+
+    dch -v ${new_upstream_version}-1 "Dummy changelog entry"
+    sed -i -e 's/^\(DEB_UPSTREAM_TARBALL_MD5\b\)/#\1/' debian/rules
+    debian/rules get-orig-source
+
+Store new new md5sum to help ensure identical source is received later.
+
 
 Maintaining packaging build routines
 ------------------------------------
