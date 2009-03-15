@@ -29,6 +29,12 @@ and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
 
 Store new new md5sum to help ensure identical source is received later.
 
+Setting DEB_MAINTAINER_MODE=1 enables additional build routines helpful
+during development of the package, but unfit for normal builds.  This
+typically includes the CDBS feature of auto-updating debian/control with
+CDBS-related build-dependencies, which is forbidden by Debian Policy as
+build environment must not change during automated builds.
+
 
 Maintaining packaging build routines
 ------------------------------------
