@@ -1,1 +1,3 @@
-core
+cdbs/buildinfo
+cdbs/copyright-check
+cdbs/package-relations
