@@ -535,7 +535,7 @@ class ActivityIcon(CanvasIcon):
             launcher.add_launcher(entry['activity_id'],
                                   self._activity_info.get_icon(),
                                   XoColor(entry.get('icon-color', '')))
-            journal.misc.resume(entry)
+            journal.misc.resume(entry, self._activity_info.get_bundle_id())
         else:
             client = gconf.client_get_default()
             xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
