@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-21 00:30-0500\n"
-"PO-Revision-Date: 2009-02-28 19:45+0100\n"
+"PO-Revision-Date: 2009-03-15 13:34-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "Über mich"
 
 #: ../extensions/cpsection/aboutme/model.py:43
 msgid "You must enter a name."
-msgstr "Bitte einen Namen eingeben"
+msgstr "Bitte einen Namen eingeben."
 
 #: ../extensions/cpsection/aboutme/model.py:68
 #, python-format
@@ -93,7 +93,6 @@ msgid "Firmware:"
 msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
-#, fuzzy
 msgid "Wireless Firmware:"
 msgstr "WLAN-Firmware:"
 
@@ -138,9 +137,8 @@ msgstr "Zeitzone"
 
 # (Markus S.) 'Rahmen'? (Vorschlag von hmeyer)
 #: ../extensions/cpsection/frame/__init__.py:21
-#, fuzzy
 msgid "Frame"
-msgstr "Frame"
+msgstr "Rahmen"
 
 #: ../extensions/cpsection/frame/model.py:38
 #: ../extensions/cpsection/frame/model.py:60
@@ -208,9 +206,8 @@ msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../extensions/cpsection/network/model.py:137
-#, fuzzy
 msgid "Error in specified argument use 0/1."
-msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
+msgstr "Fehler im angegebenen Parameter  -- 0/1 verwenden."
 
 #: ../extensions/cpsection/network/view.py:56
 msgid "Wireless"
@@ -218,7 +215,7 @@ msgstr "Drahtlosnetzwerk"
 
 #: ../extensions/cpsection/network/view.py:64
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Schalte das Funknetz aus, um die Lebensdauer der Batterie zu erhöhen"
+msgstr "Schalte das Funknetz aus, um die Lebensdauer der Batterie zu erhöhen."
 
 # (Markus S,) war 'Radio:'
 #: ../extensions/cpsection/network/view.py:77
@@ -229,14 +226,13 @@ msgstr "Funknetz"
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Verwirf die Netzwerk-Chronik, wenn du Schwierigkeiten hast, dich mit dem "
-"Netzwerk zu verbinden"
+"Netzwerk zu verbinden."
 
 #: ../extensions/cpsection/network/view.py:102
 msgid "Discard network history"
 msgstr "Netzwerk-Chronik verwerfen"
 
 #: ../extensions/cpsection/network/view.py:115
-#, fuzzy
 msgid "Collaboration"
 msgstr "Zusammenarbeit"
 
@@ -289,9 +285,8 @@ msgid "My Battery"
 msgstr "Meine Batterie"
 
 #: ../extensions/deviceicon/battery.py:137
-#, fuzzy
 msgid "Removed"
-msgstr "Entfernen"
+msgstr "Entfernt"
 
 #: ../extensions/deviceicon/battery.py:140
 msgid "Charging"
@@ -347,10 +342,10 @@ msgstr "Kanal"
 msgid "Wired Network"
 msgstr "Kabelnetzwerk"
 
+# (Markus S.) War 'Geschwindigkeit'
 #: ../extensions/deviceicon/network.py:169
-#, fuzzy
 msgid "Speed"
-msgstr "Geschwindigkeit"
+msgstr "Übertragungsrate"
 
 #: ../extensions/deviceicon/speaker.py:46
 msgid "My Speakers"
@@ -369,7 +364,6 @@ msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
 #: ../data/sugar.schemas.in.h:1
-#, fuzzy
 msgid "Backup URL"
 msgstr "Backup-URL"
 
@@ -400,17 +394,14 @@ msgid "Edge Delay"
 msgstr "Randverzögerung"
 
 #: ../data/sugar.schemas.in.h:7
-#, fuzzy
 msgid "Favorites Layout"
 msgstr "Favoriten-Layout"
 
 #: ../data/sugar.schemas.in.h:8
-#, fuzzy
 msgid "Favorites resume mode"
 msgstr "Favoriten-Wiederaufnahemodus"
 
 #: ../data/sugar.schemas.in.h:9
-#, fuzzy
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -419,7 +410,6 @@ msgstr ""
 "nach uns zu suchen."
 
 #: ../data/sugar.schemas.in.h:10
-#, fuzzy
 msgid "Jabber Server"
 msgstr "Jabber-Server"
 
@@ -435,15 +425,17 @@ msgstr "Automatische Energieverwaltung"
 msgid "Power Automatic."
 msgstr "Automatische Energieverwaltung."
 
+# (Markus S.) war 'Extreme Energieverwaltung'
 #: ../data/sugar.schemas.in.h:14
 #, fuzzy
 msgid "Power Extreme"
-msgstr "Extreme Energieverwaltung"
+msgstr "Extremes Energiesparen"
 
+# (Markus S.) war 'Extreme Energieverwaltung'
 #: ../data/sugar.schemas.in.h:15
 #, fuzzy
 msgid "Power Extreme."
-msgstr "Extreme Energieverwaltung."
+msgstr "Extremes Energiesparen."
 
 #: ../data/sugar.schemas.in.h:16
 #, fuzzy
@@ -463,7 +455,6 @@ msgid "Timezone setting for the system."
 msgstr "Zeitzoneneinstellung des Systems"
 
 #: ../data/sugar.schemas.in.h:21
-#, fuzzy
 msgid "Url of the jabber server to use."
 msgstr "URL des zu nutzenden Jabber-Servers."
 
@@ -485,14 +476,13 @@ msgstr "Benutzername, der überall auf dem Desktop benutzt wird."
 
 #: ../data/sugar.schemas.in.h:26
 msgid "Volume Level"
-msgstr "Lautstärkepegel"
+msgstr "Lautstärke"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "Volume level for the sound device."
 msgstr "Lautstärkepegel für die Audio-Ausgabe"
 
 #: ../data/sugar.schemas.in.h:28
-#, fuzzy
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -506,8 +496,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"sugar-control-panel: WARNUNG, mehr als eine Option mit demselben Namen: %s "
-"und Modul: %r gefunden"
+"sugar-control-panel: WARNUNG, mehr als eine Option mit demselben "
+"Namengefunden: %s Modul: %r "
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -712,7 +702,6 @@ msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
 #: ../src/jarabe/desktop/keydialog.py:224
-#, fuzzy
 msgid "Wireless Security:"
 msgstr "WLAN-Sicherheit:"
 
@@ -779,7 +768,7 @@ msgstr "%s von %s"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 #, python-format
-#, fuzzy, python-format
+#, python-format
 msgid "Transfer from %r"
 msgstr "Übertragung von %r"
 
@@ -795,7 +784,7 @@ msgstr "%s (%s)"
 
 #: ../src/jarabe/frame/activitiestray.py:755
 #, python-format
-#, fuzzy, python-format
+#, python-format
 msgid "Transfer to %r"
 msgstr "Übertragung zu %r"
 
@@ -951,9 +940,8 @@ msgid "No matching entries "
 msgstr "Keine passenden Einträge"
 
 #: ../src/jarabe/journal/listview.py:369
-#, fuzzy
 msgid "Clear search"
-msgstr "Suchliste leeren"
+msgstr "Suchfeld leeren"
 
 #: ../src/jarabe/journal/misc.py:91
 msgid "No date"
@@ -982,17 +970,14 @@ msgid "Close"
 msgstr "Schließen"
 
 #: ../src/jarabe/journal/palettes.py:73
-#, fuzzy
 msgid "Resume with"
-msgstr "Wiederaufnahme mit"
+msgstr "Wiederaufnehmen mit"
 
 #: ../src/jarabe/journal/palettes.py:76
-#, fuzzy
 msgid "Start with"
 msgstr "Beginnen mit"
 
 #: ../src/jarabe/journal/palettes.py:98
-#, fuzzy
 msgid "Send to"
 msgstr "Senden an"
 
@@ -1005,7 +990,6 @@ msgid "No friends present"
 msgstr "Keine Freunde anwesend"
 
 #: ../src/jarabe/journal/palettes.py:190
-#, fuzzy
 msgid "No valid connection found"
 msgstr "Keine gültige Verbindung gefunden"
 
@@ -1014,7 +998,6 @@ msgid "No activity to resume entry"
 msgstr "Keine Aktivität, um den Eintrag wieder aufzunehmen"
 
 #: ../src/jarabe/journal/palettes.py:220
-#, fuzzy
 msgid "No activity to start entry"
 msgstr "Keine Aktivität, um den Eintrag zu beginnen"
 
@@ -1053,13 +1036,12 @@ msgstr "Starte..."
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:73
-#, fuzzy
 msgid "View Source"
 msgstr "Quelltext betrachten"
 
 #: ../src/jarabe/view/palettes.py:84
 msgid "Stop"
-msgstr "Stopp"
+msgstr "Beenden"
 
 #: ../src/jarabe/view/palettes.py:171
 msgid "Remove favorite"
