@@ -1,2 +1,2 @@
-git+tarball
-cdbs/misc
+git+tarball+misc
+git+tarball+quilt
