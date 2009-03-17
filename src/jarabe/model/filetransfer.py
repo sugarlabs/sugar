@@ -204,7 +204,7 @@ class IncomingFileTransfer(BaseFileTransfer):
 
         channel_ft = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_ft.AcceptFile(SOCKET_ADDRESS_TYPE_UNIX,
-                SOCKET_ACCESS_CONTROL_LOCALHOST, '', 0)
+                SOCKET_ACCESS_CONTROL_LOCALHOST, '', 0, byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('__notify_state_cb %r' % self.props.state)
@@ -266,7 +266,8 @@ class OutgoingFileTransfer(BaseFileTransfer):
         
         channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_file_transfer.ProvideFile(
-                SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '')
+                SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
+                byte_arrays=True)
 
     def _get_buddy_handle(self):
         object_path = self.buddy.object_path()
