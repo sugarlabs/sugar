@@ -20,6 +20,7 @@ from gettext import gettext as _
 import tempfile
 import os
 
+import gobject
 import gconf
 import dbus
 import gio
@@ -456,15 +457,18 @@ class BaseTransferButton(ToolButton):
             frame.remove_notification(self.notif_icon)
             self.notif_icon = None
 
+    def remove(self):
+        frame = jarabe.frame.get_view()
+        frame.remove_notification(self.notif_icon)
+        self.props.parent.remove(self)
+
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('_update state: %r %r' % (file_transfer.props.state,
                 file_transfer.reason_last_change))
         if file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             if file_transfer.reason_last_change == \
                filetransfer.FT_REASON_LOCAL_STOPPED:
-                frame = jarabe.frame.get_view()
-                frame.remove_notification(self.notif_icon)
-                self.props.parent.remove(self)
+                self.remove()
 
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
@@ -499,6 +503,7 @@ class IncomingTransferButton(BaseTransferButton):
 
     def create_palette(self):
         palette = IncomingTransferPalette(self.file_transfer)
+        palette.connect('dismiss-clicked', self.__dismiss_clicked_cb)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         return palette
@@ -565,6 +570,9 @@ class IncomingTransferButton(BaseTransferButton):
     def __error_handler_cb(self, error):
         logging.debug('__error_handler_cb %r %s' % (self._object_id, error))
 
+    def __dismiss_clicked_cb(self, palette):
+        self.remove()
+
 class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
@@ -592,13 +600,24 @@ class OutgoingTransferButton(BaseTransferButton):
 
     def create_palette(self):
         palette = OutgoingTransferPalette(self.file_transfer)
+        palette.connect('dismiss-clicked', self.__dismiss_clicked_cb)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
         return palette
 
+    def __dismiss_clicked_cb(self, palette):
+        self.remove()
+
 class BaseTransferPalette(Palette):
     """Base palette class for frame or notification icon for file transfers
     """
+    __gtype_name__ = "SugarBaseTransferPalette"
+
+    __gsignals__ = {
+        'dismiss-clicked':          (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+    }
+
     def __init__(self, file_transfer):
         Palette.__init__(self, file_transfer.title)
 
@@ -654,6 +673,7 @@ class BaseTransferPalette(Palette):
 class IncomingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for incoming file transfers
     """
+    __gtype_name__ = "SugarIncomingTransferPalette"
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
 
@@ -723,9 +743,20 @@ class IncomingTransferPalette(BaseTransferPalette):
             self.update_progress()
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
-            # TODO: What to do here?
+
+            for item in self.menu.get_children():
+                self.menu.remove(item)
+
+            menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+            menu_item.connect('activate', self.__dismiss_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
             self.update_progress()
         elif self.file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
+
+            for item in self.menu.get_children():
+                self.menu.remove(item)
 
             menu_item = MenuItem(_('Resume'), icon_name='dialog-cancel')
             menu_item.connect('activate', self.__resume_activate_cb)
@@ -759,9 +790,14 @@ class IncomingTransferPalette(BaseTransferPalette):
     def __resume_activate_cb(self, menu_item):
         self.file_transfer.resume()
 
+    def __dismiss_activate_cb(self, menu_item):
+        self.emit('dismiss-clicked')
+
 class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers
     """
+    __gtype_name__ = "SugarOutgoingTransferPalette"
+
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
 
@@ -830,9 +866,20 @@ class OutgoingTransferPalette(BaseTransferPalette):
             self.update_progress()
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
-            # TODO: What to do here?
+
+            for item in self.menu.get_children():
+                self.menu.remove(item)
+
+            menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+            menu_item.connect('activate', self.__dismiss_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
             self.update_progress()
 
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
+
+    def __dismiss_activate_cb(self, menu_item):
+        self.emit('dismiss-clicked')
 
