@@ -488,15 +488,15 @@ class ActivityIcon(CanvasIcon):
 
         width, height = self.get_allocation()
 
-        x = ActivityIcon._BORDER_WIDTH / 2
-        y = ActivityIcon._BORDER_WIDTH / 2
+        x = ActivityIcon._BORDER_WIDTH / 2.0
+        y = ActivityIcon._BORDER_WIDTH / 2.0
         width -= ActivityIcon._BORDER_WIDTH
         height -= ActivityIcon._BORDER_WIDTH
-        radius = width / 10
+        radius = width / 10.0
 
         cr.move_to(x + radius, y)
         cr.arc(x + width - radius, y + radius, radius, math.pi * 1.5,
-               math.pi * 2)
+               math.pi * 2.0)
         cr.arc(x + width - radius, x + height - radius, radius, 0,
                math.pi * 0.5)
         cr.arc(x + radius, y + height - radius, radius, math.pi * 0.5, math.pi)
