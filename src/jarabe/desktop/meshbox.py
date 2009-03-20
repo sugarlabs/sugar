@@ -101,15 +101,17 @@ class AccessPointView(CanvasPulsingIcon):
                                       dbus_interface=_NM_ACCESSPOINT_IFACE,
                                       byte_arrays=True)
 
-        self._device.Get(_NM_DEVICE_IFACE, 'State',
-                         reply_handler=self.__get_device_state_reply_cb,
-                         error_handler=self.__get_device_state_error_cb)
-        self._device.Get(_NM_WIRELESS_IFACE, 'WirelessCapabilities',
-                         reply_handler=self.__get_device_caps_reply_cb,
-                         error_handler=self.__get_device_caps_error_cb)
-        self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
-                         reply_handler=self.__get_active_ap_reply_cb,
-                         error_handler=self.__get_active_ap_error_cb)
+        interface_props = dbus.Interface(self._device,
+                                         'org.freedesktop.DBus.Properties')
+        interface_props.Get(_NM_DEVICE_IFACE, 'State',
+                            reply_handler=self.__get_device_state_reply_cb,
+                            error_handler=self.__get_device_state_error_cb)
+        interface_props.Get(_NM_WIRELESS_IFACE, 'WirelessCapabilities',
+                            reply_handler=self.__get_device_caps_reply_cb,
+                            error_handler=self.__get_device_caps_error_cb)
+        interface_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+                            reply_handler=self.__get_active_ap_reply_cb,
+                            error_handler=self.__get_active_ap_error_cb)
 
         self._bus.add_signal_receiver(self.__device_state_changed_cb,
                                       signal_name='StateChanged',
@@ -196,7 +198,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._update()
 
     def __get_device_state_error_cb(self, err):
-        logging.debug('Error getting the access point properties: %s', err)
+        logging.debug('Error getting the device state: %s', err)
 
     def __get_all_props_reply_cb(self, properties):
         self._update_properties(properties)

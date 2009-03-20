@@ -192,6 +192,7 @@ class WirelessDeviceView(ToolButton):
 
         self._bus = dbus.SystemBus()
         self._device = device
+        self._device_props = None
         self._flags = 0
         self._name = ''
         self._strength = 0
@@ -218,14 +219,15 @@ class WirelessDeviceView(ToolButton):
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
-                     reply_handler=self.__get_device_props_reply_cb,
-                     error_handler=self.__get_device_props_error_cb)
+        self._device_props = dbus.Interface(self._device, 
+                                            'org.freedesktop.DBus.Properties')
+        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True, 
+                              reply_handler=self.__get_device_props_reply_cb,
+                              error_handler=self.__get_device_props_error_cb)
 
-        self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
-                         reply_handler=self.__get_active_ap_reply_cb,
-                         error_handler=self.__get_active_ap_error_cb)
+        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+                               reply_handler=self.__get_active_ap_reply_cb,
+                               error_handler=self.__get_active_ap_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
@@ -276,10 +278,9 @@ class WirelessDeviceView(ToolButton):
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
-
-        self._device.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
-                         reply_handler=self.__get_active_ap_reply_cb,
-                         error_handler=self.__get_active_ap_error_cb)
+        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+                               reply_handler=self.__get_active_ap_reply_cb,
+                               error_handler=self.__get_active_ap_error_cb)
 
     def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
@@ -343,9 +344,7 @@ class WirelessDeviceView(ToolButton):
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.DEVICE_STATE_ACTIVATED:
-            props = dbus.Interface(self._device,
-                                   'org.freedesktop.DBus.Properties')
-            address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
+            address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected(self._frequency, address)
             self._icon.props.pulsing = False
 
