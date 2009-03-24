@@ -14,9 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
-import statvfs
-from gettext import gettext as _
 import logging
 
 import gobject
@@ -25,10 +22,7 @@ import gtk
 import gconf
 
 from sugar.graphics.tray import TrayIcon
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics import style
 
 from jarabe.journal import journalactivity
 from jarabe.view.palettes import VolumePalette
