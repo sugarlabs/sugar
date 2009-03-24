@@ -173,7 +173,7 @@
       <applyto>/desktop/sugar/show_logout</applyto>
       <owner>sugar</owner>
       <type>bool</type>
-      <default>false</default>
+      <default>true</default>
       <locale name="C">
       <!-- FIXME: Enable these after string freeze is over
         <short>Show Log out</short>
