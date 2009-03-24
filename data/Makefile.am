@@ -13,6 +13,7 @@ sugar_DATA =			\
 	activities.defaults	\
 	kbdconfig		\
 	mime.defaults		\
+	GPLv2			\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
