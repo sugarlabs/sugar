@@ -74,7 +74,7 @@ def _write_i18n(langs):
         fd.close()
     else:
         fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % langs[0])
+        fd.write('LANG="%s"\n' % langs[0].strip("\n"))
         fd.write('LANGUAGE="%s"\n' % langstr)
         fd.close()
 
