@@ -295,8 +295,9 @@ class VolumePalette(Palette):
     def __unmount_activate_cb(self, menu_item):
         self._mount.unmount(self.__unmount_cb)
 
-    def __unmount_cb(self, source, result):
-        logging.debug('__unmount_cb %r %r' % (source, result))
+    def __unmount_cb(self, mount, result):
+        logging.debug('__unmount_cb %r %r' % (mount, result))
+        mount.unmount_finish(result)
 
     def __popup_cb(self, palette):
         mount_point = self._mount.get_root().get_path()
