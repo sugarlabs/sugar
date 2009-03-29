@@ -62,6 +62,15 @@ If git-import-orig fails complaining about no changes, revert both pulls
 (using "git reset --hard HEAD^" in both master and upstream branches),
 and try again skipping the very newest changes to cheat git-import-orig.
 
+To do a package release from upstream Git snapshot, first look at
+upstream development for a good place to release, and tag by its date,
+replacing "~" with "." to mimic git-buildpackage logic (replace
+timestamp and commit hash below with real ones based on chosen commit).
+
+    git log --abbrev-commit upstream-git
+    git tag -s -m "Upstream snapshot" upstream/0.2.git20080130 61279f8
+    dch -r -v "0.2~git20080130-1" "New upstream Git snapshot."
+
 
 Maintaining packaging build routines
 ------------------------------------
