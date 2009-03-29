@@ -64,6 +64,12 @@ If git-import-orig fails complaining about no changes, revert both pulls
 (using "git reset --hard HEAD^" in both master and upstream branches),
 and try again skipping the very newest changes to cheat git-import-orig.
 
+Setting DEB_MAINTAINER_MODE=1 enables additional build routines helpful
+during development of the package, but unfit for normal builds.  This
+typically includes the CDBS feature of auto-updating debian/control with
+CDBS-related build-dependencies, which is forbidden by Debian Policy as
+build environment must not change during automated builds.
+
 
 Maintaining packaging build routines
 ------------------------------------
