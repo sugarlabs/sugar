@@ -12,7 +12,8 @@ git-buildpackage, with all official releases tagged and signed and
 binary diffs of tarballs stored using pristine-tar.  This is documented
 below /usr/share/doc/git-buildpackage/manual-html/ .
 
-Upstream development is tracked in the branch "upstream-git".
+Upstream development is tracked both in the Git branch "upstream-git"
+and using upstream tarballs.
 
 A custom build target shows current upstream and packaging versions:
 
