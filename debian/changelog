@@ -1,3 +1,10 @@
+sugar (0.82.9-6) UNRELEASED; urgency=low
+
+  * Add README.source.
+  * Enable signed-tags to git-buildpackage configfile.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 15:05:25 +0200
+
 sugar (0.82.9-5) unstable; urgency=medium
 
   * Update CDBS snippets:
