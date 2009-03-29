@@ -1,2 +1,2 @@
-vcs/git+git
-git+tarball
+git+git+tarball
+git+tarball+misc
