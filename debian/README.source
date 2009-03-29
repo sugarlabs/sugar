@@ -32,6 +32,10 @@ and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
 
 Store new md5sum to help ensure identical source is received later.
 
+Before injecting a newer upstream tarball, use below commands to sync
+with upstream Git, to adopt upstream commit messages and to minimize
+size of our Git.
+
 The following commands updates the local mirror of upstream source:
 
     git checkout upstream-git
@@ -53,6 +57,10 @@ command with either a tag or an explicit commit hash):
     git pull . upstream-git
     git checkout master
     git pull . upstream
+
+If git-import-orig fails complaining about no changes, revert both pulls
+(using "git reset --hard HEAD^" in both master and upstream branches),
+and try again skipping the very newest changes to cheat git-import-orig.
 
 
 Maintaining packaging build routines
