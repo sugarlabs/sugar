@@ -1,2 +1,2 @@
-git+tarball+misc
-git+tarball+quilt
+git+git+tarball+quilt
+git+git+tarball+misc

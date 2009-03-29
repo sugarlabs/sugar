@@ -14,6 +14,9 @@ git-buildpackage, with all official releases tagged and signed and
 binary diffs of tarballs stored using pristine-tar.  This is documented
 below /usr/share/doc/git-buildpackage/manual-html/ .
 
+Upstream development is tracked both in the Git branch "upstream-git"
+and using upstream tarballs.
+
 A custom build target shows current upstream and packaging versions:
 
     debian/rules print-version
@@ -29,7 +32,37 @@ and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
     sed -i -e 's/^\(DEB_UPSTREAM_TARBALL_MD5\b\)/#\1/' debian/rules
     debian/rules get-orig-source
 
-Store new new md5sum to help ensure identical source is received later.
+Store new md5sum to help ensure identical source is received later.
+
+Before injecting a newer upstream tarball, use below commands to sync
+with upstream Git, to adopt upstream commit messages and to minimize
+size of our Git.
+
+The following commands updates the local mirror of upstream source:
+
+    git checkout upstream-git
+    git pull
+    git fetch --tags
+
+The following command shows upstream changes possibly relevant to merge
+or cherry-pick (replace leading "upstream" with "HEAD^" and invoke
+immediately after syncing to show recently merged changes possibly
+relevant to mention in our changelog):
+
+    git log --pretty="format:%h %s" upstream..upstream-git
+
+The following commands merges all upstream changes with our packaging
+branches (to skip newest upstream changes, replace dot in first pull
+command with either a tag or an explicit commit hash):
+
+    git checkout upstream
+    git pull . upstream-git
+    git checkout master
+    git pull . upstream
+
+If git-import-orig fails complaining about no changes, revert both pulls
+(using "git reset --hard HEAD^" in both master and upstream branches),
+and try again skipping the very newest changes to cheat git-import-orig.
 
 Setting DEB_MAINTAINER_MODE=1 enables additional build routines helpful
 during development of the package, but unfit for normal builds.  This
@@ -49,4 +82,4 @@ included from below /usr/share/cdbs may also be documented in
 /usr/share/doc/cdbs/cdbs-doc.pdf.gz .
 
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 26 Feb 2009 21:28:29 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 16:02:47 +0200
