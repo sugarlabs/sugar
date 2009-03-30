@@ -1,5 +1,6 @@
-sugar (0.82.9-6) UNRELEASED; urgency=low
+sugar (0.84.1-1) UNRELEASED; urgency=low
 
+  * New upstream release.
   * Add README.source (and drop CDBS hints and README.packaging).
   * Enable signed-tags to git-buildpackage configfile.
 
