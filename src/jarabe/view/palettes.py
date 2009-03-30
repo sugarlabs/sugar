@@ -155,6 +155,9 @@ class ActivityPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
+        if not os.access(self._bundle.get_path(), os.W_OK):
+            menu_item.props.sensitive = False
+
         registry = bundleregistry.get_registry()
         self._activity_changed_sid = registry.connect('bundle_changed',
                 self.__activity_changed_cb)
