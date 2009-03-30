@@ -2,7 +2,8 @@ sugar (0.84.1-1) UNRELEASED; urgency=low
 
   * New upstream release.
   * Add README.source (and drop CDBS hints and README.packaging).
-  * Enable signed-tags to git-buildpackage configfile.
+  * Update git-buildpackage configfile to enable signed-tags and use
+    upstream-0.84 as upstream branch.
   * Use sugarlabs.org URLs (and drop laptop.org ones) to upstream source
     and Homepage.  Bump watch file to track 0.84*.
 
