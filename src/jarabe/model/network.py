@@ -245,8 +245,9 @@ class NMSettingsConnection(dbus.service.Object):
             config.set(identifier, 'uuid', self._settings.connection.uuid)
             config.set(identifier, 'autoconnect', 
                        self._settings.connection.autoconnect)
-            config.set(identifier, 'timestamp', 
-                       self._settings.connection.timestamp)
+            if self._settings.connection.timestamp is not None:
+                config.set(identifier, 'timestamp', 
+                           self._settings.connection.timestamp)
 
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:
@@ -362,8 +363,10 @@ def load_connections():
             settings.connection.type = nmtype
             autoconnect = bool(config.get(section, 'autoconnect'))
             settings.connection.autoconnect = autoconnect
-            timestamp = int(config.get(section, 'timestamp'))
-            settings.connection.timestamp = timestamp
+
+            if config.has_option(section, 'timestamp'):
+                timestamp = int(config.get(section, 'timestamp'))
+                settings.connection.timestamp = timestamp
 
             secrets = None
             if config.has_option(section, 'key-mgmt'):
