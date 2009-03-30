@@ -46,5 +46,26 @@ $(patsubst %,binary-predeb/%,$(DEB_PACKAGES)) :: binary-predeb/%:
 	echo 'cdbs:Depends=$(CDBS_DEPENDS_ALL), $(or $(CDBS_DEPENDS_$(cdbs_curpkg)),$(CDBS_DEPENDS))' \
 	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
 	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Pre-Depends=$(CDBS_PREDEPENDS_ALL), $(or $(CDBS_PREDEPENDS_$(cdbs_curpkg)),$(CDBS_PREDEPENDS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Recommends=$(CDBS_RECOMMENDS_ALL), $(or $(CDBS_RECOMMENDS_$(cdbs_curpkg)),$(CDBS_RECOMMENDS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Suggests=$(CDBS_SUGGESTS_ALL), $(or $(CDBS_SUGGESTS_$(cdbs_curpkg)),$(CDBS_SUGGESTS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Breaks=$(CDBS_BREAKS_ALL), $(or $(CDBS_BREAKS_$(cdbs_curpkg)),$(CDBS_BREAKS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Provides=$(CDBS_PROVIDES_ALL), $(or $(CDBS_PROVIDES_$(cdbs_curpkg)),$(CDBS_PROVIDES))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Replaces=$(CDBS_REPLACES_ALL), $(or $(CDBS_REPLACES_$(cdbs_curpkg)),$(CDBS_REPLACES))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Enhances=$(CDBS_ENHANCES_ALL), $(or $(CDBS_ENHANCES_$(cdbs_curpkg)),$(CDBS_ENHANCES))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
 
 endif
