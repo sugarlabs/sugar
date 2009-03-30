@@ -32,16 +32,13 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = bin
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/sugar-control-panel.in $(srcdir)/sugar-emulator.in \
-	$(srcdir)/sugar-shell-service.in $(srcdir)/sugar-shell.in \
 	$(srcdir)/sugar.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = sugar sugar-control-panel sugar-emulator \
-	sugar-shell sugar-shell-service
+CONFIG_CLEAN_FILES = sugar
 am__installdirs = "$(DESTDIR)$(bindir)"
 binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
 SCRIPTS = $(bin_SCRIPTS)
@@ -71,6 +68,9 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GCONFTOOL = @GCONFTOOL@
+GCONF_SCHEMA_CONFIG_SOURCE = @GCONF_SCHEMA_CONFIG_SOURCE@
+GCONF_SCHEMA_FILE_DIR = @GCONF_SCHEMA_FILE_DIR@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -185,21 +185,23 @@ sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-bin_SCRIPTS = \
-	sugar			\
+python_scripts = \
 	sugar-activity		\
-	sugar-backup		\
 	sugar-control-panel	\
 	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch		\
-	sugar-shell		\
-	sugar-shell-service
+	sugar-session		\
+	sugar-ui-check
 
-EXTRA_DIST = $(bin_SCRIPTS) sugar.in
-DISTCLEANFILES = sugar
+bin_SCRIPTS = \
+	sugar			\
+	$(python_scripts)
+
+EXTRA_DIST = $(python_scripts) sugar.in
 all: all-am
 
 .SUFFIXES:
@@ -233,14 +235,6 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 sugar: $(top_builddir)/config.status $(srcdir)/sugar.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-sugar-control-panel: $(top_builddir)/config.status $(srcdir)/sugar-control-panel.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-sugar-emulator: $(top_builddir)/config.status $(srcdir)/sugar-emulator.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-sugar-shell: $(top_builddir)/config.status $(srcdir)/sugar-shell.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-sugar-shell-service: $(top_builddir)/config.status $(srcdir)/sugar-shell-service.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
@@ -321,7 +315,6 @@ clean-generic:
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
-	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

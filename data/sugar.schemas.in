@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/desktop/sugar/user/nick</key>
+      <applyto>/desktop/sugar/user/nick</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>User Name</short>
+        <long>User name that is used throughout the desktop.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/color</key>
+      <applyto>/desktop/sugar/user/color</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>User Color</short>
+        <long>Color for the XO icon that is used throughout the 
+	  desktop. The string is composed of the stroke color and fill 
+	  color, format is that of rbg colors. Example: #AC32FF,#9A5200 
+	</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/sound/volume</key>
+      <applyto>/desktop/sugar/sound/volume</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>80</default>
+      <locale name="C">
+        <short>Volume Level</short>
+        <long>Volume level for the sound device.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/sound/mute</key>
+      <applyto>/desktop/sugar/sound/mute</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Sound Muted</short>
+        <long>Setting for muting the sound device.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/backup_url</key>
+      <applyto>/desktop/sugar/backup_url</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Backup URL</short>
+        <long>Url where the backup is saved to.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/date/timezone</key>
+      <applyto>/desktop/sugar/date/timezone</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>UTC</default>
+      <locale name="C">
+        <short>Timezone</short>
+        <long>Timezone setting for the system.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/desktop/favorites_layout</key>
+      <applyto>/desktop/sugar/desktop/favorites_layout</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>ring-layout</default>
+      <locale name="C">
+        <short>Favorites Layout</short>
+        <long>Layout of the favorites view.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/desktop/favorites_mode</key>
+      <applyto>/desktop/sugar/desktop/favorites_mode</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Favorites resume mode</short>
+        <long>When in resume mode, clicking on a favorite icon will cause the last entry for that activity to be resumed.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/frame/edge_delay</key>
+      <applyto>/desktop/sugar/frame/edge_delay</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>1000</default>
+      <locale name="C">
+        <short>Edge Delay</short>
+        <long>Delay for the activation of the frame using the edges.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/frame/corner_delay</key>
+      <applyto>/desktop/sugar/frame/corner_delay</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Corner Delay</short>
+        <long>Delay for the activation of the frame using the corners.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/collaboration/jabber_server</key>
+      <applyto>/desktop/sugar/collaboration/jabber_server</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>jabber.sugarlabs.org</default>
+      <locale name="C">
+        <short>Jabber Server</short>
+        <long>Url of the jabber server to use.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/power/automatic</key>
+      <applyto>/desktop/sugar/power/automatic</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Power Automatic</short>
+        <long>Power Automatic.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/power/extreme</key>
+      <applyto>/desktop/sugar/power/extreme</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Power Extreme</short>
+        <long>Power Extreme. </long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/collaboration/publish_gadget</key>
+      <applyto>/desktop/sugar/collaboration/publish_gadget</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Publish to Gadget</short>
+        <long>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/show_logout</key>
+      <applyto>/desktop/sugar/show_logout</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+      <!-- FIXME: Enable these after string freeze is over
+        <short>Show Log out</short>
+        <long>If TRUE, Sugar will show a "Log out" option.</long>-->
+      </locale>
+    </schema>
+
+  </schemalist>
+</gconfschemafile>

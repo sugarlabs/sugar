@@ -1,4 +1,0 @@
-[D-BUS Service]
-Name = org.laptop.ActivityRegistry
-Exec = @bindir@/sugar-shell-service
-

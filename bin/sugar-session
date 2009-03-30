@@ -1,0 +1,173 @@
+#!/usr/bin/env python
+# Copyright (C) 2006, Red Hat, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import os
+import sys
+import time
+
+if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
+    print '%r STARTUP: Starting the shell' % time.time()
+    sys.stdout.flush()
+
+import shutil
+import gettext
+import logging
+
+import gconf
+import gtk
+import gobject
+import dbus.glib
+
+gtk.gdk.threads_init()
+dbus.glib.threads_init()
+
+from sugar import logger
+from sugar import env
+
+# NOTE: This needs to happen so early because some modules register translatable
+# strings in the module scope.
+from jarabe import config
+gettext.bindtextdomain('sugar', config.locale_path)
+gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+gettext.textdomain('sugar')
+
+from jarabe.desktop.homewindow import HomeWindow
+from jarabe.model import sound
+from jarabe.view import launcher
+from jarabe import intro
+
+def cleanup_logs():
+    """Clean up the log directory, moving old logs into a numbered backup
+    directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
+    around; the rest are removed."""
+    logs_dir = env.get_logs_path()
+    if not os.path.isdir(logs_dir):
+        os.makedirs(logs_dir)
+
+    backup_logs = []
+    backup_dirs = []
+    for f in os.listdir(logs_dir):
+        path = os.path.join(logs_dir, f)
+        if os.path.isfile(path):
+            backup_logs.append(f)
+        elif os.path.isdir(path):
+            backup_dirs.append(path)    
+
+    if len(backup_dirs) > 3:
+        backup_dirs.sort()
+        root = backup_dirs[0]
+        for f in os.listdir(root):
+            os.remove(os.path.join(root, f))
+        os.rmdir(root)
+
+    if len(backup_logs) > 0:
+        name = str(int(time.time()))
+        backup_dir = os.path.join(logs_dir, name)
+        os.mkdir(backup_dir)
+        for log in backup_logs:
+            source_path = os.path.join(logs_dir, log)
+            dest_path = os.path.join(backup_dir, log)
+            os.rename(source_path, dest_path)
+
+def start_ui_service():
+    from jarabe.view.service import UIService
+
+    ui_service = UIService()
+    ui_service.start()
+
+def start_session_manager():
+    from jarabe.model.session import get_session_manager
+
+    session_manager = get_session_manager()
+    session_manager.start()
+
+def unfreeze_dcon_cb():
+    logging.debug('STARTUP: unfreeze_dcon_cb')
+    from jarabe.model import screen
+
+    screen.set_dcon_freeze(0)
+
+def setup_frame_cb():
+    logging.debug('STARTUP: setup_frame_cb')
+    from jarabe import frame
+    frame.get_view()
+
+def setup_keyhandler_cb():
+    logging.debug('STARTUP: setup_keyhandler_cb')
+    from jarabe.view import keyhandler
+    from jarabe import frame
+    keyhandler.setup(frame.get_view())
+
+def setup_journal_cb():
+    logging.debug('STARTUP: setup_journal_cb')
+    from jarabe.journal import journalactivity
+    journalactivity.start()
+
+def show_software_updates_cb(home_window):
+    logging.debug('STARTUP: show_software_updates_cb')
+    if os.path.isfile(os.path.expanduser('~/.sugar-update')):
+        home_window.get_home_box().show_software_updates_alert()
+
+def setup_notification_service_cb():
+    from jarabe.model import notifications
+    notifications.init()
+
+def setup_file_transfer_cb():
+    from jarabe.model import filetransfer
+    filetransfer.init()
+
+def main():
+    cleanup_logs()
+    logger.start('shell')
+
+    intro.check_profile()
+
+    client = gconf.client_get_default()
+    timezone = client.get_string('/desktop/sugar/date/timezone')
+
+    if timezone is not None and timezone:
+        os.environ['TZ'] = timezone
+
+    start_ui_service()
+    start_session_manager()
+
+    sound.restore()
+
+    sys.path.append(config.ext_path)
+
+    icons_path = os.path.join(config.data_path, 'icons')
+    gtk.icon_theme_get_default().append_search_path(icons_path)
+
+    launcher.setup()
+
+    home_window = HomeWindow()
+    home_window.show()
+
+    gobject.idle_add(unfreeze_dcon_cb)
+    gobject.idle_add(setup_frame_cb)
+    gobject.idle_add(setup_keyhandler_cb)
+    gobject.idle_add(setup_journal_cb)
+    gobject.idle_add(setup_notification_service_cb)
+    gobject.idle_add(setup_file_transfer_cb)
+    gobject.idle_add(show_software_updates_cb, home_window)
+
+    try:
+        gtk.main()
+    except KeyboardInterrupt:
+        print 'Ctrl+C pressed, exiting...'
+
+main()

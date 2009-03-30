@@ -1,18 +1,18 @@
-AC_INIT([Sugar],[0.82.9],[],[sugar])
+AC_INIT([Sugar],[0.84.1],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.82.1"
+SUCROSE_VERSION="0.84.1"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
 AM_PATH_PYTHON
 
-PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0)
+PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gconf-2.0)
 
 # Setup GETTEXT
 #
@@ -29,14 +29,20 @@ AC_ARG_ENABLE(update-mimedb,
     enable_update_mimedb=yes)
 AM_CONDITIONAL(ENABLE_UPDATE_MIMEDB, test x$enable_update_mimedb = xyes)
 
+# Verify that gconftool is installed 
+# 
+AC_PATH_PROG(GCONFTOOL, gconftool-2, no)
+
+if test "$GCONFTOOL" = no; then
+  AC_MSG_ERROR([gconftool-2 executable not found in your path - should be installed with GConf])
+fi
+
+AM_GCONF_SOURCE_2
+
+
 AC_CONFIG_FILES([
 bin/sugar
-bin/sugar-control-panel
-bin/sugar-emulator
-bin/sugar-shell
-bin/sugar-shell-service
-service/config.py
-src/config.py
+src/jarabe/config.py
 ])
 
 AC_OUTPUT([
@@ -44,20 +50,27 @@ Makefile
 bin/Makefile
 data/Makefile
 data/icons/Makefile
-service/Makefile
+extensions/Makefile
+extensions/cpsection/Makefile
+extensions/cpsection/aboutme/Makefile
+extensions/cpsection/aboutcomputer/Makefile
+extensions/cpsection/datetime/Makefile
+extensions/cpsection/frame/Makefile
+extensions/cpsection/language/Makefile
+extensions/cpsection/network/Makefile
+extensions/cpsection/power/Makefile
+extensions/deviceicon/Makefile
+extensions/globalkey/Makefile
 src/Makefile
-src/controlpanel/Makefile
-src/controlpanel/model/Makefile
-src/controlpanel/view/Makefile
-src/intro/Makefile
-src/hardware/Makefile
-src/view/Makefile
-src/view/devices/Makefile
-src/view/devices/network/Makefile
-src/view/frame/Makefile
-src/view/home/Makefile
-src/model/Makefile
-src/model/devices/Makefile
-src/model/devices/network/Makefile
+src/jarabe/Makefile
+src/jarabe/controlpanel/Makefile
+src/jarabe/desktop/Makefile
+src/jarabe/frame/Makefile
+src/jarabe/intro/Makefile
+src/jarabe/journal/Makefile
+src/jarabe/view/Makefile
+src/jarabe/model/Makefile
+src/jarabe/util/Makefile
+src/jarabe/util/telepathy/Makefile
 po/Makefile.in
 ])

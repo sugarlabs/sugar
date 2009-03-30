@@ -9,9 +9,9 @@ text/x-xml-abiword                    org.laptop.AbiWordActivity
 application/msword                    org.laptop.AbiWordActivity
 application/rtf                       org.laptop.AbiWordActivity
 
-image/png                             org.laptop.WebActivity
-image/gif                             org.laptop.WebActivity
-image/jpeg                            org.laptop.WebActivity
+image/png                             org.laptop.ImageViewerActivity
+image/gif                             org.laptop.ImageViewerActivity
+image/jpeg                            org.laptop.ImageViewerActivity
 text/html                             org.laptop.WebActivity
 application/xhtml+xml                 org.laptop.WebActivity
 application/xml                       org.laptop.WebActivity
@@ -19,3 +19,6 @@ application/rss+xml                   org.laptop.WebActivity
 application/ogg                       org.laptop.WebActivity
 audio/ogg                             org.laptop.WebActivity
 video/ogg                             org.laptop.WebActivity
+
+text/x-python                         org.laptop.PippyActivity
+
