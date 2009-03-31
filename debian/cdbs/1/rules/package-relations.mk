@@ -64,6 +64,9 @@ $(patsubst %,binary-predeb/%,$(DEB_PACKAGES)) :: binary-predeb/%:
 	echo 'cdbs:Replaces=$(CDBS_REPLACES_ALL), $(or $(CDBS_REPLACES_$(cdbs_curpkg)),$(CDBS_REPLACES))' \
 	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
 	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Conflicts=$(CDBS_CONFLICTS_ALL), $(or $(CDBS_CONFLICTS_$(cdbs_curpkg)),$(CDBS_CONFLICTS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
 	echo 'cdbs:Enhances=$(CDBS_ENHANCES_ALL), $(or $(CDBS_ENHANCES_$(cdbs_curpkg)),$(CDBS_ENHANCES))' \
 	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
 	  >> debian/$(cdbs_curpkg).substvars
