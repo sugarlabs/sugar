@@ -215,9 +215,10 @@ class NMSettingsConnection(dbus.service.Object):
         self._secrets = secrets
 
     def set_connected(self):
-        self._settings.connection.autoconnect = True
-        self._settings.connection.timestamp = int(time.time())
-        self.save()
+        if not self._settings.connection.autoconnect:
+            self._settings.connection.autoconnect = True
+            self._settings.connection.timestamp = int(time.time())
+            self.save()
 
     def set_secrets(self, secrets):
         self._secrets = secrets
