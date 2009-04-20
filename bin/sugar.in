@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if test -z "$SUGAR_SCALING"; then
-    export SUGAR_SCALING=100
+    export SUGAR_SCALING=72
 fi
 
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
