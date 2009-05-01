@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-21 00:30-0500\n"
-"PO-Revision-Date: 2009-02-28 10:21-0500\n"
+"POT-Creation-Date: 2009-03-19 00:30-0400\n"
+"PO-Revision-Date: 2009-05-01 11:59-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -271,7 +273,7 @@ msgstr ""
 "Gestion extrême de l'alimentation (désactive la radio sans fil, prolonge la "
 "durée de vie de la batterie)"
 
-#: ../extensions/deviceicon/battery.py:56
+#: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
 msgstr "Ma batterie"
 
@@ -310,14 +312,14 @@ msgid "Disconnect..."
 msgstr "Déconnexion..."
 
 #: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:247
+#: ../src/jarabe/desktop/meshbox.py:248
 msgid "Connecting..."
 msgstr "Connexion..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:113
 #: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:253
+#: ../src/jarabe/desktop/meshbox.py:254
 msgid "Connected"
 msgstr "Connecté"
 
@@ -333,19 +335,19 @@ msgstr "Réseau filaire"
 msgid "Speed"
 msgstr "Vitesse"
 
-#: ../extensions/deviceicon/speaker.py:46
+#: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "Haut-parleurs"
 
-#: ../extensions/deviceicon/speaker.py:128
+#: ../extensions/deviceicon/speaker.py:135
 msgid "Unmute"
 msgstr "Activer le son"
 
-#: ../extensions/deviceicon/speaker.py:131
+#: ../extensions/deviceicon/speaker.py:138
 msgid "Mute"
 msgstr "Mettre en sourdine"
 
-#: ../extensions/globalkey/screenshot.py:50
+#: ../extensions/globalkey/screenshot.py:51
 msgid "Screenshot"
 msgstr "Capture d'écran"
 
@@ -548,65 +550,65 @@ msgstr "Accepter"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:687
-#: ../src/jarabe/frame/activitiestray.py:766
-#: ../src/jarabe/frame/activitiestray.py:794
+#: ../src/jarabe/frame/activitiestray.py:726
+#: ../src/jarabe/frame/activitiestray.py:821
+#: ../src/jarabe/frame/activitiestray.py:849
 msgid "Cancel"
 msgstr "Annuler"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:339
 msgid "Ok"
 msgstr "Ok"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:114
+#: ../src/jarabe/desktop/favoriteslayout.py:116
 msgid "Freeform"
 msgstr "Libre"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:196
+#: ../src/jarabe/desktop/favoriteslayout.py:198
 msgid "Ring"
 msgstr "Concentrique"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:332
+#: ../src/jarabe/desktop/favoriteslayout.py:334
 msgid "Spiral"
 msgstr "Spirale"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:399
+#: ../src/jarabe/desktop/favoriteslayout.py:401
 msgid "Box"
 msgstr "Boîte"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:440
+#: ../src/jarabe/desktop/favoriteslayout.py:442
 msgid "Triangle"
 msgstr "Triangle"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:330
 msgid "Registration Failed"
 msgstr "Echec de l'enregistrement"
 
-#: ../src/jarabe/desktop/favoritesview.py:330
+#: ../src/jarabe/desktop/favoritesview.py:331
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "Registration Successful"
 msgstr "Enregistrement réussi"
 
-#: ../src/jarabe/desktop/favoritesview.py:333
+#: ../src/jarabe/desktop/favoritesview.py:334
 msgid "You are now registered with your school server."
 msgstr "Vous êtes maintenant enregistré sur le serveur de l'école"
 
-#: ../src/jarabe/desktop/favoritesview.py:668
+#: ../src/jarabe/desktop/favoritesview.py:674
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -679,25 +681,25 @@ msgstr "WPA & WPA2 Personal"
 msgid "Wireless Security:"
 msgstr "Sécurité sans fil :"
 
-#: ../src/jarabe/desktop/meshbox.py:131
+#: ../src/jarabe/desktop/meshbox.py:132
 msgid "Connect"
 msgstr "Connecter"
 
-#: ../src/jarabe/desktop/meshbox.py:135
+#: ../src/jarabe/desktop/meshbox.py:136
 msgid "Disconnect"
 msgstr "Déconnecter"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:441
-#: ../src/jarabe/frame/activitiestray.py:711
+#: ../src/jarabe/desktop/meshbox.py:442
+#: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/jarabe/desktop/meshbox.py:446
-#: ../src/jarabe/frame/activitiestray.py:227
+#: ../src/jarabe/desktop/meshbox.py:447
+#: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Rejoindre"
 
@@ -713,47 +715,52 @@ msgstr "Impossible de se connecter au serveur."
 msgid "The server could not complete the request."
 msgstr "Le serveur n'a pas pu achever la requête."
 
-#: ../src/jarabe/frame/activitiestray.py:232
-#: ../src/jarabe/frame/activitiestray.py:659
+#: ../src/jarabe/frame/activitiestray.py:240
+#: ../src/jarabe/frame/activitiestray.py:698
 msgid "Decline"
 msgstr "Refuser"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:650
 #, python-format
 msgid "%dB"
 msgstr "%do"
 
-#: ../src/jarabe/frame/activitiestray.py:614
+#: ../src/jarabe/frame/activitiestray.py:652
 #, python-format
 msgid "%dKB"
 msgstr "%dKo"
 
-#: ../src/jarabe/frame/activitiestray.py:616
+#: ../src/jarabe/frame/activitiestray.py:654
 #, python-format
 msgid "%dMB"
 msgstr "%dMo"
 
-#: ../src/jarabe/frame/activitiestray.py:633
+#: ../src/jarabe/frame/activitiestray.py:671
 #, python-format
 msgid "%s of %s"
 msgstr "%s sur %s"
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:683
 #, python-format
 msgid "Transfer from %r"
 msgstr "Transfert depuis %r"
 
-#: ../src/jarabe/frame/activitiestray.py:654
+#: ../src/jarabe/frame/activitiestray.py:693
 msgid "Accept"
 msgstr "Accepter"
 
-#: ../src/jarabe/frame/activitiestray.py:677
-#: ../src/jarabe/frame/activitiestray.py:784
+#: ../src/jarabe/frame/activitiestray.py:716
+#: ../src/jarabe/frame/activitiestray.py:839
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:755
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "Refuser"
+
+#: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
 msgstr "Transfert vers %r"
@@ -908,7 +915,7 @@ msgstr "Aucune entrée correspondante"
 msgid "Clear search"
 msgstr "Effacer la recherche"
 
-#: ../src/jarabe/journal/misc.py:91
+#: ../src/jarabe/journal/misc.py:93
 msgid "No date"
 msgstr "Sans date"
 
