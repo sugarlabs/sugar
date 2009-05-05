@@ -12,6 +12,7 @@ sugar (0.84.1-1) UNRELEASED; urgency=low
     + Use format documented in dep5 r48 proposal
     + Separate files owned only by Redhat or OLPC.
     + Add proper licensing header to debian/rules
+  * Bump standards-version to 3.8.1.
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 15:05:25 +0200
 
