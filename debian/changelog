@@ -6,6 +6,12 @@ sugar (0.84.1-1) UNRELEASED; urgency=low
     upstream-0.84 as upstream branch.
   * Use sugarlabs.org URLs (and drop laptop.org ones) to upstream source
     and Homepage.  Bump watch file to track 0.84*.
+  * Really tighten dependency on sugar-artwork (as promised, and
+    misspelled, in 0.79.4-1). Closes: bug#477275 for real this time.
+  * Update debian/copyright and copyright hints:
+    + Use format documented in dep5 r48 proposal
+    + Separate files owned only by Redhat or OLPC.
+    + Add proper licensing header to debian/rules
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 15:05:25 +0200
 
