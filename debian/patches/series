@@ -2,5 +2,5 @@
 2001_empy_from_system.patch
 2002_wpa_passphrase_in_usr-bin.patch
 #2003_fix_tz_config_path.patch
-2004_strip_dbus_interface_hints.patch
 2991_enable_danish_l10n.patch
+2992_empy_from_system.patch
