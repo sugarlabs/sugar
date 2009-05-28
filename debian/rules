@@ -51,7 +51,7 @@ reverse-config::
 	rm -f debian/stamp-upstreamtmpstuff
 
 # Needed by upstream build process
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
+CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
 # Needed for our packaging routines
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-empy
