@@ -1,4 +1,4 @@
-sugar (0.84.6-1) UNRELEASED; urgency=low
+sugar (0.84.6-1) unstable; urgency=low
 
   [ Jonas Smedegaard ]
   * New upstream release.
@@ -14,12 +14,13 @@ sugar (0.84.6-1) UNRELEASED; urgency=low
     + Separate files owned only by Redhat or OLPC.
     + Add proper licensing header to debian/rules
   * Bump standards-version to 3.8.1.
+  * Move aside (and revert at cleanup) upstream shipped temporary files.
 
   [ Laurent Bigonville ]
   * Remove telepathy-stream-engine dependency, not needed anymore
     (Closes: #526889)
 
- -- Laurent Bigonville <bigon@debian.org>  Thu, 28 May 2009 11:41:00 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 28 May 2009 21:54:38 +0200
 
 sugar (0.82.9-5) unstable; urgency=medium
 
