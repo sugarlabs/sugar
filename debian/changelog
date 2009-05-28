@@ -1,7 +1,15 @@
-sugar (0.84.6-1) unstable; urgency=low
+sugar-0.84 (0.84.6-1) unstable; urgency=low
 
   [ Jonas Smedegaard ]
   * New upstream release.
+  * Update patches:
+    + Drop patches 0001-0002 and 2992 (glive.py dropped upstream)
+    + Drop patch 2004 (dbus syntax problem resolved upstream)
+    + Add (another) patch 2992 to really use system empy
+    + Unfuzz remaining patches
+  * Append branch to source and binary package names and Sugar-specific
+    package relations, to support multiple branches in same distribution
+    concurrently.
   * Add README.source (and drop CDBS hints and README.packaging).
   * Update git-buildpackage configfile to enable signed-tags and use
     upstream-0.84 as upstream branch.
@@ -15,12 +23,13 @@ sugar (0.84.6-1) unstable; urgency=low
     + Add proper licensing header to debian/rules
   * Bump standards-version to 3.8.1.
   * Move aside (and revert at cleanup) upstream shipped temporary files.
+  * Build-depend on libgconf2-dev.
 
   [ Laurent Bigonville ]
   * Remove telepathy-stream-engine dependency, not needed anymore
     (Closes: #526889)
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 28 May 2009 21:54:38 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 28 May 2009 23:07:58 +0200
 
 sugar (0.82.9-5) unstable; urgency=medium
 
