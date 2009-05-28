@@ -1,4 +1,4 @@
-Source: sugar
+Source: sugar-0.84
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
