@@ -1,5 +1,6 @@
 # coding=utf-8
 # Copyright (C) 2008, OLPC
+# Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -173,9 +174,9 @@ class AboutComputer(SectionView):
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 
-        label_copyright = gtk.Label(_("© 2008 One Laptop per Child "
-                                      "Association Inc; Red Hat Inc; "
-                                      "and Contributors."))
+        label_copyright = gtk.Label("© 2006-2009 One Laptop per Child "
+                                    "Association Inc; Red Hat Inc; Collabora Ltd; "
+                                    "and Contributors.")
         label_copyright.set_alignment(0, 0)
         label_copyright.show()
         vbox_copyright.pack_start(label_copyright, expand=False)

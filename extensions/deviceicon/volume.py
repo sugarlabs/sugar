@@ -88,7 +88,7 @@ def _setup_volumes(tray):
     for mount in volume_monitor.get_mounts():
         _add_device(mount, tray)
 
-    #volume_monitor.connect('volume-added', _volume_added_cb, tray)
+    volume_monitor.connect('volume-added', _volume_added_cb, tray)
     volume_monitor.connect('mount-added', _mount_added_cb, tray)
     volume_monitor.connect('mount-removed', _mount_removed_cb, tray)
 
@@ -102,8 +102,9 @@ def _mount(volume, tray):
         #TODO: pass None as mount_operation, or better, SugarMountOperation
         volume.mount(gtk.MountOperation(tray.get_toplevel()), _mount_cb)
 
-def _mount_cb(source, result):
-    logging.debug('mount finished %r %r' % (source, result))
+def _mount_cb(volume, result):
+    logging.debug('_mount_cb %r %r' % (volume, result))
+    volume.mount_finish(result)
 
 def _mount_added_cb(volume_monitor, mount, tray):
     _add_device(mount, tray)

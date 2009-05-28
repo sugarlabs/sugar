@@ -16,9 +16,9 @@ text/html                             org.laptop.WebActivity
 application/xhtml+xml                 org.laptop.WebActivity
 application/xml                       org.laptop.WebActivity
 application/rss+xml                   org.laptop.WebActivity
-application/ogg                       org.laptop.WebActivity
-audio/ogg                             org.laptop.WebActivity
-video/ogg                             org.laptop.WebActivity
+application/ogg                       org.laptop.sugar.Jukebox
+audio/ogg                             org.laptop.sugar.Jukebox
+video/ogg                             org.laptop.sugar.Jukebox
 
 text/x-python                         org.laptop.PippyActivity
 

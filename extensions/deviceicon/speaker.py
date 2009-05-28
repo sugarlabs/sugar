@@ -93,8 +93,6 @@ class SpeakerPalette(Palette):
 
         self._model = model
 
-        self.set_size_request(style.zoom(style.GRID_CELL_SIZE * 4), -1)
-
         vbox = gtk.VBox()
         self.set_content(vbox)
         vbox.show()

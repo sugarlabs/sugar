@@ -606,7 +606,7 @@ class FavoritePalette(ActivityPalette):
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
-            activityfactory.create_with_object_id(self._bundle, entry['uid'])
+            journal.misc.resume(entry, self._bundle_id)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
