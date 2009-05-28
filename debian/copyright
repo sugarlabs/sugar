@@ -185,7 +185,7 @@ License: GAP
  with or without modifications, as long as this notice is preserved.
 
 Files: debian/*
-Copyright: 2003-2008, Jonas Smedegaard <dr@jones.dk>
+Copyright: 2003-2009, Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
 
 Files: debian/cdbs/1/class/autotools*
