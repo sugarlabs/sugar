@@ -55,6 +55,15 @@ reverse-config::
 	done
 	rm -f debian/stamp-upstreamtmpstuff
 
+# Register GConf schemas
+post-install/$(pkg)::
+	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
+	mv $(DEB_DESTDIR)/etc/gconf/schemas/sugar.schemas $(DEB_DESTDIR)/usr/share/gconf/schemas/
+	rmdir $(DEB_DESTDIR)/etc/gconf/schemas
+	rmdir $(DEB_DESTDIR)/etc/gconf
+binary-install/$(pkg)::
+	dh_gconf -p$(cdbs_curpkg)
+
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
