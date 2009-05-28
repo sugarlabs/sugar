@@ -1,5 +1,6 @@
 sugar (0.84.1-1) UNRELEASED; urgency=low
 
+  [ Jonas Smedegaard ]
   * New upstream release.
   * Add README.source (and drop CDBS hints and README.packaging).
   * Update git-buildpackage configfile to enable signed-tags and use
@@ -13,7 +14,11 @@ sugar (0.84.1-1) UNRELEASED; urgency=low
     + Separate files owned only by Redhat or OLPC.
     + Add proper licensing header to debian/rules
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 15:05:25 +0200
+  [ Laurent Bigonville ]
+  * Remove telepathy-stream-engine dependency, not needed anymore
+    (Closes: #526889)
+
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 28 May 2009 11:41:00 +0200
 
 sugar (0.82.9-5) unstable; urgency=medium
 
