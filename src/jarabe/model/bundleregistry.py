@@ -210,7 +210,7 @@ class BundleRegistry(gobject.GObject):
                 ''.join(traceback.format_exception(*sys.exc_info()))))
             return None
 
-        if self.is_installed(bundle):
+        if self.get_bundle(bundle.get_bundle_id()):
             return None
 
         self._bundles.append(bundle)
@@ -321,7 +321,8 @@ class BundleRegistry(gobject.GObject):
 
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
-        if self.is_installed(bundle):
+
+        if self.get_bundle(bundle.get_bundle_id()):
             raise AlreadyInstalledException
 
         for installed_bundle in self._bundles:

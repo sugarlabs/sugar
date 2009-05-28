@@ -77,7 +77,7 @@ class Activity(gobject.GObject):
         self._activity_id = activity_id
         self._activity_info = activity_info
         self._launch_time = time.time()
-        self._launching = False
+        self._launching = True
 
         if window is not None:
             self.set_window(window)

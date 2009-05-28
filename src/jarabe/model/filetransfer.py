@@ -52,7 +52,7 @@ CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
 class StreamSplicer(gobject.GObject):
-    _CHUNK_SIZE = 1024 # 1K
+    _CHUNK_SIZE = 10240 # 10K
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,
@@ -71,18 +71,15 @@ class StreamSplicer(gobject.GObject):
 
     def __read_async_cb(self, input_stream, result):
         data = input_stream.read_finish(result)
-        #logging.debug('__read_async_cb %r' % len(data))
-        if data:
-            self._pending_buffers.append(data)
-            if len(data) == self._CHUNK_SIZE:
-                self._input_stream.read_async(self._CHUNK_SIZE,
-                                              self.__read_async_cb,
-                                              gobject.PRIORITY_LOW)
 
-        if not data or len(data) < self._CHUNK_SIZE:
+        if not data:
             logging.debug('closing input stream')
             self._input_stream.close()
-
+        else:
+            self._pending_buffers.append(data)
+            self._input_stream.read_async(self._CHUNK_SIZE,
+                                            self.__read_async_cb,
+                                            gobject.PRIORITY_LOW)
         self._write_next_buffer()
 
     def __write_async_cb(self, output_stream, result, user_data):

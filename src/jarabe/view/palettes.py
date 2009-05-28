@@ -155,6 +155,9 @@ class ActivityPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
+        if not os.access(self._bundle.get_path(), os.W_OK):
+            menu_item.props.sensitive = False
+
         registry = bundleregistry.get_registry()
         self._activity_changed_sid = registry.connect('bundle_changed',
                 self.__activity_changed_cb)
@@ -295,8 +298,9 @@ class VolumePalette(Palette):
     def __unmount_activate_cb(self, menu_item):
         self._mount.unmount(self.__unmount_cb)
 
-    def __unmount_cb(self, source, result):
-        logging.debug('__unmount_cb %r %r' % (source, result))
+    def __unmount_cb(self, mount, result):
+        logging.debug('__unmount_cb %r %r' % (mount, result))
+        mount.unmount_finish(result)
 
     def __popup_cb(self, palette):
         mount_point = self._mount.get_root().get_path()

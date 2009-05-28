@@ -145,8 +145,18 @@ class VolumeButton(BaseButton):
         mount_point = mount.get_root().get_path()
         BaseButton.__init__(self, mount_point)
 
-        # TODO: fallback to the more generic icons when needed
-        self.props.named_icon = mount.get_icon().props.names[0]
+        icon_name = None
+        icon_theme = gtk.icon_theme_get_default()
+        for icon_name in mount.get_icon().props.names:
+            icon_info = icon_theme.lookup_icon(icon_name,
+                                               gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+            if icon_info is not None:
+                break
+
+        if icon_name is None:
+            icon_name = 'drive'
+
+        self.props.named_icon = icon_name
         
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()

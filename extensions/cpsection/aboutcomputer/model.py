@@ -22,6 +22,8 @@ import subprocess
 from gettext import gettext as _
 import errno
 
+from jarabe import config
+
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
 
@@ -113,7 +115,7 @@ def _read_file(path):
         return None
 
 def get_license():
-    license_file = "/usr/share/licenses/common-licenses/GPLv2"
+    license_file = os.path.join(config.data_path, 'GPLv2')
     lang = os.environ['LANG']
     if lang.endswith("UTF-8"):
         lang = lang[:-6]
