@@ -29,7 +29,7 @@ sugar-0.84 (0.84.6-1) unstable; urgency=low
   * Remove telepathy-stream-engine dependency, not needed anymore
     (Closes: #526889)
 
- -- Jonas Smedegaard <dr@jones.dk>  Thu, 28 May 2009 23:07:58 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 29 May 2009 01:21:07 +0200
 
 sugar (0.82.9-5) unstable; urgency=medium
 
