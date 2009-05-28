@@ -119,6 +119,7 @@ Copyright: 2008, Martin Dengler
 License: GPL-2+
 
 Files: extensions/globalkey/screenshot.py
+	extensions/cpsection/aboutcomputer/view.py
 Copyright: 2008, One Laptop Per Child
 	2009, Simon Schampijer
 License: GPL-2+
