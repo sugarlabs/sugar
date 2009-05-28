@@ -13,8 +13,8 @@ XS-Python-Version: all
 Package: sugar
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
-Recommends: sugar-artwork (>= 0.79.2), network-manager, net-tools, xserver-xephyr, x11-xserver-utils | xrandr | xbase-clients
-Suggests: openssh-client
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
 Description: window manager from the OLPC project
