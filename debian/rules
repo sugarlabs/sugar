@@ -34,7 +34,7 @@ include debian/cdbs/1/rules/buildinfo.mk
 
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = 1b17cda899764f2a6d41ca4aca7bf3a1
+DEB_UPSTREAM_TARBALL_MD5 = 1747f7f35519b273e6c27bbcd8513d4b
 
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, gettext, intltool, shared-mime-info
