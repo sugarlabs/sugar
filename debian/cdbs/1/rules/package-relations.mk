@@ -31,6 +31,8 @@ include $(_cdbs_rules_path)/buildcore.mk$(_cdbs_makefile_suffix)
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.43)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\|0.4.27\|0.4.39\)) *,* */, /g')
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\|0.4.27\)) *,* */, /g')
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.27)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\)) *,* */, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 7.0.1)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\|7.0.1\)) *,* */, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 6)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\)) *,* */, /g')
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.44)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\)) *,* */, /g')
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.37.2)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\)) *,* */, /g')
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\)) *,* */, /g')
@@ -44,6 +46,30 @@ CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e 's/ *,/,/g' 
 # Apply CDBS-declared dependencies to binary packages
 $(patsubst %,binary-predeb/%,$(DEB_PACKAGES)) :: binary-predeb/%:
 	echo 'cdbs:Depends=$(CDBS_DEPENDS_ALL), $(or $(CDBS_DEPENDS_$(cdbs_curpkg)),$(CDBS_DEPENDS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Pre-Depends=$(CDBS_PREDEPENDS_ALL), $(or $(CDBS_PREDEPENDS_$(cdbs_curpkg)),$(CDBS_PREDEPENDS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Recommends=$(CDBS_RECOMMENDS_ALL), $(or $(CDBS_RECOMMENDS_$(cdbs_curpkg)),$(CDBS_RECOMMENDS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Suggests=$(CDBS_SUGGESTS_ALL), $(or $(CDBS_SUGGESTS_$(cdbs_curpkg)),$(CDBS_SUGGESTS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Breaks=$(CDBS_BREAKS_ALL), $(or $(CDBS_BREAKS_$(cdbs_curpkg)),$(CDBS_BREAKS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Provides=$(CDBS_PROVIDES_ALL), $(or $(CDBS_PROVIDES_$(cdbs_curpkg)),$(CDBS_PROVIDES))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Replaces=$(CDBS_REPLACES_ALL), $(or $(CDBS_REPLACES_$(cdbs_curpkg)),$(CDBS_REPLACES))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Conflicts=$(CDBS_CONFLICTS_ALL), $(or $(CDBS_CONFLICTS_$(cdbs_curpkg)),$(CDBS_CONFLICTS))' \
+	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
+	  >> debian/$(cdbs_curpkg).substvars
+	echo 'cdbs:Enhances=$(CDBS_ENHANCES_ALL), $(or $(CDBS_ENHANCES_$(cdbs_curpkg)),$(CDBS_ENHANCES))' \
 	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
 	  >> debian/$(cdbs_curpkg).substvars
 
