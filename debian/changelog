@@ -1,3 +1,12 @@
+sugar-0.84 (0.84.6-2) unstable; urgency=low
+
+  * Enhance package-relations.mk to support all binary package relations
+    (except -indep ones).
+  * Extend package-relation cleanup to include debhelper 6 and 7.0.1.
+  * Fix provide/conflict/replace sugar.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 29 May 2009 02:02:36 +0200
+
 sugar-0.84 (0.84.6-1) unstable; urgency=low
 
   [ Jonas Smedegaard ]
