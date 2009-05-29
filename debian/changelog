@@ -1,3 +1,13 @@
+sugar-0.84 (0.84.6-4) unstable; urgency=low
+
+  * Improve dependencies:
+    + Depend on python-rsvg (only fallback to python-gnome2-desktop and
+      librsvg2-common)
+    + Stop x11-xserver-utils fallbacks to xrandr or xbase-clients
+    + Depend on python-cjson (not simplejson)
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 29 May 2009 21:38:46 +0200
+
 sugar-0.84 (0.84.6-3) unstable; urgency=low
 
   * Fix dependencies (for real this time).
