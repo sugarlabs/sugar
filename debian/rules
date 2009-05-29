@@ -68,9 +68,11 @@ binary-install/$(pkg)::
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
 # Needed (always/often) at runtime
+#  python-rsvg fallbacks unneeded since python-rsvg 2.24.0-2: can be dropped after Squeeze+1
 CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
-CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-numpy, python-gnome2-desktop, python-simplejson
-CDBS_DEPENDS += , librsvg2-common, matchbox-window-manager, dbus-x11, telepathy-gabble, telepathy-salut
+CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-numpy, python-simplejson
+CDBS_DEPENDS += , python-rsvg | python-gnome2-desktop (<= 2.24.0-1), python-rsvg | librsvg2-common
+CDBS_DEPENDS += , matchbox-window-manager, dbus-x11, telepathy-gabble, telepathy-salut
 CDBS_RECOMMENDS = sugar-artwork-$(pkgbranch), network-manager, net-tools, xserver-xephyr, x11-xserver-utils | xrandr | xbase-clients
 CDBS_SUGGESTS = openssh-client
 
