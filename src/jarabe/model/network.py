@@ -102,11 +102,17 @@ class Wireless(object):
     def __init__(self):
         self.ssid = None
         self.security = None
+        self.mode = None
+        self.channel = None
 
     def get_dict(self):
         wireless = {'ssid': self.ssid}
         if self.security:
             wireless['security'] = self.security
+        if self.mode:
+            wireless['mode'] = self.mode
+        if self.channel:
+            wireless['channel'] = self.channel
         return wireless
 
 class Connection(object):
@@ -126,10 +132,22 @@ class Connection(object):
             connection['timestamp'] = self.timestamp
         return connection
 
+class IP4Config(object):
+    def __init__(self):
+        self.method = None
+
+    def get_dict(self):
+        ip4_config = {}
+        print self.method
+        if self.method is not None:
+            ip4_config['method'] = self.method
+        return ip4_config
+
 class Settings(object):
     def __init__(self):
         self.connection = Connection()
         self.wireless = Wireless()
+        self.ip4_config = None
         self.wireless_security = None
 
     def get_dict(self):
@@ -139,6 +157,8 @@ class Settings(object):
         if self.wireless_security is not None:
             settings['802-11-wireless-security'] = \
                 self.wireless_security.get_dict()
+        if self.ip4_config is not None:
+            settings['ipv4'] = self.ip4_config.get_dict()
         return settings
 
 class Secrets(object):

@@ -353,6 +353,11 @@ class AccessPointView(CanvasPulsingIcon):
             settings.connection.type = '802-11-wireless'
             settings.wireless.ssid = self._name
 
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                settings.wireless.mode = 'infrastructure'
+            elif self._mode == network.NM_802_11_MODE_ADHOC:
+                settings.wireless.mode = 'adhoc'
+
             wireless_security = self._get_security()
             settings.wireless_security = wireless_security
 
