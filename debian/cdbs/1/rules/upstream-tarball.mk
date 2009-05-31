@@ -53,6 +53,9 @@ DEB_UPSTREAM_TARBALL_SRCDIR = $(cdbs_upstream_tarball_basename)
 DEB_UPSTREAM_REPACKAGE_TAG = dfsg
 DEB_UPSTREAM_REPACKAGE_DELIMITER = ~
 
+# TODO: Move this to buildcore.mk
+cdbs_findargs-path-or-name = $(if $(findstring /,$(firstword $(1))),-path './$(patsubst ./%,%,$(firstword $(1)))',-name '$(firstword $(1))') $(foreach obj,$(wordlist 2,$(words $(1)),$(1)),-or $(if $(findstring /,$(obj)),-path './$(obj:./%=%)',-name '$(obj)'))
+
 cdbs_upstream_tarball_basename = $(if $(strip $(DEB_UPSTREAM_TARBALL_BASENAME_MANGLE)),$(shell echo '$(DEB_UPSTREAM_TARBALL_BASENAME)' | perl -pe '$(DEB_UPSTREAM_TARBALL_BASENAME_MANGLE)'),$(DEB_UPSTREAM_TARBALL_BASENAME))
 cdbs_upstream_tarball = $(cdbs_upstream_tarball_basename).$(DEB_UPSTREAM_TARBALL_EXTENSION)
 cdbs_upstream_received_tarball = $(DEB_SOURCE_PACKAGE)_$(DEB_UPSTREAM_TARBALL_VERSION).orig.$(if $(findstring $(DEB_UPSTREAM_TARBALL_EXTENSION),tgz),tar.gz,$(DEB_UPSTREAM_TARBALL_EXTENSION))
@@ -132,6 +135,16 @@ get-orig-source:
 		gzip -9 "$(DEB_UPSTREAM_WORKDIR)/$(cdbs_upstream_local_basename).orig.tar"; \
 	fi
 
-DEB_PHONY_RULES += print-version get-orig-source
+fail-source-not-repackaged:
+	@if find . $(call cdbs_findargs-path-or-name,$(DEB_UPSTREAM_REPACKAGE_EXCLUDE)) | grep '.*'; then \
+		echo; \
+		echo 'ERROR: Source contains the files/paths listed above'; \
+		echo '       which was intended to not be distributed with the source.'; \
+		echo '       Please repackage source with these items stripped!'; \
+		echo '       (get-orig-source target can automate this - see README.source)'; \
+		exit 1; \
+	fi
+
+DEB_PHONY_RULES += print-version get-orig-source fail-source-not-repackaged
 
 endif
