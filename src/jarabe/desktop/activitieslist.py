@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2009 Tomeu Vizoso
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,15 +16,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from gettext import gettext as _
 
 import gobject
+import pango
+import gconf
 import gtk
 import hippo
-import gconf
 
 from sugar import util
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
@@ -32,36 +35,76 @@ from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
 from jarabe.view import launcher
 
-class ActivitiesList(gtk.VBox):
-    __gtype_name__ = 'SugarActivitiesList'
+class ActivitiesTreeView(gtk.TreeView):
+    __gtype_name__ = 'SugarActivitiesTreeView'
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
+    _CELL_ICON = 0
+    _CELL_TITLE = 1
+    _CELL_VERSION = 2
+    _CELL_VERSION_TEXT = 3
+    _CELL_DATE = 4
+    _CELL_DATE_TEXT = 5
 
     def __init__(self):
-        logging.debug('STARTUP: Loading the activities list')
-
         gobject.GObject.__init__(self)
 
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        scrolled_window.set_shadow_type(gtk.SHADOW_NONE)
-        scrolled_window.connect('key-press-event', self.__key_press_event_cb)
-        self.pack_start(scrolled_window)
-        scrolled_window.show()
+        column = gtk.TreeViewColumn('')
 
-        canvas = hippo.Canvas()
-        scrolled_window.add_with_viewport(canvas)
-        scrolled_window.child.set_shadow_type(gtk.SHADOW_NONE)
-        canvas.show()
+        cell_icon = CellRendererIcon()
+        cell_icon.props.height = style.STANDARD_ICON_SIZE
+        cell_icon.props.width = style.STANDARD_ICON_SIZE
+        cell_icon.props.xalign = 0
+        cell_icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        cell_icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        cell_icon.props.size = style.STANDARD_ICON_SIZE
 
-        self._alert = None
-        self._query = ''
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_WHITE.get_int()
-        canvas.set_root(self._box)
+        column.pack_start(cell_icon)
+        column.add_attribute(cell_icon, 'file-name', self._CELL_ICON)
+        self.append_column(column)
+
+        column = gtk.TreeViewColumn(_('Title'))
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
+        column.props.expand = True
+        column.set_sort_column_id(self._CELL_TITLE)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.ellipsize = pango.ELLIPSIZE_MIDDLE
+        cell_text.props.ellipsize_set = True
+
+        column.pack_start(cell_text)
+        column.add_attribute(cell_text, 'text', self._CELL_TITLE)
+        self.append_column(column)
+
+        column = gtk.TreeViewColumn(_('Version'))
+        column.set_alignment(1)
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
+        column.props.resizable = True
+        column.props.reorderable = True
+        column.props.expand = True
+        column.set_sort_column_id(self._CELL_VERSION)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.xalign = 1
+        column.pack_start(cell_text)
+        column.add_attribute(cell_text, 'text', self._CELL_VERSION_TEXT)
+        self.append_column(column)
+
+        column = gtk.TreeViewColumn(_('Date'))
+        column.set_alignment(1)
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
+        column.props.resizable = True
+        column.props.reorderable = True
+        column.props.expand = True
+        column.set_sort_column_id(self._CELL_DATE)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.xalign = 1
+        column.pack_start(cell_text)
+        column.add_attribute(cell_text, 'text', self._CELL_DATE_TEXT)
+        self.append_column(column)
+
+        self.set_search_column(self._CELL_TITLE)
+        self.set_model(gtk.ListStore(str, str, int, str, int, str))
 
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -88,13 +131,51 @@ class ActivitiesList(gtk.VBox):
     def _add_activity(self, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
+
+        timestamp = activity_info.get_installation_time()
+        self.get_model().append([activity_info.get_icon(),
+                                 activity_info.get_name(),
+                                 activity_info.get_activity_version(),
+                                 'Version %s' % activity_info.get_activity_version(),
+                                 timestamp,
+                                 util.timestamp_to_elapsed_string(timestamp)])
+
+        """
         entry = ActivityEntry(activity_info)
         entry.icon.connect('erase-activated', self.__erase_activated_cb)
         self._box.insert_sorted(entry, 0, self._compare_activities)
         entry.set_visible(entry.matches(self._query))
+        """
 
     def __erase_activated_cb(self, activity_icon, bundle_id):
         self.emit('erase-activated', bundle_id)
+
+class ActivitiesList(gtk.VBox):
+    __gtype_name__ = 'SugarActivitiesList'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str]))
+    }
+
+    def __init__(self):
+        logging.debug('STARTUP: Loading the activities list')
+
+        gobject.GObject.__init__(self)
+
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window.set_shadow_type(gtk.SHADOW_NONE)
+        scrolled_window.connect('key-press-event', self.__key_press_event_cb)
+        self.pack_start(scrolled_window)
+        scrolled_window.show()
+
+        self._tree_view = ActivitiesTreeView()
+        scrolled_window.add(self._tree_view)
+        self._tree_view.show()
+
+        self._alert = None
+        self._query = ''
 
     def set_filter(self, query):
         self._query = query
