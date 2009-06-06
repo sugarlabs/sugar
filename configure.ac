@@ -10,6 +10,8 @@ AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
 
+AM_MAINTAINER_MODE
+
 AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gconf-2.0)
