@@ -54,6 +54,8 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_icon.props.height = style.GRID_CELL_SIZE
         cell_icon.props.size = style.SMALL_ICON_SIZE
         cell_icon.props.icon_name = 'emblem-favorite'
+        cell_icon.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        cell_icon.connect('activate', self.__favorite_activate_cb)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
@@ -173,6 +175,9 @@ class ActivitiesTreeView(gtk.TreeView):
         else:
             cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             cell.props.fill_color = style.COLOR_WHITE.get_svg()
+
+    def __favorite_activate_cb(self, cell, path):
+        self.get_model()[path][0] = not self.get_model()[path][0]
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
