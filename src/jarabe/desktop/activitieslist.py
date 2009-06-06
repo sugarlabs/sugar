@@ -38,42 +38,55 @@ from jarabe.view import launcher
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
-    _CELL_ICON = 0
-    _CELL_TITLE = 1
-    _CELL_VERSION = 2
-    _CELL_VERSION_TEXT = 3
-    _CELL_DATE = 4
-    _CELL_DATE_TEXT = 5
+    _CELL_FAVORITE = 0
+    _CELL_ICON = 1
+    _CELL_TITLE = 2
+    _CELL_VERSION = 3
+    _CELL_VERSION_TEXT = 4
+    _CELL_DATE = 5
+    _CELL_DATE_TEXT = 6
 
     def __init__(self):
         gobject.GObject.__init__(self)
 
+        cell_icon = CellRendererIcon()
+        cell_icon.props.width = style.GRID_CELL_SIZE
+        cell_icon.props.height = style.GRID_CELL_SIZE
+        cell_icon.props.size = style.SMALL_ICON_SIZE
+        cell_icon.props.icon_name = 'emblem-favorite'
+
         column = gtk.TreeViewColumn('')
+        column.pack_start(cell_icon)
+        column.set_cell_data_func(cell_icon, self.__favorite_set_data_cb)
+        self.append_column(column)
 
         cell_icon = CellRendererIcon()
-        cell_icon.props.height = style.STANDARD_ICON_SIZE
-        cell_icon.props.width = style.STANDARD_ICON_SIZE
-        cell_icon.props.xalign = 0
+        cell_icon.props.width = style.GRID_CELL_SIZE
+        cell_icon.props.height = style.GRID_CELL_SIZE
         cell_icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         cell_icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         cell_icon.props.size = style.STANDARD_ICON_SIZE
 
+        column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
         column.add_attribute(cell_icon, 'file-name', self._CELL_ICON)
         self.append_column(column)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.ellipsize = pango.ELLIPSIZE_MIDDLE
+        cell_text.props.ellipsize_set = True
+        cell_text.props.font_desc = style.FONT_BOLD.get_pango_desc()
 
         column = gtk.TreeViewColumn(_('Title'))
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.expand = True
         column.set_sort_column_id(self._CELL_TITLE)
-
-        cell_text = gtk.CellRendererText()
-        cell_text.props.ellipsize = pango.ELLIPSIZE_MIDDLE
-        cell_text.props.ellipsize_set = True
-
         column.pack_start(cell_text)
         column.add_attribute(cell_text, 'text', self._CELL_TITLE)
         self.append_column(column)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.xalign = 1
 
         column = gtk.TreeViewColumn(_('Version'))
         column.set_alignment(1)
@@ -82,12 +95,12 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.reorderable = True
         column.props.expand = True
         column.set_sort_column_id(self._CELL_VERSION)
-
-        cell_text = gtk.CellRendererText()
-        cell_text.props.xalign = 1
         column.pack_start(cell_text)
         column.add_attribute(cell_text, 'text', self._CELL_VERSION_TEXT)
         self.append_column(column)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.xalign = 1
 
         column = gtk.TreeViewColumn(_('Date'))
         column.set_alignment(1)
@@ -96,15 +109,12 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.reorderable = True
         column.props.expand = True
         column.set_sort_column_id(self._CELL_DATE)
-
-        cell_text = gtk.CellRendererText()
-        cell_text.props.xalign = 1
         column.pack_start(cell_text)
         column.add_attribute(cell_text, 'text', self._CELL_DATE_TEXT)
         self.append_column(column)
 
         self.set_search_column(self._CELL_TITLE)
-        self.set_model(gtk.ListStore(str, str, int, str, int, str))
+        self.set_model(gtk.ListStore(bool, str, str, int, str, int, str))
 
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -132,8 +142,12 @@ class ActivitiesTreeView(gtk.TreeView):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
 
+        registry = bundleregistry.get_registry()
         timestamp = activity_info.get_installation_time()
-        self.get_model().append([activity_info.get_icon(),
+        favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                                               activity_info.get_activity_version())
+        self.get_model().append([favorite,
+                                 activity_info.get_icon(),
                                  activity_info.get_name(),
                                  activity_info.get_activity_version(),
                                  'Version %s' % activity_info.get_activity_version(),
@@ -149,6 +163,16 @@ class ActivitiesTreeView(gtk.TreeView):
 
     def __erase_activated_cb(self, activity_icon, bundle_id):
         self.emit('erase-activated', bundle_id)
+
+    def __favorite_set_data_cb(self, column, cell, model, tree_iter):
+        favorite = model[tree_iter][0]
+        if favorite:
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            cell.props.xo_color = color
+        else:
+            cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            cell.props.fill_color = style.COLOR_WHITE.get_svg()
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
