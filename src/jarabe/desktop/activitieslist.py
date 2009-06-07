@@ -220,8 +220,20 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.size = style.STANDARD_ICON_SIZE
 
+        self._tree_view = tree_view
+
     def create_palette(self):
-        return Palette(self.props.palette_invoker.path)
+        model = self._tree_view.get_model()
+        row = model[self.props.palette_invoker.path]
+        bundle_id = row[ActivitiesModel.COLUMN_BUNDLE_ID]
+
+        registry = bundleregistry.get_registry()
+        palette = ActivityPalette(registry.get_bundle(bundle_id))
+        palette.connect('erase-activated', self.__erase_activated_cb)
+        return palette
+
+    def __erase_activated_cb(self, palette):
+        self.emit('erase-activated', self._activity_info.get_bundle_id())
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
