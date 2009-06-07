@@ -27,6 +27,7 @@ import hippo
 from sugar import util
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon, CellRendererIcon
+from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
@@ -38,36 +39,29 @@ from jarabe.view import launcher
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
-    _CELL_FAVORITE = 0
-    _CELL_ICON = 1
-    _CELL_TITLE = 2
-    _CELL_VERSION = 3
-    _CELL_VERSION_TEXT = 4
-    _CELL_DATE = 5
-    _CELL_DATE_TEXT = 6
+    _CELL_BUNDLE_ID = 0
+    _CELL_FAVORITE = 1
+    _CELL_ICON = 2
+    _CELL_TITLE = 3
+    _CELL_VERSION = 4
+    _CELL_VERSION_TEXT = 5
+    _CELL_DATE = 6
+    _CELL_DATE_TEXT = 7
 
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        cell_icon = CellRendererIcon()
-        cell_icon.props.width = style.GRID_CELL_SIZE
-        cell_icon.props.height = style.GRID_CELL_SIZE
-        cell_icon.props.size = style.SMALL_ICON_SIZE
-        cell_icon.props.icon_name = 'emblem-favorite'
-        cell_icon.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
-        cell_icon.connect('activate', self.__favorite_activate_cb)
+        self.set_model(ActivitiesListModel())
+
+        cell_favorite = CellRendererFavorite(self)
+        cell_favorite.connect('activate', self.__favorite_activate_cb)
 
         column = gtk.TreeViewColumn('')
-        column.pack_start(cell_icon)
-        column.set_cell_data_func(cell_icon, self.__favorite_set_data_cb)
+        column.pack_start(cell_favorite)
+        column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.append_column(column)
 
-        cell_icon = CellRendererIcon()
-        cell_icon.props.width = style.GRID_CELL_SIZE
-        cell_icon.props.height = style.GRID_CELL_SIZE
-        cell_icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        cell_icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-        cell_icon.props.size = style.STANDARD_ICON_SIZE
+        cell_icon = CellRendererActivityIcon(self)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
@@ -116,7 +110,6 @@ class ActivitiesTreeView(gtk.TreeView):
         self.append_column(column)
 
         self.set_search_column(self._CELL_TITLE)
-        self.set_model(gtk.ListStore(bool, str, str, int, str, int, str))
 
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -146,20 +139,20 @@ class ActivitiesTreeView(gtk.TreeView):
 
         registry = bundleregistry.get_registry()
         timestamp = activity_info.get_installation_time()
+        version = activity_info.get_activity_version()
         favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                               activity_info.get_activity_version())
-        self.get_model().append([favorite,
+                                               version)
+        self.get_model().append([activity_info.get_bundle_id(),
+                                 favorite,
                                  activity_info.get_icon(),
                                  activity_info.get_name(),
-                                 activity_info.get_activity_version(),
-                                 'Version %s' % activity_info.get_activity_version(),
+                                 version,
+                                 _('Version %s') % version,
                                  timestamp,
                                  util.timestamp_to_elapsed_string(timestamp)])
 
         """
-        entry = ActivityEntry(activity_info)
         entry.icon.connect('erase-activated', self.__erase_activated_cb)
-        self._box.insert_sorted(entry, 0, self._compare_activities)
         entry.set_visible(entry.matches(self._query))
         """
 
@@ -167,7 +160,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self.emit('erase-activated', bundle_id)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter):
-        favorite = model[tree_iter][0]
+        favorite = model[tree_iter][self._CELL_FAVORITE]
         if favorite:
             client = gconf.client_get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -177,7 +170,41 @@ class ActivitiesTreeView(gtk.TreeView):
             cell.props.fill_color = style.COLOR_WHITE.get_svg()
 
     def __favorite_activate_cb(self, cell, path):
-        self.get_model()[path][0] = not self.get_model()[path][0]
+        row = self.get_model()[path]
+        row[self._CELL_FAVORITE] = not row[self._CELL_FAVORITE]
+
+class ActivitiesListModel(gtk.ListStore):
+    __gtype_name__ = 'SugarActivitiesListModel'
+
+    def __init__(self):
+        gtk.ListStore.__init__(self, str, bool, str, str, int, str, int, str)
+
+class CellRendererFavorite(CellRendererIcon):
+    __gtype_name__ = 'SugarCellRendererFavorite'
+
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.icon_name = 'emblem-favorite'
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+
+class CellRendererActivityIcon(CellRendererIcon):
+    __gtype_name__ = 'SugarCellRendererActivityIcon'
+
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.size = style.STANDARD_ICON_SIZE
+
+    def create_palette(self):
+        return Palette(self.props.palette_invoker.path)
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
