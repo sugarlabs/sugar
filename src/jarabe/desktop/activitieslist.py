@@ -39,6 +39,11 @@ from jarabe.view import launcher
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str]))
+    }
+
     def __init__(self):
         gobject.GObject.__init__(self)
 
@@ -53,6 +58,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self.append_column(column)
 
         cell_icon = CellRendererActivityIcon(self)
+        cell_icon.connect('erase-activated', self.__erase_activated_cb)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
@@ -102,7 +108,7 @@ class ActivitiesTreeView(gtk.TreeView):
 
         self.set_search_column(ActivitiesModel.COLUMN_TITLE)
 
-    def __erase_activated_cb(self, activity_icon, bundle_id):
+    def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter):
@@ -192,7 +198,6 @@ class ActivitiesModel(gtk.ListStore):
                      util.timestamp_to_elapsed_string(timestamp)])
 
         """
-        entry.icon.connect('erase-activated', self.__erase_activated_cb)
         entry.set_visible(entry.matches(self._query))
         """
 
@@ -210,6 +215,11 @@ class CellRendererFavorite(CellRendererIcon):
 
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererActivityIcon'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str]))
+    }
 
     def __init__(self, tree_view):
         CellRendererIcon.__init__(self, tree_view)
@@ -232,8 +242,8 @@ class CellRendererActivityIcon(CellRendererIcon):
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
 
-    def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.get_bundle_id())
+    def __erase_activated_cb(self, palette, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
@@ -256,6 +266,7 @@ class ActivitiesList(gtk.VBox):
         scrolled_window.show()
 
         self._tree_view = ActivitiesTreeView()
+        self._tree_view.connect('erase-activated', self.__erase_activated_cb)
         scrolled_window.add(self._tree_view)
         self._tree_view.show()
 
@@ -295,6 +306,9 @@ class ActivitiesList(gtk.VBox):
     def remove_alert(self):
         self.remove(self._alert)
         self._alert = None
+
+    def __erase_activated_cb(self, tree_view, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarListActivityIcon'

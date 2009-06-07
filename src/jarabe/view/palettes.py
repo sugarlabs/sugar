@@ -109,7 +109,7 @@ class ActivityPalette(Palette):
 
     __gsignals__ = {
         'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([]))
+                             gobject.TYPE_NONE, ([str]))
     }
 
     def __init__(self, activity_info):
@@ -210,7 +210,7 @@ class ActivityPalette(Palette):
             self._update_favorite_item()
 
     def __erase_activate_cb(self, menu_item):
-        self.emit('erase-activated')
+        self.emit('erase-activated', self._bundle_id)
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):

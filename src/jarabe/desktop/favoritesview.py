@@ -472,8 +472,8 @@ class ActivityIcon(CanvasIcon):
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
 
-    def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.get_bundle_id())
+    def __erase_activated_cb(self, palette, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
     def __palette_activate_cb(self, palette):
         self._activate()
