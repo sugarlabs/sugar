@@ -74,7 +74,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  wpasupplicant (wpa_passphrase) needed in jarabe.desktop.keydialog.WPAKeyDialog()
 #  openssh-client (ssh-keygen) needed in jarabe.window.create_profile()
 CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
-CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-numpy, python-cjson
+CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson
 CDBS_DEPENDS += , matchbox-window-manager, dbus-x11
 CDBS_RECOMMENDS = sugar-artwork-$(pkgbranch), network-manager, net-tools, xserver-xephyr, x11-utils, x11-xserver-utils, lsb-release, wpasupplicant, ethtool
 CDBS_SUGGESTS = openssh-client
