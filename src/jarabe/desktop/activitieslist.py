@@ -162,21 +162,26 @@ class ActivitiesModel(gtk.ListStore):
                 return
 
     def __activity_removed_cb(self, activity_registry, activity_info):
-        for entry in self._box.get_children():
-            if entry.get_bundle_id() == activity_info.get_bundle_id() and \
-                    entry.get_version() == activity_info.get_activity_version():
-                self._box.remove(entry)
+        bundle_id = activity_info.get_bundle_id()
+        version = activity_info.get_activity_version()
+        favorite = activity_registry.is_bundle_favorite(bundle_id, version)
+        for row in self:
+            if row[ActivitiesModel.COLUMN_BUNDLE_ID] == bundle_id and \
+                    row[ActivitiesModel.COLUMN_VERSION] == version:
+                self.remove(row.iter)
                 return
 
     def _add_activity(self, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
 
-        registry = bundleregistry.get_registry()
         timestamp = activity_info.get_installation_time()
         version = activity_info.get_activity_version()
+
+        registry = bundleregistry.get_registry()
         favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
                                                version)
+
         self.append([activity_info.get_bundle_id(),
                      favorite,
                      activity_info.get_icon(),
