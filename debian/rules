@@ -82,6 +82,10 @@ CDBS_PROVIDES = $(pkgbase)
 CDBS_CONFLICTS = $(pkgbase)
 CDBS_REPLACES = $(pkgbase)
 
+# Journal, now part of Jarabe, was separately packaged upstream < 0.84
+CDBS_CONFLICTS += , sugar-journal-activity
+CDBS_REPLACES += , sugar-journal-activity
+
 # Needed for our packaging
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-empy
 
