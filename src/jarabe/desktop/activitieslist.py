@@ -39,19 +39,10 @@ from jarabe.view import launcher
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
-    _CELL_BUNDLE_ID = 0
-    _CELL_FAVORITE = 1
-    _CELL_ICON = 2
-    _CELL_TITLE = 3
-    _CELL_VERSION = 4
-    _CELL_VERSION_TEXT = 5
-    _CELL_DATE = 6
-    _CELL_DATE_TEXT = 7
-
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self.set_model(ActivitiesListModel())
+        self.set_model(ActivitiesModel())
 
         cell_favorite = CellRendererFavorite(self)
         cell_favorite.connect('activate', self.__favorite_activate_cb)
@@ -65,7 +56,7 @@ class ActivitiesTreeView(gtk.TreeView):
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
-        column.add_attribute(cell_icon, 'file-name', self._CELL_ICON)
+        column.add_attribute(cell_icon, 'file-name', ActivitiesModel.COLUMN_ICON)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -76,9 +67,9 @@ class ActivitiesTreeView(gtk.TreeView):
         column = gtk.TreeViewColumn(_('Title'))
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.expand = True
-        column.set_sort_column_id(self._CELL_TITLE)
+        column.set_sort_column_id(ActivitiesModel.COLUMN_TITLE)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', self._CELL_TITLE)
+        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_TITLE)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -90,9 +81,9 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.resizable = True
         column.props.reorderable = True
         column.props.expand = True
-        column.set_sort_column_id(self._CELL_VERSION)
+        column.set_sort_column_id(ActivitiesModel.COLUMN_VERSION)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', self._CELL_VERSION_TEXT)
+        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_VERSION_TEXT)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -104,63 +95,18 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.resizable = True
         column.props.reorderable = True
         column.props.expand = True
-        column.set_sort_column_id(self._CELL_DATE)
+        column.set_sort_column_id(ActivitiesModel.COLUMN_DATE)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', self._CELL_DATE_TEXT)
+        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_DATE_TEXT)
         self.append_column(column)
 
-        self.set_search_column(self._CELL_TITLE)
-
-        gobject.idle_add(self.__connect_to_bundle_registry_cb)
-
-    def __connect_to_bundle_registry_cb(self):
-        registry = bundleregistry.get_registry()
-        for info in registry:
-            self._add_activity(info)
-        registry.connect('bundle-added', self.__activity_added_cb)
-        registry.connect('bundle-removed', self.__activity_removed_cb)
-
-    def __activity_added_cb(self, activity_registry, activity_info):
-        self._add_activity(activity_info)
-
-    def __activity_removed_cb(self, activity_registry, activity_info):
-        for entry in self._box.get_children():
-            if entry.get_bundle_id() == activity_info.get_bundle_id() and \
-                    entry.get_version() == activity_info.get_activity_version():
-                self._box.remove(entry)
-                return
-
-    def _compare_activities(self, entry_a, entry_b):
-        return entry_b.get_installation_time() - entry_a.get_installation_time()
-
-    def _add_activity(self, activity_info):
-        if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
-            return
-
-        registry = bundleregistry.get_registry()
-        timestamp = activity_info.get_installation_time()
-        version = activity_info.get_activity_version()
-        favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                               version)
-        self.get_model().append([activity_info.get_bundle_id(),
-                                 favorite,
-                                 activity_info.get_icon(),
-                                 activity_info.get_name(),
-                                 version,
-                                 _('Version %s') % version,
-                                 timestamp,
-                                 util.timestamp_to_elapsed_string(timestamp)])
-
-        """
-        entry.icon.connect('erase-activated', self.__erase_activated_cb)
-        entry.set_visible(entry.matches(self._query))
-        """
+        self.set_search_column(ActivitiesModel.COLUMN_TITLE)
 
     def __erase_activated_cb(self, activity_icon, bundle_id):
         self.emit('erase-activated', bundle_id)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter):
-        favorite = model[tree_iter][self._CELL_FAVORITE]
+        favorite = model[tree_iter][ActivitiesModel.COLUMN_FAVORITE]
         if favorite:
             client = gconf.client_get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -171,13 +117,79 @@ class ActivitiesTreeView(gtk.TreeView):
 
     def __favorite_activate_cb(self, cell, path):
         row = self.get_model()[path]
-        row[self._CELL_FAVORITE] = not row[self._CELL_FAVORITE]
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_favorite(row[ActivitiesModel.COLUMN_BUNDLE_ID],
+                                     row[ActivitiesModel.COLUMN_VERSION],
+                                     not row[ActivitiesModel.COLUMN_FAVORITE])
 
-class ActivitiesListModel(gtk.ListStore):
-    __gtype_name__ = 'SugarActivitiesListModel'
+class ActivitiesModel(gtk.ListStore):
+    __gtype_name__ = 'SugarActivitiesModel'
+
+    COLUMN_BUNDLE_ID = 0
+    COLUMN_FAVORITE = 1
+    COLUMN_ICON = 2
+    COLUMN_TITLE = 3
+    COLUMN_VERSION = 4
+    COLUMN_VERSION_TEXT = 5
+    COLUMN_DATE = 6
+    COLUMN_DATE_TEXT = 7
 
     def __init__(self):
         gtk.ListStore.__init__(self, str, bool, str, str, int, str, int, str)
+
+        gobject.idle_add(self.__connect_to_bundle_registry_cb)
+
+    def __connect_to_bundle_registry_cb(self):
+        registry = bundleregistry.get_registry()
+        for info in registry:
+            self._add_activity(info)
+        registry.connect('bundle-added', self.__activity_added_cb)
+        registry.connect('bundle-changed', self.__activity_changed_cb)
+        registry.connect('bundle-removed', self.__activity_removed_cb)
+
+    def __activity_added_cb(self, activity_registry, activity_info):
+        self._add_activity(activity_info)
+
+    def __activity_changed_cb(self, activity_registry, activity_info):
+        bundle_id = activity_info.get_bundle_id()
+        version = activity_info.get_activity_version()
+        favorite = activity_registry.is_bundle_favorite(bundle_id, version)
+        for row in self:
+            if row[ActivitiesModel.COLUMN_BUNDLE_ID] == bundle_id and \
+                    row[ActivitiesModel.COLUMN_VERSION] == version:
+                row[ActivitiesModel.COLUMN_FAVORITE] = favorite
+                row[ActivitiesModel.COLUMN_TITLE] = activity_info.get_name()
+                return
+
+    def __activity_removed_cb(self, activity_registry, activity_info):
+        for entry in self._box.get_children():
+            if entry.get_bundle_id() == activity_info.get_bundle_id() and \
+                    entry.get_version() == activity_info.get_activity_version():
+                self._box.remove(entry)
+                return
+
+    def _add_activity(self, activity_info):
+        if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
+            return
+
+        registry = bundleregistry.get_registry()
+        timestamp = activity_info.get_installation_time()
+        version = activity_info.get_activity_version()
+        favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                                               version)
+        self.append([activity_info.get_bundle_id(),
+                     favorite,
+                     activity_info.get_icon(),
+                     activity_info.get_name(),
+                     version,
+                     _('Version %s') % version,
+                     timestamp,
+                     util.timestamp_to_elapsed_string(timestamp)])
+
+        """
+        entry.icon.connect('erase-activated', self.__erase_activated_cb)
+        entry.set_visible(entry.matches(self._query))
+        """
 
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
