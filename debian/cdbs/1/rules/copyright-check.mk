@@ -48,8 +48,8 @@ debian/stamp-copyright-check:
 #  * Double-dollar ($$) expands to plain dollar ($) in make
 	@licensecheck -c '$(DEB_COPYRIGHT_CHECK_REGEX)' -r --copyright -i '$(DEB_COPYRIGHT_CHECK_IGNORE_REGEX)' * \
 		| LC_ALL=C perl -e \
-	'print "Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX\n";'\
-	'print "Upstream-Name: Untrusted draft - double-check copyrights yourself!\n\n";'\
+	'print "Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=REVISION\n";'\
+	'print "Name: Untrusted draft - double-check copyrights yourself!\n\n";'\
 	'$$n=0; while (<>) {'\
 	'	s/[^[:print:]]//g;'\
 	'	if (/^([^:\s][^:]+):[\s]+(\S.*?)\s*$$/) {'\
