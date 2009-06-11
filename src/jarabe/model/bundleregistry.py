@@ -51,12 +51,16 @@ class BundleRegistry(gobject.GObject):
         self._mime_defaults = self._load_mime_defaults()
 
         self._bundles = []
+        # hold a reference to the monitors so they don't get disposed
+        self._gio_monitors = []
+
         user_path = env.get_user_activities_path()
         for activity_dir in [user_path, config.activities_path]:
             self._scan_directory(activity_dir)
             directory = gio.File(activity_dir)
             monitor = directory.monitor_directory()
             monitor.connect('changed', self.__file_monitor_changed_cb)
+            self._gio_monitors.append(monitor)
 
         self._last_defaults_mtime = -1
         self._favorite_bundles = {}
