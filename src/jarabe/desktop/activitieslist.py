@@ -47,7 +47,11 @@ class ActivitiesTreeView(gtk.TreeView):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self.set_model(ActivitiesModel())
+        self._query = ''
+
+        model = ListModel().filter_new()
+        model.set_visible_func(self.__model_visible_cb)
+        self.set_model(model)
 
         cell_favorite = CellRendererFavorite(self)
         cell_favorite.connect('activate', self.__favorite_activate_cb)
@@ -59,10 +63,11 @@ class ActivitiesTreeView(gtk.TreeView):
 
         cell_icon = CellRendererActivityIcon(self)
         cell_icon.connect('erase-activated', self.__erase_activated_cb)
+        cell_icon.connect('activate', self.__icon_activate_cb)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
-        column.add_attribute(cell_icon, 'file-name', ActivitiesModel.COLUMN_ICON)
+        column.add_attribute(cell_icon, 'file-name', ListModel.COLUMN_ICON)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -73,9 +78,9 @@ class ActivitiesTreeView(gtk.TreeView):
         column = gtk.TreeViewColumn(_('Title'))
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.expand = True
-        column.set_sort_column_id(ActivitiesModel.COLUMN_TITLE)
+        column.set_sort_column_id(ListModel.COLUMN_TITLE)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_TITLE)
+        column.add_attribute(cell_text, 'text', ListModel.COLUMN_TITLE)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -87,9 +92,9 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.resizable = True
         column.props.reorderable = True
         column.props.expand = True
-        column.set_sort_column_id(ActivitiesModel.COLUMN_VERSION)
+        column.set_sort_column_id(ListModel.COLUMN_VERSION)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_VERSION_TEXT)
+        column.add_attribute(cell_text, 'text', ListModel.COLUMN_VERSION_TEXT)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -101,18 +106,18 @@ class ActivitiesTreeView(gtk.TreeView):
         column.props.resizable = True
         column.props.reorderable = True
         column.props.expand = True
-        column.set_sort_column_id(ActivitiesModel.COLUMN_DATE)
+        column.set_sort_column_id(ListModel.COLUMN_DATE)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', ActivitiesModel.COLUMN_DATE_TEXT)
+        column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE_TEXT)
         self.append_column(column)
 
-        self.set_search_column(ActivitiesModel.COLUMN_TITLE)
+        self.set_search_column(ListModel.COLUMN_TITLE)
 
     def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter):
-        favorite = model[tree_iter][ActivitiesModel.COLUMN_FAVORITE]
+        favorite = model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
             client = gconf.client_get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -124,12 +129,34 @@ class ActivitiesTreeView(gtk.TreeView):
     def __favorite_activate_cb(self, cell, path):
         row = self.get_model()[path]
         registry = bundleregistry.get_registry()
-        registry.set_bundle_favorite(row[ActivitiesModel.COLUMN_BUNDLE_ID],
-                                     row[ActivitiesModel.COLUMN_VERSION],
-                                     not row[ActivitiesModel.COLUMN_FAVORITE])
+        registry.set_bundle_favorite(row[ListModel.COLUMN_BUNDLE_ID],
+                                     row[ListModel.COLUMN_VERSION],
+                                     not row[ListModel.COLUMN_FAVORITE])
 
-class ActivitiesModel(gtk.ListStore):
-    __gtype_name__ = 'SugarActivitiesModel'
+    def __icon_activate_cb(self, cell, path):
+        row = self.get_model()[path]
+
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(row[ListModel.COLUMN_BUNDLE_ID])
+
+        activity_id = activityfactory.create_activity_id()
+
+        client = gconf.client_get_default()
+        xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        launcher.add_launcher(activity_id, bundle.get_icon(), xo_color)
+        activityfactory.create(bundle, ActivityHandle(activity_id))
+
+    def set_filter(self, query):
+        self._query = query.lower()
+        self.get_model().refilter()
+
+    def __model_visible_cb(self, model, tree_iter):
+        title = model[tree_iter][ListModel.COLUMN_TITLE]
+        return title is not None and title.lower().find(self._query) > -1
+
+class ListModel(gtk.ListStore):
+    __gtype_name__ = 'SugarListModel'
 
     COLUMN_BUNDLE_ID = 0
     COLUMN_FAVORITE = 1
@@ -146,8 +173,7 @@ class ActivitiesModel(gtk.ListStore):
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
     def __connect_to_bundle_registry_cb(self):
-        registry = bundleregistry.get_registry()
-        for info in registry:
+        for info in bundleregistry.get_registry():
             self._add_activity(info)
         registry.connect('bundle-added', self.__activity_added_cb)
         registry.connect('bundle-changed', self.__activity_changed_cb)
@@ -161,10 +187,10 @@ class ActivitiesModel(gtk.ListStore):
         version = activity_info.get_activity_version()
         favorite = activity_registry.is_bundle_favorite(bundle_id, version)
         for row in self:
-            if row[ActivitiesModel.COLUMN_BUNDLE_ID] == bundle_id and \
-                    row[ActivitiesModel.COLUMN_VERSION] == version:
-                row[ActivitiesModel.COLUMN_FAVORITE] = favorite
-                row[ActivitiesModel.COLUMN_TITLE] = activity_info.get_name()
+            if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
+                    row[ListModel.COLUMN_VERSION] == version:
+                row[ListModel.COLUMN_FAVORITE] = favorite
+                row[ListModel.COLUMN_TITLE] = activity_info.get_name()
                 return
 
     def __activity_removed_cb(self, activity_registry, activity_info):
@@ -172,8 +198,8 @@ class ActivitiesModel(gtk.ListStore):
         version = activity_info.get_activity_version()
         favorite = activity_registry.is_bundle_favorite(bundle_id, version)
         for row in self:
-            if row[ActivitiesModel.COLUMN_BUNDLE_ID] == bundle_id and \
-                    row[ActivitiesModel.COLUMN_VERSION] == version:
+            if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
+                    row[ListModel.COLUMN_VERSION] == version:
                 self.remove(row.iter)
                 return
 
@@ -197,10 +223,6 @@ class ActivitiesModel(gtk.ListStore):
                      timestamp,
                      util.timestamp_to_elapsed_string(timestamp)])
 
-        """
-        entry.set_visible(entry.matches(self._query))
-        """
-
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
 
@@ -212,6 +234,8 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
 
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererActivityIcon'
@@ -226,16 +250,22 @@ class CellRendererActivityIcon(CellRendererIcon):
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.STANDARD_ICON_SIZE
         self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-        self.props.size = style.STANDARD_ICON_SIZE
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+
+        client = gconf.client_get_default()
+        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
+        self.props.prelit_fill_color = prelit_color.get_fill_color()
 
         self._tree_view = tree_view
 
     def create_palette(self):
         model = self._tree_view.get_model()
         row = model[self.props.palette_invoker.path]
-        bundle_id = row[ActivitiesModel.COLUMN_BUNDLE_ID]
+        bundle_id = row[ListModel.COLUMN_BUNDLE_ID]
 
         registry = bundleregistry.get_registry()
         palette = ActivityPalette(registry.get_bundle(bundle_id))
@@ -271,12 +301,9 @@ class ActivitiesList(gtk.VBox):
         self._tree_view.show()
 
         self._alert = None
-        self._query = ''
 
     def set_filter(self, query):
-        self._query = query
-        for entry in self._box.get_children():
-            entry.set_visible(entry.matches(query))
+        self._tree_view.set_filter(query)
 
     def __key_press_event_cb(self, scrolled_window, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
@@ -310,195 +337,3 @@ class ActivitiesList(gtk.VBox):
     def __erase_activated_cb(self, tree_view, bundle_id):
         self.emit('erase-activated', bundle_id)
 
-class ActivityIcon(CanvasIcon):
-    __gtype_name__ = 'SugarListActivityIcon'
-
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
-
-    def __init__(self, activity_info):
-        CanvasIcon.__init__(self, size=style.STANDARD_ICON_SIZE, cache=True,
-                            file_name=activity_info.get_icon())
-        self._activity_info = activity_info
-        self._uncolor()
-        self.connect('hovering-changed', self.__hovering_changed_event_cb)
-        self.connect('button-release-event', self.__button_release_event_cb)
-
-        client = gconf.client_get_default()
-        self._xocolor = XoColor(client.get_string("/desktop/sugar/user/color"))
-
-    def create_palette(self):
-        palette = ActivityPalette(self._activity_info)
-        palette.connect('erase-activated', self.__erase_activated_cb)
-        return palette
-
-    def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.get_bundle_id())
-
-    def _color(self):
-        self.props.xo_color = self._xocolor
-
-    def _uncolor(self):
-        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-
-    def __hovering_changed_event_cb(self, icon, hovering):
-        if hovering:
-            self._color()
-        else:
-            self._uncolor()
-
-    def __button_release_event_cb(self, icon, event):
-        self.palette.popdown(immediate=True)
-        self._uncolor()
-
-class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
-    __gtype_name__ = 'SugarActivityEntry'
-
-    _TITLE_COL_WIDTH   = style.GRID_CELL_SIZE * 3
-    _VERSION_COL_WIDTH = style.GRID_CELL_SIZE * 1
-    _DATE_COL_WIDTH    = style.GRID_CELL_SIZE * 5
-
-    def __init__(self, activity_info):
-        hippo.CanvasBox.__init__(self, spacing=style.DEFAULT_SPACING,
-                                 padding_top=style.DEFAULT_PADDING,
-                                 padding_bottom=style.DEFAULT_PADDING,
-                                 padding_left=style.DEFAULT_PADDING * 2,
-                                 padding_right=style.DEFAULT_PADDING * 2,
-                                 box_height=style.GRID_CELL_SIZE,
-                                 orientation=hippo.ORIENTATION_HORIZONTAL)
-
-        registry = bundleregistry.get_registry()
-        registry.connect('bundle-changed', self.__activity_changed_cb)
-
-        self._bundle = activity_info
-        self._bundle_id = activity_info.get_bundle_id()
-        self._version = activity_info.get_activity_version()
-        self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                     self._version)
-        self._title = activity_info.get_name()
-        self._installation_time = activity_info.get_installation_time()
-
-        self._favorite_icon = FavoriteIcon(self._favorite)
-        self._favorite_icon.connect('notify::favorite',
-                                    self.__favorite_changed_cb)
-        self.append(self._favorite_icon)
-
-        self.icon = ActivityIcon(activity_info)
-        self.icon.connect('button-release-event',
-                          self.__icon_button_release_event_cb)
-        self.append(self.icon)
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            align = hippo.ALIGNMENT_END
-        else:
-            align = hippo.ALIGNMENT_START
-
-        title = hippo.CanvasText(text=activity_info.get_name(),
-                                 xalign=align,
-                                 font_desc=style.FONT_BOLD.get_pango_desc(),
-                                 box_width=ActivityEntry._TITLE_COL_WIDTH)
-        self.append(title)
-
-        version = hippo.CanvasText(text=activity_info.get_activity_version(),
-                                   xalign=hippo.ALIGNMENT_END,
-                                   font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                   box_width=ActivityEntry._VERSION_COL_WIDTH)
-        self.append(version)
-
-        expander = hippo.CanvasBox()
-        self.append(expander, hippo.PACK_EXPAND)
-
-        timestamp = activity_info.get_installation_time()
-        date = hippo.CanvasText(
-                text=util.timestamp_to_elapsed_string(timestamp),
-                xalign=align,
-                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                box_width=ActivityEntry._DATE_COL_WIDTH)
-        self.append(date)
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            self.reverse()
-
-    def __favorite_changed_cb(self, favorite_icon, pspec):
-        registry = bundleregistry.get_registry()
-        registry.set_bundle_favorite(self._bundle_id, self._version,
-                                       favorite_icon.props.favorite)
-
-    def __activity_changed_cb(self, activity_registry, activity_info):
-        if self._bundle_id == activity_info.get_bundle_id() and \
-                self._version == activity_info.get_activity_version():
-            self._title = activity_info.get_name()
-
-            registry = bundleregistry.get_registry()
-            self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                         self._version)
-
-            self._favorite_icon.props.favorite = self._favorite
-
-    def __icon_button_release_event_cb(self, icon, event):
-        activity_id = activityfactory.create_activity_id()
-
-        client = gconf.client_get_default()
-        xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-        launcher.add_launcher(activity_id,
-                              self._bundle.get_icon(),
-                              xo_color)
-
-        activityfactory.create(self._bundle, ActivityHandle(activity_id))
-
-    def get_bundle_id(self):
-        return self._bundle_id
-
-    def get_version(self):
-        return self._version
-
-    def get_installation_time(self):
-        return self._installation_time
-
-    def matches(self, query):
-        if not query:
-            return True
-        return self._title.lower().find(query) > -1
-
-class FavoriteIcon(CanvasIcon):
-    def __init__(self, favorite):
-        CanvasIcon.__init__(self, icon_name='emblem-favorite',
-                            box_width=style.GRID_CELL_SIZE*3/5,
-                            size=style.SMALL_ICON_SIZE)
-        self._favorite = None
-        self.set_favorite(favorite)
-        self.connect('button-release-event', self.__release_event_cb)
-        self.connect('motion-notify-event', self.__motion_notify_event_cb)
-
-    def set_favorite(self, favorite):
-        if favorite == self._favorite:
-            return
-
-        self._favorite = favorite
-        if favorite:
-            client = gconf.client_get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            self.props.xo_color = color
-        else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_WHITE.get_svg()
-
-    def get_favorite(self):
-        return self._favorite
-
-    favorite = gobject.property(
-        type=bool, default=False, getter=get_favorite, setter=set_favorite)
-
-    def __release_event_cb(self, icon, event):
-        self.props.favorite = not self.props.favorite
-
-    def __motion_notify_event_cb(self, icon, event):
-        if not self._favorite:
-            if event.detail == hippo.MOTION_DETAIL_ENTER:
-                icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
-            elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-                icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
