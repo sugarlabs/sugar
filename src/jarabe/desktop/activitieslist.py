@@ -175,7 +175,8 @@ class ListModel(gtk.ListStore):
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
     def __connect_to_bundle_registry_cb(self):
-        for info in bundleregistry.get_registry():
+        registry = bundleregistry.get_registry()
+        for info in registry:
             self._add_activity(info)
         registry.connect('bundle-added', self.__activity_added_cb)
         registry.connect('bundle-changed', self.__activity_changed_cb)
