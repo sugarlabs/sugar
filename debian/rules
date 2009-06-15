@@ -55,6 +55,16 @@ reverse-config::
 	done
 	rm -f debian/stamp-upstreamtmpstuff
 
+# Generate (and cleanup) files containing variables static per build
+infiles = $(filter-out debian/control.in, $(wildcard debian/*.in))
+outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
+DEB_PHONY_RULES += $(outfiles)
+pre-build:: $(outfiles)
+$(outfiles):
+	sed 's/__VER__/$(pkgbranch)/' <$(subst $(pkgbranch),__VER__,$@).in >$@
+clean::
+	rm -f $(outfiles)
+
 # Register GConf schemas
 post-install/$(pkg)::
 	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
