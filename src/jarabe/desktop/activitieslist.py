@@ -51,7 +51,7 @@ class ActivitiesTreeView(gtk.TreeView):
 
         self.modify_base(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        model = ListModel().filter_new()
+        model = ListModel()
         model.set_visible_func(self.__model_visible_cb)
         self.set_model(model)
 
@@ -157,7 +157,7 @@ class ActivitiesTreeView(gtk.TreeView):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
         return title is not None and title.lower().find(self._query) > -1
 
-class ListModel(gtk.ListStore):
+class ListModel(gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
 
     COLUMN_BUNDLE_ID = 0
@@ -170,7 +170,9 @@ class ListModel(gtk.ListStore):
     COLUMN_DATE_TEXT = 7
 
     def __init__(self):
-        gtk.ListStore.__init__(self, str, bool, str, str, int, str, int, str)
+        self._model = gtk.ListStore(str, bool, str, str, int, str, int, str)
+        self._model_filter = self._model.filter_new()
+        gtk.TreeModelSort.__init__(self, self._model_filter)
 
         gobject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -217,14 +219,20 @@ class ListModel(gtk.ListStore):
         favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
                                                version)
 
-        self.append([activity_info.get_bundle_id(),
-                     favorite,
-                     activity_info.get_icon(),
-                     activity_info.get_name(),
-                     version,
-                     _('Version %s') % version,
-                     timestamp,
-                     util.timestamp_to_elapsed_string(timestamp)])
+        self._model.append([activity_info.get_bundle_id(),
+                            favorite,
+                            activity_info.get_icon(),
+                            activity_info.get_name(),
+                            version,
+                            _('Version %s') % version,
+                            timestamp,
+                            util.timestamp_to_elapsed_string(timestamp)])
+
+    def set_visible_func(self, func):
+        self._model_filter.set_visible_func(func)
+
+    def refilter(self):
+        self._model_filter.refilter()
 
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
