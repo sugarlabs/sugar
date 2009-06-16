@@ -75,14 +75,13 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_text = gtk.CellRendererText()
         cell_text.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         cell_text.props.ellipsize_set = True
-        cell_text.props.font_desc = style.FONT_BOLD.get_pango_desc()
 
         column = gtk.TreeViewColumn(_('Title'))
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.expand = True
         column.set_sort_column_id(ListModel.COLUMN_TITLE)
         column.pack_start(cell_text)
-        column.add_attribute(cell_text, 'text', ListModel.COLUMN_TITLE)
+        column.add_attribute(cell_text, 'markup', ListModel.COLUMN_TITLE)
         self.append_column(column)
 
         cell_text = gtk.CellRendererText()
@@ -195,7 +194,6 @@ class ListModel(gtk.TreeModelSort):
             if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
                     row[ListModel.COLUMN_VERSION] == version:
                 row[ListModel.COLUMN_FAVORITE] = favorite
-                row[ListModel.COLUMN_TITLE] = activity_info.get_name()
                 return
 
     def __activity_removed_cb(self, activity_registry, activity_info):
@@ -219,10 +217,19 @@ class ListModel(gtk.TreeModelSort):
         favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
                                                version)
 
+        tag_list = activity_info.get_tags()
+        if tag_list is None or not tag_list:
+            title = '<b>%s</b>' % activity_info.get_name()
+        else:
+            tags = ', '.join(tag_list)
+            title = '<b>%s</b>\n' \
+                    '<span style="italic" weight="light">%s</span>' % \
+                            (activity_info.get_name(), tags)
+
         self._model.append([activity_info.get_bundle_id(),
                             favorite,
                             activity_info.get_icon(),
-                            activity_info.get_name(),
+                            title,
                             version,
                             _('Version %s') % version,
                             timestamp,
