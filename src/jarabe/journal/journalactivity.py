@@ -133,7 +133,7 @@ class JournalActivity(Window):
 
         self._dbus_service = JournalActivityDBusService(self)        
 
-        self.iconify()
+        #self.iconify()
         
         self._critical_space_alert = None
         self._check_available_space()
@@ -185,8 +185,8 @@ class JournalActivity(Window):
         if keyname == 'Escape':
             self.show_main_view()
 
-    def __detail_clicked_cb(self, list_view, entry):
-        self._show_secondary_view(entry.metadata)
+    def __detail_clicked_cb(self, list_view, object_id):
+        self._show_secondary_view(object_id)
 
     def __clear_clicked_cb(self, list_view):
         self._main_toolbox.search_toolbar.clear_query()
@@ -207,9 +207,8 @@ class JournalActivity(Window):
             self.set_canvas(self._main_view)
             self._main_view.show()
 
-    def _show_secondary_view(self, metadata):
-        # Need to get the full set of properties
-        metadata = model.get(metadata['uid'])
+    def _show_secondary_view(self, object_id):
+        metadata = model.get(object_id)
         try:
             self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:
@@ -233,7 +232,7 @@ class JournalActivity(Window):
         if metadata is None:
             return False
         else:
-            self._show_secondary_view(metadata)
+            self._show_secondary_view(object_id)
             return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):

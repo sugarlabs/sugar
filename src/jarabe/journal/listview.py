@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,28 +20,48 @@ import sys
 from gettext import gettext as _
 import time
 
-import hippo
 import gobject
 import gtk
-import dbus
+import hippo
+import gconf
+import pango
 
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon, Icon
+from sugar.graphics.icon import CanvasIcon, Icon, CellRendererIcon
+from sugar.graphics.xocolor import XoColor
+from sugar import util
 
 from jarabe.journal.collapsedentry import CollapsedEntry
+from jarabe.journal.listmodel import ListModel
+from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
-
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
-DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
+from jarabe.journal import misc
 
 UPDATE_INTERVAL = 300
 
-EMPTY_JOURNAL = _("Your Journal is empty")
-NO_MATCH = _("No matching entries ")
+MESSAGE_EMPTY_JOURNAL = 0
+MESSAGE_NO_MATCH = 1
 
-class BaseListView(gtk.HBox):
-    __gtype_name__ = 'BaseListView'
+class TreeView(gtk.TreeView):
+    __gtype_name__ = 'JournalTreeView'
+
+    def __init__(self):
+        gtk.TreeView.__init__(self)
+
+    def do_size_request(self, requisition):
+        # HACK: We tell the model that the view is just resizing so it can avoid
+        # hitting both D-Bus and disk.
+        model = self.get_model()
+        if model is not None:
+            model.view_is_resizing = True
+        try:
+            gtk.TreeView.do_size_request(self, requisition)
+        finally:
+            if model is not None:
+                model.view_is_resizing = False
+
+class BaseListView(gtk.Bin):
+    __gtype_name__ = 'JournalBaseListView'
 
     __gsignals__ = {
         'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
@@ -51,57 +71,34 @@ class BaseListView(gtk.HBox):
 
     def __init__(self):
         self._query = {}
-        self._result_set = None
-        self._entries = []
-        self._page_size = 0
-        self._reflow_sid = 0
-        self._do_scroll_hid = None
+        self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
 
-        gtk.HBox.__init__(self)
-        self.set_flags(gtk.HAS_FOCUS|gtk.CAN_FOCUS)
-        self.connect('key-press-event', self._key_press_event_cb)
+        gobject.GObject.__init__(self)
 
-        self._box = hippo.CanvasBox(
-                        orientation=hippo.ORIENTATION_VERTICAL,
-                        background_color=style.COLOR_WHITE.get_int())
-
-        self._canvas = hippo.Canvas()
-        self._canvas.set_root(self._box)
-
-        self.pack_start(self._canvas)
-        self._canvas.show()
-
-        self._vadjustment = gtk.Adjustment(value=0, lower=0, upper=0, 
-                                           step_incr=1, page_incr=0,
-                                           page_size=0)
-        self._vadjustment.connect('value-changed',
-                                  self._vadjustment_value_changed_cb)
-        self._vadjustment.connect('changed', self._vadjustment_changed_cb)
-
-        self._vscrollbar = gtk.VScrollbar(self._vadjustment)
-        self.pack_end(self._vscrollbar, expand=False, fill=False)
-        self._vscrollbar.show()
-        
-        self.connect('scroll-event', self._scroll_event_cb)
         self.connect('destroy', self.__destroy_cb)
 
-        # DND stuff
-        self._temp_file_path = None
-        self._pressed_button = None
-        self._press_start_x = None
-        self._press_start_y = None
-        self._last_clicked_entry = None
-        self._canvas.drag_source_set(0, [], 0)
-        self._canvas.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                          gtk.gdk.POINTER_MOTION_HINT_MASK)
-        self._canvas.connect_after("motion_notify_event",
-                       self._canvas_motion_notify_event_cb)
-        self._canvas.connect("button_press_event",
-                       self._canvas_button_press_event_cb)
-        self._canvas.connect("drag_end", self._drag_end_cb)
-        self._canvas.connect("drag_data_get", self._drag_data_get_cb)
+        self._scrolled_window = gtk.ScrolledWindow()
+        self._scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.add(self._scrolled_window)
+        self._scrolled_window.show()
+
+        self.tree_view = TreeView()
+        self.tree_view.props.fixed_height_mode = True
+        self.tree_view.modify_base(gtk.STATE_NORMAL,
+                                   style.COLOR_WHITE.get_gdk_color())
+        self._scrolled_window.add(self.tree_view)
+        self.tree_view.show()
+
+        self.cell_title = None
+        self.cell_icon = None
+        self._add_columns()
+
+        self.tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+                                                [('text/uri-list', 0, 0),
+                                                 ('journal-object-id', 0, 0)],
+                                                gtk.gdk.ACTION_COPY)
 
         # Auto-update stuff
         self._fully_obscured = True
@@ -109,123 +106,160 @@ class BaseListView(gtk.HBox):
         self._refresh_idle_handler = None
         self._update_dates_timer = None
 
-        bus = dbus.SessionBus()
-        datastore = dbus.Interface(
-            bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH), DS_DBUS_INTERFACE)
-        self._datastore_created_handler = \
-                datastore.connect_to_signal('Created',
-                                             self.__datastore_created_cb)
-        self._datastore_updated_handler = \
-                datastore.connect_to_signal('Updated',
-                                            self.__datastore_updated_cb)
+        model.created.connect(self.__model_created_cb)
+        model.updated.connect(self.__model_updated_cb)
+        model.deleted.connect(self.__model_deleted_cb)
 
-        self._datastore_deleted_handler = \
-                datastore.connect_to_signal('Deleted',
-                                            self.__datastore_deleted_cb)
+    def __model_created_cb(self, sender, **kwargs):
+        self._set_dirty()
+
+    def __model_updated_cb(self, sender, **kwargs):
+        self._set_dirty()
+
+    def __model_deleted_cb(self, sender, **kwargs):
+        self._set_dirty()
+
+    def _add_columns(self):
+        cell_favorite = CellRendererFavorite(self.tree_view)
+        cell_favorite.connect('activate', self.__favorite_activate_cb)
+
+        column = gtk.TreeViewColumn('')
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column.props.fixed_width = cell_favorite.props.width
+        column.pack_start(cell_favorite)
+        column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
+        self.tree_view.append_column(column)
+
+        self.cell_icon = CellRendererActivityIcon(self.tree_view)
+        self.cell_icon.connect('activate', self.__icon_activate_cb)
+
+        column = gtk.TreeViewColumn('')
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column.props.fixed_width = self.cell_icon.props.width
+        column.pack_start(self.cell_icon)
+        column.add_attribute(self.cell_icon, 'file-name', ListModel.COLUMN_ICON)
+        column.add_attribute(self.cell_icon, 'xo-color', ListModel.COLUMN_ICON_COLOR)
+        self.tree_view.append_column(column)
+
+        self.cell_title = gtk.CellRendererText()
+        self.cell_title.props.ellipsize = pango.ELLIPSIZE_MIDDLE
+        self.cell_title.props.ellipsize_set = True
+
+        column = gtk.TreeViewColumn(_('Title'))
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column.props.expand = True
+        column.pack_start(self.cell_title)
+        column.add_attribute(self.cell_title, 'markup', ListModel.COLUMN_TITLE)
+        self.tree_view.append_column(column)
+
+        buddies_column = gtk.TreeViewColumn('')
+        buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self.tree_view.append_column(buddies_column)
+
+        for column_index in [ListModel.COLUMN_BUDDY_1, ListModel.COLUMN_BUDDY_2,
+                             ListModel.COLUMN_BUDDY_3]:
+            cell_icon = CellRendererBuddy(self.tree_view,
+                                          column_index=column_index)
+            buddies_column.pack_start(cell_icon)
+            buddies_column.props.fixed_width += cell_icon.props.width
+            buddies_column.add_attribute(cell_icon, 'buddy', column_index)
+
+        cell_text = gtk.CellRendererText()
+        cell_text.props.xalign = 1
+
+        # Measure the required width for a date in the form of "10 hours, 10
+        # minutes ago"
+        timestamp = time.time() - 10 * 60 - 10 * 60 * 60
+        date = util.timestamp_to_elapsed_string(timestamp)
+        date_width = self._get_width_for_string(date)
+
+        self.date_column = gtk.TreeViewColumn(_('Date'))
+        self.date_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self.date_column.props.fixed_width = date_width
+        self.date_column.set_alignment(1)
+        self.date_column.props.resizable = True
+        self.date_column.pack_start(cell_text)
+        self.date_column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE)
+        self.tree_view.append_column(self.date_column)
+
+    def _get_width_for_string(self, text):
+        # Add some extra margin
+        text = text + 'aaaaa'
+
+        widget = gtk.Label('')
+        context = widget.get_pango_context()
+        layout = pango.Layout(context)
+        layout.set_text(text)
+        width, height = layout.get_size()
+        return pango.PIXELS(width)
+
+    def do_size_allocate(self, allocation):
+        self.allocation = allocation
+        self.child.size_allocate(allocation)
+
+    def do_size_request(self, requisition):
+        requisition.width, requisition.height = self.child.size_request()
 
     def __destroy_cb(self, widget):
-        self._datastore_created_handler.remove()
-        self._datastore_updated_handler.remove()
-        self._datastore_deleted_handler.remove()
+        if self._model is not None:
+            self._model.destroy()
 
-    def _vadjustment_changed_cb(self, vadjustment):
-        if vadjustment.props.upper > self._page_size:
-            self._vscrollbar.show()
+    def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
+        favorite = self._model[tree_iter][ListModel.COLUMN_FAVORITE]
+        if favorite:
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            cell.props.xo_color = color
         else:
-            self._vscrollbar.hide()
+            cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            cell.props.fill_color = style.COLOR_WHITE.get_svg()
 
-    def _vadjustment_value_changed_cb(self, vadjustment):
-        if self._do_scroll_hid is None:
-            self._do_scroll_hid = gobject.idle_add(self._do_scroll)
+    def __favorite_activate_cb(self, cell, path):
+        row = self._model[path]
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        if metadata['keep'] == 1:
+            metadata['keep'] = 0
+        else:
+            metadata['keep'] = 1
+        model.write(metadata, update_mtime=False)
 
-    def _do_scroll(self):
-        current_position = int(self._vadjustment.props.value)
-
-        self._result_set.seek(current_position)
-        metadata_list = self._result_set.read(self._page_size)
-
-        if self._result_set.length != self._vadjustment.props.upper:
-            self._vadjustment.props.upper = self._result_set.length
-            self._vadjustment.changed()
-
-        self._refresh_view(metadata_list)
-        self._dirty = False
-
-        self._do_scroll_hid = None                
-        return False
-
-    def _refresh_view(self, metadata_list):
-        logging.debug('ListView %r' % self)
-        # Indicate when the Journal is empty
-        if len(metadata_list) == 0:
-            if self._is_query_empty():
-                self._show_message(EMPTY_JOURNAL)
-            else:
-                self._show_message(NO_MATCH)
-            return
-
-        # Refresh view and create the entries if they don't exist yet.
-        for i in range(0, self._page_size):
-            try:
-                if i < len(metadata_list):
-                    if i >= len(self._entries):
-                        entry = self.create_entry()
-                        self._box.append(entry)
-                        self._entries.append(entry)
-                        entry.metadata = metadata_list[i]
-                    else:
-                        entry = self._entries[i]
-                        entry.metadata = metadata_list[i]
-                        entry.set_visible(True)
-                elif i < len(self._entries):
-                    entry = self._entries[i]
-                    entry.set_visible(False)
-            except Exception:
-                logging.error('Exception while displaying entry:\n' + \
-                    ''.join(traceback.format_exception(*sys.exc_info())))
-
-    def create_entry(self):
-        """ Create a descendant of BaseCollapsedEntry
-        """
-        raise NotImplementedError
+    def __icon_activate_cb(self, cell, path):
+        row = self._model[path]
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        misc.resume(metadata)
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
         self._query = query_dict
-        if self._page_size > 0:
-            self.refresh()
+        self.refresh()
 
     def refresh(self):
         logging.debug('ListView.refresh query %r' % self._query)
         self._stop_progress_bar()
         self._start_progress_bar()
-        if self._result_set is not None:
-            self._result_set.stop()
 
-        self._result_set = model.find(self._query, self._page_size)
-        self._result_set.ready.connect(self.__result_set_ready_cb)
-        self._result_set.progress.connect(self.__result_set_progress_cb)
-        self._result_set.setup()
+        if self._model is not None:
+            self._model.stop()
 
-    def __result_set_ready_cb(self, **kwargs):
-        if kwargs['sender'] != self._result_set:
-            return
+        self._model = ListModel(self._query)
+        self._model.connect('ready', self.__model_ready_cb)
+        self._model.connect('progress', self.__model_progress_cb)
+        self._model.setup()
 
+    def __model_ready_cb(self, model):
         self._stop_progress_bar()
 
-        self._vadjustment.props.upper = self._result_set.length
-        self._vadjustment.changed()
+        # Cannot set it up earlier because will try to access the model and it
+        # needs to be ready.
+        self.tree_view.set_model(self._model)
 
-        self._vadjustment.props.value = min(self._vadjustment.props.value,
-                self._result_set.length - self._page_size)
-        if self._result_set.length == 0:
+        if len(model) == 0:
             if self._is_query_empty():
-                self._show_message(EMPTY_JOURNAL)
+                self._show_message(MESSAGE_EMPTY_JOURNAL)
             else:
-                self._show_message(NO_MATCH)
+                self._show_message(MESSAGE_NO_MATCH)
         else:
             self._clear_message()
-            self._do_scroll()
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
@@ -237,18 +271,16 @@ class BaseListView(gtk.HBox):
         else:
             return True
 
-    def __result_set_progress_cb(self, **kwargs):
+    def __model_progress_cb(self, tree_model):
         if time.time() - self._last_progress_bar_pulse > 0.05:
             if self._progress_bar is not None:
                 self._progress_bar.pulse()
                 self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
-        self.remove(self._canvas)
-        self.remove(self._vscrollbar)
-
         alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0.5)
-        self.pack_start(alignment)
+        self.remove(self.child)
+        self.add(alignment)
         alignment.show()
 
         self._progress_bar = gtk.ProgressBar()
@@ -258,102 +290,23 @@ class BaseListView(gtk.HBox):
         self._progress_bar.show()
 
     def _stop_progress_bar(self):
-        for widget in self.get_children():
-            self.remove(widget)
-        self._progress_bar = None
-
-        self.pack_start(self._canvas)
-        self.pack_end(self._vscrollbar, expand=False, fill=False)
-
-    def _scroll_event_cb(self, hbox, event):
-        if event.direction == gtk.gdk.SCROLL_UP:
-            if self._vadjustment.props.value > self._vadjustment.props.lower:
-                self._vadjustment.props.value -= 1
-        elif event.direction == gtk.gdk.SCROLL_DOWN:
-            max_value = self._result_set.length - self._page_size
-            if self._vadjustment.props.value < max_value:
-                self._vadjustment.props.value += 1
-
-    def do_focus(self, direction):
-        if not self.is_focus():
-            self.grab_focus()
-            return True
-        return False
-
-    def _key_press_event_cb(self, widget, event):
-        keyname = gtk.gdk.keyval_name(event.keyval)
-
-        if keyname == 'Up':
-            if self._vadjustment.props.value > self._vadjustment.props.lower:
-                self._vadjustment.props.value -= 1
-        elif keyname == 'Down':
-            max_value = self._result_set.length - self._page_size
-            if self._vadjustment.props.value < max_value:
-                self._vadjustment.props.value += 1
-        elif keyname == 'Page_Up' or keyname == 'KP_Page_Up':
-            new_position = max(0, 
-                               self._vadjustment.props.value - self._page_size)
-            if new_position != self._vadjustment.props.value:
-                self._vadjustment.props.value = new_position
-        elif keyname == 'Page_Down' or keyname == 'KP_Page_Down':
-            new_position = min(self._result_set.length - self._page_size,
-                               self._vadjustment.props.value + self._page_size)
-            if new_position != self._vadjustment.props.value:
-                self._vadjustment.props.value = new_position
-        elif keyname == 'Home' or keyname == 'KP_Home':
-            new_position = 0
-            if new_position != self._vadjustment.props.value:
-                self._vadjustment.props.value = new_position
-        elif keyname == 'End' or keyname == 'KP_End':
-            new_position = max(0, self._result_set.length - self._page_size)
-            if new_position != self._vadjustment.props.value:
-                self._vadjustment.props.value = new_position
-        else:
-            return False
-
-        return True
-
-    def do_size_allocate(self, allocation):
-        gtk.HBox.do_size_allocate(self, allocation)
-        new_page_size = int(allocation.height / style.GRID_CELL_SIZE)
-
-        logging.debug("do_size_allocate: %r" % new_page_size)
-        
-        if new_page_size != self._page_size:
-            self._page_size = new_page_size
-            self._queue_reflow()
-
-    def _queue_reflow(self):
-        if not self._reflow_sid:
-            self._reflow_sid = gobject.idle_add(self._reflow_idle_cb)
-
-    def _reflow_idle_cb(self):
-        self._box.clear()
-        self._entries = []
-
-        self._vadjustment.props.page_size = self._page_size
-        self._vadjustment.props.page_increment = self._page_size
-        self._vadjustment.changed()
-
-        if self._result_set is not None:
-            self._result_set.stop()
-        self._result_set = model.find(self._query, self._page_size)
-
-        max_value = max(0, self._result_set.length - self._page_size)
-        if self._vadjustment.props.value > max_value:
-            self._vadjustment.props.value = max_value
-        else:
-            self._do_scroll()
-
-        self._reflow_sid = 0
+        if self.child != self._progress_bar:
+            return
+        self.remove(self.child)
+        self.add(self._scrolled_window)
 
     def _show_message(self, message):
+        canvas = hippo.Canvas()
+        self.remove(self.child)
+        self.add(canvas)
+        canvas.show()
+
         box = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL,
                               background_color=style.COLOR_WHITE.get_int(),
                               yalign=hippo.ALIGNMENT_CENTER,
                               spacing=style.DEFAULT_SPACING,
                               padding_bottom=style.GRID_CELL_SIZE)
-        self._canvas.set_root(box)
+        canvas.set_root(box)
 
         icon = CanvasIcon(size=style.LARGE_ICON_SIZE,
                           icon_name='activity-journal',
@@ -361,141 +314,65 @@ class BaseListView(gtk.HBox):
                           fill_color = style.COLOR_TRANSPARENT.get_svg())
         box.append(icon)
 
-        text = hippo.CanvasText(text=message,
+        if message == MESSAGE_EMPTY_JOURNAL:
+            text = _('Your Journal is empty')
+        elif message == MESSAGE_NO_MATCH:
+            text = _('No matching entries')
+        else:
+            raise ValueError('Invalid message')
+
+        text = hippo.CanvasText(text=text,
                 xalign=hippo.ALIGNMENT_CENTER,
                 font_desc=style.FONT_BOLD.get_pango_desc(),
                 color = style.COLOR_BUTTON_GREY.get_int())
         box.append(text)
 
-        button = gtk.Button(label=_('Clear search'))
-        button.connect('clicked', self.__clear_button_clicked_cb)
-        button.props.image = Icon(icon_name='dialog-cancel',
-                                  icon_size=gtk.ICON_SIZE_BUTTON)
-        canvas_button = hippo.CanvasWidget(widget=button,
-                                           xalign=hippo.ALIGNMENT_CENTER)
-        box.append(canvas_button)
+        if message == MESSAGE_NO_MATCH:
+            button = gtk.Button(label=_('Clear search'))
+            button.connect('clicked', self.__clear_button_clicked_cb)
+            button.props.image = Icon(icon_name='dialog-cancel',
+                                      icon_size=gtk.ICON_SIZE_BUTTON)
+            canvas_button = hippo.CanvasWidget(widget=button,
+                                               xalign=hippo.ALIGNMENT_CENTER)
+            box.append(canvas_button)
 
     def __clear_button_clicked_cb(self, button):
         self.emit('clear-clicked')
 
     def _clear_message(self):
-        self._canvas.set_root(self._box)
-
-    # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
-    def _canvas_motion_notify_event_cb(self, widget, event):
-        if not self._pressed_button:
-            return True
-        
-        # if the mouse button is not pressed, no drag should occurr
-        if not event.state & gtk.gdk.BUTTON1_MASK:
-            self._pressed_button = None
-            return True
-
-        logging.debug("motion_notify_event_cb")
-                        
-        if event.is_hint:
-            x, y, state_ = event.window.get_pointer()
-        else:
-            x = event.x
-            y = event.y
-
-        if widget.drag_check_threshold(int(self._press_start_x),
-                                       int(self._press_start_y),
-                                       int(x),
-                                       int(y)):
-            context_ = widget.drag_begin([('text/uri-list', 0, 0),
-                                          ('journal-object-id', 0, 0)],
-                                         gtk.gdk.ACTION_COPY,
-                                         1,
-                                         event)
-        return True
-
-    def _drag_end_cb(self, widget, drag_context):
-        logging.debug("drag_end_cb")
-        self._pressed_button = None
-        self._press_start_x = None
-        self._press_start_y = None
-        self._last_clicked_entry = None
-
-        # Release and delete the temp file
-        self._temp_file_path = None
-
-    def _drag_data_get_cb(self, widget, context, selection, target_type,
-                          event_time):
-        logging.debug("drag_data_get_cb: requested target " + selection.target)
-
-        metadata = self._last_clicked_entry.metadata
-        if selection.target == 'text/uri-list':
-            # Get hold of a reference so the temp file doesn't get deleted
-            self._temp_file_path = model.get_file(metadata['uid'])
-            selection.set(selection.target, 8, self._temp_file_path)
-        elif selection.target == 'journal-object-id':
-            selection.set(selection.target, 8, metadata['uid'])
-
-    def _canvas_button_press_event_cb(self, widget, event):
-        logging.debug("button_press_event_cb")
-
-        if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
-            self._last_clicked_entry = \
-                    self._get_entry_at_coords(event.x, event.y)
-            if self._last_clicked_entry:
-                self._pressed_button = event.button
-                self._press_start_x = event.x
-                self._press_start_y = event.y
-
-        return False
-
-    def _get_entry_at_coords(self, x, y):
-        for entry in self._box.get_children():
-            entry_x, entry_y = entry.get_context().translate_to_widget(entry)
-            entry_width, entry_height = entry.get_allocation()
-
-            if (x >= entry_x ) and (x <= entry_x + entry_width) and        \
-                    (y >= entry_y ) and (y <= entry_y + entry_height):
-                return entry
-        return None
+        self.remove(self.child)
+        self.add(self._scrolled_window)
+        self._scrolled_window.show()
 
     def update_dates(self):
         logging.debug('ListView.update_dates')
-        for entry in self._entries:
-            if entry.get_visible():
-                entry.update_date()
-
-    def __datastore_created_cb(self, uid):
-        self._set_dirty()
-        
-    def __datastore_updated_cb(self, uid):
-        self._set_dirty()
-        
-    def __datastore_deleted_cb(self, uid):
-        self._set_dirty()
+        visible_range = self.tree_view.get_visible_range()
+        if visible_range is None:
+            return
+        path, end_path = visible_range
+        while True:
+            x, y, width, height = self.tree_view.get_cell_area(path,
+                                                               self.date_column)
+            x, y = self.tree_view.convert_tree_to_widget_coords(x, y)
+            self.tree_view.queue_draw_area(x, y, width, height)
+            if path == end_path:
+                break
+            else:
+                next_iter = self._model.iter_next(self._model.get_iter(path))
+                path = self._model.get_path(next_iter)
 
     def _set_dirty(self):
         if self._fully_obscured:
             self._dirty = True
         else:
-            self._schedule_refresh()
-
-    def _schedule_refresh(self):
-        if self._refresh_idle_handler is None:
-            logging.debug('Add refresh idle callback')
-            self._refresh_idle_handler = \
-                    gobject.idle_add(self.__refresh_idle_cb)
-
-    def __refresh_idle_cb(self):
-        self.refresh()
-        if self._refresh_idle_handler is not None:
-            logging.debug('Remove refresh idle callback')
-            gobject.source_remove(self._refresh_idle_handler)
-            self._refresh_idle_handler = None
-        return False
+            self.refresh()
 
     def set_is_visible(self, visible):
         logging.debug('canvas_visibility_notify_event_cb %r' % visible)
         if visible:
             self._fully_obscured = False
             if self._dirty:
-                self._schedule_refresh()
+                self.refresh()
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
@@ -513,7 +390,7 @@ class BaseListView(gtk.HBox):
         return True
 
 class ListView(BaseListView):
-    __gtype_name__ = 'ListView'
+    __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
@@ -524,11 +401,117 @@ class ListView(BaseListView):
     def __init__(self):
         BaseListView.__init__(self)
 
-    def create_entry(self):
-        entry = CollapsedEntry()
-        entry.connect('detail-clicked', self.__entry_activated_cb)
-        return entry
+        self.cell_title.props.editable = True
+        self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
 
-    def __entry_activated_cb(self, entry):
-        self.emit('detail-clicked', entry)
+        cell_detail = CellRendererDetail(self.tree_view)
+        cell_detail.connect('activate', self.__detail_activate_cb)
+
+        column = gtk.TreeViewColumn('')
+        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column.props.fixed_width = cell_detail.props.width
+        column.pack_start(cell_detail)
+        self.tree_view.append_column(column)
+
+    def __detail_activate_cb(self, cell, path):
+        row = self.tree_view.get_model()[path]
+        self.emit('detail-clicked', row[ListModel.COLUMN_UID])
+
+    def __detail_clicked_cb(self, cell, uid):
+        self.emit('detail-clicked', uid)
+
+class CellRendererFavorite(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererFavorite'
+
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.icon_name = 'emblem-favorite'
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+
+class CellRendererDetail(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererDetail'
+
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.icon_name = 'go-right'
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
+
+class CellRendererActivityIcon(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererActivityIcon'
+
+    __gsignals__ = {
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([str])),
+    }
+
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.STANDARD_ICON_SIZE
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+
+        self.tree_view = tree_view
+
+    def create_palette(self):
+        tree_model = self.tree_view.get_model()
+        metadata = tree_model.get_metadata(self.props.palette_invoker.path)
+
+        palette = ObjectPalette(metadata, detail=True)
+        palette.connect('detail-clicked',
+                        self.__detail_clicked_cb)
+        return palette
+
+    def __detail_clicked_cb(self, palette, uid):
+        self.emit('detail-clicked', uid)
+
+class CellRendererBuddy(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererBuddy'
+
+    def __init__(self, tree_view, column_index):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.STANDARD_ICON_SIZE
+        self.props.height = style.STANDARD_ICON_SIZE
+        self.props.size = style.STANDARD_ICON_SIZE
+        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+
+        self.tree_view = tree_view
+        self._model_column_index = column_index
+
+    def create_palette(self):
+        model = self.tree_view.get_model()
+        row = model[self.props.palette_invoker.path]
+
+        if row[self._model_column_index] is not None:
+            nick, xo_color = row[self._model_column_index]
+            return BuddyPalette((nick, xo_color.to_string()))
+        else:
+            return None
+
+    def set_buddy(self, buddy):
+        if buddy is None:
+            self.props.icon_name = None
+        else:
+            nick_, xo_color = buddy
+            self.props.icon_name = 'computer-xo'
+            self.props.xo_color = xo_color
+
+    buddy = gobject.property(type=object, setter=set_buddy)
 

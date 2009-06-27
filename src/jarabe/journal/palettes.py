@@ -41,7 +41,7 @@ class ObjectPalette(Palette):
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([]))
+                           ([str])),
     }
 
     def __init__(self, metadata, detail=False):
@@ -61,7 +61,7 @@ class ObjectPalette(Palette):
                                    style.COLOR_TRANSPARENT.get_svg()))
         
         if metadata.has_key('title'):
-            title = metadata['title']
+            title = gobject.markup_escape_text(metadata['title'])
         else:
             title = _('Untitled')
 
@@ -142,7 +142,7 @@ class ObjectPalette(Palette):
         model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
-        self.emit('detail-clicked')
+        self.emit('detail-clicked', self._metadata['uid'])
 
     def __friend_selected_cb(self, menu_item, buddy):
         logging.debug('__friend_selected_cb')
