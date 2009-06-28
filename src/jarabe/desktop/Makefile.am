@@ -12,7 +12,6 @@ sugar_PYTHON =			\
         keydialog.py		\
 	meshbox.py		\
 	myicon.py		\
-	proc_smaps.py		\
         schoolserver.py		\
 	snowflakelayout.py	\
 	spreadlayout.py		\
