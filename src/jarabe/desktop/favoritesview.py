@@ -377,7 +377,7 @@ class DatastoreListener(object):
     def get_last_activity_async(self, bundle_id, properties, callback_cb):
         query = {'activity': bundle_id,
                  'limit': 5,
-                 'order_by': ['-mtime']}
+                 'order_by': ['-timestamp']}
 
         reply_handler = lambda entries, total_count: self.__reply_handler_cb(
                 entries, total_count, callback_cb)

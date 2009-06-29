@@ -93,6 +93,7 @@ class BaseListView(gtk.Bin):
 
         self.cell_title = None
         self.cell_icon = None
+        self._title_column = None
         self._add_columns()
 
         self.tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
@@ -145,12 +146,15 @@ class BaseListView(gtk.Bin):
         self.cell_title.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         self.cell_title.props.ellipsize_set = True
 
-        column = gtk.TreeViewColumn(_('Title'))
-        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
-        column.props.expand = True
-        column.pack_start(self.cell_title)
-        column.add_attribute(self.cell_title, 'markup', ListModel.COLUMN_TITLE)
-        self.tree_view.append_column(column)
+        self._title_column = gtk.TreeViewColumn(_('Title'))
+        self._title_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self._title_column.props.expand = True
+        self._title_column.props.clickable = True
+        self._title_column.pack_start(self.cell_title)
+        self._title_column.add_attribute(self.cell_title, 'markup',
+                                         ListModel.COLUMN_TITLE)
+        self._title_column.connect('clicked', self.__header_clicked_cb)
+        self.tree_view.append_column(self._title_column)
 
         buddies_column = gtk.TreeViewColumn('')
         buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
@@ -178,9 +182,51 @@ class BaseListView(gtk.Bin):
         self.date_column.props.fixed_width = date_width
         self.date_column.set_alignment(1)
         self.date_column.props.resizable = True
+        self.date_column.props.clickable = True
+        self.date_column.props.sort_indicator = True
+        self.date_column.props.sort_order = gtk.SORT_ASCENDING
         self.date_column.pack_start(cell_text)
         self.date_column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE)
+        self.date_column.connect('clicked', self.__header_clicked_cb)
         self.tree_view.append_column(self.date_column)
+
+    def __header_clicked_cb(self, column_clicked):
+        if column_clicked == self._title_column:
+            if self._title_column.props.sort_indicator:
+                if self._title_column.props.sort_order == gtk.SORT_DESCENDING:
+                    self._query['order_by'] = ['+title']
+                else:
+                    self._query['order_by'] = ['-title']
+            else:
+                self._query['order_by'] = ['+title']
+        elif column_clicked == self.date_column:
+            if self.date_column.props.sort_indicator:
+                if self.date_column.props.sort_order == gtk.SORT_DESCENDING:
+                    self._query['order_by'] = ['+timestamp']
+                else:
+                    self._query['order_by'] = ['-timestamp']
+            else:
+                self._query['order_by'] = ['+timestamp']
+
+        self.refresh()
+
+        # Need to update the column indicators after the model has been reset
+        if self._query['order_by'] == ['-timestamp']:
+            self.date_column.props.sort_indicator = True
+            self._title_column.props.sort_indicator = False
+            self.date_column.props.sort_order = gtk.SORT_DESCENDING
+        elif self._query['order_by'] == ['+timestamp']:
+            self.date_column.props.sort_indicator = True
+            self._title_column.props.sort_indicator = False
+            self.date_column.props.sort_order = gtk.SORT_ASCENDING
+        elif self._query['order_by'] == ['-title']:
+            self.date_column.props.sort_indicator = False
+            self._title_column.props.sort_indicator = True
+            self._title_column.props.sort_order = gtk.SORT_DESCENDING
+        elif self._query['order_by'] == ['+title']:
+            self.date_column.props.sort_indicator = False
+            self._title_column.props.sort_indicator = True
+            self._title_column.props.sort_order = gtk.SORT_ASCENDING
 
     def _get_width_for_string(self, text):
         # Add some extra margin
@@ -231,6 +277,10 @@ class BaseListView(gtk.Bin):
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
         self._query = query_dict
+
+        if 'order_by' not in self._query:
+            self._query['order_by'] = ['+timestamp']
+
         self.refresh()
 
     def refresh(self):
