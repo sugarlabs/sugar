@@ -153,7 +153,13 @@ class BaseResultSet(object):
             query = self._query.copy()
             query['limit'] = self._cache_limit
             query['offset'] = offset
-            entries, self._total_count = self.find(query)
+            entries, total_count = self.find(query)
+
+            if total_count != self._total_count:
+                logging.warning('Inconsistency detected, remaking the cache')
+                self._offset = 0
+                self._cache.remove_all(self._cache)
+                return self.read(max_count)
 
             self._cache.remove_all(self._cache)
             self._cache.append_all(entries)
@@ -168,7 +174,13 @@ class BaseResultSet(object):
             query = self._query.copy()
             query['limit'] = max_count
             query['offset'] = last_cached_entry
-            entries, self._total_count = self.find(query)
+            entries, total_count = self.find(query)
+
+            if total_count != self._total_count:
+                logging.warning('Inconsistency detected, remaking the cache')
+                self._offset = 0
+                self._cache.remove_all(self._cache)
+                return self.read(max_count)
 
             # update cache
             self._cache.append_all(entries)
@@ -190,7 +202,13 @@ class BaseResultSet(object):
             query = self._query.copy()
             query['limit'] = limit
             query['offset'] = self._offset
-            entries, self._total_count = self.find(query)
+            entries, total_count = self.find(query)
+
+            if total_count != self._total_count:
+                logging.warning('Inconsistency detected, remaking the cache')
+                self._offset = 0
+                self._cache.remove_all(self._cache)
+                return self.read(max_count)
 
             # update cache
             self._cache.prepend_all(entries)
