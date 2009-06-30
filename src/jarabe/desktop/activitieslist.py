@@ -56,7 +56,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self.set_model(model)
 
         cell_favorite = CellRendererFavorite(self)
-        cell_favorite.connect('activate', self.__favorite_activate_cb)
+        cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_favorite)
@@ -65,7 +65,7 @@ class ActivitiesTreeView(gtk.TreeView):
 
         cell_icon = CellRendererActivityIcon(self)
         cell_icon.connect('erase-activated', self.__erase_activated_cb)
-        cell_icon.connect('activate', self.__icon_activate_cb)
+        cell_icon.connect('clicked', self.__icon_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.pack_start(cell_icon)
@@ -127,14 +127,14 @@ class ActivitiesTreeView(gtk.TreeView):
             cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             cell.props.fill_color = style.COLOR_WHITE.get_svg()
 
-    def __favorite_activate_cb(self, cell, path):
+    def __favorite_clicked_cb(self, cell, path):
         row = self.get_model()[path]
         registry = bundleregistry.get_registry()
         registry.set_bundle_favorite(row[ListModel.COLUMN_BUNDLE_ID],
                                      row[ListModel.COLUMN_VERSION],
                                      not row[ListModel.COLUMN_FAVORITE])
 
-    def __icon_activate_cb(self, cell, path):
+    def __icon_clicked_cb(self, cell, path):
         row = self.get_model()[path]
 
         registry = bundleregistry.get_registry()

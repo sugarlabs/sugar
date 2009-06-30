@@ -122,7 +122,7 @@ class BaseListView(gtk.Bin):
 
     def _add_columns(self):
         cell_favorite = CellRendererFavorite(self.tree_view)
-        cell_favorite.connect('activate', self.__favorite_activate_cb)
+        cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
@@ -132,7 +132,7 @@ class BaseListView(gtk.Bin):
         self.tree_view.append_column(column)
 
         self.cell_icon = CellRendererActivityIcon(self.tree_view)
-        self.cell_icon.connect('activate', self.__icon_activate_cb)
+        self.cell_icon.connect('clicked', self.__icon_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
@@ -260,16 +260,16 @@ class BaseListView(gtk.Bin):
             cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             cell.props.fill_color = style.COLOR_WHITE.get_svg()
 
-    def __favorite_activate_cb(self, cell, path):
+    def __favorite_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
-        if metadata['keep'] == 1:
-            metadata['keep'] = 0
+        if metadata['keep'] == '1':
+            metadata['keep'] = '0'
         else:
-            metadata['keep'] = 1
+            metadata['keep'] = '1'
         model.write(metadata, update_mtime=False)
 
-    def __icon_activate_cb(self, cell, path):
+    def __icon_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         misc.resume(metadata)
@@ -455,7 +455,7 @@ class ListView(BaseListView):
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
 
         cell_detail = CellRendererDetail(self.tree_view)
-        cell_detail.connect('activate', self.__detail_activate_cb)
+        cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
@@ -463,7 +463,7 @@ class ListView(BaseListView):
         column.pack_start(cell_detail)
         self.tree_view.append_column(column)
 
-    def __detail_activate_cb(self, cell, path):
+    def __detail_cell_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         self.emit('detail-clicked', row[ListModel.COLUMN_UID])
 
