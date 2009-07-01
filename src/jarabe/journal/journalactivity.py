@@ -133,7 +133,7 @@ class JournalActivity(Window):
 
         self._dbus_service = JournalActivityDBusService(self)        
 
-        #self.iconify()
+        self.iconify()
         
         self._critical_space_alert = None
         self._check_available_space()
