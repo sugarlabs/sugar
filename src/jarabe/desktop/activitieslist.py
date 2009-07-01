@@ -190,7 +190,7 @@ class ListModel(gtk.TreeModelSort):
         bundle_id = activity_info.get_bundle_id()
         version = activity_info.get_activity_version()
         favorite = activity_registry.is_bundle_favorite(bundle_id, version)
-        for row in self:
+        for row in self._model:
             if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
                     row[ListModel.COLUMN_VERSION] == version:
                 row[ListModel.COLUMN_FAVORITE] = favorite
@@ -200,7 +200,7 @@ class ListModel(gtk.TreeModelSort):
         bundle_id = activity_info.get_bundle_id()
         version = activity_info.get_activity_version()
         favorite = activity_registry.is_bundle_favorite(bundle_id, version)
-        for row in self:
+        for row in self._model:
             if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
                     row[ListModel.COLUMN_VERSION] == version:
                 self.remove(row.iter)
