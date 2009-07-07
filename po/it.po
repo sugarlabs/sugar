@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-19 00:30-0400\n"
-"PO-Revision-Date: 2009-04-30 09:08-0400\n"
+"POT-Creation-Date: 2009-06-11 00:31-0400\n"
+"PO-Revision-Date: 2009-07-07 12:04-0400\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -65,49 +65,43 @@ msgstr "Seleziona per cambiare il tuo colore:"
 msgid "About my Computer"
 msgstr "Il mio Computer"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:26
+#: ../extensions/cpsection/aboutcomputer/model.py:28
 msgid "Not available"
 msgstr "Non disponibile"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Identità"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Numero di Serie:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Build:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
 msgstr "Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:146
 msgid "Wireless Firmware:"
 msgstr "Wireless Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid "Copyright and License"
 msgstr "Copyright e Licenza"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:176
-msgid ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-msgstr ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; e Contributori."
-
-#: ../extensions/cpsection/aboutcomputer/view.py:183
+#: ../extensions/cpsection/aboutcomputer/view.py:184
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -119,7 +113,7 @@ msgstr ""
 "chiunque è il benvenuto per apportare modifiche e migliorie e/o distribuirne "
 "copie, alle condizioni descritte nella licenza medesima."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:195
+#: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
 msgstr "Testo della Licenza:"
 
@@ -300,7 +294,7 @@ msgstr "%(hour)d:%(min).2d rimanenti"
 msgid "Charged"
 msgstr "Carica"
 
-#: ../extensions/deviceicon/network.py:40
+#: ../extensions/deviceicon/network.py:43
 #, python-format
 msgid "IP address: %s"
 msgstr "Indirizzo IP: %s"
@@ -309,49 +303,82 @@ msgstr "Indirizzo IP: %s"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:109
 msgid "Disconnect..."
 msgstr "Disconnessione..."
 
-#: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:248
+#: ../extensions/deviceicon/network.py:113
+msgid "Create new wireless network"
+msgstr "Crea una nuova rete wireless"
+
+#: ../extensions/deviceicon/network.py:119
+#: ../src/jarabe/desktop/meshbox.py:250
 msgid "Connecting..."
 msgstr "Connessione..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:254
+#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:179
+#: ../src/jarabe/desktop/meshbox.py:256
 msgid "Connected"
 msgstr "Connesso"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "Canale"
 
-#: ../extensions/deviceicon/network.py:141
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr "Rete su cavo"
 
-#: ../extensions/deviceicon/network.py:169
+#: ../extensions/deviceicon/network.py:182
 msgid "Speed"
 msgstr "Velocità"
+
+#: ../extensions/deviceicon/network.py:389
+#, python-format
+msgid "%s's network"
+msgstr "rete di %s"
 
 #: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "I miei Altoparlanti"
 
-#: ../extensions/deviceicon/speaker.py:135
+#: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
 msgstr "Attiva"
 
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
 msgstr "Silenzia"
 
-#: ../extensions/globalkey/screenshot.py:51
+#: ../extensions/globalkey/screenshot.py:56
+msgid "Mesh"
+msgstr "Mesh"
+
+#: ../extensions/globalkey/screenshot.py:58
+#: ../src/jarabe/frame/zoomtoolbar.py:38
+msgid "Group"
+msgstr "Gruppo"
+
+#: ../extensions/globalkey/screenshot.py:60
+#: ../src/jarabe/frame/zoomtoolbar.py:40
+msgid "Home"
+msgstr "Casa"
+
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Activity"
+msgstr "Attività"
+
+#: ../extensions/globalkey/screenshot.py:69
 msgid "Screenshot"
 msgstr "Schermata"
+
+#: ../extensions/globalkey/screenshot.py:71
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "Schermata di \"%s\""
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -688,24 +715,24 @@ msgstr "WPA & WPA2 Personal"
 msgid "Wireless Security:"
 msgstr "Wireless Security:"
 
-#: ../src/jarabe/desktop/meshbox.py:132
+#: ../src/jarabe/desktop/meshbox.py:134
 msgid "Connect"
 msgstr "Connetti"
 
-#: ../src/jarabe/desktop/meshbox.py:136
+#: ../src/jarabe/desktop/meshbox.py:138
 msgid "Disconnect"
 msgstr "Disconnetti"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:442
+#: ../src/jarabe/desktop/meshbox.py:449
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Riprendi"
 
-#: ../src/jarabe/desktop/meshbox.py:447
+#: ../src/jarabe/desktop/meshbox.py:454
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Associa"
@@ -794,18 +821,6 @@ msgstr "ritaglio %s"
 #: ../src/jarabe/frame/zoomtoolbar.py:36
 msgid "Neighborhood"
 msgstr "I miei vicini"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:38
-msgid "Group"
-msgstr "Gruppo"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:40
-msgid "Home"
-msgstr "Casa"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:42
-msgid "Activity"
-msgstr "Attività"
 
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
@@ -919,7 +934,7 @@ msgstr "Il tuo Diario è vuoto"
 msgid "No matching entries "
 msgstr "Non ci sono dati corrispondenti "
 
-#: ../src/jarabe/journal/listview.py:369
+#: ../src/jarabe/journal/listview.py:370
 msgid "Clear search"
 msgstr "Annulla ricerca"
 
@@ -1024,24 +1039,24 @@ msgstr "Visualizza Sorgente"
 msgid "Stop"
 msgstr "Chiudi"
 
-#: ../src/jarabe/view/palettes.py:171
+#: ../src/jarabe/view/palettes.py:174
 msgid "Remove favorite"
 msgstr "Rimuovi preferito"
 
-#: ../src/jarabe/view/palettes.py:175
+#: ../src/jarabe/view/palettes.py:178
 msgid "Make favorite"
 msgstr "Definisci preferito"
 
-#: ../src/jarabe/view/palettes.py:238
+#: ../src/jarabe/view/palettes.py:241
 msgid "Show contents"
 msgstr "Mostra i contenuti"
 
-#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
+#: ../src/jarabe/view/palettes.py:263 ../src/jarabe/view/palettes.py:313
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
 
-#: ../src/jarabe/view/palettes.py:285
+#: ../src/jarabe/view/palettes.py:288
 msgid "Unmount"
 msgstr "Rimuovi"
 
@@ -1061,6 +1076,11 @@ msgstr "Sorgente della Attività"
 #, python-format
 msgid "View source: %r"
 msgstr "Vedi codice sorgente: %r"
+
+#~ msgid ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+#~ msgstr ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; e Contributori."
 
 #~ msgid "Document"
 #~ msgstr "Documento"
@@ -1087,9 +1107,6 @@ msgstr "Vedi codice sorgente: %r"
 
 #~ msgid "About my XO"
 #~ msgstr "Informazioni sul mio XO"
-
-#~ msgid "Mesh"
-#~ msgstr "Mesh"
 
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Connesso ad un Portale Mesh di scuola"
