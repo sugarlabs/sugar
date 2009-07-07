@@ -132,7 +132,6 @@ class BaseListView(gtk.Bin):
         self.tree_view.append_column(column)
 
         self.cell_icon = CellRendererActivityIcon(self.tree_view)
-        self.cell_icon.connect('clicked', self.__icon_clicked_cb)
 
         column = gtk.TreeViewColumn('')
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
@@ -268,11 +267,6 @@ class BaseListView(gtk.Bin):
         else:
             metadata['keep'] = '1'
         model.write(metadata, update_mtime=False)
-
-    def __icon_clicked_cb(self, cell, path):
-        row = self._model[path]
-        metadata = model.get(row[ListModel.COLUMN_UID])
-        misc.resume(metadata)
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
@@ -452,6 +446,8 @@ class ListView(BaseListView):
         BaseListView.__init__(self)
 
         self.cell_title.props.editable = True
+
+        self.cell_icon.connect('clicked', self.__icon_clicked_cb)
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
 
         cell_detail = CellRendererDetail(self.tree_view)
@@ -469,6 +465,11 @@ class ListView(BaseListView):
 
     def __detail_clicked_cb(self, cell, uid):
         self.emit('detail-clicked', uid)
+
+    def __icon_clicked_cb(self, cell, path):
+        row = self.tree_view.get_model()[path]
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        misc.resume(metadata)
 
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
@@ -510,6 +511,8 @@ class CellRendererActivityIcon(CellRendererIcon):
     }
 
     def __init__(self, tree_view):
+        self._show_palette = True
+
         CellRendererIcon.__init__(self, tree_view)
 
         self.props.width = style.GRID_CELL_SIZE
@@ -520,6 +523,9 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.tree_view = tree_view
 
     def create_palette(self):
+        if not self._show_palette:
+            return None
+
         tree_model = self.tree_view.get_model()
         metadata = tree_model.get_metadata(self.props.palette_invoker.path)
 
@@ -530,6 +536,12 @@ class CellRendererActivityIcon(CellRendererIcon):
 
     def __detail_clicked_cb(self, palette, uid):
         self.emit('detail-clicked', uid)
+
+    def set_show_palette(self, show_palette):
+        self._show_palette = show_palette
+
+    show_palette = gobject.property(type=bool, default=True,
+                                    setter=set_show_palette)
 
 class CellRendererBuddy(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererBuddy'
