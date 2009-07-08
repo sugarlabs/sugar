@@ -31,7 +31,6 @@ from sugar.graphics.icon import CanvasIcon, Icon, CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar import util
 
-from jarabe.journal.collapsedentry import CollapsedEntry
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
