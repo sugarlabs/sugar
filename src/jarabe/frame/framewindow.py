@@ -93,7 +93,7 @@ class FrameWindow(gtk.Window):
             self.resize(self.size, gtk.gdk.screen_height())
 
     def _realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
         self.window.set_accept_focus(False)
 
     def _enter_notify_cb(self, window, event):

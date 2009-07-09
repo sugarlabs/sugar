@@ -61,6 +61,7 @@ class LaunchWindow(gtk.Window):
         wm.set_activity_id(widget.window, str(self._activity_id))
         widget.window.property_change('_SUGAR_WINDOW_TYPE', 'STRING', 8,
                                       gtk.gdk.PROP_MODE_REPLACE, 'launcher')
+        widget.window.set_decorations(0)
 
     def __size_changed_cb(self, screen):
         self._update_size()

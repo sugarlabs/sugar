@@ -623,7 +623,8 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def __button_release_event_cb(self, icon, event):
-        self._home_model.get_active_activity().get_window().activate(1)
+        window = self._home_model.get_active_activity().get_window()
+        window.activate(gtk.get_current_event_time())
 
     def _update(self):
         self.props.file_name = self._home_activity.get_icon_path()

@@ -88,11 +88,10 @@ def _start_xephyr(dpi, dimensions, fullscreen):
                     tries -= 1
                     time.sleep(0.1)
 
-def _start_matchbox():
-    cmd = ['matchbox-window-manager']
+def _start_window_manager():
+    cmd = ['metacity']
 
-    cmd.extend(['-use_titlebar', 'no'])
-    cmd.extend(['-theme', 'sugar'])
+    cmd.extend(['--no-force-fullscreen'])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
@@ -157,7 +156,7 @@ def main():
     if not args:
         command.append('sugar')
     else:
-        _start_matchbox()
+        _start_window_manager()
 
         if args[0].endswith('.py'):
             command.append('python')
