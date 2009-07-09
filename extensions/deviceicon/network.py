@@ -394,9 +394,8 @@ class WirelessDeviceView(ToolButton):
             settings.connection.id = 'Auto ' + connection_name
             settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
-            settings.connection.mode = 'adhoc'
             settings.wireless.ssid = dbus.ByteArray(connection_name)
-            settings.wireless.channel = 'bg'
+            settings.wireless.band = 'bg'
             settings.wireless.mode = 'adhoc'
 
             settings.ip4_config = IP4Config()
