@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -124,6 +125,12 @@ class WirelessPalette(Palette):
         self._set_channel(frequency)
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
+        
+    def set_disconnected(self):
+        self.props.primary_text = ''
+        self.props.secondary_text = ''
+        self._disconnect_item.hide()
+        self.set_content(None)
 
     def __disconnect_activate_cb(self, menuitem):
         self.emit('deactivate-connection')
@@ -362,6 +369,12 @@ class WirelessDeviceView(ToolButton):
             address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected(self._frequency, address)
             self._icon.props.pulsing = False
+        else:
+            self._icon.props.badge_name = None
+            self._icon.props.pulsing = False
+            self._icon.props.pulse_color = self._inactive_color
+            self._icon.props.base_color = self._inactive_color
+            self._palette.set_disconnected()
 
     def _update_color(self):
         self._icon.props.base_color = self._color
@@ -394,11 +407,9 @@ class WirelessDeviceView(ToolButton):
             settings.connection.id = 'Auto ' + connection_name
             settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
-            settings.connection.mode = 'adhoc'
             settings.wireless.ssid = dbus.ByteArray(connection_name)
-            settings.wireless.channel = 'bg'
+            settings.wireless.band = 'bg'
             settings.wireless.mode = 'adhoc'
-
             settings.ip4_config = IP4Config()
             settings.ip4_config.method = 'shared'
 
