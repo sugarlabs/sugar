@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,6 +47,7 @@ from jarabe.model import bundleregistry
 from jarabe.model import network
 from jarabe.model import shell
 from jarabe.model.network import Settings
+from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -228,7 +230,8 @@ class AccessPointView(CanvasPulsingIcon):
         if state == network.DEVICE_STATE_ACTIVATED:
             connection = network.find_connection(self._name)
             if connection:
-                connection.set_connected()
+                if self._mode == network.NM_802_11_MODE_INFRA:
+                    connection.set_connected()
 
             icon_name = '%s-connected' % _ICON_NAME
         else:
@@ -357,6 +360,9 @@ class AccessPointView(CanvasPulsingIcon):
                 settings.wireless.mode = 'infrastructure'
             elif self._mode == network.NM_802_11_MODE_ADHOC:
                 settings.wireless.mode = 'adhoc'
+                settings.wireless.band = 'bg'
+                settings.ip4_config = IP4Config()
+                settings.ip4_config.method = 'shared'
 
             wireless_security = self._get_security()
             settings.wireless_security = wireless_security

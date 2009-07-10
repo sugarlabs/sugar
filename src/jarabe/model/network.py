@@ -1,4 +1,5 @@
 # Copyright (C) 2008 Red Hat, Inc.
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -263,15 +264,11 @@ class NMSettingsConnection(dbus.service.Object):
             config.set(identifier, 'type', self._settings.connection.type)
             config.set(identifier, 'ssid', self._settings.wireless.ssid)
             config.set(identifier, 'uuid', self._settings.connection.uuid)
-            config.set(identifier, 'mode', self._settings.wireless.mode)
             config.set(identifier, 'autoconnect', 
                        self._settings.connection.autoconnect)
             if self._settings.connection.timestamp is not None:
                 config.set(identifier, 'timestamp', 
                            self._settings.connection.timestamp)
-            if self._settings.wireless.band is not None:
-                config.set(identifier, 'band', 
-                           self._settings.wireless.band)
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:
                     config.set(identifier, 'key-mgmt',
@@ -288,10 +285,6 @@ class NMSettingsConnection(dbus.service.Object):
                 if self._settings.wireless.security is not None:
                     config.set(identifier, 'security',
                                self._settings.wireless.security)
-            if self._settings.ip4_config is not None:
-                if self._settings.ip4_config.method is not None:
-                    config.set(identifier, 'method', 
-                               self._settings.ip4_config.method)
             if self._secrets is not None:
                 if self._settings.wireless_security.key_mgmt == 'none':
                     config.set(identifier, 'key', self._secrets.wep_key)
@@ -388,23 +381,12 @@ def load_connections():
             settings.connection.uuid = uuid
             nmtype = config.get(section, 'type')
             settings.connection.type = nmtype
-            mode = config.get(section, 'mode')
-            settings.wireless.mode = mode
             autoconnect = bool(config.get(section, 'autoconnect'))
             settings.connection.autoconnect = autoconnect
 
             if config.has_option(section, 'timestamp'):
                 timestamp = int(config.get(section, 'timestamp'))
                 settings.connection.timestamp = timestamp
-
-            if config.has_option(section, 'band'):
-                band = config.get(section, 'band')
-                settings.wireless.band = band
-
-            if config.has_option(section, 'method'):
-                method = config.get(section, 'method')
-                settings.ip4_config = IP4Config()
-                settings.ip4_config.method = method
 
             secrets = None
             if config.has_option(section, 'key-mgmt'):
