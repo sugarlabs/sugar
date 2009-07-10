@@ -29,6 +29,7 @@ src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py
 src/jarabe/controlpanel/toolbar.py
+src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
@@ -41,7 +42,6 @@ src/jarabe/frame/clipboardobject.py
 src/jarabe/frame/devicestray.py
 src/jarabe/frame/zoomtoolbar.py
 src/jarabe/intro/window.py
-src/jarabe/journal/collapsedentry.py
 src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py
