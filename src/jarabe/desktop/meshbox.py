@@ -16,7 +16,7 @@
 
 from gettext import gettext as _
 import logging
-import sha
+import hashlib
 
 import dbus
 import hippo
@@ -169,7 +169,7 @@ class AccessPointView(CanvasPulsingIcon):
         if 'Mode' in properties:
             self._mode = properties['Mode']
 
-        sh = sha.new()
+        sh = hashlib.sha1()
         data = self._name + hex(self._flags)
         sh.update(data)
         h = hash(sh.digest())
