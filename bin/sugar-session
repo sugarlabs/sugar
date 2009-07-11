@@ -134,13 +134,14 @@ def main():
     cleanup_logs()
     logger.start('shell')
 
-    intro.check_profile()
-
     client = gconf.client_get_default()
-    timezone = client.get_string('/desktop/sugar/date/timezone')
+    client.set_string('/desktop/gnome/peripherals/mouse/cursor_theme', 'sugar')
 
+    timezone = client.get_string('/desktop/sugar/date/timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
+
+    intro.check_profile()
 
     start_ui_service()
     start_session_manager()
