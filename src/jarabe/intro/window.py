@@ -241,6 +241,9 @@ class IntroWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
 
+        self.props.decorated = False
+        self.maximize()
+
         self._canvas = hippo.Canvas()
         self._intro_box = _IntroBox()
         self._intro_box.connect('done', self._done_cb)

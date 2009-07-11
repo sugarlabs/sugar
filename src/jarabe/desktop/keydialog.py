@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import md5
+import hashlib
 from gettext import gettext as _
 
 import gtk
@@ -53,7 +53,7 @@ def hash_passphrase(passphrase):
     elif len(passphrase) < 64:
         while len(passphrase) < 64:
             passphrase += passphrase[:64 - len(passphrase)]
-    passphrase = md5.new(passphrase).digest()
+    passphrase = hashlib.md5(passphrase).digest()
     return string_to_hex(passphrase)[:26]
 
 class CanceledKeyRequestError(dbus.DBusException):

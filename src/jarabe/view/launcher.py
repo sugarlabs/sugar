@@ -33,6 +33,7 @@ class LaunchWindow(gtk.Window):
         gobject.GObject.__init__(self)
 
         self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_NORMAL
+        self.props.decorated = False
 
         canvas = hippo.Canvas()
         canvas.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
@@ -61,7 +62,6 @@ class LaunchWindow(gtk.Window):
         wm.set_activity_id(widget.window, str(self._activity_id))
         widget.window.property_change('_SUGAR_WINDOW_TYPE', 'STRING', 8,
                                       gtk.gdk.PROP_MODE_REPLACE, 'launcher')
-        widget.window.set_decorations(0)
 
     def __size_changed_cb(self, screen):
         self._update_size()

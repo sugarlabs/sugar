@@ -18,7 +18,7 @@
 
 from gettext import gettext as _
 import logging
-import sha
+import hashlib
 import socket
 import struct
 
@@ -317,7 +317,7 @@ class WirelessDeviceView(ToolButton):
         if 'Frequency' in properties:
             self._frequency = properties['Frequency']
 
-        sh = sha.new()
+        sh = hashlib.sha1()
         data = self._name + hex(self._flags)
         sh.update(data)
         h = hash(sh.digest())
