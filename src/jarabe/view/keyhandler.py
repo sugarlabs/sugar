@@ -22,6 +22,7 @@ import errno
 import traceback
 import sys
 
+import gconf
 import dbus
 import gtk
 
@@ -86,6 +87,8 @@ class KeyHandler(object):
         self._keystate_pressed = 0
         self._speech_proxy = None
 
+        self._ungrab_metacity_keys()
+
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
@@ -110,6 +113,15 @@ class KeyHandler(object):
                                   traceback.format_exc())
 
         self._key_grabber.grab_keys(_actions_table.keys())
+
+    def _ungrab_metacity_keys(self):
+        """So we can grab those instead.
+        """
+        client = gconf.client_get_default()
+        for key in ['run_command_screenshot', 'switch_windows',
+                    'cycle_windows']:
+            key = '/apps/metacity/global_keybindings/' + key
+            client.set_string(key, 'disabled')
 
     def _change_volume(self, step=None, value=None):
         if step is not None:

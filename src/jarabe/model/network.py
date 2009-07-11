@@ -1,4 +1,5 @@
 # Copyright (C) 2008 Red Hat, Inc.
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -103,7 +104,7 @@ class Wireless(object):
         self.ssid = None
         self.security = None
         self.mode = None
-        self.channel = None
+        self.band = None
 
     def get_dict(self):
         wireless = {'ssid': self.ssid}
@@ -111,8 +112,8 @@ class Wireless(object):
             wireless['security'] = self.security
         if self.mode:
             wireless['mode'] = self.mode
-        if self.channel:
-            wireless['channel'] = self.channel
+        if self.band:
+            wireless['band'] = self.band
         return wireless
 
 class Connection(object):
@@ -138,7 +139,6 @@ class IP4Config(object):
 
     def get_dict(self):
         ip4_config = {}
-        print self.method
         if self.method is not None:
             ip4_config['method'] = self.method
         return ip4_config
@@ -269,7 +269,6 @@ class NMSettingsConnection(dbus.service.Object):
             if self._settings.connection.timestamp is not None:
                 config.set(identifier, 'timestamp', 
                            self._settings.connection.timestamp)
-
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:
                     config.set(identifier, 'key-mgmt',

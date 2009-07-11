@@ -457,6 +457,12 @@ class ShellModel(gobject.GObject):
             if activity_id:
                 home_activity = self.get_activity_by_id(activity_id)
 
+                xid = window.get_xid()
+                gdk_window = gtk.gdk.window_foreign_new(xid)
+                gdk_window.set_decorations(0)
+
+                window.maximize()
+
             if not home_activity:
                 home_activity = Activity(activity_info, activity_id, window)
                 self._add_activity(home_activity)
