@@ -15,8 +15,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import gtk
+import time
+
 import gobject
+import gtk
 
 from jarabe.model import shell
 
@@ -57,27 +59,28 @@ class TabbingHandler(object):
             else:
                 self._frame.show(self._frame.MODE_NON_INTERACTIVE)
 
-    def __timeout_cb(self):
-        self._activate_current()
+    def __timeout_cb(self, event_time):
+        self._activate_current(event_time)
         self._timeout = None
         return False
 
-    def _start_timeout(self):
+    def _start_timeout(self, event_time):
         self._cancel_timeout()
-        self._timeout = gobject.timeout_add(_RAISE_DELAY, self.__timeout_cb)
+        self._timeout = gobject.timeout_add(_RAISE_DELAY,
+                lambda: self.__timeout_cb(event_time))
 
     def _cancel_timeout(self):
         if self._timeout:
             gobject.source_remove(self._timeout)
             self._timeout = None
 
-    def _activate_current(self):
+    def _activate_current(self, event_time):
         home_model = shell.get_model()
         activity = home_model.get_tabbing_activity()
         if activity and activity.get_window():
-            activity.get_window().activate(1)
+            activity.get_window().activate(event_time)
 
-    def next_activity(self):
+    def next_activity(self, event_time):
         if not self._tabbing:
             first_switch = True
             self._start_tabbing()
@@ -96,11 +99,11 @@ class TabbingHandler(object):
                 activity = shell_model.get_next_activity(current=activity)
 
             shell_model.set_tabbing_activity(activity)
-            self._start_timeout()
+            self._start_timeout(event_time)
         else:
-            self._activate_next_activity()
+            self._activate_next_activity(event_time)
 
-    def previous_activity(self):
+    def previous_activity(self, event_time):
         if not self._tabbing:
             first_switch = True
             self._start_tabbing()
@@ -121,14 +124,14 @@ class TabbingHandler(object):
             shell_model.set_tabbing_activity(activity)
             self._start_timeout()
         else:
-            self._activate_next_activity()
+            self._activate_next_activity(event_time)
 
-    def _activate_next_activity(self):
+    def _activate_next_activity(self, event_time):
         next_activity = shell.get_model().get_next_activity()
         if next_activity:
-            next_activity.get_window().activate(gtk.get_current_event_time())
+            next_activity.get_window().activate(event_time)
 
-    def stop(self):
+    def stop(self, event_time):
         gtk.gdk.keyboard_ungrab()
         gtk.gdk.pointer_ungrab()
         self._tabbing = False
@@ -136,7 +139,7 @@ class TabbingHandler(object):
         self._frame.hide()
 
         self._cancel_timeout()
-        self._activate_current()
+        self._activate_current(event_time)
 
         home_model = shell.get_model()
         home_model.set_tabbing_activity(None)

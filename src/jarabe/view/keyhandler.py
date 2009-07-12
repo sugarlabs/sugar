@@ -166,69 +166,69 @@ class KeyHandler(object):
             self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
                 error_handler=self._on_speech_err)
 
-    def handle_say_text(self):
+    def handle_say_text(self, event_time):
         clipboard = gtk.clipboard_get(selection="PRIMARY")
         clipboard.request_text(self._primary_selection_cb)
 
-    def handle_previous_window(self):
-        self._tabbing_handler.previous_activity()
+    def handle_previous_window(self, event_time):
+        self._tabbing_handler.previous_activity(event_time)
 
-    def handle_next_window(self):
-        self._tabbing_handler.next_activity()
+    def handle_next_window(self, event_time):
+        self._tabbing_handler.next_activity(event_time)
 
-    def handle_close_window(self):
+    def handle_close_window(self, event_time):
         active_activity = shell.get_model().get_active_activity()
         if active_activity.is_journal():
             return
 
         active_activity.get_window().close()
 
-    def handle_zoom_mesh(self):
+    def handle_zoom_mesh(self, event_time):
         shell.get_model().zoom_level = ShellModel.ZOOM_MESH
 
-    def handle_zoom_group(self):
+    def handle_zoom_group(self, event_time):
         shell.get_model().zoom_level = ShellModel.ZOOM_GROUP
 
-    def handle_zoom_home(self):
+    def handle_zoom_home(self, event_time):
         shell.get_model().zoom_level = ShellModel.ZOOM_HOME
 
-    def handle_zoom_activity(self):
+    def handle_zoom_activity(self, event_time):
         shell.get_model().zoom_level = ShellModel.ZOOM_ACTIVITY
 
-    def handle_brightness_max(self):
+    def handle_brightness_max(self, event_time):
         self._change_brightness(value=_BRIGHTNESS_MAX)
 
-    def handle_brightness_min(self):
+    def handle_brightness_min(self, event_time):
         self._change_brightness(value=0)
 
-    def handle_volume_max(self):
+    def handle_volume_max(self, event_time):
         self._change_volume(value=_VOLUME_MAX)
 
-    def handle_volume_min(self):
+    def handle_volume_min(self, event_time):
         self._change_volume(value=0)
 
-    def handle_brightness_up(self):
+    def handle_brightness_up(self, event_time):
         self._change_brightness(step=_BRIGHTNESS_STEP)
 
-    def handle_brightness_down(self):
+    def handle_brightness_down(self, event_time):
         self._change_brightness(step=-_BRIGHTNESS_STEP)
 
-    def handle_volume_mute(self):
+    def handle_volume_mute(self, event_time):
         if sound.get_muted() is True:
             sound.set_muted(False)
         else:
             sound.set_muted(True)
 
-    def handle_volume_up(self):
+    def handle_volume_up(self, event_time):
         self._change_volume(step=_VOLUME_STEP)
 
-    def handle_volume_down(self):
+    def handle_volume_down(self, event_time):
         self._change_volume(step=-_VOLUME_STEP)
 
-    def handle_frame(self):
+    def handle_frame(self, event_time):
         self._frame.notify_key_press()
 
-    def handle_rotate(self):
+    def handle_rotate(self, event_time):
         """
         Handles rotation of the display (using xrandr) and of the d-pad.
 
@@ -268,13 +268,13 @@ class KeyHandler(object):
             if e.errno != errno.EINTR:
                 raise
 
-    def handle_quit_emulator(self):
+    def handle_quit_emulator(self, event_time):
         session.get_session_manager().shutdown()
 
-    def handle_open_search(self):
+    def handle_open_search(self, event_time):
         journalactivity.get_journal().focus_search()
 
-    def _key_pressed_cb(self, grabber, keycode, state):
+    def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
         logging.debug('_key_pressed_cb: %i %i %s' % (keycode, state, key))
         if key:
@@ -287,14 +287,14 @@ class KeyHandler(object):
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
                 if not action in ["next_window", "previous_window"]:
-                    self._tabbing_handler.stop()
+                    self._tabbing_handler.stop(event_time)
                     return True
 
             if hasattr(action, 'handle_key_press'):
                 action.handle_key_press(key)
             elif isinstance(action, basestring):
                 method = getattr(self, 'handle_' + action)
-                method()
+                method(event_time)
             else:
                 raise TypeError('Invalid action %r' % action)
 
@@ -303,17 +303,17 @@ class KeyHandler(object):
             # If this is not a registered key, then cancel tabbing.
             if self._tabbing_handler.is_tabbing():
                 if not grabber.is_modifier(keycode):
-                    self._tabbing_handler.stop()
+                    self._tabbing_handler.stop(event_time)
                 return True
 
         return False
 
-    def _key_released_cb(self, grabber, keycode, state):
+    def _key_released_cb(self, grabber, keycode, state, event_time):
         if self._tabbing_handler.is_tabbing():
             # We stop tabbing and switch to the new window as soon as the
             # modifier key is raised again.
             if grabber.is_modifier(keycode, mask=_TABBING_MODIFIER):
-                self._tabbing_handler.stop()
+                self._tabbing_handler.stop(event_time)
 
             return True
         return False
