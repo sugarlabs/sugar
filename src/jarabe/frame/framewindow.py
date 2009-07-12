@@ -93,6 +93,7 @@ class FrameWindow(gtk.Window):
             self.resize(self.size, gtk.gdk.screen_height())
 
     def _realize_cb(self, widget):
+        self.window.set_override_redirect(True)
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
         self.window.set_accept_focus(False)
 
