@@ -122,7 +122,7 @@ class TabbingHandler(object):
                 activity = shell_model.get_previous_activity(current=activity)
 
             shell_model.set_tabbing_activity(activity)
-            self._start_timeout()
+            self._start_timeout(event_time)
         else:
             self._activate_next_activity(event_time)
 
