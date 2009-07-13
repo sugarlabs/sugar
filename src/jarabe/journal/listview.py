@@ -445,6 +445,7 @@ class ListView(BaseListView):
         BaseListView.__init__(self)
 
         self.cell_title.props.editable = True
+        self.cell_title.connect('edited', self.__cell_title_edited_cb)
 
         self.cell_icon.connect('clicked', self.__icon_clicked_cb)
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
@@ -469,6 +470,12 @@ class ListView(BaseListView):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         misc.resume(metadata)
+
+    def __cell_title_edited_cb(self, cell, path, new_text):
+        row = self._model[path]
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        metadata['title'] = new_text
+        model.write(metadata, update_mtime=False)
 
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
