@@ -1,3 +1,25 @@
+sugar-0.84 (0.84.6-6) unstable; urgency=low
+
+  * Stop depending on telepathy-gabble or telepathy-salut (only logfile
+    prefs mentioned here, actual use is by sugar-presence-service).
+  * Rename patch 2002→1002 and adapt to strip path (not just adapt it to
+    fit Debian).
+  * Recommend x11-utils, lsb-release, wpasupplicant and ethtool.
+  * Stop depending on python-numpy (passed to grid function in
+    python-sugar-toolkit since 0.83.x).
+  * Depend on openssh-client (not just suggest: needed at initial
+    login).
+  * Stop depending on net-tool (actual use is by
+    sugar-presence-service).
+  * Suggest gdb (needed by --debug option of sugar-launch command).
+  * Fix install menu file, and XDG xsession and desktop files.
+  * Fix depend on python-wnck (wrongly depended on python-rsvg since
+    0.84.6-4), thanks to Tomeu Vizoso.
+  * Build-depend on python-gtksourceview2. Thanks to Tomeu Vizoso for
+    spotting this.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 16 Jul 2009 14:10:51 +0200
+
 sugar-0.84 (0.84.6-5) unstable; urgency=low
 
   * Conflict with and replace sugar-journal-activity.

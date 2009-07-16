@@ -32,18 +32,18 @@ Files: AUTHORS
 	debian/control
 	debian/control.in
 	debian/gbp.conf
+	debian/patches/1002_wpa_passphrase_strip_path.patch
 	debian/patches/2001_empy_from_system.patch
-	debian/patches/2002_wpa_passphrase_in_usr-bin.patch
 	debian/patches/2003_fix_tz_config_path.patch
 	debian/patches/2991_enable_danish_l10n.patch
 	debian/patches/2992_empy_from_system.patch
 	debian/patches/README
 	debian/patches/series
 	debian/pycompat
+	debian/sugar-__VER__.install.in
+	debian/sugar-__VER__.menu.in
 	debian/sugar-emulator.desktop
 	debian/sugar.desktop
-	debian/sugar.install
-	debian/sugar.menu
 	debian/watch
 	extensions/Makefile.am
 	extensions/cpsection/Makefile.am
