@@ -446,6 +446,7 @@ class ActivityIcon(CanvasIcon):
     def __get_last_activity_async_cb(self, entries, error=None):
         if error is not None:
             logging.error('Error retrieving most recent activities: %r' % error)
+            return
 
         # If there's a problem with the DS index, we may get entries not related
         # to this activity.
