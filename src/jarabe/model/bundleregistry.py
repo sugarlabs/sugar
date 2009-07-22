@@ -379,6 +379,9 @@ class BundleRegistry(gobject.GObject):
         act = self.get_bundle(bundle.get_bundle_id())
         if act is None:
             logging.warning('Activity not installed')
+        elif act.get_activity_version() == bundle.get_activity_version():
+            logging.debug('No upgrade needed, same version already installed.')
+            return
         elif act.get_path().startswith(env.get_user_activities_path()):
             try:
                 self.uninstall(bundle, force=True)
