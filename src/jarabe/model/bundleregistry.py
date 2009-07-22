@@ -78,7 +78,7 @@ class BundleRegistry(gobject.GObject):
         if not one_file.get_path().endswith('.activity'):
             return
         if event_type == gio.FILE_MONITOR_EVENT_CREATED:
-            self.add_bundle(one_file.get_path())
+            self.add_bundle(one_file.get_path(), install_mime_type=True)
         elif event_type == gio.FILE_MONITOR_EVENT_DELETED:
             self.remove_bundle(one_file.get_path())
 
@@ -194,8 +194,8 @@ class BundleRegistry(gobject.GObject):
                 logging.error('Error while processing installed activity ' \
                               'bundle: %s, %s, %s' % (folder, e.__class__, e))
 
-    def add_bundle(self, bundle_path):
-        bundle = self._add_bundle(bundle_path)
+    def add_bundle(self, bundle_path, install_mime_type=False):
+        bundle = self._add_bundle(bundle_path, install_mime_type)
         if bundle is not None:
             self._set_bundle_favorite(bundle.get_bundle_id(),
                                       bundle.get_activity_version(),
@@ -205,10 +205,12 @@ class BundleRegistry(gobject.GObject):
         else:
             return False
 
-    def _add_bundle(self, bundle_path):
+    def _add_bundle(self, bundle_path, install_mime_type=False):
         logging.debug('STARTUP: Adding bundle %r' % bundle_path)
         try:
             bundle = ActivityBundle(bundle_path)
+            if install_mime_type:
+                bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
             logging.error('Error loading bundle %r:\n%s' % (bundle_path,
                 ''.join(traceback.format_exception(*sys.exc_info()))))
