@@ -5,6 +5,7 @@ sugar_DATA =			 	\
 	module-about_my_computer.svg   	\
 	module-date_and_time.svg 	\
 	module-frame.svg	 	\
+	module-keyboard.svg		\
 	module-language.svg      	\
 	module-network.svg	 	\
 	module-power.svg

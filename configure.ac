@@ -58,6 +58,7 @@ extensions/cpsection/aboutme/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
+extensions/cpsection/keyboard/Makefile
 extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
