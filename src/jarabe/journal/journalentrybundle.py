@@ -40,7 +40,7 @@ class JournalEntryBundle(Bundle):
     def __init__(self, path):
         Bundle.__init__(self, path)
 
-    def install(self):
+    def install(self, install_path):
         if os.environ.has_key('SUGAR_ACTIVITY_ROOT'):
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
@@ -61,6 +61,9 @@ class JournalEntryBundle(Bundle):
             model.write(metadata, file_path)
         finally:
             shutil.rmtree(bundle_dir, ignore_errors=True)
+
+    def get_bundle_id(self):
+        return None
 
     def _read_metadata(self, bundle_dir):
         metadata_path = os.path.join(bundle_dir, '_metadata.json')
