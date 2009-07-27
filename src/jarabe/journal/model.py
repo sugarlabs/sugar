@@ -483,9 +483,11 @@ def write(metadata, file_path='', update_mtime=True):
 def _get_file_name(title, mime_type):
     file_name = title
 
-    extension = '.' + mime.get_primary_extension(mime_type)
-    if not file_name.endswith(extension):
-        file_name += extension
+    extension = mime.get_primary_extension(mime_type)
+    if extension is not None and extension:
+        extension = '.' + extension
+        if not file_name.endswith(extension):
+            file_name += extension
 
     # Invalid characters in VFAT filenames. From
     # http://en.wikipedia.org/wiki/File_Allocation_Table
@@ -498,7 +500,7 @@ def _get_file_name(title, mime_type):
     max_len = 250
     if len(file_name) > max_len:
         name, extension = os.path.splitext(file_name)
-        file_name = name[0:max_len - extension] + extension
+        file_name = name[0:max_len - len(extension)] + extension
     
     return file_name
 
