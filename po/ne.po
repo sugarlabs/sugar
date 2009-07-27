@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-21 00:30-0500\n"
-"PO-Revision-Date: 2009-03-01 00:19-0500\n"
-"Last-Translator: Pradosh Kharel <pradosh@olenepal.org>\n"
+"POT-Creation-Date: 2009-04-29 17:36-0400\n"
+"PO-Revision-Date: 2009-07-27 00:11-0400\n"
+"Last-Translator: Daniel Drake <dsd@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ne\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -63,50 +65,43 @@ msgstr "रङ्ग परिवर्तन गर्न क्लिक ग�
 msgid "About my Computer"
 msgstr "मेरो कम्पयूटरको बारेमा"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:26
+#: ../extensions/cpsection/aboutcomputer/model.py:28
 msgid "Not available"
 msgstr "उपलब्ध छैन"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "व्यक्तित्ब"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "क्रमिक अङ्क"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "सफ्टवेर"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "बनाइ:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "सुगर:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
 msgstr "फर्मवेर:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:146
 msgid "Wireless Firmware:"
 msgstr "तारबिनाको फर्मवेर:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid "Copyright and License"
 msgstr "कपिराइट र अनुमतिपत्र"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:176
-msgid ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-msgstr ""
-"© २००८ वान ल्यप् टप पर चाईल्ड असोसिएसन आइ एन सि; रेड ह्यट आइ एन सि; र अरु "
-"निर्माताहरु।"
-
-#: ../extensions/cpsection/aboutcomputer/view.py:183
+#: ../extensions/cpsection/aboutcomputer/view.py:184
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -117,7 +112,7 @@ msgstr ""
 "हो,  सुगर ले जि एन यु जनरल पब्लिक अनुमति पत्र प्रयोग गर्छ र तपाईंले यसलाई "
 "परिवर्तन गरेर नियम अनुसार अरुलाई दिन सक्नुहुन्छ।"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:195
+#: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
 msgstr "सम्पूर्ण अनुमति पत्र:"
 
@@ -267,7 +262,7 @@ msgstr ""
 "अति किफायत शक्तिको प्रबन्धकर्ता (तार बिनाको रेडियो असमर्थ पार्छ, ब्याटरिको "
 "जीवन बढाउँछ)"
 
-#: ../extensions/deviceicon/battery.py:56
+#: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
 msgstr "मेरो बेटरी"
 
@@ -286,7 +281,7 @@ msgstr "एकदमै थोरै शक्‍ति बाँकी छ"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(घण्टा)d:%(मिनेट).2d बाँकी"
+msgstr "%(hour)d:%(min).2d बाँकी"
 
 #: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
@@ -310,14 +305,14 @@ msgstr "जडान विच्छेद..."
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:247
+#: ../src/jarabe/desktop/meshbox.py:250
 msgid "Connecting..."
 msgstr "जडान हुदैछ..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:113
 #: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:253
+#: ../src/jarabe/desktop/meshbox.py:256
 msgid "Connected"
 msgstr "जडान भयो"
 
@@ -333,19 +328,19 @@ msgstr "तार युक्त संजाल"
 msgid "Speed"
 msgstr "गति"
 
-#: ../extensions/deviceicon/speaker.py:46
+#: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "मेरो स्पिकरहरु"
 
-#: ../extensions/deviceicon/speaker.py:128
+#: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
 msgstr "आवाज खोल"
 
-#: ../extensions/deviceicon/speaker.py:131
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
 msgstr "आवाज बन्द"
 
-#: ../extensions/globalkey/screenshot.py:50
+#: ../extensions/globalkey/screenshot.py:51
 msgid "Screenshot"
 msgstr "पर्दाछवि"
 
@@ -475,8 +470,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"सुगर-कन्ट्रोल-प्यानल: सावधान, त्यही नाम भएको एउटा भन्दा धेरै रोजाई भेटियो: "
-"%s मोडियुल: %r"
+"सुगर-कन्ट्रोल-प्यानल: सावधान, त्यही नाम भएको एउटा भन्दा धेरै रोजाई भेटियो: %"
+"s मोडियुल: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -547,65 +542,65 @@ msgstr "भयो"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:687
-#: ../src/jarabe/frame/activitiestray.py:766
-#: ../src/jarabe/frame/activitiestray.py:794
+#: ../src/jarabe/frame/activitiestray.py:726
+#: ../src/jarabe/frame/activitiestray.py:821
+#: ../src/jarabe/frame/activitiestray.py:849
 msgid "Cancel"
 msgstr "रद्द"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:339
 msgid "Ok"
 msgstr "हुन्छ"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:114
+#: ../src/jarabe/desktop/favoriteslayout.py:116
 msgid "Freeform"
 msgstr "स्वतन्त्र आकारको"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:196
+#: ../src/jarabe/desktop/favoriteslayout.py:198
 msgid "Ring"
 msgstr "औँठी"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:332
+#: ../src/jarabe/desktop/favoriteslayout.py:334
 msgid "Spiral"
 msgstr "पेंचदार"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:399
+#: ../src/jarabe/desktop/favoriteslayout.py:401
 msgid "Box"
 msgstr "बाकस"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:440
+#: ../src/jarabe/desktop/favoriteslayout.py:442
 msgid "Triangle"
 msgstr "त्रिकोण"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:330
 msgid "Registration Failed"
 msgstr "दर्ता असफल भयो"
 
-#: ../src/jarabe/desktop/favoritesview.py:330
+#: ../src/jarabe/desktop/favoritesview.py:331
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "Registration Successful"
 msgstr "दर्ता सफल"
 
-#: ../src/jarabe/desktop/favoritesview.py:333
+#: ../src/jarabe/desktop/favoritesview.py:334
 msgid "You are now registered with your school server."
 msgstr "अब तपाईँको नाम बिद्यालयको सर्भरमा दर्ता भइसक्यो।"
 
-#: ../src/jarabe/desktop/favoritesview.py:668
+#: ../src/jarabe/desktop/favoritesview.py:674
 msgid "Register"
 msgstr "दर्ता"
 
@@ -677,25 +672,25 @@ msgstr "WPA र WPA2 निजी"
 msgid "Wireless Security:"
 msgstr "तारबिनाको लागि सुरक्षा"
 
-#: ../src/jarabe/desktop/meshbox.py:131
+#: ../src/jarabe/desktop/meshbox.py:134
 msgid "Connect"
 msgstr "जोड"
 
-#: ../src/jarabe/desktop/meshbox.py:135
+#: ../src/jarabe/desktop/meshbox.py:138
 msgid "Disconnect"
 msgstr "विच्छेद भयो"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:441
-#: ../src/jarabe/frame/activitiestray.py:711
+#: ../src/jarabe/desktop/meshbox.py:444
+#: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "पुनरारम्भ"
 
-#: ../src/jarabe/desktop/meshbox.py:446
-#: ../src/jarabe/frame/activitiestray.py:227
+#: ../src/jarabe/desktop/meshbox.py:449
+#: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "सहभागी होऊ"
 
@@ -711,47 +706,52 @@ msgstr "सर्भरमा जड़ान हुन सकेन।"
 msgid "The server could not complete the request."
 msgstr "सर्भरले अनुरोध पुरा गर्न सकेन।"
 
-#: ../src/jarabe/frame/activitiestray.py:232
-#: ../src/jarabe/frame/activitiestray.py:659
+#: ../src/jarabe/frame/activitiestray.py:240
+#: ../src/jarabe/frame/activitiestray.py:698
 msgid "Decline"
 msgstr "नाई"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:650
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:614
+#: ../src/jarabe/frame/activitiestray.py:652
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:616
+#: ../src/jarabe/frame/activitiestray.py:654
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:633
+#: ../src/jarabe/frame/activitiestray.py:671
 #, python-format
 msgid "%s of %s"
 msgstr "%s को %s"
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:683
 #, python-format
 msgid "Transfer from %r"
 msgstr "%r बाट सार्नुहोस"
 
-#: ../src/jarabe/frame/activitiestray.py:654
+#: ../src/jarabe/frame/activitiestray.py:693
 msgid "Accept"
 msgstr "स्विकार"
 
-#: ../src/jarabe/frame/activitiestray.py:677
-#: ../src/jarabe/frame/activitiestray.py:784
+#: ../src/jarabe/frame/activitiestray.py:716
+#: ../src/jarabe/frame/activitiestray.py:839
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:755
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
 msgstr "%r मा सार्नुहोस"
@@ -902,11 +902,11 @@ msgstr "तिम्रो पंजिका खाली छ"
 msgid "No matching entries "
 msgstr "मिल्ने लेखा छैन "
 
-#: ../src/jarabe/journal/listview.py:369
+#: ../src/jarabe/journal/listview.py:370
 msgid "Clear search"
 msgstr "खोजलाई सफा गर"
 
-#: ../src/jarabe/journal/misc.py:91
+#: ../src/jarabe/journal/misc.py:93
 msgid "No date"
 msgstr "मिति छैन"
 
@@ -1005,24 +1005,24 @@ msgstr "स्रोत हेर"
 msgid "Stop"
 msgstr "बन्द गर"
 
-#: ../src/jarabe/view/palettes.py:171
+#: ../src/jarabe/view/palettes.py:174
 msgid "Remove favorite"
 msgstr "प्रिय हटाउ"
 
-#: ../src/jarabe/view/palettes.py:175
+#: ../src/jarabe/view/palettes.py:178
 msgid "Make favorite"
 msgstr "प्रिय बनाउ"
 
-#: ../src/jarabe/view/palettes.py:238
+#: ../src/jarabe/view/palettes.py:241
 msgid "Show contents"
 msgstr "वस्तुहरु देखाउ"
 
-#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
+#: ../src/jarabe/view/palettes.py:263 ../src/jarabe/view/palettes.py:313
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(खालि॒_ठाउँ )d MB खालि"
+msgstr "%(free_space)d MB खालि"
 
-#: ../src/jarabe/view/palettes.py:285
+#: ../src/jarabe/view/palettes.py:288
 msgid "Unmount"
 msgstr "हटाऊ"
 
@@ -1042,6 +1042,12 @@ msgstr "क्रियाकलाप बन्डलको मुल"
 #, python-format
 msgid "View source: %r"
 msgstr "स्रोत हेर : %r"
+
+#~ msgid ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+#~ msgstr ""
+#~ "© २००८ वान ल्यप् टप पर चाईल्ड असोसिएसन आइ एन सि; रेड ह्यट आइ एन सि; र अरु "
+#~ "निर्माताहरु।"
 
 #~ msgid "Document"
 #~ msgstr "कागतपत्र"
