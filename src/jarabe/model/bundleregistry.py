@@ -26,6 +26,7 @@ import cjson
 
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
+from jarabe.journal.journalentrybundle import JournalEntryBundle
 from sugar.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar import env
@@ -315,7 +316,8 @@ class BundleRegistry(gobject.GObject):
     def is_installed(self, bundle):
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle):
+        if isinstance(bundle, ContentBundle) or \
+                isinstance(bundle, JournalEntryBundle):
             return bundle.is_installed()
 
         for installed_bundle in self._bundles:
@@ -344,7 +346,8 @@ class BundleRegistry(gobject.GObject):
         
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle):
+        if isinstance(bundle, ContentBundle) or \
+                isinstance(bundle, JournalEntryBundle):
             pass
         elif not self.add_bundle(install_path):
             raise RegistrationException
@@ -352,7 +355,8 @@ class BundleRegistry(gobject.GObject):
     def uninstall(self, bundle, force=False):        
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle):
+        if isinstance(bundle, ContentBundle) or \
+                isinstance(bundle, JournalEntryBundle):
             if bundle.is_installed():
                 bundle.uninstall()
             else:
