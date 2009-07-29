@@ -35,6 +35,9 @@ class BuddyModel(gobject.GObject):
         'icon-changed':             (gobject.SIGNAL_RUN_FIRST,
                                      gobject.TYPE_NONE,
                                      ([])),
+        'tags-changed':             (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
         'current-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                      gobject.TYPE_NONE,
                                      ([gobject.TYPE_PYOBJECT]))
@@ -47,6 +50,7 @@ class BuddyModel(gobject.GObject):
         gobject.GObject.__init__(self)
 
         self._color = None
+        self._tags = None
         self._ba_handler = None
         self._pc_handler = None
         self._dis_handler = None
@@ -99,6 +103,9 @@ class BuddyModel(gobject.GObject):
     def get_color(self):
         return self._color
 
+    def get_tags(self):
+        return self._tags
+
     def get_buddy(self):
         return self._buddy
 
@@ -124,6 +131,7 @@ class BuddyModel(gobject.GObject):
         self._buddy = buddy
         self._key = self._buddy.props.key
         self._nick = self._buddy.props.nick
+        self._tags = self._buddy.props.tags
         self._set_color_from_string(self._buddy.props.color)
 
         self._pc_handler = self._buddy.connect('property-changed',
@@ -155,6 +163,9 @@ class BuddyModel(gobject.GObject):
         if 'nick' in keys:
             self._nick = self._buddy.props.nick
             self.emit('nick-changed', self.get_nick())            
+        if 'tags' in keys:
+            self._tags = self._buddy.props.tags
+            self.emit('tags-changed', self.get_tags())
 
     def _buddy_disappeared_cb(self, buddy):
         if buddy != self._buddy:
