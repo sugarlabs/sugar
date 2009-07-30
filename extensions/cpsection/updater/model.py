@@ -134,7 +134,7 @@ class UpdateList(gtk.ListStore):
 
         try:
             new_version, new_url, new_size = aslo.fetch_update_info(row[BUNDLE])
-        except Exceptoin, e:
+        except Exception, e:
             logging.warning('Failure %s updating: %s' % \
                     (row[BUNDLE].get_name(), e))
             return False
@@ -142,7 +142,7 @@ class UpdateList(gtk.ListStore):
         row[CURRENT_VERSION] = row[BUNDLE].get_activity_version()
         row[UPDATE_VERSION] = long(new_version)
 
-        if row[CURRENT_VERSION] > row[UPDATE_VERSION]:
+        if row[CURRENT_VERSION] >= row[UPDATE_VERSION]:
             logging.debug('Skip %s update' % row[BUNDLE].get_name())
             return False
 
@@ -184,7 +184,11 @@ class UpdateList(gtk.ListStore):
             fd, xofile = tempfile.mkstemp(suffix='.xo')
             os.close(fd)
             try:
-                urllib.urlretrieve(row[UPDATE_URL], xofile)
+                try:
+                    urllib.urlretrieve(row[UPDATE_URL], xofile)
+                except Exception, e:
+                    logging.warning("Can't download %s" % row[UPDATE_URL])
+                    continue
 
                 if self._cancel:
                     return installed
