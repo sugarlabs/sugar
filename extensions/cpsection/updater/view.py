@@ -1,14 +1,24 @@
-from gettext import gettext as _
-import gettext
-import logging
-from threading import Thread
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import pygtk
-pygtk.require('2.0')
+import logging
 import gtk
 import gobject
+from threading import Thread
+from gettext import gettext as _
+from gettext import ngettext
 
-from sugar.activity import activity
 from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 
@@ -33,14 +43,16 @@ class ActivityUpdater(SectionView):
         self.top_label = gtk.Label()
         self.top_label.set_line_wrap(True)
         self.top_label.set_justify(gtk.JUSTIFY_LEFT)
-        self.top_label.set_property('xalign',0)
+        self.top_label.set_property('xalign', 0)
 
         # bottom label #
         bottom_label = gtk.Label()
         bottom_label.set_line_wrap(True)
         bottom_label.set_justify(gtk.JUSTIFY_LEFT)
         bottom_label.set_property('xalign', 0)
-        bottom_label.set_markup(_('Software updates correct errors, eliminate security vulnerabilities, and provide new features.'))
+        bottom_label.set_markup(
+                _('Software updates correct errors, eliminate security' \
+                  'vulnerabilities, and provide new features.'))
 
         # main canvas #
         self.pack_start(self.top_label, expand=False)
@@ -62,7 +74,8 @@ class ActivityUpdater(SectionView):
 
     # refresh #
     def refresh_cb(self, widget, event):
-        self.top_label.set_markup('<big>%s</big>' % _('Checking for updates...'))
+        self.top_label.set_markup('<big>%s</big>' % \
+                _('Checking for updates...'))
         self.progress_pane.switch_to_check_progress()
         self.bundle_list.freeze_notify()
         Thread(target=self._do_refresh).start()
@@ -83,12 +96,12 @@ class ActivityUpdater(SectionView):
             header = _("Your software is up-to-date")
             self.progress_pane.switch_to_complete_message()
         else:
-            header = gettext.ngettext("You can install %s update",
-                                      "You can install %s updates", avail) \
-                                      % avail
+            header = ngettext("You can install %s update",
+                              "You can install %s updates", avail) \
+                              % avail
             self.bundle_pane.switch()
         self.top_label.set_markup('<big>%s</big>' % _e(header))
-        self.bundle_pane._refresh_update_size()
+        self.bundle_pane.refresh_update_size()
 
     def install_cb(self, widget, event, data=None):
         """Invoked when the 'ok' button is clicked."""
@@ -104,15 +117,12 @@ class ActivityUpdater(SectionView):
 
     def _install_done_cb(self, installed):
         self.bundle_list.thaw_notify()
-        header = gettext.ngettext("%s update was installed",
-                                  "%s updates were installed", installed) \
-                                  % installed
+        header = ngettext("%s update was installed",
+                          "%s updates were installed", installed) \
+                          % installed
         self.top_label.set_markup('<big>%s</big>' % _e(header))
         self.progress_pane.update(0)
         self.progress_pane.switch_to_complete_message()
-
-    def _install_progress_cb(n, extra=None, icon=None):
-        gobject.idle_add(self._progress_cb, n, extra, icon)
 
     def _progress_cb(self, n, extra=None, icon=None):
         """Invoked in main thread during a refresh operation."""
@@ -158,7 +168,7 @@ class BundlePane(gtk.VBox):
             self.install_button.set_sensitive(bundle_list.is_valid())
         update_activity.bundle_list.connect('notify::is-valid', is_valid_cb)
 
-    def _refresh_update_size(self):
+    def refresh_update_size(self):
         """Update the 'download size' label."""
         bundle_list = self.updater_activity.bundle_list
         size = bundle_list.updates_size()
@@ -209,7 +219,8 @@ class BundleListView(gtk.ScrolledWindow):
         hide_func = view_func_maker('visible')
         insens_func = view_func_maker('sensitive')
         self.column_install = gtk.TreeViewColumn('Install', crbool)
-        self.column_install.add_attribute(crbool, 'active', model.UPDATE_SELECTED)
+        self.column_install.add_attribute(crbool, 'active',
+                model.UPDATE_SELECTED)
         self.column_install.set_cell_data_func(crbool, hide_func)
         self.column = gtk.TreeViewColumn('Name')
         self.column.pack_start(cricon, expand=False)
@@ -239,7 +250,8 @@ class BundleListView(gtk.ScrolledWindow):
         self.treeview.connect('button-press-event', self.show_context_menu)
 
         def is_valid_cb(activity_list, __):
-            self.treeview.set_sensitive(self.update_activity.bundle_list.is_valid())
+            self.treeview.set_sensitive(
+                    self.update_activity.bundle_list.is_valid())
         self.update_activity.bundle_list.connect('notify::is-valid',
                                                     is_valid_cb)
         is_valid_cb(self.update_activity.bundle_list, None)
@@ -250,31 +262,36 @@ class BundleListView(gtk.ScrolledWindow):
     def toggled_cb(self, crbool, path):
         row = self.treeview.props.model[path]
         row[model.UPDATE_SELECTED] = not row[model.UPDATE_SELECTED]
-        self.bundle_pane._refresh_update_size()
+        self.bundle_pane.refresh_update_size()
 
     def show_context_menu(self, widget, event):
         """
         Show a context menu if a right click was performed on an update entry
         """
-        if event.type == gtk.gdk.BUTTON_PRESS and event.button == 3:
-            def cb(__, f):
-                f()
-                self.bundle_pane._refresh_update_size()
-            menu = gtk.Menu()
-            item_select_none = gtk.MenuItem(_("_Uncheck All"))
-            item_select_none.connect("activate", cb,
-                                     bundle_list.unselect_all)
-            menu.add(item_select_none)
-            if self.updater_activity.activity_list.updates_available() == 0:
-                item_select_none.set_property("sensitive", False)
-            item_select_all = gtk.MenuItem(_("_Check All"))
-            item_select_all.connect("activate", cb,
-                                    bundle_list.select_all)
-            menu.add(item_select_all)
-            menu.popup(None, None, None, 0, event.time)
-            menu.show_all()
-            return True
-        return False
+        if not (event.type == gtk.gdk.BUTTON_PRESS and event.button == 3):
+            return
+
+        menu = gtk.Menu()
+
+        item = gtk.MenuItem(_("_Uncheck All"))
+        item.connect("activate", self.__check_activate_cb, False)
+        if self.update_activity.bundle_list.updates_available() == 0:
+            item.set_property("sensitive", False)
+        menu.add(item)
+
+        item = gtk.MenuItem(_("_Check All"))
+        item.connect("activate", self.__check_activate_cb, True)
+        if self.update_activity.bundle_list.updates_available() == 0:
+            item.set_property("sensitive", False)
+        menu.add(item)
+
+        menu.popup(None, None, None, 0, event.time)
+        menu.show_all()
+
+    def __check_activate_cb(self, sender, state):
+        for i in self.update_activity.bundle_list:
+            i[model.UPDATE_SELECTED] = state
+        self.bundle_pane.refresh_update_size()
 
 class ProgressPane(gtk.VBox):
     """Container which replaces the `ActivityPane` during refresh or
@@ -286,7 +303,7 @@ class ProgressPane(gtk.VBox):
         self.set_spacing(style.DEFAULT_PADDING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
-        self.bar = gtk.ProgressBar()
+        self.progress = gtk.ProgressBar()
         self.label = gtk.Label()
         self.label.set_line_wrap(True)
         self.label.set_property('xalign', 0.5)
@@ -300,14 +317,14 @@ class ProgressPane(gtk.VBox):
         self.refresh_button = gtk.Button(stock=gtk.STOCK_REFRESH)
         self.try_again_button = _make_button(_('Try again'),
                                              stock=gtk.STOCK_REFRESH)
-        for widget,cb in [(self.cancel_button, update_activity.cancel_cb),
+        for widget, cb in [(self.cancel_button, update_activity.cancel_cb),
                           (self.refresh_button, update_activity.refresh_cb),
                           (self.try_again_button, update_activity.refresh_cb)]:
             widget.connect('clicked', cb, update_activity)
             hbox.pack_start(widget, expand=True, fill=False)
 
         self.pack_start(self.icon)
-        self.pack_start(self.bar)
+        self.pack_start(self.progress)
         self.pack_start(self.label)
         self.pack_start(hbox)
 
@@ -317,9 +334,9 @@ class ProgressPane(gtk.VBox):
         in `extra` or an icon in `icon`."""
 
         if n is None:
-            self.bar.pulse()
+            self.progress.pulse()
         else:
-            self.bar.set_fraction(n)
+            self.progress.set_fraction(n)
         extra = _e(extra) if extra is not None else ''
         self.label.set_markup(extra)
         self.icon.set_property('visible', icon is not None)
@@ -346,7 +363,7 @@ class ProgressPane(gtk.VBox):
         """Make the progress pane visible and the activity pane invisible."""
         self.update_activity.bundle_pane.set_property('visible', False)
         self.set_property('visible', True)
-        for widget, v in [ (self.bar, show_bar),
+        for widget, v in [ (self.progress, show_bar),
                            (self.cancel_button, show_cancel),
                            (self.refresh_button,
                                 not show_cancel and not show_try_again),
@@ -372,8 +389,3 @@ def _make_button(label_text, stock=None, name=None):
     hbox.pack_start(l, expand=False)
     b.add(hbox)
     return b
-
-if __name__ == "__main__":
-    window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-    t = UpdateActivity(window)
-    gtk.main()

@@ -46,8 +46,6 @@ from backends import aslo
 ##########################################################################
 # Fundamental data object.
 
-_column_name_map = dict(globals())
-
 """List of columns in the `UpdateList`."""
 BUNDLE_ID, \
     BUNDLE, \
@@ -62,12 +60,6 @@ BUNDLE_ID, \
     UPDATE_AVAILABLE, \
     IS_HEADER = xrange(12)
 
-
-"""Map column names to indices."""
-_column_name_map = dict((k,v) for k,v in globals().items()
-                        if k not in _column_name_map and k!='_column_name_map')
-
-
 class UpdateList(gtk.ListStore):
     """Model which provides backing storage for the BUNDLE list treeview."""
 
@@ -75,16 +67,6 @@ class UpdateList(gtk.ListStore):
         'is_valid': (gobject.TYPE_BOOLEAN, 'is valid',
                      'true iff the UpdateList has been properly refreshed',
                      False, gobject.PARAM_READABLE),
-        'saw_network_failure': (gobject.TYPE_BOOLEAN, 'saw network failure',
-                                'true iff at least one network IO error '+
-                                'occurred when the UpdateList was last '+
-                                'refreshed',
-                                False, gobject.PARAM_READABLE),
-        'saw_network_success': (gobject.TYPE_BOOLEAN, 'saw network success',
-                                'true iff at least one network operation '+
-                                'completed successfully when the UpdateList '+
-                                'was last refreshed',
-                                False, gobject.PARAM_READABLE),
     }
 
     def __init__(self):
@@ -97,7 +79,10 @@ class UpdateList(gtk.ListStore):
 
         self._cancel = False
         self._is_valid = True
-        self.registry =bundleregistry.get_registry()
+        self.registry = bundleregistry.get_registry()
+        self.steps_count = 0
+        self.steps_total = 0
+        self._progress_cb = None
 
     def refresh_list(self, progress_callback=lambda n, extra: None,
                            clear_cache=True):
@@ -106,12 +91,12 @@ class UpdateList(gtk.ListStore):
         self._progress_cb(None, _('Looking for local actvities...'))
 
         self.clear()
-        self.steps_total = len(self.registry._bundles)
+        self.steps_total = len([i for i in self.registry])
         self.steps_count = 0
 
         row_map = {}
 
-        for bundle in self.registry._bundles:
+        for bundle in self.registry:
             self._make_progress(_('Checking %s...') % bundle.get_name())
 
             if self._cancel:
@@ -187,7 +172,8 @@ class UpdateList(gtk.ListStore):
                 try:
                     urllib.urlretrieve(row[UPDATE_URL], xofile)
                 except Exception, e:
-                    logging.warning("Can't download %s" % row[UPDATE_URL])
+                    logging.warning("Can't download %s: %s" % \
+                            (row[UPDATE_URL], e))
                     continue
 
                 if self._cancel:
@@ -249,27 +235,27 @@ class UpdateList(gtk.ListStore):
 ###############################################################################
 # Utility Funtions
 
-def _humanize_size(bytes):
+def _humanize_size(bytes_):
     """
     Convert a given size in bytes to a nicer better readable unit
     """
-    if bytes == 0:
+    if bytes_ == 0:
         # TRANSLATORS: download size is 0
         return _("None")
-    elif bytes < 1024:
+    elif bytes_ < 1024:
         # TRANSLATORS: download size of very small updates
         return _("1 KB")
-    elif bytes < 1024 * 1024:
+    elif bytes_ < 1024 * 1024:
         # TRANSLATORS: download size of small updates, e.g. "250 KB"
-        return locale.format(_("%.0f KB"), bytes/1024)
+        return locale.format(_("%.0f KB"), bytes_ / 1024)
     else:
         # TRANSLATORS: download size of updates, e.g. "2.3 MB"
-        return locale.format(_("%.1f MB"), bytes / 1024 / 1024)
+        return locale.format(_("%.1f MB"), bytes_ / 1024 / 1024)
 
 def print_available(ul):#FIXME this should onlu return available updates
-    print
     def opt(x):
-        if x is None or x == '': return ''
+        if x is None or x == '':
+            return ''
         return ': %s' % x
     for row in ul:
         if row[IS_HEADER]:
@@ -290,4 +276,5 @@ def _main():
     print_available(update_list)
     update_list.install_updates()
 
-if __name__ == '__main__': _main ()
+if __name__ == '__main__':
+    _main ()
