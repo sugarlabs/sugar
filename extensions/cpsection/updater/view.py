@@ -103,7 +103,7 @@ class ActivityUpdater(SectionView):
         self.top_label.set_markup('<big>%s</big>' % _e(header))
         self.bundle_pane.refresh_update_size()
 
-    def __install_clicked_cb(self, widget, event, data=None):
+    def install_clicked_cb(self, widget, event, data=None):
         """Invoked when the 'ok' button is clicked."""
         self.top_label.set_markup('<big>%s</big>' %
                                   _('Installing updates...'))
@@ -164,7 +164,7 @@ class BundlePane(gtk.VBox):
         self.install_button = _make_button(_("Install selected"),
                 name='emblem-downloads')
         self.install_button.connect('clicked',
-                update_activity.__install_clicked_cb, self)
+                update_activity.install_clicked_cb, self)
         button_box.pack_start(self.install_button, expand=False)
 
         def is_valid_cb(bundle_list, __):
