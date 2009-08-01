@@ -118,14 +118,14 @@ class UpdateList(gtk.ListStore):
         logging.debug('Looking for %s' % row[BUNDLE].get_name())
 
         try:
-            new_version, new_url, new_size = aslo.fetch_update_info(row[BUNDLE])
+            new_ver, new_url, new_size = aslo.fetch_update_info(row[BUNDLE])
         except Exception, e:
             logging.warning('Failure %s updating: %s' % \
                     (row[BUNDLE].get_name(), e))
             return False
 
         row[CURRENT_VERSION] = row[BUNDLE].get_activity_version()
-        row[UPDATE_VERSION] = long(new_version)
+        row[UPDATE_VERSION] = long(new_ver)
 
         if row[CURRENT_VERSION] >= row[UPDATE_VERSION]:
             logging.debug('Skip %s update' % row[BUNDLE].get_name())
@@ -139,9 +139,9 @@ class UpdateList(gtk.ListStore):
         row[UPDATE_SIZE] = new_size
         row[DESCRIPTION] = \
                 _('From version %(current)d to %(new)s (Size: %(size)s)') % \
-                { 'current' : row[CURRENT_VERSION],
-                  'new'     : row[UPDATE_VERSION],
-                  'size'    :_humanize_size(row[UPDATE_SIZE]) }
+                {'current': row[CURRENT_VERSION],
+                 'new': row[UPDATE_VERSION],
+                 'size': _humanize_size(row[UPDATE_SIZE])}
         row[UPDATE_SELECTED] = True
 
         return True
@@ -218,15 +218,16 @@ class UpdateList(gtk.ListStore):
 
     def updates_selected(self):
         """Return the number of updates selected."""
-        return self._sum_rows(lambda r: 1 if
-                              r[UPDATE_AVAILABLE] and r[UPDATE_SELECTED] else 0)
+        return self._sum_rows(lambda r:
+                1 if r[UPDATE_AVAILABLE] and r[UPDATE_SELECTED] else 0)
 
     def updates_size(self):
         """Returns the size (in bytes) of the selected updates available.
 
         Updated by `refresh`."""
-        return self._sum_rows(lambda r: r[UPDATE_SIZE] if
-                              r[UPDATE_AVAILABLE] and r[UPDATE_SELECTED] else 0)
+        return self._sum_rows(lambda r:
+                r[UPDATE_SIZE] if r[UPDATE_AVAILABLE] and \
+                        r[UPDATE_SELECTED] else 0)
     def is_valid(self):
         """The UpdateList is invalidated before it is refreshed, and when
         the group information is modified without refreshing."""
@@ -277,4 +278,4 @@ def _main():
     update_list.install_updates()
 
 if __name__ == '__main__':
-    _main ()
+    _main()

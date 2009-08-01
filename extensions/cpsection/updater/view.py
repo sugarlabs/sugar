@@ -103,7 +103,7 @@ class ActivityUpdater(SectionView):
         self.top_label.set_markup('<big>%s</big>' % _e(header))
         self.bundle_pane.refresh_update_size()
 
-    def install_cb(self, widget, event, data=None):
+    def __install_clicked_cb(self, widget, event, data=None):
         """Invoked when the 'ok' button is clicked."""
         self.top_label.set_markup('<big>%s</big>' %
                                   _('Installing updates...'))
@@ -160,10 +160,13 @@ class BundlePane(gtk.VBox):
         self.check_button = gtk.Button(stock=gtk.STOCK_REFRESH)
         self.check_button.connect('clicked', update_activity.refresh_cb, self)
         button_box.pack_start(self.check_button, expand=False)
+
         self.install_button = _make_button(_("Install selected"),
-                                          name='emblem-downloads')
-        self.install_button.connect('clicked', update_activity.install_cb, self)
+                name='emblem-downloads')
+        self.install_button.connect('clicked',
+                update_activity.__install_clicked_cb, self)
         button_box.pack_start(self.install_button, expand=False)
+
         def is_valid_cb(bundle_list, __):
             self.install_button.set_sensitive(bundle_list.is_valid())
         update_activity.bundle_list.connect('notify::is-valid', is_valid_cb)
@@ -178,9 +181,9 @@ class BundlePane(gtk.VBox):
 
     def switch(self):
         """Make the bundle list visible and the progress pane invisible."""
-        for widget, v in [ (self, True),
-                           (self.updater_activity.progress_pane, False)]:# ,
-                           #(self.activity_updater.expander, False)]:
+        for widget, v in [(self, True),
+                          (self.updater_activity.progress_pane, False)]:# ,
+                          #(self.activity_updater.expander, False)]:
             widget.set_property('visible', v)
 
 class BundleListView(gtk.ScrolledWindow):
@@ -363,12 +366,12 @@ class ProgressPane(gtk.VBox):
         """Make the progress pane visible and the activity pane invisible."""
         self.update_activity.bundle_pane.set_property('visible', False)
         self.set_property('visible', True)
-        for widget, v in [ (self.progress, show_bar),
-                           (self.cancel_button, show_cancel),
-                           (self.refresh_button,
+        for widget, v in [(self.progress, show_bar),
+                          (self.cancel_button, show_cancel),
+                          (self.refresh_button,
                                 not show_cancel and not show_try_again),
-                           (self.try_again_button, show_try_again),
-                           #(self.update_activity.expander, False)
+                          (self.try_again_button, show_try_again),
+                          #(self.update_activity.expander, False)
                           ]:
             widget.set_property('visible', v)
         self.cancel_button.set_sensitive(True)
