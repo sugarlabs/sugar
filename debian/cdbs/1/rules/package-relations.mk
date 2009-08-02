@@ -41,13 +41,14 @@ CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelpe
 CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.0)/ s/\bdebhelper *\(,\|(>= \(4.1.60\))\)/, /g')
 
 # TODO: Move these to buildcore.mk
-cdbs_curvar = $(or $($(1)_$(cdbs_curpkg)),$1)
+cdbs_curvar = $(or $($(1)_$(cdbs_curpkg)),$($1))
 cdbs_squash_commas = $(shell echo '$1' | sed -e 's/ *,[ ,]*/, /g' -e 's/^[ ,]*//' -e 's/[ ,]*$$//')
 
 # Cleanup superfluous commas and whitespace
 CDBS_BUILD_DEPENDS := $(call cdbs_squash_commas,$(CDBS_BUILD_DEPENDS))
 
-cdbs_all_cur_squash_commas = $(call cdbs_squash_commas,$(CDBS_DEPENDS_ALL), $(call cdbs_curvar,CDBS_DEPENDS))
+comma = ,
+cdbs_all_cur_squash_commas = $(call cdbs_squash_commas,$($(1)_ALL)$(comma) $(call cdbs_curvar,$1))
 
 # Apply CDBS-declared dependencies to binary packages
 $(patsubst %,binary-predeb/%,$(DEB_PACKAGES)) :: binary-predeb/%:
