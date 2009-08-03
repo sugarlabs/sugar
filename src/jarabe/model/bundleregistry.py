@@ -210,6 +210,8 @@ class BundleRegistry(gobject.GObject):
         logging.debug('STARTUP: Adding bundle %r' % bundle_path)
         try:
             bundle = ActivityBundle(bundle_path)
+            logging.error(bundle_path)
+            logging.error(bundle)
             if install_mime_type:
                 bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
@@ -330,12 +332,9 @@ class BundleRegistry(gobject.GObject):
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
 
-        if self.get_bundle(bundle.get_bundle_id()):
-            raise AlreadyInstalledException
-
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() == \
+                    bundle.get_activity_version() <= \
                         installed_bundle.get_activity_version():
                 raise AlreadyInstalledException
             elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
