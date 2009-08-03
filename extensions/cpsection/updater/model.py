@@ -29,22 +29,14 @@ import tempfile
 import locale
 import logging
 import urllib
-
-import gettext
-_ = lambda msg: gettext.dgettext('sugar-update-control', msg)
-
 import gtk
 import gobject
+from gettext import gettext as _
 
 from jarabe.model import bundleregistry
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from backends import aslo
-
-#_logger = logging.getLogger('update-activity')
-
-##########################################################################
-# Fundamental data object.
 
 """List of columns in the `UpdateList`."""
 BUNDLE_ID, \
@@ -241,17 +233,17 @@ def _humanize_size(bytes_):
     Convert a given size in bytes to a nicer better readable unit
     """
     if bytes_ == 0:
-        # TRANSLATORS: download size is 0
-        return _("None")
+        # TRANS: download size is 0
+        return _('None')
     elif bytes_ < 1024:
-        # TRANSLATORS: download size of very small updates
-        return _("1 KB")
+        # TRANS: download size of very small updates
+        return _('1 KB')
     elif bytes_ < 1024 * 1024:
-        # TRANSLATORS: download size of small updates, e.g. "250 KB"
-        return locale.format(_("%.0f KB"), bytes_ / 1024)
+        # TRANS: download size of small updates, e.g. '250 KB'
+        return locale.format(_('%.0f KB'), bytes_ / 1024)
     else:
-        # TRANSLATORS: download size of updates, e.g. "2.3 MB"
-        return locale.format(_("%.1f MB"), bytes_ / 1024 / 1024)
+        # TRANS: download size of updates, e.g. '2.3 MB'
+        return locale.format(_('%.1f MB'), bytes_ / 1024 / 1024)
 
 def print_available(ul):#FIXME this should onlu return available updates
     def opt(x):

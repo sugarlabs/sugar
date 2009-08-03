@@ -23,11 +23,8 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 
 import model
-from model import _humanize_size
 
 gtk.gdk.threads_init()
-
-_logger = logging.getLogger('update-activity')
 
 _e = gobject.markup_escape_text
 
@@ -176,7 +173,7 @@ class BundlePane(gtk.VBox):
         bundle_list = self.updater_activity.bundle_list
         size = bundle_list.updates_size()
         self.size_label.set_markup(_('Download size: %s') %
-                                   _humanize_size(size))
+                                   model._humanize_size(size))
         self.install_button.set_sensitive(bundle_list.updates_selected()!=0)
 
     def switch(self):
