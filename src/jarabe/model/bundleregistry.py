@@ -210,8 +210,6 @@ class BundleRegistry(gobject.GObject):
         logging.debug('STARTUP: Adding bundle %r' % bundle_path)
         try:
             bundle = ActivityBundle(bundle_path)
-            logging.error(bundle_path)
-            logging.error(bundle)
             if install_mime_type:
                 bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
