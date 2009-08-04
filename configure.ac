@@ -61,6 +61,8 @@ extensions/cpsection/frame/Makefile
 extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
+extensions/cpsection/updater/Makefile
+extensions/cpsection/updater/backends/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
 src/Makefile
