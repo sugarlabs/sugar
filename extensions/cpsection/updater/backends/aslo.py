@@ -96,6 +96,7 @@ def parse_url(url):
     The `urlopen_args` can be any keyword arguments accepted by
     `bitfrost.util.urlrange.urlopen`."""
 
+    logging.debug('Update uri=%s' % url)
     response = urllib2.urlopen(url)
     return parse_aslo(response.read())
 

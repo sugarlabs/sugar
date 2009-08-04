@@ -29,22 +29,14 @@ import tempfile
 import locale
 import logging
 import urllib
-
-import gettext
-_ = lambda msg: gettext.dgettext('sugar-update-control', msg)
-
 import gtk
 import gobject
+from gettext import gettext as _
 
 from jarabe.model import bundleregistry
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from backends import aslo
-
-#_logger = logging.getLogger('update-activity')
-
-##########################################################################
-# Fundamental data object.
 
 """List of columns in the `UpdateList`."""
 BUNDLE_ID, \
@@ -79,9 +71,9 @@ class UpdateList(gtk.ListStore):
 
         self._cancel = False
         self._is_valid = True
-        self.registry = bundleregistry.get_registry()
-        self.steps_count = 0
-        self.steps_total = 0
+        self._registry = bundleregistry.get_registry()
+        self._steps_count = 0
+        self._steps_total = 0
         self._progress_cb = None
 
     def refresh_list(self, progress_callback=lambda n, extra: None,
@@ -91,12 +83,12 @@ class UpdateList(gtk.ListStore):
         self._progress_cb(None, _('Looking for local actvities...'))
 
         self.clear()
-        self.steps_total = len([i for i in self.registry])
-        self.steps_count = 0
+        self._steps_total = len([i for i in self._registry])
+        self._steps_count = 0
 
         row_map = {}
 
-        for bundle in self.registry:
+        for bundle in self._registry:
             self._make_progress(_('Checking %s...') % bundle.get_name())
 
             if self._cancel:
@@ -108,13 +100,13 @@ class UpdateList(gtk.ListStore):
             row[BUNDLE] = bundle
             row[BUNDLE_ID] = bundle.get_bundle_id()
 
-            if self.refresh_row(row):
+            if self._refresh_row(row):
                 row_map[row[BUNDLE_ID]] = self.get_path(self.append(row))
 
     def cancel(self):
         self._cancel = True
 
-    def refresh_row(self, row):
+    def _refresh_row(self, row):
         logging.debug('Looking for %s' % row[BUNDLE].get_name())
 
         try:
@@ -149,8 +141,8 @@ class UpdateList(gtk.ListStore):
     def install_updates(self, progress_cb=(lambda n, row: None)):
         self._cancel = False
         self._progress_cb = progress_cb
-        self.steps_total = len([0 for row in self if row[UPDATE_SELECTED]]) * 2
-        self.steps_count = 0
+        self._steps_total = len([0 for row in self if row[UPDATE_SELECTED]]) * 2
+        self._steps_count = 0
 
         installed = 0
 
@@ -200,8 +192,8 @@ class UpdateList(gtk.ListStore):
 
     def _make_progress(self, msg=None): #FIXME needs better name
         """Helper function to do progress update."""
-        self.steps_count += 1
-        self._progress_cb(float(self.steps_count)/self.steps_total, msg)
+        self._steps_count += 1
+        self._progress_cb(float(self._steps_count)/self._steps_total, msg)
 
     def _sum_rows(self, row_func):
         """Sum the values returned by row_func called on all non-header
@@ -241,17 +233,17 @@ def _humanize_size(bytes_):
     Convert a given size in bytes to a nicer better readable unit
     """
     if bytes_ == 0:
-        # TRANSLATORS: download size is 0
-        return _("None")
+        # TRANS: download size is 0
+        return _('None')
     elif bytes_ < 1024:
-        # TRANSLATORS: download size of very small updates
-        return _("1 KB")
+        # TRANS: download size of very small updates
+        return _('1 KB')
     elif bytes_ < 1024 * 1024:
-        # TRANSLATORS: download size of small updates, e.g. "250 KB"
-        return locale.format(_("%.0f KB"), bytes_ / 1024)
+        # TRANS: download size of small updates, e.g. '250 KB'
+        return locale.format(_('%.0f KB'), bytes_ / 1024)
     else:
-        # TRANSLATORS: download size of updates, e.g. "2.3 MB"
-        return locale.format(_("%.1f MB"), bytes_ / 1024 / 1024)
+        # TRANS: download size of updates, e.g. '2.3 MB'
+        return locale.format(_('%.1f MB'), bytes_ / 1024 / 1024)
 
 def print_available(ul):#FIXME this should onlu return available updates
     def opt(x):
