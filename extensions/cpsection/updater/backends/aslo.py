@@ -51,72 +51,50 @@ An example::
 import logging
 import urllib2
 from xml.etree.ElementTree import XML
+import traceback
 
 from jarabe import config
 
+_FIND_DESCRIPTION = \
+        './/{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description'
 _FIND_VERSION = './/{http://www.mozilla.org/2004/em-rdf#}version'
 _FIND_LINK = './/{http://www.mozilla.org/2004/em-rdf#}updateLink'
 _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
 _UPDATE_PATH = 'http://activities.sugarlabs.org/services/update.php'
 
-class ASLOParser():
-    """XML parser to pull out data expressed in our aslo format."""
-
-    def __init__(self, xml_data):
-        self.elem = XML(xml_data)
-
-        self.version = 0
-        self.link = None
-        self.size = 0
-
-    def parse(self):
-        try:
-            self.version = self.elem.find(_FIND_VERSION).text
-            self.link = self.elem.find(_FIND_LINK).text
-            self.size = long(self.elem.find(_FIND_SIZE).text) * 1024
-        except Exception, e:
-            logging.warning("Can't parse update data: %s" % e)
-            self.version = 0
-            self.link = None
-            self.size = 0
-
-def parse_aslo(xml_data):
-    """Parse the activity information embedded in the given string
-    containing XML data.  Returns a list containing the activity version,
-    size and url.
-    """
-    ap = ASLOParser(xml_data)
-    ap.parse()
-    return ap.version, ap.link, ap.size
-
-def parse_url(url):
-    """Parse the activity information at the given URL. Returns the same
-    information as `parse_xml` does, and raises the same exceptions.
-    The `urlopen_args` can be any keyword arguments accepted by
-    `bitfrost.util.urlrange.urlopen`."""
-
-    logging.debug('Update uri=%s' % url)
+def _parse_url(url, bundle_id):
     response = urllib2.urlopen(url)
-    return parse_aslo(response.read())
+    document = XML(response.read())
+
+    if document.find(_FIND_DESCRIPTION) is None:
+        logging.debug('Bundle %s not available in the server for the version'
+                      ' %s' % (bundle_id, config.version))
+        return '0', None, 0
+
+    version = document.find(_FIND_VERSION).text
+    link = document.find(_FIND_LINK).text
+    size = long(document.find(_FIND_SIZE).text) * 1024
+
+    return version, link, size
 
 def fetch_update_info(bundle):
-    """Return a tuple of new version, url for new version.
+    """Return a tuple of (version, link, size_in_bytes) for new version.
 
-    All the information about the new version is `None` if no newer
-    update can be found.
+    Returns ('0', None, 0) if no update is found for the platform version.
     """
 
     url = '%s?id=%s&appVersion=%s' % \
-            (_UPDATE_PATH, bundle.get_bundle_id(), config.version)
+            (_UPDATE_PATH, bundle.get_bundle_id(), '0.84.1') #config.version)
 
-    return parse_url(url)
+    return _parse_url(url, bundle.get_bundle_id())
 
 #########################################################################
 # Self-test code.
 def _main():
     """Self-test."""
-    print parse_url('%s?id=bounce' % _UPDATE_PATH)
+    print _parse_url('%s?id=bounce' % _UPDATE_PATH, 'bounce')
 
 if __name__ == '__main__':
     _main()
+

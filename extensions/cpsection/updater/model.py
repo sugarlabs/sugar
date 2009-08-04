@@ -29,13 +29,16 @@ import tempfile
 import locale
 import logging
 import urllib
-import gtk
-import gobject
 from gettext import gettext as _
+import traceback
 
-from jarabe.model import bundleregistry
+import gobject
+import gtk
+
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
+
+from jarabe.model import bundleregistry
 from backends import aslo
 
 """List of columns in the `UpdateList`."""
@@ -111,9 +114,9 @@ class UpdateList(gtk.ListStore):
 
         try:
             new_ver, new_url, new_size = aslo.fetch_update_info(row[BUNDLE])
-        except Exception, e:
-            logging.warning('Failure %s updating: %s' % \
-                    (row[BUNDLE].get_name(), e))
+        except Exception:
+            logging.warning('Failure updating %s\n%s' % \
+                    (row[BUNDLE].get_name(), traceback.format_exc()))
             return False
 
         row[CURRENT_VERSION] = row[BUNDLE].get_activity_version()
