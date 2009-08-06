@@ -169,6 +169,9 @@ class BundleRegistry(gobject.GObject):
     def __iter__(self):
         return self._bundles.__iter__()
 
+    def __len__(self):
+        return len(self._bundles)
+
     def _scan_directory(self, path):
         if not os.path.isdir(path):
             return
