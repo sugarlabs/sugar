@@ -51,6 +51,7 @@ FT_REASON_REMOTE_ERROR = 6
 CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
+# TODO Move to use splice_async() in Sugar 0.88
 class StreamSplicer(gobject.GObject):
     _CHUNK_SIZE = 10240 # 10K
     __gsignals__ = {
