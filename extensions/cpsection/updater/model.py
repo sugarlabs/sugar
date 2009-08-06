@@ -1,5 +1,5 @@
-#!/usr/bin/python
 # Copyright (C) 2009, Sugar Labs
+# Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,263 +14,279 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-"""Sugar bundle updater: model.
+'''Sugar bundle updater: model.
 
 This module implements the non-GUI portions of the bundle updater, including
 list of installed bundls, whether updates are needed, and the URL at which to
 find the bundle updated.
-
-`UpdateList` inherits from `gtk.ListStore` in order to work closely with the
-view pane. This module requires `gtk`.
-"""
+'''
 
 import os
-import tempfile
-import locale
 import logging
-import urllib
-from gettext import gettext as _
+import tempfile
+from urlparse import urlparse
 import traceback
 
 import gobject
-import gtk
+import gio
 
-from sugar.bundle.activitybundle import ActivityBundle
+from sugar import env
 from sugar.datastore import datastore
+from sugar.bundle.activitybundle import ActivityBundle
 
 from jarabe.model import bundleregistry
+
 from backends import aslo
 
-"""List of columns in the `UpdateList`."""
-BUNDLE_ID, \
-    BUNDLE, \
-    ICON, \
-    NAME, \
-    CURRENT_VERSION, \
-    UPDATE_VERSION, \
-    UPDATE_SIZE, \
-    UPDATE_URL, \
-    DESCRIPTION, \
-    UPDATE_SELECTED, \
-    UPDATE_AVAILABLE, \
-    IS_HEADER = xrange(12)
 
-class UpdateList(gtk.ListStore):
-    """Model which provides backing storage for the BUNDLE list treeview."""
+class UpdateModel(gobject.GObject):
+    __gtype_name__ = 'SugarUpdateModel'
 
-    __gproperties__ = {
-        'is_valid': (gobject.TYPE_BOOLEAN, 'is valid',
-                     'true iff the UpdateList has been properly refreshed',
-                     False, gobject.PARAM_READABLE),
+    __gsignals__ = {
+        'progress': (gobject.SIGNAL_RUN_FIRST,
+                     gobject.TYPE_NONE,
+                     ([int, str, float, int])),
     }
 
+    ACTION_CHECKING = 0
+    ACTION_UPDATING = 1
+    ACTION_DOWNLOADING = 2
+
     def __init__(self):
-        logging.debug('STARTUP: Loading the bundle updater')
+        gobject.GObject.__init__(self)
 
-        gtk.ListStore.__init__(self,
-                               str, object, gtk.gdk.Pixbuf, str,
-                               long, long, long, str,
-                               str, bool, bool, bool)
+        self.updates = None
+        self._bundles_to_check = None
+        self._bundles_to_update = None
+        self._total_bundles_to_update = 0
+        self._downloader = None
 
-        self._cancel = False
-        self._is_valid = True
-        self._registry = bundleregistry.get_registry()
-        self._steps_count = 0
-        self._steps_total = 0
-        self._progress_cb = None
+    def check_updates(self):
+        self.updates = []
+        self._bundles_to_check = \
+                [bundle for bundle in bundleregistry.get_registry()]
+        self._check_next_update()
 
-    def refresh_list(self, progress_callback=lambda n, extra: None,
-                           clear_cache=True):
-        self._cancel = False
-        self._progress_cb = progress_callback
-        self._progress_cb(None, _('Looking for local actvities...'))
+    def _check_next_update(self):
+        total = len(bundleregistry.get_registry())
+        current = total - len(self._bundles_to_check)
 
-        self.clear()
-        self._steps_total = len([i for i in self._registry])
-        self._steps_count = 0
+        bundle = self._bundles_to_check.pop()
+        self.emit('progress', UpdateModel.ACTION_CHECKING, bundle.get_name(),
+                  current, total)
 
-        row_map = {}
+        aslo.fetch_update_info(bundle, self.__check_completed_cb)
 
-        for bundle in self._registry:
-            self._make_progress(_('Checking %s...') % bundle.get_name())
+    def __check_completed_cb(self, bundle, version, link, size, error_message):
+        if error_message is not None:
+            logging.error('Error getting update information from server:\n'
+                          '%s' % error_message)
 
-            if self._cancel:
-                break # Cancel bundle refresh
+        if version is not None and version > bundle.get_activity_version():
+            self.updates.append(BundleUpdate(bundle, version, link, size))
 
-            row = [None, None, None, None,
-                   0, 0, 0, None,
-                   None, True, False, False]
-            row[BUNDLE] = bundle
-            row[BUNDLE_ID] = bundle.get_bundle_id()
-
-            if self._refresh_row(row):
-                row_map[row[BUNDLE_ID]] = self.get_path(self.append(row))
-
-    def cancel(self):
-        self._cancel = True
-
-    def _refresh_row(self, row):
-        logging.debug('Looking for %s' % row[BUNDLE].get_name())
-
-        try:
-            new_ver, new_url, new_size = aslo.fetch_update_info(row[BUNDLE])
-        except Exception:
-            logging.warning('Failure updating %s\n%s' % \
-                    (row[BUNDLE].get_name(), traceback.format_exc()))
-            return False
-
-        row[CURRENT_VERSION] = row[BUNDLE].get_activity_version()
-        row[UPDATE_VERSION] = long(new_ver)
-
-        if row[CURRENT_VERSION] >= row[UPDATE_VERSION]:
-            logging.debug('Skip %s update' % row[BUNDLE].get_name())
-            return False
-
-        row[ICON] = gtk.gdk.pixbuf_new_from_file_at_size(
-                row[BUNDLE].get_icon(), 32, 32)
-        row[NAME] = row[BUNDLE].get_name()
-        row[UPDATE_URL] = new_url
-        row[UPDATE_AVAILABLE] = True
-        row[UPDATE_SIZE] = new_size
-        row[DESCRIPTION] = \
-                _('From version %(current)d to %(new)s (Size: %(size)s)') % \
-                {'current': row[CURRENT_VERSION],
-                 'new': row[UPDATE_VERSION],
-                 'size': _humanize_size(row[UPDATE_SIZE])}
-        row[UPDATE_SELECTED] = True
-
-        return True
-
-    def install_updates(self, progress_cb=(lambda n, row: None)):
-        self._cancel = False
-        self._progress_cb = progress_cb
-        self._steps_total = len([0 for row in self if row[UPDATE_SELECTED]]) * 2
-        self._steps_count = 0
-
-        installed = 0
-
-        for row in self:
-            if self._cancel:
-                return installed
-            if row[IS_HEADER]:
-                continue
-            if not row[UPDATE_SELECTED]:
-                continue
-
-            logging.debug('Downloading %s from %s' % \
-                    (row[NAME], row[UPDATE_URL]))
-            self._make_progress(_('Downloading %s...') % row[NAME])
-
-            fd, xofile = tempfile.mkstemp(suffix='.xo')
-            os.close(fd)
-            try:
-                try:
-                    urllib.urlretrieve(row[UPDATE_URL], xofile)
-                except Exception, e:
-                    logging.warning("Can't download %s: %s" % \
-                            (row[UPDATE_URL], e))
-                    continue
-
-                if self._cancel:
-                    return installed
-
-                logging.debug('Installing %s' % row[NAME])
-                self._make_progress(_('Installing %s...') % row[NAME])
-
-                jobject = datastore.create()
-                jobject.metadata['title'] = \
-                        '%s-%s' % (row[NAME], row[UPDATE_VERSION])
-                jobject.metadata['mime_type'] = ActivityBundle.MIME_TYPE
-                jobject.file_path = xofile
-                datastore.write(jobject, transfer_ownership=True)
-
-                installed += 1
-            finally:
-                if os.path.exists(xofile):
-                    os.unlink(xofile)
-
-        return installed
-
-###############################################################################
-
-    def _make_progress(self, msg=None): #FIXME needs better name
-        """Helper function to do progress update."""
-        self._steps_count += 1
-        self._progress_cb(float(self._steps_count)/self._steps_total, msg)
-
-    def _sum_rows(self, row_func):
-        """Sum the values returned by row_func called on all non-header
-        rows."""
-        return sum(row_func(r) for r in self if not r[IS_HEADER])
-
-###############################################################################
-
-    def updates_available(self):
-        """Return the number of updates available.
-
-        Updated by `refresh`."""
-        return self._sum_rows(lambda r: 1 if r[UPDATE_AVAILABLE] else 0)
-
-    def updates_selected(self):
-        """Return the number of updates selected."""
-        return self._sum_rows(lambda r:
-                1 if r[UPDATE_AVAILABLE] and r[UPDATE_SELECTED] else 0)
-
-    def updates_size(self):
-        """Returns the size (in bytes) of the selected updates available.
-
-        Updated by `refresh`."""
-        return self._sum_rows(lambda r:
-                r[UPDATE_SIZE] if r[UPDATE_AVAILABLE] and \
-                        r[UPDATE_SELECTED] else 0)
-    def is_valid(self):
-        """The UpdateList is invalidated before it is refreshed, and when
-        the group information is modified without refreshing."""
-        return self._is_valid
-
-###############################################################################
-# Utility Funtions
-
-def _humanize_size(bytes_):
-    """
-    Convert a given size in bytes to a nicer better readable unit
-    """
-    if bytes_ == 0:
-        # TRANS: download size is 0
-        return _('None')
-    elif bytes_ < 1024:
-        # TRANS: download size of very small updates
-        return _('1 KB')
-    elif bytes_ < 1024 * 1024:
-        # TRANS: download size of small updates, e.g. '250 KB'
-        return locale.format(_('%.0f KB'), bytes_ / 1024)
-    else:
-        # TRANS: download size of updates, e.g. '2.3 MB'
-        return locale.format(_('%.1f MB'), bytes_ / 1024 / 1024)
-
-def print_available(ul):#FIXME this should onlu return available updates
-    def opt(x):
-        if x is None or x == '':
-            return ''
-        return ': %s' % x
-    for row in ul:
-        if row[IS_HEADER]:
-            print row[NAME] + opt(row[DESCRIPTION])
+        if self._bundles_to_check:
+            gobject.idle_add(self._check_next_update)
         else:
-            print '*', row[NAME] + opt(row[DESCRIPTION])
-    print
-    #print _('%(number)d updates available.  Size: %(size)s') % \
-    #      { 'number': ul.updates_available(),
-    #        'size': _humanize_size(ul.updates_size()) }
+            total = len(bundleregistry.get_registry())
+            if bundle is None:
+                name = ''
+            else:
+                name = bundle.get_name()
+            self.emit('progress', UpdateModel.ACTION_CHECKING, name, total,
+                      total)
 
-###############################################################################
-# Self-test code.
-def _main():
-    """Self-test."""
-    update_list = UpdateList()
-    update_list.refresh_list()
-    print_available(update_list)
-    update_list.install_updates()
+    def update(self, bundle_ids):
+        self._bundles_to_update = []
+        for bundle_update in self.updates:
+            if bundle_update.bundle.get_bundle_id() in bundle_ids:
+                self._bundles_to_update.append(bundle_update)
 
-if __name__ == '__main__':
-    _main()
+        self._total_bundles_to_update = len(self._bundles_to_update)
+        self._download_next_update()
+
+    def _download_next_update(self):
+        bundle_update = self._bundles_to_update.pop()
+
+        total = self._total_bundles_to_update * 2
+        current = total - len(self._bundles_to_update) * 2 - 2
+
+        self.emit('progress', UpdateModel.ACTION_DOWNLOADING,
+                  bundle_update.bundle.get_name(), current, total)
+
+        self._downloader = _Downloader(bundle_update)
+        self._downloader.connect('progress', self.__downloader_progress_cb)
+        self._downloader.connect('error', self.__downloader_error_cb)
+
+    def __downloader_progress_cb(self, downloader, progress):
+        logging.debug('__downloader_progress_cb %r' % progress)
+        total = self._total_bundles_to_update * 2
+        current = total - len(self._bundles_to_update) * 2 - 2 + progress
+
+        self.emit('progress', UpdateModel.ACTION_DOWNLOADING,
+                  self._downloader.bundle_update.bundle.get_name(),
+                  current, total)
+
+        if progress == 1:
+            self._install_update(self._downloader.bundle_update,
+                                 self._downloader.get_local_file_path())
+            self._downloader = None
+
+    def __downloader_error_cb(self, downloader, error_message):
+        logging.error('Error downloading update:\n%s' % error_message)
+
+        total = self._total_bundles_to_update * 2
+        current = total - len(self._bundles_to_update) * 2
+        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current, total)
+
+        if self._bundles_to_update:
+            # do it in idle so the UI has a chance to refresh
+            gobject.idle_add(self._download_next_update)
+
+    def _install_update(self, bundle_update, local_file_path):
+
+        total = self._total_bundles_to_update * 2
+        current = total - len(self._bundles_to_update) * 2 - 1
+
+        self.emit('progress', UpdateModel.ACTION_UPDATING,
+                  bundle_update.bundle.get_name(),
+                  current, total)
+
+        # TODO: Should we first expand the zip async so we can provide progress
+        # and only then copy to the journal?
+        jobject = datastore.create()
+        try:
+            title = '%s-%s' % (bundle_update.bundle.get_name(),
+                               bundle_update.version)
+            jobject.metadata['title'] = title
+            jobject.metadata['mime_type'] = ActivityBundle.MIME_TYPE
+            jobject.file_path = local_file_path
+            datastore.write(jobject, transfer_ownership=True)
+        finally:
+            jobject.destroy()
+
+        current += 1
+        self.emit('progress', UpdateModel.ACTION_UPDATING,
+                  bundle_update.bundle.get_name(),
+                  current, total)
+
+        if self._bundles_to_update:
+            # do it in idle so the UI has a chance to refresh
+            gobject.idle_add(self._download_next_update)
+
+    def get_total_bundles_to_update(self):
+        return self._total_bundles_to_update
+
+
+class BundleUpdate(object):
+
+    def __init__(self, bundle, version, link, size):
+        self.bundle = bundle
+        self.version = version
+        self.link = link
+        self.size = size
+
+
+class _Downloader(gobject.GObject):
+    _CHUNK_SIZE = 10240 # 10K
+    __gsignals__ = {
+        'progress': (gobject.SIGNAL_RUN_FIRST,
+                     gobject.TYPE_NONE,
+                     ([float])),
+        'error': (gobject.SIGNAL_RUN_FIRST,
+                  gobject.TYPE_NONE,
+                  ([str])),
+    }
+
+    def __init__(self, bundle_update):
+        gobject.GObject.__init__(self)
+
+        self.bundle_update = bundle_update
+        self._input_stream = None
+        self._output_stream = None
+        self._pending_buffers = []
+        self._input_file = gio.File(bundle_update.link)
+        self._output_file = None
+        self._downloaded_size = 0
+
+        self._input_file.read_async(self.__file_read_async_cb)
+
+    def __file_read_async_cb(self, gfile, result):
+        try:
+            self._input_stream = self._input_file.read_finish(result)
+        except:
+            self.emit('error', traceback.format_exc())
+            return
+            
+        temp_file_path = self._get_temp_file_path(self.bundle_update.link)
+        self._output_file = gio.File(temp_file_path)
+        self._output_stream = self._output_file.create()
+
+        self._input_stream.read_async(self._CHUNK_SIZE, self.__read_async_cb,
+                                      gobject.PRIORITY_LOW)
+
+    def __read_async_cb(self, input_stream, result):
+        data = input_stream.read_finish(result)
+
+        if data is None:
+            # TODO
+            pass
+        elif not data:
+            logging.debug('closing input stream')
+            self._input_stream.close()
+            self._check_if_finished_writing()
+        else:
+            self._pending_buffers.append(data)
+            self._input_stream.read_async(self._CHUNK_SIZE,
+                                          self.__read_async_cb,
+                                          gobject.PRIORITY_LOW)
+
+        self._write_next_buffer()
+
+    def __write_async_cb(self, output_stream, result, user_data):
+        count = output_stream.write_finish(result)
+
+        self._downloaded_size += count
+        progress = self._downloaded_size / float(self.bundle_update.size)
+        self.emit('progress', progress)
+
+        self._check_if_finished_writing()
+
+        if self._pending_buffers:
+            self._write_next_buffer()
+
+    def _write_next_buffer(self):
+        if self._pending_buffers and not self._output_stream.has_pending():
+            data = self._pending_buffers.pop(0)
+            # TODO: we pass the buffer as user_data because of
+            # http://bugzilla.gnome.org/show_bug.cgi?id=564102
+            self._output_stream.write_async(data, self.__write_async_cb,
+                                            gobject.PRIORITY_LOW,
+                                            user_data=data)
+
+    def _get_temp_file_path(self, uri):
+        # TODO: Should we use the HTTP headers for the file name?
+        scheme_, netloc_, path, params_, query_, fragment_ = \
+                urlparse(uri)
+        path = os.path.basename(path)
+
+        base_name, extension_ = os.path.splitext(path)
+        fd, file_path = tempfile.mkstemp(dir=env.get_user_activities_path(),
+                prefix=base_name, suffix='.xo')
+        os.close(fd)
+        os.unlink(file_path)
+
+        return file_path
+
+    def get_local_file_path(self):
+        return self._output_file.get_path()
+
+    def _check_if_finished_writing(self):
+        if not self._pending_buffers and \
+                not self._output_stream.has_pending() and \
+                self._input_stream.is_closed():
+
+            logging.debug('closing output stream')
+            self._output_stream.close()
+
+            self.emit('progress', 1.0)

@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-"""Activity information microformat parser.
+'''Activity information microformat parser.
 
 Activity information is embedded in HTML/XHTML/XML pages using a
 Resource Description Framework (RDF) http://www.w3.org/RDF/ .
@@ -46,12 +46,13 @@ An example::
         </RDF:Description>
     </em:targetApplication>
 </RDF:Description></RDF:RDF>
-"""
+'''
 
 import logging
-import urllib2
 from xml.etree.ElementTree import XML
 import traceback
+
+import gio
 
 from jarabe import config
 
@@ -63,38 +64,94 @@ _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
 _UPDATE_PATH = 'http://activities.sugarlabs.org/services/update.php'
 
-def _parse_url(url, bundle_id):
-    response = urllib2.urlopen(url)
-    document = XML(response.read())
+_fetcher = None
 
-    if document.find(_FIND_DESCRIPTION) is None:
-        logging.debug('Bundle %s not available in the server for the version'
-                      ' %s' % (bundle_id, config.version))
-        return '0', None, 0
 
-    version = document.find(_FIND_VERSION).text
-    link = document.find(_FIND_LINK).text
-    size = long(document.find(_FIND_SIZE).text) * 1024
+class _UpdateFetcher(object):
 
-    return version, link, size
+    _CHUNK_SIZE = 10240
 
-def fetch_update_info(bundle):
-    """Return a tuple of (version, link, size_in_bytes) for new version.
+    def __init__(self, bundle, completion_cb):
 
-    Returns ('0', None, 0) if no update is found for the platform version.
-    """
+        url = '%s?id=%s&appVersion=%s' % \
+                (_UPDATE_PATH, bundle.get_bundle_id(), config.version)
 
-    url = '%s?id=%s&appVersion=%s' % \
-            (_UPDATE_PATH, bundle.get_bundle_id(), '0.84.1') #config.version)
+        self._completion_cb = completion_cb
+        self._file = gio.File(url)
+        self._stream = None
+        self._xml_data = ''
+        self._bundle = bundle
 
-    return _parse_url(url, bundle.get_bundle_id())
+        self._file.read_async(self.__file_read_async_cb)
 
-#########################################################################
-# Self-test code.
-def _main():
-    """Self-test."""
-    print _parse_url('%s?id=bounce' % _UPDATE_PATH, 'bounce')
+    def __file_read_async_cb(self, gfile, result):
+        try:
+            self._stream = self._file.read_finish(result)
+        except:
+            global _fetcher
+            _fetcher = None
+            self._completion_cb(None, None, None, None, traceback.format_exc())
+            return
 
-if __name__ == '__main__':
-    _main()
+        self._stream.read_async(self._CHUNK_SIZE, self.__stream_read_async_cb)
 
+    def __stream_read_async_cb(self, stream, result):
+        xml_data = self._stream.read_finish(result)
+        if xml_data is None:
+            global _fetcher
+            _fetcher = None
+            self._completion_cb(self._bundle, None, None, None,
+                    'Error reading update information for %s from '
+                    'server.' % self._bundle.get_bundle_id())
+            return
+        elif not xml_data:
+            self._process_result()
+        else:
+            self._xml_data += xml_data
+            self._stream.read_async(self._CHUNK_SIZE,
+                                    self.__stream_read_async_cb)
+
+    def _process_result(self):
+        document = XML(self._xml_data)
+
+        if document.find(_FIND_DESCRIPTION) is None:
+            logging.debug('Bundle %s not available in the server for the '
+                    'version %s' % (self._bundle.get_bundle_id(),
+                                    config.version))
+            version = None
+            link = None
+            size = None
+        else:
+            try:
+                version = int(document.find(_FIND_VERSION).text)
+            except ValueError:
+                logging.error(traceback.format_exc())
+                version = 0
+
+            link = document.find(_FIND_LINK).text
+
+            try:
+                size = long(document.find(_FIND_SIZE).text) * 1024
+            except ValueError:
+                logging.error(traceback.format_exc())
+                size = 0
+
+        global _fetcher
+        _fetcher = None
+        self._completion_cb(self._bundle, version, link, size, None)
+
+
+def fetch_update_info(bundle, completion_cb):
+    '''Queries the server for a newer version of the ActivityBundle.
+
+       completion_cb receives bundle, version, link, size and possibly an error
+       message:
+       
+       def completion_cb(bundle, version, link, size, error_message):
+    '''
+    global _fetcher
+
+    if _fetcher is not None:
+        raise RuntimeError('Multiple simultaneous requests are not supported')
+
+    _fetcher = _UpdateFetcher(bundle, completion_cb)
