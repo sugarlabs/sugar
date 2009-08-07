@@ -815,8 +815,9 @@ class OutgoingTransferPalette(BaseTransferPalette):
         self._update()
 
     def _update(self):
-        logging.debug('_update state: %r' % self.file_transfer.props.state)
-        if self.file_transfer.props.state == filetransfer.FT_STATE_PENDING:
+        new_state = self.file_transfer.props.state
+        logging.debug('_update state: %r' % new_state)
+        if new_state == filetransfer.FT_STATE_PENDING:
 
             menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -840,8 +841,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
             vbox.add(label)
             label.show()
 
-        elif self.file_transfer.props.state in \
-                [filetransfer.FT_STATE_ACCEPTED, filetransfer.FT_STATE_OPEN]:
+        elif new_state in [filetransfer.FT_STATE_ACCEPTED,
+                           filetransfer.FT_STATE_OPEN]:
 
             for item in self.menu.get_children():
                 self.menu.remove(item)
@@ -865,7 +866,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
 
             self.update_progress()
 
-        elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
+        elif new_state in [filetransfer.FT_STATE_COMPLETED,
+                           filetransfer.FT_STATE_CANCELLED]:
 
             for item in self.menu.get_children():
                 self.menu.remove(item)
