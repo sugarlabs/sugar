@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2009, Walter Bender 
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,7 +56,8 @@ _ACTION_ANYTHING = 0
 _ACTION_EVERYBODY = 0
 _ACTION_MY_FRIENDS = 1
 _ACTION_MY_CLASS = 2
-            
+
+
 class MainToolbox(Toolbox):
     def __init__(self):
         Toolbox.__init__(self)
@@ -72,8 +74,8 @@ class SearchToolbar(gtk.Toolbar):
         'query-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
                           ([object]))
-    }
-    
+        }
+
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -203,7 +205,7 @@ class SearchToolbar(gtk.Toolbar):
             date_range = (today_start - timedelta(30), right_now)
         elif self._when_search_combo.props.value == _ACTION_PAST_YEAR:
             date_range = (today_start - timedelta(356), right_now)
-        
+
         return (time.mktime(date_range[0].timetuple()),
                 time.mktime(date_range[1].timetuple()))
 
@@ -268,17 +270,30 @@ class SearchToolbar(gtk.Toolbar):
         try:
             self._what_search_combo.remove_all()
             # TRANS: Item in a combo box that filters by entry type.
-            self._what_search_combo.append_item(_ACTION_ANYTHING, _('Anything'))
+            self._what_search_combo.append_item(_ACTION_ANYTHING,
+                                                _('Anything'))
 
             registry = bundleregistry.get_registry()
             appended_separator = False
+
+            types = mime.get_all_generic_types()
+            for generic_type in types:
+                if not appended_separator:
+                    self._what_search_combo.append_separator()
+                    appended_separator = True
+                self._what_search_combo.append_item(
+                    generic_type.type_id, generic_type.name, generic_type.icon)
+                if generic_type.type_id == current_value:
+                    current_value_index = \
+                            len(self._what_search_combo.get_model()) - 1
+
+                self._what_search_combo.set_active(current_value_index)
+
+            self._what_search_combo.append_separator()
+
             for service_name in model.get_unique_values('activity'):
                 activity_info = registry.get_bundle(service_name)
                 if not activity_info is None:
-                    if not appended_separator:
-                        self._what_search_combo.append_separator()            
-                        appended_separator = True
-
                     if os.path.exists(activity_info.get_icon()):
                         self._what_search_combo.append_item(service_name,
                                 activity_info.get_name(),
@@ -291,18 +306,6 @@ class SearchToolbar(gtk.Toolbar):
                     if service_name == current_value:
                         current_value_index = \
                                 len(self._what_search_combo.get_model()) - 1
-
-            self._what_search_combo.append_separator()
-
-            types = mime.get_all_generic_types()
-            for generic_type in types :
-                self._what_search_combo.append_item(
-                    generic_type.type_id, generic_type.name, generic_type.icon)
-                if generic_type.type_id == current_value:
-                    current_value_index = \
-                            len(self._what_search_combo.get_model()) - 1
-
-                self._what_search_combo.set_active(current_value_index)
         finally:
             self._what_search_combo.handler_unblock(
                     self._what_combo_changed_sid)
@@ -398,7 +401,7 @@ class EntryToolbar(gtk.Toolbar):
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
-        
+
         for menu_item in palette.menu.get_children():
             palette.menu.remove(menu_item)
             menu_item.destroy()
