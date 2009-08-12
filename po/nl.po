@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-19 00:30-0400\n"
-"PO-Revision-Date: 2009-05-21 02:42-0400\n"
+"POT-Creation-Date: 2009-06-11 00:31-0400\n"
+"PO-Revision-Date: 2009-07-31 16:03-0400\n"
 "Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -65,50 +65,43 @@ msgstr "Klik om de kleur te veranderen:"
 msgid "About my Computer"
 msgstr "Over mijn computer"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:26
+#: ../extensions/cpsection/aboutcomputer/model.py:28
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Identiteit"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Serienummer:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Bouw:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
 msgstr "Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:146
 msgid "Wireless Firmware:"
 msgstr "Firmware draadloos netwerk:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid "Copyright and License"
 msgstr "Copyright en licentie"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:176
-msgid ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-msgstr ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; en anderen die "
-"bijgedragen hebben."
-
-#: ../extensions/cpsection/aboutcomputer/view.py:183
+#: ../extensions/cpsection/aboutcomputer/view.py:184
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -120,7 +113,7 @@ msgstr ""
 "je mag het aanpassen en/of kopieën distribueren onder de condities zoals "
 "vermeld in de licentie."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:195
+#: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
 msgstr "Volledige licentie:"
 
@@ -298,54 +291,87 @@ msgstr "%(hour)d:%(min).2d over"
 msgid "Charged"
 msgstr "Opgeladen"
 
-#: ../extensions/deviceicon/network.py:40
+#: ../extensions/deviceicon/network.py:43
 #, python-format
 msgid "IP address: %s"
 msgstr "IP adres: %s"
 
-#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:109
 msgid "Disconnect..."
 msgstr "Verbinding verbreken..."
 
-#: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:248
+#: ../extensions/deviceicon/network.py:113
+msgid "Create new wireless network"
+msgstr "Nieuw draadloos netwerk aanmaken"
+
+#: ../extensions/deviceicon/network.py:119
+#: ../src/jarabe/desktop/meshbox.py:250
 msgid "Connecting..."
 msgstr "Verbinden..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:254
+#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:179
+#: ../src/jarabe/desktop/meshbox.py:256
 msgid "Connected"
 msgstr "Verbonden"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "Kanaal"
 
-#: ../extensions/deviceicon/network.py:141
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr "Bedraad netwerk"
 
-#: ../extensions/deviceicon/network.py:169
+#: ../extensions/deviceicon/network.py:182
 msgid "Speed"
 msgstr "Snelheid"
+
+#: ../extensions/deviceicon/network.py:389
+#, python-format
+msgid "%s's network"
+msgstr "%s's netwerk"
 
 #: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "Mijn Speakers"
 
-#: ../extensions/deviceicon/speaker.py:135
+#: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
 msgstr "Ontdempen"
 
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
 msgstr "Dempen"
 
-#: ../extensions/globalkey/screenshot.py:51
+#: ../extensions/globalkey/screenshot.py:56
+msgid "Mesh"
+msgstr "Mesh"
+
+#: ../extensions/globalkey/screenshot.py:58
+#: ../src/jarabe/frame/zoomtoolbar.py:38
+msgid "Group"
+msgstr "Groep"
+
+#: ../extensions/globalkey/screenshot.py:60
+#: ../src/jarabe/frame/zoomtoolbar.py:40
+msgid "Home"
+msgstr "Thuis"
+
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Activity"
+msgstr "Activiteit"
+
+#: ../extensions/globalkey/screenshot.py:69
 msgid "Screenshot"
 msgstr "Schermafdruk"
+
+#: ../extensions/globalkey/screenshot.py:71
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "Schermafdruk van \"%s\""
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -680,24 +706,24 @@ msgstr "WPA en WPA 2 Persoonlijk"
 msgid "Wireless Security:"
 msgstr "Draadloze netwerkbeveiliging:"
 
-#: ../src/jarabe/desktop/meshbox.py:132
+#: ../src/jarabe/desktop/meshbox.py:134
 msgid "Connect"
 msgstr "Verbinden"
 
-#: ../src/jarabe/desktop/meshbox.py:136
+#: ../src/jarabe/desktop/meshbox.py:138
 msgid "Disconnect"
 msgstr "Verbinding verbreken"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:442
+#: ../src/jarabe/desktop/meshbox.py:449
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Hervatten"
 
-#: ../src/jarabe/desktop/meshbox.py:447
+#: ../src/jarabe/desktop/meshbox.py:454
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Bijvoegen"
@@ -786,18 +812,6 @@ msgstr "%s in klembord zetten"
 #: ../src/jarabe/frame/zoomtoolbar.py:36
 msgid "Neighborhood"
 msgstr "Omgeving"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:38
-msgid "Group"
-msgstr "Groep"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:40
-msgid "Home"
-msgstr "Thuis"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:42
-msgid "Activity"
-msgstr "Activiteit"
 
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
@@ -911,7 +925,7 @@ msgstr "Je dagboek is leeg"
 msgid "No matching entries "
 msgstr "Geen overeenkomende ingangen "
 
-#: ../src/jarabe/journal/listview.py:369
+#: ../src/jarabe/journal/listview.py:370
 msgid "Clear search"
 msgstr "Zoekopdracht wissen"
 
@@ -1014,24 +1028,24 @@ msgstr "Bron weergeven"
 msgid "Stop"
 msgstr "Stop"
 
-#: ../src/jarabe/view/palettes.py:171
+#: ../src/jarabe/view/palettes.py:174
 msgid "Remove favorite"
 msgstr "Verwijder favoriet"
 
-#: ../src/jarabe/view/palettes.py:175
+#: ../src/jarabe/view/palettes.py:178
 msgid "Make favorite"
 msgstr "Maak favoriet"
 
-#: ../src/jarabe/view/palettes.py:238
+#: ../src/jarabe/view/palettes.py:241
 msgid "Show contents"
 msgstr "Inhoud weergeven"
 
-#: ../src/jarabe/view/palettes.py:260 ../src/jarabe/view/palettes.py:309
+#: ../src/jarabe/view/palettes.py:263 ../src/jarabe/view/palettes.py:313
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB vrij"
 
-#: ../src/jarabe/view/palettes.py:285
+#: ../src/jarabe/view/palettes.py:288
 msgid "Unmount"
 msgstr "Loskoppelen"
 
@@ -1051,6 +1065,12 @@ msgstr "Activiteitsbundel Bron"
 #, python-format
 msgid "View source: %r"
 msgstr "Bron weergeven: %r"
+
+#~ msgid ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+#~ msgstr ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; en anderen die "
+#~ "bijgedragen hebben."
 
 #~ msgid "Document"
 #~ msgstr "Document"
@@ -1072,9 +1092,6 @@ msgstr "Bron weergeven: %r"
 
 #~ msgid "About my XO"
 #~ msgstr "Over mijn XO"
-
-#~ msgid "Mesh"
-#~ msgstr "Mesh"
 
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Verbonden met een School Mesh Portaal"

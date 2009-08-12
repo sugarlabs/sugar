@@ -246,7 +246,7 @@ class BaseListView(gtk.Bin):
 
     def __destroy_cb(self, widget):
         if self._model is not None:
-            self._model.destroy()
+            self._model.stop()
 
     def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
         favorite = self._model[tree_iter][ListModel.COLUMN_FAVORITE]

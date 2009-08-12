@@ -239,7 +239,7 @@ class WPAKeyDialog(KeyDialog):
         elif len(key) >= 8 and len(key) <= 63:
             # passphrase
             from subprocess import Popen, PIPE
-            p = Popen(['/usr/sbin/wpa_passphrase', ssid, key], stdout=PIPE)
+            p = Popen(['wpa_passphrase', ssid, key], stdout=PIPE)
             for line in p.stdout:
                 if line.strip().startswith("psk="):
                     real_key = line.strip()[4:]

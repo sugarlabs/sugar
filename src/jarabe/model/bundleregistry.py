@@ -169,6 +169,9 @@ class BundleRegistry(gobject.GObject):
     def __iter__(self):
         return self._bundles.__iter__()
 
+    def __len__(self):
+        return len(self._bundles)
+
     def _scan_directory(self, path):
         if not os.path.isdir(path):
             return
@@ -330,12 +333,9 @@ class BundleRegistry(gobject.GObject):
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
 
-        if self.get_bundle(bundle.get_bundle_id()):
-            raise AlreadyInstalledException
-
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() == \
+                    bundle.get_activity_version() <= \
                         installed_bundle.get_activity_version():
                 raise AlreadyInstalledException
             elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():

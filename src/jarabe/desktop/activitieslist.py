@@ -203,7 +203,7 @@ class ListModel(gtk.TreeModelSort):
         for row in self._model:
             if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
                     row[ListModel.COLUMN_VERSION] == version:
-                self.remove(row.iter)
+                self._model.remove(row.iter)
                 return
 
     def _add_activity(self, activity_info):
