@@ -307,6 +307,14 @@ class BundleRegistry(gobject.GObject):
                           'favorites': self._favorite_bundles}
         open(path, 'w').write(cjson.encode(favorites_data))
 
+    def is_pre_installed(self, bundle_id):
+        installed = self.get_bundle(bundle_id)
+        if installed is not None and \
+                not installed.get_path().startswith(
+                        env.get_user_activities_path()):
+            return True
+        return False
+
     def is_installed(self, bundle):
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
@@ -324,7 +332,8 @@ class BundleRegistry(gobject.GObject):
     def install(self, bundle):
         activities_path = env.get_user_activities_path()
 
-        if self.get_bundle(bundle.get_bundle_id()):
+        if self.is_pre_installed(bundle.get_bundle_id()) or \
+                self.is_installed(bundle):
             raise AlreadyInstalledException
 
         for installed_bundle in self._bundles:
