@@ -18,7 +18,6 @@
 import os
 import logging
 import traceback
-import sys
 
 import gobject
 import gio
@@ -187,7 +186,8 @@ class BundleRegistry(gobject.GObject):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
             except Exception, e:
                 logging.error('Error while processing installed activity ' \
-                              'bundle: %s, %s, %s' % (f, e.__class__, e))
+                              'bundle %s:\n%s' % \
+                                    (folder, traceback.format_exc()))
 
         bundle_dirs = bundles.keys()
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
@@ -196,7 +196,8 @@ class BundleRegistry(gobject.GObject):
                 self._add_bundle(folder)
             except Exception, e:
                 logging.error('Error while processing installed activity ' \
-                              'bundle: %s, %s, %s' % (folder, e.__class__, e))
+                              'bundle %s:\n%s' % \
+                                    (folder, traceback.format_exc()))
 
     def add_bundle(self, bundle_path, install_mime_type=False):
         bundle = self._add_bundle(bundle_path, install_mime_type)
@@ -217,7 +218,7 @@ class BundleRegistry(gobject.GObject):
                 bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
             logging.error('Error loading bundle %r:\n%s' % (bundle_path,
-                ''.join(traceback.format_exception(*sys.exc_info()))))
+                    traceback.format_exc()))
             return None
 
         if self.get_bundle(bundle.get_bundle_id()):
@@ -392,7 +393,7 @@ class BundleRegistry(gobject.GObject):
             except Exception:
                 logging.error('Uninstall failed, still trying to install ' \
                     'newer bundle:\n' + \
-                    ''.join(traceback.format_exception(*sys.exc_info())))
+                    traceback.format_exc())
         else:
             logging.warning('Unable to uninstall system activity, ' \
                             'installing upgraded version in user activities')
