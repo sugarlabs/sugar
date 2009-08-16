@@ -29,6 +29,8 @@ CLASS = 'Language'
 ICON = 'module-keyboard'
 TITLE = _('Keyboard')
 
+_APPLY_TIMEOUT = 3000
+
 class LayoutCombo(gtk.HBox):
     __gsignals__ = {
         'selection-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
@@ -143,13 +145,13 @@ class Keyboard(SectionView):
         self._vbox = gtk.VBox()
         scrollwindow.add_with_viewport(self._vbox)
         
-        self._kmodel_sid = None
-        self._layout_sid = None
-        self._group_switch_option_sid = None
+        self.__kmodel_sid = None
+        self.__layout_sid = None
+        self.__group_switch_sid = None
 
         self._setup_kmodel()
         self._setup_layouts()
-        self._setup_group_switch_option() 
+        self._setup_group_switch_option()
         
         self._vbox.show()
 
@@ -186,6 +188,27 @@ class Keyboard(SectionView):
         self._vbox.pack_start(box_kmodel, expand=False)
         box_kmodel.show_all()
 
+        self._kmodel_combo.connect('changed', self.__kmodel_changed_cb)
+
+    def __kmodel_changed_cb(self, combobox):
+        if self.__kmodel_sid is not None:
+            gobject.source_remove(self.__kmodel_sid)
+        self.__kmodel_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+            self.__kmodel_timeout_cb, combobox)
+
+    def __kmodel_timeout_cb(self, combobox):
+        it = combobox.get_active_iter()
+        model = combobox.get_model()
+        kmodel = model.get(it, 0)[0]
+        if kmodel == self._xkb.get_current_model():
+            return
+        try:
+            self._xkb.set_model(kmodel)
+        except:
+            pass #TODO: Show error
+
+        return False
+
     def _setup_group_switch_option(self):
         separator_grp_option = gtk.HSeparator()
         self._vbox.pack_start(separator_grp_option, expand=False)
@@ -216,7 +239,7 @@ class Keyboard(SectionView):
             found = False
             for row in self._grp_option_store:
                 if current_grp_option in row[0]:
-                    self._kmodel_combo.set_active_iter(row.iter)
+                    self._grp_option_combo.set_active_iter(row.iter)
                     found = True
                     break
             if not found:
@@ -225,6 +248,27 @@ class Keyboard(SectionView):
         box_grp_option.pack_start(self._grp_option_combo, expand = False)
         self._vbox.pack_start(box_grp_option, expand=False)
         box_grp_option.show_all()
+
+        self._grp_option_combo.connect('changed', self.__group_switch_changed_cb)
+
+    def __group_switch_changed_cb(self, combobox):
+        if self.__group_switch_sid is not None:
+            gobject.source_remove(self.__group_switch_sid)
+        self.__group_switch_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+            self.__group_switch_timeout_cb, combobox)
+
+    def __group_switch_timeout_cb(self, combobox):
+        it = combobox.get_active_iter()
+        model = combobox.get_model()
+        group_switch = model.get(it, 0)[0]
+        if group_switch == self._xkb.get_current_option_grp():
+            return
+        try:
+            self._xkb.set_option_grp(group_switch)
+        except:
+            pass #TODO: Show error
+
+        return False
 
     def _setup_layouts(self):
         separator_klayout = gtk.HSeparator()
@@ -266,11 +310,11 @@ class Keyboard(SectionView):
             else:
                 box.show_all()
                 if i == 1:
-                    # First row - no need for showing remove
+                    # First row - no need for showing remove btn
                     add, remove = box.get_children()
                     remove.props.visible = False
                 if i == self._xkb.get_max_layouts():
-                    # Last row - no need for showing add
+                    # Last row - no need for showing add btn
                     add, remove = box.get_children()
                     add.props.visible = False
             i += 1
@@ -316,4 +360,19 @@ class Keyboard(SectionView):
                 self._selected_klayouts.append(combo.get_layout())
 
         self.__determine_add_remove_box_visibility()
+
+        if self.__layout_sid is not None:
+            gobject.source_remove(self.__layout_sid)
+        self.__layout_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+            self.__layout_timeout_cb)
+
+    def __layout_timeout_cb(self):
+        if self._selected_klayouts == self._xkb.get_current_layouts():
+            return
+        try:
+            self._xkb.set_layouts(self._selected_klayouts)
+        except:
+            pass #TODO: Show error
+
+        return False
 

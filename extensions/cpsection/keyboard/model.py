@@ -116,3 +116,29 @@ class XKB(gobject.GObject):
     
     def get_max_layouts(self):
         return self._engine.get_max_num_groups()
+
+    def set_model(self, model):
+        #XXX: Which one goes first ?
+        self._gconf_client.set_string(MODEL_KEY, model)
+        self._configrec.set_model(model)
+        self._configrec.activate(self._engine)
+
+    def set_option_grp(self, option_grp):
+        #XXX: Take a backup of existing settings first (there may be other hand set values)
+        options = [option_grp]
+        self._gconf_client.set_list(OPTIONS_KEY, gconf.VALUE_STRING, options)
+        self._configrec.set_options(options)
+        self._configrec.activate(self._engine)
+
+    def set_layouts(self, layouts):
+        self._gconf_client.set_list(LAYOUTS_KEY, gconf.VALUE_STRING, layouts)
+        layouts_list = []
+        variants_list = []
+        for layout in layouts:
+            layouts_list.append(layout.split('(')[0])
+            variants_list.append(layout.split('(')[1][:-1])
+            
+        self._configrec.set_layouts(layouts_list)
+        self._configrec.set_variants(variants_list)
+        self._configrec.activate(self._engine)        
+        
