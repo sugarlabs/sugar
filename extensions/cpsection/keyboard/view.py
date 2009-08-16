@@ -123,10 +123,12 @@ class Keyboard(SectionView):
 
         self._kmodel = None
         self._selected_kmodel = None
-        self._klayout = []
-        self._selected_klayout = []
-        self._kgrpswitch_option = None
-        self._selected_kgrpswitch_option = None
+        
+        self._klayouts = []
+        self._selected_klayouts = []
+        
+        self._group_switch_option = None
+        self._selected_group_switch_option = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -199,11 +201,11 @@ class Keyboard(SectionView):
     def __kmodel_timeout_cb(self, combobox):
         it = combobox.get_active_iter()
         model = combobox.get_model()
-        kmodel = model.get(it, 0)[0]
-        if kmodel == self._xkb.get_current_model():
+        self._selected_kmodel = model.get(it, 0)[0]
+        if self._selected_kmodel == self._xkb.get_current_model():
             return
         try:
-            self._xkb.set_model(kmodel)
+            self._xkb.set_model(self._selected_kmodel)
         except:
             pass #TODO: Show error
 
@@ -232,13 +234,13 @@ class Keyboard(SectionView):
         self._grp_option_combo.pack_start(cell)
         self._grp_option_combo.add_attribute(cell, 'text', 1)
 
-        current_grp_option = self._xkb.get_current_option_grp()
-        if not current_grp_option:
+        self._group_switch_option = self._xkb.get_current_option_grp()
+        if not self._group_switch_option:
             self._grp_option_combo.set_active(0)
         else:
             found = False
             for row in self._grp_option_store:
-                if current_grp_option in row[0]:
+                if self._group_switch_option in row[0]:
                     self._grp_option_combo.set_active_iter(row.iter)
                     found = True
                     break
@@ -260,11 +262,12 @@ class Keyboard(SectionView):
     def __group_switch_timeout_cb(self, combobox):
         it = combobox.get_active_iter()
         model = combobox.get_model()
-        group_switch = model.get(it, 0)[0]
-        if group_switch == self._xkb.get_current_option_grp():
+        self._selected_group_switch_option = model.get(it, 0)[0]
+        if self._selected_group_switch_option == \
+                self._xkb.get_current_option_grp():
             return
         try:
-            self._xkb.set_option_grp(group_switch)
+            self._xkb.set_option_grp(self._selected_group_switch_option)
         except:
             pass #TODO: Show error
 
@@ -281,7 +284,6 @@ class Keyboard(SectionView):
         self._vbox.pack_start(label_klayout, expand=False)
 
         self._klayouts = self._xkb.get_current_layouts()
-        self._selected_klayouts = None
         for i in range(0, self._xkb.get_max_layouts()):
             add_remove_box = self.__create_add_remove_box()
             self._layout_addremovebox_list.append(add_remove_box)
@@ -375,4 +377,10 @@ class Keyboard(SectionView):
             pass #TODO: Show error
 
         return False
+
+
+    def undo(self):
+        self._xkb.set_model(self._kmodel)
+        self._xkb.set_layouts(self._klayouts)
+        self._xkb.set_option_grp(self._group_switch_option)
 
