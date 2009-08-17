@@ -1,4 +1,5 @@
-# Copyright (C) 2007, 2008 One Laptop Per Child
+# Copyright (C) 2009 OLPC
+# Author: Sayamindu Dasgupta <sayamindu@laptop.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
