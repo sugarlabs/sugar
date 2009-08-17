@@ -31,6 +31,7 @@ import gconf
 import gtk
 import gobject
 import dbus.glib
+import xklavier
 
 gtk.gdk.threads_init()
 dbus.glib.threads_init()
@@ -130,6 +131,37 @@ def setup_file_transfer_cb():
     from jarabe.model import filetransfer
     filetransfer.init()
 
+def setup_keyboard_cb(gconf_client):
+    logging.debug('STARTUP: setup_keyboard_cb')
+    try:
+        engine = xklavier.Engine(gtk.gdk.display_get_default())
+        configrec = xklavier.ConfigRec()
+        configrec.get_from_server(engine)
+
+        layouts = gconf_client.get_list(\
+            '/desktop/sugar/peripherals/keyboard/layouts', gconf.VALUE_STRING)
+        layouts_list = []
+        variants_list = []
+        for layout in layouts:
+            layouts_list.append(layout.split('(')[0])
+            variants_list.append(layout.split('(')[1][:-1])
+            
+        configrec.set_layouts(layouts_list)
+        configrec.set_variants(variants_list)
+
+        model = gconf_client.get_string(\
+            '/desktop/sugar/peripherals/keyboard/model')
+        configrec.set_model(model)
+
+        options = gconf_client.get_list(\
+            '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
+        configrec.set_options(options)        
+
+        configrec.activate(engine)
+    except:
+        logging.debug('ERROR in setup_keyboard_cb: %s' % str(sys.exc_info()))
+        pass
+
 def main():
     cleanup_logs()
     logger.start('shell')
@@ -164,6 +196,7 @@ def main():
     gobject.idle_add(setup_notification_service_cb)
     gobject.idle_add(setup_file_transfer_cb)
     gobject.idle_add(show_software_updates_cb, home_window)
+    gobject.idle_add(setup_keyboard_cb, client)
 
     try:
         gtk.main()
