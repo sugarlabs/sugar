@@ -20,11 +20,11 @@ import gobject
 import gconf
 
 
-GRP_NAME = 'grp' # The XKB name for group switch options
+_GRP_NAME = 'grp' # The XKB name for group switch options
 
-LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'
-OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
-MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
+_LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'
+_OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
+_MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
 class XKB(gobject.GObject):
     def __init__(self, display):
@@ -44,7 +44,8 @@ class XKB(gobject.GObject):
     def _populate_two(self, c_reg, item, subitem, store):
         layout = item.get_name()
         if subitem:
-            desc = '%s, %s' % (subitem.get_description(), item.get_description())
+            desc = '%s, %s' % (subitem.get_description(), \
+                                            item.get_description())
             variant = subitem.get_name()
         else:
             desc = 'Default layout, %s' % item.get_description()
@@ -53,38 +54,45 @@ class XKB(gobject.GObject):
         store.append([desc, ('%s(%s)' % (layout, variant))])
 
     def get_models(self):
+        """Return list of supported keyboard models"""
         models = []
         self._configreg.foreach_model(self._populate_one, models)
         models.sort()
         return models
 
     def get_languages(self):
+        """Return list of supported keyboard languages"""
         languages = []
         self._configreg.foreach_language(self._populate_one, languages)
         languages.sort()
         return languages
 
     def get_layouts_for_language(self, language):
+        """Return list of supported keyboard layouts for a given language"""
         layouts = []
-        self._configreg.foreach_language_variant(language, self._populate_two, layouts)
+        self._configreg.foreach_language_variant(language, self._populate_two, \
+                                               layouts)
         layouts.sort()
         return layouts
 
     def get_options_grp(self):
+        """Return list of supported options for switching keyboard group"""
         options = []
-        self._configreg.foreach_option(GRP_NAME, self._populate_one, options)
+        self._configreg.foreach_option(_GRP_NAME, self._populate_one, options)
         options.sort()
         return options
 
     def get_current_model(self):
-        model = self._gconf_client.get_string(MODEL_KEY)
+        """Return the enabled keyboard model"""
+        model = self._gconf_client.get_string(_MODEL_KEY)
         if model:
             return model
         else:
             return self._configrec.get_model()
 
     def get_current_layouts(self):
-        layouts = self._gconf_client.get_list(LAYOUTS_KEY, 'string')
+        """Return the enabled keyboard layouts with variants"""
+        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, 'string')
         if layouts:
             return layouts
         
@@ -103,35 +111,39 @@ class XKB(gobject.GObject):
         return ret
 
     def get_current_option_grp(self):
-        options = self._gconf_client.get_list(OPTIONS_KEY, 'string')
+        """Return the enabled option for switching keyboard group"""
+        options = self._gconf_client.get_list(_OPTIONS_KEY, 'string')
         
         if not options:
             options = self._configrec.get_options()
 
         for option in options:
-            if option.startswith(GRP_NAME):
+            if option.startswith(_GRP_NAME):
                 return option
         
         return None
     
     def get_max_layouts(self):
+        """Return the maximum number of layouts supported simultaneously"""
         return self._engine.get_max_num_groups()
 
     def set_model(self, model):
-        #XXX: Which one goes first ?
-        self._gconf_client.set_string(MODEL_KEY, model)
+        """Sets the supplied keyboard model"""
+        self._gconf_client.set_string(_MODEL_KEY, model)
         self._configrec.set_model(model)
         self._configrec.activate(self._engine)
 
     def set_option_grp(self, option_grp):
-        #XXX: Take a backup of existing settings first (there may be other hand set values)
+        """Sets the supplied option for switching keyboard group"""
+        #XXX: Merge, not overwrite previous options
         options = [option_grp]
-        self._gconf_client.set_list(OPTIONS_KEY, gconf.VALUE_STRING, options)
+        self._gconf_client.set_list(_OPTIONS_KEY, gconf.VALUE_STRING, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
 
     def set_layouts(self, layouts):
-        self._gconf_client.set_list(LAYOUTS_KEY, gconf.VALUE_STRING, layouts)
+        """Sets the supplied keyboard layouts (with variants)"""
+        self._gconf_client.set_list(_LAYOUTS_KEY, gconf.VALUE_STRING, layouts)
         layouts_list = []
         variants_list = []
         for layout in layouts:

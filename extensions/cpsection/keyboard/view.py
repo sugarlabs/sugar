@@ -23,7 +23,6 @@ from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
-from jarabe.controlpanel.inlinealert import InlineAlert
 
 CLASS = 'Language'
 ICON = 'module-keyboard'
@@ -32,10 +31,17 @@ TITLE = _('Keyboard')
 _APPLY_TIMEOUT = 3000
 
 class LayoutCombo(gtk.HBox):
+
+    """
+    Custom GTK widget with two comboboxes side by side, one for layout, and
+    the other for variants for the selected layout.
+    """
+
     __gsignals__ = {
         'selection-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
                             (gobject.TYPE_STRING, gobject.TYPE_INT))
         }
+
     def __init__(self, xkb, n):
         gtk.HBox.__init__(self)
         self._xkb = xkb
@@ -51,7 +57,8 @@ class LayoutCombo(gtk.HBox):
         label.set_alignment(0.5, 0.5)
         self.pack_start(label, expand=False)
 
-        self._klang_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self._klang_store = gtk.ListStore(gobject.TYPE_STRING, \
+                                                    gobject.TYPE_STRING)
         for description, name in self._xkb.get_languages():
             self._klang_store.append([name, description])
 
@@ -67,7 +74,8 @@ class LayoutCombo(gtk.HBox):
         self._kvariant_store = None
         self._kvariant_combo = gtk.ComboBox(model = None)
         self._kvariant_combo_changed_id = \
-            self._kvariant_combo.connect('changed', self._kvariant_combo_changed_cb)
+            self._kvariant_combo.connect('changed', \
+                                self._kvariant_combo_changed_cb)
         cell = gtk.CellRendererText()
         cell.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         self._kvariant_combo.pack_start(cell)
@@ -77,13 +85,15 @@ class LayoutCombo(gtk.HBox):
         self._klang_combo.set_active(self._index)
 
     def select_layout(self, layout):
+        """Select a given keyboard layout and show appropriate variants"""
         self._kvariant_combo.handler_block(self._kvariant_combo_changed_id)
         for i in range(0, len(self._klang_store)):
             self._klang_combo.set_active(i)
             for j in range(0, len(self._kvariant_store)):
                 if self._kvariant_store[j][0] == layout:
                     self._kvariant_combo.set_active(j)
-                    self._kvariant_combo.handler_unblock(self._kvariant_combo_changed_id)
+                    self._kvariant_combo.handler_unblock(\
+                                self._kvariant_combo_changed_id)
                     return True
 
         self._kvariant_combo.handler_unblock(self._kvariant_combo_changed_id)
@@ -91,12 +101,14 @@ class LayoutCombo(gtk.HBox):
         return False
 
     def get_layout(self):
+        """Gets the selected layout (with variant)"""
         iter = self._kvariant_combo.get_active_iter()
         model = self._kvariant_combo.get_model()
         return model.get(iter, 0)[0]
 
     def _set_kvariant_store(self, lang):
-        self._kvariant_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        self._kvariant_store = gtk.ListStore(gobject.TYPE_STRING, \
+                                                    gobject.TYPE_STRING)
         for description, name in self._xkb.get_layouts_for_language(lang):
             self._kvariant_store.append([name, description])
         self._kvariant_combo.set_model(self._kvariant_store)
@@ -133,7 +145,8 @@ class Keyboard(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
         
-        self._layout_table = gtk.Table(rows = 4, columns = 2, homogeneous = False)
+        self._layout_table = gtk.Table(rows = 4, columns = 2, \
+                                                homogeneous = False)
 
         self._xkb = model.XKB(self.get_display())
         self._layout_combo_list = []
@@ -158,6 +171,7 @@ class Keyboard(SectionView):
         self._vbox.show()
 
     def _setup_kmodel(self):
+        """Adds the controls for changing the keyboard model"""
         separator_kmodel = gtk.HSeparator()
         self._vbox.pack_start(separator_kmodel, expand=False)
         separator_kmodel.show_all()
@@ -171,26 +185,27 @@ class Keyboard(SectionView):
         box_kmodel.set_border_width(style.DEFAULT_SPACING * 2)
         box_kmodel.set_spacing(style.DEFAULT_SPACING)
 
-        self._kmodel_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        kmodel_store = gtk.ListStore(gobject.TYPE_STRING, \
+                                                gobject.TYPE_STRING)
         for description, name in self._xkb.get_models():
-            self._kmodel_store.append([name, description])
+            kmodel_store.append([name, description])
 
-        self._kmodel_combo = gtk.ComboBox(model = self._kmodel_store)
+        kmodel_combo = gtk.ComboBox(model = kmodel_store)
         cell = gtk.CellRendererText()
-        self._kmodel_combo.pack_start(cell)
-        self._kmodel_combo.add_attribute(cell, 'text', 1)
+        kmodel_combo.pack_start(cell)
+        kmodel_combo.add_attribute(cell, 'text', 1)
 
         self._kmodel = self._xkb.get_current_model()
-        for row in self._kmodel_store:
+        for row in kmodel_store:
             if self._kmodel in row[0]:
-                self._kmodel_combo.set_active_iter(row.iter)
+                kmodel_combo.set_active_iter(row.iter)
                 break
 
-        box_kmodel.pack_start(self._kmodel_combo, expand = False)
+        box_kmodel.pack_start(kmodel_combo, expand = False)
         self._vbox.pack_start(box_kmodel, expand=False)
         box_kmodel.show_all()
 
-        self._kmodel_combo.connect('changed', self.__kmodel_changed_cb)
+        kmodel_combo.connect('changed', self.__kmodel_changed_cb)
 
     def __kmodel_changed_cb(self, combobox):
         if self.__kmodel_sid is not None:
@@ -212,6 +227,7 @@ class Keyboard(SectionView):
         return False
 
     def _setup_group_switch_option(self):
+        """Adds the controls for changing the group switch option of keyboard"""
         separator_grp_option = gtk.HSeparator()
         self._vbox.pack_start(separator_grp_option, expand=False)
         separator_grp_option.show_all()
@@ -225,33 +241,35 @@ class Keyboard(SectionView):
         box_grp_option.set_border_width(style.DEFAULT_SPACING * 2)
         box_grp_option.set_spacing(style.DEFAULT_SPACING)
 
-        self._grp_option_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        grp_option_store = gtk.ListStore(gobject.TYPE_STRING, \
+                                                    gobject.TYPE_STRING)
         for description, name in self._xkb.get_options_grp():
-            self._grp_option_store.append([name, description])
+            grp_option_store.append([name, description])
 
-        self._grp_option_combo = gtk.ComboBox(model = self._grp_option_store)
+        grp_option_combo = gtk.ComboBox(model = grp_option_store)
         cell = gtk.CellRendererText()
-        self._grp_option_combo.pack_start(cell)
-        self._grp_option_combo.add_attribute(cell, 'text', 1)
+        grp_option_combo.pack_start(cell)
+        grp_option_combo.add_attribute(cell, 'text', 1)
 
         self._group_switch_option = self._xkb.get_current_option_grp()
         if not self._group_switch_option:
-            self._grp_option_combo.set_active(0)
+            grp_option_combo.set_active(0)
         else:
             found = False
-            for row in self._grp_option_store:
+            for row in grp_option_store:
                 if self._group_switch_option in row[0]:
-                    self._grp_option_combo.set_active_iter(row.iter)
+                    grp_option_combo.set_active_iter(row.iter)
                     found = True
                     break
             if not found:
-                self._grp_option_combo.set_active(0)
+                grp_option_combo.set_active(0)
 
-        box_grp_option.pack_start(self._grp_option_combo, expand = False)
+        box_grp_option.pack_start(grp_option_combo, expand = False)
         self._vbox.pack_start(box_grp_option, expand=False)
         box_grp_option.show_all()
 
-        self._grp_option_combo.connect('changed', self.__group_switch_changed_cb)
+        grp_option_combo.connect('changed', \
+                            self.__group_switch_changed_cb)
 
     def __group_switch_changed_cb(self, combobox):
         if self.__group_switch_sid is not None:
@@ -274,6 +292,7 @@ class Keyboard(SectionView):
         return False
 
     def _setup_layouts(self):
+        """Adds the controls for changing the keyboard layouts"""
         separator_klayout = gtk.HSeparator()
         self._vbox.pack_start(separator_klayout, expand=False)
         separator_klayout.show_all()
@@ -356,6 +375,7 @@ class Keyboard(SectionView):
         self._update_klayouts()
 
     def _update_klayouts(self):
+        """Responds to any changes in the keyboard layout options"""
         self._selected_klayouts = []
         for combo in self._layout_combo_list:
             if combo.props.visible:
@@ -380,6 +400,7 @@ class Keyboard(SectionView):
 
 
     def undo(self):
+        """Reverts back to the original keyboard configuration"""
         self._xkb.set_model(self._kmodel)
         self._xkb.set_layouts(self._klayouts)
         self._xkb.set_option_grp(self._group_switch_option)
