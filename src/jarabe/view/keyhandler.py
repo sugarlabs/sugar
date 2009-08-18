@@ -28,7 +28,6 @@ import gtk
 
 from sugar._sugarext import KeyGrabber
 
-from jarabe.model import screen
 from jarabe.model import sound
 from jarabe.model import shell
 from jarabe.model import session
@@ -37,9 +36,7 @@ from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
 
-_BRIGHTNESS_STEP = 2
 _VOLUME_STEP = sound.VOLUME_STEP
-_BRIGHTNESS_MAX = 15
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
@@ -48,10 +45,6 @@ _actions_table = {
     'F2'                   : 'zoom_group',
     'F3'                   : 'zoom_home',
     'F4'                   : 'zoom_activity',
-    'F9'                   : 'brightness_down',
-    'F10'                  : 'brightness_up',
-    '<alt>F9'              : 'brightness_min',
-    '<alt>F10'             : 'brightness_max',
     'XF86AudioMute'        : 'volume_mute',
     'F11'                  : 'volume_down',
     'XF86AudioLowerVolume' : 'volume_down',
@@ -60,7 +53,6 @@ _actions_table = {
     '<alt>F11'             : 'volume_min',
     '<alt>F12'             : 'volume_max',
     '0x93'                 : 'frame',
-    '0xEB'                 : 'rotate',
     '<alt>Tab'             : 'next_window',
     '<alt><shift>Tab'      : 'previous_window',
     '<alt>Escape'          : 'close_window',
@@ -70,7 +62,6 @@ _actions_table = {
     '<alt><shift>q'        : 'quit_emulator',
     'XF86Search'           : 'open_search',
     '<alt><shift>o'        : 'open_search',
-    '<alt><shift>r'        : 'rotate',
     '<alt><shift>s'        : 'say_text',
 }
 
@@ -81,7 +72,6 @@ SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
 class KeyHandler(object):
     def __init__(self, frame):
         self._frame = frame
-        self._screen_rotation = 0
         self._key_pressed = None
         self._keycode_pressed = 0
         self._keystate_pressed = 0
@@ -134,20 +124,6 @@ class KeyHandler(object):
         sound.set_volume(volume)
         sound.set_muted(volume == 0)
 
-    def _change_brightness(self, step=None, value=None):
-        if step is not None:
-            level = screen.get_display_brightness() + step
-        elif value is not None:
-            level = value
-
-        level = min(max(0, level), _BRIGHTNESS_MAX)
-
-        screen.set_display_brightness(level)
-        if level == 0:
-            screen.set_display_mode(screen.B_AND_W_MODE)
-        else:
-            screen.set_display_mode(screen.COLOR_MODE)
-
     def _get_speech_proxy(self):
         if self._speech_proxy is None:
             bus = dbus.SessionBus()
@@ -195,23 +171,11 @@ class KeyHandler(object):
     def handle_zoom_activity(self, event_time):
         shell.get_model().zoom_level = ShellModel.ZOOM_ACTIVITY
 
-    def handle_brightness_max(self, event_time):
-        self._change_brightness(value=_BRIGHTNESS_MAX)
-
-    def handle_brightness_min(self, event_time):
-        self._change_brightness(value=0)
-
     def handle_volume_max(self, event_time):
         self._change_volume(value=_VOLUME_MAX)
 
     def handle_volume_min(self, event_time):
         self._change_volume(value=0)
-
-    def handle_brightness_up(self, event_time):
-        self._change_brightness(step=_BRIGHTNESS_STEP)
-
-    def handle_brightness_down(self, event_time):
-        self._change_brightness(step=-_BRIGHTNESS_STEP)
 
     def handle_volume_mute(self, event_time):
         if sound.get_muted() is True:
@@ -227,46 +191,6 @@ class KeyHandler(object):
 
     def handle_frame(self, event_time):
         self._frame.notify_key_press()
-
-    def handle_rotate(self, event_time):
-        """
-        Handles rotation of the display (using xrandr) and of the d-pad.
-
-        Notes: default mappings for keypad on MP
-        KP_Up 80
-        KP_Right 85
-        KP_Down 88
-        KP_Left 83
-        """
-
-        states = [ 'normal', 'left', 'inverted', 'right']
-        keycodes = (80, 85, 88, 83, 80, 85, 88, 83)
-        keysyms = ("KP_Up", "KP_Right", "KP_Down", "KP_Left")
-
-        self._screen_rotation -= 1
-        self._screen_rotation %= 4
-
-        actual_keycodes = keycodes[self._screen_rotation:self._screen_rotation 
-                                   + 4]
-        # code_pairs now contains a mapping of keycode -> keysym in the current
-        # orientation
-        code_pairs = zip(actual_keycodes, keysyms)
-
-        # Using the mappings in code_pairs, we dynamically build up an xmodmap
-        # command to rotate the dpad keys.
-        argv = ['xmodmap']
-        for arg in [('-e', 'keycode %i = %s' % p) for p in code_pairs]:
-            argv.extend(arg)
-
-        # If either the xmodmap or xrandr command fails, check_call will fail
-        # with CalledProcessError, which we raise.
-        try:
-            subprocess.check_call(argv)
-            subprocess.check_call(['xrandr', '-o', 
-                                   states[self._screen_rotation]])
-        except OSError, e:
-            if e.errno != errno.EINTR:
-                raise
 
     def handle_quit_emulator(self, event_time):
         session.get_session_manager().shutdown()
