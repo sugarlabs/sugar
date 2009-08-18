@@ -132,7 +132,7 @@ class ActivityPalette(Palette):
 
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_TRANSPARENT.get_svg()))
-        menu_item = MenuItem(text_label=_('Start'),
+        menu_item = MenuItem(text_label=_('Start new'),
                              file_name=activity_info.get_icon(),
                              xo_color=xo_color)
         menu_item.connect('activate', self.__start_activate_cb)
