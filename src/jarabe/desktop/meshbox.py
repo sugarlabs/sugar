@@ -76,7 +76,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._flags = 0
         self._wpa_flags = 0
         self._rsn_flags = 0
-        self._mode = 0
+        self._mode = network.NM_802_11_MODE_UNKNOWN
         self._device_caps = 0
         self._device_state = None
         self._connection = None
@@ -158,8 +158,12 @@ class AccessPointView(CanvasPulsingIcon):
             self._update_state()
 
     def _update_properties(self, properties):
+        if 'Mode' in properties:
+            self._mode = properties['Mode']
+            self._color = None
         if 'Ssid' in properties:
             self._name = properties['Ssid']
+            self._color = None
         if 'Strength' in properties:
             self._strength = properties['Strength']
         if 'Flags' in properties:
@@ -168,17 +172,21 @@ class AccessPointView(CanvasPulsingIcon):
             self._wpa_flags = properties['WpaFlags']
         if 'RsnFlags' in properties:
             self._rsn_flags = properties['RsnFlags']
-        if 'Mode' in properties:
-            self._mode = properties['Mode']
 
-        sh = sha.new()
-        data = self._name + hex(self._flags)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor.colors)
+        if self._color == None:
+            if self._mode == network.NM_802_11_MODE_ADHOC:
+                encoded_color = self._name.split("#", 1)
+                if len(encoded_color) == 2:
+                    self._color = XoColor('#' + encoded_color[1])
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                sh = sha.new()
+                data = self._name + hex(self._flags)
+                sh.update(data)
+                h = hash(sh.digest())
+                idx = h % len(xocolor.colors)
 
-        self._color = XoColor('%s,%s' % (xocolor.colors[idx][0],
-                                         xocolor.colors[idx][1]))
+                self._color = XoColor('%s,%s' % (xocolor.colors[idx][0],
+                                                 xocolor.colors[idx][1]))
 
         self._update()
 

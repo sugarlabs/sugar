@@ -215,6 +215,7 @@ class WirelessDeviceView(ToolButton):
         self._device_props = None
         self._flags = 0
         self._name = ''
+        self._mode = network.NM_802_11_MODE_UNKNOWN
         self._strength = 0
         self._frequency = 0
         self._device_state = None
@@ -308,8 +309,12 @@ class WirelessDeviceView(ToolButton):
         self._update_properties(properties)
 
     def _update_properties(self, properties):
+        if 'Mode' in properties:
+            self._mode = properties['Mode']
+            self._color = None
         if 'Ssid' in properties:
             self._name = properties['Ssid']
+            self._color = None
         if 'Strength' in properties:
             self._strength = properties['Strength']
         if 'Flags' in properties:
@@ -317,14 +322,21 @@ class WirelessDeviceView(ToolButton):
         if 'Frequency' in properties:
             self._frequency = properties['Frequency']
 
-        sh = sha.new()
-        data = self._name + hex(self._flags)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor.colors)
+        if self._color == None:
+            if self._mode == network.NM_802_11_MODE_ADHOC:
+                encoded_color = self._name.split("#", 1)
+                if len(encoded_color) == 2:
+                    self._color = xocolor.XoColor('#' + encoded_color[1])
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                sh = sha.new()
+                data = self._name + hex(self._flags)
+                sh.update(data)
+                h = hash(sh.digest())
+                idx = h % len(xocolor.colors)
 
-        self._color = xocolor.XoColor('%s,%s' % (xocolor.colors[idx][0],
-                                                 xocolor.colors[idx][1]))
+                self._color = xocolor.XoColor('%s,%s' %
+                                              (xocolor.colors[idx][0],
+                                               xocolor.colors[idx][1]))
         self._update()
 
     def __get_all_ap_props_reply_cb(self, properties):
@@ -399,7 +411,8 @@ class WirelessDeviceView(ToolButton):
     def __create_connection_cb(self, palette, data=None):
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
-        connection_name = _('%s\'s network') % nick
+        color = client.get_string('/desktop/sugar/user/color')
+        connection_name = _('%s\'s network %s') % (nick, color)
 
         connection = network.find_connection(connection_name)
         if connection is None:
