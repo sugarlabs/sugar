@@ -277,7 +277,7 @@ class BaseListView(gtk.Bin):
         self.refresh()
 
     def refresh(self):
-        logging.debug('ListView.refresh query %r' % self._query)
+        logging.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
         self._start_progress_bar()
 
@@ -411,7 +411,7 @@ class BaseListView(gtk.Bin):
             self.refresh()
 
     def set_is_visible(self, visible):
-        logging.debug('canvas_visibility_notify_event_cb %r' % visible)
+        logging.debug('canvas_visibility_notify_event_cb %r', visible)
         if visible:
             self._fully_obscured = False
             if self._dirty:

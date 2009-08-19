@@ -876,7 +876,7 @@ class MeshBox(gtk.VBox):
             self._layout.remove(icon)
             del self.access_points[ap_o]
         else:
-            logging.error('Can not remove access point %s' % ap_o)
+            logging.error('Can not remove access point %s', ap_o)
 
     def suspend(self):
         if not self._suspended:

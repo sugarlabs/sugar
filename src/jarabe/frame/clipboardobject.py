@@ -110,7 +110,7 @@ class ClipboardObject(object):
                     format_ = mime.get_for_file(uri.path)
                 else:
                     format_ = mime.get_from_file_name(uri.path)
-                logging.debug('Choosed %r!' % format_)
+                logging.debug('Chose %r!', format_)
 
         return format_
 

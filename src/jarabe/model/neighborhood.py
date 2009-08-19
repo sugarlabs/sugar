@@ -122,16 +122,16 @@ class Neighborhood(gobject.GObject):
         gconf_client = gconf.client_get_default()
         key = '/desktop/sugar/collaboration/publish_gadget'
         publish = gconf_client.get_bool(key)
-        logging.debug("Gadget discovered on connection %s."
-                " Publish our status: %r" %
-                (conn.service_name.split('.')[-1], publish))
+        logging.debug('Gadget discovered on connection %s.'
+            ' Publish our status: %r', conn.service_name.split('.')[-1],
+                publish)
         conn[CONN_INTERFACE_GADGET].Publish(publish)
 
         self._request_random_buddies(conn, NB_RANDOM_BUDDIES)
         self._request_random_activities(conn, NB_RANDOM_ACTIVITIES)
 
     def _request_random_buddies(self, conn, nb):
-        logging.debug("Request %d random buddies" % nb)
+        logging.debug('Request %d random buddies', nb)
 
         path, props_ = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':
@@ -145,7 +145,7 @@ class Neighborhood(gobject.GObject):
                 lambda: self._request_random_buddies(conn, nb)))
 
     def _request_random_activities(self, conn, nb):
-        logging.debug("Request %d random activities" % nb)
+        logging.debug('Request %d random activities', nb)
 
         path, props_ = conn[CONNECTION_INTERFACE_REQUESTS].CreateChannel(
             { 'org.freedesktop.Telepathy.Channel.ChannelType':

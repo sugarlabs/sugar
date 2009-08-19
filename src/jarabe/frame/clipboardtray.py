@@ -79,7 +79,7 @@ class ClipboardTray(tray.VTray):
         if not selection.data:
             return
 
-        logging.debug('ClipboardTray: adding type %r' % selection.type)
+        logging.debug('ClipboardTray: adding type %r', selection.type)
 
         cb_service = clipboard.get_instance()
         if selection.type == 'text/uri-list':
@@ -115,13 +115,13 @@ class ClipboardTray(tray.VTray):
             cb_service = clipboard.get_instance()
             cb_service.delete_object(icon.get_object_id())
 
-        logging.debug('ClipboardTray: %r was added' % cb_object.get_id())
+        logging.debug('ClipboardTray: %r was added', cb_object.get_id())
 
     def _object_deleted_cb(self, cb_service, object_id):
         icon = self._icons[object_id]
         self.remove_item(icon)
         del self._icons[object_id]
-        logging.debug('ClipboardTray: %r was deleted' % object_id)
+        logging.debug('ClipboardTray: %r was deleted', object_id)
 
     def drag_motion_cb(self, widget, context, x, y, time):
         logging.debug('ClipboardTray._drag_motion_cb')
@@ -180,14 +180,14 @@ class ClipboardTray(tray.VTray):
 
     def drag_data_received_cb(self, widget, context, x, y, selection,
                               targetType, time):
-        logging.debug('ClipboardTray: got data for target %r'
-                      % selection.target)
+        logging.debug('ClipboardTray: got data for target %r',
+            selection.target)
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
-                logging.warn('ClipboardTray: empty selection for target %s'
-                             % selection.target)
+                logging.warn('ClipboardTray: empty selection for target %s',
+                    selection.target)
             elif selection.target == 'XdndDirectSave0':
                 if selection.data == 'S':
                     window = context.source_window

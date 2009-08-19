@@ -229,7 +229,7 @@ class VolumePalette(Palette):
         self._mount.unmount(self.__unmount_cb)
 
     def __unmount_cb(self, mount, result):
-        logging.debug('__unmount_cb %r %r' % (mount, result))
+        logging.debug('__unmount_cb %r %r', mount, result)
         mount.unmount_finish(result)
 
     def __popup_cb(self, palette):

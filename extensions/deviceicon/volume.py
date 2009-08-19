@@ -97,7 +97,7 @@ def _mount(volume, tray):
         volume.mount(gtk.MountOperation(tray.get_toplevel()), _mount_cb)
 
 def _mount_cb(volume, result):
-    logging.debug('_mount_cb %r %r' % (volume, result))
+    logging.debug('_mount_cb %r %r', volume, result)
     volume.mount_finish(result)
 
 def _mount_added_cb(volume_monitor, mount, tray):

@@ -74,7 +74,7 @@ class ClipboardMenu(Palette):
 
     def _update_open_submenu(self):
         activities = self._get_activities()
-        logging.debug('_update_open_submenu: %r' % activities)
+        logging.debug('_update_open_submenu: %r', activities)
         child = self._open_item.get_child()
         if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
@@ -97,7 +97,7 @@ class ClipboardMenu(Palette):
             activity_info = registry.get_bundle(service_name)
 
             if not activity_info:
-                logging.warning('Activity %s is unknown.' % service_name)
+                logging.warning('Activity %s is unknown.', service_name)
 
             item = gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,

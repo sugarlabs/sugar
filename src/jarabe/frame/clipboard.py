@@ -77,7 +77,7 @@ class Clipboard(gobject.GObject):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
         self.emit('object-deleted', object_id)
-        logging.debug('Deleted object with object_id %r' % object_id)
+        logging.debug('Deleted object with object_id %r', object_id)
         
     def set_object_percent(self, object_id, percent):
         cb_object = self._objects[object_id]

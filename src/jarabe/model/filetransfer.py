@@ -147,7 +147,7 @@ class BaseFileTransfer(gobject.GObject):
                 handle)
 
     def __transferred_bytes_changed_cb(self, transferred_bytes):
-        logging.debug('__transferred_bytes_changed_cb %r' % transferred_bytes)
+        logging.debug('__transferred_bytes_changed_cb %r', transferred_bytes)
         self.props.transferred_bytes = transferred_bytes
 
     def _set_transferred_bytes(self, transferred_bytes):
@@ -160,11 +160,11 @@ class BaseFileTransfer(gobject.GObject):
             getter=_get_transferred_bytes, setter=_set_transferred_bytes)
 
     def __initial_offset_defined_cb(self, offset):
-        logging.debug('__initial_offset_defined_cb %r' % offset)
+        logging.debug('__initial_offset_defined_cb %r', offset)
         self.initial_offset = offset
 
     def __state_changed_cb(self, state, reason):
-        logging.debug('__state_changed_cb %r %r' % (state, reason))
+        logging.debug('__state_changed_cb %r %r', state, reason)
         self.reason_last_change = reason
         self.props.state = state
 
@@ -205,7 +205,7 @@ class IncomingFileTransfer(BaseFileTransfer):
                 SOCKET_ACCESS_CONTROL_LOCALHOST, '', 0, byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
-        logging.debug('__notify_state_cb %r' % self.props.state)
+        logging.debug('__notify_state_cb %r', self.props.state)
         if self.props.state == FT_STATE_OPEN:
             # Need to hold a reference to the socket so that python doesn't
             # close the fd when it goes out of scope
@@ -276,14 +276,14 @@ class OutgoingFileTransfer(BaseFileTransfer):
                                   'org.laptop.Sugar.Presence.Buddy')
 
         handles = ps_buddy.GetTelepathyHandles()
-        logging.debug('_get_buddy_handle %r' % handles)
+        logging.debug('_get_buddy_handle %r', handles)
 
         bus_name, object_path, handle = handles[0]
 
         return handle
 
     def __notify_state_cb(self, file_transfer, pspec):
-        logging.debug('__notify_state_cb %r' % self.props.state)
+        logging.debug('__notify_state_cb %r', self.props.state)
         if self.props.state == FT_STATE_OPEN:
             # Need to hold a reference to the socket so that python doesn't
             # closes the fd when it goes out of scope
@@ -291,7 +291,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
             self._socket.connect(self._socket_address)
             output_stream = gio.unix.OutputStream(self._socket.fileno(), True)
 
-            logging.debug('opening %s for reading' % self._file_name)
+            logging.debug('opening %s for reading', self._file_name)
             input_stream = gio.File(self._file_name).read()
             if self.initial_offset > 0:
                 input_stream.skip(self.initial_offset)
@@ -308,14 +308,14 @@ def _new_channels_cb(connection, channels):
         if props[CHANNEL + '.ChannelType'] == CHANNEL_TYPE_FILE_TRANSFER and \
                 not props[CHANNEL + '.Requested']:
 
-            logging.debug('__new_channels_cb %r' % object_path)
+            logging.debug('__new_channels_cb %r', object_path)
 
             incoming_file_transfer = IncomingFileTransfer(connection,
                                                           object_path, props)
             new_file_transfer.send(None, file_transfer=incoming_file_transfer)
 
 def _monitor_connection(connection):
-    logging.debug('connection added %r' % connection)
+    logging.debug('connection added %r', connection)
     connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal('NewChannels',
             lambda channels: _new_channels_cb(connection, channels))
 
@@ -323,7 +323,7 @@ def _connection_addded_cb(conn_watcher, connection):
     _monitor_connection(connection)
 
 def _connection_removed_cb(conn_watcher, connection):
-    logging.debug('connection removed %r' % connection)
+    logging.debug('connection removed %r', connection)
 
 _conn_watcher = None
 

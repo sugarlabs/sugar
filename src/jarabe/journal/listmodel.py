@@ -193,7 +193,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         if selection.target == 'text/uri-list':
             # Get hold of a reference so the temp file doesn't get deleted
             self._temp_drag_file_path = model.get_file(uid)
-            logging.debug('putting %r in selection' % self._temp_drag_file_path)
+            logging.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(selection.target, 8, self._temp_drag_file_path)
             return True
         elif selection.target == 'journal-object-id':

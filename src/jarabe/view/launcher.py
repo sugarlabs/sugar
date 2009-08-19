@@ -157,4 +157,4 @@ def _destroy_launcher(home_activity):
         _launchers[activity_id].destroy()
         del _launchers[activity_id]
     else:
-        logging.error('Launcher for %s is missing' % activity_id)
+        logging.error('Launcher for %s is missing', activity_id)

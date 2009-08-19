@@ -68,8 +68,7 @@ class BundleRegistry(gobject.GObject):
         try:
             self._load_favorites()
         except Exception:
-            logging.error('Error while loading favorite_activities\n%s.' \
-                    % traceback.format_exc())
+            logging.exception('Error while loading favorite_activities.')
 
         self._merge_default_favorites()
 
@@ -154,7 +153,7 @@ class BundleRegistry(gobject.GObject):
             if max_version > -1 and key not in self._favorite_bundles:
                 self._favorite_bundles[key] = None
 
-        logging.debug('After merging: %r' % self._favorite_bundles)
+        logging.debug('After merging: %r', self._favorite_bundles)
 
         self._write_favorites_file()
 
@@ -211,14 +210,13 @@ class BundleRegistry(gobject.GObject):
             return False
 
     def _add_bundle(self, bundle_path, install_mime_type=False):
-        logging.debug('STARTUP: Adding bundle %r' % bundle_path)
+        logging.debug('STARTUP: Adding bundle %r', bundle_path)
         try:
             bundle = ActivityBundle(bundle_path)
             if install_mime_type:
                 bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
-            logging.error('Error loading bundle %r:\n%s' % (bundle_path,
-                    traceback.format_exc()))
+            logging.exception('Error loading bundle %r', bundle_path)
             return None
 
         if self.get_bundle(bundle.get_bundle_id()):

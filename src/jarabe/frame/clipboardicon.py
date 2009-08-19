@@ -96,7 +96,7 @@ class ClipboardIcon(RadioToolButton):
     def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
         if not selection.target in [target[0] for target in targets]:
             logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
-                            ' but only have %r.' % (selection.target, targets))
+                            ' but only have %r.', selection.target, targets)
             return
         data = self._cb_object.get_formats()[selection.target].get_data()
         selection.set(selection.target, 8, data)

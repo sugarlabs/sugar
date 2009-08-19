@@ -20,7 +20,6 @@ from datetime import datetime
 import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
-import traceback
 import re
 
 import gobject
@@ -119,7 +118,7 @@ class BaseResultSet(object):
         self._position = position
 
     def read(self):
-        logging.debug('ResultSet.read position: %r' % self._position)
+        logging.debug('ResultSet.read position: %r', self._position)
 
         if self._position == -1:
             self.seek(0)
@@ -142,8 +141,8 @@ class BaseResultSet(object):
             # Total cache miss: remake it
             limit = self._page_size * MIN_PAGES_TO_CACHE
             offset = max(0, self._position - limit / 2)
-            logging.debug('remaking cache, offset: %r limit: %r' % \
-                          (offset, limit))
+            logging.debug('remaking cache, offset: %r limit: %r', offset,
+                limit)
             query = self._query.copy()
             query['limit'] = limit
             query['offset'] = offset
@@ -156,8 +155,8 @@ class BaseResultSet(object):
         elif remaining_forward_entries <= 0 and remaining_backwards_entries > 0:
 
             # Add one page to the end of cache
-            logging.debug('appending one more page, offset: %r' % \
-                          last_cached_entry)
+            logging.debug('appending one more page, offset: %r',
+                last_cached_entry)
             query = self._query.copy()
             query['limit'] = self._page_size
             query['offset'] = last_cached_entry
@@ -180,8 +179,8 @@ class BaseResultSet(object):
             limit = min(self._offset, self._page_size)
             self._offset = max(0, self._offset - limit)
 
-            logging.debug('prepending one more page, offset: %r limit: %r' % 
-                          (self._offset, limit))
+            logging.debug('prepending one more page, offset: %r limit: %r',
+                self._offset, limit)
             query = self._query.copy()
             query['limit'] = self._page_size
             query['offset'] = self._offset
@@ -289,7 +288,7 @@ class InplaceResultSet(BaseResultSet):
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
-        logging.debug('InplaceResultSet.find took %f s.' % (time.time() - t))
+        logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
 
         return entries, total_count
 
@@ -331,8 +330,7 @@ class InplaceResultSet(BaseResultSet):
                     self.progress.send(self)
 
             except Exception:
-                logging.error('Error reading file %r: %s' % \
-                              (full_path, traceback.format_exc()))
+                logging.exception('Error reading file %r', full_path)
 
         if self._pending_directories == 0:
             self.setup_ready()
@@ -412,10 +410,10 @@ def get_file(object_id):
     """Returns the file for an object
     """
     if os.path.exists(object_id):
-        logging.debug('get_file asked for file with path %r' % object_id)
+        logging.debug('get_file asked for file with path %r', object_id)
         return object_id
     else:
-        logging.debug('get_file asked for entry with id %r' % object_id)
+        logging.debug('get_file asked for entry with id %r', object_id)
         file_path = _get_datastore().get_filename(object_id)
         if file_path:
             return util.TempFilePath(file_path)
@@ -450,8 +448,8 @@ def copy(metadata, mount_point):
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
-    logging.debug('model.write %r %r %r' % (metadata.get('uid', ''), file_path,
-                                            update_mtime))
+    logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
+        update_mtime)
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())

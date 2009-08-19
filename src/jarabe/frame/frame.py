@@ -318,7 +318,7 @@ class Frame(object):
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:
-            logging.debug('icon %r not in list of notifications.' % icon)
+            logging.debug('icon %r not in list of notifications.', icon)
             return
 
         window = self._notif_by_icon[icon]
@@ -326,7 +326,7 @@ class Frame(object):
         del self._notif_by_icon[icon]
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('__notification_received_cb %r' % kwargs)
+        logging.debug('__notification_received_cb %r', kwargs)
         icon = NotificationIcon()
 
         hints = kwargs['hints']

@@ -64,8 +64,8 @@ def setup_view_source(activity):
     bundle_path = activity.get_bundle_path()
 
     if window_xid in map_activity_to_window:
-        _logger.debug('Viewsource window already open for %s %s' % \
-                (window_xid, bundle_path))
+        _logger.debug('Viewsource window already open for %s %s', window_xid,
+            bundle_path)
         return
 
     document_path = None
@@ -95,7 +95,7 @@ class ViewSource(gtk.Window):
     def __init__(self, window_xid, bundle_path, document_path, title):
         gtk.Window.__init__(self)
 
-        logging.debug('ViewSource paths: %r %r' % (bundle_path, document_path))
+        logging.debug('ViewSource paths: %r %r', bundle_path, document_path)
 
         self.set_decorated(False)
         self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
@@ -248,7 +248,7 @@ class DocumentButton(RadioToolButton):
         self._jobject.destroy()
      
     def __internal_save_error_cb(self, err):
-        logging.debug("Error saving Source object to datastore: %s" % err)
+        logging.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
 
 class Toolbar(gtk.Toolbar):
@@ -439,7 +439,7 @@ class SourceDisplay(gtk.ScrolledWindow):
             return
 
         mime_type = mime.get_for_file(self._file_path)
-        logging.debug('Detected mime type: %r' % mime_type)
+        logging.debug('Detected mime type: %r', mime_type)
 
         language_manager = gtksourceview2.language_manager_get_default()
         detected_language = None
@@ -450,7 +450,7 @@ class SourceDisplay(gtk.ScrolledWindow):
                 break
 
         if detected_language is not None:
-            logging.debug('Detected language: %r' % \
+            logging.debug('Detected language: %r',
                     detected_language.get_name())
 
         self._buffer.set_language(detected_language)

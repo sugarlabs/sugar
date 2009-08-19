@@ -63,10 +63,10 @@ class ClipboardPanelWindow(FrameWindow):
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
                               'MULTIPLE', 'SAVE_TARGETS'):
-                logging.debug('Asking for target %s.' % target)
+                logging.debug('Asking for target %s.', target)
                 selection = x_clipboard.wait_for_contents(target)
                 if not selection:
-                    logging.warning('no data for selection target %s.' % target)
+                    logging.warning('no data for selection target %s.', target)
                     continue
                 self._add_selection(key, selection)
 
@@ -74,7 +74,7 @@ class ClipboardPanelWindow(FrameWindow):
 
     def _add_selection(self, key, selection):
         if not selection.data:
-            logging.warning('no data for selection target %s.' % selection.type)
+            logging.warning('no data for selection target %s.', selection.type)
             return
             
         logging.debug('adding type ' + selection.type + '.')

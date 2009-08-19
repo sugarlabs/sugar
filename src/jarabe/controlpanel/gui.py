@@ -352,7 +352,7 @@ class ModelWrapper(object):
                 try:
                     method(self._options[key])
                 except Exception, detail:
-                    _logger.debug('Error undo option: %s' % detail)        
+                    _logger.debug('Error undo option: %s', detail)
 
 class _SectionIcon(gtk.EventBox):
     __gtype_name__ = "SugarSectionIcon"

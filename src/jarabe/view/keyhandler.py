@@ -91,7 +91,7 @@ class KeyHandler(object):
             if f.endswith('.py') and not f.startswith('__'):
                 module_name = f[:-3]
                 try:
-                    logging.debug('Loading module %r' % module_name)
+                    logging.debug('Loading module %r', module_name)
                     module = __import__('globalkey.' + module_name, globals(),
                                         locals(), [module_name])
                     for key in module.BOUND_KEYS:
@@ -134,10 +134,10 @@ class KeyHandler(object):
         return self._speech_proxy
 
     def _on_speech_err(self, ex):
-        logging.error("An error occurred with the ESpeak service: %r" % (ex, ))
+        logging.error('An error occurred with the ESpeak service: %r', ex)
 
     def _primary_selection_cb(self, clipboard, text, user_data):
-        logging.debug('KeyHandler._primary_selection_cb: %r' % text)
+        logging.debug('KeyHandler._primary_selection_cb: %r', text)
         if text:
             self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
                 error_handler=self._on_speech_err)
@@ -200,7 +200,7 @@ class KeyHandler(object):
 
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
-        logging.debug('_key_pressed_cb: %i %i %s' % (keycode, state, key))
+        logging.debug('_key_pressed_cb: %i %i %s', keycode, state, key)
         if key:
             self._key_pressed = key
             self._keycode_pressed = keycode

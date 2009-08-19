@@ -89,8 +89,8 @@ class HomeBox(gtk.VBox):
             try:
                 os.unlink(update_trigger_file)
             except OSError:
-                logging.error('Software-update: Can not remove file %s' % 
-                              update_trigger_file)
+                logging.error('Software-update: Can not remove file %s',
+                    update_trigger_file)
 
         if response_id == gtk.RESPONSE_OK:
             from jarabe.controlpanel.gui import ControlPanel

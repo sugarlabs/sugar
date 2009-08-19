@@ -269,7 +269,7 @@ class Activity(gobject.GObject):
         pass
     
     def _set_active_error(self, err):
-        logging.error("set_active() failed: %s" % err)
+        logging.error("set_active() failed: %s", err)
 
 class ShellModel(gobject.GObject):
     """Model of the shell (activity management)
@@ -474,8 +474,8 @@ class ShellModel(gobject.GObject):
                 self.emit('launch-completed', home_activity)
 
                 startup_time = time.time() - home_activity.get_launch_time()
-                logging.debug('%s launched in %f seconds.' %
-                                   (home_activity.get_type(), startup_time))
+                logging.debug('%s launched in %f seconds.',
+                    home_activity.get_type(), startup_time)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
@@ -537,7 +537,7 @@ class ShellModel(gobject.GObject):
         if home_activity:
             self._remove_activity(home_activity)
         else:
-            logging.error('Model for window %d does not exist.' % xid)
+            logging.error('Model for window %d does not exist.', xid)
 
     def notify_launch(self, activity_id, service_name):
         registry = get_registry()
@@ -562,13 +562,13 @@ class ShellModel(gobject.GObject):
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
-            logging.debug("Activity %s (%s) launch failed" % \
-                          (activity_id, home_activity.get_type()))
+            logging.debug("Activity %s (%s) launch failed", activity_id,
+                home_activity.get_type())
             home_activity.props.launching = False
             self._remove_activity(home_activity)
         else:
-            logging.error('Model for activity id %s does not exist.'
-                          % activity_id)
+            logging.error('Model for activity id %s does not exist.',
+                activity_id)
 
         self.emit('launch-failed', home_activity)
 
@@ -576,12 +576,12 @@ class ShellModel(gobject.GObject):
         home_activity = self.get_activity_by_id(activity_id)
 
         if not home_activity:
-            logging.debug('Activity %s has been closed already.' % activity_id)
+            logging.debug('Activity %s has been closed already.', activity_id)
             return False
 
         if home_activity.props.launching:
-            logging.debug('Activity %s still launching, assuming it failed...'
-                          % activity_id)
+            logging.debug('Activity %s still launching, assuming it failed.',
+                activity_id)
             self.notify_launch_failed(activity_id)
         return False
 

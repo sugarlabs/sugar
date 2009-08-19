@@ -75,7 +75,7 @@ class ZoomToolbar(gtk.Toolbar):
         self._set_zoom_level(kwargs['new_level'])
 
     def _set_zoom_level(self, new_level):
-        logging.debug('new zoom level: %r' % new_level)
+        logging.debug('new zoom level: %r', new_level)
         if new_level == shell.ShellModel.ZOOM_MESH:
             self._mesh_button.props.active = True
         elif new_level == shell.ShellModel.ZOOM_GROUP:

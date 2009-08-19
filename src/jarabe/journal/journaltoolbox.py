@@ -258,7 +258,7 @@ class SearchToolbar(gtk.Toolbar):
                 break
 
         if what_filter_index == -1:
-            logging.warning('what_filter %r not known' % what_filter)
+            logging.warning('what_filter %r not known', what_filter)
         else:
             self._what_search_combo.set_active(what_filter_index)
 

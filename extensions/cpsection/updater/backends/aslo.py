@@ -116,8 +116,7 @@ class _UpdateFetcher(object):
 
         if document.find(_FIND_DESCRIPTION) is None:
             logging.debug('Bundle %s not available in the server for the '
-                    'version %s' % (self._bundle.get_bundle_id(),
-                                    config.version))
+                'version %s', self._bundle.get_bundle_id(), config.version)
             version = None
             link = None
             size = None

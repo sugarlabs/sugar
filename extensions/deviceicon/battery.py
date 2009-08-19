@@ -189,28 +189,28 @@ class DeviceModel(gobject.GObject):
         try:
             return self._battery.GetProperty(_LEVEL_PROP)
         except dbus.DBusException:
-            logging.error('Cannot access %s' % _LEVEL_PROP)
+            logging.error('Cannot access %s', _LEVEL_PROP)
             return 0
 
     def _get_charging(self):
         try:
             return self._battery.GetProperty(_CHARGING_PROP)
         except dbus.DBusException:
-            logging.error('Cannot access %s' % _CHARGING_PROP)
+            logging.error('Cannot access %s', _CHARGING_PROP)
             return False
 
     def _get_discharging(self):
         try:
             return self._battery.GetProperty(_DISCHARGING_PROP)
         except dbus.DBusException:
-            logging.error('Cannot access %s' % _DISCHARGING_PROP)
+            logging.error('Cannot access %s', _DISCHARGING_PROP)
             return False
 
     def _get_present(self):
         try:
             return self._battery.GetProperty(_PRESENT_PROP)
         except dbus.DBusException:
-            logging.error('Cannot access %s' % _PRESENT_PROP)
+            logging.error('Cannot access %s', _PRESENT_PROP)
             return False
 
     def do_get_property(self, pspec):

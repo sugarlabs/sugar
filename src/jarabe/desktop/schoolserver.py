@@ -46,12 +46,12 @@ def register_laptop(url=REGISTER_URL):
     server = ServerProxy(url)
     try:
         data = server.register(sn, nick, uuid, profile.pubkey)
-    except (Error, socket.error), e:
-        logging.error('Registration: cannot connect to server: %s' % e)
+    except (Error, socket.error):
+        logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))        
         
     if data['success'] != 'OK':
-        logging.error('Registration: server could not complete request: %s' % 
+        logging.error('Registration: server could not complete request: %s',
                       data['error'])
         raise RegisterError(_('The server could not complete the request.'))
 

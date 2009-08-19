@@ -119,7 +119,7 @@ class UpdateModel(gobject.GObject):
         self._downloader.connect('error', self.__downloader_error_cb)
 
     def __downloader_progress_cb(self, downloader, progress):
-        logging.debug('__downloader_progress_cb %r' % progress)
+        logging.debug('__downloader_progress_cb %r', progress)
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2 + progress
 
@@ -133,7 +133,7 @@ class UpdateModel(gobject.GObject):
             self._downloader = None
 
     def __downloader_error_cb(self, downloader, error_message):
-        logging.error('Error downloading update:\n%s' % error_message)
+        logging.error('Error downloading update:\n%s', error_message)
 
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2

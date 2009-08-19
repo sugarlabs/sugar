@@ -431,7 +431,7 @@ class ActivityIcon(CanvasIcon):
 
     def __get_last_activity_async_cb(self, entries, error=None):
         if error is not None:
-            logging.error('Error retrieving most recent activities: %r' % error)
+            logging.error('Error retrieving most recent activities: %r', error)
             return
 
         # If there's a problem with the DS index, we may get entries not related
@@ -678,7 +678,7 @@ class FavoritesSetting(object):
     def __init__(self):
         client = gconf.client_get_default() 
         self._layout = client.get_string(self._FAVORITES_KEY)
-        logging.debug('FavoritesSetting layout %r' % (self._layout))
+        logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
 
@@ -688,7 +688,7 @@ class FavoritesSetting(object):
         return self._layout
 
     def set_layout(self, layout):
-        logging.debug('set_layout %r %r' % (layout, self._layout))
+        logging.debug('set_layout %r %r', layout, self._layout)
         if layout != self._layout:
             self._layout = layout
 

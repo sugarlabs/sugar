@@ -55,7 +55,7 @@ def create_profile(name, color=None, pixbuf=None):
         cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
         (s, o) = commands.getstatusoutput(cmd)
         if s != 0:
-            logging.error("Could not generate key pair: %d %s" % (s, o))
+            logging.error("Could not generate key pair: %d %s", s, o)
     else:
         logging.error("Keypair exists, skip generation.")
 

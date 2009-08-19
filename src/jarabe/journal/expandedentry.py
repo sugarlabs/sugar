@@ -187,8 +187,8 @@ class ExpandedEntry(hippo.CanvasBox):
             try:
                 surface = cairo.ImageSurface.create_from_png(png_file)
                 has_preview = True
-            except Exception, e:
-                logging.error('Error while loading the preview: %r' % e)
+            except Exception:
+                logging.exception('Error while loading the preview')
                 has_preview = False
         else:
             has_preview = False

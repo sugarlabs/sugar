@@ -57,14 +57,14 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
 
     def append(self, icon, locked=False):
         if not hasattr(type(icon), 'fixed_position'):
-            logging.debug('Icon without fixed_position: %r' % icon)
+            logging.debug('Icon without fixed_position: %r', icon)
             return
 
         icon.props.size = max(icon.props.size, style.STANDARD_ICON_SIZE)
 
         relative_x, relative_y = icon.fixed_position
         if relative_x < 0 or relative_y < 0:
-            logging.debug('Icon out of bounds: %r' % icon)
+            logging.debug('Icon out of bounds: %r', icon)
             return
 
         min_width_, width = self.box.get_width_request()
@@ -82,7 +82,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
             raise ValueError('Child not in box.')
 
         if not(hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version')):
-            logging.debug('Not an activity icon %r' % icon)
+            logging.debug('Not an activity icon %r', icon)
             return
 
         min_width_, width = self.box.get_width_request()

@@ -236,7 +236,7 @@ class JournalActivity(Window):
             return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.' % mount_point)
+        logging.debug('Selected volume: %r.', mount_point)
         self._main_toolbox.search_toolbar.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
@@ -281,8 +281,7 @@ class JournalActivity(Window):
         try:
             registry.install(bundle)
         except (ZipExtractException, RegistrationException):
-            logging.warning('Could not install bundle %s:\n%s' % \
-                            (bundle.get_path(), traceback.format_exc()))
+            logging.exception('Could not install bundle %s', bundle.get_path())
             return
 
         if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
@@ -297,14 +296,14 @@ class JournalActivity(Window):
         search_toolbar.give_entry_focus()
 
     def __window_state_event_cb(self, window, event):
-        logging.debug('window_state_event_cb %r' % self)
+        logging.debug('window_state_event_cb %r', self)
         if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
             state = event.new_window_state
             visible = not state & gtk.gdk.WINDOW_STATE_ICONIFIED
             self._list_view.set_is_visible(visible)
 
     def __visibility_notify_event_cb(self, window, event):
-        logging.debug('visibility_notify_event_cb %r' % self)
+        logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
