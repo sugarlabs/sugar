@@ -105,6 +105,9 @@ def main():
                 for method in methods:
                     if method.startswith('get_'):
                         print '    %s' % method[4:]
+                    elif method.startswith('clear_'):
+                        print "    %s (use the -c argument with this option)" \
+                                % method[6:]
         if option in ("-g"):
             for module in modules:
                 method = getattr(module, 'print_' + key, None)
