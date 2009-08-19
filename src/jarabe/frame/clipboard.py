@@ -59,9 +59,9 @@ class Clipboard(gobject.GObject):
         cb_object = self._objects[object_id]
 
         if format_type == 'XdndDirectSave0':
-            format = Format('text/uri-list', data + '\r\n', on_disk)
-            format.owns_disk_data = True
-            cb_object.add_format(format)
+            format_ = Format('text/uri-list', data + '\r\n', on_disk)
+            format_.owns_disk_data = True
+            cb_object.add_format(format_)
         elif on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
@@ -98,10 +98,10 @@ class Clipboard(gobject.GObject):
 
     def _process_object(self, cb_object):
         formats = cb_object.get_formats()
-        for format_name, format in formats.iteritems():
-            if format.is_on_disk() and not format.owns_disk_data:
-                new_uri = self._copy_file(format.get_data())
-                format.set_data(new_uri)
+        for format_name, format_ in formats.iteritems():
+            if format_.is_on_disk() and not format_.owns_disk_data:
+                new_uri = self._copy_file(format_.get_data())
+                format_.set_data(new_uri)
 
         # Add a text/plain format to objects that are text but lack it
         if 'text/plain' not in formats.keys():
@@ -121,8 +121,8 @@ class Clipboard(gobject.GObject):
     def get_object_data(self, object_id, format_type):   
         logging.debug('Clipboard.get_object_data')
         cb_object = self._objects[object_id]
-        format = cb_object.get_formats()[format_type]
-        return format
+        format_ = cb_object.get_formats()[format_type]
+        return format_
 
     def _copy_file(self, original_uri):
         uri = urlparse.urlparse(original_uri)

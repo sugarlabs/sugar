@@ -153,7 +153,7 @@ class ClipboardTray(tray.VTray):
         
         if 'XdndDirectSave0' in context.targets:
             window = context.source_window
-            prop_type, format, filename = \
+            prop_type, format_, filename = \
                 window.property_get('XdndDirectSave0','text/plain')
 
             # FIXME query the clipboard service for a filename?
@@ -165,7 +165,7 @@ class ClipboardTray(tray.VTray):
 
             dest_uri = 'file://' + os.path.join(base_dir, dest_filename)
 
-            window.property_change('XdndDirectSave0', prop_type, format,
+            window.property_change('XdndDirectSave0', prop_type, format_,
                                    gtk.gdk.PROP_MODE_REPLACE, dest_uri)
 
             widget.drag_get_data(context, 'XdndDirectSave0', time)

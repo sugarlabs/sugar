@@ -17,7 +17,6 @@
 import logging
 import time
 import traceback
-import sys
 import os
 from gettext import gettext as _
 
@@ -69,7 +68,7 @@ def get_icon_name(metadata):
             try:
                 bundle = ActivityBundle(file_path)
                 file_name = bundle.get_icon()
-            except:
+            except Exception:
                 logging.warning('Could not read bundle:\n' + \
                                 traceback.format_exc())
 

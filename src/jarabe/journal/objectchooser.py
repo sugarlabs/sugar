@@ -19,7 +19,6 @@ import logging
 
 import gobject
 import gtk
-import hippo
 import wnck
 
 from sugar.graphics import style
@@ -180,11 +179,6 @@ class ChooserListView(BaseListView):
 
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
-
-    def create_entry(self):
-        entry = ChooserCollapsedEntry()
-        entry.connect('entry-activated', self.__entry_activated_cb)
-        return entry
 
     def __entry_activated_cb(self, entry):
         self.emit('entry-activated', entry)
