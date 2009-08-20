@@ -21,14 +21,19 @@ import hippo
 
 from jarabe.journal.browse.lazymodel import Source
 from jarabe.journal.browse.tableview import TableView, TableCell
+from jarabe.journal.browse.source import *
 
 class ThumbsCell(TableCell, hippo.CanvasBox):
     def __init__(self):
         TableCell.__init__(self)
         hippo.CanvasBox.__init__(self, orientation=hippo.ORIENTATION_VERTICAL)
 
-        label = hippo.CanvasWidget(widget=gtk.Button('!!!'))
-        self.append(label)
+        self.label = hippo.CanvasText(
+                size_mode=hippo.CANVAS_SIZE_ELLIPSIZE_END)
+        self.append(self.label)
+
+    def fillin(self):
+        self.label.props.text = self.row[FIELD_TITLE] or ''
 
 class ThumbsView(TableView):
     __gsignals__ = {
