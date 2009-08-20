@@ -18,7 +18,7 @@
 import logging
 from gettext import gettext as _
 import sys
-import traceback 
+import traceback
 import uuid
 
 import gtk
@@ -34,7 +34,7 @@ from sugar import wm
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
-from jarabe.journal.listview import ListView
+from jarabe.journal.objectsview import ObjectsView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
@@ -105,11 +105,14 @@ class JournalActivity(Window):
         logging.debug("STARTUP: Loading the journal")
         Window.__init__(self)
 
+        accel_group = gtk.AccelGroup()
+        self.set_data('sugar-accel-group', accel_group)
+        self.add_accel_group(accel_group)
+
         self.set_title(_('Journal'))
 
         self._main_view = None
         self._secondary_view = None
-        self._list_view = None
         self._detail_view = None
         self._main_toolbox = None
         self._detail_toolbox = None
@@ -131,10 +134,10 @@ class JournalActivity(Window):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-        self._dbus_service = JournalActivityDBusService(self)        
+        self._dbus_service = JournalActivityDBusService(self)
 
         self.iconify()
-        
+
         self._critical_space_alert = None
         self._check_available_space()
 
@@ -152,11 +155,11 @@ class JournalActivity(Window):
         self._main_toolbox = MainToolbox()
         self._main_view = gtk.VBox()
 
-        self._list_view = ListView()
-        self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
-        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-        self._main_view.pack_start(self._list_view)
-        self._list_view.show()
+        self._objects_view = ObjectsView()
+        self._objects_view.connect('clear-clicked', self.__clear_clicked_cb)
+        self._objects_view.connect('detail-clicked', self.__detail_clicked_cb)
+        self._main_view.pack_start(self._objects_view)
+        self._objects_view.show()
 
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
@@ -165,6 +168,7 @@ class JournalActivity(Window):
 
         search_toolbar = self._main_toolbox.search_toolbar
         search_toolbar.connect('query-changed', self._query_changed_cb)
+        search_toolbar.connect('view-changed', self.__view_changed_cb)
         search_toolbar.set_mount_point('/')
 
     def _setup_secondary_view(self):
@@ -195,8 +199,11 @@ class JournalActivity(Window):
         self.show_main_view()
 
     def _query_changed_cb(self, toolbar, query):
-        self._list_view.update_with_query(query)
+        self._objects_view.update_with_query(query)
         self.show_main_view()
+
+    def __view_changed_cb(self, sender, view):
+        self._objects_view.change_view(view)
 
     def show_main_view(self):
         if self.toolbox != self._main_toolbox:
@@ -261,7 +268,7 @@ class JournalActivity(Window):
 
     def _focus_in_event_cb(self, window, event):
         self.search_grab_focus()
-        self._list_view.update_dates()
+        self._objects_view.update_dates()
 
     def _check_for_bundle(self, object_id):
         registry = bundleregistry.get_registry()
@@ -300,12 +307,12 @@ class JournalActivity(Window):
         if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
             state = event.new_window_state
             visible = not state & gtk.gdk.WINDOW_STATE_ICONIFIED
-            self._list_view.set_is_visible(visible)
+            self._objects_view.set_is_visible(visible)
 
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED
-        self._list_view.set_is_visible(visible)
+        self._objects_view.set_is_visible(visible)
 
     def _check_available_space(self):
         ''' Check available space on device

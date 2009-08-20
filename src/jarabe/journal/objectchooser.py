@@ -24,7 +24,7 @@ import wnck
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
 
-from jarabe.journal.listview import BaseListView
+from jarabe.journal.objectsview import ObjectsView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import SearchToolbar
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -84,15 +84,16 @@ class ObjectChooser(gtk.Window):
         vbox.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._list_view = ChooserListView()
+        self._list_view = ObjectsView()
+        self._list_view.props.hover_selection = True
         self._list_view.connect('entry-activated', self.__entry_activated_cb)
         vbox.pack_start(self._list_view)
         self._list_view.show()
 
         self._toolbar.set_mount_point('/')
-        
+
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         if what_filter:
@@ -161,39 +162,3 @@ class TitleBox(VolumesToolbar):
 
         self.insert(tool_item, -1)
         tool_item.show()
-
-class ChooserListView(BaseListView):
-    __gtype_name__ = 'ChooserListView'
-
-    __gsignals__ = {
-        'entry-activated': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
-                            ([str])),
-    }
-
-    def __init__(self):
-        BaseListView.__init__(self)
-
-        self.cell_icon.props.show_palette = False
-        self.tree_view.props.hover_selection = True
-
-        self.tree_view.connect('button-release-event',
-                               self.__button_release_event_cb)
-
-    def __entry_activated_cb(self, entry):
-        self.emit('entry-activated', entry)
-
-    def __button_release_event_cb(self, tree_view, event):
-        if event.window != tree_view.get_bin_window():
-            return False
-
-        pos = tree_view.get_path_at_pos(event.x, event.y)
-        if pos is None:
-            return False
-
-        path, column_, x_, y_ = pos
-        uid = tree_view.get_model()[path][ListModel.COLUMN_UID]
-        self.emit('entry-activated', uid)
-
-        return False
-
