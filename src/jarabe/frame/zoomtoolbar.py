@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2009 Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,25 +34,26 @@ class ZoomToolbar(gtk.Toolbar):
         self.set_direction(gtk.TEXT_DIR_LTR)
 
         self._mesh_button = self._add_button('zoom-neighborhood',
-                _('Neighborhood'), shell.ShellModel.ZOOM_MESH)
+                _('Neighborhood'), _('F1'), shell.ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',
-                _('Group'), shell.ShellModel.ZOOM_GROUP)
+                _('Group'), _('F2'), shell.ShellModel.ZOOM_GROUP)
         self._home_button = self._add_button('zoom-home',
-                _('Home'), shell.ShellModel.ZOOM_HOME)
+                _('Home'), _('F3'), shell.ShellModel.ZOOM_HOME)
         self._activity_button = self._add_button('zoom-activity',
-                _('Activity'), shell.ShellModel.ZOOM_ACTIVITY)
+                _('Activity'), _('F4'), shell.ShellModel.ZOOM_ACTIVITY)
 
         shell_model = shell.get_model()
         self._set_zoom_level(shell_model.zoom_level)
         shell_model.zoom_level_changed.connect(self.__zoom_level_changed_cb)
 
-    def _add_button(self, icon_name, label, zoom_level):
+    def _add_button(self, icon_name, label, accelerator, zoom_level):
         if self.get_children():
             group = self.get_children()[0]
         else:
             group = None
 
-        button = RadioToolButton(named_icon=icon_name, group=group)
+        button = RadioToolButton(named_icon=icon_name, group=group, 
+                                 accelerator=accelerator)
         button.connect('clicked', self.__level_clicked_cb, zoom_level)
         self.add(button)
         button.show()
