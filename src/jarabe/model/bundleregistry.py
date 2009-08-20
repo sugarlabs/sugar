@@ -184,10 +184,10 @@ class BundleRegistry(gobject.GObject):
                 bundle_dir = os.path.join(path, f)
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
-            except Exception, e:
+            except Exception:
                 logging.error('Error while processing installed activity ' \
                               'bundle %s:\n%s' % \
-                                    (folder, traceback.format_exc()))
+                                    (bundle_dir, traceback.format_exc()))
 
         bundle_dirs = bundles.keys()
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))

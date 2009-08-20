@@ -204,26 +204,26 @@ class ClipboardMenu(Palette):
     def _copy_to_journal(self):
         formats = self._cb_object.get_formats().keys()
         most_significant_mime_type = mime.choose_most_significant(formats)
-        format = self._cb_object.get_formats()[most_significant_mime_type]
+        format_ = self._cb_object.get_formats()[most_significant_mime_type]
 
         transfer_ownership = False
         if most_significant_mime_type == 'text/uri-list':
-            uris = mime.split_uri_list(format.get_data())
+            uris = mime.split_uri_list(format_.get_data())
             if len(uris) == 1 and uris[0].startswith('file://'):
                 file_path = urlparse.urlparse(uris[0]).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format.get_data())
+                file_path = self._write_to_temp_file(format_.get_data())
                 transfer_ownership = True
                 mime_type = 'text/uri-list'
         else:
-            if format.is_on_disk():
-                file_path = urlparse.urlparse(format.get_data()).path
+            if format_.is_on_disk():
+                file_path = urlparse.urlparse(format_.get_data()).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format.get_data())
+                file_path = self._write_to_temp_file(format_.get_data())
                 transfer_ownership = True
                 sniffed_mime_type = mime.get_for_file(file_path)
                 if sniffed_mime_type == 'application/octet-stream':

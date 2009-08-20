@@ -15,8 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import traceback
-import sys
 from gettext import gettext as _
 import time
 
@@ -50,14 +48,14 @@ class TreeView(gtk.TreeView):
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can avoid
         # hitting both D-Bus and disk.
-        model = self.get_model()
-        if model is not None:
-            model.view_is_resizing = True
+        tree_model = self.get_model()
+        if tree_model is not None:
+            tree_model.view_is_resizing = True
         try:
             gtk.TreeView.do_size_request(self, requisition)
         finally:
-            if model is not None:
-                model.view_is_resizing = False
+            if tree_model is not None:
+                tree_model.view_is_resizing = False
 
 class BaseListView(gtk.Bin):
     __gtype_name__ = 'JournalBaseListView'
@@ -93,6 +91,7 @@ class BaseListView(gtk.Bin):
         self.cell_title = None
         self.cell_icon = None
         self._title_column = None
+        self.date_column = None
         self._add_columns()
 
         self.tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
@@ -137,7 +136,8 @@ class BaseListView(gtk.Bin):
         column.props.fixed_width = self.cell_icon.props.width
         column.pack_start(self.cell_icon)
         column.add_attribute(self.cell_icon, 'file-name', ListModel.COLUMN_ICON)
-        column.add_attribute(self.cell_icon, 'xo-color', ListModel.COLUMN_ICON_COLOR)
+        column.add_attribute(self.cell_icon, 'xo-color',
+                             ListModel.COLUMN_ICON_COLOR)
         self.tree_view.append_column(column)
 
         self.cell_title = gtk.CellRendererText()
@@ -234,7 +234,7 @@ class BaseListView(gtk.Bin):
         context = widget.get_pango_context()
         layout = pango.Layout(context)
         layout.set_text(text)
-        width, height = layout.get_size()
+        width, height_ = layout.get_size()
         return pango.PIXELS(width)
 
     def do_size_allocate(self, allocation):
@@ -289,14 +289,14 @@ class BaseListView(gtk.Bin):
         self._model.connect('progress', self.__model_progress_cb)
         self._model.setup()
 
-    def __model_ready_cb(self, model):
+    def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()
 
         # Cannot set it up earlier because will try to access the model and it
         # needs to be ready.
         self.tree_view.set_model(self._model)
 
-        if len(model) == 0:
+        if len(tree_model) == 0:
             if self._is_query_empty():
                 self._show_message(MESSAGE_EMPTY_JOURNAL)
             else:
@@ -564,8 +564,8 @@ class CellRendererBuddy(CellRendererIcon):
         self._model_column_index = column_index
 
     def create_palette(self):
-        model = self.tree_view.get_model()
-        row = model[self.props.palette_invoker.path]
+        tree_model = self.tree_view.get_model()
+        row = tree_model[self.props.palette_invoker.path]
 
         if row[self._model_column_index] is not None:
             nick, xo_color = row[self._model_column_index]
