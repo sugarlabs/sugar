@@ -175,9 +175,8 @@
       <type>bool</type>
       <default>true</default>
       <locale name="C">
-      <!-- FIXME: Enable these after string freeze is over
         <short>Show Log out</short>
-        <long>If TRUE, Sugar will show a "Log out" option.</long>-->
+        <long>If TRUE, Sugar will show a "Log out" option.</long>
       </locale>
     </schema>
 
