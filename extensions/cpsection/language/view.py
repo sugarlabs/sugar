@@ -57,6 +57,7 @@ class Language(SectionView):
                                           " If a translation is not available,"\
                                           " the next in the list will be used.")
         self._text = gtk.Label(explanation)
+        self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
         self.pack_start(self._text, False)
         self._text.show()
