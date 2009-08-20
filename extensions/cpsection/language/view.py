@@ -53,8 +53,9 @@ class Language(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        explanation = "Add languages in the order you prefer. If a " \
-            "translation is not available, the next in the list will be used."
+        explanation = gettext.gettext("Add languages in the order you prefer." \
+                                          " If a translation is not available,"\
+                                          " the next in the list will be used.")
         self._text = gtk.Label(explanation)
         self._text.set_alignment(0, 0)
         self.pack_start(self._text, False)
