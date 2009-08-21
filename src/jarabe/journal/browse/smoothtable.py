@@ -40,6 +40,7 @@ class SmoothTable(gtk.Container):
         self._reordered = None
         self._last_allocation = None
         self._fill_in = fill_in
+        self._visible_rows = {}
 
         gtk.Container.__init__(self)
 
@@ -86,6 +87,14 @@ class SmoothTable(gtk.Container):
                         int(self._adj.upper))
 
     bin_rows = property(get_bin_rows, set_bin_rows)
+
+    def get_visible_cell(self, y, x):
+        if x >= self.columns:
+            return None
+        row = self._visible_rows.get(y)
+        if row is None:
+            return None
+        return row[x]
 
     def goto(self, row):
         if self._adj is None:
@@ -282,6 +291,7 @@ class SmoothTable(gtk.Container):
         if not visible_rows or len(visible_rows) < self.rows + \
                 (self._get_head() != visible_rows[0]):
             self._reordered = self.allocation
+            self._visible_rows = {}
 
             def insert_spare_row(cell_y, end_y):
                 while cell_y < end_y:
@@ -290,12 +300,15 @@ class SmoothTable(gtk.Container):
                         return
                     row = spare_rows.pop()
                     self._allocate_row(row, cell_y)
+                    self._visible_rows[cell_y / self._cell_height] = row
                     cell_y = cell_y + self._cell_height
 
             cell_y = self._get_head()
             for i in visible_rows:
-                insert_spare_row(cell_y, i.row[0].allocation.y)
-                cell_y = i.row[0].allocation.y + i.row[0].allocation.height
+                cell = i.row[0].allocation
+                insert_spare_row(cell_y, cell.y)
+                self._visible_rows[cell.y / self._cell_height] = i.row
+                cell_y = cell.y + cell.height
             insert_spare_row(cell_y, page_end)
 
         self._bin_window.move(0, int(-self._adj.value))

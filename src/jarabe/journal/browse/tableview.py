@@ -155,16 +155,13 @@ class TableView(SmoothTable):
         self._selected_cell = None
 
     def __row_changed_cb(self, model, path, iter):
-        range = self.frame
-        if path[0] < range[0] or path[0] > range[1]:
+        y = path[0] / self.columns
+        x = path[0] % self.columns
+
+        canvas = self.get_visible_cell(y, x)
+        if canvas is None:
             return
 
-        y = (path[0] - range[0]) / self.columns
-        x = (path[0] - range[0]) % self.columns
-
-        from jarabe.journal.objectmodel import Source
-
-        canvas = self._rows[y][x]
         row = self._model.get_row(path)
 
         self._fill_in(canvas, y, x, row)
