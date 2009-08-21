@@ -70,7 +70,8 @@ class SmoothTable(gtk.Container):
         if self._adj is None or self._cell_height == 0:
             return (0, 0)
         top = int(self._adj.value / self._cell_height)
-        return (top * self.columns, (top + self.rows) * self.columns - 1)
+        bottom = int(math.ceil(self._adj.value + self._adj.page_size))
+        return (top * self.columns, bottom / self._cell_height * self.columns)
 
     frame = property(get_frame)
 
@@ -266,7 +267,7 @@ class SmoothTable(gtk.Container):
 
         spare_rows = []
         visible_rows = []
-        page_end = self._adj.value + self._adj.page_size
+        page_end = int(self._adj.value + self._adj.page_size)
 
         if self._last_allocation != self.allocation:
             self._last_allocation = self.allocation
