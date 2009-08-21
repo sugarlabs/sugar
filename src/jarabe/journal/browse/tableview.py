@@ -329,7 +329,7 @@ class TableView(gtk.Bin):
     def _get_frame(self):
         adj = self._full_adjustment
         return (int(adj.value / self._cell_height) * self._cols,
-               (int(adj.value / self._cell_height) + self._rows) * \
+               (int(adj.value / self._cell_height) + self._rows + 1) * \
                        self._cols - 1)
 
     def __adjustment_value_changed(self, adjustment, force=False):
@@ -361,8 +361,9 @@ class TableView(gtk.Bin):
 
                 cell.row = None
                 if cell_num < count:
-                    cell.row = self._model.get_row((cell_num,),
-                            self._get_frame())
+                    row = self._model.get_row((cell_num,), self._get_frame())
+                    if row != False:
+                        cell.row = row
 
                 self._fillin_cell(canvas, cell)
                 cell_num += 1
