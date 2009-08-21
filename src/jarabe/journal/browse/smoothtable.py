@@ -28,7 +28,7 @@ class SmoothTable(gtk.Container):
                        [gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]),
             }
 
-    def __init__(self, rows, columns, new_widget):
+    def __init__(self, rows, columns, new_cell, fill_in):
         assert(rows and columns)
 
         self._rows = []
@@ -39,19 +39,21 @@ class SmoothTable(gtk.Container):
         self._cell_height = 0
         self._reordered = None
         self._last_allocation = None
+        self._fill_in = fill_in
 
         gtk.Container.__init__(self)
 
-        cell_no = 0
         for y in range(rows + 2):
             row = []
             for x in range(columns):
-                cell = new_widget()
+                cell = new_cell()
+                cell.show()
                 cell.set_parent(self)
                 cell.size_allocate(gtk.gdk.Rectangle(-1, -1))
-                cell_no += 1
                 row.append(cell)
             self._rows.append(row)
+
+        self.connect('key-press-event', self.__key_press_event_cb)
 
     def get_columns(self):
         return len(self._rows[0])
@@ -63,21 +65,33 @@ class SmoothTable(gtk.Container):
 
     rows = property(get_rows)
 
-    def get_head(self):
-        if self._adj is None:
-            return 0
-        return int(self._adj.value) - int(self._adj.value) % self._cell_height
+    def get_frame(self):
+        if self._adj is None or self._cell_height == 0:
+            return (0, 0)
+        top = int(self._adj.value / self._cell_height)
+        return (top * self.columns, (top + self.rows) * self.columns - 1)
 
-    head = property(get_head)
+    frame = property(get_frame)
 
-    def set_count(self, count):
-        self._bin_rows = max(0, math.ceil(float(count) / len(self._rows[0])))
+    def get_bin_rows(self):
+        return self._bin_rows
+
+    def set_bin_rows(self, bin_rows):
+        self._bin_rows = bin_rows
 
         if self._adj is not None:
             self._setup_adjustment(force=True)
             if self.flags() & gtk.REALIZED:
                 self._bin_window.resize(self.allocation.width,
                         int(self._adj.upper))
+
+    bin_rows = property(get_bin_rows, set_bin_rows)
+
+    def goto(self, row):
+        if self._adj is None:
+            return
+        self._adj.props.value = row * self._cell_height
+        self._adj.value_changed()
 
     def do_realize(self):
         self.set_flags(gtk.REALIZED)
@@ -208,9 +222,10 @@ class SmoothTable(gtk.Container):
     def _allocate_row(self, row, cell_y):
         cell_x = 0
         cell_no = cell_y / self._cell_height * self.columns
+        cell_row = cell_y / self._cell_height
 
-        for cell in row:
-            self.emit('fill-in', cell, cell_no)
+        for cell_column, cell in enumerate(row):
+            self._fill_in(cell, cell_row, cell_column)
 
             callocation = gtk.gdk.Rectangle(cell_x, cell_y)
             callocation.width = self.allocation.width / self.columns
@@ -220,8 +235,24 @@ class SmoothTable(gtk.Container):
             cell_x += callocation.width
             cell_no += 1
 
+    def _get_head(self):
+        if self._adj is None:
+            return 0
+        return int(self._adj.value) - int(self._adj.value) % self._cell_height
+
     def __adjustment_value_changed_cb(self, sender=None):
-        if not self.flags() & gtk.REALIZED:
+        if not self.flags() & gtk.REALIZED or self._cell_height == 0:
+            return
+
+        if self._adj.value < 0:
+            self._adj.value = 0
+            self._adj.value_changed()
+            return
+
+        bottom = self._adj.upper - (self.rows * self._cell_height)
+        if self._adj.value > bottom:
+            self._adj.value = bottom
+            self._adj.value_changed()
             return
 
         spare_rows = []
@@ -248,8 +279,8 @@ class SmoothTable(gtk.Container):
                 else:
                     bisect.insort_right(visible_rows, IndexedRow(row))
 
-        if not visible_rows or \
-                len(visible_rows) < self.rows + (self.head != visible_rows[0]):
+        if not visible_rows or len(visible_rows) < self.rows + \
+                (self._get_head() != visible_rows[0]):
             self._reordered = self.allocation
 
             def insert_spare_row(cell_y, end_y):
@@ -261,7 +292,7 @@ class SmoothTable(gtk.Container):
                     self._allocate_row(row, cell_y)
                     cell_y = cell_y + self._cell_height
 
-            cell_y = self.head
+            cell_y = self._get_head()
             for i in visible_rows:
                 insert_spare_row(cell_y, i.row[0].allocation.y)
                 cell_y = i.row[0].allocation.y + i.row[0].allocation.height
@@ -270,21 +301,57 @@ class SmoothTable(gtk.Container):
         self._bin_window.move(0, int(-self._adj.value))
         self.window.process_updates(True)
 
+    def __key_press_event_cb(self, widget, event):
+        if self._adj is None or self._cell_height == 0:
+            return
+
+        page = self.rows * self._cell_height
+        uplimit = self._adj.upper - page
+
+        if event.keyval == gtk.keysyms.Up:
+            self._adj.value -= self._cell_height
+
+        elif event.keyval == gtk.keysyms.Down:
+            self._adj.value += min(uplimit - self._adj.value, self._cell_height)
+
+        elif event.keyval in (gtk.keysyms.Page_Up, gtk.keysyms.KP_Page_Up):
+            self._adj.value -= min(self._adj.value, page)
+
+        elif event.keyval in (gtk.keysyms.Page_Down, gtk.keysyms.KP_Page_Down):
+            self._adj.value += min(uplimit - self._adj.value, page)
+
+        elif event.keyval in (gtk.keysyms.Home, gtk.keysyms.KP_Home):
+            self._adj.value = 0
+
+        elif event.keyval in (gtk.keysyms.End, gtk.keysyms.KP_End):
+            self._adj.value = uplimit
+
+        else:
+            return False
+
+        return True
+
 SmoothTable.set_set_scroll_adjustments_signal('set-scroll-adjustments')
 
 if __name__ == '__main__':
+    import random
+
     window = gtk.Window()
 
     scrolled = gtk.ScrolledWindow()
     scrolled.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
     window.add(scrolled)
 
-    def cb(sender, button, offset):
-        button.props.label = str(offset)
-    table = SmoothTable(3, 3, gtk.Button)
-    table.connect('fill-in', cb)
-    table.set_count(100)
+    def fill_in(cell, row, column):
+        cell.props.label = '%s:%s' % (row, column)
+    table = SmoothTable(3, 3, gtk.Button, fill_in)
+    table.bin_rows = 100
     scrolled.add(table)
+
+    for row in table._rows:
+        for cell in row:
+            cell.connect('clicked',
+                    lambda button: table.goto(random.randint(0, 100)))
 
     window.show_all()
     gtk.main()
