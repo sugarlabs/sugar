@@ -42,8 +42,6 @@ class Source(GObject):
     FIELD_MODIFY_TIME = 31
     FIELD_THUMB = 32
 
-    FIELD_FETCHED = 50
-
     FIELDS_BASE = {'uid': (FIELD_UID, str),
                    'title': (FIELD_TITLE, str),
                    'mtime': (FIELD_MTIME, str),

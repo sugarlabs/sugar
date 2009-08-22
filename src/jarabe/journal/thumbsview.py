@@ -25,7 +25,8 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.palette import CanvasInvoker
 
 from jarabe.journal.keepicon import KeepIcon
-from jarabe.journal.objectmodel import Source
+from jarabe.journal.source import Source
+from jarabe.journal.objectmodel import ObjectModel
 from jarabe.journal.browse.tableview import TableView, TableCell
 from jarabe.journal.palettes import ObjectPalette
 from jarabe.journal import misc
@@ -38,6 +39,8 @@ STAR_WIDTH = 30
 class ThumbsCell(TableCell, hippo.CanvasBox):
     def __init__(self):
         TableCell.__init__(self)
+
+        self._last_uid = None
 
         hippo.CanvasBox.__init__(self,
                 orientation=hippo.ORIENTATION_VERTICAL,
@@ -110,13 +113,22 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         self.date.props.text = self.row[Source.FIELD_MODIFY_TIME] or ''
         self.keep.props.keep = int(self.row[Source.FIELD_KEEP] or 0) == 1
 
-        thumb = self.row[Source.FIELD_THUMB]
-
         w, h = self.activity_box.get_allocation()
         if w / 4. * 3. > h:
             w = int(h / 3. * 4.)
         else:
             h = int(w / 4. * 3.)
+        thumb = self.row[Source.FIELD_THUMB]
+
+
+        logging.error('> %r %r %r %r' % (self, self._last_uid, self.row[Source.FIELD_UID], self.row.has_key(ObjectModel.FIELD_FETCHED_FLAG)))
+
+        if self._last_uid == self.row[Source.FIELD_UID] and \
+                not self.row.has_key(ObjectModel.FIELD_FETCHED_FLAG):
+            # do not blink by preview while re-reading entries
+            return
+        else:
+            self._last_uid = self.row[Source.FIELD_UID]
 
         if thumb is None:
             self.thumb.set_visible(False)

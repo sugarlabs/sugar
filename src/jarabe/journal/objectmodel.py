@@ -26,6 +26,8 @@ from jarabe.journal.source import Source
 from jarabe.journal.browse.lazymodel import LazyModel
 
 class ObjectModel(LazyModel):
+    FIELD_FETCHED_FLAG = 50
+
     def __init__(self):
         LazyModel.__init__(self, Source.FIELDS_BASE, Source.FIELDS_CALC)
         self._fetch_queue = []
@@ -37,21 +39,22 @@ class ObjectModel(LazyModel):
                     int(row[Source.FIELD_TIMESTAMP]) or 0)
 
         if column == Source.FIELD_THUMB:
-            row = self.fetch_metadata(row)
-            if row is not None:
-                return 
+            if self.fetch_metadata(row):
+                return row[Source.FIELD_THUMB]
             return None
 
         return None
 
     def fetch_metadata(self, row, force=False):
-        if row.has_key(Source.FIELD_FETCHED):
-            return row
+        if row.has_key(self.FIELD_FETCHED_FLAG):
+            return True
 
         if row not in self._fetch_queue:
             self._fetch_queue.append(row)
             if len(self._fetch_queue) == 1:
                 gobject.idle_add(self.__idle_cb, force)
+
+        return False
 
     def __idle_cb(self, force):
         while len(self._fetch_queue):
@@ -67,10 +70,12 @@ class ObjectModel(LazyModel):
         del self._fetch_queue[0]
 
         if metadata is not None:
-            row[Source.FIELD_THUMB] = misc.load_preview(metadata)
             row.metadata.update(metadata)
-            row[Source.FIELD_FETCHED] = True
-            self.emit('row-changed', row.path, row.iter)
+
+        row[Source.FIELD_THUMB] = misc.load_preview(metadata)
+        row[self.FIELD_FETCHED_FLAG] = True
+
+        self.emit('row-changed', row.path, row.iter)
 
         if len(self._fetch_queue):
             self.__idle_cb(False)
