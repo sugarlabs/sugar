@@ -224,15 +224,19 @@ class DetailsIcon(CanvasIcon):
     def __init__(self, **kwargs):
         CanvasIcon.__init__(self, **kwargs)
         self.props.icon_name = 'go-right'
-        self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.connect('motion-notify-event', self.__motion_notify_event_cb)
+        self.connect('activated', self.__on_leave_cb)
+        self.__on_leave_cb(None)
+
+    def __on_leave_cb(self, button):
+        self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
 
     def __motion_notify_event_cb(self, icon, event):
         if event.detail == hippo.MOTION_DETAIL_ENTER:
             icon.props.fill_color = style.COLOR_BLACK.get_svg()
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+            self.__on_leave_cb(None)
 
 
 class ThumbsView(TableView):
