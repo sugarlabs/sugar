@@ -21,7 +21,7 @@ import gobject
 
 from sugar.graphics import style
 from sugar.graphics.roundbox import CanvasRoundBox
-from jarabe.journal.browse.smoothtable import SmoothTable
+from jarabe.journal.smoothtable import SmoothTable
 
 COLOR_BACKGROUND = style.COLOR_WHITE
 COLOR_SELECTED = style.COLOR_TEXT_FIELD_GREY

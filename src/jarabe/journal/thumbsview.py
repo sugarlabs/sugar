@@ -25,7 +25,7 @@ from sugar.graphics.palette import CanvasInvoker
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.source import Source
 from jarabe.journal.objectmodel import ObjectModel
-from jarabe.journal.browse.tableview import TableView, TableCell
+from jarabe.journal.tableview import TableView, TableCell
 from jarabe.journal.palettes import ObjectPalette
 from jarabe.journal import misc
 from jarabe.journal import model

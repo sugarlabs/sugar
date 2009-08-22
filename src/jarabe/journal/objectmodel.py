@@ -20,7 +20,7 @@ from sugar import util
 
 from jarabe.journal import misc
 from jarabe.journal.source import Source
-from jarabe.journal.browse.lazymodel import LazyModel
+from jarabe.journal.lazymodel import LazyModel
 
 
 class ObjectModel(LazyModel):
