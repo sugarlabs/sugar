@@ -71,6 +71,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 border_color=style.COLOR_BUTTON_GREY.get_int(),
                 xalign=hippo.ALIGNMENT_CENTER,
                 yalign=hippo.ALIGNMENT_CENTER)
+        self.thumb.connect('detail-clicked', self.__detail_clicked_cb)
         self.activity_box.append(self.thumb, hippo.PACK_EXPAND)
 
         self.activity_icon = ActivityIcon(
@@ -78,6 +79,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 border_color=style.COLOR_BUTTON_GREY.get_int(),
                 xalign=hippo.ALIGNMENT_CENTER,
                 yalign=hippo.ALIGNMENT_CENTER)
+        self.activity_icon.connect('detail-clicked', self.__detail_clicked_cb)
         self.activity_box.append(self.activity_icon, hippo.PACK_EXPAND)
 
         title_box = hippo.CanvasBox(
@@ -120,9 +122,6 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             h = int(w / 4. * 3.)
         thumb = self.row[Source.FIELD_THUMB]
 
-
-        logging.error('> %r %r %r %r' % (self, self._last_uid, self.row[Source.FIELD_UID], self.row.has_key(ObjectModel.FIELD_FETCHED_FLAG)))
-
         if self._last_uid == self.row[Source.FIELD_UID] and \
                 not self.row.has_key(ObjectModel.FIELD_FETCHED_FLAG):
             # do not blink by preview while re-reading entries
@@ -151,6 +150,9 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
     def __detail_activated_cb(self, button):
         self.tree.emit('detail-clicked', self.row[Source.FIELD_UID])
 
+    def __detail_clicked_cb(self, sender, uid):
+        self.tree.emit('detail-clicked', uid)
+
 class ActivityCanvas:
     def __init__(self):
         self._metadata = None
@@ -164,10 +166,8 @@ class ActivityCanvas:
     def create_palette(self):
         if self._metadata is None:
             return None
-
         palette = ObjectPalette(self._metadata, detail=True)
-        palette.connect('detail-clicked',
-                        self.__detail_clicked_cb)
+        palette.connect('detail-clicked', self.__detail_clicked_cb)
         return palette
 
     def __detail_clicked_cb(self, palette, uid):
@@ -178,6 +178,11 @@ class ActivityCanvas:
         return True
 
 class ActivityIcon(ActivityCanvas, CanvasIcon):
+    __gsignals__ = {
+            'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                              ([str])),
+            }
+
     def __init__(self, **kwargs):
         CanvasIcon.__init__(self, **kwargs)
         ActivityCanvas.__init__(self)
@@ -195,6 +200,11 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
                 self.props.xo_color = XoColor(self._metadata['icon-color'])
 
 class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
+    __gsignals__ = {
+            'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                              ([str])),
+            }
+
     def __init__(self, **kwargs):
         hippo.CanvasImage.__init__(self, **kwargs)
         ActivityCanvas.__init__(self)
