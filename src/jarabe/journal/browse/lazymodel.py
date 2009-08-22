@@ -153,11 +153,15 @@ class LazyModel(gtk.GenericTreeModel):
 
         count = self._source.get_count()
 
-        for i in range(self._last_count, count):
-            self.emit('row-inserted', (i,), self.get_iter((i,)))
-
-        for i in reversed(range(count, self._last_count)):
-            self.emit('row-deleted', (i,))
+        # TODO how to handle large update,
+        #      commented for now since in TableView
+        #      it works fine w/o these updates
+        #for i in range(self._last_count, count):
+        #    self.emit('row-inserted', (i,), self.get_iter((i,)))
+        #for i in reversed(range(count, self._last_count)):
+        #    self.emit('row-deleted', (i,))
+        if self._last_count != count:
+            self.emit('rows-reordered', (0,), self.get_iter((0,)), None)
 
         if self._frame[0] >= count:
             self._frame = (0, -1)
@@ -166,9 +170,12 @@ class LazyModel(gtk.GenericTreeModel):
                 if self._cache.has_key(i):
                     del self._cache[i]
             self._frame = (self._frame[0], count-1)
+
         self._cache = {}
-        for i in range(self._frame[0], self._frame[1]+1):
-            self.emit('row-changed', (i,), self.get_iter((i,)))
+
+        if self._last_count == count:
+            for i in range(self._frame[0], self._frame[1]+1):
+                self.emit('row-changed', (i,), self.get_iter((i,)))
 
         self._last_count = count
 
@@ -176,7 +183,7 @@ class LazyModel(gtk.GenericTreeModel):
         for i, row in self._cache.items():
             for field in fields:
                 if row.has_key(field):
-                    del row[i]
+                    del row[field]
             self.emit('row-changed', (i,), self.get_iter((i,)))
 
     def get_row(self, pos, frame=None):
@@ -387,7 +394,7 @@ class Row:
 
     def __contains__(self, key):
         if isinstance(key, int):
-            return key < len(self.row)
+            return key < len(self.row) or self._calced_row.has_key(key)
         else:
             return self.metadata.__contains__(key)
 
