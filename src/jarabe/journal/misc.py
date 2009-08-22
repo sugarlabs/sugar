@@ -18,6 +18,8 @@ import logging
 import time
 import traceback
 import os
+import StringIO
+import cairo
 from gettext import gettext as _
 
 import gio
@@ -232,3 +234,23 @@ def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
             is_journal_bundle(metadata)
 
+def load_preview(metadata):
+    if not metadata.has_key('preview') or \
+            len(metadata['preview']) < 5:
+        return None
+
+    if metadata['preview'][1:4] == 'PNG':
+        preview_data = metadata['preview']
+    else:
+        # TODO: We are close to be able to drop this.
+        import base64
+        preview_data = base64.b64decode(metadata['preview'])
+
+    png_file = StringIO.StringIO(preview_data)
+    try:
+        surface = cairo.ImageSurface.create_from_png(png_file)
+    except Exception, e:
+        logging.error('Error while loading the preview: %r' % e)
+        return None
+
+    return surface

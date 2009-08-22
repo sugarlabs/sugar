@@ -16,10 +16,8 @@
 
 import logging
 from gettext import gettext as _
-import StringIO
 
 import hippo
-import cairo
 import gobject
 import gtk
 import cjson
@@ -172,29 +170,10 @@ class ExpandedEntry(hippo.CanvasBox):
         height = style.zoom(240)
         box = hippo.CanvasBox()
 
-        if self._metadata.has_key('preview') and \
-                len(self._metadata['preview']) > 4:
-            
-            if self._metadata['preview'][1:4] == 'PNG':
-                preview_data = self._metadata['preview']
-            else:
-                # TODO: We are close to be able to drop this.
-                import base64
-                preview_data = base64.b64decode(
-                        self._metadata['preview'])
+        preview = misc.load_preview(self._metadata)
 
-            png_file = StringIO.StringIO(preview_data)
-            try:
-                surface = cairo.ImageSurface.create_from_png(png_file)
-                has_preview = True
-            except Exception:
-                logging.exception('Error while loading the preview')
-                has_preview = False
-        else:
-            has_preview = False
-
-        if has_preview:
-            preview_box = hippo.CanvasImage(image=surface,
+        if preview is not None:
+            preview_box = hippo.CanvasImage(image=preview,
                     border=style.LINE_WIDTH,
                     border_color=style.COLOR_BUTTON_GREY.get_int(),
                     xalign=hippo.ALIGNMENT_CENTER,
@@ -211,16 +190,18 @@ class ExpandedEntry(hippo.CanvasBox):
                     color=style.COLOR_BUTTON_GREY.get_int(),
                     box_width=width,
                     box_height=height)
+
         preview_box.connect_after('button-release-event',
                                   self._preview_box_button_release_event_cb)
         box.append(preview_box)
+
         return box
 
     def _create_buddy_list(self):
 
         vbox = hippo.CanvasBox()
         vbox.props.spacing = style.DEFAULT_SPACING
-        
+
         text = hippo.CanvasText(text=_('Participants:'),
                                 font_desc=style.FONT_NORMAL.get_pango_desc())
         text.props.color = style.COLOR_BUTTON_GREY.get_int()

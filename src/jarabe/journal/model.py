@@ -65,7 +65,9 @@ class _Cache(object):
     
     def remove_all(self, entries):
         for uid in [entry['uid'] for entry in entries]:
-            obj = self._dict[uid]
+            obj = self._dict.get(uid)
+            if obj is None:
+                continue
             self._array.remove(obj)
             del self._dict[uid]
 
@@ -394,16 +396,24 @@ def _get_mount_point(path):
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
 
-def get(object_id):
+def get(object_id, reply_cb=None):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
         stat = os.stat(object_id)
         metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
-    else:
+
+    elif reply_cb is None:
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
         metadata['mountpoint'] = '/'
+
+    else:
+        _get_datastore().get_properties(object_id, byte_arrays=True,
+                reply_handler=reply_cb,
+                error_handler=lambda e: reply_cb(None))
+        return None
+
     return metadata
 
 def get_file(object_id):

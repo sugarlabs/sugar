@@ -16,7 +16,6 @@
 
 import gtk
 import hippo
-import math
 import gobject
 import logging
 
@@ -30,11 +29,9 @@ COLOR_SELECTED = style.COLOR_TEXT_FIELD_GREY
 class TableCell:
     def __init__(self):
         self.row = None
+        self.tree = None
 
-    def fillin(self):
-        pass
-
-    def on_release(self, widget, event):
+    def do_fill_in(self):
         pass
 
 class TableView(SmoothTable):
@@ -93,12 +90,11 @@ class TableView(SmoothTable):
         canvas.set_root(sel_box)
 
         cell = cell_class()
+        cell.tree = self
         sel_box.append(cell, hippo.PACK_EXPAND)
 
         canvas.connect('enter-notify-event', self.__enter_notify_event_cb, cell)
         canvas.connect('leave-notify-event', self.__leave_notify_event_cb)
-        canvas.connect('button-release-event', self.__button_release_event_cb,
-                cell)
 
         canvas.table_view_cell_sel_box = sel_box
         canvas.table_view_cell = cell
@@ -129,11 +125,8 @@ class TableView(SmoothTable):
         if cell.row is None:
             cell.set_visible(False)
         else:
-            cell.fillin()
+            cell.do_fill_in()
             cell.set_visible(True)
-
-    def __button_release_event_cb(self, widget, event, cell):
-        cell.on_release(widget, event)
 
     def __enter_notify_event_cb(self, canvas, event, cell):
         if not self.hover_selection:

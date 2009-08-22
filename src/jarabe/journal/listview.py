@@ -251,10 +251,14 @@ class BaseListView(gtk.Bin):
         model.write(metadata, update_mtime=False)
 
     def update_dates(self):
+        if not self.flags() & gtk.REALIZED:
+            return
+
         logging.debug('ListView.update_dates')
         visible_range = self.get_visible_range()
         if visible_range is None:
             return
+
         path, end_path = visible_range
         while True:
             x, y, width, height = self.get_cell_area(path, self.date_column)

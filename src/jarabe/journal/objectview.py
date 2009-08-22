@@ -29,9 +29,8 @@ from jarabe.journal import model
 from jarabe.journal.listview import ListView
 from jarabe.journal.thumbsview import ThumbsView
 from jarabe.journal.listmodel import ListModel
-from jarabe.journal.browse.lazymodel import LazyModel
-from jarabe.journal.browse.localsource import LocalSource
-from jarabe.journal.browse.source import *
+from jarabe.journal.objectmodel import ObjectModel
+from jarabe.journal.source import Source, LocalSource
 
 UPDATE_INTERVAL = 300
 
@@ -65,7 +64,7 @@ class ObjectsView(gtk.Bin):
         self._result_set = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
-        self._model = LazyModel(FIELDS_LIST)
+        self._model = ObjectModel()
         self._view_widgets = []
         self._view = VIEW_LIST
 
@@ -123,7 +122,7 @@ class ObjectsView(gtk.Bin):
             # TODO in 0.88 VIEW_LIST will use lazymodel
             self._view_widgets[VIEW_LIST].view.update_dates()
             return
-        self._model.recalc([FIELD_MODIFY_TIME])
+        self._model.recalc([Source.FIELD_MODIFY_TIME])
 
     def change_view(self, view):
         self._view = view
@@ -302,7 +301,7 @@ class ObjectsView(gtk.Bin):
             return False
 
         path, column_, x_, y_ = pos
-        uid = tree_view.get_model()[path][FIELD_UID]
+        uid = tree_view.get_model()[path][Source.FIELD_UID]
         self.emit('entry-activated', uid)
 
         return False

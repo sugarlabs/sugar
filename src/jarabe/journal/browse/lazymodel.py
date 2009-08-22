@@ -219,7 +219,7 @@ class LazyModel(gtk.GenericTreeModel):
         def fetch():
             row = self._source.get_row(offset)
 
-            if not row:
+            if row is None or row == False:
                 if row is not None:
                     logging.debug('_get_row: can not find row for %s' % offset)
                     return False
@@ -343,7 +343,7 @@ class Row:
         self.model = model
         self.iter = iter
         self.path = path
-        self.object = object
+        self.metadata = object
         self.row = [None] * len(model._columns_by_name)
         self._calced_row = {}
 
@@ -365,7 +365,7 @@ class Row:
                         self._calced_row[key] = value
                     return value
         else:
-            return self.object[key]
+            return self.metadata[key]
 
     def __setitem__(self, key, value):
         if isinstance(key, int):
@@ -374,7 +374,7 @@ class Row:
             else:
                 self._calced_row[key] = value
         else:
-            self.object[key] = value
+            self.metadata[key] = value
 
     def __delitem__(self, key):
         if isinstance(key, int):
@@ -383,13 +383,13 @@ class Row:
             else:
                 del self._calced_row[key]
         else:
-            del self.object[key]
+            del self.metadata[key]
 
     def __contains__(self, key):
         if isinstance(key, int):
             return key < len(self.row)
         else:
-            return self.object.__contains__(key)
+            return self.metadata.__contains__(key)
 
     def has_key(self, key):
         return self.__contains__(key)
