@@ -71,10 +71,6 @@ class ObjectsView(gtk.Bin):
         self.connect('destroy', self.__destroy_cb)
 
         for view_class in VIEW_TYPES:
-            widget = gtk.ScrolledWindow()
-            widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-            widget.show()
-
             view = view_class()
             view.modify_base(gtk.STATE_NORMAL,
                     style.COLOR_WHITE.get_gdk_color())
@@ -82,12 +78,10 @@ class ObjectsView(gtk.Bin):
             view.connect('button-release-event', self.__button_release_event_cb)
             view.show()
 
-            is_view_scrollable = view.set_scroll_adjustments(None, None)
-            if is_view_scrollable:
-                widget.add(view)
-            else:
-                widget.add_with_viewport(view)
-
+            widget = gtk.ScrolledWindow()
+            widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+            widget.show()
+            widget.add(view)
             widget.view = view
             self._view_widgets.append(widget)
 
@@ -125,6 +119,8 @@ class ObjectsView(gtk.Bin):
         self._model.recalc([Source.FIELD_MODIFY_TIME])
 
     def change_view(self, view):
+        if self._view_widgets[view].parent is not None:
+            return
         self._view = view
         if self.child is not None:
             self.remove(self.child)
@@ -156,7 +152,6 @@ class ObjectsView(gtk.Bin):
     def _refresh(self):
         logging.debug('ListView._refresh query %r' % self._query)
         self._stop_progress_bar()
-        self._start_progress_bar()
 
         if self._result_set is not None:
             self._result_set.stop()
@@ -182,6 +177,9 @@ class ObjectsView(gtk.Bin):
             self.change_view(self._view)
 
     def __result_set_progress_cb(self, **kwargs):
+        if self._progress_bar is None:
+            self._start_progress_bar()
+
         if time.time() - self._last_progress_bar_pulse > 0.05:
             if self._progress_bar is not None:
                 self._progress_bar.pulse()
@@ -230,6 +228,7 @@ class ObjectsView(gtk.Bin):
             self.remove(self.child)
         self.add(self._view_widgets[self._view])
         self._view_widgets[self._view].show()
+        self._progress_bar = None
 
     def _show_message(self, message):
         canvas = hippo.Canvas()
