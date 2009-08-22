@@ -24,8 +24,6 @@ class SmoothTable(gtk.Container):
     __gsignals__ = {
             'set-scroll-adjustments': (gobject.SIGNAL_RUN_FIRST, None,
                                       [gtk.Adjustment, gtk.Adjustment]),
-            'fill-in': (gobject.SIGNAL_RUN_FIRST, None,
-                       [gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]),
             }
 
     def __init__(self, rows, columns, new_cell, fill_in):
@@ -79,13 +77,16 @@ class SmoothTable(gtk.Container):
         return self._bin_rows
 
     def set_bin_rows(self, bin_rows):
-        self._bin_rows = bin_rows
+        self._bin_rows = max(self.rows, bin_rows)
 
-        if self._adj is not None:
-            self._setup_adjustment(force=True)
-            if self.flags() & gtk.REALIZED:
-                self._bin_window.resize(self.allocation.width,
-                        int(self._adj.upper))
+        if self._adj is None:
+            return
+
+        for row in self._rows:
+            for cell in row:
+                cell.size_allocate(gtk.gdk.Rectangle(-1, -1, 0, 0))
+
+        self._setup_adjustment(force=True)
 
     bin_rows = property(get_bin_rows, set_bin_rows)
 
@@ -251,18 +252,9 @@ class SmoothTable(gtk.Container):
         return int(self._adj.value) - int(self._adj.value) % self._cell_height
 
     def __adjustment_value_changed_cb(self, sender=None):
-        if not self.flags() & gtk.REALIZED or self._cell_height == 0:
-            return
-
-        if self._adj.value < 0:
-            self._adj.value = 0
-            self._adj.value_changed()
-            return
-
-        bottom = self._adj.upper - (self.rows * self._cell_height)
-        if self._adj.value > bottom:
-            self._adj.value = bottom
-            self._adj.value_changed()
+        if not self.flags() & gtk.REALIZED or self._cell_height == 0 or \
+                self._adj.value < 0 or self._adj.value > self._adj.upper - \
+                    (self.rows * self._cell_height):
             return
 
         spare_rows = []

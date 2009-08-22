@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import gtk
+import math
 import hippo
 import gobject
 import logging
@@ -55,15 +56,18 @@ class TableView(SmoothTable):
     def set_model(self, model):
         if self._model == model:
             return
+
         if self._model:
             self._model.disconnect_by_func(self.__row_changed_cb)
             self._model.disconnect_by_func(self.__table_resized_cb)
+
         self._model = model
+
         if model:
             self._model.connect('row-changed', self.__row_changed_cb)
-            self._model.connect('row-inserted', self.__table_resized_cb)
-            self._model.connect('row-deleted', self.__table_resized_cb)
-        self.bin_rows = self._model.iter_n_children(None) / self.columns
+            self._model.connect('rows-reordered', self.__table_resized_cb)
+
+        self._resize()
 
     model = gobject.property(type=object,
             getter=get_model, setter=set_model)
@@ -101,7 +105,12 @@ class TableView(SmoothTable):
 
         return canvas
 
-    def _fill_in(self, canvas, y, x, row=None):
+    def _resize(self):
+        rows = int(math.ceil(float(self._model.iter_n_children(None)) / \
+                self.columns))
+        self.bin_rows = rows
+
+    def _fill_in(self, canvas, y, x, prepared_row=None):
 
         cell = canvas.table_view_cell
         sel_box = canvas.table_view_cell_sel_box
@@ -112,7 +121,7 @@ class TableView(SmoothTable):
             bg_color = COLOR_BACKGROUND
         sel_box.props.background_color = bg_color.get_int()
 
-        cell.row = row
+        cell.row = prepared_row
 
         if cell.row is None:
             cell_num = y * self.columns + x
@@ -156,8 +165,7 @@ class TableView(SmoothTable):
             return
 
         row = self._model.get_row(path)
-
         self._fill_in(canvas, y, x, row)
 
-    def __table_resized_cb(self, model=None, path=None, iter=None):
-        self.bin_rows = self._model.iter_n_children(None) / self.columns
+    def __table_resized_cb(self, model=None, path=None, iter=None, arg3=None):
+        self._resize()
