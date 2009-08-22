@@ -44,7 +44,9 @@ VIEW_TYPES = [ListView, ThumbsView]
 
 PAGE_SIZE = 10
 
+
 class ObjectsView(gtk.Bin):
+
     __gsignals__ = {
         'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
@@ -75,7 +77,8 @@ class ObjectsView(gtk.Bin):
             view.modify_base(gtk.STATE_NORMAL,
                     style.COLOR_WHITE.get_gdk_color())
             view.connect('detail-clicked', self.__detail_clicked_cb)
-            view.connect('button-release-event', self.__button_release_event_cb)
+            view.connect('button-release-event',
+                    self.__button_release_event_cb)
             view.show()
 
             widget = gtk.ScrolledWindow()
@@ -188,8 +191,8 @@ class ObjectsView(gtk.Bin):
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
         # a new search term is added.
-        if self._query.get('query', '') or self._query.get('mime_type', '') or \
-                self._query.get('keep', '') or self._query.get('mtime', '') or \
+        if self._query.get('query', '') or self._query.get('mime_type', '') or\
+                self._query.get('keep', '') or self._query.get('mtime', '') or\
                 self._query.get('activity', ''):
             return False
         else:

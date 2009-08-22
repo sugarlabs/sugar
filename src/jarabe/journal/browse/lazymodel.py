@@ -18,10 +18,13 @@ import gtk
 import logging
 from gobject import GObject, SIGNAL_RUN_FIRST, TYPE_PYOBJECT
 
+
 class Source(GObject):
+
     __gsignals__ = {
             'objects-updated': (SIGNAL_RUN_FIRST, None, []),
-            'row-delayed-fetch': (SIGNAL_RUN_FIRST, None, 2*[TYPE_PYOBJECT]) }
+            'row-delayed-fetch': (SIGNAL_RUN_FIRST, None, 2 * [TYPE_PYOBJECT]),
+            }
 
     def get_count(self):
         """ Returns number of objects """
@@ -46,28 +49,36 @@ class Source(GObject):
         """ Set current order """
         pass
 
+
 class LazyModel(gtk.GenericTreeModel):
-    def __init__(self, columns, calc_columns={}):
+
+    def __init__(self, columns, calc_columns=None):
         """ columns/calc_columns = {field_name: (column_num, column_type)} """
         gtk.GenericTreeModel.__init__(self)
 
-        self._columns_by_name = {}
-        self._columns_by_num = {}
-        self._columns_types = {}
+        self.columns_by_name = {}
+        self.columns_by_num = {}
+        self.columns_types = {}
 
         for name, i in columns.items():
-            self._columns_by_name[name] = i[0]
-            self._columns_by_num[i[0]] = name
-            self._columns_types[i[0]] = i[1]
+            self.columns_by_name[name] = i[0]
+            self.columns_by_num[i[0]] = name
+            self.columns_types[i[0]] = i[1]
 
-        for name, i in calc_columns.items():
-            self._columns_types[i[0]] = i[1]
+        if calc_columns is not None:
+            for name, i in calc_columns.items():
+                self.columns_types[i[0]] = i[1]
 
-        self._n_columns = max(self._columns_types.keys()) + 1
+        self._n_columns = max(self.columns_types.keys()) + 1
 
         self._source = None
         self._closing = False
         self._view = None
+        self._last_count = 0
+        self._cache = {}
+        self._frame = (0, -1)
+        self._in_process = {}
+        self._postponed = []
 
         self.set_source(None, force=True)
         self.set_view(None, force=True)
@@ -85,12 +96,12 @@ class LazyModel(gtk.GenericTreeModel):
 
         if self._source is not None:
             self._source.disconnect_by_func(self.refresh)
-            self._source.disconnect_by_func(self._delayed_fetch_cb)
+            self._source.disconnect_by_func(self.__delayed_fetch_cb)
 
         self._source = source
         if self._source is not None:
             self._source.connect('objects-updated', self.refresh)
-            self._source.connect('row-delayed-fetch', self._delayed_fetch_cb)
+            self._source.connect('row-delayed-fetch', self.__delayed_fetch_cb)
 
         self.refresh()
 
@@ -129,17 +140,17 @@ class LazyModel(gtk.GenericTreeModel):
     view = property(get_view, set_view)
 
     def get_order(self):
-        if not self._source:
+        if self._source is None:
             return None
         order = self._source.get_order()
         if order is None:
             return None
-        return (self._columns_by_name[order[0]], order[1])
+        return (self.columns_by_name[order[0]], order[1])
 
     def set_order(self, column, order):
-        if not self._source:
+        if self._source is None:
             return
-        self._source.set_order(self._columns_by_num[column], order)
+        self._source.set_order(self.columns_by_num[column], order)
         self._update_columns()
 
     def refresh(self, sender=None):
@@ -157,17 +168,17 @@ class LazyModel(gtk.GenericTreeModel):
         #      commented for now since in TableView
         #      it works fine w/o these updates
         #for i in range(self._last_count, count):
-        #    self.emit('row-inserted', (i,), self.get_iter((i,)))
+        #    self.emit('row-inserted', (i, ), self.get_iter((i, )))
         #for i in reversed(range(count, self._last_count)):
-        #    self.emit('row-deleted', (i,))
+        #    self.emit('row-deleted', (i, ))
         if self._last_count != count:
-            self.emit('rows-reordered', (0,), self.get_iter((0,)), None)
+            self.emit('rows-reordered', (0, ), self.get_iter((0, )), None)
 
         if self._frame[0] >= count:
             self._frame = (0, -1)
         elif self._frame[1] >= count:
             for i in range(count, self._frame[1]):
-                if self._cache.has_key(i):
+                if i in self._cache:
                     del self._cache[i]
             self._frame = (self._frame[0], count-1)
 
@@ -175,40 +186,40 @@ class LazyModel(gtk.GenericTreeModel):
 
         if self._last_count == count:
             for i in range(self._frame[0], self._frame[1]+1):
-                self.emit('row-changed', (i,), self.get_iter((i,)))
+                self.emit('row-changed', (i, ), self.get_iter((i, )))
 
         self._last_count = count
 
     def recalc(self, fields):
         for i, row in self._cache.items():
             for field in fields:
-                if row.has_key(field):
+                if field in row:
                     del row[field]
-            self.emit('row-changed', (i,), self.get_iter((i,)))
+            self.emit('row-changed', (i, ), self.get_iter((i, )))
 
     def get_row(self, pos, frame=None):
-        if not self._source:
+        if self._source is None:
             return False
         if not isinstance(pos, tuple):
             pos = self.get_path(pos)
         return self._get_row(pos[0], frame or (pos, pos))
 
-    def _delayed_fetch_cb(self, source, offset, object):
-        if not self._in_process.has_key(offset):
-            logging.debug('_delayed_fetch_cb: no offset=%s' % offset)
+    def __delayed_fetch_cb(self, source, offset, metadata):
+        if not offset in self._in_process:
+            logging.debug('__delayed_fetch_cb: no offset=%s' % offset)
             return
 
-        logging.debug('_delayed_fetch_cb: get %s' % offset)
+        logging.debug('__delayed_fetch_cb: get %s' % offset)
 
-        path = (offset,)
-        iter = self.get_iter(path)
-        row = Row(self, path, iter, object)
+        path = (offset, )
+        iterator = self.get_iter(path)
+        row = Row(self, path, iterator, metadata)
 
         if self.in_frame(offset):
             self._cache[offset] = row
 
         del self._in_process[offset]
-        self.emit('row-changed', path, iter)
+        self.emit('row-changed', path, iterator)
         if self._in_process:
             return
 
@@ -216,13 +227,14 @@ class LazyModel(gtk.GenericTreeModel):
             offset, force = self._postponed.pop()
             if not force and not self.in_frame(offset):
                 continue
-            row = self.get_row((offset,))
-            if row:
-                self.emit('row-changed', row.path, row.iter)
+            row = self.get_row((offset, ))
+            if row is not None and row != False:
+                self.emit('row-changed', row.path, row.iterator)
             else:
                 break
 
     def _get_row(self, offset, frame):
+
         def fetch():
             row = self._source.get_row(offset)
 
@@ -234,12 +246,12 @@ class LazyModel(gtk.GenericTreeModel):
                 self._in_process[offset] = True
                 return None
 
-            row = Row(self, (offset,), self.get_iter(offset), row)
+            row = Row(self, (offset, ), self.get_iter(offset), row)
             self._cache[offset] = row
             return row
 
         out = self._cache.get(offset)
-        if out:
+        if out is not None:
             return out
 
         if frame[0] >= frame[1]:
@@ -259,10 +271,10 @@ class LazyModel(gtk.GenericTreeModel):
                 self._cache = {}
             else:
                 for i in range(self._frame[0], intersect_min):
-                    if self._cache.has_key(i):
+                    if i in self._cache:
                         del self._cache[i]
                 for i in range(intersect_max+1, self._frame[1]+1):
-                    if self._cache.has_key(i):
+                    if i in self._cache:
                         del self._cache[i]
             self._frame = frame
 
@@ -274,7 +286,7 @@ class LazyModel(gtk.GenericTreeModel):
 
     def _update_columns(self):
         order = self.get_order()
-        if not order or not hasattr(self._view, 'get_columns'):
+        if order is None or not hasattr(self._view, 'get_columns'):
             return
 
         for column in self._view.get_columns():
@@ -287,38 +299,36 @@ class LazyModel(gtk.GenericTreeModel):
     def in_frame(self, offset):
         return offset >= self._frame[0] and offset <= self._frame[1]
 
-    # interface implementation -------------------------------------------------
-
     def on_get_n_columns(self):
         return self._n_columns
 
     def on_get_column_type(self, index):
-        return self._columns_types.get(index, bool)
+        return self.columns_types.get(index, bool)
 
-    def on_iter_n_children(self, iter):
-        if iter is None and not self._closing:
+    def on_iter_n_children(self, iterator):
+        if iterator is None and not self._closing:
             return self._source.get_count()
         else:
             return 0
 
     def on_get_value(self, offset, column):
-        if not self._view or offset >= self._source.get_count():
+        if self._view is None or offset >= self._source.get_count():
             return None
 
-        # return value only if iter came from visible range
+        # return value only if iterator came from visible range
         # (on setting model, gtk.TreeView scans all items)
-        range = self._view.get_visible_range()
-        if range and offset >= range[0][0] and offset <= range[1][0]:
-            row = self._get_row(offset, (range[0][0], range[1][0]))
-            return row and row[column]
+        vrange = self._view.get_visible_range()
+        if vrange and offset >= vrange[0][0] and offset <= vrange[1][0]:
+            row = self._get_row(offset, (vrange[0][0], vrange[1][0]))
+            return row is not None and row != False and row[column]
 
         return None
 
-    def on_iter_nth_child(self, iter, n):
+    def on_iter_nth_child(self, iterator, n):
         return n
 
-    def on_get_path(self, iter):
-        return (iter)
+    def on_get_path(self, iterator):
+        return iterator
 
     def on_get_iter(self, path):
         if self._source.get_count() and not self._closing:
@@ -326,36 +336,38 @@ class LazyModel(gtk.GenericTreeModel):
         else:
             return False
 
-    def on_iter_next(self, iter):
-        if iter != None:
-            if iter >= self._source.get_count() - 1 or self._closing:
+    def on_iter_next(self, iterator):
+        if iterator is not None:
+            if iterator >= self._source.get_count() - 1 or self._closing:
                 return None
-            return iter + 1
+            return iterator + 1
         return None
 
     def on_get_flags(self):
         return gtk.TREE_MODEL_ITERS_PERSIST | gtk.TREE_MODEL_LIST_ONLY
 
-    def on_iter_children(self, iter):
+    def on_iter_children(self, iterator):
         return None
 
-    def on_iter_has_child(self, iter):
+    def on_iter_has_child(self, iterator):
         return False
 
-    def on_iter_parent(self, iter):
+    def on_iter_parent(self, iterator):
         return None
 
+
 class Row:
-    def __init__(self, model, path, iter, object):
+
+    def __init__(self, model, path, iterator, metadata):
         self.model = model
-        self.iter = iter
+        self.iterator = iterator
         self.path = path
-        self.metadata = object
-        self.row = [None] * len(model._columns_by_name)
+        self.metadata = metadata
+        self.row = [None] * len(model.columns_by_name)
         self._calced_row = {}
 
-        for name, value in object.items():
-            column = model._columns_by_name.get(str(name), -1)
+        for name, value in metadata.items():
+            column = model.columns_by_name.get(str(name), -1)
             if column != -1:
                 self.row[column] = value
 
@@ -364,7 +376,7 @@ class Row:
             if key < len(self.row):
                 return self.row[key]
             else:
-                if self._calced_row.has_key(key):
+                if key in self._calced_row:
                     return self._calced_row[key]
                 else:
                     value = self.model.on_calc_value(self, key)
@@ -394,7 +406,7 @@ class Row:
 
     def __contains__(self, key):
         if isinstance(key, int):
-            return key < len(self.row) or self._calced_row.has_key(key)
+            return key < len(self.row) or key in self._calced_row
         else:
             return self.metadata.__contains__(key)
 
@@ -402,7 +414,7 @@ class Row:
         return self.__contains__(key)
 
     def get(self, key, default=None):
-        if self.has_key(key):
+        if key in self:
             return self.__getitem__(key)
         else:
             return default

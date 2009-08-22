@@ -14,16 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
 import cairo
-from gobject import property, GObject, SIGNAL_RUN_FIRST, TYPE_PYOBJECT
+from gobject import GObject, SIGNAL_RUN_FIRST, TYPE_PYOBJECT
 
-from sugar import util
-
-from jarabe.journal.browse.lazymodel import LazyModel
 from jarabe.journal import model
 
+
 class Source(GObject):
+
     FIELD_UID = 0
     FIELD_TITLE = 1
     FIELD_MTIME = 2
@@ -60,10 +58,12 @@ class Source(GObject):
                    'modify_time': (FIELD_MODIFY_TIME, str),
                    'thumb': (FIELD_THUMB, cairo.ImageSurface)}
 
+
 class LocalSource(Source):
+
     __gsignals__ = {
             'objects-updated': (SIGNAL_RUN_FIRST, None, []),
-            'row-delayed-fetch': (SIGNAL_RUN_FIRST, None, 2*[TYPE_PYOBJECT])
+            'row-delayed-fetch': (SIGNAL_RUN_FIRST, None, 2 * [TYPE_PYOBJECT]),
             }
 
     def __init__(self, resultset):

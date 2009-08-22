@@ -20,7 +20,9 @@ import math
 import bisect
 import logging
 
+
 class SmoothTable(gtk.Container):
+
     __gsignals__ = {
             'set-scroll-adjustments': (gobject.SIGNAL_RUN_FIRST, None,
                                       [gtk.Adjustment, gtk.Adjustment]),
@@ -42,9 +44,9 @@ class SmoothTable(gtk.Container):
 
         gtk.Container.__init__(self)
 
-        for y in range(rows + 2):
+        for i in range(rows + 2):
             row = []
-            for x in range(columns):
+            for j in range(columns):
                 cell = new_cell()
                 cell.show()
                 cell.set_parent(self)
@@ -266,7 +268,9 @@ class SmoothTable(gtk.Container):
             self._last_allocation = self.allocation
             spare_rows = [] + self._rows
         else:
+
             class IndexedRow:
+
                 def __init__(self, row):
                     self.row = row
 
@@ -319,7 +323,8 @@ class SmoothTable(gtk.Container):
             self._adj.value -= self._cell_height
 
         elif event.keyval == gtk.keysyms.Down:
-            self._adj.value += min(uplimit - self._adj.value, self._cell_height)
+            self._adj.value += min(uplimit - self._adj.value,
+                    self._cell_height)
 
         elif event.keyval in (gtk.keysyms.Page_Up, gtk.keysyms.KP_Page_Up):
             self._adj.value -= min(self._adj.value, page)
@@ -339,26 +344,3 @@ class SmoothTable(gtk.Container):
         return True
 
 SmoothTable.set_set_scroll_adjustments_signal('set-scroll-adjustments')
-
-if __name__ == '__main__':
-    import random
-
-    window = gtk.Window()
-
-    scrolled = gtk.ScrolledWindow()
-    scrolled.set_policy(gtk.POLICY_ALWAYS, gtk.POLICY_ALWAYS)
-    window.add(scrolled)
-
-    def fill_in(cell, row, column):
-        cell.props.label = '%s:%s' % (row, column)
-    table = SmoothTable(3, 3, gtk.Button, fill_in)
-    table.bin_rows = 100
-    scrolled.add(table)
-
-    for row in table._rows:
-        for cell in row:
-            cell.connect('clicked',
-                    lambda button: table.goto(random.randint(0, 100)))
-
-    window.show_all()
-    gtk.main()

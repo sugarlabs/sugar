@@ -14,10 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
-import cairo
 import gobject
-import logging
 
 from sugar import util
 
@@ -25,7 +22,9 @@ from jarabe.journal import misc
 from jarabe.journal.source import Source
 from jarabe.journal.browse.lazymodel import LazyModel
 
+
 class ObjectModel(LazyModel):
+
     FIELD_FETCHED_FLAG = 50
 
     def __init__(self):
@@ -46,7 +45,7 @@ class ObjectModel(LazyModel):
         return None
 
     def fetch_metadata(self, row, force=False):
-        if row.has_key(self.FIELD_FETCHED_FLAG):
+        if self.FIELD_FETCHED_FLAG in row:
             return True
 
         if row not in self._fetch_queue:
@@ -75,7 +74,7 @@ class ObjectModel(LazyModel):
         row[Source.FIELD_THUMB] = misc.load_preview(metadata)
         row[self.FIELD_FETCHED_FLAG] = True
 
-        self.emit('row-changed', row.path, row.iter)
+        self.emit('row-changed', row.path, row.iterator)
 
         if len(self._fetch_queue):
             self.__idle_cb(False)

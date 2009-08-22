@@ -18,7 +18,6 @@ import gtk
 import math
 import hippo
 import gobject
-import logging
 
 from sugar.graphics import style
 from sugar.graphics.roundbox import CanvasRoundBox
@@ -27,7 +26,9 @@ from jarabe.journal.browse.smoothtable import SmoothTable
 COLOR_BACKGROUND = style.COLOR_WHITE
 COLOR_SELECTED = style.COLOR_TEXT_FIELD_GREY
 
+
 class TableCell:
+
     def __init__(self):
         self.row = None
         self.tree = None
@@ -35,17 +36,19 @@ class TableCell:
     def do_fill_in(self):
         pass
 
+
 class TableView(SmoothTable):
+
     def __init__(self, cell_class, rows, columns):
         SmoothTable.__init__(self, rows, columns,
-                lambda: self._create_cell(cell_class), self._fill_in)
+                lambda: self._create_cell(cell_class), self._do_fill_in)
 
         self._model = None
         self._hover_selection = False
         self._selected_cell = None
 
     def get_cursor(self):
-        return (self.frame[0],)
+        return (self.frame[0], )
 
     def set_cursor(self, cursor):
         self.goto(cursor)
@@ -57,13 +60,13 @@ class TableView(SmoothTable):
         if self._model == model:
             return
 
-        if self._model:
+        if self._model is not None:
             self._model.disconnect_by_func(self.__row_changed_cb)
             self._model.disconnect_by_func(self.__table_resized_cb)
 
         self._model = model
 
-        if model:
+        if model is not None:
             self._model.connect('row-changed', self.__row_changed_cb)
             self._model.connect('rows-reordered', self.__table_resized_cb)
 
@@ -82,7 +85,7 @@ class TableView(SmoothTable):
             getter=get_hover_selection, setter=set_hover_selection)
 
     def get_visible_range(self):
-        return ((self.frame[0],), (self.frame[1],))
+        return ((self.frame[0], ), (self.frame[1], ))
 
     def _create_cell(self, cell_class):
         canvas = hippo.Canvas()
@@ -97,7 +100,8 @@ class TableView(SmoothTable):
         cell.tree = self
         sel_box.append(cell, hippo.PACK_EXPAND)
 
-        canvas.connect('enter-notify-event', self.__enter_notify_event_cb, cell)
+        canvas.connect('enter-notify-event',
+                self.__enter_notify_event_cb, cell)
         canvas.connect('leave-notify-event', self.__leave_notify_event_cb)
 
         canvas.table_view_cell_sel_box = sel_box
@@ -110,7 +114,7 @@ class TableView(SmoothTable):
                 self.columns))
         self.bin_rows = rows
 
-    def _fill_in(self, canvas, y, x, prepared_row=None):
+    def _do_fill_in(self, canvas, y, x, prepared_row=None):
 
         cell = canvas.table_view_cell
         sel_box = canvas.table_view_cell_sel_box
@@ -127,8 +131,8 @@ class TableView(SmoothTable):
             cell_num = y * self.columns + x
 
             if cell_num < self._model.iter_n_children(None):
-                row = self._model.get_row((cell_num,), self.frame)
-                if row != False:
+                row = self._model.get_row((cell_num, ), self.frame)
+                if row is not None and row != False:
                     cell.row = row
 
         if cell.row is None:
@@ -156,7 +160,7 @@ class TableView(SmoothTable):
 
         self._selected_cell = None
 
-    def __row_changed_cb(self, model, path, iter):
+    def __row_changed_cb(self, model, path, iterator):
         y = path[0] / self.columns
         x = path[0] % self.columns
 
@@ -165,7 +169,7 @@ class TableView(SmoothTable):
             return
 
         row = self._model.get_row(path)
-        self._fill_in(canvas, y, x, row)
+        self._do_fill_in(canvas, y, x, row)
 
-    def __table_resized_cb(self, model=None, path=None, iter=None, arg3=None):
+    def __table_resized_cb(self, model=None, path=None, iterator=None, a=None):
         self._resize()

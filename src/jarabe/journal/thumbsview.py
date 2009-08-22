@@ -14,9 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
 import gobject
-import logging
 import hippo
 
 from sugar.graphics import style
@@ -36,7 +34,9 @@ ROWS = 4
 COLUMNS = 5
 STAR_WIDTH = 30
 
+
 class ThumbsCell(TableCell, hippo.CanvasBox):
+
     def __init__(self):
         TableCell.__init__(self)
 
@@ -123,7 +123,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         thumb = self.row[Source.FIELD_THUMB]
 
         if self._last_uid == self.row[Source.FIELD_UID] and \
-                not self.row.has_key(ObjectModel.FIELD_FETCHED_FLAG):
+                not ObjectModel.FIELD_FETCHED_FLAG in self.row:
             # do not blink by preview while re-reading entries
             return
         else:
@@ -153,13 +153,17 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
     def __detail_clicked_cb(self, sender, uid):
         self.tree.emit('detail-clicked', uid)
 
+
 class ActivityCanvas:
+
     def __init__(self):
         self._metadata = None
         self.connect_after('button-release-event',
                 self.__button_release_event_cb)
+        self.palette = None
 
     def set_metadata(self, metadata):
+        # pylint: disable-msg=W0201
         self.palette = None
         self._metadata = metadata
 
@@ -173,11 +177,13 @@ class ActivityCanvas:
     def __detail_clicked_cb(self, palette, uid):
         self.emit('detail-clicked', uid)
 
-    def __button_release_event_cb(self, button, foo):
+    def __button_release_event_cb(self, button, event):
         misc.resume(self._metadata)
         return True
 
+
 class ActivityIcon(ActivityCanvas, CanvasIcon):
+
     __gsignals__ = {
             'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                               ([str])),
@@ -196,10 +202,12 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         else:
-            if metadata.has_key('icon-color') and metadata['icon-color']:
+            if 'icon-color' in metadata and metadata['icon-color']:
                 self.props.xo_color = XoColor(self._metadata['icon-color'])
 
+
 class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
+
     __gsignals__ = {
             'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                               ([str])),
@@ -217,7 +225,9 @@ class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
         if self._palette_invoker is not None:
             self._palette_invoker.detach()
 
+
 class DetailsIcon(CanvasIcon):
+
     def __init__(self, **kwargs):
         CanvasIcon.__init__(self, **kwargs)
         self.props.icon_name = 'go-right'
@@ -231,7 +241,9 @@ class DetailsIcon(CanvasIcon):
         elif event.detail == hippo.MOTION_DETAIL_LEAVE:
             icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
 
+
 class ThumbsView(TableView):
+
     __gsignals__ = {
             'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
                               gobject.TYPE_NONE,

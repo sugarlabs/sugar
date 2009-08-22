@@ -22,7 +22,9 @@ from sugar.graphics.palette import Invoker
 
 _SHOW_PALETTE_TIMEOUT = 200
 
+
 class TreeView(gtk.TreeView):
+
     def __init__(self):
         gtk.TreeView.__init__(self)
         self._invoker = _TreeInvoker(self)
@@ -39,7 +41,9 @@ class TreeView(gtk.TreeView):
     def create_palette(self):
         return self._invoker.cell_palette
 
+
 class TreeViewColumn(gtk.TreeViewColumn):
+
     def __init__(self, title=None, cell=None, **kwargs):
         gtk.TreeViewColumn.__init__(self, title, cell, **kwargs)
         self.view = None
@@ -55,7 +59,7 @@ class TreeViewColumn(gtk.TreeViewColumn):
         return self._order_by
 
     def _clicked_cb(self, column):
-        if not self.view:
+        if self.view is None:
             return
 
         if self.props.sort_indicator:
@@ -68,7 +72,9 @@ class TreeViewColumn(gtk.TreeViewColumn):
 
         self.view.get_model().set_order(self._order_by, new_order)
 
+
 class _TreeInvoker(Invoker):
+
     def __init__(self, tree=None):
         Invoker.__init__(self)
         self._position_hint = self.AT_CURSOR
@@ -83,7 +89,7 @@ class _TreeInvoker(Invoker):
         self._leave_hid = None
         self._button_hid = None
 
-        if tree:
+        if tree is not None:
             self.attach(tree)
 
     def get_toplevel(self):
@@ -94,7 +100,8 @@ class _TreeInvoker(Invoker):
         self._enter_hid = tree.connect('enter-notify-event', self._enter_cb)
         self._motion_hid = tree.connect('motion-notify-event', self._enter_cb)
         self._leave_hid = tree.connect('leave-notify-event', self._leave_cb)
-        self._button_hid = tree.connect('button-release-event', self._button_cb)
+        self._button_hid = tree.connect('button-release-event',
+                self._button_cb)
         Invoker.attach(self, tree)
 
     def detach(self):
@@ -130,19 +137,19 @@ class _TreeInvoker(Invoker):
             return False
 
         row = self._tree.props.model.get_row(path)
-        if not row:
+        if row is None:
             logging.debug('_open_palette: wait for row %s' % path)
             self._enter_timeout = gobject.timeout_add(500, self._open_palette,
                     self.notify_mouse_enter, False)
             return False
 
         palette = column.palette_cb(self._tree.props.model, row, x, y)
-        if not palette:
+        if palette is None:
             self._close_palette()
             return False
 
         if self._palette_pos != (path, column) or self.cell_palette != palette:
-            if self.palette:
+            if self.palette is not None:
                 self.palette.popdown(True)
                 self.palette = None
 
