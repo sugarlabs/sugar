@@ -43,28 +43,37 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         self._last_uid = None
 
         hippo.CanvasBox.__init__(self,
-                orientation=hippo.ORIENTATION_VERTICAL,
+                orientation=hippo.ORIENTATION_HORIZONTAL,
                 padding_left=style.DEFAULT_SPACING,
-                padding_top=style.DEFAULT_SPACING,
+                padding_top=style.DEFAULT_SPACING * 2,
                 spacing=style.DEFAULT_PADDING)
 
-        self.preview_box = hippo.CanvasBox(
-                spacing=style.DEFAULT_PADDING,
-                orientation=hippo.ORIENTATION_HORIZONTAL)
-        self.append(self.preview_box, hippo.PACK_EXPAND)
+        # tools column
 
-        star_box = hippo.CanvasBox(
+        tools_box = hippo.CanvasBox(
+                spacing=style.DEFAULT_PADDING,
                 orientation=hippo.ORIENTATION_VERTICAL,
                 box_width=STAR_WIDTH)
-        self.preview_box.append(star_box)
+        self.append(tools_box)
 
         self.keep = KeepIcon(False)
         self.keep.props.size = style.SMALL_ICON_SIZE
         self.keep.connect('activated', self.__star_activated_cb)
-        star_box.append(self.keep)
+        tools_box.append(self.keep)
+
+        details = DetailsIcon(
+                size=style.SMALL_ICON_SIZE)
+        details.connect('activated', self.__detail_activated_cb)
+        tools_box.append(details)
+
+        # main column
+
+        main_box = hippo.CanvasBox(
+                orientation=hippo.ORIENTATION_VERTICAL)
+        self.append(main_box, hippo.PACK_EXPAND)
 
         self.activity_box = hippo.CanvasBox()
-        self.preview_box.append(self.activity_box, hippo.PACK_EXPAND)
+        main_box.append(self.activity_box, hippo.PACK_EXPAND)
 
         self.thumb = ThumbCanvas(
                 border=style.LINE_WIDTH,
@@ -82,36 +91,20 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         self.activity_icon.connect('detail-clicked', self.__detail_clicked_cb)
         self.activity_box.append(self.activity_icon, hippo.PACK_EXPAND)
 
-        title_box = hippo.CanvasBox(
-                orientation=hippo.ORIENTATION_HORIZONTAL)
-        self.append(title_box)
-
-        tool_box = hippo.CanvasBox(
-                orientation=hippo.ORIENTATION_VERTICAL,
-                box_width=STAR_WIDTH)
-        title_box.append(tool_box)
-
-        details = DetailsIcon(
-                size=style.SMALL_ICON_SIZE)
-        details.connect('activated', self.__detail_activated_cb)
-        tool_box.append(details)
-
-        text_box = hippo.CanvasBox(
-                orientation=hippo.ORIENTATION_VERTICAL)
-        title_box.append(text_box)
-
         self.title = hippo.CanvasText(
+                padding_top=style.DEFAULT_PADDING,
                 xalign=hippo.ALIGNMENT_START,
                 size_mode=hippo.CANVAS_SIZE_ELLIPSIZE_END)
-        text_box.append(self.title)
+        main_box.append(self.title)
 
         self.date = hippo.CanvasText(
                 xalign=hippo.ALIGNMENT_START,
                 size_mode=hippo.CANVAS_SIZE_ELLIPSIZE_END)
-        text_box.append(self.date)
+        main_box.append(self.date)
 
     def do_fill_in(self):
-        self.title.props.text = self.row[Source.FIELD_TITLE] or ''
+        self.title.props.markup = \
+                '<b>%s</b>' % self.row[Source.FIELD_TITLE] or ''
         self.date.props.text = self.row[Source.FIELD_MODIFY_TIME] or ''
         self.keep.props.keep = int(self.row[Source.FIELD_KEEP] or 0) == 1
 
