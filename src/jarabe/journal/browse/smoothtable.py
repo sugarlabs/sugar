@@ -68,8 +68,9 @@ class SmoothTable(gtk.Container):
         if self._adj is None or self._cell_height == 0:
             return (0, 0)
         top = int(self._adj.value / self._cell_height)
-        bottom = int(math.ceil(self._adj.value + self._adj.page_size))
-        return (top * self.columns, bottom / self._cell_height * self.columns)
+        bottom = int(math.ceil(self._adj.value + self._adj.page_size) / \
+                self._cell_height)
+        return (top * self.columns, bottom * self.columns + (self.columns - 1))
 
     frame = property(get_frame)
 
