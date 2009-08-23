@@ -166,24 +166,19 @@ class LazyModel(gtk.GenericTreeModel):
 
         self._update_columns()
 
-        count = self._source.get_count()
-
         # TODO how to handle large update,
         #      commented for now since in TableView
         #      it works fine w/o these updates
+        #
         #for i in range(self._last_count, count):
         #    self.emit('row-inserted', (i, ), self.get_iter((i, )))
         #for i in reversed(range(count, self._last_count)):
         #    self.emit('row-deleted', (i, ))
-        if self._last_count != count:
-            self.emit('rows-reordered', (0, ), self.get_iter((0, )), None)
 
+        count = self._source.get_count()
         if self._frame[0] >= count:
             self._frame = (0, -1)
         elif self._frame[1] >= count:
-            for i in range(count, self._frame[1]):
-                if i in self._cache:
-                    del self._cache[i]
             self._frame = (self._frame[0], count-1)
 
         self._cache = {}

@@ -46,6 +46,7 @@ class TableView(SmoothTable):
         self._model = None
         self._hover_selection = False
         self._selected_cell = None
+        self._row_changed_id = None
 
     def get_cursor(self):
         return (self.frame[0], )
@@ -60,15 +61,14 @@ class TableView(SmoothTable):
         if self._model == model:
             return
 
-        if self._model is not None:
-            self._model.disconnect_by_func(self.__row_changed_cb)
-            self._model.disconnect_by_func(self.__table_resized_cb)
+        if self._row_changed_id is not None:
+            self._model.disconnect(self._row_changed_id)
 
         self._model = model
 
         if model is not None:
-            self._model.connect('row-changed', self.__row_changed_cb)
-            self._model.connect('rows-reordered', self.__table_resized_cb)
+            self._row_changed_id = \
+                    self._model.connect('row-changed', self.__row_changed_cb)
 
         self._resize()
 
@@ -170,6 +170,3 @@ class TableView(SmoothTable):
 
         row = self._model.get_row(path)
         self._do_fill_in(canvas, y, x, row)
-
-    def __table_resized_cb(self, model=None, path=None, iterator=None, a=None):
-        self._resize()
