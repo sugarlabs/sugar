@@ -81,7 +81,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 xalign=hippo.ALIGNMENT_CENTER,
                 yalign=hippo.ALIGNMENT_CENTER)
         self.thumb.connect('detail-clicked', self.__detail_clicked_cb)
-        self.activity_box.append(self.thumb, hippo.PACK_EXPAND)
+        self.activity_box.append(self.thumb, hippo.PACK_FIXED)
 
         self.activity_icon = ActivityIcon(
                 border=style.LINE_WIDTH,
@@ -89,7 +89,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 xalign=hippo.ALIGNMENT_CENTER,
                 yalign=hippo.ALIGNMENT_CENTER)
         self.activity_icon.connect('detail-clicked', self.__detail_clicked_cb)
-        self.activity_box.append(self.activity_icon, hippo.PACK_EXPAND)
+        self.activity_box.append(self.activity_icon, hippo.PACK_FIXED)
 
         self.title = hippo.CanvasText(
                 padding_top=style.DEFAULT_PADDING,
@@ -113,6 +113,9 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             w = int(h / 3. * 4.)
         else:
             h = int(w / 4. * 3.)
+        w -= style.LINE_WIDTH * 2
+        h -= style.LINE_WIDTH * 2
+
         thumb = self.row[Source.FIELD_THUMB]
 
         if self._last_uid == self.row[Source.FIELD_UID] and \
@@ -127,6 +130,8 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             self.activity_icon.set_visible(True)
             self.activity_icon.set_metadata(self.row.metadata)
             self.activity_icon.allocate(w, h, True)
+            self.activity_box.set_position(self.activity_icon,
+                    style.LINE_WIDTH, style.LINE_WIDTH)
         else:
             self.activity_icon.set_visible(False)
             self.thumb.set_visible(True)
@@ -135,6 +140,8 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             self.thumb.props.image = thumb
             self.thumb.set_metadata(self.row.metadata)
             self.thumb.allocate(w, h, True)
+            self.activity_box.set_position(self.thumb,
+                    style.LINE_WIDTH, style.LINE_WIDTH)
 
     def __star_activated_cb(self, keep_button):
         self.row.metadata['keep'] = not keep_button.props.keep and 1 or 0
