@@ -118,11 +118,7 @@ class LazyModel(gtk.GenericTreeModel):
 
         if self._view is not None:
             cursor = self._view.get_cursor()
-            try:
-                self._closing = True
-                self._view.set_model(None)
-            finally:
-                self._closing = False
+            self._unset_view_model()
 
         self._view = view
         self._cache = {}
@@ -166,15 +162,6 @@ class LazyModel(gtk.GenericTreeModel):
 
         self._update_columns()
 
-        # TODO how to handle large update,
-        #      commented for now since in TableView
-        #      it works fine w/o these updates
-        #
-        #for i in range(self._last_count, count):
-        #    self.emit('row-inserted', (i, ), self.get_iter((i, )))
-        #for i in reversed(range(count, self._last_count)):
-        #    self.emit('row-deleted', (i, ))
-
         count = self._source.get_count()
         if self._frame[0] >= count:
             self._frame = (0, -1)
@@ -183,8 +170,12 @@ class LazyModel(gtk.GenericTreeModel):
 
         self._cache = {}
 
-        for i in range(self._frame[0], self._frame[1]+1):
-            self.emit('row-changed', (i, ), self.get_iter((i, )))
+        if self._last_count != count:
+            self._unset_view_model()
+            self._view.set_model(self)
+        else:
+            for i in range(self._frame[0], self._frame[1]+1):
+                self.emit('row-changed', (i, ), self.get_iter((i, )))
 
         self._last_count = count
 
@@ -201,6 +192,13 @@ class LazyModel(gtk.GenericTreeModel):
         if not isinstance(pos, tuple):
             pos = self.get_path(pos)
         return self._get_row(pos[0], frame or (pos, pos))
+
+    def _unset_view_model(self):
+        try:
+            self._closing = True
+            self._view.set_model(None)
+        finally:
+            self._closing = False
 
     def __delayed_fetch_cb(self, source, offset, metadata):
         if not offset in self._in_process:

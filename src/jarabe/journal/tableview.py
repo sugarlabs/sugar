@@ -61,7 +61,7 @@ class TableView(SmoothTable):
         if self._model == model:
             return
 
-        if self._row_changed_id is not None:
+        if self._model is not None and self._row_changed_id is not None:
             self._model.disconnect(self._row_changed_id)
 
         self._model = model
@@ -70,7 +70,9 @@ class TableView(SmoothTable):
             self._row_changed_id = \
                     self._model.connect('row-changed', self.__row_changed_cb)
 
-        self._resize()
+        if model is not None:
+            rows = math.ceil(float(model.iter_n_children(None)) / self.columns)
+            self.bin_rows = int(rows)
 
     model = gobject.property(type=object,
             getter=get_model, setter=set_model)
@@ -108,11 +110,6 @@ class TableView(SmoothTable):
         canvas.table_view_cell = cell
 
         return canvas
-
-    def _resize(self):
-        rows = int(math.ceil(float(self._model.iter_n_children(None)) / \
-                self.columns))
-        self.bin_rows = rows
 
     def _do_fill_in(self, canvas, y, x, prepared_row=None):
 
