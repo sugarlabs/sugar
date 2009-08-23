@@ -44,21 +44,25 @@ class ObjectModel(LazyModel):
 
         return None
 
-    def fetch_metadata(self, row, force=False):
+    def fetch_metadata(self, row):
+        if row.metadata['mountpoint'] != '/':
+            # do not process non-ds objects
+            return False
+
         if self.FIELD_FETCHED_FLAG in row:
             return True
 
         if row not in self._fetch_queue:
             self._fetch_queue.append(row)
             if len(self._fetch_queue) == 1:
-                gobject.idle_add(self.__idle_cb, force)
+                gobject.idle_add(self.__idle_cb)
 
         return False
 
-    def __idle_cb(self, force):
+    def __idle_cb(self):
         while len(self._fetch_queue):
             row = self._fetch_queue[0]
-            if force or self.in_frame(row.path[0]):
+            if self.in_frame(row.path[0]):
                 self.source.get_object(row, self.__get_object_cb)
                 break
             del self._fetch_queue[0]
@@ -77,4 +81,4 @@ class ObjectModel(LazyModel):
         self.emit('row-changed', row.path, row.iterator)
 
         if len(self._fetch_queue):
-            self.__idle_cb(False)
+            gobject.idle_add(self.__idle_cb)
