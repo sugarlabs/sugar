@@ -128,6 +128,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             self.thumb.set_visible(False)
             self.activity_icon.set_visible(True)
             self.activity_icon.palette = None
+            self.activity_icon.update_icon()
         else:
             self.activity_icon.set_visible(False)
             self.thumb.set_visible(True)
@@ -191,7 +192,7 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
         CanvasIcon.__init__(self, **kwargs)
         ActivityCanvas.__init__(self, cell)
 
-    def create_palette(self):
+    def update_icon(self):
         metadata = self._cell.row.metadata
         self.props.file_name = misc.get_icon_name(metadata)
 
@@ -200,9 +201,7 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         else:
             if 'icon-color' in metadata and metadata['icon-color']:
-                self.props.xo_color = XoColor(self._metadata['icon-color'])
-
-        ActivityCanvas.create_palette(self)
+                self.props.xo_color = XoColor(metadata['icon-color'])
 
 
 class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
