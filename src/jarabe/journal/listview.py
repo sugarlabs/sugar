@@ -33,31 +33,8 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
 
-UPDATE_INTERVAL = 300
-
-MESSAGE_EMPTY_JOURNAL = 0
-MESSAGE_NO_MATCH = 1
-
-class TreeView(gtk.TreeView):
-    __gtype_name__ = 'JournalTreeView'
-
-    def __init__(self):
-        gtk.TreeView.__init__(self)
-
-    def do_size_request(self, requisition):
-        # HACK: We tell the model that the view is just resizing so it can avoid
-        # hitting both D-Bus and disk.
-        tree_model = self.get_model()
-        if tree_model is not None:
-            tree_model.view_is_resizing = True
-        try:
-            gtk.TreeView.do_size_request(self, requisition)
-        finally:
-            if tree_model is not None:
-                tree_model.view_is_resizing = False
-
-class BaseListView(gtk.Bin):
-    __gtype_name__ = 'JournalBaseListView'
+class ListView(gtk.TreeView):
+    __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
@@ -103,14 +80,14 @@ class BaseListView(gtk.Bin):
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can avoid
         # hitting both D-Bus and disk.
-        model = self.get_model()
-        if model is not None:
-            model.view_is_resizing = True
+        tree_model = self.get_model()
+        if tree_model is not None:
+            tree_model.view_is_resizing = True
         try:
             gtk.TreeView.do_size_request(self, requisition)
         finally:
-            if model is not None:
-                model.view_is_resizing = False
+            if tree_model is not None:
+                tree_model.view_is_resizing = False
 
     def _add_columns(self):
         cell_favorite = CellRendererFavorite(self)
