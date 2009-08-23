@@ -72,24 +72,25 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 orientation=hippo.ORIENTATION_VERTICAL)
         self.append(main_box, hippo.PACK_EXPAND)
 
-        self.activity_box = hippo.CanvasBox()
-        main_box.append(self.activity_box, hippo.PACK_EXPAND)
+        self.allocation_box = hippo.CanvasBox()
+        main_box.append(self.allocation_box, hippo.PACK_EXPAND)
+
+        self.activity_box = hippo.CanvasBox(
+                border=style.LINE_WIDTH,
+                border_color=style.COLOR_BUTTON_GREY.get_int())
+        self.allocation_box.append(self.activity_box, hippo.PACK_FIXED)
 
         self.thumb = ThumbCanvas(
-                border=style.LINE_WIDTH,
-                border_color=style.COLOR_BUTTON_GREY.get_int(),
-                xalign=hippo.ALIGNMENT_CENTER,
-                yalign=hippo.ALIGNMENT_CENTER)
+                xalign=hippo.ALIGNMENT_START,
+                yalign=hippo.ALIGNMENT_START)
         self.thumb.connect('detail-clicked', self.__detail_clicked_cb)
         self.activity_box.append(self.thumb, hippo.PACK_FIXED)
 
         self.activity_icon = ActivityIcon(
-                border=style.LINE_WIDTH,
-                border_color=style.COLOR_BUTTON_GREY.get_int(),
-                xalign=hippo.ALIGNMENT_CENTER,
-                yalign=hippo.ALIGNMENT_CENTER)
+                xalign=hippo.ALIGNMENT_START,
+                yalign=hippo.ALIGNMENT_START)
         self.activity_icon.connect('detail-clicked', self.__detail_clicked_cb)
-        self.activity_box.append(self.activity_icon, hippo.PACK_FIXED)
+        self.activity_box.append(self.activity_icon, hippo.PACK_EXPAND)
 
         self.title = hippo.CanvasText(
                 padding_top=style.DEFAULT_PADDING,
@@ -108,13 +109,9 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         self.date.props.text = self.row[Source.FIELD_MODIFY_TIME] or ''
         self.keep.props.keep = int(self.row[Source.FIELD_KEEP] or 0) == 1
 
-        w, h = self.activity_box.get_allocation()
-        if w / 4. * 3. > h:
-            w = int(h / 3. * 4.)
-        else:
-            h = int(w / 4. * 3.)
-        w -= style.LINE_WIDTH * 2
-        h -= style.LINE_WIDTH * 2
+        w, h = self.tree.thumb_size
+        self.activity_box.props.box_width = w
+        self.activity_box.props.box_height = h
 
         thumb = self.row[Source.FIELD_THUMB]
 
@@ -129,14 +126,11 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
             self.thumb.set_visible(False)
             self.activity_icon.set_visible(True)
             self.activity_icon.set_metadata(self.row.metadata)
-            self.activity_icon.allocate(w, h, True)
-            self.activity_box.set_position(self.activity_icon,
-                    style.LINE_WIDTH, style.LINE_WIDTH)
         else:
             self.activity_icon.set_visible(False)
             self.thumb.set_visible(True)
-            self.thumb.props.scale_width = w
-            self.thumb.props.scale_height = h
+            self.thumb.props.scale_width = w - style.LINE_WIDTH * 2
+            self.thumb.props.scale_height = h - style.LINE_WIDTH * 2
             self.thumb.props.image = thumb
             self.thumb.set_metadata(self.row.metadata)
             self.thumb.allocate(w, h, True)
@@ -256,3 +250,22 @@ class ThumbsView(TableView):
 
     def __init__(self):
         TableView.__init__(self, ThumbsCell, ROWS, COLUMNS)
+        self.thumb_size = (0, 0)
+
+    def do_size_allocate(self, allocation):
+        text_layout = self.create_pango_layout('W')
+        w = allocation.width / COLUMNS - STAR_WIDTH - style.DEFAULT_SPACING - \
+                style.DEFAULT_PADDING - style.LINE_WIDTH * 2
+        h = allocation.height / ROWS - text_layout.get_pixel_size()[1] * 2 - \
+                style.DEFAULT_SPACING * 2 - style.DEFAULT_PADDING - \
+                style.LINE_WIDTH * 2
+
+        # keep thumb size 4:3
+        if w / 4. * 3. > h:
+            w = int(h / 3. * 4.)
+        else:
+            h = int(w / 4. * 3.)
+
+        self.thumb_size = (max(0, w), max(0, h))
+
+        TableView.do_size_allocate(self, allocation)

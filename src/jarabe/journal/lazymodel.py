@@ -129,7 +129,11 @@ class LazyModel(gtk.GenericTreeModel):
         self._frame = (0, -1)
         self._in_process = {}
         self._postponed = []
-        self._last_count = self._source and self._source.get_count() or 0
+
+        if self._source is None:
+            self._last_count = 0
+        else:
+            self._last_count = self._source.get_count()
 
         if self._source is not None and view is not None:
             self._update_columns()
@@ -184,9 +188,8 @@ class LazyModel(gtk.GenericTreeModel):
 
         self._cache = {}
 
-        if self._last_count == count:
-            for i in range(self._frame[0], self._frame[1]+1):
-                self.emit('row-changed', (i, ), self.get_iter((i, )))
+        for i in range(self._frame[0], self._frame[1]+1):
+            self.emit('row-changed', (i, ), self.get_iter((i, )))
 
         self._last_count = count
 
