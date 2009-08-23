@@ -14,8 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import sys
 import gobject
 import hippo
+import pango
 
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
@@ -106,8 +108,15 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         main_box.append(self.date)
 
     def do_fill_in(self):
-        self.title.props.markup = \
-                '<b>%s</b>' % self.row[Source.FIELD_TITLE] or ''
+        title_weight = pango.AttrWeight(pango.WEIGHT_BOLD)
+        title_weight.start_index = 0
+        title_weight.end_index = sys.maxint
+        title_attributes = pango.AttrList()
+        title_attributes.insert(title_weight)
+
+        self.title.props.attributes = title_attributes
+        self.title.props.text = self.row[Source.FIELD_TITLE] or ''
+
         self.date.props.text = self.row[Source.FIELD_MODIFY_TIME] or ''
         self.keep.props.keep = int(self.row[Source.FIELD_KEEP] or 0) == 1
 
