@@ -24,7 +24,7 @@ import wnck
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
 
-from jarabe.journal.objectsview import ObjectsView
+from jarabe.journal.objectview import ObjectView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import SearchToolbar
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -84,7 +84,7 @@ class ObjectChooser(gtk.Window):
         vbox.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._list_view = ObjectsView()
+        self._list_view = ObjectView()
         self._list_view.props.hover_selection = True
         self._list_view.connect('entry-activated', self.__entry_activated_cb)
         vbox.pack_start(self._list_view)

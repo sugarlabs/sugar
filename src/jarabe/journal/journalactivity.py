@@ -34,7 +34,7 @@ from sugar import wm
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
-from jarabe.journal.objectsview import ObjectsView
+from jarabe.journal.objectview import ObjectView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
@@ -155,7 +155,7 @@ class JournalActivity(Window):
         self._main_toolbox = MainToolbox()
         self._main_view = gtk.VBox()
 
-        self._objects_view = ObjectsView()
+        self._objects_view = ObjectView()
         self._objects_view.connect('clear-clicked', self.__clear_clicked_cb)
         self._objects_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._main_view.pack_start(self._objects_view)

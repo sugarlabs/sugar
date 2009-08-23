@@ -45,7 +45,7 @@ VIEW_TYPES = [ListView, ThumbsView]
 PAGE_SIZE = 10
 
 
-class ObjectsView(gtk.Bin):
+class ObjectView(gtk.Bin):
 
     __gsignals__ = {
         'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
