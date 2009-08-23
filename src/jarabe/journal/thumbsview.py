@@ -48,6 +48,8 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 padding_top=style.DEFAULT_SPACING * 2,
                 spacing=style.DEFAULT_PADDING)
 
+        self.connect('button-release-event', self.__button_release_event_cb)
+
         # tools column
 
         tools_box = hippo.CanvasBox(
@@ -80,13 +82,13 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
                 border_color=style.COLOR_BUTTON_GREY.get_int())
         self.allocation_box.append(self.activity_box, hippo.PACK_FIXED)
 
-        self.thumb = ThumbCanvas(
+        self.thumb = ThumbCanvas(self,
                 xalign=hippo.ALIGNMENT_START,
                 yalign=hippo.ALIGNMENT_START)
         self.thumb.connect('detail-clicked', self.__detail_clicked_cb)
         self.activity_box.append(self.thumb, hippo.PACK_FIXED)
 
-        self.activity_icon = ActivityIcon(
+        self.activity_icon = ActivityIcon(self,
                 xalign=hippo.ALIGNMENT_START,
                 yalign=hippo.ALIGNMENT_START)
         self.activity_icon.connect('detail-clicked', self.__detail_clicked_cb)
@@ -109,7 +111,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         self.date.props.text = self.row[Source.FIELD_MODIFY_TIME] or ''
         self.keep.props.keep = int(self.row[Source.FIELD_KEEP] or 0) == 1
 
-        w, h = self.tree.thumb_size
+        w, h = self.table.thumb_size
         self.activity_box.props.box_width = w
         self.activity_box.props.box_height = h
 
@@ -125,14 +127,14 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         if thumb is None:
             self.thumb.set_visible(False)
             self.activity_icon.set_visible(True)
-            self.activity_icon.set_metadata(self.row.metadata)
+            self.activity_icon.palette = None
         else:
             self.activity_icon.set_visible(False)
             self.thumb.set_visible(True)
             self.thumb.props.scale_width = w - style.LINE_WIDTH * 2
             self.thumb.props.scale_height = h - style.LINE_WIDTH * 2
             self.thumb.props.image = thumb
-            self.thumb.set_metadata(self.row.metadata)
+            self.thumb.palette = None
             self.thumb.allocate(w, h, True)
             self.activity_box.set_position(self.thumb,
                     style.LINE_WIDTH, style.LINE_WIDTH)
@@ -142,29 +144,31 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         model.write(self.row.metadata, update_mtime=False)
 
     def __detail_activated_cb(self, button):
-        self.tree.emit('detail-clicked', self.row[Source.FIELD_UID])
+        self.table.emit('detail-clicked', self.row[Source.FIELD_UID])
 
     def __detail_clicked_cb(self, sender, uid):
-        self.tree.emit('detail-clicked', uid)
+        self.table.emit('detail-clicked', uid)
+
+    def __button_release_event_cb(self, sender, event):
+        if not self.table.props.hover_selection:
+            return False
+        uid = self.row[Source.FIELD_UID]
+        self.table.emit('entry-activated', uid)
+        return False
 
 
 class ActivityCanvas:
 
-    def __init__(self):
-        self._metadata = None
+    def __init__(self, cell):
+        self._cell = cell
         self.connect_after('button-release-event',
                 self.__button_release_event_cb)
         self.palette = None
 
-    def set_metadata(self, metadata):
-        # pylint: disable-msg=W0201
-        self.palette = None
-        self._metadata = metadata
-
     def create_palette(self):
-        if self._metadata is None:
-            return None
-        palette = ObjectPalette(self._metadata, detail=True)
+        if self._cell.table.props.hover_selection:
+            return
+        palette = ObjectPalette(self._cell.row.metadata, detail=True)
         palette.connect('detail-clicked', self.__detail_clicked_cb)
         return palette
 
@@ -172,7 +176,7 @@ class ActivityCanvas:
         self.emit('detail-clicked', uid)
 
     def __button_release_event_cb(self, button, event):
-        misc.resume(self._metadata)
+        misc.resume(self._cell.row.metadata)
         return True
 
 
@@ -183,13 +187,12 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
                               ([str])),
             }
 
-    def __init__(self, **kwargs):
+    def __init__(self, cell, **kwargs):
         CanvasIcon.__init__(self, **kwargs)
-        ActivityCanvas.__init__(self)
+        ActivityCanvas.__init__(self, cell)
 
-    def set_metadata(self, metadata):
-        ActivityCanvas.set_metadata(self, metadata)
-
+    def create_palette(self):
+        metadata = self._cell.row.metadata
         self.props.file_name = misc.get_icon_name(metadata)
 
         if misc.is_activity_bundle(metadata):
@@ -199,6 +202,8 @@ class ActivityIcon(ActivityCanvas, CanvasIcon):
             if 'icon-color' in metadata and metadata['icon-color']:
                 self.props.xo_color = XoColor(self._metadata['icon-color'])
 
+        ActivityCanvas.create_palette(self)
+
 
 class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
 
@@ -207,9 +212,9 @@ class ThumbCanvas(ActivityCanvas, hippo.CanvasImage):
                               ([str])),
             }
 
-    def __init__(self, **kwargs):
+    def __init__(self, cell, **kwargs):
         hippo.CanvasImage.__init__(self, **kwargs)
-        ActivityCanvas.__init__(self)
+        ActivityCanvas.__init__(self, cell)
 
         self._palette_invoker = CanvasInvoker()
         self._palette_invoker.attach(self)
@@ -246,6 +251,9 @@ class ThumbsView(TableView):
             'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
                               gobject.TYPE_NONE,
                               ([object])),
+            'entry-activated': (gobject.SIGNAL_RUN_FIRST,
+                                gobject.TYPE_NONE,
+                                ([str])),
             }
 
     def __init__(self):

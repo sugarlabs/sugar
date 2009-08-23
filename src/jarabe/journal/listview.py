@@ -28,6 +28,7 @@ from sugar.graphics.icon import CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar import util
 
+from jarabe.journal.source import Source
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
@@ -39,7 +40,10 @@ class ListView(gtk.TreeView):
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([object]))
+                           ([object])),
+        'entry-activated': (gobject.SIGNAL_RUN_FIRST,
+                            gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self):
@@ -73,6 +77,24 @@ class ListView(gtk.TreeView):
 
         self.connect('notify::hover-selection',
                 self.__notify_hover_selection_cb)
+        self.connect('button-release-event', self.__button_release_event_cb)
+
+    def __button_release_event_cb(self, tree_view, event):
+        if not tree_view.props.hover_selection:
+            return False
+
+        if event.window != tree_view.get_bin_window():
+            return False
+
+        pos = tree_view.get_path_at_pos(event.x, event.y)
+        if pos is None:
+            return False
+
+        path, column_, x_, y_ = pos
+        uid = tree_view.get_model()[path][Source.FIELD_UID]
+        self.emit('entry-activated', uid)
+
+        return False
 
     def __notify_hover_selection_cb(self, widget, pspec):
         self.cell_icon.props.show_palette = not self.props.hover_selection

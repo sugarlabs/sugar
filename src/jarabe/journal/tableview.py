@@ -31,7 +31,7 @@ class TableCell:
 
     def __init__(self):
         self.row = None
-        self.tree = None
+        self.table = None
 
     def do_fill_in(self):
         pass
@@ -99,7 +99,7 @@ class TableView(SmoothTable):
         canvas.set_root(sel_box)
 
         cell = cell_class()
-        cell.tree = self
+        cell.table = self
         sel_box.append(cell, hippo.PACK_EXPAND)
 
         canvas.connect('enter-notify-event',

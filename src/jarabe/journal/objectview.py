@@ -77,8 +77,7 @@ class ObjectView(gtk.Bin):
             view.modify_base(gtk.STATE_NORMAL,
                     style.COLOR_WHITE.get_gdk_color())
             view.connect('detail-clicked', self.__detail_clicked_cb)
-            view.connect('button-release-event',
-                    self.__button_release_event_cb)
+            view.connect('entry-activated', self.__entry_activated_cb)
             view.show()
 
             widget = gtk.ScrolledWindow()
@@ -291,22 +290,8 @@ class ObjectView(gtk.Bin):
     def __detail_clicked_cb(self, list_view, object_id):
         self.emit('detail-clicked', object_id)
 
-    def __button_release_event_cb(self, tree_view, event):
-        if not tree_view.props.hover_selection:
-            return False
-
-        if event.window != tree_view.get_bin_window():
-            return False
-
-        pos = tree_view.get_path_at_pos(event.x, event.y)
-        if pos is None:
-            return False
-
-        path, column_, x_, y_ = pos
-        uid = tree_view.get_model()[path][Source.FIELD_UID]
+    def __entry_activated_cb(self, sender, uid):
         self.emit('entry-activated', uid)
-
-        return False
 
     def do_size_allocate(self, allocation):
         self.allocation = allocation

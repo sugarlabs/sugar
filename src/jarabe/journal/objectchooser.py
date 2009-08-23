@@ -80,15 +80,16 @@ class ObjectChooser(gtk.Window):
 
         self._toolbar = SearchToolbar()
         self._toolbar.connect('query-changed', self.__query_changed_cb)
+        self._toolbar.connect('view-changed', self.__view_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         vbox.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._list_view = ObjectView()
-        self._list_view.props.hover_selection = True
-        self._list_view.connect('entry-activated', self.__entry_activated_cb)
-        vbox.pack_start(self._list_view)
-        self._list_view.show()
+        self._object_view = ObjectView()
+        self._object_view.props.hover_selection = True
+        self._object_view.connect('entry-activated', self.__entry_activated_cb)
+        vbox.pack_start(self._object_view)
+        self._object_view.show()
 
         self._toolbar.set_mount_point('/')
 
@@ -126,7 +127,10 @@ class ObjectChooser(gtk.Window):
         return self._selected_object_id
 
     def __query_changed_cb(self, toolbar, query):
-        self._list_view.update_with_query(query)
+        self._object_view.update_with_query(query)
+
+    def __view_changed_cb(self, sender, view):
+        self._object_view.change_view(view)
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
@@ -135,7 +139,7 @@ class ObjectChooser(gtk.Window):
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED
-        self._list_view.set_is_visible(visible)
+        self._object_view.set_is_visible(visible)
 
 class TitleBox(VolumesToolbar):
     __gtype_name__ = 'TitleBox'
