@@ -134,6 +134,11 @@ class ControlPanel(gtk.Window):
         if not os.path.exists('/ofw'):
             options.remove('power')
 
+        try:
+            import xklavier
+        except ImportError:
+            options.remove('keyboard')
+
         for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
                                        title=self._options[option]['title'],

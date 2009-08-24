@@ -31,7 +31,6 @@ import gconf
 import gtk
 import gobject
 import dbus.glib
-import xklavier
 
 gtk.gdk.threads_init()
 dbus.glib.threads_init()
@@ -200,7 +199,12 @@ def main():
     gobject.idle_add(setup_notification_service_cb)
     gobject.idle_add(setup_file_transfer_cb)
     gobject.idle_add(show_software_updates_cb, home_window)
-    gobject.idle_add(setup_keyboard_cb, client)
+
+    try:
+        import xklavier
+        gobject.idle_add(setup_keyboard_cb, client)
+    except ImportError:
+        logging.debug('Could not load xklavier for keyboard configuration')
 
     try:
         gtk.main()
