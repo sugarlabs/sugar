@@ -106,6 +106,8 @@ class ActivityPalette(Palette):
     __gtype_name__ = 'SugarActivityPalette'
 
     def __init__(self, activity_info):
+        self._activity_info = activity_info
+
         client = gconf.client_get_default()
         color = XoColor(client.get_string("/desktop/sugar/user/color"))
         activity_icon = Icon(file=activity_info.get_icon(),
@@ -134,11 +136,11 @@ class ActivityPalette(Palette):
 
         activity_id = activityfactory.create_activity_id()
         launcher.add_launcher(activity_id,
-                              self._bundle.get_icon(),
+                              self._activity_info.get_icon(),
                               xo_color)
 
         handle = ActivityHandle(activity_id)
-        activityfactory.create(self._bundle, handle)
+        activityfactory.create(self._activity_info, handle)
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):
