@@ -163,7 +163,7 @@ def setup_keyboard_cb(gconf_client):
 
         configrec.activate(engine)
     except:
-        logging.debug('ERROR in setup_keyboard_cb: %s' % str(sys.exc_info()))
+        logging.exception('Error during keyboard configuration')
         pass
 
 def main():

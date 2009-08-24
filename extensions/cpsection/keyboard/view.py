@@ -18,6 +18,7 @@
 import gtk
 import gobject
 import pango
+import logging
 from gettext import gettext as _
 
 from sugar.graphics import style
@@ -30,9 +31,6 @@ ICON = 'module-keyboard'
 TITLE = _('Keyboard')
 
 _APPLY_TIMEOUT = 3000
-
-_logger = logging.getLogger('ControlPanel - Keyboard')
-
 
 class LayoutCombo(gtk.HBox):
 
@@ -226,7 +224,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_model(self._selected_kmodel)
         except:
-            _logger.debug('Could not set new keyboard model')
+            logging.exception('Could not set new keyboard model')
 
         return False
 
@@ -293,7 +291,7 @@ class Keyboard(SectionView):
             self._keyboard_manager.set_option_group(\
                 self._selected_group_switch_option)
         except:
-            _logger.debug('Could not set new keyboard group switch option')
+            logging.exception('Could not set new keyboard group switch option')
 
 
         return False
@@ -402,7 +400,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_layouts(self._selected_klayouts)
         except:
-            _logger.debug('Could not set new keyboard layouts')
+            logging.exception('Could not set new keyboard layouts')
 
         return False
 
