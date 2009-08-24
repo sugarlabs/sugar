@@ -167,7 +167,7 @@ class ThumbsCell(TableCell, hippo.CanvasBox):
         return False
 
 
-class ActivityCanvas:
+class ActivityCanvas(object):
 
     def __init__(self, cell):
         self._cell = cell

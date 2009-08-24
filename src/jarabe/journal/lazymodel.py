@@ -352,7 +352,7 @@ class LazyModel(gtk.GenericTreeModel):
         return None
 
 
-class Row:
+class Row(object):
 
     def __init__(self, model, path, iterator, metadata):
         self.model = model

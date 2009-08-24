@@ -27,7 +27,7 @@ COLOR_BACKGROUND = style.COLOR_WHITE
 COLOR_SELECTED = style.COLOR_TEXT_FIELD_GREY
 
 
-class TableCell:
+class TableCell(object):
 
     def __init__(self):
         self.row = None
