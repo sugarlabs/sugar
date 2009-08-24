@@ -420,6 +420,21 @@ def get_file(object_id):
         else:
             return None
 
+def get_file_size(object_id):
+    """Return the file size for an object
+    """
+    logging.debug('get_file_size %r', object_id)
+    if os.path.exists(object_id):
+        return os.stat(object_id).st_size
+
+    file_path = dbus_helpers.get_filename(object_id)
+    if file_path:
+        size = os.stat(file_path).st_size
+        os.remove(file_path)
+        return size
+
+    return 0
+
 def get_unique_values(key):
     """Returns a list with the different values a property has taken
     """

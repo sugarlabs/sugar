@@ -17,6 +17,7 @@
 import logging
 from gettext import gettext as _
 import StringIO
+import time
 
 import hippo
 import cairo
@@ -29,6 +30,7 @@ from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.canvastextview import CanvasTextView
+from sugar.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -117,6 +119,9 @@ class ExpandedEntry(hippo.CanvasBox):
         
         self._preview = self._create_preview()
         first_column.append(self._preview)
+
+        technical_box = self._create_technical()
+        first_column.append(technical_box)
 
         # Second column
 
@@ -215,6 +220,37 @@ class ExpandedEntry(hippo.CanvasBox):
                                   self._preview_box_button_release_event_cb)
         box.append(preview_box)
         return box
+
+    def _create_technical(self):
+        vbox = hippo.CanvasBox()
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        lines = [
+            _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
+            _('Date: %s') % (self._format_date(),),
+            _('Size: %s') % (format_size(model.get_file_size(self._metadata['uid'])),),
+        ]
+
+        for line in lines:
+            text = hippo.CanvasText(text=line,
+                font_desc=style.FONT_NORMAL.get_pango_desc())
+            text.props.color = style.COLOR_BUTTON_GREY.get_int()
+
+            if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+                text.props.xalign = hippo.ALIGNMENT_END
+            else:
+                text.props.xalign = hippo.ALIGNMENT_START
+
+            vbox.append(text)
+
+        return vbox
+
+    def _format_date(self):
+        if 'timestamp' in self._metadata:
+            timestamp = float(self._metadata['timestamp'])
+            return time.strftime('%x', time.localtime(timestamp))
+        else:
+            return _('No date')
 
     def _create_buddy_list(self):
 
