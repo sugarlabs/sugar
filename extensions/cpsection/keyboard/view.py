@@ -43,9 +43,9 @@ class LayoutCombo(gtk.HBox):
                             (gobject.TYPE_STRING, gobject.TYPE_INT))
         }
 
-    def __init__(self, xkb, n):
+    def __init__(self, keyboard_manager, n):
         gtk.HBox.__init__(self)
-        self._xkb = xkb
+        self._keyboard_manager = keyboard_manager
         self._index = n
 
         self.set_border_width(style.DEFAULT_SPACING)
@@ -60,7 +60,7 @@ class LayoutCombo(gtk.HBox):
 
         self._klang_store = gtk.ListStore(gobject.TYPE_STRING, \
                                                     gobject.TYPE_STRING)
-        for description, name in self._xkb.get_languages():
+        for description, name in self._keyboard_manager.get_languages():
             self._klang_store.append([name, description])
 
         self._klang_combo = gtk.ComboBox(model = self._klang_store)
@@ -103,14 +103,14 @@ class LayoutCombo(gtk.HBox):
 
     def get_layout(self):
         """Gets the selected layout (with variant)"""
-        iter = self._kvariant_combo.get_active_iter()
+        it = self._kvariant_combo.get_active_iter()
         model = self._kvariant_combo.get_model()
-        return model.get(iter, 0)[0]
+        return model.get(it, 0)[0]
 
     def _set_kvariant_store(self, lang):
         self._kvariant_store = gtk.ListStore(gobject.TYPE_STRING, \
                                                     gobject.TYPE_STRING)
-        for description, name in self._xkb.get_layouts_for_language(lang):
+        for description, name in self._keyboard_manager.get_layouts_for_language(lang):
             self._kvariant_store.append([name, description])
         self._kvariant_combo.set_model(self._kvariant_store)
         self._kvariant_combo.set_active(0)
@@ -149,7 +149,7 @@ class Keyboard(SectionView):
         self._layout_table = gtk.Table(rows = 4, columns = 2, \
                                                 homogeneous = False)
 
-        self._xkb = model.XKB(self.get_display())
+        self._keyboard_manager = model.KeyboardManager(self.get_display())
         self._layout_combo_list = []
         self._layout_addremovebox_list = []
 
@@ -188,7 +188,7 @@ class Keyboard(SectionView):
 
         kmodel_store = gtk.ListStore(gobject.TYPE_STRING, \
                                                 gobject.TYPE_STRING)
-        for description, name in self._xkb.get_models():
+        for description, name in self._keyboard_manager.get_models():
             kmodel_store.append([name, description])
 
         kmodel_combo = gtk.ComboBox(model = kmodel_store)
@@ -196,7 +196,7 @@ class Keyboard(SectionView):
         kmodel_combo.pack_start(cell)
         kmodel_combo.add_attribute(cell, 'text', 1)
 
-        self._kmodel = self._xkb.get_current_model()
+        self._kmodel = self._keyboard_manager.get_current_model()
         for row in kmodel_store:
             if self._kmodel in row[0]:
                 kmodel_combo.set_active_iter(row.iter)
@@ -218,10 +218,10 @@ class Keyboard(SectionView):
         it = combobox.get_active_iter()
         model = combobox.get_model()
         self._selected_kmodel = model.get(it, 0)[0]
-        if self._selected_kmodel == self._xkb.get_current_model():
+        if self._selected_kmodel == self._keyboard_manager.get_current_model():
             return
         try:
-            self._xkb.set_model(self._selected_kmodel)
+            self._keyboard_manager.set_model(self._selected_kmodel)
         except:
             pass #TODO: Show error
 
@@ -229,47 +229,48 @@ class Keyboard(SectionView):
 
     def _setup_group_switch_option(self):
         """Adds the controls for changing the group switch option of keyboard"""
-        separator_grp_option = gtk.HSeparator()
-        self._vbox.pack_start(separator_grp_option, expand=False)
-        separator_grp_option.show_all()
+        separator_group_option = gtk.HSeparator()
+        self._vbox.pack_start(separator_group_option, expand=False)
+        separator_group_option.show_all()
 
-        label_grp_option = gtk.Label(_('Key(s) to change layout'))
-        label_grp_option.set_alignment(0, 0)
-        self._vbox.pack_start(label_grp_option, expand=False)
-        label_grp_option.show_all()
+        label_group_option = gtk.Label(_('Key(s) to change layout'))
+        label_group_option.set_alignment(0, 0)
+        self._vbox.pack_start(label_group_option, expand=False)
+        label_group_option.show_all()
 
-        box_grp_option = gtk.VBox()
-        box_grp_option.set_border_width(style.DEFAULT_SPACING * 2)
-        box_grp_option.set_spacing(style.DEFAULT_SPACING)
+        box_group_option = gtk.VBox()
+        box_group_option.set_border_width(style.DEFAULT_SPACING * 2)
+        box_group_option.set_spacing(style.DEFAULT_SPACING)
 
-        grp_option_store = gtk.ListStore(gobject.TYPE_STRING, \
+        group_option_store = gtk.ListStore(gobject.TYPE_STRING, \
                                                     gobject.TYPE_STRING)
-        for description, name in self._xkb.get_options_grp():
-            grp_option_store.append([name, description])
+        for description, name in self._keyboard_manager.get_options_group():
+            group_option_store.append([name, description])
 
-        grp_option_combo = gtk.ComboBox(model = grp_option_store)
+        group_option_combo = gtk.ComboBox(model = group_option_store)
         cell = gtk.CellRendererText()
-        grp_option_combo.pack_start(cell)
-        grp_option_combo.add_attribute(cell, 'text', 1)
+        group_option_combo.pack_start(cell)
+        group_option_combo.add_attribute(cell, 'text', 1)
 
-        self._group_switch_option = self._xkb.get_current_option_grp()
+        self._group_switch_option = \
+                self._keyboard_manager.get_current_option_group()
         if not self._group_switch_option:
-            grp_option_combo.set_active(0)
+            group_option_combo.set_active(0)
         else:
             found = False
-            for row in grp_option_store:
+            for row in group_option_store:
                 if self._group_switch_option in row[0]:
-                    grp_option_combo.set_active_iter(row.iter)
+                    group_option_combo.set_active_iter(row.iter)
                     found = True
                     break
             if not found:
-                grp_option_combo.set_active(0)
+                group_option_combo.set_active(0)
 
-        box_grp_option.pack_start(grp_option_combo, expand = False)
-        self._vbox.pack_start(box_grp_option, expand=False)
-        box_grp_option.show_all()
+        box_group_option.pack_start(group_option_combo, expand = False)
+        self._vbox.pack_start(box_group_option, expand=False)
+        box_group_option.show_all()
 
-        grp_option_combo.connect('changed', \
+        group_option_combo.connect('changed', \
                             self.__group_switch_changed_cb)
 
     def __group_switch_changed_cb(self, combobox):
@@ -283,10 +284,11 @@ class Keyboard(SectionView):
         model = combobox.get_model()
         self._selected_group_switch_option = model.get(it, 0)[0]
         if self._selected_group_switch_option == \
-                self._xkb.get_current_option_grp():
+                self._keyboard_manager.get_current_option_group():
             return
         try:
-            self._xkb.set_option_grp(self._selected_group_switch_option)
+            self._keyboard_manager.set_option_group(\
+                self._selected_group_switch_option)
         except:
             pass #TODO: Show error
 
@@ -303,13 +305,13 @@ class Keyboard(SectionView):
         label_klayout.show_all()
         self._vbox.pack_start(label_klayout, expand=False)
 
-        self._klayouts = self._xkb.get_current_layouts()
-        for i in range(0, self._xkb.get_max_layouts()):
+        self._klayouts = self._keyboard_manager.get_current_layouts()
+        for i in range(0, self._keyboard_manager.get_max_layouts()):
             add_remove_box = self.__create_add_remove_box()
             self._layout_addremovebox_list.append(add_remove_box)
             self._layout_table.attach(add_remove_box, 1, 2, i, i+1)
 
-            layout_combo = LayoutCombo(self._xkb, i)
+            layout_combo = LayoutCombo(self._keyboard_manager, i)
             layout_combo.connect('selection-changed', \
                 self.__layout_combo_selection_changed_cb)
             self._layout_combo_list.append(layout_combo)
@@ -335,7 +337,7 @@ class Keyboard(SectionView):
                     # First row - no need for showing remove btn
                     add, remove = box.get_children()
                     remove.props.visible = False
-                if i == self._xkb.get_max_layouts():
+                if i == self._keyboard_manager.get_max_layouts():
                     # Last row - no need for showing add btn
                     add, remove = box.get_children()
                     add.props.visible = False
@@ -390,10 +392,11 @@ class Keyboard(SectionView):
             self.__layout_timeout_cb)
 
     def __layout_timeout_cb(self):
-        if self._selected_klayouts == self._xkb.get_current_layouts():
+        if self._selected_klayouts == \
+                self._keyboard_manager.get_current_layouts():
             return
         try:
-            self._xkb.set_layouts(self._selected_klayouts)
+            self._keyboard_manager.set_layouts(self._selected_klayouts)
         except:
             pass #TODO: Show error
 
@@ -402,7 +405,7 @@ class Keyboard(SectionView):
 
     def undo(self):
         """Reverts back to the original keyboard configuration"""
-        self._xkb.set_model(self._kmodel)
-        self._xkb.set_layouts(self._klayouts)
-        self._xkb.set_option_grp(self._group_switch_option)
+        self._keyboard_manager.set_model(self._kmodel)
+        self._keyboard_manager.set_layouts(self._klayouts)
+        self._keyboard_manager.set_option_group(self._group_switch_option)
 

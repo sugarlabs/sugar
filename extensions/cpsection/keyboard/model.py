@@ -21,65 +21,64 @@ import gobject
 import gconf
 
 
-_GRP_NAME = 'grp' # The XKB name for group switch options
+_GROUP_NAME = 'grp' # The XKB name for group switch options
 
 _LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'
 _OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
 _MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
-class XKB(gobject.GObject):
+class KeyboardManager(object):
     def __init__(self, display):
-        gobject.GObject.__init__(self)
-        
         self._engine = xklavier.Engine(display)
-        self._configreg = xklavier.ConfigRegistry(self._engine)
-        self._configreg.load(False)
+        self._configregistry = xklavier.ConfigRegistry(self._engine)
+        self._configregistry.load(False)
         self._configrec = xklavier.ConfigRec()
         self._configrec.get_from_server(self._engine)
 	
         self._gconf_client = gconf.client_get_default()
 
-    def _populate_one(self, c_reg, item, store):
+    def _populate_one(self, config_registry, item, store):
         store.append([item.get_description(), item.get_name()])
 
-    def _populate_two(self, c_reg, item, subitem, store):
+    def _populate_two(self, config_registry, item, subitem, store):
         layout = item.get_name()
         if subitem:
-            desc = '%s, %s' % (subitem.get_description(), \
+            description = '%s, %s' % (subitem.get_description(), \
                                             item.get_description())
             variant = subitem.get_name()
         else:
-            desc = 'Default layout, %s' % item.get_description()
+            description = 'Default layout, %s' % item.get_description()
             variant = ''
         
-        store.append([desc, ('%s(%s)' % (layout, variant))])
+        store.append([description, ('%s(%s)' % (layout, variant))])
 
     def get_models(self):
         """Return list of supported keyboard models"""
         models = []
-        self._configreg.foreach_model(self._populate_one, models)
+        self._configregistry.foreach_model(self._populate_one, models)
         models.sort()
         return models
 
     def get_languages(self):
         """Return list of supported keyboard languages"""
         languages = []
-        self._configreg.foreach_language(self._populate_one, languages)
+        self._configregistry.foreach_language(self._populate_one, languages)
         languages.sort()
         return languages
 
     def get_layouts_for_language(self, language):
         """Return list of supported keyboard layouts for a given language"""
         layouts = []
-        self._configreg.foreach_language_variant(language, self._populate_two, \
-                                               layouts)
+        self._configregistry.foreach_language_variant(language, \
+                                                self._populate_two, layouts)
         layouts.sort()
         return layouts
 
-    def get_options_grp(self):
+    def get_options_group(self):
         """Return list of supported options for switching keyboard group"""
         options = []
-        self._configreg.foreach_option(_GRP_NAME, self._populate_one, options)
+        self._configregistry.foreach_option(_GROUP_NAME, self._populate_one, \
+                                                                        options)
         options.sort()
         return options
 
@@ -93,33 +92,33 @@ class XKB(gobject.GObject):
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
-        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, 'string')
+        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, gconf.VALUE_STRING)
         if layouts:
             return layouts
         
         layouts = self._configrec.get_layouts()
         variants = self._configrec.get_variants()
 
-        ret = []
+        layout_list = []
         i = 0
         for layout in layouts:
             if len(variants) <= i or variants[i] == '':
-                ret.append('%s(%s)' % (layout, ''))
+                layout_list.append('%s(%s)' % (layout, ''))
             else:
-                ret.append('%s(%s)' % (layout, variants[i]))
+                layout_list.append('%s(%s)' % (layout, variants[i]))
             i += 1
 
-        return ret
+        return layout_list
 
-    def get_current_option_grp(self):
+    def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
-        options = self._gconf_client.get_list(_OPTIONS_KEY, 'string')
+        options = self._gconf_client.get_list(_OPTIONS_KEY, gconf.VALUE_STRING)
         
         if not options:
             options = self._configrec.get_options()
 
         for option in options:
-            if option.startswith(_GRP_NAME):
+            if option.startswith(_GROUP_NAME):
                 return option
         
         return None
@@ -134,10 +133,10 @@ class XKB(gobject.GObject):
         self._configrec.set_model(model)
         self._configrec.activate(self._engine)
 
-    def set_option_grp(self, option_grp):
+    def set_option_group(self, option_group):
         """Sets the supplied option for switching keyboard group"""
         #XXX: Merge, not overwrite previous options
-        options = [option_grp]
+        options = [option_group]
         self._gconf_client.set_list(_OPTIONS_KEY, gconf.VALUE_STRING, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
