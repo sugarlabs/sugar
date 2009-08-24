@@ -145,17 +145,21 @@ def setup_keyboard_cb(gconf_client):
         for layout in layouts:
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
-            
-        configrec.set_layouts(layouts_list)
-        configrec.set_variants(variants_list)
+        
+        if layouts_list is not None and layouts_list is not [] \
+                and variants_list is not None and variants_list is not []:
+            configrec.set_layouts(layouts_list)
+            configrec.set_variants(variants_list)
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
-        configrec.set_model(model)
+        if model is not None:
+            configrec.set_model(model)
 
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
-        configrec.set_options(options)        
+        if options is not [] and options is not None:
+            configrec.set_options(options)        
 
         configrec.activate(engine)
     except:

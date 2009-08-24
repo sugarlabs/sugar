@@ -31,6 +31,9 @@ TITLE = _('Keyboard')
 
 _APPLY_TIMEOUT = 3000
 
+_logger = logging.getLogger('ControlPanel - Keyboard')
+
+
 class LayoutCombo(gtk.HBox):
 
     """
@@ -223,7 +226,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_model(self._selected_kmodel)
         except:
-            pass #TODO: Show error
+            _logger.debug('Could not set new keyboard model')
 
         return False
 
@@ -290,7 +293,8 @@ class Keyboard(SectionView):
             self._keyboard_manager.set_option_group(\
                 self._selected_group_switch_option)
         except:
-            pass #TODO: Show error
+            _logger.debug('Could not set new keyboard group switch option')
+
 
         return False
 
@@ -398,7 +402,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_layouts(self._selected_klayouts)
         except:
-            pass #TODO: Show error
+            _logger.debug('Could not set new keyboard layouts')
 
         return False
 
