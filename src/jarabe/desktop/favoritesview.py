@@ -92,6 +92,7 @@ class FavoritesView(hippo.Canvas):
         self._layout = None
         self._alert = None
         self._datastore_listener = DatastoreListener()
+        self._resume_mode = True
 
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -130,6 +131,7 @@ class FavoritesView(hippo.Canvas):
             return
         icon = ActivityIcon(activity_info, self._datastore_listener)
         icon.props.size = style.STANDARD_ICON_SIZE
+        icon.set_resume_mode(self._resume_mode)
         self._box.insert_sorted(icon, 0, self._layout.compare_activities)
         self._layout.append(icon)
 
@@ -335,6 +337,12 @@ class FavoritesView(hippo.Canvas):
     def __register_alert_response_cb(self, alert, response_id):
         self.remove_alert()
 
+    def set_resume_mode(self, resume_mode):
+        self._resume_mode = resume_mode
+        for icon in self._box.get_children():
+            if hasattr(icon, 'set_resume_mode'):
+                icon.set_resume_mode(self._resume_mode)
+
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
@@ -400,6 +408,7 @@ class ActivityIcon(CanvasIcon):
         self._activity_info = activity_info
         self._journal_entries = []
         self._hovering = False
+        self._resume_mode = True
 
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
@@ -446,7 +455,7 @@ class ActivityIcon(CanvasIcon):
 
     def _update(self):
         self.palette = None
-        if not self._journal_entries:
+        if not self._resume_mode or not self._journal_entries:
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
@@ -506,7 +515,7 @@ class ActivityIcon(CanvasIcon):
 
     def _activate(self):
         self.palette.popdown(immediate=True)
-        if self._journal_entries:
+        if self._resume_mode and self._journal_entries:
             entry = self._journal_entries[0]
 
             shell_model = shell.get_model()
@@ -547,6 +556,10 @@ class ActivityIcon(CanvasIcon):
         registry = bundleregistry.get_registry()
         return registry.get_bundle_position(self.bundle_id, self.version)
     fixed_position = property(_get_fixed_position, None)
+
+    def set_resume_mode(self, resume_mode):
+        self._resume_mode = resume_mode
+        self._update()
 
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'

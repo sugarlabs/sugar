@@ -45,7 +45,7 @@ gettext.bindtextdomain('sugar', config.locale_path)
 gettext.bindtextdomain('sugar-toolkit', config.locale_path)
 gettext.textdomain('sugar')
 
-from jarabe.desktop.homewindow import HomeWindow
+from jarabe.desktop import homewindow
 from jarabe.model import sound
 from jarabe.view import launcher
 from jarabe import intro
@@ -117,9 +117,10 @@ def setup_journal_cb():
     from jarabe.journal import journalactivity
     journalactivity.start()
 
-def show_software_updates_cb(home_window):
+def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
+        home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
 def setup_notification_service_cb():
@@ -157,7 +158,7 @@ def main():
 
     launcher.setup()
 
-    home_window = HomeWindow()
+    home_window = homewindow.get_instance()
     home_window.show()
 
     gobject.idle_add(unfreeze_dcon_cb)
@@ -166,7 +167,7 @@ def main():
     gobject.idle_add(setup_journal_cb)
     gobject.idle_add(setup_notification_service_cb)
     gobject.idle_add(setup_file_transfer_cb)
-    gobject.idle_add(show_software_updates_cb, home_window)
+    gobject.idle_add(show_software_updates_cb)
 
     try:
         gtk.main()

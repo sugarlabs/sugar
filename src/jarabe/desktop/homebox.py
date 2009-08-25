@@ -141,6 +141,8 @@ class HomeBox(gtk.VBox):
     def focus_search_entry(self):
         self._toolbar.search_entry.grab_focus()
 
+    def set_resume_mode(self, resume_mode):
+        self._favorites_view.set_resume_mode(resume_mode)
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'

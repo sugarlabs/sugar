@@ -141,3 +141,12 @@ class HomeWindow(gtk.Window):
 
     def get_home_box(self):
         return self._home_box
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = HomeWindow()
+    return _instance
+
