@@ -65,17 +65,34 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
                      COLUMN_BUDDY_3:        object,
                      COLUMN_BUDDY_2:        object}
 
-    def __init__(self, result_set):
+    _PAGE_SIZE = 10
+
+    def __init__(self, query):
         gobject.GObject.__init__(self)
 
         self._last_requested_index = None
         self._cached_row = None
-        self._result_set = result_set
+        self._result_set = model.find(query, ListModel._PAGE_SIZE)
         self._temp_drag_file_path = None
 
         # HACK: The view will tell us that it is resizing so the model can
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
+
+        self._result_set.ready.connect(self.__result_set_ready_cb)
+        self._result_set.progress.connect(self.__result_set_progress_cb)
+
+    def __result_set_ready_cb(self, **kwargs):
+        self.emit('ready')
+
+    def __result_set_progress_cb(self, **kwargs):
+        self.emit('progress')
+
+    def setup(self):
+        self._result_set.setup()
+
+    def stop(self):
+        self._result_set.stop()
 
     def get_metadata(self, path):
         return model.get(self[path][ListModel.COLUMN_UID])

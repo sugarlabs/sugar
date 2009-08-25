@@ -65,9 +65,7 @@ class _Cache(object):
     
     def remove_all(self, entries):
         for uid in [entry['uid'] for entry in entries]:
-            obj = self._dict.get(uid)
-            if obj is None:
-                continue
+            obj = self._dict[uid]
             self._array.remove(obj)
             del self._dict[uid]
 
@@ -196,8 +194,8 @@ class BaseResultSet(object):
             objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 self._cache.remove_all(self._cache[-objects_excess:])
-        #else:
-        #    logging.debug('cache hit and no need to grow the cache')
+        else:
+            logging.debug('cache hit and no need to grow the cache')
 
         return self._cache[self._position - self._offset]
 
@@ -396,24 +394,16 @@ def _get_mount_point(path):
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
 
-def get(object_id, reply_cb=None):
+def get(object_id):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
         stat = os.stat(object_id)
         metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
-
-    elif reply_cb is None:
+    else:
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
         metadata['mountpoint'] = '/'
-
-    else:
-        _get_datastore().get_properties(object_id, byte_arrays=True,
-                reply_handler=reply_cb,
-                error_handler=lambda e: reply_cb(None))
-        return None
-
     return metadata
 
 def get_file(object_id):

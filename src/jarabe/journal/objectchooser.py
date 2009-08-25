@@ -24,7 +24,7 @@ import wnck
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
 
-from jarabe.journal.objectview import ObjectView
+from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import SearchToolbar
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -80,21 +80,19 @@ class ObjectChooser(gtk.Window):
 
         self._toolbar = SearchToolbar()
         self._toolbar.connect('query-changed', self.__query_changed_cb)
-        self._toolbar.connect('view-changed', self.__view_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         vbox.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        self._object_view = ObjectView()
-        self._object_view.props.hover_selection = True
-        self._object_view.connect('entry-activated', self.__entry_activated_cb)
-        vbox.pack_start(self._object_view)
-        self._object_view.show()
+        self._list_view = ChooserListView()
+        self._list_view.connect('entry-activated', self.__entry_activated_cb)
+        vbox.pack_start(self._list_view)
+        self._list_view.show()
 
         self._toolbar.set_mount_point('/')
-
+        
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
         self.set_size_request(width, height)
 
         if what_filter:
@@ -127,10 +125,7 @@ class ObjectChooser(gtk.Window):
         return self._selected_object_id
 
     def __query_changed_cb(self, toolbar, query):
-        self._object_view.update_with_query(query)
-
-    def __view_changed_cb(self, sender, view):
-        self._object_view.change_view(view)
+        self._list_view.update_with_query(query)
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
@@ -139,7 +134,7 @@ class ObjectChooser(gtk.Window):
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED
-        self._object_view.set_is_visible(visible)
+        self._list_view.set_is_visible(visible)
 
 class TitleBox(VolumesToolbar):
     __gtype_name__ = 'TitleBox'
@@ -166,3 +161,39 @@ class TitleBox(VolumesToolbar):
 
         self.insert(tool_item, -1)
         tool_item.show()
+
+class ChooserListView(BaseListView):
+    __gtype_name__ = 'ChooserListView'
+
+    __gsignals__ = {
+        'entry-activated': (gobject.SIGNAL_RUN_FIRST,
+                            gobject.TYPE_NONE,
+                            ([str])),
+    }
+
+    def __init__(self):
+        BaseListView.__init__(self)
+
+        self.cell_icon.props.show_palette = False
+        self.tree_view.props.hover_selection = True
+
+        self.tree_view.connect('button-release-event',
+                               self.__button_release_event_cb)
+
+    def __entry_activated_cb(self, entry):
+        self.emit('entry-activated', entry)
+
+    def __button_release_event_cb(self, tree_view, event):
+        if event.window != tree_view.get_bin_window():
+            return False
+
+        pos = tree_view.get_path_at_pos(event.x, event.y)
+        if pos is None:
+            return False
+
+        path, column_, x_, y_ = pos
+        uid = tree_view.get_model()[path][ListModel.COLUMN_UID]
+        self.emit('entry-activated', uid)
+
+        return False
+

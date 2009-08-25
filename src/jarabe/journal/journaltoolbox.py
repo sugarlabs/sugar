@@ -26,7 +26,6 @@ import gobject
 import gio
 import gtk
 
-from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
@@ -74,10 +73,7 @@ class SearchToolbar(gtk.Toolbar):
     __gsignals__ = {
         'query-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([object])),
-        'view-changed': (gobject.SIGNAL_RUN_FIRST,
-                         gobject.TYPE_NONE,
-                         ([object]))
+                          ([object]))
         }
 
     def __init__(self):
@@ -118,33 +114,9 @@ class SearchToolbar(gtk.Toolbar):
         #self.insert(tool_item, -1)
         #tool_item.show()
 
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        self.insert(separator, -1)
-        separator.show()
-
-        list_button = RadioToolButton(named_icon='view-list')
-        list_button.props.tooltip = _('List view')
-        list_button.props.accelerator = _('<Ctrl>1')
-        list_button.connect('toggled', self.__view_button_toggled_cb, 0)
-        self.insert(list_button, -1)
-        list_button.show()
-
-        thumb_button = RadioToolButton(named_icon='view-thumbs')
-        thumb_button.props.group = list_button
-        thumb_button.props.tooltip = _('Thumbs view')
-        thumb_button.props.accelerator = _('<Ctrl>2')
-        thumb_button.connect('toggled', self.__view_button_toggled_cb, 1)
-        self.insert(thumb_button, -1)
-        thumb_button.show()
-
         self._query = self._build_query()
 
         self.refresh_filters()
-
-    def __view_button_toggled_cb(self, button, view_num):
-        self.emit('view-changed', view_num)
 
     def give_entry_focus(self):
         self._search_entry.grab_focus()
