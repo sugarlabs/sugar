@@ -427,7 +427,7 @@ def get_file_size(object_id):
     if os.path.exists(object_id):
         return os.stat(object_id).st_size
 
-    file_path = dbus_helpers.get_filename(object_id)
+    file_path = _get_datastore().get_filename(object_id)
     if file_path:
         size = os.stat(file_path).st_size
         os.remove(file_path)

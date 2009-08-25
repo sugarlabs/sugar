@@ -228,8 +228,8 @@ class ExpandedEntry(hippo.CanvasBox):
         lines = [
             _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
             _('Date: %s') % (self._format_date(),),
-            _('Size: %s') % (format_size(model.get_file_size(self._metadata['uid'])),),
-        ]
+            _('Size: %s') % (format_size(model.get_file_size(
+                        self._metadata['uid'])),)]
 
         for line in lines:
             text = hippo.CanvasText(text=line,
