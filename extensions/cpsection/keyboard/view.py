@@ -229,7 +229,7 @@ class Keyboard(SectionView):
             return
         try:
             self._keyboard_manager.set_model(self._selected_kmodel)
-        except:
+        except Exception:
             logging.exception('Could not set new keyboard model')
 
         return False
@@ -296,7 +296,7 @@ class Keyboard(SectionView):
         try:
             self._keyboard_manager.set_option_group(\
                 self._selected_group_switch_option)
-        except:
+        except Exception:
             logging.exception('Could not set new keyboard group switch option')
 
 
@@ -405,7 +405,7 @@ class Keyboard(SectionView):
             return
         try:
             self._keyboard_manager.set_layouts(self._selected_klayouts)
-        except:
+        except Exception:
             logging.exception('Could not set new keyboard layouts')
 
         return False

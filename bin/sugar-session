@@ -168,7 +168,7 @@ def setup_keyboard_cb(gconf_client):
             configrec.set_options(options)        
 
         configrec.activate(engine)
-    except:
+    except Exception:
         logging.exception('Error during keyboard configuration')
 
 def main():
