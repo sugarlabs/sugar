@@ -602,7 +602,7 @@ class FavoritePalette(ActivityPalette):
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
-            journal.misc.resume(entry, self._bundle_id)
+            journal.misc.resume(entry, entry['activity'])
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
