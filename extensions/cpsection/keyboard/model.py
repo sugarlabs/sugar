@@ -17,7 +17,6 @@
 #
 
 import xklavier
-import gobject
 import gconf
 
 

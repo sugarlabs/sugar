@@ -116,7 +116,8 @@ class LayoutCombo(gtk.HBox):
     def _set_kvariant_store(self, lang):
         self._kvariant_store = gtk.ListStore(gobject.TYPE_STRING, \
                                                     gobject.TYPE_STRING)
-        for description, name in self._keyboard_manager.get_layouts_for_language(lang):
+        layouts = self._keyboard_manager.get_layouts_for_language(lang)
+        for description, name in layouts:
             self._kvariant_store.append([name, description])
         self._kvariant_combo.set_model(self._kvariant_store)
         self._kvariant_combo.set_active(0)

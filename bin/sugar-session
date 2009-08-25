@@ -24,7 +24,6 @@ if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
     print '%r STARTUP: Starting the shell' % time.time()
     sys.stdout.flush()
 
-import shutil
 import gettext
 import logging
 
@@ -171,7 +170,6 @@ def setup_keyboard_cb(gconf_client):
         configrec.activate(engine)
     except:
         logging.exception('Error during keyboard configuration')
-        pass
 
 def main():
     cleanup_logs()
