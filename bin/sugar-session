@@ -133,7 +133,13 @@ def setup_file_transfer_cb():
 def setup_keyboard_cb(gconf_client):
     logging.debug('STARTUP: setup_keyboard_cb')
     try:
-        engine = xklavier.Engine(gtk.gdk.display_get_default())
+        display = gtk.gdk.display_get_default()
+        if display is not None:
+            engine = xklavier.Engine(display)
+        else:
+            logging.debug('setup_keyboard_cb: Could not get default display.')
+            return
+
         configrec = xklavier.ConfigRec()
         configrec.get_from_server(engine)
 
