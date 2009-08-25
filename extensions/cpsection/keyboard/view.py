@@ -35,6 +35,7 @@ _APPLY_TIMEOUT = 3000
 #TODO: This cpsection adds checks for xklavier in bin/sugar-session and
 #      src/jarabe/controlpanel/gui.py. We should get rid of these checks
 #      once python-xklavier has been packaged for all major distributions
+#      For more information, see: http://dev.sugarlabs.org/ticket/407
 
 class LayoutCombo(gtk.HBox):
 
