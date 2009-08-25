@@ -180,5 +180,42 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/peripherals/keyboard/layouts</key>
+      <applyto>/desktop/sugar/peripherals/keyboard/layouts</applyto>
+      <owner>sugar</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>Keyboard layouts</short>
+        <long>List of keyboard layouts. Each entry should be in the form layout(variant)</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/peripherals/keyboard/options</key>
+      <applyto>/desktop/sugar/peripherals/keyboard/options</applyto>
+      <owner>sugar</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <locale name="C">
+        <short>Keyboard options</short>
+        <long>List of keyboard options.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/peripherals/keyboard/model</key>
+      <applyto>/desktop/sugar/peripherals/keyboard/model</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Keyboard model</short>
+        <long>The keyboard model to be used</long>
+      </locale>
+    </schema>
+
+
   </schemalist>
 </gconfschemafile>

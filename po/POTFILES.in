@@ -10,6 +10,7 @@ extensions/cpsection/datetime/view.py
 extensions/cpsection/frame/__init__.py
 extensions/cpsection/frame/model.py
 extensions/cpsection/frame/view.py
+extensions/cpsection/keyboard/view.py
 extensions/cpsection/language/__init__.py
 extensions/cpsection/language/model.py
 extensions/cpsection/language/view.py
