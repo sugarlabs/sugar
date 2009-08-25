@@ -71,13 +71,13 @@ class BuddyMenu(Palette):
         self._invite_menu = MenuItem('')
         self._invite_menu.connect('activate', self._invite_friend_cb)
         self.menu.append(self._invite_menu)
-        
+
         home_model = shell.get_model()
         self._active_activity_changed_hid = home_model.connect(
                 'active-activity-changed', self._cur_activity_changed_cb)
         activity = home_model.get_active_activity()
         self._update_invite_menu(activity)
-    
+
     def _add_my_items(self):
         item = MenuItem(_('Shutdown'), 'system-shutdown')
         item.connect('activate', self.__shutdown_activate_cb)
@@ -85,7 +85,7 @@ class BuddyMenu(Palette):
         item.show()
 
         client = gconf.client_get_default()
-        
+
         if client.get_bool('/desktop/sugar/show_logout'):
             item = MenuItem(_('Logout'), 'system-logout')
             item.connect('activate', self.__logout_activate_cb)
@@ -124,18 +124,18 @@ class BuddyMenu(Palette):
         if activity is None or activity.is_journal() or \
            activity.get_activity_id() == buddy_activity_id:
             self._invite_menu.hide()
-        else:    
+        else:
             title = activity.get_title()
             label = self._invite_menu.get_children()[0]
             label.set_text(_('Invite to %s') % title)
-        
+
             icon = Icon(file=activity.get_icon_path())
             icon.props.xo_color = activity.get_icon_color()
             self._invite_menu.set_image(icon)
             icon.show()
 
             self._invite_menu.show()
-                        
+
     def _cur_activity_changed_cb(self, home_model, activity_model):
         self._update_invite_menu(activity_model)
 
@@ -146,7 +146,7 @@ class BuddyMenu(Palette):
         self.set_primary_text(nick)
 
     def _make_friend_cb(self, menuitem):
-        friends.get_model().make_friend(self._buddy)    
+        friends.get_model().make_friend(self._buddy)
 
     def _remove_friend_cb(self, menuitem):
         friends.get_model().remove(self._buddy)

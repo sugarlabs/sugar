@@ -90,9 +90,9 @@ class ObjectChooser(gtk.Window):
         self._list_view.show()
 
         self._toolbar.set_mount_point('/')
-        
+
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         if what_filter:
@@ -120,7 +120,7 @@ class ObjectChooser(gtk.Window):
 
     def __close_button_clicked_cb(self, button):
         self.emit('response', gtk.RESPONSE_DELETE_EVENT)
-        
+
     def get_selected_object_id(self):
         return self._selected_object_id
 

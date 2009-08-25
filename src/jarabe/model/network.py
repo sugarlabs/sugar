@@ -264,10 +264,10 @@ class NMSettingsConnection(dbus.service.Object):
             config.set(identifier, 'type', self._settings.connection.type)
             config.set(identifier, 'ssid', self._settings.wireless.ssid)
             config.set(identifier, 'uuid', self._settings.connection.uuid)
-            config.set(identifier, 'autoconnect', 
+            config.set(identifier, 'autoconnect',
                        self._settings.connection.autoconnect)
             if self._settings.connection.timestamp is not None:
-                config.set(identifier, 'timestamp', 
+                config.set(identifier, 'timestamp',
                            self._settings.connection.timestamp)
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:

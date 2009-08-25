@@ -52,7 +52,7 @@ class ZoomToolbar(gtk.Toolbar):
         else:
             group = None
 
-        button = RadioToolButton(named_icon=icon_name, group=group, 
+        button = RadioToolButton(named_icon=icon_name, group=group,
                                  accelerator=accelerator)
         button.connect('clicked', self.__level_clicked_cb, zoom_level)
         self.add(button)
@@ -62,7 +62,7 @@ class ZoomToolbar(gtk.Toolbar):
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)
-        
+
         return button
 
     def __level_clicked_cb(self, button, level):

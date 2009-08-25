@@ -31,19 +31,19 @@ _DBUS_PATH = "/org/laptop/Shell"
 
 class UIService(dbus.service.Object):
     """Provides d-bus service to script the shell's operations
-    
+
     Uses a shell_model object to observe events such as changes to:
-    
-        * nickname 
+
+        * nickname
         * colour
         * icon
         * currently active activity
-    
+
     and pass the event off to the methods in the dbus signature.
-    
-    Key method here at the moment is add_bundle, which is used to 
+
+    Key method here at the moment is add_bundle, which is used to
     do a run-time registration of a bundle using it's application path.
-    
+
     XXX At the moment the d-bus service methods do not appear to do
     anything other than add_bundle
     """

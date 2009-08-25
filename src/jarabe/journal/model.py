@@ -62,7 +62,7 @@ class _Cache(object):
         for entry in entries:
             self._array.append(entry)
             self._dict[entry['uid']] = entry
-    
+
     def remove_all(self, entries):
         for uid in [entry['uid'] for entry in entries]:
             obj = self._dict[uid]
@@ -376,7 +376,7 @@ def find(query, page_size):
     """
     if 'order_by' not in query:
         query['order_by'] = ['-mtime']
-    
+
     mount_points = query.pop('mountpoints', ['/'])
     if mount_points is None or len(mount_points) != 1:
         raise ValueError('Exactly one mount point must be specified')
@@ -514,7 +514,7 @@ def _get_file_name(title, mime_type):
     if len(file_name) > max_len:
         name, extension = os.path.splitext(file_name)
         file_name = name[0:max_len - len(extension)] + extension
-    
+
     return file_name
 
 def _get_unique_file_name(mount_point, file_name):

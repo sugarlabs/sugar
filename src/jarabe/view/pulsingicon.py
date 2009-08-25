@@ -138,7 +138,7 @@ class PulsingIcon(Icon):
         if self._pulsing:
             self._pulser.start(restart=True)
         else:
-            self._pulser.stop()    
+            self._pulser.stop()
 
     def get_pulsing(self):
         return self._pulsing
@@ -176,7 +176,7 @@ class CanvasPulsingIcon(CanvasIcon):
         self.connect('destroy', self.__destroy_cb)
 
     def __destroy_cb(self, box):
-        self._pulser.stop()    
+        self._pulser.stop()
 
     def set_pulse_color(self, pulse_color):
         self._pulse_color = pulse_color
@@ -220,7 +220,7 @@ class CanvasPulsingIcon(CanvasIcon):
         if self._pulsing:
             self._pulser.start(restart=True)
         else:
-            self._pulser.stop()    
+            self._pulser.stop()
 
     def get_pulsing(self):
         return self._pulsing

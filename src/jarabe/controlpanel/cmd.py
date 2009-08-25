@@ -25,14 +25,14 @@ from jarabe import config
 
 _RESTART = 1
 
-_same_option_warning = _("sugar-control-panel: WARNING, found more than" 
-                         " one option with the same name: %s module: %r") 
+_same_option_warning = _("sugar-control-panel: WARNING, found more than"
+                         " one option with the same name: %s module: %r")
 _no_option_error = _("sugar-control-panel: key=%s not an available option")
 _general_error = _("sugar-control-panel: %s")
 
 def cmd_help():
     '''Print the help to the screen'''
-    # TRANS: Translators, there's a empty line at the end of this string, 
+    # TRANS: Translators, there's a empty line at the end of this string,
     # which must appear in the translated string (msgstr) as well.
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
     Control for the sugar environment. \n\
@@ -50,7 +50,7 @@ def note_restart():
     print _('To apply your changes you have to restart sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
-def load_modules():    
+def load_modules():
     '''Build a list of pointers to available modules and import them.
     '''
     modules = []
@@ -62,15 +62,15 @@ def load_modules():
         if os.path.isdir(os.path.join(path, item)) and \
                 os.path.exists(os.path.join(path, item, 'model.py')):
             try:
-                module = __import__('.'.join(('cpsection', item, 'model')), 
+                module = __import__('.'.join(('cpsection', item, 'model')),
                                     globals(), locals(), ['model'])
             except Exception:
                 logging.error('Exception while loading extension:\n' + \
                     ''.join(traceback.format_exception(*sys.exc_info())))
             else:
                 modules.append(module)
-            
-    return modules        
+
+    return modules
 
 def main():
     try:
@@ -93,12 +93,12 @@ def main():
                 if method:
                     found += 1
                     if found == 1:
-                        print method.__doc__ 
+                        print method.__doc__
                     else:
                         print _(_same_option_warning % (key, module))
-            if found == 0:            
-                print _(_no_option_error % key)  
-        if option in ("-l"):            
+            if found == 0:
+                print _(_no_option_error % key)
+        if option in ("-l"):
             for module in modules:
                 methods = dir(module)
                 print '%s:' % module.__name__.split('.')[1]
@@ -120,8 +120,8 @@ def main():
                             print _(_general_error % detail)
                     else:
                         print _(_same_option_warning % (key, module))
-            if found == 0:            
-                print _(_no_option_error % key)  
+            if found == 0:
+                print _(_no_option_error % key)
         if option in ("-s"):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
@@ -137,8 +137,8 @@ def main():
                             note_restart()
                     else:
                         print _(_same_option_warning % (key, module))
-            if found == 0:            
-                print _(_no_option_error % key)  
+            if found == 0:
+                print _(_no_option_error % key)
         if option in ("-c"):
             for module in modules:
                 method = getattr(module, 'clear_' + key, None)
@@ -154,5 +154,5 @@ def main():
                             note_restart()
                     else:
                         print _(_same_option_warning % (key, module))
-            if found == 0:            
-                print _(_no_option_error % key)  
+            if found == 0:
+                print _(_no_option_error % key)

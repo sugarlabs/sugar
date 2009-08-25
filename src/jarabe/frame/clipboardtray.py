@@ -19,7 +19,7 @@ import logging
 import tempfile
 
 import gtk
- 
+
 from sugar import util
 from sugar.graphics import tray
 from sugar.graphics import style
@@ -31,20 +31,20 @@ class _ContextMap(object):
     """Maps a drag context to the clipboard object involved in the dragging."""
     def __init__(self):
         self._context_map = {}
-        
+
     def add_context(self, context, object_id, data_types):
         """Establishes the mapping. data_types will serve us for reference-
         counting this mapping.
         """
         self._context_map[context] = [object_id, data_types]
-    
+
     def get_object_id(self, context):
         """Retrieves the object_id associated with context.
         Will release the association when this function was called as many times
         as the number of data_types that this clipboard object contains.
         """
         [object_id, data_types_left] = self._context_map[context]
-        
+
         data_types_left = data_types_left - 1
         if data_types_left == 0:
             del self._context_map[context]
@@ -55,11 +55,11 @@ class _ContextMap(object):
 
     def has_context(self, context):
         return context in self._context_map
- 
+
 class ClipboardTray(tray.VTray):
-    
+
     MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
-    
+
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
         self._icons = {}
@@ -88,16 +88,16 @@ class ClipboardTray(tray.VTray):
                 raise NotImplementedError('Multiple uris in text/uri-list' \
                                           ' still not supported.')
 
-            cb_service.add_object_format(object_id, 
+            cb_service.add_object_format(object_id,
                                          selection.type,
                                          uris[0],
                                          on_disk=True)
         else:
-            cb_service.add_object_format(object_id, 
+            cb_service.add_object_format(object_id,
                                          selection.type,
                                          selection.data,
                                          on_disk=False)
-    
+
     def _object_added_cb(self, cb_service, cb_object):
         if self._icons:
             group = self._icons.values()[0]
@@ -150,7 +150,7 @@ class ClipboardTray(tray.VTray):
         object_id = cb_service.add_object(name="")
 
         self._context_map.add_context(context, object_id, len(context.targets))
-        
+
         if 'XdndDirectSave0' in context.targets:
             window = context.source_window
             prop_type, format_, filename = \
@@ -175,7 +175,7 @@ class ClipboardTray(tray.VTray):
                     widget.drag_get_data(context, target, time)
 
         cb_service.set_object_percent(object_id, percent=100)
-        
+
         return True
 
     def drag_data_received_cb(self, widget, context, x, y, selection,

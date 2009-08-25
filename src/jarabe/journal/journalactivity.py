@@ -18,7 +18,7 @@
 import logging
 from gettext import gettext as _
 import sys
-import traceback 
+import traceback
 import uuid
 
 import gtk
@@ -131,10 +131,10 @@ class JournalActivity(Window):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-        self._dbus_service = JournalActivityDBusService(self)        
+        self._dbus_service = JournalActivityDBusService(self)
 
         self.iconify()
-        
+
         self._critical_space_alert = None
         self._check_available_space()
 
@@ -310,8 +310,8 @@ class JournalActivity(Window):
     def _check_available_space(self):
         ''' Check available space on device
 
-            If the available space is below 50MB an alert will be 
-            shown which encourages to delete old journal entries. 
+            If the available space is below 50MB an alert will be
+            shown which encourages to delete old journal entries.
         '''
 
         if self._critical_space_alert:
@@ -320,11 +320,11 @@ class JournalActivity(Window):
         free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
         if free_space < _SPACE_TRESHOLD:
             self._critical_space_alert = ModalAlert()
-            self._critical_space_alert.connect('destroy', 
+            self._critical_space_alert.connect('destroy',
                                                self.__alert_closed_cb)
             self._critical_space_alert.show()
-        
-    def __alert_closed_cb(self, data):  
+
+    def __alert_closed_cb(self, data):
         self.show_main_view()
         self.present()
         self._critical_space_alert = None

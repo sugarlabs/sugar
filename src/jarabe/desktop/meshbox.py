@@ -129,7 +129,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._palette_icon = Icon(icon_name=icon_name,
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
-                                              
+
         p = palette.Palette(primary_text=self._name,
                             icon=self._palette_icon)
 
@@ -185,7 +185,7 @@ class AccessPointView(CanvasPulsingIcon):
                 digest = hash(sha_hash.digest())
                 index = digest % len(xocolor.colors)
 
-                self._color = XoColor('%s,%s' % 
+                self._color = XoColor('%s,%s' %
                                       (xocolor.colors[index][0],
                                        xocolor.colors[index][1]))
         self._update()
@@ -273,7 +273,7 @@ class AccessPointView(CanvasPulsingIcon):
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
-    def _update_color(self):        
+    def _update_color(self):
         if self._greyed_out:
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
@@ -358,7 +358,7 @@ class AccessPointView(CanvasPulsingIcon):
     def _connect(self):
         connection = network.find_connection(self._name)
         if connection is None:
-            settings = Settings()            
+            settings = Settings()
             settings.connection.id = 'Auto ' + self._name
             settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
@@ -742,7 +742,7 @@ class MeshBox(gtk.VBox):
         self._suspended = True
         self._query = ''
         self._owner_icon = None
-            
+
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.pack_start(self._toolbar, expand=False)
@@ -776,7 +776,7 @@ class MeshBox(gtk.VBox):
         netmgr_observer.listen()
 
     def do_size_allocate(self, allocation):
-        width = allocation.width        
+        width = allocation.width
         height = allocation.height
 
         min_w_, icon_width = self._owner_icon.get_width_request()
@@ -791,7 +791,7 @@ class MeshBox(gtk.VBox):
         self._add_alone_buddy(buddy_model)
 
     def _buddy_removed_cb(self, model, buddy_model):
-        self._remove_buddy(buddy_model) 
+        self._remove_buddy(buddy_model)
 
     def _buddy_moved_cb(self, model, buddy_model, activity_model):
         # Owner doesn't move from the center
@@ -803,7 +803,7 @@ class MeshBox(gtk.VBox):
         self._add_activity(activity_model)
 
     def _activity_removed_cb(self, model, activity_model):
-        self._remove_activity(activity_model) 
+        self._remove_activity(activity_model)
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(buddy_model)

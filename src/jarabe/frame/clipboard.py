@@ -65,7 +65,7 @@ class Clipboard(gobject.GObject):
         elif on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
-            logging.debug('Added format of type ' + format_type 
+            logging.debug('Added format of type ' + format_type
                           + ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
@@ -78,7 +78,7 @@ class Clipboard(gobject.GObject):
         cb_object.destroy()
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)
-        
+
     def set_object_percent(self, object_id, percent):
         cb_object = self._objects[object_id]
         if percent < 0 or percent > 100:
@@ -118,7 +118,7 @@ class Clipboard(gobject.GObject):
         logging.debug('Clipboard.get_object')
         return self._objects[object_id]
 
-    def get_object_data(self, object_id, format_type):   
+    def get_object_data(self, object_id, format_type):
         logging.debug('Clipboard.get_object_data')
         cb_object = self._objects[object_id]
         format_ = cb_object.get_formats()[format_type]

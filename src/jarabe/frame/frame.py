@@ -276,13 +276,13 @@ class Frame(object):
 
     def _drag_motion_cb(self, window, context, x, y, time):
         self._mouse_listener.mouse_enter()
-        
+
     def _drag_leave_cb(self, window, drag_context, timestamp):
         self._mouse_listener.mouse_leave()
-            
+
     def _enter_corner_cb(self, event_area):
         self._mouse_listener.mouse_enter()
-        
+
     def notify_key_press(self):
         self._key_listener.key_press()
 

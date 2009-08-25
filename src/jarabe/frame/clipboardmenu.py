@@ -62,7 +62,7 @@ class ClipboardMenu(Palette):
         self._journal_item = MenuItem(_('Keep'))
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU, 
+        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
@@ -109,7 +109,7 @@ class ClipboardMenu(Palette):
         activities = self._get_activities()
         installable = self._cb_object.is_bundle()
         percent = self._cb_object.get_percent()
-        
+
         if percent == 100 and (activities or installable):
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = True

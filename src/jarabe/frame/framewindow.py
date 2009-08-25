@@ -79,7 +79,7 @@ class FrameWindow(gtk.Window):
         box.append(self._bg, hippo.PACK_EXPAND)
 
         self._update_size()
-    
+
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
@@ -104,6 +104,6 @@ class FrameWindow(gtk.Window):
     def _leave_notify_cb(self, window, event):
         if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self.hover = False
-        
+
     def _size_changed_cb(self, screen):
         self._update_size()

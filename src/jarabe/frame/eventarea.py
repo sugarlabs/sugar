@@ -43,38 +43,38 @@ class EventArea(gobject.GObject):
         bottom = gtk.gdk.screen_height() -1
         width = gtk.gdk.screen_width() - 2
         height = gtk.gdk.screen_height() - 2
-        
-        if self._edge_delay != _MAX_DELAY:    
-            invisible = self._create_invisible(1, 0, width, 1, 
+
+        if self._edge_delay != _MAX_DELAY:
+            invisible = self._create_invisible(1, 0, width, 1,
                                                self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(1, bottom, width, 1, 
+            invisible = self._create_invisible(1, bottom, width, 1,
                                                self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(0, 1, 1, height, 
+            invisible = self._create_invisible(0, 1, 1, height,
                                                self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, 1, 1, height, 
+            invisible = self._create_invisible(right, 1, 1, height,
                                                self._edge_delay)
             self._windows.append(invisible)
 
-        if self._corner_delay != _MAX_DELAY:    
-            invisible = self._create_invisible(0, 0, 1, 1, 
+        if self._corner_delay != _MAX_DELAY:
+            invisible = self._create_invisible(0, 0, 1, 1,
                                                self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, 0, 1, 1, 
+            invisible = self._create_invisible(right, 0, 1, 1,
                                                self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(0, bottom, 1, 1, 
+            invisible = self._create_invisible(0, bottom, 1, 1,
                                                self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, bottom, 1, 1, 
+            invisible = self._create_invisible(right, bottom, 1, 1,
                                                self._corner_delay)
             self._windows.append(invisible)
 
@@ -85,10 +85,10 @@ class EventArea(gobject.GObject):
     def _create_invisible(self, x, y, width, height, delay):
         invisible = gtk.Invisible()
         if delay >= 0:
-            invisible.connect('enter-notify-event', self._enter_notify_cb, 
+            invisible.connect('enter-notify-event', self._enter_notify_cb,
                               delay)
             invisible.connect('leave-notify-event', self._leave_notify_cb)
-        
+
         invisible.drag_dest_set(0, [], 0)
         invisible.connect('drag_motion', self._drag_motion_cb)
         invisible.connect('drag_leave', self._drag_leave_cb)
@@ -114,30 +114,30 @@ class EventArea(gobject.GObject):
     def _enter_notify_cb(self, widget, event, delay):
         if widget in self._sids:
             gobject.source_remove(self._sids[widget])
-        self._sids[widget] = gobject.timeout_add(delay, 
-                                                 self.__delay_cb, 
+        self._sids[widget] = gobject.timeout_add(delay,
+                                                 self.__delay_cb,
                                                  widget)
 
-    def __delay_cb(self, widget):        
-        del self._sids[widget] 
+    def __delay_cb(self, widget):
+        del self._sids[widget]
         self._notify_enter()
         return False
 
     def _leave_notify_cb(self, widget, event):
         if widget in self._sids:
             gobject.source_remove(self._sids[widget])
-            del self._sids[widget] 
+            del self._sids[widget]
         self._notify_leave()
 
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
         drag_context.drag_status(0, timestamp)
         self._notify_enter()
         return True
-        
+
     def _drag_leave_cb(self, widget, drag_context, timestamp):
         self._notify_leave()
         return True
-        
+
     def show(self):
         for window in self._windows:
             window.show()

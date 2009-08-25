@@ -722,7 +722,7 @@ class IncomingTransferPalette(BaseTransferPalette):
 
             for item in self.menu.get_children():
                 self.menu.remove(item)
-            
+
             menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
             menu_item.connect('activate', self.__cancel_activate_cb)
             self.menu.append(menu_item)
@@ -846,7 +846,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
 
             for item in self.menu.get_children():
                 self.menu.remove(item)
-            
+
             menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
             menu_item.connect('activate', self.__cancel_activate_cb)
             self.menu.append(menu_item)

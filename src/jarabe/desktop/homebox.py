@@ -53,16 +53,16 @@ class HomeBox(gtk.VBox):
         self._toolbar.show()
 
         self._set_view(_FAVORITES_VIEW)
-            
+
     def show_software_updates_alert(self):
         alert = Alert()
-        updater_icon = Icon(icon_name='module-updater', 
+        updater_icon = Icon(icon_name='module-updater',
                     pixel_size = style.STANDARD_ICON_SIZE)
         alert.props.icon = updater_icon
         updater_icon.show()
         alert.props.title = _('Software Update')
-        alert.props.msg = _('Update your activities to ensure' 
-                            ' compatibility with your new software') 
+        alert.props.msg = _('Update your activities to ensure'
+                            ' compatibility with your new software')
 
         cancel_icon = Icon(icon_name='dialog-cancel')
         alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), cancel_icon)
@@ -77,7 +77,7 @@ class HomeBox(gtk.VBox):
         else:
             self._favorites_view.add_alert(alert)
         alert.connect('response', self.__software_update_response_cb)
-        
+
     def __software_update_response_cb(self, alert, response_id):
         if self._list_view in self.get_children():
             self._list_view.remove_alert()
@@ -208,7 +208,7 @@ class HomeToolbar(gtk.Toolbar):
                 self.search_entry.set_sensitive(True)
                 self.search_entry.grab_focus()
                 self.emit('view-changed', view)
-            
+
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -248,7 +248,7 @@ class HomeToolbar(gtk.Toolbar):
 
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
-    
+
     def __init__(self):
         RadioToolButton.__init__(self)
 

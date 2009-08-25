@@ -95,28 +95,28 @@ class HomeWindow(gtk.Window):
 
         if old_level != ShellModel.ZOOM_ACTIVITY and \
            new_level != ShellModel.ZOOM_ACTIVITY:
-            self.remove(self.get_child()) 
-            self.add(self._transition_box) 
-            self._transition_box.show() 
+            self.remove(self.get_child())
+            self.add(self._transition_box)
+            self._transition_box.show()
 
-            if new_level == ShellModel.ZOOM_HOME: 
-                end_size = style.XLARGE_ICON_SIZE 
-            elif new_level == ShellModel.ZOOM_GROUP: 
-                end_size = style.LARGE_ICON_SIZE 
-            elif new_level == ShellModel.ZOOM_MESH: 
-                end_size = style.STANDARD_ICON_SIZE 
+            if new_level == ShellModel.ZOOM_HOME:
+                end_size = style.XLARGE_ICON_SIZE
+            elif new_level == ShellModel.ZOOM_GROUP:
+                end_size = style.LARGE_ICON_SIZE
+            elif new_level == ShellModel.ZOOM_MESH:
+                end_size = style.STANDARD_ICON_SIZE
 
-            if old_level == ShellModel.ZOOM_HOME: 
-                start_size = style.XLARGE_ICON_SIZE 
-            elif old_level == ShellModel.ZOOM_GROUP: 
-                start_size = style.LARGE_ICON_SIZE 
-            elif old_level == ShellModel.ZOOM_MESH: 
-                start_size = style.STANDARD_ICON_SIZE 
+            if old_level == ShellModel.ZOOM_HOME:
+                start_size = style.XLARGE_ICON_SIZE
+            elif old_level == ShellModel.ZOOM_GROUP:
+                start_size = style.LARGE_ICON_SIZE
+            elif old_level == ShellModel.ZOOM_MESH:
+                start_size = style.STANDARD_ICON_SIZE
 
-            self._transition_box.start_transition(start_size, end_size) 
+            self._transition_box.start_transition(start_size, end_size)
         else:
             self._update_view(new_level)
-    
+
     def _transition_completed_cb(self, transition_box):
         self._update_view(shell.get_model().zoom_level)
 
@@ -124,7 +124,7 @@ class HomeWindow(gtk.Window):
         if level == ShellModel.ZOOM_ACTIVITY:
             return
 
-        current_child = self.get_child() 
+        current_child = self.get_child()
         self.remove(current_child)
 
         if level == ShellModel.ZOOM_HOME:

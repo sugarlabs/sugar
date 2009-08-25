@@ -99,10 +99,10 @@ class Grid(_sugarext.Grid):
 
         if weight > 0:
             self._detect_collisions(child)
-        
+
     def _shift_child(self, child, weight):
         rect = self._child_rects[child]
-        
+
         new_rects = []
 
         # Get rects right, left, bottom and top
@@ -148,7 +148,7 @@ class Grid(_sugarext.Grid):
             if new_weight < weight:
                 best_rect = new_rect
                 weight = new_weight
-        
+
         if best_rect:
             self._child_rects[child] = best_rect
             weight = self._shift_child(child, weight)

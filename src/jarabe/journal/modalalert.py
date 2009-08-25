@@ -22,7 +22,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
-class ModalAlert(gtk.Window):    
+class ModalAlert(gtk.Window):
 
     __gtype_name__ = 'SugarModalAlert'
 
@@ -34,16 +34,16 @@ class ModalAlert(gtk.Window):
         width = gtk.gdk.screen_width() - offset * 2
         height = gtk.gdk.screen_height() - offset * 2
         self.set_size_request(width, height)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS) 
+        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
-        
+
         self._main_view = gtk.EventBox()
-        self._vbox = gtk.VBox()        
+        self._vbox = gtk.VBox()
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self._vbox.set_border_width(style.GRID_CELL_SIZE * 2)
-        self._main_view.modify_bg(gtk.STATE_NORMAL, 
+        self._main_view.modify_bg(gtk.STATE_NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._main_view.add(self._vbox)
         self._vbox.show()
@@ -58,17 +58,17 @@ class ModalAlert(gtk.Window):
         icon.show()
 
         self._title = gtk.Label()
-        self._title.modify_fg(gtk.STATE_NORMAL, 
+        self._title.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
-        self._title.set_markup('<b>%s</b>' % _('Your Journal is full'))  
+        self._title.set_markup('<b>%s</b>' % _('Your Journal is full'))
         self._vbox.pack_start(self._title, False)
         self._title.show()
 
-        self._message = gtk.Label(_('Please delete some old Journal' 
+        self._message = gtk.Label(_('Please delete some old Journal'
                                     ' entries to make space for new ones.'))
-        self._message.modify_fg(gtk.STATE_NORMAL, 
+        self._message.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(self._message, False)        
+        self._vbox.pack_start(self._message, False)
         self._message.show()
 
         alignment = gtk.Alignment(xalign=0.5, yalign=0.5)

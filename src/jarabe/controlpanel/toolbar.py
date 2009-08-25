@@ -66,7 +66,7 @@ class MainToolbar(gtk.Toolbar):
 
     def get_entry(self):
         return self._search_entry
-       
+
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -103,12 +103,12 @@ class SectionToolbar(gtk.Toolbar):
 
         self._icon = Icon()
         self._add_widget(self._icon)
-        
+
         self._add_separator()
 
         self._title = gtk.Label()
         self._add_widget(self._title)
-        
+
         self._add_separator(True)
 
         self.cancel_button = ToolButton('dialog-cancel')

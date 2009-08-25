@@ -102,7 +102,7 @@ class ViewSource(gtk.Window):
         self.set_border_width(style.LINE_WIDTH)
 
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         self._parent_window_xid = window_xid
@@ -125,7 +125,7 @@ class ViewSource(gtk.Window):
         vbox.pack_start(pane)
         pane.show()
 
-        self._selected_file = None        
+        self._selected_file = None
         file_name = ''
 
         activity_bundle = ActivityBundle(bundle_path)
@@ -145,7 +145,7 @@ class ViewSource(gtk.Window):
         pane.add2(self._source_display)
         self._source_display.show()
         self._source_display.file_path = self._selected_file
-        
+
         if document_path is not None:
             self._select_source(document_path)
 
@@ -197,7 +197,7 @@ class ViewSource(gtk.Window):
 
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
-    
+
     def __init__(self, file_name, document_path, title):
         RadioToolButton.__init__(self)
 
@@ -216,7 +216,7 @@ class DocumentButton(RadioToolButton):
         icon.show()
 
         menu_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU, 
+        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
                     xo_color=XoColor(self._color))
         menu_item.set_image(icon)
 
@@ -246,7 +246,7 @@ class DocumentButton(RadioToolButton):
     def __internal_save_cb(self):
         logging.debug("Saved Source object to datastore.")
         self._jobject.destroy()
-     
+
     def __internal_save_error_cb(self, err):
         logging.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
@@ -273,7 +273,7 @@ class Toolbar(gtk.Toolbar):
 
         if document_path is not None and os.path.exists(document_path):
             document_button = DocumentButton(file_name, document_path, title)
-            document_button.connect('toggled', self.__button_toggled_cb, 
+            document_button.connect('toggled', self.__button_toggled_cb,
                                     document_path)
             self.insert(document_button, -1)
             document_button.show()
@@ -290,7 +290,7 @@ class Toolbar(gtk.Toolbar):
             if document_path is not None:
                 activity_button.props.group = document_button
             activity_button.props.tooltip = _('Activity Bundle Source')
-            activity_button.connect('toggled', self.__button_toggled_cb, 
+            activity_button.connect('toggled', self.__button_toggled_cb,
                                     bundle_path)
             self.insert(activity_button, -1)
             activity_button.show()
@@ -303,7 +303,7 @@ class Toolbar(gtk.Toolbar):
         self._add_widget(label)
 
         self._add_separator(True)
-        
+
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
         stop.connect('clicked', self.__stop_clicked_cb)
@@ -390,7 +390,7 @@ class FileViewer(gtk.ScrolledWindow):
                 if os.path.isdir(full_path):
                     new_iter = model.append(parent, [f, full_path])
                     self._add_dir_to_model(full_path, new_iter)
-                else:                    
+                else:
                     current_iter = model.append(parent, [f, full_path])
                     if f == self._initial_filename:
                         selection = self._tree_view.get_selection()
@@ -413,7 +413,7 @@ class SourceDisplay(gtk.ScrolledWindow):
         self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
         self.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
 
-        self._buffer = gtksourceview2.Buffer()        
+        self._buffer = gtksourceview2.Buffer()
         self._buffer.set_highlight_syntax(True)
 
         self._source_view = gtksourceview2.View(self._buffer)

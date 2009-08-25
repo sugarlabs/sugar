@@ -48,8 +48,8 @@ def register_laptop(url=REGISTER_URL):
         data = server.register(sn, nick, uuid, profile.pubkey)
     except (Error, socket.error):
         logging.exception('Registration: cannot connect to server')
-        raise RegisterError(_('Cannot connect to the server.'))        
-        
+        raise RegisterError(_('Cannot connect to the server.'))
+
     if data['success'] != 'OK':
         logging.error('Registration: server could not complete request: %s',
                       data['error'])

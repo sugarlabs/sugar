@@ -36,10 +36,10 @@ class TabbingHandler(object):
             logging.debug('Grabing the input.')
 
             screen = gtk.gdk.screen_get_default()
-            window = screen.get_root_window()     
+            window = screen.get_root_window()
             keyboard_grab_result = gtk.gdk.keyboard_grab(window)
             pointer_grab_result = gtk.gdk.pointer_grab(window)
-            
+
             self._tabbing = (keyboard_grab_result == gtk.gdk.GRAB_SUCCESS and
                              pointer_grab_result == gtk.gdk.GRAB_SUCCESS)
 

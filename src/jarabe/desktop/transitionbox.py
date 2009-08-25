@@ -61,12 +61,12 @@ class _Layout(gobject.GObject, hippo.CanvasLayout):
 
 class TransitionBox(hippo.Canvas):
     __gtype_name__ = 'SugarTransitionBox'
-    
+
     __gsignals__ = {
         'completed': (gobject.SIGNAL_RUN_FIRST,
                       gobject.TYPE_NONE, ([]))
     }
-    
+
     def __init__(self):
         gobject.GObject.__init__(self)
 

@@ -116,7 +116,7 @@ class ExpandedEntry(hippo.CanvasBox):
             header.reverse()
 
         # First column
-        
+
         self._preview = self._create_preview()
         first_column.append(self._preview)
 
@@ -179,7 +179,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         if self._metadata.has_key('preview') and \
                 len(self._metadata['preview']) > 4:
-            
+
             if self._metadata['preview'][1:4] == 'PNG':
                 preview_data = self._metadata['preview']
             else:
@@ -256,7 +256,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox = hippo.CanvasBox()
         vbox.props.spacing = style.DEFAULT_SPACING
-        
+
         text = hippo.CanvasText(text=_('Participants:'),
                                 font_desc=style.FONT_NORMAL.get_pango_desc())
         text.props.color = style.COLOR_BUTTON_GREY.get_int()
@@ -305,7 +305,7 @@ class ExpandedEntry(hippo.CanvasBox):
     def _create_tags(self):
         vbox = hippo.CanvasBox()
         vbox.props.spacing = style.DEFAULT_SPACING
-        
+
         text = hippo.CanvasText(text=_('Tags:'),
                                 font_desc=style.FONT_NORMAL.get_pango_desc())
         text.props.color = style.COLOR_BUTTON_GREY.get_int()
@@ -316,7 +316,7 @@ class ExpandedEntry(hippo.CanvasBox):
             text.props.xalign = hippo.ALIGNMENT_START
 
         vbox.append(text)
-        
+
         tags = self._metadata.get('tags', '')
         text_view = CanvasTextView(tags, box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
@@ -366,9 +366,9 @@ class ExpandedEntry(hippo.CanvasBox):
 
         if needs_update:
             model.write(self._metadata, update_mtime=False)
- 
+
         self._update_title_sid = None
- 
+
     def get_keep(self):
         return int(self._metadata.get('keep', 0)) == 1
 

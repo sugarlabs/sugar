@@ -102,7 +102,7 @@ class VolumesToolbar(gtk.Toolbar):
         logging.debug('__unmount_cb %r %r', source, result)
 
     def _get_button_for_mount(self, mount):
-        mount_point = mount.get_root().get_path()    
+        mount_point = mount.get_root().get_path()
         for button in self.get_children():
             if button.mount_point == mount_point:
                 return button
@@ -157,7 +157,7 @@ class VolumeButton(BaseButton):
             icon_name = 'drive'
 
         self.props.named_icon = icon_name
-        
+
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))

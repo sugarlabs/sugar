@@ -90,10 +90,10 @@ class ClipboardObject(object):
 
     def set_percent(self, percent):
         self._percent = percent
-    
+
     def add_format(self, format_):
         self._formats[format_.get_type()] = format_
-    
+
     def get_formats(self):
         return self._formats
 

@@ -112,7 +112,7 @@ class FavoritesView(hippo.Canvas):
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
-        self._set_layout(favorites_settings.layout)        
+        self._set_layout(favorites_settings.layout)
 
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
@@ -169,7 +169,7 @@ class FavoritesView(hippo.Canvas):
             self._add_activity(activity_info)
 
     def do_size_allocate(self, allocation):
-        width = allocation.width        
+        width = allocation.width
         height = allocation.height
 
         min_w_, my_icon_width = self._my_icon.get_width_request()
@@ -213,7 +213,7 @@ class FavoritesView(hippo.Canvas):
     def __motion_notify_event_cb(self, widget, event):
         if not self._pressed_button:
             return False
-        
+
         # if the mouse button is not pressed, no drag should occurr
         if not event.state & gtk.gdk.BUTTON1_MASK:
             self._pressed_button = None
@@ -239,7 +239,7 @@ class FavoritesView(hippo.Canvas):
         icon_file_name = self._last_clicked_icon.props.file_name
         # TODO: we should get the pixbuf from the widget, so it has colors, etc
         pixbuf = gtk.gdk.pixbuf_new_from_file(icon_file_name)
-        
+
         self._hot_x = pixbuf.props.width / 2
         self._hot_y = pixbuf.props.height / 2
         context.set_icon_pixbuf(pixbuf, self._hot_x, self._hot_y)
@@ -322,7 +322,7 @@ class FavoritesView(hippo.Canvas):
         except RegisterError, e:
             alert.props.title = _('Registration Failed')
             alert.props.msg = _('%s') % e
-        else:    
+        else:
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
                                 'with your school server.')
@@ -332,8 +332,8 @@ class FavoritesView(hippo.Canvas):
         alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
 
         self.add_alert(alert)
-        alert.connect('response', self.__register_alert_response_cb)            
-            
+        alert.connect('response', self.__register_alert_response_cb)
+
     def __register_alert_response_cb(self, alert, response_id):
         self.remove_alert()
 
@@ -500,7 +500,7 @@ class ActivityIcon(CanvasIcon):
         cr.stroke()
 
     def do_get_content_height_request(self, for_width):
-        height, height = CanvasIcon.do_get_content_height_request(self, 
+        height, height = CanvasIcon.do_get_content_height_request(self,
                                                                   for_width)
         height += ActivityIcon._BORDER_WIDTH * 2
         return height, height
@@ -689,7 +689,7 @@ class FavoritesSetting(object):
     _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
 
     def __init__(self):
-        client = gconf.client_get_default() 
+        client = gconf.client_get_default()
         self._layout = client.get_string(self._FAVORITES_KEY)
         logging.debug('FavoritesSetting layout %r', self._layout)
 

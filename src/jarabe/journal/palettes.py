@@ -59,7 +59,7 @@ class ObjectPalette(Palette):
             activity_icon.props.xo_color = \
                 XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                    style.COLOR_TRANSPARENT.get_svg()))
-        
+
         if metadata.has_key('title'):
             title = gobject.markup_escape_text(metadata['title'])
         else:
@@ -173,7 +173,7 @@ class FriendsMenu(gtk.Menu):
             friends_model = friends.get_model()
             for friend in friends_model:
                 if friend.is_present():
-                    menu_item = MenuItem(text_label=friend.get_nick(), 
+                    menu_item = MenuItem(text_label=friend.get_nick(),
                                          icon_name='computer-xo',
                                          xo_color=friend.get_color())
                     menu_item.connect('activate', self.__item_activate_cb,
@@ -185,12 +185,12 @@ class FriendsMenu(gtk.Menu):
                 menu_item = MenuItem(_('No friends present'))
                 menu_item.set_sensitive(False)
                 self.append(menu_item)
-                menu_item.show()            
+                menu_item.show()
         else:
             menu_item = MenuItem(_('No valid connection found'))
             menu_item.set_sensitive(False)
             self.append(menu_item)
-            menu_item.show()            
+            menu_item.show()
 
     def __item_activate_cb(self, menu_item, friend):
         self.emit('friend-selected', friend)
@@ -221,7 +221,7 @@ class StartWithMenu(gtk.Menu):
             menu_item = MenuItem(resume_label)
             menu_item.set_sensitive(False)
             self.append(menu_item)
-            menu_item.show()            
+            menu_item.show()
 
     def __item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)

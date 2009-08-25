@@ -50,10 +50,10 @@ class SessionManager(session.SessionManager):
         session.SessionManager.shutdown_completed(self)
 
         bus = dbus.SystemBus()
-        proxy = bus.get_object('org.freedesktop.Hal', 
+        proxy = bus.get_object('org.freedesktop.Hal',
                                '/org/freedesktop/Hal/devices/computer')
         pm = dbus.Interface(proxy, \
-                            'org.freedesktop.Hal.Device.SystemPowerManagement') 
+                            'org.freedesktop.Hal.Device.SystemPowerManagement')
 
         if env.is_emulator():
             self._close_emulator()

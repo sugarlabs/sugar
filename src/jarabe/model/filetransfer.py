@@ -93,7 +93,7 @@ class StreamSplicer(gobject.GObject):
             output_stream.close()
             self.emit('finished')
         else:
-            self._write_next_buffer()            
+            self._write_next_buffer()
 
     def _write_next_buffer(self):
         if self._pending_buffers and not self._output_stream.has_pending():
@@ -261,7 +261,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
             CHANNEL_TYPE_FILE_TRANSFER + '.InitialOffset': 0})
 
         self.set_channel(Channel(connection.service_name, object_path))
-        
+
         channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_file_transfer.ProvideFile(
                 SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',

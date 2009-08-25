@@ -133,7 +133,7 @@ class ClipboardIcon(RadioToolButton):
                     XoColor('%s,%s' % (self._icon.props.stroke_color,
                                        self._icon.props.fill_color))
             frame = jarabe.frame.get_view()
-            frame.add_notification(self._notif_icon, 
+            frame.add_notification(self._notif_icon,
                                    gtk.CORNER_BOTTOM_LEFT)
         self._current_percent = cb_object.get_percent()
 

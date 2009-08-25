@@ -83,7 +83,7 @@ class GroupBox(hippo.Canvas):
         icon.destroy()
 
     def do_size_allocate(self, allocation):
-        width = allocation.width        
+        width = allocation.width
         height = allocation.height
 
         min_w_, icon_width = self._owner_icon.get_width_request()

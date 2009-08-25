@@ -58,7 +58,7 @@ class ClipboardPanelWindow(FrameWindow):
         cb_service = clipboard.get_instance()
         key = cb_service.add_object(name="")
         cb_service.set_object_percent(key, percent=0)
-        
+
         targets = x_clipboard.wait_for_targets()
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
@@ -76,9 +76,9 @@ class ClipboardPanelWindow(FrameWindow):
         if not selection.data:
             logging.warning('no data for selection target %s.', selection.type)
             return
-            
+
         logging.debug('adding type ' + selection.type + '.')
-                    
+
         cb_service = clipboard.get_instance()
         if selection.type == 'text/uri-list':
             uris = selection.get_uris()
@@ -96,7 +96,7 @@ class ClipboardPanelWindow(FrameWindow):
                                          uri,
                                          on_disk)
         else:
-            cb_service.add_object_format(key, 
+            cb_service.add_object_format(key,
                                          selection.type,
                                          selection.data,
                                          on_disk=False)

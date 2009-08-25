@@ -74,7 +74,7 @@ class KeyDialog(gtk.Dialog):
         self._rsn_flags = rsn_flags
         self._dev_caps = dev_caps
 
-        self.set_has_separator(False)        
+        self.set_has_separator(False)
 
         label = gtk.Label("A wireless encryption key is required for\n" \
                           " the wireless network '%s'." % self._ssid)

@@ -46,10 +46,10 @@ class ActivityModel:
 
     def get_id(self):
         return self.activity.props.id
-        
+
     def get_icon_name(self):
         return self.bundle.get_icon()
-    
+
     def get_color(self):
         return XoColor(self.activity.props.color)
 
@@ -101,7 +101,7 @@ class Neighborhood(gobject.GObject):
             self.__conn_addded_cb(self._conn_watcher, conn)
 
         gconf_client = gconf.client_get_default()
-        gconf_client.add_dir('/desktop/sugar/collaboration', 
+        gconf_client.add_dir('/desktop/sugar/collaboration',
                              gconf.CLIENT_PRELOAD_NONE)
         gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
             self.__publish_gadget_changed_cb)
@@ -158,7 +158,7 @@ class Neighborhood(gobject.GObject):
                 lambda: self.__respawnable_view_closed_cb(
                     lambda: self._request_random_activities(conn, nb)))
 
-    def __publish_gadget_changed_cb(self, client_, cnxn_id_, entry, 
+    def __publish_gadget_changed_cb(self, client_, cnxn_id_, entry,
                                     user_data=None):
         if entry.value.type == gconf.VALUE_BOOL:
             publish = entry.value.get_bool()

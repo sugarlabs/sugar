@@ -62,7 +62,7 @@ class BuddyModel(gobject.GObject):
         self._buddy = None
 
         if not buddy:
-            self._key = key        
+            self._key = key
             # connect to the PS's buddy-appeared signal and
             # wait for the buddy to appear
             self._ba_handler = self._pservice.connect('buddy-appeared',
@@ -162,7 +162,7 @@ class BuddyModel(gobject.GObject):
             self.emit('current-activity-changed', buddy.props.current_activity)
         if 'nick' in keys:
             self._nick = self._buddy.props.nick
-            self.emit('nick-changed', self.get_nick())            
+            self.emit('nick-changed', self.get_nick())
         if 'tags' in keys:
             self._tags = self._buddy.props.tags
             self.emit('tags-changed', self.get_tags())
