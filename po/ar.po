@@ -1242,5 +1242,10 @@ msgstr "اعرض مصدر: %r"
 #~ msgid " and "
 #~ msgstr " و "
 
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#, python-format
 #~ msgid ", "
 #~ msgstr "، "
