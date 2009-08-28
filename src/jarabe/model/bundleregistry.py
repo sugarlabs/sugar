@@ -219,8 +219,17 @@ class BundleRegistry(gobject.GObject):
             logging.exception('Error loading bundle %r', bundle_path)
             return None
 
-        if self.get_bundle(bundle.get_bundle_id()):
-            return None
+        bundle_id = bundle.get_bundle_id()
+        installed = self.get_bundle(bundle_id)
+
+        if installed is not None:
+            if installed.get_activity_version() >= \
+                    bundle.get_activity_version():
+                logging.debug('Skip old version for %s', bundle_id)
+                return None
+            else:
+                logging.debug('Upgrade %s', bundle_id)
+                self.remove_bundle(installed.get_path())
 
         self._bundles.append(bundle)
         return bundle
@@ -367,14 +376,15 @@ class BundleRegistry(gobject.GObject):
                 act.get_activity_version() != bundle.get_activity_version():
             logging.warning('Not uninstalling, different bundle present')
             return
-        elif not act.get_path().startswith(env.get_user_activities_path()):
-            logging.warning('Not uninstalling system activity')
+
+        if not act.is_user_activity():
+            logging.debug('Do not uninstall system activity')
             return
 
         install_path = act.get_path()
 
         bundle.uninstall(install_path, force)
-        
+
         if not self.remove_bundle(install_path):
             raise RegistrationException
 
@@ -385,7 +395,7 @@ class BundleRegistry(gobject.GObject):
         elif act.get_activity_version() == bundle.get_activity_version():
             logging.debug('No upgrade needed, same version already installed.')
             return
-        elif act.get_path().startswith(env.get_user_activities_path()):
+        elif act.is_user_activity():
             try:
                 self.uninstall(bundle, force=True)
             except Exception:

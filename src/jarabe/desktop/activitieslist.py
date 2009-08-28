@@ -403,10 +403,11 @@ class ActivityListPalette(ActivityPalette):
         self.menu.append(self._favorite_item)
         self._favorite_item.show()
 
-        menu_item = MenuItem(_('Erase'), 'list-remove')
-        menu_item.connect('activate', self.__erase_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        if activity_info.is_user_activity():
+            menu_item = MenuItem(_('Erase'), 'list-remove')
+            menu_item.connect('activate', self.__erase_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
 
         if not os.access(activity_info.get_path(), os.W_OK):
             menu_item.props.sensitive = False
