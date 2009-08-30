@@ -217,7 +217,10 @@ class AccessPointView(CanvasPulsingIcon):
         logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
-        if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
+        if network.find_connection(self._name) is not None:
+            self.props.badge_name = "emblem-favorite"
+            self._palette_icon.props.badge_name = "emblem-favorite"
+        elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
             self.props.badge_name = "emblem-locked"
             self._palette_icon.props.badge_name = "emblem-locked"
         else:
