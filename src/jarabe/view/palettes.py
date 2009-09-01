@@ -215,7 +215,7 @@ class VolumePalette(Palette):
 
         self.connect('popup', self.__popup_cb)
 
-        menu_item = MenuItem(_('Unmount'))
+        menu_item = MenuItem(_('Remove'))
 
         icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
         menu_item.set_image(icon)
