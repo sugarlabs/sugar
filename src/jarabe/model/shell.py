@@ -35,14 +35,6 @@ _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
 _SERVICE_INTERFACE = "org.laptop.Activity"
 
-def get_sugar_window_type(wnck_window):
-    window = gtk.gdk.window_foreign_new(wnck_window.get_xid())
-    prop_info = window.property_get('_SUGAR_WINDOW_TYPE', 'STRING')
-    if prop_info is None:
-        return None
-    else:
-        return prop_info[2]
-
 class Activity(gobject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
 
@@ -469,7 +461,7 @@ class ShellModel(gobject.GObject):
             else:
                 home_activity.set_window(window)
 
-            if get_sugar_window_type(window) != 'launcher':
+            if wm.get_sugar_window_type(window) != 'launcher':
                 home_activity.props.launching = False
                 self.emit('launch-completed', home_activity)
 
