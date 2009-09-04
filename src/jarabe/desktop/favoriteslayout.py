@@ -281,6 +281,9 @@ class RingLayout(FavoritesLayout):
             min_w_, child_width = child.get_width_request()
             min_h_, child_height = child.get_height_request(child_width)
 
+            if child_width <= 0 or child_height <= 0:
+                return
+
             child.allocate(int(x), int(y), child_width, child_height,
                             origin_changed)
 

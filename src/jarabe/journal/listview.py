@@ -388,10 +388,14 @@ class BaseListView(gtk.Bin):
         self._scrolled_window.show()
 
     def update_dates(self):
-        logging.debug('ListView.update_dates')
+        if not self.tree_view.flags() & gtk.REALIZED:
+            return
         visible_range = self.tree_view.get_visible_range()
         if visible_range is None:
             return
+
+        logging.debug('ListView.update_dates')
+
         path, end_path = visible_range
         while True:
             x, y, width, height = self.tree_view.get_cell_area(path,

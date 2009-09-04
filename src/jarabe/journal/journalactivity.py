@@ -199,8 +199,8 @@ class JournalActivity(Window):
         self.show_main_view()
 
     def show_main_view(self):
-        if self.toolbox != self._main_toolbox:
-            self.set_toolbox(self._main_toolbox)
+        if self.toolbar_box != self._main_toolbox:
+            self.set_toolbar_box(self._main_toolbox)
             self._main_toolbox.show()
 
         if self.canvas != self._main_view:
@@ -215,7 +215,7 @@ class JournalActivity(Window):
             logging.error('Exception while displaying entry:\n' + \
                 ''.join(traceback.format_exception(*sys.exc_info())))
 
-        self.set_toolbox(self._detail_toolbox)
+        self.set_toolbar_box(self._detail_toolbox)
         self._detail_toolbox.show()
 
         try:

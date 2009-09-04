@@ -463,7 +463,8 @@ class ShellModel(gobject.GObject):
 
             if wm.get_sugar_window_type(window) != 'launcher':
                 home_activity.props.launching = False
-                self.emit('launch-completed', home_activity)
+                if not home_activity.is_journal():
+                    self.emit('launch-completed', home_activity)
 
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
