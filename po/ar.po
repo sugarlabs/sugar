@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-26 00:31-0400\n"
-"PO-Revision-Date: 2009-09-05 13:01-0400\n"
+"PO-Revision-Date: 2009-09-05 13:21-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -535,11 +535,11 @@ msgstr "طور الاستكمال المفضل"
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
-msgstr ""
+msgstr "إذا ضبطت «صحيح» فستتيح سكّر البحث عنا في خادوم جابِر"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
+msgstr "إذا ضبطت «صحيح» فستظهر سكّر خيار \"اخرج\"."
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Jabber Server"
@@ -642,24 +642,24 @@ msgstr "مستوى شدة الصوت."
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
-msgstr ""
+msgstr "في وضع الاستكمال، النقر على أيقونة مفضلة سيستكمل آخر مدخلة لهذا النشاط."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr ""
+msgstr "لوحة تحكم سكر: تحذير، وُجد أكثر من خيار بنفس الاسم: %s الوحدة: %s"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "لوحة تحكم سكر: key=%s ليس متاحا كخيار"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "لوحة تحكم سكر: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -676,6 +676,16 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"الاستخدام: لوحة تحكم سكر [ خيار ] مفتاح [ معاملات ... ]\n"
+"لوحة تحكم لبيئة «سُكّر».\n"
+"الخيارات: \n"
+"-hاعرض رسالة المساعدة هذه \n"
+"-lاسرد كل الخيارات المتاحة \n"
+"-h keyاعرض معلومات عن هذا المفتاح \n"
+"-g key       اعرض القيمة الحالية للمفتاح \n"
+"-s keyاضبط قيمة المفتاح \n"
+"-c keyامسح القيمة الحالية للمفتاح \n"
+"          "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
@@ -964,7 +974,7 @@ msgstr "افتح باستخدام"
 #: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "قصاصة %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
@@ -1488,5 +1498,10 @@ msgstr "اعرض مصدر: %r"
 #~ msgid ", "
 #~ msgstr "، "
 
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#, python-format
 #~ msgid "No matching entries "
 #~ msgstr "لا نتائج مطابقة "
