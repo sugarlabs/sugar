@@ -198,7 +198,6 @@ class BaseListView(gtk.HBox):
     def refresh(self):
         logging.debug('ListView.refresh query %r' % self._query)
         self._stop_progress_bar()
-        self._start_progress_bar()
         if self._result_set is not None:
             self._result_set.stop()
 
@@ -238,6 +237,9 @@ class BaseListView(gtk.HBox):
             return True
 
     def __result_set_progress_cb(self, **kwargs):
+        if self._progress_bar is None:
+            self._start_progress_bar()
+
         if time.time() - self._last_progress_bar_pulse > 0.05:
             if self._progress_bar is not None:
                 self._progress_bar.pulse()
