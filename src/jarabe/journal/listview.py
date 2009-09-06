@@ -279,7 +279,6 @@ class BaseListView(gtk.Bin):
     def refresh(self):
         logging.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
-        self._start_progress_bar()
 
         if self._model is not None:
             self._model.stop()
@@ -290,11 +289,18 @@ class BaseListView(gtk.Bin):
         self._model.setup()
 
     def __model_ready_cb(self, tree_model):
+        logging.debug('ListView.__model_ready_cb')
         self._stop_progress_bar()
+
+        scroll_position = self.tree_view.props.vadjustment.props.value
+        logging.debug('ListView.__model_ready_cb %r', scroll_position)
 
         # Cannot set it up earlier because will try to access the model and it
         # needs to be ready.
         self.tree_view.set_model(self._model)
+
+        self.tree_view.props.vadjustment.props.value = scroll_position
+        self.tree_view.props.vadjustment.value_changed()
 
         if len(tree_model) == 0:
             if self._is_query_empty():
@@ -315,6 +321,9 @@ class BaseListView(gtk.Bin):
             return True
 
     def __model_progress_cb(self, tree_model):
+        if self._progress_bar is None:
+            self._start_progress_bar()
+
         if time.time() - self._last_progress_bar_pulse > 0.05:
             if self._progress_bar is not None:
                 self._progress_bar.pulse()
@@ -383,6 +392,8 @@ class BaseListView(gtk.Bin):
         self.emit('clear-clicked')
 
     def _clear_message(self):
+        if self.child == self._scrolled_window:
+            return
         self.remove(self.child)
         self.add(self._scrolled_window)
         self._scrolled_window.show()
