@@ -261,7 +261,7 @@ class BaseListView(gtk.Bin):
     def __favorite_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
-        if metadata['keep'] == '1':
+        if metadata.get('keep', 0) == '1':
             metadata['keep'] = '0'
         else:
             metadata['keep'] = '1'
