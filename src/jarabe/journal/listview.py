@@ -71,9 +71,12 @@ class BaseListView(gtk.Bin):
         self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
+        self._scroll_position = 0.
 
         gobject.GObject.__init__(self)
 
+        self.connect('map', self.__map_cb)
+        self.connect('unrealize', self.__unrealize_cb)
         self.connect('destroy', self.__destroy_cb)
 
         self._scrolled_window = gtk.ScrolledWindow()
@@ -292,14 +295,14 @@ class BaseListView(gtk.Bin):
         logging.debug('ListView.__model_ready_cb')
         self._stop_progress_bar()
 
-        scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__model_ready_cb %r', scroll_position)
+        self._scroll_position = self.tree_view.props.vadjustment.props.value
+        logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
 
         # Cannot set it up earlier because will try to access the model and it
         # needs to be ready.
         self.tree_view.set_model(self._model)
 
-        self.tree_view.props.vadjustment.props.value = scroll_position
+        self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
 
         if len(tree_model) == 0:
@@ -309,6 +312,15 @@ class BaseListView(gtk.Bin):
                 self._show_message(MESSAGE_NO_MATCH)
         else:
             self._clear_message()
+
+    def __map_cb(self, widget):
+        logging.debug('ListView.__map_cb %r', self._scroll_position)
+        self.tree_view.props.vadjustment.props.value = self._scroll_position
+        self.tree_view.props.vadjustment.value_changed()
+
+    def __unrealize_cb(self, widget):
+        self._scroll_position = self.tree_view.props.vadjustment.props.value
+        logging.debug('ListView.__map_cb %r', self._scroll_position)
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
