@@ -211,6 +211,8 @@ class BaseCollapsedEntry(hippo.CanvasBox):
 
     def __keep_icon_button_release_event_cb(self, button, event):
         logging.debug('__keep_icon_button_release_event_cb')
+        if not model.is_editable(metadata):
+            return
         metadata = model.get(self._metadata['uid'])
         if self.get_keep():
             metadata['keep'] = 0

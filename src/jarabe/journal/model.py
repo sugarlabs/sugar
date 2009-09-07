@@ -397,9 +397,11 @@ def _datastore_updated_cb(object_id):
 def _datastore_deleted_cb(object_id):
     deleted.send(None, object_id=object_id)
 
-def find(query, page_size):
+def find(query_, page_size):
     """Returns a ResultSet
     """
+    query = query_.copy()
+
     if 'order_by' not in query:
         query['order_by'] = ['-mtime']
     
@@ -539,7 +541,10 @@ def _get_unique_file_name(mount_point, file_name):
 
     return file_name
 
+def is_editable(metadata):
+    mountpoint = metadata.get('mountpoint', '/')
+    return mountpoint == '/'
+
 created = dispatch.Signal()
 updated = dispatch.Signal()
 deleted = dispatch.Signal()
-

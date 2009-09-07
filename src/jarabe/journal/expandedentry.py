@@ -154,12 +154,18 @@ class ExpandedEntry(hippo.CanvasBox):
         return icon
 
     def _create_title(self):
-        title = CanvasEntry()
-        title.set_background(style.COLOR_WHITE.get_html())
-        title.props.text = self._metadata.get('title', _('Untitled'))
-        title.props.widget.connect('focus-out-event',
-                                   self._title_focus_out_event_cb)
-        return title
+        entry = gtk.Entry()
+        entry.props.text = self._metadata.get('title', _('Untitled'))
+
+        bg_color = style.COLOR_WHITE.get_gdk_color()
+        entry.modify_bg(gtk.STATE_INSENSITIVE, bg_color)
+        entry.modify_base(gtk.STATE_INSENSITIVE, bg_color)
+
+        entry.props.editable = model.is_editable(self._metadata)
+        if entry.props.editable:
+            entry.connect('focus-out-event', self._title_focus_out_event_cb)
+
+        return hippo.CanvasWidget(widget=entry)
 
     def _create_date(self):
         date = hippo.CanvasText(xalign=hippo.ALIGNMENT_START,
@@ -261,8 +267,11 @@ class ExpandedEntry(hippo.CanvasBox):
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
-        text_view.text_view_widget.connect('focus-out-event',
-                                           self._description_focus_out_event_cb)
+        editable = model.is_editable(self._metadata)
+        if editable:
+            text_view.text_view_widget.connect('focus-out-event',
+                    self._description_focus_out_event_cb)
+        text_view.text_view_widget.props.editable = editable
 
         return vbox, text_view
 
@@ -286,8 +295,11 @@ class ExpandedEntry(hippo.CanvasBox):
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
-        text_view.text_view_widget.connect('focus-out-event',
-                                           self._tags_focus_out_event_cb)
+        editable = model.is_editable(self._metadata)
+        if editable:
+            text_view.text_view_widget.connect('focus-out-event',
+                    self._tags_focus_out_event_cb)
+        text_view.text_view_widget.props.editable = editable
 
         return vbox, text_view
 
@@ -309,9 +321,10 @@ class ExpandedEntry(hippo.CanvasBox):
         needs_update = False
 
         old_title = self._metadata.get('title', None)
-        if old_title != self._title.props.text:
-            self._icon.palette.props.primary_text = self._title.props.text
-            self._metadata['title'] = self._title.props.text
+        new_title = self._title.props.widget.props.text
+        if old_title != new_title:
+            self._icon.palette.props.primary_text = new_title
+            self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
 
@@ -337,6 +350,8 @@ class ExpandedEntry(hippo.CanvasBox):
         return int(self._metadata.get('keep', 0)) == 1
 
     def _keep_icon_activated_cb(self, keep_icon):
+        if not model.is_editable(self._metadata):
+            return
         if self.get_keep():
             self._metadata['keep'] = 0
         else:
