@@ -258,8 +258,7 @@ class BaseListView(gtk.Bin):
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             cell.props.xo_color = color
         else:
-            cell.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            cell.props.fill_color = style.COLOR_WHITE.get_svg()
+            cell.props.xo_color = None
 
     def __favorite_clicked_cb(self, cell, path):
         row = self._model[path]
