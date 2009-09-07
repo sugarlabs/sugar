@@ -146,8 +146,6 @@ class Frame(object):
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
-        self._event_area.show()
-
         self.mode = None
 
     def show(self, mode):
@@ -161,8 +159,6 @@ class Frame(object):
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
-
-        self._event_area.hide()
 
     def move(self, pos):
         self.current_position = pos
