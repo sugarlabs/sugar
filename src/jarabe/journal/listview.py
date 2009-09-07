@@ -478,9 +478,14 @@ class ListView(BaseListView):
 
     def __init__(self):
         BaseListView.__init__(self)
+        self._is_dragging = False
 
-        self.cell_title.props.editable = True
+        self.tree_view.connect('drag-begin', self.__drag_begin_cb)
+        self.tree_view.connect('button-release-event',
+                self.__button_release_event_cb)
+
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
+        self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
 
         self.cell_icon.connect('clicked', self.__icon_clicked_cb)
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
@@ -493,6 +498,27 @@ class ListView(BaseListView):
         column.props.fixed_width = cell_detail.props.width
         column.pack_start(cell_detail)
         self.tree_view.append_column(column)
+
+    def __drag_begin_cb(self, widget, drag_context):
+        self._is_dragging = True
+
+    def __button_release_event_cb(self, tree_view, event):
+        try:
+            if self._is_dragging:
+                return
+        finally:
+            self._is_dragging = False
+
+        pos = tree_view.get_path_at_pos(int(event.x), int(event.y))
+        if pos is None:
+            return
+
+        path, column, x_, y_ = pos
+        if column != self._title_column:
+            return
+
+        self.cell_title.props.editable = True
+        tree_view.set_cursor_on_cell(path, column, start_editing=True)
 
     def __detail_cell_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
@@ -511,6 +537,10 @@ class ListView(BaseListView):
         metadata = model.get(row[ListModel.COLUMN_UID])
         metadata['title'] = new_text
         model.write(metadata, update_mtime=False)
+        self.cell_title.props.editable = False
+
+    def __editing_canceled_cb(self, cell):
+        self.cell_title.props.editable = False
 
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
