@@ -63,13 +63,13 @@ class BuddyList(hippo.CanvasBox):
             self.append(hbox)
 
 class ExpandedEntry(hippo.CanvasBox):
-    def __init__(self, metadata):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
         self.props.orientation = hippo.ORIENTATION_VERTICAL
         self.props.background_color = style.COLOR_WHITE.get_int()
         self.props.padding_top = style.DEFAULT_SPACING * 3
 
-        self._metadata = metadata
+        self._metadata = None
         self._update_title_sid = None
 
         # Create header
@@ -102,8 +102,9 @@ class ExpandedEntry(hippo.CanvasBox):
         self._keep_icon = self._create_keep_icon()
         header.append(self._keep_icon)
 
-        self._icon = self._create_icon()
-        header.append(self._icon)
+        self._icon = None
+        self._icon_box = hippo.CanvasBox()
+        header.append(self._icon_box)
 
         self._title = self._create_title()
         header.append(self._title, hippo.PACK_EXPAND)
@@ -117,11 +118,11 @@ class ExpandedEntry(hippo.CanvasBox):
 
         # First column
 
-        self._preview = self._create_preview()
-        first_column.append(self._preview)
+        self._preview_box = hippo.CanvasBox()
+        first_column.append(self._preview_box)
 
-        technical_box = self._create_technical()
-        first_column.append(technical_box)
+        self._technical_box = hippo.CanvasBox()
+        first_column.append(self._technical_box)
 
         # Second column
 
@@ -131,12 +132,45 @@ class ExpandedEntry(hippo.CanvasBox):
         tags_box, self._tags = self._create_tags()
         second_column.append(tags_box)
 
-        self._buddy_list = self._create_buddy_list()
+        self._buddy_list = hippo.CanvasBox()
         second_column.append(self._buddy_list)
 
+    def set_metadata(self, metadata):
+        if self._metadata == metadata:
+            return
+        self._metadata = metadata
+
+        self._keep_icon.keep = (int(metadata.get('keep', 0)) == 1)
+
+        self._icon = self._create_icon()
+        self._icon_box.clear()
+        self._icon_box.append(self._icon)
+
+        self._date.props.text = misc.get_date(metadata)
+
+        title = self._title.props.widget
+        title.props.text = metadata.get('title', _('Untitled'))
+        title.props.editable = model.is_editable(metadata)
+
+        self._preview_box.clear()
+        self._preview_box.append(self._create_preview())
+
+        self._technical_box.clear()
+        self._technical_box.append(self._create_technical())
+
+        self._buddy_list.clear()
+        self._buddy_list.append(self._create_buddy_list())
+
+        description = self._description.text_view_widget
+        description.props.buffer.props.text = metadata.get('description', '')
+        description.props.editable = model.is_editable(metadata)
+
+        tags = self._tags.text_view_widget
+        tags.props.buffer.props.text = metadata.get('tags', '')
+        tags.props.editable = model.is_editable(metadata)
+
     def _create_keep_icon(self):
-        keep = int(self._metadata.get('keep', 0)) == 1
-        keep_icon = KeepIcon(keep)
+        keep_icon = KeepIcon(False)
         keep_icon.connect('activated', self._keep_icon_activated_cb)
         return keep_icon
 
@@ -160,22 +194,17 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _create_title(self):
         entry = gtk.Entry()
-        entry.props.text = self._metadata.get('title', _('Untitled'))
+        entry.connect('focus-out-event', self._title_focus_out_event_cb)
 
         bg_color = style.COLOR_WHITE.get_gdk_color()
         entry.modify_bg(gtk.STATE_INSENSITIVE, bg_color)
         entry.modify_base(gtk.STATE_INSENSITIVE, bg_color)
 
-        entry.props.editable = model.is_editable(self._metadata)
-        if entry.props.editable:
-            entry.connect('focus-out-event', self._title_focus_out_event_cb)
-
         return hippo.CanvasWidget(widget=entry)
 
     def _create_date(self):
         date = hippo.CanvasText(xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                text = misc.get_date(self._metadata))
+                                font_desc=style.FONT_NORMAL.get_pango_desc())
         return date
 
     def _create_preview(self):
@@ -297,17 +326,13 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        description = self._metadata.get('description', '')
-        text_view = CanvasTextView(description,
-                                   box_height=style.GRID_CELL_SIZE * 2)
+        text_view = CanvasTextView('',
+                box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
-        editable = model.is_editable(self._metadata)
-        if editable:
-            text_view.text_view_widget.connect('focus-out-event',
-                    self._description_focus_out_event_cb)
-        text_view.text_view_widget.props.editable = editable
+        text_view.text_view_widget.connect('focus-out-event',
+                self._description_focus_out_event_cb)
 
         return vbox, text_view
 
@@ -326,16 +351,13 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        tags = self._metadata.get('tags', '')
-        text_view = CanvasTextView(tags, box_height=style.GRID_CELL_SIZE * 2)
+        text_view = CanvasTextView('',
+                box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
-        editable = model.is_editable(self._metadata)
-        if editable:
-            text_view.text_view_widget.connect('focus-out-event',
-                    self._tags_focus_out_event_cb)
-        text_view.text_view_widget.props.editable = editable
+        text_view.text_view_widget.connect('focus-out-event',
+                self._tags_focus_out_event_cb)
 
         return vbox, text_view
 
@@ -354,6 +376,9 @@ class ExpandedEntry(hippo.CanvasBox):
         self._update_entry()
 
     def _update_entry(self):
+        if not model.is_editable(self._metadata):
+            return
+
         needs_update = False
 
         old_title = self._metadata.get('title', None)
@@ -405,4 +430,3 @@ class ExpandedEntry(hippo.CanvasBox):
         logging.debug('_preview_box_button_release_event_cb')
         misc.resume(self._metadata)
         return True
-

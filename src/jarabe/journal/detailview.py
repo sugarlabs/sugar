@@ -64,10 +64,10 @@ class DetailView(gtk.VBox):
         return False
 
     def _update_view(self):
-        if self._expanded_entry:
-            self._root.remove(self._expanded_entry)
-        self._expanded_entry = ExpandedEntry(self._metadata)
-        self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
+        if self._expanded_entry is None:
+            self._expanded_entry = ExpandedEntry()
+            self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
+        self._expanded_entry.set_metadata(self._metadata)
 
     def refresh(self):
         logging.debug('DetailView.refresh')
