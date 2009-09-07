@@ -263,6 +263,8 @@ class BaseListView(gtk.Bin):
     def __favorite_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
+        if not model.is_editable(metadata):
+            return
         if metadata.get('keep', 0) == '1':
             metadata['keep'] = '0'
         else:
@@ -324,6 +326,9 @@ class BaseListView(gtk.Bin):
     def __unrealize_cb(self, widget):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
         logging.debug('ListView.__map_cb %r', self._scroll_position)
+
+        is_editable = self._query.get('mountpoints', '') == '/'
+        self.cell_title.props.editable = is_editable
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
