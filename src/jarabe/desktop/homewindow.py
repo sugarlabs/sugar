@@ -49,8 +49,12 @@ class HomeWindow(gtk.Window):
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
+        self.connect('map-event', self.__map_event_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
+        self.connect('key-release-event', self.__key_release_event_cb)
 
         self._home_box = HomeBox()
         self._group_box = GroupBox()
@@ -85,6 +89,21 @@ class HomeWindow(gtk.Window):
             self._deactivate_view()
         else:
             self._activate_view()
+
+    def __key_press_event_cb(self, window, event):
+        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+            self._home_box.set_resume_mode(False)
+        return False
+
+    def __key_release_event_cb(self, window, event):
+        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+            self._home_box.set_resume_mode(True)
+        return False
+
+    def __map_event_cb(self, window, event):
+        # have to make the desktop window active
+        # since metacity doesn't make it on startup
+        self.window.focus()
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']

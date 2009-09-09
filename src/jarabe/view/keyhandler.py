@@ -35,7 +35,6 @@ from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
-from jarabe.desktop import homewindow
 
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
@@ -64,8 +63,6 @@ _actions_table = {
     'XF86Search'           : 'open_search',
     '<alt><shift>o'        : 'open_search',
     '<alt><shift>s'        : 'say_text',
-    'Alt_L'                : 'disable_resume_mode',
-    'Alt_R'                : 'disable_resume_mode',
 }
 
 SPEECH_DBUS_SERVICE = 'org.laptop.Speech'
@@ -201,13 +198,6 @@ class KeyHandler(object):
     def handle_open_search(self, event_time):
         journalactivity.get_journal().focus_search()
 
-    def handle_disable_resume_mode(self, event_time):
-        # TODO: KeyHandler should be a singleton and interested parties
-        # would listen to it. That way it wouldn't need to reference half
-        # of the shell classes.
-        home_box = homewindow.get_instance().get_home_box()
-        home_box.set_resume_mode(False)
-
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
         logging.debug('_key_pressed_cb: %i %i %s', keycode, state, key)
@@ -242,23 +232,8 @@ class KeyHandler(object):
 
         return False
 
-    def _is_resume_mode_keycode(self, keycode):
-        """See if the physical key pressed matches one of the keys that modify
-        the resume mode of the favorites view.
-        """
-        keymap = gtk.gdk.keymap_get_default()
-        entries = keymap.get_entries_for_keycode(keycode)
-        for entry in entries:
-            if gtk.gdk.keyval_name(entry[0]) in ['Alt_L', 'Alt_R']:
-                return True
-        return False
-
     def _key_released_cb(self, grabber, keycode, state, event_time):
         logging.debug('_key_released_cb: %i %i' % (keycode, state))
-        if self._is_resume_mode_keycode(keycode):
-            home_box = homewindow.get_instance().get_home_box()
-            home_box.set_resume_mode(True)
-
         if self._tabbing_handler.is_tabbing():
             # We stop tabbing and switch to the new window as soon as the
             # modifier key is raised again.
