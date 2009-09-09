@@ -17,10 +17,7 @@
 
 import os
 import logging
-import subprocess
-import errno
 import traceback
-import sys
 
 import gconf
 import dbus
@@ -98,7 +95,7 @@ class KeyHandler(object):
                         if key in _actions_table:
                             raise ValueError('Key %r is already bound' % key)
                         _actions_table[key] = module
-                except:
+                except Exception:
                     logging.error('Exception while loading extension:\n' + \
                                   traceback.format_exc())
 
