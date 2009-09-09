@@ -50,6 +50,7 @@ class HomeWindow(gtk.Window):
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
 
+        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
         self.connect('map-event', self.__map_event_cb)
@@ -86,9 +87,16 @@ class HomeWindow(gtk.Window):
 
     def _visibility_notify_event_cb(self, window, event):
         if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
-            self._deactivate_view()
+            self._deactivate_view(shell.get_model().zoom_level)
         else:
-            self._activate_view()
+            display = gtk.gdk.display_get_default()
+            screen_, x_, y_, modmask = display.get_pointer()
+            if modmask & gtk.gdk.MOD1_MASK:
+                self._home_box.set_resume_mode(False)
+            else:
+                self._home_box.set_resume_mode(True)
+
+            self._activate_view(shell.get_model().zoom_level)
 
     def __key_press_event_cb(self, window, event):
         if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:

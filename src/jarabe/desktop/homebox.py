@@ -43,9 +43,6 @@ class HomeBox(gtk.VBox):
 
         gobject.GObject.__init__(self)
 
-        self.connect('visibility-notify-event',
-                     self.__visibility_notify_event_cb)
-
         self._favorites_view = favoritesview.FavoritesView()
         self._list_view = ActivitiesList()
 
@@ -146,16 +143,6 @@ class HomeBox(gtk.VBox):
 
     def set_resume_mode(self, resume_mode):
         self._favorites_view.set_resume_mode(resume_mode)
-
-    def __visibility_notify_event_cb(self, window, event):
-        if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
-            return
-
-        screen_, x_, y_, modmask = gtk.gdk.display_get_default().get_pointer()
-        if modmask & gtk.gdk.MOD1_MASK:
-            self.set_resume_mode(False)
-        else:
-            self.set_resume_mode(True)
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
