@@ -446,6 +446,9 @@ class BaseListView(gtk.Bin):
             self.refresh()
 
     def set_is_visible(self, visible):
+        if visible != self._fully_obscured:
+            return
+
         logging.debug('canvas_visibility_notify_event_cb %r', visible)
         if visible:
             self._fully_obscured = False
