@@ -43,6 +43,7 @@ class HomeWindow(gtk.Window):
         self.add_accel_group(accel_group)
 
         self._active = False
+        self._fully_obscured = True
 
         self.set_default_size(gtk.gdk.screen_width(),
                               gtk.gdk.screen_height())
@@ -86,7 +87,12 @@ class HomeWindow(gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-        if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
+        fully_obscured = (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED)
+        if self._fully_obscured == fully_obscured:
+            return
+        self._fully_obscured = fully_obscured
+
+        if fully_obscured:
             self._deactivate_view(shell.get_model().zoom_level)
         else:
             display = gtk.gdk.display_get_default()
