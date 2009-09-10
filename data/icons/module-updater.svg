@@ -1,0 +1,16 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#000">
+	<!ENTITY fill_color "#fff">
+]><svg height="55px" viewBox="0 0 55 55" width="55px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" stroke="&stroke_color;" fill="&fill_color;">
+ <g>
+  <g>
+   <path d="M 31.752 7.088 C 41.935 9.118 49.609 18.107 49.609 28.887 C 49.609 41.173 39.65 51.129 27.374 51.129 C 15.086 51.129 5.133 41.173 5.133 28.887 C 5.133 19.648 10.768 11.723 18.801 8.365 " fill="none" stroke="&fill_color;" />
+   <path d="M 36.134 15.154 L 31.752 7.088 L 40.439 4.13 " fill="none" stroke="&fill_color;" />
+  </g>
+  <g>
+   <g>
+    <path d="M 38.57 25.886 C 37.597 25.886 36.718 26.282 36.082 26.918 L 31.021 31.979 L 31.02 17.022 C 31.018 16.124 30.675 15.221 29.99 14.533 C 28.613 13.159 26.383 13.159 25.01 14.533 C 24.321 15.222 23.98 16.122 23.979 17.023 L 23.977 31.978 L 18.918 26.918 C 18.281 26.281 17.4 25.886 16.429 25.887 C 14.484 25.885 12.908 27.465 12.908 29.408 C 12.907 30.381 13.304 31.263 13.936 31.899 L 27.5 45.463 L 41.062 31.898 C 41.697 31.262 42.09 30.382 42.093 29.41 C 42.094 27.463 40.516 25.885 38.57 25.886 Z " stroke="none" />
+   </g>
+  </g>
+ </g>
+</svg>
