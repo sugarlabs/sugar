@@ -431,6 +431,8 @@ class BaseListView(gtk.Bin):
         logging.debug('ListView.update_dates')
 
         path, end_path = visible_range
+        tree_model = self.tree_view.get_model()
+
         while True:
             x, y, width, height = self.tree_view.get_cell_area(path,
                                                                self.date_column)
@@ -439,8 +441,8 @@ class BaseListView(gtk.Bin):
             if path == end_path:
                 break
             else:
-                next_iter = self._model.iter_next(self._model.get_iter(path))
-                path = self._model.get_path(next_iter)
+                next_iter = tree_model.iter_next(tree_model.get_iter(path))
+                path = tree_model.get_path(next_iter)
 
     def _set_dirty(self):
         if self._fully_obscured:
