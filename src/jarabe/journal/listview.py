@@ -85,6 +85,8 @@ class BaseListView(gtk.Bin):
         self._scrolled_window.show()
 
         self.tree_view = TreeView()
+        selection = self.tree_view.get_selection()
+        selection.set_mode(gtk.SELECTION_NONE)
         self.tree_view.props.fixed_height_mode = True
         self.tree_view.modify_base(gtk.STATE_NORMAL,
                                    style.COLOR_WHITE.get_gdk_color())
