@@ -288,6 +288,7 @@ class BaseListView(gtk.Bin):
 
         if self._model is not None:
             self._model.stop()
+        self._dirty = False
 
         self._model = ListModel(self._query)
         self._model.connect('ready', self.__model_ready_cb)
