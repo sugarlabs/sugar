@@ -28,49 +28,39 @@ include $(_cdbs_rules_path)/buildcore.mk$(_cdbs_makefile_suffix)
 
 # Merge build-dependencies on same packages
 # TODO: rewrite (in perl, probably) to be more generic
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.43)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\|0.4.27\|0.4.39\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\|0.4.27\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.27)/ s/ *,* *\bcdbs (>= \(0.4.23-1.1\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 7.0.1)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\|7.0.1\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 6)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.44)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.37.2)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.28)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\|4.2.21\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.21)/ s/ *,* *\bdebhelper (>= \(4.1.60\|4.2.0\)) *,* */, /g')
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.0)/ s/ *,* *\bdebhelper (>= \(4.1.60\)) *,* */, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.43)/ s/\bcdbs *\(,\|(>= \(0.4.23-1.1\|0.4.27\|0.4.39\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.39)/ s/\bcdbs *\(,\|(>= \(0.4.23-1.1\|0.4.27\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bcdbs (>= 0.4.27)/ s/\bcdbs *\(,\|(>= \(0.4.23-1.1\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 7.0.1)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\|6\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 6)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\|5.0.44\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.44)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\|5.0.37.2\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5.0.37.2)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\|5\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 5)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\|4.2.28\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.28)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\|4.2.21\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.21)/ s/\bdebhelper *\(,\|(>= \(4.1.60\|4.2.0\))\)/, /g')
+CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e '/\bdebhelper (>= 4.2.0)/ s/\bdebhelper *\(,\|(>= \(4.1.60\))\)/, /g')
 
-# Cleanup superfluous commas
-CDBS_BUILD_DEPENDS := $(shell echo '$(CDBS_BUILD_DEPENDS)' | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//')
+# TODO: Move these to buildcore.mk
+cdbs_curvar = $(or $($(1)_$(cdbs_curpkg)),$($1))
+cdbs_squash_commas = $(shell echo '$1' | sed -e 's/ *,[ ,]*/, /g' -e 's/^[ ,]*//' -e 's/[ ,]*$$//')
+
+# Cleanup superfluous commas and whitespace
+CDBS_BUILD_DEPENDS := $(call cdbs_squash_commas,$(CDBS_BUILD_DEPENDS))
+
+comma = ,
+cdbs_all_cur_squash_commas = $(call cdbs_squash_commas,$($(1)_ALL)$(comma) $(call cdbs_curvar,$1))
 
 # Apply CDBS-declared dependencies to binary packages
 $(patsubst %,binary-predeb/%,$(DEB_PACKAGES)) :: binary-predeb/%:
-	echo 'cdbs:Depends=$(CDBS_DEPENDS_ALL), $(or $(CDBS_DEPENDS_$(cdbs_curpkg)),$(CDBS_DEPENDS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Pre-Depends=$(CDBS_PREDEPENDS_ALL), $(or $(CDBS_PREDEPENDS_$(cdbs_curpkg)),$(CDBS_PREDEPENDS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Recommends=$(CDBS_RECOMMENDS_ALL), $(or $(CDBS_RECOMMENDS_$(cdbs_curpkg)),$(CDBS_RECOMMENDS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Suggests=$(CDBS_SUGGESTS_ALL), $(or $(CDBS_SUGGESTS_$(cdbs_curpkg)),$(CDBS_SUGGESTS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Breaks=$(CDBS_BREAKS_ALL), $(or $(CDBS_BREAKS_$(cdbs_curpkg)),$(CDBS_BREAKS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Provides=$(CDBS_PROVIDES_ALL), $(or $(CDBS_PROVIDES_$(cdbs_curpkg)),$(CDBS_PROVIDES))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Replaces=$(CDBS_REPLACES_ALL), $(or $(CDBS_REPLACES_$(cdbs_curpkg)),$(CDBS_REPLACES))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Conflicts=$(CDBS_CONFLICTS_ALL), $(or $(CDBS_CONFLICTS_$(cdbs_curpkg)),$(CDBS_CONFLICTS))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
-	echo 'cdbs:Enhances=$(CDBS_ENHANCES_ALL), $(or $(CDBS_ENHANCES_$(cdbs_curpkg)),$(CDBS_ENHANCES))' \
-	  | sed -e 's/ *,/,/g' -e 's/^ *, *//' -e 's/ *, *$$//' \
-	  >> debian/$(cdbs_curpkg).substvars
+	@echo 'Adding cdbs dependencies to debian/$(cdbs_curpkg).substvars'
+	@echo 'cdbs:Depends=$(call cdbs_all_cur_squash_commas,CDBS_DEPENDS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Pre-Depends=$(call cdbs_all_cur_squash_commas,CDBS_PREDEPENDS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Recommends=$(call cdbs_all_cur_squash_commas,CDBS_RECOMMENDS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Suggests=$(call cdbs_all_cur_squash_commas,CDBS_SUGGESTS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Breaks=$(call cdbs_all_cur_squash_commas,CDBS_BREAKS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Provides=$(call cdbs_all_cur_squash_commas,CDBS_PROVIDES)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Replaces=$(call cdbs_all_cur_squash_commas,CDBS_REPLACES)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Conflicts=$(call cdbs_all_cur_squash_commas,CDBS_CONFLICTS)' >> debian/$(cdbs_curpkg).substvars
+	@echo 'cdbs:Enhances=$(call cdbs_all_cur_squash_commas,CDBS_ENHANCES)' >> debian/$(cdbs_curpkg).substvars
 
 endif
