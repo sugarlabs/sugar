@@ -1,3 +1,24 @@
+sugar-0.84 (0.84.6-7) unstable; urgency=low
+
+  * Add patch 0001 syncing with head of upstream (sucrose-0.82 branch).
+    + Update locales zh_TW, nl, ne, mn, it, fr, ar.
+    + Remake the cache when the DS returns an unexpected amount of
+      entries.
+    + Fix .xoj support (sl#1098).
+    + Upgrade activities that were installed from bundles (sl#1176).
+  * Update CDBS snippets:
+    + Enhance package-relations.mk to support all binary package
+      relations (except -indep ones).
+    + Improve package-relation.mk cleanup to cover debhelper 6 and 7,
+      strip more whitespace and cover mixture of unversioned+versioned
+      dependencies.
+    + Silence applying dependencies in package-relation.mk.
+    + Implement fail-source-not-repackaged rule in upstream-tarball.mk.
+    + Update URL to draft DEP5 format in copyright-check.mk output.
+  * Fix double cdbs build-dependency.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 10 Sep 2009 20:46:47 +0200
+
 sugar-0.84 (0.84.6-6) unstable; urgency=low
 
   * Stop depending on telepathy-gabble or telepathy-salut (only logfile

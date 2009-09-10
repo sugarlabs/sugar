@@ -1,5 +1,5 @@
-Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=XXX
-Upstream-Name: Untrusted draft - double-check copyrights yourself!
+Format: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=REVISION
+Name: Untrusted draft - double-check copyrights yourself!
 
 Files: AUTHORS
 	Makefile.am
@@ -47,7 +47,6 @@ Files: AUTHORS
 	debian/watch
 	extensions/Makefile.am
 	extensions/cpsection/Makefile.am
-	extensions/cpsection/__init__.py
 	extensions/cpsection/aboutcomputer/Makefile.am
 	extensions/cpsection/aboutme/Makefile.am
 	extensions/cpsection/datetime/Makefile.am
@@ -56,13 +55,10 @@ Files: AUTHORS
 	extensions/cpsection/network/Makefile.am
 	extensions/cpsection/power/Makefile.am
 	extensions/deviceicon/Makefile.am
-	extensions/deviceicon/__init__.py
 	extensions/globalkey/Makefile.am
-	extensions/globalkey/__init__.py
 	intltool-extract.in
 	intltool-merge.in
 	intltool-update.in
-	po/ChangeLog
 	po/POTFILES.in
 	po/POTFILES.skip
 	po/de.po
@@ -76,7 +72,6 @@ Files: AUTHORS
 	src/jarabe/intro/__init__.py
 	src/jarabe/intro/default-picture.png
 	src/jarabe/journal/Makefile.am
-	src/jarabe/journal/__init__.py
 	src/jarabe/model/Makefile.am
 	src/jarabe/util/Makefile.am
 	src/jarabe/util/telepathy/Makefile.am
@@ -84,7 +79,8 @@ Files: AUTHORS
 Copyright: *No copyright*
 License: UNKNOWN
 
-Files: po/af.po
+Files: debian/patches/0001_sync_git_head.patch
+	po/af.po
 	po/am.po
 	po/ar.po
 	po/ay.po
