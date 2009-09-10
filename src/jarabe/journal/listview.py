@@ -254,7 +254,7 @@ class BaseListView(gtk.Bin):
             self._model.stop()
 
     def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
-        favorite = self._model[tree_iter][ListModel.COLUMN_FAVORITE]
+        favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
             client = gconf.client_get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
