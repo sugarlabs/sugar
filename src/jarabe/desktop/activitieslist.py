@@ -51,6 +51,8 @@ class ActivitiesTreeView(gtk.TreeView):
         self._query = ''
 
         self.modify_base(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        selection = self.get_selection()
+        selection.set_mode(gtk.SELECTION_NONE)
 
         model = ListModel()
         model.set_visible_func(self.__model_visible_cb)
