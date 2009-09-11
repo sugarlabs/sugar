@@ -1,6 +1,6 @@
 sugar-0.84 (0.84.6-7) unstable; urgency=low
 
-  * Add patch 0001 syncing with head of upstream (sucrose-0.82 branch).
+  * Add patch 0001 syncing with head of upstream sucrose-0.84 branch.
     + Update locales zh_TW, nl, ne, mn, it, fr, ar.
     + Remake the cache when the DS returns an unexpected amount of
       entries.
