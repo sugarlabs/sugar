@@ -1,0 +1,28 @@
+diff --git a/src/jarabe/desktop/keydialog.py b/src/jarabe/desktop/keydialog.py
+--- a/src/jarabe/desktop/keydialog.py
++++ b/src/jarabe/desktop/keydialog.py
+@@ -16,7 +16,7 @@
+ 
+ import md5
+ from gettext import gettext as _
+-
++import os
+ import gtk
+ import dbus
+ 
+@@ -238,8 +238,14 @@ class WPAKeyDialog(KeyDialog):
+             real_key = key
+         elif len(key) >= 8 and len(key) <= 63:
+             # passphrase
++            if os.path.exists('/usr/sbin/wpa_passphrase'):
++                wpa_passphrase = '/usr/sbin/wpa_passphrase'
++            elif os.path.exists('/usr/bin/wpa_passphrase'):
++                wpa_passphrase = '/usr/bin/wpa_passphrase'
++            else:
++                raise RuntimeError("Can't find wpa_passphrase command")
+             from subprocess import Popen, PIPE
+-            p = Popen(['/usr/sbin/wpa_passphrase', ssid, key], stdout=PIPE)
++            p = Popen([wpa_passphrase, ssid, key], stdout=PIPE)
+             for line in p.stdout:
+                 if line.strip().startswith("psk="):
+                     real_key = line.strip()[4:]
