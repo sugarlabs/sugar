@@ -1,6 +1,4 @@
-0001_sync_git_head.patch
 1001_danish_l10n.patch
-1002_wpa_passphrase.patch
 2001_empy_from_system.patch
 #2003_fix_tz_config_path.patch
 2991_enable_danish_l10n.patch
