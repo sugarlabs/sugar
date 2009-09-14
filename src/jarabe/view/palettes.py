@@ -59,10 +59,7 @@ class CurrentActivityPalette(BasePalette):
         BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
-        self.props.primary_text = self._home_activity.get_activity_name()
-
-        if self._home_activity.get_title() != self.props.primary_text:
-            self.props.secondary_text = self._home_activity.get_title()
+        self.set_primary_text(self._home_activity.get_title())
 
         menu_item = MenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
