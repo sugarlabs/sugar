@@ -90,7 +90,8 @@ CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo,
 CDBS_DEPENDS += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS += , matchbox-window-manager, dbus-x11, openssh-client
 CDBS_RECOMMENDS = sugar-artwork-$(pkgbranch), network-manager, xserver-xephyr, x11-utils, x11-xserver-utils, lsb-release, wpasupplicant, ethtool
-CDBS_SUGGESTS = gdb
+CDBS_SUGGESTS = $(patsubst %,sugar-%-activity,read write imageviewer browse jukebox pippy)
+CDBS_SUGGESTS += , gdb
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
 CDBS_PROVIDES = $(pkgbase)
