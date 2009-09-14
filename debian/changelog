@@ -1,3 +1,26 @@
+sugar-0.86 (0.85.7-1) unstable; urgency=low
+
+  * New upstream devlopment release:
+  * Switch to new branch:
+    + Bump major version to 0.86 for binary and source package.
+    + Use unversioned upstream-branch in gbp.conf.
+    + Simplify watch file (we want to watch too new files too).
+  * Update dependencies:
+    + Depend on metacity (and not matchbox-window-manager).
+    + Depend on python-gconf.
+    + Recommend (current branch of) python-carquinyol.
+    + Suggest sugar activities read write imageviewer browse jukebox
+      pippy (set upstream as default actions for various mime types).
+    + Suggest python-xklavier (should be recommended, but not yet in
+      Debian).
+    + Stop recommending x11-xserver-utils (xrandr and xmodmap no longer
+      used).
+  * Drop patches 0001 and 1002 obsoleted by new release.
+  * Bump standards-version to 3.8.3 in control.in.
+  * Update debian/copyright (new owners and years, same licenses).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 15 Sep 2009 01:02:31 +0200
+
 sugar-0.84 (0.84.6-8) unstable; urgency=low
 
   * Update OLPC relation (now historic) in long description.

@@ -16,9 +16,11 @@ Files: AUTHORS
 	data/icons/module-about_my_computer.svg
 	data/icons/module-date_and_time.svg
 	data/icons/module-frame.svg
+	data/icons/module-keyboard.svg
 	data/icons/module-language.svg
 	data/icons/module-network.svg
 	data/icons/module-power.svg
+	data/icons/module-updater.svg
 	data/kbdconfig
 	data/mime.defaults
 	data/nm-user-settings.conf
@@ -32,7 +34,6 @@ Files: AUTHORS
 	debian/control
 	debian/control.in
 	debian/gbp.conf
-	debian/patches/1002_wpa_passphrase_strip_path.patch
 	debian/patches/2001_empy_from_system.patch
 	debian/patches/2003_fix_tz_config_path.patch
 	debian/patches/2991_enable_danish_l10n.patch
@@ -51,9 +52,12 @@ Files: AUTHORS
 	extensions/cpsection/aboutme/Makefile.am
 	extensions/cpsection/datetime/Makefile.am
 	extensions/cpsection/frame/Makefile.am
+	extensions/cpsection/keyboard/Makefile.am
 	extensions/cpsection/language/Makefile.am
 	extensions/cpsection/network/Makefile.am
 	extensions/cpsection/power/Makefile.am
+	extensions/cpsection/updater/Makefile.am
+	extensions/cpsection/updater/backends/Makefile.am
 	extensions/deviceicon/Makefile.am
 	extensions/globalkey/Makefile.am
 	intltool-extract.in
@@ -79,8 +83,7 @@ Files: AUTHORS
 Copyright: *No copyright*
 License: UNKNOWN
 
-Files: debian/patches/0001_sync_git_head.patch
-	po/af.po
+Files: po/af.po
 	po/am.po
 	po/ar.po
 	po/ay.po
@@ -137,35 +140,6 @@ Files: debian/patches/0001_sync_git_head.patch
 Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
 
-Files: extensions/cpsection/network/__init__.py
-	extensions/deviceicon/battery.py
-	src/jarabe/__init__.py
-	src/jarabe/controlpanel/__init__.py
-	src/jarabe/desktop/__init__.py
-	src/jarabe/desktop/friendview.py
-	src/jarabe/desktop/groupbox.py
-	src/jarabe/desktop/homewindow.py
-	src/jarabe/desktop/keydialog.py
-	src/jarabe/desktop/meshbox.py
-	src/jarabe/desktop/myicon.py
-	src/jarabe/desktop/snowflakelayout.py
-	src/jarabe/frame/__init__.py
-	src/jarabe/frame/frame.py
-	src/jarabe/frame/framewindow.py
-	src/jarabe/frame/friendstray.py
-	src/jarabe/frame/zoomtoolbar.py
-	src/jarabe/model/__init__.py
-	src/jarabe/model/buddy.py
-	src/jarabe/model/friends.py
-	src/jarabe/model/invites.py
-	src/jarabe/model/neighborhood.py
-	src/jarabe/view/__init__.py
-	src/jarabe/view/buddyicon.py
-	src/jarabe/view/buddymenu.py
-	src/jarabe/view/service.py
-Copyright: 2006-2007, Red Hat, Inc
-License: GPL-2+
-
 Files: Makefile.in
 	bin/Makefile.in
 	data/Makefile.in
@@ -176,9 +150,12 @@ Files: Makefile.in
 	extensions/cpsection/aboutme/Makefile.in
 	extensions/cpsection/datetime/Makefile.in
 	extensions/cpsection/frame/Makefile.in
+	extensions/cpsection/keyboard/Makefile.in
 	extensions/cpsection/language/Makefile.in
 	extensions/cpsection/network/Makefile.in
 	extensions/cpsection/power/Makefile.in
+	extensions/cpsection/updater/Makefile.in
+	extensions/cpsection/updater/backends/Makefile.in
 	extensions/deviceicon/Makefile.in
 	extensions/globalkey/Makefile.in
 	src/Makefile.in
@@ -195,15 +172,40 @@ Files: Makefile.in
 Copyright: 1994-2002
 License: UNKNOWN (GENERATED FILE)
 
+Files: extensions/cpsection/network/__init__.py
+	extensions/deviceicon/battery.py
+	src/jarabe/__init__.py
+	src/jarabe/controlpanel/__init__.py
+	src/jarabe/desktop/__init__.py
+	src/jarabe/desktop/friendview.py
+	src/jarabe/desktop/groupbox.py
+	src/jarabe/desktop/homewindow.py
+	src/jarabe/desktop/keydialog.py
+	src/jarabe/desktop/myicon.py
+	src/jarabe/desktop/snowflakelayout.py
+	src/jarabe/frame/__init__.py
+	src/jarabe/frame/frame.py
+	src/jarabe/frame/framewindow.py
+	src/jarabe/frame/friendstray.py
+	src/jarabe/model/__init__.py
+	src/jarabe/model/buddy.py
+	src/jarabe/model/friends.py
+	src/jarabe/model/invites.py
+	src/jarabe/model/neighborhood.py
+	src/jarabe/view/__init__.py
+	src/jarabe/view/buddyicon.py
+	src/jarabe/view/buddymenu.py
+	src/jarabe/view/service.py
+Copyright: 2006-2007, Red Hat, Inc
+License: GPL-2+
+
 Files: extensions/cpsection/aboutcomputer/model.py
 	extensions/cpsection/aboutme/model.py
 	extensions/cpsection/frame/model.py
 	extensions/cpsection/network/model.py
 	extensions/cpsection/power/model.py
-	extensions/deviceicon/network.py
 	extensions/deviceicon/volume.py
 	src/jarabe/controlpanel/gui.py
-	src/jarabe/desktop/activitieslist.py
 	src/jarabe/desktop/favoriteslayout.py
 	src/jarabe/desktop/homebox.py
 	src/jarabe/frame/devicestray.py
@@ -226,10 +228,10 @@ Files: extensions/cpsection/aboutcomputer/__init__.py
 	extensions/cpsection/frame/__init__.py
 	extensions/cpsection/frame/view.py
 	extensions/cpsection/language/__init__.py
-	extensions/cpsection/language/view.py
 	extensions/cpsection/network/view.py
 	extensions/cpsection/power/__init__.py
 	extensions/cpsection/power/view.py
+	extensions/cpsection/updater/__init__.py
 	src/jarabe/controlpanel/inlinealert.py
 	src/jarabe/controlpanel/sectionview.py
 Copyright: 2008, OLPC
@@ -239,12 +241,10 @@ Files: src/jarabe/frame/clipboardmenu.py
 	src/jarabe/frame/clipboardobject.py
 	src/jarabe/frame/clipboardpanelwindow.py
 	src/jarabe/frame/clipboardtray.py
-	src/jarabe/journal/collapsedentry.py
+	src/jarabe/journal/__init__.py
 	src/jarabe/journal/detailview.py
 	src/jarabe/journal/expandedentry.py
 	src/jarabe/journal/journalentrybundle.py
-	src/jarabe/journal/journaltoolbox.py
-	src/jarabe/journal/listview.py
 	src/jarabe/journal/misc.py
 	src/jarabe/journal/objectchooser.py
 	src/jarabe/journal/volumestoolbar.py
@@ -252,23 +252,12 @@ Copyright: 2007, One Laptop Per Child
 License: GPL-2+
 
 Files: bin/sugar-launch
-	src/jarabe/desktop/proc_smaps.py
 	src/jarabe/desktop/spreadlayout.py
 	src/jarabe/desktop/transitionbox.py
 	src/jarabe/frame/eventarea.py
 	src/jarabe/intro/colorpicker.py
 	src/jarabe/intro/window.py
 Copyright: 2007, Red Hat, Inc
-License: GPL-2+
-
-Files: bin/sugar-control-panel
-	bin/sugar-ui-check
-	src/jarabe/config.py
-	src/jarabe/config.py.in
-	src/jarabe/model/network.py
-	src/jarabe/model/session.py
-	src/jarabe/view/launcher.py
-Copyright: 2008, Red Hat, Inc
 License: GPL-2+
 
 Files: extensions/cpsection/datetime/model.py
@@ -280,6 +269,15 @@ Files: extensions/cpsection/datetime/model.py
 Copyright: 2007-2008, One Laptop Per Child
 License: GPL-2+
 
+Files: bin/sugar-control-panel
+	bin/sugar-ui-check
+	src/jarabe/config.py
+	src/jarabe/config.py.in
+	src/jarabe/model/session.py
+	src/jarabe/view/launcher.py
+Copyright: 2008, Red Hat, Inc
+License: GPL-2+
+
 Files: bin/sugar-activity
 	bin/sugar-emulator
 	src/jarabe/model/screen.py
@@ -287,17 +285,24 @@ Files: bin/sugar-activity
 Copyright: 2006-2008, Red Hat, Inc
 License: GPL-2+
 
-Files: bin/sugar-session
-	src/jarabe/frame/clipboard.py
-	src/jarabe/journal/keepicon.py
-Copyright: 2006, Red Hat, Inc
-License: GPL-2+
-
 Files: src/jarabe/desktop/favoritesview.py
 	src/jarabe/frame/activitiestray.py
 	src/jarabe/model/owner.py
 Copyright: 2008, One Laptop Per Child
 	2006-2007, Red Hat, Inc
+License: GPL-2+
+
+Files: extensions/deviceicon/network.py
+	extensions/globalkey/viewsource.py
+	src/jarabe/view/viewsource.py
+Copyright: 2008, One Laptop Per Child
+	2009, Tomeu Vizoso, Simon Schampijer
+License: GPL-2+
+
+Files: extensions/cpsection/keyboard/__init__.py
+	extensions/cpsection/keyboard/model.py
+	extensions/cpsection/keyboard/view.py
+Copyright: 2009, OLPC
 License: GPL-2+
 
 Files: debian/cdbs/1/class/autotools-vars.mk
@@ -317,10 +322,25 @@ Files: debian/cdbs/1/class/python-autotools.mk
 Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: GPL
 
-Files: extensions/globalkey/viewsource.py
-	src/jarabe/view/viewsource.py
-Copyright: 2008, One Laptop Per Child
-	2009, Tomeu Vizoso, Simon Schampijer
+Files: src/jarabe/frame/clipboard.py
+	src/jarabe/journal/keepicon.py
+Copyright: 2006, Red Hat, Inc
+License: GPL-2+
+
+Files: extensions/cpsection/aboutcomputer/view.py
+	extensions/cpsection/language/view.py
+Copyright: 2009, Simon Schampijer
+	2008, OLPC
+License: GPL-2+
+
+Files: extensions/cpsection/updater/backends/__init__.py
+	extensions/cpsection/updater/backends/aslo.py
+Copyright: 2009, Sugar Labs
+License: GPL-2+
+
+Files: src/jarabe/journal/listmodel.py
+	src/jarabe/journal/listview.py
+Copyright: 2009, Tomeu Vizoso
 License: GPL-2+
 
 Files: COPYING
@@ -366,6 +386,16 @@ Copyright: 2006-2007, Red Hat, Inc
 	2009, Aleksey Lim
 License: GPL-2+
 
+Files: src/jarabe/frame/zoomtoolbar.py
+Copyright: 2006-2007, Red Hat, Inc
+	2009, Simon Schampijer
+License: GPL-2+
+
+Files: src/jarabe/desktop/meshbox.py
+Copyright: 2006-2007, Red Hat, Inc
+	2009, Tomeu Vizoso, Simon Schampijer
+License: GPL-2+
+
 Files: src/jarabe/model/shell.py
 Copyright: 2006-2008, Red Hat, Inc
 	2006-2007, Owen Williams
@@ -378,6 +408,11 @@ License: GPL-2+
 Files: src/jarabe/journal/journalactivity.py
 Copyright: 2007, One Laptop Per Child
 	2006, Red Hat, Inc
+License: GPL-2+
+
+Files: src/jarabe/journal/journaltoolbox.py
+Copyright: 2007, One Laptop Per Child
+	2009, Walter Bender
 License: GPL-2+
 
 Files: src/jarabe/frame/clipboardicon.py
@@ -400,11 +435,26 @@ License: GPL-2+
 
 Files: extensions/globalkey/screenshot.py
 Copyright: 2008, One Laptop Per Child
-	2009, Simon Schampijer
+	2009, Simon Schampijer, James Zaki
+License: GPL-2+
+
+Files: extensions/cpsection/updater/view.py
+Copyright: 2008, One Laptop Per Child
+	2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: src/jarabe/model/network.py
+Copyright: 2008, Red Hat, Inc
+	2009, Tomeu Vizoso, Simon Schampijer
 License: GPL-2+
 
 Files: src/jarabe/model/filetransfer.py
 Copyright: 2008, Tomeu Vizoso
+License: GPL-2+
+
+Files: bin/sugar-session
+Copyright: 2009, One Laptop Per Child Association Inc
+	2006, Red Hat, Inc
 License: GPL-2+
 
 Files: src/jarabe/view/keyhandler.py
@@ -412,9 +462,14 @@ Copyright: 2009, Simon Schampijer
 	2006-2007, Red Hat, Inc
 License: GPL-2+
 
-Files: extensions/cpsection/aboutcomputer/view.py
-Copyright: 2009, Simon Schampijer
-	2008, OLPC
+Files: extensions/cpsection/updater/model.py
+Copyright: 2009, Sugar Labs
+	2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: src/jarabe/desktop/activitieslist.py
+Copyright: 2009, Tomeu Vizoso
+	2008, One Laptop Per Child
 License: GPL-2+
 
 Files: src/jarabe/util/telepathy/connection_watcher.py
@@ -435,9 +490,7 @@ Copyright: 1995-1997, by Ulrich Drepper <drepper@gnu.ai.mit.edu>
 License: UNKNOWN
 
 Files: aclocal.m4
-Copyright: 1995-2002, Free Software Foundation, Inc
-	2001-2004, Red Hat, Inc
-	1996-2004
+Copyright: 1996-2004
 License: UNKNOWN
 
 Files: po/fr.po
