@@ -6,7 +6,7 @@ Contact: Sugarlabs <sugar-devel@lists.sugarlabs.org>
 Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar
 	git://git.sugarlabs.org/sugar/mainline.git
 
-Copyright: 2007-2008, One Laptop Per Child
+Copyright: 2007-2008, One Laptop Per Child Association Inc
 License: GPL-2+
 
 Files:	bin/sugar-activity
@@ -24,9 +24,7 @@ Files:	bin/sugar-activity
 	src/jarabe/desktop/homewindow.py
 	src/jarabe/desktop/__init__.py
 	src/jarabe/desktop/keydialog.py
-	src/jarabe/desktop/meshbox.py
 	src/jarabe/desktop/myicon.py
-	src/jarabe/desktop/proc_smaps.py
 	src/jarabe/desktop/snowflakelayout.py
 	src/jarabe/desktop/spreadlayout.py
 	src/jarabe/desktop/transitionbox.py
@@ -36,7 +34,6 @@ Files:	bin/sugar-activity
 	src/jarabe/frame/framewindow.py
 	src/jarabe/frame/friendstray.py
 	src/jarabe/frame/__init__.py
-	src/jarabe/frame/zoomtoolbar.py
 	src/jarabe/__init__.py
 	src/jarabe/intro/colorpicker.py
 	src/jarabe/intro/window.py
@@ -46,7 +43,6 @@ Files:	bin/sugar-activity
 	src/jarabe/model/__init__.py
 	src/jarabe/model/invites.py
 	src/jarabe/model/neighborhood.py
-	src/jarabe/model/network.py
 	src/jarabe/model/screen.py
 	src/jarabe/model/session.py
 	src/jarabe/model/sound.py
@@ -58,14 +54,15 @@ Files:	bin/sugar-activity
 Copyright: 2006-2008, Red Hat, Inc
 License: GPL-2+
 
-Files: src/jarabe/desktop/favoritesview.py
+Files: bin/sugar-session
+	src/jarabe/desktop/favoritesview.py
 	src/jarabe/desktop/grid.py
 	src/jarabe/frame/activitiestray.py
 	src/jarabe/frame/clipboardicon.py
 	src/jarabe/journal/journalactivity.py
 	src/jarabe/model/owner.py
 Copyright: 2006-2007, Red Hat, Inc
-	2007-2008, One Laptop Per Child
+	2007-2009, One Laptop Per Child Association Inc
 License: GPL-2+
 
 Files: Makefile.in
@@ -75,11 +72,24 @@ License: GAP
  gives unlimited permission to copy and/or distribute it,
  with or without modifications, as long as this notice is preserved.
 
-Files: extensions/globalkey/viewsource.py
+Files: extensions/deviceicon/network.py
+	extensions/globalkey/viewsource.py
 	src/jarabe/view/viewsource.py
-Copyright: 2008, One Laptop Per Child
+Copyright: 2008, One Laptop Per Child Association Inc
 	2009, Simon Schampijer
 	2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: src/jarabe/desktop/meshbox.py
+	src/jarabe/model/network.py
+Copyright: 2006-2008, Red Hat, Inc
+	2009, Simon Schampijer
+	2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: extensions/cpsection/updater/backends/__init__.py
+	extensions/cpsection/updater/backends/aslo.py
+Copyright: 2009, Sugar Labs
 License: GPL-2+
 
 Files: ./missing
@@ -113,19 +123,46 @@ Files: extensions/deviceicon/speaker.py
 Copyright: 2008, Martin Dengler
 License: GPL-2+
 
-Files: extensions/globalkey/screenshot.py
+Files: extensions/cpsection/aboutcomputer/view.py
+	extensions/cpsection/language/view.py
+	extensions/globalkey/screenshot.py
 	extensions/cpsection/aboutcomputer/view.py
-Copyright: 2008, One Laptop Per Child
+Copyright: 2008, One Laptop Per Child Association Inc
 	2009, Simon Schampijer
 License: GPL-2+
 
-Files: src/jarabe/model/filetransfer.py
-Copyright: 2008, Tomeu Vizoso
+Files: extensions/globalkey/screenshot.py
+Copyright: 2008, One Laptop Per Child Association Inc
+	2009, Simon Schampijer
+	2009, James Zaki
 License: GPL-2+
 
-Files: src/jarabe/view/keyhandler.py
+Files: extensions/cpsection/updater/view.py
+	src/jarabe/desktop/activitieslist.py
+Copyright: 2008, One Laptop Per Child Association Inc
+	2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: src/jarabe/journal/listmodel.py
+	src/jarabe/journal/listview.py
+	src/jarabe/model/filetransfer.py
+Copyright: 2008-2009, Tomeu Vizoso
+License: GPL-2+
+
+Files: src/jarabe/frame/zoomtoolbar.py
+	src/jarabe/view/keyhandler.py
 Copyright: 2006-2007, Red Hat, Inc
 	2009, Simon Schampijer
+License: GPL-2+
+
+Files: src/jarabe/journal/journaltoolbox.py
+Copyright: 2007, One Laptop Per Child Association Inc
+	2009, Walter Bender
+License: GPL-2+
+
+Files: extensions/cpsection/updater/model.py
+Copyright: 2009, Sugar Labs
+	2009, Tomeu Vizoso
 License: GPL-2+
 
 Files: src/jarabe/util/telepathy/connection_watcher.py
