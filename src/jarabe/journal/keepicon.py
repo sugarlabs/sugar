@@ -28,7 +28,7 @@ class KeepIcon(CanvasIcon):
                             box_width=style.GRID_CELL_SIZE * 3 / 5,
                             size=style.SMALL_ICON_SIZE)
         self.connect('motion-notify-event', self.__motion_notify_event_cb)
-                
+
         self._keep = None
         self.set_keep(keep)
 

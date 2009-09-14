@@ -42,8 +42,8 @@ class NotificationService(dbus.service.Object):
     def Notify(self, app_name, replaces_id, app_icon, summary, body, actions,
                hints, expire_timeout):
 
-        logging.debug('Received notification: %r' % ([app_name, replaces_id,
-                      app_icon, summary, body, actions, hints, expire_timeout]))
+        logging.debug('Received notification: %r', [app_name, replaces_id,
+                      app_icon, summary, body, actions, hints, expire_timeout])
 
         if replaces_id > 0:
             notification_id = replaces_id
@@ -55,7 +55,7 @@ class NotificationService(dbus.service.Object):
             notification_id = self._notification_counter
 
         self.notification_received.send(self, app_name=app_name,
-                replaces_id=replaces_id, app_icon=app_icon, summary=summary, 
+                replaces_id=replaces_id, app_icon=app_icon, summary=summary,
                 body=body, actions=actions, hints=hints,
                 expire_timeout=expire_timeout)
 

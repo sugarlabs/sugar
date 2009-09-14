@@ -10,6 +10,8 @@ extensions/cpsection/datetime/view.py
 extensions/cpsection/frame/__init__.py
 extensions/cpsection/frame/model.py
 extensions/cpsection/frame/view.py
+extensions/cpsection/keyboard/__init__.py
+extensions/cpsection/keyboard/view.py
 extensions/cpsection/language/__init__.py
 extensions/cpsection/language/model.py
 extensions/cpsection/language/view.py
@@ -19,6 +21,8 @@ extensions/cpsection/network/view.py
 extensions/cpsection/power/__init__.py
 extensions/cpsection/power/model.py
 extensions/cpsection/power/view.py
+extensions/cpsection/updater/__init__.py
+extensions/cpsection/updater/view.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/network.py
 extensions/deviceicon/speaker.py
@@ -29,6 +33,7 @@ src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py
 src/jarabe/controlpanel/toolbar.py
+src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
@@ -41,7 +46,6 @@ src/jarabe/frame/clipboardobject.py
 src/jarabe/frame/devicestray.py
 src/jarabe/frame/zoomtoolbar.py
 src/jarabe/intro/window.py
-src/jarabe/journal/collapsedentry.py
 src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py

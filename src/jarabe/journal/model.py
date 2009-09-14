@@ -20,7 +20,6 @@ from datetime import datetime
 import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
-import traceback
 import re
 
 import gobject
@@ -41,7 +40,8 @@ PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'keep', 'buddies',
               'icon-color', 'mime_type', 'progress', 'activity', 'mountpoint',
               'activity_id', 'bundle_id']
 
-PAGES_TO_CACHE = 5
+MIN_PAGES_TO_CACHE = 3
+MAX_PAGES_TO_CACHE = 5
 
 class _Cache(object):
 
@@ -62,13 +62,12 @@ class _Cache(object):
         for entry in entries:
             self._array.append(entry)
             self._dict[entry['uid']] = entry
-    
+
     def remove_all(self, entries):
-        entries = entries[:]
-        for entry in entries:
-            obj = self._dict[entry['uid']]
+        for uid in [entry['uid'] for entry in entries]:
+            obj = self._dict[uid]
             self._array.remove(obj)
-            del self._dict[entry['uid']]
+            del self._dict[uid]
 
     def __len__(self):
         return len(self._array)
@@ -83,11 +82,11 @@ class BaseResultSet(object):
     """Encapsulates the result of a query
     """
 
-    def __init__(self, query, cache_limit):
+    def __init__(self, query, page_size):
         self._total_count  = -1
         self._position = -1
         self._query = query
-        self._cache_limit = cache_limit
+        self._page_size = page_size
 
         self._offset = 0
         self._cache = _Cache()
@@ -104,7 +103,7 @@ class BaseResultSet(object):
     def get_length(self):
         if self._total_count == -1:
             query = self._query.copy()
-            query['limit'] = self._cache_limit
+            query['limit'] = self._page_size * MIN_PAGES_TO_CACHE
             entries, self._total_count = self.find(query)
             self._cache.append_all(entries)
             self._offset = 0
@@ -118,13 +117,8 @@ class BaseResultSet(object):
     def seek(self, position):
         self._position = position
 
-    def read(self, max_count):
-        logging.debug('ResultSet.read position: %r' % self._position)
-
-        if max_count * PAGES_TO_CACHE > self._cache_limit:
-            raise RuntimeError(
-                    'max_count (%i) too big for self._cache_limit'
-                    ' (%i).' % (max_count, self._cache_limit))
+    def read(self):
+        logging.debug('ResultSet.read position: %r', self._position)
 
         if self._position == -1:
             self.seek(0)
@@ -142,31 +136,29 @@ class BaseResultSet(object):
 
         last_cached_entry = self._offset + len(self._cache)
 
-        if (remaining_forward_entries <= 0 and
-                    remaining_backwards_entries <= 0) or \
-                max_count > self._cache_limit:
+        if remaining_forward_entries <= 0 and remaining_backwards_entries <= 0:
 
             # Total cache miss: remake it
-            offset = max(0, self._position - max_count)
-            logging.debug('remaking cache, offset: %r limit: %r' % \
-                          (offset, max_count * 2))
+            limit = self._page_size * MIN_PAGES_TO_CACHE
+            offset = max(0, self._position - limit / 2)
+            logging.debug('remaking cache, offset: %r limit: %r', offset,
+                limit)
             query = self._query.copy()
-            query['limit'] = self._cache_limit
+            query['limit'] = limit
             query['offset'] = offset
             entries, self._total_count = self.find(query)
 
             self._cache.remove_all(self._cache)
             self._cache.append_all(entries)
             self._offset = offset
-            
-        elif remaining_forward_entries < 2 * max_count and \
-             last_cached_entry < self._total_count:
+
+        elif remaining_forward_entries <= 0 and remaining_backwards_entries > 0:
 
             # Add one page to the end of cache
-            logging.debug('appending one more page, offset: %r' % \
-                          last_cached_entry)
+            logging.debug('appending one more page, offset: %r',
+                last_cached_entry)
             query = self._query.copy()
-            query['limit'] = max_count
+            query['limit'] = self._page_size
             query['offset'] = last_cached_entry
             entries, self._total_count = self.find(query)
 
@@ -174,21 +166,23 @@ class BaseResultSet(object):
             self._cache.append_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - self._cache_limit
+            cache_limit = self._page_size * MAX_PAGES_TO_CACHE
+            objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 self._offset += objects_excess
                 self._cache.remove_all(self._cache[:objects_excess])
 
-        elif remaining_backwards_entries < 2 * max_count and self._offset > 0:
+        elif remaining_forward_entries > 0 and \
+                remaining_backwards_entries <= 0 and self._offset > 0:
 
             # Add one page to the beginning of cache
-            limit = min(self._offset, max_count)
-            self._offset = max(0, self._offset - max_count)
+            limit = min(self._offset, self._page_size)
+            self._offset = max(0, self._offset - limit)
 
-            logging.debug('prepending one more page, offset: %r limit: %r' % 
-                          (self._offset, limit))
+            logging.debug('prepending one more page, offset: %r limit: %r',
+                self._offset, limit)
             query = self._query.copy()
-            query['limit'] = limit
+            query['limit'] = self._page_size
             query['offset'] = self._offset
             entries, self._total_count = self.find(query)
 
@@ -196,20 +190,19 @@ class BaseResultSet(object):
             self._cache.prepend_all(entries)
 
             # apply the cache limit
-            objects_excess = len(self._cache) - self._cache_limit
+            cache_limit = self._page_size * MAX_PAGES_TO_CACHE
+            objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 self._cache.remove_all(self._cache[-objects_excess:])
         else:
             logging.debug('cache hit and no need to grow the cache')
 
-        first_pos = self._position - self._offset
-        last_pos = self._position - self._offset + max_count
-        return self._cache[first_pos:last_pos]
+        return self._cache[self._position - self._offset]
 
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
     """
-    def __init__(self, query, cache_limit):
+    def __init__(self, query, page_size):
 
         if query.get('query', '') and not query['query'].startswith('"'):
             query_text = ''
@@ -222,7 +215,7 @@ class DatastoreResultSet(BaseResultSet):
 
             query['query'] = query_text
 
-        BaseResultSet.__init__(self, query, cache_limit)
+        BaseResultSet.__init__(self, query, page_size)
 
     def find(self, query):
         entries, total_count = _get_datastore().find(query, PROPERTIES,
@@ -236,8 +229,8 @@ class DatastoreResultSet(BaseResultSet):
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
     """
-    def __init__(self, query, cache_limit, mount_point):
-        BaseResultSet.__init__(self, query, cache_limit)
+    def __init__(self, query, page_size, mount_point):
+        BaseResultSet.__init__(self, query, page_size)
         self._mount_point = mount_point
         self._file_list = None
         self._pending_directories = 0
@@ -295,7 +288,7 @@ class InplaceResultSet(BaseResultSet):
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
-        logging.debug('InplaceResultSet.find took %f s.' % (time.time() - t))
+        logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
 
         return entries, total_count
 
@@ -337,8 +330,7 @@ class InplaceResultSet(BaseResultSet):
                     self.progress.send(self)
 
             except Exception:
-                logging.error('Error reading file %r: %s' % \
-                              (full_path, traceback.format_exc()))
+                logging.exception('Error reading file %r', full_path)
 
         if self._pending_directories == 0:
             self.setup_ready()
@@ -379,21 +371,22 @@ def _datastore_updated_cb(object_id):
 def _datastore_deleted_cb(object_id):
     deleted.send(None, object_id=object_id)
 
-def find(query, page_size):
+def find(query_, page_size):
     """Returns a ResultSet
     """
+    query = query_.copy()
+
     if 'order_by' not in query:
         query['order_by'] = ['-mtime']
-    
+
     mount_points = query.pop('mountpoints', ['/'])
     if mount_points is None or len(mount_points) != 1:
         raise ValueError('Exactly one mount point must be specified')
 
-    cache_limit = page_size * PAGES_TO_CACHE
     if mount_points[0] == '/':
-        return DatastoreResultSet(query, cache_limit)
+        return DatastoreResultSet(query, page_size)
     else:
-        return InplaceResultSet(query, cache_limit, mount_points[0])
+        return InplaceResultSet(query, page_size, mount_points[0])
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
@@ -419,15 +412,30 @@ def get_file(object_id):
     """Returns the file for an object
     """
     if os.path.exists(object_id):
-        logging.debug('get_file asked for file with path %r' % object_id)
+        logging.debug('get_file asked for file with path %r', object_id)
         return object_id
     else:
-        logging.debug('get_file asked for entry with id %r' % object_id)
+        logging.debug('get_file asked for entry with id %r', object_id)
         file_path = _get_datastore().get_filename(object_id)
         if file_path:
             return util.TempFilePath(file_path)
         else:
             return None
+
+def get_file_size(object_id):
+    """Return the file size for an object
+    """
+    logging.debug('get_file_size %r', object_id)
+    if os.path.exists(object_id):
+        return os.stat(object_id).st_size
+
+    file_path = _get_datastore().get_filename(object_id)
+    if file_path:
+        size = os.stat(file_path).st_size
+        os.remove(file_path)
+        return size
+
+    return 0
 
 def get_unique_values(key):
     """Returns a list with the different values a property has taken
@@ -457,8 +465,8 @@ def copy(metadata, mount_point):
 def write(metadata, file_path='', update_mtime=True):
     """Creates or updates an entry for that id
     """
-    logging.debug('model.write %r %r %r' % (metadata.get('uid', ''), file_path,
-                                            update_mtime))
+    logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
+        update_mtime)
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
@@ -490,9 +498,11 @@ def write(metadata, file_path='', update_mtime=True):
 def _get_file_name(title, mime_type):
     file_name = title
 
-    extension = '.' + mime.get_primary_extension(mime_type)
-    if not file_name.endswith(extension):
-        file_name += extension
+    extension = mime.get_primary_extension(mime_type)
+    if extension is not None and extension:
+        extension = '.' + extension
+        if not file_name.endswith(extension):
+            file_name += extension
 
     # Invalid characters in VFAT filenames. From
     # http://en.wikipedia.org/wiki/File_Allocation_Table
@@ -505,8 +515,8 @@ def _get_file_name(title, mime_type):
     max_len = 250
     if len(file_name) > max_len:
         name, extension = os.path.splitext(file_name)
-        file_name = name[0:max_len - extension] + extension
-    
+        file_name = name[0:max_len - len(extension)] + extension
+
     return file_name
 
 def _get_unique_file_name(mount_point, file_name):
@@ -521,7 +531,10 @@ def _get_unique_file_name(mount_point, file_name):
 
     return file_name
 
+def is_editable(metadata):
+    mountpoint = metadata.get('mountpoint', '/')
+    return mountpoint == '/'
+
 created = dispatch.Signal()
 updated = dispatch.Signal()
 deleted = dispatch.Signal()
-

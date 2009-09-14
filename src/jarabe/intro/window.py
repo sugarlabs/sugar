@@ -55,7 +55,7 @@ def create_profile(name, color=None, pixbuf=None):
         cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
         (s, o) = commands.getstatusoutput(cmd)
         if s != 0:
-            logging.error("Could not generate key pair: %d %s" % (s, o))
+            logging.error("Could not generate key pair: %d %s", s, o)
     else:
         logging.error("Keypair exists, skip generation.")
 
@@ -240,6 +240,9 @@ class _IntroBox(hippo.CanvasBox):
 class IntroWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self)
+
+        self.props.decorated = False
+        self.maximize()
 
         self._canvas = hippo.Canvas()
         self._intro_box = _IntroBox()

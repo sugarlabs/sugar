@@ -1,14 +1,16 @@
-AC_INIT([Sugar],[0.84.6],[],[sugar])
+AC_INIT([Sugar],[0.85.7],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.84.2"
+SUCROSE_VERSION="0.85.6"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
+
+AM_MAINTAINER_MODE
 
 AM_PATH_PYTHON
 
@@ -56,9 +58,12 @@ extensions/cpsection/aboutme/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
+extensions/cpsection/keyboard/Makefile
 extensions/cpsection/language/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
+extensions/cpsection/updater/Makefile
+extensions/cpsection/updater/backends/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
 src/Makefile

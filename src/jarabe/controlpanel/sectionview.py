@@ -30,7 +30,7 @@ class SectionView(gtk.VBox):
         'is_valid'      : (bool, None, None, True,
                            gobject.PARAM_READWRITE)
         }
-    
+
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import md5
+import hashlib
 from gettext import gettext as _
 
 import gtk
@@ -53,7 +53,7 @@ def hash_passphrase(passphrase):
     elif len(passphrase) < 64:
         while len(passphrase) < 64:
             passphrase += passphrase[:64 - len(passphrase)]
-    passphrase = md5.new(passphrase).digest()
+    passphrase = hashlib.md5(passphrase).digest()
     return string_to_hex(passphrase)[:26]
 
 class CanceledKeyRequestError(dbus.DBusException):
@@ -74,7 +74,7 @@ class KeyDialog(gtk.Dialog):
         self._rsn_flags = rsn_flags
         self._dev_caps = dev_caps
 
-        self.set_has_separator(False)        
+        self.set_has_separator(False)
 
         label = gtk.Label("A wireless encryption key is required for\n" \
                           " the wireless network '%s'." % self._ssid)
@@ -239,7 +239,7 @@ class WPAKeyDialog(KeyDialog):
         elif len(key) >= 8 and len(key) <= 63:
             # passphrase
             from subprocess import Popen, PIPE
-            p = Popen(['/usr/sbin/wpa_passphrase', ssid, key], stdout=PIPE)
+            p = Popen(['wpa_passphrase', ssid, key], stdout=PIPE)
             for line in p.stdout:
                 if line.strip().startswith("psk="):
                     real_key = line.strip()[4:]

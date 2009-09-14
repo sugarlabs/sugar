@@ -111,7 +111,7 @@ def _read_file(path):
         value = value.strip('\n')
         return value
     else:
-        _logger.debug('No information in file or directory: %s' % path)
+        _logger.debug('No information in file or directory: %s', path)
         return None
 
 def get_license():

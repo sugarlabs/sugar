@@ -76,7 +76,7 @@ class VolumesToolbar(gtk.Toolbar):
         self._remove_button(mount)
 
     def _add_button(self, mount):
-        logging.debug('VolumeToolbar._add_button: %r' % mount.get_name())
+        logging.debug('VolumeToolbar._add_button: %r', mount.get_name())
 
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
@@ -99,14 +99,14 @@ class VolumesToolbar(gtk.Toolbar):
         mount.unmount(self.__unmount_cb)
 
     def __unmount_cb(self, source, result):
-        logging.debug('__unmount_cb %r %r' % (source, result))
+        logging.debug('__unmount_cb %r %r', source, result)
 
     def _get_button_for_mount(self, mount):
-        mount_point = mount.get_root().get_path()    
+        mount_point = mount.get_root().get_path()
         for button in self.get_children():
             if button.mount_point == mount_point:
                 return button
-        logging.error('Couldnt find button with mount_point %r' % mount_point)
+        logging.error('Couldnt find button with mount_point %r', mount_point)
         return None
 
     def _remove_button(self, mount):
@@ -157,7 +157,7 @@ class VolumeButton(BaseButton):
             icon_name = 'drive'
 
         self.props.named_icon = icon_name
-        
+
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))

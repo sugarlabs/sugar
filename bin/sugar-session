@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (C) 2006, Red Hat, Inc.
+# Copyright (C) 2009, One Laptop Per Child Association Inc
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +24,6 @@ if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
     print '%r STARTUP: Starting the shell' % time.time()
     sys.stdout.flush()
 
-import shutil
 import gettext
 import logging
 
@@ -45,7 +45,7 @@ gettext.bindtextdomain('sugar', config.locale_path)
 gettext.bindtextdomain('sugar-toolkit', config.locale_path)
 gettext.textdomain('sugar')
 
-from jarabe.desktop.homewindow import HomeWindow
+from jarabe.desktop import homewindow
 from jarabe.model import sound
 from jarabe.view import launcher
 from jarabe import intro
@@ -117,9 +117,10 @@ def setup_journal_cb():
     from jarabe.journal import journalactivity
     journalactivity.start()
 
-def show_software_updates_cb(home_window):
+def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
+        home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
 def setup_notification_service_cb():
@@ -130,17 +131,60 @@ def setup_file_transfer_cb():
     from jarabe.model import filetransfer
     filetransfer.init()
 
+def setup_keyboard_cb(gconf_client):
+    logging.debug('STARTUP: setup_keyboard_cb')
+    try:
+        display = gtk.gdk.display_get_default()
+        if display is not None:
+            engine = xklavier.Engine(display)
+        else:
+            logging.debug('setup_keyboard_cb: Could not get default display.')
+            return
+
+        configrec = xklavier.ConfigRec()
+        configrec.get_from_server(engine)
+
+        layouts = gconf_client.get_list(\
+            '/desktop/sugar/peripherals/keyboard/layouts', gconf.VALUE_STRING)
+        layouts_list = []
+        variants_list = []
+        for layout in layouts:
+            layouts_list.append(layout.split('(')[0])
+            variants_list.append(layout.split('(')[1][:-1])
+        
+        if layouts_list is not None and layouts_list is not [] \
+                and variants_list is not None and variants_list is not []:
+            configrec.set_layouts(layouts_list)
+            configrec.set_variants(variants_list)
+
+        model = gconf_client.get_string(\
+            '/desktop/sugar/peripherals/keyboard/model')
+        if model is not None:
+            configrec.set_model(model)
+
+        options = gconf_client.get_list(\
+            '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
+        if options is not [] and options is not None:
+            configrec.set_options(options)        
+
+        configrec.activate(engine)
+    except Exception:
+        logging.exception('Error during keyboard configuration')
+
 def main():
     cleanup_logs()
     logger.start('shell')
 
-    intro.check_profile()
-
     client = gconf.client_get_default()
-    timezone = client.get_string('/desktop/sugar/date/timezone')
+    client.set_string('/desktop/gnome/peripherals/mouse/cursor_theme', 'sugar')
+    client.set_string('/apps/metacity/general/mouse_button_modifier',
+                      'disabled')
 
+    timezone = client.get_string('/desktop/sugar/date/timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
+
+    intro.check_profile()
 
     start_ui_service()
     start_session_manager()
@@ -154,7 +198,7 @@ def main():
 
     launcher.setup()
 
-    home_window = HomeWindow()
+    home_window = homewindow.get_instance()
     home_window.show()
 
     gobject.idle_add(unfreeze_dcon_cb)
@@ -163,7 +207,13 @@ def main():
     gobject.idle_add(setup_journal_cb)
     gobject.idle_add(setup_notification_service_cb)
     gobject.idle_add(setup_file_transfer_cb)
-    gobject.idle_add(show_software_updates_cb, home_window)
+    gobject.idle_add(show_software_updates_cb)
+
+    try:
+        import xklavier
+        gobject.idle_add(setup_keyboard_cb, client)
+    except ImportError:
+        logging.debug('Could not load xklavier for keyboard configuration')
 
     try:
         gtk.main()

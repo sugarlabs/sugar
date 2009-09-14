@@ -62,7 +62,7 @@ class ClipboardMenu(Palette):
         self._journal_item = MenuItem(_('Keep'))
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU, 
+        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
@@ -74,7 +74,7 @@ class ClipboardMenu(Palette):
 
     def _update_open_submenu(self):
         activities = self._get_activities()
-        logging.debug('_update_open_submenu: %r' % activities)
+        logging.debug('_update_open_submenu: %r', activities)
         child = self._open_item.get_child()
         if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
@@ -97,7 +97,7 @@ class ClipboardMenu(Palette):
             activity_info = registry.get_bundle(service_name)
 
             if not activity_info:
-                logging.warning('Activity %s is unknown.' % service_name)
+                logging.warning('Activity %s is unknown.', service_name)
 
             item = gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
@@ -109,7 +109,7 @@ class ClipboardMenu(Palette):
         activities = self._get_activities()
         installable = self._cb_object.is_bundle()
         percent = self._cb_object.get_percent()
-        
+
         if percent == 100 and (activities or installable):
             self._remove_item.props.sensitive = True
             self._open_item.props.sensitive = True
@@ -204,26 +204,26 @@ class ClipboardMenu(Palette):
     def _copy_to_journal(self):
         formats = self._cb_object.get_formats().keys()
         most_significant_mime_type = mime.choose_most_significant(formats)
-        format = self._cb_object.get_formats()[most_significant_mime_type]
+        format_ = self._cb_object.get_formats()[most_significant_mime_type]
 
         transfer_ownership = False
         if most_significant_mime_type == 'text/uri-list':
-            uris = mime.split_uri_list(format.get_data())
+            uris = mime.split_uri_list(format_.get_data())
             if len(uris) == 1 and uris[0].startswith('file://'):
                 file_path = urlparse.urlparse(uris[0]).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format.get_data())
+                file_path = self._write_to_temp_file(format_.get_data())
                 transfer_ownership = True
                 mime_type = 'text/uri-list'
         else:
-            if format.is_on_disk():
-                file_path = urlparse.urlparse(format.get_data()).path
+            if format_.is_on_disk():
+                file_path = urlparse.urlparse(format_.get_data()).path
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format.get_data())
+                file_path = self._write_to_temp_file(format_.get_data())
                 transfer_ownership = True
                 sniffed_mime_type = mime.get_for_file(file_path)
                 if sniffed_mime_type == 'application/octet-stream':

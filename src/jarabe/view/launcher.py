@@ -28,14 +28,21 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.model import shell
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 
-class LaunchWindow(hippo.CanvasWindow):
+class LaunchWindow(gtk.Window):
     def __init__(self, activity_id, icon_path, icon_color):
-        gobject.GObject.__init__(
-                self, type_hint=gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        gobject.GObject.__init__(self)
+
+        self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_NORMAL
+        self.props.decorated = False
+
+        canvas = hippo.Canvas()
+        canvas.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self.add(canvas)
+        canvas.show()
 
         self._activity_id = activity_id
         self._box = LaunchBox(activity_id, icon_path, icon_color)
-        self.set_root(self._box)
+        canvas.set_root(self._box)
 
         self.connect('realize', self.__realize_cb)
 
@@ -61,8 +68,7 @@ class LaunchWindow(hippo.CanvasWindow):
 
 class LaunchBox(hippo.CanvasBox):
     def __init__(self, activity_id, icon_path, icon_color):
-        gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL,
-                                 background_color=style.COLOR_WHITE.get_int())
+        gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL)
 
         self._activity_id = activity_id
         self._activity_icon = CanvasPulsingIcon(
@@ -114,7 +120,7 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         d = (self.end_size - self.start_size) * current
-        self._icon.props.size = self.start_size + d
+        self._icon.props.size = int(self.start_size + d)
 
 _launchers = {}
 
@@ -151,4 +157,4 @@ def _destroy_launcher(home_activity):
         _launchers[activity_id].destroy()
         del _launchers[activity_id]
     else:
-        logging.error('Launcher for %s is missing' % activity_id)
+        logging.error('Launcher for %s is missing', activity_id)

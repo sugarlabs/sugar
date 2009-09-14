@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 
 from gettext import gettext as _
 import logging
-import sha
+import hashlib
 
 import dbus
 import hippo
@@ -46,6 +47,7 @@ from jarabe.model import bundleregistry
 from jarabe.model import network
 from jarabe.model import shell
 from jarabe.model.network import Settings
+from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -74,7 +76,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._flags = 0
         self._wpa_flags = 0
         self._rsn_flags = 0
-        self._mode = 0
+        self._mode = network.NM_802_11_MODE_UNKNOWN
         self._device_caps = 0
         self._device_state = None
         self._connection = None
@@ -127,7 +129,7 @@ class AccessPointView(CanvasPulsingIcon):
         self._palette_icon = Icon(icon_name=icon_name,
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
-                                              
+
         p = palette.Palette(primary_text=self._name,
                             icon=self._palette_icon)
 
@@ -156,8 +158,12 @@ class AccessPointView(CanvasPulsingIcon):
             self._update_state()
 
     def _update_properties(self, properties):
+        if 'Mode' in properties:
+            self._mode = properties['Mode']
+            self._color = None
         if 'Ssid' in properties:
             self._name = properties['Ssid']
+            self._color = None
         if 'Strength' in properties:
             self._strength = properties['Strength']
         if 'Flags' in properties:
@@ -166,18 +172,22 @@ class AccessPointView(CanvasPulsingIcon):
             self._wpa_flags = properties['WpaFlags']
         if 'RsnFlags' in properties:
             self._rsn_flags = properties['RsnFlags']
-        if 'Mode' in properties:
-            self._mode = properties['Mode']
 
-        sh = sha.new()
-        data = self._name + hex(self._flags)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor.colors)
+        if self._color == None:
+            if self._mode == network.NM_802_11_MODE_ADHOC:
+                encoded_color = self._name.split("#", 1)
+                if len(encoded_color) == 2:
+                    self._color = XoColor('#' + encoded_color[1])
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                sha_hash = hashlib.sha1()
+                data = self._name + hex(self._flags)
+                sha_hash.update(data)
+                digest = hash(sha_hash.digest())
+                index = digest % len(xocolor.colors)
 
-        self._color = XoColor('%s,%s' % (xocolor.colors[idx][0],
-                                         xocolor.colors[idx][1]))
-
+                self._color = XoColor('%s,%s' %
+                                      (xocolor.colors[index][0],
+                                       xocolor.colors[index][1]))
         self._update()
 
     def __get_active_ap_reply_cb(self, ap):
@@ -207,7 +217,10 @@ class AccessPointView(CanvasPulsingIcon):
         logging.debug('Error getting the access point properties: %s', err)
 
     def _update(self):
-        if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
+        if network.find_connection(self._name) is not None:
+            self.props.badge_name = "emblem-favorite"
+            self._palette_icon.props.badge_name = "emblem-favorite"
+        elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
             self.props.badge_name = "emblem-locked"
             self._palette_icon.props.badge_name = "emblem-locked"
         else:
@@ -228,7 +241,8 @@ class AccessPointView(CanvasPulsingIcon):
         if state == network.DEVICE_STATE_ACTIVATED:
             connection = network.find_connection(self._name)
             if connection:
-                connection.set_connected()
+                if self._mode == network.NM_802_11_MODE_INFRA:
+                    connection.set_connected()
 
             icon_name = '%s-connected' % _ICON_NAME
         else:
@@ -262,7 +276,7 @@ class AccessPointView(CanvasPulsingIcon):
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
-    def _update_color(self):        
+    def _update_color(self):
         if self._greyed_out:
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
@@ -347,11 +361,19 @@ class AccessPointView(CanvasPulsingIcon):
     def _connect(self):
         connection = network.find_connection(self._name)
         if connection is None:
-            settings = Settings()            
+            settings = Settings()
             settings.connection.id = 'Auto ' + self._name
             settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
             settings.wireless.ssid = self._name
+
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                settings.wireless.mode = 'infrastructure'
+            elif self._mode == network.NM_802_11_MODE_ADHOC:
+                settings.wireless.mode = 'adhoc'
+                settings.wireless.band = 'bg'
+                settings.ip4_config = IP4Config()
+                settings.ip4_config.method = 'shared'
 
             wireless_security = self._get_security()
             settings.wireless_security = wireless_security
@@ -723,7 +745,7 @@ class MeshBox(gtk.VBox):
         self._suspended = True
         self._query = ''
         self._owner_icon = None
-            
+
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.pack_start(self._toolbar, expand=False)
@@ -757,7 +779,7 @@ class MeshBox(gtk.VBox):
         netmgr_observer.listen()
 
     def do_size_allocate(self, allocation):
-        width = allocation.width        
+        width = allocation.width
         height = allocation.height
 
         min_w_, icon_width = self._owner_icon.get_width_request()
@@ -772,7 +794,7 @@ class MeshBox(gtk.VBox):
         self._add_alone_buddy(buddy_model)
 
     def _buddy_removed_cb(self, model, buddy_model):
-        self._remove_buddy(buddy_model) 
+        self._remove_buddy(buddy_model)
 
     def _buddy_moved_cb(self, model, buddy_model, activity_model):
         # Owner doesn't move from the center
@@ -784,7 +806,7 @@ class MeshBox(gtk.VBox):
         self._add_activity(activity_model)
 
     def _activity_removed_cb(self, model, activity_model):
-        self._remove_activity(activity_model) 
+        self._remove_activity(activity_model)
 
     def _add_alone_buddy(self, buddy_model):
         icon = BuddyIcon(buddy_model)
@@ -857,7 +879,7 @@ class MeshBox(gtk.VBox):
             self._layout.remove(icon)
             del self.access_points[ap_o]
         else:
-            logging.error('Can not remove access point %s' % ap_o)
+            logging.error('Can not remove access point %s', ap_o)
 
     def suspend(self):
         if not self._suspended:

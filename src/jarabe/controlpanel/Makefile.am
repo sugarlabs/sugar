@@ -5,6 +5,6 @@ sugar_PYTHON = 				\
 	gui.py				\
 	inlinealert.py			\
 	sectionview.py			\
-	toolbar.py			
+	toolbar.py
 
 

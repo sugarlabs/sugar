@@ -44,13 +44,13 @@ class NotificationIcon(gtk.EventBox):
         self._icon.props.pulsing = True
         self.add(self._icon)
         self._icon.show()
-        
+
         gobject.timeout_add_seconds(self._PULSE_TIMEOUT, self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
     def __stop_pulsing_cb(self):
-        self._icon.props.pulsing = False        
+        self._icon.props.pulsing = False
         return False
 
     def do_set_property(self, pspec, value):
@@ -77,7 +77,7 @@ class NotificationIcon(gtk.EventBox):
 
     def _get_palette(self):
         return self._icon.palette
-    
+
     palette = property(_get_palette, _set_palette)
 
 class NotificationWindow(gtk.Window):

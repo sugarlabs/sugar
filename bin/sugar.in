@@ -1,10 +1,13 @@
 #!/bin/sh
 
 if test -z "$SUGAR_SCALING"; then
-    export SUGAR_SCALING=100
+    export SUGAR_SCALING=72
 fi
 
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
+
+# Needed for executing wpa_passphrase
+export PATH="$PATH":/sbin:/usr/sbin
 
 if ! test -f "$GTK2_RC_FILES"; then
     echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available in path $GTK2_RC_FILES"
@@ -16,7 +19,6 @@ if [ -f ~/.sugar/debug ]; then
         . ~/.sugar/debug
 fi
 
-matchbox-window-manager -use_titlebar no -theme sugar \
-                        -kbdconfig @prefix@/share/sugar/data/kbdconfig &
+metacity --no-force-fullscreen &
 
 exec sugar-session

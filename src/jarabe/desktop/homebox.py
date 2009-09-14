@@ -27,7 +27,6 @@ from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
 
-from jarabe.model import bundleregistry
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
@@ -47,10 +46,6 @@ class HomeBox(gtk.VBox):
         self._favorites_view = favoritesview.FavoritesView()
         self._list_view = ActivitiesList()
 
-        self._favorites_view.connect('erase-activated',
-                                     self.__erase_activated_cb)
-        self._list_view.connect('erase-activated', self.__erase_activated_cb)
-
         self._toolbar = HomeToolbar()
         self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
@@ -59,53 +54,15 @@ class HomeBox(gtk.VBox):
 
         self._set_view(_FAVORITES_VIEW)
 
-    def __erase_activated_cb(self, view, bundle_id):
-        registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(bundle_id)
-
-        alert = Alert()
-        alert.props.title = _('Confirm erase')
-        alert.props.msg = \
-                _('Confirm erase: Do you want to permanently erase %s?') \
-                % activity_info.get_name()
-
-        cancel_icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(gtk.RESPONSE_CANCEL, _('Keep'), cancel_icon)
-
-        erase_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, _('Erase'), erase_icon)
-
-        if self._list_view in self.get_children():
-            self._list_view.add_alert(alert)
-        else:
-            self._favorites_view.add_alert(alert)
-        # TODO: If the favorite layouts didn't hardcoded the box size, we could
-        # just pack an alert between the toolbar and the canvas.
-        #self.pack_start(alert, False)
-        #self.reorder_child(alert, 1)
-        alert.connect('response', self.__erase_confirmation_dialog_response_cb,
-                bundle_id)
-
-    def __erase_confirmation_dialog_response_cb(self, alert, response_id,
-                                                bundle_id):
-        if self._list_view in self.get_children():
-            self._list_view.remove_alert()
-        else:
-            self._favorites_view.remove_alert()
-        if response_id == gtk.RESPONSE_OK:
-            registry = bundleregistry.get_registry()
-            bundle = registry.get_bundle(bundle_id)
-            registry.uninstall(bundle)
-            
     def show_software_updates_alert(self):
         alert = Alert()
-        updater_icon = Icon(icon_name='module-updater', 
+        updater_icon = Icon(icon_name='module-updater',
                     pixel_size = style.STANDARD_ICON_SIZE)
         alert.props.icon = updater_icon
         updater_icon.show()
         alert.props.title = _('Software Update')
-        alert.props.msg = _('Update your activities to ensure' 
-                            ' compatibility with your new software') 
+        alert.props.msg = _('Update your activities to ensure'
+                            ' compatibility with your new software')
 
         cancel_icon = Icon(icon_name='dialog-cancel')
         alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), cancel_icon)
@@ -120,7 +77,7 @@ class HomeBox(gtk.VBox):
         else:
             self._favorites_view.add_alert(alert)
         alert.connect('response', self.__software_update_response_cb)
-        
+
     def __software_update_response_cb(self, alert, response_id):
         if self._list_view in self.get_children():
             self._list_view.remove_alert()
@@ -132,8 +89,8 @@ class HomeBox(gtk.VBox):
             try:
                 os.unlink(update_trigger_file)
             except OSError:
-                logging.error('Software-update: Can not remove file %s' % 
-                              update_trigger_file)
+                logging.error('Software-update: Can not remove file %s',
+                    update_trigger_file)
 
         if response_id == gtk.RESPONSE_OK:
             from jarabe.controlpanel.gui import ControlPanel
@@ -184,6 +141,8 @@ class HomeBox(gtk.VBox):
     def focus_search_entry(self):
         self._toolbar.search_entry.grab_focus()
 
+    def set_resume_mode(self, resume_mode):
+        self._favorites_view.set_resume_mode(resume_mode)
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
@@ -249,7 +208,7 @@ class HomeToolbar(gtk.Toolbar):
                 self.search_entry.set_sensitive(True)
                 self.search_entry.grab_focus()
                 self.emit('view-changed', view)
-            
+
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -289,7 +248,7 @@ class HomeToolbar(gtk.Toolbar):
 
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
-    
+
     def __init__(self):
         RadioToolButton.__init__(self)
 

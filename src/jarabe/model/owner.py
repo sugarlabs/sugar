@@ -62,8 +62,8 @@ class Owner(gobject.GObject):
             raise RuntimeError("invalid buddy icon")
 
         # Get the icon's hash
-        import md5
-        digest = md5.new(self._icon).digest()
+        import hashlib
+        digest = hashlib.md5(self._icon).digest()
         self._icon_hash = util.printable_hash(digest)
 
         self._pservice = presenceservice.get_instance()

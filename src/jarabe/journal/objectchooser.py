@@ -19,14 +19,13 @@ import logging
 
 import gobject
 import gtk
-import hippo
 import wnck
 
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
 
-from jarabe.journal.listview import ListView
-from jarabe.journal.collapsedentry import BaseCollapsedEntry
+from jarabe.journal.listview import BaseListView
+from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import SearchToolbar
 from jarabe.journal.volumestoolbar import VolumesToolbar
 
@@ -91,9 +90,9 @@ class ObjectChooser(gtk.Window):
         self._list_view.show()
 
         self._toolbar.set_mount_point('/')
-        
+
         width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2        
+        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         if what_filter:
@@ -107,8 +106,8 @@ class ObjectChooser(gtk.Window):
         if window.get_xid() == parent.xid:
             self.destroy()
 
-    def __entry_activated_cb(self, list_view, entry):
-        self._selected_object_id = entry.metadata['uid']
+    def __entry_activated_cb(self, list_view, uid):
+        self._selected_object_id = uid
         self.emit('response', gtk.RESPONSE_ACCEPT)
 
     def __delete_event_cb(self, chooser, event):
@@ -121,19 +120,19 @@ class ObjectChooser(gtk.Window):
 
     def __close_button_clicked_cb(self, button):
         self.emit('response', gtk.RESPONSE_DELETE_EVENT)
-        
+
     def get_selected_object_id(self):
         return self._selected_object_id
 
     def __query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
 
-    def __volume_changed_cb(self, volume_toolbar, volume_id):
-        logging.debug('Selected volume: %r.' % volume_id)
-        self._toolbar.set_volume_id(volume_id)
+    def __volume_changed_cb(self, volume_toolbar, mount_point):
+        logging.debug('Selected volume: %r.', mount_point)
+        self._toolbar.set_mount_point(mount_point)
 
     def __visibility_notify_event_cb(self, window, event):
-        logging.debug('visibility_notify_event_cb %r' % self)
+        logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
@@ -163,50 +162,38 @@ class TitleBox(VolumesToolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
-class ChooserCollapsedEntry(BaseCollapsedEntry):
-    __gtype_name__ = 'ChooserCollapsedEntry'
-
-    __gsignals__ = {
-        'entry-activated': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
-                            ([]))
-    }
-
-    def __init__(self):
-        BaseCollapsedEntry.__init__(self)
-
-        self.connect_after('button-release-event',
-                           self.__button_release_event_cb)
-        self.connect('motion-notify-event', self.__motion_notify_event_cb)
-
-    def __button_release_event_cb(self, entry, event):
-        self.emit('entry-activated')
-        return True
-
-    def __motion_notify_event_cb(self, entry, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            self.props.background_color = style.COLOR_PANEL_GREY.get_int()
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            self.props.background_color = style.COLOR_WHITE.get_int()
-        return False
-
-class ChooserListView(ListView):
+class ChooserListView(BaseListView):
     __gtype_name__ = 'ChooserListView'
 
     __gsignals__ = {
         'entry-activated': (gobject.SIGNAL_RUN_FIRST,
                             gobject.TYPE_NONE,
-                            ([object]))
+                            ([str])),
     }
 
     def __init__(self):
-        ListView.__init__(self)
+        BaseListView.__init__(self)
 
-    def create_entry(self):
-        entry = ChooserCollapsedEntry()
-        entry.connect('entry-activated', self.__entry_activated_cb)
-        return entry
+        self.cell_icon.props.show_palette = False
+        self.tree_view.props.hover_selection = True
+
+        self.tree_view.connect('button-release-event',
+                               self.__button_release_event_cb)
 
     def __entry_activated_cb(self, entry):
         self.emit('entry-activated', entry)
+
+    def __button_release_event_cb(self, tree_view, event):
+        if event.window != tree_view.get_bin_window():
+            return False
+
+        pos = tree_view.get_path_at_pos(event.x, event.y)
+        if pos is None:
+            return False
+
+        path, column_, x_, y_ = pos
+        uid = tree_view.get_model()[path][ListModel.COLUMN_UID]
+        self.emit('entry-activated', uid)
+
+        return False
 

@@ -63,7 +63,7 @@ class FriendsTray(VTray):
             return
 
         model = BuddyModel(buddy=buddy)
- 
+
         icon = FriendIcon(model)
         self.add_item(icon)
         icon.show()
@@ -102,11 +102,11 @@ class FriendsTray(VTray):
         self._activity_ps = activity_ps
 
         self.clear()
-	
+
         # always display ourselves
         self.add_buddy(self._owner)
 
-        if shared_activity is True: 
+        if shared_activity is True:
             for buddy in activity_ps.get_joined_buddies():
                 self.add_buddy(buddy)
 
@@ -114,15 +114,15 @@ class FriendsTray(VTray):
                             'buddy-joined', self.__buddy_joined_cb)
             self._left_hid = activity_ps.connect(
                             'buddy-left', self.__buddy_left_cb)
-            
+
     def _active_activity_changed_cb(self, home_model, home_activity):
-        if home_activity is None:        
+        if home_activity is None:
             return
 
         activity_id = home_activity.get_activity_id()
         if activity_id is None:
             return
-        
+
         # check if activity is shared
         activity = None
         for act in self._pservice.get_activities():

@@ -65,11 +65,6 @@ about the layout can be accessed with fields of the class."""
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
-
     def __init__(self, **kwargs):
         logging.debug('STARTUP: Loading the favorites view')
 
@@ -97,6 +92,7 @@ class FavoritesView(hippo.Canvas):
         self._layout = None
         self._alert = None
         self._datastore_listener = DatastoreListener()
+        self._resume_mode = True
 
         # More DND stuff
         self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -116,7 +112,7 @@ class FavoritesView(hippo.Canvas):
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
-        self._set_layout(favorites_settings.layout)        
+        self._set_layout(favorites_settings.layout)
 
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
@@ -134,13 +130,10 @@ class FavoritesView(hippo.Canvas):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
         icon = ActivityIcon(activity_info, self._datastore_listener)
-        icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
+        icon.set_resume_mode(self._resume_mode)
         self._box.insert_sorted(icon, 0, self._layout.compare_activities)
         self._layout.append(icon)
-
-    def __erase_activated_cb(self, activity_icon, bundle_id):
-        self.emit('erase-activated', bundle_id)
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
@@ -176,7 +169,7 @@ class FavoritesView(hippo.Canvas):
             self._add_activity(activity_info)
 
     def do_size_allocate(self, allocation):
-        width = allocation.width        
+        width = allocation.width
         height = allocation.height
 
         min_w_, my_icon_width = self._my_icon.get_width_request()
@@ -220,7 +213,7 @@ class FavoritesView(hippo.Canvas):
     def __motion_notify_event_cb(self, widget, event):
         if not self._pressed_button:
             return False
-        
+
         # if the mouse button is not pressed, no drag should occurr
         if not event.state & gtk.gdk.BUTTON1_MASK:
             self._pressed_button = None
@@ -246,7 +239,7 @@ class FavoritesView(hippo.Canvas):
         icon_file_name = self._last_clicked_icon.props.file_name
         # TODO: we should get the pixbuf from the widget, so it has colors, etc
         pixbuf = gtk.gdk.pixbuf_new_from_file(icon_file_name)
-        
+
         self._hot_x = pixbuf.props.width / 2
         self._hot_y = pixbuf.props.height / 2
         context.set_icon_pixbuf(pixbuf, self._hot_x, self._hot_y)
@@ -329,7 +322,7 @@ class FavoritesView(hippo.Canvas):
         except RegisterError, e:
             alert.props.title = _('Registration Failed')
             alert.props.msg = _('%s') % e
-        else:    
+        else:
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
                                 'with your school server.')
@@ -339,10 +332,16 @@ class FavoritesView(hippo.Canvas):
         alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
 
         self.add_alert(alert)
-        alert.connect('response', self.__register_alert_response_cb)            
-            
+        alert.connect('response', self.__register_alert_response_cb)
+
     def __register_alert_response_cb(self, alert, response_id):
         self.remove_alert()
+
+    def set_resume_mode(self, resume_mode):
+        self._resume_mode = resume_mode
+        for icon in self._box.get_children():
+            if hasattr(icon, 'set_resume_mode'):
+                icon.set_resume_mode(self._resume_mode)
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -377,7 +376,7 @@ class DatastoreListener(object):
     def get_last_activity_async(self, bundle_id, properties, callback_cb):
         query = {'activity': bundle_id,
                  'limit': 5,
-                 'order_by': ['-mtime']}
+                 'order_by': ['+timestamp']}
 
         reply_handler = lambda entries, total_count: self.__reply_handler_cb(
                 entries, total_count, callback_cb)
@@ -386,8 +385,8 @@ class DatastoreListener(object):
                 error, callback_cb)
 
         self._datastore.find(query, properties, byte_arrays=True,
-                               reply_handler=reply_handler,
-                               error_handler=error_handler)
+                             reply_handler=reply_handler,
+                             error_handler=error_handler)
 
     def __reply_handler_cb(self, entries, total_count, callback_cb):
         logging.debug('__reply_handler_cb')
@@ -402,11 +401,6 @@ class ActivityIcon(CanvasIcon):
 
     _BORDER_WIDTH = style.zoom(3)
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
-
     def __init__(self, activity_info, datastore_listener):
         CanvasIcon.__init__(self, cache=True,
                             file_name=activity_info.get_icon())
@@ -414,6 +408,7 @@ class ActivityIcon(CanvasIcon):
         self._activity_info = activity_info
         self._journal_entries = []
         self._hovering = False
+        self._resume_mode = True
 
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
@@ -445,7 +440,8 @@ class ActivityIcon(CanvasIcon):
 
     def __get_last_activity_async_cb(self, entries, error=None):
         if error is not None:
-            logging.error('Error retrieving most recent activities: %r' % error)
+            logging.error('Error retrieving most recent activities: %r', error)
+            return
 
         # If there's a problem with the DS index, we may get entries not related
         # to this activity.
@@ -459,7 +455,7 @@ class ActivityIcon(CanvasIcon):
 
     def _update(self):
         self.palette = None
-        if not self._journal_entries:
+        if not self._resume_mode or not self._journal_entries:
             self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         else:
@@ -469,11 +465,7 @@ class ActivityIcon(CanvasIcon):
     def create_palette(self):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('activate', self.__palette_activate_cb)
-        palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
-
-    def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def __palette_activate_cb(self, palette):
         self._activate()
@@ -508,7 +500,7 @@ class ActivityIcon(CanvasIcon):
         cr.stroke()
 
     def do_get_content_height_request(self, for_width):
-        height, height = CanvasIcon.do_get_content_height_request(self, 
+        height, height = CanvasIcon.do_get_content_height_request(self,
                                                                   for_width)
         height += ActivityIcon._BORDER_WIDTH * 2
         return height, height
@@ -523,7 +515,7 @@ class ActivityIcon(CanvasIcon):
 
     def _activate(self):
         self.palette.popdown(immediate=True)
-        if self._journal_entries:
+        if self._resume_mode and self._journal_entries:
             entry = self._journal_entries[0]
 
             shell_model = shell.get_model()
@@ -564,6 +556,10 @@ class ActivityIcon(CanvasIcon):
         registry = bundleregistry.get_registry()
         return registry.get_bundle_position(self.bundle_id, self.version)
     fixed_position = property(_get_fixed_position, None)
+
+    def set_resume_mode(self, resume_mode):
+        self._resume_mode = resume_mode
+        self._update()
 
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
@@ -606,7 +602,7 @@ class FavoritePalette(ActivityPalette):
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
-            journal.misc.resume(entry, self._bundle_id)
+            journal.misc.resume(entry, entry['activity'])
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
@@ -623,7 +619,8 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self.connect('button-release-event', self.__button_release_event_cb)
 
     def __button_release_event_cb(self, icon, event):
-        self._home_model.get_active_activity().get_window().activate(1)
+        window = self._home_model.get_active_activity().get_window()
+        window.activate(gtk.get_current_event_time())
 
     def _update(self):
         self.props.file_name = self._home_activity.get_icon_path()
@@ -692,9 +689,9 @@ class FavoritesSetting(object):
     _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
 
     def __init__(self):
-        client = gconf.client_get_default() 
+        client = gconf.client_get_default()
         self._layout = client.get_string(self._FAVORITES_KEY)
-        logging.debug('FavoritesSetting layout %r' % (self._layout))
+        logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
 
@@ -704,7 +701,7 @@ class FavoritesSetting(object):
         return self._layout
 
     def set_layout(self, layout):
-        logging.debug('set_layout %r %r' % (layout, self._layout))
+        logging.debug('set_layout %r %r', layout, self._layout)
         if layout != self._layout:
             self._layout = layout
 

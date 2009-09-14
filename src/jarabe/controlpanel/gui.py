@@ -46,7 +46,7 @@ class ControlPanel(gtk.Window):
         width = gtk.gdk.screen_width() - offset * 2
         height = gtk.gdk.screen_height() - offset * 2
         self.set_size_request(width, height)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS) 
+        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
@@ -59,7 +59,7 @@ class ControlPanel(gtk.Window):
         self._section_view = None
         self._section_toolbar = None
         self._main_toolbar = None
-        
+
         self._vbox = gtk.VBox()
         self._hbox = gtk.HBox()
         self._vbox.pack_start(self._hbox)
@@ -67,7 +67,7 @@ class ControlPanel(gtk.Window):
 
         self._main_view = gtk.EventBox()
         self._hbox.pack_start(self._main_view)
-        self._main_view.modify_bg(gtk.STATE_NORMAL, 
+        self._main_view.modify_bg(gtk.STATE_NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._main_view.show()
 
@@ -90,16 +90,16 @@ class ControlPanel(gtk.Window):
         if self._canvas:
             self._main_view.remove(self._canvas)
         if canvas:
-            self._main_view.add(canvas)        
+            self._main_view.add(canvas)
         self._canvas = canvas
 
     def _set_toolbar(self, toolbar):
         if self._toolbar:
-            self._vbox.remove(self._toolbar)            
+            self._vbox.remove(self._toolbar)
         self._vbox.pack_start(toolbar, False)
-        self._vbox.reorder_child(toolbar, 0) 
+        self._vbox.reorder_child(toolbar, 0)
         self._toolbar = toolbar
-        if not self._separator: 
+        if not self._separator:
             self._separator = gtk.HSeparator()
             self._vbox.pack_start(self._separator, False)
             self._vbox.reorder_child(self._separator, 1)
@@ -120,9 +120,9 @@ class ControlPanel(gtk.Window):
         child.modify_bg(gtk.STATE_NORMAL, style.COLOR_BLACK.get_gdk_color())
 
         self._setup_options()
-        self._main_toolbar.connect('stop-clicked', 
+        self._main_toolbar.connect('stop-clicked',
                                    self.__stop_clicked_cb)
-        self._main_toolbar.connect('search-changed', 
+        self._main_toolbar.connect('search-changed',
                                    self.__search_changed_cb)
 
     def _setup_options(self):
@@ -134,12 +134,17 @@ class ControlPanel(gtk.Window):
         if not os.path.exists('/ofw'):
             options.remove('power')
 
+        try:
+            import xklavier
+        except ImportError:
+            options.remove('keyboard')
+
         for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
-            sectionicon.connect('button_press_event', 
+            sectionicon.connect('button_press_event',
                                self.__select_option_cb, option)
             sectionicon.show()
 
@@ -162,7 +167,7 @@ class ControlPanel(gtk.Window):
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
         self._set_canvas(self._scrolledwindow)
-        self._main_view.modify_bg(gtk.STATE_NORMAL, 
+        self._main_view.modify_bg(gtk.STATE_NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._table.show()
         self._scrolledwindow.show()
@@ -171,7 +176,7 @@ class ControlPanel(gtk.Window):
         entry.set_text('')
 
     def _update(self, query):
-        for option in self._options:            
+        for option in self._options:
             found = False
             for key in self._options[option]['keywords']:
                 if query.lower() in key.lower():
@@ -183,16 +188,16 @@ class ControlPanel(gtk.Window):
 
     def _setup_section(self):
         self._section_toolbar = SectionToolbar()
-        self._section_toolbar.connect('cancel-clicked', 
+        self._section_toolbar.connect('cancel-clicked',
                                      self.__cancel_clicked_cb)
-        self._section_toolbar.connect('accept-clicked', 
+        self._section_toolbar.connect('accept-clicked',
                                      self.__accept_clicked_cb)
 
     def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
 
         icon = self._section_toolbar.get_icon()
-        icon.set_from_icon_name(self._options[option]['icon'], 
+        icon.set_from_icon_name(self._options[option]['icon'],
                                 gtk.ICON_SIZE_LARGE_TOOLBAR)
         icon.props.xo_color = self._options[option]['color']
         title = self._section_toolbar.get_title()
@@ -201,32 +206,32 @@ class ControlPanel(gtk.Window):
 
         self._current_option = option
 
-        mod = __import__('.'.join(('cpsection', option, 'view')), 
-                         globals(), locals(), ['view']) 
+        mod = __import__('.'.join(('cpsection', option, 'view')),
+                         globals(), locals(), ['view'])
         view_class = getattr(mod, self._options[option]['view'], None)
 
-        mod = __import__('.'.join(('cpsection', option, 'model')), 
+        mod = __import__('.'.join(('cpsection', option, 'model')),
                          globals(), locals(), ['model'])
-        model = ModelWrapper(mod)        
+        model = ModelWrapper(mod)
 
-        self._section_view = view_class(model, 
+        self._section_view = view_class(model,
                                         self._options[option]['alerts'])
 
-        self._set_canvas(self._section_view)        
+        self._set_canvas(self._section_view)
         self._section_view.show()
-        self._section_view.connect('notify::is-valid', 
+        self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
         self._section_view.connect('request-close',
                                    self.__close_request_cb)
-        self._main_view.modify_bg(gtk.STATE_NORMAL, 
+        self._main_view.modify_bg(gtk.STATE_NORMAL,
                                   style.COLOR_WHITE.get_gdk_color())
 
     def set_section_view_auto_close(self):
         '''Automatically close the control panel if there is "nothing to do"
         '''
         self._section_view.auto_close = True
-    
-    def _get_options(self):    
+
+    def _get_options(self):
         '''Get the available option information from the extensions
         '''
         options = {}
@@ -238,10 +243,10 @@ class ControlPanel(gtk.Window):
             if os.path.isdir(os.path.join(path, item)) and \
                     os.path.exists(os.path.join(path, item, '__init__.py')):
                 try:
-                    mod = __import__('.'.join(('cpsection', item)), 
+                    mod = __import__('.'.join(('cpsection', item)),
                                      globals(), locals(), [item])
                     view_class = getattr(mod, 'CLASS', None)
-                    if view_class is not None: 
+                    if view_class is not None:
                         options[item] = {}
                         options[item]['alerts'] = []
                         options[item]['view'] = view_class
@@ -252,18 +257,18 @@ class ControlPanel(gtk.Window):
                         keywords.append(options[item]['title'].lower())
                         if item not in keywords:
                             keywords.append(item)
-                    else:    
+                    else:
                         _logger.error('There is no CLASS constant specifieds ' \
                                           'in the view file \'%s\'.' % item)
                 except Exception:
                     logging.error('Exception while loading extension:\n' + \
                         ''.join(traceback.format_exception(*sys.exc_info())))
 
-        return options             
+        return options
 
     def __cancel_clicked_cb(self, widget):
         self._section_view.undo()
-        self._options[self._current_option]['alerts'] = [] 
+        self._options[self._current_option]['alerts'] = []
         self._section_toolbar.accept_button.set_sensitive(True)
         self._show_main_view()
 
@@ -272,24 +277,24 @@ class ControlPanel(gtk.Window):
             self._section_toolbar.accept_button.set_sensitive(False)
             self._section_toolbar.cancel_button.set_sensitive(False)
             alert = Alert()
-            alert.props.title = _('Warning') 
-            alert.props.msg = _('Changes require restart') 
-                
+            alert.props.title = _('Warning')
+            alert.props.msg = _('Changes require restart')
+
             icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon) 
-            icon.show() 
+            alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon)
+            icon.show()
 
             if self._current_option != 'aboutme':
-                icon = Icon(icon_name='dialog-ok') 
-                alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon) 
+                icon = Icon(icon_name='dialog-ok')
+                alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon)
                 icon.show()
 
-            icon = Icon(icon_name='system-restart') 
-            alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon) 
-            icon.show() 
+            icon = Icon(icon_name='system-restart')
+            alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon)
+            icon.show()
 
             self._vbox.pack_start(alert, False)
-            self._vbox.reorder_child(alert, 2) 
+            self._vbox.reorder_child(alert, 2)
             alert.connect('response', self.__response_cb)
             alert.show()
         else:
@@ -299,15 +304,15 @@ class ControlPanel(gtk.Window):
         self._vbox.remove(alert)
         self._section_toolbar.accept_button.set_sensitive(True)
         self._section_toolbar.cancel_button.set_sensitive(True)
-        if response_id is gtk.RESPONSE_CANCEL:             
+        if response_id is gtk.RESPONSE_CANCEL:
             self._section_view.undo()
             self._section_view.setup()
             self._options[self._current_option]['alerts'] = []
-        elif response_id is gtk.RESPONSE_ACCEPT:             
+        elif response_id is gtk.RESPONSE_ACCEPT:
             self._options[self._current_option]['alerts'] = \
                 self._section_view.restart_alerts
             self._show_main_view()
-        elif response_id is gtk.RESPONSE_APPLY:                         
+        elif response_id is gtk.RESPONSE_APPLY:
             session_manager = get_session_manager()
             session_manager.logout()
 
@@ -315,18 +320,18 @@ class ControlPanel(gtk.Window):
         self.show_section_view(option)
 
     def __search_changed_cb(self, maintoolbar, query):
-        self._update(query)            
+        self._update(query)
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
 
     def __close_request_cb(self, widget, event=None):
         self.destroy()
-    
+
     def __valid_section_cb(self, section_view, pspec):
         section_is_valid = section_view.props.is_valid
         self._section_toolbar.accept_button.set_sensitive(section_is_valid)
-        
+
 class ModelWrapper(object):
     def __init__(self, module):
         self._module = module
@@ -337,7 +342,7 @@ class ModelWrapper(object):
         methods = dir(self._module)
         for method in methods:
             if method.startswith('get_') and method[4:] != 'color':
-                try:                        
+                try:
                     self._options[method[4:]] = getattr(self._module, method)()
                 except Exception:
                     self._options[method[4:]] = None
@@ -347,12 +352,12 @@ class ModelWrapper(object):
 
     def undo(self):
         for key in self._options.keys():
-            method = getattr(self._module, 'set_' + key, None)            
+            method = getattr(self._module, 'set_' + key, None)
             if method and self._options[key] is not None:
                 try:
                     method(self._options[key])
                 except Exception, detail:
-                    _logger.debug('Error undo option: %s' % detail)        
+                    _logger.debug('Error undo option: %s', detail)
 
 class _SectionIcon(gtk.EventBox):
     __gtype_name__ = "SugarSectionIcon"
@@ -368,7 +373,7 @@ class _SectionIcon(gtk.EventBox):
                           gobject.PARAM_READWRITE)
     }
 
-    def __init__(self, **kwargs): 
+    def __init__(self, **kwargs):
         self._icon_name = None
         self._pixel_size = style.GRID_CELL_SIZE
         self._xo_color = None
@@ -377,16 +382,16 @@ class _SectionIcon(gtk.EventBox):
         gobject.GObject.__init__(self, **kwargs)
 
         self._vbox = gtk.VBox()
-        self._icon = Icon(icon_name=self._icon_name, 
-                          pixel_size=self._pixel_size, 
+        self._icon = Icon(icon_name=self._icon_name,
+                          pixel_size=self._pixel_size,
                           xo_color=self._xo_color)
         self._vbox.pack_start(self._icon, expand=False, fill=False)
 
         self._label = gtk.Label(self._title)
-        self._label.modify_fg(gtk.STATE_NORMAL, 
+        self._label.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(self._label, expand=False, fill=False)
-        
+
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self.set_visible_window(False)
         self.set_app_paintable(True)

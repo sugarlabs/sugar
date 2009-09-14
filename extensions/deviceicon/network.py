@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +18,7 @@
 
 from gettext import gettext as _
 import logging
-import sha
+import hashlib
 import socket
 import struct
 
@@ -32,8 +33,11 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics import xocolor
+from sugar.util import unique_id
 
 from jarabe.model import network
+from jarabe.model.network import Settings
+from jarabe.model.network import IP4Config
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
 
@@ -71,7 +75,9 @@ class WirelessPalette(Palette):
 
     __gsignals__ = {
         'deactivate-connection' : (gobject.SIGNAL_RUN_FIRST,
-                                   gobject.TYPE_NONE, ([]))
+                                   gobject.TYPE_NONE, ([])),
+        'create-connection'     : (gobject.SIGNAL_RUN_FIRST,
+                                   gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, primary_text):
@@ -105,6 +111,11 @@ class WirelessPalette(Palette):
         self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
         self.menu.append(self._disconnect_item)
 
+        self._adhoc_item = gtk.MenuItem(_('Create new wireless network'))
+        self._adhoc_item.connect('activate', self.__adhoc_activate_cb)
+        self.menu.append(self._adhoc_item)
+        self._adhoc_item.show()
+
     def set_connecting(self):
         self.props.secondary_text = _('Connecting...')
 
@@ -114,9 +125,18 @@ class WirelessPalette(Palette):
         self._set_channel(frequency)
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
+        
+    def set_disconnected(self):
+        self.props.primary_text = ''
+        self.props.secondary_text = ''
+        self._disconnect_item.hide()
+        self.set_content(None)
 
     def __disconnect_activate_cb(self, menuitem):
         self.emit('deactivate-connection')
+
+    def __adhoc_activate_cb(self, menuitem):
+        self.emit('create-connection')
 
     def _set_channel(self, frequency):
         try:
@@ -195,6 +215,7 @@ class WirelessDeviceView(ToolButton):
         self._device_props = None
         self._flags = 0
         self._name = ''
+        self._mode = network.NM_802_11_MODE_UNKNOWN
         self._strength = 0
         self._frequency = 0
         self._device_state = None
@@ -215,7 +236,9 @@ class WirelessDeviceView(ToolButton):
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self._palette = WirelessPalette(self._name)
         self._palette.connect('deactivate-connection',
-                              self.__deactivate_connection)
+                              self.__deactivate_connection_cb)
+        self._palette.connect('create-connection',
+                              self.__create_connection_cb)
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
@@ -286,8 +309,12 @@ class WirelessDeviceView(ToolButton):
         self._update_properties(properties)
 
     def _update_properties(self, properties):
+        if 'Mode' in properties:
+            self._mode = properties['Mode']
+            self._color = None
         if 'Ssid' in properties:
             self._name = properties['Ssid']
+            self._color = None
         if 'Strength' in properties:
             self._strength = properties['Strength']
         if 'Flags' in properties:
@@ -295,14 +322,21 @@ class WirelessDeviceView(ToolButton):
         if 'Frequency' in properties:
             self._frequency = properties['Frequency']
 
-        sh = sha.new()
-        data = self._name + hex(self._flags)
-        sh.update(data)
-        h = hash(sh.digest())
-        idx = h % len(xocolor.colors)
+        if self._color == None:
+            if self._mode == network.NM_802_11_MODE_ADHOC:
+                encoded_color = self._name.split("#", 1)
+                if len(encoded_color) == 2:
+                    self._color = xocolor.XoColor('#' + encoded_color[1])
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                sha_hash = hashlib.sha1()
+                data = self._name + hex(self._flags)
+                sha_hash.update(data)
+                digest = hash(sha_hash.digest())
+                index = digest % len(xocolor.colors)
 
-        self._color = xocolor.XoColor('%s,%s' % (xocolor.colors[idx][0],
-                                                 xocolor.colors[idx][1]))
+                self._color = xocolor.XoColor('%s,%s' % 
+                                              (xocolor.colors[index][0],
+                                               xocolor.colors[index][1]))
         self._update()
 
     def __get_all_ap_props_reply_cb(self, properties):
@@ -347,11 +381,17 @@ class WirelessDeviceView(ToolButton):
             address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected(self._frequency, address)
             self._icon.props.pulsing = False
+        else:
+            self._icon.props.badge_name = None
+            self._icon.props.pulsing = False
+            self._icon.props.pulse_color = self._inactive_color
+            self._icon.props.base_color = self._inactive_color
+            self._palette.set_disconnected()
 
     def _update_color(self):
         self._icon.props.base_color = self._color
 
-    def __deactivate_connection(self, palette, data=None):
+    def __deactivate_connection_cb(self, palette, data=None):
         if self._active_ap_op is not None:
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
             netmgr = dbus.Interface(obj, _NM_IFACE)
@@ -368,6 +408,41 @@ class WirelessDeviceView(ToolButton):
                     netmgr.DeactivateConnection(conn_o)
                     break
 
+    def __create_connection_cb(self, palette, data=None):
+        client = gconf.client_get_default()
+        nick = client.get_string('/desktop/sugar/user/nick')
+        color = client.get_string('/desktop/sugar/user/color')
+        connection_name = _('%s\'s network %s') % (nick, color)
+
+        connection = network.find_connection(connection_name)
+        if connection is None:
+            settings = Settings()
+            settings.connection.id = 'Auto ' + connection_name
+            settings.connection.uuid = unique_id()
+            settings.connection.type = '802-11-wireless'
+            settings.wireless.ssid = dbus.ByteArray(connection_name)
+            settings.wireless.band = 'bg'
+            settings.wireless.mode = 'adhoc'
+            settings.ip4_config = IP4Config()
+            settings.ip4_config.method = 'shared'
+
+            connection = network.add_connection(connection_name, settings)
+
+        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+        netmgr = dbus.Interface(obj, _NM_IFACE)
+
+        netmgr.ActivateConnection(network.SETTINGS_SERVICE,
+                                  connection.path,
+                                  self._device.object_path,
+                                  '/',
+                                  reply_handler=self.__activate_reply_cb,
+                                  error_handler=self.__activate_error_cb)
+
+    def __activate_reply_cb(self, connection):
+        logging.debug('Network created: %s', connection)
+
+    def __activate_error_cb(self, err):
+        logging.debug('Failed to create network: %s', err)
 
 class WiredDeviceView(TrayIcon):
 
@@ -389,52 +464,18 @@ class WiredDeviceView(TrayIcon):
 
 class WirelessDeviceObserver(object):
     def __init__(self, device, tray):
-        self._bus = dbus.SystemBus()
         self._device = device
         self._device_view = None
         self._tray = tray
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
-                     reply_handler=self.__get_device_props_reply_cb,
-                     error_handler=self.__get_device_props_error_cb)
-
-        self._bus.add_signal_receiver(self.__state_changed_cb,
-                                      signal_name='StateChanged',
-                                      path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+        self._device_view = WirelessDeviceView(self._device)
+        self._tray.add_device(self._device_view)
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__state_changed_cb,
-                                         signal_name='StateChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
-
-    def __get_device_props_reply_cb(self, properties):
-        if 'State' in properties:
-            self._update_state(properties['State'])
-
-    def __get_device_props_error_cb(self, err):
-        logging.error('Error getting the device properties: %s', err)
-
-    def __state_changed_cb(self, new_state, old_state, reason):
-        self._update_state(new_state)
-
-    def _update_state(self, state):
-        if state == network.DEVICE_STATE_PREPARE or \
-           state == network.DEVICE_STATE_CONFIG or \
-           state == network.DEVICE_STATE_NEED_AUTH or \
-           state == network.DEVICE_STATE_IP_CONFIG or \
-           state == network.DEVICE_STATE_ACTIVATED:
-            if self._device_view is None:
-                self._device_view = WirelessDeviceView(self._device)
-                self._tray.add_device(self._device_view)
-        else:
-            if self._device_view is not None:
-                self._device_view.disconnect()
-                self._tray.remove_device(self._device_view)
-                del self._device_view
-                self._device_view = None
+        self._device_view.disconnect()
+        self._tray.remove_device(self._device_view)
+        del self._device_view
+        self._device_view = None
 
 
 class WiredDeviceObserver(object):

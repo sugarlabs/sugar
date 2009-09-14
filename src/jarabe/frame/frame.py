@@ -146,8 +146,6 @@ class Frame(object):
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
-        self._event_area.show()
-
         self.mode = None
 
     def show(self, mode):
@@ -161,8 +159,6 @@ class Frame(object):
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
-
-        self._event_area.hide()
 
     def move(self, pos):
         self.current_position = pos
@@ -276,13 +272,13 @@ class Frame(object):
 
     def _drag_motion_cb(self, window, context, x, y, time):
         self._mouse_listener.mouse_enter()
-        
+
     def _drag_leave_cb(self, window, drag_context, timestamp):
         self._mouse_listener.mouse_leave()
-            
+
     def _enter_corner_cb(self, event_area):
         self._mouse_listener.mouse_enter()
-        
+
     def notify_key_press(self):
         self._key_listener.key_press()
 
@@ -318,7 +314,7 @@ class Frame(object):
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:
-            logging.debug('icon %r not in list of notifications.' % icon)
+            logging.debug('icon %r not in list of notifications.', icon)
             return
 
         window = self._notif_by_icon[icon]
@@ -326,7 +322,7 @@ class Frame(object):
         del self._notif_by_icon[icon]
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('__notification_received_cb %r' % kwargs)
+        logging.debug('__notification_received_cb %r', kwargs)
         icon = NotificationIcon()
 
         hints = kwargs['hints']

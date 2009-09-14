@@ -1,4 +1,5 @@
 # Copyright (C) 2008, OLPC
+# Copyright (C) 2009, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,7 +53,18 @@ class Language(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
+        explanation = gettext.gettext("Add languages in the order you prefer." \
+                                          " If a translation is not available,"\
+                                          " the next in the list will be used.")
+        self._text = gtk.Label(explanation)
+        self._text.set_width_chars(100)
+        self._text.set_line_wrap(True)
+        self._text.set_alignment(0, 0)
+        self.pack_start(self._text, False)
+        self._text.show()
+
         self._table = gtk.Table(rows=1, columns=3, homogeneous=False)
+        self._table.set_border_width(style.DEFAULT_SPACING * 2)        
         self.pack_start(self._table, False)
         self._table.show()
 
@@ -76,6 +88,8 @@ class Language(SectionView):
         self._table.resize(self._selected_lang_count, 3)
 
         label = gtk.Label(str=str(self._selected_lang_count))
+        label.modify_fg(gtk.STATE_NORMAL,
+            style.COLOR_SELECTION_GREY.get_gdk_color())
         self._labels.append(label)
         self._attach_to_table(label, 0, 1, padding=1)
         label.show()

@@ -43,14 +43,20 @@ class HomeWindow(gtk.Window):
         self.add_accel_group(accel_group)
 
         self._active = False
+        self._fully_obscured = True
 
         self.set_default_size(gtk.gdk.screen_width(),
                               gtk.gdk.screen_height())
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+
+        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
+        self.connect('map-event', self.__map_event_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
+        self.connect('key-release-event', self.__key_release_event_cb)
 
         self._home_box = HomeBox()
         self._group_box = GroupBox()
@@ -81,10 +87,37 @@ class HomeWindow(gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-        if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
-            self._deactivate_view()
+        fully_obscured = (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED)
+        if self._fully_obscured == fully_obscured:
+            return
+        self._fully_obscured = fully_obscured
+
+        if fully_obscured:
+            self._deactivate_view(shell.get_model().zoom_level)
         else:
-            self._activate_view()
+            display = gtk.gdk.display_get_default()
+            screen_, x_, y_, modmask = display.get_pointer()
+            if modmask & gtk.gdk.MOD1_MASK:
+                self._home_box.set_resume_mode(False)
+            else:
+                self._home_box.set_resume_mode(True)
+
+            self._activate_view(shell.get_model().zoom_level)
+
+    def __key_press_event_cb(self, window, event):
+        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+            self._home_box.set_resume_mode(False)
+        return False
+
+    def __key_release_event_cb(self, window, event):
+        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+            self._home_box.set_resume_mode(True)
+        return False
+
+    def __map_event_cb(self, window, event):
+        # have to make the desktop window active
+        # since metacity doesn't make it on startup
+        self.window.focus()
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']
@@ -95,28 +128,28 @@ class HomeWindow(gtk.Window):
 
         if old_level != ShellModel.ZOOM_ACTIVITY and \
            new_level != ShellModel.ZOOM_ACTIVITY:
-            self.remove(self.get_child()) 
-            self.add(self._transition_box) 
-            self._transition_box.show() 
+            self.remove(self.get_child())
+            self.add(self._transition_box)
+            self._transition_box.show()
 
-            if new_level == ShellModel.ZOOM_HOME: 
-                end_size = style.XLARGE_ICON_SIZE 
-            elif new_level == ShellModel.ZOOM_GROUP: 
-                end_size = style.LARGE_ICON_SIZE 
-            elif new_level == ShellModel.ZOOM_MESH: 
-                end_size = style.STANDARD_ICON_SIZE 
+            if new_level == ShellModel.ZOOM_HOME:
+                end_size = style.XLARGE_ICON_SIZE
+            elif new_level == ShellModel.ZOOM_GROUP:
+                end_size = style.LARGE_ICON_SIZE
+            elif new_level == ShellModel.ZOOM_MESH:
+                end_size = style.STANDARD_ICON_SIZE
 
-            if old_level == ShellModel.ZOOM_HOME: 
-                start_size = style.XLARGE_ICON_SIZE 
-            elif old_level == ShellModel.ZOOM_GROUP: 
-                start_size = style.LARGE_ICON_SIZE 
-            elif old_level == ShellModel.ZOOM_MESH: 
-                start_size = style.STANDARD_ICON_SIZE 
+            if old_level == ShellModel.ZOOM_HOME:
+                start_size = style.XLARGE_ICON_SIZE
+            elif old_level == ShellModel.ZOOM_GROUP:
+                start_size = style.LARGE_ICON_SIZE
+            elif old_level == ShellModel.ZOOM_MESH:
+                start_size = style.STANDARD_ICON_SIZE
 
-            self._transition_box.start_transition(start_size, end_size) 
+            self._transition_box.start_transition(start_size, end_size)
         else:
             self._update_view(new_level)
-    
+
     def _transition_completed_cb(self, transition_box):
         self._update_view(shell.get_model().zoom_level)
 
@@ -124,7 +157,7 @@ class HomeWindow(gtk.Window):
         if level == ShellModel.ZOOM_ACTIVITY:
             return
 
-        current_child = self.get_child() 
+        current_child = self.get_child()
         self.remove(current_child)
 
         if level == ShellModel.ZOOM_HOME:
@@ -141,3 +174,12 @@ class HomeWindow(gtk.Window):
 
     def get_home_box(self):
         return self._home_box
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = HomeWindow()
+    return _instance
+

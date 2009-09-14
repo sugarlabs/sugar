@@ -43,7 +43,7 @@ class ActivityInvite(BaseInvite):
 
 class PrivateInvite(BaseInvite):
     """Invitation to a private 1-1 Telepathy channel.
-    
+
     This includes text chat or streaming media.
     """
     def __init__(self, bundle_id, private_channel):

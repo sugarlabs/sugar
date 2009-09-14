@@ -1,5 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
-# Copyright (C) 2009 Simon Schampijer
+# Copyright (C) 2009 Simon Schampijer, James Zaki
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import dbus
 
 from sugar.datastore import datastore
 from sugar.graphics import style
+from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']
 
@@ -46,9 +47,32 @@ def handle_key_press(key):
     client = gconf.client_get_default()
     color = client.get_string('/desktop/sugar/user/color')
 
+    content_title = None
+    shell_model = shell.get_model()
+    zoom_level = shell_model.zoom_level
+
+    # TRANS: Nouns of what a screenshot contains
+    if zoom_level == shell_model.ZOOM_MESH:
+        content_title = _('Mesh')
+    elif zoom_level == shell_model.ZOOM_GROUP:
+        content_title = _('Group')
+    elif zoom_level == shell_model.ZOOM_HOME:
+        content_title = _('Home')
+    elif zoom_level == shell_model.ZOOM_ACTIVITY:
+        activity = shell_model.get_active_activity()
+        if activity != None:
+            content_title = activity.get_title()
+            if content_title == None:
+                content_title = _('Activity')
+
+    if content_title is None:
+        title = _('Screenshot')
+    else:
+        title = _('Screenshot of \"%s\"') % content_title
+
     jobject = datastore.create()
     try:
-        jobject.metadata['title'] = _('Screenshot')
+        jobject.metadata['title'] = title
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = _get_preview_data(screenshot)

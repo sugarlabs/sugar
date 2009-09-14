@@ -41,7 +41,7 @@ class ObjectPalette(Palette):
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([]))
+                           ([str])),
     }
 
     def __init__(self, metadata, detail=False):
@@ -59,9 +59,9 @@ class ObjectPalette(Palette):
             activity_icon.props.xo_color = \
                 XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                    style.COLOR_TRANSPARENT.get_svg()))
-        
+
         if metadata.has_key('title'):
-            title = metadata['title']
+            title = gobject.markup_escape_text(metadata['title'])
         else:
             title = _('Untitled')
 
@@ -126,7 +126,7 @@ class ObjectPalette(Palette):
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
         self._temp_file_path = model.get_file(self._metadata['uid'])
-        logging.debug('__clipboard_get_func_cb %r' % self._temp_file_path)
+        logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
         selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
@@ -142,7 +142,7 @@ class ObjectPalette(Palette):
         model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
-        self.emit('detail-clicked')
+        self.emit('detail-clicked', self._metadata['uid'])
 
     def __friend_selected_cb(self, menu_item, buddy):
         logging.debug('__friend_selected_cb')
@@ -173,7 +173,7 @@ class FriendsMenu(gtk.Menu):
             friends_model = friends.get_model()
             for friend in friends_model:
                 if friend.is_present():
-                    menu_item = MenuItem(text_label=friend.get_nick(), 
+                    menu_item = MenuItem(text_label=friend.get_nick(),
                                          icon_name='computer-xo',
                                          xo_color=friend.get_color())
                     menu_item.connect('activate', self.__item_activate_cb,
@@ -185,12 +185,12 @@ class FriendsMenu(gtk.Menu):
                 menu_item = MenuItem(_('No friends present'))
                 menu_item.set_sensitive(False)
                 self.append(menu_item)
-                menu_item.show()            
+                menu_item.show()
         else:
             menu_item = MenuItem(_('No valid connection found'))
             menu_item.set_sensitive(False)
             self.append(menu_item)
-            menu_item.show()            
+            menu_item.show()
 
     def __item_activate_cb(self, menu_item, friend):
         self.emit('friend-selected', friend)
@@ -221,7 +221,7 @@ class StartWithMenu(gtk.Menu):
             menu_item = MenuItem(resume_label)
             menu_item.set_sensitive(False)
             self.append(menu_item)
-            menu_item.show()            
+            menu_item.show()
 
     def __item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)

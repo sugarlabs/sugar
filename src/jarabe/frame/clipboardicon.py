@@ -96,7 +96,7 @@ class ClipboardIcon(RadioToolButton):
     def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
         if not selection.target in [target[0] for target in targets]:
             logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
-                            ' but only have %r.' % (selection.target, targets))
+                            ' but only have %r.', selection.target, targets)
             return
         data = self._cb_object.get_formats()[selection.target].get_data()
         selection.set(selection.target, 8, data)
@@ -133,7 +133,7 @@ class ClipboardIcon(RadioToolButton):
                     XoColor('%s,%s' % (self._icon.props.stroke_color,
                                        self._icon.props.fill_color))
             frame = jarabe.frame.get_view()
-            frame.add_notification(self._notif_icon, 
+            frame.add_notification(self._notif_icon,
                                    gtk.CORNER_BOTTOM_LEFT)
         self._current_percent = cb_object.get_percent()
 

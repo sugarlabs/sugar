@@ -17,6 +17,7 @@
 import logging
 from gettext import gettext as _
 import StringIO
+import time
 
 import hippo
 import cairo
@@ -29,6 +30,7 @@ from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.canvastextview import CanvasTextView
+from sugar.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -61,13 +63,13 @@ class BuddyList(hippo.CanvasBox):
             self.append(hbox)
 
 class ExpandedEntry(hippo.CanvasBox):
-    def __init__(self, metadata):
+    def __init__(self):
         hippo.CanvasBox.__init__(self)
         self.props.orientation = hippo.ORIENTATION_VERTICAL
         self.props.background_color = style.COLOR_WHITE.get_int()
         self.props.padding_top = style.DEFAULT_SPACING * 3
 
-        self._metadata = metadata
+        self._metadata = None
         self._update_title_sid = None
 
         # Create header
@@ -100,8 +102,9 @@ class ExpandedEntry(hippo.CanvasBox):
         self._keep_icon = self._create_keep_icon()
         header.append(self._keep_icon)
 
-        self._icon = self._create_icon()
-        header.append(self._icon)
+        self._icon = None
+        self._icon_box = hippo.CanvasBox()
+        header.append(self._icon_box)
 
         self._title = self._create_title()
         header.append(self._title, hippo.PACK_EXPAND)
@@ -114,9 +117,12 @@ class ExpandedEntry(hippo.CanvasBox):
             header.reverse()
 
         # First column
-        
-        self._preview = self._create_preview()
-        first_column.append(self._preview)
+
+        self._preview_box = hippo.CanvasBox()
+        first_column.append(self._preview_box)
+
+        self._technical_box = hippo.CanvasBox()
+        first_column.append(self._technical_box)
 
         # Second column
 
@@ -126,12 +132,45 @@ class ExpandedEntry(hippo.CanvasBox):
         tags_box, self._tags = self._create_tags()
         second_column.append(tags_box)
 
-        self._buddy_list = self._create_buddy_list()
+        self._buddy_list = hippo.CanvasBox()
         second_column.append(self._buddy_list)
 
+    def set_metadata(self, metadata):
+        if self._metadata == metadata:
+            return
+        self._metadata = metadata
+
+        self._keep_icon.keep = (int(metadata.get('keep', 0)) == 1)
+
+        self._icon = self._create_icon()
+        self._icon_box.clear()
+        self._icon_box.append(self._icon)
+
+        self._date.props.text = misc.get_date(metadata)
+
+        title = self._title.props.widget
+        title.props.text = metadata.get('title', _('Untitled'))
+        title.props.editable = model.is_editable(metadata)
+
+        self._preview_box.clear()
+        self._preview_box.append(self._create_preview())
+
+        self._technical_box.clear()
+        self._technical_box.append(self._create_technical())
+
+        self._buddy_list.clear()
+        self._buddy_list.append(self._create_buddy_list())
+
+        description = self._description.text_view_widget
+        description.props.buffer.props.text = metadata.get('description', '')
+        description.props.editable = model.is_editable(metadata)
+
+        tags = self._tags.text_view_widget
+        tags.props.buffer.props.text = metadata.get('tags', '')
+        tags.props.editable = model.is_editable(metadata)
+
     def _create_keep_icon(self):
-        keep = int(self._metadata.get('keep', 0)) == 1
-        keep_icon = KeepIcon(keep)
+        keep_icon = KeepIcon(False)
         keep_icon.connect('activated', self._keep_icon_activated_cb)
         return keep_icon
 
@@ -154,17 +193,18 @@ class ExpandedEntry(hippo.CanvasBox):
         return icon
 
     def _create_title(self):
-        title = CanvasEntry()
-        title.set_background(style.COLOR_WHITE.get_html())
-        title.props.text = self._metadata.get('title', _('Untitled'))
-        title.props.widget.connect('focus-out-event',
-                                   self._title_focus_out_event_cb)
-        return title
+        entry = gtk.Entry()
+        entry.connect('focus-out-event', self._title_focus_out_event_cb)
+
+        bg_color = style.COLOR_WHITE.get_gdk_color()
+        entry.modify_bg(gtk.STATE_INSENSITIVE, bg_color)
+        entry.modify_base(gtk.STATE_INSENSITIVE, bg_color)
+
+        return hippo.CanvasWidget(widget=entry)
 
     def _create_date(self):
         date = hippo.CanvasText(xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc(),
-                                text = misc.get_date(self._metadata))
+                                font_desc=style.FONT_NORMAL.get_pango_desc())
         return date
 
     def _create_preview(self):
@@ -174,7 +214,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         if self._metadata.has_key('preview') and \
                 len(self._metadata['preview']) > 4:
-            
+
             if self._metadata['preview'][1:4] == 'PNG':
                 preview_data = self._metadata['preview']
             else:
@@ -187,8 +227,8 @@ class ExpandedEntry(hippo.CanvasBox):
             try:
                 surface = cairo.ImageSurface.create_from_png(png_file)
                 has_preview = True
-            except Exception, e:
-                logging.error('Error while loading the preview: %r' % e)
+            except Exception:
+                logging.exception('Error while loading the preview')
                 has_preview = False
         else:
             has_preview = False
@@ -216,11 +256,42 @@ class ExpandedEntry(hippo.CanvasBox):
         box.append(preview_box)
         return box
 
+    def _create_technical(self):
+        vbox = hippo.CanvasBox()
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        lines = [
+            _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
+            _('Date: %s') % (self._format_date(),),
+            _('Size: %s') % (format_size(model.get_file_size(
+                        self._metadata['uid'])),)]
+
+        for line in lines:
+            text = hippo.CanvasText(text=line,
+                font_desc=style.FONT_NORMAL.get_pango_desc())
+            text.props.color = style.COLOR_BUTTON_GREY.get_int()
+
+            if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+                text.props.xalign = hippo.ALIGNMENT_END
+            else:
+                text.props.xalign = hippo.ALIGNMENT_START
+
+            vbox.append(text)
+
+        return vbox
+
+    def _format_date(self):
+        if 'timestamp' in self._metadata:
+            timestamp = float(self._metadata['timestamp'])
+            return time.strftime('%x', time.localtime(timestamp))
+        else:
+            return _('No date')
+
     def _create_buddy_list(self):
 
         vbox = hippo.CanvasBox()
         vbox.props.spacing = style.DEFAULT_SPACING
-        
+
         text = hippo.CanvasText(text=_('Participants:'),
                                 font_desc=style.FONT_NORMAL.get_pango_desc())
         text.props.color = style.COLOR_BUTTON_GREY.get_int()
@@ -255,21 +326,20 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        description = self._metadata.get('description', '')
-        text_view = CanvasTextView(description,
-                                   box_height=style.GRID_CELL_SIZE * 2)
+        text_view = CanvasTextView('',
+                box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
         text_view.text_view_widget.connect('focus-out-event',
-                                           self._description_focus_out_event_cb)
+                self._description_focus_out_event_cb)
 
         return vbox, text_view
 
     def _create_tags(self):
         vbox = hippo.CanvasBox()
         vbox.props.spacing = style.DEFAULT_SPACING
-        
+
         text = hippo.CanvasText(text=_('Tags:'),
                                 font_desc=style.FONT_NORMAL.get_pango_desc())
         text.props.color = style.COLOR_BUTTON_GREY.get_int()
@@ -280,14 +350,14 @@ class ExpandedEntry(hippo.CanvasBox):
             text.props.xalign = hippo.ALIGNMENT_START
 
         vbox.append(text)
-        
-        tags = self._metadata.get('tags', '')
-        text_view = CanvasTextView(tags, box_height=style.GRID_CELL_SIZE * 2)
+
+        text_view = CanvasTextView('',
+                box_height=style.GRID_CELL_SIZE * 2)
         vbox.append(text_view, hippo.PACK_EXPAND)
 
         text_view.text_view_widget.props.accepts_tab = False
         text_view.text_view_widget.connect('focus-out-event',
-                                           self._tags_focus_out_event_cb)
+                self._tags_focus_out_event_cb)
 
         return vbox, text_view
 
@@ -306,12 +376,16 @@ class ExpandedEntry(hippo.CanvasBox):
         self._update_entry()
 
     def _update_entry(self):
+        if not model.is_editable(self._metadata):
+            return
+
         needs_update = False
 
         old_title = self._metadata.get('title', None)
-        if old_title != self._title.props.text:
-            self._icon.palette.props.primary_text = self._title.props.text
-            self._metadata['title'] = self._title.props.text
+        new_title = self._title.props.widget.props.text
+        if old_title != new_title:
+            self._icon.palette.props.primary_text = new_title
+            self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
 
@@ -330,13 +404,15 @@ class ExpandedEntry(hippo.CanvasBox):
 
         if needs_update:
             model.write(self._metadata, update_mtime=False)
- 
+
         self._update_title_sid = None
- 
+
     def get_keep(self):
         return int(self._metadata.get('keep', 0)) == 1
 
     def _keep_icon_activated_cb(self, keep_icon):
+        if not model.is_editable(self._metadata):
+            return
         if self.get_keep():
             self._metadata['keep'] = 0
         else:
@@ -354,4 +430,3 @@ class ExpandedEntry(hippo.CanvasBox):
         logging.debug('_preview_box_button_release_event_cb')
         misc.resume(self._metadata)
         return True
-

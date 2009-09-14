@@ -18,7 +18,7 @@
 import logging
 from gettext import gettext as _
 import sys
-import traceback 
+import traceback
 import uuid
 
 import gtk
@@ -131,10 +131,10 @@ class JournalActivity(Window):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-        self._dbus_service = JournalActivityDBusService(self)        
+        self._dbus_service = JournalActivityDBusService(self)
 
         self.iconify()
-        
+
         self._critical_space_alert = None
         self._check_available_space()
 
@@ -185,8 +185,8 @@ class JournalActivity(Window):
         if keyname == 'Escape':
             self.show_main_view()
 
-    def __detail_clicked_cb(self, list_view, entry):
-        self._show_secondary_view(entry.metadata)
+    def __detail_clicked_cb(self, list_view, object_id):
+        self._show_secondary_view(object_id)
 
     def __clear_clicked_cb(self, list_view):
         self._main_toolbox.search_toolbar.clear_query()
@@ -199,24 +199,23 @@ class JournalActivity(Window):
         self.show_main_view()
 
     def show_main_view(self):
-        if self.toolbox != self._main_toolbox:
-            self.set_toolbox(self._main_toolbox)
+        if self.toolbar_box != self._main_toolbox:
+            self.set_toolbar_box(self._main_toolbox)
             self._main_toolbox.show()
 
         if self.canvas != self._main_view:
             self.set_canvas(self._main_view)
             self._main_view.show()
 
-    def _show_secondary_view(self, metadata):
-        # Need to get the full set of properties
-        metadata = model.get(metadata['uid'])
+    def _show_secondary_view(self, object_id):
+        metadata = model.get(object_id)
         try:
             self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:
             logging.error('Exception while displaying entry:\n' + \
                 ''.join(traceback.format_exception(*sys.exc_info())))
 
-        self.set_toolbox(self._detail_toolbox)
+        self.set_toolbar_box(self._detail_toolbox)
         self._detail_toolbox.show()
 
         try:
@@ -233,11 +232,11 @@ class JournalActivity(Window):
         if metadata is None:
             return False
         else:
-            self._show_secondary_view(metadata)
+            self._show_secondary_view(object_id)
             return True
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
-        logging.debug('Selected volume: %r.' % mount_point)
+        logging.debug('Selected volume: %r.', mount_point)
         self._main_toolbox.search_toolbar.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
@@ -282,12 +281,12 @@ class JournalActivity(Window):
         try:
             registry.install(bundle)
         except (ZipExtractException, RegistrationException):
-            logging.warning('Could not install bundle %s:\n%s' % \
-                            (bundle.get_path(), traceback.format_exc()))
+            logging.exception('Could not install bundle %s', bundle.get_path())
             return
 
         if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
             model.delete(object_id)
+            return
 
         metadata['bundle_id'] = bundle.get_bundle_id()
         model.write(metadata)
@@ -297,22 +296,22 @@ class JournalActivity(Window):
         search_toolbar.give_entry_focus()
 
     def __window_state_event_cb(self, window, event):
-        logging.debug('window_state_event_cb %r' % self)
+        logging.debug('window_state_event_cb %r', self)
         if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
             state = event.new_window_state
             visible = not state & gtk.gdk.WINDOW_STATE_ICONIFIED
             self._list_view.set_is_visible(visible)
 
     def __visibility_notify_event_cb(self, window, event):
-        logging.debug('visibility_notify_event_cb %r' % self)
+        logging.debug('visibility_notify_event_cb %r', self)
         visible = event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
     def _check_available_space(self):
         ''' Check available space on device
 
-            If the available space is below 50MB an alert will be 
-            shown which encourages to delete old journal entries. 
+            If the available space is below 50MB an alert will be
+            shown which encourages to delete old journal entries.
         '''
 
         if self._critical_space_alert:
@@ -321,11 +320,11 @@ class JournalActivity(Window):
         free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
         if free_space < _SPACE_TRESHOLD:
             self._critical_space_alert = ModalAlert()
-            self._critical_space_alert.connect('destroy', 
+            self._critical_space_alert.connect('destroy',
                                                self.__alert_closed_cb)
             self._critical_space_alert.show()
-        
-    def __alert_closed_cb(self, data):  
+
+    def __alert_closed_cb(self, data):
         self.show_main_view()
         self.present()
         self._critical_space_alert = None

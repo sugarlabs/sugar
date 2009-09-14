@@ -45,41 +45,50 @@ class FrameWindow(gtk.Window):
         box = hippo.CanvasBox()
         self._canvas.set_root(box)
 
+        bg_box = hippo.CanvasBox(
+                border_color=style.COLOR_BUTTON_GREY.get_int())
+        box.append(bg_box, hippo.PACK_EXPAND)
+
+        self._bg = hippo.CanvasBox()
+        bg_box.append(self._bg, hippo.PACK_EXPAND)
+
         padding = style.GRID_CELL_SIZE
-        if self._position == gtk.POS_TOP or self._position == gtk.POS_BOTTOM:
+        border = style.LINE_WIDTH
+
+        if position == gtk.POS_TOP or position == gtk.POS_BOTTOM:
             box.props.orientation = hippo.ORIENTATION_HORIZONTAL
             box.props.padding_left = padding
             box.props.padding_right = padding
             box.props.padding_top = 0
             box.props.padding_bottom = 0
+            self._bg.props.orientation = hippo.ORIENTATION_HORIZONTAL
+            self._bg.props.padding_left = border * 2
+            self._bg.props.padding_right = border * 2
         else:
             box.props.orientation = hippo.ORIENTATION_VERTICAL
             box.props.padding_left = 0
             box.props.padding_right = 0
             box.props.padding_top = padding
             box.props.padding_bottom = padding
+            self._bg.props.orientation = hippo.ORIENTATION_VERTICAL
+            self._bg.props.padding_top = border * 2
+            self._bg.props.padding_bottom = border * 2
 
-        self._bg = hippo.CanvasBox(
-                border_color=style.COLOR_BUTTON_GREY.get_int())
-
-        border = style.LINE_WIDTH
         if position == gtk.POS_TOP:
-            self._bg.props.orientation = hippo.ORIENTATION_HORIZONTAL
-            self._bg.props.border_bottom = border
+            bg_box.props.orientation = hippo.ORIENTATION_HORIZONTAL
+            bg_box.props.border_bottom = border
         elif position == gtk.POS_BOTTOM:
-            self._bg.props.orientation = hippo.ORIENTATION_HORIZONTAL
-            self._bg.props.border_top = border
+            bg_box.props.orientation = hippo.ORIENTATION_HORIZONTAL
+            bg_box.props.border_top = border
         elif position == gtk.POS_LEFT:
-            self._bg.props.orientation = hippo.ORIENTATION_VERTICAL
-            self._bg.props.border_right = border
+            bg_box.props.orientation = hippo.ORIENTATION_VERTICAL
+            bg_box.props.border_right = border
         elif position == gtk.POS_RIGHT:
-            self._bg.props.orientation = hippo.ORIENTATION_VERTICAL
-            self._bg.props.border_left = border
-
-        box.append(self._bg, hippo.PACK_EXPAND)
+            bg_box.props.orientation = hippo.ORIENTATION_VERTICAL
+            bg_box.props.border_left = border
 
         self._update_size()
-    
+
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
@@ -93,7 +102,7 @@ class FrameWindow(gtk.Window):
             self.resize(self.size, gtk.gdk.screen_height())
 
     def _realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DOCK)
         self.window.set_accept_focus(False)
 
     def _enter_notify_cb(self, window, event):
@@ -103,6 +112,6 @@ class FrameWindow(gtk.Window):
     def _leave_notify_cb(self, window, event):
         if event.detail != gtk.gdk.NOTIFY_INFERIOR:
             self.hover = False
-        
+
     def _size_changed_cb(self, screen):
         self._update_size()

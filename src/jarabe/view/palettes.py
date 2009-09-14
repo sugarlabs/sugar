@@ -17,10 +17,9 @@
 import os
 import statvfs
 from gettext import gettext as _
-import gconf
 import logging
 
-import gobject
+import gconf
 import gtk
 
 from sugar import env
@@ -32,7 +31,6 @@ from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 
-from jarabe.model import bundleregistry
 from jarabe.model import shell
 from jarabe.view import launcher
 from jarabe.view.viewsource import setup_view_source
@@ -61,7 +59,10 @@ class CurrentActivityPalette(BasePalette):
         BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
-        self.set_primary_text(self._home_activity.get_title())
+        self.props.primary_text = self._home_activity.get_activity_name()
+
+        if self._home_activity.get_title() != self.props.primary_text:
+            self.props.secondary_text = self._home_activity.get_title()
 
         menu_item = MenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
@@ -107,12 +108,9 @@ class CurrentActivityPalette(BasePalette):
 class ActivityPalette(Palette):
     __gtype_name__ = 'SugarActivityPalette'
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([]))
-    }
-
     def __init__(self, activity_info):
+        self._activity_info = activity_info
+
         client = gconf.client_get_default()
         color = XoColor(client.get_string("/desktop/sugar/user/color"))
         activity_icon = Icon(file=activity_info.get_icon(),
@@ -122,17 +120,9 @@ class ActivityPalette(Palette):
         Palette.__init__(self, primary_text=activity_info.get_name(),
                          icon=activity_icon)
 
-        registry = bundleregistry.get_registry()
-
-        self._bundle = activity_info
-        self._bundle_id = activity_info.get_bundle_id()
-        self._version = activity_info.get_activity_version()
-        self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                     self._version)
-
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_TRANSPARENT.get_svg()))
-        menu_item = MenuItem(text_label=_('Start'),
+        menu_item = MenuItem(text_label=_('Start new'),
                              file_name=activity_info.get_icon(),
                              xo_color=xo_color)
         menu_item.connect('activate', self.__start_activate_cb)
@@ -140,46 +130,6 @@ class ActivityPalette(Palette):
         menu_item.show()
 
         # TODO: start-with
-
-        self._favorite_item = MenuItem('')
-        self._favorite_icon = Icon(icon_name='emblem-favorite',
-                icon_size=gtk.ICON_SIZE_MENU)
-        self._favorite_item.set_image(self._favorite_icon)
-        self._favorite_item.connect('activate',
-                                    self.__change_favorite_activate_cb)
-        self.menu.append(self._favorite_item)
-        self._favorite_item.show()
-
-        menu_item = MenuItem(_('Erase'), 'list-remove')
-        menu_item.connect('activate', self.__erase_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
-
-        if not os.access(self._bundle.get_path(), os.W_OK):
-            menu_item.props.sensitive = False
-
-        registry = bundleregistry.get_registry()
-        self._activity_changed_sid = registry.connect('bundle_changed',
-                self.__activity_changed_cb)
-        self._update_favorite_item()
-
-        self.connect('destroy', self.__destroy_cb)
-
-    def __destroy_cb(self, palette):
-        self.disconnect(self._activity_changed_sid)
-
-    def _update_favorite_item(self):
-        label = self._favorite_item.child
-        if self._favorite:
-            label.set_text(_('Remove favorite'))
-            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                         style.COLOR_TRANSPARENT.get_svg()))
-        else:
-            label.set_text(_('Make favorite'))
-            client = gconf.client_get_default()
-            xo_color = XoColor(client.get_string("/desktop/sugar/user/color"))
-
-        self._favorite_icon.props.xo_color = xo_color
 
     def __start_activate_cb(self, menu_item):
         self.popdown(immediate=True)
@@ -189,28 +139,11 @@ class ActivityPalette(Palette):
 
         activity_id = activityfactory.create_activity_id()
         launcher.add_launcher(activity_id,
-                              self._bundle.get_icon(),
+                              self._activity_info.get_icon(),
                               xo_color)
 
         handle = ActivityHandle(activity_id)
-        activityfactory.create(self._bundle, handle)
-
-    def __change_favorite_activate_cb(self, menu_item):
-        registry = bundleregistry.get_registry()
-        registry.set_bundle_favorite(self._bundle_id,
-                                     self._version,
-                                     not self._favorite)
-
-    def __activity_changed_cb(self, activity_registry, activity_info):
-        if activity_info.get_bundle_id() == self._bundle_id and \
-               activity_info.get_activity_version() == self._version:
-            registry = bundleregistry.get_registry()
-            self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                         self._version)
-            self._update_favorite_item()
-
-    def __erase_activate_cb(self, menu_item):
-        self.emit('erase-activated')
+        activityfactory.create(self._activity_info, handle)
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):
@@ -285,7 +218,7 @@ class VolumePalette(Palette):
 
         self.connect('popup', self.__popup_cb)
 
-        menu_item = MenuItem(_('Unmount'))
+        menu_item = MenuItem(_('Remove'))
 
         icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
         menu_item.set_image(icon)
@@ -299,7 +232,7 @@ class VolumePalette(Palette):
         self._mount.unmount(self.__unmount_cb)
 
     def __unmount_cb(self, mount, result):
-        logging.debug('__unmount_cb %r %r' % (mount, result))
+        logging.debug('__unmount_cb %r %r', mount, result)
         mount.unmount_finish(result)
 
     def __popup_cb(self, palette):

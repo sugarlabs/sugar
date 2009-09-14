@@ -1,4 +1,5 @@
 # Copyright (C) 2008 Red Hat, Inc.
+# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -102,11 +103,17 @@ class Wireless(object):
     def __init__(self):
         self.ssid = None
         self.security = None
+        self.mode = None
+        self.band = None
 
     def get_dict(self):
         wireless = {'ssid': self.ssid}
         if self.security:
             wireless['security'] = self.security
+        if self.mode:
+            wireless['mode'] = self.mode
+        if self.band:
+            wireless['band'] = self.band
         return wireless
 
 class Connection(object):
@@ -126,10 +133,21 @@ class Connection(object):
             connection['timestamp'] = self.timestamp
         return connection
 
+class IP4Config(object):
+    def __init__(self):
+        self.method = None
+
+    def get_dict(self):
+        ip4_config = {}
+        if self.method is not None:
+            ip4_config['method'] = self.method
+        return ip4_config
+
 class Settings(object):
     def __init__(self):
         self.connection = Connection()
         self.wireless = Wireless()
+        self.ip4_config = None
         self.wireless_security = None
 
     def get_dict(self):
@@ -139,6 +157,8 @@ class Settings(object):
         if self.wireless_security is not None:
             settings['802-11-wireless-security'] = \
                 self.wireless_security.get_dict()
+        if self.ip4_config is not None:
+            settings['ipv4'] = self.ip4_config.get_dict()
         return settings
 
 class Secrets(object):
@@ -234,8 +254,8 @@ class NMSettingsConnection(dbus.service.Object):
                 if not config.read(config_path):
                     logging.error('Error reading the nm config file')
                     return
-            except ConfigParser.ParsingError, e:
-                logging.error('Error reading the nm config file: %s' % e)
+            except ConfigParser.ParsingError:
+                logging.exception('Error reading the nm config file')
                 return
             identifier = self._settings.connection.id
 
@@ -244,12 +264,11 @@ class NMSettingsConnection(dbus.service.Object):
             config.set(identifier, 'type', self._settings.connection.type)
             config.set(identifier, 'ssid', self._settings.wireless.ssid)
             config.set(identifier, 'uuid', self._settings.connection.uuid)
-            config.set(identifier, 'autoconnect', 
+            config.set(identifier, 'autoconnect',
                        self._settings.connection.autoconnect)
             if self._settings.connection.timestamp is not None:
-                config.set(identifier, 'timestamp', 
+                config.set(identifier, 'timestamp',
                            self._settings.connection.timestamp)
-
             if self._settings.wireless_security is not None:
                 if self._settings.wireless_security.key_mgmt is not None:
                     config.set(identifier, 'key-mgmt',
@@ -273,13 +292,13 @@ class NMSettingsConnection(dbus.service.Object):
                 elif self._settings.wireless_security.key_mgmt == 'wpa-psk':
                     config.set(identifier, 'key', self._secrets.psk)
         except ConfigParser.Error, e:
-            logging.error('Error constructing %s: %s' % (identifier, e))
+            logging.exception('Error constructing %s', identifier)
         else:
             f = open(config_path, 'w')
             try:
                 config.write(f)
-            except ConfigParser.Error, e:
-                logging.error('Can not write %s error: %s' % (config_path, e))
+            except ConfigParser.Error:
+                logging.exception('Can not write %s', config_path)
             f.close()
 
     @dbus.service.method(dbus_interface=NM_CONNECTION_IFACE,
@@ -291,16 +310,16 @@ class NMSettingsConnection(dbus.service.Object):
                          async_callbacks=('reply', 'error'),
                          in_signature='sasb', out_signature='a{sa{sv}}')
     def GetSecrets(self, setting_name, hints, request_new, reply, error):
-        logging.debug('Secrets requested for connection %s request_new=%s'
-                      % (self.path, request_new))
+        logging.debug('Secrets requested for connection %s request_new=%s',
+            self.path, request_new)
 
         if request_new or self._secrets is None:
             # request_new is for example the case when the pw on the AP changes
             response = SecretsResponse(self, reply, error)
             try:
                 self.secrets_request.send(self, response=response)
-            except Exception, e:
-                logging.error('Error requesting the secrets via dialog: %s' % e)
+            except Exception:
+                logging.exception('Error requesting the secrets via dialog')
         else:
             reply(self._secrets.get_dict())
 
@@ -309,8 +328,8 @@ def get_settings():
     if _nm_settings is None:
         try:
             _nm_settings = NMSettings()
-        except dbus.DBusException, e:
-            logging.error('Cannot create the UserSettings service %s.', e)
+        except dbus.DBusException:
+            logging.exception('Cannot create the UserSettings service.')
         load_connections()
     return _nm_settings
 
@@ -348,8 +367,8 @@ def load_connections():
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
             return
-    except ConfigParser.ParsingError, e:
-        logging.error('Error reading the nm config file: %s' % e)
+    except ConfigParser.ParsingError:
+        logging.exception('Error reading the nm config file')
         return
 
     for section in config.sections():
@@ -393,7 +412,7 @@ def load_connections():
                     if config.has_option(section, 'pairwise'):
                         value = config.get(section, 'pairwise')
                         settings.wireless_security.pairwise = value
-        except ConfigParser.Error, e:
-            logging.error('Error reading section: %s' % e)
+        except ConfigParser.Error:
+            logging.exception('Error reading section')
         else:
             add_connection(ssid, settings, secrets)

@@ -49,13 +49,16 @@ class Network(SectionView):
         self._radio_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._jabber_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
 
+        workspace = gtk.VBox()
+        workspace.show()
+
         separator_wireless = gtk.HSeparator()
-        self.pack_start(separator_wireless, expand=False)
+        workspace.pack_start(separator_wireless, expand=False)
         separator_wireless.show()
 
         label_wireless = gtk.Label(_('Wireless'))
         label_wireless.set_alignment(0, 0)
-        self.pack_start(label_wireless, expand=False)
+        workspace.pack_start(label_wireless, expand=False)
         label_wireless.show()
         box_wireless = gtk.VBox()
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
@@ -105,16 +108,16 @@ class Network(SectionView):
         box_wireless.pack_start(box_clear_history, expand=False)
         box_clear_history.show()
 
-        self.pack_start(box_wireless, expand=False)
+        workspace.pack_start(box_wireless, expand=False)
         box_wireless.show()
 
         separator_mesh = gtk.HSeparator()
-        self.pack_start(separator_mesh, False)
+        workspace.pack_start(separator_mesh, False)
         separator_mesh.show()
 
         label_mesh = gtk.Label(_('Collaboration'))
         label_mesh.set_alignment(0, 0)
-        self.pack_start(label_mesh, expand=False)
+        workspace.pack_start(label_mesh, expand=False)
         label_mesh.show()
         box_mesh = gtk.VBox()
         box_mesh.set_border_width(style.DEFAULT_SPACING * 2)
@@ -161,8 +164,14 @@ class Network(SectionView):
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_alert.show()
 
-        self.pack_start(box_mesh, expand=False)
+        workspace.pack_start(box_mesh, expand=False)
         box_mesh.show()
+
+        scrolled = gtk.ScrolledWindow()
+        scrolled.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled.add_with_viewport(workspace)
+        scrolled.show()
+        self.add(scrolled)
 
         self.setup()
 

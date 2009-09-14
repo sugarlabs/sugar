@@ -33,8 +33,8 @@ class ClipboardObject(object):
         self._formats = {}
 
     def destroy(self):
-        for format in self._formats.itervalues():
-            format.destroy()
+        for format_ in self._formats.itervalues():
+            format_.destroy()
 
     def get_id(self):
         return self._id
@@ -90,10 +90,10 @@ class ClipboardObject(object):
 
     def set_percent(self, percent):
         self._percent = percent
-    
-    def add_format(self, format):
-        self._formats[format.get_type()] = format
-    
+
+    def add_format(self, format_):
+        self._formats[format_.get_type()] = format_
+
     def get_formats(self):
         return self._formats
 
@@ -101,18 +101,18 @@ class ClipboardObject(object):
         if not self._formats:
             return ''
 
-        format = mime.choose_most_significant(self._formats.keys())
-        if format == 'text/uri-list':
+        format_ = mime.choose_most_significant(self._formats.keys())
+        if format_ == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
             uri = urlparse.urlparse(mime.split_uri_list(data)[0], 'file')
             if uri.scheme == 'file':
                 if os.path.exists(uri.path):
-                    format = mime.get_for_file(uri.path)
+                    format_ = mime.get_for_file(uri.path)
                 else:
-                    format = mime.get_from_file_name(uri.path)
-                logging.debug('Choosed %r!' % format)
+                    format_ = mime.get_from_file_name(uri.path)
+                logging.debug('Chose %r!', format_)
 
-        return format
+        return format_
 
 class Format(object):
 

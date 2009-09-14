@@ -17,7 +17,6 @@
 import logging
 import time
 import traceback
-import sys
 import os
 from gettext import gettext as _
 
@@ -45,7 +44,7 @@ def _get_icon_for_mime(mime_type):
                 return file_name
 
     icons = gio.content_type_get_icon(mime_type)
-    logging.debug('icons for this file: %r' % icons.props.names)
+    logging.debug('icons for this file: %r', icons.props.names)
     for icon_name in icons.props.names:
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
@@ -69,7 +68,7 @@ def get_icon_name(metadata):
             try:
                 bundle = ActivityBundle(file_path)
                 file_name = bundle.get_icon()
-            except:
+            except Exception:
                 logging.warning('Could not read bundle:\n' + \
                                 traceback.format_exc())
 
@@ -97,27 +96,27 @@ def get_bundle(metadata):
         if is_activity_bundle(metadata):
             file_path = util.TempFilePath(model.get_file(metadata['uid']))
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r' % file_path)
+                logging.warning('Invalid path: %r', file_path)
                 return None
             return ActivityBundle(file_path)
 
         elif is_content_bundle(metadata):
             file_path = util.TempFilePath(model.get_file(metadata['uid']))
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r' % file_path)
+                logging.warning('Invalid path: %r', file_path)
                 return None
             return ContentBundle(file_path)
 
         elif is_journal_bundle(metadata):
             file_path = util.TempFilePath(model.get_file(metadata['uid']))
             if not os.path.exists(file_path):
-                logging.warning('Invalid path: %r' % file_path)
+                logging.warning('Invalid path: %r', file_path)
                 return None
             return JournalEntryBundle(file_path)
         else:
             return None
     except MalformedBundleException, e:
-        logging.warning('Incorrect bundle: %r' % e)
+        logging.warning('Incorrect bundle: %r', e)
         return None
 
 def _get_activities_for_mime(mime_type):
@@ -197,7 +196,7 @@ def resume(metadata, bundle_id=None):
         if bundle_id is None:
             activities = get_activities(metadata)
             if not activities:
-                logging.warning('No activity can open this object, %s.' %
+                logging.warning('No activity can open this object, %s.',
                         metadata.get('mime_type', None))
                 return
             bundle_id = activities[0].get_bundle_id()

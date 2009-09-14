@@ -72,8 +72,8 @@ class Friends(gobject.GObject):
                         continue
                     buddy = BuddyModel(key=key, nick=cp.get(key, 'nick'))
                     self.add_friend(buddy)
-        except Exception, exc:
-            logging.error("Error parsing friends file: %s" % exc)
+        except Exception:
+            logging.exception('Error parsing friends file')
 
     def save(self):
         cp = ConfigParser()
@@ -98,8 +98,8 @@ class Friends(gobject.GObject):
             pass
 
         def friends_synced_error(e):
-            logging.error("Error asking presence service to sync friends: %s"
-                % e)
+            logging.error('Error asking presence service to sync friends: %s',
+                e)
 
         keys = []
         for friend in self:
