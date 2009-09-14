@@ -85,6 +85,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  wpasupplicant (wpa_passphrase) needed in jarabe.desktop.keydialog.WPAKeyDialog()
 #  openssh-client (ssh-keygen) needed in jarabe.window.create_profile()
 #  gdb needed by command sugar-launch
+# TODO: recommend (not suggest) python-xklavier when packaged for Debian
 CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
 CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2, python-gconf
 CDBS_DEPENDS += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
@@ -92,7 +93,7 @@ CDBS_DEPENDS += , metacity, dbus-x11, openssh-client
 CDBS_RECOMMENDS = sugar-artwork-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS += , network-manager, xserver-xephyr, x11-utils, x11-xserver-utils, lsb-release, wpasupplicant, ethtool
 CDBS_SUGGESTS = $(patsubst %,sugar-%-activity,read write imageviewer browse jukebox pippy)
-CDBS_SUGGESTS += , gdb
+CDBS_SUGGESTS += , gdb, python-xklavier
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
 CDBS_PROVIDES = $(pkgbase)
