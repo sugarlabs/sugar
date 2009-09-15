@@ -173,7 +173,7 @@ class JournalButton(BaseButton):
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
 
-        self.props.named_icon = 'computer-xo'
+        self.props.named_icon = 'activity-journal'
 
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
