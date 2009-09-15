@@ -186,8 +186,6 @@ class BaseListView(gtk.Bin):
         self.date_column.set_alignment(1)
         self.date_column.props.resizable = True
         self.date_column.props.clickable = True
-        self.date_column.props.sort_indicator = True
-        self.date_column.props.sort_order = gtk.SORT_ASCENDING
         self.date_column.pack_start(cell_text)
         self.date_column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE)
         self.tree_view.append_column(self.date_column)
