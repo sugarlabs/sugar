@@ -51,6 +51,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self._query = ''
 
         self.modify_base(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self.set_headers_visible(False)
         selection = self.get_selection()
         selection.set_mode(gtk.SELECTION_NONE)
 
@@ -61,7 +62,7 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_favorite = CellRendererFavorite(self)
         cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn()
         column.pack_start(cell_favorite)
         column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.append_column(column)
@@ -70,7 +71,7 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_icon.connect('erase-activated', self.__erase_activated_cb)
         cell_icon.connect('clicked', self.__icon_clicked_cb)
 
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn()
         column.pack_start(cell_icon)
         column.add_attribute(cell_icon, 'file-name', ListModel.COLUMN_ICON)
         self.append_column(column)
@@ -79,7 +80,7 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_text.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         cell_text.props.ellipsize_set = True
 
-        column = gtk.TreeViewColumn(_('Title'))
+        column = gtk.TreeViewColumn()
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.expand = True
         column.set_sort_column_id(ListModel.COLUMN_TITLE)
@@ -90,7 +91,7 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_text = gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = gtk.TreeViewColumn(_('Version'))
+        column = gtk.TreeViewColumn()
         column.set_alignment(1)
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.resizable = True
@@ -104,7 +105,7 @@ class ActivitiesTreeView(gtk.TreeView):
         cell_text = gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = gtk.TreeViewColumn(_('Date'))
+        column = gtk.TreeViewColumn()
         column.set_alignment(1)
         column.props.sizing = gtk.TREE_VIEW_COLUMN_GROW_ONLY
         column.props.resizable = True
