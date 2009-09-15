@@ -282,7 +282,9 @@ class FavoritesView(hippo.Canvas):
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
-            raise ValueError('Unknown favorites layout: %r' % layout)
+            logging.warn('Unknown favorites layout: %r' % layout)
+            layout = favoriteslayout.RingLayout.key
+            assert layout in LAYOUT_MAP
 
         if type(self._layout) == LAYOUT_MAP[layout]:
             return
