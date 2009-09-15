@@ -44,6 +44,7 @@ class TreeView(gtk.TreeView):
 
     def __init__(self):
         gtk.TreeView.__init__(self)
+        self.set_headers_visible(False)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can avoid
@@ -127,7 +128,7 @@ class BaseListView(gtk.Bin):
         cell_favorite = CellRendererFavorite(self.tree_view)
         cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn()
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         column.props.fixed_width = cell_favorite.props.width
         column.pack_start(cell_favorite)
@@ -136,7 +137,7 @@ class BaseListView(gtk.Bin):
 
         self.cell_icon = CellRendererActivityIcon(self.tree_view)
 
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn()
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         column.props.fixed_width = self.cell_icon.props.width
         column.pack_start(self.cell_icon)
@@ -149,17 +150,16 @@ class BaseListView(gtk.Bin):
         self.cell_title.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         self.cell_title.props.ellipsize_set = True
 
-        self._title_column = gtk.TreeViewColumn(_('Title'))
+        self._title_column = gtk.TreeViewColumn()
         self._title_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         self._title_column.props.expand = True
         self._title_column.props.clickable = True
         self._title_column.pack_start(self.cell_title)
         self._title_column.add_attribute(self.cell_title, 'markup',
                                          ListModel.COLUMN_TITLE)
-        self._title_column.connect('clicked', self.__header_clicked_cb)
         self.tree_view.append_column(self._title_column)
 
-        buddies_column = gtk.TreeViewColumn('')
+        buddies_column = gtk.TreeViewColumn()
         buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         self.tree_view.append_column(buddies_column)
 
@@ -180,7 +180,7 @@ class BaseListView(gtk.Bin):
         date = util.timestamp_to_elapsed_string(timestamp)
         date_width = self._get_width_for_string(date)
 
-        self.date_column = gtk.TreeViewColumn(_('Date'))
+        self.date_column = gtk.TreeViewColumn()
         self.date_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         self.date_column.props.fixed_width = date_width
         self.date_column.set_alignment(1)
@@ -190,46 +190,7 @@ class BaseListView(gtk.Bin):
         self.date_column.props.sort_order = gtk.SORT_ASCENDING
         self.date_column.pack_start(cell_text)
         self.date_column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE)
-        self.date_column.connect('clicked', self.__header_clicked_cb)
         self.tree_view.append_column(self.date_column)
-
-    def __header_clicked_cb(self, column_clicked):
-        if column_clicked == self._title_column:
-            if self._title_column.props.sort_indicator:
-                if self._title_column.props.sort_order == gtk.SORT_DESCENDING:
-                    self._query['order_by'] = ['+title']
-                else:
-                    self._query['order_by'] = ['-title']
-            else:
-                self._query['order_by'] = ['+title']
-        elif column_clicked == self.date_column:
-            if self.date_column.props.sort_indicator:
-                if self.date_column.props.sort_order == gtk.SORT_DESCENDING:
-                    self._query['order_by'] = ['+timestamp']
-                else:
-                    self._query['order_by'] = ['-timestamp']
-            else:
-                self._query['order_by'] = ['+timestamp']
-
-        self.refresh()
-
-        # Need to update the column indicators after the model has been reset
-        if self._query['order_by'] == ['-timestamp']:
-            self.date_column.props.sort_indicator = True
-            self._title_column.props.sort_indicator = False
-            self.date_column.props.sort_order = gtk.SORT_DESCENDING
-        elif self._query['order_by'] == ['+timestamp']:
-            self.date_column.props.sort_indicator = True
-            self._title_column.props.sort_indicator = False
-            self.date_column.props.sort_order = gtk.SORT_ASCENDING
-        elif self._query['order_by'] == ['-title']:
-            self.date_column.props.sort_indicator = False
-            self._title_column.props.sort_indicator = True
-            self._title_column.props.sort_order = gtk.SORT_DESCENDING
-        elif self._query['order_by'] == ['+title']:
-            self.date_column.props.sort_indicator = False
-            self._title_column.props.sort_indicator = True
-            self._title_column.props.sort_order = gtk.SORT_ASCENDING
 
     def _get_width_for_string(self, text):
         # Add some extra margin
@@ -501,7 +462,7 @@ class ListView(BaseListView):
         cell_detail = CellRendererDetail(self.tree_view)
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
 
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn()
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         column.props.fixed_width = cell_detail.props.width
         column.pack_start(cell_detail)
