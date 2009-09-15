@@ -51,6 +51,7 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
+data/sugar-emulator.desktop
 data/icons/Makefile
 extensions/Makefile
 extensions/cpsection/Makefile
