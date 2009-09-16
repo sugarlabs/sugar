@@ -354,6 +354,12 @@ class ShellModel(gobject.GObject):
         if old_level == new_level:
             return
 
+        if old_level != self.ZOOM_ACTIVITY:
+            screen = gtk.gdk.screen_get_default()
+            active_window_type = screen.get_active_window().get_type_hint()
+            if active_window_type != gtk.gdk.WINDOW_TYPE_HINT_DESKTOP:
+                return
+
         self._zoom_level = new_level
         if new_level is not self.ZOOM_ACTIVITY:
             self._desktop_level = new_level
