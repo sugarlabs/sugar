@@ -260,8 +260,9 @@ class BaseListView(gtk.Bin):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
         logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
 
-        # prevent glitches while later vadjustment setting
-        self.tree_view.hide()
+        if self.tree_view.window is not None:
+            # prevent glitches while later vadjustment setting, see #1235
+            self.tree_view.get_bin_window().hide()
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
@@ -270,7 +271,9 @@ class BaseListView(gtk.Bin):
         self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
 
-        self.tree_view.show()
+        if self.tree_view.window is not None:
+            # prevent glitches while later vadjustment setting, see #1235
+            self.tree_view.get_bin_window().show()
 
         if len(tree_model) == 0:
             if self._is_query_empty():
