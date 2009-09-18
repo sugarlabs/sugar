@@ -16,11 +16,11 @@
 
 # pylint: disable-msg=C0301
 
-prefix = '/usr/local'
-data_path = '/usr/local/share/sugar/data'
-shell_path = '/usr/local/share/sugar/shell'
-locale_path = '/usr/local/share/locale'
-ext_path = '/usr/local/share/sugar/extensions'
-activities_path = "/usr/local/share/sugar/activities"
-version = '0.85.6'
+prefix = '/home/tomeu/sugar-jhbuild/install'
+data_path = '/home/tomeu/sugar-jhbuild/install/share/sugar/data'
+shell_path = '/home/tomeu/sugar-jhbuild/install/share/sugar/shell'
+locale_path = '/home/tomeu/sugar-jhbuild/install/share/locale'
+ext_path = '/home/tomeu/sugar-jhbuild/install/share/sugar/extensions'
+activities_path = "/home/tomeu/sugar-jhbuild/install/share/sugar/activities"
+version = '0.85.7'
 
