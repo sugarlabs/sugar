@@ -1,3 +1,17 @@
+sugar-0.86 (0.85.8-1) unstable; urgency=low
+
+  * New upstream devlopment release.
+  * Fix depend versioned on metacilty (required --no-force-fullscreen
+    option introduced in 2.27.1).
+  * Use upstream sugar-emulator desktop file.
+    + Drop locally shipped desktop file.
+    + Depend on (not recommend) branched sugar-artwork (needed for icon
+      used in upstream desktop file).
+    + Adapt menu file to not use -x option (matching upstream desktop
+      file).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 18 Sep 2009 21:37:20 +0200
+
 sugar-0.86 (0.85.7-1) unstable; urgency=low
 
   * New upstream devlopment release:

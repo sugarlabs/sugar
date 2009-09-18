@@ -26,6 +26,8 @@ Files: AUTHORS
 	data/nm-user-settings.conf
 	data/sugar-100.gtkrc
 	data/sugar-72.gtkrc
+	data/sugar-emulator.desktop
+	data/sugar-emulator.desktop.in
 	data/sugar.desktop
 	data/sugar.schemas.in
 	data/sugar.xml.in
