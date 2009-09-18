@@ -140,9 +140,10 @@ class KeyboardManager(object):
     def set_option_group(self, option_group):
         """Sets the supplied option for switching keyboard group"""
         #XXX: Merge, not overwrite previous options
-        if option_group is None:
-            option_group = ''
-        options = [option_group]
+        if option_group is None or not option_group:
+            options = ['']
+        else:
+            options = [option_group]
         self._gconf_client.set_list(_OPTIONS_KEY, gconf.VALUE_STRING, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
