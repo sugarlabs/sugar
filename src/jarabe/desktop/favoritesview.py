@@ -516,7 +516,9 @@ class ActivityIcon(CanvasIcon):
         self._activate()
 
     def _activate(self):
-        self.palette.popdown(immediate=True)
+        if self.palette is not None:
+            self.palette.popdown(immediate=True)
+
         if self._resume_mode and self._journal_entries:
             entry = self._journal_entries[0]
 
