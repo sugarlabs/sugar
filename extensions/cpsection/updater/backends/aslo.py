@@ -62,7 +62,7 @@ _FIND_VERSION = './/{http://www.mozilla.org/2004/em-rdf#}version'
 _FIND_LINK = './/{http://www.mozilla.org/2004/em-rdf#}updateLink'
 _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
-_UPDATE_PATH = 'http://activities.sugarlabs.org/services/update.php'
+_UPDATE_PATH = 'http://activities.sugarlabs.org/services/update-aslo.php'
 
 _fetcher = None
 
@@ -72,9 +72,14 @@ class _UpdateFetcher(object):
     _CHUNK_SIZE = 10240
 
     def __init__(self, bundle, completion_cb):
+        # ASLO knows only about stable SP releases
+        major, minor = config.version.split('.')[0:2]
+        sp_version = '%s.%s' % (major, int(minor) + int(minor) % 2)
 
         url = '%s?id=%s&appVersion=%s' % \
-                (_UPDATE_PATH, bundle.get_bundle_id(), config.version)
+                (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
+
+        logging.debug('Fetch %s', url)
 
         self._completion_cb = completion_cb
         self._file = gio.File(url)

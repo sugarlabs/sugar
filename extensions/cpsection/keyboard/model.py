@@ -87,7 +87,9 @@ class KeyboardManager(object):
         if model:
             return model
         else:
-            return self._configrec.get_model()
+            model = self._configrec.get_model()
+            self.set_model(model)
+            return model
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
@@ -107,19 +109,22 @@ class KeyboardManager(object):
                 layout_list.append('%s(%s)' % (layout, variants[i]))
             i += 1
 
+        self.set_layouts(layout_list)
+
         return layout_list
 
     def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
         options = self._gconf_client.get_list(_OPTIONS_KEY, gconf.VALUE_STRING)
-        
+
         if not options:
             options = self._configrec.get_options()
+            self.set_option_group(options)
 
         for option in options:
             if option.startswith(_GROUP_NAME):
                 return option
-        
+
         return None
     
     def get_max_layouts(self):
@@ -135,7 +140,10 @@ class KeyboardManager(object):
     def set_option_group(self, option_group):
         """Sets the supplied option for switching keyboard group"""
         #XXX: Merge, not overwrite previous options
-        options = [option_group]
+        if option_group is None or not option_group:
+            options = ['']
+        else:
+            options = [option_group]
         self._gconf_client.set_list(_OPTIONS_KEY, gconf.VALUE_STRING, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)

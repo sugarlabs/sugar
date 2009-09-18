@@ -132,10 +132,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                           style.COLOR_TRANSPARENT.get_svg()))
         else:
-            if metadata.get('icon-color', ''):
-                xo_color = XoColor(metadata['icon-color'])
-            else:
-                xo_color = None
+            xo_color = misc.get_icon_color(metadata)
         self._cached_row.append(xo_color)
 
         title = gobject.markup_escape_text(metadata.get('title', None))

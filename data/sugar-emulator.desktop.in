@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Sugar Emulator
+Exec=@prefix@/bin/sugar-emulator
+Type=Application
+Icon=@prefix@/share/icons/sugar/scalable/device/computer-xo.svg
+Categories=Education
