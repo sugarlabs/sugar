@@ -16,19 +16,19 @@
 
 import logging
 import time
-import traceback
 import os
 from gettext import gettext as _
 
 import gio
+import gconf
 
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.icon import get_icon_file_name
+from sugar.graphics.xocolor import XoColor
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
-from sugar.bundle.bundle import MalformedBundleException
 from sugar import util
 
 from jarabe.model import bundleregistry
@@ -69,8 +69,7 @@ def get_icon_name(metadata):
                 bundle = ActivityBundle(file_path)
                 file_name = bundle.get_icon()
             except Exception:
-                logging.warning('Could not read bundle:\n' + \
-                                traceback.format_exc())
+                logging.exception('Could not read bundle')
 
     if file_name is None:
         file_name = _get_icon_for_mime(metadata.get('mime_type', ''))
@@ -115,8 +114,8 @@ def get_bundle(metadata):
             return JournalEntryBundle(file_path)
         else:
             return None
-    except MalformedBundleException, e:
-        logging.warning('Incorrect bundle: %r', e)
+    except Exception:
+        logging.exception('Incorrect bundle')
         return None
 
 def _get_activities_for_mime(mime_type):
@@ -232,3 +231,9 @@ def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
             is_journal_bundle(metadata)
 
+def get_icon_color(metadata):
+    if metadata is None or not 'icon-color' in metadata:
+        client = gconf.client_get_default()
+        return XoColor(client.get_string('/desktop/sugar/user/color'))
+    else:
+        return XoColor(metadata['icon-color'])

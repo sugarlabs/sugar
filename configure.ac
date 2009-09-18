@@ -1,11 +1,11 @@
-AC_INIT([Sugar],[0.85.7],[],[sugar])
+AC_INIT([Sugar],[0.85.8],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.85.6"
+SUCROSE_VERSION="0.85.7"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
@@ -51,6 +51,7 @@ AC_OUTPUT([
 Makefile
 bin/Makefile
 data/Makefile
+data/sugar-emulator.desktop
 data/icons/Makefile
 extensions/Makefile
 extensions/cpsection/Makefile

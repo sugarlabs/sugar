@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 00:31-0400\n"
-"PO-Revision-Date: 2009-09-01 13:00-0400\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2009-09-16 01:37-0400\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -423,14 +423,14 @@ msgid "Create new wireless network"
 msgstr "Créer un nouveau réseau sans fil"
 
 #: ../extensions/deviceicon/network.py:120
-#: ../src/jarabe/desktop/meshbox.py:261
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "Connexion..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:124
 #: ../extensions/deviceicon/network.py:186
-#: ../src/jarabe/desktop/meshbox.py:267
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "Connecté"
 
@@ -776,17 +776,17 @@ msgid "Keep"
 msgstr "Conserver"
 
 #: ../src/jarabe/desktop/activitieslist.py:364
-#: ../src/jarabe/desktop/activitieslist.py:406
+#: ../src/jarabe/desktop/activitieslist.py:407
 #: ../src/jarabe/journal/journaltoolbox.py:360
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Erase"
 msgstr "Supprimer"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:428
 msgid "Remove favorite"
 msgstr "Retirer le favori"
 
-#: ../src/jarabe/desktop/activitieslist.py:431
+#: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
 msgstr "Ajouter aux favoris"
 
@@ -804,19 +804,19 @@ msgstr "Concentrique"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:334
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr "Spirale"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:401
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr "Boîte"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:442
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr "Triangle"
 
@@ -895,27 +895,23 @@ msgstr "Déconnecter"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:463
+#: ../src/jarabe/desktop/meshbox.py:466
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:428
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/jarabe/desktop/meshbox.py:468
+#: ../src/jarabe/desktop/meshbox.py:471
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Rejoindre"
 
-#: ../src/jarabe/desktop/schoolserver.py:34
-msgid "Cannot obtain data needed for registration."
-msgstr "Impossible d'obtenir les données nécessaires à l'enregistrement."
-
-#: ../src/jarabe/desktop/schoolserver.py:51
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr "Impossible de se connecter au serveur."
 
-#: ../src/jarabe/desktop/schoolserver.py:56
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr "Le serveur n'a pas pu achever la requête."
 
@@ -969,7 +965,7 @@ msgstr "Refuser"
 msgid "Transfer to %r"
 msgstr "Transfert vers %r"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "Retirer"
 
@@ -1045,7 +1041,7 @@ msgstr "Date : %s"
 #: ../src/jarabe/journal/expandedentry.py:231
 #, python-format
 msgid "Size: %s"
-msgstr "Dimensions : %s"
+msgstr "Taille : %s"
 
 #: ../src/jarabe/journal/expandedentry.py:253 ../src/jarabe/journal/misc.py:92
 msgid "No date"
@@ -1250,10 +1246,6 @@ msgstr "Afficher les contenus"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d Mo de libre"
 
-#: ../src/jarabe/view/palettes.py:218
-msgid "Unmount"
-msgstr "Démonter"
-
 #: ../src/jarabe/view/viewsource.py:208
 msgid "Instance Source"
 msgstr "Instancie source"
@@ -1270,6 +1262,12 @@ msgstr "Source du paquet activité"
 #, python-format
 msgid "View source: %r"
 msgstr "Afficher le code source : %r"
+
+#~ msgid "Cannot obtain data needed for registration."
+#~ msgstr "Impossible d'obtenir les données nécessaires à l'enregistrement."
+
+#~ msgid "Unmount"
+#~ msgstr "Démonter"
 
 #~ msgid "Restart"
 #~ msgstr "Redémarrer"

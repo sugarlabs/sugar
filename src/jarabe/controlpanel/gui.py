@@ -126,18 +126,18 @@ class ControlPanel(gtk.Window):
                                    self.__search_changed_cb)
 
     def _setup_options(self):
-        row = 0
-        column = 2
-        options = self._options.keys()
-        options.sort()
-
         if not os.path.exists('/ofw'):
-            options.remove('power')
+            del self._options['power']
 
         try:
             import xklavier
         except ImportError:
-            options.remove('keyboard')
+            del self._options['keyboard']
+
+        row = 0
+        column = 2
+        options = self._options.keys()
+        options.sort()
 
         for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
@@ -257,6 +257,7 @@ class ControlPanel(gtk.Window):
                         keywords.append(options[item]['title'].lower())
                         if item not in keywords:
                             keywords.append(item)
+                        options[item]['keywords'] = keywords
                     else:
                         _logger.error('There is no CLASS constant specifieds ' \
                                           'in the view file \'%s\'.' % item)

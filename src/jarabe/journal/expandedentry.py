@@ -180,13 +180,11 @@ class ExpandedEntry(hippo.CanvasBox):
                            self._icon_button_release_event_cb)
 
         if misc.is_activity_bundle(self._metadata):
-            icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-            icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-            if self._metadata.has_key('icon-color') and \
-                   self._metadata['icon-color']:
-                icon.props.xo_color = XoColor( \
-                    self._metadata['icon-color'])
+            xo_color = misc.get_icon_color(self._metadata)
+        icon.props.xo_color = xo_color
 
         icon.set_palette(ObjectPalette(self._metadata))
 
