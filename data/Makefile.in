@@ -33,13 +33,14 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 subdir = data
-DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/sugar-emulator.desktop.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES =
+CONFIG_CLEAN_FILES = sugar-emulator.desktop
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -71,11 +72,12 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" \
+am__installdirs = "$(DESTDIR)$(applicationsdir)" \
+	"$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" \
 	"$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" \
 	"$(DESTDIR)$(xsessionsdir)"
-DATA = $(mime_DATA) $(nmservice_DATA) $(schema_DATA) $(sugar_DATA) \
-	$(xsessions_DATA)
+DATA = $(applications_DATA) $(mime_DATA) $(nmservice_DATA) \
+	$(schema_DATA) $(sugar_DATA) $(xsessions_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -250,6 +252,8 @@ GTKRC_FILES = \
 
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop
+applicationsdir = $(datadir)/applications
+applications_DATA = sugar-emulator.desktop
 mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
 mimedir = $(datadir)/mime/packages
@@ -259,7 +263,7 @@ nmservice_DATA = nm-user-settings.conf
 schemadir = $(GCONF_SCHEMA_FILE_DIR)
 schema_in_files = sugar.schemas.in
 schema_DATA = $(schema_in_files:.schemas.in=.schemas)
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(applications_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files)
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
 all: all-recursive
 
@@ -294,6 +298,28 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+sugar-emulator.desktop: $(top_builddir)/config.status $(srcdir)/sugar-emulator.desktop.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+install-applicationsDATA: $(applications_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(applicationsdir)" || $(MKDIR_P) "$(DESTDIR)$(applicationsdir)"
+	@list='$(applications_DATA)'; test -n "$(applicationsdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(applicationsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(applicationsdir)" || exit $$?; \
+	done
+
+uninstall-applicationsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(applications_DATA)'; test -n "$(applicationsdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(applicationsdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(applicationsdir)" && rm -f $$files
 install-mimeDATA: $(mime_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(mimedir)" || $(MKDIR_P) "$(DESTDIR)$(mimedir)"
@@ -593,7 +619,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
+	for dir in "$(DESTDIR)$(applicationsdir)" "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -642,9 +668,9 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-data-local install-mimeDATA \
-	install-nmserviceDATA install-schemaDATA install-sugarDATA \
-	install-xsessionsDATA
+install-data-am: install-applicationsDATA install-data-local \
+	install-mimeDATA install-nmserviceDATA install-schemaDATA \
+	install-sugarDATA install-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-recursive
@@ -689,9 +715,9 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-mimeDATA uninstall-nmserviceDATA \
-	uninstall-schemaDATA uninstall-sugarDATA \
-	uninstall-xsessionsDATA
+uninstall-am: uninstall-applicationsDATA uninstall-mimeDATA \
+	uninstall-nmserviceDATA uninstall-schemaDATA \
+	uninstall-sugarDATA uninstall-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
@@ -702,16 +728,17 @@ uninstall-am: uninstall-mimeDATA uninstall-nmserviceDATA \
 	all all-am check check-am clean clean-generic ctags \
 	ctags-recursive distclean distclean-generic distclean-tags \
 	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am install-data-hook \
-	install-data-local install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-mimeDATA \
-	install-nmserviceDATA install-pdf install-pdf-am install-ps \
-	install-ps-am install-schemaDATA install-strip \
-	install-sugarDATA install-xsessionsDATA installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	install-am install-applicationsDATA install-data \
+	install-data-am install-data-hook install-data-local \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-mimeDATA install-nmserviceDATA install-pdf \
+	install-pdf-am install-ps install-ps-am install-schemaDATA \
+	install-strip install-sugarDATA install-xsessionsDATA \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic pdf pdf-am ps ps-am tags tags-recursive \
+	uninstall uninstall-am uninstall-applicationsDATA \
 	uninstall-hook uninstall-mimeDATA uninstall-nmserviceDATA \
 	uninstall-schemaDATA uninstall-sugarDATA \
 	uninstall-xsessionsDATA

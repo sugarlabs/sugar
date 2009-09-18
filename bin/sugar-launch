@@ -84,5 +84,6 @@ if options.debug:
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
     cmd_args.extend(act_args)
 
+os.chdir(str(activity.get_path()))
 os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
 

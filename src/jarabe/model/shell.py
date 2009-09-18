@@ -210,6 +210,13 @@ class Activity(gobject.GObject):
         else:
             return self._activity_info.get_path()
 
+    def get_activity_name(self):
+        """Returns the activity's bundle name"""
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_name()
+
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
             return self._activity_id == activity.get_activity_id()
