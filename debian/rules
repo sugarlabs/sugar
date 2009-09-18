@@ -89,7 +89,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
 CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2, python-gconf
 CDBS_DEPENDS += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
-CDBS_DEPENDS += , metacity, dbus-x11, openssh-client
+CDBS_DEPENDS += , metacity (>= 2.27.1), dbus-x11, openssh-client
 CDBS_RECOMMENDS = sugar-artwork-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS += , network-manager, xserver-xephyr, x11-utils, lsb-release, wpasupplicant, ethtool
 CDBS_SUGGESTS = sugar-read-activity, sugar-write-activity, sugar-imageviewer-activity, sugar-browse-activity, sugar-jukebox-activity, sugar-pippy-activity
