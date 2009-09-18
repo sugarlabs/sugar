@@ -51,14 +51,7 @@ class ObjectPalette(Palette):
 
         activity_icon = Icon(icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
         activity_icon.props.file = misc.get_icon_name(metadata)
-        if metadata.has_key('icon-color') and \
-                metadata['icon-color']:
-            activity_icon.props.xo_color = \
-                XoColor(metadata['icon-color'])
-        else:
-            activity_icon.props.xo_color = \
-                XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                   style.COLOR_TRANSPARENT.get_svg()))
+        activity_icon.props.xo_color = misc.get_icon_color(metadata)
 
         if metadata.has_key('title'):
             title = gobject.markup_escape_text(metadata['title'])

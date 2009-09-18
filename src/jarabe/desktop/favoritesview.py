@@ -42,7 +42,7 @@ from jarabe.view import launcher
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import shell
 from jarabe.model import bundleregistry
-from jarabe import journal
+from jarabe.journal import misc
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
@@ -458,11 +458,11 @@ class ActivityIcon(CanvasIcon):
     def _update(self):
         self.palette = None
         if not self._resume_mode or not self._journal_entries:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-            first_entry = self._journal_entries[0]
-            self.props.xo_color = XoColor(first_entry['icon-color'])
+            xo_color = misc.get_icon_color(self._journal_entries[0])
+        self.props.xo_color = xo_color
 
     def create_palette(self):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
@@ -528,8 +528,8 @@ class ActivityIcon(CanvasIcon):
 
             launcher.add_launcher(entry['activity_id'],
                                   self._activity_info.get_icon(),
-                                  XoColor(entry.get('icon-color', '')))
-            journal.misc.resume(entry, self._activity_info.get_bundle_id())
+                                  misc.get_icon_color(entry))
+            misc.resume(entry, self._activity_info.get_bundle_id())
         else:
             client = gconf.client_get_default()
             xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -569,14 +569,14 @@ class FavoritePalette(ActivityPalette):
     def __init__(self, activity_info, journal_entries):
         ActivityPalette.__init__(self, activity_info)
 
-        if journal_entries and journal_entries[0].get('icon-color', ''):
-            color = XoColor(journal_entries[0]['icon-color'])
+        if not journal_entries:
+            xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
-            color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                       style.COLOR_WHITE.get_svg()))
+            xo_color = misc.get_icon_color(journal_entries[0])
 
         self.props.icon = Icon(file=activity_info.get_icon(),
-                               xo_color=color,
+                               xo_color=xo_color,
                                icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
         if journal_entries:
@@ -584,8 +584,8 @@ class FavoritePalette(ActivityPalette):
 
             menu_items = []
             for entry in journal_entries:
-                icon_file_name = journal.misc.get_icon_name(entry)
-                color = XoColor(entry.get('icon-color', None))
+                icon_file_name = misc.get_icon_name(entry)
+                color = misc.get_icon_color(entry)
 
                 menu_item = MenuItem(text_label=entry['title'],
                                      file_name=icon_file_name,
@@ -604,7 +604,7 @@ class FavoritePalette(ActivityPalette):
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
-            journal.misc.resume(entry, entry['activity'])
+            misc.resume(entry, entry['activity'])
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
