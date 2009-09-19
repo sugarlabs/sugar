@@ -1,7 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Name=Sugar Emulator
-Exec=/home/tomeu/sugar-jhbuild/install/bin/sugar-emulator
-Type=Application
-Icon=/home/tomeu/sugar-jhbuild/install/share/icons/sugar/scalable/device/computer-xo.svg
-Categories=Education

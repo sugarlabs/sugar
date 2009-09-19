@@ -71,7 +71,7 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(sugardir)"
+am__installdirs = "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(sugardir)"
 py_compile = $(top_srcdir)/py-compile
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -244,9 +244,9 @@ SUBDIRS = \
 
 sugardir = $(pythondir)/jarabe
 sugar_PYTHON = \
-        __init__.py		\
-	config.py
+	__init__.py
 
+nodist_sugar_PYTHON = config.py
 all: all-recursive
 
 .SUFFIXES:
@@ -282,6 +282,44 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 config.py: $(top_builddir)/config.status $(srcdir)/config.py.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+install-nodist_sugarPYTHON: $(nodist_sugar_PYTHON)
+	@$(NORMAL_INSTALL)
+	test -z "$(sugardir)" || $(MKDIR_P) "$(DESTDIR)$(sugardir)"
+	@list='$(nodist_sugar_PYTHON)'; dlist=; list2=; test -n "$(sugardir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then b=; else b="$(srcdir)/"; fi; \
+	  if test -f $$b$$p; then \
+	    $(am__strip_dir) \
+	    dlist="$$dlist $$f"; \
+	    list2="$$list2 $$b$$p"; \
+	  else :; fi; \
+	done; \
+	for file in $$list2; do echo $$file; done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(sugardir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(sugardir)" || exit $$?; \
+	done || exit $$?; \
+	if test -n "$$dlist"; then \
+	  if test -z "$(DESTDIR)"; then \
+	    PYTHON=$(PYTHON) $(py_compile) --basedir "$(sugardir)" $$dlist; \
+	  else \
+	    PYTHON=$(PYTHON) $(py_compile) --destdir "$(DESTDIR)" --basedir "$(sugardir)" $$dlist; \
+	  fi; \
+	else :; fi
+
+uninstall-nodist_sugarPYTHON:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nodist_sugar_PYTHON)'; test -n "$(sugardir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	filesc=`echo "$$files" | sed 's|$$|c|'`; \
+	fileso=`echo "$$files" | sed 's|$$|o|'`; \
+	echo " ( cd '$(DESTDIR)$(sugardir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(sugardir)" && rm -f $$files || exit $$?; \
+	echo " ( cd '$(DESTDIR)$(sugardir)' && rm -f" $$filesc ")"; \
+	cd "$(DESTDIR)$(sugardir)" && rm -f $$filesc || exit $$?; \
+	echo " ( cd '$(DESTDIR)$(sugardir)' && rm -f" $$fileso ")"; \
+	cd "$(DESTDIR)$(sugardir)" && rm -f $$fileso
 install-sugarPYTHON: $(sugar_PYTHON)
 	@$(NORMAL_INSTALL)
 	test -z "$(sugardir)" || $(MKDIR_P) "$(DESTDIR)$(sugardir)"
@@ -519,7 +557,7 @@ check: check-recursive
 all-am: Makefile
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(sugardir)"; do \
+	for dir in "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(sugardir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -567,7 +605,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-sugarPYTHON
+install-data-am: install-nodist_sugarPYTHON install-sugarPYTHON
 
 install-dvi: install-dvi-recursive
 
@@ -611,7 +649,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-sugarPYTHON
+uninstall-am: uninstall-nodist_sugarPYTHON uninstall-sugarPYTHON
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
 	install-am install-strip tags-recursive
@@ -623,11 +661,12 @@ uninstall-am: uninstall-sugarPYTHON
 	install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip install-sugarPYTHON installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am \
+	install-nodist_sugarPYTHON install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip install-sugarPYTHON \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic pdf pdf-am ps ps-am tags tags-recursive \
+	uninstall uninstall-am uninstall-nodist_sugarPYTHON \
 	uninstall-sugarPYTHON
 
 
