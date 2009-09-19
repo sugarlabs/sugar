@@ -9,6 +9,8 @@ SUBDIRS = 		\
 	util
 
 sugardir = $(pythondir)/jarabe
-sugar_PYTHON =			\
-        __init__.py		\
-	config.py
+sugar_PYTHON =		\
+	__init__.py
+
+nodist_sugar_PYTHON = config.py
+
