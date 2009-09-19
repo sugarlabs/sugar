@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.85.8],[],[sugar])
+AC_INIT([Sugar],[0.85.9],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -43,40 +43,40 @@ AM_GCONF_SOURCE_2
 
 
 AC_CONFIG_FILES([
-bin/sugar
-src/jarabe/config.py
-])
-
-AC_OUTPUT([
-Makefile
 bin/Makefile
+bin/sugar
+data/icons/Makefile
 data/Makefile
 data/sugar-emulator.desktop
-data/icons/Makefile
-extensions/Makefile
-extensions/cpsection/Makefile
-extensions/cpsection/aboutme/Makefile
 extensions/cpsection/aboutcomputer/Makefile
+extensions/cpsection/aboutme/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile
 extensions/cpsection/language/Makefile
+extensions/cpsection/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
-extensions/cpsection/updater/Makefile
 extensions/cpsection/updater/backends/Makefile
+extensions/cpsection/updater/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
-src/Makefile
-src/jarabe/Makefile
+extensions/Makefile
+Makefile
+po/Makefile.in
+src/jarabe/config.py
 src/jarabe/controlpanel/Makefile
 src/jarabe/desktop/Makefile
 src/jarabe/frame/Makefile
 src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
-src/jarabe/view/Makefile
+src/jarabe/Makefile
 src/jarabe/model/Makefile
 src/jarabe/util/Makefile
 src/jarabe/util/telepathy/Makefile
-po/Makefile.in
+src/jarabe/view/Makefile
+src/Makefile
 ])
+
+AC_OUTPUT
+
