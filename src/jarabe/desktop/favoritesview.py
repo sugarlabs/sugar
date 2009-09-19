@@ -522,6 +522,9 @@ class ActivityIcon(CanvasIcon):
         if self._resume_mode and self._journal_entries:
             entry = self._journal_entries[0]
 
+            if not entry['activity_id']:
+                entry['activity_id'] = activityfactory.create_activity_id()
+
             shell_model = shell.get_model()
             activity = shell_model.get_activity_by_id(entry['activity_id'])
             if activity:
