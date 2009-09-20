@@ -207,6 +207,9 @@ class UpdateModel(gobject.GObject):
 
         if self._downloader is not None:
             self._downloader.cancel()
+            file_path = self._downloader.get_local_file_path()
+            if file_path is not None and os.path.exists(file_path):
+                os.unlink(file_path)
             self._downloader = None
 
         self._total_bundles_to_update = 0
