@@ -170,6 +170,16 @@ class BaseListView(gtk.Bin):
             buddies_column.pack_start(cell_icon)
             buddies_column.props.fixed_width += cell_icon.props.width
             buddies_column.add_attribute(cell_icon, 'buddy', column_index)
+            buddies_column.set_cell_data_func(cell_icon,
+                    self.__buddies_set_data_cb)
+
+        cell_progress = gtk.CellRendererProgress()
+        cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
+        buddies_column.pack_start(cell_progress)
+        buddies_column.add_attribute(cell_progress, 'value',
+                ListModel.COLUMN_PROGRESS)
+        buddies_column.set_cell_data_func(cell_progress,
+                self.__progress_data_cb)
 
         cell_text = gtk.CellRendererText()
         cell_text.props.xalign = 1
@@ -211,6 +221,14 @@ class BaseListView(gtk.Bin):
     def __destroy_cb(self, widget):
         if self._model is not None:
             self._model.stop()
+
+    def __buddies_set_data_cb(self, column, cell, tree_model, tree_iter):
+        progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
+        cell.props.visible = progress >= 100
+
+    def __progress_data_cb(self, column, cell, tree_model, tree_iter):
+        progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
+        cell.props.visible = progress < 100
 
     def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
