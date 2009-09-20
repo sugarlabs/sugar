@@ -1,3 +1,9 @@
+sugar-0.86 (0.85.9-2) unstable; urgency=low
+
+  * Fix add epoch to dependency on metacity.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 20 Sep 2009 18:38:00 +0200
+
 sugar-0.86 (0.85.9-1) unstable; urgency=low
 
   * New upstream development release.
