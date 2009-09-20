@@ -60,6 +60,7 @@ class UpdateModel(gobject.GObject):
         self._bundles_to_update = None
         self._total_bundles_to_update = 0
         self._downloader = None
+        self._cancelling = False
 
     def check_updates(self):
         self.updates = []
@@ -85,7 +86,9 @@ class UpdateModel(gobject.GObject):
         if version is not None and version > bundle.get_activity_version():
             self.updates.append(BundleUpdate(bundle, version, link, size))
 
-        if self._bundles_to_check:
+        if self._cancelling:
+            self._cancel_checking()
+        elif self._bundles_to_check:
             gobject.idle_add(self._check_next_update)
         else:
             total = len(bundleregistry.get_registry())
@@ -106,6 +109,10 @@ class UpdateModel(gobject.GObject):
         self._download_next_update()
 
     def _download_next_update(self):
+        if self._cancelling:
+            self._cancel_updating()
+            return
+
         bundle_update = self._bundles_to_update.pop()
 
         total = self._total_bundles_to_update * 2
@@ -120,6 +127,11 @@ class UpdateModel(gobject.GObject):
 
     def __downloader_progress_cb(self, downloader, progress):
         logging.debug('__downloader_progress_cb %r', progress)
+
+        if self._cancelling:
+            self._cancel_updating()
+            return
+
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2 + progress
 
@@ -135,8 +147,12 @@ class UpdateModel(gobject.GObject):
     def __downloader_error_cb(self, downloader, error_message):
         logging.error('Error downloading update:\n%s', error_message)
 
-        total = self._total_bundles_to_update * 2
-        current = total - len(self._bundles_to_update) * 2
+        if self._cancelling:
+            self._cancel_updating()
+            return
+
+        total = self._total_bundles_to_update
+        current = total - len(self._bundles_to_update)
         self.emit('progress', UpdateModel.ACTION_UPDATING, '', current, total)
 
         if self._bundles_to_update:
@@ -145,8 +161,8 @@ class UpdateModel(gobject.GObject):
 
     def _install_update(self, bundle_update, local_file_path):
 
-        total = self._total_bundles_to_update * 2
-        current = total - len(self._bundles_to_update) * 2 - 1
+        total = self._total_bundles_to_update
+        current = total - len(self._bundles_to_update) - 0.5
 
         self.emit('progress', UpdateModel.ACTION_UPDATING,
                   bundle_update.bundle.get_name(),
@@ -165,18 +181,37 @@ class UpdateModel(gobject.GObject):
         finally:
             jobject.destroy()
 
-        current += 1
         self.emit('progress', UpdateModel.ACTION_UPDATING,
                   bundle_update.bundle.get_name(),
-                  current, total)
+                  current + 0.5, total)
 
         if self._bundles_to_update:
             # do it in idle so the UI has a chance to refresh
             gobject.idle_add(self._download_next_update)
 
-    def get_total_bundles_to_update(self):
-        return self._total_bundles_to_update
+    def cancel(self):
+        self._cancelling = True
 
+    def _cancel_checking(self):
+        logging.debug('UpdateModel._cancel_checking')
+        total = len(bundleregistry.get_registry())
+        current = total - len(self._bundles_to_check)
+        self.emit('progress', UpdateModel.ACTION_CHECKING, '', current, current)
+        self._bundles_to_check = None
+        self._cancelling = False
+
+    def _cancel_updating(self):
+        logging.debug('UpdateModel._cancel_updating')
+        current = self._total_bundles_to_update - len(self._bundles_to_update) - 1
+        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current, current)
+
+        if self._downloader is not None:
+            self._downloader.cancel()
+            self._downloader = None
+
+        self._total_bundles_to_update = 0
+        self._bundles_to_update = None
+        self._cancelling = False
 
 class BundleUpdate(object):
 
@@ -208,10 +243,17 @@ class _Downloader(gobject.GObject):
         self._input_file = gio.File(bundle_update.link)
         self._output_file = None
         self._downloaded_size = 0
+        self._cancelling = False
 
         self._input_file.read_async(self.__file_read_async_cb)
 
+    def cancel(self):
+        self._cancelling = True
+
     def __file_read_async_cb(self, gfile, result):
+        if self._cancelling:
+            return
+
         try:
             self._input_stream = self._input_file.read_finish(result)
         except:
@@ -226,6 +268,9 @@ class _Downloader(gobject.GObject):
                                       gobject.PRIORITY_LOW)
 
     def __read_async_cb(self, input_stream, result):
+        if self._cancelling:
+            return
+
         data = input_stream.read_finish(result)
 
         if data is None:
@@ -244,6 +289,9 @@ class _Downloader(gobject.GObject):
         self._write_next_buffer()
 
     def __write_async_cb(self, output_stream, result, user_data):
+        if self._cancelling:
+            return
+
         count = output_stream.write_finish(result)
 
         self._downloaded_size += count
