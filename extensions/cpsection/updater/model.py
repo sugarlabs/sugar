@@ -321,6 +321,9 @@ class _Downloader(gobject.GObject):
                 urlparse(uri)
         path = os.path.basename(path)
 
+        if not os.path.exists(env.get_user_activities_path()):
+            os.makedirs(env.get_user_activities_path())
+
         base_name, extension_ = os.path.splitext(path)
         fd, file_path = tempfile.mkstemp(dir=env.get_user_activities_path(),
                 prefix=base_name, suffix='.xo')
