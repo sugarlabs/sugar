@@ -164,7 +164,7 @@ def setup_keyboard_cb(gconf_client):
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
-        if model is not None:
+        if model:
             configrec.set_model(model)
 
         options = gconf_client.get_list(\

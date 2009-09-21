@@ -133,6 +133,8 @@ class KeyboardManager(object):
 
     def set_model(self, model):
         """Sets the supplied keyboard model"""
+        if model is None or not model:
+            return
         self._gconf_client.set_string(_MODEL_KEY, model)
         self._configrec.set_model(model)
         self._configrec.activate(self._engine)
@@ -150,6 +152,8 @@ class KeyboardManager(object):
 
     def set_layouts(self, layouts):
         """Sets the supplied keyboard layouts (with variants)"""
+        if layouts is None or not layouts:
+            return
         self._gconf_client.set_list(_LAYOUTS_KEY, gconf.VALUE_STRING, layouts)
         layouts_list = []
         variants_list = []
