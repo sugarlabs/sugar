@@ -56,3 +56,4 @@ shell/extensions/_extensions.c
 data/sugar.gtkrc
 data/sugar.xml
 data/sugar-xo.gtkrc
+data/sugar-emulator.desktop
