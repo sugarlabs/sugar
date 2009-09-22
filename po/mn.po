@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-09-05 00:31-0400\n"
-"PO-Revision-Date: 2009-09-21 18:09-0400\n"
+"PO-Revision-Date: 2009-09-22 14:33-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -23,7 +23,7 @@ msgstr "Миний тухай"
 
 #: ../extensions/cpsection/aboutme/model.py:43
 msgid "You must enter a name."
-msgstr "Та нэр оруулах шаардлагатай"
+msgstr "Та нэр оруулах шаардлагатай."
 
 #: ../extensions/cpsection/aboutme/model.py:68
 #, python-format
@@ -47,11 +47,11 @@ msgstr "дүүргэх:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:86
 msgid "Error in specified color modifiers."
-msgstr "Сонгосон өнгийг солиход алдаа гарлаа"
+msgstr "Сонгосон өнгийг солиход алдаа гарлаа."
 
 #: ../extensions/cpsection/aboutme/model.py:89
 msgid "Error in specified colors."
-msgstr "Сонгосон өнгөнд алдаа гарлаа"
+msgstr "Сонгосон өнгөнд алдаа гарлаа."
 
 #: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:92
 msgid "Name:"
@@ -137,7 +137,7 @@ msgstr "Жааз"
 #: ../extensions/cpsection/frame/model.py:38
 #: ../extensions/cpsection/frame/model.py:60
 msgid "Value must be an integer."
-msgstr "Тоо хэмжээ нь бүхэл байх ёстой"
+msgstr "Тоо хэмжээ нь бүхэл байх ёстой."
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
@@ -171,7 +171,7 @@ msgstr "Хэл"
 
 #: ../extensions/cpsection/language/model.py:28
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "~/.i18n. Хандаж чадсангүй. Үндсэн тохиргоог үүсгэнэ үү."
+msgstr "~/.i18n хандаж чадсангүй. Үндсэн тохиргоог үүсгэнэ үү."
 
 #: ../extensions/cpsection/language/model.py:124
 #, python-format
@@ -181,7 +181,7 @@ msgstr "Кодны хэл=%s тодорхойлж чадсангүй."
 #: ../extensions/cpsection/language/model.py:144
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Уучлаарай, би '%s' хэлээр ярьдаггүй."
+msgstr "Уучлаарай би '%s' хэлээр ярьдаггүй."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -280,7 +280,7 @@ msgstr "Цэнэг маш бага байна"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(цаг)d:%(мин).2d үлдлээ"
+msgstr "%(hour)d:%(min).2d үлдлээ"
 
 #: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
@@ -494,12 +494,11 @@ msgstr "sugar-удирдах-самбар: товч=%s сонгох боломж
 msgid "sugar-control-panel: %s"
 msgstr "sugar-удирдах-самбар: %s"
 
-# TRANS: Translators, there's a empty line at the end of this string,
+# TRANS: Translators, there's a empty line at the end of this string,&amp;amp;amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;gt;&amp;amp;amp;lt;br /&amp;amp;amp;gt;&amp;amp;lt;br /&amp;amp;gt;&amp;lt;br /&amp;gt;&lt;br /&gt;<br />
 # which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:37
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -513,14 +512,15 @@ msgid ""
 "    "
 msgstr ""
 "Хэрэглээ: sugar-удирдах-самбар [ сонголт ] товч [ аргумент ... ] \n"
-"Sugar-ийн орчны хяналт. \n"
-"Сонголтууд: \n"
-"-х Энэ тусламжын мэдээ үзүүлэх ба гаргах\n"
-"-л Боломжит сонголтын үзүүлэлтүүд \n"
-"-х товч Товчны тухай мэдээлэл \n"
-"-а товч Товчны одоогийн ач холбогдлыг мэдэх \n"
-"-ы товч Товчны одоогийн ач холбогдлыг тохируулах \n"
-" "
+"    Sugar-ийн орчны хяналт. \n"
+"    Сонголтууд: \n"
+"    -х         Энэ тусламжын мэдээ үзүүлэх ба гаргах \n"
+"    -л         Боломжит сонголтын үзүүлэлтүүд \n"
+"    -х         товч Товчны тухай мэдээлэл \n"
+"    -а         товч Товчны одоогийн ач холбогдлыг мэдэх \n"
+"    -ы         товч Товчны одоогийн ач холбогдлыг тохируулах \n"
+"    -с         товч Товчны одоогийн ач холбогдлыг арилгах \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
@@ -802,7 +802,7 @@ msgstr "Нүүр хуудас"
 
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
-msgstr "Энд дарж өнгөө солино уу"
+msgstr "Энд дарж өнгөө солино уу:"
 
 #: ../src/jarabe/intro/window.py:174 ../src/jarabe/journal/detailview.py:103
 msgid "Back"
@@ -1246,9 +1246,8 @@ msgid ""
 msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software update"
-msgstr "Хангамж Шинэчлэх"
+msgstr "Хангамж шинэчлэх"
 
 #: ../extensions/cpsection/updater/view.py:62
 msgid ""
@@ -1313,9 +1312,8 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:373
-#, fuzzy
 msgid "None"
-msgstr "Боллоо"
+msgstr "Огт үгүй"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:376
@@ -1445,9 +1443,8 @@ msgid "Size: %s"
 msgstr ""
 
 #: ../src/jarabe/journal/listview.py:363
-#, fuzzy
 msgid "No matching entries"
-msgstr "Тохирсон оролт алга "
+msgstr "Тохирсон оролт алга"
 
 #: ../src/jarabe/journal/palettes.py:107
 msgid "View Details"
