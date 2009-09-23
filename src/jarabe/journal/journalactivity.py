@@ -68,6 +68,10 @@ class JournalActivityDBusService(dbus.service.Object):
 
         if self._parent.show_object(object_id):
             self._parent.present()
+            if self._parent.window is not None:
+                # have to use gdk level, looks like metacity
+                # doesn't raise windows from non-icon state, see #1339
+                self._parent.window.focus()
 
     def _chooser_response_cb(self, chooser, response_id, chooser_id):
         logging.debug('JournalActivityDBusService._chooser_response_cb')
