@@ -293,18 +293,35 @@ class InplaceResultSet(BaseResultSet):
         return entries, total_count
 
     def _recurse_dir(self, dir_path):
+        self._pending_directories += 1
+        gobject.idle_add(self._idle_recurse_dir, dir_path)
+
+    def _idle_recurse_dir(self, dir_path):
+        try:
+            self._real_recurse_dir(dir_path)
+        finally:
+            self._pending_directories -= 1
+            if self._pending_directories == 0:
+                self.setup_ready()
+
+    def _real_recurse_dir(self, dir_path):
         if self._stopped:
             return
 
-        for entry in os.listdir(dir_path):
+        try:
+            dirs = os.listdir(dir_path)
+        except Exception:
+            logging.exception('Error reading directory %r', dir_path)
+            dirs = []
+
+        for entry in dirs:
             if entry.startswith('.'):
                 continue
             full_path = dir_path + '/' + entry
             try:
                 stat = os.stat(full_path)
                 if S_IFMT(stat.st_mode) == S_IFDIR:
-                    self._pending_directories += 1
-                    gobject.idle_add(lambda s=full_path: self._recurse_dir(s))
+                    self._recurse_dir(full_path)
 
                 elif S_IFMT(stat.st_mode) == S_IFREG:
                     add_to_list = True
@@ -331,11 +348,6 @@ class InplaceResultSet(BaseResultSet):
 
             except Exception:
                 logging.exception('Error reading file %r', full_path)
-
-        if self._pending_directories == 0:
-            self.setup_ready()
-        else:
-            self._pending_directories -= 1
 
 def _get_file_metadata(path, stat):
     client = gconf.client_get_default()
