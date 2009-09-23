@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-09-05 00:31-0400\n"
-"PO-Revision-Date: 2009-09-23 16:09-0400\n"
+"PO-Revision-Date: 2009-09-23 16:23-0400\n"
 "Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -188,7 +188,7 @@ msgstr "Sprache"
 
 #: ../extensions/cpsection/language/model.py:28
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Zugriff auf %s nicht möglich. Erzeuge daher Standardeinstellungen."
+msgstr "Zugriff auf ~/.i18n nicht möglich. Erzeuge daher Standardeinstellungen."
 
 #: ../extensions/cpsection/language/model.py:124
 #, python-format
@@ -225,11 +225,11 @@ msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../extensions/cpsection/network/model.py:137
 msgid "Error in specified argument use 0/1."
-msgstr "Fehler im angegebenen Parameter  -- 0/1 verwenden."
+msgstr "Fehler im angegebenen Parameter -- 0/1 verwenden."
 
 #: ../extensions/cpsection/network/view.py:59
 msgid "Wireless"
-msgstr "Drahtlosnetzwerk"
+msgstr "Funknetzwerk"
 
 #: ../extensions/cpsection/network/view.py:67
 msgid "Turn off the wireless radio to save battery life"
@@ -318,7 +318,7 @@ msgstr "Prüfe %s..."
 #: ../extensions/cpsection/updater/view.py:124
 #, python-format
 msgid "Downloading %s..."
-msgstr "Lade %s..."
+msgstr "Lade %s herunter..."
 
 #: ../extensions/cpsection/updater/view.py:126
 #, python-format
@@ -327,7 +327,7 @@ msgstr "Aktualisiere %s..."
 
 #: ../extensions/cpsection/updater/view.py:135
 msgid "Your software is up-to-date"
-msgstr "Deine Software ist auf dem aktuellen Stand."
+msgstr "Deine Software ist auf dem neuesten Stand."
 
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
@@ -353,7 +353,7 @@ msgstr[1] "%s Updates wurden installiert."
 
 #: ../extensions/cpsection/updater/view.py:244
 msgid "Install selected"
-msgstr "Ausgewählte installieren"
+msgstr "Auswahl installieren"
 
 #: ../extensions/cpsection/updater/view.py:265
 #, python-format
@@ -670,8 +670,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"sugar-control-panel: WARNUNG, mehr als eine Option mit demselben "
-"Namengefunden: %s Modul: %r "
+"sugar-control-panel: WARNUNG, mehr als eine Option mit demselben Namen "
+"gefunden: %s Modul: %r "
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -805,7 +805,7 @@ msgstr "Favorit entfernen"
 
 #: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
-msgstr "Zum Favorit machen"
+msgstr "Zum Favoriten machen"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
@@ -839,7 +839,7 @@ msgstr "Dreieck"
 
 #: ../src/jarabe/desktop/favoritesview.py:323
 msgid "Registration Failed"
-msgstr "Registrierung fehlgeschlagen"
+msgstr "Anmeldung fehlgeschlagen"
 
 #: ../src/jarabe/desktop/favoritesview.py:324
 #, python-format
@@ -848,15 +848,15 @@ msgstr "%s"
 
 #: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Registration Successful"
-msgstr "Registrierung erfolgreich"
+msgstr "Anmeldung erfolgreich"
 
 #: ../src/jarabe/desktop/favoritesview.py:327
 msgid "You are now registered with your school server."
-msgstr "Du bist nun bei deinem Schulserver registriert."
+msgstr "Du bist nun an deinem Schulserver angemeldet."
 
 #: ../src/jarabe/desktop/favoritesview.py:671
 msgid "Register"
-msgstr "Registrieren"
+msgstr "Anmelden"
 
 #: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
