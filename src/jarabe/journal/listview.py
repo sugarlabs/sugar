@@ -328,9 +328,8 @@ class BaseListView(gtk.Bin):
             self._start_progress_bar()
 
         if time.time() - self._last_progress_bar_pulse > 0.05:
-            if self._progress_bar is not None:
-                self._progress_bar.pulse()
-                self._last_progress_bar_pulse = time.time()
+            self._progress_bar.pulse()
+            self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
         alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0.5)
@@ -345,10 +344,11 @@ class BaseListView(gtk.Bin):
         self._progress_bar.show()
 
     def _stop_progress_bar(self):
-        if self.child != self._progress_bar:
+        if self._progress_bar is None:
             return
         self.remove(self.child)
         self.add(self._scrolled_window)
+        self._progress_bar = None
 
     def _show_message(self, message):
         canvas = hippo.Canvas()
