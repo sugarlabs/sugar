@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-09-05 00:31-0400\n"
-"PO-Revision-Date: 2009-09-18 10:30-0400\n"
+"PO-Revision-Date: 2009-09-24 19:08-0400\n"
 "Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -108,7 +108,7 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"O Sugar é a interface gráfica de utilizador que estás a utilizar. O Açúcar é "
+"O Sugar é a interface gráfica de utilizador que estás a utilizar. O Sugar é "
 "software livre, licenciado sob a GNU General Public License, e és bem vindo "
 "a fazer alterações a ele e/ou a distribuir cópias dele, segundo certas "
 "condições descritas a seguir."
@@ -254,8 +254,8 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"O servidor é equivalente ao quarto em que estás; pessoas no mesmo servidor "
-"poderão ver-se umas às outras, mesmo que não estejam na mesma rede."
+"O servidor é o equivalente a em que qual quarto estás tu; pessoas no mesmo "
+"servidor poderão ver-se umas às outras, mesmo que não estejam na mesma rede."
 
 #: ../extensions/cpsection/network/view.py:136
 msgid "Server:"
@@ -353,7 +353,7 @@ msgstr "Tamanho da transferência: %s"
 #: ../extensions/cpsection/updater/view.py:353
 #, python-format
 msgid "From version %(current)d to %(new)s (Size: %(size)s)"
-msgstr "Da versão %(current)d para %(new)s (Tamanho: %(size)s)"
+msgstr "Da versão %(current)d para a versão %(new)s (Tamanho: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:373
@@ -449,7 +449,6 @@ msgstr "Velocidade"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format
-#, fuzzy
 msgid "%s's network %s"
 msgstr "Rede %s do %s"
 
@@ -536,12 +535,13 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Se VERDADE, o Sugar irá tornar-nos pesquisáveis pelos outros utilizadores do "
-"servidor Jabber."
+"Se TRUE (verdadeiro), o Sugar irá tornar-nos pesquisáveis pelos outros "
+"utilizadores do servidor Jabber."
 
 #: ../data/sugar.schemas.in.h:10
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Se VERDADE, o Sugar irá mostrar uma opção de \"Terminar a sessão\"."
+msgstr ""
+"Se TRUE (verdadeiro), o Sugar irá mostrar uma opção de \"Terminar a sessão\"."
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Jabber Server"
@@ -961,8 +961,9 @@ msgstr "%s (%s)"
 
 #: ../src/jarabe/frame/activitiestray.py:750
 #: ../src/jarabe/frame/activitiestray.py:875
+#, fuzzy
 msgid "Dismiss"
-msgstr ""
+msgstr "Descartar"
 
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
@@ -1137,7 +1138,6 @@ msgid "Your Journal is empty"
 msgstr "O teu Diário está vazio"
 
 #: ../src/jarabe/journal/listview.py:363
-#, fuzzy
 msgid "No matching entries"
 msgstr "Nenhuma entrada encontrada"
 
