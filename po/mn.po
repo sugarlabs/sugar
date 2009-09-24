@@ -1040,9 +1040,6 @@ msgstr "Салгах"
 #~ msgid "About my XO"
 #~ msgstr "Миний ХО-гын тухай"
 
-#~ msgid "Mesh"
-#~ msgstr "Тархалт"
-
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Сургуулийн тархалтын порталд холбогдлоо."
 
