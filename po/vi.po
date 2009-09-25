@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-13 08:29-0500\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2009-09-25 09:18-0400\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -63,49 +65,43 @@ msgstr "Nhấn chuột để thay đổi màu :"
 msgid "About my Computer"
 msgstr "Giới thiệu máy tính này"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:26
+#: ../extensions/cpsection/aboutcomputer/model.py:28
 msgid "Not available"
 msgstr "Không sẵn sàng"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Cá tính"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Số sản xuất: "
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Phần mềm"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Bản xây dựng: "
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
 msgstr "Phần vững: "
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:146
 msgid "Wireless Firmware:"
 msgstr "Phần vững không dây:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid "Copyright and License"
 msgstr "Tác quyền và Giấy phép"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:176
-msgid ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-msgstr ""
-"© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-
-#: ../extensions/cpsection/aboutcomputer/view.py:183
+#: ../extensions/cpsection/aboutcomputer/view.py:184
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -116,7 +112,7 @@ msgstr ""
 "do, được bao quát bởi Giấy Phép Công Cộng GNU (GPL), thì bạn có quyền sửa "
 "đổi và/hay phân phối lại bản sao nó với các điều kiện GPL."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:195
+#: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
 msgstr "Giấy phép đầy đủ :"
 
@@ -128,7 +124,7 @@ msgstr "Ngày và Giờ"
 msgid "Error timezone does not exist."
 msgstr "Lỗi: múi giờ không tồn tại."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:19
+#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:27
 msgid "Timezone"
 msgstr "Múi giờ"
 
@@ -166,8 +162,25 @@ msgstr "Góc"
 msgid "Edge"
 msgstr "Cạnh"
 
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:31
+msgid "Keyboard"
+msgstr "Bàn phím"
+
+#: ../extensions/cpsection/keyboard/view.py:187
+msgid "Keyboard Model"
+msgstr "Mô hình bàn phím"
+
+#: ../extensions/cpsection/keyboard/view.py:243
+msgid "Key(s) to change layout"
+msgstr "(Tổ hợp) phím để chuyển đổi bố trí"
+
+#: ../extensions/cpsection/keyboard/view.py:311
+msgid "Keyboard Layout(s)"
+msgstr "Bố trí Bàn phím"
+
 #: ../extensions/cpsection/language/__init__.py:21
-#: ../extensions/cpsection/language/view.py:32
+#: ../extensions/cpsection/language/view.py:33
 msgid "Language"
 msgstr "Ngôn ngữ"
 
@@ -186,6 +199,14 @@ msgstr "Không thể quyết định ngôn ngữ cho mã=%s."
 msgid "Sorry I do not speak '%s'."
 msgstr "Tiếc là chương trình này không hiểu « %s »."
 
+#: ../extensions/cpsection/language/view.py:56
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr ""
+"Thêm các ngôn ngữ theo thứ tự đã thích. Nếu không có bản dịch thì dùng ngôn "
+"ngữ kế tiếp trong danh sách này."
+
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
 msgid "Network"
@@ -203,31 +224,31 @@ msgstr "Lỗi trong đối số chọn một đã ghi rõ bật/tắt."
 msgid "Error in specified argument use 0/1."
 msgstr "Lỗi trong đối số chỉ định: dùng 0/1."
 
-#: ../extensions/cpsection/network/view.py:56
+#: ../extensions/cpsection/network/view.py:59
 msgid "Wireless"
 msgstr "Không dây"
 
-#: ../extensions/cpsection/network/view.py:64
+#: ../extensions/cpsection/network/view.py:67
 msgid "Turn off the wireless radio to save battery life"
 msgstr "Tắt máy thu thanh không dây để tiết kiệm thời gian chạy bằng pin"
 
-#: ../extensions/cpsection/network/view.py:77
+#: ../extensions/cpsection/network/view.py:80
 msgid "Radio"
 msgstr "Thu thanh"
 
-#: ../extensions/cpsection/network/view.py:93
+#: ../extensions/cpsection/network/view.py:96
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr "Hủy lịch sử mạng nếu bạn gặp khó khăn trong việc kết nối tới mạng"
 
-#: ../extensions/cpsection/network/view.py:102
+#: ../extensions/cpsection/network/view.py:105
 msgid "Discard network history"
 msgstr "Hủy lịch sử mạng"
 
-#: ../extensions/cpsection/network/view.py:115
+#: ../extensions/cpsection/network/view.py:118
 msgid "Collaboration"
 msgstr "Hợp tác"
 
-#: ../extensions/cpsection/network/view.py:123
+#: ../extensions/cpsection/network/view.py:126
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -237,7 +258,7 @@ msgstr ""
 "phòng (trên cùng một máy phục vụ) thì có thể liên lạc với nhau, ngay cả khi "
 "không phải làm cùng một việc (trên cùng một mạng)."
 
-#: ../extensions/cpsection/network/view.py:133
+#: ../extensions/cpsection/network/view.py:136
 msgid "Server:"
 msgstr "Máy phục vụ :"
 
@@ -268,7 +289,94 @@ msgstr ""
 "Rất quản lý năng lượng (tắt máy thu thanh không dây, tăng thời gian chạy "
 "bằng pin)"
 
-#: ../extensions/deviceicon/battery.py:56
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software update"
+msgstr "Cập nhật phần mềm"
+
+#: ../extensions/cpsection/updater/view.py:62
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"Bản cập nhật phần mềm thì sửa chữa lỗi, loại trừ trường hợp có thể bị lỗ "
+"hổng bảo mật, và cung cấp tính năng mới."
+
+#: ../extensions/cpsection/updater/view.py:122
+#, python-format
+msgid "Checking %s..."
+msgstr "Đang kiểm tra %s..."
+
+#: ../extensions/cpsection/updater/view.py:124
+#, python-format
+msgid "Downloading %s..."
+msgstr "Đang tải về %s..."
+
+#: ../extensions/cpsection/updater/view.py:126
+#, python-format
+msgid "Updating %s..."
+msgstr "Đang cập nhật %s..."
+
+#: ../extensions/cpsection/updater/view.py:135
+msgid "Your software is up-to-date"
+msgstr "Phần mềm vẫn còn hiện thời"
+
+#: ../extensions/cpsection/updater/view.py:137
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] "Bạn có dịp cài đặt %s bản cập nhật"
+
+#: ../extensions/cpsection/updater/view.py:155
+msgid "Checking for updates..."
+msgstr "Đang kiểm tra có bản cập nhật chưa..."
+
+#: ../extensions/cpsection/updater/view.py:160
+msgid "Installing updates..."
+msgstr "Đang cài đặt bản cập nhật..."
+
+#: ../extensions/cpsection/updater/view.py:165
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] "%s bản cập nhật đã được cài đặt"
+
+#: ../extensions/cpsection/updater/view.py:244
+msgid "Install selected"
+msgstr "Cài đặt mục đã chọn"
+
+#: ../extensions/cpsection/updater/view.py:265
+#, python-format
+msgid "Download size: %s"
+msgstr "Kích cỡ tải về: %s"
+
+#: ../extensions/cpsection/updater/view.py:353
+#, python-format
+msgid "From version %(current)d to %(new)s (Size: %(size)s)"
+msgstr "Từ phiên bản %(current)d lên %(new)s (Kích cỡ : %(size)s)"
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:373
+msgid "None"
+msgstr "Không có"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:376
+msgid "1 KB"
+msgstr "1 KB"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:379
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f KB"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:382
+#, python-format
+msgid "%.1f MB"
+msgstr "%.1f MB"
+
+#: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
 msgstr "Pin của mình"
 
@@ -289,77 +397,91 @@ msgstr "Pin yếu tới hạn"
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d còn lại"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
 msgstr "Sạc đầy"
 
-#: ../extensions/deviceicon/network.py:40
+#: ../extensions/deviceicon/network.py:44
 #, python-format
 msgid "IP address: %s"
 msgstr "Địa chỉ IP: %s"
 
-#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:110
 msgid "Disconnect..."
 msgstr "Ngắt kết nối..."
 
-#: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:246
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Tạo mạng vô tuyến mới"
+
+#: ../extensions/deviceicon/network.py:120
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:252
+#: ../extensions/deviceicon/network.py:124
+#: ../extensions/deviceicon/network.py:186
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "Đã kết nối"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:146
 msgid "Channel"
 msgstr "Kênh"
 
-#: ../extensions/deviceicon/network.py:141
+#: ../extensions/deviceicon/network.py:161
 msgid "Wired Network"
 msgstr "Mạng theo dây"
 
-#: ../extensions/deviceicon/network.py:169
+#: ../extensions/deviceicon/network.py:189
 msgid "Speed"
 msgstr "Tốc độ"
 
-#: ../extensions/deviceicon/speaker.py:46
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "Mạng của %s %s"
+
+#: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "Loa của mình"
 
-#: ../extensions/deviceicon/speaker.py:128
+#: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
 msgstr "Bỏ câm"
 
-#: ../extensions/deviceicon/speaker.py:131
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
 msgstr "Câm"
 
-#: ../extensions/globalkey/screenshot.py:50
-msgid "Screenshot"
-msgstr "Ảnh chụp màn hình"
+#: ../extensions/globalkey/screenshot.py:56
+msgid "Mesh"
+msgstr "Mesh"
 
-#: ../extensions/globalkey/viewsource.py:196
-#, python-format
-msgid "View source: %r"
-msgstr "Xem nguồn: %r"
+#: ../extensions/globalkey/screenshot.py:58
+#: ../src/jarabe/frame/zoomtoolbar.py:39
+msgid "Group"
+msgstr "Nhóm"
 
-#: ../extensions/globalkey/viewsource.py:205
-#: ../src/jarabe/frame/zoomtoolbar.py:42
+#: ../extensions/globalkey/screenshot.py:60
+#: ../src/jarabe/frame/zoomtoolbar.py:41
+msgid "Home"
+msgstr "Nhà"
+
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Hoạt động"
 
-#: ../extensions/globalkey/viewsource.py:212
-msgid "Document"
-msgstr "Tài liệu"
+#: ../extensions/globalkey/screenshot.py:69
+msgid "Screenshot"
+msgstr "Ảnh chụp màn hình"
 
-#: ../extensions/globalkey/viewsource.py:226
-#: ../src/jarabe/journal/objectchooser.py:141
-msgid "Close"
-msgstr "Đóng"
+#: ../extensions/globalkey/screenshot.py:71
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "Ảnh chụp màn hình « %s »"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
@@ -407,74 +529,107 @@ msgstr ""
 "tìm kiếm qua chúng ta."
 
 #: ../data/sugar.schemas.in.h:10
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr "TRUE (đúng) thì Sugar hiển thị một tùy chọn « Đăng xuất »."
+
+#: ../data/sugar.schemas.in.h:11
 msgid "Jabber Server"
 msgstr "Máy phục vụ Jabber"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:12
+msgid "Keyboard layouts"
+msgstr "Bố trí bàn phím"
+
+#: ../data/sugar.schemas.in.h:13
+msgid "Keyboard model"
+msgstr "Mô hình bàn phím"
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Keyboard options"
+msgstr "Tuỳ chọn bàn phím"
+
+#: ../data/sugar.schemas.in.h:15
 msgid "Layout of the favorites view."
 msgstr "Bố trí của ô xem các mục ưa thích."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:16
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr "Danh sách các bố trí bàn phím. Mỗi mục nên có dạng « bố_trí(biến_đổi) »"
+
+#: ../data/sugar.schemas.in.h:17
+msgid "List of keyboard options."
+msgstr "Danh sách các tuỳ chọn về bàn phím."
+
+#: ../data/sugar.schemas.in.h:18
 msgid "Power Automatic"
 msgstr "Tự động năng lượng"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:19
 msgid "Power Automatic."
 msgstr "Tự động năng lượng."
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:20
 msgid "Power Extreme"
 msgstr "Năng lượng cực"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:21
 msgid "Power Extreme."
 msgstr "Năng lượng cực."
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:22
 msgid "Publish to Gadget"
 msgstr "Xuất tới Gadget"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:23
 msgid "Setting for muting the sound device."
 msgstr "Thiết lập để câm thiết bị âm thanh."
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:24
+msgid "Show Log out"
+msgstr "Hiện Đăng xuất"
+
+#: ../data/sugar.schemas.in.h:25
 msgid "Sound Muted"
 msgstr "Âm câm"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:26
+msgid "The keyboard model to be used"
+msgstr "Mô hình bàn phím cần dùng"
+
+#: ../data/sugar.schemas.in.h:28
 msgid "Timezone setting for the system."
 msgstr "Thiết lập múi giờ cho hệ thống."
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:29
 msgid "Url of the jabber server to use."
 msgstr "Địa chỉ URL của máy phục vụ Jabber cần dùng."
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:30
 msgid "Url where the backup is saved to."
 msgstr "Địa chỉ URL vào đó lưu bản sao lưu."
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:31
 msgid "User Color"
 msgstr "Màu người dùng"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:32
 msgid "User Name"
 msgstr "Tên người dùng"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:33
 msgid "User name that is used throughout the desktop."
 msgstr "Tên người dùng được sử dụng trên toàn bộ môi trường."
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:34
 msgid "Volume Level"
 msgstr "Cấp âm"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:35
 msgid "Volume level for the sound device."
 msgstr "Cấp âm lượng cho thiết bị âm thanh."
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:36
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -533,24 +688,24 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Để áp dụng các thay đổi thì cần phải khởi chạy lại pn sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:272
+#: ../src/jarabe/controlpanel/gui.py:280
 msgid "Warning"
 msgstr "Cảnh báo"
 
-#: ../src/jarabe/controlpanel/gui.py:273
+#: ../src/jarabe/controlpanel/gui.py:281
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "Có thay đổi thì cần phải khởi chạy lại"
 
-#: ../src/jarabe/controlpanel/gui.py:276
+#: ../src/jarabe/controlpanel/gui.py:284
 msgid "Cancel changes"
 msgstr "Thôi thay đổi"
 
-#: ../src/jarabe/controlpanel/gui.py:281 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:289 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Về sau"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:293
 msgid "Restart now"
 msgstr "Khởi chạy lại ngay"
 
@@ -559,116 +714,145 @@ msgid "Done"
 msgstr "Hoàn tất"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
-#: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:683
-#: ../src/jarabe/frame/activitiestray.py:762
-#: ../src/jarabe/frame/activitiestray.py:790
+#: ../src/jarabe/desktop/homebox.py:68
+#: ../src/jarabe/frame/activitiestray.py:726
+#: ../src/jarabe/frame/activitiestray.py:822
+#: ../src/jarabe/frame/activitiestray.py:850
 msgid "Cancel"
 msgstr "Thôi"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:334
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "Ok"
 msgstr "OK"
 
+#: ../src/jarabe/desktop/activitieslist.py:80
+#: ../src/jarabe/journal/listview.py:147
+msgid "Title"
+msgstr "Tên"
+
+#: ../src/jarabe/desktop/activitieslist.py:91
+msgid "Version"
+msgstr "Phiên bản"
+
+#: ../src/jarabe/desktop/activitieslist.py:105
+#: ../src/jarabe/journal/listview.py:178
+msgid "Date"
+msgstr "Ngày"
+
+#: ../src/jarabe/desktop/activitieslist.py:234
+#, python-format
+msgid "Version %s"
+msgstr "Phiên bản %s"
+
+#: ../src/jarabe/desktop/activitieslist.py:355
+msgid "Confirm erase"
+msgstr "Xác nhận việc xoá"
+
+#: ../src/jarabe/desktop/activitieslist.py:357
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "Xác nhận việc xoá: bạn có muốn xoá hẳn %s không?"
+
+#: ../src/jarabe/desktop/activitieslist.py:361
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/view/viewsource.py:218
+msgid "Keep"
+msgstr "Giữ"
+
+#: ../src/jarabe/desktop/activitieslist.py:364
+#: ../src/jarabe/desktop/activitieslist.py:407
+#: ../src/jarabe/journal/journaltoolbox.py:360
+#: ../src/jarabe/journal/palettes.py:112
+msgid "Erase"
+msgstr "Xoá"
+
+#: ../src/jarabe/desktop/activitieslist.py:428
+msgid "Remove favorite"
+msgstr "Bỏ Ưa thích"
+
+#: ../src/jarabe/desktop/activitieslist.py:432
+msgid "Make favorite"
+msgstr "Đặt Ưa thích"
+
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:114
+#: ../src/jarabe/desktop/favoriteslayout.py:116
 msgid "Freeform"
 msgstr "Dạng tự do"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:196
+#: ../src/jarabe/desktop/favoriteslayout.py:198
 msgid "Ring"
 msgstr "Vòng"
 
+# TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:341
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr "Xoắn ốc"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:408
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr "Hộp"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:449
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr "Hình giác"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:323
 msgid "Registration Failed"
 msgstr "Lỗi đăng ký"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:324
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Registration Successful"
 msgstr "Đang ký thành công"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:327
 msgid "You are now registered with your school server."
 msgstr "Bạn đã đăng ký với máy phục vụ trường học."
 
-#: ../src/jarabe/desktop/favoritesview.py:666
+#: ../src/jarabe/desktop/favoritesview.py:671
 msgid "Register"
 msgstr "Đăng ký"
 
-#: ../src/jarabe/desktop/homebox.py:67
-msgid "Confirm erase"
-msgstr "Xác nhận việc xoá"
-
-#: ../src/jarabe/desktop/homebox.py:69
-#, python-format
-msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Xác nhận việc xoá: bạn có muốn xoá hẳn %s không?"
-
-#: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
-msgid "Keep"
-msgstr "Giữ"
-
-#: ../src/jarabe/desktop/homebox.py:76
-#: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:97 ../src/jarabe/view/palettes.py:127
-msgid "Erase"
-msgstr "Xoá"
-
-#: ../src/jarabe/desktop/homebox.py:106
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "Cập nhật Phần mềm"
 
-#: ../src/jarabe/desktop/homebox.py:107
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "Cập nhật các hoạt động để đảm bảo tính tương thích với phần mềm mới"
 
-#: ../src/jarabe/desktop/homebox.py:116
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "Kiểm tra ngay"
 
-#: ../src/jarabe/desktop/homebox.py:233
+#: ../src/jarabe/desktop/homebox.py:192
 msgid "List view"
 msgstr "Xem danh sách"
 
-#: ../src/jarabe/desktop/homebox.py:234
+#: ../src/jarabe/desktop/homebox.py:193
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/jarabe/desktop/homebox.py:296
+#: ../src/jarabe/desktop/homebox.py:255
 msgid "Favorites view"
 msgstr "Xem Ưa thích"
 
-#: ../src/jarabe/desktop/homebox.py:297
+#: ../src/jarabe/desktop/homebox.py:256
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
-
-#: ../src/jarabe/desktop/homebox.py:304
-msgid "Resume by default"
-msgstr "Tiếp tục lại theo mặc định"
 
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
@@ -686,86 +870,87 @@ msgstr "WPA và WPA2 Cá nhân"
 msgid "Wireless Security:"
 msgstr "Bảo mật Không dây:"
 
-#: ../src/jarabe/desktop/meshbox.py:130
+#: ../src/jarabe/desktop/meshbox.py:136
 msgid "Connect"
 msgstr "Kết nối"
 
-#: ../src/jarabe/desktop/meshbox.py:134
+#: ../src/jarabe/desktop/meshbox.py:140
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:440
-#: ../src/jarabe/frame/activitiestray.py:707
-#: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:63 ../src/jarabe/view/palettes.py:62
+#: ../src/jarabe/desktop/meshbox.py:466
+#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "Tiếp tục"
 
-#: ../src/jarabe/desktop/meshbox.py:445
-#: ../src/jarabe/frame/activitiestray.py:221
+#: ../src/jarabe/desktop/meshbox.py:471
+#: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Vào"
 
-#: ../src/jarabe/desktop/schoolserver.py:18
-msgid "Cannot obtain data needed for registration."
-msgstr "Không thể lấy dữ liệu cần thiết để đăng ký."
-
-#: ../src/jarabe/desktop/schoolserver.py:35
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr "Không thể kết nối tới máy phục vụ."
 
-#: ../src/jarabe/desktop/schoolserver.py:40
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr "Máy phục vụ không thể hoàn tất yêu cầu."
 
-#: ../src/jarabe/frame/activitiestray.py:226
-#: ../src/jarabe/frame/activitiestray.py:655
+#: ../src/jarabe/frame/activitiestray.py:240
+#: ../src/jarabe/frame/activitiestray.py:698
 msgid "Decline"
 msgstr "Từ chối"
 
-#: ../src/jarabe/frame/activitiestray.py:608
+#: ../src/jarabe/frame/activitiestray.py:650
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:610
+#: ../src/jarabe/frame/activitiestray.py:652
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:654
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:671
 #, python-format
 msgid "%s of %s"
 msgstr "%s trên %s"
 
-#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:683
 #, python-format
 msgid "Transfer from %r"
 msgstr "Truyền từ %r"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:693
 msgid "Accept"
 msgstr "Chấp nhận"
 
-#: ../src/jarabe/frame/activitiestray.py:673
-#: ../src/jarabe/frame/activitiestray.py:780
+#: ../src/jarabe/frame/activitiestray.py:716
+#: ../src/jarabe/frame/activitiestray.py:840
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:751
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Hủy"
+
+#: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
 msgstr "Truyền tới %r"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "Bỏ"
 
@@ -778,22 +963,30 @@ msgstr "Mở"
 msgid "Open with"
 msgstr "Mở bằng"
 
-#: ../src/jarabe/frame/clipboardobject.py:47
+#: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
 msgstr "đoạn trích %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:36
+#: ../src/jarabe/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "Hàng xóm"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:38
-msgid "Group"
-msgstr "Nhóm"
+#: ../src/jarabe/frame/zoomtoolbar.py:37
+msgid "F1"
+msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:40
-msgid "Home"
-msgstr "Nhà"
+#: ../src/jarabe/frame/zoomtoolbar.py:39
+msgid "F2"
+msgstr "F2"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:41
+msgid "F3"
+msgstr "F3"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "F4"
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
@@ -807,25 +1000,47 @@ msgstr "Lùi"
 msgid "Next"
 msgstr "Tiếp"
 
-#: ../src/jarabe/journal/collapsedentry.py:243
-#: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/palettes.py:57
+#: ../src/jarabe/journal/expandedentry.py:164
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "Không tên"
 
-#: ../src/jarabe/journal/expandedentry.py:205
+#: ../src/jarabe/journal/expandedentry.py:210
 msgid "No preview"
 msgstr "Không xem thử"
 
-#: ../src/jarabe/journal/expandedentry.py:224
+#: ../src/jarabe/journal/expandedentry.py:229
+#, python-format
+msgid "Kind: %s"
+msgstr "Kiểu : %s"
+
+#: ../src/jarabe/journal/expandedentry.py:229
+msgid "Unknown"
+msgstr "Không rõ"
+
+#: ../src/jarabe/journal/expandedentry.py:230
+#, python-format
+msgid "Date: %s"
+msgstr "Ngày: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:231
+#, python-format
+msgid "Size: %s"
+msgstr "Kích cỡ : %s"
+
+#: ../src/jarabe/journal/expandedentry.py:253 ../src/jarabe/journal/misc.py:92
+msgid "No date"
+msgstr "Không có ngày tháng"
+
+#: ../src/jarabe/journal/expandedentry.py:260
 msgid "Participants:"
 msgstr "Người dự :"
 
-#: ../src/jarabe/journal/expandedentry.py:247
+#: ../src/jarabe/journal/expandedentry.py:283
 msgid "Description:"
 msgstr "Mô tả:"
 
-#: ../src/jarabe/journal/expandedentry.py:273
+#: ../src/jarabe/journal/expandedentry.py:309
 msgid "Tags:"
 msgstr "Thẻ:"
 
@@ -834,86 +1049,81 @@ msgstr "Thẻ:"
 msgid "Journal"
 msgstr "Nhật ký"
 
-#: ../src/jarabe/journal/journaltoolbox.py:65
+#: ../src/jarabe/journal/journaltoolbox.py:67
 msgid "Search"
 msgstr "Tìm kiếm"
 
-#: ../src/jarabe/journal/journaltoolbox.py:124
+#: ../src/jarabe/journal/journaltoolbox.py:126
 msgid "Anytime"
 msgstr "Lúc nào"
 
-#: ../src/jarabe/journal/journaltoolbox.py:126
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Today"
 msgstr "Hôm nay"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Since yesterday"
 msgstr "Kể từ ngày hôm qua"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Past week"
 msgstr "Tuần qua"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past month"
 msgstr "Tháng qua"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past year"
 msgstr "Năm qua"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Anyone"
 msgstr "Bất cứ ai"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "My friends"
 msgstr "Bạn bè"
 
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "My class"
 msgstr "Cùng lớp"
 
 # TRANS: Item in a combo box that filters by entry type.
-#. TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:271
+#: ../src/jarabe/journal/journaltoolbox.py:274
 msgid "Anything"
 msgstr "Bất cứ gì"
 
 # TODO: Add "Start with" menu item
-#: ../src/jarabe/journal/journaltoolbox.py:347
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:350
+#: ../src/jarabe/journal/palettes.py:90
 msgid "Copy"
 msgstr "Chép"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:111
+#: ../src/jarabe/journal/journaltoolbox.py:431
+#: ../src/jarabe/journal/palettes.py:75
 msgid "Start"
 msgstr "Khởi chạy"
 
-#: ../src/jarabe/journal/listview.py:40
+#: ../src/jarabe/journal/listview.py:361
 msgid "Your Journal is empty"
 msgstr "Nhật ký của bạn còn trống"
 
-#: ../src/jarabe/journal/listview.py:41
-msgid "No matching entries "
-msgstr "Không tìm thấy "
+#: ../src/jarabe/journal/listview.py:363
+msgid "No matching entries"
+msgstr "Không tìm thấy"
 
-#: ../src/jarabe/journal/listview.py:369
+#: ../src/jarabe/journal/listview.py:374
 msgid "Clear search"
 msgstr "Xoá trường tìm"
-
-#: ../src/jarabe/journal/misc.py:92
-msgid "No date"
-msgstr "Không có ngày tháng"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
@@ -929,95 +1139,134 @@ msgstr ""
 msgid "Show Journal"
 msgstr "Hiện Nhật ký"
 
-#: ../src/jarabe/journal/objectchooser.py:136
+#: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
 msgstr "Chọn một đối tượng"
 
-#: ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/view/viewsource.py:308
+msgid "Close"
+msgstr "Đóng"
+
+#: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
 msgstr "Tiếp tục lại với"
 
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
 msgstr "Bắt đầu với"
 
-#: ../src/jarabe/journal/palettes.py:89
+#: ../src/jarabe/journal/palettes.py:98
 msgid "Send to"
 msgstr "Gửi cho"
 
-#: ../src/jarabe/journal/palettes.py:167
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr "Xem chi tiết"
+
+#: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
 msgstr "Bạn bè không có mặt"
 
-#: ../src/jarabe/journal/palettes.py:172
+#: ../src/jarabe/journal/palettes.py:190
 msgid "No valid connection found"
 msgstr "Không tìm thấy kết nối hợp lệ"
 
-#: ../src/jarabe/journal/palettes.py:200
+#: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
 msgstr "Không có hoạt động để tiếp tục nhập vào"
 
-#: ../src/jarabe/journal/palettes.py:202
+#: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
 msgstr "Không có hoạt động cần lại để bắt đầu nhập vào"
 
-#: ../src/jarabe/view/buddymenu.py:61
+#: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
 msgstr "Bỏ bạn"
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:65
 msgid "Make friend"
 msgstr "Kết bạn"
 
-#: ../src/jarabe/view/buddymenu.py:81
-msgid "My Settings"
-msgstr "Thiết lập của mình"
-
-#: ../src/jarabe/view/buddymenu.py:86
-msgid "Logout"
-msgstr "Đăng xuất"
-
-#: ../src/jarabe/view/buddymenu.py:91
-msgid "Restart"
-msgstr "Khởi chạy lại"
-
-#: ../src/jarabe/view/buddymenu.py:96
+#: ../src/jarabe/view/buddymenu.py:82
 msgid "Shutdown"
 msgstr "Tắt máy"
 
-#: ../src/jarabe/view/buddymenu.py:131
+#: ../src/jarabe/view/buddymenu.py:90
+msgid "Logout"
+msgstr "Đăng xuất"
+
+#: ../src/jarabe/view/buddymenu.py:95
+msgid "My Settings"
+msgstr "Thiết lập của mình"
+
+#: ../src/jarabe/view/buddymenu.py:130
 #, python-format
 msgid "Invite to %s"
 msgstr "Mời vào %s"
 
-#: ../src/jarabe/view/palettes.py:43
+#: ../src/jarabe/view/palettes.py:45
 msgid "Starting..."
 msgstr "Đang khởi chạy..."
 
-#: ../src/jarabe/view/palettes.py:73
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:71
+msgid "View Source"
+msgstr "Xem nguồn"
+
+#: ../src/jarabe/view/palettes.py:82
 msgid "Stop"
 msgstr "Dừng"
 
-#: ../src/jarabe/view/palettes.py:145
-msgid "Remove favorite"
-msgstr "Bỏ Ưa thích"
+#: ../src/jarabe/view/palettes.py:122
+msgid "Start new"
+msgstr "Khởi chạy mới"
 
-#: ../src/jarabe/view/palettes.py:149
-msgid "Make favorite"
-msgstr "Đặt Ưa thích"
-
-#: ../src/jarabe/view/palettes.py:201
+#: ../src/jarabe/view/palettes.py:171
 msgid "Show contents"
 msgstr "Hiện nội dung"
 
-#: ../src/jarabe/view/palettes.py:223 ../src/jarabe/view/palettes.py:272
+#: ../src/jarabe/view/palettes.py:193 ../src/jarabe/view/palettes.py:243
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB còn rảnh"
 
-#: ../src/jarabe/view/palettes.py:248
-msgid "Unmount"
-msgstr "Bỏ lắp"
+#: ../src/jarabe/view/viewsource.py:208
+msgid "Instance Source"
+msgstr "Thể hiện nguồn"
+
+#: ../src/jarabe/view/viewsource.py:233
+msgid "Source"
+msgstr "Nguồn"
+
+#: ../src/jarabe/view/viewsource.py:292
+msgid "Activity Bundle Source"
+msgstr "Nguồn bó hoạt động"
+
+#: ../src/jarabe/view/viewsource.py:299
+#, python-format
+msgid "View source: %r"
+msgstr "Xem nguồn: %r"
+
+#~ msgid "Cannot obtain data needed for registration."
+#~ msgstr "Không thể lấy dữ liệu cần thiết để đăng ký."
+
+#~ msgid "Unmount"
+#~ msgstr "Bỏ lắp"
+
+#~ msgid "Restart"
+#~ msgstr "Khởi chạy lại"
+
+#~ msgid ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+#~ msgstr ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+
+#~ msgid "Document"
+#~ msgstr "Tài liệu"
+
+#~ msgid "Resume by default"
+#~ msgstr "Tiếp tục lại theo mặc định"
 
 #~ msgid "Encryption Type:"
 #~ msgstr "Cách mật mã: "
@@ -1033,9 +1282,6 @@ msgstr "Bỏ lắp"
 
 #~ msgid "About my XO"
 #~ msgstr "Giới thiệu XO của mình"
-
-#~ msgid "Mesh"
-#~ msgstr "Mesh"
 
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Có kết nối tới một cổng chính Mesh trường học"
