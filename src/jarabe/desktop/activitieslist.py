@@ -411,8 +411,8 @@ class ActivityListPalette(ActivityPalette):
             self.menu.append(menu_item)
             menu_item.show()
 
-        if not os.access(activity_info.get_path(), os.W_OK):
-            menu_item.props.sensitive = False
+            if not os.access(activity_info.get_path(), os.W_OK):
+                menu_item.props.sensitive = False
 
         registry = bundleregistry.get_registry()
         self._activity_changed_sid = registry.connect('bundle_changed',
