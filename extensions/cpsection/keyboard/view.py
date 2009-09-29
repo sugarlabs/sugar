@@ -204,10 +204,11 @@ class Keyboard(SectionView):
         kmodel_combo.add_attribute(cell, 'text', 1)
 
         self._kmodel = self._keyboard_manager.get_current_model()
-        for row in kmodel_store:
-            if self._kmodel in row[0]:
-                kmodel_combo.set_active_iter(row.iter)
-                break
+        if self._kmodel is not None:
+            for row in kmodel_store:
+                if self._kmodel in row[0]:
+                    kmodel_combo.set_active_iter(row.iter)
+                    break
 
         box_kmodel.pack_start(kmodel_combo, expand = False)
         self._vbox.pack_start(box_kmodel, expand=False)

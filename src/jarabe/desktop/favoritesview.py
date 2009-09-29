@@ -467,10 +467,14 @@ class ActivityIcon(CanvasIcon):
     def create_palette(self):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('activate', self.__palette_activate_cb)
+        palette.connect('entry-activate', self.__palette_entry_activate_cb)
         return palette
 
     def __palette_activate_cb(self, palette):
         self._activate()
+
+    def __palette_entry_activate_cb(self, palette, metadata):
+        self._resume(metadata)
 
     def __hovering_changed_event_cb(self, icon, hovering):
         self._hovering = hovering
@@ -515,23 +519,27 @@ class ActivityIcon(CanvasIcon):
     def __button_release_event_cb(self, icon, event):
         self._activate()
 
+    def _resume(self, journal_entry):
+        if not journal_entry['activity_id']:
+            journal_entry['activity_id'] = activityfactory.create_activity_id()
+
+        shell_model = shell.get_model()
+        activity = shell_model.get_activity_by_id(journal_entry['activity_id'])
+        if activity:
+            activity.get_window().activate(gtk.get_current_event_time())
+            return
+
+        launcher.add_launcher(journal_entry['activity_id'],
+                              self._activity_info.get_icon(),
+                              misc.get_icon_color(journal_entry))
+        misc.resume(journal_entry, self._activity_info.get_bundle_id())
+
     def _activate(self):
         if self.palette is not None:
             self.palette.popdown(immediate=True)
 
         if self._resume_mode and self._journal_entries:
-            entry = self._journal_entries[0]
-
-            shell_model = shell.get_model()
-            activity = shell_model.get_activity_by_id(entry['activity_id'])
-            if activity:
-                activity.get_window().activate(gtk.get_current_event_time())
-                return
-
-            launcher.add_launcher(entry['activity_id'],
-                                  self._activity_info.get_icon(),
-                                  misc.get_icon_color(entry))
-            misc.resume(entry, self._activity_info.get_bundle_id())
+            self._resume(self._journal_entries[0])
         else:
             client = gconf.client_get_default()
             xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -567,6 +575,11 @@ class ActivityIcon(CanvasIcon):
 
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
+
+    __gsignals__ = {
+        'entry-activate': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE, ([object])),
+    }
 
     def __init__(self, activity_info, journal_entries):
         ActivityPalette.__init__(self, activity_info)
@@ -606,7 +619,7 @@ class FavoritePalette(ActivityPalette):
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
-            misc.resume(entry, entry['activity'])
+            self.emit('entry-activate', entry)
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):

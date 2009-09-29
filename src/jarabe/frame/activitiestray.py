@@ -768,6 +768,8 @@ class IncomingTransferPalette(BaseTransferPalette):
     def __accept_activate_cb(self, menu_item):
         #TODO: figure out the best place to get rid of that temp file
         extension = mime.get_primary_extension(self.file_transfer.mime_type)
+        if extension is None:
+            extension = '.bin'
         fd, file_path = tempfile.mkstemp(suffix=extension,
                 prefix=self._sanitize(self.file_transfer.title))
         os.close(fd)

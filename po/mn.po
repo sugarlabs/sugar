@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-27 13:34-0500\n"
-"PO-Revision-Date: 2009-02-17 16:37-0500\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2009-09-22 14:33-0400\n"
 "Last-Translator: Odontsetseg Bat-Erdene <obat-erdene@suffolk.edu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -21,35 +23,35 @@ msgstr "Миний тухай"
 
 #: ../extensions/cpsection/aboutme/model.py:43
 msgid "You must enter a name."
-msgstr "Та нэр оруулах шаардлагатай"
+msgstr "Та нэр оруулах шаардлагатай."
 
 #: ../extensions/cpsection/aboutme/model.py:68
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "зурагдах хэмжээ:     өнгө=%s тодролт=%s"
+msgstr "зурагдах хэмжээ:   өнгө=%s тодролт=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:71
 #, python-format
 msgid "stroke:   %s"
-msgstr "зурагдах хэмжээ:      %s"
+msgstr "зурагдах хэмжээ:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:73
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "дүүргэх:     өнгө=%s тодролт=%s "
+msgstr "дүүргэх:     өнгө=%s тодролт=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "fill:     %s"
-msgstr "дүүргэх:      %s"
+msgstr "дүүргэх:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:86
 msgid "Error in specified color modifiers."
-msgstr "Сонгосон өнгийг солиход алдаа гарлаа"
+msgstr "Сонгосон өнгийг солиход алдаа гарлаа."
 
 #: ../extensions/cpsection/aboutme/model.py:89
 msgid "Error in specified colors."
-msgstr "Сонгосон өнгөнд алдаа гарлаа"
+msgstr "Сонгосон өнгөнд алдаа гарлаа."
 
 #: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:92
 msgid "Name:"
@@ -63,39 +65,39 @@ msgstr "Товшиж өнгөө солино уу:"
 msgid "About my Computer"
 msgstr "Миний компьютерийн тухай"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:26
+#: ../extensions/cpsection/aboutcomputer/model.py:28
 msgid "Not available"
 msgstr "Боломжгүй байна"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Онцлох шинж"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Цувралын дугаар:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Програм хангамж"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Хувилбар:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr ""
 
-#: ../extensions/cpsection/aboutcomputer/view.py:130
+#: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
 msgstr "Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:145
+#: ../extensions/cpsection/aboutcomputer/view.py:146
 msgid "Wireless Firmware:"
 msgstr ""
 
-#: ../extensions/cpsection/aboutcomputer/view.py:168
+#: ../extensions/cpsection/aboutcomputer/view.py:169
 msgid "Copyright and License"
 msgstr ""
 
@@ -104,7 +106,7 @@ msgid ""
 "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 msgstr ""
 
-#: ../extensions/cpsection/aboutcomputer/view.py:183
+#: ../extensions/cpsection/aboutcomputer/view.py:184
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -112,7 +114,7 @@ msgid ""
 "therein."
 msgstr ""
 
-#: ../extensions/cpsection/aboutcomputer/view.py:195
+#: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
 msgstr ""
 
@@ -124,7 +126,7 @@ msgstr "Огноо ба Цаг"
 msgid "Error timezone does not exist."
 msgstr "Алдаа: цагийн бүс байхгүй байна."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:19
+#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:27
 msgid "Timezone"
 msgstr "Цагийн бүс"
 
@@ -135,7 +137,7 @@ msgstr "Жааз"
 #: ../extensions/cpsection/frame/model.py:38
 #: ../extensions/cpsection/frame/model.py:60
 msgid "Value must be an integer."
-msgstr "Тоо хэмжээ нь бүхэл байх ёстой"
+msgstr "Тоо хэмжээ нь бүхэл байх ёстой."
 
 #: ../extensions/cpsection/frame/view.py:26
 msgid "never"
@@ -163,13 +165,13 @@ msgid "Edge"
 msgstr "Ирмэг"
 
 #: ../extensions/cpsection/language/__init__.py:21
-#: ../extensions/cpsection/language/view.py:32
+#: ../extensions/cpsection/language/view.py:33
 msgid "Language"
 msgstr "Хэл"
 
 #: ../extensions/cpsection/language/model.py:28
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "~/.i18n. Хандаж чадсангүй. Үндсэн тохиргоог үүсгэнэ үү. "
+msgstr "~/.i18n хандаж чадсангүй. Үндсэн тохиргоог үүсгэнэ үү."
 
 #: ../extensions/cpsection/language/model.py:124
 #, python-format
@@ -179,7 +181,7 @@ msgstr "Кодны хэл=%s тодорхойлж чадсангүй."
 #: ../extensions/cpsection/language/model.py:144
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Уучлаарай, би '%s' хэлээр ярьдаггүй."
+msgstr "Уучлаарай би '%s' хэлээр ярьдаггүй."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -198,38 +200,38 @@ msgstr "Сонгосон тохиргооны төлөвд алдаа гарла
 msgid "Error in specified argument use 0/1."
 msgstr "Сонгосон тохиргооны төлөвд алдаа гарлаа 0/1 aшиглах хэрэгтэй."
 
-#: ../extensions/cpsection/network/view.py:56
+#: ../extensions/cpsection/network/view.py:59
 msgid "Wireless"
 msgstr "Утасгүй холболт"
 
-#: ../extensions/cpsection/network/view.py:64
+#: ../extensions/cpsection/network/view.py:67
 msgid "Turn off the wireless radio to save battery life"
 msgstr ""
 
-#: ../extensions/cpsection/network/view.py:77
+#: ../extensions/cpsection/network/view.py:80
 msgid "Radio"
 msgstr "Радио"
 
-#: ../extensions/cpsection/network/view.py:93
+#: ../extensions/cpsection/network/view.py:96
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 
-#: ../extensions/cpsection/network/view.py:102
+#: ../extensions/cpsection/network/view.py:105
 msgid "Discard network history"
 msgstr ""
 
-#: ../extensions/cpsection/network/view.py:115
+#: ../extensions/cpsection/network/view.py:118
 msgid "Collaboration"
 msgstr "Хамтын ажиллагаа"
 
-#: ../extensions/cpsection/network/view.py:123
+#: ../extensions/cpsection/network/view.py:126
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
 
-#: ../extensions/cpsection/network/view.py:133
+#: ../extensions/cpsection/network/view.py:136
 msgid "Server:"
 msgstr "Сервер:"
 
@@ -259,7 +261,7 @@ msgid ""
 msgstr ""
 "Хүчдэлийг дээд зэргээр хэмнэх (радио долгионыг хааснаар батерейг хэмнэх)"
 
-#: ../extensions/deviceicon/battery.py:56
+#: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
 msgstr "Миний батарей"
 
@@ -278,13 +280,13 @@ msgstr "Цэнэг маш бага байна"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(цаг)d:%(мин).2d үлдлээ"
+msgstr "%(hour)d:%(min).2d үлдлээ"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
 msgstr "Цэнэглэгдсэн"
 
-#: ../extensions/deviceicon/network.py:40
+#: ../extensions/deviceicon/network.py:44
 #, python-format
 msgid "IP address: %s"
 msgstr "IP хаяг: %s"
@@ -293,7 +295,7 @@ msgstr "IP хаяг: %s"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:110
 msgid "Disconnect..."
 msgstr "Салгах..."
 
@@ -301,53 +303,53 @@ msgstr "Салгах..."
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:246
+#: ../extensions/deviceicon/network.py:120
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "Холбогдож байна..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:252
+#: ../extensions/deviceicon/network.py:124
+#: ../extensions/deviceicon/network.py:186
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "Холбогдсон"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:146
 msgid "Channel"
 msgstr "Суваг"
 
-#: ../extensions/deviceicon/network.py:141
+#: ../extensions/deviceicon/network.py:161
 msgid "Wired Network"
 msgstr "Утастай Сүлжээ"
 
-#: ../extensions/deviceicon/network.py:169
+#: ../extensions/deviceicon/network.py:189
 msgid "Speed"
 msgstr "Хурд"
 
-#: ../extensions/deviceicon/speaker.py:46
+#: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
 msgstr "Миний чанга яригч"
 
-#: ../extensions/deviceicon/speaker.py:128
+#: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
 msgstr "Дуутай болгох"
 
-#: ../extensions/deviceicon/speaker.py:131
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
 msgstr "Дуугүй болгох"
 
-#: ../extensions/globalkey/screenshot.py:50
+#: ../extensions/globalkey/screenshot.py:69
 msgid "Screenshot"
 msgstr "Дэлгэцний зураг"
 
-#: ../extensions/globalkey/viewsource.py:196
+#: ../src/jarabe/view/viewsource.py:299
 #, python-format
 msgid "View source: %r"
 msgstr ""
 
-#: ../extensions/globalkey/viewsource.py:205
-#: ../src/jarabe/frame/zoomtoolbar.py:42
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "Үйл ажиллагаа"
 
@@ -355,8 +357,8 @@ msgstr "Үйл ажиллагаа"
 msgid "Document"
 msgstr "Бичиг баримт"
 
-#: ../extensions/globalkey/viewsource.py:226
-#: ../src/jarabe/journal/objectchooser.py:141
+#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/view/viewsource.py:308
 msgid "Close"
 msgstr "Хаах"
 
@@ -401,75 +403,75 @@ msgid ""
 "server."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:11
 msgid "Jabber Server"
 msgstr "Жаббер Сервер"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:15
 msgid "Layout of the favorites view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:18
 msgid "Power Automatic"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:19
 msgid "Power Automatic."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:20
 msgid "Power Extreme"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:21
 msgid "Power Extreme."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:22
 msgid "Publish to Gadget"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:23
 msgid "Setting for muting the sound device."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:25
 msgid "Sound Muted"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:28
 msgid "Timezone setting for the system."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:29
 msgid "Url of the jabber server to use."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:30
 msgid "Url where the backup is saved to."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:31
 msgid "User Color"
 msgstr "Хэрэглэгчийн Өнгө"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:32
 msgid "User Name"
 msgstr "Хэрэглэгчийн Нэр"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:33
 msgid "User name that is used throughout the desktop."
 msgstr "Хэрэглэгчийн нэр олон байдалд ашиглаж байдаг."
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:34
 msgid "Volume Level"
 msgstr "Дууны Хэмжээ"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:35
 msgid "Volume level for the sound device."
 msgstr "Дуу авианы тоноглолын дууны жэмжээ."
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:36
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -492,12 +494,11 @@ msgstr "sugar-удирдах-самбар: товч=%s сонгох боломж
 msgid "sugar-control-panel: %s"
 msgstr "sugar-удирдах-самбар: %s"
 
-# TRANS: Translators, there's a empty line at the end of this string,
+# TRANS: Translators, there's a empty line at the end of this string,&amp;amp;amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;lt;br /&amp;amp;amp;amp;gt;&amp;amp;amp;lt;br /&amp;amp;amp;gt;&amp;amp;lt;br /&amp;amp;gt;&amp;lt;br /&amp;gt;&lt;br /&gt;<br />
 # which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:37
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -511,37 +512,38 @@ msgid ""
 "    "
 msgstr ""
 "Хэрэглээ: sugar-удирдах-самбар [ сонголт ] товч [ аргумент ... ] \n"
-"Sugar-ийн орчны хяналт. \n"
-"Сонголтууд: \n"
-"-х Энэ тусламжын мэдээ үзүүлэх ба гаргах\n"
-"-л Боломжит сонголтын үзүүлэлтүүд \n"
-"-х товч Товчны тухай мэдээлэл \n"
-"-а товч Товчны одоогийн ач холбогдлыг мэдэх \n"
-"-ы товч Товчны одоогийн ач холбогдлыг тохируулах \n"
-" "
+"    Sugar-ийн орчны хяналт. \n"
+"    Сонголтууд: \n"
+"    -х         Энэ тусламжын мэдээ үзүүлэх ба гаргах \n"
+"    -л         Боломжит сонголтын үзүүлэлтүүд \n"
+"    -х         товч Товчны тухай мэдээлэл \n"
+"    -а         товч Товчны одоогийн ач холбогдлыг мэдэх \n"
+"    -ы         товч Товчны одоогийн ач холбогдлыг тохируулах \n"
+"    -с         товч Товчны одоогийн ач холбогдлыг арилгах \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Өөрчлөлтийг идэвхжүүлэхийн тулд та дахин эхлүүлэх шаардлагатай.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:272
+#: ../src/jarabe/controlpanel/gui.py:280
 msgid "Warning"
 msgstr "Анхаар"
 
-#: ../src/jarabe/controlpanel/gui.py:273
+#: ../src/jarabe/controlpanel/gui.py:281
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "Өөрчлөхийн тулд дахин эхлүүлэх хэрэгтэй"
 
-#: ../src/jarabe/controlpanel/gui.py:276
+#: ../src/jarabe/controlpanel/gui.py:284
 msgid "Cancel changes"
 msgstr "Өөрчлөлтийг цуцлах"
 
-#: ../src/jarabe/controlpanel/gui.py:281 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:289 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Дараа"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:293
 msgid "Restart now"
 msgstr "Одоо эхлүүлэх үү"
 
@@ -550,71 +552,74 @@ msgid "Done"
 msgstr "Боллоо"
 
 #: ../src/jarabe/controlpanel/toolbar.py:115
-#: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:683
-#: ../src/jarabe/frame/activitiestray.py:762
-#: ../src/jarabe/frame/activitiestray.py:790
+#: ../src/jarabe/desktop/homebox.py:68
+#: ../src/jarabe/frame/activitiestray.py:726
+#: ../src/jarabe/frame/activitiestray.py:822
+#: ../src/jarabe/frame/activitiestray.py:850
 msgid "Cancel"
 msgstr "Болих"
 
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:334
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "Ok"
 msgstr "Тийм"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:114
+#: ../src/jarabe/desktop/favoriteslayout.py:116
 msgid "Freeform"
 msgstr "Дурын хэлбэр"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:196
+#: ../src/jarabe/desktop/favoriteslayout.py:198
 msgid "Ring"
 msgstr "Цагираг"
 
+# TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:341
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr "Спираль"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:408
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr "Хайрцаг"
 
+# TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:449
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr "Гурвалжин"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:323
 msgid "Registration Failed"
 msgstr "Бүртгэл бүтэлгүйтлээ"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:324
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Registration Successful"
 msgstr "Бүртгэл амжилттай"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:327
 msgid "You are now registered with your school server."
 msgstr "Та одоо сургуулийн серверт бүртгэгдлээ."
 
-#: ../src/jarabe/desktop/favoritesview.py:666
+#: ../src/jarabe/desktop/favoritesview.py:671
 msgid "Register"
 msgstr "Бүртгүүлэх"
 
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/desktop/activitieslist.py:355
 msgid "Confirm erase"
 msgstr "Арилгахыг зөвшөөрөх"
 
-#: ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/desktop/activitieslist.py:357
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Арилгахыг зөвшөөрөх: Та %s бүр мөсөн арилгахыг хүсч байна уу?"
@@ -623,41 +628,44 @@ msgstr "Арилгахыг зөвшөөрөх: Та %s бүр мөсөн ари�
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/desktop/activitieslist.py:361
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "Хадгалах"
 
-#: ../src/jarabe/desktop/homebox.py:76
-#: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:97 ../src/jarabe/view/palettes.py:127
+#: ../src/jarabe/desktop/activitieslist.py:364
+#: ../src/jarabe/desktop/activitieslist.py:407
+#: ../src/jarabe/journal/journaltoolbox.py:360
+#: ../src/jarabe/journal/palettes.py:112
 msgid "Erase"
 msgstr "Арилгах"
 
-#: ../src/jarabe/desktop/homebox.py:106
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "Хангамж Шинэчлэх"
 
-#: ../src/jarabe/desktop/homebox.py:107
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:116
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:233
+#: ../src/jarabe/desktop/homebox.py:192
 msgid "List view"
 msgstr "Жагсаалтыг харах"
 
-#: ../src/jarabe/desktop/homebox.py:234
+#: ../src/jarabe/desktop/homebox.py:193
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/jarabe/desktop/homebox.py:296
+#: ../src/jarabe/desktop/homebox.py:255
 msgid "Favorites view"
 msgstr "Дуртай зүйлсийг үзэх"
 
-#: ../src/jarabe/desktop/homebox.py:297
+#: ../src/jarabe/desktop/homebox.py:256
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
@@ -681,25 +689,25 @@ msgstr ""
 msgid "Wireless Security:"
 msgstr ""
 
-#: ../src/jarabe/desktop/meshbox.py:130
+#: ../src/jarabe/desktop/meshbox.py:136
 msgid "Connect"
 msgstr "Холбох"
 
-#: ../src/jarabe/desktop/meshbox.py:134
+#: ../src/jarabe/desktop/meshbox.py:140
 msgid "Disconnect"
 msgstr "Салгах"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:440
-#: ../src/jarabe/frame/activitiestray.py:707
-#: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:63 ../src/jarabe/view/palettes.py:62
+#: ../src/jarabe/desktop/meshbox.py:466
+#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "Эргэж орох"
 
-#: ../src/jarabe/desktop/meshbox.py:445
-#: ../src/jarabe/frame/activitiestray.py:221
+#: ../src/jarabe/desktop/meshbox.py:471
+#: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Нэгдэх"
 
@@ -707,60 +715,60 @@ msgstr "Нэгдэх"
 msgid "Cannot obtain data needed for registration."
 msgstr ""
 
-#: ../src/jarabe/desktop/schoolserver.py:35
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr ""
 
-#: ../src/jarabe/desktop/schoolserver.py:40
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:226
-#: ../src/jarabe/frame/activitiestray.py:655
+#: ../src/jarabe/frame/activitiestray.py:240
+#: ../src/jarabe/frame/activitiestray.py:698
 msgid "Decline"
 msgstr "Үл зөвшөөрөх"
 
-#: ../src/jarabe/frame/activitiestray.py:608
+#: ../src/jarabe/frame/activitiestray.py:650
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:610
+#: ../src/jarabe/frame/activitiestray.py:652
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:612
+#: ../src/jarabe/frame/activitiestray.py:654
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:671
 #, python-format
 msgid "%s of %s"
 msgstr "%s-ны %s"
 
-#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:683
 #, python-format
 msgid "Transfer from %r"
 msgstr "%r-аас дамжуулах"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:693
 msgid "Accept"
 msgstr "Зөвшөөрөх"
 
-#: ../src/jarabe/frame/activitiestray.py:673
-#: ../src/jarabe/frame/activitiestray.py:780
+#: ../src/jarabe/frame/activitiestray.py:716
+#: ../src/jarabe/frame/activitiestray.py:840
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:751
+#: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
 msgstr "%r-д дамжуулах"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "Устгах"
 
@@ -773,26 +781,28 @@ msgstr "Нээх"
 msgid "Open with"
 msgstr "Сонгож нээх"
 
-#: ../src/jarabe/frame/clipboardobject.py:47
+#: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:36
+#: ../src/jarabe/frame/zoomtoolbar.py:37
 msgid "Neighborhood"
 msgstr "Хөршүүд"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:38
+#: ../extensions/globalkey/screenshot.py:58
+#: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "Бүлэг"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:40
+#: ../extensions/globalkey/screenshot.py:60
+#: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "Нүүр хуудас"
 
 #: ../src/jarabe/intro/window.py:124
 msgid "Click to change color:"
-msgstr "Энд дарж өнгөө солино уу"
+msgstr "Энд дарж өнгөө солино уу:"
 
 #: ../src/jarabe/intro/window.py:174 ../src/jarabe/journal/detailview.py:103
 msgid "Back"
@@ -802,25 +812,24 @@ msgstr "Буцах"
 msgid "Next"
 msgstr "Дараах"
 
-#: ../src/jarabe/journal/collapsedentry.py:243
-#: ../src/jarabe/journal/expandedentry.py:159
-#: ../src/jarabe/journal/palettes.py:57
+#: ../src/jarabe/journal/expandedentry.py:164
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "Гарчиггүй"
 
-#: ../src/jarabe/journal/expandedentry.py:205
+#: ../src/jarabe/journal/expandedentry.py:210
 msgid "No preview"
 msgstr "Урьдчилан харах боломжгүй"
 
-#: ../src/jarabe/journal/expandedentry.py:224
+#: ../src/jarabe/journal/expandedentry.py:260
 msgid "Participants:"
 msgstr "Гүйцэтгэгчид:"
 
-#: ../src/jarabe/journal/expandedentry.py:247
+#: ../src/jarabe/journal/expandedentry.py:283
 msgid "Description:"
 msgstr "Тайлбар:"
 
-#: ../src/jarabe/journal/expandedentry.py:273
+#: ../src/jarabe/journal/expandedentry.py:309
 msgid "Tags:"
 msgstr "Шошго:"
 
@@ -829,72 +838,72 @@ msgstr "Шошго:"
 msgid "Journal"
 msgstr "Журнал"
 
-#: ../src/jarabe/journal/journaltoolbox.py:65
+#: ../src/jarabe/journal/journaltoolbox.py:67
 msgid "Search"
 msgstr "Хайлт"
 
-#: ../src/jarabe/journal/journaltoolbox.py:124
+#: ../src/jarabe/journal/journaltoolbox.py:126
 msgid "Anytime"
 msgstr "Ямар ч үед"
 
-#: ../src/jarabe/journal/journaltoolbox.py:126
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Today"
 msgstr "Өнөөдөр"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Since yesterday"
 msgstr "Өчигдрөөс хойших"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Past week"
 msgstr "Өнгөрсөн долоо хоногт"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past month"
 msgstr "Өнгөрсөн сард"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past year"
 msgstr "Өнгөрсөн жил"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Anyone"
 msgstr "Хэн ч гэсэн"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "My friends"
 msgstr "Миний найзууд"
 
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "My class"
 msgstr "Манай анги"
 
 # TRANS: Item in a combo box that filters by entry type.
 #. TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:271
+#: ../src/jarabe/journal/journaltoolbox.py:274
 msgid "Anything"
 msgstr "Бүх юм"
 
 # TODO: Add "Start with" menu item
-#: ../src/jarabe/journal/journaltoolbox.py:347
-#: ../src/jarabe/journal/palettes.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:350
+#: ../src/jarabe/journal/palettes.py:90
 msgid "Copy"
 msgstr "Хуулах"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:111
+#: ../src/jarabe/journal/journaltoolbox.py:431
+#: ../src/jarabe/journal/palettes.py:75
 msgid "Start"
 msgstr "Эхлэх"
 
-#: ../src/jarabe/journal/listview.py:40
+#: ../src/jarabe/journal/listview.py:361
 msgid "Your Journal is empty"
 msgstr "Таны Журнал хоосон байна"
 
@@ -902,11 +911,11 @@ msgstr "Таны Журнал хоосон байна"
 msgid "No matching entries "
 msgstr "Тохирсон оролт алга "
 
-#: ../src/jarabe/journal/listview.py:369
+#: ../src/jarabe/journal/listview.py:374
 msgid "Clear search"
 msgstr "Хайлт арилгах"
 
-#: ../src/jarabe/journal/misc.py:92
+#: ../src/jarabe/journal/expandedentry.py:253 ../src/jarabe/journal/misc.py:92
 msgid "No date"
 msgstr "Огноо байхгүй"
 
@@ -922,51 +931,51 @@ msgstr ""
 msgid "Show Journal"
 msgstr "Журнал Үзүүлэх"
 
-#: ../src/jarabe/journal/objectchooser.py:136
+#: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
 msgstr "Обьектыг сонгох"
 
-#: ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:89
+#: ../src/jarabe/journal/palettes.py:98
 msgid "Send to"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:167
+#: ../src/jarabe/journal/palettes.py:185
 msgid "No friends present"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:172
+#: ../src/jarabe/journal/palettes.py:190
 msgid "No valid connection found"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:200
+#: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:202
+#: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
 msgstr ""
 
-#: ../src/jarabe/view/buddymenu.py:61
+#: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
 msgstr "Найзыг хасах"
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:65
 msgid "Make friend"
 msgstr "Найз нэмэх"
 
-#: ../src/jarabe/view/buddymenu.py:81
+#: ../src/jarabe/view/buddymenu.py:95
 msgid "My Settings"
 msgstr "Миний Тохиргоо"
 
-#: ../src/jarabe/view/buddymenu.py:86
+#: ../src/jarabe/view/buddymenu.py:90
 msgid "Logout"
 msgstr "Гарах"
 
@@ -974,36 +983,36 @@ msgstr "Гарах"
 msgid "Restart"
 msgstr "Дахин эхлүүлэх"
 
-#: ../src/jarabe/view/buddymenu.py:96
+#: ../src/jarabe/view/buddymenu.py:82
 msgid "Shutdown"
 msgstr "Унтраах"
 
-#: ../src/jarabe/view/buddymenu.py:131
+#: ../src/jarabe/view/buddymenu.py:130
 #, python-format
 msgid "Invite to %s"
 msgstr "%s-д урих"
 
-#: ../src/jarabe/view/palettes.py:43
+#: ../src/jarabe/view/palettes.py:45
 msgid "Starting..."
 msgstr "Эхэлж байна..."
 
-#: ../src/jarabe/view/palettes.py:73
+#: ../src/jarabe/view/palettes.py:82
 msgid "Stop"
 msgstr "Зогсоох"
 
-#: ../src/jarabe/view/palettes.py:145
+#: ../src/jarabe/desktop/activitieslist.py:428
 msgid "Remove favorite"
 msgstr "Дуртай зүйлийг устгах"
 
-#: ../src/jarabe/view/palettes.py:149
+#: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
 msgstr "Дуртай зүйл болгох"
 
-#: ../src/jarabe/view/palettes.py:201
+#: ../src/jarabe/view/palettes.py:171
 msgid "Show contents"
 msgstr "Агуулгийг үзэх"
 
-#: ../src/jarabe/view/palettes.py:223 ../src/jarabe/view/palettes.py:272
+#: ../src/jarabe/view/palettes.py:193 ../src/jarabe/view/palettes.py:243
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ашиглаагүй"
@@ -1030,9 +1039,6 @@ msgstr "Салгах"
 
 #~ msgid "About my XO"
 #~ msgstr "Миний ХО-гын тухай"
-
-#~ msgid "Mesh"
-#~ msgstr "Тархалт"
 
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Сургуулийн тархалтын порталд холбогдлоо."
@@ -1205,5 +1211,259 @@ msgstr "Салгах"
 #~ msgid " and "
 #~ msgstr "ба"
 
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#, python-format
 #~ msgid ", "
 #~ msgstr ","
+
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:31
+msgid "Keyboard"
+msgstr ""
+
+#: ../extensions/cpsection/keyboard/view.py:187
+msgid "Keyboard Model"
+msgstr ""
+
+#: ../extensions/cpsection/keyboard/view.py:243
+msgid "Key(s) to change layout"
+msgstr ""
+
+#: ../extensions/cpsection/keyboard/view.py:311
+msgid "Keyboard Layout(s)"
+msgstr ""
+
+#: ../extensions/cpsection/language/view.py:56
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr ""
+
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software update"
+msgstr "Хангамж шинэчлэх"
+
+#: ../extensions/cpsection/updater/view.py:62
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:122
+#, python-format
+msgid "Checking %s..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:124
+#, python-format
+msgid "Downloading %s..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:126
+#, python-format
+msgid "Updating %s..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:135
+msgid "Your software is up-to-date"
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:137
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../extensions/cpsection/updater/view.py:155
+msgid "Checking for updates..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:160
+msgid "Installing updates..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:165
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../extensions/cpsection/updater/view.py:244
+msgid "Install selected"
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:265
+#, python-format
+msgid "Download size: %s"
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:353
+#, python-format
+msgid "From version %(current)d to %(new)s (Size: %(size)s)"
+msgstr ""
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:373
+msgid "None"
+msgstr "Огт үгүй"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:376
+msgid "1 KB"
+msgstr ""
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:379
+#, python-format
+msgid "%.0f KB"
+msgstr ""
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:382
+#, python-format
+msgid "%.1f MB"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr ""
+
+#: ../extensions/globalkey/screenshot.py:56
+msgid "Mesh"
+msgstr "Тархалт"
+
+#: ../extensions/globalkey/screenshot.py:71
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:10
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:12
+msgid "Keyboard layouts"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:13
+msgid "Keyboard model"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Keyboard options"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:16
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:17
+msgid "List of keyboard options."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:24
+msgid "Show Log out"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:26
+msgid "The keyboard model to be used"
+msgstr ""
+
+#: ../src/jarabe/desktop/activitieslist.py:80
+#: ../src/jarabe/journal/listview.py:147
+msgid "Title"
+msgstr ""
+
+#: ../src/jarabe/desktop/activitieslist.py:91
+msgid "Version"
+msgstr ""
+
+#: ../src/jarabe/desktop/activitieslist.py:105
+#: ../src/jarabe/journal/listview.py:178
+msgid "Date"
+msgstr ""
+
+#: ../src/jarabe/desktop/activitieslist.py:234
+#, python-format
+msgid "Version %s"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:37
+msgid "F1"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:39
+msgid "F2"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:41
+msgid "F3"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "F4"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:229
+#, python-format
+msgid "Kind: %s"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:229
+msgid "Unknown"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:230
+#, python-format
+msgid "Date: %s"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:231
+#, python-format
+msgid "Size: %s"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:363
+msgid "No matching entries"
+msgstr "Тохирсон оролт алга"
+
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr ""
+
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:71
+msgid "View Source"
+msgstr ""
+
+#: ../src/jarabe/view/palettes.py:122
+msgid "Start new"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:208
+msgid "Instance Source"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:233
+msgid "Source"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:292
+msgid "Activity Bundle Source"
+msgstr ""

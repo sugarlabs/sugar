@@ -90,6 +90,12 @@ def _volume_added_cb(volume_monitor, volume, tray):
     _mount(volume, tray)
 
 def _mount(volume, tray):
+    # Follow Nautilus behaviour here
+    # since it has the same issue with removable device
+    # and it would be good to not invent our own workflow
+    if hasattr(volume, 'should_automount') and not volume.should_automount():
+        return
+
     #TODO: should be done by some other process, like gvfs-hal-volume-monitor
     #TODO: use volume.should_automount() when it gets into pygtk
     if volume.get_mount() is None and volume.can_mount():

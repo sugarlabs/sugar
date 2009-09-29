@@ -18,6 +18,7 @@
 from gettext import gettext as _
 from gettext import ngettext
 import locale
+import logging
 
 import gobject
 import gtk
@@ -97,6 +98,8 @@ class ActivityUpdater(SectionView):
 
         if self._progress_pane is None:
             self._progress_pane = ProgressPane()
+            self._progress_pane.cancel_button.connect('clicked',
+                    self.__cancel_button_clicked_cb)
 
         self.pack_start(self._progress_pane, expand=True, fill=False)
         self._progress_pane.show()
@@ -115,7 +118,7 @@ class ActivityUpdater(SectionView):
             self._finished_checking()
             return
         elif current == total:
-            self._finished_updating()
+            self._finished_updating(int(current))
             return
 
         if action == UpdateModel.ACTION_CHECKING:
@@ -130,6 +133,7 @@ class ActivityUpdater(SectionView):
         self._progress_pane.set_progress(current / float(total))
 
     def _finished_checking(self):
+        logging.debug('ActivityUpdater._finished_checking')
         available_updates = len(self._model.updates)
         if not available_updates:
             top_message = _('Your software is up-to-date')
@@ -160,8 +164,11 @@ class ActivityUpdater(SectionView):
         self._top_label.set_markup('<big>%s</big>' % _('Installing updates...'))
         self._model.update(self._update_box.get_bundles_to_update())
 
-    def _finished_updating(self):
-        installed_updates = self._model.get_total_bundles_to_update()
+    def __cancel_button_clicked_cb(self, button):
+        self._model.cancel()
+
+    def _finished_updating(self, installed_updates):
+        logging.debug('ActivityUpdater._finished_updating')
         top_message = ngettext('%s update was installed',
                                '%s updates were installed', installed_updates)
         top_message = top_message % installed_updates
@@ -169,6 +176,8 @@ class ActivityUpdater(SectionView):
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._clear_center()
 
+    def undo(self):        
+        self._model.cancel()
 
 class ProgressPane(gtk.VBox):
     '''Container which replaces the `ActivityPane` during refresh or
@@ -195,9 +204,9 @@ class ProgressPane(gtk.VBox):
         self.pack_start(alignment_box)
         alignment_box.show()
 
-        cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
-        alignment_box.add(cancel_button)
-        cancel_button.show()
+        self.cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
+        alignment_box.add(self.cancel_button)
+        self.cancel_button.show()
 
     def set_message(self, message):
         self._label.set_text(message)
