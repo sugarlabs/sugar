@@ -67,7 +67,7 @@ class DeviceView(TrayIcon):
     def __button_release_event_cb(self, widget, event):
         journal = journalactivity.get_journal()
         journal.set_active_volume(self._mount)
-        journal.present()
+        journal.reveal()
         return True
 
 def setup(tray):
