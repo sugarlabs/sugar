@@ -26,7 +26,6 @@ Files: AUTHORS
 	data/nm-user-settings.conf
 	data/sugar-100.gtkrc
 	data/sugar-72.gtkrc
-	data/sugar-emulator.desktop
 	data/sugar-emulator.desktop.in
 	data/sugar.desktop
 	data/sugar.schemas.in
@@ -45,7 +44,6 @@ Files: AUTHORS
 	debian/pycompat
 	debian/sugar-__VER__.install.in
 	debian/sugar-__VER__.menu.in
-	debian/sugar-emulator.desktop
 	debian/sugar.desktop
 	debian/watch
 	extensions/Makefile.am
@@ -273,7 +271,6 @@ License: GPL-2+
 
 Files: bin/sugar-control-panel
 	bin/sugar-ui-check
-	src/jarabe/config.py
 	src/jarabe/config.py.in
 	src/jarabe/model/session.py
 	src/jarabe/view/launcher.py
@@ -352,7 +349,7 @@ Copyright: 1989, 1991, Free Software Foundation, Inc.
 License: UNKNOWN
 
 Files: missing
-Copyright: 1996-1997, 1999-2000, 2002-2005
+Copyright: 1996-1997, 1999-2000, 2002-2006
 License: GPL (GENERATED FILE)
 
 Files: py-compile
