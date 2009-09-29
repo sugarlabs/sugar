@@ -39,7 +39,7 @@ pkg = $(pkgbase)-$(pkgbranch)
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = 9f747c3de1a46917690df6977f3e1ca1
+DEB_UPSTREAM_TARBALL_MD5 = 48179bb0d79ca105683788bbd9bf2620
 
 # Move aside (and revert at cleanup) upstream shipped temporary files
 upstreamtmpfiles = src/jarabe/config.py
