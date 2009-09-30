@@ -522,16 +522,6 @@ class ActivityIcon(CanvasIcon):
     def _resume(self, journal_entry):
         if not journal_entry['activity_id']:
             journal_entry['activity_id'] = activityfactory.create_activity_id()
-
-        shell_model = shell.get_model()
-        activity = shell_model.get_activity_by_id(journal_entry['activity_id'])
-        if activity:
-            activity.get_window().activate(gtk.get_current_event_time())
-            return
-
-        launcher.add_launcher(journal_entry['activity_id'],
-                              self._activity_info.get_icon(),
-                              misc.get_icon_color(journal_entry))
         misc.resume(journal_entry, self._activity_info.get_bundle_id())
 
     def _activate(self):
