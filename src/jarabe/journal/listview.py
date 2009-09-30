@@ -505,7 +505,10 @@ class ListView(BaseListView):
         if column != self._title_column:
             return
 
-        self.cell_title.props.editable = True
+        row = self.tree_view.get_model()[path]
+        metadata = model.get(row[ListModel.COLUMN_UID])
+        self.cell_title.props.editable = model.is_editable(metadata)
+
         tree_view.set_cursor_on_cell(path, column, start_editing=True)
 
     def __detail_cell_clicked_cb(self, cell, path):
