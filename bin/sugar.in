@@ -1,5 +1,14 @@
 #!/bin/sh
 
+init_cursor() {
+    # have to reset cursor(metacity sets it on startup)
+    # ugly but works
+    for i in 1 2 3; do
+        sleep 1
+        xsetroot -cursor_name left_ptr
+    done
+}
+
 if test -z "$SUGAR_SCALING"; then
     export SUGAR_SCALING=72
 fi
@@ -19,6 +28,8 @@ if [ -f ~/.sugar/debug ]; then
         . ~/.sugar/debug
 fi
 
+echo Xcursor.theme: sugar | xrdb -merge
 metacity --no-force-fullscreen &
+init_cursor &
 
 exec sugar-session
