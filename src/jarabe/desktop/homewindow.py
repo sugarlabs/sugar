@@ -117,7 +117,10 @@ class HomeWindow(gtk.Window):
     def __map_event_cb(self, window, event):
         # have to make the desktop window active
         # since metacity doesn't make it on startup
-        self.window.focus()
+        timestamp = event.time
+        if not timestamp:
+            timestamp = gtk.gdk.x11_get_server_time(self.window)
+        self.window.focus(timestamp)
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']
