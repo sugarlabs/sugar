@@ -180,8 +180,6 @@ class JournalActivity(Window):
 
     def _key_press_event_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
-        logging.info(keyname)
-        logging.info(event.state)
         if keyname == 'Escape':
             self.show_main_view()
 
