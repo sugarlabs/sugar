@@ -117,7 +117,7 @@ class HomeWindow(gtk.Window):
     def __map_event_cb(self, window, event):
         # have to make the desktop window active
         # since metacity doesn't make it on startup
-        timestamp = event.time
+        timestamp = event.get_time()
         if not timestamp:
             timestamp = gtk.gdk.x11_get_server_time(self.window)
         self.window.focus(timestamp)
