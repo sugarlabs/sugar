@@ -31,7 +31,9 @@ from jarabe.model import shell
 BOUND_KEYS = ['<alt>1', 'Print']
 
 def handle_key_press(key):
-    file_path = os.path.join(tempfile.gettempdir(), '%i' % time.time())
+    fd, file_path = tempfile.mkstemp(
+            dir=os.path.join(env.get_profile_path(), 'data'))
+    os.close(fd)
 
     window = gtk.gdk.get_default_root_window()
     width, height = window.get_size()

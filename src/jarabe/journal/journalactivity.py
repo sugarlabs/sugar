@@ -67,11 +67,7 @@ class JournalActivityDBusService(dbus.service.Object):
         logging.debug('Trying to show object %s', object_id)
 
         if self._parent.show_object(object_id):
-            self._parent.present()
-            if self._parent.window is not None:
-                # have to use gdk level, looks like metacity
-                # doesn't raise windows from non-icon state, see #1339
-                self._parent.window.focus()
+            self._parent.reveal()
 
     def _chooser_response_cb(self, chooser, response_id, chooser_id):
         logging.debug('JournalActivityDBusService._chooser_response_cb')
@@ -184,8 +180,6 @@ class JournalActivity(Window):
 
     def _key_press_event_cb(self, widget, event):
         keyname = gtk.gdk.keyval_name(event.keyval)
-        logging.info(keyname)
-        logging.info(event.state)
         if keyname == 'Escape':
             self.show_main_view()
 
@@ -330,7 +324,7 @@ class JournalActivity(Window):
 
     def __alert_closed_cb(self, data):
         self.show_main_view()
-        self.present()
+        self.reveal()
         self._critical_space_alert = None
 
     def set_active_volume(self, mount):
@@ -339,7 +333,7 @@ class JournalActivity(Window):
     def focus_search(self):
         """Become visible and give focus to the search entry
         """
-        self.present()
+        self.reveal()
         self.show_main_view()
         self.search_grab_focus()
 

@@ -19,6 +19,7 @@ import dbus
 import os
 import signal
 import sys
+import logging
 
 from sugar import session
 from sugar import env
@@ -47,8 +48,6 @@ class SessionManager(session.SessionManager):
         self.initiate_shutdown()
 
     def shutdown_completed(self):
-        session.SessionManager.shutdown_completed(self)
-
         bus = dbus.SystemBus()
         proxy = bus.get_object('org.freedesktop.Hal',
                                '/org/freedesktop/Hal/devices/computer')
@@ -58,12 +57,18 @@ class SessionManager(session.SessionManager):
         if env.is_emulator():
             self._close_emulator()
         else:
-            if self._logout_mode == self.MODE_SHUTDOWN:
-                pm.Shutdown()
-            elif self._logout_mode == self.MODE_REBOOT:
-                pm.Reboot()
+            try:
+                if self._logout_mode == self.MODE_SHUTDOWN:
+                    pm.Shutdown()
+                elif self._logout_mode == self.MODE_REBOOT:
+                    pm.Reboot()
+            except:
+                logging.exception('Can not stop sugar')
+                self.session.cancel_shutdown()
+                return
 
-            gtk.main_quit()
+        session.SessionManager.shutdown_completed(self)
+        gtk.main_quit()
 
     def _close_emulator(self):
         gtk.main_quit()

@@ -181,7 +181,6 @@ def main():
     logger.start('shell')
 
     client = gconf.client_get_default()
-    client.set_string('/desktop/gnome/peripherals/mouse/cursor_theme', 'sugar')
     client.set_string('/apps/metacity/general/mouse_button_modifier',
                       'disabled')
 
