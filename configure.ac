@@ -1,11 +1,11 @@
-AC_INIT([Sugar],[0.86.0],[],[sugar])
+AC_INIT([Sugar],[0.86.1],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.86.0"
+SUCROSE_VERSION="0.86.1"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])

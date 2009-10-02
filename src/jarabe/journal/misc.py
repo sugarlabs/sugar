@@ -21,6 +21,7 @@ from gettext import gettext as _
 
 import gio
 import gconf
+import gtk
 
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
@@ -31,7 +32,8 @@ from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
 from sugar import util
 
-from jarabe.model import bundleregistry
+from jarabe.view import launcher
+from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
 
@@ -192,6 +194,15 @@ def resume(metadata, bundle_id=None):
         activity_bundle = registry.get_bundle(activities[0].get_bundle_id())
         activityfactory.create_with_uri(activity_bundle, bundle.get_start_uri())
     else:
+        activity_id = metadata.get('activity_id', '')
+
+        if activity_id:
+            shell_model = shell.get_model()
+            activity = shell_model.get_activity_by_id(activity_id)
+            if activity:
+                activity.get_window().activate(gtk.get_current_event_time())
+                return
+
         if bundle_id is None:
             activities = get_activities(metadata)
             if not activities:
@@ -202,7 +213,6 @@ def resume(metadata, bundle_id=None):
 
         bundle = registry.get_bundle(bundle_id)
 
-        activity_id = metadata.get('activity_id', '')
 
         if metadata.get('mountpoint', '/') == '/':
             object_id = metadata['uid']
@@ -210,6 +220,8 @@ def resume(metadata, bundle_id=None):
             object_id = model.copy(metadata, '/')
 
         if activity_id:
+            launcher.add_launcher(activity_id, bundle.get_icon(),
+                    get_icon_color(metadata))
             handle = ActivityHandle(object_id=object_id,
                                     activity_id=activity_id)
             activityfactory.create(bundle, handle)

@@ -1,7 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Sugar Emulator
+Name=Sugar
+GenericName=Sugar Emulator
+Comment=The emulator for the Sugar Desktop Environment
 Exec=@prefix@/bin/sugar-emulator
+Terminal=false
 Type=Application
-Icon=@prefix@/share/icons/sugar/scalable/device/computer-xo.svg
-Categories=Education
+Icon=sugar-xo
+Categories=Education;Teaching;

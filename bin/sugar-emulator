@@ -73,8 +73,9 @@ def _start_xephyr(dpi, dimensions, fullscreen):
     # FIXME evil workaround until F10 Xephyr is fixed
     if os.path.exists('/etc/fedora-release'):
         if open('/etc/fedora-release').read().startswith('Fedora release 10'):
-            _run_xephyr(random.randint(100, 500), dpi, dimensions, fullscreen)
-            return
+            display = random.randint(100, 500)
+            _run_xephyr(display, dpi, dimensions, fullscreen)
+            return  display
 
     for display in range(100, 110):
         if not _check_xephyr(display):
@@ -83,15 +84,15 @@ def _start_xephyr(dpi, dimensions, fullscreen):
             tries = 10
             while tries > 0:
                 if _check_xephyr(display):
-                    return
+                    return display
                 else:
                     tries -= 1
                     time.sleep(0.1)
 
-def _start_window_manager():
+def _start_window_manager(display):
     cmd = ['metacity']
 
-    cmd.extend(['--no-force-fullscreen'])
+    cmd.extend(['--no-force-fullscreen', '-d', ':%d' % display])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
@@ -146,7 +147,7 @@ def main():
 
     _setup_env()
 
-    _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
+    display = _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
 
     if options.scaling:
         os.environ['SUGAR_SCALING'] = options.scaling
@@ -154,9 +155,9 @@ def main():
     command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
 
     if not args:
-        command.append('sugar')
+        command.extend(['sugar', '-d', ':%d' % display])
     else:
-        _start_window_manager()
+        _start_window_manager(display)
 
         if args[0].endswith('.py'):
             command.append('python')

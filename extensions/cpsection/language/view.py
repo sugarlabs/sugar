@@ -63,10 +63,15 @@ class Language(SectionView):
         self.pack_start(self._text, False)
         self._text.show()
 
+        scrolled = gtk.ScrolledWindow()
+        scrolled.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled.show()
+        self.pack_start(scrolled, expand=True)
+
         self._table = gtk.Table(rows=1, columns=3, homogeneous=False)
         self._table.set_border_width(style.DEFAULT_SPACING * 2)        
-        self.pack_start(self._table, False)
         self._table.show()
+        scrolled.add_with_viewport(self._table)
 
         self._lang_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         self.pack_start(self._lang_alert_box, False)
