@@ -27,6 +27,7 @@ Files: AUTHORS
 	data/sugar-100.gtkrc
 	data/sugar-72.gtkrc
 	data/sugar-emulator.desktop.in
+	data/sugar-xo.svg
 	data/sugar.desktop
 	data/sugar.schemas.in
 	data/sugar.xml.in
