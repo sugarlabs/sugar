@@ -334,6 +334,14 @@ class ActivitiesTray(HTray):
 
         filetransfer.new_file_transfer.connect(self.__new_file_transfer_cb)
 
+    def _get_button_id(self, home_activity):
+        if home_activity.get_activity_id() is not None:
+            # activity button
+            return home_activity.get_activity_id()
+        else:
+            # non-activity window button
+            return (None, home_activity.get_xid())
+
     def __activity_added_cb(self, home_model, home_activity):
         logging.debug('__activity_added_cb: %r', home_activity)
         if self.get_children():
@@ -343,18 +351,18 @@ class ActivitiesTray(HTray):
 
         button = ActivityButton(home_activity, group)
         self.add_item(button)
-        self._buttons[home_activity.get_xid()] = button
+        self._buttons[self._get_button_id(home_activity)] = button
         button.connect('clicked', self.__activity_clicked_cb, home_activity)
         button.show()
 
     def __activity_removed_cb(self, home_model, home_activity):
         logging.debug('__activity_removed_cb: %r', home_activity)
-        button = self._buttons[home_activity.get_xid()]
+        button = self._buttons[self._get_button_id(home_activity)]
         self.remove_item(button)
-        del self._buttons[home_activity.get_xid()]
+        del self._buttons[self._get_button_id(home_activity)]
 
     def _activate_activity(self, home_activity):
-        button = self._buttons[home_activity.get_xid()]
+        button = self._buttons[self._get_button_id(home_activity)]
         self._freeze_button_clicks = True
         button.props.active = True
         self._freeze_button_clicks = False
