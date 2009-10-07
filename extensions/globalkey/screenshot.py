@@ -26,6 +26,7 @@ import dbus
 
 from sugar.datastore import datastore
 from sugar.graphics import style
+from sugar import env
 from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']
