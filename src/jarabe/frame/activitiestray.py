@@ -343,18 +343,18 @@ class ActivitiesTray(HTray):
 
         button = ActivityButton(home_activity, group)
         self.add_item(button)
-        self._buttons[home_activity.get_xid()] = button
+        self._buttons[home_activity] = button
         button.connect('clicked', self.__activity_clicked_cb, home_activity)
         button.show()
 
     def __activity_removed_cb(self, home_model, home_activity):
         logging.debug('__activity_removed_cb: %r', home_activity)
-        button = self._buttons[home_activity.get_xid()]
+        button = self._buttons[home_activity]
         self.remove_item(button)
-        del self._buttons[home_activity.get_xid()]
+        del self._buttons[home_activity]
 
     def _activate_activity(self, home_activity):
-        button = self._buttons[home_activity.get_xid()]
+        button = self._buttons[home_activity]
         self._freeze_button_clicks = True
         button.props.active = True
         self._freeze_button_clicks = False
