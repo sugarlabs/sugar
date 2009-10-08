@@ -1,3 +1,9 @@
+sugar-0.86 (0.86.2-1) unstable; urgency=low
+
+  * New upstream bugfix release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 08 Oct 2009 22:03:48 +0200
+
 sugar-0.86 (0.86.1-1) unstable; urgency=low
 
   * New upstream bugfix release.

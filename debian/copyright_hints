@@ -5,6 +5,7 @@ Files: AUTHORS
 	Makefile.am
 	README
 	bin/Makefile.am
+	bin/sugar-emulator
 	bin/sugar-install-bundle
 	bin/sugar.in
 	configure.ac
@@ -279,9 +280,9 @@ Copyright: 2008, Red Hat, Inc
 License: GPL-2+
 
 Files: bin/sugar-activity
-	bin/sugar-emulator
 	src/jarabe/model/screen.py
 	src/jarabe/model/sound.py
+	src/jarabe/util/emulator.py
 Copyright: 2006-2008, Red Hat, Inc
 License: GPL-2+
 
