@@ -17,7 +17,6 @@
 
 import logging
 import time
-import subprocess
 
 import gconf
 import wnck
@@ -323,8 +322,6 @@ class ShellModel(gobject.GObject):
         self._screen.connect('window-closed', self._window_closed_cb)
         self._screen.connect('active-window-changed',
                              self._active_window_changed_cb)
-        self._screen.connect('window-manager-changed',
-                             self.__window_manager_changed_cb)
 
         self.zoom_level_changed = dispatch.Signal()
 
@@ -593,21 +590,6 @@ class ShellModel(gobject.GObject):
                 activity_id)
             self.notify_launch_failed(activity_id)
         return False
-
-    def __window_manager_changed_cb(self, screen):
-        wm_name = screen.get_window_manager_name()
-        if wm_name is not None:
-            logging.debug('Setup %s wm', wm_name)
-            self._setup_wm()
-
-    def _setup_wm(self):
-        # have to reset cursor(metacity sets it on startup)
-        if subprocess.call('xsetroot -cursor_name left_ptr', shell=True):
-            logging.warning('Can not reset cursor')
-
-        if subprocess.call('metacity-message disable-keybindings',
-                shell=True):
-            logging.warning('Can not disable metacity keybindings')
 
 
 _model = None
