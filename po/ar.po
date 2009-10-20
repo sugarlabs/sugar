@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 00:31-0400\n"
-"PO-Revision-Date: 2009-09-05 13:21-0400\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2009-10-15 02:00-0400\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -426,14 +426,14 @@ msgid "Create new wireless network"
 msgstr "أنشئ سبكة لاسلكية جديدة"
 
 #: ../extensions/deviceicon/network.py:120
-#: ../src/jarabe/desktop/meshbox.py:261
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "يتصّل..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:124
 #: ../extensions/deviceicon/network.py:186
-#: ../src/jarabe/desktop/meshbox.py:267
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "مُتّصل"
 
@@ -535,7 +535,7 @@ msgstr "طور الاستكمال المفضل"
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
-msgstr "إذا ضبطت «صحيح» فستتيح سكّر البحث عنا في خادوم جابِر"
+msgstr "إذا ضبطت «صحيح» فستتيح سكّر البحث عنا في خادوم جابِر."
 
 #: ../data/sugar.schemas.in.h:10
 msgid "If TRUE, Sugar will show a \"Log out\" option."
@@ -568,7 +568,7 @@ msgstr "قائمة بتخطيطات لوحة المفاتيح، كل على ال
 
 #: ../data/sugar.schemas.in.h:17
 msgid "List of keyboard options."
-msgstr "قائمة بخيارات لوحة المفاتيح"
+msgstr "قائمة بخيارات لوحة المفاتيح."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Power Automatic"
@@ -649,7 +649,7 @@ msgstr "في وضع الاستكمال، النقر على أيقونة مفضل
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr "لوحة تحكم سكر: تحذير، وُجد أكثر من خيار بنفس الاسم: %s الوحدة: %s"
+msgstr "لوحة تحكم سكر: تحذير، وُجد أكثر من خيار بنفس الاسم: %s الوحدة: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -768,17 +768,17 @@ msgid "Keep"
 msgstr "احفظ"
 
 #: ../src/jarabe/desktop/activitieslist.py:364
-#: ../src/jarabe/desktop/activitieslist.py:406
+#: ../src/jarabe/desktop/activitieslist.py:407
 #: ../src/jarabe/journal/journaltoolbox.py:360
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Erase"
 msgstr "امسح"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:428
 msgid "Remove favorite"
 msgstr "احذف المفضلة"
 
-#: ../src/jarabe/desktop/activitieslist.py:431
+#: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
 msgstr "اصنع مفضلة"
 
@@ -795,17 +795,17 @@ msgid "Ring"
 msgstr "حلقة"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:334
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr "حلزون"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:401
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr "صندوق"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:442
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr "مثلث"
 
@@ -884,27 +884,23 @@ msgstr "اقطع الاتصال"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:463
+#: ../src/jarabe/desktop/meshbox.py:466
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:428
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "استكمل"
 
-#: ../src/jarabe/desktop/meshbox.py:468
+#: ../src/jarabe/desktop/meshbox.py:471
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "التحق"
 
-#: ../src/jarabe/desktop/schoolserver.py:34
-msgid "Cannot obtain data needed for registration."
-msgstr "تعذّر الحصول على البيانات المطلوبة للتسجيل."
-
-#: ../src/jarabe/desktop/schoolserver.py:51
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr "تعذّر الاتصال بالخادوم."
 
-#: ../src/jarabe/desktop/schoolserver.py:56
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr "لم يستطع الخادوم إكمال الطلب."
 
@@ -958,7 +954,7 @@ msgstr "ارفض"
 msgid "Transfer to %r"
 msgstr "نقل إلى %r"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "أزل"
 
@@ -1237,10 +1233,6 @@ msgstr "أظهر المحتويات"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d م.بايت خالية"
 
-#: ../src/jarabe/view/palettes.py:218
-msgid "Unmount"
-msgstr "افصل"
-
 #: ../src/jarabe/view/viewsource.py:208
 msgid "Instance Source"
 msgstr "مصدر السيرورة"
@@ -1257,6 +1249,12 @@ msgstr "مصدر حزمة النشاط"
 #, python-format
 msgid "View source: %r"
 msgstr "اعرض مصدر: %r"
+
+#~ msgid "Cannot obtain data needed for registration."
+#~ msgstr "تعذّر الحصول على البيانات المطلوبة للتسجيل."
+
+#~ msgid "Unmount"
+#~ msgstr "افصل"
 
 #~ msgid "Restart"
 #~ msgstr "أعد التشغيل"
