@@ -591,6 +591,7 @@ class ShellModel(gobject.GObject):
             self.notify_launch_failed(activity_id)
         return False
 
+
 _model = None
 
 def get_model():

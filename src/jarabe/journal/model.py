@@ -182,7 +182,7 @@ class BaseResultSet(object):
             logging.debug('prepending one more page, offset: %r limit: %r',
                 self._offset, limit)
             query = self._query.copy()
-            query['limit'] = self._page_size
+            query['limit'] = limit
             query['offset'] = self._offset
             entries, self._total_count = self.find(query)
 

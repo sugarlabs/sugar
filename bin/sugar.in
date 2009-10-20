@@ -14,15 +14,6 @@ EOF
     exit 0
 }
 
-init_cursor() {
-    # have to reset cursor(metacity sets it on startup)
-    # ugly but works
-    for i in 1 2 3; do
-        sleep 1
-        xsetroot -cursor_name left_ptr
-    done
-}
-
 while [ $# -ne 0 ] ; do
     case "$1" in
       	-d | --display)
@@ -61,6 +52,5 @@ fi
 
 echo Xcursor.theme: sugar | xrdb -merge
 metacity --no-force-fullscreen -d $DISPLAY &
-init_cursor &
 
 exec sugar-session
