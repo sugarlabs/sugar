@@ -65,6 +65,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 
 # Needed (always/often/sometimes) at runtime
 #  python-wnck fallback unneeded since python-wnck 2.24.0-2: can be dropped after Squeeze+1
+#  python-gconf fallback unneeded since python-gconf 2.22.3-3: can be dropped after Squeeze+1
 #  metacity needed by commands sugar and sugar-session
 #  xserver-xephyr and x11-utils (xdpyinfo) needed by command sugar-emulator
 #  x11-xserver-utils (xrdb) needed by command sugar and (xsetroot) by command sugar-session
@@ -74,8 +75,9 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  gdb needed by command sugar-launch
 # TODO: recommend (not suggest) python-xklavier when packaged for Debian
 CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch)
-CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2, python-gconf
+CDBS_DEPENDS += , python-hippocanvas, python-gobject, python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2
 CDBS_DEPENDS += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_DEPENDS += , python-gconf | python-gnome2 (<= 2.22.3-2)
 CDBS_DEPENDS += , metacity (>= 1:2.27.1), dbus-x11, openssh-client, x11-xserver-utils
 CDBS_RECOMMENDS = python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS += , network-manager, xserver-xephyr, x11-utils, lsb-release, wpasupplicant, ethtool, tzdata
