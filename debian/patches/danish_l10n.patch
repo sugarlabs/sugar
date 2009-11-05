@@ -1,3 +1,6 @@
+From: Jonas Smedegaard <dr@jones.dk>
+Subject: Add danish (da) localisation
+Last-Update: 2009-11-05
 diff --git a/po/da.po b/po/da.po
 --- /dev/null
 +++ b/po/da.po

@@ -1,3 +1,12 @@
+From: Jonas Smedegaard <dr@jones.dk>
+Subject: Adapt timezone handling to Debian environment
+
+Debian-specific environment handling only relevant on, well, Debian.
+
+Upstream might want to not be Fedora-specific, however...
+
+Forwarded: not-needed
+Last-Update: 2009-11-05
 diff --git a/src/controlpanel/control.py b/src/controlpanel/control.py
 index faac689..a6d9d04 100644
 --- a/src/controlpanel/control.py

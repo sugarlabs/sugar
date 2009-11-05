@@ -1,5 +1,5 @@
-1001_danish_l10n.patch
-2001_empy_from_system.patch
-#2003_fix_tz_config_path.patch
-2991_enable_danish_l10n.patch
-2992_empy_from_system.patch
+danish_l10n.patch
+empy_from_system.patch
+#fix_tz_config_path.patch
+danish_l10n_autotools.patch
+empy_from_system_autotools.patch

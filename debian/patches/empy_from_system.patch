@@ -1,7 +1,11 @@
---- a/data/Makefile.in
-+++ b/data/Makefile.in
-@@ -637,11 +637,11 @@
- 
+From: Jonas Smedegaard <dr@jones.dk>
+Subject: Use empy from system
+Forwarded: not-needed
+Last-Update: 2009-11-05
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -1,11 +1,11 @@
+ SUBDIRS = icons
  
  sugar-72.gtkrc: gtkrc.em
 -	$(srcdir)/em.py -D scaling=\'72\' $(srcdir)/gtkrc.em > \
@@ -12,5 +16,5 @@
 -	$(srcdir)/em.py -D scaling=\'100\' $(srcdir)/gtkrc.em > \
 +	empy -D scaling=\'100\' $(srcdir)/gtkrc.em > \
  		$(top_builddir)/data/sugar-100.gtkrc
- @INTLTOOL_XML_RULE@
  
+ sugardir = $(pkgdatadir)/data
