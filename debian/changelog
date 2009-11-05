@@ -1,3 +1,13 @@
+sugar-0.86 (0.86.3-2) unstable; urgency=low
+
+  * Have dependency on python-gconf fallback to older python-gnome2, to
+    ease backporting.
+  * Switch to source format 3.0 (quilt).
+  * Restructure patches to DEP3 format: Add meta-info; drop leading
+    numbers and README.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 06 Nov 2009 00:37:43 +0100
+
 sugar-0.86 (0.86.3-1) unstable; urgency=low
 
   * New upstream bugfix release.

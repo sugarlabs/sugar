@@ -37,13 +37,13 @@ Files: AUTHORS
 	debian/control
 	debian/control.in
 	debian/gbp.conf
-	debian/patches/2001_empy_from_system.patch
-	debian/patches/2003_fix_tz_config_path.patch
-	debian/patches/2991_enable_danish_l10n.patch
-	debian/patches/2992_empy_from_system.patch
-	debian/patches/README
+	debian/patches/danish_l10n_autotools.patch
+	debian/patches/empy_from_system.patch
+	debian/patches/empy_from_system_autotools.patch
+	debian/patches/fix_tz_config_path.patch
 	debian/patches/series
 	debian/pycompat
+	debian/source/format
 	debian/sugar-__VER__.install.in
 	debian/sugar-__VER__.menu.in
 	debian/sugar.desktop
@@ -498,7 +498,7 @@ Files: po/fr.po
 Copyright: 2007, the Package Owner
 License: UNKNOWN
 
-Files: debian/patches/1001_danish_l10n.patch
+Files: debian/patches/danish_l10n.patch
 Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: UNKNOWN
 
