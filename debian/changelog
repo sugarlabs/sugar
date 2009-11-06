@@ -1,3 +1,12 @@
+sugar-0.86 (0.86.3-3) unstable; urgency=low
+
+  * Apply patches, and drop using quilt (unneeded with new source
+    format, and Sugar not backportable to Etch anyway). Stop build-
+    depending on quilt or patchutils. Update README.source.
+  * Unfuzz patches.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 06 Nov 2009 01:06:48 +0100
+
 sugar-0.86 (0.86.3-2) unstable; urgency=low
 
   * Have dependency on python-gconf fallback to older python-gnome2, to

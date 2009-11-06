@@ -350,6 +350,11 @@ Copyright: 1989, 1991, Free Software Foundation, Inc.
 	the software, and
 License: UNKNOWN
 
+Files: debian/patches/danish_l10n.patch
+	po/da.po
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
+License: UNKNOWN
+
 Files: missing
 Copyright: 1996-1997, 1999-2000, 2002-2006
 License: GPL (GENERATED FILE)
@@ -496,10 +501,6 @@ License: UNKNOWN
 
 Files: po/fr.po
 Copyright: 2007, the Package Owner
-License: UNKNOWN
-
-Files: debian/patches/danish_l10n.patch
-Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: UNKNOWN
 
 Files: po/ig.po
