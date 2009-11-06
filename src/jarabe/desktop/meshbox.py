@@ -373,7 +373,7 @@ class AccessPointView(CanvasPulsingIcon):
                 settings.wireless.mode = 'adhoc'
                 settings.wireless.band = 'bg'
                 settings.ip4_config = IP4Config()
-                settings.ip4_config.method = 'shared'
+                settings.ip4_config.method = 'link-local'
 
             wireless_security = self._get_security()
             settings.wireless_security = wireless_security

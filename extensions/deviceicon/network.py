@@ -424,7 +424,7 @@ class WirelessDeviceView(ToolButton):
             settings.wireless.band = 'bg'
             settings.wireless.mode = 'adhoc'
             settings.ip4_config = IP4Config()
-            settings.ip4_config.method = 'shared'
+            settings.ip4_config.method = 'link-local'
 
             connection = network.add_connection(connection_name, settings)
 
