@@ -33,7 +33,6 @@ include debian/cdbs/1/rules/buildinfo.mk
 
 pkgbase = sugar
 pkgbranch = 0.86
-pkg = $(pkgbase)-$(pkgbranch)
 
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
@@ -51,12 +50,12 @@ clean::
 	rm -f $(outfiles)
 
 # Register GConf schemas
-post-install/$(pkg)::
+post-install/sugar-$(pkgbranch)::
 	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
 	mv $(DEB_DESTDIR)/etc/gconf/schemas/sugar.schemas $(DEB_DESTDIR)/usr/share/gconf/schemas/
 	rmdir $(DEB_DESTDIR)/etc/gconf/schemas
 	rmdir $(DEB_DESTDIR)/etc/gconf
-binary-install/$(pkg)::
+binary-install/sugar-$(pkgbranch)::
 	dh_gconf -p$(cdbs_curpkg)
 
 # Needed by upstream build process
@@ -80,24 +79,24 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #    jarabe.window.create_profile()
 #  * gdb needed by command sugar-launch
 # TODO: recommend (not suggest) python-xklavier when packaged for Debian
-CDBS_DEPENDS = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch)
-CDBS_DEPENDS += , python-hippocanvas, python-gobject (>= 2.15.0), python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2
-CDBS_DEPENDS += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
-CDBS_DEPENDS += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS += , metacity (>= 1:2.27.1), dbus-x11, openssh-client, x11-xserver-utils
-CDBS_RECOMMENDS = python-carquinyol-$(pkgbranch)
-CDBS_RECOMMENDS += , network-manager, xserver-xephyr, x11-utils, lsb-release, wpasupplicant, ethtool, tzdata
-CDBS_SUGGESTS = sugar-read-activity, sugar-write-activity, sugar-imageviewer-activity, sugar-browse-activity, sugar-jukebox-activity, sugar-pippy-activity
-CDBS_SUGGESTS += , gdb, python-xklavier
+CDBS_DEPENDS_sugar-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch)
+CDBS_DEPENDS_sugar-$(pkgbranch) += , python-hippocanvas, python-gobject (>= 2.15.0), python-gtk2, python-cairo, python-dbus, python-telepathy, python-cjson, python-gtksourceview2
+CDBS_DEPENDS_sugar-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_DEPENDS_sugar-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
+CDBS_DEPENDS_sugar-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, openssh-client, x11-xserver-utils
+CDBS_RECOMMENDS_sugar-$(pkgbranch) = python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-$(pkgbranch) += , network-manager, xserver-xephyr, x11-utils, lsb-release, wpasupplicant, ethtool, tzdata
+CDBS_SUGGESTS_sugar-$(pkgbranch) = sugar-read-activity, sugar-write-activity, sugar-imageviewer-activity, sugar-browse-activity, sugar-jukebox-activity, sugar-pippy-activity
+CDBS_SUGGESTS_sugar-$(pkgbranch) += , gdb, python-xklavier
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
-CDBS_PROVIDES = $(pkgbase)
-CDBS_CONFLICTS = $(pkgbase)
-CDBS_REPLACES = $(pkgbase)
+CDBS_PROVIDES_sugar-$(pkgbranch) = $(pkgbase)
+CDBS_CONFLICTS_sugar-$(pkgbranch) = $(pkgbase)
+CDBS_REPLACES_sugar-$(pkgbranch) = $(pkgbase)
 
 # Journal, now part of Jarabe, was separately packaged upstream < 0.84
-CDBS_CONFLICTS += , sugar-journal-activity
-CDBS_REPLACES += , sugar-journal-activity
+CDBS_CONFLICTS_sugar-$(pkgbranch) += , sugar-journal-activity
+CDBS_REPLACES_sugar-$(pkgbranch) += , sugar-journal-activity
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-empy
