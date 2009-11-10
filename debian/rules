@@ -39,6 +39,8 @@ DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_U
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
 DEB_UPSTREAM_TARBALL_MD5 = 3ba8a6133540bb1037396adf552af52f
 
+DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
+
 # Generate (and cleanup) files containing variables static per build
 infiles = $(filter-out debian/control.in, $(wildcard debian/*.in))
 outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
