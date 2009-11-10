@@ -27,3 +27,27 @@ Description: Sugar graphical shell - window manager
  environment for kids.
  .
  This package contains the integrated session and window manager Sugar.
+
+Package: python-jarabe-0.86
+Section: python
+Architecture: all
+Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${python:Provides}, ${cdbs:Provides}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+XB-Python-Version: ${python:Versions}
+Description: Sugar graphical shell - library
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package contains Jarabe, the Sugar Graphical "Shell" Interface
+ providing the shell-level operations for Sugar.  It interacts heavily
+ with the Sugar UI libraries.
+ .
+ This is a "graphical" shell, the name does not refer to a command-line
+ "shell" interface.
