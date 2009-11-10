@@ -72,11 +72,12 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  * python-telepathy versioning needed for use of
 #    CONNECTION_INTERFACE_REQUESTS ABI
 #  * metacity needed by commands sugar and sugar-session
-#  * xserver-xephyr and x11-utils (xdpyinfo) needed by command
-#    sugar-emulator
+#  * xserver-xephyr and x11-utils (xdpyinfo) needed in
+#    src/jarabe/util/emulator.py
 #  * x11-xserver-utils (xrdb) needed by command sugar and (xsetroot) by
 #    command sugar-session
-#  * lsb-release, tzdata and ethtool needed in extension ControlPanel
+#  * lsb-release (lsb_release), tzdata and ethtool needed in extension
+#    ControlPanel
 #  * wpasupplicant (wpa_passphrase) needed in
 #    jarabe.desktop.keydialog.WPAKeyDialog()
 #  * openssh-client (ssh-keygen) needed in
