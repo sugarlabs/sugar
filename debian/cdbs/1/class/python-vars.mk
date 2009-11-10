@@ -28,7 +28,7 @@ _cdbs_class_python_vars = 1
 
 include $(_cdbs_rules_path)/buildvars.mk$(_cdbs_makefile_suffix)
 
-DEB_PYTHON_PACKAGES = $(filter-out %-doc %-dev %-common, $(DEB_PACKAGES))
+DEB_PYTHON_PACKAGES ?= $(filter-out %-doc %-dev %-common, $(DEB_PACKAGES))
 
 DEB_PYTHON_ARCH_PACKAGES = $(filter $(DEB_PYTHON_PACKAGES), $(DEB_ARCH_PACKAGES))
 DEB_PYTHON_INDEP_PACKAGES = $(filter $(DEB_PYTHON_PACKAGES), $(DEB_INDEP_PACKAGES))
