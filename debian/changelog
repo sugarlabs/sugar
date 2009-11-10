@@ -1,3 +1,18 @@
+sugar-0.86 (0.86.3-4) unstable; urgency=low
+
+  * Tighten python-gobject dependency to versions providing GIO binding.
+  * Tighten dependency on python-telepathy to versions implementing
+    CONNECTION_INTERFACE_REQUESTS ABI.
+  * Beautify comments in debian/rules.
+  * Restructure debian/rules to explicitly use sugar-$(pkgbranch).
+  * Update local python-autotools.mk snippet to make
+    DEB_PYTHON_PRIVATE_MODULES_DIRS apply alos to dh_python-central (not
+    only dh_python-support) as it has apparently been supported since at
+    least python-central 0.6.6.
+  * Register Python private modules below /usr/share/sugar.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 10 Nov 2009 01:58:05 +0100
+
 sugar-0.86 (0.86.3-3) unstable; urgency=low
 
   * Apply patches, and drop using quilt (unneeded with new source
