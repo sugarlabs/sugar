@@ -1,2 +1,2 @@
-?package(sugar-__VER__):needs="X11" section="Applications/Emulators" \
+?package(sugar-emulator-__VER__):needs="X11" section="Applications/Emulators" \
   title="Sugar Emulator" command="/usr/bin/sugar-emulator"
