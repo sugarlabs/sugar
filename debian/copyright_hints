@@ -43,9 +43,14 @@ Files: AUTHORS
 	debian/patches/fix_tz_config_path.patch
 	debian/patches/series
 	debian/pycompat
+	debian/python-jarabe-__VER__.install.in
 	debian/source/format
-	debian/sugar-__VER__.install.in
-	debian/sugar-__VER__.menu.in
+	debian/sugar-emulator-__VER__.install.in
+	debian/sugar-emulator-__VER__.menu.in
+	debian/sugar-emulator.desktop
+	debian/sugar-session-__VER__.install.in
+	debian/sugar-session-__VER__.menu.in
+	debian/sugar-tools-__VER__.install.in
 	debian/sugar.desktop
 	debian/watch
 	extensions/Makefile.am

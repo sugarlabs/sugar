@@ -1,3 +1,25 @@
+sugar-0.86 (0.86.3-5) unstable; urgency=low
+
+  * Update local CDBS snippets:
+    + Fix python-vars.mk to allow overriding DEB_PYTHON_PACKAGES.
+    + Fix invoke Python debhelper hook right after dh_install (not
+      before) to include files installed through debhelper.
+  * Split out new binary packages python-jarabe, sugar-session,
+    sugar-emulator and sugar-tools, and replace/rename now empty sugar
+    package with sucrose (all with trailing -$BRANCH).
+    As a result, parts of Sugar can be installed alone, and installing
+    sucrose ensures that all official parts of a released sucrose gets
+    installed (in the future - not all parts are packaged officially for
+    Debian yet).
+    Provides/conflicts/replaces are temporarily provided for old
+    versioned sugar packages to help migration.
+    Provides/conflicts/replaces for unversioned "sugar" will be kept, to
+    have "aptitude install sugar" be sensible (with only a single branch
+    available it installs, with multiple branches it lists the options).
+  * Use locally written XDG-compliant desktop file for sugar-emulator.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 11 Nov 2009 14:09:33 +0100
+
 sugar-0.86 (0.86.3-4) unstable; urgency=low
 
   * Tighten python-gobject dependency to versions providing GIO binding.
