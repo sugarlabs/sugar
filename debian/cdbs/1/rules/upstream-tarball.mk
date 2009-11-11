@@ -107,7 +107,7 @@ get-orig-source:
 	@untar="tar -x -C"; \
 	case "$(cdbs_upstream_received_tarball)" in \
 	    *.tar.gz)  unpack="gunzip -c";; \
-	    *.tar.bz2) unpack="bunzip2 -c";    uncompress="bunzip2";; \
+	    *.tar.bz2) unpack="bunzip2 -c";; \
 	    *.tar.Z)   unpack="uncompress -c"; uncompress="uncompress";; \
 	    *.zip)     unpack="unzip -q";      uncompress="false";       untar="-d"; nopipe="true";; \
 	    *.tar)     unpack="cat";           uncompress="true";; \
