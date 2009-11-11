@@ -23,7 +23,7 @@ pkgbranch = 0.86
 
 DEB_BUILDDIR = build
 DEB_PYTHON_SYSTEM = pycentral
-DEB_PYTHON_PACKAGES = python-jarabe-$(pkgbranch) sugar-$(pkgbranch)
+DEB_PYTHON_PACKAGES = python-jarabe-$(pkgbranch) sugar-session-$(pkgbranch) sugar-emulator-$(pkgbranch) sugar-tools-$(pkgbranch)
 ifneq (,$(DEB_MAINTAINER_MODE))
   # Enable stuff not policy compliant (eg. unsuitable for build daemons)
   DEB_COPYRIGHT_CHECK_STRICT = yes
@@ -124,12 +124,18 @@ CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(jarabe_nm_wpa), $(jarabe
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(session_activities), $(session_xkb)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
-CDBS_PROVIDES_sugar-$(pkgbranch) = $(pkgbase)
-CDBS_CONFLICTS_sugar-$(pkgbranch) = $(pkgbase)
-CDBS_REPLACES_sugar-$(pkgbranch) = $(pkgbase)
-CDBS_PROVIDES_python-jarabe-$(pkgbranch) = $(pkgbase)
-CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = $(pkgbase)
-CDBS_REPLACES_python-jarabe-$(pkgbranch) = $(pkgbase)
+CDBS_PROVIDES_sucrose-$(pkgbranch) = $(pkgbase)
+CDBS_CONFLICTS_sucrose-$(pkgbranch) = $(pkgbase)
+CDBS_REPLACES_sucrose-$(pkgbranch) = $(pkgbase)
+CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
+CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = python-jarabe
+CDBS_REPLACES_python-jarabe-$(pkgbranch) = python-jarabe
+
+# sugar-xxx included in 0.84.6-1 - 0.86.3-4 replaced by sucrose-xxx:
+# can be dropped after Squeeze
+CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
+CDBS_CONFLICTS_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
+CDBS_REPLACES_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
 
 # Journal, now part of Jarabe, was separately packaged upstream < 0.84
 CDBS_CONFLICTS_python-jarabe-$(pkgbranch) += , sugar-journal-activity
