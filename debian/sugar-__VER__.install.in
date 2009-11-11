@@ -1,3 +1,0 @@
-debian/sugar.desktop usr/share/xsessions/
-debian/tmp/etc/* etc/
-debian/tmp/usr/bin debian/tmp/usr/share usr/

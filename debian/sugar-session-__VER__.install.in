@@ -1,0 +1,9 @@
+debian/sugar.desktop			usr/share/xsessions/
+debian/tmp/etc/*			etc/
+debian/tmp/usr/bin/sugar		usr/bin/
+debian/tmp/usr/bin/sugar-session	usr/bin/
+debian/tmp/usr/share/icons		usr/share/
+debian/tmp/usr/share/locale		usr/share/
+debian/tmp/usr/share/mime		usr/share/
+debian/tmp/usr/share/sugar		usr/share/
+debian/tmp/usr/share/xsessions		usr/share/

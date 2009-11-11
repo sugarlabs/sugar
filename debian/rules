@@ -84,22 +84,44 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 #  * openssh-client (ssh-keygen) needed in
 #    jarabe.window.create_profile()
 #  * gdb needed by command sugar-launch
-# TODO: recommend (not suggest) python-xklavier when packaged for Debian
-CDBS_DEPENDS_sugar-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
-CDBS_DEPENDS_sugar-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
-CDBS_DEPENDS_sugar-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
-CDBS_DEPENDS_sugar-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS_sugar-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, x11-xserver-utils
+# TODO: recommend (not suggest) activities and xkb when packaged
+session_xkb = python-xklavier
+session_nm = network-manager
+session_activities = sugar-read-activity, sugar-write-activity, sugar-imageviewer-activity, sugar-browse-activity, sugar-jukebox-activity, sugar-pippy-activity
+emulator_exec = xserver-xephyr, x11-utils
+jarabe_initprofile = openssh-client
+jarabe_nm_wpa = wpasupplicant
+jarabe_cp_cli_exec = lsb-release, ethtool, tzdata
+tools_debug = gdb
+CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, x11-xserver-utils
+CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
+CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
+CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-hippocanvas, python-gobject (>= 2.15.0), python-gtk2, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-cjson, python-gtksourceview2
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , openssh-client
-CDBS_RECOMMENDS_sugar-$(pkgbranch) = python-carquinyol-$(pkgbranch)
-CDBS_RECOMMENDS_sugar-$(pkgbranch) += , network-manager, x11-utils, lsb-release, ethtool, tzdata
-CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , network-manager, xserver-xephyr, x11-utils, wpasupplicant
-CDBS_SUGGESTS_sugar-$(pkgbranch) = sugar-read-activity, sugar-write-activity, sugar-imageviewer-activity, sugar-browse-activity, sugar-jukebox-activity, sugar-pippy-activity
-CDBS_SUGGESTS_sugar-$(pkgbranch) += , gdb, python-xklavier
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(jarabe_cp_cli_exec)
+CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) = sugar-session-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
+CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exec), dbus
+CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
+CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm_wpa)
+CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(jarabe_initprofile)
+CDBS_SUGGESTS_sugar-session-$(pkgbranch) = $(session_xkb), $(session_activities)
+CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = $(tools_debug)
+CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = $(emulator_exec)
+
+# TODO: depend on all when packaged for Debian
+CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(jarabe_nm_wpa), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(tools_debug)
+CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(session_activities), $(session_xkb)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
 CDBS_PROVIDES_sugar-$(pkgbranch) = $(pkgbase)
