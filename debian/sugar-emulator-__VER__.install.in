@@ -1,2 +1,2 @@
-debian/tmp/usr/share/applications	usr/share/
+debian/sugar-emulator.desktop		usr/share/applications/
 debian/tmp/usr/bin/sugar-emulator	usr/bin/
