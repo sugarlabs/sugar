@@ -91,13 +91,13 @@ session_activities = sugar-read-activity, sugar-write-activity, sugar-imageviewe
 emulator_exec = xserver-xephyr, x11-utils
 jarabe_initprofile = openssh-client
 jarabe_nm_wpa = wpasupplicant
-jarabe_cp_cli_exec = lsb-release, ethtool, tzdata
+jarabe_cp_cli_exec = x11-xserver-utils, lsb-release, ethtool, tzdata
 tools_debug = gdb
 CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, x11-xserver-utils
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
