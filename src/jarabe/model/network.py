@@ -20,6 +20,7 @@ import os
 import time
 
 import dbus
+import gobject
 import ConfigParser
 
 from sugar import dispatch
@@ -76,6 +77,7 @@ NM_SETTINGS_PATH = '/org/freedesktop/NetworkManagerSettings'
 NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
 NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
+NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 
 _nm_settings = None
 _conn_counter = 0
@@ -322,6 +324,112 @@ class NMSettingsConnection(dbus.service.Object):
                 logging.exception('Error requesting the secrets via dialog')
         else:
             reply(self._secrets.get_dict())
+
+
+class AccessPoint(gobject.GObject):
+    __gsignals__ = {
+        'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([gobject.TYPE_PYOBJECT]))
+    }
+
+    def __init__(self, device, model):
+        self.__gobject_init__()
+        self.device = device
+        self.model = model
+
+        self._initialized = False
+        self._bus = dbus.SystemBus()
+
+        self.name = ''
+        self.strength = 0
+        self.flags = 0
+        self.wpa_flags = 0
+        self.rsn_flags = 0
+        self.mode = 0
+
+    def initialize(self):
+        model_props = dbus.Interface(self.model,
+            'org.freedesktop.DBus.Properties')
+        model_props.GetAll(NM_ACCESSPOINT_IFACE, byte_arrays=True,
+                           reply_handler=self._ap_properties_changed_cb,
+                           error_handler=self._get_all_props_error_cb)
+
+        self._bus.add_signal_receiver(self._ap_properties_changed_cb,
+                                      signal_name='PropertiesChanged',
+                                      path=self.model.object_path,
+                                      dbus_interface=NM_ACCESSPOINT_IFACE,
+                                      byte_arrays=True)
+
+    def network_hash(self):
+        """
+        This is a hash which uniquely identifies the network that this AP
+        is a bridge to. i.e. its expected for 2 APs with identical SSID and
+        other settings to have the same network hash, because we assume that
+        they are a part of the same underlying network.
+        """
+
+        # based on logic from nm-applet
+        fl = 0
+
+        if self.mode == NM_802_11_MODE_INFRA:
+            fl |= 1 << 0
+        elif self.mode == NM_802_11_MODE_ADHOC:
+            fl |= 1 << 1
+        else:
+            fl |= 1 << 2
+
+        # Separate out no encryption, WEP-only, and WPA-capable */
+        if (not (self.flags & NM_802_11_AP_FLAGS_PRIVACY)) \
+                and self.wpa_flags == NM_802_11_AP_SEC_NONE \
+                and self.rsn_flags == NM_802_11_AP_SEC_NONE:
+            fl |= 1 << 3
+        elif (self.flags & NM_802_11_AP_FLAGS_PRIVACY) \
+                and self.wpa_flags == NM_802_11_AP_SEC_NONE \
+                and self.rsn_flags == NM_802_11_AP_SEC_NONE:
+            fl |= 1 << 4
+        elif (not (self.flags & NM_802_11_AP_FLAGS_PRIVACY)) \
+                and self.wpa_flags != NM_802_11_AP_SEC_NONE \
+                and self.rsn_flags != NM_802_11_AP_SEC_NONE:
+            fl |= 1 << 5
+        else:
+            fl |= 1 << 6
+
+        hashstr = str(fl) + "@" + self.name
+        return hash(hashstr)
+
+    def _update_properties(self, properties):
+        if self._initialized:
+            old_hash = self.network_hash()
+        else:
+            old_hash = None
+
+        if 'Ssid' in properties:
+            self.name = properties['Ssid']
+        if 'Strength' in properties:
+            self.strength = properties['Strength']
+        if 'Flags' in properties:
+            self.flags = properties['Flags']
+        if 'WpaFlags' in properties:
+            self.wpa_flags = properties['WpaFlags']
+        if 'RsnFlags' in properties:
+            self.rsn_flags = properties['RsnFlags']
+        if 'Mode' in properties:
+            self.mode = properties['Mode']
+        self._initialized = True
+        self.emit('props-changed', old_hash)
+
+    def _get_all_props_error_cb(self, err):
+        logging.error('Error getting the access point properties: %s', err)
+
+    def _ap_properties_changed_cb(self, properties):
+        self._update_properties(properties)
+
+    def disconnect(self):
+        self._bus.remove_signal_receiver(self._ap_properties_changed_cb,
+                                         signal_name='PropertiesChanged',
+                                         path=self.model.object_path,
+                                         dbus_interface=NM_ACCESSPOINT_IFACE)
+
 
 def get_settings():
     global _nm_settings

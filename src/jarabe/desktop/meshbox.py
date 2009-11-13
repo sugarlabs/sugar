@@ -49,6 +49,7 @@ from jarabe.model import shell
 from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
+from jarabe.model.network import AccessPoint
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -60,28 +61,44 @@ _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
 _ICON_NAME = 'network-wireless'
 
-class AccessPointView(CanvasPulsingIcon):
-    def __init__(self, device, model):
+
+class WirelessNetworkView(CanvasPulsingIcon):
+    def __init__(self, initial_ap):
         CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
                                    cache=True)
         self._bus = dbus.SystemBus()
-        self._device = device
-        self._model = model
+        self._access_points = {initial_ap.model.object_path: initial_ap}
+        self._active_ap = None
+        self._device = initial_ap.device
         self._palette_icon = None
         self._disconnect_item = None
         self._connect_item = None
         self._greyed_out = False
-        self._name = ''
-        self._strength = 0
-        self._flags = 0
-        self._wpa_flags = 0
-        self._rsn_flags = 0
-        self._mode = network.NM_802_11_MODE_UNKNOWN
+        self._name = initial_ap.name
+        self._mode = initial_ap.mode
+        self._strength = initial_ap.strength
+        self._flags = initial_ap.flags
+        self._wpa_flags = initial_ap.wpa_flags
+        self._rsn_flags = initial_ap.rsn_flags
         self._device_caps = 0
         self._device_state = None
         self._connection = None
-        self._active = True
         self._color = None
+
+        if self._mode == network.NM_802_11_MODE_ADHOC:
+            encoded_color = self._name.split("#", 1)
+            if len(encoded_color) == 2:
+                self._color = xocolor.XoColor('#' + encoded_color[1])
+        if self._mode == network.NM_802_11_MODE_INFRA:
+            sha_hash = hashlib.sha1()
+            data = self._name + hex(self._flags)
+            sha_hash.update(data)
+            digest = hash(sha_hash.digest())
+            index = digest % len(xocolor.colors)
+
+            self._color = xocolor.XoColor('%s,%s' %
+                                          (xocolor.colors[index][0],
+                                           xocolor.colors[index][1]))
 
         self.connect('button-release-event', self.__button_release_event_cb)
 
@@ -91,17 +108,17 @@ class AccessPointView(CanvasPulsingIcon):
 
         self._palette = self._create_palette()
         self.set_palette(self._palette)
+        self._palette_icon.props.xo_color = self._color
 
-        model_props = dbus.Interface(model, 'org.freedesktop.DBus.Properties')
-        model_props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
-                           reply_handler=self.__get_all_props_reply_cb,
-                           error_handler=self.__get_all_props_error_cb)
-
-        self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
-                                      signal_name='PropertiesChanged',
-                                      path=model.object_path,
-                                      dbus_interface=_NM_ACCESSPOINT_IFACE,
-                                      byte_arrays=True)
+        if network.find_connection(self._name) is not None:
+            self.props.badge_name = "emblem-favorite"
+            self._palette_icon.props.badge_name = "emblem-favorite"
+        elif initial_ap.flags == network.NM_802_11_AP_FLAGS_PRIVACY:
+            self.props.badge_name = "emblem-locked"
+            self._palette_icon.props.badge_name = "emblem-locked"
+        else:
+            self.props.badge_name = None
+            self._palette_icon.props.badge_name = None
 
         interface_props = dbus.Interface(self._device,
                                          'org.freedesktop.DBus.Properties')
@@ -117,11 +134,11 @@ class AccessPointView(CanvasPulsingIcon):
 
         self._bus.add_signal_receiver(self.__device_state_changed_cb,
                                       signal_name='StateChanged',
-                                      path=device.object_path,
+                                      path=self._device.object_path,
                                       dbus_interface=_NM_DEVICE_IFACE)
         self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
                                       signal_name='PropertiesChanged',
-                                      path=device.object_path,
+                                      path=self._device.object_path,
                                       dbus_interface=_NM_WIRELESS_IFACE)
 
     def _create_palette(self):
@@ -148,92 +165,48 @@ class AccessPointView(CanvasPulsingIcon):
         self._device_state = new_state
         self._update_state()
 
-    def __ap_properties_changed_cb(self, properties):
-        self._update_properties(properties)
+    def __update_active_ap(self, ap_path):
+        if ap_path in self._access_points:
+            # save reference to active AP, so that we always display the
+            # strength of that one
+            self._active_ap = self._access_points[ap_path]
+            self.update_strength()
+            self._update_state()
+        elif self._active_ap is not None:
+            # revert to showing state of strongest AP again
+            self._active_ap = None
+            self.update_strength()
+            self._update_state()
 
     def __wireless_properties_changed_cb(self, properties):
         if 'ActiveAccessPoint' in properties:
-            ap = properties['ActiveAccessPoint']
-            self._active = (ap == self._model.object_path)
-            self._update_state()
+            self.__update_active_ap(properties['ActiveAccessPoint'])
 
-    def _update_properties(self, properties):
-        if 'Mode' in properties:
-            self._mode = properties['Mode']
-            self._color = None
-        if 'Ssid' in properties:
-            self._name = properties['Ssid']
-            self._color = None
-        if 'Strength' in properties:
-            self._strength = properties['Strength']
-        if 'Flags' in properties:
-            self._flags = properties['Flags']
-        if 'WpaFlags' in properties:
-            self._wpa_flags = properties['WpaFlags']
-        if 'RsnFlags' in properties:
-            self._rsn_flags = properties['RsnFlags']
-
-        if self._color == None:
-            if self._mode == network.NM_802_11_MODE_ADHOC:
-                encoded_color = self._name.split("#", 1)
-                if len(encoded_color) == 2:
-                    self._color = XoColor('#' + encoded_color[1])
-            if self._mode == network.NM_802_11_MODE_INFRA:
-                sha_hash = hashlib.sha1()
-                data = self._name + hex(self._flags)
-                sha_hash.update(data)
-                digest = hash(sha_hash.digest())
-                index = digest % len(xocolor.colors)
-
-                self._color = XoColor('%s,%s' %
-                                      (xocolor.colors[index][0],
-                                       xocolor.colors[index][1]))
-        self._update()
-
-    def __get_active_ap_reply_cb(self, ap):
-        self._active = (ap == self._model.object_path)
-        self._update_state()
+    def __get_active_ap_reply_cb(self, ap_path):
+        self.__update_active_ap(ap_path)
 
     def __get_active_ap_error_cb(self, err):
-        logging.debug('Error getting the active access point: %s', err)
+        logging.error('Error getting the active access point: %s', err)
 
     def __get_device_caps_reply_cb(self, caps):
         self._device_caps = caps
 
     def __get_device_caps_error_cb(self, err):
-        logging.debug('Error getting the wireless device properties: %s', err)
+        logging.error('Error getting the wireless device properties: %s', err)
 
     def __get_device_state_reply_cb(self, state):
         self._device_state = state
         self._update()
 
     def __get_device_state_error_cb(self, err):
-        logging.debug('Error getting the device state: %s', err)
-
-    def __get_all_props_reply_cb(self, properties):
-        self._update_properties(properties)
-
-    def __get_all_props_error_cb(self, err):
-        logging.debug('Error getting the access point properties: %s', err)
+        logging.error('Error getting the device state: %s', err)
 
     def _update(self):
-        if network.find_connection(self._name) is not None:
-            self.props.badge_name = "emblem-favorite"
-            self._palette_icon.props.badge_name = "emblem-favorite"
-        elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-            self.props.badge_name = "emblem-locked"
-            self._palette_icon.props.badge_name = "emblem-locked"
-        else:
-            self.props.badge_name = None
-            self._palette_icon.props.badge_name = None
-
-        self._palette.props.primary_text = self._name
-
         self._update_state()
         self._update_color()
 
     def _update_state(self):
-        if self._active:
+        if self._active_ap is not None:
             state = self._device_state
         else:
             state = network.DEVICE_STATE_UNKNOWN
@@ -283,11 +256,8 @@ class AccessPointView(CanvasPulsingIcon):
         else:
             self.props.base_color = self._color
 
-        self._palette_icon.props.xo_color = self._color
-
     def _disconnect_activate_cb(self, item):
         pass
-
 
     def _add_ciphers_from_flags(self, flags, pairwise):
         ciphers = []
@@ -388,7 +358,7 @@ class AccessPointView(CanvasPulsingIcon):
 
         netmgr.ActivateConnection(network.SETTINGS_SERVICE, connection.path,
                                   self._device.object_path,
-                                  self._model.object_path,
+                                  "/",
                                   reply_handler=self.__activate_reply_cb,
                                   error_handler=self.__activate_error_cb)
 
@@ -396,7 +366,7 @@ class AccessPointView(CanvasPulsingIcon):
         logging.debug('Connection activated: %s', connection)
 
     def __activate_error_cb(self, err):
-        logging.debug('Failed to activate connection: %s', err)
+        logging.error('Failed to activate connection: %s', err)
 
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
@@ -407,12 +377,42 @@ class AccessPointView(CanvasPulsingIcon):
         keydialog.create(self._name, self._flags, self._wpa_flags,
                          self._rsn_flags, self._device_caps, response)
 
-    def disconnect(self):
-        self._bus.remove_signal_receiver(self.__ap_properties_changed_cb,
-                                         signal_name='PropertiesChanged',
-                                         path=self._model.object_path,
-                                         dbus_interface=_NM_ACCESSPOINT_IFACE)
+    def update_strength(self):
+        if self._active_ap is not None:
+            # display strength of AP that we are connected to
+            new_strength = self._active_ap.strength
+        else:
+            # display the strength of the strongest AP that makes up this
+            # network, also considering that there may be no APs
+            new_strength = max([0] + [ap.strength for ap in
+                                      self._access_points.values()])
 
+        if new_strength != self._strength:
+            self._strength = new_strength
+            self._update_state()
+
+    def add_ap(self, ap):
+        self._access_points[ap.model.object_path] = ap
+        self.update_strength()
+
+    def remove_ap(self, ap):
+        path = ap.model.object_path
+        if path not in self._access_points:
+            return
+        del self._access_points[path]
+        if self._active_ap == ap:
+            self._active_ap = None
+        self.update_strength()
+
+    def num_aps(self):
+        return len(self._access_points)
+
+    def find_ap(self, ap_path):
+        if ap_path not in self._access_points:
+            return None
+        return self._access_points[ap_path]
+
+    def disconnect(self):
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
@@ -421,6 +421,7 @@ class AccessPointView(CanvasPulsingIcon):
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_WIRELESS_IFACE)
+
 
 class ActivityView(hippo.CanvasBox):
     def __init__(self, model):
@@ -538,6 +539,7 @@ class ActivityView(hippo.CanvasBox):
 
 _AUTOSEARCH_TIMEOUT = 1000
 
+
 class MeshToolbar(gtk.Toolbar):
     __gtype_name__ = 'MeshToolbar'
 
@@ -606,6 +608,7 @@ class MeshToolbar(gtk.Toolbar):
         self.search_entry.activate()
         return False
 
+
 class DeviceObserver(object):
     def __init__(self, box, device):
         self._box = box
@@ -650,6 +653,7 @@ class DeviceObserver(object):
                                          path=self._device.object_path,
                                          dbus_interface=_NM_WIRELESS_IFACE)
 
+
 class NetworkManagerObserver(object):
     def __init__(self, box):
         self._box = box
@@ -693,10 +697,13 @@ class NetworkManagerObserver(object):
             state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
                 ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                found = False
                 if ap_o != '/':
-                    ap_view = self._box.access_points[ap_o]
-                    ap_view.create_keydialog(kwargs['response'])
-                else:
+                    for net in self._box.wireless_networks.values():
+                        if net.find_ap(ap_o) is not None:
+                            found = True
+                            net.create_keydialog(kwargs['response'])
+                if not found:
                     logging.error('Could not determine AP for'
                                   ' specific object %s' % conn_o)
 
@@ -727,6 +734,7 @@ class NetworkManagerObserver(object):
             observer.disconnect()
             del self._devices[device_o]
 
+
 class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
 
@@ -735,7 +743,7 @@ class MeshBox(gtk.VBox):
 
         gobject.GObject.__init__(self)
 
-        self.access_points = {}
+        self.wireless_networks = {}
 
         self._model = neighborhood.get_model()
         self._buddies = {}
@@ -863,35 +871,75 @@ class MeshBox(gtk.VBox):
         del self._activities[activity_model.get_id()]
         icon.destroy()
 
-    def add_access_point(self, device, ap):
-        icon = AccessPointView(device, ap)
-        self._layout.add(icon)
+    # add AP to its corresponding network icon on the desktop,
+    # creating one if it doesn't already exist
+    def _add_ap_to_network(self, ap):
+        hash = ap.network_hash()
+        if hash in self.wireless_networks:
+            self.wireless_networks[hash].add_ap(ap)
+        else:
+            # this is a new network
+            icon = WirelessNetworkView(ap)
+            self.wireless_networks[hash] = icon
+            self._layout.add(icon)
+            if hasattr(icon, 'set_filter'):
+                icon.set_filter(self._query)
 
-        if hasattr(icon, 'set_filter'):
-            icon.set_filter(self._query)
+    def _remove_net_if_empty(self, net, hash):
+        # remove a network if it has no APs left
+        if net.num_aps() != 0:
+            net.disconnect()
+            self._layout.remove(net)
+            del self.wireless_networks[hash]
 
-        self.access_points[ap.object_path] = icon
+    def _ap_props_changed_cb(self, ap, old_hash):
+        if old_hash is None: # new AP finished initializing
+            self._add_ap_to_network(ap)
+            return
+
+        hash = ap.network_hash()
+        if old_hash == hash:
+            # no change in network identity, so just update signal strengths
+            self.wireless_networks[hash].update_strength()
+            return
+
+        # properties change includes a change of the identity of the network
+        # that it is on. so create this as a new network.
+        self.wireless_networks[old_hash].remove_ap(ap)
+        self._remove_net_if_empty(wireless_networks[old_hash], old_hash)
+        self._add_ap_to_network(ap)
+
+    def add_access_point(self, device, ap_o):
+        ap = AccessPoint(device, ap_o)
+        ap.connect('props-changed', self._ap_props_changed_cb)
+        ap.initialize()
 
     def remove_access_point(self, ap_o):
-        if ap_o in self.access_points:
-            icon = self.access_points[ap_o]
-            icon.disconnect()
-            self._layout.remove(icon)
-            del self.access_points[ap_o]
-        else:
-            logging.error('Can not remove access point %s', ap_o)
+        # we don't keep an index of ap object path to network, but since
+        # we'll only ever have a handful of networks, just try them all...
+        for net in self.wireless_networks.values():
+            ap = net.find_ap(ap_o)
+            if not ap:
+                continue
+
+            ap.disconnect()
+            net.remove_ap(ap)
+            self._remove_net_if_empty(net, ap.network_hash())
+            return
+
+        logging.error('Can not remove access point %s', ap_o)
 
     def suspend(self):
         if not self._suspended:
             self._suspended = True
-            for ap in self.access_points.values():
-                ap.props.paused = True
+            for net in self.wireless_networks.values():
+                net.props.paused = True
 
     def resume(self):
         if self._suspended:
             self._suspended = False
-            for ap in self.access_points.values():
-                ap.props.paused = False
+            for net in self.wireless_networks.values():
+                net.props.paused = False
 
     def _toolbar_query_changed_cb(self, toolbar, query):
         self._query = query.lower()
