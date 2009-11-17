@@ -63,6 +63,8 @@ binary-install/sugar-session-$(pkgbranch)::
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
+comma = ,
+
 # Needed (always/often/sometimes) at runtime
 #  * python-wnck fallback unneeded since python-wnck 2.24.0-2: can be
 #    dropped after Squeeze+1
@@ -86,7 +88,7 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 # TODO: recommend (not suggest) activities and xkb when packaged
 session_xkb = python-xklavier
 session_nm = network-manager
-session_activities = $(patsubst %,sugar-%-activity,read write imageviewer browse jukebox pippy)
+session_activities = $(patsubst %,$(comma) sugar-%-activity,read write imageviewer browse jukebox pippy)
 emulator_exec = xserver-xephyr, x11-utils
 jarabe_initprofile = openssh-client
 jarabe_nm_wpa = wpasupplicant
