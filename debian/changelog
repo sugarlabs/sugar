@@ -9,7 +9,7 @@ sugar-0.86 (0.86.3-6) unstable; urgency=low
       meta packages (not only python-jarabe).
     + Declare session_activities more compactly.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 17 Nov 2009 15:00:13 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 17 Nov 2009 15:31:45 +0100
 
 sugar-0.86 (0.86.3-5) unstable; urgency=low
 
