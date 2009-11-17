@@ -126,6 +126,15 @@ CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(session_activities), $(session_xkb)
 CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
 CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = python-jarabe
 CDBS_REPLACES_python-jarabe-$(pkgbranch) = python-jarabe
+CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar-session
+CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar-session
+CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar-session
+CDBS_PROVIDES_sugar-emulator-$(pkgbranch) = sugar-emulator
+CDBS_CONFLICTS_sugar-emulator-$(pkgbranch) = sugar-emulator
+CDBS_REPLACES_sugar-emulator-$(pkgbranch) = sugar-emulator
+CDBS_PROVIDES_sugar-tools-$(pkgbranch) = sugar-tools
+CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar-tools
+CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar-tools
 
 # Provide virtual unversioned sugar package
 CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar
