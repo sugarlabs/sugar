@@ -1,3 +1,16 @@
+sugar-0.86 (0.86.3-6) unstable; urgency=low
+
+  * Fix and improve dependencies:
+    + Recommend (not depend on) x11-xserver-utils (used in
+      controlpanel).
+    + Fix replace and conflict with sugar from replacement packages (not
+      sucrose metapackage), and do it versioned.
+    + Fix provide/conflict with/replace virtual counterparts of all non-
+      meta packages (not only python-jarabe).
+    + Declare session_activities more compactly.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 17 Nov 2009 15:00:13 +0100
+
 sugar-0.86 (0.86.3-5) unstable; urgency=low
 
   * Update local CDBS snippets:
