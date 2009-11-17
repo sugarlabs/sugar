@@ -18,7 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-pkgbase = sugar
 pkgbranch = 0.86
 
 DEB_BUILDDIR = build
@@ -124,18 +123,37 @@ CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(jarabe_nm_wpa), $(jarabe
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(session_activities), $(session_xkb)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
-CDBS_PROVIDES_sucrose-$(pkgbranch) = $(pkgbase)
-CDBS_CONFLICTS_sucrose-$(pkgbranch) = $(pkgbase)
-CDBS_REPLACES_sucrose-$(pkgbranch) = $(pkgbase)
 CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
 CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = python-jarabe
 CDBS_REPLACES_python-jarabe-$(pkgbranch) = python-jarabe
 
-# sugar-xxx included in 0.84.6-1 - 0.86.3-4 replaced by sucrose-xxx:
-# can be dropped after Squeeze
-CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
-CDBS_CONFLICTS_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
-CDBS_REPLACES_sucrose-$(pkgbranch) = sugar-$(pkgbranch)
+# Provide virtual unversioned sugar package
+CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar
+
+# sugar until 0.82.9-5 (released with Lenny) split into
+# python-jarabe-xxx, sugar-session-xxx, sugar-emulator-xxx and
+# sugar-tools-xxx: can be dropped after Squeeze+1
+CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_REPLACES_python-jarabe-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_CONFLICTS_sugar-emulator-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_REPLACES_sugar-emulator-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
+
+# sugar-xxx 0.84.6-1 - 0.86.3-4 (not in any official Debian release)
+# split into python-jarabe-xxx, sugar-session-xxx, sugar-emulator-xxx
+# and sugar-tools-xxx: can be dropped after Squeeze
+CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_REPLACES_python-jarabe-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_CONFLICTS_sugar-emulator-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_REPLACES_sugar-emulator-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
+CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
 
 # Journal, now part of Jarabe, was separately packaged upstream < 0.84
 CDBS_CONFLICTS_python-jarabe-$(pkgbranch) += , sugar-journal-activity
