@@ -156,7 +156,6 @@ CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
 # sugar-xxx 0.84.6-1 - 0.86.3-4 (not in any official Debian release)
 # split into python-jarabe-xxx, sugar-session-xxx, sugar-emulator-xxx
 # and sugar-tools-xxx: can be dropped after Squeeze
-CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
 CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
 CDBS_REPLACES_python-jarabe-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
 CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar-$(pkgbranch) (<= 0.86.3-4)
