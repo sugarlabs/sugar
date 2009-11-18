@@ -17,8 +17,8 @@
 
 import gobject
 import os
-import cjson
 import gconf
+import simplejson
 
 from telepathy.interfaces import CHANNEL_TYPE_TEXT
 
@@ -98,7 +98,7 @@ class Owner(gobject.GObject):
             bundle_id = 'org.laptop.Chat'
         else:
             bundle_id = 'org.laptop.VideoChat'
-        tp_channel = cjson.encode([bus_name, connection, channel])
+        tp_channel = simplejson.dumps([bus_name, connection, channel])
         self._invites.add_private_invite(tp_channel, bundle_id)
 
     def _activity_disappeared_cb(self, pservice, activity):

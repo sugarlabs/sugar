@@ -18,7 +18,7 @@ import os
 import tempfile
 import shutil
 
-import cjson
+import json
 import dbus
 
 from sugar.bundle.bundle import Bundle, MalformedBundleException
@@ -70,7 +70,12 @@ class JournalEntryBundle(Bundle):
         if not os.path.exists(metadata_path):
             raise MalformedBundleException(
                     'Bundle must contain the file "_metadata.json"')
-        return cjson.decode(open(metadata_path, 'r').read())
+        f = open(metadata_path, 'r')
+        try:
+            json_data = f.read()
+        finally:
+            f.close()
+        return json.read(json_data)
 
     def _read_preview(self, uid, bundle_dir):
         preview_path = os.path.join(bundle_dir, 'preview', uid)
