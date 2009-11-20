@@ -84,8 +84,15 @@ def get_icon_name(metadata):
 def get_date(metadata):
     """ Convert from a string in iso format to a more human-like format. """
     if metadata.has_key('timestamp'):
-        timestamp = float(metadata['timestamp'])
-        return util.timestamp_to_elapsed_string(timestamp)
+        try:
+            timestamp = float(metadata['timestamp'])
+        except ValueError:
+            logging.warning('Got a ValueError while getting timestamp.')
+            timestamp = None
+        if timestamp is None:
+            return _('No date')
+        else:
+            return util.timestamp_to_elapsed_string(timestamp)
     elif metadata.has_key('mtime'):
         ti = time.strptime(metadata['mtime'], "%Y-%m-%dT%H:%M:%S")
         return util.timestamp_to_elapsed_string(time.mktime(ti))
