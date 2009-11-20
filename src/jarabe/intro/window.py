@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from ctypes import cdll
 import os
 import logging
 from gettext import gettext as _
@@ -32,6 +33,10 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.intro import colorpicker
 
 _BACKGROUND_COLOR = style.COLOR_WHITE
+
+def sync():
+    libc = cdll.LoadLibrary("libc.so.6") 
+    libc.sync()
 
 def create_profile(name, color=None, pixbuf=None):
     if not pixbuf:
@@ -256,6 +261,7 @@ class IntroWindow(gtk.Window):
 
     def _create_profile_cb(self, name, color):
         create_profile(name, color)
+        sync()
         gtk.main_quit()
 
         return False
