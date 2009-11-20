@@ -1,3 +1,4 @@
+sync_git_head.patch
 danish_l10n.patch
 empy_from_system.patch
 #fix_tz_config_path.patch
