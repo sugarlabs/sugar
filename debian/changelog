@@ -1,8 +1,13 @@
-sugar-0.88 (0.86.3-1) UNRELEASED; urgency=low
+sugar-0.88 (0.86.3-1) experimental; urgency=low
 
   * Switch packaging to branch 0.88.
+  * Add and apply patch to sync with upstream git head.
+  * Update local CDBS snippet upstream-tarball.mk to no longer
+    recompress bzip-compressed tarballs in get-orig-source rule.
+  * Release for experimental, as not all parts of 0.88 branch are
+    packaged yet.
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Nov 2009 19:41:53 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 20 Nov 2009 20:09:28 +0100
 
 sugar-0.86 (0.86.3-6) unstable; urgency=low
 
