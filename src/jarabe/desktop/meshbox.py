@@ -887,7 +887,7 @@ class MeshBox(gtk.VBox):
  
     def _remove_net_if_empty(self, net, hash):
         # remove a network if it has no APs left
-        if net.num_aps() != 0:
+        if net.num_aps() == 0:
             net.disconnect()
             self._layout.remove(net)
             del self.wireless_networks[hash]
@@ -906,7 +906,7 @@ class MeshBox(gtk.VBox):
         # properties change includes a change of the identity of the network
         # that it is on. so create this as a new network.
         self.wireless_networks[old_hash].remove_ap(ap)
-        self._remove_net_if_empty(wireless_networks[old_hash], old_hash)
+        self._remove_net_if_empty(self.wireless_networks[old_hash], old_hash)
         self._add_ap_to_network(ap)
 
     def add_access_point(self, device, ap_o):
