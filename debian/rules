@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 # 02111-1307 USA.
 
-pkgbranch = 0.86
+pkgbranch = 0.88
 
 DEB_BUILDDIR = build
 DEB_PYTHON_SYSTEM = pycentral
