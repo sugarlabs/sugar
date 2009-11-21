@@ -140,6 +140,8 @@ CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar-tools
 
 # Provide virtual unversioned sugar package
 CDBS_PROVIDES_sucrose-$(pkgbranch) = sugar
+CDBS_CONFLICTS_sucrose-$(pkgbranch) = sugar
+CDBS_REPLACES_sucrose-$(pkgbranch) = sugar
 
 # sugar until 0.82.9-5 (released with Lenny) split into
 # python-jarabe-0.86 and sugar-{session,emulator,tools}-0.86: can be
