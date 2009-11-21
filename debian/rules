@@ -66,8 +66,9 @@ CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, li
 comma = ,
 
 # Needed (always/often/sometimes) at runtime
-#  * python-wnck fallback unneeded since python-wnck 2.24.0-2: can be
-#    dropped after Squeeze+1
+#  * python-wnck needed by python-jarabe (several places) and commands
+#    sugar-ui-check and sugar-session. Fallback unneeded since
+#    python-wnck 2.24.0-2: can be dropped after Squeeze+1
 #  * python-gconf fallback unneeded since python-gconf 2.22.3-3: can be
 #    dropped after Squeeze+1
 #  * python-gobject versioning needed for GIO bindings
