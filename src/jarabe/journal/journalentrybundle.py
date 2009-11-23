@@ -18,7 +18,7 @@ import os
 import tempfile
 import shutil
 
-import json
+import simplejson
 import dbus
 
 from sugar.bundle.bundle import Bundle, MalformedBundleException
@@ -75,7 +75,7 @@ class JournalEntryBundle(Bundle):
             json_data = f.read()
         finally:
             f.close()
-        return json.read(json_data)
+        return simplejson.loads(json_data)
 
     def _read_preview(self, uid, bundle_dir):
         preview_path = os.path.join(bundle_dir, 'preview', uid)

@@ -16,7 +16,7 @@
 
 import logging
 
-import json
+import simplejson
 import gobject
 import gtk
 
@@ -144,9 +144,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         self._cached_row.append(int(metadata.get('progress', 100)))
 
         if metadata.get('buddies', ''):
-            # json cannot read unicode strings
-            buddies_str = metadata['buddies'].encode('utf8')
-            buddies = json.read(buddies_str).values()
+            buddies = simplejson.loads(metadata['buddies']).values()
         else:
             buddies = []
 
