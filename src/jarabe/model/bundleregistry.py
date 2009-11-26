@@ -329,7 +329,7 @@ class BundleRegistry(gobject.GObject):
                 return True
         return False
 
-    def install(self, bundle):
+    def install(self, bundle, uid=None):
         activities_path = env.get_user_activities_path()
 
         if self.is_pre_installed(bundle.get_bundle_id()) or \
@@ -345,8 +345,11 @@ class BundleRegistry(gobject.GObject):
                 self.uninstall(installed_bundle, force=True)
 
         install_dir = env.get_user_activities_path()
-        install_path = bundle.install(install_dir)
-        
+        if isinstance(bundle, JournalEntryBundle):
+            install_path = bundle.install(install_dir, uid)
+        else:
+            install_path = bundle.install(install_dir)
+
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
         if isinstance(bundle, ContentBundle) or \

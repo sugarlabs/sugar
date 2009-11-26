@@ -279,15 +279,23 @@ class JournalActivity(Window):
         if registry.is_installed(bundle):
             logging.debug('_check_for_bundle bundle already installed')
             return
+
+        if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
+            # JournalEntryBundle code takes over the datastore entry and
+            # transforms it into the journal entry from the bundle -- we have
+            # nothing more to do.
+            try:
+                registry.install(bundle, metadata['uid'])
+            except (ZipExtractException, RegistrationException):
+                logging.exception('Could not install bundle %s',
+                        bundle.get_path())
+            return
+
         try:
             registry.install(bundle)
         except (ZipExtractException, RegistrationException):
             logging.warning('Could not install bundle %s:\n%s' % \
                             (bundle.get_path(), traceback.format_exc()))
-            return
-
-        if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
-            model.delete(object_id)
             return
 
         metadata['bundle_id'] = bundle.get_bundle_id()
