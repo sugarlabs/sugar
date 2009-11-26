@@ -40,24 +40,24 @@ class JournalEntryBundle(Bundle):
     def __init__(self, path):
         Bundle.__init__(self, path)
 
-    def install(self, install_path):
+    def install(self, install_path, uid=''):
         if os.environ.has_key('SUGAR_ACTIVITY_ROOT'):
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
         else:
             install_dir = tempfile.gettempdir()
         bundle_dir = os.path.join(install_dir, self._zip_root_dir)
-        uid = self._zip_root_dir
+        temp_uid = self._zip_root_dir
         self._unzip(install_dir)
         try:
             metadata = self._read_metadata(bundle_dir)
-            metadata['uid'] = ''
+            metadata['uid'] = uid
 
-            preview = self._read_preview(uid, bundle_dir)
+            preview = self._read_preview(temp_uid, bundle_dir)
             if preview is not None:
                 metadata['preview'] = dbus.ByteArray(preview)
 
-            file_path = os.path.join(bundle_dir, uid)
+            file_path = os.path.join(bundle_dir, temp_uid)
             model.write(metadata, file_path)
         finally:
             shutil.rmtree(bundle_dir, ignore_errors=True)
