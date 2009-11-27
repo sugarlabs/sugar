@@ -130,9 +130,18 @@ def setup_file_transfer_cb():
     from jarabe.model import filetransfer
     filetransfer.init()
 
+def set_fonts():
+    client = gconf.client_get_default()
+    face = client.get_string('/desktop/sugar/font/default_face')
+    size = client.get_float('/desktop/sugar/font/default_size')
+    settings = gtk.settings_get_default()
+    settings.set_property("gtk-font-name", "%s %f" % (face, size))
+
 def main():
     cleanup_logs()
     logger.start('shell')
+
+    set_fonts()
 
     intro.check_profile()
 
