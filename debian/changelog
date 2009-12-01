@@ -1,4 +1,4 @@
-sugar-0.88 (0.86.3-2) UNRELEASED; urgency=low
+sugar-0.88 (0.86.3-2) experimental; urgency=low
 
   * Drop noop conflicts/replaces, and adjust notes on when others can be
     dropped.
@@ -8,7 +8,7 @@ sugar-0.88 (0.86.3-2) UNRELEASED; urgency=low
   * Fix short and long descriptions for sugar-emulator. Closes:
     bug#558903, thanks to Rhonda.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 01 Dec 2009 01:19:35 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 01 Dec 2009 02:06:29 +0100
 
 sugar-0.88 (0.86.3-1) experimental; urgency=low
 
