@@ -1,3 +1,15 @@
+sugar-0.88 (0.86.3-2) UNRELEASED; urgency=low
+
+  * Drop noop conflicts/replaces, and adjust notes on when others can be
+    dropped.
+  * Have versioned sucrose conflict/replace (not only provide) virtual
+    unversioned sugar.
+  * Add note on need for python-wnck.
+  * Fix short and long descriptions for sugar-emulator. Closes:
+    bug#558903, thanks to Rhonda.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 01 Dec 2009 01:19:35 +0100
+
 sugar-0.88 (0.86.3-1) experimental; urgency=low
 
   * Switch packaging to branch 0.88.
