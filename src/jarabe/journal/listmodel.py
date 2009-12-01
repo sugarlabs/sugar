@@ -16,7 +16,7 @@
 
 import logging
 
-import cjson
+import simplejson
 import gobject
 import gtk
 
@@ -144,7 +144,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         self._cached_row.append(int(metadata.get('progress', 100)))
 
         if metadata.get('buddies', ''):
-            buddies = cjson.decode(metadata['buddies']).values()
+            buddies = simplejson.loads(metadata['buddies']).values()
         else:
             buddies = []
 

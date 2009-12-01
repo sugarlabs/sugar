@@ -69,7 +69,7 @@ class ZoomToolbar(gtk.Toolbar):
         if not button.get_active():
             return
 
-        shell.get_model().zoom_level = level
+        shell.get_model().set_zoom_level(level)
 
     def __zoom_level_changed_cb(self, **kwargs):
         self._set_zoom_level(kwargs['new_level'])

@@ -146,16 +146,16 @@ class KeyHandler(object):
         active_activity.get_window().close()
 
     def handle_zoom_mesh(self, event_time):
-        shell.get_model().zoom_level = ShellModel.ZOOM_MESH
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH, event_time)
 
     def handle_zoom_group(self, event_time):
-        shell.get_model().zoom_level = ShellModel.ZOOM_GROUP
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_GROUP, event_time)
 
     def handle_zoom_home(self, event_time):
-        shell.get_model().zoom_level = ShellModel.ZOOM_HOME
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_HOME, event_time)
 
     def handle_zoom_activity(self, event_time):
-        shell.get_model().zoom_level = ShellModel.ZOOM_ACTIVITY
+        shell.get_model().set_zoom_level(ShellModel.ZOOM_ACTIVITY, event_time)
 
     def handle_volume_max(self, event_time):
         self._change_volume(value=_VOLUME_MAX)
