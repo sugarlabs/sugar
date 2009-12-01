@@ -349,7 +349,7 @@ class ShellModel(gobject.GObject):
             self.zoom_level_changed.send(self, old_level=old_level,
                                          new_level=new_level)
 
-    def _set_zoom_level(self, new_level):
+    def set_zoom_level(self, new_level, x_event_time=0):
         old_level = self.zoom_level
         if old_level == new_level:
             return
@@ -370,10 +370,17 @@ class ShellModel(gobject.GObject):
         show_desktop = new_level is not self.ZOOM_ACTIVITY
         self._screen.toggle_showing_desktop(show_desktop)
 
+        if new_level is self.ZOOM_ACTIVITY:
+            # activate the window, in case it was iconified
+            # (e.g. during sugar launch, the Journal starts in this state)
+            window = self._active_activity.get_window()
+            if window:
+                window.activate(x_event_time or gtk.get_current_event_time())
+
     def _get_zoom_level(self):
         return self._zoom_level
 
-    zoom_level = property(_get_zoom_level, _set_zoom_level)
+    zoom_level = property(_get_zoom_level)
 
     def _get_activities_with_window(self):
         ret = []

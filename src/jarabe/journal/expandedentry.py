@@ -23,7 +23,7 @@ import hippo
 import cairo
 import gobject
 import gtk
-import cjson
+import simplejson
 
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
@@ -303,7 +303,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         if self._metadata.has_key('buddies') and \
                 self._metadata['buddies']:
-            buddies = cjson.decode(self._metadata['buddies']).values()
+            buddies = simplejson.loads(self._metadata['buddies']).values()
             vbox.append(BuddyList(buddies))
             return vbox
         else:
