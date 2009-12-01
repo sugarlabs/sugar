@@ -206,11 +206,7 @@ class BaseCollapsedEntry(hippo.CanvasBox):
                 int(self.metadata['progress']) < 100
 
     def get_keep(self):
-        try:
-            keep = int(self.metadata.get('keep', 0))
-        except ValueError:
-            logging.warning('Got a ValueError while getting keep metadata.')
-            keep =  0
+        keep = int(self.metadata.get('keep', 0))
         return keep == 1
 
     def __keep_icon_button_release_event_cb(self, button, event):
