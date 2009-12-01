@@ -22,7 +22,7 @@ import sys
 
 import gobject
 import gio
-import cjson
+import simplejson
 
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
@@ -105,7 +105,7 @@ class BundleRegistry(gobject.GObject):
     def _load_favorites(self):
         favorites_path = env.get_profile_path('favorite_activities')
         if os.path.exists(favorites_path):
-            favorites_data = cjson.decode(open(favorites_path).read())
+            favorites_data = simplejson.load(open(favorites_path))
 
             favorite_bundles = favorites_data['favorites']
             if not isinstance(favorite_bundles, dict):
@@ -305,7 +305,7 @@ class BundleRegistry(gobject.GObject):
         path = env.get_profile_path('favorite_activities')
         favorites_data = {'defaults-mtime': self._last_defaults_mtime,
                           'favorites': self._favorite_bundles}
-        open(path, 'w').write(cjson.encode(favorites_data))
+        simplejson.dump(favorites_data, open(path, 'w'), indent=1)
 
     def is_pre_installed(self, bundle_id):
         installed = self.get_bundle(bundle_id)

@@ -20,7 +20,7 @@ from gettext import gettext as _
 import gobject
 import gtk
 import hippo
-import cjson
+import simplejson
 
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
@@ -180,7 +180,7 @@ class BaseCollapsedEntry(hippo.CanvasBox):
     def _decode_buddies(self):
         if self.metadata.has_key('buddies') and \
            self.metadata['buddies']:
-            buddies = cjson.decode(self.metadata['buddies']).values()
+            buddies = simplejson.loads(self._metadata['buddies']).values()
         else:
             buddies = []
         return buddies
