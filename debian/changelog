@@ -1,3 +1,11 @@
+sugar-0.88 (0.87.1-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Drop patch syncing against upstream Git: obsoleted by new upstream
+    release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 01 Dec 2009 15:43:39 +0100
+
 sugar-0.88 (0.86.3-2) experimental; urgency=low
 
   * Drop noop conflicts/replaces, and adjust notes on when others can be
