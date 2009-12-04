@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2009 One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,10 +63,12 @@ class CanceledKeyRequestError(dbus.DBusException):
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 class KeyDialog(gtk.Dialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
+                 response):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
         self.set_title("Wireless Key Required")
 
+        self._settings = settings
         self._response = response
         self._entry = None
         self._ssid = ssid
@@ -110,9 +113,10 @@ WEP_HEX = 2
 WEP_ASCII = 3
 
 class WEPKeyDialog(KeyDialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
+                 response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
-                           dev_caps, response)
+                           dev_caps, settings, response)
 
         # WEP key type
         self.key_store = gtk.ListStore(str, int)
@@ -180,7 +184,7 @@ class WEPKeyDialog(KeyDialog):
 
     def create_security(self):
         (key, auth_alg) = self._get_security()
-        secrets = Secrets()
+        secrets = Secrets(self._settings)
         secrets.wep_key = key
         secrets.auth_alg = auth_alg
         return secrets
@@ -206,9 +210,10 @@ class WEPKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
 
 class WPAKeyDialog(KeyDialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
+                 response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
-                           dev_caps, response)
+                           dev_caps, settings, response)
         self.add_key_entry()
 
         self.store = gtk.ListStore(str)
@@ -258,7 +263,7 @@ class WPAKeyDialog(KeyDialog):
         print "Key: %s" % key
 
     def create_security(self):
-        secrets = Secrets()
+        secrets = Secrets(self._settings)
         secrets.psk = self._get_security()
         return secrets
 
@@ -276,14 +281,14 @@ class WPAKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
         return False
 
-def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
+def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
     if wpa_flags == network.NM_802_11_AP_SEC_NONE and \
             rsn_flags == network.NM_802_11_AP_SEC_NONE:
         key_dialog = WEPKeyDialog(ssid, flags, wpa_flags, rsn_flags,
-                                  dev_caps, response)
+                                  dev_caps, settings, response)
     else:
         key_dialog = WPAKeyDialog(ssid, flags, wpa_flags, rsn_flags,
-                                  dev_caps, response)
+                                  dev_caps, settings, response)
 
     key_dialog.connect("response", _key_dialog_response_cb)
     key_dialog.connect("destroy", _key_dialog_destroy_cb)

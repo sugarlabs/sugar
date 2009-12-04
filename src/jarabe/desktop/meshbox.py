@@ -1,5 +1,6 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2009 One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -373,9 +374,9 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._update_state()
         self._update_color()
 
-    def create_keydialog(self, response):
+    def create_keydialog(self, settings, response):
         keydialog.create(self._name, self._flags, self._wpa_flags,
-                         self._rsn_flags, self._device_caps, response)
+                         self._rsn_flags, self._device_caps, settings, response)
 
     def update_strength(self):
         if self._active_ap is not None:
@@ -702,7 +703,8 @@ class NetworkManagerObserver(object):
                     for net in self._box.wireless_networks.values():
                         if net.find_ap(ap_o) is not None:
                             found = True
-                            net.create_keydialog(kwargs['response'])
+                            settings = kwargs['connection'].get_settings()
+                            net.create_keydialog(settings, kwargs['response'])
                 if not found:
                     logging.error('Could not determine AP for'
                                   ' specific object %s' % conn_o)
