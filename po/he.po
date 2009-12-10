@@ -762,3 +762,18 @@ msgstr ""
 #: ../src/journal/modalalert.py:75
 msgid "Show Journal"
 msgstr ""
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "יצירת רשת אלחוטית חדשה"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+#, fuzzy
+msgid "%s's network %s"
+msgstr "הרשת של %s"

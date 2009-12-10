@@ -280,6 +280,7 @@ msgstr ""
 "-g κλειδί που παίρνει την τρέχουσα τιμή του κλειδιού \n"
 "-s κλειδί που καθορίζει την τρέχουσα τιμή του κλειδιού \n"
 "  "
+
 #: ../src/controlpanel/cmd.py:45
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το sugar\n"
@@ -775,3 +776,17 @@ msgstr "%(free_space)d MB ελεύθερα"
 
 #~ msgid ", "
 #~ msgstr ", "
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Δημιουργία νέου ασύρματου δικτύου"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Απομάκρυνση"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "%s's δίκτυο %s"

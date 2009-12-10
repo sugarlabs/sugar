@@ -897,3 +897,18 @@ msgstr "ජර්නලය පෙන්වන්න"
 
 #~ msgid "OK"
 #~ msgstr "හරි"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "නව රැහැන් රහිත ජාලයක් සාදන්න"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "නිෂ්ප්‍රභ කරනවා"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+#, fuzzy
+msgid "%s's network %s"
+msgstr "%sගේ ජාලය"

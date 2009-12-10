@@ -1108,3 +1108,17 @@ msgstr "Se källa: %r"
 
 #~ msgid "Control Panel"
 #~ msgstr "Kontrollpanel"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Skapa ett nytt trådlöst nätverk"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Avvisa"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "%ss nätverk %s"

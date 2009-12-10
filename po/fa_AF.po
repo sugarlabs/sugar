@@ -417,3 +417,18 @@ msgstr "در مورد این XO"
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
 msgstr "در دسترس نیست"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "شبکه بی سیم جدید ایجاد کن"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "مرخص کردن"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+#, fuzzy
+msgid "%s's network %s"
+msgstr "شبکه"

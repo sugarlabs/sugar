@@ -1315,3 +1315,17 @@ msgstr "Quelltext betrachten: %r"
 # have a good mapping
 #~ msgid ", "
 #~ msgstr ", "
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Neues Funknetzwerk erstellen"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Verwerfen"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "%ss Netzwerk %s"

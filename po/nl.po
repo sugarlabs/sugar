@@ -1162,3 +1162,17 @@ msgstr "Bron weergeven: %r"
 #, python-format
 #~ msgid "%d years"
 #~ msgstr "%d jaren"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Nieuw draadloos netwerk aanmaken"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Wegdoen"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "%s's netwerk %s"

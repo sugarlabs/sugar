@@ -418,3 +418,19 @@ msgstr ""
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
 msgstr ""
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Создать новую беспроводную сеть"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+#, fuzzy
+msgid "Dismiss"
+msgstr "Расформировать"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+#, fuzzy
+msgid "%s's network %s"
+msgstr "Сеть %s"

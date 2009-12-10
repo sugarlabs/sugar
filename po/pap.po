@@ -533,3 +533,17 @@ msgstr ""
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr ""
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr ""

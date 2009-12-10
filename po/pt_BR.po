@@ -436,3 +436,17 @@ msgstr "Não disponível"
 #: ../shell/view/home/MeshBox.py:300
 msgid "Join"
 msgstr "Juntar-se"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Criar nova rede wireless"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr ""

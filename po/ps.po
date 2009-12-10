@@ -422,3 +422,18 @@ msgstr ""
 #: ../shell/view/home/HomeBox.py:222
 msgid "Not available"
 msgstr ""
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "نوی بېسیمه جال جوړول"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "لېرې کول"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+#, fuzzy
+msgid "%s's network %s"
+msgstr "د جال"

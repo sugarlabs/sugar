@@ -1265,3 +1265,17 @@ msgstr "ソースを表示: %r"
 #, fuzzy
 #~ msgid ", "
 #~ msgstr "、"
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "無線ネットワークを作成"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "閉じる"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "%s のネットワーク %s"

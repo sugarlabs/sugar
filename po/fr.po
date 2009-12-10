@@ -1322,3 +1322,17 @@ msgstr "Afficher le code source : %r"
 
 #~ msgid ", "
 #~ msgstr ", "
+
+#: ../extensions/deviceicon/network.py:114
+msgid "Create new wireless network"
+msgstr "Créer un nouveau réseau sans fil"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:875
+msgid "Dismiss"
+msgstr "Refuser"
+
+#: ../extensions/deviceicon/network.py:415
+#, python-format
+msgid "%s's network %s"
+msgstr "Réseau %s %s"
