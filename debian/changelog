@@ -1,3 +1,10 @@
+sugar-0.88 (0.87.1-2) unstable; urgency=low
+
+  * Have python-jarabe depend on sugar-presence-service. Closes:
+    bug#560292, thanks to Fabian Greffrath.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Thu, 10 Dec 2009 13:19:03 +0100
+
 sugar-0.88 (0.87.1-1) unstable; urgency=low
 
   * New upstream development release.
