@@ -748,11 +748,6 @@ msgstr "Accepter"
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:873
-msgid "Dismiss"
-msgstr "Refuser"
-
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"

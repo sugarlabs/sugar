@@ -1215,11 +1215,6 @@ msgstr "Салгах"
 #~ msgid ", "
 #~ msgstr ","
 
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:873
-msgid "Dismiss"
-msgstr ""
-
 #: ../src/jarabe/journal/palettes.py:107
 msgid "View Details"
 msgstr ""
