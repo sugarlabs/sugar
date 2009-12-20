@@ -13,6 +13,17 @@
       </locale>
     </schema>
     <schema>
+      <key>/schemas/desktop/sugar/user/default_nick</key>
+      <applyto>/desktop/sugar/user/default_nick</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>system</default>
+      <locale name="C">
+        <short>Default nick</short>
+        <long>"disabled" to ask nick on initialization; "system" to reuse UNIX account long name.</long>
+      </locale>
+    </schema>
+    <schema>
       <key>/schemas/desktop/sugar/user/color</key>
       <applyto>/desktop/sugar/user/color</applyto>
       <owner>sugar</owner>
