@@ -21,6 +21,7 @@ import logging
 import hashlib
 import socket
 import struct
+import re
 
 import gtk
 import gobject
@@ -409,10 +410,27 @@ class WirelessDeviceView(ToolButton):
                     break
 
     def __create_connection_cb(self, palette, data=None):
+        """Create an 802.11 IBSS network.
+
+        The user's color is encoded at the end of the network name. The network
+        name is truncated so that it does not exceed the 32 byte SSID limit.
+        """
         client = gconf.client_get_default()
-        nick = client.get_string('/desktop/sugar/user/nick')
+        nick = client.get_string('/desktop/sugar/user/nick').decode('utf-8')
         color = client.get_string('/desktop/sugar/user/color')
-        connection_name = _('%s\'s network %s') % (nick, color)
+        color_suffix = ' %s' % color
+
+        format = _('%s\'s network').encode('utf-8')
+        extra_length = (len(format) - len('%s')) + len(color_suffix)
+        name_limit = 32 - extra_length
+
+        # truncate the nick and use a regex to drop any partial characters
+        # at the end
+        nick = nick.encode('utf-8')[:name_limit]
+        nick = re.sub("([\xf6-\xf7][\x80-\xbf]{0,2}|[\xe0-\xef][\x80-\xbf]{0,1}|[\xc0-\xdf])$", '', nick)
+
+        connection_name = format % nick
+        connection_name += color_suffix
 
         connection = network.find_connection(connection_name)
         if connection is None:
