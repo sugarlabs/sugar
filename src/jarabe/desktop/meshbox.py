@@ -86,11 +86,12 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._connection = None
         self._color = None
 
-        if self._mode == network.NM_802_11_MODE_ADHOC:
+        if self._mode == network.NM_802_11_MODE_ADHOC \
+                and self._name_encodes_colors():
             encoded_color = self._name.split("#", 1)
             if len(encoded_color) == 2:
                 self._color = xocolor.XoColor('#' + encoded_color[1])
-        if self._mode == network.NM_802_11_MODE_INFRA:
+        else:
             sh = sha.new()
             data = self._name + hex(self._flags)
             sh.update(data)
@@ -141,6 +142,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                       signal_name='PropertiesChanged',
                                       path=self._device.object_path,
                                       dbus_interface=_NM_WIRELESS_IFACE)
+
+    def _name_encodes_colors(self):
+        """Match #XXXXXX,#YYYYYY at the end of the network name"""
+        return self._name[-7] == '#' and self._name[-8] == ',' \
+            and self._name[-15] == '#'
 
     def _create_palette(self):
         icon_name = get_icon_state(_ICON_NAME, self._strength)

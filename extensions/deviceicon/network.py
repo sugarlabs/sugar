@@ -309,6 +309,11 @@ class WirelessDeviceView(ToolButton):
     def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
 
+    def _name_encodes_colors(self):
+        """Match #XXXXXX,#YYYYYY at the end of the network name"""
+        return self._name[-7] == '#' and self._name[-8] == ',' \
+            and self._name[-15] == '#'
+
     def _update_properties(self, properties):
         if 'Mode' in properties:
             self._mode = properties['Mode']
@@ -324,11 +329,12 @@ class WirelessDeviceView(ToolButton):
             self._frequency = properties['Frequency']
 
         if self._color == None:
-            if self._mode == network.NM_802_11_MODE_ADHOC:
+            if self._mode == network.NM_802_11_MODE_ADHOC \
+                    and self._name_encodes_colors():
                 encoded_color = self._name.split("#", 1)
                 if len(encoded_color) == 2:
                     self._color = xocolor.XoColor('#' + encoded_color[1])
-            if self._mode == network.NM_802_11_MODE_INFRA:
+            else:
                 sh = sha.new()
                 data = self._name + hex(self._flags)
                 sh.update(data)
