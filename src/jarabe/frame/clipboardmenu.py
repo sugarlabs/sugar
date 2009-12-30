@@ -29,6 +29,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 from sugar import mime
+from sugar import env
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
@@ -194,7 +195,8 @@ class ClipboardMenu(Palette):
         jobject.destroy()
 
     def _write_to_temp_file(self, data):
-        f, file_path = tempfile.mkstemp()
+        tmp_dir = os.path.join(env.get_profile_path(), 'data')
+        f, file_path = tempfile.mkstemp(dir=tmp_dir)
         try:
             os.write(f, data)
         finally:

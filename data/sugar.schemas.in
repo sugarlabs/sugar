@@ -13,6 +13,17 @@
       </locale>
     </schema>
     <schema>
+      <key>/schemas/desktop/sugar/user/default_nick</key>
+      <applyto>/desktop/sugar/user/default_nick</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>system</default>
+      <locale name="C">
+        <short>Default nick</short>
+        <long>"disabled" to ask nick on initialization; "system" to reuse UNIX account long name.</long>
+      </locale>
+    </schema>
+    <schema>
       <key>/schemas/desktop/sugar/user/color</key>
       <applyto>/desktop/sugar/user/color</applyto>
       <owner>sugar</owner>
@@ -213,6 +224,29 @@
       <locale name="C">
         <short>Keyboard model</short>
         <long>The keyboard model to be used</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/font/default_face</key>
+      <applyto>/desktop/sugar/font/default_face</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>Sans Serif</default>
+      <locale name="C">
+        <short>Default font face</short>
+        <long>Font face that is used throughout the desktop.</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/font/default_size</key>
+      <applyto>/desktop/sugar/font/default_size</applyto>
+      <owner>sugar</owner>
+      <type>float</type>
+      <default>10</default>
+      <locale name="C">
+        <short>Default font size</short>
+        <long>Font size that is used throughout the desktop.</long>
       </locale>
     </schema>
 
