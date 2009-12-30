@@ -23,7 +23,6 @@ Files:	bin/sugar-activity
 	src/jarabe/desktop/groupbox.py
 	src/jarabe/desktop/homewindow.py
 	src/jarabe/desktop/__init__.py
-	src/jarabe/desktop/keydialog.py
 	src/jarabe/desktop/myicon.py
 	src/jarabe/desktop/snowflakelayout.py
 	src/jarabe/desktop/spreadlayout.py
@@ -57,6 +56,7 @@ License: GPL-2+
 Files: bin/sugar-session
 	src/jarabe/desktop/favoritesview.py
 	src/jarabe/desktop/grid.py
+	src/jarabe/desktop/keydialog.py
 	src/jarabe/frame/activitiestray.py
 	src/jarabe/frame/clipboardicon.py
 	src/jarabe/journal/journalactivity.py
