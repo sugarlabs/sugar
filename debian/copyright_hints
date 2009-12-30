@@ -187,7 +187,6 @@ Files: extensions/cpsection/network/__init__.py
 	src/jarabe/desktop/friendview.py
 	src/jarabe/desktop/groupbox.py
 	src/jarabe/desktop/homewindow.py
-	src/jarabe/desktop/keydialog.py
 	src/jarabe/desktop/myicon.py
 	src/jarabe/desktop/snowflakelayout.py
 	src/jarabe/frame/__init__.py
@@ -397,14 +396,20 @@ Copyright: 2006-2007, Red Hat, Inc
 	2009, Aleksey Lim
 License: GPL-2+
 
+Files: src/jarabe/desktop/meshbox.py
+Copyright: 2006-2007, Red Hat, Inc
+	2009, One Laptop per Child
+	2009, Tomeu Vizoso, Simon Schampijer
+License: GPL-2+
+
+Files: src/jarabe/desktop/keydialog.py
+Copyright: 2006-2007, Red Hat, Inc
+	2009, One Laptop per Child
+License: GPL-2+
+
 Files: src/jarabe/frame/zoomtoolbar.py
 Copyright: 2006-2007, Red Hat, Inc
 	2009, Simon Schampijer
-License: GPL-2+
-
-Files: src/jarabe/desktop/meshbox.py
-Copyright: 2006-2007, Red Hat, Inc
-	2009, Tomeu Vizoso, Simon Schampijer
 License: GPL-2+
 
 Files: src/jarabe/model/shell.py
@@ -456,6 +461,7 @@ License: GPL-2+
 
 Files: src/jarabe/model/network.py
 Copyright: 2008, Red Hat, Inc
+	2009, One Laptop per Child
 	2009, Tomeu Vizoso, Simon Schampijer
 License: GPL-2+
 

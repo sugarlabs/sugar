@@ -1,3 +1,14 @@
+sugar-0.88 (0.87.2-1) unstable; urgency=low
+
+  * New upstream development release.
+  * Use bzip2-compressed tarballs in gbp.conf.
+  * Fix depend on python-simplejson (and not python-cjson). Closes:
+    bug#563037, thanks to Rafael Ortiz.
+  * Update debian/copyright (no new licenses or owners, just shuffling
+    around).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 30 Dec 2009 16:09:09 +0100
+
 sugar-0.88 (0.87.1-2) unstable; urgency=low
 
   * Have python-jarabe depend on sugar-presence-service. Closes:
