@@ -56,6 +56,8 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
         cmd.append('-dpi')
         cmd.append('%d' % dpi)
 
+    cmd.append('-noreset')
+
     result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
     pid = result[0]
 

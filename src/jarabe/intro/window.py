@@ -18,6 +18,7 @@ import os
 import logging
 from gettext import gettext as _
 import gconf
+import pwd
 
 import gtk
 import gobject
@@ -111,6 +112,9 @@ class _NamePage(_Page):
     def get_name(self):
         return self._entry.props.text
 
+    def set_name(self, new_name):
+        self._entry.props.text = new_name
+
     def activate(self):
         self._entry.props.widget.grab_focus()
 
@@ -155,6 +159,20 @@ class _IntroBox(hippo.CanvasBox):
         self._color_page = _ColorPage()
         self._current_page = None
         self._next_button = None
+
+        client = gconf.client_get_default()
+        default_nick = client.get_string('/desktop/sugar/user/default_nick')
+        if default_nick != 'disabled':
+            self._page = self.PAGE_COLOR
+            if default_nick == 'system':
+                pwd_entry = pwd.getpwuid(os.getuid())
+                if pwd_entry.pw_gecos:
+                    nick = pwd_entry.pw_gecos.split(',')[0]
+                    self._name_page.set_name(nick)
+                else:
+                    self._name_page.set_name(pwd_entry.pw_name)
+            else:
+                self._name_page.set_name(default_nick)
 
         self._setup_page()
 

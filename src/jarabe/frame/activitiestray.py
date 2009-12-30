@@ -37,6 +37,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
 from sugar import mime
+from sugar import env
 
 from jarabe.model import shell
 from jarabe.model import neighborhood
@@ -771,7 +772,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         if extension is None:
             extension = '.bin'
         fd, file_path = tempfile.mkstemp(suffix=extension,
-                prefix=self._sanitize(self.file_transfer.title))
+                prefix=self._sanitize(self.file_transfer.title),
+                dir=os.path.join(env.get_profile_path(), 'data'))
         os.close(fd)
         os.unlink(file_path)
 

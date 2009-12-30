@@ -196,7 +196,6 @@ def bootstrap():
     setup_window_manager()
     launcher.setup()
 
-    gobject.idle_add(unfreeze_dcon_cb)
     gobject.idle_add(setup_frame_cb)
     gobject.idle_add(setup_keyhandler_cb)
     gobject.idle_add(setup_journal_cb)
@@ -206,6 +205,13 @@ def bootstrap():
 
     if sys.modules.has_key('xklavier'):
         gobject.idle_add(setup_keyboard_cb)
+
+def set_fonts():
+    client = gconf.client_get_default()
+    face = client.get_string('/desktop/sugar/font/default_face')
+    size = client.get_float('/desktop/sugar/font/default_size')
+    settings = gtk.settings_get_default()
+    settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
     cleanup_logs()
@@ -218,6 +224,12 @@ def main():
     timezone = client.get_string('/desktop/sugar/date/timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
+
+    set_fonts()
+
+    # this must be added early, so that it executes and unfreezes the screen
+    # even when we initially get blocked on the intro screen
+    gobject.idle_add(unfreeze_dcon_cb)
 
     intro.check_profile()
 

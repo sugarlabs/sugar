@@ -1,5 +1,6 @@
 # Copyright (C) 2008 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2009 One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -164,22 +165,29 @@ class Settings(object):
         return settings
 
 class Secrets(object):
-    def __init__(self):
+    def __init__(self, settings):
+        self.settings = settings
         self.wep_key = None
         self.psk = None
         self.auth_alg = None
 
     def get_dict(self):
-        secrets = {}
+        # Although we could just return the keys here, we instead return all
+        # of the network settings so that we can apply any late decisions made
+        # by the user (e.g. if they selected shared key authentication). see
+        # http://bugs.sugarlabs.org/ticket/1602
+        settings = self.settings.get_dict()
+        if '802-11-wireless-security' not in settings:
+            settings['802-11-wireless-security'] = {}
 
         if self.wep_key is not None:
-            secrets['wep-key0'] = self.wep_key
+            settings['802-11-wireless-security']['wep-key0'] = self.wep_key
         if self.psk is not None:
-            secrets['psk'] = self.psk
+            settings['802-11-wireless-security']['psk'] = self.psk
         if self.auth_alg is not None:
-            secrets['auth-alg'] = self.auth_alg
+            settings['802-11-wireless-security']['auth-alg'] = self.auth_alg
 
-        return {'802-11-wireless-security': secrets}
+        return settings
 
 class NMSettings(dbus.service.Object):
     def __init__(self):
@@ -245,6 +253,9 @@ class NMSettingsConnection(dbus.service.Object):
     def set_secrets(self, secrets):
         self._secrets = secrets
         self.save()
+
+    def get_settings(self):
+        return self._settings
 
     def save(self):
         profile_path = env.get_profile_path()
@@ -498,7 +509,7 @@ def load_connections():
 
             secrets = None
             if config.has_option(section, 'key-mgmt'):
-                secrets = Secrets()
+                secrets = Secrets(settings)
                 settings.wireless_security = WirelessSecurity()
                 mgmt = config.get(section, 'key-mgmt')
                 settings.wireless_security.key_mgmt = mgmt
