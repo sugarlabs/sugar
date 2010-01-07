@@ -10,7 +10,6 @@ org.laptop.Analyze
 org.laptop.Calculate
 org.laptop.Chat
 org.laptop.HelpActivity
-org.laptop.Log
 org.laptop.MeasureActivity
 org.laptop.Memorize
 org.laptop.Oficina
@@ -20,7 +19,6 @@ org.laptop.TamTamEdit
 org.laptop.TamTamJam
 org.laptop.TamTamMini
 org.laptop.TamTamSynthLab
-org.laptop.Terminal
 org.laptop.TurtleArtActivity
 org.laptop.WebActivity
 org.laptop.WikipediaActivityEN
