@@ -16,6 +16,7 @@
 
 import os
 import random
+import signal
 import subprocess
 import time
 from optparse import OptionParser
@@ -24,6 +25,7 @@ import gtk
 import gobject
 
 from sugar import env
+
 
 default_dimensions = (800, 600)
 def _run_xephyr(display, dpi, dimensions, fullscreen):
@@ -58,42 +60,48 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
 
     cmd.append('-noreset')
 
-    result = gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
-    pid = result[0]
+    pipe = subprocess.Popen(cmd)
 
     os.environ['DISPLAY'] = ":%d" % (display)
-    os.environ['SUGAR_EMULATOR_PID'] = str(pid)
+    os.environ['SUGAR_EMULATOR_PID'] = str(pipe.pid)
+    return pipe
 
-def _check_xephyr(display):
+
+def _check_server(display):
     result = subprocess.call(['xdpyinfo', '-display', ':%d' % display],
                              stdout=open(os.devnull, "w"),
                              stderr=open(os.devnull, "w"))
     return result == 0
 
+
+def _kill_pipe(pipe):
+    """Terminate and wait for child process."""
+    try:
+        os.kill(pipe.pid, signal.SIGTERM)
+    except OSError:
+        pass
+
+    pipe.wait()
+
+
 def _start_xephyr(dpi, dimensions, fullscreen):
-    # FIXME evil workaround until F10 Xephyr is fixed
-    if os.path.exists('/etc/fedora-release'):
-        if open('/etc/fedora-release').read().startswith('Fedora release 10'):
-            display = random.randint(100, 500)
-            _run_xephyr(display, dpi, dimensions, fullscreen)
-            return  display
+    for display in range(30, 40):
+        if not _check_server(display):
+            pipe = _run_xephyr(display, dpi, dimensions, fullscreen)
 
-    for display in range(100, 110):
-        if not _check_xephyr(display):
-            _run_xephyr(display, dpi, dimensions, fullscreen)
+            for i_ in range(10):
+                if _check_server(display):
+                    return pipe
 
-            tries = 10
-            while tries > 0:
-                if _check_xephyr(display):
-                    return display
-                else:
-                    tries -= 1
-                    time.sleep(0.1)
+                time.sleep(0.1)
 
-def _start_window_manager(display):
+            _kill_pipe(pipe)
+
+
+def _start_window_manager():
     cmd = ['metacity']
 
-    cmd.extend(['--no-force-fullscreen', '-d', ':%d' % display])
+    cmd.extend(['--no-force-fullscreen'])
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
@@ -127,21 +135,22 @@ def main():
 
     _setup_env()
 
-    display = _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
+    server = _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
 
     if options.scaling:
         os.environ['SUGAR_SCALING'] = options.scaling
 
-    command = ['dbus-launch', 'dbus-launch', '--exit-with-session']
+    command = ['dbus-launch', '--exit-with-session']
 
     if not args:
-        command.extend(['sugar', '-d', ':%d' % display])
+        command.append('sugar')
     else:
-        _start_window_manager(display)
+        _start_window_manager()
 
         if args[0].endswith('.py'):
             command.append('python')
 
         command.append(args[0])
-    
-    os.execlp(*command)
+
+    subprocess.call(command)
+    _kill_pipe(server)
