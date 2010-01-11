@@ -664,12 +664,13 @@ class DeviceObserver(object):
 class NetworkManagerObserver(object):
     def __init__(self, box):
         self._box = box
-        self._bus = dbus.SystemBus()
+        self._bus = None
         self._devices = {}
         self._netmgr = None
 
     def listen(self):
         try:
+            self._bus = dbus.SystemBus()
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
             self._netmgr = dbus.Interface(obj, _NM_IFACE)
         except dbus.DBusException:
