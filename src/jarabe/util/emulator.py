@@ -106,27 +106,6 @@ def _setup_env():
     os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
 
-    path = os.path.join(os.environ.get("HOME"), '.i18n')
-    if os.path.exists(path):    
-        fd = open(path, "r")
-        lines = fd.readlines()
-        fd.close()
-
-        language_env_variable = None
-        lang_env_variable = None
-
-        for line in lines:
-            if line.startswith("LANGUAGE="):
-                lang = line[9:].replace('"', '')
-                language_env_variable = lang.strip()
-            elif line.startswith("LANG="):
-                lang_env_variable = line[5:].replace('"', '')
-
-        # There might be cases where .i18n may not contain a LANGUAGE field
-        if language_env_variable is not None:
-            os.environ['LANGUAGE'] = language_env_variable
-        if lang_env_variable is not None:
-            os.environ['LANG'] = lang_env_variable
 
 def main():
     """Script-level operations"""
