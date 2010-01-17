@@ -6,6 +6,7 @@ sugar_PYTHON =			\
 	filetransfer.py		\
 	friends.py		\
 	invites.py		\
+	olpcmesh.py		\
 	owner.py		\
 	neighborhood.py		\
         network.py              \
