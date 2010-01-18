@@ -756,6 +756,11 @@ msgstr "Accetta"
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "Abbandona"
+
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
@@ -1361,11 +1366,6 @@ msgstr "Vedi codice sorgente: %r"
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
 msgstr "Crea una nuova rete wireless"
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
-msgstr "Abbandona"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format

@@ -280,7 +280,7 @@ msgstr "Цэнэг маш бага байна"
 #: ../extensions/deviceicon/battery.py:149
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(цаг)d:%(мин).2d үлдлээ"
+msgstr "%(hour)d:%(min).2d үлдлээ"
 
 #: ../extensions/deviceicon/battery.py:152
 msgid "Charged"
@@ -1215,6 +1215,11 @@ msgstr "Салгах"
 #~ msgid ", "
 #~ msgstr ","
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr ""
+
 #: ../src/jarabe/journal/palettes.py:107
 msgid "View Details"
 msgstr ""
@@ -1238,11 +1243,6 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
-msgstr ""
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:415

@@ -748,6 +748,11 @@ msgstr "Accepter"
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "Refuser"
+
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
@@ -1322,10 +1327,6 @@ msgstr "Afficher le code source : %r"
 msgid "Create new wireless network"
 msgstr "Créer un nouveau réseau sans fil"
 
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
-msgstr "Refuser"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format

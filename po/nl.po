@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-04-29 17:36-0400\n"
-"PO-Revision-Date: 2009-05-21 02:43-0400\n"
-"Last-Translator: Myckel Habets <myckel@sdf.lonestar.org>\n"
+"PO-Revision-Date: 2009-12-26 03:27-0400\n"
+"Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -161,7 +161,7 @@ msgstr "Hoek"
 
 #: ../extensions/cpsection/frame/view.py:111
 msgid "Edge"
-msgstr "Ribbe"
+msgstr "Rand"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:32
@@ -205,7 +205,7 @@ msgstr "Draadloos"
 
 #: ../extensions/cpsection/network/view.py:64
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Draadloze zender uitzetten om de batterij te besparen"
+msgstr "Draadloze zender uitzetten om de accu te besparen"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Radio"
@@ -231,7 +231,7 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"De server is het equivalent van in welke ruimte je je bevindt; mensen op "
+"De server is hetzelfde als de ruimte waar je je in bevindt; mensen op "
 "dezelfde server kunnen elkaar zien, ook als ze niet op hetzelfde netwerk "
 "zitten"
 
@@ -268,7 +268,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
-msgstr "Mijn Accu"
+msgstr "Mijn accu"
 
 #: ../extensions/deviceicon/battery.py:137
 msgid "Removed"
@@ -294,7 +294,7 @@ msgstr "Opgeladen"
 #: ../extensions/deviceicon/network.py:40
 #, python-format
 msgid "IP address: %s"
-msgstr "IP adres: %s"
+msgstr "IP-adres: %s"
 
 #: ../extensions/deviceicon/network.py:104
 msgid "Disconnect..."
@@ -326,15 +326,15 @@ msgstr "Snelheid"
 
 #: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
-msgstr "Mijn Speakers"
+msgstr "Mijn speakers"
 
 #: ../extensions/deviceicon/speaker.py:133
 msgid "Unmute"
-msgstr "Ontdempen"
+msgstr "Geluid aan"
 
 #: ../extensions/deviceicon/speaker.py:136
 msgid "Mute"
-msgstr "Dempen"
+msgstr "Geluid uit"
 
 #: ../extensions/globalkey/screenshot.py:51
 msgid "Screenshot"
@@ -342,7 +342,7 @@ msgstr "Schermafdruk"
 
 #: ../data/sugar.schemas.in.h:1
 msgid "Backup URL"
-msgstr "Backup URL"
+msgstr "Back-up URL"
 
 #: ../data/sugar.schemas.in.h:2
 msgid ""
@@ -372,7 +372,7 @@ msgstr "Randvertraging"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Favorites Layout"
-msgstr "Favorietenlayout"
+msgstr "Favorietenindeling"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Favorites resume mode"
@@ -383,16 +383,16 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Indien WAAR, Sugar zal ons opzoekbaar maken voor andere gebruikers op de "
-"Jabber server."
+"Indien WAAR, dan zal Sugar ons opzoekbaar maken voor andere gebruikers op de "
+"Jabber-server."
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Jabber Server"
-msgstr "Jabber server"
+msgstr "Jabber-server"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Layout of the favorites view."
-msgstr "Layout van de Favorieten weergave"
+msgstr "Indeling van de Favorieten weergave."
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Power Automatic"
@@ -420,7 +420,7 @@ msgstr "Instelling voor dempen van het audio-apparaat."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Sound Muted"
-msgstr "Geluid gedempt"
+msgstr "Geluid uitgezet"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Timezone setting for the system."
@@ -428,11 +428,11 @@ msgstr "Tijdzone-instelling voor het systeem."
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Url of the jabber server to use."
-msgstr "Url van de te gebruiken jabber server."
+msgstr "Url van de te gebruiken Jabber-server."
 
 #: ../data/sugar.schemas.in.h:22
 msgid "Url where the backup is saved to."
-msgstr "Url waar de backup opgeslagen wordt."
+msgstr "Url waar de back-up opgeslagen wordt."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "User Color"
@@ -459,8 +459,8 @@ msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Indien in hervatmodus, klikken op een favoriet icoon zal ervoor zorgen dat "
-"de laatste ingang voor die activiteit hervat wordt."
+"Indien in hervatmodus, kun je door te klikken op een favorietenicoon ervoor "
+"zorgen dat de laatste invoer van die activiteit hervat wordt."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -596,7 +596,7 @@ msgstr "Registratie succesvol uitgevoerd"
 
 #: ../src/jarabe/desktop/favoritesview.py:334
 msgid "You are now registered with your school server."
-msgstr "Je bent nu geregistreerd bij je schoolserver."
+msgstr "Je bent nu geregistreerd bij je school-server."
 
 #: ../src/jarabe/desktop/favoritesview.py:674
 msgid "Register"
@@ -659,11 +659,11 @@ msgstr "<Ctrl>1"
 
 #: ../src/jarabe/desktop/keydialog.py:131
 msgid "Key Type:"
-msgstr "Sleutel type:"
+msgstr "Sleuteltype:"
 
 #: ../src/jarabe/desktop/keydialog.py:151
 msgid "Authentication Type:"
-msgstr "Authenticatie type:"
+msgstr "Authenticatietype:"
 
 #: ../src/jarabe/desktop/keydialog.py:215
 msgid "WPA & WPA2 Personal"
@@ -747,6 +747,11 @@ msgstr "Accepteren"
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
+
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "Wegdoen"
 
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
@@ -954,11 +959,11 @@ msgstr "Geen geldige verbinding gevonden"
 
 #: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
-msgstr "Geen activiteit om ingang mee te hervatten"
+msgstr "Geen activiteit om invoer mee te hervatten"
 
 #: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
-msgstr "Geen activiteit om ingang mee te starten"
+msgstr "Geen activiteit om invoer mee te starten"
 
 #: ../src/jarabe/view/buddymenu.py:62
 msgid "Remove friend"
@@ -1161,11 +1166,6 @@ msgstr "Bron weergeven: %r"
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
 msgstr "Nieuw draadloos netwerk aanmaken"
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
-msgstr "Wegdoen"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format

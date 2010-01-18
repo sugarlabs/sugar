@@ -746,6 +746,11 @@ msgstr "स्विकार"
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr ""
+
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
@@ -1245,11 +1250,6 @@ msgstr "स्रोत हेर : %r"
 
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
-msgstr ""
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:415

@@ -767,6 +767,11 @@ msgstr "Akzeptieren"
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "Verwerfen"
+
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
@@ -1314,11 +1319,6 @@ msgstr "Quelltext betrachten: %r"
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
 msgstr "Neues Funknetzwerk erstellen"
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
-msgstr "Verwerfen"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-04-29 17:36-0400\n"
-"PO-Revision-Date: 2009-08-28 20:46+0300\n"
+"PO-Revision-Date: 2010-01-16 14:29+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Virtaal 0.4.0\n"
+"X-Generator: Pootle 2.0.1\n"
 "Nplurals=6; Plural=N==0 ? 0: n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 "
 ": n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
@@ -56,7 +56,8 @@ msgstr "خطأ في مُغيّرات الألوان المحددة."
 msgid "Error in specified colors."
 msgstr "خطأ في الألوان المحددة."
 
-#: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:92
+#: ../extensions/cpsection/aboutme/view.py:94
+#: ../src/jarabe/intro/window.py:92
 msgid "Name:"
 msgstr "الاسم:"
 
@@ -127,7 +128,8 @@ msgstr "التاريخ والوقت"
 msgid "Error timezone does not exist."
 msgstr "خطأ: المنطقة الزمنية لا وجود لها."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:19
+#: ../extensions/cpsection/datetime/view.py:68
+#: ../data/sugar.schemas.in.h:19
 msgid "Timezone"
 msgstr "المنطقة الزمنية"
 
@@ -372,17 +374,19 @@ msgstr "تأخير الحافة"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Favorites Layout"
-msgstr ""
+msgstr "التخطيطات المفضّلة"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "اوضاع التلخيص المفضّلة"
 
 #: ../data/sugar.schemas.in.h:9
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"ان كان صحيح TRUE ، سكّر سيوفر قابلية البحث عنّا عند المستخدمين الاخرين في "
+"الخادم جابر Jabber"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Jabber Server"
@@ -410,11 +414,11 @@ msgstr "الطاقة متشددة."
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "انشر الى غادجيت Gadget"
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "الاعدادات لاسكات جهاز الصوت"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Sound Muted"
@@ -422,15 +426,15 @@ msgstr "الصوت مُصمَت"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "اعدادات المنطقةالزمنية للنظام."
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Url of the jabber server to use."
-msgstr ""
+msgstr "رابط خادوم جابر لاستعماله."
 
 #: ../data/sugar.schemas.in.h:22
 msgid "Url where the backup is saved to."
-msgstr ""
+msgstr "الرابط اين ستحفظ ملفات الاسترجاع."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "User Color"
@@ -457,6 +461,8 @@ msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"في وضع الاستمرار، النقر على أيقونة مفضلة سيسبب الرجوع إلى آخر مدخل لهذا "
+"النشاط."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -464,16 +470,17 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"لوحة-تحكم-سكّر:تحذير ،تم ايجاد اكثر من اعداد يحمل نفس الاسم : %s الوحدة : %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "لوحة-تحكم-سكّر: المفتاح=%s  ليس اعدادا متاحا"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "لوحة-تحكم-سكّر: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -490,6 +497,16 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
@@ -508,7 +525,8 @@ msgstr "تتطلب التغييرات إعادة التشغيل"
 msgid "Cancel changes"
 msgstr "ألغِ التغييرات"
 
-#: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:284
+#: ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
 msgstr "لاحقا"
 
@@ -516,7 +534,8 @@ msgstr "لاحقا"
 msgid "Restart now"
 msgstr "أعِد التشغيل الآن"
 
-#: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:188
+#: ../src/jarabe/controlpanel/toolbar.py:61
+#: ../src/jarabe/intro/window.py:188
 msgid "Done"
 msgstr "تمّ"
 
@@ -594,14 +613,16 @@ msgstr "أكّد المسح: أتريد مسح %s نهائيا؟"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "احفظ"
 
 #: ../src/jarabe/desktop/homebox.py:76
 #: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:112 ../src/jarabe/view/palettes.py:153
+#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/view/palettes.py:153
 msgid "Erase"
 msgstr "امسح"
 
@@ -661,7 +682,8 @@ msgstr "اقطع الاتصال"
 #: ../src/jarabe/desktop/meshbox.py:444
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
+#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "استكمل"
 
@@ -722,6 +744,11 @@ msgstr "اقبل"
 msgid "%s (%s)"
 msgstr "‏%s ‏(%s)"
 
+#: ../src/jarabe/frame/activitiestray.py:750
+#: ../src/jarabe/frame/activitiestray.py:873
+msgid "Dismiss"
+msgstr "ارفض"
+
 #: ../src/jarabe/frame/activitiestray.py:810
 #, python-format
 msgid "Transfer to %r"
@@ -743,7 +770,7 @@ msgstr "افتح باستخدام"
 #: ../src/jarabe/frame/clipboardobject.py:49
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s clipping"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:36
 msgid "Neighborhood"
@@ -765,7 +792,8 @@ msgstr "النشاط"
 msgid "Click to change color:"
 msgstr "انقر لتغيير اللون:"
 
-#: ../src/jarabe/intro/window.py:174 ../src/jarabe/journal/detailview.py:103
+#: ../src/jarabe/intro/window.py:174
+#: ../src/jarabe/journal/detailview.py:103
 msgid "Back"
 msgstr "السابق"
 
@@ -855,7 +883,8 @@ msgstr "انسخ"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:135
+#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/view/palettes.py:135
 msgid "Start"
 msgstr "ابدأ"
 
@@ -982,7 +1011,8 @@ msgstr "اصنع مفضلة"
 msgid "Show contents"
 msgstr "أظهر المحتويات"
 
-#: ../src/jarabe/view/palettes.py:263 ../src/jarabe/view/palettes.py:313
+#: ../src/jarabe/view/palettes.py:263
+#: ../src/jarabe/view/palettes.py:313
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d م.بايت خالية"
@@ -1248,11 +1278,6 @@ msgstr "اعرض مصدر: %r"
 #: ../extensions/deviceicon/network.py:114
 msgid "Create new wireless network"
 msgstr "أنشئ شبكة لاسلكية جديدة"
-
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
-msgid "Dismiss"
-msgstr "ارفض"
 
 #: ../extensions/deviceicon/network.py:415
 #, python-format
