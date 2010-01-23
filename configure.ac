@@ -54,6 +54,7 @@ extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile
 extensions/cpsection/language/Makefile
+extensions/cpsection/modemconfiguration/Makefile
 extensions/cpsection/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile

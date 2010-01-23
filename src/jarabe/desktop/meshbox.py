@@ -116,7 +116,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
 
-        if network.find_connection(self._name) is not None:
+        if network.find_connection_by_ssid(self._name) is not None:
             self.props.badge_name = "emblem-favorite"
             self._palette_icon.props.badge_name = "emblem-favorite"
         elif initial_ap.flags == network.NM_802_11_AP_FLAGS_PRIVACY:
@@ -223,7 +223,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
             state = network.DEVICE_STATE_UNKNOWN
 
         if state == network.DEVICE_STATE_ACTIVATED:
-            connection = network.find_connection(self._name)
+            connection = network.find_connection_by_ssid(self._name)
             if connection:
                 if self._mode == network.NM_802_11_MODE_INFRA:
                     connection.set_connected()
@@ -340,11 +340,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._connect()
 
     def _connect(self):
-        connection = network.find_connection(self._name)
+        connection = network.find_connection_by_ssid(self._name)
         if connection is None:
             settings = Settings()
             settings.connection.id = 'Auto ' + self._name
-            settings.connection.uuid = unique_id()
+            uuid = settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
             settings.wireless.ssid = self._name
 
@@ -362,7 +362,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
             if wireless_security is not None:
                 settings.wireless.security = '802-11-wireless-security'
 
-            connection = network.add_connection(self._name, settings)
+            connection = network.add_connection(uuid, settings)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)

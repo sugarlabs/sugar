@@ -1,6 +1,7 @@
 # Copyright (C) 2008 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009 One Laptop per Child
+# Copyright (C) 2009 Paraguay Educa, Martin Abente
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,12 +24,15 @@ import time
 import dbus
 import gobject
 import ConfigParser
+import gconf
 
 from sugar import dispatch
 from sugar import env
+from sugar.util import unique_id
 
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
+DEVICE_TYPE_GSM_MODEM = 3
 DEVICE_TYPE_802_11_OLPC_MESH = 6
 
 DEVICE_STATE_UNKNOWN = 0
@@ -41,6 +45,9 @@ DEVICE_STATE_NEED_AUTH = 6
 DEVICE_STATE_IP_CONFIG = 7
 DEVICE_STATE_ACTIVATED = 8
 DEVICE_STATE_FAILED = 9
+
+NM_CONNECTION_TYPE_802_11_WIRELESS = '802-11-wireless'
+NM_CONNECTION_TYPE_GSM = 'gsm'
 
 NM_ACTIVE_CONNECTION_STATE_UNKNOWN = 0
 NM_ACTIVE_CONNECTION_STATE_ACTIVATING = 1
@@ -80,6 +87,11 @@ NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
 NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
+
+GSM_USERNAME_PATH = '/sugar/network/gsm/username'
+GSM_PASSWORD_PATH = '/sugar/network/gsm/password'
+GSM_NUMBER_PATH = '/sugar/network/gsm/number'
+GSM_APN_PATH = '/sugar/network/gsm/apn'
 
 _nm_settings = None
 _conn_counter = 0
@@ -168,6 +180,44 @@ class IP4Config(object):
             ip4_config['method'] = self.method
         return ip4_config
 
+class Serial(object):
+    def __init__(self):
+        self.baud = None
+
+    def get_dict(self):
+        serial = {}
+
+        if self.baud is not None:
+            serial['baud'] = self.baud
+
+        return serial
+
+class Ppp(object):
+    def __init__(self):
+        pass
+
+    def get_dict(self):
+      ppp = {}
+      return ppp
+
+class Gsm(object):
+    def __init__(self):
+        self.apn = None
+        self.number = None
+        self.username = None
+
+    def get_dict(self):
+        gsm = {}
+
+        if self.apn is not None:
+            gsm['apn'] = self.apn
+        if self.number is not None:
+            gsm['number'] = self.number
+        if self.username is not None:
+            gsm['username'] = self.username
+
+        return gsm
+
 class Settings(object):
     def __init__(self, wireless_cfg=None):
         self.connection = Connection()
@@ -215,6 +265,35 @@ class Secrets(object):
 
         return settings
 
+class SettingsGsm(object):
+    def __init__(self):
+        self.connection = Connection()
+        self.ip4_config = IP4Config()
+        self.serial = Serial()
+        self.ppp = Ppp()
+        self.gsm = Gsm()
+
+    def get_dict(self):
+        settings = {}
+
+        settings['connection'] = self.connection.get_dict()
+        settings['serial'] = self.serial.get_dict()
+        settings['ppp'] = self.ppp.get_dict()
+        settings['gsm'] = self.gsm.get_dict()
+        settings['ipv4'] = self.ip4_config.get_dict()
+
+        return settings
+
+class SecretsGsm(object):
+    def __init__(self):
+        self.password = None
+
+    def get_dict(self):
+        secrets = {}
+        if self.password is not None:
+            secrets['password'] = self.password
+        return {'gsm': secrets}
+
 class NMSettings(dbus.service.Object):
     def __init__(self):
         bus = dbus.SystemBus()
@@ -233,8 +312,8 @@ class NMSettings(dbus.service.Object):
     def NewConnection(self, connection_path):
         pass
 
-    def add_connection(self, ssid, conn):
-        self.connections[ssid] = conn
+    def add_connection(self, uuid, conn):
+        self.connections[uuid] = conn
         conn.secrets_request.connect(self.__secrets_request_cb)
         self.NewConnection(conn.path)
 
@@ -274,11 +353,13 @@ class NMSettingsConnection(dbus.service.Object):
         if not self._settings.connection.autoconnect:
             self._settings.connection.autoconnect = True
             self._settings.connection.timestamp = int(time.time())
-            self.save()
+            if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+                self.save()
 
     def set_secrets(self, secrets):
         self._secrets = secrets
-        self.save()
+        if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+            self.save()
 
     def get_settings(self):
         return self._settings
@@ -467,7 +548,6 @@ class AccessPoint(gobject.GObject):
                                          path=self.model.object_path,
                                          dbus_interface=NM_ACCESSPOINT_IFACE)
 
-
 def get_settings():
     global _nm_settings
     if _nm_settings is None:
@@ -478,24 +558,28 @@ def get_settings():
         load_connections()
     return _nm_settings
 
-def find_connection(ssid):
+def find_connection_by_ssid(ssid):
     connections = get_settings().connections
-    if ssid in connections:
-        return connections[ssid]
-    else:
-        return None
 
-def add_connection(ssid, settings, secrets=None):
+    for conn_index in connections:
+        connection = connections[conn_index]
+        if connection._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+            if connection._settings.wireless.ssid == ssid:
+                return connection
+
+    return None
+
+def add_connection(uuid, settings, secrets=None):
     global _conn_counter
 
     path = NM_SETTINGS_PATH + '/' + str(_conn_counter)
     _conn_counter += 1
 
     conn = NMSettingsConnection(path, settings, secrets)
-    _nm_settings.add_connection(ssid, conn)
+    _nm_settings.add_connection(uuid, conn)
     return conn
 
-def load_connections():
+def load_wifi_connections():
     profile_path = env.get_profile_path()
     config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
 
@@ -560,4 +644,43 @@ def load_connections():
         except ConfigParser.Error:
             logging.exception('Error reading section')
         else:
-            add_connection(ssid, settings, secrets)
+            add_connection(uuid, settings, secrets)
+
+
+def load_gsm_connection():
+    settings = SettingsGsm()
+    secrets = SecretsGsm()
+
+    client = gconf.client_get_default()
+    settings.gsm.username = client.get_string(GSM_USERNAME_PATH) or ''
+    settings.gsm.number = client.get_string(GSM_NUMBER_PATH) or ''
+    settings.gsm.apn = client.get_string(GSM_APN_PATH) or ''
+    password = client.get_string(GSM_PASSWORD_PATH) or ''
+
+    if password:
+        secrets.password = password
+
+    settings.connection.id = 'gsm'
+    settings.connection.type = NM_CONNECTION_TYPE_GSM
+    uuid = settings.connection.uuid = unique_id()
+    settings.connection.autoconnect = False
+    settings.ip4_config.method = 'auto'
+    settings.serial.baud = 115200
+
+    try:
+        add_connection(uuid, settings, secrets)
+    except Exception:
+        logging.exception('While adding gsm connection')
+
+def load_connections():
+    load_wifi_connections()
+    load_gsm_connection()
+
+def find_gsm_connection():
+    connections = get_settings().connections
+
+    for connection in connections.values():
+        if connection.get_settings().connection.type == NM_CONNECTION_TYPE_GSM:
+            return connection
+
+    return None
