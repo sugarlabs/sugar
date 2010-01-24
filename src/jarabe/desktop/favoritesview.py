@@ -23,7 +23,6 @@ import gobject
 import gconf
 import gtk
 import hippo
-import dbus
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon, CanvasIcon
@@ -34,6 +33,7 @@ from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.presence import presenceservice
 from sugar import dispatch
+from sugar.datastore import datastore
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
@@ -91,7 +91,6 @@ class FavoritesView(hippo.Canvas):
 
         self._layout = None
         self._alert = None
-        self._datastore_listener = DatastoreListener()
         self._resume_mode = True
 
         # More DND stuff
@@ -129,7 +128,7 @@ class FavoritesView(hippo.Canvas):
     def _add_activity(self, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
-        icon = ActivityIcon(activity_info, self._datastore_listener)
+        icon = ActivityIcon(activity_info)
         icon.props.size = style.STANDARD_ICON_SIZE
         icon.set_resume_mode(self._resume_mode)
         self._box.insert_sorted(icon, 0, self._layout.compare_activities)
@@ -345,65 +344,14 @@ class FavoritesView(hippo.Canvas):
             if hasattr(icon, 'set_resume_mode'):
                 icon.set_resume_mode(self._resume_mode)
 
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
-DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
-
-class DatastoreListener(object):
-    def __init__(self):
-        bus = dbus.SessionBus()
-        remote_object = bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH)
-        self._datastore = dbus.Interface(remote_object, DS_DBUS_INTERFACE)
-        self._datastore.connect_to_signal('Created',
-                                          self.__datastore_created_cb)
-        self._datastore.connect_to_signal('Updated',
-                                          self.__datastore_updated_cb)
-        self._datastore.connect_to_signal('Deleted',
-                                          self.__datastore_deleted_cb)
-
-        self.updated = dispatch.Signal()
-        self.deleted = dispatch.Signal()
-
-    def __datastore_created_cb(self, object_id):
-        metadata = self._datastore.get_properties(object_id, byte_arrays=True)
-        self.updated.send(self, metadata=metadata)
-
-    def __datastore_updated_cb(self, object_id):
-        metadata = self._datastore.get_properties(object_id, byte_arrays=True)
-        self.updated.send(self, metadata=metadata)
-
-    def __datastore_deleted_cb(self, object_id):
-        self.deleted.send(self, object_id=object_id)
-
-    def get_last_activity_async(self, bundle_id, properties, callback_cb):
-        query = {'activity': bundle_id,
-                 'limit': 5,
-                 'order_by': ['+timestamp']}
-
-        reply_handler = lambda entries, total_count: self.__reply_handler_cb(
-                entries, total_count, callback_cb)
-
-        error_handler = lambda error: self.__error_handler_cb(
-                error, callback_cb)
-
-        self._datastore.find(query, properties, byte_arrays=True,
-                             reply_handler=reply_handler,
-                             error_handler=error_handler)
-
-    def __reply_handler_cb(self, entries, total_count, callback_cb):
-        logging.debug('__reply_handler_cb')
-        callback_cb(entries)
-
-    def __error_handler_cb(self, error, callback_cb):
-        logging.debug('__error_handler_cb')
-        callback_cb(None, error)
 
 class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
     _BORDER_WIDTH = style.zoom(3)
+    _MAX_RESUME_ENTRIES = 5
 
-    def __init__(self, activity_info, datastore_listener):
+    def __init__(self, activity_info):
         CanvasIcon.__init__(self, cache=True,
                             file_name=activity_info.get_icon())
 
@@ -415,9 +363,8 @@ class ActivityIcon(CanvasIcon):
         self.connect('hovering-changed', self.__hovering_changed_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
-        self._datastore_listener = datastore_listener
-        datastore_listener.updated.connect(self.__datastore_listener_updated_cb)
-        datastore_listener.deleted.connect(self.__datastore_listener_deleted_cb)
+        datastore.updated.connect(self.__datastore_listener_updated_cb)
+        datastore.deleted.connect(self.__datastore_listener_deleted_cb)
 
         self._refresh()
         self._update()
@@ -426,8 +373,7 @@ class ActivityIcon(CanvasIcon):
         bundle_id = self._activity_info.get_bundle_id()
         properties = ['uid', 'title', 'icon-color', 'activity', 'activity_id',
                       'mime_type', 'mountpoint']
-        self._datastore_listener.get_last_activity_async(bundle_id, properties,
-                self.__get_last_activity_async_cb)
+        self._get_last_activity_async(bundle_id, properties)
 
     def __datastore_listener_updated_cb(self, **kwargs):
         bundle_id = self._activity_info.get_bundle_id()
@@ -440,11 +386,14 @@ class ActivityIcon(CanvasIcon):
                 self._refresh()
                 break
 
-    def __get_last_activity_async_cb(self, entries, error=None):
-        if error is not None:
-            logging.error('Error retrieving most recent activities: %r', error)
-            return
+    def _get_last_activity_async(self, bundle_id, properties):
+        query = {'activity': bundle_id}
+        datastore.find(query, sorting='-mtime', limit=self._MAX_RESUME_ENTRIES,
+                       properties=properties,
+                       reply_handler=self.__get_last_activity_reply_handler_cb,
+                       error_handler=self.__get_last_activity_error_handler_cb)
 
+    def __get_last_activity_reply_handler_cb(self, entries, total_count):
         # If there's a problem with the DS index, we may get entries not related
         # to this activity.
         checked_entries = []
@@ -454,6 +403,9 @@ class ActivityIcon(CanvasIcon):
 
         self._journal_entries = checked_entries
         self._update()
+
+    def __get_last_activity_error_handler_cb(self, error):
+        logging.error('Error retrieving most recent activities: %r', error)
 
     def _update(self):
         self.palette = None
@@ -726,4 +678,3 @@ def get_settings():
     if _favorites_settings is None:
         _favorites_settings = FavoritesSetting()
     return _favorites_settings
-
