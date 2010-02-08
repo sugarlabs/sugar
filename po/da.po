@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 00:31-0400\n"
-"PO-Revision-Date: 2009-08-17 22:32-0400\n"
-"Last-Translator: Chris Leonard <cjl@laptop.org>\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2010-01-25 03:48+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -28,7 +28,7 @@ msgstr "Du skal skrive et navn."
 #: ../extensions/cpsection/aboutme/model.py:68
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "Streg:   farve=%s nuance=%s"
+msgstr "streg:   farve=%s nuance=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:71
 #, python-format
@@ -209,7 +209,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/model.py:79
 msgid "State is unknown."
-msgstr "Tilstand er ukendt"
+msgstr "Tilstand er ukendt."
 
 #: ../extensions/cpsection/network/model.py:105
 msgid "Error in specified radio argument use on/off."
@@ -409,13 +409,13 @@ msgid "Create new wireless network"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:120
-#: ../src/jarabe/desktop/meshbox.py:261
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "Forbinder..."
 
 #: ../extensions/deviceicon/network.py:124
 #: ../extensions/deviceicon/network.py:186
-#: ../src/jarabe/desktop/meshbox.py:267
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "Tilsluttet"
 
@@ -659,14 +659,15 @@ msgid ""
 "    "
 msgstr ""
 "Anvendelse: sugar-control-panel [ valg ] nøgle [ argumenter ... ] \n"
-"Styring af sukker-miljøet. \n"
-"Valg: \n"
-"-h vis denne hjælpebesked og afslut \n"
-"-l vis liste over alle tilgængelige valg \n"
-"-h key vis information om denne nøgle \n"
-"-g key hent den nuværende værdi for nøglen \n"
-"-s key angiv den nuværende værdi for nøglen \n"
-"-c key nulstil den nuværende værdi for nøglen \n"
+"    Styring af sukker-miljøet. \n"
+"    Valg: \n"
+"    -h           vis denne hjælpebesked og afslut \n"
+"    -l           vis liste over alle tilgængelige valg \n"
+"    -h key       vis information om denne nøgle \n"
+"    -g key       hent den nuværende værdi for nøglen \n"
+"    -s key       angiv den nuværende værdi for nøglen \n"
+"    -c key       nulstil den nuværende værdi for nøglen \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:50
 msgid "To apply your changes you have to restart sugar.\n"
@@ -745,17 +746,17 @@ msgid "Keep"
 msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:364
-#: ../src/jarabe/desktop/activitieslist.py:406
+#: ../src/jarabe/desktop/activitieslist.py:407
 #: ../src/jarabe/journal/journaltoolbox.py:360
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Erase"
 msgstr "Slet"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:428
 msgid "Remove favorite"
 msgstr "Fjern favorit"
 
-#: ../src/jarabe/desktop/activitieslist.py:431
+#: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
 msgstr "Opret favorit"
 
@@ -770,17 +771,17 @@ msgid "Ring"
 msgstr ""
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:334
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:401
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:442
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr ""
 
@@ -859,27 +860,23 @@ msgid "Disconnect"
 msgstr "Afbryd"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:463
+#: ../src/jarabe/desktop/meshbox.py:466
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:428
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "Genoptag"
 
-#: ../src/jarabe/desktop/meshbox.py:468
+#: ../src/jarabe/desktop/meshbox.py:471
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Tilslut"
 
-#: ../src/jarabe/desktop/schoolserver.py:34
-msgid "Cannot obtain data needed for registration."
-msgstr "Kan ikke skaffe data nødvendig for registrering."
-
-#: ../src/jarabe/desktop/schoolserver.py:51
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr "Kan ikke forbinde til serveren."
 
-#: ../src/jarabe/desktop/schoolserver.py:56
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr "Serveren kunne ikke gennemføre forespørgslen."
 
@@ -933,7 +930,7 @@ msgstr ""
 msgid "Transfer to %r"
 msgstr ""
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "Fjern"
 
@@ -1096,7 +1093,7 @@ msgstr "Din logbog er tom"
 
 #: ../src/jarabe/journal/listview.py:363
 msgid "No matching entries"
-msgstr "Ingen modsvarende emner "
+msgstr "Ingen modsvarende emner"
 
 #: ../src/jarabe/journal/listview.py:374
 msgid "Clear search"
@@ -1206,10 +1203,6 @@ msgstr "Vis indhold"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ledig"
 
-#: ../src/jarabe/view/palettes.py:218
-msgid "Unmount"
-msgstr ""
-
 #: ../src/jarabe/view/viewsource.py:208
 msgid "Instance Source"
 msgstr ""
@@ -1226,6 +1219,9 @@ msgstr ""
 #, python-format
 msgid "View source: %r"
 msgstr ""
+
+#~ msgid "Cannot obtain data needed for registration."
+#~ msgstr "Kan ikke skaffe data nødvendig for registrering."
 
 #~ msgid "Restart"
 #~ msgstr "Genstart"
