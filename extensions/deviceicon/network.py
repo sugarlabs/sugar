@@ -2,6 +2,7 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
+# Copyright (C) 2010 Plan Ceibal, Daniel Castelo
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
