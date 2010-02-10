@@ -51,8 +51,8 @@ if ! test -f "$GTK2_RC_FILES"; then
 fi
 
 # Set default language
-export LANG="en_US.utf8"
-export LANGUAGE="en_US.utf8"
+export LANG="${LANG:-en_US.utf8}"
+export LANGUAGE="${LANGUAGE:-${LANG}}"
 
 # Source language settings and debug definitions
 if [ -f ~/.i18n ]; then
