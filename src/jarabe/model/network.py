@@ -197,8 +197,8 @@ class Ppp(object):
         pass
 
     def get_dict(self):
-      ppp = {}
-      return ppp
+        ppp = {}
+        return ppp
 
 class Gsm(object):
     def __init__(self):
@@ -350,11 +350,14 @@ class NMSettingsConnection(dbus.service.Object):
         self._secrets = secrets
 
     def set_connected(self):
-        if not self._settings.connection.autoconnect:
-            self._settings.connection.autoconnect = True
+        if self._settings.connection.type == NM_CONNECTION_TYPE_GSM:
             self._settings.connection.timestamp = int(time.time())
-            if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-                self.save()
+        else:
+            if not self._settings.connection.autoconnect:
+                self._settings.connection.autoconnect = True
+                self._settings.connection.timestamp = int(time.time())
+                if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+                    self.save()
 
     def set_secrets(self, secrets):
         self._secrets = secrets
