@@ -816,13 +816,13 @@ class GsmDeviceView(TrayIcon):
                 connection.set_connected()
                 self._connection_timestamp =  time.time() - \
                         connection.get_settings().connection.timestamp
-                self._connection_time_handler = gobject.timeout_add( \
-                        1000, self.__connection_timecount_cb)
+                self._connection_time_handler = gobject.timeout_add_seconds( \
+                        1, self.__connection_timecount_cb)
                 self._update_stats(0, 0)
                 self._update_connection_time()                
                 self._palette.info_box.show() 
 
-        if state is network.DEVICE_STATE_DISCONNECTED:
+        elif state is network.DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
@@ -852,14 +852,14 @@ class GsmDeviceView(TrayIcon):
         self._update_stats(in_bytes, out_bytes)
 
     def _update_stats(self, in_bytes, out_bytes):
-        in_kbytes = in_bytes / 1024
-        out_kbytes = out_bytes / 1024
-        text = _("Data sent %d kb / received %d kb") % (out_kbytes, in_kbytes)
+        in_KBytes = in_bytes / 1024
+        out_KBytes = out_bytes / 1024
+        text = _("Data sent %d KB / received %d KB") % (out_KBytes, in_KBytes)
         self._palette.data_label.set_text(text)
 
     def __connection_timecount_cb(self):
         self._connection_timestamp = self._connection_timestamp + 1
-        self._update_connectiontime()
+        self._update_connection_time()
         return True
 
     def _update_connection_time(self):
