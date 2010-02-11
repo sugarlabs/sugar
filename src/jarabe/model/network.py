@@ -93,6 +93,8 @@ GSM_USERNAME_PATH = '/sugar/network/gsm/username'
 GSM_PASSWORD_PATH = '/sugar/network/gsm/password'
 GSM_NUMBER_PATH = '/sugar/network/gsm/number'
 GSM_APN_PATH = '/sugar/network/gsm/apn'
+GSM_PIN_PATH = '/sugar/network/gsm/pin'
+GSM_PUK_PATH = '/sugar/network/gsm/puk'
 
 _nm_settings = None
 _conn_counter = 0
@@ -288,11 +290,17 @@ class SettingsGsm(object):
 class SecretsGsm(object):
     def __init__(self):
         self.password = None
-
+        self.pin = None
+        self.puk = None
+        
     def get_dict(self):
         secrets = {}
         if self.password is not None:
             secrets['password'] = self.password
+        if self.pin is not None:
+            secrets['pin'] = self.pin
+        if self.puk is not None:    
+            secrets['puk'] = self.puk
         return {'gsm': secrets}
 
 class NMSettings(dbus.service.Object):
@@ -436,7 +444,6 @@ class NMSettingsConnection(dbus.service.Object):
     def GetSecrets(self, setting_name, hints, request_new, reply, error):
         logging.debug('Secrets requested for connection %s request_new=%s',
             self.path, request_new)
-
         if request_new or self._secrets is None:
             # request_new is for example the case when the pw on the AP changes
             response = SecretsResponse(self, reply, error)
@@ -652,17 +659,18 @@ def load_wifi_connections():
 
 
 def load_gsm_connection():
-    settings = SettingsGsm()
-    secrets = SecretsGsm()
-
     client = gconf.client_get_default()
+
+    settings = SettingsGsm()
     settings.gsm.username = client.get_string(GSM_USERNAME_PATH) or ''
     settings.gsm.number = client.get_string(GSM_NUMBER_PATH) or ''
     settings.gsm.apn = client.get_string(GSM_APN_PATH) or ''
     password = client.get_string(GSM_PASSWORD_PATH) or ''
 
-    if password:
-        secrets.password = password
+    secrets = SecretsGsm()
+    secrets.pin = client.get_string(GSM_PIN_PATH) or ''
+    secrets.puk = client.get_string(GSM_PUK_PATH) or ''
+    secrets.password = password
 
     settings.connection.id = 'gsm'
     settings.connection.type = NM_CONNECTION_TYPE_GSM
