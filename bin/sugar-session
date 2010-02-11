@@ -72,7 +72,7 @@ def cleanup_logs():
         if os.path.isfile(path):
             backup_logs.append(f)
         elif os.path.isdir(path):
-            backup_dirs.append(path)    
+            backup_dirs.append(path)
 
     if len(backup_dirs) > 3:
         backup_dirs.sort()
@@ -161,7 +161,7 @@ def setup_keyboard_cb():
         for layout in layouts:
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
-        
+
         if layouts_list is not None and layouts_list is not [] \
                 and variants_list is not None and variants_list is not []:
             configrec.set_layouts(layouts_list)
@@ -175,7 +175,7 @@ def setup_keyboard_cb():
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
         if options is not [] and options is not None:
-            configrec.set_options(options)        
+            configrec.set_options(options)
 
         configrec.activate(engine)
     except Exception:
@@ -214,7 +214,12 @@ def set_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
-    cleanup_logs()
+    try:
+        cleanup_logs()
+    except OSError, e:
+        # logs cleanup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'logs cleanup failed: %s' % e
     logger.start('shell')
 
     client = gconf.client_get_default()
