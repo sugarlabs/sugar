@@ -250,6 +250,17 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/i18n/langpackdir</key>
+      <applyto>/desktop/sugar/i18n/langpackdir</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Directory to search for translations</short>
+        <long>Additional directories which can contain updated translations.</long>
+      </locale>
+    </schema>
 
   </schemalist>
 </gconfschemafile>
