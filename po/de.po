@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-04-29 17:36-0400\n"
-"PO-Revision-Date: 2009-09-23 14:17-0400\n"
-"Last-Translator: Markus Schlager <m.slg@gmx.de>\n"
+"PO-Revision-Date: 2010-02-27 23:27+0200\n"
+"Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 "X-Poedit-Language: German\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
@@ -27,22 +27,22 @@ msgstr "Bitte einen Namen eingeben."
 #: ../extensions/cpsection/aboutme/model.py:68
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "Linie:   Farbe=%s Farbton=%s"
+msgstr "linie:   Farbe=%s Farbton=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:71
 #, python-format
 msgid "stroke:   %s"
-msgstr "Linie:   %s"
+msgstr "linie:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:73
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "Füllung:     Farbe=%s Farbton=%s"
+msgstr "füllung:     Farbe=%s Farbton=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "fill:     %s"
-msgstr "Füllung:     %s"
+msgstr "füllung:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:86
 msgid "Error in specified color modifiers."
@@ -122,7 +122,7 @@ msgstr "Datum & Uhrzeit"
 
 #: ../extensions/cpsection/datetime/model.py:87
 msgid "Error timezone does not exist."
-msgstr "Fehler: unbekannte Zeitzone"
+msgstr "Fehler: unbekannte Zeitzone."
 
 #: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:19
 msgid "Timezone"
@@ -170,6 +170,7 @@ msgid "Language"
 msgstr "Sprache"
 
 #: ../extensions/cpsection/language/model.py:28
+#, fuzzy
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "Zugriff auf %s nicht möglich. Erzeuge daher Standardeinstellungen."
 
@@ -200,7 +201,7 @@ msgstr "Fehler im angegebenen radio-Parameter (Funknetz) -- on/off verwenden."
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
 #: ../extensions/cpsection/network/model.py:137
 msgid "Error in specified argument use 0/1."
-msgstr "Fehler im angegebenen Parameter  -- 0/1 verwenden."
+msgstr "Fehler im angegebenen Parameter -- 0/1 verwenden."
 
 #: ../extensions/cpsection/network/view.py:56
 msgid "Wireless"
@@ -208,7 +209,7 @@ msgstr "Drahtlosnetzwerk"
 
 #: ../extensions/cpsection/network/view.py:64
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Schalte das Funknetz aus, um die Lebensdauer der Batterie zu erhöhen."
+msgstr "Schalte das Funknetz aus, um die Lebensdauer der Batterie zu erhöhen"
 
 # (Markus S,) war 'Radio:'
 #: ../extensions/cpsection/network/view.py:77
@@ -219,7 +220,7 @@ msgstr "Funknetz"
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Verwirf die Netzwerk-Chronik, wenn du Schwierigkeiten hast, dich mit dem "
-"Netzwerk zu verbinden."
+"Netzwerk zu verbinden"
 
 #: ../extensions/cpsection/network/view.py:102
 msgid "Discard network history"
@@ -393,7 +394,7 @@ msgstr "Favoriten-Layout"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Favorites resume mode"
-msgstr "Favoriten-Wiederaufnahemodus"
+msgstr "Favoriten-Wiederaufnahmemodus"
 
 #: ../data/sugar.schemas.in.h:9
 msgid ""
@@ -409,7 +410,7 @@ msgstr "Jabber-Server"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Layout of the favorites view."
-msgstr "Layout der Favoriten-Ansicht"
+msgstr "Layout der Favoriten-Ansicht."
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Power Automatic"
@@ -435,7 +436,7 @@ msgstr "Veröffentlichen auf Gerät"
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Setting for muting the sound device."
-msgstr "Einstellung zum Stummschalten der Audio-Ausgabe"
+msgstr "Einstellung zum Stummschalten der Audio-Ausgabe."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Sound Muted"
@@ -443,7 +444,7 @@ msgstr "Stummgeschaltet"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Timezone setting for the system."
-msgstr "Zeitzoneneinstellung des Systems"
+msgstr "Zeitzoneneinstellung des Systems."
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Url of the jabber server to use."
@@ -471,15 +472,15 @@ msgstr "Lautstärke"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "Volume level for the sound device."
-msgstr "Lautstärkepegel für die Audio-Ausgabe"
+msgstr "Lautstärkepegel für die Audio-Ausgabe."
 
 #: ../data/sugar.schemas.in.h:28
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Wenn im Wiederaufnahemodus, führt ein Anklicken des Favoriten-Symbols dazu, "
-"dass der letzte Eintrag für diese Aktivität wieder aufgenommen wird."
+"Im Wiederaufnahmemodus führt ein Anklicken des Favoriten-Symbols dazu, dass "
+"der letzte Eintrag für diese Aktivität fortgesetzt wird."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -544,7 +545,7 @@ msgstr "Neustart zur Übernahme der Änderungen notwendig"
 
 #: ../src/jarabe/controlpanel/gui.py:279
 msgid "Cancel changes"
-msgstr "Änderungen aufheben"
+msgstr "Änderungen verwerfen"
 
 #: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
@@ -552,7 +553,7 @@ msgstr "Später"
 
 #: ../src/jarabe/controlpanel/gui.py:288
 msgid "Restart now"
-msgstr "Jetzt neustarten"
+msgstr "Jetzt neu starten"
 
 #: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:188
 msgid "Done"
@@ -654,7 +655,7 @@ msgstr "Software-Aktualisierung"
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Aktualisiere deine Aktivitäten, um die Kompatibilität mit deiner neuen "
-"Software sicher zu stellen."
+"Software sicher zu stellen"
 
 #: ../src/jarabe/desktop/homebox.py:116
 msgid "Check now"
@@ -708,7 +709,7 @@ msgstr "Verbindung trennen"
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
-msgstr "Wiederaufnehmen"
+msgstr "Fortsetzen"
 
 #: ../src/jarabe/desktop/meshbox.py:449
 #: ../src/jarabe/frame/activitiestray.py:235
@@ -920,7 +921,7 @@ msgstr "Start"
 
 #: ../src/jarabe/journal/listview.py:40
 msgid "Your Journal is empty"
-msgstr "Dein Journal ist leer."
+msgstr "Dein Journal ist leer"
 
 #: ../src/jarabe/journal/listview.py:41
 msgid "No matching entries "
@@ -936,7 +937,7 @@ msgstr "Kein Datum"
 
 #: ../src/jarabe/journal/modalalert.py:63
 msgid "Your Journal is full"
-msgstr "Dein Journal ist voll."
+msgstr "Dein Journal ist voll"
 
 #: ../src/jarabe/journal/modalalert.py:67
 msgid "Please delete some old Journal entries to make space for new ones."
@@ -958,7 +959,7 @@ msgstr "Schließen"
 
 #: ../src/jarabe/journal/palettes.py:73
 msgid "Resume with"
-msgstr "Wiederaufnehmen mit"
+msgstr "Fortsetzen mit"
 
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start with"
@@ -982,7 +983,7 @@ msgstr "Keine gültige Verbindung gefunden"
 
 #: ../src/jarabe/journal/palettes.py:218
 msgid "No activity to resume entry"
-msgstr "Keine Aktivität, um den Eintrag wieder aufzunehmen"
+msgstr "Keine Aktivität, um den Eintrag fortzusetzen"
 
 #: ../src/jarabe/journal/palettes.py:220
 msgid "No activity to start entry"
