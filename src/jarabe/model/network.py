@@ -659,30 +659,41 @@ def load_wifi_connections():
 
 
 def load_gsm_connection():
+    _BAUD_RATE = 115200
+
     client = gconf.client_get_default()
 
-    settings = SettingsGsm()
-    settings.gsm.username = client.get_string(GSM_USERNAME_PATH) or ''
-    settings.gsm.number = client.get_string(GSM_NUMBER_PATH) or ''
-    settings.gsm.apn = client.get_string(GSM_APN_PATH) or ''
+    username = client.get_string(GSM_USERNAME_PATH) or ''
     password = client.get_string(GSM_PASSWORD_PATH) or ''
+    number = client.get_string(GSM_NUMBER_PATH) or ''
+    apn = client.get_string(GSM_APN_PATH) or ''
+    pin = client.get_string(GSM_PIN_PATH) or ''
+    puk = client.get_string(GSM_PUK_PATH) or ''
 
-    secrets = SecretsGsm()
-    secrets.pin = client.get_string(GSM_PIN_PATH) or ''
-    secrets.puk = client.get_string(GSM_PUK_PATH) or ''
-    secrets.password = password
+    if username and number and apn:
+        settings = SettingsGsm()
+        settings.gsm.username = username 
+        settings.gsm.number = number
+        settings.gsm.apn = apn
+        
+        secrets = SecretsGsm()
+        secrets.pin = pin
+        secrets.puk = puk
+        secrets.password = password
 
-    settings.connection.id = 'gsm'
-    settings.connection.type = NM_CONNECTION_TYPE_GSM
-    uuid = settings.connection.uuid = unique_id()
-    settings.connection.autoconnect = False
-    settings.ip4_config.method = 'auto'
-    settings.serial.baud = 115200
+        settings.connection.id = 'gsm'
+        settings.connection.type = NM_CONNECTION_TYPE_GSM
+        uuid = settings.connection.uuid = unique_id()
+        settings.connection.autoconnect = False
+        settings.ip4_config.method = 'auto'
+        settings.serial.baud = _BAUD_RATE
 
-    try:
-        add_connection(uuid, settings, secrets)
-    except Exception:
-        logging.exception('While adding gsm connection')
+        try:
+            add_connection(uuid, settings, secrets)
+        except Exception:
+            logging.exception('Error adding gsm connection to NMSettings.')
+    else:
+        logging.exception("No gsm connection was set in GConf.")
 
 def load_connections():
     load_wifi_connections()
@@ -695,4 +706,5 @@ def find_gsm_connection():
         if connection.get_settings().connection.type == NM_CONNECTION_TYPE_GSM:
             return connection
 
+    logging.debug('There is no gsm connection in the NMSettings.')
     return None
