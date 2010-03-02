@@ -58,12 +58,13 @@ def set_automatic_pm(enabled):
 
     if using_powerd():
         # powerd
-        if not os.access(POWERD_INHIBIT_FLAG, os.W_OK):
-            _logger.debug('File %s is not writeable' % POWERD_INHIBIT_FLAG)
-            return 0
         if enabled == 'off' or enabled == 0:
-            fd = open(POWERD_INHIBIT_FLAG, 'w')
-            fd.close()
+            try:
+                fd = open(POWERD_INHIBIT_FLAG, 'w')
+            except IOError:
+                _logger.debug('File %s is not writeable' % POWERD_INHIBIT_FLAG)
+            else:
+                fd.close()
         else:
             os.unlink(POWERD_INHIBIT_FLAG)
         return 0
