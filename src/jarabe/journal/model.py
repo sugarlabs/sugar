@@ -472,9 +472,9 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    return write(metadata, file_path)
+    return write(metadata, file_path, transfer_ownership=False)
 
-def write(metadata, file_path='', update_mtime=True):
+def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
     """Creates or updates an entry for that id
     """
     logging.debug('model.write %r %r %r' % (metadata.get('uid', ''), file_path,
@@ -488,11 +488,11 @@ def write(metadata, file_path='', update_mtime=True):
             object_id = _get_datastore().update(metadata['uid'],
                                                  dbus.Dictionary(metadata),
                                                  file_path,
-                                                 True)
+                                                 transfer_ownership)
         else:
             object_id = _get_datastore().create(dbus.Dictionary(metadata),
                                                  file_path,
-                                                 True)
+                                                 transfer_ownership)
     else:
         if not os.path.exists(file_path):
             raise ValueError('Entries without a file cannot be copied to '
