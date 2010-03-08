@@ -31,6 +31,7 @@ from sugar import mime
 from jarabe.model import bundleregistry
 from jarabe.model import friends
 from jarabe.model import filetransfer
+from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 
@@ -217,6 +218,10 @@ class StartWithMenu(gtk.Menu):
             menu_item.show()
 
     def __item_activate_cb(self, menu_item, service_name):
+        mime_type = self._metadata.get('mime_type', '')
+        if mime_type:
+            mime = mimeregistry.get_registry()
+            mime.set_default_activity(mime_type, service_name)
         misc.resume(self._metadata, service_name)
 
 
