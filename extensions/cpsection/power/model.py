@@ -15,14 +15,22 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import os
 from gettext import gettext as _
-import gconf
+import logging
 
+import gconf
 import dbus
 
 OHM_SERVICE_NAME = 'org.freedesktop.ohm'
 OHM_SERVICE_PATH = '/org/freedesktop/ohm/Keystore'
 OHM_SERVICE_IFACE = 'org.freedesktop.ohm.Keystore'
+
+POWERD_FLAG_DIR = '/etc/powerd/flags'
+POWERD_INHIBIT_FLAG = '/etc/powerd/flags/inhibit-suspend'
+
+_logger = logging.getLogger('ControlPanel - Power')
+
 
 class ReadError(Exception):
     def __init__(self, value):
@@ -30,7 +38,16 @@ class ReadError(Exception):
     def __str__(self):
         return repr(self.value)
 
+def using_powerd():
+    # directory exists if powerd running, and it's recent
+    # enough to be controllable.
+    return os.access(POWERD_FLAG_DIR, os.W_OK)
+
 def get_automatic_pm():
+    if using_powerd():
+        return not os.access(POWERD_INHIBIT_FLAG, os.R_OK)
+
+    # ohmd
     client = gconf.client_get_default()
     return client.get_bool('/desktop/sugar/power/automatic')
 
@@ -40,6 +57,20 @@ def print_automatic_pm():
 def set_automatic_pm(enabled):
     """Automatic suspends on/off."""
 
+    if using_powerd():
+        # powerd
+        if enabled == 'off' or enabled == 0:
+            try:
+                fd = open(POWERD_INHIBIT_FLAG, 'w')
+            except IOError:
+                _logger.debug('File %s is not writeable' % POWERD_INHIBIT_FLAG)
+            else:
+                fd.close()
+        else:
+            os.unlink(POWERD_INHIBIT_FLAG)
+        return
+
+    # ohmd
     bus = dbus.SystemBus()
     proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
     keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
@@ -55,7 +86,7 @@ def set_automatic_pm(enabled):
 
     client = gconf.client_get_default()
     client.set_bool('/desktop/sugar/power/automatic', enabled)
-    return 0
+    return
 
 def get_extreme_pm():
     client = gconf.client_get_default()
