@@ -8,6 +8,7 @@ sugar_PYTHON =			\
 	invites.py		\
 	olpcmesh.py		\
 	owner.py		\
+	mimeregistry.py	\
 	neighborhood.py		\
         network.py              \
         notifications.py        \
