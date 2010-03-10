@@ -19,7 +19,6 @@ import os
 import logging
 import traceback
 
-import gconf
 import dbus
 import gtk
 

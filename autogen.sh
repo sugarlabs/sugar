@@ -1,4 +1,4 @@
 #!/bin/sh
 intltoolize
 autoreconf -i
-./configure "$@"
+./configure --enable-maintainer-mode "$@"

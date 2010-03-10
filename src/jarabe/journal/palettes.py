@@ -220,8 +220,8 @@ class StartWithMenu(gtk.Menu):
     def __item_activate_cb(self, menu_item, service_name):
         mime_type = self._metadata.get('mime_type', '')
         if mime_type:
-            mime = mimeregistry.get_registry()
-            mime.set_default_activity(mime_type, service_name)
+            mime_registry = mimeregistry.get_registry()
+            mime_registry.set_default_activity(mime_type, service_name)
         misc.resume(self._metadata, service_name)
 
 

@@ -55,7 +55,7 @@ class SessionManager(session.SessionManager):
                 bus = dbus.SystemBus()
                 proxy = bus.get_object('org.freedesktop.Hal',
                                        '/org/freedesktop/Hal/devices/computer')
-                pm = dbus.Interface(proxy, \
+                pm = dbus.Interface(proxy,
                                     'org.freedesktop.Hal.Device.SystemPowerManagement')
 
                 if self._logout_mode == self.MODE_SHUTDOWN:

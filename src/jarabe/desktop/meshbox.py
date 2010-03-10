@@ -52,7 +52,6 @@ from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 from jarabe.model.network import AccessPoint
-from jarabe.model.network import OlpcMesh as OlpcMeshSettings
 from jarabe.model.olpcmesh import OlpcMeshManager
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'

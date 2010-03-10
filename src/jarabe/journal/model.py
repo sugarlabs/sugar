@@ -378,9 +378,6 @@ def find(query_, page_size):
     """
     query = query_.copy()
 
-    if 'order_by' not in query:
-        query['order_by'] = ['-mtime']
-
     mount_points = query.pop('mountpoints', ['/'])
     if mount_points is None or len(mount_points) != 1:
         raise ValueError('Exactly one mount point must be specified')
