@@ -11,6 +11,7 @@ sugar_PYTHON =			\
 	homewindow.py		\
         keydialog.py		\
 	meshbox.py		\
+	networkviews.py		\
         schoolserver.py		\
 	snowflakelayout.py	\
 	spreadlayout.py		\
