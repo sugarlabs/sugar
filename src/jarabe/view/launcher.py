@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from gettext import gettext as _
 
 import gtk
 import hippo
@@ -34,15 +35,41 @@ class LaunchWindow(gtk.Window):
 
         self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_NORMAL
         self.props.decorated = False
+        self.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        canvas = hippo.Canvas()
-        canvas.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
-        self.add(canvas)
+        canvas = gtk.VBox()
         canvas.show()
+        self.add(canvas)
+
+        bar_size = gtk.gdk.screen_height() / 5 * 2
+
+        header = gtk.VBox()
+        header.set_size_request(-1, bar_size)
+        header.show()
+        canvas.pack_start(header, expand=False)
 
         self._activity_id = activity_id
         self._box = LaunchBox(activity_id, icon_path, icon_color)
-        canvas.set_root(self._box)
+        box = hippo.Canvas()
+        box.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        box.set_root(self._box)
+        box.show()
+        canvas.pack_start(box)
+
+        footer = gtk.VBox(spacing=style.DEFAULT_SPACING)
+        footer.set_size_request(-1, bar_size)
+        footer.show()
+        canvas.pack_end(footer, expand=False)
+
+        self.error_text = gtk.Label()
+        self.error_text.props.use_markup = True
+        footer.pack_start(self.error_text, expand=False)
+
+        button_box = gtk.Alignment(xalign=0.5)
+        button_box.show()
+        footer.pack_start(button_box, expand=False)
+        self.cancel_button = gtk.Button(stock=gtk.STOCK_STOP)
+        button_box.add(self.cancel_button)
 
         self.connect('realize', self.__realize_cb)
 
@@ -145,6 +172,21 @@ def __launch_started_cb(home_model, home_activity):
                  home_activity.get_icon_color())
 
 def __launch_failed_cb(home_model, home_activity):
+    activity_id = home_activity.get_activity_id()
+    launcher = _launchers.get(activity_id)
+
+    if launcher is None:
+        logging.error('Launcher for %s is missing', activity_id)
+    else:
+        launcher.error_text.props.label = _('<b>%s</b> failed to start.') % \
+                home_activity.get_activity_name()
+        launcher.error_text.show()
+
+        launcher.cancel_button.connect('clicked',
+                __cancel_button_clicked_cb, home_activity)
+        launcher.cancel_button.show()
+
+def __cancel_button_clicked_cb(button, home_activity):
     _destroy_launcher(home_activity)
 
 def __launch_completed_cb(home_model, home_activity):
