@@ -103,8 +103,8 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     def on_get_column_type(self, index):
         return ListModel._COLUMN_TYPES[index]
 
-    def on_iter_n_children(self, iter):
-        if iter == None:
+    def on_iter_n_children(self, iterator):
+        if iterator == None:
             return self._result_set.length
         else:
             return 0
@@ -148,7 +148,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         else:
             buddies = []
 
-        for n in xrange(0, 3):
+        for n_ in xrange(0, 3):
             if buddies:
                 nick, color = buddies.pop(0)
                 self._cached_row.append((nick, XoColor(color)))
@@ -157,32 +157,32 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
 
         return self._cached_row[column]
 
-    def on_iter_nth_child(self, iter, n):
+    def on_iter_nth_child(self, iterator, n):
         return n
 
-    def on_get_path(self, iter):
-        return (iter)
+    def on_get_path(self, iterator):
+        return (iterator)
 
     def on_get_iter(self, path):
         return path[0]
 
-    def on_iter_next(self, iter):
-        if iter != None:
-            if iter >= self._result_set.length - 1:
+    def on_iter_next(self, iterator):
+        if iterator != None:
+            if iterator >= self._result_set.length - 1:
                 return None
-            return iter + 1
+            return iterator + 1
         return None
 
     def on_get_flags(self):
         return gtk.TREE_MODEL_ITERS_PERSIST | gtk.TREE_MODEL_LIST_ONLY
 
-    def on_iter_children(self, iter):
+    def on_iter_children(self, iterator):
         return None
 
-    def on_iter_has_child(self, iter):
+    def on_iter_has_child(self, iterator):
         return False
 
-    def on_iter_parent(self, iter):
+    def on_iter_parent(self, iterator):
         return None
 
     def do_drag_data_get(self, path, selection):

@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """D-bus service providing access to the shell's functionality"""
-import os
 
 import dbus
 import gtk
