@@ -42,26 +42,10 @@ except ImportError:
 gtk.gdk.threads_init()
 dbus.glib.threads_init()
 
-from sugar import logger
-from sugar import env
-
-# NOTE: This needs to happen so early because some modules register translatable
-# strings in the module scope.
-from jarabe import config
-gettext.bindtextdomain('sugar', config.locale_path)
-gettext.bindtextdomain('sugar-toolkit', config.locale_path)
-gettext.textdomain('sugar')
-
-from jarabe.desktop import homewindow
-from jarabe.model import sound
-from jarabe.view import launcher
-from jarabe import intro
-
-def cleanup_logs():
+def cleanup_logs(logs_dir):
     """Clean up the log directory, moving old logs into a numbered backup
     directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
     around; the rest are removed."""
-    logs_dir = env.get_logs_path()
     if not os.path.isdir(logs_dir):
         os.makedirs(logs_dir)
 
@@ -127,6 +111,7 @@ def setup_journal_cb():
 def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
+        from jarabe.desktop import homewindow
         home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
@@ -194,6 +179,8 @@ def setup_window_manager():
 
 def bootstrap():
     setup_window_manager()
+
+    from jarabe.view import launcher
     launcher.setup()
 
     gobject.idle_add(setup_frame_cb)
@@ -215,11 +202,25 @@ def set_fonts():
 
 def main():
     try:
-        cleanup_logs()
+        from sugar import env
+        cleanup_logs(env.get_logs_path())
     except OSError, e:
         # logs cleanup is not critical; it should not prevent sugar from
         # starting if (for example) the disk is full or read-only.
         print 'logs cleanup failed: %s' % e
+
+    from sugar import logger
+    # NOTE: This needs to happen so early because some modules register translatable
+    # strings in the module scope.
+    from jarabe import config
+    gettext.bindtextdomain('sugar', config.locale_path)
+    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+    gettext.textdomain('sugar')
+
+    from jarabe.desktop import homewindow
+    from jarabe.model import sound
+    from jarabe import intro
+
     logger.start('shell')
 
     client = gconf.client_get_default()
