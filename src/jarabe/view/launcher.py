@@ -29,7 +29,9 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.model import shell
 from jarabe.view.pulsingicon import CanvasPulsingIcon
 
+
 class LaunchWindow(gtk.Window):
+
     def __init__(self, activity_id, icon_path, icon_color):
         gobject.GObject.__init__(self)
 
@@ -93,7 +95,9 @@ class LaunchWindow(gtk.Window):
     def __size_changed_cb(self, screen):
         self._update_size()
 
+
 class LaunchBox(hippo.CanvasBox):
+
     def __init__(self, activity_id, icon_path, icon_color):
         gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL)
 
@@ -137,7 +141,9 @@ class LaunchBox(hippo.CanvasBox):
         else:
             self._activity_icon.props.paused = True
 
+
 class _Animation(animator.Animation):
+
     def __init__(self, icon, start_size, end_size):
         animator.Animation.__init__(self, 0.0, 1.0)
 
@@ -149,13 +155,16 @@ class _Animation(animator.Animation):
         d = (self.end_size - self.start_size) * current
         self._icon.props.size = int(self.start_size + d)
 
+
 _launchers = {}
+
 
 def setup():
     model = shell.get_model()
     model.connect('launch-started', __launch_started_cb)
     model.connect('launch-failed', __launch_failed_cb)
     model.connect('launch-completed', __launch_completed_cb)
+
 
 def add_launcher(activity_id, icon_path, icon_color):
 
@@ -167,9 +176,11 @@ def add_launcher(activity_id, icon_path, icon_color):
 
     _launchers[activity_id] = launch_window
 
+
 def __launch_started_cb(home_model, home_activity):
-    add_launcher(home_activity.get_activity_id(), home_activity.get_icon_path(),
-                 home_activity.get_icon_color())
+    add_launcher(home_activity.get_activity_id(),
+            home_activity.get_icon_path(), home_activity.get_icon_color())
+
 
 def __launch_failed_cb(home_model, home_activity):
     activity_id = home_activity.get_activity_id()
@@ -186,11 +197,14 @@ def __launch_failed_cb(home_model, home_activity):
                 __cancel_button_clicked_cb, home_activity)
         launcher.cancel_button.show()
 
+
 def __cancel_button_clicked_cb(button, home_activity):
     _destroy_launcher(home_activity)
 
+
 def __launch_completed_cb(home_model, home_activity):
     _destroy_launcher(home_activity)
+
 
 def _destroy_launcher(home_activity):
     activity_id = home_activity.get_activity_id()
