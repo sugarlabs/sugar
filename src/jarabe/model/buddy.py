@@ -14,9 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import gobject
+import gconf
+
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
-import gobject
 
 _NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
 
@@ -31,9 +33,6 @@ class BaseBuddyModel(gobject.GObject):
         self._present = False
 
         gobject.GObject.__init__(self, **kwargs)
-
-    def _set_color_from_string(self, color_string):
-        self._color = XoColor(color_string)
 
     def is_present(self):
         return self._present
@@ -60,7 +59,10 @@ class BaseBuddyModel(gobject.GObject):
     def get_color(self):
         return self._color
 
-    color = gobject.property(type=object, getter=get_color)
+    def set_color(self, color):
+        self._color = color
+
+    color = gobject.property(type=object, getter=get_color, setter=set_color)
 
     def get_tags(self):
         return self._tags
@@ -85,8 +87,10 @@ class OwnerBuddyModel(BaseBuddyModel):
     def __init__(self):
         BaseBuddyModel.__init__(self)
         self.props.present = True
-        self.props.nick = 'XXXXXXXXXXXXXX'
-        self.props.color = ''
+
+        client = gconf.client_get_default()
+        self.props.nick = client.get_string("/desktop/sugar/user/nick")
+        self.props.color = XoColor(client.get_string("/desktop/sugar/user/color"))
 
     def is_owner(self):
         return True
@@ -125,6 +129,9 @@ class BuddyModel(BaseBuddyModel):
             self._pservice.get_buddies_async(reply_handler=self._get_buddies_cb)
         else:
             self._update_buddy(buddy)
+
+    def _set_color_from_string(self, color_string):
+        self._color = XoColor(color_string)
 
     def _get_buddies_cb(self, buddy_list):
         buddy = None
