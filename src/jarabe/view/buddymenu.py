@@ -42,8 +42,7 @@ class BuddyMenu(Palette):
         self._active_activity_changed_hid = None
         self.connect('destroy', self.__destroy_cb)
 
-        self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
-        self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
+        self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
 
         if buddy.is_owner():
             self._add_my_items()
@@ -54,8 +53,7 @@ class BuddyMenu(Palette):
         if self._active_activity_changed_hid is not None:
             home_model = shell.get_model()
             home_model.disconnect(self._active_activity_changed_hid)
-        self._buddy.disconnect_by_func(self._buddy_icon_changed_cb)
-        self._buddy.disconnect_by_func(self._buddy_nick_changed_cb)
+        self._buddy.disconnect_by_func(self.__buddy_notify_nick_cb)
 
     def _add_buddy_items(self):
         if friends.get_model().has_buddy(self._buddy):
@@ -139,11 +137,8 @@ class BuddyMenu(Palette):
     def _cur_activity_changed_cb(self, home_model, activity_model):
         self._update_invite_menu(activity_model)
 
-    def _buddy_icon_changed_cb(self, buddy):
-        pass
-
-    def _buddy_nick_changed_cb(self, buddy, nick):
-        self.set_primary_text(nick)
+    def __buddy_notify_nick_cb(self, buddy, pspec):
+        self.set_primary_text(buddy.props.nick)
 
     def _make_friend_cb(self, menuitem):
         friends.get_model().make_friend(self._buddy)

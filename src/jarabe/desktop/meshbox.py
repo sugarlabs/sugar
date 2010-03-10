@@ -1176,19 +1176,19 @@ class MeshBox(gtk.VBox):
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
 
-        self._buddies[buddy_model.get_buddy().object_path()] = icon
+        self._buddies[buddy_model.props.key] = icon
 
     def _remove_alone_buddy(self, buddy_model):
-        icon = self._buddies[buddy_model.get_buddy().object_path()]
+        icon = self._buddies[buddy_model.props.key]
         self._layout.remove(icon)
-        del self._buddies[buddy_model.get_buddy().object_path()]
+        del self._buddies[buddy_model.props.key]
         icon.destroy()
 
     def _remove_buddy(self, buddy_model):
-        object_path = buddy_model.get_buddy().object_path()
-        if self._buddies.has_key(object_path):
+        if self._buddies.has_key(buddy_model.props.key):
             self._remove_alone_buddy(buddy_model)
         else:
+            object_path = buddy_model.get_buddy().object_path()
             for activity in self._activities.values():
                 if activity.has_buddy_icon(object_path):
                     activity.remove_buddy_icon(object_path)

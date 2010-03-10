@@ -22,7 +22,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import activity
 
-from jarabe.model.buddy import BuddyModel
+from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
 from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
@@ -77,6 +77,7 @@ class Neighborhood(gobject.GObject):
 
         self._activities = {}
         self._buddies = {}
+        self._buddies[None] = OwnerBuddyModel()
 
         self._pservice = presenceservice.get_instance()
         self._pservice.connect("activity-appeared",

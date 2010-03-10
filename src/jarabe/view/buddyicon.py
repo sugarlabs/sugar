@@ -25,17 +25,19 @@ class BuddyIcon(CanvasIcon):
 
         self._greyed_out = False
         self._buddy = buddy
-        self._buddy.connect('appeared', self._buddy_presence_change_cb)
-        self._buddy.connect('disappeared', self._buddy_presence_change_cb)
-        self._buddy.connect('color-changed', self._buddy_presence_change_cb)
+        self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
+        self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
         palette = BuddyMenu(buddy)
         self.set_palette(palette)
 
         self._update_color()
 
-    def _buddy_presence_change_cb(self, buddy, color=None):
+    def __buddy_notify_present_cb(self, buddy, pspec):
         # Update the icon's color when the buddy comes and goes
+        self._update_color()
+
+    def __buddy_notify_color_cb(self, buddy, pspec):
         self._update_color()
 
     def _update_color(self):

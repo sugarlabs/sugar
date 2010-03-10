@@ -26,7 +26,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 
 from jarabe.view.buddymenu import BuddyMenu
-from jarabe.model.buddy import BuddyModel
+from jarabe.model.buddy import OwnerBuddyModel
 from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
@@ -54,9 +54,7 @@ class GroupBox(hippo.Canvas):
                                       xo_color=color)
         self._owner_icon.props.size = style.LARGE_ICON_SIZE
 
-        presence_service = presenceservice.get_instance()
-        owner = BuddyModel(buddy=presence_service.get_owner())
-        self._owner_icon.set_palette(BuddyMenu(owner))
+        self._owner_icon.set_palette(BuddyMenu(OwnerBuddyModel()))
         self._layout.add(self._owner_icon)
 
         friends_model = friends.get_model()

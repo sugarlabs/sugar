@@ -14,13 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 from sugar.presence import presenceservice
 from sugar.graphics.tray import VTray, TrayIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
-from jarabe.model.buddy import BuddyModel
+from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
 
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
@@ -41,15 +43,15 @@ class FriendsTray(VTray):
         self._left_hid = -1
         self._buddies = {}
 
-        self._pservice = presenceservice.get_instance()
-        self._pservice.connect('activity-appeared',
-                               self.__activity_appeared_cb)
+        logging.info('KILL_PS listen for when new activities appear')
+        #self._pservice = presenceservice.get_instance()
+        #self._pservice.connect('activity-appeared',
+        #                       self.__activity_appeared_cb)
 
-        self._owner = self._pservice.get_owner()
-
+        logging.info('KILL_PS Add initial activities the PS knows about')
         # Add initial activities the PS knows about
-        self._pservice.get_activities_async( \
-                reply_handler=self._get_activities_cb)
+        #self._pservice.get_activities_async( \
+        #        reply_handler=self._get_activities_cb)
 
         shell.get_model().connect('active-activity-changed',
                                   self._active_activity_changed_cb)
@@ -62,9 +64,7 @@ class FriendsTray(VTray):
         if self._buddies.has_key(buddy.props.key):
             return
 
-        model = BuddyModel(buddy=buddy)
-
-        icon = FriendIcon(model)
+        icon = FriendIcon(buddy)
         self.add_item(icon)
         icon.show()
 
@@ -104,11 +104,11 @@ class FriendsTray(VTray):
         self.clear()
 
         # always display ourselves
-        self.add_buddy(self._owner)
+        self.add_buddy(OwnerBuddyModel())
 
         if shared_activity is True:
             for buddy in activity_ps.get_joined_buddies():
-                self.add_buddy(buddy)
+                self.add_buddy(BuddyModel(buddy=buddy))
 
             self._joined_hid = activity_ps.connect(
                             'buddy-joined', self.__buddy_joined_cb)
@@ -125,17 +125,18 @@ class FriendsTray(VTray):
 
         # check if activity is shared
         activity = None
-        for act in self._pservice.get_activities():
-            if activity_id == act.props.id:
-                activity = act
-                break
+        logging.info('KILL_PS check in local list of activities')
+        #for act in self._pservice.get_activities():
+        #    if activity_id == act.props.id:
+        #        activity = act
+        #        break
         if activity:
             self._set_activity_ps(activity, True)
         else:
             self._set_activity_ps(home_activity, False)
 
     def __buddy_joined_cb(self, activity, buddy):
-        self.add_buddy(buddy)
+        self.add_buddy(BuddyModel(buddy=buddy))
 
     def __buddy_left_cb(self, activity, buddy):
         self.remove_buddy(buddy)

@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 import gobject
 from sugar.presence import presenceservice
 
@@ -74,9 +76,10 @@ class Invites(gobject.GObject):
 
         self._dict = {}
 
-        ps = presenceservice.get_instance()
-        owner = ps.get_owner()
-        owner.connect('joined-activity', self._owner_joined_cb)
+        logging.info('KILL_PS listen for when the owner joins an activity')
+        #ps = presenceservice.get_instance()
+        #owner = ps.get_owner()
+        #owner.connect('joined-activity', self._owner_joined_cb)
 
     def add_invite(self, bundle_id, activity_id):
         if activity_id in self._dict:

@@ -20,46 +20,97 @@ import gobject
 
 _NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
 
-class BuddyModel(gobject.GObject):
-    __gsignals__ = {
-        'appeared':                 (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
-        'disappeared':              (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
-        'nick-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'color-changed':            (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'icon-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([])),
-        'tags-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'current-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT]))
-    }
+class BaseBuddyModel(gobject.GObject):
+    __gtype_name__ = 'SugarBaseBuddyModel'
 
+    def __init__(self, **kwargs):
+        self._key = None
+        self._nick = None
+        self._color = None
+        self._tags = None
+        self._present = False
+
+        gobject.GObject.__init__(self, **kwargs)
+
+    def _set_color_from_string(self, color_string):
+        self._color = XoColor(color_string)
+
+    def is_present(self):
+        return self._present
+
+    def set_present(self, present):
+        self._present = present
+
+    present = gobject.property(type=bool, default=False, getter=is_present,
+                               setter=set_present)
+
+    def get_nick(self):
+        return self._nick
+
+    def set_nick(self, nick):
+        self._nick = nick
+
+    nick = gobject.property(type=object, getter=get_nick, setter=set_nick)
+
+    def get_key(self):
+        return self._key
+
+    key = gobject.property(type=object, getter=get_key)
+
+    def get_color(self):
+        return self._color
+
+    color = gobject.property(type=object, getter=get_color)
+
+    def get_tags(self):
+        return self._tags
+
+    tags = gobject.property(type=object, getter=get_tags)
+
+    def get_current_activity(self):
+        raise NotImplementedError
+
+    current_activity = gobject.property(type=object,
+                                        getter=get_current_activity)
+
+    def is_owner(self):
+        raise NotImplementedError
+
+    def get_buddy(self):
+        raise NotImplementedError
+
+
+class OwnerBuddyModel(BaseBuddyModel):
+    __gtype_name__ = 'SugarOwnerBuddyModel'
+    def __init__(self):
+        BaseBuddyModel.__init__(self)
+        self.props.present = True
+        self.props.nick = 'XXXXXXXXXXXXXX'
+        self.props.color = ''
+
+    def is_owner(self):
+        return True
+
+    def get_buddy(self):
+        return None
+
+
+class BuddyModel(BaseBuddyModel):
+    __gtype_name__ = 'SugarBuddyModel'
     def __init__(self, key=None, buddy=None, nick=None):
         if (key and buddy) or (not key and not buddy):
             raise RuntimeError("Must specify only _one_ of key or buddy.")
 
-        gobject.GObject.__init__(self)
+        BaseBuddyModel.__init__(self, nick=nick, key=key)
+        
+        self._pservice = presenceservice.get_instance()
 
-        self._color = None
-        self._tags = None
+        self._buddy = None
         self._ba_handler = None
         self._pc_handler = None
         self._dis_handler = None
         self._bic_handler = None
         self._cac_handler = None
-
-        self._pservice = presenceservice.get_instance()
-
-        self._buddy = None
 
         if not buddy:
             self._key = key
@@ -91,38 +142,21 @@ class BuddyModel(gobject.GObject):
 
             self._update_buddy(buddy)
 
-    def _set_color_from_string(self, color_string):
-        self._color = XoColor(color_string)
-
-    def get_key(self):
-        return self._key
-
-    def get_nick(self):
-        return self._nick
-
-    def get_color(self):
-        return self._color
-
-    def get_tags(self):
-        return self._tags
-
-    def get_buddy(self):
-        return self._buddy
-
     def is_owner(self):
-        if not self._buddy:
-            return False
-        return self._buddy.props.owner
-
-    def is_present(self):
-        if self._buddy:
-            return True
         return False
 
     def get_current_activity(self):
         if self._buddy:
             return self._buddy.props.current_activity
         return None
+
+    def is_present(self):
+        if self._buddy:
+            return True
+        return False
+
+    def get_buddy(self):
+        return self._buddy
 
     def _update_buddy(self, buddy):
         if not buddy:
@@ -133,11 +167,10 @@ class BuddyModel(gobject.GObject):
         self._nick = self._buddy.props.nick
         self._tags = self._buddy.props.tags
         self._set_color_from_string(self._buddy.props.color)
+        self.props.present = True
 
         self._pc_handler = self._buddy.connect('property-changed',
                                                self._buddy_property_changed_cb)
-        self._bic_handler = self._buddy.connect('icon-changed',
-                                                self._buddy_icon_changed_cb)
 
     def _buddy_appeared_cb(self, pservice, buddy):
         if self._buddy or buddy.props.key != self._key:
@@ -177,6 +210,5 @@ class BuddyModel(gobject.GObject):
         self._set_color_from_string(_NOT_PRESENT_COLOR)
         self.emit('disappeared')
         self._buddy = None
+        self.props.present = False
 
-    def _buddy_icon_changed_cb(self, buddy):
-        self.emit('icon-changed')
