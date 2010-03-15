@@ -21,25 +21,25 @@ import gobject
 import gconf
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CONNECTION
-from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
-from telepathy.interfaces import CONNECTION_INTERFACE_ALIASING
-from telepathy.interfaces import CONNECTION_INTERFACE_CONTACT_CAPABILITIES
-from telepathy.interfaces import CONNECTION_INTERFACE_CONTACTS
-from telepathy.interfaces import CHANNEL_INTERFACE
-from telepathy.interfaces import CHANNEL_INTERFACE_GROUP
-from telepathy.interfaces import ACCOUNT_MANAGER
-from telepathy.interfaces import CHANNEL_DISPATCHER
-from telepathy.interfaces import CHANNEL_REQUEST
-from telepathy.interfaces import CLIENT
-from telepathy.interfaces import CLIENT_HANDLER
-from telepathy.constants import HANDLE_TYPE_LIST
-from telepathy.client import Connection
-from telepathy.client import Channel
+from telepathy.interfaces import CONNECTION, \
+                                 CONNECTION_INTERFACE_REQUESTS, \
+                                 CONNECTION_INTERFACE_ALIASING, \
+                                 CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
+                                 CONNECTION_INTERFACE_CONTACTS, \
+                                 CONNECTION_INTERFACE_SIMPLE_PRESENCE, \
+                                 CHANNEL_INTERFACE, \
+                                 CHANNEL_INTERFACE_GROUP, \
+                                 ACCOUNT_MANAGER, \
+                                 CHANNEL_DISPATCHER, \
+                                 CHANNEL_REQUEST, \
+                                 CLIENT, \
+                                 CLIENT_HANDLER
+from telepathy.constants import HANDLE_TYPE_LIST, \
+                                CONNECTION_PRESENCE_TYPE_OFFLINE
+from telepathy.client import Connection, Channel
 from telepathy.server import DBusProperties
 
 from sugar.graphics.xocolor import XoColor
-from sugar.presence import presenceservice
 from sugar import activity
 from sugar import dispatch
 
@@ -184,9 +184,34 @@ class Neighborhood(gobject.GObject):
                   'MembersChanged',
                   partial(self.__members_changed_cb, connection))
 
+        connection[CONNECTION_INTERFACE_ALIASING].connect_to_signal(
+                'AliasesChanged',
+                partial(self.__aliases_changed_cb, connection))
+
+        connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE].connect_to_signal(
+                'PresencesChanged',
+                partial(self.__presences_changed_cb, connection))
+
         handles = channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP, 'Members')
         if handles:
             self._add_handles(connection, handles)
+
+    def __presences_changed_cb(self, connection, presences):
+        logging.debug('__presences_changed_cb %r', presences)
+        for handle, presence in presences.iteritems():
+            if (connection.service_name, handle) in self._buddies:
+                presence_type, status, message = presence
+                if presence_type == CONNECTION_PRESENCE_TYPE_OFFLINE:
+                    buddy = self._buddies[(connection.service_name, handle)]
+                    del self._buddies[(connection.service_name, handle)]
+                    self.emit('buddy-removed', buddy)
+
+    def __aliases_changed_cb(self, connection, aliases):
+        logging.debug('__aliases_changed_cb %r', aliases)
+        for handle, alias in aliases:
+            if (connection.service_name, handle) in self._buddies:
+                buddy = self._buddies[(connection.service_name, handle)]
+                buddy.props.nick = alias
 
     def _add_handles(self, connection, handles):
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
