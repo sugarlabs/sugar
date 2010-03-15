@@ -14,30 +14,45 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+from functools import partial
+
 import gobject
 import gconf
-import logging
+import dbus
+from dbus import PROPERTIES_IFACE
+from telepathy.interfaces import CONNECTION
+from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
+from telepathy.interfaces import CONNECTION_INTERFACE_ALIASING
+from telepathy.interfaces import CONNECTION_INTERFACE_CONTACT_CAPABILITIES
+from telepathy.interfaces import CONNECTION_INTERFACE_CONTACTS
+from telepathy.interfaces import CHANNEL_INTERFACE
+from telepathy.interfaces import CHANNEL_INTERFACE_GROUP
+from telepathy.interfaces import ACCOUNT_MANAGER
+from telepathy.interfaces import CHANNEL_DISPATCHER
+from telepathy.interfaces import CHANNEL_REQUEST
+from telepathy.interfaces import CLIENT
+from telepathy.interfaces import CLIENT_HANDLER
+from telepathy.constants import HANDLE_TYPE_LIST
+from telepathy.client import Connection
+from telepathy.client import Channel
+from telepathy.server import DBusProperties
 
 from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 from sugar import activity
+from sugar import dispatch
 
 from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
 from jarabe.model import bundleregistry
 from jarabe.util.telepathy import connection_watcher
 
-from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS
-from telepathy.interfaces import CHANNEL_INTERFACE
-from telepathy.client import Channel
-
-CONN_INTERFACE_GADGET = 'org.laptop.Telepathy.Gadget'
-CHAN_INTERFACE_VIEW = 'org.laptop.Telepathy.Channel.Interface.View'
-CHAN_INTERFACE_BUDBY_VIEW = 'org.laptop.Telepathy.Channel.Type.BuddyView'
-CHAN_INTERFACE_ACTIVITY_VIEW = 'org.laptop.Telepathy.Channel.Type.ActivityView'
-
-NB_RANDOM_BUDDIES = 20
-NB_RANDOM_ACTIVITIES = 40
+ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
+ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
+CHANNEL_DISPATCHER_SERVICE = 'org.freedesktop.Telepathy.ChannelDispatcher'
+CHANNEL_DISPATCHER_PATH = '/org/freedesktop/Telepathy/ChannelDispatcher'
+SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
+SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
 class ActivityModel:
     def __init__(self, act, bundle):
@@ -55,6 +70,32 @@ class ActivityModel:
 
     def get_bundle_id(self):
         return self.bundle.get_bundle_id()
+
+class ClientHandler(dbus.service.Object, DBusProperties):
+    def __init__(self):
+        self._interfaces = set([CLIENT, CLIENT_HANDLER, PROPERTIES_IFACE])
+
+        bus = dbus.Bus()
+        bus_name = dbus.service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
+
+        dbus.service.Object.__init__(self, bus_name, SUGAR_CLIENT_PATH)
+        DBusProperties.__init__(self)
+
+        self._implement_property_get(CLIENT, {
+            'Interfaces': lambda: [CLIENT, CLIENT_HANDLER, PROPERTIES_IFACE],
+          })
+
+        self.got_channel = dispatch.Signal()
+
+    @dbus.service.method(dbus_interface=CLIENT_HANDLER,
+                         in_signature='ooa(oa{sv})aota{sv}', out_signature='')
+    def HandleChannels(self, account, connection, channels, requests_satisfied,
+                        user_action_time, handler_info):
+        logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account, connection,
+                channels, requests_satisfied, user_action_time, handler_info)
+        for channel in channels:
+            self.got_channel.send(self, account=account,
+                                  connection=connection, channel=channel)
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -75,6 +116,102 @@ class Neighborhood(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
+        self._activities = {}
+        self._buddies = {None: OwnerBuddyModel()}
+
+        bus = dbus.Bus()
+
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
+        account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+
+        accounts = account_manager.Get(ACCOUNT_MANAGER_SERVICE, 'ValidAccounts',
+                                       dbus_interface=PROPERTIES_IFACE)
+        if not accounts:
+            client = gconf.client_get_default()
+            nick = client.get_string('/desktop/sugar/user/nick')
+
+            params = {
+                    'nickname': nick,
+                    'first-name': '',
+                    'last-name': '',
+                    #'jid': '%s@%s' % ('moc', 'mac'),
+                    'published-name': nick,
+                    }
+
+            properties = {
+                    'org.freedesktop.Telepathy.Account.Enabled': True,
+                    'org.freedesktop.Telepathy.Account.Nickname': nick,
+                    'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
+                    }
+
+            account = account_manager.CreateAccount('salut', 'local-xmpp', 
+                                                    'salut', params, properties)
+            accounts = [account]
+
+        for account in accounts:
+            self._client_handler = ClientHandler()
+            self._client_handler.got_channel.connect(self.__got_channel_cb)
+
+            obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, CHANNEL_DISPATCHER_PATH)
+            channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
+
+            properties = {
+                    'org.freedesktop.Telepathy.Channel.ChannelType': 'org.freedesktop.Telepathy.Channel.Type.ContactList',
+                    'org.freedesktop.Telepathy.Channel.TargetHandleType': HANDLE_TYPE_LIST,
+                    'org.freedesktop.Telepathy.Channel.TargetID': 'subscribe',
+                    }
+            #import time; time.sleep(10)
+            request_path = channel_dispatcher.EnsureChannel(account, properties, 0, SUGAR_CLIENT_SERVICE)
+            obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
+            request = dbus.Interface(obj, CHANNEL_REQUEST)
+            request.connect_to_signal('Failed', self.__channel_request_failed_cb)
+            request.connect_to_signal('Succeeded', self.__channel_request_succeeded_cb)
+            request.Proceed()
+
+            logging.debug('meec %r', request)
+
+    def __got_channel_cb(self, **kwargs):
+        # TODO: How hacky is this?
+        connection_name = kwargs['connection'].replace('/', '.')[1:]
+
+        channel_path = kwargs['channel'][0]
+        connection = Connection(connection_name, kwargs['connection'],
+                ready_handler=partial(self.__connection_ready_cb, channel_path))
+
+    def __connection_ready_cb(self, channel_path, connection):
+        channel = Channel(connection.service_name, channel_path)
+        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
+                  'MembersChanged',
+                  partial(self.__members_changed_cb, connection))
+
+        handles = channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP, 'Members')
+        if handles:
+            self._add_handles(connection, handles)
+
+    def _add_handles(self, connection, handles):
+        interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
+        attributes = connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
+                handles, interfaces, False,
+                reply_handler=partial(self.__get_contact_attributes_cb, connection),
+                error_handler=self.__error_handler_cb)
+
+    def __error_handler_cb(self, error):
+        raise RuntimeError(error)
+
+    def __get_contact_attributes_cb(self, connection, attributes):
+        logging.debug('__get_contact_attributes_cb %r', attributes)
+
+        for handle in attributes.keys():
+            logging.debug('Got handle %r', handle)
+            buddy = BuddyModel(nick=attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias'])
+            self._buddies[(connection.service_name, handle)] = buddy
+            self.emit('buddy-added', buddy)
+
+    def __members_changed_cb(self, connection, message, added, removed,
+            local_pending, remote_pending, actor, reason):
+        self._add_handles(connection, added)
+
+        """
         self._activities = {}
         self._buddies = {}
         self._buddies[None] = OwnerBuddyModel()
@@ -106,6 +243,13 @@ class Neighborhood(gobject.GObject):
                              gconf.CLIENT_PRELOAD_NONE)
         gconf_client.notify_add('/desktop/sugar/collaboration/publish_gadget',
             self.__publish_gadget_changed_cb)
+        """
+
+    def __channel_request_failed_cb(self, error, message):
+        raise RuntimeError('Couldn\'t retrieve contact list: %s %s', error, message)
+
+    def __channel_request_succeeded_cb(self):
+        logging.debug('moooc Successfully ensured a ContactList channel')
 
     def __conn_addded_cb(self, watcher, conn):
         if CONN_INTERFACE_GADGET not in conn:
@@ -205,6 +349,9 @@ class Neighborhood(gobject.GObject):
             self.emit('buddy-moved', model, activity_model)
         else:
             self.emit('buddy-moved', model, None)
+
+    def __buddy_added_cb(self, **kwargs):
+        self.emit('buddy-added', kwargs['buddy'])
 
     def _buddy_appeared_cb(self, pservice, buddy):
         if self._buddies.has_key(buddy.object_path()):

@@ -98,15 +98,21 @@ class OwnerBuddyModel(BaseBuddyModel):
     def get_buddy(self):
         return None
 
-
 class BuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarBuddyModel'
-    def __init__(self, key=None, buddy=None, nick=None):
-        if (key and buddy) or (not key and not buddy):
-            raise RuntimeError("Must specify only _one_ of key or buddy.")
+    def __init__(self, **kwargs):
+        BaseBuddyModel.__init__(self, **kwargs)
 
-        BaseBuddyModel.__init__(self, nick=nick, key=key)
-        
+    def is_owner(self):
+        return False
+
+    def get_current_activity(self):
+        return None
+
+    def get_buddy(self):
+        raise NotImplementedError
+
+"""        
         self._pservice = presenceservice.get_instance()
 
         self._buddy = None
@@ -218,4 +224,10 @@ class BuddyModel(BaseBuddyModel):
         self.emit('disappeared')
         self._buddy = None
         self.props.present = False
+"""
+
+class FriendBuddyModel(BuddyModel):
+    __gtype_name__ = 'SugarFriendBuddyModel'
+    def __init__(self, nick, key):
+        BuddyModel.__init__(self, nick=nick, key=key)
 
