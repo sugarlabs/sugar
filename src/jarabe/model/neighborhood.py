@@ -240,11 +240,13 @@ class Neighborhood(gobject.GObject):
                     self.emit('buddy-removed', buddy)
 
     def __aliases_changed_cb(self, connection, aliases):
-        logging.debug('__aliases_changed_cb %r', aliases)
+        logging.debug('__aliases_changed_cb')
         for handle, alias in aliases:
             if (connection.service_name, handle) in self._buddies:
+                logging.debug('Got handle %r with nick %r, going to update', handle, alias)
                 buddy = self._buddies[(connection.service_name, handle)]
                 buddy.props.nick = alias
+                buddy.props.key = (connection.service_name, handle)
 
     def _add_handles(self, connection, handles):
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
@@ -267,7 +269,7 @@ class Neighborhood(gobject.GObject):
                 buddy.props.nick = nick
             else:
                 logging.debug('Got handle %r with nick %r, going to add', handle, nick)
-                buddy = BuddyModel(nick=nick)
+                buddy = BuddyModel(nick=nick, key=(connection.service_name, handle))
                 self._buddies[(connection.service_name, handle)] = buddy
                 self.emit('buddy-added', buddy)
 
