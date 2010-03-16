@@ -126,32 +126,15 @@ class Neighborhood(gobject.GObject):
 
         accounts = account_manager.Get(ACCOUNT_MANAGER_SERVICE, 'ValidAccounts',
                                        dbus_interface=PROPERTIES_IFACE)
-        if not accounts:
-            client = gconf.client_get_default()
-            nick = client.get_string('/desktop/sugar/user/nick')
+        logging.debug('accounts %r', accounts)
 
-            params = {
-                    'nickname': nick,
-                    'first-name': '',
-                    'last-name': '',
-                    #'jid': '%s@%s' % ('moc', 'mac'),
-                    'published-name': nick,
-                    }
+        self._client_handler = ClientHandler()
+        self._client_handler.got_channel.connect(self.__got_channel_cb)
 
-            properties = {
-                    'org.freedesktop.Telepathy.Account.Enabled': True,
-                    'org.freedesktop.Telepathy.Account.Nickname': nick,
-                    'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
-                    }
-
-            account = account_manager.CreateAccount('salut', 'local-xmpp', 
-                                                    'salut', params, properties)
-            accounts = [account]
+        self._ensure_link_local_account(account_manager, accounts)
+        self._ensure_server_account(account_manager, accounts)
 
         for account in accounts:
-            self._client_handler = ClientHandler()
-            self._client_handler.got_channel.connect(self.__got_channel_cb)
-
             obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, CHANNEL_DISPATCHER_PATH)
             channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
 
@@ -169,6 +152,56 @@ class Neighborhood(gobject.GObject):
             request.Proceed()
 
             logging.debug('meec %r', request)
+
+    def _ensure_link_local_account(self, account_manager, accounts):
+        for account in accounts:
+            if 'salut' in account:
+                return
+
+        client = gconf.client_get_default()
+        nick = client.get_string('/desktop/sugar/user/nick')
+
+        params = {
+                'nickname': nick,
+                'first-name': '',
+                'last-name': '',
+                #'jid': '%s@%s' % ('moc', 'mac'),
+                'published-name': nick,
+                }
+
+        properties = {
+                'org.freedesktop.Telepathy.Account.Enabled': True,
+                'org.freedesktop.Telepathy.Account.Nickname': nick,
+                'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
+                }
+
+        account = account_manager.CreateAccount('salut', 'local-xmpp',
+                                                'salut', params, properties)
+        accounts.append(account)
+
+    def _ensure_server_account(self, account_manager, accounts):
+        for account in accounts:
+            if 'gabble' in account:
+                return
+
+        client = gconf.client_get_default()
+        nick = client.get_string('/desktop/sugar/user/nick')
+
+        params = {
+                'account': '***',
+                'password': '***',
+                'server': 'talk.google.com',
+                }
+
+        properties = {
+                'org.freedesktop.Telepathy.Account.Enabled': True,
+                'org.freedesktop.Telepathy.Account.Nickname': nick,
+                'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
+                }
+
+        account = account_manager.CreateAccount('gabble', 'jabber',
+                                                'jabber', params, properties)
+        accounts.append(account)
 
     def __got_channel_cb(self, **kwargs):
         # TODO: How hacky is this?
@@ -224,13 +257,19 @@ class Neighborhood(gobject.GObject):
         raise RuntimeError(error)
 
     def __get_contact_attributes_cb(self, connection, attributes):
-        logging.debug('__get_contact_attributes_cb %r', attributes)
+        logging.debug('__get_contact_attributes_cb')
 
         for handle in attributes.keys():
-            logging.debug('Got handle %r', handle)
-            buddy = BuddyModel(nick=attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias'])
-            self._buddies[(connection.service_name, handle)] = buddy
-            self.emit('buddy-added', buddy)
+            nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
+            if (connection.service_name, handle) in self._buddies:
+                logging.debug('Got handle %r with nick %r, going to update', handle, nick)
+                buddy = self._buddies[(connection.service_name, handle)]
+                buddy.props.nick = nick
+            else:
+                logging.debug('Got handle %r with nick %r, going to add', handle, nick)
+                buddy = BuddyModel(nick=nick)
+                self._buddies[(connection.service_name, handle)] = buddy
+                self.emit('buddy-added', buddy)
 
     def __members_changed_cb(self, connection, message, added, removed,
             local_pending, remote_pending, actor, reason):
