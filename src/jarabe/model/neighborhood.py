@@ -154,6 +154,7 @@ class Neighborhood(gobject.GObject):
             logging.debug('meec %r', request)
 
     def _ensure_link_local_account(self, account_manager, accounts):
+        # TODO: Is this the better way to check for an account?
         for account in accounts:
             if 'salut' in account:
                 return
@@ -180,6 +181,7 @@ class Neighborhood(gobject.GObject):
         accounts.append(account)
 
     def _ensure_server_account(self, account_manager, accounts):
+        # TODO: Is this the better way to check for an account?
         for account in accounts:
             if 'gabble' in account:
                 return
@@ -191,6 +193,7 @@ class Neighborhood(gobject.GObject):
                 'account': '***',
                 'password': '***',
                 'server': 'talk.google.com',
+                'resource': 'sugar',
                 }
 
         properties = {
