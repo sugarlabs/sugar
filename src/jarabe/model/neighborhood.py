@@ -29,13 +29,18 @@ from telepathy.interfaces import CONNECTION, \
                                  CONNECTION_INTERFACE_SIMPLE_PRESENCE, \
                                  CHANNEL_INTERFACE, \
                                  CHANNEL_INTERFACE_GROUP, \
+                                 CHANNEL_TYPE_TEXT, \
                                  ACCOUNT_MANAGER, \
                                  CHANNEL_DISPATCHER, \
+                                 CHANNEL_DISPATCH_OPERATION, \
                                  CHANNEL_REQUEST, \
                                  CLIENT, \
-                                 CLIENT_HANDLER
+                                 CLIENT_APPROVER, \
+                                 CLIENT_HANDLER, \
+                                 CLIENT_INTERFACE_REQUESTS
 from telepathy.constants import HANDLE_TYPE_LIST, \
-                                CONNECTION_PRESENCE_TYPE_OFFLINE
+                                CONNECTION_PRESENCE_TYPE_OFFLINE, \
+                                CONNECTION_HANDLE_TYPE_CONTACT
 from telepathy.client import Connection, Channel
 from telepathy.server import DBusProperties
 
@@ -73,7 +78,9 @@ class ActivityModel:
 
 class ClientHandler(dbus.service.Object, DBusProperties):
     def __init__(self):
-        self._interfaces = set([CLIENT, CLIENT_HANDLER, PROPERTIES_IFACE])
+        self._interfaces = set([CLIENT, CLIENT_HANDLER,
+                                CLIENT_INTERFACE_REQUESTS, PROPERTIES_IFACE,
+                                CLIENT_APPROVER])
 
         bus = dbus.Bus()
         bus_name = dbus.service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
@@ -82,10 +89,25 @@ class ClientHandler(dbus.service.Object, DBusProperties):
         DBusProperties.__init__(self)
 
         self._implement_property_get(CLIENT, {
-            'Interfaces': lambda: [CLIENT, CLIENT_HANDLER, PROPERTIES_IFACE],
+            'Interfaces': lambda: list(self._interfaces),
           })
-
+        self._implement_property_get(CLIENT_HANDLER, {
+            'HandlerChannelFilter': self.__get_filters_cb,
+          })
+        self._implement_property_get(CLIENT_APPROVER, {
+            'ApproverChannelFilter': self.__get_filters_cb,
+          })
         self.got_channel = dispatch.Signal()
+
+    def __get_filters_cb(self):
+        logging.debug('__get_filters_cb')
+        filters = {
+            CHANNEL_INTERFACE + '.ChannelType'     : CHANNEL_TYPE_TEXT,
+            CHANNEL_INTERFACE + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+            }
+        filter_dict = dbus.Dictionary(filters, signature='sv')
+        logging.debug('__get_filters_cb %r', dbus.Array([filter_dict], signature='a{sv}'))
+        return dbus.Array([filter_dict], signature='a{sv}')
 
     @dbus.service.method(dbus_interface=CLIENT_HANDLER,
                          in_signature='ooa(oa{sv})aota{sv}', out_signature='')
@@ -96,6 +118,25 @@ class ClientHandler(dbus.service.Object, DBusProperties):
         for channel in channels:
             self.got_channel.send(self, account=account,
                                   connection=connection, channel=channel)
+
+    @dbus.service.method(dbus_interface=CLIENT_INTERFACE_REQUESTS,
+                         in_signature='oa{sv}', out_signature='')
+    def AddRequest(self, request, properties):
+        logging.debug('AddRequest\n%r\n%r', request, properties)
+
+    @dbus.service.method(dbus_interface=CLIENT_APPROVER,
+                         in_signature='a(oa{sv})oa{sv}', out_signature='')
+    def AddDispatchOperation(self, channels, dispatch_operation_path, properties):
+        logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels, dispatch_operation_path, properties)
+        gobject.idle_add(self._dispatch_cb, dispatch_operation_path)
+
+    def _dispatch_cb(self, dispatch_operation_path):
+        bus = dbus.Bus()
+        obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
+        dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
+        logging.debug('_dispatch_cb 1')
+        dispatch_operation.HandleWith('org.freedesktop.Telepathy.Client.org.laptop.Chat')
+        logging.debug('_dispatch_cb 2')
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -143,7 +184,6 @@ class Neighborhood(gobject.GObject):
                     'org.freedesktop.Telepathy.Channel.TargetHandleType': HANDLE_TYPE_LIST,
                     'org.freedesktop.Telepathy.Channel.TargetID': 'subscribe',
                     }
-            #import time; time.sleep(10)
             request_path = channel_dispatcher.EnsureChannel(account, properties, 0, SUGAR_CLIENT_SERVICE)
             obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
             request = dbus.Interface(obj, CHANNEL_REQUEST)

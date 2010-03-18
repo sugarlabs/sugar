@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export SUGAR_SCALING=72
+export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
+
+exec $@
