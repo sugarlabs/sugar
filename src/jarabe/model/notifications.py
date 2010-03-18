@@ -43,7 +43,7 @@ class NotificationService(dbus.service.Object):
                hints, expire_timeout):
 
         logging.debug('Received notification: %r', [app_name, replaces_id,
-                      app_icon, summary, body, actions, hints, expire_timeout])
+                      '<app_icon>', summary, body, actions, '<hints>', expire_timeout])
 
         if replaces_id > 0:
             notification_id = replaces_id

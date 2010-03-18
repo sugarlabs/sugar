@@ -322,7 +322,7 @@ class Frame(object):
         del self._notif_by_icon[icon]
 
     def __notification_received_cb(self, **kwargs):
-        logging.debug('__notification_received_cb %r', kwargs)
+        logging.debug('__notification_received_cb')
         icon = NotificationIcon()
 
         hints = kwargs['hints']
