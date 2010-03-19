@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,36 +22,26 @@ import gobject
 import gconf
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import CONNECTION, \
-                                 CONNECTION_INTERFACE_REQUESTS, \
-                                 CONNECTION_INTERFACE_ALIASING, \
-                                 CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
-                                 CONNECTION_INTERFACE_CONTACTS, \
-                                 CONNECTION_INTERFACE_SIMPLE_PRESENCE, \
-                                 CHANNEL_INTERFACE, \
+from telepathy.interfaces import ACCOUNT_MANAGER, \
+                                 CHANNEL, \
                                  CHANNEL_INTERFACE_GROUP, \
-                                 CHANNEL_TYPE_TEXT, \
-                                 ACCOUNT_MANAGER, \
                                  CHANNEL_DISPATCHER, \
-                                 CHANNEL_DISPATCH_OPERATION, \
                                  CHANNEL_REQUEST, \
-                                 CLIENT, \
-                                 CLIENT_APPROVER, \
-                                 CLIENT_HANDLER, \
-                                 CLIENT_INTERFACE_REQUESTS
+                                 CHANNEL_TYPE_CONTACT_LIST, \
+                                 CONNECTION, \
+                                 CONNECTION_INTERFACE_ALIASING, \
+                                 CONNECTION_INTERFACE_CONTACTS, \
+                                 CONNECTION_INTERFACE_SIMPLE_PRESENCE
 from telepathy.constants import HANDLE_TYPE_LIST, \
-                                CONNECTION_PRESENCE_TYPE_OFFLINE, \
-                                CONNECTION_HANDLE_TYPE_CONTACT
+                                CONNECTION_PRESENCE_TYPE_OFFLINE
 from telepathy.client import Connection, Channel
-from telepathy.server import DBusProperties
 
 from sugar.graphics.xocolor import XoColor
 from sugar import activity
-from sugar import dispatch
 
 from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
+from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
-from jarabe.util.telepathy import connection_watcher
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
 ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
@@ -75,68 +66,6 @@ class ActivityModel:
 
     def get_bundle_id(self):
         return self.bundle.get_bundle_id()
-
-class ClientHandler(dbus.service.Object, DBusProperties):
-    def __init__(self):
-        self._interfaces = set([CLIENT, CLIENT_HANDLER,
-                                CLIENT_INTERFACE_REQUESTS, PROPERTIES_IFACE,
-                                CLIENT_APPROVER])
-
-        bus = dbus.Bus()
-        bus_name = dbus.service.BusName(SUGAR_CLIENT_SERVICE, bus=bus)
-
-        dbus.service.Object.__init__(self, bus_name, SUGAR_CLIENT_PATH)
-        DBusProperties.__init__(self)
-
-        self._implement_property_get(CLIENT, {
-            'Interfaces': lambda: list(self._interfaces),
-          })
-        self._implement_property_get(CLIENT_HANDLER, {
-            'HandlerChannelFilter': self.__get_filters_cb,
-          })
-        self._implement_property_get(CLIENT_APPROVER, {
-            'ApproverChannelFilter': self.__get_filters_cb,
-          })
-        self.got_channel = dispatch.Signal()
-
-    def __get_filters_cb(self):
-        logging.debug('__get_filters_cb')
-        filters = {
-            CHANNEL_INTERFACE + '.ChannelType'     : CHANNEL_TYPE_TEXT,
-            CHANNEL_INTERFACE + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
-            }
-        filter_dict = dbus.Dictionary(filters, signature='sv')
-        logging.debug('__get_filters_cb %r', dbus.Array([filter_dict], signature='a{sv}'))
-        return dbus.Array([filter_dict], signature='a{sv}')
-
-    @dbus.service.method(dbus_interface=CLIENT_HANDLER,
-                         in_signature='ooa(oa{sv})aota{sv}', out_signature='')
-    def HandleChannels(self, account, connection, channels, requests_satisfied,
-                        user_action_time, handler_info):
-        logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account, connection,
-                channels, requests_satisfied, user_action_time, handler_info)
-        for channel in channels:
-            self.got_channel.send(self, account=account,
-                                  connection=connection, channel=channel)
-
-    @dbus.service.method(dbus_interface=CLIENT_INTERFACE_REQUESTS,
-                         in_signature='oa{sv}', out_signature='')
-    def AddRequest(self, request, properties):
-        logging.debug('AddRequest\n%r\n%r', request, properties)
-
-    @dbus.service.method(dbus_interface=CLIENT_APPROVER,
-                         in_signature='a(oa{sv})oa{sv}', out_signature='')
-    def AddDispatchOperation(self, channels, dispatch_operation_path, properties):
-        logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels, dispatch_operation_path, properties)
-        gobject.idle_add(self._dispatch_cb, dispatch_operation_path)
-
-    def _dispatch_cb(self, dispatch_operation_path):
-        bus = dbus.Bus()
-        obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
-        dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
-        logging.debug('_dispatch_cb 1')
-        dispatch_operation.HandleWith('org.freedesktop.Telepathy.Client.org.laptop.Chat')
-        logging.debug('_dispatch_cb 2')
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -169,8 +98,8 @@ class Neighborhood(gobject.GObject):
                                        dbus_interface=PROPERTIES_IFACE)
         logging.debug('accounts %r', accounts)
 
-        self._client_handler = ClientHandler()
-        self._client_handler.got_channel.connect(self.__got_channel_cb)
+        client_handler = telepathyclient.get_instance()
+        client_handler.got_channel.connect(self.__got_channel_cb)
 
         self._ensure_link_local_account(account_manager, accounts)
         self._ensure_server_account(account_manager, accounts)
@@ -180,9 +109,9 @@ class Neighborhood(gobject.GObject):
             channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
 
             properties = {
-                    'org.freedesktop.Telepathy.Channel.ChannelType': 'org.freedesktop.Telepathy.Channel.Type.ContactList',
-                    'org.freedesktop.Telepathy.Channel.TargetHandleType': HANDLE_TYPE_LIST,
-                    'org.freedesktop.Telepathy.Channel.TargetID': 'subscribe',
+                    CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
+                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
+                    CHANNEL + '.TargetID': 'subscribe',
                     }
             request_path = channel_dispatcher.EnsureChannel(account, properties, 0, SUGAR_CLIENT_SERVICE)
             obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
@@ -251,7 +180,7 @@ class Neighborhood(gobject.GObject):
         connection_name = kwargs['connection'].replace('/', '.')[1:]
 
         channel_path = kwargs['channel'][0]
-        connection = Connection(connection_name, kwargs['connection'],
+        Connection(connection_name, kwargs['connection'],
                 ready_handler=partial(self.__connection_ready_cb, channel_path))
 
     def __connection_ready_cb(self, channel_path, connection):
@@ -276,7 +205,7 @@ class Neighborhood(gobject.GObject):
         logging.debug('__presences_changed_cb %r', presences)
         for handle, presence in presences.iteritems():
             if (connection.service_name, handle) in self._buddies:
-                presence_type, status, message = presence
+                presence_type, status_, message_ = presence
                 if presence_type == CONNECTION_PRESENCE_TYPE_OFFLINE:
                     buddy = self._buddies[(connection.service_name, handle)]
                     del self._buddies[(connection.service_name, handle)]
@@ -293,7 +222,7 @@ class Neighborhood(gobject.GObject):
 
     def _add_handles(self, connection, handles):
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
-        attributes = connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
+        connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
                 handles, interfaces, False,
                 reply_handler=partial(self.__get_contact_attributes_cb, connection),
                 error_handler=self.__error_handler_cb)
