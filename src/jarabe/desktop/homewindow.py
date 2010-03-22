@@ -82,9 +82,9 @@ class HomeWindow(gtk.Window):
 
     def _visibility_notify_event_cb(self, window, event):
         if event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED:
-            self._deactivate_view()
+            self._deactivate_view(shell.get_model().zoom_level)
         else:
-            self._activate_view()
+            self._activate_view(shell.get_model().zoom_level)
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']
