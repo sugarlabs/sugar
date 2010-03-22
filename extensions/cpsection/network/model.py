@@ -15,9 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
 import dbus
 from gettext import gettext as _
 import gconf
+import os
+
+_logger = logging.getLogger('ControlPanel - Network')
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -64,7 +68,10 @@ def _restart_jabber():
         raise ReadError('%s service not available' % _PS_SERVICE)
     ps.RestartServerConnection()
 
-def get_radio():
+def print_radio():
+    print ('off', 'on')[get_radio()]
+    
+def get_radio_nm():
     bus = dbus.SystemBus()
     try:
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
@@ -78,10 +85,12 @@ def get_radio():
     else:
         raise ReadError(_('State is unknown.'))
 
-def print_radio():
-    print ('off', 'on')[get_radio()]
-    
-def set_radio(state):
+
+# set_radio_nm/get_radio_nm aren't currently used, but it's
+# rumored that in NM 0.8, NM will be able to adjust the
+# rfkill state itself.  if it does, and restores it at boot
+# time, we can go back to using NM.  leaving this code for now.
+def set_radio_nm(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
     """    
@@ -106,6 +115,53 @@ def set_radio(state):
 
     return 0
 
+def get_radio_rfkill():
+    pipe_stdout = os.popen('/sbin/rfkill list wifi', 'r')
+    try:
+        output = pipe_stdout.read()
+        _logger.debug('rfkill said: %s' % output)
+        blocked = " blocked: yes" in output
+        # if not soft- or hard-blocked, radio is on
+        return not blocked
+
+    finally:
+        pipe_stdout.close()
+
+RFKILL_STATE_FILE = '/home/olpc/.rfkill_block_wifi'
+
+def set_radio_rfkill(state):
+    """Turn Radio 'on' or 'off'
+    state : 'on/off'
+    """    
+    if state == 'on' or state == 1:
+        os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "unblock", "wifi")
+        # remove the flag file (checked at boot)
+        try:
+            os.unlink(RFKILL_STATE_FILE)
+        except
+            _logger.debug('File %s was not unlinked' % RFKILL_STATE_FILE)
+    elif state == 'off' or state == 0:
+        os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "block", "wifi")
+        # touch the flag file
+        try:
+            fd = open(RFKILL_STATE_FILE, 'w')
+        except IOError:
+            _logger.debug('File %s is not writeable' % RFKILL_STATE_FILE)
+        else:
+            fd.close()
+    else:
+        raise ValueError(_("Error in specified radio argument use on/off."))
+
+    return 0
+
+# get current status from rfkill
+def get_radio():
+    return get_radio_rfkill()
+
+# set new status to both the dot-file and rfkill
+def set_radio(state):
+    set_radio_rfkill(state)
+
 def clear_registration():
     """Clear the registration with the schoolserver
     """
@@ -122,7 +178,7 @@ def get_publish_information():
     client = gconf.client_get_default()
     publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
     return publish
-	
+
 def print_publish_information():
     print get_publish_information()
 
