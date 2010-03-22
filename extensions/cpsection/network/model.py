@@ -138,7 +138,7 @@ def set_radio_rfkill(state):
         # remove the flag file (checked at boot)
         try:
             os.unlink(RFKILL_STATE_FILE)
-        except
+        except:
             _logger.debug('File %s was not unlinked' % RFKILL_STATE_FILE)
     elif state == 'off' or state == 0:
         os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "block", "wifi")
