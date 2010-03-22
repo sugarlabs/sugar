@@ -249,9 +249,9 @@ class KeyHandler(object):
         # If either the xmodmap or xrandr command fails, check_call will fail
         # with CalledProcessError, which we raise.
         try:
-            subprocess.check_call(argv)
             subprocess.check_call(['xrandr', '-o', 
                                    states[self._screen_rotation]])
+            subprocess.check_call(argv)
         except OSError, e:
             if e.errno != errno.EINTR:
                 raise
