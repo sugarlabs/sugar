@@ -20,12 +20,8 @@ import os
 import gconf
 import simplejson
 
-from telepathy.interfaces import CHANNEL_TYPE_TEXT
-
 from sugar import env
-from sugar.presence import presenceservice
 from sugar import util
-from jarabe.model.invites import Invites
 
 class Owner(gobject.GObject):
     """Class representing the owner of this machine/instance. This class
@@ -66,43 +62,8 @@ class Owner(gobject.GObject):
         digest = hashlib.md5(self._icon).digest()
         self._icon_hash = util.printable_hash(digest)
 
-        self._pservice = presenceservice.get_instance()
-        self._pservice.connect('activity-invitation',
-                               self._activity_invitation_cb)
-        self._pservice.connect('private-invitation',
-                               self._private_invitation_cb)
-        self._pservice.connect('activity-disappeared',
-                              self._activity_disappeared_cb)
-
-        self._invites = Invites()
-
-    def get_invites(self):
-        return self._invites
-
     def get_nick(self):
         return self._nick
-
-    def _activity_invitation_cb(self, pservice, activity, buddy, message):
-        self._invites.add_invite(activity.props.type,
-                                 activity.props.id)
-
-    def _private_invitation_cb(self, pservice, bus_name, connection,
-                               channel, channel_type):
-        """Handle a private-invitation from Presence Service.
-
-        This is a connection by a non-Sugar XMPP client, so
-        launch Chat or VideoChat with the Telepathy connection and
-        channel.
-        """
-        if channel_type == CHANNEL_TYPE_TEXT:
-            bundle_id = 'org.laptop.Chat'
-        else:
-            bundle_id = 'org.laptop.VideoChat'
-        tp_channel = simplejson.dumps([bus_name, connection, channel])
-        self._invites.add_private_invite(tp_channel, bundle_id)
-
-    def _activity_disappeared_cb(self, pservice, activity):
-        self._invites.remove_activity(activity.props.id)
 
 _model = None
 
