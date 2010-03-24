@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 # -*- mode: makefile; coding: utf-8 -*-
-# Copyright © 2007-2009 Jonas Smedegaard <dr@jones.dk>
+# Copyright © 2007-2010 Jonas Smedegaard <dr@jones.dk>
 # Description: Main Debian packaging script for sugar
 #
 # This program is free software; you can redistribute it and/or
@@ -23,16 +23,10 @@ pkgbranch = 0.88
 DEB_BUILDDIR = build
 DEB_PYTHON_SYSTEM = pycentral
 DEB_PYTHON_PACKAGES = python-jarabe-$(pkgbranch) sugar-session-$(pkgbranch) sugar-emulator-$(pkgbranch) sugar-tools-$(pkgbranch)
-ifneq (,$(DEB_MAINTAINER_MODE))
-  # Enable stuff not policy compliant (eg. unsuitable for build daemons)
-  DEB_COPYRIGHT_CHECK_STRICT = yes
-  DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
-endif
-include debian/cdbs/1/rules/upstream-tarball.mk
-include debian/cdbs/1/rules/copyright-check.mk
-include debian/cdbs/1/class/python-autotools.mk
+include /usr/share/cdbs/1/rules/upstream-tarball.mk
+include /usr/share/cdbs/1/rules/utils.mk
+include /usr/share/cdbs/1/class/python-autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
-include debian/cdbs/1/rules/buildinfo.mk
 
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
@@ -61,7 +55,7 @@ binary-install/sugar-session-$(pkgbranch)::
 	dh_gconf -p$(cdbs_curpkg)
 
 # Needed by upstream build process
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
+CDBS_BUILD_DEPENDS += , libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
 comma = ,
 
@@ -162,7 +156,4 @@ CDBS_CONFLICTS_python-jarabe-$(pkgbranch) += , sugar-journal-activity
 CDBS_REPLACES_python-jarabe-$(pkgbranch) += , sugar-journal-activity
 
 # Needed for our packaging
-CDBS_BUILD_DEPENDS := $(CDBS_BUILD_DEPENDS), python-empy
-
-# Resolve, cleanup and apply CDBS-declared dependencies
-include debian/cdbs/1/rules/package-relations.mk
+CDBS_BUILD_DEPENDS += , python-empy
