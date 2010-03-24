@@ -5,10 +5,9 @@ Only applied as patch to avoid bloating diffs by regenerating autotools.
 
 Forwarded: not-needed
 Last-Update: 2009-11-05
-diff --git a/configure b/configure
 --- a/configure
 +++ b/configure
-@@ -2795,7 +2795,7 @@
+@@ -2855,7 +2855,7 @@
  
  # Setup GETTEXT
  #
