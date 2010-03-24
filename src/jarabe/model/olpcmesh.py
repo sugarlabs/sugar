@@ -170,8 +170,8 @@ class OlpcMeshManager(object):
         logging.error('Failed to activate connection: %s', err)
 
     def _activate_connection(self, channel, anycast_address=None):
-        logging.debug("activate channel %d anycast %s",
-                      (channel, repr(anycast_address)))
+        logging.debug("activate channel %d anycast %r",
+                      channel, anycast_address)
         proxy = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         network_manager = dbus.Interface(proxy, _NM_IFACE)
         connection = self._make_connection(channel, anycast_address)
