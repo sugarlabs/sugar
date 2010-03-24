@@ -1,3 +1,15 @@
+sugar-0.88 (0.87.2-2) UNRELEASED; urgency=low
+
+  * Drop all local CDBS snippets: included with main cdbs package now.
+  * Revert apply patches to source in Git.
+  * Refresh and unfuzz patches.
+  * Drop build-dependencies on quilt and patchutils.
+  * Relax build-dependencies on python-central and python-dev.
+  * Relax build-dependency on devscripts slightly, to ease backporting.
+  * Tighten build-dependency on cdbs.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 10:23:10 +0100
+
 sugar-0.88 (0.87.2-1) unstable; urgency=low
 
   * New upstream development release.
