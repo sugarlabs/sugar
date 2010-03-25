@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
+	echo Refusing to run as root.
+	exit 3
+fi
+
 usage() {
     cat <<EOF
 Usage: sugar [OPTION]..
@@ -45,7 +50,14 @@ if ! test -f "$GTK2_RC_FILES"; then
     exit 1
 fi
 
-# Source debug definitions
+# Set default language
+export LANG="${LANG:-en_US.utf8}"
+export LANGUAGE="${LANGUAGE:-${LANG}}"
+
+# Source language settings and debug definitions
+if [ -f ~/.i18n ]; then
+        . ~/.i18n
+fi
 if [ -f ~/.sugar/debug ]; then
         . ~/.sugar/debug
 fi

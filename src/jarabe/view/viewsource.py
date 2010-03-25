@@ -266,6 +266,8 @@ class Toolbar(gtk.Toolbar):
     def __init__(self, title, bundle_path, document_path):
         gtk.Toolbar.__init__(self)
 
+        document_button = None
+
         self._add_separator()
 
         activity_bundle = ActivityBundle(bundle_path)
@@ -287,7 +289,7 @@ class Toolbar(gtk.Toolbar):
                         stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
             icon.show()
-            if document_path is not None:
+            if document_button is not None:
                 activity_button.props.group = document_button
             activity_button.props.tooltip = _('Activity Bundle Source')
             activity_button.connect('toggled', self.__button_toggled_cb,

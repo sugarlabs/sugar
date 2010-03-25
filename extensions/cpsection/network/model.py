@@ -65,8 +65,8 @@ def _restart_jabber():
     ps.RestartServerConnection()
 
 def get_radio():
-    bus = dbus.SystemBus()
     try:
+        bus = dbus.SystemBus()
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
         nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
     except dbus.DBusException:
@@ -86,16 +86,16 @@ def set_radio(state):
     state : 'on/off'
     """    
     if state == 'on' or state == 1:
-        bus = dbus.SystemBus()
         try:
+            bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
             nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
     elif state == 'off' or state == 0:
-        bus = dbus.SystemBus()
         try:
+            bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
             nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
         except dbus.DBusException:

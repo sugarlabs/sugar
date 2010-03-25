@@ -19,7 +19,7 @@ from gettext import gettext as _
 from xmlrpclib import ServerProxy, Error
 import socket
 import os
-import string
+from string import ascii_uppercase
 import random
 import time
 import uuid
@@ -37,8 +37,8 @@ def generate_serial_number():
 
     serial_part1 = []
 
-    for y in range(3) :
-        serial_part1.append(random.choice(string.ascii_uppercase))
+    for y_ in range(3) :
+        serial_part1.append(random.choice(ascii_uppercase))
 
     serial_part1 = ''.join(serial_part1)
     serial_part2 = str(int(time.time()))[-8:]
@@ -89,7 +89,8 @@ def register_laptop(url=REGISTER_URL):
     else:
         sn = generate_serial_number()
         uuid_ = str(uuid.uuid1())
-        jabber_server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        setting_name = '/desktop/sugar/collaboration/jabber_server'
+        jabber_server = client.get_string(setting_name)
         store_identifiers(sn, uuid_, jabber_server)
         url = 'http://' + jabber_server + ':8080/'
 

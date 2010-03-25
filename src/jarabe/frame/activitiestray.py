@@ -22,7 +22,6 @@ import os
 
 import gobject
 import gconf
-import dbus
 import gio
 import gtk
 
@@ -36,6 +35,7 @@ from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
+from sugar.datastore import datastore
 from sugar import mime
 from sugar import env
 
@@ -51,9 +51,6 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
 
-DS_DBUS_SERVICE = "org.laptop.sugar.DataStore"
-DS_DBUS_INTERFACE = "org.laptop.sugar.DataStore"
-DS_DBUS_PATH = "/org/laptop/sugar/DataStore"
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
@@ -477,8 +474,7 @@ class IncomingTransferButton(BaseTransferButton):
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
-        self._object_id = None
-        self._metadata = {}
+        self._ds_object = datastore.create()
 
         file_transfer.connect('notify::state', self.__notify_state_cb)
         file_transfer.connect('notify::transferred-bytes',
@@ -512,58 +508,35 @@ class IncomingTransferButton(BaseTransferButton):
     def __notify_state_cb(self, file_transfer, pspec):
         if file_transfer.props.state == filetransfer.FT_STATE_OPEN:
             logging.debug('__notify_state_cb OPEN')
-            self._metadata['title'] = file_transfer.title
-            self._metadata['description'] = file_transfer.description
-            self._metadata['progress'] = '0'
-            self._metadata['keep'] = '0'
-            self._metadata['buddies'] = ''
-            self._metadata['preview'] = ''
-            self._metadata['icon-color'] = file_transfer.buddy.props.color
-            self._metadata['mime_type'] = file_transfer.mime_type
-
-            datastore = self._get_datastore()
-            file_path = ''
-            transfer_ownership = True
-            self._object_id = datastore.create(self._metadata, file_path,
-                                               transfer_ownership)
-
+            self._ds_object.metadata['title'] = file_transfer.title
+            self._ds_object.metadata['description'] = file_transfer.description
+            self._ds_object.metadata['progress'] = '0'
+            self._ds_object.metadata['keep'] = '0'
+            self._ds_object.metadata['buddies'] = ''
+            self._ds_object.metadata['preview'] = ''
+            self._ds_object.metadata['icon-color'] = \
+                    file_transfer.buddy.props.color
+            self._ds_object.metadata['mime_type'] = file_transfer.mime_type
         elif file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
             logging.debug('__notify_state_cb COMPLETED')
-            self._metadata['progress'] = '100'
-
-            datastore = self._get_datastore()
-            file_path = file_transfer.destination_path
-            transfer_ownership = True
-            datastore.update(self._object_id, self._metadata, file_path,
-                             transfer_ownership,
-                             reply_handler=self.__reply_handler_cb,
-                             error_handler=self.__error_handler_cb)
-
+            self._ds_object.metadata['progress'] = '100'
+            self._ds_object.file_path = file_transfer.destination_path
+            datastore.write(self._ds_jobject, transfer_ownership=True,
+                            reply_handler=self.__reply_handler_cb,
+                            error_handler=self.__error_handler_cb)
         elif file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             logging.debug('__notify_state_cb CANCELLED')
-            if self._object_id is not None:
-                datastore.delete(self._object_id,
-                                 reply_handler=self.__reply_handler_cb,
-                                 error_handler=self.__error_handler_cb)
-                self._object_id = None
+            object_id = self._jobject.object_id
+            if object_id is not None:
+                self._ds_object.destroy()
+                datastore.delete(object_id)
+                self._ds_object = None
 
     def __notify_transferred_bytes_cb(self, file_transfer, pspec):
         progress = file_transfer.props.transferred_bytes /      \
                    file_transfer.file_size
-        self._metadata['progress'] = str(progress * 100)
-
-        datastore = self._get_datastore()
-        file_path = ''
-        transfer_ownership = True
-        datastore.update(self._object_id, self._metadata, file_path,
-                         transfer_ownership,
-                         reply_handler=self.__reply_handler_cb,
-                         error_handler=self.__error_handler_cb)
-
-    def _get_datastore(self):
-        bus = dbus.SessionBus()
-        remote_object = bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH)
-        return dbus.Interface(remote_object, DS_DBUS_INTERFACE)
+        self._ds_object.metadata['progress'] = str(progress * 100)
+        datastore.write(self._ds_object.object_id, update_mtime=False)
 
     def __reply_handler_cb(self):
         logging.debug('__reply_handler_cb %r', self._object_id)
@@ -888,4 +861,3 @@ class OutgoingTransferPalette(BaseTransferPalette):
 
     def __dismiss_activate_cb(self, menu_item):
         self.emit('dismiss-clicked')
-

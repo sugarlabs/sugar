@@ -36,6 +36,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
 from sugar.util import unique_id
+from sugar import profile
 
 from jarabe.model import neighborhood
 from jarabe.view.buddyicon import BuddyIcon
@@ -51,17 +52,19 @@ from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 from jarabe.model.network import AccessPoint
+from jarabe.model.olpcmesh import OlpcMeshManager
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
+_NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
-_ICON_NAME = 'network-wireless'
-
+_AP_ICON_NAME = 'network-wireless'
+_OLPC_MESH_ICON_NAME = 'network-mesh'
 
 class WirelessNetworkView(CanvasPulsingIcon):
     def __init__(self, initial_ap):
@@ -86,11 +89,12 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._connection = None
         self._color = None
 
-        if self._mode == network.NM_802_11_MODE_ADHOC:
+        if self._mode == network.NM_802_11_MODE_ADHOC \
+                and self._name_encodes_colors():
             encoded_color = self._name.split("#", 1)
             if len(encoded_color) == 2:
                 self._color = xocolor.XoColor('#' + encoded_color[1])
-        if self._mode == network.NM_802_11_MODE_INFRA:
+        else:
             sha_hash = hashlib.sha1()
             data = self._name + hex(self._flags)
             sha_hash.update(data)
@@ -111,7 +115,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
 
-        if network.find_connection(self._name) is not None:
+        if network.find_connection_by_ssid(self._name) is not None:
             self.props.badge_name = "emblem-favorite"
             self._palette_icon.props.badge_name = "emblem-favorite"
         elif initial_ap.flags == network.NM_802_11_AP_FLAGS_PRIVACY:
@@ -142,8 +146,13 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                       path=self._device.object_path,
                                       dbus_interface=_NM_WIRELESS_IFACE)
 
+    def _name_encodes_colors(self):
+        """Match #XXXXXX,#YYYYYY at the end of the network name"""
+        return self._name[-7] == '#' and self._name[-8] == ',' \
+            and self._name[-15] == '#'
+
     def _create_palette(self):
-        icon_name = get_icon_state(_ICON_NAME, self._strength)
+        icon_name = get_icon_state(_AP_ICON_NAME, self._strength)
         self._palette_icon = Icon(icon_name=icon_name,
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
@@ -213,14 +222,14 @@ class WirelessNetworkView(CanvasPulsingIcon):
             state = network.DEVICE_STATE_UNKNOWN
 
         if state == network.DEVICE_STATE_ACTIVATED:
-            connection = network.find_connection(self._name)
+            connection = network.find_connection_by_ssid(self._name)
             if connection:
                 if self._mode == network.NM_802_11_MODE_INFRA:
                     connection.set_connected()
 
-            icon_name = '%s-connected' % _ICON_NAME
+            icon_name = '%s-connected' % _AP_ICON_NAME
         else:
-            icon_name = _ICON_NAME
+            icon_name = _AP_ICON_NAME
 
         icon_name = get_icon_state(icon_name, self._strength)
         if icon_name:
@@ -330,11 +339,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._connect()
 
     def _connect(self):
-        connection = network.find_connection(self._name)
+        connection = network.find_connection_by_ssid(self._name)
         if connection is None:
             settings = Settings()
             settings.connection.id = 'Auto ' + self._name
-            settings.connection.uuid = unique_id()
+            uuid = settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
             settings.wireless.ssid = self._name
 
@@ -352,7 +361,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
             if wireless_security is not None:
                 settings.wireless.security = '802-11-wireless-security'
 
-            connection = network.add_connection(self._name, settings)
+            connection = network.add_connection(uuid, settings)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
@@ -413,6 +422,17 @@ class WirelessNetworkView(CanvasPulsingIcon):
             return None
         return self._access_points[ap_path]
 
+    def is_olpc_mesh(self):
+        return self._mode == network.NM_802_11_MODE_ADHOC \
+            and self.name == "olpc-mesh"
+
+    def remove_all_aps(self):
+        for ap in self._access_points.values():
+            ap.disconnect()
+        self._access_points = {}
+        self._active_ap = None
+        self.update_strength()
+
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
@@ -422,6 +442,146 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_WIRELESS_IFACE)
+
+
+class OlpcMeshView(CanvasPulsingIcon):
+    def __init__(self, mesh_mgr, channel):
+        CanvasPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
+                                   size=style.STANDARD_ICON_SIZE, cache=True)
+        self._bus = dbus.SystemBus()
+        self._channel = channel
+        self._mesh_mgr = mesh_mgr
+        self._disconnect_item = None
+        self._connect_item = None
+        self._greyed_out = False
+        self._name = ''
+        self._device_state = None
+        self._connection = None
+        self._active = False
+        device = mesh_mgr.mesh_device
+
+        self.connect('button-release-event', self.__button_release_event_cb)
+
+        interface_props = dbus.Interface(device,
+                                         'org.freedesktop.DBus.Properties')
+        interface_props.Get(_NM_DEVICE_IFACE, 'State',
+                            reply_handler=self.__get_device_state_reply_cb,
+                            error_handler=self.__get_device_state_error_cb)
+        interface_props.Get(_NM_OLPC_MESH_IFACE, 'ActiveChannel',
+                            reply_handler=self.__get_active_channel_reply_cb,
+                            error_handler=self.__get_active_channel_error_cb)
+
+        self._bus.add_signal_receiver(self.__device_state_changed_cb,
+                                      signal_name='StateChanged',
+                                      path=device.object_path,
+                                      dbus_interface=_NM_DEVICE_IFACE)
+        self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
+                                      signal_name='PropertiesChanged',
+                                      path=device.object_path,
+                                      dbus_interface=_NM_OLPC_MESH_IFACE)
+
+        pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        self.props.pulse_color = pulse_color
+        self.props.base_color = profile.get_color()
+        self._palette = self._create_palette()
+        self.set_palette(self._palette)
+
+    def _create_palette(self):
+        _palette = palette.Palette(_("Mesh Network %d") % self._channel)
+
+        self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
+        self._connect_item.connect('activate', self.__connect_activate_cb)
+        _palette.menu.append(self._connect_item)
+
+        return _palette
+
+    def __get_device_state_reply_cb(self, state):
+        self._device_state = state
+        self._update()
+
+    def __get_device_state_error_cb(self, err):
+        logging.error('Error getting the device state: %s', err)
+
+    def __device_state_changed_cb(self, new_state, old_state, reason):
+        self._device_state = new_state
+        self._update()
+
+    def __get_active_channel_reply_cb(self, channel):
+        self._active = (channel == self._channel)
+        self._update()
+
+    def __get_active_channel_error_cb(self, err):
+        logging.error('Error getting the active channel: %s', err)
+
+    def __wireless_properties_changed_cb(self, properties):
+        if 'ActiveChannel' in properties:
+            channel = properties['ActiveChannel']
+            self._active = (channel == self._channel)
+            self._update()
+
+    def _update(self):
+        if self._active:
+            state = self._device_state
+        else:
+            state = network.DEVICE_STATE_UNKNOWN
+
+        if state in [network.DEVICE_STATE_PREPARE,
+                     network.DEVICE_STATE_CONFIG,
+                     network.DEVICE_STATE_NEED_AUTH,
+                     network.DEVICE_STATE_IP_CONFIG]:
+            if self._disconnect_item:
+                self._disconnect_item.show()
+            self._connect_item.hide()
+            self._palette.props.secondary_text = _('Connecting...')
+            self.props.pulsing = True
+        elif state == network.DEVICE_STATE_ACTIVATED:
+            if self._disconnect_item:
+                self._disconnect_item.show()
+            self._connect_item.hide()
+            self._palette.props.secondary_text = _('Connected')
+            self.props.pulsing = False
+        else:
+            if self._disconnect_item:
+                self._disconnect_item.hide()
+            self._connect_item.show()
+            self._palette.props.secondary_text = None
+            self.props.pulsing = False
+
+    def _update_color(self):
+        if self._greyed_out:
+            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+        else:
+            self.props.base_color = profile.get_color()
+
+    def __connect_activate_cb(self, icon):
+        self._connect()
+
+    def __button_release_event_cb(self, icon, event):
+        self._connect()
+
+    def _connect(self):
+        self._mesh_mgr.user_activate_channel(self._channel)
+
+    def __activate_reply_cb(self, connection):
+        logging.debug('Connection activated: %s', connection)
+
+    def __activate_error_cb(self, err):
+        logging.error('Failed to activate connection: %s', err)
+
+    def set_filter(self, query):
+        self._greyed_out = (query != '')
+        self._update_color()
+
+    def disconnect(self):
+        self._bus.remove_signal_receiver(self.__device_state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
+        self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
+                                         signal_name='PropertiesChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_OLPC_MESH_IFACE)
 
 
 class ActivityView(hippo.CanvasBox):
@@ -658,12 +818,13 @@ class DeviceObserver(object):
 class NetworkManagerObserver(object):
     def __init__(self, box):
         self._box = box
-        self._bus = dbus.SystemBus()
+        self._bus = None
         self._devices = {}
         self._netmgr = None
 
     def listen(self):
         try:
+            self._bus = dbus.SystemBus()
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
             self._netmgr = dbus.Interface(obj, _NM_IFACE)
         except dbus.DBusException:
@@ -723,6 +884,8 @@ class NetworkManagerObserver(object):
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             self._devices[device_o] = DeviceObserver(self._box, device)
+        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+            self._box.enable_olpc_mesh(device)
 
     def _get_device_path_error_cb(self, err):
         logging.error('Failed to get device type: %s', err)
@@ -735,7 +898,13 @@ class NetworkManagerObserver(object):
             observer = self._devices[device_o]
             observer.disconnect()
             del self._devices[device_o]
-
+            return
+            
+        device = self._bus.get_object(_NM_SERVICE, device_o)
+        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+            self._box.disable_olpc_mesh(device)
 
 class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
@@ -750,7 +919,7 @@ class MeshBox(gtk.VBox):
         self._model = neighborhood.get_model()
         self._buddies = {}
         self._activities = {}
-        self._mesh = {}
+        self._mesh = []
         self._buddy_to_activity = {}
         self._suspended = True
         self._query = ''
@@ -895,6 +1064,14 @@ class MeshBox(gtk.VBox):
             del self.wireless_networks[hash]
 
     def _ap_props_changed_cb(self, ap, old_hash):
+        # if we have mesh hardware, ignore OLPC mesh networks that appear as
+        # normal wifi networks
+        if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
+                and ap.name == "olpc-mesh":
+            logging.debug("ignoring OLPC mesh IBSS")
+            ap.disconnect()
+            return
+
         if old_hash is None: # new AP finished initializing
             self._add_ap_to_network(ap)
             return
@@ -929,18 +1106,49 @@ class MeshBox(gtk.VBox):
             self._remove_net_if_empty(net, ap.network_hash())
             return
 
-        logging.error('Can not remove access point %s', ap_o)
+        # it's not an error if the AP isn't found, since we might have ignored
+        # it (e.g. olpc-mesh adhoc network)
+        logging.debug('Can not remove access point %s' % ap_o)
+
+    def _add_olpc_mesh_icon(self, mesh_mgr, channel):
+        icon = OlpcMeshView(mesh_mgr, channel)
+        self._layout.add(icon)
+        self._mesh.append(icon)
+
+    def enable_olpc_mesh(self, mesh_device):
+        mesh_mgr = OlpcMeshManager(mesh_device)
+        self._add_olpc_mesh_icon(mesh_mgr, 1)
+        self._add_olpc_mesh_icon(mesh_mgr, 6)
+        self._add_olpc_mesh_icon(mesh_mgr, 11)
+
+        # the OLPC mesh can be recognised as a "normal" wifi network. remove
+        # any such normal networks if they have been created
+        for hash, net in self.wireless_networks.iteritems():
+            if not net.is_olpc_mesh():
+                continue
+
+            logging.debug("removing OLPC mesh IBSS")
+            net.remove_all_aps()
+            net.disconnect()
+            self._layout.remove(net)
+            del self.wireless_networks[hash]
+
+    def disable_olpc_mesh(self, mesh_device):
+        for icon in self._mesh:
+            icon.disconnect()
+            self._layout.remove(icon)
+        self._mesh = []
 
     def suspend(self):
         if not self._suspended:
             self._suspended = True
-            for net in self.wireless_networks.values():
+            for net in self.wireless_networks.values() + self._mesh:
                 net.props.paused = True
 
     def resume(self):
         if self._suspended:
             self._suspended = False
-            for net in self.wireless_networks.values():
+            for net in self.wireless_networks.values() + self._mesh:
                 net.props.paused = False
 
     def _toolbar_query_changed_cb(self, toolbar, query):

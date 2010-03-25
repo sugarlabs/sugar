@@ -577,13 +577,13 @@ class ShellModel(gobject.GObject):
         if home_activity:
             logging.debug("Activity %s (%s) launch failed", activity_id,
                 home_activity.get_type())
-            home_activity.props.launching = False
-            self._remove_activity(home_activity)
+            if home_activity.props.launching:
+                self.emit('launch-failed', home_activity)
+            else:
+                self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.',
                 activity_id)
-
-        self.emit('launch-failed', home_activity)
 
     def _check_activity_launched(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)

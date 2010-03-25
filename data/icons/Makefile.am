@@ -7,6 +7,7 @@ sugar_DATA =                        \
 	module-frame.svg                \
 	module-keyboard.svg             \
 	module-language.svg             \
+	module-modemconfiguration.svg	\
 	module-network.svg              \
 	module-power.svg                \
 	module-updater.svg

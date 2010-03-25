@@ -48,16 +48,16 @@ class SessionManager(session.SessionManager):
         self.initiate_shutdown()
 
     def shutdown_completed(self):
-        bus = dbus.SystemBus()
-        proxy = bus.get_object('org.freedesktop.Hal',
-                               '/org/freedesktop/Hal/devices/computer')
-        pm = dbus.Interface(proxy, \
-                            'org.freedesktop.Hal.Device.SystemPowerManagement')
-
         if env.is_emulator():
             self._close_emulator()
-        else:
+        elif self._logout_mode != self.MODE_LOGOUT:
             try:
+                bus = dbus.SystemBus()
+                proxy = bus.get_object('org.freedesktop.Hal',
+                                       '/org/freedesktop/Hal/devices/computer')
+                pm = dbus.Interface(proxy,
+                                    'org.freedesktop.Hal.Device.SystemPowerManagement')
+
                 if self._logout_mode == self.MODE_SHUTDOWN:
                     pm.Shutdown()
                 elif self._logout_mode == self.MODE_REBOOT:

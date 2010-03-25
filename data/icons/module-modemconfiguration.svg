@@ -1,0 +1,11 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#ffffff">
+	<!ENTITY fill_color "none">
+]><svg enable-background="new 0 0 56.167 55" height="55px" version="1.1" viewBox="0 0 56.167 55" width="56.167px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="network-gsm">
+	<g>
+		<path d="M13.759,11.28    v28.937h0.002c0,0.004-0.002,0.008-0.002,0.014c0,7.05,5.715,12.763,12.764,12.763c7.047,0,12.762-5.713,12.762-12.763v-0.014    V11.28H13.759z" fill="&fill_color;" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5"/>
+		<rect fill="&stroke_color;" height="9.702" width="14.063" x="19.43" y="16.902"/>
+		
+			<line fill="&fill_color;" stroke="&stroke_color;" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" x1="39.286" x2="39.286" y1="11.28" y2="1.993"/>
+	</g>
+</g></svg>
