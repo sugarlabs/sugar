@@ -31,7 +31,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-subdir = extensions/cpsection/frame
+subdir = extensions/cpsection/modemconfiguration
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(sugar_PYTHON)
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -192,7 +192,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-sugardir = $(pkgdatadir)/extensions/cpsection/frame
+sugardir = $(pkgdatadir)/extensions/cpsection/modemconfiguration
 sugar_PYTHON = \
 	__init__.py	\
 	model.py	\
@@ -210,9 +210,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign extensions/cpsection/frame/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign extensions/cpsection/modemconfiguration/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign extensions/cpsection/frame/Makefile
+	  $(AUTOMAKE) --foreign extensions/cpsection/modemconfiguration/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
