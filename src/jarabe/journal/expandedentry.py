@@ -28,7 +28,6 @@ import simplejson
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
-from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.canvastextview import CanvasTextView
 from sugar.util import format_size
 

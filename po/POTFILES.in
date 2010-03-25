@@ -15,6 +15,8 @@ extensions/cpsection/keyboard/view.py
 extensions/cpsection/language/__init__.py
 extensions/cpsection/language/model.py
 extensions/cpsection/language/view.py
+extensions/cpsection/modemconfiguration/__init__.py
+extensions/cpsection/modemconfiguration/view.py
 extensions/cpsection/network/__init__.py
 extensions/cpsection/network/model.py
 extensions/cpsection/network/view.py
@@ -58,6 +60,7 @@ src/jarabe/journal/palettes.py
 src/jarabe/journal/volumestoolbar.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
+src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
 src/jarabe/view/viewsource.py
 

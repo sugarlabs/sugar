@@ -42,26 +42,10 @@ except ImportError:
 gtk.gdk.threads_init()
 dbus.glib.threads_init()
 
-from sugar import logger
-from sugar import env
-
-# NOTE: This needs to happen so early because some modules register translatable
-# strings in the module scope.
-from jarabe import config
-gettext.bindtextdomain('sugar', config.locale_path)
-gettext.bindtextdomain('sugar-toolkit', config.locale_path)
-gettext.textdomain('sugar')
-
-from jarabe.desktop import homewindow
-from jarabe.model import sound
-from jarabe.view import launcher
-from jarabe import intro
-
-def cleanup_logs():
+def cleanup_logs(logs_dir):
     """Clean up the log directory, moving old logs into a numbered backup
     directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
     around; the rest are removed."""
-    logs_dir = env.get_logs_path()
     if not os.path.isdir(logs_dir):
         os.makedirs(logs_dir)
 
@@ -72,7 +56,7 @@ def cleanup_logs():
         if os.path.isfile(path):
             backup_logs.append(f)
         elif os.path.isdir(path):
-            backup_dirs.append(path)    
+            backup_dirs.append(path)
 
     if len(backup_dirs) > 3:
         backup_dirs.sort()
@@ -127,6 +111,7 @@ def setup_journal_cb():
 def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
+        from jarabe.desktop import homewindow
         home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
@@ -161,7 +146,7 @@ def setup_keyboard_cb():
         for layout in layouts:
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
-        
+
         if layouts_list is not None and layouts_list is not [] \
                 and variants_list is not None and variants_list is not []:
             configrec.set_layouts(layouts_list)
@@ -175,7 +160,7 @@ def setup_keyboard_cb():
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
         if options is not [] and options is not None:
-            configrec.set_options(options)        
+            configrec.set_options(options)
 
         configrec.activate(engine)
     except Exception:
@@ -194,6 +179,8 @@ def setup_window_manager():
 
 def bootstrap():
     setup_window_manager()
+
+    from jarabe.view import launcher
     launcher.setup()
 
     gobject.idle_add(setup_frame_cb)
@@ -214,7 +201,26 @@ def set_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
-    cleanup_logs()
+    try:
+        from sugar import env
+        cleanup_logs(env.get_logs_path())
+    except OSError, e:
+        # logs cleanup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'logs cleanup failed: %s' % e
+
+    from sugar import logger
+    # NOTE: This needs to happen so early because some modules register translatable
+    # strings in the module scope.
+    from jarabe import config
+    gettext.bindtextdomain('sugar', config.locale_path)
+    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+    gettext.textdomain('sugar')
+
+    from jarabe.desktop import homewindow
+    from jarabe.model import sound
+    from jarabe import intro
+
     logger.start('shell')
 
     client = gconf.client_get_default()

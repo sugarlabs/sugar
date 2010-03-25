@@ -49,34 +49,24 @@ class _Cache(object):
 
     def __init__(self, entries=None):
         self._array = []
-        self._dict = {}
         if entries is not None:
             self.append_all(entries)
 
     def prepend_all(self, entries):
-        for entry in entries[::-1]:
-            self._array.insert(0, entry)
-            self._dict[entry['uid']] = entry
+        self._array[0:0] = entries
 
     def append_all(self, entries):
-        for entry in entries:
-            self._array.append(entry)
-            self._dict[entry['uid']] = entry
-
-    def remove_all(self, entries):
-        for uid in [entry['uid'] for entry in entries]:
-            obj = self._dict[uid]
-            self._array.remove(obj)
-            del self._dict[uid]
+        self._array += entries
 
     def __len__(self):
         return len(self._array)
 
     def __getitem__(self, key):
-        if isinstance(key, basestring):
-            return self._dict[key]
-        else:
-            return self._array[key]
+        return self._array[key]
+
+    def __delitem__(self, key):
+        del self._array[key]
+
 
 class BaseResultSet(object):
     """Encapsulates the result of a query
@@ -148,7 +138,7 @@ class BaseResultSet(object):
             query['offset'] = offset
             entries, self._total_count = self.find(query)
 
-            self._cache.remove_all(self._cache)
+            del self._cache[:]
             self._cache.append_all(entries)
             self._offset = offset
 
@@ -170,7 +160,7 @@ class BaseResultSet(object):
             objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 self._offset += objects_excess
-                self._cache.remove_all(self._cache[:objects_excess])
+                del self._cache[:objects_excess]
 
         elif remaining_forward_entries > 0 and \
                 remaining_backwards_entries <= 0 and self._offset > 0:
@@ -193,7 +183,7 @@ class BaseResultSet(object):
             cache_limit = self._page_size * MAX_PAGES_TO_CACHE
             objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
-                self._cache.remove_all(self._cache[-objects_excess:])
+                del self._cache[-objects_excess:]
         else:
             logging.debug('cache hit and no need to grow the cache')
 
@@ -388,9 +378,6 @@ def find(query_, page_size):
     """
     query = query_.copy()
 
-    if 'order_by' not in query:
-        query['order_by'] = ['-mtime']
-
     mount_points = query.pop('mountpoints', ['/'])
     if mount_points is None or len(mount_points) != 1:
         raise ValueError('Exactly one mount point must be specified')
@@ -473,9 +460,9 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    return write(metadata, file_path)
+    return write(metadata, file_path, transfer_ownership=False)
 
-def write(metadata, file_path='', update_mtime=True):
+def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
     """Creates or updates an entry for that id
     """
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
@@ -489,11 +476,11 @@ def write(metadata, file_path='', update_mtime=True):
             object_id = _get_datastore().update(metadata['uid'],
                                                  dbus.Dictionary(metadata),
                                                  file_path,
-                                                 True)
+                                                 transfer_ownership)
         else:
             object_id = _get_datastore().create(dbus.Dictionary(metadata),
                                                  file_path,
-                                                 True)
+                                                 transfer_ownership)
     else:
         if not os.path.exists(file_path):
             raise ValueError('Entries without a file cannot be copied to '

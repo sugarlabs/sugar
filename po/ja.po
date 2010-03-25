@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-26 00:31-0400\n"
-"PO-Revision-Date: 2009-09-14 08:16-0400\n"
+"POT-Creation-Date: 2009-09-05 00:31-0400\n"
+"PO-Revision-Date: 2010-01-29 04:42+0200\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -172,7 +172,7 @@ msgstr "キーボードのモデル"
 
 #: ../extensions/cpsection/keyboard/view.py:243
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "レイアウト変更に使うキー"
 
 #: ../extensions/cpsection/keyboard/view.py:311
 msgid "Keyboard Layout(s)"
@@ -412,14 +412,14 @@ msgstr "無線ネットワークを作成"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
 #: ../extensions/deviceicon/network.py:120
-#: ../src/jarabe/desktop/meshbox.py:261
+#: ../src/jarabe/desktop/meshbox.py:264
 msgid "Connecting..."
 msgstr "接続しています..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:124
 #: ../extensions/deviceicon/network.py:186
-#: ../src/jarabe/desktop/meshbox.py:267
+#: ../src/jarabe/desktop/meshbox.py:270
 msgid "Connected"
 msgstr "接続しました"
 
@@ -755,17 +755,17 @@ msgid "Keep"
 msgstr "ジャーナルに保存"
 
 #: ../src/jarabe/desktop/activitieslist.py:364
-#: ../src/jarabe/desktop/activitieslist.py:406
+#: ../src/jarabe/desktop/activitieslist.py:407
 #: ../src/jarabe/journal/journaltoolbox.py:360
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Erase"
 msgstr "消去する"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:428
 msgid "Remove favorite"
 msgstr "お気に入りから削除"
 
-#: ../src/jarabe/desktop/activitieslist.py:431
+#: ../src/jarabe/desktop/activitieslist.py:432
 msgid "Make favorite"
 msgstr "お気に入りに登録"
 
@@ -783,19 +783,19 @@ msgstr "円に並べる"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:334
+#: ../src/jarabe/desktop/favoriteslayout.py:337
 msgid "Spiral"
 msgstr "渦巻きに並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:401
+#: ../src/jarabe/desktop/favoriteslayout.py:404
 msgid "Box"
 msgstr "箱型に並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:442
+#: ../src/jarabe/desktop/favoriteslayout.py:445
 msgid "Triangle"
 msgstr "三角形に並べる"
 
@@ -874,27 +874,23 @@ msgstr "切断"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:463
+#: ../src/jarabe/desktop/meshbox.py:466
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:428
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
 msgid "Resume"
 msgstr "再開"
 
-#: ../src/jarabe/desktop/meshbox.py:468
+#: ../src/jarabe/desktop/meshbox.py:471
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "参加"
 
-#: ../src/jarabe/desktop/schoolserver.py:34
-msgid "Cannot obtain data needed for registration."
-msgstr "登録に必要なデータを取得できません"
-
-#: ../src/jarabe/desktop/schoolserver.py:51
+#: ../src/jarabe/desktop/schoolserver.py:103
 msgid "Cannot connect to the server."
 msgstr "サーバーに接続できません"
 
-#: ../src/jarabe/desktop/schoolserver.py:56
+#: ../src/jarabe/desktop/schoolserver.py:108
 msgid "The server could not complete the request."
 msgstr "サーバーは要求の処理を完了できませんでした"
 
@@ -948,7 +944,7 @@ msgstr "閉じる"
 msgid "Transfer to %r"
 msgstr "%rへ転送"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52
+#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
 msgid "Remove"
 msgstr "削除"
 
@@ -1227,10 +1223,6 @@ msgstr "内容を表示"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB 空き"
 
-#: ../src/jarabe/view/palettes.py:218
-msgid "Unmount"
-msgstr "取りはずす"
-
 #: ../src/jarabe/view/viewsource.py:208
 msgid "Instance Source"
 msgstr "インスタンスのソースコード"
@@ -1247,6 +1239,12 @@ msgstr "アクティビティバンドルのソースコード"
 #, python-format
 msgid "View source: %r"
 msgstr "ソースを表示: %r"
+
+#~ msgid "Cannot obtain data needed for registration."
+#~ msgstr "登録に必要なデータを取得できません"
+
+#~ msgid "Unmount"
+#~ msgstr "取りはずす"
 
 #~ msgid "Restart"
 #~ msgstr "再起動"

@@ -220,7 +220,7 @@
       <applyto>/desktop/sugar/peripherals/keyboard/model</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default></default>
+      <default>evdev</default>
       <locale name="C">
         <short>Keyboard model</short>
         <long>The keyboard model to be used</long>
@@ -250,6 +250,84 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/i18n/langpackdir</key>
+      <applyto>/desktop/sugar/i18n/langpackdir</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Directory to search for translations</short>
+        <long>Additional directories which can contain updated translations.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/username</key>
+      <applyto>/desktop/sugar/network/gsm/username</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network username</short>
+        <long>GSM network username configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/password</key>
+      <applyto>/desktop/sugar/network/gsm/password</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network password</short>
+        <long>GSM network password configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/number</key>
+      <applyto>/desktop/sugar/network/gsm/number</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>*99#</default>
+      <locale name="C">
+        <short>GSM network number</short>
+        <long>GSM network telephone number configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/apn</key>
+      <applyto>/desktop/sugar/network/gsm/apn</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network APN</short>
+        <long>GSM network access point name configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/pin</key>
+      <applyto>/desktop/sugar/network/gsm/pin</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network PIN</short>
+        <long>GSM network personal identification number configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/puk</key>
+      <applyto>/desktop/sugar/network/gsm/puk</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network PUK</short>
+        <long>GSM network personal unlock key configuration</long>
+      </locale>
+    </schema>
 
   </schemalist>
 </gconfschemafile>

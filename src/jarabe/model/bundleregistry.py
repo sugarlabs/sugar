@@ -31,6 +31,7 @@ from sugar.bundle.bundle import MalformedBundleException, \
 from sugar import env
 
 from jarabe import config
+from jarabe.model import mimeregistry
 
 class BundleRegistry(gobject.GObject):
     """Tracks the available activity bundles"""
@@ -244,13 +245,25 @@ class BundleRegistry(gobject.GObject):
 
     def get_activities_for_type(self, mime_type):
         result = []
+
+        mime = mimeregistry.get_registry()
+        default_bundle_id = mime.get_default_activity(mime_type)
+        default_bundle = None
+
         for bundle in self._bundles:
             if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-                if self.get_default_for_type(mime_type) == \
+
+                if bundle.get_bundle_id() == default_bundle_id:
+                    default_bundle = bundle
+                elif self.get_default_for_type(mime_type) == \
                         bundle.get_bundle_id():
                     result.insert(0, bundle)
                 else:
                     result.append(bundle)
+
+        if default_bundle is not None:
+            result.insert(0, default_bundle)
+
         return result
 
     def get_default_for_type(self, mime_type):
@@ -351,7 +364,7 @@ class BundleRegistry(gobject.GObject):
 
         install_dir = env.get_user_activities_path()
         if isinstance(bundle, JournalEntryBundle):
-            install_path = bundle.install(install_dir, uid)
+            install_path = bundle.install(uid)
         else:
             install_path = bundle.install(install_dir)
 
