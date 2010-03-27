@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-11 00:31-0500\n"
-"PO-Revision-Date: 2010-03-27 22:17+0200\n"
+"PO-Revision-Date: 2010-03-27 22:30+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -678,59 +678,59 @@ msgstr "Schriftgröße, die auf dem Desktop benutzt wird."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "GSM network APN"
-msgstr "GSM Netzwerk APN"
+msgstr "GSM-Netzwerk APN"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network PIN"
-msgstr "GSM Netzwerk PIN"
+msgstr "GSM-Netzwerk PIN"
 
 #: ../data/sugar.schemas.in.h:19
 msgid "GSM network PUK"
-msgstr "GSM Netzwerk PUK"
+msgstr "GSM-Netzwerk PUK"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network access point name configuration"
-msgstr "GSM Netzwerk Zugriffspunkt Namenseingabe"
+msgstr "GSM-Netzwerk Namenseinstellung Zugriffspunkt"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network number"
-msgstr "GSM Netzwerk-Nummer"
+msgstr "GSM-Netzwerk Nummer"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network password"
-msgstr "GSM Netzwerk Passwort"
+msgstr "GSM-Netzwerk Passwort"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network password configuration"
-msgstr "GSM Netzwerk Passwort Einstellung"
+msgstr "GSM-Netzwerk Passworteinstellung"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network personal identification number configuration"
-msgstr "GSM Netzwerk PIN Einstellung"
+msgstr "GSM-Netzwerk PIN-Einstellung"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network personal unlock key configuration"
-msgstr "GSM Netzwerk PUK Einstellung"
+msgstr "GSM-Netzwerk PUK-Einstellung"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network telephone number configuration"
-msgstr "GSM Netzwerk Telefonnummer Einstellung"
+msgstr "GSM-Netzwerk Telefonnummereinstellung"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network username"
-msgstr "GSM Netzwerk Benutzername"
+msgstr "GSM-Netzwerk Benutzername"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network username configuration"
-msgstr "GSM Netzwerk Benutzername Einstellung"
+msgstr "GSM-Netzwerk Benutzernameneinstellung"
 
 #: ../data/sugar.schemas.in.h:29
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Falls WAHR, wird Sugar uns suchbar für andere Nutzer des Jabber-Servers "
-"machen."
+"Falls WAHR, wird Sugar es für andere Nutzer des Jabber-Servers zulassen, uns "
+"zu suchen."
 
 #: ../data/sugar.schemas.in.h:30
 msgid "If TRUE, Sugar will show a \"Log out\" option."
