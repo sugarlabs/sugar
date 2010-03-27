@@ -1,11 +1,15 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # This file is distributed under the same license as the PACKAGE package.
 # Fabian Affolter <fab@fedoraproject.org>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-11 00:32-0500\n"
-"PO-Revision-Date: 2010-03-26 20:53+0200\n"
+"POT-Creation-Date: 2010-03-11 00:31-0500\n"
+"PO-Revision-Date: 2010-03-27 22:17+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -124,7 +128,7 @@ msgstr "Datum & Uhrzeit"
 msgid "Error timezone does not exist."
 msgstr "Fehler: unbekannte Zeitzone."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:33
+#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:47
 msgid "Timezone"
 msgstr "Zeitzone"
 
@@ -212,21 +216,37 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Modem Konfiguration"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:90
+#: ../extensions/cpsection/modemconfiguration/view.py:91
 msgid "Username:"
 msgstr "Benutzername:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:102
 msgid "Password:"
 msgstr "Passwort:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:112
+#: ../extensions/cpsection/modemconfiguration/view.py:113
 msgid "Number:"
 msgstr "Nummer:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:123
-msgid "APN:"
-msgstr "APN (Zugangspunkt):"
+#: ../extensions/cpsection/modemconfiguration/view.py:124
+msgid "Access Point Name (APN):"
+msgstr "Access-Point-Name (APN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:135
+msgid "Personal Identity Number (PIN):"
+msgstr "Persönliche Kennnumer (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:146
+msgid "Personal Unblocking Key (PUK):"
+msgstr "Persönlicher Freischaltschlüssel (PUK):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:167
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr ""
+"Du musst die folgenden Daten eingeben, um eine Verbindung zu einem "
+"Mobilfunknetz (3G) aufzubauen."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -293,13 +313,13 @@ msgid "Power"
 msgstr "Energieversorgung"
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
-#: ../extensions/cpsection/power/model.py:54
+#: ../extensions/cpsection/power/model.py:85
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 "Fehler im automatischen Energieverwaltungsparameter -- on/off verwenden."
 
 # (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
-#: ../extensions/cpsection/power/model.py:81
+#: ../extensions/cpsection/power/model.py:112
 msgid "Error in extreme pm argument, use on/off."
 msgstr "Fehler im extremen Energieverwaltungsparameter -- on/off verwenden."
 
@@ -441,11 +461,11 @@ msgstr "IP-Addresse: %s"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:111
+#: ../extensions/deviceicon/network.py:112
 msgid "Disconnect..."
 msgstr "Verbindung trennen..."
 
-#: ../extensions/deviceicon/network.py:116
+#: ../extensions/deviceicon/network.py:117
 msgid "Create new wireless network"
 msgstr "Neues Funknetzwerk erstellen"
 
@@ -453,51 +473,51 @@ msgstr "Neues Funknetzwerk erstellen"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:122
-#: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/meshbox.py:248 ../src/jarabe/desktop/meshbox.py:537
+#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:285
+#: ../src/jarabe/desktop/meshbox.py:247 ../src/jarabe/desktop/meshbox.py:536
 msgid "Connecting..."
 msgstr "Verbinde..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:126
-#: ../extensions/deviceicon/network.py:198
-#: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/meshbox.py:254 ../src/jarabe/desktop/meshbox.py:543
+#: ../extensions/deviceicon/network.py:127
+#: ../extensions/deviceicon/network.py:199
+#: ../extensions/deviceicon/network.py:289
+#: ../src/jarabe/desktop/meshbox.py:253 ../src/jarabe/desktop/meshbox.py:542
 msgid "Connected"
 msgstr "Verbunden"
 
-#: ../extensions/deviceicon/network.py:158
+#: ../extensions/deviceicon/network.py:159
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../extensions/deviceicon/network.py:173
+#: ../extensions/deviceicon/network.py:174
 msgid "Wired Network"
 msgstr "Kabelnetzwerk"
 
 # (Markus S.) War 'Geschwindigkeit'
-#: ../extensions/deviceicon/network.py:201
+#: ../extensions/deviceicon/network.py:202
 msgid "Speed"
 msgstr "Übertragungsrate"
 
-#: ../extensions/deviceicon/network.py:228
+#: ../extensions/deviceicon/network.py:229
 msgid "Wireless modem"
 msgstr "Funkmodem"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:277
 msgid "Please wait..."
 msgstr "Bitte warten..."
 
-#: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/meshbox.py:164 ../src/jarabe/desktop/meshbox.py:494
+#: ../extensions/deviceicon/network.py:280
+#: ../src/jarabe/desktop/meshbox.py:163 ../src/jarabe/desktop/meshbox.py:493
 msgid "Connect"
 msgstr "Verbinden"
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:281
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: ../extensions/deviceicon/network.py:283
+#: ../extensions/deviceicon/network.py:284
 #: ../src/jarabe/controlpanel/toolbar.py:115
 #: ../src/jarabe/desktop/homebox.py:68
 #: ../src/jarabe/frame/activitiestray.py:700
@@ -507,27 +527,35 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 # (mschlager) war 'Nicht verbunden', ich würde aber eher erwarten, dass das die Beschriftung eines Menüeintrags ist, mit dem man eine Verbindung trennt, was dann in der Folge die Meldung 'Disconnecting...' liefert.
-#: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/desktop/meshbox.py:168
+#: ../extensions/deviceicon/network.py:288
+#: ../src/jarabe/desktop/meshbox.py:167
 msgid "Disconnect"
 msgstr "Verbindung trennen"
 
-#: ../extensions/deviceicon/network.py:530
+#: ../extensions/deviceicon/network.py:292
+msgid "Sim requires Pin/Puk"
+msgstr "Sim benötigt PIN/PUK"
+
+#: ../extensions/deviceicon/network.py:293
+msgid "Authentication Error"
+msgstr "Authentifizierungsfehler"
+
+#: ../extensions/deviceicon/network.py:538
 #, python-format
 msgid "%s's network"
 msgstr "Netzwerk von %s"
 
-#: ../extensions/deviceicon/network.py:597
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:605
+#: ../extensions/deviceicon/network.py:664
 msgid "Mesh Network"
 msgstr "Maschennetzwerk"
 
-#: ../extensions/deviceicon/network.py:857
+#: ../extensions/deviceicon/network.py:869
 #, python-format
-msgid "Data sent %d kb / received %d kb"
-msgstr "%d kb gesendet / %d kb empfangen"
+msgid "Data sent %d KB / received %d KB"
+msgstr "gesendet %d KB / empfangen %d KB"
 
-#: ../extensions/deviceicon/network.py:868
+#: ../extensions/deviceicon/network.py:880
 msgid "Connection time "
 msgstr "Verbindungsdauer "
 
@@ -582,10 +610,15 @@ msgstr ""
 "nutzt den vollständigen UNIX-Benutzernamen."
 
 #: ../data/sugar.schemas.in.h:2
+msgid "Additional directories which can contain updated translations."
+msgstr ""
+"Weitere Verzeichnisse, die aktualisierte Übersetzungen enthalten können."
+
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "Backup-URL"
 
-#: ../data/sugar.schemas.in.h:3
+#: ../data/sugar.schemas.in.h:4
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rbg colors. "
@@ -595,164 +628,216 @@ msgstr ""
 "Zeichenkette setzt sich aus der Linien- und der Füllfarbe zusammen, die "
 "jeweils als RGB-Farben angeben werden. Beispiel: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:5
 msgid "Corner Delay"
 msgstr "Eckenverzögerung"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:6
 msgid "Default font face"
 msgstr "Standard-Schriftart"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font size"
 msgstr "Standard-Schriftgröße"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:8
 msgid "Default nick"
 msgstr "Standard-Benutzername"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:9
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Verzögerung bei der Aktivierung eines Rahmens über die Ecken."
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Verzögerung bei der Aktivierung eines Rahmens über die Ränder."
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:11
+msgid "Directory to search for translations"
+msgstr "Verzeichnis zur Suche nach Übersetzungen"
+
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "Randverzögerung"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:13
 msgid "Favorites Layout"
 msgstr "Favoriten-Layout"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites resume mode"
 msgstr "Favoriten-Wiederaufnahmemodus"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:15
 msgid "Font face that is used throughout the desktop."
 msgstr "Schriftart, die auf dem Desktop benutzt wird."
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:16
 msgid "Font size that is used throughout the desktop."
 msgstr "Schriftgröße, die auf dem Desktop benutzt wird."
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:17
+msgid "GSM network APN"
+msgstr "GSM Netzwerk APN"
+
+#: ../data/sugar.schemas.in.h:18
+msgid "GSM network PIN"
+msgstr "GSM Netzwerk PIN"
+
+#: ../data/sugar.schemas.in.h:19
+msgid "GSM network PUK"
+msgstr "GSM Netzwerk PUK"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network access point name configuration"
+msgstr "GSM Netzwerk Zugriffspunkt Namenseingabe"
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network number"
+msgstr "GSM Netzwerk-Nummer"
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network password"
+msgstr "GSM Netzwerk Passwort"
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network password configuration"
+msgstr "GSM Netzwerk Passwort Einstellung"
+
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network personal identification number configuration"
+msgstr "GSM Netzwerk PIN Einstellung"
+
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network personal unlock key configuration"
+msgstr "GSM Netzwerk PUK Einstellung"
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network telephone number configuration"
+msgstr "GSM Netzwerk Telefonnummer Einstellung"
+
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network username"
+msgstr "GSM Netzwerk Benutzername"
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network username configuration"
+msgstr "GSM Netzwerk Benutzername Einstellung"
+
+#: ../data/sugar.schemas.in.h:29
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Falls WAHR, wird Sugar es anderen Benutzern des Jabber-Servers ermöglichen, "
-"nach uns zu suchen."
+"Falls WAHR, wird Sugar uns suchbar für andere Nutzer des Jabber-Servers "
+"machen."
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:30
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "Falls WAHR, wird Sugar die Option \"Abmelden\" anzeigen."
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:31
 msgid "Jabber Server"
 msgstr "Jabber-Server"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:32
 msgid "Keyboard layouts"
 msgstr "Tastaturlayouts"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:33
 msgid "Keyboard model"
 msgstr "Tastaturmodell"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:34
 msgid "Keyboard options"
 msgstr "Tastatureinstellungen"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:35
 msgid "Layout of the favorites view."
 msgstr "Layout der Favoriten-Ansicht."
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:36
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Liste der Tastaturlayouts. Jeder Eintrag sollte von der Form "
 "Layout(Variante) sein."
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:37
 msgid "List of keyboard options."
 msgstr "Liste der Tastatureinstellungen."
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:38
 msgid "Power Automatic"
 msgstr "Automatische Energieverwaltung"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:39
 msgid "Power Automatic."
 msgstr "Automatische Energieverwaltung."
 
 # (Markus S.) war 'Extreme Energieverwaltung'
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:40
 msgid "Power Extreme"
 msgstr "Extremes Energiesparen"
 
 # (Markus S.) war 'Extreme Energieverwaltung'
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:41
 msgid "Power Extreme."
 msgstr "Extremes Energiesparen."
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:42
 msgid "Publish to Gadget"
 msgstr "Veröffentlichen auf Gerät"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:43
 msgid "Setting for muting the sound device."
 msgstr "Einstellung zum Stummschalten der Audio-Ausgabe."
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:44
 msgid "Show Log out"
 msgstr "Abmelden anzeigen"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:45
 msgid "Sound Muted"
 msgstr "Stummgeschaltet"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:46
 msgid "The keyboard model to be used"
 msgstr "Das zu verwendende Tastaturmodell"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:48
 msgid "Timezone setting for the system."
 msgstr "Zeitzoneneinstellung des Systems."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:49
 msgid "Url of the jabber server to use."
 msgstr "URL des zu nutzenden Jabber-Servers."
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:50
 msgid "Url where the backup is saved to."
 msgstr "URL, unter der das Backup gespeichert wird."
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:51
 msgid "User Color"
 msgstr "Benutzerfarbe"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:52
 msgid "User Name"
 msgstr "Benutzername"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:53
 msgid "User name that is used throughout the desktop."
 msgstr "Benutzername, der überall auf dem Desktop benutzt wird."
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:54
 msgid "Volume Level"
 msgstr "Lautstärke"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:55
 msgid "Volume level for the sound device."
 msgstr "Lautstärkepegel für die Audio-Ausgabe."
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:56
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -766,8 +851,8 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"sugar-control-panel: WARNUNG, mehr als eine Option mit demselben Namen "
-"gefunden: %s Modul: %r"
+"sugar-control-panel: WARNUNG, mehr als eine Auswahl mit dem gleichen Namen "
+"gefunden: %s module: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -869,7 +954,7 @@ msgstr "Behalten"
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:409
 #: ../src/jarabe/journal/journaltoolbox.py:360
-#: ../src/jarabe/journal/palettes.py:105
+#: ../src/jarabe/journal/palettes.py:106
 msgid "Erase"
 msgstr "Löschen"
 
@@ -928,7 +1013,7 @@ msgstr "Anmeldung erfolgreich"
 msgid "You are now registered with your school server."
 msgstr "Du bist nun an deinem Schulserver angemeldet."
 
-#: ../src/jarabe/desktop/favoritesview.py:630
+#: ../src/jarabe/desktop/favoritesview.py:631
 msgid "Register"
 msgstr "Anmelden"
 
@@ -978,30 +1063,30 @@ msgstr "WPA & WPA2 Personal"
 msgid "Wireless Security:"
 msgstr "WLAN-Sicherheit:"
 
-#: ../src/jarabe/desktop/meshbox.py:492
+#: ../src/jarabe/desktop/meshbox.py:491
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Maschennetzwerk %d"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:629
+#: ../src/jarabe/desktop/meshbox.py:628
 #: ../src/jarabe/frame/activitiestray.py:735
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:65 ../src/jarabe/view/palettes.py:67
+#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:67
 msgid "Resume"
 msgstr "Fortsetzen"
 
-#: ../src/jarabe/desktop/meshbox.py:634
+#: ../src/jarabe/desktop/meshbox.py:633
 #: ../src/jarabe/frame/activitiestray.py:233
 msgid "Join"
 msgstr "Mitmachen"
 
-#: ../src/jarabe/desktop/schoolserver.py:103
+#: ../src/jarabe/desktop/schoolserver.py:104
 msgid "Cannot connect to the server."
 msgstr "Kann nicht mit dem Server verbinden."
 
-#: ../src/jarabe/desktop/schoolserver.py:108
+#: ../src/jarabe/desktop/schoolserver.py:109
 msgid "The server could not complete the request."
 msgstr "Der Server konnte die Anforderung nicht erfüllen."
 
@@ -1107,47 +1192,47 @@ msgstr "Zurück"
 msgid "Next"
 msgstr "Vor"
 
-#: ../src/jarabe/journal/expandedentry.py:152
-#: ../src/jarabe/journal/palettes.py:59
+#: ../src/jarabe/journal/expandedentry.py:151
+#: ../src/jarabe/journal/palettes.py:60
 msgid "Untitled"
 msgstr "Ohne Titel"
 
-#: ../src/jarabe/journal/expandedentry.py:243
+#: ../src/jarabe/journal/expandedentry.py:242
 msgid "No preview"
 msgstr "Keine Vorschau"
 
-#: ../src/jarabe/journal/expandedentry.py:262
+#: ../src/jarabe/journal/expandedentry.py:261
 #, python-format
 msgid "Kind: %s"
 msgstr "Art: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:262
+#: ../src/jarabe/journal/expandedentry.py:261
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: ../src/jarabe/journal/expandedentry.py:263
+#: ../src/jarabe/journal/expandedentry.py:262
 #, python-format
 msgid "Date: %s"
 msgstr "Datum: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:263
 #, python-format
 msgid "Size: %s"
 msgstr "Größe: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:286 ../src/jarabe/journal/misc.py:93
+#: ../src/jarabe/journal/expandedentry.py:285 ../src/jarabe/journal/misc.py:93
 msgid "No date"
 msgstr "Kein Datum"
 
-#: ../src/jarabe/journal/expandedentry.py:293
+#: ../src/jarabe/journal/expandedentry.py:292
 msgid "Participants:"
 msgstr "Teilnehmer:"
 
-#: ../src/jarabe/journal/expandedentry.py:316
+#: ../src/jarabe/journal/expandedentry.py:315
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: ../src/jarabe/journal/expandedentry.py:341
+#: ../src/jarabe/journal/expandedentry.py:340
 msgid "Tags:"
 msgstr "Stichwörter:"
 
@@ -1209,14 +1294,14 @@ msgstr "Alles"
 
 # TODO: Add "Start with" menu item
 #: ../src/jarabe/journal/journaltoolbox.py:350
-#: ../src/jarabe/journal/palettes.py:83
+#: ../src/jarabe/journal/palettes.py:84
 msgid "Copy"
 msgstr "Kopieren"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:431
-#: ../src/jarabe/journal/palettes.py:68
+#: ../src/jarabe/journal/palettes.py:69
 msgid "Start"
 msgstr "Start"
 
@@ -1239,7 +1324,7 @@ msgstr "Dein Tagebuch ist voll."
 #: ../src/jarabe/journal/modalalert.py:67
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"Lösche bitte einige alte Tagebuch-Einträge, um Platz für neue zu schaffen."
+"Lösche bitte einige alte Tagebucheinträge, um Platz für neue zu schaffen."
 
 #: ../src/jarabe/journal/modalalert.py:79
 msgid "Show Journal"
@@ -1250,39 +1335,39 @@ msgid "Choose an object"
 msgstr "Ein Objekt auswählen"
 
 #: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:308
+#: ../src/jarabe/view/viewsource.py:310
 msgid "Close"
 msgstr "Schließen"
 
-#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/palettes.py:67
 msgid "Resume with"
 msgstr "Fortsetzen mit"
 
-#: ../src/jarabe/journal/palettes.py:69
+#: ../src/jarabe/journal/palettes.py:70
 msgid "Start with"
 msgstr "Beginnen mit"
 
-#: ../src/jarabe/journal/palettes.py:91
+#: ../src/jarabe/journal/palettes.py:92
 msgid "Send to"
 msgstr "Senden an"
 
-#: ../src/jarabe/journal/palettes.py:100
+#: ../src/jarabe/journal/palettes.py:101
 msgid "View Details"
 msgstr "Details betrachten"
 
-#: ../src/jarabe/journal/palettes.py:178
+#: ../src/jarabe/journal/palettes.py:179
 msgid "No friends present"
 msgstr "Keine Freunde anwesend"
 
-#: ../src/jarabe/journal/palettes.py:183
+#: ../src/jarabe/journal/palettes.py:184
 msgid "No valid connection found"
 msgstr "Keine gültige Verbindung gefunden"
 
-#: ../src/jarabe/journal/palettes.py:211
+#: ../src/jarabe/journal/palettes.py:212
 msgid "No activity to resume entry"
 msgstr "Keine Aktivität, um den Eintrag fortzusetzen"
 
-#: ../src/jarabe/journal/palettes.py:213
+#: ../src/jarabe/journal/palettes.py:214
 msgid "No activity to start entry"
 msgstr "Keine Aktivität, um den Eintrag zu beginnen"
 
@@ -1310,6 +1395,11 @@ msgstr "Meine Einstellungen"
 #, python-format
 msgid "Invite to %s"
 msgstr "Einladen zu %s"
+
+#: ../src/jarabe/view/launcher.py:192
+#, python-format
+msgid "<b>%s</b> failed to start."
+msgstr "<b>%s</b> konnte nicht gestartet werden."
 
 #: ../src/jarabe/view/palettes.py:45
 msgid "Starting..."
@@ -1345,14 +1435,17 @@ msgstr "Quelltext der Instanz"
 msgid "Source"
 msgstr "Quelltext"
 
-#: ../src/jarabe/view/viewsource.py:292
+#: ../src/jarabe/view/viewsource.py:294
 msgid "Activity Bundle Source"
 msgstr "Quelltext des Aktivitätenbündels"
 
-#: ../src/jarabe/view/viewsource.py:299
+#: ../src/jarabe/view/viewsource.py:301
 #, python-format
 msgid "View source: %r"
 msgstr "Quelltext betrachten: %r"
+
+#~ msgid "APN:"
+#~ msgstr "APN (Zugangspunkt):"
 
 #~ msgid "Title"
 #~ msgstr "Titel"
