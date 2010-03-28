@@ -6,6 +6,10 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # This file is distributed under the same license as the PACKAGE package.
 # Fabian Affolter <fab@fedoraproject.org>, 2007.
 msgid ""
@@ -13,7 +17,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-03-11 00:31-0500\n"
-"PO-Revision-Date: 2010-03-27 22:30+0200\n"
+"PO-Revision-Date: 2010-03-29 01:49+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -218,7 +222,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Modem Konfiguration"
+msgstr "Modem-Konfiguration"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:91
 msgid "Username:"
@@ -1019,7 +1023,7 @@ msgstr "Du bist nun an deinem Schulserver angemeldet."
 
 #: ../src/jarabe/desktop/favoritesview.py:631
 msgid "Register"
-msgstr "Anmelden"
+msgstr "Am Schulserver anmelden"
 
 #: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
@@ -1385,11 +1389,11 @@ msgstr "Freunde werden"
 
 #: ../src/jarabe/view/buddymenu.py:82
 msgid "Shutdown"
-msgstr "Ausschalten"
+msgstr "Rechner Ausschalten"
 
 #: ../src/jarabe/view/buddymenu.py:90
 msgid "Logout"
-msgstr "Abmelden"
+msgstr "Benutzer Abmelden"
 
 #: ../src/jarabe/view/buddymenu.py:95
 msgid "My Settings"
