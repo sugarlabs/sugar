@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-05 00:31-0400\n"
-"PO-Revision-Date: 2009-12-22 08:00-0400\n"
+"POT-Creation-Date: 2010-02-11 00:32-0500\n"
+"PO-Revision-Date: 2010-03-28 16:09+0200\n"
 "Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "Language: zh_TW\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.3\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -53,7 +53,7 @@ msgstr "指定增修顏色時發生錯誤"
 msgid "Error in specified colors."
 msgstr "指定顏色時發生錯誤"
 
-#: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:92
+#: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:93
 msgid "Name:"
 msgstr "姓名:"
 
@@ -121,7 +121,7 @@ msgstr "日期與時間"
 msgid "Error timezone does not exist."
 msgstr "錯誤,時區資料不存在."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:27
+#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:33
 msgid "Timezone"
 msgstr "時區"
 
@@ -164,15 +164,15 @@ msgstr "邊緣"
 msgid "Keyboard"
 msgstr "鍵盤"
 
-#: ../extensions/cpsection/keyboard/view.py:187
+#: ../extensions/cpsection/keyboard/view.py:189
 msgid "Keyboard Model"
 msgstr "鍵盤型式"
 
-#: ../extensions/cpsection/keyboard/view.py:243
+#: ../extensions/cpsection/keyboard/view.py:248
 msgid "Key(s) to change layout"
 msgstr "按鍵改變樣式"
 
-#: ../extensions/cpsection/keyboard/view.py:311
+#: ../extensions/cpsection/keyboard/view.py:318
 msgid "Keyboard Layout(s)"
 msgstr "鍵盤樣式"
 
@@ -200,6 +200,26 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr "請依序加入你使用的語言。如果優先選定的語言缺少翻譯，則使用次優先的語言翻譯。"
+
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem Configuration"
+msgstr "數據機設定"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:90
+msgid "Username:"
+msgstr "使用者帳號："
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Password:"
+msgstr "密碼："
+
+#: ../extensions/cpsection/modemconfiguration/view.py:112
+msgid "Number:"
+msgstr "撥接號碼："
+
+#: ../extensions/cpsection/modemconfiguration/view.py:123
+msgid "APN:"
+msgstr "接取點名稱(APN)："
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -282,83 +302,83 @@ msgstr "積極電源管理模式 (關閉無線網路，增加電池使用時間)
 msgid "Software update"
 msgstr "軟體更新"
 
-#: ../extensions/cpsection/updater/view.py:62
+#: ../extensions/cpsection/updater/view.py:63
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr "軟體更新會修正錯誤，消除安全上的弱點，以及增加新的功能。"
 
-#: ../extensions/cpsection/updater/view.py:122
+#: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
 msgstr "檢查 %s 中…"
 
-#: ../extensions/cpsection/updater/view.py:124
+#: ../extensions/cpsection/updater/view.py:127
 #, python-format
 msgid "Downloading %s..."
 msgstr "下載 %s 中…"
 
-#: ../extensions/cpsection/updater/view.py:126
+#: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Updating %s..."
 msgstr "更新 %s 中…"
 
-#: ../extensions/cpsection/updater/view.py:135
+#: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
 msgstr "您的軟體已經是最新版本"
 
-#: ../extensions/cpsection/updater/view.py:137
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "您可以安裝 %s 個更新"
 
-#: ../extensions/cpsection/updater/view.py:155
+#: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
 msgstr "檢查更新中…"
 
-#: ../extensions/cpsection/updater/view.py:160
+#: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
 msgstr "安裝更新中…"
 
-#: ../extensions/cpsection/updater/view.py:165
+#: ../extensions/cpsection/updater/view.py:172
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "已安裝 %s 個更新"
 
-#: ../extensions/cpsection/updater/view.py:244
+#: ../extensions/cpsection/updater/view.py:253
 msgid "Install selected"
 msgstr "安裝選用的"
 
-#: ../extensions/cpsection/updater/view.py:265
+#: ../extensions/cpsection/updater/view.py:274
 #, python-format
 msgid "Download size: %s"
 msgstr "下載檔案大小：%s"
 
-#: ../extensions/cpsection/updater/view.py:353
+#: ../extensions/cpsection/updater/view.py:362
 #, python-format
 msgid "From version %(current)d to %(new)s (Size: %(size)s)"
 msgstr "由版本 %(current)d 更新至 %(new)s (大小： %(size)s)"
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:373
+#: ../extensions/cpsection/updater/view.py:382
 msgid "None"
 msgstr "無"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:376
+#: ../extensions/cpsection/updater/view.py:385
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:379
+#: ../extensions/cpsection/updater/view.py:388
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:391
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
@@ -388,7 +408,7 @@ msgstr "剩餘 %(hour)d:%(min).2d"
 msgid "Charged"
 msgstr "充電完成"
 
-#: ../extensions/deviceicon/network.py:44
+#: ../extensions/deviceicon/network.py:49
 #, python-format
 msgid "IP address: %s"
 msgstr "網路地址： %s"
@@ -397,11 +417,11 @@ msgstr "網路地址： %s"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:111
 msgid "Disconnect..."
 msgstr "切斷連線…"
 
-#: ../extensions/deviceicon/network.py:114
+#: ../extensions/deviceicon/network.py:116
 msgid "Create new wireless network"
 msgstr "新增無線網路"
 
@@ -409,34 +429,81 @@ msgstr "新增無線網路"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:120
-#: ../src/jarabe/desktop/meshbox.py:264
+#: ../extensions/deviceicon/network.py:122
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/meshbox.py:248 ../src/jarabe/desktop/meshbox.py:537
 msgid "Connecting..."
 msgstr "連線中…"
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:124
-#: ../extensions/deviceicon/network.py:186
-#: ../src/jarabe/desktop/meshbox.py:270
+#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:198
+#: ../extensions/deviceicon/network.py:288
+#: ../src/jarabe/desktop/meshbox.py:254 ../src/jarabe/desktop/meshbox.py:543
 msgid "Connected"
 msgstr "已連線"
 
-#: ../extensions/deviceicon/network.py:146
+#: ../extensions/deviceicon/network.py:158
 msgid "Channel"
 msgstr "頻道"
 
-#: ../extensions/deviceicon/network.py:161
+#: ../extensions/deviceicon/network.py:173
 msgid "Wired Network"
 msgstr "有線網路"
 
-#: ../extensions/deviceicon/network.py:189
+#: ../extensions/deviceicon/network.py:201
 msgid "Speed"
 msgstr "速度"
 
-#: ../extensions/deviceicon/network.py:415
+#: ../extensions/deviceicon/network.py:228
+msgid "Wireless modem"
+msgstr "無線網路數據機"
+
+#: ../extensions/deviceicon/network.py:276
+msgid "Please wait..."
+msgstr "請稍待…"
+
+#: ../extensions/deviceicon/network.py:279
+#: ../src/jarabe/desktop/meshbox.py:164 ../src/jarabe/desktop/meshbox.py:494
+msgid "Connect"
+msgstr "連線"
+
+#: ../extensions/deviceicon/network.py:280
+msgid "Disconnected"
+msgstr "已切斷"
+
+#: ../extensions/deviceicon/network.py:283
+#: ../src/jarabe/controlpanel/toolbar.py:115
+#: ../src/jarabe/desktop/homebox.py:68
+#: ../src/jarabe/frame/activitiestray.py:700
+#: ../src/jarabe/frame/activitiestray.py:799
+#: ../src/jarabe/frame/activitiestray.py:827
+msgid "Cancel"
+msgstr "取消"
+
+#: ../extensions/deviceicon/network.py:287
+#: ../src/jarabe/desktop/meshbox.py:168
+msgid "Disconnect"
+msgstr "切斷連線"
+
+#: ../extensions/deviceicon/network.py:530
 #, python-format
-msgid "%s's network %s"
-msgstr "%s 的網路 %s"
+msgid "%s's network"
+msgstr "%s 的網路"
+
+#: ../extensions/deviceicon/network.py:597
+#: ../extensions/deviceicon/network.py:656
+msgid "Mesh Network"
+msgstr "網狀網路"
+
+#: ../extensions/deviceicon/network.py:857
+#, python-format
+msgid "Data sent %d kb / received %d kb"
+msgstr "資料發送 %d kb / 接收 %d kb"
+
+#: ../extensions/deviceicon/network.py:868
+msgid "Connection time "
+msgstr "連線時間 "
 
 #: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
@@ -450,177 +517,203 @@ msgstr "取消靜音"
 msgid "Mute"
 msgstr "喇叭靜音"
 
-#: ../extensions/globalkey/screenshot.py:56
+#: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
 msgstr "網狀網路"
 
-#: ../extensions/globalkey/screenshot.py:58
+#: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "Group"
 msgstr "我的群組"
 
-#: ../extensions/globalkey/screenshot.py:60
+#: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "Home"
 msgstr "我的家"
 
-#: ../extensions/globalkey/screenshot.py:66
+#: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Activity"
 msgstr "活動"
 
-#: ../extensions/globalkey/screenshot.py:69
+#: ../extensions/globalkey/screenshot.py:72
 msgid "Screenshot"
 msgstr "畫面抓圖"
 
-#: ../extensions/globalkey/screenshot.py:71
+#: ../extensions/globalkey/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "%s 的畫面抓圖"
 
 #: ../data/sugar.schemas.in.h:1
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr "點選「停用」將於啟動時詢問代號，點選「系統」則恢復使用 UNIX 名稱。"
+
+#: ../data/sugar.schemas.in.h:2
 msgid "Backup URL"
 msgstr "備份網址"
 
-#: ../data/sugar.schemas.in.h:2
+#: ../data/sugar.schemas.in.h:3
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rbg colors. "
 "Example: #AC32FF,#9A5200"
 msgstr "您選取的顏色將使用在整個桌面當中。顏色指定字串包含了筆畫顏色與填充顏色，格式為紅藍綠三原色的強度。例如： #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:3
+#: ../data/sugar.schemas.in.h:4
 msgid "Corner Delay"
 msgstr "角落觸發延遲"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:5
+msgid "Default font face"
+msgstr "預設字型"
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Default font size"
+msgstr "預設字體大小"
+
+#: ../data/sugar.schemas.in.h:7
+msgid "Default nick"
+msgstr "預設代號"
+
+#: ../data/sugar.schemas.in.h:8
 msgid "Delay for the activation of the frame using the corners."
 msgstr "當游標移到畫面四角時浮現邊框的延遲時間"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:9
 msgid "Delay for the activation of the frame using the edges."
 msgstr "當游標移到畫面邊緣時浮現邊框的延遲時間"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:10
 msgid "Edge Delay"
 msgstr "邊緣觸發延遲"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:11
 msgid "Favorites Layout"
 msgstr "偏好的顯示方式"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:12
 msgid "Favorites resume mode"
 msgstr "偏好的回復模式"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:13
+msgid "Font face that is used throughout the desktop."
+msgstr "預設字型將套用於整個桌面環境"
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Font size that is used throughout the desktop."
+msgstr "預設字體大小將套用於整個桌面環境"
+
+#: ../data/sugar.schemas.in.h:15
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr "選擇「是」的話，Sugar 將會讓其他 Jabber 伺服器的使用者可以搜尋到我們"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:16
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "選擇「是」的話，Sugar 將會顯示『登出』的選項"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:17
 msgid "Jabber Server"
 msgstr "Jabber 伺服器"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:18
 msgid "Keyboard layouts"
 msgstr "鍵盤排列"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:19
 msgid "Keyboard model"
 msgstr "鍵盤型號"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:20
 msgid "Keyboard options"
 msgstr "鍵盤選項"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:21
 msgid "Layout of the favorites view."
 msgstr "我的最愛顯示方式"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:22
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "鍵盤排列列表，每個項目應該在排列列表中"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:23
 msgid "List of keyboard options."
 msgstr "鍵盤排列列表"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:24
 msgid "Power Automatic"
 msgstr "自動省電模式"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:25
 msgid "Power Automatic."
 msgstr "自動省電模式。"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:26
 msgid "Power Extreme"
 msgstr "極度省電模式"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:27
 msgid "Power Extreme."
 msgstr "極度省電模式。"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:28
 msgid "Publish to Gadget"
 msgstr "發佈到小工具"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:29
 msgid "Setting for muting the sound device."
 msgstr "音效設備靜音設定。"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:30
 msgid "Show Log out"
 msgstr "顯示登出"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:31
 msgid "Sound Muted"
 msgstr "靜音"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:32
 msgid "The keyboard model to be used"
 msgstr "選用的鍵盤型式"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:34
 msgid "Timezone setting for the system."
 msgstr "系統的時區設定"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:35
 msgid "Url of the jabber server to use."
 msgstr "Jabber 伺服器的網址。"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:36
 msgid "Url where the backup is saved to."
 msgstr "備份主機的網址。"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:37
 msgid "User Color"
 msgstr "使用者顏色"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:38
 msgid "User Name"
 msgstr "使用者名稱"
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:39
 msgid "User name that is used throughout the desktop."
 msgstr "使用者名稱將用於整個桌面上"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:40
 msgid "Volume Level"
 msgstr "音量"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:41
 msgid "Volume level for the sound device."
 msgstr "音效設備的音量"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:42
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -675,68 +768,46 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "需要重新啟動系統使變更生效.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:280
+#: ../src/jarabe/controlpanel/gui.py:281
 msgid "Warning"
 msgstr "警告"
 
-#: ../src/jarabe/controlpanel/gui.py:281
+#: ../src/jarabe/controlpanel/gui.py:282
 #: ../src/jarabe/controlpanel/sectionview.py:42
 msgid "Changes require restart"
 msgstr "改變須要重新啟動才能生效"
 
-#: ../src/jarabe/controlpanel/gui.py:284
+#: ../src/jarabe/controlpanel/gui.py:285
 msgid "Cancel changes"
 msgstr "取消改變"
 
-#: ../src/jarabe/controlpanel/gui.py:289 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:290 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "稍候"
 
-#: ../src/jarabe/controlpanel/gui.py:293
+#: ../src/jarabe/controlpanel/gui.py:294
 msgid "Restart now"
 msgstr "馬上重新啟動"
 
-#: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:188
+#: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:206
 msgid "Done"
 msgstr "完成"
 
-#: ../src/jarabe/controlpanel/toolbar.py:115
-#: ../src/jarabe/desktop/homebox.py:68
-#: ../src/jarabe/frame/activitiestray.py:726
-#: ../src/jarabe/frame/activitiestray.py:822
-#: ../src/jarabe/frame/activitiestray.py:850
-msgid "Cancel"
-msgstr "取消"
-
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:333
 msgid "Ok"
 msgstr "確定"
 
-#: ../src/jarabe/desktop/activitieslist.py:80
-#: ../src/jarabe/journal/listview.py:147
-msgid "Title"
-msgstr "標題"
-
-#: ../src/jarabe/desktop/activitieslist.py:91
-msgid "Version"
-msgstr "版本"
-
-#: ../src/jarabe/desktop/activitieslist.py:105
-#: ../src/jarabe/journal/listview.py:178
-msgid "Date"
-msgstr "日期"
-
-#: ../src/jarabe/desktop/activitieslist.py:234
+#: ../src/jarabe/desktop/activitieslist.py:236
 #, python-format
 msgid "Version %s"
 msgstr "版本 %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:355
+#: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
 msgstr "確認刪除"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "確認刪除：您確定要永久地刪除 %s 嗎？"
@@ -745,24 +816,24 @@ msgstr "確認刪除：您確定要永久地刪除 %s 嗎？"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:361
-#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/frame/clipboardmenu.py:63
 #: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "保存"
 
-#: ../src/jarabe/desktop/activitieslist.py:364
-#: ../src/jarabe/desktop/activitieslist.py:407
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:409
 #: ../src/jarabe/journal/journaltoolbox.py:360
-#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/journal/palettes.py:105
 msgid "Erase"
 msgstr "刪除"
 
-#: ../src/jarabe/desktop/activitieslist.py:428
+#: ../src/jarabe/desktop/activitieslist.py:430
 msgid "Remove favorite"
 msgstr "移除偏好活動"
 
-#: ../src/jarabe/desktop/activitieslist.py:432
+#: ../src/jarabe/desktop/activitieslist.py:434
 msgid "Make favorite"
 msgstr "指定偏好活動"
 
@@ -796,24 +867,24 @@ msgstr "方型"
 msgid "Triangle"
 msgstr "三角形"
 
-#: ../src/jarabe/desktop/favoritesview.py:323
+#: ../src/jarabe/desktop/favoritesview.py:324
 msgid "Registration Failed"
 msgstr "註冊失敗"
 
-#: ../src/jarabe/desktop/favoritesview.py:324
+#: ../src/jarabe/desktop/favoritesview.py:325
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:327
 msgid "Registration Successful"
 msgstr "註冊成功"
 
-#: ../src/jarabe/desktop/favoritesview.py:327
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "You are now registered with your school server."
 msgstr "您已經成功註冊到校園主機"
 
-#: ../src/jarabe/desktop/favoritesview.py:671
+#: ../src/jarabe/desktop/favoritesview.py:630
 msgid "Register"
 msgstr "註冊"
 
@@ -845,41 +916,38 @@ msgstr "偏好檢視"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:131
+#: ../src/jarabe/desktop/keydialog.py:135
 msgid "Key Type:"
 msgstr "金鑰類型:"
 
-#: ../src/jarabe/desktop/keydialog.py:151
+#: ../src/jarabe/desktop/keydialog.py:155
 msgid "Authentication Type:"
 msgstr "認證類型:"
 
-#: ../src/jarabe/desktop/keydialog.py:215
+#: ../src/jarabe/desktop/keydialog.py:220
 msgid "WPA & WPA2 Personal"
 msgstr "個人的 WPA & WPA2 加密"
 
-#: ../src/jarabe/desktop/keydialog.py:224
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "Wireless Security:"
 msgstr "無線網路加密："
 
-#: ../src/jarabe/desktop/meshbox.py:136
-msgid "Connect"
-msgstr "連線"
-
-#: ../src/jarabe/desktop/meshbox.py:140
-msgid "Disconnect"
-msgstr "切斷連線"
+#: ../src/jarabe/desktop/meshbox.py:492
+#, python-format
+msgid "Mesh Network %d"
+msgstr "網狀網路 %d"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:466
-#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/desktop/meshbox.py:629
+#: ../src/jarabe/frame/activitiestray.py:735
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:64
+#: ../src/jarabe/journal/palettes.py:65 ../src/jarabe/view/palettes.py:67
 msgid "Resume"
 msgstr "回復"
 
-#: ../src/jarabe/desktop/meshbox.py:471
-#: ../src/jarabe/frame/activitiestray.py:235
+#: ../src/jarabe/desktop/meshbox.py:634
+#: ../src/jarabe/frame/activitiestray.py:233
 msgid "Join"
 msgstr "加入"
 
@@ -891,66 +959,66 @@ msgstr "無法連線到伺服器"
 msgid "The server could not complete the request."
 msgstr "伺服器無法完成查尋動作"
 
-#: ../src/jarabe/frame/activitiestray.py:240
-#: ../src/jarabe/frame/activitiestray.py:698
+#: ../src/jarabe/frame/activitiestray.py:238
+#: ../src/jarabe/frame/activitiestray.py:672
 msgid "Decline"
 msgstr "拒絕"
 
-#: ../src/jarabe/frame/activitiestray.py:650
+#: ../src/jarabe/frame/activitiestray.py:624
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:652
+#: ../src/jarabe/frame/activitiestray.py:626
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:654
+#: ../src/jarabe/frame/activitiestray.py:628
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:671
+#: ../src/jarabe/frame/activitiestray.py:645
 #, python-format
 msgid "%s of %s"
 msgstr "%s 之 %s"
 
-#: ../src/jarabe/frame/activitiestray.py:683
+#: ../src/jarabe/frame/activitiestray.py:657
 #, python-format
 msgid "Transfer from %r"
 msgstr "傳送自 %r"
 
-#: ../src/jarabe/frame/activitiestray.py:693
+#: ../src/jarabe/frame/activitiestray.py:667
 msgid "Accept"
 msgstr "接受"
 
-#: ../src/jarabe/frame/activitiestray.py:716
-#: ../src/jarabe/frame/activitiestray.py:840
+#: ../src/jarabe/frame/activitiestray.py:690
+#: ../src/jarabe/frame/activitiestray.py:817
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:750
-#: ../src/jarabe/frame/activitiestray.py:875
+#: ../src/jarabe/frame/activitiestray.py:724
+#: ../src/jarabe/frame/activitiestray.py:852
 msgid "Dismiss"
 msgstr "拒絕"
 
-#: ../src/jarabe/frame/activitiestray.py:810
+#: ../src/jarabe/frame/activitiestray.py:787
 #, python-format
 msgid "Transfer to %r"
 msgstr "傳送給 %r"
 
-#: ../src/jarabe/frame/clipboardmenu.py:52 ../src/jarabe/view/palettes.py:218
+#: ../src/jarabe/frame/clipboardmenu.py:53 ../src/jarabe/view/palettes.py:221
 msgid "Remove"
 msgstr "移除"
 
-#: ../src/jarabe/frame/clipboardmenu.py:57
-#: ../src/jarabe/frame/clipboardmenu.py:80
+#: ../src/jarabe/frame/clipboardmenu.py:58
+#: ../src/jarabe/frame/clipboardmenu.py:81
 msgid "Open"
 msgstr "開啟"
 
-#: ../src/jarabe/frame/clipboardmenu.py:85
+#: ../src/jarabe/frame/clipboardmenu.py:86
 msgid "Open with"
 msgstr "開啟使用"
 
@@ -979,59 +1047,59 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:124
+#: ../src/jarabe/intro/window.py:128
 msgid "Click to change color:"
 msgstr "點選改變顏色:"
 
-#: ../src/jarabe/intro/window.py:174 ../src/jarabe/journal/detailview.py:103
+#: ../src/jarabe/intro/window.py:192 ../src/jarabe/journal/detailview.py:103
 msgid "Back"
 msgstr "上一步"
 
-#: ../src/jarabe/intro/window.py:191
+#: ../src/jarabe/intro/window.py:209
 msgid "Next"
 msgstr "下一步"
 
-#: ../src/jarabe/journal/expandedentry.py:164
-#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/expandedentry.py:152
+#: ../src/jarabe/journal/palettes.py:59
 msgid "Untitled"
 msgstr "未命名"
 
-#: ../src/jarabe/journal/expandedentry.py:210
+#: ../src/jarabe/journal/expandedentry.py:243
 msgid "No preview"
 msgstr "沒有預覽"
 
-#: ../src/jarabe/journal/expandedentry.py:229
+#: ../src/jarabe/journal/expandedentry.py:262
 #, python-format
 msgid "Kind: %s"
 msgstr "類別: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:229
+#: ../src/jarabe/journal/expandedentry.py:262
 msgid "Unknown"
 msgstr "未知"
 
-#: ../src/jarabe/journal/expandedentry.py:230
+#: ../src/jarabe/journal/expandedentry.py:263
 #, python-format
 msgid "Date: %s"
 msgstr "日期: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:231
+#: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Size: %s"
 msgstr "大小: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:253 ../src/jarabe/journal/misc.py:92
+#: ../src/jarabe/journal/expandedentry.py:286 ../src/jarabe/journal/misc.py:93
 msgid "No date"
 msgstr "無日期"
 
-#: ../src/jarabe/journal/expandedentry.py:260
+#: ../src/jarabe/journal/expandedentry.py:293
 msgid "Participants:"
 msgstr "參與者"
 
-#: ../src/jarabe/journal/expandedentry.py:283
+#: ../src/jarabe/journal/expandedentry.py:316
 msgid "Description:"
 msgstr "說明:"
 
-#: ../src/jarabe/journal/expandedentry.py:309
+#: ../src/jarabe/journal/expandedentry.py:341
 msgid "Tags:"
 msgstr "標籤:"
 
@@ -1093,26 +1161,26 @@ msgstr "所有類別"
 
 # TODO: Add "Start with" menu item
 #: ../src/jarabe/journal/journaltoolbox.py:350
-#: ../src/jarabe/journal/palettes.py:90
+#: ../src/jarabe/journal/palettes.py:83
 msgid "Copy"
 msgstr "複製"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:431
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:68
 msgid "Start"
 msgstr "啟動"
 
-#: ../src/jarabe/journal/listview.py:361
+#: ../src/jarabe/journal/listview.py:373
 msgid "Your Journal is empty"
 msgstr "空白的日誌內容"
 
-#: ../src/jarabe/journal/listview.py:363
+#: ../src/jarabe/journal/listview.py:375
 msgid "No matching entries"
 msgstr "沒有相符的紀錄"
 
-#: ../src/jarabe/journal/listview.py:374
+#: ../src/jarabe/journal/listview.py:386
 msgid "Clear search"
 msgstr "清除搜尋項目"
 
@@ -1137,35 +1205,35 @@ msgstr "選擇物件"
 msgid "Close"
 msgstr "關閉"
 
-#: ../src/jarabe/journal/palettes.py:73
+#: ../src/jarabe/journal/palettes.py:66
 msgid "Resume with"
 msgstr "回復活動"
 
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/palettes.py:69
 msgid "Start with"
 msgstr "開始活動"
 
-#: ../src/jarabe/journal/palettes.py:98
+#: ../src/jarabe/journal/palettes.py:91
 msgid "Send to"
 msgstr "傳送給"
 
-#: ../src/jarabe/journal/palettes.py:107
+#: ../src/jarabe/journal/palettes.py:100
 msgid "View Details"
 msgstr "檢視詳細內容"
 
-#: ../src/jarabe/journal/palettes.py:185
+#: ../src/jarabe/journal/palettes.py:178
 msgid "No friends present"
 msgstr "沒有好友上線"
 
-#: ../src/jarabe/journal/palettes.py:190
+#: ../src/jarabe/journal/palettes.py:183
 msgid "No valid connection found"
 msgstr "找不到有效的網路連線"
 
-#: ../src/jarabe/journal/palettes.py:218
+#: ../src/jarabe/journal/palettes.py:211
 msgid "No activity to resume entry"
 msgstr "找不到可以回復的活動"
 
-#: ../src/jarabe/journal/palettes.py:220
+#: ../src/jarabe/journal/palettes.py:213
 msgid "No activity to start entry"
 msgstr "找不到可以開始的活動"
 
@@ -1199,23 +1267,23 @@ msgid "Starting..."
 msgstr "啟動中…"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:71
+#: ../src/jarabe/view/palettes.py:74
 msgid "View Source"
 msgstr "檢視原始碼"
 
-#: ../src/jarabe/view/palettes.py:82
+#: ../src/jarabe/view/palettes.py:85
 msgid "Stop"
 msgstr "停止"
 
-#: ../src/jarabe/view/palettes.py:122
+#: ../src/jarabe/view/palettes.py:125
 msgid "Start new"
 msgstr "建立新的"
 
-#: ../src/jarabe/view/palettes.py:171
+#: ../src/jarabe/view/palettes.py:174
 msgid "Show contents"
 msgstr "顯示內容"
 
-#: ../src/jarabe/view/palettes.py:193 ../src/jarabe/view/palettes.py:243
+#: ../src/jarabe/view/palettes.py:196 ../src/jarabe/view/palettes.py:246
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "剩餘 %(free_space)d MB 空間"
@@ -1236,6 +1304,15 @@ msgstr "預裝活動原始碼"
 #, python-format
 msgid "View source: %r"
 msgstr "查看原始碼： %r"
+
+#~ msgid "Title"
+#~ msgstr "標題"
+
+#~ msgid "Version"
+#~ msgstr "版本"
+
+#~ msgid "Date"
+#~ msgstr "日期"
 
 #~ msgid "Cannot obtain data needed for registration."
 #~ msgstr "無法取得註冊所需的資料"
@@ -1265,12 +1342,6 @@ msgstr "查看原始碼： %r"
 # have a good mapping
 #~ msgid "Disconnecting..."
 #~ msgstr "切斷連線中…"
-
-#~ msgid "Mesh Network"
-#~ msgstr "網狀網路"
-
-#~ msgid "Disconnected"
-#~ msgstr "已切斷"
 
 #~ msgid "About my XO"
 #~ msgstr "關於我的ＸＯ"
