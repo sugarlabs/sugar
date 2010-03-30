@@ -1,5 +1,6 @@
-sugar-0.88 (0.87.2-2) UNRELEASED; urgency=low
+sugar-0.88 (0.87.8-1) UNRELEASED; urgency=low
 
+  * New upstream development release.
   * Drop all local CDBS snippets: included with main cdbs package now.
   * Revert apply patches to source in Git.
   * Refresh and unfuzz patches.
@@ -7,8 +8,15 @@ sugar-0.88 (0.87.2-2) UNRELEASED; urgency=low
   * Relax build-dependencies on python-central and python-dev.
   * Relax build-dependency on devscripts slightly, to ease backporting.
   * Tighten build-dependency on cdbs.
+  * Disable patches adding danish l10n: Upstream ships with alternative
+    translation now (merging postponed till later).
+  * Update copyright file:
+    + Reformat to conform to draft DEP5 rev. 135.
+    + Add a few new owners (no new licenses).
+    + Shuffle file sections around to better match hints file.
+  * Bump standards-version to 3.8.4.
 
- -- Jonas Smedegaard <dr@jones.dk>  Wed, 24 Mar 2010 10:23:10 +0100
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 30 Mar 2010 12:02:08 +0200
 
 sugar-0.88 (0.87.2-1) unstable; urgency=low
 

@@ -19,6 +19,7 @@ Files: ./AUTHORS,
 	./data/icons/module-frame.svg,
 	./data/icons/module-keyboard.svg,
 	./data/icons/module-language.svg,
+	./data/icons/module-modemconfiguration.svg,
 	./data/icons/module-network.svg,
 	./data/icons/module-power.svg,
 	./data/icons/module-updater.svg,
@@ -61,6 +62,7 @@ Files: ./AUTHORS,
 	./extensions/cpsection/frame/Makefile.am,
 	./extensions/cpsection/keyboard/Makefile.am,
 	./extensions/cpsection/language/Makefile.am,
+	./extensions/cpsection/modemconfiguration/Makefile.am,
 	./extensions/cpsection/network/Makefile.am,
 	./extensions/cpsection/power/Makefile.am,
 	./extensions/cpsection/updater/Makefile.am,
@@ -87,6 +89,55 @@ Files: ./AUTHORS,
 	./src/jarabe/util/telepathy/Makefile.am,
 	./src/jarabe/view/Makefile.am
 Copyright: *No copyright*
+License: UNKNOWN
+ FIXME
+
+Files: ./po/af.po,
+	./po/am.po,
+	./po/ay.po,
+	./po/bg.po,
+	./po/bn.po,
+	./po/bn_IN.po,
+	./po/da.po,
+	./po/dz.po,
+	./po/el.po,
+	./po/en.po,
+	./po/ff.po,
+	./po/gu.po,
+	./po/ha.po,
+	./po/hi.po,
+	./po/ht.po,
+	./po/is.po,
+	./po/km.po,
+	./po/ko.po,
+	./po/kos.po,
+	./po/mg.po,
+	./po/mk.po,
+	./po/ml.po,
+	./po/mr.po,
+	./po/mvo.po,
+	./po/nb.po,
+	./po/pa.po,
+	./po/pap.po,
+	./po/pis.po,
+	./po/ps.po,
+	./po/pt_BR.po,
+	./po/qu.po,
+	./po/ro.po,
+	./po/ru.po,
+	./po/rw.po,
+	./po/sd.po,
+	./po/sq.po,
+	./po/sw.po,
+	./po/te.po,
+	./po/th.po,
+	./po/tpi.po,
+	./po/tvl.po,
+	./po/tzo.po,
+	./po/ur.po,
+	./po/yo.po,
+	./po/zh_CN.po
+Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
@@ -136,48 +187,6 @@ Copyright: 2006, Red Hat, Inc
 	2007, Red Hat, Inc
 	2008, Red Hat, Inc
 License: GPL-2+
- FIXME
-
-Files: ./po/af.po,
-	./po/am.po,
-	./po/ay.po,
-	./po/bg.po,
-	./po/bn.po,
-	./po/bn_IN.po,
-	./po/dz.po,
-	./po/el.po,
-	./po/en.po,
-	./po/ff.po,
-	./po/gu.po,
-	./po/ha.po,
-	./po/hi.po,
-	./po/ht.po,
-	./po/is.po,
-	./po/km.po,
-	./po/ko.po,
-	./po/mk.po,
-	./po/ml.po,
-	./po/mr.po,
-	./po/mvo.po,
-	./po/nb.po,
-	./po/pa.po,
-	./po/pap.po,
-	./po/pis.po,
-	./po/ps.po,
-	./po/pt_BR.po,
-	./po/qu.po,
-	./po/ro.po,
-	./po/ru.po,
-	./po/rw.po,
-	./po/sd.po,
-	./po/te.po,
-	./po/th.po,
-	./po/tpi.po,
-	./po/ur.po,
-	./po/yo.po,
-	./po/zh_CN.po
-Copyright: YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
  FIXME
 
 Files: ./extensions/cpsection/aboutcomputer/model.py,
@@ -233,6 +242,7 @@ Files: ./Makefile.in,
 	./extensions/cpsection/frame/Makefile.in,
 	./extensions/cpsection/keyboard/Makefile.in,
 	./extensions/cpsection/language/Makefile.in,
+	./extensions/cpsection/modemconfiguration/Makefile.in,
 	./extensions/cpsection/network/Makefile.in,
 	./extensions/cpsection/power/Makefile.in,
 	./extensions/cpsection/updater/Makefile.in,
@@ -276,6 +286,25 @@ Copyright: 2008, OLPC
 License: GPL-2+
  FIXME
 
+Files: ./po/bi.po,
+	./po/cpp.po,
+	./po/cs.po,
+	./po/fil.po,
+	./po/he.po,
+	./po/hu.po,
+	./po/id.po,
+	./po/mi.po,
+	./po/mn.po,
+	./po/ms.po,
+	./po/ne.po,
+	./po/sk.po,
+	./po/ug.po,
+	./po/wa.po
+Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+	YEAR THE PACKAGE'S HOLDER
+License: UNKNOWN
+ FIXME
+
 Files: ./src/jarabe/desktop/favoritesview.py,
 	./src/jarabe/desktop/grid.py,
 	./src/jarabe/frame/activitiestray.py,
@@ -290,11 +319,10 @@ Copyright: 2006, Red Hat, Inc
 License: GPL-2+
  FIXME
 
-Files: ./extensions/deviceicon/network.py,
-	./extensions/globalkey/viewsource.py,
-	./src/jarabe/view/viewsource.py
-Copyright: 2008, One Laptop Per Child
-	2009, Tomeu Vizoso, Simon Schampijer
+Files: ./extensions/cpsection/modemconfiguration/__init__.py,
+	./extensions/cpsection/modemconfiguration/model.py,
+	./extensions/cpsection/modemconfiguration/view.py
+Copyright: 2009, Paraguay Educa, Martin Abente
 License: GPL-2+
  FIXME
 
@@ -329,11 +357,9 @@ Copyright: 2008, One Laptop Per Child
 License: GPL-2+
  FIXME
 
-Files: ./src/jarabe/desktop/meshbox.py,
-	./src/jarabe/model/network.py
-Copyright: 2006-2007, Red Hat, Inc
-	2008, Red Hat, Inc
-	2009, One Laptop per Child
+Files: ./extensions/globalkey/viewsource.py,
+	./src/jarabe/view/viewsource.py
+Copyright: 2008, One Laptop Per Child
 	2009, Tomeu Vizoso, Simon Schampijer
 License: GPL-2+
  FIXME
@@ -351,22 +377,8 @@ Copyright: 2009, Sugar Labs
 License: GPL-2+
  FIXME
 
-Files: ./debian/patches/danish_l10n.patch,
-	./po/da.po
-Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
-	2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-License: UNKNOWN
- FIXME
-
-Files: ./po/mn.po,
-	./po/ne.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-	YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
 Files: ./missing
-Copyright: 1996-1997, 1999-2000, 2002-2005
+Copyright: 1996-1997, 1999-2000, 2002-2006
 License: GPL
  FIXME
 
@@ -415,6 +427,11 @@ Copyright: 2008, OLPC
 License: GPL-2+
  FIXME
 
+Files: ./src/jarabe/model/mimeregistry.py
+Copyright: 2009, Aleksey Lim
+License: GPL-2+
+ FIXME
+
 Files: ./src/jarabe/model/bundleregistry.py
 Copyright: 2006-2007, Red Hat, Inc
 	2009, Aleksey Lim
@@ -447,6 +464,14 @@ Copyright: 2008, OLPC
 License: GPL-2+
  FIXME
 
+Files: ./extensions/deviceicon/network.py
+Copyright: 2008, One Laptop Per Child
+	2009, Paraguay Educa, Martin Abente
+	2009, Tomeu Vizoso, Simon Schampijer
+	2010, Plan Ceibal, Daniel Castelo
+License: GPL-2+
+ FIXME
+
 Files: ./extensions/globalkey/screenshot.py
 Copyright: 2008, One Laptop Per Child
 	2009, Simon Schampijer, James Zaki
@@ -465,9 +490,30 @@ Copyright: 2006, Red Hat, Inc
 License: GPL-2+
  FIXME
 
+Files: ./src/jarabe/model/olpcmesh.py
+Copyright: 2009, One Laptop per Child
+License: GPL-2+
+ FIXME
+
+Files: ./src/jarabe/model/network.py
+Copyright: 2008, Red Hat, Inc
+	2009, One Laptop per Child
+	2009, Paraguay Educa, Martin Abente
+	2009, Tomeu Vizoso, Simon Schampijer
+	2010, Plan Ceibal, Daniel Castelo
+License: GPL-2+
+ FIXME
+
 Files: ./src/jarabe/desktop/keydialog.py
 Copyright: 2006-2007, Red Hat, Inc
 	2009, One Laptop per Child
+License: GPL-2+
+ FIXME
+
+Files: ./src/jarabe/desktop/meshbox.py
+Copyright: 2006-2007, Red Hat, Inc
+	2009, One Laptop per Child
+	2009, Tomeu Vizoso, Simon Schampijer
 License: GPL-2+
  FIXME
 
@@ -506,9 +552,17 @@ Copyright: %(current)d إلى %(new)s (الحجم %(size)s)"
 	2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 	2008, لجمعي� حاسوب محمول لكل طفل؛ ردهات؛ والمساهمين."
 	YEAR THE PACKAGE'S HOLDER
+	المحدد، استخدم on/off."
 	بتخطيطات لوح� المفاتيح، كل على الشكل ‪layout(variant)‬"
 	تحكم سكر: key=%s ليس متاحا كخيار"
 	شبك� XO"
+	عند البدء، أو \"system\" (النظام) "
+License: UNKNOWN
+ FIXME
+
+Files: ./debian/patches/danish_l10n.patch
+Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
+	2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 License: UNKNOWN
  FIXME
 
@@ -563,6 +617,14 @@ Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contribu
 License: UNKNOWN
  FIXME
 
+Files: ./po/sv.po
+Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+	2008, One Laptop per Child Association Inc; Red Hat Inc; och andra "
+	YEAR THE PACKAGE'S HOLDER
+	och Licens"
+License: UNKNOWN
+ FIXME
+
 Files: ./po/tr.po
 Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 	2008, One Laptop per Child Association Inc; Red Hat Inc; ve Destekçiler"
@@ -590,6 +652,14 @@ Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contribu
 	ai"
 	tự đã thích. Nếu không có bản dịch thì dùng ngôn "
 	để giải phóng thêm s�c ch�a cho mục nhập "
+License: UNKNOWN
+ FIXME
+
+Files: ./po/ta.po
+Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+	2008இல் ஒரு பிள்ளைக்கு ஒரு மடிமேல்கணி�ி கொடுக்க இணக்கம்Inc; Red Hat Inc; "
+	YEAR THE PACKAGE'S HOLDER
+	pm விவாதம் தவறு . உபயோகி on/off."
 License: UNKNOWN
  FIXME
 
