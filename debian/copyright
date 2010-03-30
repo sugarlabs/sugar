@@ -232,7 +232,7 @@ License: GPL-2+
  .
  On Debian systems, the complete text of a recent version of the GNU
  General Public License (GPL) can be found in the file
- "/usr/share/common-licenses/GPL-2".
+ "/usr/share/common-licenses/GPL".
  .
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
