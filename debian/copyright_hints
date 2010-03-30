@@ -114,6 +114,7 @@ Files: ./po/af.po,
 	./po/mg.po,
 	./po/mk.po,
 	./po/ml.po,
+	./po/mn.po,
 	./po/mr.po,
 	./po/mvo.po,
 	./po/nb.po,
@@ -294,7 +295,6 @@ Files: ./po/bi.po,
 	./po/hu.po,
 	./po/id.po,
 	./po/mi.po,
-	./po/mn.po,
 	./po/ms.po,
 	./po/ne.po,
 	./po/sk.po,
@@ -383,7 +383,7 @@ License: GPL
  FIXME
 
 Files: ./py-compile
-Copyright: 2000-2001, 2003-2005, Free Software Foundation, Inc
+Copyright: 2000-2001, 2003-2005, 2008-2009, Free Software
 License: GPL
  FIXME
 
@@ -663,16 +663,17 @@ Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contribu
 License: UNKNOWN
  FIXME
 
+Files: ./po/de.po
+Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+	YEAR THE PACKAGE'S HOLDER
+	und Lizenz"
+License: UNKNOWN
+ FIXME
+
 Files: ./po/zh_TW.po
 Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 	2008, 每童一� 公司; 紅帽 公司; 以及其他的貢獻者"
 	YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: ./po/de.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-	und Lizenz"
 License: UNKNOWN
  FIXME
 

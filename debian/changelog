@@ -1,4 +1,4 @@
-sugar-0.88 (0.87.8-1) UNRELEASED; urgency=low
+sugar-0.88 (0.88.0-1) unstable; urgency=low
 
   * New upstream development release.
   * Drop all local CDBS snippets: included with main cdbs package now.
@@ -12,11 +12,11 @@ sugar-0.88 (0.87.8-1) UNRELEASED; urgency=low
     translation now (merging postponed till later).
   * Update copyright file:
     + Reformat to conform to draft DEP5 rev. 135.
-    + Add a few new owners (no new licenses).
+    + Add a few new owners and years (no new licenses).
     + Shuffle file sections around to better match hints file.
   * Bump standards-version to 3.8.4.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 30 Mar 2010 12:02:08 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 30 Mar 2010 12:13:18 +0200
 
 sugar-0.88 (0.87.2-1) unstable; urgency=low
 
