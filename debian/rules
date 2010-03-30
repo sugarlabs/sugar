@@ -31,7 +31,7 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = 287440d0d395e95fc730fa01d56daa0e
+DEB_UPSTREAM_TARBALL_MD5 = c87c52fc4dbfafdde6e45d1ac010e46b
 
 DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
 
