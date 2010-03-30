@@ -37,6 +37,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import iconentry
 from sugar.graphics import style
 from sugar import mime
+from sugar import profile
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
@@ -396,8 +397,8 @@ class EntryToolbar(gtk.Toolbar):
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)
 
-    def _copy_menu_item_activate_cb(self, menu_item, mount):
-        model.copy(self._metadata, mount.get_root().get_path())
+    def _copy_menu_item_activate_cb(self, menu_item, mount_point):
+        model.copy(self._metadata, mount_point)
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -405,6 +406,17 @@ class EntryToolbar(gtk.Toolbar):
         for menu_item in palette.menu.get_children():
             palette.menu.remove(menu_item)
             menu_item.destroy()
+
+        if self._metadata['mountpoint'] != '/':
+            journal_item = MenuItem(_('Journal'))
+            journal_item.set_image(Icon(
+                    icon_name='activity-journal',
+                    xo_color=profile.get_color(),
+                    icon_size=gtk.ICON_SIZE_MENU))
+            journal_item.connect('activate',
+                    self._copy_menu_item_activate_cb, '/')
+            journal_item.show()
+            palette.menu.append(journal_item)
 
         volume_monitor = gio.volume_monitor_get()
         for mount in volume_monitor.get_mounts():
@@ -418,7 +430,7 @@ class EntryToolbar(gtk.Toolbar):
 
             menu_item.connect('activate',
                               self._copy_menu_item_activate_cb,
-                              mount)
+                              mount.get_root().get_path())
             palette.menu.append(menu_item)
             menu_item.show()
 
