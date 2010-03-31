@@ -18,6 +18,7 @@
 import logging
 import dbus
 from gettext import gettext as _
+from jarabe.model import network
 import gconf
 import os
 
@@ -75,7 +76,7 @@ def get_radio_nm():
     bus = dbus.SystemBus()
     try:
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available' % _NM_SERVICE)
 
@@ -98,7 +99,7 @@ def set_radio_nm(state):
         bus = dbus.SystemBus()
         try:
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
@@ -106,7 +107,7 @@ def set_radio_nm(state):
         bus = dbus.SystemBus()
         try:
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
@@ -172,7 +173,10 @@ def clear_registration():
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    pass
+    network.clear_connections()
+
+def count_networks():
+    return network.count_connections()
 
 def get_publish_information():
     client = gconf.client_get_default()

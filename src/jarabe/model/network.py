@@ -216,6 +216,11 @@ class NMSettings(dbus.service.Object):
         self.secrets_request.send(self, connection=sender,
                                   response=kwargs['response'])
 
+    def clear_connections(self):
+        for connection in self.connections.values():
+            connection.Removed()
+        self.connections = {}
+
 class SecretsResponse(object):
     ''' Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
@@ -244,10 +249,28 @@ class NMSettingsConnection(dbus.service.Object):
         self._settings = settings
         self._secrets = secrets
 
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='')
+    def Removed(self):
+        pass
+
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='a{sa{sv}}')
+    def Updated(self, settings):
+        pass
+
     def set_connected(self):
         if not self._settings.connection.autoconnect:
             self._settings.connection.autoconnect = True
             self._settings.connection.timestamp = int(time.time())
+            self.Updated(self._settings.get_dict())
+            self.save()
+
+    def set_disconnected(self):
+        if self._settings.connection.autoconnect:
+            self._settings.connection.autoconnect = False
+            self._settings.connection.timestamp = None
+            self.Updated(self._settings.get_dict())
             self.save()
 
     def set_secrets(self, secrets):
@@ -336,7 +359,6 @@ class NMSettingsConnection(dbus.service.Object):
         else:
             reply(self._secrets.get_dict())
 
-
 class AccessPoint(gobject.GObject):
     __gsignals__ = {
         'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -359,8 +381,7 @@ class AccessPoint(gobject.GObject):
         self.mode = 0
 
     def initialize(self):
-        model_props = dbus.Interface(self.model,
-            'org.freedesktop.DBus.Properties')
+        model_props = dbus.Interface(self.model, dbus.PROPERTIES_IFACE)
         model_props.GetAll(NM_ACCESSPOINT_IFACE, byte_arrays=True,
                            reply_handler=self._ap_properties_changed_cb,
                            error_handler=self._get_all_props_error_cb)
@@ -473,15 +494,13 @@ def load_connections():
     profile_path = env.get_profile_path()
     config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
 
-    config = ConfigParser.ConfigParser()
-
     if not os.path.exists(config_path):
         if not os.path.exists(os.path.dirname(config_path)):
             os.makedirs(os.path.dirname(config_path), 0755)
         f = open(config_path, 'w')
-        config.write(f)
         f.close()
 
+    config = ConfigParser.ConfigParser()
     try:
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
@@ -535,3 +554,17 @@ def load_connections():
             logging.error('Error reading section: %s' % e)
         else:
             add_connection(ssid, settings, secrets)
+
+def count_connections():
+    return len(get_settings().connections)
+
+def clear_connections():
+    _nm_settings.clear_connections()
+
+    profile_path = env.get_profile_path()
+    config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
+
+    if not os.path.exists(os.path.dirname(config_path)):
+        os.makedirs(os.path.dirname(config_path), 0755)
+    f = open(config_path, 'w')
+    f.close()

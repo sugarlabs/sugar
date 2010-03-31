@@ -83,7 +83,6 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._rsn_flags = initial_ap.rsn_flags
         self._device_caps = 0
         self._device_state = None
-        self._connection = None
         self._color = None
 
         if self._mode == network.NM_802_11_MODE_ADHOC \
@@ -112,18 +111,9 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
 
-        if network.find_connection(self._name) is not None:
-            self.props.badge_name = "emblem-favorite"
-            self._palette_icon.props.badge_name = "emblem-favorite"
-        elif initial_ap.flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-            self.props.badge_name = "emblem-locked"
-            self._palette_icon.props.badge_name = "emblem-locked"
-        else:
-            self.props.badge_name = None
-            self._palette_icon.props.badge_name = None
+        self._update_badge()
 
-        interface_props = dbus.Interface(self._device,
-                                         'org.freedesktop.DBus.Properties')
+        interface_props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
         interface_props.Get(_NM_DEVICE_IFACE, 'State',
                             reply_handler=self.__get_device_state_reply_cb,
                             error_handler=self.__get_device_state_error_cb)
@@ -153,7 +143,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._palette_icon = Icon(icon_name=icon_name,
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
-                                              
+
         p = palette.Palette(primary_text=self._name,
                             icon=self._palette_icon)
 
@@ -171,6 +161,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
+        self._update_badge()
 
     def __update_active_ap(self, ap_path):
         if ap_path in self._access_points:
@@ -211,6 +202,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
     def _update(self):
         self._update_state()
         self._update_color()
+        self._update_badge()
 
     def _update_state(self):
         if self._active_ap is not None:
@@ -256,15 +248,47 @@ class WirelessNetworkView(CanvasPulsingIcon):
             self._palette.props.secondary_text = None
             self.props.pulsing = False
 
-    def _update_color(self):        
+    def _update_color(self):
         if self._greyed_out:
             self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
             self.props.base_color = self._color
 
+    def _update_badge(self):
+        if network.find_connection(self._name) is not None:
+            self.props.badge_name = "emblem-favorite"
+            self._palette_icon.props.badge_name = "emblem-favorite"
+        elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
+            self.props.badge_name = "emblem-locked"
+            self._palette_icon.props.badge_name = "emblem-locked"
+        else:
+            self.props.badge_name = None
+            self._palette_icon.props.badge_name = None
+
     def _disconnect_activate_cb(self, item):
-        pass
+        connection = network.find_connection(self._name)
+        if connection:
+            if self._mode == network.NM_802_11_MODE_INFRA:
+                connection.set_disconnected()
+
+        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+        netmgr = dbus.Interface(obj, _NM_IFACE)
+
+        netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
+        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+
+        for conn_o in active_connections_o:
+            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+            state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
+            if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATED:
+                ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                if ap_o != '/' and self.find_ap(ap_o) is not None:
+                    netmgr.DeactivateConnection(conn_o)
+                else:
+                    logging.error('Could not determine AP for'
+                                  ' specific object %s' % conn_o)
 
     def _add_ciphers_from_flags(self, flags, pairwise):
         ciphers = []
@@ -694,13 +718,12 @@ class NetworkManagerObserver(object):
         # FIXME It would be better to do all of this async, but I cannot think
         # of a good way to. NM could really use some love here.
 
-        netmgr_props = dbus.Interface(
-                            self._netmgr, 'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
         active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
             obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
                 ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
@@ -724,7 +747,7 @@ class NetworkManagerObserver(object):
 
     def _check_device(self, device_o):
         device = self._bus.get_object(_NM_SERVICE, device_o)
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
