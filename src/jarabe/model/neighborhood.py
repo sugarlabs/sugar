@@ -50,22 +50,16 @@ CHANNEL_DISPATCHER_PATH = '/org/freedesktop/Telepathy/ChannelDispatcher'
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
-class ActivityModel:
-    def __init__(self, act, bundle):
-        self.activity = act
+CONNECTION_INTERFACE_APPLICATIONS = CONNECTION + '.Interface.Applications.DRAFT'
+
+class ActivityModel(object):
+    def __init__(self, bundle, activity_id):
         self.bundle = bundle
-
-    def get_id(self):
-        return self.activity.props.id
-
-    def get_icon_name(self):
-        return self.bundle.get_icon()
+        self.activity_id = activity_id
 
     def get_color(self):
-        return XoColor(self.activity.props.color)
-
-    def get_bundle_id(self):
-        return self.bundle.get_bundle_id()
+        logging.info('KILL_PS get the initiator''s colors')
+        return None
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -94,7 +88,7 @@ class Neighborhood(gobject.GObject):
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
 
-        accounts = account_manager.Get(ACCOUNT_MANAGER_SERVICE, 'ValidAccounts',
+        accounts = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
                                        dbus_interface=PROPERTIES_IFACE)
         logging.debug('accounts %r', accounts)
 
@@ -197,6 +191,11 @@ class Neighborhood(gobject.GObject):
                 'PresencesChanged',
                 partial(self.__presences_changed_cb, connection))
 
+        if CONNECTION_INTERFACE_APPLICATIONS in connection:
+            connection[CONNECTION_INTERFACE_APPLICATIONS].connect_to_signal(
+                    'ApplicationsUpdated',
+                    partial(self.__applications_updated_cb, connection))
+
         handles = channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP, 'Members')
         if handles:
             self._add_handles(connection, handles)
@@ -219,6 +218,42 @@ class Neighborhood(gobject.GObject):
                 buddy = self._buddies[(connection.service_name, handle)]
                 buddy.props.nick = alias
                 buddy.props.key = (connection.service_name, handle)
+
+    def __applications_updated_cb(self, connection, handle, applications):
+        logging.debug('__applications_updated_cb %r %r', handle, applications)
+
+        buddy = self._buddies[(connection.service_name, handle)]
+
+        for application in applications:
+            activity_id = application.get('TargetId', '')
+            bundle_id = application.get('bundle-id', '')
+
+            if not bundle_id or not activity_id:
+                logging.warning('Ignoring malformed shared activity')
+                continue
+
+            if self.has_activity(activity_id):
+                return
+
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(bundle_id)
+            if not bundle:
+                logging.warning('Ignoring shared activity we don''t have')
+                continue
+            
+            model = ActivityModel(bundle, activity_id)
+            self._activities[activity_id] = model
+            self.emit('activity-added', model)
+
+            logging.info('KILL_PS move buddies around')
+            """
+            for buddy in self._pservice.get_buddies():
+                cur_activity = buddy.props.current_activity
+                object_path = buddy.object_path()
+                if cur_activity == activity and object_path in self._buddies:
+                    buddy_model = self._buddies[object_path]
+                    self.emit('buddy-moved', buddy_model, model)
+            """
 
     def _add_handles(self, connection, handles):
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]

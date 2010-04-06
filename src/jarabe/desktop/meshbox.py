@@ -75,33 +75,32 @@ class ActivityView(hippo.CanvasBox):
         self._icon = self._create_icon()
         self._layout.add(self._icon, center=True)
 
-        self._update_palette()
-
-        activity = self._model.activity
-        activity.connect('notify::name', self._name_changed_cb)
-        activity.connect('notify::color', self._color_changed_cb)
-        activity.connect('notify::private', self._private_changed_cb)
-        activity.connect('joined', self._joined_changed_cb)
-        #FIXME: 'joined' signal not working, see #5032
+        self._palette = self._create_palette()
+        self._icon.set_palette(self._palette)
 
     def _create_icon(self):
-        icon = CanvasIcon(file_name=self._model.get_icon_name(),
+        icon = CanvasIcon(file_name=self._model.bundle.get_icon(),
                     xo_color=self._model.get_color(), cache=True,
                     size=style.STANDARD_ICON_SIZE)
         icon.connect('activated', self._clicked_cb)
         return icon
 
     def _create_palette(self):
-        p_text = glib.markup_escape_text(self._model.activity.props.name)
-        p_icon = Icon(file=self._model.get_icon_name(),
+        p_text = glib.markup_escape_text(self._model.bundle.get_name())
+        p_icon = Icon(file=self._model.bundle.get_icon(),
                       xo_color=self._model.get_color())
         p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
         p = palette.Palette(None,
                             primary_text=p_text,
                             icon=p_icon)
 
-        private = self._model.activity.props.private
-        joined = self._model.activity.props.joined
+        logging.info('KILL_PS display private activities in the neighborhood')
+        #private = self._model.activity.props.private
+        private = False
+
+        logging.info('KILL_PS check if we are already in this activity')
+        #joined = self._model.activity.props.joined
+        joined = False
 
         if joined:
             item = MenuItem(_('Resume'), 'activity-start')
@@ -116,10 +115,6 @@ class ActivityView(hippo.CanvasBox):
 
         return p
 
-    def _update_palette(self):
-        self._palette = self._create_palette()
-        self._icon.set_palette(self._palette)
-
     def has_buddy_icon(self, key):
         return self._icons.has_key(key)
 
@@ -133,15 +128,12 @@ class ActivityView(hippo.CanvasBox):
         icon.destroy()
 
     def _clicked_cb(self, item):
-        bundle_id = self._model.get_bundle_id()
-        bundle = bundleregistry.get_registry().get_bundle(bundle_id)
-
-        misc.launch(bundle, activity_id=self._model.get_id(),
+        misc.launch(self._model.bundle, activity_id=self._model.activity_id,
                 color=self._model.get_color())
 
     def set_filter(self, query):
-        text_to_check = self._model.activity.props.name.lower() + \
-                self._model.activity.props.type.lower()
+        text_to_check = self._model.bundle.get_name().lower() + \
+                self._model.bundle.get_bundle_id().lower()
         if text_to_check.find(query) == -1:
             self._icon.props.stroke_color = '#D5D5D5'
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
@@ -151,21 +143,6 @@ class ActivityView(hippo.CanvasBox):
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
-
-    def _name_changed_cb(self, activity, pspec):
-        self._update_palette()
-
-    def _color_changed_cb(self, activity, pspec):
-        self._layout.remove(self._icon)
-        self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
-        self._icon.set_palette(self._palette)
-
-    def _private_changed_cb(self, activity, pspec):
-        self._update_palette()
-
-    def _joined_changed_cb(self, widget, event):
-        logging.debug('ActivityView._joined_changed_cb')
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -528,8 +505,8 @@ class MeshBox(gtk.VBox):
 
         if activity_model == None:
             self._add_alone_buddy(buddy_model)
-        elif activity_model.get_id() in self._activities:
-            activity = self._activities[activity_model.get_id()]
+        elif activity_model.activity_id in self._activities:
+            activity = self._activities[activity_model.activity_id]
 
             icon = BuddyIcon(buddy_model, style.STANDARD_ICON_SIZE)
             activity.add_buddy_icon(buddy_model.get_buddy().object_path(), icon)
@@ -544,12 +521,12 @@ class MeshBox(gtk.VBox):
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
 
-        self._activities[activity_model.get_id()] = icon
+        self._activities[activity_model.activity_id] = icon
 
     def _remove_activity(self, activity_model):
-        icon = self._activities[activity_model.get_id()]
+        icon = self._activities[activity_model.activity_id]
         self._layout.remove(icon)
-        del self._activities[activity_model.get_id()]
+        del self._activities[activity_model.activity_id]
         icon.destroy()
 
     # add AP to its corresponding network icon on the desktop,
