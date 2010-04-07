@@ -28,6 +28,10 @@ from telepathy.interfaces import ACCOUNT_MANAGER, \
                                  CHANNEL_DISPATCHER, \
                                  CHANNEL_REQUEST, \
                                  CHANNEL_TYPE_CONTACT_LIST, \
+                                 CHANNEL_TYPE_DBUS_TUBE, \
+                                 CHANNEL_TYPE_STREAMED_MEDIA, \
+                                 CHANNEL_TYPE_STREAM_TUBE, \
+                                 CHANNEL_TYPE_TEXT, \
                                  CONNECTION, \
                                  CONNECTION_INTERFACE_ALIASING, \
                                  CONNECTION_INTERFACE_CONTACTS, \
@@ -178,11 +182,6 @@ class Neighborhood(gobject.GObject):
                 ready_handler=partial(self.__connection_ready_cb, channel_path))
 
     def __connection_ready_cb(self, channel_path, connection):
-        channel = Channel(connection.service_name, channel_path)
-        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
-                  'MembersChanged',
-                  partial(self.__members_changed_cb, connection))
-
         connection[CONNECTION_INTERFACE_ALIASING].connect_to_signal(
                 'AliasesChanged',
                 partial(self.__aliases_changed_cb, connection))
@@ -196,9 +195,27 @@ class Neighborhood(gobject.GObject):
                     'ApplicationsUpdated',
                     partial(self.__applications_updated_cb, connection))
 
-        handles = channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP, 'Members')
-        if handles:
-            self._add_handles(connection, handles)
+        channel = Channel(connection.service_name, channel_path)
+        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
+                  'MembersChanged',
+                  partial(self.__members_changed_cb, connection))
+
+        channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
+                'Members',
+                reply_handler=partial(self.__get_members_ready_cb, connection),
+                error_handler=self.__error_handler_cb)
+
+    def __get_members_ready_cb(self, connection, handles):
+        if not handles:
+            return
+
+        self._add_handles(connection, handles)
+
+        if CONNECTION_INTERFACE_APPLICATIONS in connection:
+            connection[CONNECTION_INTERFACE_APPLICATIONS].GetApplications(
+                    handles,
+                    reply_handler=partial(self.__get_applications_ready_cb, connection),
+                    error_handler=self.__error_handler_cb)
 
     def __presences_changed_cb(self, connection, presences):
         logging.debug('__presences_changed_cb %r', presences)
@@ -219,21 +236,47 @@ class Neighborhood(gobject.GObject):
                 buddy.props.nick = alias
                 buddy.props.key = (connection.service_name, handle)
 
+    def __get_applications_ready_cb(self, connection, applications_per_contact):
+        logging.debug('__get_applications_ready_cb %r %r', connection, applications_per_contact)
+        for handle, applications in applications_per_contact.iteritems():
+            self._add_applications(connection, handle, applications)
+
     def __applications_updated_cb(self, connection, handle, applications):
-        logging.debug('__applications_updated_cb %r %r', handle, applications)
+        self._add_applications(connection, handle, applications)
 
-        buddy = self._buddies[(connection.service_name, handle)]
-
+    def _add_applications(self, connection, contact_handle, applications):
+        logging.debug('_add_applications %r %r', contact_handle, applications)
         for application in applications:
-            activity_id = application.get('TargetId', '')
-            bundle_id = application.get('bundle-id', '')
+            channel_type, handle_type, handle, service_name = application
 
-            if not bundle_id or not activity_id:
+            # TODO: we should probably inspect it instead, or generate a new one
+            activity_id = handle
+
+            # TODO: refactor it so it doesn't duplicated what is in invites.py
+            if channel_type == CHANNEL_TYPE_TEXT:
+                bundle_id = 'org.laptop.Chat'
+            elif channel_type == CHANNEL_TYPE_STREAMED_MEDIA:
+                bundle_id = 'org.laptop.VideoChat'
+            elif channel_type == CHANNEL_TYPE_DBUS_TUBE:
+                bundle_id = channel_properties[CHANNEL_TYPE_DBUS_TUBE + '.ServiceName']
+            elif channel_type == CHANNEL_TYPE_STREAM_TUBE:
+                bundle_id = channel_properties[CHANNEL_TYPE_STREAM_TUBE + '.Service']
+            else:
+                logging.warning('Ignoring unknown channel type: %s', channel_type)
+                continue
+
+            if not activity_id:
                 logging.warning('Ignoring malformed shared activity')
                 continue
 
             if self.has_activity(activity_id):
                 return
+
+            buddy = self._buddies.get((connection.service_name, contact_handle), None)
+
+            if buddy is None:
+                logging.warning('Ignoring activity of unknown owner: %r', contact_handle)
+                continue
 
             registry = bundleregistry.get_registry()
             bundle = registry.get_bundle(bundle_id)
