@@ -250,9 +250,9 @@ class Neighborhood(gobject.GObject):
             channel_type, handle_type, handle, service_name = application
 
             # TODO: we should probably inspect it instead, or generate a new one
-            activity_id = handle
+            activity_id = str(handle)
 
-            # TODO: refactor it so it doesn't duplicated what is in invites.py
+            # TODO: refactor it so it doesn't duplicates what is in invites.py
             if channel_type == CHANNEL_TYPE_TEXT:
                 bundle_id = 'org.laptop.Chat'
             elif channel_type == CHANNEL_TYPE_STREAMED_MEDIA:
