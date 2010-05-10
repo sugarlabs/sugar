@@ -23,7 +23,8 @@ import sha
 import socket
 import struct
 import re
-
+import datetime
+import time
 import gtk
 import gobject
 import gconf
@@ -51,6 +52,7 @@ _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_WIRED_IFACE = 'org.freedesktop.NetworkManager.Device.Wired'
 _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
+_NM_SERIAL_IFACE = 'org.freedesktop.NetworkManager.Device.Serial'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
@@ -209,6 +211,7 @@ class GsmPalette(Palette):
     }
 
     def __init__(self):
+
         Palette.__init__(self, label=_('Wireless modem'))
 
         self._current_state = None
@@ -219,6 +222,36 @@ class GsmPalette(Palette):
         self._toggle_state_item.show()
 
         self.set_state(_GSM_STATE_NOT_READY)
+
+        self.info_box = gtk.VBox()
+
+        self.data_label = gtk.Label()
+        self.data_label.props.xalign = 0.0
+        label_alignment = self._add_widget_with_padding(self.data_label)
+        self.info_box.pack_start(label_alignment)
+        self.data_label.show()
+        label_alignment.show()
+
+        self.connection_time_label = gtk.Label()
+        self.connection_time_label.props.xalign = 0.0
+        label_alignment = self._add_widget_with_padding( \
+                self.connection_time_label)
+        self.info_box.pack_start(label_alignment)
+        self.connection_time_label.show()
+        label_alignment.show()
+
+        self.info_box.show()
+        self.set_content(self.info_box)
+
+    def _add_widget_with_padding(self, child, xalign=0, yalign=0.5):
+        alignment = gtk.Alignment(xalign=xalign, yalign=yalign,
+                                  xscale=1, yscale=0.33)
+        alignment.set_padding(style.DEFAULT_SPACING,
+                              style.DEFAULT_SPACING,
+                              style.DEFAULT_SPACING,
+                              style.DEFAULT_SPACING)
+        alignment.add(child)
+        return alignment
 
     def set_state(self, state):
         self._current_state = state
@@ -498,7 +531,8 @@ class WirelessDeviceView(ToolButton):
         # truncate the nick and use a regex to drop any partial characters
         # at the end
         nick = nick.encode('utf-8')[:name_limit]
-        nick = re.sub("([\xf6-\xf7][\x80-\xbf]{0,2}|[\xe0-\xef][\x80-\xbf]{0,1}|[\xc0-\xdf])$", '', nick)
+        pattern = "([\xf6-\xf7][\x80-\xbf]{0,2}|[\xe0-\xef][\x80-\xbf]{0,1}|[\xc0-\xdf])$"
+        nick = re.sub(pattern, '', nick)
 
         connection_name = format % nick
         connection_name += color_suffix
@@ -557,6 +591,9 @@ class GsmDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 303
 
     def __init__(self, device):
+        self._connection_time_handler = None
+        self._connection_timestamp = 0
+
         client = gconf.client_get_default()
         color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
 
@@ -571,7 +608,10 @@ class GsmDeviceView(TrayIcon):
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
                                       dbus_interface=_NM_DEVICE_IFACE)
-
+        self._bus.add_signal_receiver(self.__ppp_stats_changed_cb,
+                                      signal_name='PppStats',
+                                      path=self._device.object_path,
+                                      dbus_interface=_NM_SERIAL_IFACE)
     def create_palette(self):
         palette = GsmPalette()
 
@@ -645,9 +685,23 @@ class GsmDeviceView(TrayIcon):
 
         if state is network.DEVICE_STATE_ACTIVATED:
             gsm_state = _GSM_STATE_CONNECTED
+            connection = network.find_gsm_connection()
+            if connection is not None:
+                connection.set_connected()
+                self._connection_timestamp =  time.time() - \
+                        connection.get_settings().connection.timestamp
+                self._connection_time_handler = gobject.timeout_add( \
+                        1000, self.__connection_timecount_cb)
+                self._update_stats(0, 0)
+                self._update_connection_time()                
+                self._palette.info_box.show() 
 
-        elif state is network.DEVICE_STATE_DISCONNECTED:
+        if state is network.DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
+            self._connection_timestamp = 0
+            if self._connection_time_handler is not None:
+                gobject.source_remove(self._connection_time_handler)
+            self._palette.info_box.hide() 
 
         elif state in [network.DEVICE_STATE_UNMANAGED,
                        network.DEVICE_STATE_UNAVAILABLE,
@@ -670,6 +724,26 @@ class GsmDeviceView(TrayIcon):
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_DEVICE_IFACE)
+
+    def __ppp_stats_changed_cb(self, in_bytes, out_bytes):
+        self._update_stats(in_bytes, out_bytes)
+
+    def _update_stats(self, in_bytes, out_bytes):
+        in_kbytes = in_bytes / 1024
+        out_kbytes = out_bytes / 1024
+        text = _("Data sent %d kb / received %d kb") % (out_kbytes, in_kbytes)
+        self._palette.data_label.set_text(text)
+
+    def __connection_timecount_cb(self):
+        self._connection_timestamp = self._connection_timestamp + 1
+        self._update_connectiontime()
+        return True
+
+    def _update_connection_time(self):
+        connection_time = datetime.datetime.fromtimestamp( \
+                self._connection_timestamp)
+        text = _("Connection time ") + connection_time.strftime('%H : %M : %S')
+        self._palette.connection_time_label.set_text(text)
 
 class WirelessDeviceObserver(object):
     def __init__(self, device, tray):
