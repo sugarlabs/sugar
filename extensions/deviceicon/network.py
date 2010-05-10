@@ -58,6 +58,7 @@ _GSM_STATE_NOT_READY = 0
 _GSM_STATE_DISCONNECTED = 1
 _GSM_STATE_CONNECTING = 2
 _GSM_STATE_CONNECTED = 3
+_GSM_STATE_NEED_AUTH = 4
 
 def frequency_to_channel(frequency):
     ftoc = { 2412: 1, 2417: 2, 2422: 3, 2427: 4,
@@ -239,6 +240,11 @@ class GsmPalette(Palette):
         elif self._current_state == _GSM_STATE_CONNECTED:
             self._toggle_state_item.get_child().set_label(_('Disconnect'))
             self.props.secondary_text = _('Connected')
+            
+        elif self._current_state == _GSM_STATE_NEED_AUTH:
+            self._toggle_state_item.get_child().set_label(_('Sim requires Pin/Puk'))
+            self.props.secondary_text = _('Authentication Error')
+            
         else:
             raise ValueError('Invalid GSM state while updating label and ' \
                              'text, %s' % str(self._current_state))
@@ -251,6 +257,8 @@ class GsmPalette(Palette):
         elif self._current_state == _GSM_STATE_CONNECTING:
             self.emit('gsm-disconnect')
         elif self._current_state == _GSM_STATE_CONNECTED:
+            self.emit('gsm-disconnect')
+        elif self._current_state == _GSM_STATE_NEED_AUTH:
             self.emit('gsm-disconnect')
         else:
             raise ValueError('Invalid GSM state while emitting signal, %s' % \
@@ -623,6 +631,7 @@ class GsmDeviceView(TrayIcon):
         raise RuntimeError('Error when disconnecting gsm device, %s' % error)
 
     def __state_changed_cb(self, new_state, old_state, reason):
+        logging.debug('State: %s to %s, reason %s', old_state, new_state, reason)
         self._update_state(int(new_state))
 
     def __current_state_check_cb(self, properties):
@@ -649,7 +658,10 @@ class GsmDeviceView(TrayIcon):
                        network.DEVICE_STATE_CONFIG,
                        network.DEVICE_STATE_IP_CONFIG]:
             gsm_state = _GSM_STATE_CONNECTING
-
+            
+        elif state in [network.DEVICE_STATE_NEED_AUTH]:
+            gsm_state = _GSM_STATE_NEED_AUTH
+            
         if self._palette is not None:
             self._palette.set_state(gsm_state)
 

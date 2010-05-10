@@ -94,7 +94,7 @@ class UsernameEntry(EntryWithLabel):
         return self._model.get_username()
 
     def set_value(self, username):
-        return self._model.set_username(username)
+        self._model.set_username(username)
 
 class PasswordEntry(EntryWithLabel):
     def __init__(self, model):
@@ -105,7 +105,7 @@ class PasswordEntry(EntryWithLabel):
         return self._model.get_password()
 
     def set_value(self, password):
-        return self._model.set_password(password)
+        self._model.set_password(password)
 
 class NumberEntry(EntryWithLabel):
     def __init__(self, model):
@@ -116,7 +116,7 @@ class NumberEntry(EntryWithLabel):
         return self._model.get_number()
 
     def set_value(self, number):
-        return self._model.set_number(number)
+        self._model.set_number(number)
 
 class ApnEntry(EntryWithLabel):
     def __init__(self, model):
@@ -127,7 +127,30 @@ class ApnEntry(EntryWithLabel):
         return self._model.get_apn()
 
     def set_value(self, apn):
-        return self._model.set_apn(apn)
+        self._model.set_apn(apn)
+
+class PinEntry(EntryWithLabel):
+    def __init__(self, model):
+        EntryWithLabel.__init__(self, _('PIN:'))
+        self._model = model
+
+    def get_value(self):
+        return self._model.get_pin()
+
+    def set_value(self, pin):
+        self._model.set_pin(pin)
+
+class PukEntry(EntryWithLabel):
+    def __init__(self, model):
+        EntryWithLabel.__init__(self, _('PUK:'))
+        self._model = model
+
+    def get_value(self):
+        return self._model.get_puk()
+
+    def set_value(self, puk):
+        self._model.set_puk(puk)
+
 
 class ModemConfiguration(SectionView):
     def __init__(self, model, alerts=None):
@@ -163,6 +186,18 @@ class ModemConfiguration(SectionView):
         self.pack_start(self._apn_entry, expand=False)
         self._apn_entry.show()
 
+        self._pin_entry = PinEntry(model)
+        self._pin_entry.connect('notify::is-valid',
+                                self.__notify_is_valid_cb)
+        self.pack_start(self._pin_entry, expand=False)
+        self._pin_entry.show()
+        
+        self._puk_entry = PukEntry(model)
+        self._puk_entry.connect('notify::is-valid',
+                                self.__notify_is_valid_cb)
+        self.pack_start(self._puk_entry, expand=False)        
+        self._puk_entry.show()
+
         self.setup()
 
     def setup(self):
@@ -170,6 +205,8 @@ class ModemConfiguration(SectionView):
         self._password_entry.set_text_from_model()
         self._number_entry.set_text_from_model()
         self._apn_entry.set_text_from_model()
+        self._pin_entry.set_text_from_model()
+        self._puk_entry.set_text_from_model()
 
         self.needs_restart = False
 
@@ -180,8 +217,10 @@ class ModemConfiguration(SectionView):
         if self._username_entry.is_valid and \
             self._password_entry.is_valid and \
                 self._number_entry.is_valid and \
-                    self._apn_entry.is_valid:
-                        self.props.is_valid = True
+                    self._apn_entry.is_valid and \
+                        self._pin_entry.is_valid and \
+                            self._puk_entry.is_valid:
+                                self.props.is_valid = True
         else:
             self.props.is_valid = False
 
