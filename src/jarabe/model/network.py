@@ -87,12 +87,12 @@ NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 
-GSM_USERNAME_PATH = '/sugar/network/gsm/username'
-GSM_PASSWORD_PATH = '/sugar/network/gsm/password'
-GSM_NUMBER_PATH = '/sugar/network/gsm/number'
-GSM_APN_PATH = '/sugar/network/gsm/apn'
-GSM_PIN_PATH = '/sugar/network/gsm/pin'
-GSM_PUK_PATH = '/sugar/network/gsm/puk'
+GSM_USERNAME_PATH = '/desktop/sugar/network/gsm/username'
+GSM_PASSWORD_PATH = '/desktop/sugar/network/gsm/password'
+GSM_NUMBER_PATH = '/desktop/sugar/network/gsm/number'
+GSM_APN_PATH = '/desktop/sugar/network/gsm/apn'
+GSM_PIN_PATH = '/desktop/sugar/network/gsm/pin'
+GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
 
 _nm_settings = None
 _conn_counter = 0
