@@ -492,7 +492,7 @@ class WirelessDeviceView(ToolButton):
         self._icon.props.base_color = self._color
 
     def __deactivate_connection_cb(self, palette, data=None):
-        connection = network.find_connection(self._name)
+        connection = network.find_connection_by_ssid(self._name)
         if connection:
             if self._mode == network.NM_802_11_MODE_INFRA:
                 connection.set_disconnected()
