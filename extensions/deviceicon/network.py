@@ -1,6 +1,7 @@
 #
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2009 Paraguay Educa, Martin Abente
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,16 +54,10 @@ _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
-_NM_DEVICE_STATE_UNKNOWN = 0
-_NM_DEVICE_STATE_UNMANAGED = 1
-_NM_DEVICE_STATE_UNAVAILABLE = 2
-_NM_DEVICE_STATE_DISCONNECTED = 3
-_NM_DEVICE_STATE_PREPARE = 4
-_NM_DEVICE_STATE_CONFIG = 5
-_NM_DEVICE_STATE_NEED_AUTH = 6
-_NM_DEVICE_STATE_IP_CONFIG = 7
-_NM_DEVICE_STATE_ACTIVATED = 8
-_NM_DEVICE_STATE_FAILED = 9
+_GSM_STATE_NOT_READY = 0
+_GSM_STATE_DISCONNECTED = 1
+_GSM_STATE_CONNECTING = 2
+_GSM_STATE_CONNECTED = 3
 
 def frequency_to_channel(frequency):
     ftoc = { 2412: 1, 2417: 2, 2422: 3, 2427: 4,
@@ -201,6 +196,65 @@ class WiredPalette(Palette):
         else:
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
+
+class GsmPalette(Palette):
+    __gtype_name__ = 'SugarGsmPalette'
+
+    __gsignals__ = {
+        'gsm-connect'         : (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([])),
+        'gsm-disconnect'      : (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([])),
+    }
+
+    def __init__(self):
+        Palette.__init__(self, label=_('Wireless modem'))
+
+        self._current_state = None
+
+        self._toggle_state_item = gtk.MenuItem('')
+        self._toggle_state_item.connect('activate', self.__toggle_state_cb)
+        self.menu.append(self._toggle_state_item)
+        self._toggle_state_item.show()
+
+        self.set_state(_GSM_STATE_NOT_READY)
+
+    def set_state(self, state):
+        self._current_state = state
+        self._update_label_and_text()
+
+    def _update_label_and_text(self):
+        if self._current_state == _GSM_STATE_NOT_READY:
+            self._toggle_state_item.get_child().set_label('...')
+            self.props.secondary_text = _('Please wait...')
+
+        elif self._current_state == _GSM_STATE_DISCONNECTED:
+            self._toggle_state_item.get_child().set_label(_('Connect'))
+            self.props.secondary_text = _('Disconnected')
+
+        elif self._current_state == _GSM_STATE_CONNECTING:
+            self._toggle_state_item.get_child().set_label(_('Cancel'))
+            self.props.secondary_text = _('Connecting...')
+
+        elif self._current_state == _GSM_STATE_CONNECTED:
+            self._toggle_state_item.get_child().set_label(_('Disconnect'))
+            self.props.secondary_text = _('Connected')
+        else:
+            raise ValueError('Invalid GSM state while updating label and ' \
+                             'text, %s' % str(self._current_state))
+
+    def __toggle_state_cb(self, menuitem):
+        if self._current_state == _GSM_STATE_NOT_READY:
+            pass
+        elif self._current_state == _GSM_STATE_DISCONNECTED:
+            self.emit('gsm-connect')
+        elif self._current_state == _GSM_STATE_CONNECTING:
+            self.emit('gsm-disconnect')
+        elif self._current_state == _GSM_STATE_CONNECTED:
+            self.emit('gsm-disconnect')
+        else:
+            raise ValueError('Invalid GSM state while emitting signal, %s' % \
+                             str(self._current_state))
 
 
 class WirelessDeviceView(ToolButton):
@@ -441,11 +495,11 @@ class WirelessDeviceView(ToolButton):
         connection_name = format % nick
         connection_name += color_suffix
 
-        connection = network.find_connection(connection_name)
+        connection = network.find_connection_by_ssid(connection_name)
         if connection is None:
             settings = Settings()
             settings.connection.id = 'Auto ' + connection_name
-            settings.connection.uuid = unique_id()
+            uuid = settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
             settings.wireless.ssid = dbus.ByteArray(connection_name)
             settings.wireless.band = 'bg'
@@ -453,7 +507,7 @@ class WirelessDeviceView(ToolButton):
             settings.ip4_config = IP4Config()
             settings.ip4_config.method = 'link-local'
 
-            connection = network.add_connection(connection_name, settings)
+            connection = network.add_connection(uuid, settings)
 
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
@@ -488,6 +542,122 @@ class WiredDeviceView(TrayIcon):
         self._palette.set_group_id('frame')
         self._palette.set_connected(speed, address)
 
+
+class GsmDeviceView(TrayIcon):
+
+    _ICON_NAME = 'gsm-device'
+    FRAME_POSITION_RELATIVE = 303
+
+    def __init__(self, device):
+        client = gconf.client_get_default()
+        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+
+        TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
+
+        self._bus = dbus.SystemBus()
+        self._device = device
+        self._palette = None
+        self.set_palette_invoker(FrameWidgetInvoker(self))
+
+        self._bus.add_signal_receiver(self.__state_changed_cb,
+                                      signal_name='StateChanged',
+                                      path=self._device.object_path,
+                                      dbus_interface=_NM_DEVICE_IFACE)
+
+    def create_palette(self):
+        palette = GsmPalette()
+
+        palette.set_group_id('frame')
+        palette.connect('gsm-connect', self.__gsm_connect_cb)
+        palette.connect('gsm-disconnect', self.__gsm_disconnect_cb)
+
+        self._palette = palette
+
+        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+                     reply_handler=self.__current_state_check_cb,
+                     error_handler=self.__current_state_check_error_cb)
+
+        return palette
+
+    def __gsm_connect_cb(self, palette, data=None):
+        connection = network.find_gsm_connection()
+        if connection is not None:
+            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+            netmgr = dbus.Interface(obj, _NM_IFACE)
+            netmgr.ActivateConnection(network.SETTINGS_SERVICE,
+                                        connection.path,
+                                        self._device.object_path,
+                                        '/',
+                                        reply_handler=self.__connect_cb,
+                                        error_handler=self.__connect_error_cb)
+
+    def __connect_cb(self, active_connection):
+        logging.debug('Connected successfully to gsm device, %s',
+                      active_connection)
+
+    def __connect_error_cb(self, error):
+        raise RuntimeError('Error when connecting to gsm device, %s' % error)
+
+    def __gsm_disconnect_cb(self, palette, data=None):
+        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
+        netmgr = dbus.Interface(obj, _NM_IFACE)
+        netmgr_props = dbus.Interface(netmgr, 'org.freedesktop.DBus.Properties')
+        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+
+        for conn_o in active_connections_o:
+            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            devices = props.Get(_NM_ACTIVE_CONN_IFACE, 'Devices')
+            if self._device.object_path in devices:
+                netmgr.DeactivateConnection(
+                        conn_o,
+                        reply_handler=self.__disconnect_cb,
+                        error_handler=self.__disconnect_error_cb)
+                break
+
+    def __disconnect_cb(self):
+        logging.debug('Disconnected successfully gsm device')
+
+    def __disconnect_error_cb(self, error):
+        raise RuntimeError('Error when disconnecting gsm device, %s' % error)
+
+    def __state_changed_cb(self, new_state, old_state, reason):
+        self._update_state(int(new_state))
+
+    def __current_state_check_cb(self, properties):
+        self._update_state(int(properties['State']))
+
+    def __current_state_check_error_cb(self, error):
+        raise RuntimeError('Error when checking gsm device state, %s' % error)
+
+    def _update_state(self, state):
+        gsm_state = None
+
+        if state is network.DEVICE_STATE_ACTIVATED:
+            gsm_state = _GSM_STATE_CONNECTED
+
+        elif state is network.DEVICE_STATE_DISCONNECTED:
+            gsm_state = _GSM_STATE_DISCONNECTED
+
+        elif state in [network.DEVICE_STATE_UNMANAGED,
+                       network.DEVICE_STATE_UNAVAILABLE,
+                       network.DEVICE_STATE_UNKNOWN]:
+            gsm_state = _GSM_STATE_NOT_READY
+
+        elif state in [network.DEVICE_STATE_PREPARE,
+                       network.DEVICE_STATE_CONFIG,
+                       network.DEVICE_STATE_IP_CONFIG]:
+            gsm_state = _GSM_STATE_CONNECTING
+
+        if self._palette is not None:
+            self._palette.set_state(gsm_state)
+
+    def disconnect(self):
+        self._bus.remove_signal_receiver(self.__state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
 
 class WirelessDeviceObserver(object):
     def __init__(self, device, tray):
@@ -552,6 +722,19 @@ class WiredDeviceObserver(object):
                 del self._device_view
                 self._device_view = None
 
+class GsmDeviceObserver(object):
+    def __init__(self, device, tray):
+        self._device = device
+        self._device_view = None
+        self._tray = tray
+
+        self._device_view = GsmDeviceView(device)
+        self._tray.add_device(self._device_view)
+
+    def disconnect(self):
+        self._device_view.disconnect()
+        self._tray.remove_device(self._device_view)
+        self._device_view = None
 
 class NetworkManagerObserver(object):
     def __init__(self, tray):
@@ -594,6 +777,9 @@ class NetworkManagerObserver(object):
             self._devices[device_op] = device
         elif device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             device = WirelessDeviceObserver(nm_device, self._tray)
+            self._devices[device_op] = device
+        elif device_type == network.DEVICE_TYPE_GSM_MODEM:
+            device = GsmDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
 
     def __device_added_cb(self, device_op):
