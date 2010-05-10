@@ -553,7 +553,7 @@ class WiredDeviceView(TrayIcon):
 
 class GsmDeviceView(TrayIcon):
 
-    _ICON_NAME = 'gsm-device'
+    _ICON_NAME = 'network-gsm'
     FRAME_POSITION_RELATIVE = 303
 
     def __init__(self, device):
