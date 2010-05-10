@@ -211,7 +211,6 @@ class GsmPalette(Palette):
     }
 
     def __init__(self):
-
         Palette.__init__(self, label=_('Wireless modem'))
 
         self._current_state = None
@@ -221,7 +220,7 @@ class GsmPalette(Palette):
         self.menu.append(self._toggle_state_item)
         self._toggle_state_item.show()
 
-        self.set_state(_GSM_STATE_NOT_READY)
+        self.set_gsm_state(_GSM_STATE_NOT_READY)
 
         self.info_box = gtk.VBox()
 
@@ -253,7 +252,7 @@ class GsmPalette(Palette):
         alignment.add(child)
         return alignment
 
-    def set_state(self, state):
+    def set_gsm_state(self, state):
         self._current_state = state
         self._update_label_and_text()
 
@@ -601,8 +600,10 @@ class GsmDeviceView(TrayIcon):
 
         self._bus = dbus.SystemBus()
         self._device = device
-        self._palette = None
+
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self._palette = self._create_gsm_palette()
+        self.set_palette(self._palette)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
@@ -612,14 +613,13 @@ class GsmDeviceView(TrayIcon):
                                       signal_name='PppStats',
                                       path=self._device.object_path,
                                       dbus_interface=_NM_SERIAL_IFACE)
-    def create_palette(self):
+
+    def _create_gsm_palette(self):
         palette = GsmPalette()
 
         palette.set_group_id('frame')
         palette.connect('gsm-connect', self.__gsm_connect_cb)
         palette.connect('gsm-disconnect', self.__gsm_disconnect_cb)
-
-        self._palette = palette
 
         props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
         props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
@@ -671,7 +671,7 @@ class GsmDeviceView(TrayIcon):
         raise RuntimeError('Error when disconnecting gsm device, %s' % error)
 
     def __state_changed_cb(self, new_state, old_state, reason):
-        logging.debug('State: %s to %s, reason %s', old_state, new_state, reason)
+        logging.debug('GSM State: %s to %s, reason %s', old_state, new_state, reason)
         self._update_state(int(new_state))
 
     def __current_state_check_cb(self, properties):
@@ -683,7 +683,7 @@ class GsmDeviceView(TrayIcon):
     def _update_state(self, state):
         gsm_state = None
 
-        if state is network.DEVICE_STATE_ACTIVATED:
+        if state == network.DEVICE_STATE_ACTIVATED:
             gsm_state = _GSM_STATE_CONNECTED
             connection = network.find_gsm_connection()
             if connection is not None:
@@ -696,7 +696,7 @@ class GsmDeviceView(TrayIcon):
                 self._update_connection_time()                
                 self._palette.info_box.show() 
 
-        if state is network.DEVICE_STATE_DISCONNECTED:
+        if state == network.DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
@@ -717,7 +717,7 @@ class GsmDeviceView(TrayIcon):
             gsm_state = _GSM_STATE_NEED_AUTH
             
         if self._palette is not None:
-            self._palette.set_state(gsm_state)
+            self._palette.set_gsm_state(gsm_state)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
@@ -736,7 +736,7 @@ class GsmDeviceView(TrayIcon):
 
     def __connection_timecount_cb(self):
         self._connection_timestamp = self._connection_timestamp + 1
-        self._update_connectiontime()
+        self._update_connection_time()
         return True
 
     def _update_connection_time(self):
