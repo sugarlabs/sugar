@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-29 17:36-0400\n"
-"PO-Revision-Date: 2009-05-01 11:55-0400\n"
+"POT-Creation-Date: 2010-05-11 01:07+0530\n"
+"PO-Revision-Date: 2010-02-27 11:34+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -125,7 +125,7 @@ msgstr "Date & heure"
 msgid "Error timezone does not exist."
 msgstr "Erreur : le fuseau horaire n'existe pas."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:19
+#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:35
 msgid "Timezone"
 msgstr "Fuseau horaire"
 
@@ -182,20 +182,55 @@ msgstr "La langue associée au code = %s n'a pas pu être déterminée."
 msgid "Sorry I do not speak '%s'."
 msgstr "Désolé je ne parle pas '%s'."
 
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem Configuration"
+msgstr "Configuration du modem"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:91
+msgid "Username:"
+msgstr "Identifiant :"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:102
+msgid "Password:"
+msgstr "Mot de passe :"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:113
+msgid "Number:"
+msgstr "Nombre :"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:124
+msgid "Access Point Name (APN):"
+msgstr "APN:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:135
+msgid "Personal Identity Number (PIN):"
+msgstr "PIN:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:146
+msgid "Personal Unblocking Key (PUK):"
+msgstr "PUK:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:167
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr ""
+
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
 msgid "Network"
 msgstr "Réseau"
 
-#: ../extensions/cpsection/network/model.py:79
+#: ../extensions/cpsection/network/model.py:87
 msgid "State is unknown."
 msgstr "État inconnu."
 
-#: ../extensions/cpsection/network/model.py:105
+#: ../extensions/cpsection/network/model.py:115
+#: ../extensions/cpsection/network/model.py:154
 msgid "Error in specified radio argument use on/off."
 msgstr "Argument 'radio' spécifié incorrect. Utiliser marche/arrêt."
 
-#: ../extensions/cpsection/network/model.py:137
+#: ../extensions/cpsection/network/model.py:197
 msgid "Error in specified argument use 0/1."
 msgstr "Argument spécifié incorrect. Utiliser 0/1."
 
@@ -214,18 +249,17 @@ msgstr "Radio"
 #: ../extensions/cpsection/network/view.py:93
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
-"Ignorer l'historique du réseau si vous avez du mal à vous connecter au "
-"réseau"
+"Ignorer l'historique du réseau si vous avez du mal à vous connecter au réseau"
 
 #: ../extensions/cpsection/network/view.py:102
 msgid "Discard network history"
 msgstr "Ignorer l'historique du réseau"
 
-#: ../extensions/cpsection/network/view.py:115
+#: ../extensions/cpsection/network/view.py:117
 msgid "Collaboration"
 msgstr "Collaboration"
 
-#: ../extensions/cpsection/network/view.py:123
+#: ../extensions/cpsection/network/view.py:125
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -235,7 +269,7 @@ msgstr ""
 "personnes présentes sur le même serveur pourront se voir même si elles ne se "
 "trouvent pas sur le même réseau."
 
-#: ../extensions/cpsection/network/view.py:133
+#: ../extensions/cpsection/network/view.py:135
 msgid "Server:"
 msgstr "Serveur :"
 
@@ -243,28 +277,17 @@ msgstr "Serveur :"
 msgid "Power"
 msgstr "Alimentation"
 
-#: ../extensions/cpsection/power/model.py:54
+#: ../extensions/cpsection/power/model.py:87
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Erreur dans l'argument gestion de l'alimentation automatique"
+msgstr "Erreur dans l'argument gestion de l'alimentation automatique."
 
-#: ../extensions/cpsection/power/model.py:81
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Erreur dans l'argument gestion de l'alimentation extrême"
-
-#: ../extensions/cpsection/power/view.py:47
+#: ../extensions/cpsection/power/view.py:44
 msgid "Power management"
 msgstr "Gestion de l'alimentation"
 
-#: ../extensions/cpsection/power/view.py:57
+#: ../extensions/cpsection/power/view.py:54
 msgid "Automatic power management (increases battery life)"
 msgstr "Gestion automatique de l'alimentation (prolonge la batterie)"
-
-#: ../extensions/cpsection/power/view.py:85
-msgid ""
-"Extreme power management (disableswireless radio, increases battery life)"
-msgstr ""
-"Gestion extrême de l'alimentation (désactive la radio sans fil, prolonge la "
-"durée de vie de la batterie)"
 
 #: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
@@ -272,7 +295,7 @@ msgstr "Ma batterie"
 
 #: ../extensions/deviceicon/battery.py:137
 msgid "Removed"
-msgstr "Retirer"
+msgstr "Retiré"
 
 #: ../extensions/deviceicon/battery.py:140
 msgid "Charging"
@@ -291,7 +314,7 @@ msgstr "%(hour)d:%(min).2d restantes"
 msgid "Charged"
 msgstr "Charge complète"
 
-#: ../extensions/deviceicon/network.py:40
+#: ../extensions/deviceicon/network.py:47
 #, python-format
 msgid "IP address: %s"
 msgstr "Adresse IP : %s"
@@ -300,33 +323,93 @@ msgstr "Adresse IP : %s"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:109
 msgid "Disconnect..."
 msgstr "Déconnexion..."
 
-#: ../extensions/deviceicon/network.py:109
-#: ../src/jarabe/desktop/meshbox.py:250
+#: ../extensions/deviceicon/network.py:113
+msgid "Create new wireless network"
+msgstr "Créer un nouveau réseau sans fil"
+
+#: ../extensions/deviceicon/network.py:119
+#: ../extensions/deviceicon/network.py:270
+#: ../src/jarabe/desktop/meshbox.py:236
 msgid "Connecting..."
 msgstr "Connexion..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:166
-#: ../src/jarabe/desktop/meshbox.py:256
+#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:185
+#: ../extensions/deviceicon/network.py:274
+#: ../src/jarabe/desktop/meshbox.py:242
 msgid "Connected"
 msgstr "Connecté"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:145
 msgid "Channel"
 msgstr "Canal"
 
-#: ../extensions/deviceicon/network.py:141
+#: ../extensions/deviceicon/network.py:160
 msgid "Wired Network"
 msgstr "Réseau filaire"
 
-#: ../extensions/deviceicon/network.py:169
+#: ../extensions/deviceicon/network.py:188
 msgid "Speed"
 msgstr "Vitesse"
+
+#: ../extensions/deviceicon/network.py:214
+msgid "Wireless modem"
+msgstr "Modem sans fil"
+
+#: ../extensions/deviceicon/network.py:262
+msgid "Please wait..."
+msgstr "Patienter..."
+
+#: ../extensions/deviceicon/network.py:265
+#: ../src/jarabe/desktop/meshbox.py:150
+msgid "Connect"
+msgstr "Connecter"
+
+#: ../extensions/deviceicon/network.py:266
+msgid "Disconnected"
+msgstr "Déconnecté"
+
+#: ../extensions/deviceicon/network.py:269
+#: ../src/jarabe/controlpanel/toolbar.py:115
+#: ../src/jarabe/desktop/homebox.py:111
+#: ../src/jarabe/frame/activitiestray.py:726
+#: ../src/jarabe/frame/activitiestray.py:821
+#: ../src/jarabe/frame/activitiestray.py:849
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../extensions/deviceicon/network.py:273
+#: ../src/jarabe/desktop/meshbox.py:154
+msgid "Disconnect"
+msgstr "Déconnecter"
+
+#: ../extensions/deviceicon/network.py:277
+msgid "Sim requires Pin/Puk"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:278
+#, fuzzy
+msgid "Authentication Error"
+msgstr "Type d'authentification :"
+
+#: ../extensions/deviceicon/network.py:526
+#, python-format
+msgid "%s's network"
+msgstr "Réseau %s"
+
+#: ../extensions/deviceicon/network.py:734
+#, python-format
+msgid "Data sent %d kb / received %d kb"
+msgstr "Données envoyées %d ko / reçues %d ko"
+
+#: ../extensions/deviceicon/network.py:745
+msgid "Connection time "
+msgstr "Durée de connexion"
 
 #: ../extensions/deviceicon/speaker.py:59
 msgid "My Speakers"
@@ -355,110 +438,179 @@ msgid ""
 "Example: #AC32FF,#9A5200"
 msgstr ""
 "Couleur du XO utilisée sur le Bureau. La chaîne indique la couleur du trait "
-"et du remplissage. Le format correspond aux couleurs RVB. Exemple : "
-"#AC32FF,#9A5200"
+"et du remplissage. Le format correspond aux couleurs RVB. Exemple : #AC32FF,"
+"#9A5200"
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Corner Delay"
 msgstr "Délai des coins"
 
 #: ../data/sugar.schemas.in.h:4
+msgid "Default font face"
+msgstr "Police par défaut"
+
+#: ../data/sugar.schemas.in.h:5
+msgid "Default font size"
+msgstr "Corps de la police par défaut"
+
+#: ../data/sugar.schemas.in.h:6
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Délai d'activation du cadre à l'aide des coins."
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:7
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Délai d'activation du cadre à l'aide des bords."
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:8
 msgid "Edge Delay"
 msgstr "Délai des bords"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:9
 msgid "Favorites Layout"
 msgstr "Disposition favorite"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:10
 msgid "Favorites resume mode"
-msgstr "Mode de reprise favori "
+msgstr "Mode de reprise favori"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:11
+msgid "Font face that is used throughout the desktop."
+msgstr "Police utilisée sur le bureau."
+
+#: ../data/sugar.schemas.in.h:12
+msgid "Font size that is used throughout the desktop."
+msgstr "Corps de la police utilisée sur le bureau."
+
+#: ../data/sugar.schemas.in.h:13
+#, fuzzy
+msgid "GSM network APN"
+msgstr "Réseau maillé %d"
+
+#: ../data/sugar.schemas.in.h:14
+#, fuzzy
+msgid "GSM network PIN"
+msgstr "Réseau maillé %d"
+
+#: ../data/sugar.schemas.in.h:15
+#, fuzzy
+msgid "GSM network PUK"
+msgstr "Réseau maillé %d"
+
+#: ../data/sugar.schemas.in.h:16
+msgid "GSM network access point name configuration"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:17
+msgid "GSM network number"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:18
+msgid "GSM network password"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:19
+#, fuzzy
+msgid "GSM network password configuration"
+msgstr "Configuration du modem"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network personal identification number configuration"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network personal unlock key configuration"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network telephone number configuration"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network username"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:24
+#, fuzzy
+msgid "GSM network username configuration"
+msgstr "Configuration du modem"
+
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Si VRAI, Sugar les autres utilisateurs du serveur Jabber pourront nous "
+"Si VRAI, Sugar permettra aux autres utilisateurs du serveur Jabber de nous "
 "retrouver."
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:26
 msgid "Jabber Server"
 msgstr "Serveur Jabber"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:27
 msgid "Layout of the favorites view."
 msgstr "Disposition de la vue favorite."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:28
 msgid "Power Automatic"
 msgstr "Alimentation automatique"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:29
 msgid "Power Automatic."
 msgstr "Alimentation automatique."
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:30
 msgid "Power Extreme"
 msgstr "Alimentation extrême"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:31
 msgid "Power Extreme."
 msgstr "Alimentation extrême."
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:32
 msgid "Publish to Gadget"
 msgstr "Publication vers Gadget"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:33
 msgid "Setting for muting the sound device."
 msgstr "Configuration de la mise en sourdine du périphérique audio."
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:34
 msgid "Sound Muted"
 msgstr "Audio désactivé"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:36
 msgid "Timezone setting for the system."
 msgstr "Configuration du fuseau horaire du système."
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:37
 msgid "Url of the jabber server to use."
 msgstr "URL du serveur Jabber à utiliser."
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:38
 msgid "Url where the backup is saved to."
 msgstr "URL d'enregistrement de la sauvegarde."
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:39
 msgid "User Color"
 msgstr "Couleurs de l'utilisateur"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:40
 msgid "User Name"
 msgstr "Nom de l'utilisateur"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:41
 msgid "User name that is used throughout the desktop."
 msgstr "Nom identifiant l'utilisateur sur le bureau."
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:42
 msgid "Volume Level"
 msgstr "Niveau de volume"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:43
 msgid "Volume level for the sound device."
 msgstr "Niveau de volume du périphérique audio."
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:44
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -541,14 +693,6 @@ msgstr "Maintenant"
 msgid "Done"
 msgstr "Accepter"
 
-#: ../src/jarabe/controlpanel/toolbar.py:115
-#: ../src/jarabe/desktop/homebox.py:111
-#: ../src/jarabe/frame/activitiestray.py:726
-#: ../src/jarabe/frame/activitiestray.py:821
-#: ../src/jarabe/frame/activitiestray.py:849
-msgid "Cancel"
-msgstr "Annuler"
-
 #: ../src/jarabe/controlpanel/toolbar.py:121
 #: ../src/jarabe/desktop/favoritesview.py:339
 msgid "Ok"
@@ -599,9 +743,9 @@ msgstr "Enregistrement réussi"
 
 #: ../src/jarabe/desktop/favoritesview.py:334
 msgid "You are now registered with your school server."
-msgstr "Vous êtes maintenant enregistré sur le serveur de l'école"
+msgstr "Vous êtes maintenant enregistré sur le serveur de l'école."
 
-#: ../src/jarabe/desktop/favoritesview.py:674
+#: ../src/jarabe/desktop/favoritesview.py:677
 msgid "Register"
 msgstr "S'enregistrer"
 
@@ -658,40 +802,32 @@ msgstr "Écran favoris"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:131
+#: ../src/jarabe/desktop/keydialog.py:135
 msgid "Key Type:"
 msgstr "Type de clé :"
 
-#: ../src/jarabe/desktop/keydialog.py:151
+#: ../src/jarabe/desktop/keydialog.py:155
 msgid "Authentication Type:"
 msgstr "Type d'authentification :"
 
-#: ../src/jarabe/desktop/keydialog.py:215
+#: ../src/jarabe/desktop/keydialog.py:220
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
-#: ../src/jarabe/desktop/keydialog.py:224
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "Wireless Security:"
 msgstr "Sécurité sans fil :"
 
-#: ../src/jarabe/desktop/meshbox.py:134
-msgid "Connect"
-msgstr "Connecter"
-
-#: ../src/jarabe/desktop/meshbox.py:138
-msgid "Disconnect"
-msgstr "Déconnecter"
-
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:444
+#: ../src/jarabe/desktop/meshbox.py:498
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Reprendre"
 
-#: ../src/jarabe/desktop/meshbox.py:449
+#: ../src/jarabe/desktop/meshbox.py:503
 #: ../src/jarabe/frame/activitiestray.py:235
 msgid "Join"
 msgstr "Rejoindre"
@@ -804,25 +940,25 @@ msgstr "Précédent"
 msgid "Next"
 msgstr "Suivant"
 
-#: ../src/jarabe/journal/collapsedentry.py:258
-#: ../src/jarabe/journal/expandedentry.py:159
+#: ../src/jarabe/journal/collapsedentry.py:260
+#: ../src/jarabe/journal/expandedentry.py:158
 #: ../src/jarabe/journal/palettes.py:66
 msgid "Untitled"
 msgstr "Sans titre"
 
-#: ../src/jarabe/journal/expandedentry.py:205
+#: ../src/jarabe/journal/expandedentry.py:211
 msgid "No preview"
 msgstr "Pas de prévisualisation"
 
-#: ../src/jarabe/journal/expandedentry.py:224
+#: ../src/jarabe/journal/expandedentry.py:230
 msgid "Participants:"
 msgstr "Participants :"
 
-#: ../src/jarabe/journal/expandedentry.py:247
+#: ../src/jarabe/journal/expandedentry.py:253
 msgid "Description:"
 msgstr "Description :"
 
-#: ../src/jarabe/journal/expandedentry.py:273
+#: ../src/jarabe/journal/expandedentry.py:282
 msgid "Tags:"
 msgstr "Étiquettes :"
 
@@ -901,10 +1037,11 @@ msgid "Your Journal is empty"
 msgstr "Le journal est vide"
 
 #: ../src/jarabe/journal/listview.py:41
+#, fuzzy
 msgid "No matching entries "
 msgstr "Aucune entrée correspondante"
 
-#: ../src/jarabe/journal/listview.py:370
+#: ../src/jarabe/journal/listview.py:372
 msgid "Clear search"
 msgstr "Effacer la recherche"
 
@@ -1047,8 +1184,184 @@ msgstr "Source du paquet activité"
 msgid "View source: %r"
 msgstr "Afficher le code source : %r"
 
+#~ msgid "Keyboard"
+#~ msgstr "Clavier"
+
+#~ msgid "Keyboard Model"
+#~ msgstr "Modèle de clavier"
+
+#~ msgid "Key(s) to change layout"
+#~ msgstr "Touche(s) de modification de la disposition"
+
+#~ msgid "Keyboard Layout(s)"
+#~ msgstr "Disposition(s) du clavier"
+
 #~ msgid ""
-#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+#~ "Add languages in the order you prefer. If a translation is not available, "
+#~ "the next in the list will be used."
+#~ msgstr ""
+#~ "Ajoutez des langues dans l'ordre souhaité. Si la traduction n'est pas "
+#~ "disponible, la suivante dans la liste sera utilisée."
+
+#~ msgid "APN:"
+#~ msgstr "APN :"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Erreur dans l'argument gestion de l'alimentation extrême."
+
+#~ msgid ""
+#~ "Extreme power management (disableswireless radio, increases battery life)"
+#~ msgstr ""
+#~ "Gestion extrême de l'alimentation (désactive la radio sans fil, prolonge "
+#~ "la durée de vie de la batterie)"
+
+#~ msgid "Software update"
+#~ msgstr "Mise à jour logicielle"
+
+#~ msgid ""
+#~ "Software updates correct errors, eliminate security vulnerabilities, and "
+#~ "provide new features."
+#~ msgstr ""
+#~ "Les mises à jour logicielles corrigent les erreurs, éliminent les failles "
+#~ "de sécurité et apportent de nouvelles fonctionnalités."
+
+#~ msgid "Checking %s..."
+#~ msgstr "Vérification de %s..."
+
+#~ msgid "Downloading %s..."
+#~ msgstr "Téléchargement de %s..."
+
+#~ msgid "Updating %s..."
+#~ msgstr "Mise à jour de %s..."
+
+#~ msgid "Your software is up-to-date"
+#~ msgstr "Vos logiciels sont à jour"
+
+#~ msgid "You can install %s update"
+#~ msgid_plural "You can install %s updates"
+#~ msgstr[0] "Vous pouvez installer %s mise à jour"
+#~ msgstr[1] "Vous pouvez installer %s mises à jour"
+
+#~ msgid "Checking for updates..."
+#~ msgstr "Vérification des mises à jour..."
+
+#~ msgid "Installing updates..."
+#~ msgstr "Installation des mises à jour..."
+
+#~ msgid "%s update was installed"
+#~ msgid_plural "%s updates were installed"
+#~ msgstr[0] "%s mise à jour a été installée"
+#~ msgstr[1] "%s mises à jour ont été installées"
+
+#~ msgid "Install selected"
+#~ msgstr "Installer les activités sélectionnées"
+
+#~ msgid "Download size: %s"
+#~ msgstr "Taille du téléchargement : %s"
+
+#~ msgid "From version %(current)d to %(new)s (Size: %(size)s)"
+#~ msgstr "De la version %(current)d à %(new)s (taille : %(size)s)"
+
+#~ msgid "None"
+#~ msgstr "Zéro"
+
+#~ msgid "1 KB"
+#~ msgstr "1 Ko"
+
+#~ msgid "%.0f KB"
+#~ msgstr "%.0f Ko"
+
+#~ msgid "%.1f MB"
+#~ msgstr "%.1f Mo"
+
+#~ msgid "Mesh Network"
+#~ msgstr "Réseau maillé"
+
+#~ msgid "Mesh"
+#~ msgstr "Réseau maillé"
+
+#~ msgid "Screenshot of \"%s\""
+#~ msgstr "Capture d'écran de \"%s\""
+
+#~ msgid ""
+#~ "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX "
+#~ "account long name."
+#~ msgstr ""
+#~ "\"désactivé\" pour demander un pseudo lors de l'initialisation ; \"système"
+#~ "\" pour réutiliser l'identifiant long du compte UNIX."
+
+#~ msgid "Default nick"
+#~ msgstr "Pseudo par défaut"
+
+#~ msgid "If TRUE, Sugar will show a \"Log out\" option."
+#~ msgstr "Si VRAI, Sugar affichera une option \"Déconnexion\"."
+
+#~ msgid "Keyboard layouts"
+#~ msgstr "Dispositions du clavier"
+
+#~ msgid "Keyboard model"
+#~ msgstr "Modèle de clavier"
+
+#~ msgid "Keyboard options"
+#~ msgstr "Options du clavier"
+
+#~ msgid ""
+#~ "List of keyboard layouts. Each entry should be in the form layout(variant)"
+#~ msgstr ""
+#~ "Liste des dispositions de claviers. Chaque ligne doit avoir la forme "
+#~ "disposition(variante)"
+
+#~ msgid "List of keyboard options."
+#~ msgstr "Liste des options de clavier."
+
+#~ msgid "Show Log out"
+#~ msgstr "Afficher Déconnexion"
+
+#~ msgid "The keyboard model to be used"
+#~ msgstr "Modèle de clavier à utiliser"
+
+#~ msgid "Version %s"
+#~ msgstr "Version %s"
+
+#~ msgid "F1"
+#~ msgstr "F1"
+
+#~ msgid "F2"
+#~ msgstr "F2"
+
+#~ msgid "F3"
+#~ msgstr "F3"
+
+#~ msgid "F4"
+#~ msgstr "F4"
+
+#~ msgid "Kind: %s"
+#~ msgstr "Variante : %s"
+
+#~ msgid "Unknown"
+#~ msgstr "Inconnu"
+
+#~ msgid "Date: %s"
+#~ msgstr "Date : %s"
+
+#~ msgid "Size: %s"
+#~ msgstr "Taille : %s"
+
+#~ msgid "Start new"
+#~ msgstr "Commencer un nouveau"
+
+#~ msgid "Title"
+#~ msgstr "Titre"
+
+#~ msgid "Version"
+#~ msgstr "Version"
+
+#~ msgid "Date"
+#~ msgstr "Date"
+
+#~ msgid ""
+#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and "
+#~ "Contributors."
 #~ msgstr ""
 #~ "© 2008 One Laptop per Child Association Inc ; Red Hat Inc ; et "
 #~ "contributeurs."
@@ -1069,17 +1382,8 @@ msgstr "Afficher le code source : %r"
 #~ msgid "Disconnecting..."
 #~ msgstr "Déconnexion..."
 
-#~ msgid "Mesh Network"
-#~ msgstr "Réseau maillé"
-
-#~ msgid "Disconnected"
-#~ msgstr "Déconnecté"
-
 #~ msgid "About my XO"
 #~ msgstr "Mon XO"
-
-#~ msgid "Mesh"
-#~ msgstr "Réseau maillé"
 
 #~ msgid "Connected to a School Mesh Portal"
 #~ msgstr "Connecté au portail du réseau maillé d'école"
@@ -1105,7 +1409,6 @@ msgstr "Afficher le code source : %r"
 #~ msgid "Settings"
 #~ msgstr "Configuration"
 
-#, python-format
 #~ msgid "Clipboard object: %s."
 #~ msgstr "Objet dans le presse-papier : %s."
 
@@ -1166,11 +1469,9 @@ msgstr "Afficher le code source : %r"
 #~ msgid "Error in reading timezone"
 #~ msgstr "Erreur de lecture de la zone temporelle"
 
-#, python-format
 #~ msgid "Error copying timezone (from %s): %s"
 #~ msgstr "Erreur en copiant la zone temporelle (de %s): %s"
 
-#, python-format
 #~ msgid "Changing permission of timezone: %s"
 #~ msgstr "Changement de la permission de zone temporelle : %s"
 
@@ -1225,7 +1526,6 @@ msgstr "Afficher le code source : %r"
 #~ msgid "Share"
 #~ msgstr "Partager"
 
-#, python-format
 #~ msgid "%s Activity"
 #~ msgstr "Activité %s"
 
@@ -1265,55 +1565,42 @@ msgstr "Afficher le code source : %r"
 #~ msgid "OK"
 #~ msgstr "OK"
 
-#, python-format
 #~ msgid "%d year"
 #~ msgstr "%d an"
 
-#, python-format
 #~ msgid "%d years"
 #~ msgstr "%d ans"
 
-#, python-format
 #~ msgid "%d month"
 #~ msgstr "%d mois"
 
-#, python-format
 #~ msgid "%d months"
 #~ msgstr "%d mois"
 
-#, python-format
 #~ msgid "%d week"
 #~ msgstr "%d semaine"
 
-#, python-format
 #~ msgid "%d weeks"
 #~ msgstr "%d semaines"
 
-#, python-format
 #~ msgid "%d day"
 #~ msgstr "%d jour"
 
-#, python-format
 #~ msgid "%d days"
 #~ msgstr "%d jours"
 
-#, python-format
 #~ msgid "%d hour"
 #~ msgstr "%d heure"
 
-#, python-format
 #~ msgid "%d hours"
 #~ msgstr "%d heures"
 
-#, python-format
 #~ msgid "%d minute"
 #~ msgstr "%d minute"
 
-#, python-format
 #~ msgid "%d minutes"
 #~ msgstr "%d minutes"
 
-#, python-format
 #~ msgid "%d second"
 #~ msgstr "%d seconde"
 
@@ -1322,13 +1609,3 @@ msgstr "Afficher le code source : %r"
 
 #~ msgid ", "
 #~ msgstr ", "
-
-#: ../extensions/deviceicon/network.py:114
-msgid "Create new wireless network"
-msgstr "Créer un nouveau réseau sans fil"
-
-
-#: ../extensions/deviceicon/network.py:415
-#, python-format
-msgid "%s's network %s"
-msgstr "Réseau %s %s"
