@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-05-11 01:07+0530\n"
-"PO-Revision-Date: 2010-03-01 01:56+0200\n"
+"PO-Revision-Date: 2010-05-11 23:59-0300\n"
 "Last-Translator: Robson Mendonça <robsonmwoc@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,8 @@ msgstr "Erro nos alteradores de cor selecionados."
 msgid "Error in specified colors."
 msgstr "Erro nas cores especificadas."
 
-#: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:92
+#: ../extensions/cpsection/aboutme/view.py:94
+#: ../src/jarabe/intro/window.py:92
 msgid "Name:"
 msgstr "Nome:"
 
@@ -102,16 +103,8 @@ msgid "Copyright and License"
 msgstr "Direito Autoral e Licença"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:184
-msgid ""
-"Sugar is the graphical user interface that you are looking at. Sugar is free "
-"software, covered by the GNU General Public License, and you are welcome to "
-"change it and/or distribute copies of it under certain conditions described "
-"therein."
-msgstr ""
-"Sugar é um interface gráfico para usuário que você estava procurando. Sugar "
-"é software livre, coberto pela Licença Geral Pública GNU, e você está "
-"convidado(a) para modificá-lo e/ou distribuir copias dele, sob certas "
-"condições descritas na Licença."
+msgid "Sugar is the graphical user interface that you are looking at. Sugar is free software, covered by the GNU General Public License, and you are welcome to change it and/or distribute copies of it under certain conditions described therein."
+msgstr "Sugar é um interface gráfico para usuário que você estava procurando. Sugar é software livre, coberto pela Licença Geral Pública GNU, e você está convidado(a) para modificá-lo e/ou distribuir copias dele, sob certas condições descritas na Licença."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:196
 msgid "Full license:"
@@ -125,7 +118,8 @@ msgstr "Data e Hora"
 msgid "Error timezone does not exist."
 msgstr "Erro: fuso horário não existe."
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:35
+#: ../extensions/cpsection/datetime/view.py:68
+#: ../data/sugar.schemas.in.h:35
 msgid "Timezone"
 msgstr "Fuso horário"
 
@@ -200,21 +194,19 @@ msgstr "Número:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:124
 msgid "Access Point Name (APN):"
-msgstr "APN"
+msgstr "Nome do Ponto de Acesso (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:135
 msgid "Personal Identity Number (PIN):"
-msgstr "PIN"
+msgstr "Número Indentificador Pessoal (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:146
 msgid "Personal Unblocking Key (PUK):"
-msgstr "PUK"
+msgstr "Chave de Desbloqueio Pessoal (PUK):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
-msgid ""
-"You will need to provide the following information to set up a mobile "
-"broadband connection to a cellular (3G) network."
-msgstr ""
+msgid "You will need to provide the following information to set up a mobile broadband connection to a cellular (3G) network."
+msgstr "Você precisa fornecer as seguintes informações para configurar sua conexão de banda larga móvel (3G) por celular."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -240,9 +232,7 @@ msgstr "rede sem fio"
 
 #: ../extensions/cpsection/network/view.py:64
 msgid "Turn off the wireless radio to save battery life"
-msgstr ""
-"Desligue a placa sem fio para economizar energia e aumentar a durabilidade "
-"da bateria"
+msgstr "Desligue a placa sem fio para economizar energia e aumentar a durabilidade da bateria"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Radio"
@@ -250,8 +240,7 @@ msgstr "Radio"
 
 #: ../extensions/cpsection/network/view.py:93
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr ""
-"Desprezar o histórico da rede se você tem problemas para conectar a rede"
+msgstr "Desprezar o histórico da rede se você tem problemas para conectar a rede"
 
 #: ../extensions/cpsection/network/view.py:102
 msgid "Discard network history"
@@ -262,14 +251,8 @@ msgid "Collaboration"
 msgstr "Colaboração"
 
 #: ../extensions/cpsection/network/view.py:125
-msgid ""
-"The server is the equivalent of what room you are in; people on the same "
-"server will be able to see each other, even when they aren't on the same "
-"network."
-msgstr ""
-"O servidor é o equivalente a uma sala na qual você está. Pessoas no mesmo "
-"servidor são capazes de ver umas às outras, mesmo quando elas não estão na "
-"mesma rede."
+msgid "The server is the equivalent of what room you are in; people on the same server will be able to see each other, even when they aren't on the same network."
+msgstr "O servidor é o equivalente a uma sala na qual você está. Pessoas no mesmo servidor são capazes de ver umas às outras, mesmo quando elas não estão na mesma rede."
 
 #: ../extensions/cpsection/network/view.py:135
 msgid "Server:"
@@ -399,12 +382,11 @@ msgstr "Desconectar"
 
 #: ../extensions/deviceicon/network.py:277
 msgid "Sim requires Pin/Puk"
-msgstr ""
+msgstr "Sim requer Pin/Puk"
 
 #: ../extensions/deviceicon/network.py:278
-#, fuzzy
 msgid "Authentication Error"
-msgstr "Tipo de Autenticação:"
+msgstr "Erro de Autenticação"
 
 #: ../extensions/deviceicon/network.py:526
 #, python-format
@@ -441,14 +423,8 @@ msgid "Backup URL"
 msgstr "URL de backup"
 
 #: ../data/sugar.schemas.in.h:2
-msgid ""
-"Color for the XO icon that is used throughout the desktop. The string is "
-"composed of the stroke color and fill color, format is that of rbg colors. "
-"Example: #AC32FF,#9A5200"
-msgstr ""
-"Cor para o ícone XO que é usado na área de trabalho. A string é composta "
-"pela cor do contorno e preenchimento, no formato de cores rgb. Exemplo: "
-"#AC32FF,#9A5200"
+msgid "Color for the XO icon that is used throughout the desktop. The string is composed of the stroke color and fill color, format is that of rbg colors. Example: #AC32FF,#9A5200"
+msgstr "Cor para o ícone XO que é usado na área de trabalho. A string é composta pela cor do contorno e preenchimento, no formato de cores rgb. Exemplo: #AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Corner Delay"
@@ -491,65 +467,56 @@ msgid "Font size that is used throughout the desktop."
 msgstr "Tamanho da fonte que é utilizada por toda área de trabalho."
 
 #: ../data/sugar.schemas.in.h:13
-#, fuzzy
 msgid "GSM network APN"
-msgstr "Rede Mesh %d"
+msgstr "Rede GSM APN"
 
 #: ../data/sugar.schemas.in.h:14
-#, fuzzy
 msgid "GSM network PIN"
-msgstr "Rede Mesh %d"
+msgstr "Rede GSM PIN"
 
 #: ../data/sugar.schemas.in.h:15
-#, fuzzy
 msgid "GSM network PUK"
-msgstr "Rede Mesh %d"
+msgstr "Rede GSM PUK"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "GSM network access point name configuration"
-msgstr ""
+msgstr "Configuração do nome do ponto de acesso da rede GSM"
 
 #: ../data/sugar.schemas.in.h:17
 msgid "GSM network number"
-msgstr ""
+msgstr "Número da rede GSM"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network password"
-msgstr ""
+msgstr "Senha da rede GSM"
 
 #: ../data/sugar.schemas.in.h:19
-#, fuzzy
 msgid "GSM network password configuration"
-msgstr "Configuração do Modem"
+msgstr "Configuração de rede GSM senha"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network personal identification number configuration"
-msgstr ""
+msgstr "Configuração de rede GSM número de identificação pessoal"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network personal unlock key configuration"
-msgstr ""
+msgstr "Configuração de rede GSM chave de desbloqueio"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network telephone number configuration"
-msgstr ""
+msgstr "Configuração de rede GSM número de telefone"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network username"
-msgstr ""
+msgstr "Nome de usuário da rede GSM"
 
 #: ../data/sugar.schemas.in.h:24
-#, fuzzy
 msgid "GSM network username configuration"
-msgstr "Configuração do Modem"
+msgstr "Configuração de rede GSM nome de usuário"
 
 #: ../data/sugar.schemas.in.h:25
-msgid ""
-"If TRUE, Sugar will make us searchable for the other users of the Jabber "
-"server."
-msgstr ""
-"Se VERDADEIRO, o Sugar nos tornará buscáveis por outros usuários do servidor "
-"Jabber."
+msgid "If TRUE, Sugar will make us searchable for the other users of the Jabber server."
+msgstr "Se VERDADEIRO, o Sugar nos tornará buscáveis por outros usuários do servidor Jabber."
 
 #: ../data/sugar.schemas.in.h:26
 msgid "Jabber Server"
@@ -620,21 +587,13 @@ msgid "Volume level for the sound device."
 msgstr "Nível do volume para o dispositivo de som."
 
 #: ../data/sugar.schemas.in.h:44
-msgid ""
-"When in resume mode, clicking on a favorite icon will cause the last entry "
-"for that activity to be resumed."
-msgstr ""
-"Quando estiver no modo continuar, clicando num ícone favorito fará com que a "
-"última entrada para essa atividade seja retomada."
+msgid "When in resume mode, clicking on a favorite icon will cause the last entry for that activity to be resumed."
+msgstr "Quando estiver no modo continuar, clicando num ícone favorito fará com que a última entrada para essa atividade seja retomada."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
-msgid ""
-"sugar-control-panel: WARNING, found more than one option with the same name: "
-"%s module: %r"
-msgstr ""
-"sugar-control-panel: AVISO, encontrado mais de uma opção com o mesmo nome: %"
-"s módulo: %r"
+msgid "sugar-control-panel: WARNING, found more than one option with the same name: %s module: %r"
+msgstr "sugar-control-panel: AVISO, encontrado mais de uma opção com o mesmo nome: %s módulo: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -689,7 +648,8 @@ msgstr "As mudanças exigem um reinício"
 msgid "Cancel changes"
 msgstr "Cancele as mudanças"
 
-#: ../src/jarabe/controlpanel/gui.py:284 ../src/jarabe/desktop/homebox.py:113
+#: ../src/jarabe/controlpanel/gui.py:284
+#: ../src/jarabe/desktop/homebox.py:113
 msgid "Later"
 msgstr "Posterior"
 
@@ -697,7 +657,8 @@ msgstr "Posterior"
 msgid "Restart now"
 msgstr "Reiniciar agora"
 
-#: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:188
+#: ../src/jarabe/controlpanel/toolbar.py:61
+#: ../src/jarabe/intro/window.py:188
 msgid "Done"
 msgstr "Pronto"
 
@@ -765,14 +726,16 @@ msgstr "Confirmar remoção: Você deseja remover %s permanentemente?"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/homebox.py:73 ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/view/viewsource.py:218
 msgid "Keep"
 msgstr "Manter"
 
 #: ../src/jarabe/desktop/homebox.py:76
 #: ../src/jarabe/journal/journaltoolbox.py:357
-#: ../src/jarabe/journal/palettes.py:112 ../src/jarabe/view/palettes.py:153
+#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/view/palettes.py:153
 msgid "Erase"
 msgstr "Apagar"
 
@@ -782,8 +745,7 @@ msgstr "Atualização de software"
 
 #: ../src/jarabe/desktop/homebox.py:107
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
-"Atualize suas atividades para assegurar compatibilidade com seu novo software"
+msgstr "Atualize suas atividades para assegurar compatibilidade com seu novo software"
 
 #: ../src/jarabe/desktop/homebox.py:116
 msgid "Check now"
@@ -826,7 +788,8 @@ msgstr "Segurança do Wireless:"
 #: ../src/jarabe/desktop/meshbox.py:498
 #: ../src/jarabe/frame/activitiestray.py:761
 #: ../src/jarabe/journal/journaltoolbox.py:425
-#: ../src/jarabe/journal/palettes.py:72 ../src/jarabe/view/palettes.py:66
+#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/view/palettes.py:66
 msgid "Resume"
 msgstr "Continuar"
 
@@ -837,7 +800,7 @@ msgstr "Juntar-se"
 
 #: ../src/jarabe/desktop/schoolserver.py:34
 msgid "Cannot obtain data needed for registration."
-msgstr ""
+msgstr "Não foi possível obter os dados necessários para o resgistro."
 
 #: ../src/jarabe/desktop/schoolserver.py:51
 msgid "Cannot connect to the server."
@@ -935,7 +898,8 @@ msgstr "Atividade"
 msgid "Click to change color:"
 msgstr "Clique para mudar a cor:"
 
-#: ../src/jarabe/intro/window.py:174 ../src/jarabe/journal/detailview.py:103
+#: ../src/jarabe/intro/window.py:174
+#: ../src/jarabe/journal/detailview.py:103
 msgid "Back"
 msgstr "Voltar"
 
@@ -990,19 +954,19 @@ msgstr "Desde ontem"
 #. TRANS: Filter entries modified during the last 7 days.
 #: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Past week"
-msgstr "Última semana"
+msgstr "Semana passada"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
 #: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Past month"
-msgstr "Último mês"
+msgstr "Mês passado"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past year"
-msgstr "Último ano"
+msgstr "Ano passado"
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Anyone"
@@ -1031,7 +995,8 @@ msgstr "Copiar"
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:135
+#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/view/palettes.py:135
 msgid "Start"
 msgstr "Iniciar"
 
@@ -1040,7 +1005,6 @@ msgid "Your Journal is empty"
 msgstr "Seu Diário está vazio"
 
 #: ../src/jarabe/journal/listview.py:41
-#, fuzzy
 msgid "No matching entries "
 msgstr "Nenhuma entrada correspondente"
 
@@ -1058,9 +1022,7 @@ msgstr "Seu Diário está cheio"
 
 #: ../src/jarabe/journal/modalalert.py:67
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr ""
-"Por favor, remova algumas entradas antigas do Diário para liberar mais "
-"espaço para as novas."
+msgstr "Por favor, remova algumas entradas antigas do Diário para liberar mais espaço para as novas."
 
 #: ../src/jarabe/journal/modalalert.py:79
 msgid "Show Journal"
@@ -1124,9 +1086,8 @@ msgid "Logout"
 msgstr "Encerrar"
 
 #: ../src/jarabe/view/buddymenu.py:95
-#, fuzzy
 msgid "Restart"
-msgstr "Reiniciar agora"
+msgstr "Reiniciar"
 
 #: ../src/jarabe/view/buddymenu.py:100
 msgid "Shutdown"
@@ -1162,7 +1123,8 @@ msgstr "Tornar favorito"
 msgid "Show contents"
 msgstr "Mostar conteúdos"
 
-#: ../src/jarabe/view/palettes.py:263 ../src/jarabe/view/palettes.py:313
+#: ../src/jarabe/view/palettes.py:263
+#: ../src/jarabe/view/palettes.py:313
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Livre"
@@ -1194,179 +1156,128 @@ msgstr "Ver fonte: %r"
 # in Brasil we have keyboard: US-International, abnt, abnt-2 (abnt-associação brasileira de normas técnicas)
 #~ msgid "Keyboard Model"
 #~ msgstr "Modelo do Teclado"
-
 #~ msgid "Key(s) to change layout"
 #~ msgstr "Teclas(s) para trocar a configuração"
-
 #~ msgid "Keyboard Layout(s)"
 #~ msgstr "Disposições de Teclado"
-
 #~ msgid ""
 #~ "Add languages in the order you prefer. If a translation is not available, "
 #~ "the next in the list will be used."
 #~ msgstr ""
 #~ "Adicione idiomas na ordem que preferir. Se uma tradução não estiver "
 #~ "disponível, a próxima da lista será usada."
-
 #~ msgid "APN:"
 #~ msgstr "APN:"
-
 #~ msgid "Error in extreme pm argument, use on/off."
 #~ msgstr "Erro no argumento pm extremo, usar ligar/desligar."
-
 #~ msgid ""
 #~ "Extreme power management (disableswireless radio, increases battery life)"
 #~ msgstr ""
 #~ "Gerenciamento de energia extremo (desliga o wireless, aumentando a "
 #~ "duração da bateria)"
-
 #~ msgid "Software update"
 #~ msgstr "Atualização de software"
-
 #~ msgid ""
 #~ "Software updates correct errors, eliminate security vulnerabilities, and "
 #~ "provide new features."
 #~ msgstr ""
 #~ "Atualização de software corrige erros, elimina vulnerabilidades de "
 #~ "segurança, e fornece novas funcionalidades."
-
 #~ msgid "Checking %s..."
 #~ msgstr "Verificando %s..."
-
 #~ msgid "Downloading %s..."
 #~ msgstr "Transferindo %s..."
-
 #~ msgid "Updating %s..."
 #~ msgstr "Atualizando %s..."
-
 #~ msgid "Your software is up-to-date"
 #~ msgstr "Seu software está atualizado"
-
 #~ msgid "You can install %s update"
 #~ msgid_plural "You can install %s updates"
 #~ msgstr[0] "Você pode instalar %s atualização"
 #~ msgstr[1] "Você pode instalar %s atualizações"
-
 #~ msgid "Checking for updates..."
 #~ msgstr "Verificando atualizações..."
-
 #~ msgid "Installing updates..."
 #~ msgstr "Instalando atualizações..."
-
 #~ msgid "%s update was installed"
 #~ msgid_plural "%s updates were installed"
 #~ msgstr[0] "A atualização %s foi instalada"
 #~ msgstr[1] "As atualizações %s foram instaladas"
-
 #~ msgid "Install selected"
 #~ msgstr "Instalar selecionados"
-
 #~ msgid "Download size: %s"
 #~ msgstr "Tamanho da transferência: %s"
-
 #~ msgid "From version %(current)d to %(new)s (Size: %(size)s)"
 #~ msgstr "Da versão %(current)d para %(new)s (Tamanho: %(size)s)"
-
 #~ msgid "None"
 #~ msgstr "Nulo"
-
 #~ msgid "1 KB"
 #~ msgstr "1 KB"
-
 #~ msgid "%.0f KB"
 #~ msgstr "%.0f KB"
-
 #~ msgid "%.1f MB"
 #~ msgstr "%.1f MB"
-
 #~ msgid "Mesh Network"
 #~ msgstr "Rede Mesh"
-
 #~ msgid "Mesh"
 #~ msgstr "Mesh"
-
 #~ msgid "Screenshot of \"%s\""
 #~ msgstr "Tela capturada de \"%s\""
-
 #~ msgid ""
 #~ "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX "
 #~ "account long name."
 #~ msgstr ""
 #~ "\"desativado\" para pedir apelido na inicialização; \"sistema\" para "
 #~ "reusar nome completo da conta UNIX."
-
 #~ msgid "Default nick"
 #~ msgstr "Apelido padrão"
-
 #~ msgid "If TRUE, Sugar will show a \"Log out\" option."
 #~ msgstr "Se TRUE (verdadeiro), o Sugar mostrará uma opção \"Deslogar\"."
-
 #~ msgid "Keyboard layouts"
 #~ msgstr "Disposições de teclado"
-
 #~ msgid "Keyboard model"
 #~ msgstr "Modelo do teclado"
-
 #~ msgid "Keyboard options"
 #~ msgstr "Opções do teclado"
-
 #~ msgid ""
 #~ "List of keyboard layouts. Each entry should be in the form layout(variant)"
 #~ msgstr ""
 #~ "Lista de disposições de teclado. Cada entrada deve estar no esquema "
 #~ "(forma variante)"
-
 #~ msgid "List of keyboard options."
 #~ msgstr "Lista de opções do teclado."
-
 #~ msgid "Show Log out"
 #~ msgstr "Motrar Deslogar"
-
 #~ msgid "The keyboard model to be used"
 #~ msgstr "Modelo de teclado a ser usado"
-
 #~ msgid "Version %s"
 #~ msgstr "Versão %s"
-
 #~ msgid "F1"
 #~ msgstr "F1"
-
 #~ msgid "F2"
 #~ msgstr "F2"
-
 #~ msgid "F3"
 #~ msgstr "F3"
-
 #~ msgid "F4"
 #~ msgstr "F4"
-
 #~ msgid "Kind: %s"
 #~ msgstr "Tipo: %s"
-
 #~ msgid "Unknown"
 #~ msgstr "Desconhecido"
-
 #~ msgid "Date: %s"
 #~ msgstr "Data: %s"
-
 #~ msgid "Size: %s"
 #~ msgstr "Tamanho: %s"
-
 #~ msgid "Start new"
 #~ msgstr "Iniciar novo"
-
 #~ msgid "Title"
 #~ msgstr "Título"
-
 #~ msgid "Version"
 #~ msgstr "Versão"
-
 #~ msgid "Date"
 #~ msgstr "Data"
-
 #~ msgid "Encryption Type:"
 #~ msgstr "Tipo de Encriptação:"
-
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
@@ -1421,122 +1332,3 @@ msgstr "Ver fonte: %r"
 
 #~ msgid "About this XO"
 #~ msgstr "Sobre este XO"
-
-# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-# TODO: Implement stopping downloads
-# self._stop_item.connect('activate', self._stop_item_activate_cb)
-# self.append_menu_item(self._stop_item)
-#~ msgid "Add to journal"
-#~ msgstr "Adicionar ao diário"
-
-#~ msgid "Reboot"
-#~ msgstr "Reiniciar"
-
-#~ msgid "My Battery life"
-#~ msgstr "Carga de minha Bateria"
-
-#~ msgid "Battery charging"
-#~ msgstr "Carregando a bateria"
-
-#~ msgid "Battery discharging"
-#~ msgstr "Descarregando a bateria"
-
-#~ msgid "Battery fully charged"
-#~ msgstr "Bateria completamente carregada"
-
-#~ msgid "Invite"
-#~ msgstr "Convidar"
-
-#~ msgid "Text"
-#~ msgstr "Texto"
-
-#~ msgid "Image"
-#~ msgstr "Imagem"
-
-#~ msgid "Share"
-#~ msgstr "Compartilhar"
-
-#~ msgid "%s Activity"
-#~ msgstr "Atividade %s"
-
-#~ msgid "Share with:"
-#~ msgstr "Partilhar com:"
-
-#~ msgid "Private"
-#~ msgstr "Privado"
-
-#~ msgid "My Neighborhood"
-#~ msgstr "Minha Vizinhança"
-
-#~ msgid "Undo"
-#~ msgstr "Desfazer"
-
-# optei pela forma de "fazer de novo" ao invés de refazer por acreditar que ela seja mais fácil de compreender para crianças.
-#~ msgid "Redo"
-#~ msgstr "Fazer de novo"
-
-#~ msgid "Paste"
-#~ msgstr "Colar"
-
-#~ msgid "Keep error"
-#~ msgstr "Erro ao manter"
-
-#~ msgid "Keep error: all changes will be lost"
-#~ msgstr "Erro ao manter: todas as alterações serão desfeitas"
-
-#~ msgid "Don't stop"
-#~ msgstr "Não pare"
-
-#~ msgid "Stop anyway"
-#~ msgstr "Pare mesmo assim"
-
-#~ msgid "Continue"
-#~ msgstr "Continuar"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "%d year"
-#~ msgstr "%d ano"
-
-#~ msgid "%d years"
-#~ msgstr "%d anos"
-
-#~ msgid "%d month"
-#~ msgstr "%d mês"
-
-#~ msgid "%d months"
-#~ msgstr "%d meses"
-
-#~ msgid "%d week"
-#~ msgstr "%d semana"
-
-#~ msgid "%d weeks"
-#~ msgstr "%d semanas"
-
-#~ msgid "%d day"
-#~ msgstr "%d dia"
-
-#~ msgid "%d days"
-#~ msgstr "%d dias"
-
-#~ msgid "%d hour"
-#~ msgstr "%d hora"
-
-#~ msgid "%d hours"
-#~ msgstr "%d horas"
-
-#~ msgid "%d minute"
-#~ msgstr "%d minuto"
-
-#~ msgid "%d minutes"
-#~ msgstr "%d minutos"
-
-#~ msgid "%d second"
-#~ msgstr "%d segundo"
-
-#~ msgid " and "
-#~ msgstr " e "
-
-#~ msgid ", "
-#~ msgstr ", "

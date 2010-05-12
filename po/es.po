@@ -62,7 +62,7 @@ msgstr "Nombre:"
 
 #: ../extensions/cpsection/aboutme/view.py:128
 msgid "Click to change your color:"
-msgstr "Clic para cambiar su color:"
+msgstr "Haga Clic para cambiar su color:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -174,8 +174,7 @@ msgstr "Idioma"
 
 #: ../extensions/cpsection/language/model.py:28
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr ""
-"No se puede acceder a ~/.i18n. Crear configuración internacional estándar."
+msgstr "No se puede acceder a ~/.i18n. Crear una configuración internacional estándar."
 
 #: ../extensions/cpsection/language/model.py:124
 #, python-format
@@ -205,21 +204,23 @@ msgstr "Número:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:124
 msgid "Access Point Name (APN):"
-msgstr "Nombre del Punto de Acceso:"
+msgstr "Nombre del Punto de Acceso (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:135
 msgid "Personal Identity Number (PIN):"
-msgstr "PIN"
+msgstr "Numero de Identificacion Personal"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:146
 msgid "Personal Unblocking Key (PUK):"
-msgstr "PUK"
+msgstr "Clave personal de desbloqueo"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Nescesitara dar la siguiente informacion para configurar una conexion mobil de banda ancha"
+"hacia una red cellular (3G)."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:28
@@ -393,12 +394,12 @@ msgstr "Desconectar"
 
 #: ../extensions/deviceicon/network.py:277
 msgid "Sim requires Pin/Puk"
-msgstr ""
+msgstr "Sim requiere Pin/Puk"
 
 #: ../extensions/deviceicon/network.py:278
 #, fuzzy
 msgid "Authentication Error"
-msgstr "Tipo de autenticación:"
+msgstr "Error de autenticación:"
 
 #: ../extensions/deviceicon/network.py:526
 #, python-format
@@ -504,15 +505,15 @@ msgstr "Red Malla %d"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "GSM network access point name configuration"
-msgstr ""
+msgstr "Configuracion del nombre del punto de acceso a una red GSM"
 
 #: ../data/sugar.schemas.in.h:17
 msgid "GSM network number"
-msgstr ""
+msgstr "Numero de red GSM"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network password"
-msgstr ""
+msgstr "Contraseña de la red GSM"
 
 #: ../data/sugar.schemas.in.h:19
 #, fuzzy
@@ -521,19 +522,19 @@ msgstr "Configuración del módem"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network personal identification number configuration"
-msgstr ""
+msgstr "Configuracion del numero de identificacion personal de una red GSM"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network personal unlock key configuration"
-msgstr ""
+msgstr "Configuracion de la clave de desbloqueo personal de una red GSM"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network telephone number configuration"
-msgstr ""
+msgstr "Configuracion del numero telefonico de una red GSM"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network username"
-msgstr ""
+msgstr "Nombre de usario de una red GSM"
 
 #: ../data/sugar.schemas.in.h:24
 #, fuzzy
