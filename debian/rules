@@ -75,6 +75,8 @@ comma = ,
 #    ControlPanel
 #  * wpasupplicant (wpa_passphrase) needed in
 #    jarabe.desktop.keydialog.WPAKeyDialog()
+#  * avahi-autoipd needed in jarabe/desktop/meshbox.py to establish
+#    NM_802_11_MODE_ADHOC
 #  * openssh-client (ssh-keygen) needed in
 #    jarabe.window.create_profile()
 #  * gdb needed by command sugar-launch
@@ -86,7 +88,7 @@ session_activities = $(patsubst %,$(comma) sugar-%-activity,read browse)
 session_activities_missing = $(patsubst %,$(comma) sugar-%-activity,write imageviewer jukebox pippy)
 emulator_exec = xserver-xephyr, x11-utils
 jarabe_initprofile = openssh-client
-jarabe_nm_wpa = wpasupplicant
+jarabe_nm = wpasupplicant, avahi-autoipd
 jarabe_cp_cli_exec = x11-xserver-utils, lsb-release, ethtool, tzdata
 tools_debug = gdb
 CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
@@ -108,14 +110,14 @@ CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-gobject (>= 2.15.0), python
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exec), dbus
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
-CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm_wpa)
+CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(jarabe_initprofile)
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) = $(session_activities_missing)
 CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = $(emulator_exec)
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(jarabe_nm_wpa), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(tools_debug), $(session_xkb), $(session_activities)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(tools_debug), $(session_xkb), $(session_activities)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(session_activities_missing)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
