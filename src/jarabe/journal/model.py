@@ -21,6 +21,7 @@ import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
 import re
+from operator import itemgetter
 
 import gobject
 import dbus
@@ -242,6 +243,8 @@ class InplaceResultSet(BaseResultSet):
 
         self._mime_types = query.get('mime_type', [])
 
+        self._sort = query.get('order_by', ['+timestamp'])[0]
+
     def setup(self):
         self._file_list = []
         self._recurse_dir(self._mount_point)
@@ -250,7 +253,13 @@ class InplaceResultSet(BaseResultSet):
         self._stopped = True
 
     def setup_ready(self):
-        self._file_list.sort(lambda a, b: b[2] - a[2])
+        if self._sort[1:] == 'filesize':
+            keygetter = itemgetter(3)
+        else:
+            keygetter = itemgetter(2) # timestamp
+        self._file_list.sort(lambda a, b: b - a,
+                             key=keygetter,
+                             reverse=self._sort[0]=='-')
         self.ready.send(self)
 
     def find(self, query):
@@ -269,7 +278,7 @@ class InplaceResultSet(BaseResultSet):
         files = self._file_list[offset:offset + limit]
 
         entries = []
-        for file_path, stat, mtime_ in files:
+        for file_path, stat, mtime_, size_ in files:
             metadata = _get_file_metadata(file_path, stat)
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
@@ -327,7 +336,7 @@ class InplaceResultSet(BaseResultSet):
                             add_to_list = False
 
                     if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime))
+                        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size)
                         self._file_list.append(file_info)
 
                     self.progress.send(self)
@@ -340,6 +349,7 @@ def _get_file_metadata(path, stat):
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
+            'filesize': stat.st_size,
             'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
