@@ -154,6 +154,17 @@ class SearchToolbar(gtk.Toolbar):
         with_search.connect('changed', self._combo_changed_cb)
         return with_search
 
+    def _add_separator(self, expand=False):
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.GRID_CELL_SIZE,
+                                       style.GRID_CELL_SIZE)
+        self.insert(separator, -1)
+        separator.show()
+
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
         tool_item.set_expand(expand)
