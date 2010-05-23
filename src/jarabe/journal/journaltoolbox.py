@@ -30,6 +30,7 @@ from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toggletoolbutton import ToggleToolButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.combobox import ComboBox
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
@@ -108,6 +109,17 @@ class SearchToolbar(gtk.Toolbar):
         tool_item = ToolComboBox(self._when_search_combo)
         self.insert(tool_item, -1)
         tool_item.show()
+
+        self._add_separator(expand=True)
+
+        self._list_view_button = ListViewButton()
+        # TODO: Connect when Grid View is implemented
+        #self._list_view.connect('toggled', self.__view_button_toggled_cb)
+        self._list_view_button.set_active(True)
+        self.insert(self._list_view_button, -1)
+        self._list_view_button.connect('sort-property-changed',
+                                       self.__sort_changed_cb)
+        self._list_view_button.show()
 
         # TODO: enable it when the DS supports saving the buddies.
         #self._with_search_combo = self._get_with_search_combo()
@@ -202,6 +214,14 @@ class SearchToolbar(gtk.Toolbar):
             if text:
                 query['query'] = text
 
+        property, order = self._list_view_button.get_current_sort()
+
+        if order == gtk.SORT_ASCENDING:
+            sign = '+'
+        else:
+            sign = '-'
+        query['order_by'] = [sign + property]
+
         return query
 
     def _get_date_range(self):
@@ -222,6 +242,9 @@ class SearchToolbar(gtk.Toolbar):
                 time.mktime(date_range[1].timetuple()))
 
     def _combo_changed_cb(self, combo):
+        self._update_if_needed()
+
+    def __sort_changed_cb(self, button):
         self._update_if_needed()
 
     def _update_if_needed(self):
@@ -467,3 +490,54 @@ class EntryToolbar(gtk.Toolbar):
                                 activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
+
+class ListViewButton(RadioToolButton):
+    __gtype_name__ = 'JournalListViewButton'
+
+    __gsignals__ = {
+        'sort-property-changed': (gobject.SIGNAL_RUN_FIRST,
+                                  gobject.TYPE_NONE,
+                                  ([])),
+    }
+
+    _SORT_OPTIONS = [
+        ('timestamp', 'view-lastedit', _('View by last edit')),
+        ('filesize', 'view-size', _('View by size')),
+    ]
+
+    def __init__(self):
+        RadioToolButton.__init__(self)
+
+        self._property = 'timestamp'
+        self._order = gtk.SORT_ASCENDING
+
+        self.props.tooltip = _('List view')
+        self.props.named_icon = 'view-list'
+        # TODO: Set accelerator when Grid View is implemented
+        #self.props.accelerator = _('<Ctrl>2')
+        self.props.group = None
+
+        for property, icon, label in self._SORT_OPTIONS:
+            button = MenuItem(icon_name=icon, text_label=label)
+            button.connect('activate',
+                           self.__sort_type_changed_cb,
+                           property,
+                           icon)
+            button.show()
+            self.props.palette.menu.insert(button, -1)
+
+    def __sort_type_changed_cb(self, widget, property, named_icon):
+        self._property = property
+        #FIXME: Implement sorting order
+        self._order = gtk.SORT_ASCENDING
+        self.emit('sort-property-changed')
+
+        self.props.named_icon = named_icon
+
+        if not self.props.active:
+            self.props.active = True
+        else:
+            self.emit('toggled')
+
+    def get_current_sort(self):
+        return (self._property, self._order)
