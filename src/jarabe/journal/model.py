@@ -36,9 +36,9 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.
-PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'keep', 'buddies',
-              'icon-color', 'mime_type', 'progress', 'activity', 'mountpoint',
-              'activity_id', 'bundle_id']
+PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'filesize',
+              'keep', 'buddies', 'icon-color', 'mime_type', 'progress',
+              'activity', 'mountpoint', 'activity_id', 'bundle_id']
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
