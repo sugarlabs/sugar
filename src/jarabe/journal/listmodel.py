@@ -19,6 +19,8 @@ import logging
 import simplejson
 import gobject
 import gtk
+import time
+from gettext import gettext as _
 
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics import style
@@ -48,18 +50,20 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     COLUMN_ICON = 2
     COLUMN_ICON_COLOR = 3
     COLUMN_TITLE = 4
-    COLUMN_DATE = 5
-    COLUMN_PROGRESS = 6
-    COLUMN_BUDDY_1 = 7
-    COLUMN_BUDDY_2 = 8
-    COLUMN_BUDDY_3 = 9
+    COLUMN_TIMESTAMP = 5
+    COLUMN_FILESIZE = 6
+    COLUMN_PROGRESS = 7
+    COLUMN_BUDDY_1 = 8
+    COLUMN_BUDDY_2 = 9
+    COLUMN_BUDDY_3 = 10
 
     _COLUMN_TYPES = {COLUMN_UID:            str,
                      COLUMN_FAVORITE:       bool,
                      COLUMN_ICON:           str,
                      COLUMN_ICON_COLOR:     object,
                      COLUMN_TITLE:          str,
-                     COLUMN_DATE:           str,
+                     COLUMN_TIMESTAMP:      str,
+                     COLUMN_FILESIZE:       str,
                      COLUMN_PROGRESS:       int,
                      COLUMN_BUDDY_1:        object,
                      COLUMN_BUDDY_3:        object,
@@ -140,6 +144,20 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
 
         timestamp = int(metadata.get('timestamp', 0))
         self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
+
+        creation_time = metadata.get('creation_time')
+        if creation_time is not None:
+            self._cached_row.append(
+                util.timestamp_to_elapsed_string(creation_time))
+        else:
+            self._cached_row.append(_('Unknown'))
+
+        try:
+            size = int(metadata.get('filesize'))
+        except (TypeError, ValueError):
+            self._cached_row.append(_('Unknown'))
+        else:
+            self._cached_row.append(util.format_size(size))
 
         self._cached_row.append(int(metadata.get('progress', 100)))
 
