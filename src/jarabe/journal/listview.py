@@ -97,7 +97,7 @@ class BaseListView(gtk.Bin):
         self.cell_title = None
         self.cell_icon = None
         self._title_column = None
-        self.date_column = None
+        self.sort_column = None
         self._add_columns()
 
         self.tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
@@ -190,15 +190,15 @@ class BaseListView(gtk.Bin):
         date = util.timestamp_to_elapsed_string(timestamp)
         date_width = self._get_width_for_string(date)
 
-        self.date_column = gtk.TreeViewColumn()
-        self.date_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
-        self.date_column.props.fixed_width = date_width
-        self.date_column.set_alignment(1)
-        self.date_column.props.resizable = True
-        self.date_column.props.clickable = True
-        self.date_column.pack_start(cell_text)
-        self.date_column.add_attribute(cell_text, 'text', ListModel.COLUMN_DATE)
-        self.tree_view.append_column(self.date_column)
+        self.sort_column = gtk.TreeViewColumn()
+        self.sort_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self.sort_column.props.fixed_width = date_width
+        self.sort_column.set_alignment(1)
+        self.sort_column.props.resizable = True
+        self.sort_column.props.clickable = True
+        self.sort_column.pack_start(cell_text)
+        self.sort_column.add_attribute(cell_text, 'text', ListModel.COLUMN_TIMESTAMP)
+        self.tree_view.append_column(self.sort_column)
 
     def _get_width_for_string(self, text):
         # Add some extra margin
@@ -415,7 +415,7 @@ class BaseListView(gtk.Bin):
 
         while True:
             x, y, width, height = self.tree_view.get_cell_area(path,
-                                                               self.date_column)
+                                                               self.sort_column)
             x, y = self.tree_view.convert_tree_to_widget_coords(x, y)
             self.tree_view.queue_draw_area(x, y, width, height)
             if path == end_path:
