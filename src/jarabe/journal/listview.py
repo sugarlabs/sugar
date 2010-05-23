@@ -252,10 +252,15 @@ class BaseListView(gtk.Bin):
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
+        if 'order_by' not in query_dict:
+            query_dict['order_by'] = ['+timestamp']
+        if query_dict['order_by'] != self._query.get('order_by'):
+            property = query_dict['order_by'][0][1:]
+            cell_text = self.sort_column.get_cell_renderers()[0]
+            self.sort_column.set_attributes(cell_text,
+                text=getattr(ListModel, 'COLUMN_' + property.upper(),
+                             ListModel.COLUMN_TIMESTAMP))
         self._query = query_dict
-
-        if 'order_by' not in self._query:
-            self._query['order_by'] = ['+timestamp']
 
         self.refresh()
 
