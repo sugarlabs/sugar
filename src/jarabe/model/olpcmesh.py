@@ -1,4 +1,4 @@
-# Copyright (C) 2009 One Laptop per Child
+# Copyright (C) 2009, 2010 One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -83,9 +83,9 @@ class OlpcMeshManager(object):
         self._eth_device_state = DEVICE_STATE_UNKNOWN
 
         if self._have_configured_connections():
-            self._start_automesh()
-        else:
             self._start_automesh_timer()
+        else:
+            self._start_automesh()
 
     def _get_companion_device(self):
         props = dbus.Interface(self.mesh_device,
