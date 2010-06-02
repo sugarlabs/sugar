@@ -276,8 +276,7 @@ class ControlPanel(gtk.Window):
                             keywords.append(item)
                         options[item]['keywords'] = keywords
                     else:
-                        _logger.error('There is no CLASS constant specified'
-                                      ' in the view file %r.', item)
+                        _logger.error('no CLASS attribute in %r', item)
                 except Exception:
                     logging.exception('Exception while loading extension:')
 
