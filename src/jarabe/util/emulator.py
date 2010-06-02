@@ -17,6 +17,7 @@
 import os
 import signal
 import subprocess
+import sys
 import time
 from optparse import OptionParser
 
@@ -24,6 +25,10 @@ import gtk
 import gobject
 
 from sugar import env
+
+
+ERROR_NO_DISPLAY = 30
+ERROR_NO_SERVER = 31
 
 
 default_dimensions = (800, 600)
@@ -59,7 +64,12 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
 
     cmd.append('-noreset')
 
-    pipe = subprocess.Popen(cmd)
+    try:
+        pipe = subprocess.Popen(cmd)
+
+    except OSError, exc:
+        sys.stderr.write('Error executing server: %s\n' % (exc, ))
+        return None
 
     os.environ['DISPLAY'] = ":%d" % (display)
     os.environ['SUGAR_EMULATOR_PID'] = str(pipe.pid)
@@ -87,6 +97,8 @@ def _start_xephyr(dpi, dimensions, fullscreen):
     for display in range(30, 40):
         if not _check_server(display):
             pipe = _run_xephyr(display, dpi, dimensions, fullscreen)
+            if pipe is None:
+                return None
 
             for i_ in range(10):
                 if _check_server(display):
@@ -95,6 +107,8 @@ def _start_xephyr(dpi, dimensions, fullscreen):
                 time.sleep(0.1)
 
             _kill_pipe(pipe)
+
+    return None
 
 
 def _start_window_manager():
@@ -132,9 +146,17 @@ def main():
                       help='Do not run emulator in fullscreen mode')
     (options, args) = parser.parse_args()
 
+    if not os.environ.get('DISPLAY'):
+        sys.stderr.write('DISPLAY not set, cannot connect to host X server.\n')
+        return ERROR_NO_DISPLAY
+
     _setup_env()
 
     server = _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
+    if server is None:
+        sys.stderr.write('Failed to start server. Please check output above'
+            ' for any error message.\n')
+        return ERROR_NO_SERVER
 
     if options.scaling:
         os.environ['SUGAR_SCALING'] = options.scaling
