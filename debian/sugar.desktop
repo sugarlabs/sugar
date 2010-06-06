@@ -3,3 +3,4 @@ Encoding=UTF-8
 Name=Sugar
 Exec=/usr/bin/sugar
 Type=Application
+Comment=Desktop enviornment first designed for the OLPC XO-1, written for use by children.
