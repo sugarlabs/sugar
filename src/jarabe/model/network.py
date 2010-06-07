@@ -33,6 +33,7 @@ from sugar.util import unique_id
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
 DEVICE_TYPE_GSM_MODEM = 3
+DEVICE_TYPE_802_11_OLPC_MESH = 6
 
 DEVICE_STATE_UNKNOWN = 0
 DEVICE_STATE_UNMANAGED = 1
@@ -117,6 +118,8 @@ class WirelessSecurity(object):
         return wireless_security
 
 class Wireless(object):
+    nm_name = "802-11-wireless"
+
     def __init__(self):
         self.ssid = None
         self.security = None
@@ -132,6 +135,23 @@ class Wireless(object):
         if self.band:
             wireless['band'] = self.band
         return wireless
+
+class OlpcMesh(object):
+    nm_name = "802-11-olpc-mesh"
+
+    def __init__(self, channel, anycast_addr):
+        self.channel = channel
+        self.anycast_addr = anycast_addr
+
+    def get_dict(self):
+        ret = {
+            "ssid": dbus.ByteArray("olpc-mesh"),
+            "channel": self.channel,
+        }
+
+        if self.anycast_addr:
+            ret["dhcp-anycast-address"] = dbus.ByteArray(self.anycast_addr)
+        return ret
 
 class Connection(object):
     def __init__(self):
@@ -199,16 +219,21 @@ class Gsm(object):
         return gsm
 
 class Settings(object):
-    def __init__(self):
+    def __init__(self, wireless_cfg=None):
         self.connection = Connection()
         self.wireless = Wireless()
         self.ip4_config = None
         self.wireless_security = None
 
+        if wireless_cfg is not None:
+            self.wireless = wireless_cfg
+        else:
+            self.wireless = Wireless()
+
     def get_dict(self):
         settings = {}
         settings['connection'] = self.connection.get_dict()
-        settings['802-11-wireless'] = self.wireless.get_dict()
+        settings[self.wireless.nm_name] = self.wireless.get_dict()
         if self.wireless_security is not None:
             settings['802-11-wireless-security'] = \
                 self.wireless_security.get_dict()
