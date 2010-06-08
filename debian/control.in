@@ -2,7 +2,8 @@ Source: sugar-0.88
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
-Uploaders: Jonas Smedegaard <dr@jones.dk>
+Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>
+DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.8.4
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar.git
