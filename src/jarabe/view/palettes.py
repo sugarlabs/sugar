@@ -39,19 +39,31 @@ class BasePalette(Palette):
     def __init__(self, home_activity):
         Palette.__init__(self)
 
-        if home_activity.props.launching:
-            home_activity.connect('notify::launching',
-                                  self._launching_changed_cb)
-            self.set_primary_text(_('Starting...'))
-        else:
-            self.setup_palette()
+        self._notify_launch_hid = None
 
-    def _launching_changed_cb(self, home_activity, pspec):
-        if not home_activity.props.launching:
+        if home_activity.props.launch_status == shell.Activity.LAUNCHING:
+            self._notify_launch_hid = home_activity.connect( \
+                    'notify::launch-status', self.__notify_launch_status_cb)
+            self.set_primary_text(_('Starting...'))
+        elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
+            self._on_failed_launch()
+        else:
             self.setup_palette()
 
     def setup_palette(self):
         raise NotImplementedError
+
+    def _on_failed_launch(self):
+        self.set_primary_text(_('Activity failed to start'))
+
+    def __notify_launch_status_cb(self, home_activity, pspec):
+        home_activity.disconnect(self._notify_launch_hid)
+        self._notify_launch_hid = None
+        if home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
+            self._on_failed_launch()
+        else:
+            self.setup_palette()
+
 
 class CurrentActivityPalette(BasePalette):
     def __init__(self, home_activity):
