@@ -84,9 +84,8 @@ Maintaining packaging build routines
 This source package wraps debhelper commands and other tedious parts of
 the build routines using the CDBS framework.  Please refer to the actual
 makefile snippets included from debian/rules for details on their
-purpose and ways to override defaults.  Additionally, makefile snippets
-included from below /usr/share/cdbs may also be documented in
-/usr/share/doc/cdbs/cdbs-doc.pdf.gz .
+purpose and ways to override defaults - or read the CDBS manual at
+in/usr/share/doc/cdbs/cdbs-doc.pdf.gz .
 
 
  -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 16:02:47 +0200
