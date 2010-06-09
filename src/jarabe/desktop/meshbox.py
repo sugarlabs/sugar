@@ -599,13 +599,15 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._update_color()
 
     def disconnect(self):
+        device_object_path = self._mesh_mgr.mesh_device.object_path
+
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
-                                         path=self._device.object_path,
+                                         path=device_object_path,
                                          dbus_interface=_NM_DEVICE_IFACE)
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
-                                         path=self._device.object_path,
+                                         path=device_object_path,
                                          dbus_interface=_NM_OLPC_MESH_IFACE)
 
 
@@ -846,6 +848,7 @@ class NetworkManagerObserver(object):
         self._bus = dbus.SystemBus()
         self._devices = {}
         self._netmgr = None
+        self._olpc_mesh_device_o = None
 
     def listen(self):
         try:
@@ -908,6 +911,7 @@ class NetworkManagerObserver(object):
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             self._devices[device_o] = DeviceObserver(self._box, device)
         elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+            self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
     def _get_device_path_error_cb(self, err):
@@ -923,11 +927,8 @@ class NetworkManagerObserver(object):
             del self._devices[device_o]
             return
 
-        device = self._bus.get_object(_NM_SERVICE, device_o)
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
-            self._box.disable_olpc_mesh(device)
+        if self._olpc_mesh_device_o == device_o:
+            self._box.disable_olpc_mesh(device_o)
 
 
 class MeshBox(gtk.VBox):
