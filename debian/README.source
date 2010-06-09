@@ -12,8 +12,8 @@ git-buildpackage, with all official releases tagged and signed and
 binary diffs of tarballs stored using pristine-tar.  This is documented
 below /usr/share/doc/git-buildpackage/manual-html/ .
 
-Upstream development is tracked both in the Git branch "upstream-git"
-and using upstream tarballs.
+Upstream development is tracked by fetching upstream Git and importing
+release tags into the "upstream" branch before git-buildpackage imports.
 
 A custom build target shows current upstream and packaging versions:
 
@@ -33,41 +33,33 @@ and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
 Store new md5sum to help ensure identical source is received later.
 
 Before injecting a newer upstream tarball, use below commands to sync
-with upstream Git, to adopt upstream commit messages and to minimize
+with upstream Git, to adopt upstream commit messages while minimizing
 size of our Git.
 
-The following commands updates the local mirror of upstream source:
-
-    git checkout upstream-git
-    git pull
-    git fetch --tags
-
-The following command shows upstream changes possibly relevant to merge
-or cherry-pick (replace leading "upstream" with "HEAD^" and invoke
-immediately after syncing to show recently merged changes possibly
-relevant to mention in our changelog):
-
-    git log --pretty="format:%h %s" upstream..upstream-git
-
-The following commands merges all upstream changes with our packaging
-branches (to skip newest upstream changes, replace dot in first pull
-command with either a tag or an explicit commit hash):
-
+    git remote add upstream-repo git://upstream.example.com/project.git
+    git fetch --tags upstream-repo
     git checkout upstream
-    git pull . upstream-git
+    git merge upstream-release-tag
     git checkout master
-    git pull . upstream
 
-If git-import-orig fails complaining about no changes, revert both pulls
-(using "git reset --hard HEAD^" in both master and upstream branches),
-and try again skipping the very newest changes to cheat git-import-orig.
+NB! Use first line above only initially - skip it on later updates.
+
+If upstream do not provide tags corresponding to tarball releases then
+use something like the following instead:
+
+    git remote add upstream-repo git://upstream.example.com/project.git
+    git fetch upstream-repo
+    git log --pretty="format:%h %s" upstream-repo/master..upstream
+    git checkout upstream
+    git pull . newest-refspec-older-than-release-from-above-git-log
+    git checkout master
 
 To do a package release from upstream Git snapshot, first look at
 upstream development for a good place to release, and tag by its date,
 replacing "~" with "." to mimic git-buildpackage logic (replace
 timestamp and commit hash below with real ones based on chosen commit).
 
-    git log --abbrev-commit upstream-git
+    git log --abbrev-commit upstream-repo/master
     git tag -s -m "Upstream snapshot" upstream/0.2.git20080130 61279f8
     dch -r -v "0.2~git20080130-1" "New upstream Git snapshot."
 
