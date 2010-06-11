@@ -1,3 +1,21 @@
+sugar-0.88 (0.88.1-1) UNRELEASED; urgency=low
+
+  [ Luke Faraone ]
+  * New upstream version.
+  * Include a comment in sugar.desktop.
+  * Add self to uploaders and set DMUA.
+  * Regenerate debian/control.in.
+  * Better comment in sugar.desktop
+  * Change hash of upstream tarball.
+
+  [ Jonas Smedegaard ]
+  * Tighten README.source section on CDBS usage: all snippets are now
+    officially packaged ones.
+  * Update README.source: Fix document bootstrapping upstream Git, and
+    rewrite to not use upstream-git branch.
+
+ -- Luke Faraone <luke@faraone.cc>  Fri, 11 Jun 2010 08:35:03 -0400
+
 sugar-0.88 (0.88.0-3) unstable; urgency=low
 
   * Update copyright file:
