@@ -59,6 +59,7 @@ class ActivityButton(RadioToolButton):
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
         self._home_activity = home_activity
+        self._notify_launch_hid = None
 
         self._icon = PulsingIcon()
         self._icon.props.base_color = home_activity.get_icon_color()
@@ -72,13 +73,12 @@ class ActivityButton(RadioToolButton):
         self.set_icon_widget(self._icon)
         self._icon.show()
 
-        if home_activity.props.launching:
+        if home_activity.props.launch_status == shell.Activity.LAUNCHING:
             self._icon.props.pulsing = True
-            self._notify_launching_hid = home_activity.connect( \
-                    'notify::launching', self.__notify_launching_cb)
-        else:
-            self._notify_launching_hid = None
-            self._notif_icon = None
+            self._notify_launch_hid = home_activity.connect( \
+                    'notify::launch-status', self.__notify_launch_status_cb)
+        elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
+            self._on_failed_launch()
 
     def create_palette(self):
         if self._home_activity.is_journal():
@@ -88,10 +88,18 @@ class ActivityButton(RadioToolButton):
         palette.set_group_id('frame')
         self.set_palette(palette)
 
-    def __notify_launching_cb(self, home_activity, pspec):
-        if not home_activity.props.launching:
+    def _on_failed_launch(self):
+        # TODO http://bugs.sugarlabs.org/ticket/2007
+        pass
+
+    def __notify_launch_status_cb(self, home_activity, pspec):
+        home_activity.disconnect(self._notify_launch_hid)
+        self._notify_launch_hid = None
+        if home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
+            self._on_failed_launch()
+        else:
             self._icon.props.pulsing = False
-            home_activity.disconnect(self._notify_launching_hid)
+
 
 class BaseInviteButton(ToolButton):
     def __init__(self, invite):

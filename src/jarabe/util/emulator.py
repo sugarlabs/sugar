@@ -17,6 +17,7 @@
 import os
 import signal
 import subprocess
+import sys
 import time
 from optparse import OptionParser
 
@@ -24,6 +25,10 @@ import gtk
 import gobject
 
 from sugar import env
+
+
+ERROR_NO_DISPLAY = 30
+ERROR_NO_SERVER = 31
 
 
 default_dimensions = (800, 600)
@@ -59,10 +64,13 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
 
     cmd.append('-noreset')
 
-    pipe = subprocess.Popen(cmd)
+    try:
+        pipe = subprocess.Popen(cmd)
 
-    os.environ['DISPLAY'] = ":%d" % (display)
-    os.environ['SUGAR_EMULATOR_PID'] = str(pipe.pid)
+    except OSError, exc:
+        sys.stderr.write('Error executing server: %s\n' % (exc, ))
+        return None
+
     return pipe
 
 
@@ -87,14 +95,18 @@ def _start_xephyr(dpi, dimensions, fullscreen):
     for display in range(30, 40):
         if not _check_server(display):
             pipe = _run_xephyr(display, dpi, dimensions, fullscreen)
+            if pipe is None:
+                return None, None
 
             for i_ in range(10):
                 if _check_server(display):
-                    return pipe
+                    return pipe, display
 
                 time.sleep(0.1)
 
             _kill_pipe(pipe)
+
+    return None, None
 
 
 def _start_window_manager():
@@ -104,7 +116,7 @@ def _start_window_manager():
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
-def _setup_env():
+def _setup_env(display, scaling, emulator_pid):
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-gabble.log')
@@ -112,7 +124,11 @@ def _setup_env():
             env.get_profile_path(), 'logs', 'telepathy-salut.log')
     os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
+    os.environ['DISPLAY'] = ":%d" % (display)
+    os.environ['SUGAR_EMULATOR_PID'] = emulator_pid
 
+    if scaling:
+        os.environ['SUGAR_SCALING'] = scaling
 
 def main():
     """Script-level operations"""
@@ -132,12 +148,18 @@ def main():
                       help='Do not run emulator in fullscreen mode')
     (options, args) = parser.parse_args()
 
-    _setup_env()
+    if not os.environ.get('DISPLAY'):
+        sys.stderr.write('DISPLAY not set, cannot connect to host X server.\n')
+        return ERROR_NO_DISPLAY
 
-    server = _start_xephyr(options.dpi, options.dimensions, options.fullscreen)
+    server, display = _start_xephyr(options.dpi, options.dimensions,
+                                    options.fullscreen)
+    if server is None:
+        sys.stderr.write('Failed to start server. Please check output above'
+            ' for any error message.\n')
+        return ERROR_NO_SERVER
 
-    if options.scaling:
-        os.environ['SUGAR_SCALING'] = options.scaling
+    _setup_env(display, options.scaling, str(server.pid))
 
     command = ['dbus-launch', '--exit-with-session']
 
