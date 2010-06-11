@@ -20,7 +20,6 @@ import os
 import sys
 import time
 import subprocess
-import shutil
 
 if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
     print '%r STARTUP: Starting the shell' % time.time()
@@ -204,10 +203,6 @@ def set_fonts():
 def main():
     try:
         from sugar import env
-        # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
-        data_dir = os.path.join(env.get_profile_path(), 'data')
-        shutil.rmtree(data_dir, ignore_errors=True)
-        os.makedirs(data_dir)
         cleanup_logs(env.get_logs_path())
     except OSError, e:
         # logs cleanup is not critical; it should not prevent sugar from

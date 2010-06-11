@@ -83,7 +83,7 @@ class UIService(dbus.service.Object):
 
         if activity is not None and activity.get_window() is not None:
             activity.get_window().activate(gtk.get_current_event_time())
-            return self._shell_model.get_launcher(activity_id) is None
+            return not activity.props.launching
 
         return False
 

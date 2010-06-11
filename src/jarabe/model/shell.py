@@ -35,7 +35,6 @@ _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
 _SERVICE_INTERFACE = "org.laptop.Activity"
 
-
 class Activity(gobject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
 
@@ -47,9 +46,10 @@ class Activity(gobject.GObject):
 
     __gtype_name__ = 'SugarHomeActivity'
 
-    LAUNCHING = 0
-    LAUNCH_FAILED = 1
-    LAUNCHED = 2
+    __gproperties__ = {
+        'launching' : (bool, None, None, False,
+                       gobject.PARAM_READWRITE),
+    }
 
     def __init__(self, activity_info, activity_id, window=None):
         """Initialise the HomeActivity
@@ -69,7 +69,7 @@ class Activity(gobject.GObject):
         self._activity_id = activity_id
         self._activity_info = activity_info
         self._launch_time = time.time()
-        self._launch_status = Activity.LAUNCHING
+        self._launching = True
 
         if window is not None:
             self.set_window(window)
@@ -83,16 +83,6 @@ class Activity(gobject.GObject):
                     self._name_owner_changed_cb,
                     signal_name="NameOwnerChanged",
                     dbus_interface="org.freedesktop.DBus")
-
-        self._launch_completed_hid = get_model().connect('launch-completed',
-                self.__launch_completed_cb)
-        self._launch_failed_hid = get_model().connect('launch-failed',
-                self.__launch_failed_cb)
-
-    def get_launch_status(self):
-        return self._launch_status
-
-    launch_status = gobject.property(getter=get_launch_status)
 
     def set_window(self, window):
         """Set the window for the activity
@@ -234,6 +224,14 @@ class Activity(gobject.GObject):
             return self._window.get_xid() == activity.get_xid()
         return False
 
+    def do_set_property(self, pspec, value):
+        if pspec.name == 'launching':
+            self._launching = value
+
+    def do_get_property(self, pspec):
+        if pspec.name == 'launching':
+            return self._launching
+
     def _get_service_name(self):
         if self._activity_id:
             return _SERVICE_NAME + self._activity_id
@@ -271,23 +269,6 @@ class Activity(gobject.GObject):
 
     def _set_active_error(self, err):
         logging.error("set_active() failed: %s", err)
-
-    def _set_launch_status(self, value):
-        get_model().disconnect(self._launch_completed_hid)
-        get_model().disconnect(self._launch_failed_hid)
-        self._launch_completed_hid = None
-        self._launch_failed_hid = None
-        self._launch_status = value
-        self.notify('launch_status')
-
-    def __launch_completed_cb(self, model, home_activity):
-        if home_activity is self:
-            self._set_launch_status(Activity.LAUNCHED)
-
-    def __launch_failed_cb(self, model, home_activity):
-        if home_activity is self:
-            self._set_launch_status(Activity.LAUNCH_FAILED)
-
 
 class ShellModel(gobject.GObject):
     """Model of the shell (activity management)
@@ -351,19 +332,8 @@ class ShellModel(gobject.GObject):
         self._active_activity = None
         self._tabbing_activity = None
         self._pservice = presenceservice.get_instance()
-        self._launchers = {}
 
         self._screen.toggle_showing_desktop(True)
-
-    def get_launcher(self, activity_id):
-        return self._launchers.get(str(activity_id))
-
-    def register_launcher(self, activity_id, launcher):
-        self._launchers[activity_id] = launcher
-
-    def unregister_launcher(self, activity_id):
-        if activity_id in self._launchers:
-            del self._launchers[activity_id]
 
     def _update_zoom_level(self, window):
         if window.get_window_type() == wnck.WINDOW_DIALOG:
@@ -512,7 +482,9 @@ class ShellModel(gobject.GObject):
                 home_activity.set_window(window)
 
             if wm.get_sugar_window_type(window) != 'launcher':
-                self.emit('launch-completed', home_activity)
+                home_activity.props.launching = False
+                if not home_activity.is_journal():
+                    self.emit('launch-completed', home_activity)
 
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
@@ -588,6 +560,7 @@ class ShellModel(gobject.GObject):
                              " was not found in the bundle registry."
                              % service_name)
         home_activity = Activity(activity_info, activity_id)
+        home_activity.props.launching = True
         self._add_activity(home_activity)
 
         self._set_active_activity(home_activity)
@@ -604,10 +577,9 @@ class ShellModel(gobject.GObject):
         if home_activity:
             logging.debug("Activity %s (%s) launch failed", activity_id,
                 home_activity.get_type())
-            if self.get_launcher(activity_id) is not None:
+            if home_activity.props.launching:
                 self.emit('launch-failed', home_activity)
             else:
-                # activity sent failure notification after closing launcher
                 self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.',
@@ -620,7 +592,7 @@ class ShellModel(gobject.GObject):
             logging.debug('Activity %s has been closed already.', activity_id)
             return False
 
-        if self.get_launcher(activity_id) is not None:
+        if home_activity.props.launching:
             logging.debug('Activity %s still launching, assuming it failed.',
                 activity_id)
             self.notify_launch_failed(activity_id)

@@ -1,4 +1,4 @@
-# Copyright (C) 2009, 2010 One Laptop per Child
+# Copyright (C) 2009 One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -83,9 +83,9 @@ class OlpcMeshManager(object):
         self._eth_device_state = DEVICE_STATE_UNKNOWN
 
         if self._have_configured_connections():
-            self._start_automesh_timer()
-        else:
             self._start_automesh()
+        else:
+            self._start_automesh_timer()
 
     def _get_companion_device(self):
         props = dbus.Interface(self.mesh_device,
@@ -170,8 +170,8 @@ class OlpcMeshManager(object):
         logging.error('Failed to activate connection: %s', err)
 
     def _activate_connection(self, channel, anycast_address=None):
-        logging.debug("activate channel %d anycast %r",
-                      channel, anycast_address)
+        logging.debug("activate channel %d anycast %s",
+                      (channel, repr(anycast_address)))
         proxy = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         network_manager = dbus.Interface(proxy, _NM_IFACE)
         connection = self._make_connection(channel, anycast_address)

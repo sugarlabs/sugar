@@ -156,6 +156,9 @@ class _Animation(animator.Animation):
         self._icon.props.size = int(self.start_size + d)
 
 
+_launchers = {}
+
+
 def setup():
     model = shell.get_model()
     model.connect('launch-started', __launch_started_cb)
@@ -164,15 +167,14 @@ def setup():
 
 
 def add_launcher(activity_id, icon_path, icon_color):
-    model = shell.get_model()
 
-    if model.get_launcher(activity_id) is not None:
+    if activity_id in _launchers:
         return
 
     launch_window = LaunchWindow(activity_id, icon_path, icon_color)
     launch_window.show()
 
-    model.register_launcher(activity_id, launch_window)
+    _launchers[activity_id] = launch_window
 
 
 def __launch_started_cb(home_model, home_activity):
@@ -182,7 +184,7 @@ def __launch_started_cb(home_model, home_activity):
 
 def __launch_failed_cb(home_model, home_activity):
     activity_id = home_activity.get_activity_id()
-    launcher = shell.get_model().get_launcher(activity_id)
+    launcher = _launchers.get(activity_id)
 
     if launcher is None:
         logging.error('Launcher for %s is missing', activity_id)
@@ -207,11 +209,8 @@ def __launch_completed_cb(home_model, home_activity):
 def _destroy_launcher(home_activity):
     activity_id = home_activity.get_activity_id()
 
-    launcher = shell.get_model().get_launcher(activity_id)
-    if launcher is None:
-        if not home_activity.is_journal():
-            logging.error('Launcher was not registered for %s', activity_id)
-        return
-
-    shell.get_model().unregister_launcher(activity_id)
-    launcher.destroy()
+    if activity_id in _launchers:
+        _launchers[activity_id].destroy()
+        del _launchers[activity_id]
+    else:
+        logging.error('Launcher for %s is missing', activity_id)

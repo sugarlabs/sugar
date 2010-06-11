@@ -642,7 +642,7 @@ class _MyIcon(MyIcon):
         self.emit('register-activate')
 
     def remove_register_menu(self):
-        self.palette.menu.remove(self._register_menu)
+        self.palette.remove(self._register_menu)
 
 class FavoritesSetting(object):
 
