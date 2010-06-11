@@ -1,8 +1,18 @@
 Building
 ========
 
-See:
-http://wiki.laptop.org/go/Sugar_with_sugar-jhbuild
+For details see: http://wiki.sugarlabs.org/go/Development_Team/Jhbuild
+
+Sugar-jhbuild will automatically download the latest of Sugar's 
+dependencies as well as Sugar itself directly from their source 
+repositories, rather than relying on source packages that may have 
+become stale. These are generic instructions on how to use jhbuild 
+to get up and running with Sugar.
+
+  $ cd sugar-jhbuild
+  $ ./sugar-jhbuild update
+  $ ./sugar-jhbuild depscheck
+  $ ./sugar-jhbuild buildgit 
 
 Running multiple instances on the same machine
 ==============================================
