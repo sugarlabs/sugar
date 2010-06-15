@@ -22,7 +22,8 @@ import gobject
 import gconf
 import dbus
 from dbus import PROPERTIES_IFACE
-from telepathy.interfaces import ACCOUNT_MANAGER, \
+from telepathy.interfaces import ACCOUNT, \
+                                 ACCOUNT_MANAGER, \
                                  CHANNEL, \
                                  CHANNEL_INTERFACE_GROUP, \
                                  CHANNEL_DISPATCHER, \
@@ -32,6 +33,7 @@ from telepathy.interfaces import ACCOUNT_MANAGER, \
                                  CHANNEL_TYPE_STREAMED_MEDIA, \
                                  CHANNEL_TYPE_STREAM_TUBE, \
                                  CHANNEL_TYPE_TEXT, \
+                                 CLIENT, \
                                  CONNECTION, \
                                  CONNECTION_INTERFACE_ALIASING, \
                                  CONNECTION_INTERFACE_CONTACTS, \
@@ -57,13 +59,55 @@ SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 CONNECTION_INTERFACE_APPLICATIONS = CONNECTION + '.Interface.Applications.DRAFT'
 
 class ActivityModel(object):
-    def __init__(self, bundle, activity_id):
+    def __init__(self, bundle, activity_id, channel_type, handle_type, connection):
         self.bundle = bundle
         self.activity_id = activity_id
+        self._channel_type = channel_type
+        self._handle_type = handle_type
+        self._connection = connection
 
     def get_color(self):
         logging.info('KILL_PS get the initiator''s colors')
         return None
+
+    def _find_account(self):
+        bus = dbus.Bus()
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
+        account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+
+        accounts = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
+                                       dbus_interface=PROPERTIES_IFACE)
+        for account_path in accounts:
+            obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
+            account = dbus.Interface(obj, ACCOUNT)
+            connection = account.Get(ACCOUNT, 'Connection',
+                                     dbus_interface=PROPERTIES_IFACE)
+            if connection == self._connection.object_path:
+                return account_path
+
+        return None
+
+    def join(self):
+        account_path = self._find_account()
+        service_name = CLIENT + '.' + self.bundle.get_bundle_id()
+
+        bus = dbus.Bus()
+        obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, CHANNEL_DISPATCHER_PATH)
+        channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
+
+        properties = {
+                CHANNEL + '.ChannelType': self._channel_type,
+                CHANNEL + '.TargetHandleType': self._handle_type,
+                CHANNEL + '.TargetID': self.activity_id,
+                }
+        request_path = channel_dispatcher.EnsureChannel(account_path,
+                                                        properties, 0,
+                                                        service_name)
+        obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
+        request = dbus.Interface(obj, CHANNEL_REQUEST)
+        #request.connect_to_signal('Failed', self.__channel_request_failed_cb)
+        #request.connect_to_signal('Succeeded', self.__channel_request_succeeded_cb)
+        request.Proceed()
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -150,7 +194,7 @@ class Neighborhood(gobject.GObject):
     def _ensure_server_account(self, account_manager, accounts):
         # TODO: Is this the better way to check for an account?
         for account in accounts:
-            if 'gabble' in account:
+            if 'jabber2' in account:
                 return
 
         client = gconf.client_get_default()
@@ -159,7 +203,7 @@ class Neighborhood(gobject.GObject):
         params = {
                 'account': '***',
                 'password': '***',
-                'server': 'talk.google.com',
+                'server': 'jabber2.sugarlabs.org',
                 'resource': 'sugar',
                 }
 
@@ -247,10 +291,7 @@ class Neighborhood(gobject.GObject):
     def _add_applications(self, connection, contact_handle, applications):
         logging.debug('_add_applications %r %r', contact_handle, applications)
         for application in applications:
-            channel_type, handle_type, handle, service_name = application
-
-            # TODO: we should probably inspect it instead, or generate a new one
-            activity_id = str(handle)
+            channel_type, handle_type, activity_id, service_name = application
 
             # TODO: refactor it so it doesn't duplicates what is in invites.py
             if channel_type == CHANNEL_TYPE_TEXT:
@@ -283,8 +324,8 @@ class Neighborhood(gobject.GObject):
             if not bundle:
                 logging.warning('Ignoring shared activity we don''t have')
                 continue
-            
-            model = ActivityModel(bundle, activity_id)
+
+            model = ActivityModel(bundle, activity_id, channel_type, handle_type, connection)
             self._activities[activity_id] = model
             self.emit('activity-added', model)
 
