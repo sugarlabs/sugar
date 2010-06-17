@@ -1,4 +1,3 @@
-# Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,6 +36,7 @@ from telepathy.interfaces import ACCOUNT, \
                                  CONNECTION, \
                                  CONNECTION_INTERFACE_ALIASING, \
                                  CONNECTION_INTERFACE_CONTACTS, \
+                                 CONNECTION_INTERFACE_REQUESTS, \
                                  CONNECTION_INTERFACE_SIMPLE_PRESENCE
 from telepathy.constants import HANDLE_TYPE_LIST, \
                                 CONNECTION_PRESENCE_TYPE_OFFLINE
@@ -46,7 +46,6 @@ from sugar.graphics.xocolor import XoColor
 from sugar import activity
 
 from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
-from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
@@ -56,119 +55,327 @@ CHANNEL_DISPATCHER_PATH = '/org/freedesktop/Telepathy/ChannelDispatcher'
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
-CONNECTION_INTERFACE_APPLICATIONS = CONNECTION + '.Interface.Applications.DRAFT'
+CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
+CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
-class ActivityModel(object):
-    def __init__(self, bundle, activity_id, channel_type, handle_type, connection):
-        self.bundle = bundle
+class ActivityModel(gobject.GObject):
+    def __init__(self, activity_id, room_handle):
+        gobject.GObject.__init__(self)
+
         self.activity_id = activity_id
-        self._channel_type = channel_type
-        self._handle_type = handle_type
-        self._connection = connection
+        self.room_handle = room_handle
+        self._bundle = None
+        self._color = None
 
     def get_color(self):
-        logging.info('KILL_PS get the initiator''s colors')
-        return None
+        return self._color
 
-    def _find_account(self):
-        bus = dbus.Bus()
-        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
-        account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+    def set_color(self, color):
+        self._color = color
 
-        accounts = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
-                                       dbus_interface=PROPERTIES_IFACE)
-        for account_path in accounts:
-            obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
-            account = dbus.Interface(obj, ACCOUNT)
-            connection = account.Get(ACCOUNT, 'Connection',
-                                     dbus_interface=PROPERTIES_IFACE)
-            if connection == self._connection.object_path:
-                return account_path
+    color = gobject.property(type=object, getter=get_color, setter=set_color)
 
-        return None
+    def get_bundle(self):
+        return self._bundle
+
+    def set_bundle(self, bundle):
+        self._bundle = bundle
+
+    bundle = gobject.property(type=object, getter=get_bundle, setter=set_bundle)
+
+    def get_name(self):
+        return self._name
+
+    def set_name(self, name):
+        self._name = name
+
+    name = gobject.property(type=object, getter=get_name, setter=set_name)
 
     def join(self):
-        account_path = self._find_account()
-        service_name = CLIENT + '.' + self.bundle.get_bundle_id()
+        pass
+
+class _Account(gobject.GObject):
+    __gsignals__ = {
+        'activity-added':       (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object, object, object])),
+        'activity-updated':     (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object, object])),
+        'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object])),
+        'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object])),
+        'buddy-updated':        (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object, object])),
+        'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
+                                 gobject.TYPE_NONE, ([object]))
+    }
+
+    def __init__(self, account_path):
+        gobject.GObject.__init__(self)
+
+        self._connection = None
+        self._buddy_handles = {}
+        self._activity_handles = {}
+
+        self._buddies_per_activity = {}
+        self._activities_per_buddy = {}
 
         bus = dbus.Bus()
-        obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, CHANNEL_DISPATCHER_PATH)
-        channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
+        obj.Get(ACCOUNT, 'Connection',
+                reply_handler=self.__got_connection_cb,
+                error_handler=self.__error_handler_cb)
+        obj.connect_to_signal(
+            'AccountPropertyChanged', self.__account_property_changed_cb)
 
-        properties = {
-                CHANNEL + '.ChannelType': self._channel_type,
-                CHANNEL + '.TargetHandleType': self._handle_type,
-                CHANNEL + '.TargetID': self.activity_id,
-                }
-        request_path = channel_dispatcher.EnsureChannel(account_path,
-                                                        properties, 0,
-                                                        service_name)
-        obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
-        request = dbus.Interface(obj, CHANNEL_REQUEST)
-        #request.connect_to_signal('Failed', self.__channel_request_failed_cb)
-        #request.connect_to_signal('Succeeded', self.__channel_request_succeeded_cb)
-        request.Proceed()
+    def __error_handler_cb(self, error):
+        raise RuntimeError(error)
+
+    def __got_connection_cb(self, connection_path):
+        logging.debug('__got_connection_cb %r', connection_path)
+
+        if connection_path == '/':
+            return
+
+        self._prepare_connection(connection_path)
+
+    def __account_property_changed_cb(self, properties):
+        if properties.get('Connection', '/') != '/' and self._connection is None:
+            self._prepare_connection(properties['Connection'])
+
+    def _prepare_connection(self, connection_path):
+        connection_name = connection_path.replace('/', '.')[1:]
+
+        self._connection = Connection(connection_name, connection_path,
+                                      ready_handler=self.__connection_ready_cb)
+
+    def __connection_ready_cb(self, connection):
+        logging.debug('__connection_ready_cb %r', connection)
+
+        connection[CONNECTION_INTERFACE_ALIASING].connect_to_signal(
+                'AliasesChanged', self.__aliases_changed_cb)
+
+        connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE].connect_to_signal(
+                'PresencesChanged', self.__presences_changed_cb)
+
+        if CONNECTION_INTERFACE_BUDDY_INFO in connection:
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].connect_to_signal(
+                'PropertiesChanged', self.__buddy_info_updated_cb,
+                byte_arrays=True)
+
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].connect_to_signal(
+                    'ActivitiesChanged', self.__buddy_activities_changed_cb)
+        else:
+            logging.warning('Connection %s does not support OLPC buddy '
+                            'properties', connection.object_path)
+
+        if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in connection:
+            connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal(
+                    'ActivityPropertiesChanged',
+                    self.__activity_properties_changed_cb)
+        else:
+            logging.warning('Connection %s does not support OLPC activity '
+                            'properties', connection.object_path)
+
+        for target_id in 'subscribe', 'publish':
+            properties = {
+                    CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
+                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
+                    CHANNEL + '.TargetID': target_id,
+                    }
+            is_ours, channel_path, properties = \
+                    connection[CONNECTION_INTERFACE_REQUESTS].EnsureChannel(
+                            dbus.Dictionary(properties, signature='sv'))
+            print is_ours, channel_path
+
+            channel = Channel(connection.service_name, channel_path)
+            channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
+                      'MembersChanged', self.__members_changed_cb)
+
+            channel = Channel(connection.service_name, channel_path)
+            channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
+                    'Members',
+                    reply_handler=self.__get_members_ready_cb,
+                    error_handler=self.__error_handler_cb)
+
+    def __aliases_changed_cb(self, aliases):
+        logging.debug('__aliases_changed_cb')
+        for handle, alias in aliases:
+            if handle in self._buddy_handles:
+                logging.debug('Got handle %r with nick %r, going to update', handle, alias)
+
+    def __presences_changed_cb(self, presences):
+        logging.debug('__presences_changed_cb %r', presences)
+        for handle, presence in presences.iteritems():
+            if handle in self._buddy_handles:
+                presence_type, status_, message_ = presence
+                if presence_type == CONNECTION_PRESENCE_TYPE_OFFLINE:
+                    del self._buddy_handles[handle]
+                    self.emit('buddy-removed', handle)
+
+    def __buddy_info_updated_cb(self, handle, properties):
+        logging.debug('__buddy_info_updated_cb %r %r', handle, properties)
+
+    def __buddy_activities_changed_cb(self, buddy_handle, activities):
+        logging.debug('__buddy_activities_changed_cb %r %r', buddy_handle, activities)
+        self._update_buddy_activities(buddy_handle, activities)
+
+    def _update_buddy_activities(self, buddy_handle, activities):
+        contact_id = self._buddy_handles[buddy_handle]
+        for activity_id, room_handle in activities:
+            if room_handle not in self._activity_handles:
+                self._activity_handles[room_handle] = activity_id
+                self.emit('activity-added', contact_id, room_handle, activity_id)
+
+            if not activity_id in self._buddies_per_activity:
+                self._buddies_per_activity[activity_id] = set()
+            self._buddies_per_activity[activity_id].add(contact_id)
+            self._activities_per_buddy[contact_id].add(activity_id)
+
+        current_activity_ids = [activity_id for activity_id, room_handle in activities]
+        for activity_id in self._activities_per_buddy[contact_id]:
+            if not activity_id in current_activity_ids:
+                self._buddies_per_activity[activity_id].remove(contact_id)
+                self.emit('activity-removed', activity_id)
+
+    def __activity_properties_changed_cb(self, room_handle, properties):
+        logging.debug('__activity_properties_changed_cb %r %r', room_handle, properties)
+        if room_handle in self._activity_handles:
+            self.emit('activity-updated', self._activity_handles[room_handle],
+                      properties)
+        else:
+            logging.debug('__activity_properties_changed_cb unknown activity')
+
+    def __members_changed_cb(self, message, added, removed, local_pending,
+                             remote_pending, actor, reason):
+        self._add_handles(added)
+
+    def __get_members_ready_cb(self, handles):
+        logging.debug('__get_members_ready_cb %r', handles)
+        if not handles:
+            return
+
+        self._add_handles(handles)
+
+        """
+        if CONNECTION_INTERFACE_APPLICATIONS in connection:
+            connection[CONNECTION_INTERFACE_APPLICATIONS].GetApplications(
+                    handles,
+                    reply_handler=partial(self.__get_applications_ready_cb, connection),
+                    error_handler=self.__error_handler_cb)
+        """
+
+    def _add_handles(self, handles):
+        logging.debug('_add_handles %r', handles)
+        interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
+        self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
+                handles, interfaces, False,
+                reply_handler=self.__get_contact_attributes_cb,
+                error_handler=self.__error_handler_cb)
+
+        if CONNECTION_INTERFACE_BUDDY_INFO not in self._connection:
+            return
+
+        for handle in handles:
+            self._connection[CONNECTION_INTERFACE_BUDDY_INFO].GetProperties(
+                handle,
+                reply_handler=partial(self.__got_buddy_info_cb, handle),
+                error_handler=self.__error_handler_cb,
+                byte_arrays=True)
+
+            self._connection[CONNECTION_INTERFACE_BUDDY_INFO].GetActivities(
+                handle,
+                reply_handler=partial(self.__got_activities_cb, handle),
+                error_handler=self.__error_handler_cb)
+
+    def __got_buddy_info_cb(self, handle, properties):
+        logging.debug('__got_buddy_info_cb %r', properties)
+        self.emit('buddy-updated', self._buddy_handles[handle], properties)
+
+    def __get_contact_attributes_cb(self, attributes):
+        logging.debug('__get_contact_attributes_cb')
+
+        for handle in attributes.keys():
+            nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
+            if handle in self._buddy_handles:
+                logging.debug('Got handle %r with nick %r, going to update', handle, nick)
+                self.emit('buddy-updated', self._buddy_handles[handle], attributes[handle])
+            else:
+                logging.debug('Got handle %r with nick %r, going to add', handle, nick)
+                contact_id = attributes[handle][CONNECTION + '/contact-id']
+                self._buddy_handles[handle] = contact_id
+                self._activities_per_buddy[contact_id] = set()
+                self.emit('buddy-added', attributes[handle])
+
+    def __got_activities_cb(self, buddy_handle, activities):
+        logging.debug('__got_activities_cb %r %r', buddy_handle, activities)
+        self._update_buddy_activities(buddy_handle, activities)
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
         'activity-added':       (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+                                 gobject.TYPE_NONE, ([object])),
         'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+                                 gobject.TYPE_NONE, ([object])),
         'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT])),
+                                 gobject.TYPE_NONE, ([object])),
         'buddy-moved':          (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE,
-                                ([gobject.TYPE_PYOBJECT,
-                                  gobject.TYPE_PYOBJECT])),
+                                ([object,
+                                  object])),
         'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([gobject.TYPE_PYOBJECT]))
+                                 gobject.TYPE_NONE, ([object]))
     }
 
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._activities = {}
         self._buddies = {None: OwnerBuddyModel()}
+        self._activities = {}
+        self._accounts = []
+        self._create_accounts()
 
+    def _create_accounts(self):
         bus = dbus.Bus()
 
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
 
-        accounts = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
-                                       dbus_interface=PROPERTIES_IFACE)
-        logging.debug('accounts %r', accounts)
+        account_paths = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
+                                            dbus_interface=PROPERTIES_IFACE)
 
-        client_handler = telepathyclient.get_instance()
-        client_handler.got_channel.connect(self.__got_channel_cb)
+        account_manager.connect_to_signal('AccountValidityChanged',
+            self.__account_validity_changed_cb)
 
-        self._ensure_link_local_account(account_manager, accounts)
-        self._ensure_server_account(account_manager, accounts)
+        self._ensure_link_local_account(account_manager, account_paths)
+        #self._ensure_server_account(account_manager, account_paths)
 
-        for account in accounts:
-            obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, CHANNEL_DISPATCHER_PATH)
-            channel_dispatcher = dbus.Interface(obj, CHANNEL_DISPATCHER)
+        for account_path in account_paths:
+            self._add_account(account_path)
 
-            properties = {
-                    CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
-                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
-                    CHANNEL + '.TargetID': 'subscribe',
-                    }
-            request_path = channel_dispatcher.EnsureChannel(account, properties, 0, SUGAR_CLIENT_SERVICE)
-            obj = bus.get_object(CHANNEL_DISPATCHER_SERVICE, request_path)
-            request = dbus.Interface(obj, CHANNEL_REQUEST)
-            request.connect_to_signal('Failed', self.__channel_request_failed_cb)
-            request.connect_to_signal('Succeeded', self.__channel_request_succeeded_cb)
-            request.Proceed()
+    def __account_validity_changed_cb(self, account_path, valid):
+        if valid:
+            self._add_account(account_path)
+        else:
+            raise NotImplementedError('TODO')
 
-            logging.debug('meec %r', request)
+    def _add_account(self, account_path):
+        account = _Account(account_path)
+        account.connect('buddy-added', self.__buddy_added_cb)
+        account.connect('buddy-updated', self.__buddy_updated_cb)
+        account.connect('activity-added', self.__activity_added_cb)
+        account.connect('activity-updated', self.__activity_updated_cb)
+        account.connect('activity-removed', self.__activity_removed_cb)
+        self._accounts.append(account)
 
     def _ensure_link_local_account(self, account_manager, accounts):
         # TODO: Is this the better way to check for an account?
         for account in accounts:
             if 'salut' in account:
+                logging.debug('Already have a Salut account')
                 return
+
+        logging.debug('Still dont have a Salut account, creating one')
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
@@ -194,17 +401,25 @@ class Neighborhood(gobject.GObject):
     def _ensure_server_account(self, account_manager, accounts):
         # TODO: Is this the better way to check for an account?
         for account in accounts:
-            if 'jabber2' in account:
+            if 'gabble' in account:
+                logging.debug('Already have a Gabble account')
                 return
+
+        logging.debug('Still dont have a Gabble account, creating one')
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
 
         params = {
-                'account': '***',
+                'account': '%s-mec@jabber2.sugarlabs.org' % nick,
                 'password': '***',
                 'server': 'jabber2.sugarlabs.org',
                 'resource': 'sugar',
+                'require-encryption': True,
+                'ignore-ssl-errors': True,
+                'register': True,
+                'old-ssl': True,
+                'port': dbus.UInt32(5223),
                 }
 
         properties = {
@@ -217,239 +432,88 @@ class Neighborhood(gobject.GObject):
                                                 'jabber', params, properties)
         accounts.append(account)
 
-    def __got_channel_cb(self, **kwargs):
-        # TODO: How hacky is this?
-        connection_name = kwargs['connection'].replace('/', '.')[1:]
+    def __buddy_added_cb(self, account, properties):
+        logging.debug('__buddy_added_cb %r', properties)
 
-        channel_path = kwargs['channel'][0]
-        Connection(connection_name, kwargs['connection'],
-                ready_handler=partial(self.__connection_ready_cb, channel_path))
+        contact_id = properties[CONNECTION + '/contact-id']
 
-    def __connection_ready_cb(self, channel_path, connection):
-        connection[CONNECTION_INTERFACE_ALIASING].connect_to_signal(
-                'AliasesChanged',
-                partial(self.__aliases_changed_cb, connection))
-
-        connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE].connect_to_signal(
-                'PresencesChanged',
-                partial(self.__presences_changed_cb, connection))
-
-        if CONNECTION_INTERFACE_APPLICATIONS in connection:
-            connection[CONNECTION_INTERFACE_APPLICATIONS].connect_to_signal(
-                    'ApplicationsUpdated',
-                    partial(self.__applications_updated_cb, connection))
-
-        channel = Channel(connection.service_name, channel_path)
-        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
-                  'MembersChanged',
-                  partial(self.__members_changed_cb, connection))
-
-        channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
-                'Members',
-                reply_handler=partial(self.__get_members_ready_cb, connection),
-                error_handler=self.__error_handler_cb)
-
-    def __get_members_ready_cb(self, connection, handles):
-        if not handles:
+        if contact_id in self._buddies:
+            logging.debug('__buddy_added_cb buddy already tracked')
             return
 
-        self._add_handles(connection, handles)
+        buddy = BuddyModel(
+                nick=properties[CONNECTION_INTERFACE_ALIASING + '/alias'])
+        self._buddies[contact_id] = buddy
 
-        if CONNECTION_INTERFACE_APPLICATIONS in connection:
-            connection[CONNECTION_INTERFACE_APPLICATIONS].GetApplications(
-                    handles,
-                    reply_handler=partial(self.__get_applications_ready_cb, connection),
-                    error_handler=self.__error_handler_cb)
+        self.emit('buddy-added', buddy)
 
-    def __presences_changed_cb(self, connection, presences):
-        logging.debug('__presences_changed_cb %r', presences)
-        for handle, presence in presences.iteritems():
-            if (connection.service_name, handle) in self._buddies:
-                presence_type, status_, message_ = presence
-                if presence_type == CONNECTION_PRESENCE_TYPE_OFFLINE:
-                    buddy = self._buddies[(connection.service_name, handle)]
-                    del self._buddies[(connection.service_name, handle)]
-                    self.emit('buddy-removed', buddy)
+    def __buddy_updated_cb(self, account, contact_id, properties):
+        logging.debug('__buddy_updated_cb %r %r', contact_id, properties)
+        if contact_id not in self._buddies:
+            logging.debug('__buddy_updated_cb Unknown buddy with contact_id %r', contact_id)
+            return
 
-    def __aliases_changed_cb(self, connection, aliases):
-        logging.debug('__aliases_changed_cb')
-        for handle, alias in aliases:
-            if (connection.service_name, handle) in self._buddies:
-                logging.debug('Got handle %r with nick %r, going to update', handle, alias)
-                buddy = self._buddies[(connection.service_name, handle)]
-                buddy.props.nick = alias
-                buddy.props.key = (connection.service_name, handle)
+        buddy = self._buddies[contact_id]
+        if 'color' in properties:
+            buddy.props.color = XoColor(properties['color'])
+        if 'key' in properties:
+            buddy.props.key = properties['key']
 
-    def __get_applications_ready_cb(self, connection, applications_per_contact):
-        logging.debug('__get_applications_ready_cb %r %r', connection, applications_per_contact)
-        for handle, applications in applications_per_contact.iteritems():
-            self._add_applications(connection, handle, applications)
+    def __activity_added_cb(self, account, contact_id, room_handle, activity_id):
+        if contact_id not in self._buddies:
+            logging.debug('__activity_added_cb Unknown buddy with contact_id %r', contact_id)
+            return
 
-    def __applications_updated_cb(self, connection, handle, applications):
-        self._add_applications(connection, handle, applications)
+        if activity_id in self._activities:
+            logging.debug('__activity_added_cb activity already tracked')
+            return
 
-    def _add_applications(self, connection, contact_handle, applications):
-        logging.debug('_add_applications %r %r', contact_handle, applications)
-        for application in applications:
-            channel_type, handle_type, activity_id, service_name = application
+        activity = ActivityModel(activity_id, room_handle)
+        self._activities[activity_id] = activity
 
-            # TODO: refactor it so it doesn't duplicates what is in invites.py
-            if channel_type == CHANNEL_TYPE_TEXT:
-                bundle_id = 'org.laptop.Chat'
-            elif channel_type == CHANNEL_TYPE_STREAMED_MEDIA:
-                bundle_id = 'org.laptop.VideoChat'
-            elif channel_type == CHANNEL_TYPE_DBUS_TUBE:
-                bundle_id = channel_properties[CHANNEL_TYPE_DBUS_TUBE + '.ServiceName']
-            elif channel_type == CHANNEL_TYPE_STREAM_TUBE:
-                bundle_id = channel_properties[CHANNEL_TYPE_STREAM_TUBE + '.Service']
-            else:
-                logging.warning('Ignoring unknown channel type: %s', channel_type)
-                continue
+    def __activity_updated_cb(self, account, activity_id, properties):
+        logging.debug('__activity_updated_cb %r %r', activity_id, properties)
+        if activity_id not in self._activities:
+            logging.debug('__activity_updated_cb Unknown activity with activity_id %r', activity_id)
+            return
 
-            if not activity_id:
-                logging.warning('Ignoring malformed shared activity')
-                continue
+        registry = bundleregistry.get_registry()
+        bundle = registry.get_bundle(properties['type'])
+        if not bundle:
+            logging.warning('Ignoring shared activity we don''t have')
+            return
 
-            if self.has_activity(activity_id):
-                return
+        activity = self._activities[activity_id]
 
-            buddy = self._buddies.get((connection.service_name, contact_handle), None)
+        is_new = activity.props.bundle is None
 
-            if buddy is None:
-                logging.warning('Ignoring activity of unknown owner: %r', contact_handle)
-                continue
+        activity.props.color = XoColor(properties['color'])
+        activity.props.bundle = bundle
+        activity.props.name = properties['name']
 
-            registry = bundleregistry.get_registry()
-            bundle = registry.get_bundle(bundle_id)
-            if not bundle:
-                logging.warning('Ignoring shared activity we don''t have')
-                continue
+        if is_new:
+            self.emit('activity-added', activity)
 
-            model = ActivityModel(bundle, activity_id, channel_type, handle_type, connection)
-            self._activities[activity_id] = model
-            self.emit('activity-added', model)
-
-            logging.info('KILL_PS move buddies around')
-            """
-            for buddy in self._pservice.get_buddies():
-                cur_activity = buddy.props.current_activity
-                object_path = buddy.object_path()
-                if cur_activity == activity and object_path in self._buddies:
-                    buddy_model = self._buddies[object_path]
-                    self.emit('buddy-moved', buddy_model, model)
-            """
-
-    def _add_handles(self, connection, handles):
-        interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
-        connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
-                handles, interfaces, False,
-                reply_handler=partial(self.__get_contact_attributes_cb, connection),
-                error_handler=self.__error_handler_cb)
-
-    def __error_handler_cb(self, error):
-        raise RuntimeError(error)
-
-    def __get_contact_attributes_cb(self, connection, attributes):
-        logging.debug('__get_contact_attributes_cb')
-
-        for handle in attributes.keys():
-            nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
-            if (connection.service_name, handle) in self._buddies:
-                logging.debug('Got handle %r with nick %r, going to update', handle, nick)
-                buddy = self._buddies[(connection.service_name, handle)]
-                buddy.props.nick = nick
-            else:
-                logging.debug('Got handle %r with nick %r, going to add', handle, nick)
-                buddy = BuddyModel(nick=nick, key=(connection.service_name, handle))
-                self._buddies[(connection.service_name, handle)] = buddy
-                self.emit('buddy-added', buddy)
-
-    def __members_changed_cb(self, connection, message, added, removed,
-            local_pending, remote_pending, actor, reason):
-        self._add_handles(connection, added)
-
-    def __channel_request_failed_cb(self, error, message):
-        raise RuntimeError('Couldn\'t retrieve contact list: %s %s', error, message)
-
-    def __channel_request_succeeded_cb(self):
-        logging.debug('Successfully ensured a ContactList channel')
+    def __activity_removed_cb(self, account, activity_id):
+        logging.debug('__activity_removed_cb %r', activity_id)
+        activity = self._activities[activity_id]
+        del self._activities[activity_id]
+        self.emit('activity-removed', activity)
 
     def get_activities(self):
-        return self._activities.values()
+        return []
 
     def get_buddies(self):
         return self._buddies.values()
 
-    def _buddy_activity_changed_cb(self, model, cur_activity):
-        if not self._buddies.has_key(model.get_buddy().object_path()):
-            return
-        if cur_activity and self._activities.has_key(cur_activity.props.id):
-            activity_model = self._activities[cur_activity.props.id]
-            self.emit('buddy-moved', model, activity_model)
-        else:
-            self.emit('buddy-moved', model, None)
-
-    def __buddy_added_cb(self, **kwargs):
-        self.emit('buddy-added', kwargs['buddy'])
-
-    def _buddy_appeared_cb(self, pservice, buddy):
-        if self._buddies.has_key(buddy.object_path()):
-            return
-
-        model = BuddyModel(buddy=buddy)
-        model.connect('current-activity-changed',
-                      self._buddy_activity_changed_cb)
-        self._buddies[buddy.object_path()] = model
-        self.emit('buddy-added', model)
-
-        cur_activity = buddy.props.current_activity
-        if cur_activity:
-            self._buddy_activity_changed_cb(model, cur_activity)
-
-    def _buddy_disappeared_cb(self, pservice, buddy):
-        if not self._buddies.has_key(buddy.object_path()):
-            return
-        self.emit('buddy-removed', self._buddies[buddy.object_path()])
-        del self._buddies[buddy.object_path()]
-
-    def _activity_appeared_cb(self, pservice, act):
-        self._check_activity(act)
-
-    def _check_activity(self, presence_activity):
-        registry = bundleregistry.get_registry()
-        bundle = registry.get_bundle(presence_activity.props.type)
-        if not bundle:
-            return
-        if self.has_activity(presence_activity.props.id):
-            return
-        self.add_activity(bundle, presence_activity)
-
     def has_activity(self, activity_id):
-        return self._activities.has_key(activity_id)
+        return False
 
     def get_activity(self, activity_id):
-        if self.has_activity(activity_id):
-            return self._activities[activity_id]
-        else:
-            return None
+        return None
 
     def add_activity(self, bundle, act):
-        model = ActivityModel(act, bundle)
-        self._activities[model.get_id()] = model
-        self.emit('activity-added', model)
-
-        for buddy in self._pservice.get_buddies():
-            cur_activity = buddy.props.current_activity
-            object_path = buddy.object_path()
-            if cur_activity == activity and object_path in self._buddies:
-                buddy_model = self._buddies[object_path]
-                self.emit('buddy-moved', buddy_model, model)
-
-    def _activity_disappeared_cb(self, pservice, act):
-        if self._activities.has_key(act.props.id):
-            activity_model = self._activities[act.props.id]
-            self.emit('activity-removed', activity_model)
-            del self._activities[act.props.id]
+        pass
 
 _model = None
 

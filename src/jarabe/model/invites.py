@@ -42,6 +42,8 @@ class ActivityInvite(object):
         return self._handler[len(CLIENT + '.'):]
 
     def join(self):
+        logging.error('ActivityInvite.join handler %r', self._handler)
+        
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, self._dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
@@ -51,7 +53,7 @@ class ActivityInvite(object):
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:
-            logging.error('__handle_with_reply_cb %r', error)
+            raise error
         else:
             logging.debug('__handle_with_reply_cb')
 
