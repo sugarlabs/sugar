@@ -97,7 +97,7 @@ class ActivityModel(gobject.GObject):
 class _Account(gobject.GObject):
     __gsignals__ = {
         'activity-added':       (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object, object])),
+                                 gobject.TYPE_NONE, ([object, object])),
         'activity-updated':     (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([object, object])),
         'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
@@ -221,21 +221,26 @@ class _Account(gobject.GObject):
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
-        contact_id = self._buddy_handles[buddy_handle]
+        if not buddy_handle in self._buddy_handles:
+            self._buddy_handles[buddy_handle] = None
+
+        if not buddy_handle in self._activities_per_buddy:
+            self._activities_per_buddy[buddy_handle] = set()
+
         for activity_id, room_handle in activities:
             if room_handle not in self._activity_handles:
                 self._activity_handles[room_handle] = activity_id
-                self.emit('activity-added', contact_id, room_handle, activity_id)
+                self.emit('activity-added', room_handle, activity_id)
 
             if not activity_id in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
-            self._buddies_per_activity[activity_id].add(contact_id)
-            self._activities_per_buddy[contact_id].add(activity_id)
+            self._buddies_per_activity[activity_id].add(buddy_handle)
+            self._activities_per_buddy[buddy_handle].add(activity_id)
 
         current_activity_ids = [activity_id for activity_id, room_handle in activities]
-        for activity_id in self._activities_per_buddy[contact_id]:
+        for activity_id in self._activities_per_buddy[buddy_handle]:
             if not activity_id in current_activity_ids:
-                self._buddies_per_activity[activity_id].remove(contact_id)
+                self._buddies_per_activity[activity_id].remove(buddy_handle)
                 self.emit('activity-removed', activity_id)
 
     def __activity_properties_changed_cb(self, room_handle, properties):
@@ -248,25 +253,17 @@ class _Account(gobject.GObject):
 
     def __members_changed_cb(self, message, added, removed, local_pending,
                              remote_pending, actor, reason):
-        self._add_handles(added)
+        self._add_buddy_handles(added)
 
     def __get_members_ready_cb(self, handles):
         logging.debug('__get_members_ready_cb %r', handles)
         if not handles:
             return
 
-        self._add_handles(handles)
+        self._add_buddy_handles(handles)
 
-        """
-        if CONNECTION_INTERFACE_APPLICATIONS in connection:
-            connection[CONNECTION_INTERFACE_APPLICATIONS].GetApplications(
-                    handles,
-                    reply_handler=partial(self.__get_applications_ready_cb, connection),
-                    error_handler=self.__error_handler_cb)
-        """
-
-    def _add_handles(self, handles):
-        logging.debug('_add_handles %r', handles)
+    def _add_buddy_handles(self, handles):
+        logging.debug('_add_buddy_handles %r', handles)
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
         self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
                 handles, interfaces, False,
@@ -293,18 +290,20 @@ class _Account(gobject.GObject):
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __get_contact_attributes_cb(self, attributes):
-        logging.debug('__get_contact_attributes_cb')
+        logging.debug('__get_contact_attributes_cb %r', attributes.keys())
 
         for handle in attributes.keys():
             nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
-            if handle in self._buddy_handles:
+
+            if handle in self._buddy_handles and not self._buddy_handles[handle] is None:
                 logging.debug('Got handle %r with nick %r, going to update', handle, nick)
                 self.emit('buddy-updated', self._buddy_handles[handle], attributes[handle])
             else:
                 logging.debug('Got handle %r with nick %r, going to add', handle, nick)
+
                 contact_id = attributes[handle][CONNECTION + '/contact-id']
                 self._buddy_handles[handle] = contact_id
-                self._activities_per_buddy[contact_id] = set()
+
                 self.emit('buddy-added', attributes[handle])
 
     def __got_activities_cb(self, buddy_handle, activities):
@@ -459,11 +458,7 @@ class Neighborhood(gobject.GObject):
         if 'key' in properties:
             buddy.props.key = properties['key']
 
-    def __activity_added_cb(self, account, contact_id, room_handle, activity_id):
-        if contact_id not in self._buddies:
-            logging.debug('__activity_added_cb Unknown buddy with contact_id %r', contact_id)
-            return
-
+    def __activity_added_cb(self, account, room_handle, activity_id):
         if activity_id in self._activities:
             logging.debug('__activity_added_cb activity already tracked')
             return
