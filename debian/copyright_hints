@@ -491,7 +491,7 @@ License: GPL-2+
  FIXME
 
 Files: ./src/jarabe/model/olpcmesh.py
-Copyright: 2009, One Laptop per Child
+Copyright: 2009-2010, One Laptop per Child
 License: GPL-2+
  FIXME
 
@@ -573,6 +573,34 @@ Copyright: 2008, One Laptop per Child Assocation "
 	2008, One Laptop per Child Association Inc; Red Hat Inc; e Contributori."
 	YEAR THE PACKAGE'S HOLDER
 	e Licenza"
+License: UNKNOWN
+ FIXME
+
+Files: ./po/fr.po
+Copyright: 2007, the Package Owner
+	2008, One Laptop per Child Assocation "
+	2008, One Laptop per Child Association Inc ; Red Hat Inc ; et "
+	2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+	[ args ...
+	afficher les informations sur cette cl√ \n"
+	au portail de r√seau maill√ de XO"
+	au portail du r√seau maill√ d'√cole"
+	d'√cole..."
+	de XO..."
+	d√finir la valeur actuelle de cette cl√ \n"
+	et apportent de nouvelles fonctionnalit√s."
+	et licence"
+	inconnu"
+	incorrect. Utiliser 0/1."
+	je ne parle pas '%s'."
+	obtenir la valeur actuelle associ√e √† cette cl√ \n"
+	pour d√marrer l'entr√e"
+	pour reprendre l'entr√e"
+	sans fil :"
+	sur le serveur de l'√cole"
+	trouv√es : %s module: %r"
+	√† le modifier et/ou √† en distribuer des copies "
+	√† un r√seau maill√ simple"
 License: UNKNOWN
  FIXME
 
@@ -705,17 +733,6 @@ License: UNKNOWN
 
 Files: ./po/ig.po
 Copyright: YEAR THE PACKAGE'S HOLDER, 2006
-License: UNKNOWN
- FIXME
-
-Files: ./po/fr.po
-Copyright: [ args ...
-	d'√cole..."
-	et apportent de nouvelles fonctionnalit√s."
-	obtenir la valeur actuelle associ√e √† cette cl√ \n"
-	sur le serveur de l'√cole"
-	trouv√es : %s module: %r"
-	√† le modifier et/ou √† en distribuer des copies "
 License: UNKNOWN
  FIXME
 
