@@ -6,7 +6,7 @@ Maintainer: Sugarlabs <sugar-devel@lists.sugarlabs.org>
 Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar
 	git://git.sugarlabs.org/sugar/mainline.git
 
-Copyright: 2007-2009, One Laptop Per Child Association Inc
+Copyright: 2007-2010, One Laptop Per Child Association Inc
 License: GPL-2+
 
 Files: Makefile.in
