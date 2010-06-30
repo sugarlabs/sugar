@@ -192,7 +192,6 @@ class _Account(gobject.GObject):
             channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
                       'MembersChanged', self.__members_changed_cb)
 
-            channel = Channel(connection.service_name, channel_path)
             channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
                     'Members',
                     reply_handler=self.__get_members_ready_cb,
@@ -221,6 +220,7 @@ class _Account(gobject.GObject):
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
+        logging.debug('_update_buddy_activities')
         if not buddy_handle in self._buddy_handles:
             self._buddy_handles[buddy_handle] = None
 
@@ -238,10 +238,24 @@ class _Account(gobject.GObject):
             self._activities_per_buddy[buddy_handle].add(activity_id)
 
         current_activity_ids = [activity_id for activity_id, room_handle in activities]
-        for activity_id in self._activities_per_buddy[buddy_handle]:
+        for activity_id in self._activities_per_buddy[buddy_handle].copy():
             if not activity_id in current_activity_ids:
-                self._buddies_per_activity[activity_id].remove(buddy_handle)
-                self.emit('activity-removed', activity_id)
+                self._remove_activity(buddy_handle, activity_id)
+
+    def _remove_activity(self, buddy_handle, activity_id):
+        if buddy_handle in self._buddies_per_activity[activity_id]:
+            self._buddies_per_activity[activity_id].remove(buddy_handle)
+            if not self._buddies_per_activity[activity_id]:
+                del self._buddies_per_activity[activity_id]
+
+        self._activities_per_buddy[buddy_handle].remove(activity_id)
+
+        for room_handle in self._activity_handles.copy():
+            if self._activity_handles[room_handle] == activity_id:
+                del self._activity_handles[room_handle]
+                break
+
+        self.emit('activity-removed', activity_id)
 
     def __activity_properties_changed_cb(self, room_handle, properties):
         logging.debug('__activity_properties_changed_cb %r %r', room_handle, properties)
@@ -459,6 +473,7 @@ class Neighborhood(gobject.GObject):
             buddy.props.key = properties['key']
 
     def __activity_added_cb(self, account, room_handle, activity_id):
+        logging.debug('__activity_added_cb %r %r', room_handle, activity_id)
         if activity_id in self._activities:
             logging.debug('__activity_added_cb activity already tracked')
             return
@@ -491,6 +506,10 @@ class Neighborhood(gobject.GObject):
 
     def __activity_removed_cb(self, account, activity_id):
         logging.debug('__activity_removed_cb %r', activity_id)
+        if activity_id not in self._activities:
+            logging.debug('Unknown activity with id %s. Already removed?',
+                          activity_id)
+            return
         activity = self._activities[activity_id]
         del self._activities[activity_id]
         self.emit('activity-removed', activity)
