@@ -150,7 +150,6 @@ class BuddyMenu(Palette):
         activity = shell.get_model().get_active_activity()
         service = activity.get_service()
         if service:
-            buddy = self._buddy.get_buddy()
-            service.Invite(buddy.props.key)
+            service.Invite(self._buddy.props.key)
         else:
             logging.error('Invite failed, activity service not ')
