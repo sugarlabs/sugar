@@ -60,7 +60,10 @@ class BaseBuddyModel(gobject.GObject):
     def get_key(self):
         return self._key
 
-    key = gobject.property(type=object, getter=get_key)
+    def set_key(self, key):
+        self._key = key
+
+    key = gobject.property(type=object, getter=get_key, setter=set_key)
 
     def get_color(self):
         return self._color
