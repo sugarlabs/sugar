@@ -22,7 +22,11 @@ import gconf
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
 
+from jarabe.util.telepathy import connection_watcher
+
 _NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
+
+CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
 class BaseBuddyModel(gobject.GObject):
     __gtype_name__ = 'SugarBaseBuddyModel'
@@ -93,6 +97,47 @@ class OwnerBuddyModel(BaseBuddyModel):
         client = gconf.client_get_default()
         self.props.nick = client.get_string("/desktop/sugar/user/nick")
         self.props.color = XoColor(client.get_string("/desktop/sugar/user/color"))
+
+        self.connect('notify::nick', self.__property_changed_cb)
+        self.connect('notify::color', self.__property_changed_cb)
+
+        logging.info('KILL_PS should set the properties before the connection'
+                     'is connected, if possible')
+        conn_watcher = connection_watcher.get_instance()
+        conn_watcher.connect('connection-added', self.__connection_added_cb)
+
+        self._sync_properties()
+
+    def __property_changed_cb(self, pspec):
+        self._sync_properties()
+
+    def _sync_properties(self):
+        conn_watcher = connection_watcher.get_instance()
+        for connection in conn_watcher.get_connections():
+            self._sync_properties_on_connection(connection)
+
+    def _sync_properties_on_connection(self, connection):
+        if CONNECTION_INTERFACE_BUDDY_INFO in connection:
+            properties = {}
+            if self.props.key is not None:
+                properties['key'] = self.props.key
+            if self.props.color is not None:
+                properties['color'] = self.props.color.to_string()
+
+            logging.debug('calling SetProperties with %r', properties)
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetProperties(
+                properties,
+                reply_handler=self.__set_properties_cb,
+                error_handler=self.__error_handler_cb)
+
+    def __set_properties_cb(self):
+        logging.debug('__set_properties_cb')
+
+    def __error_handler_cb(self, error):
+        raise RuntimeError(error)
+
+    def __connection_added_cb(self, conn_watcher, connection):
+        self._sync_properties_on_connection(connection)
 
     def is_owner(self):
         return True
