@@ -319,7 +319,7 @@ def _monitor_connection(connection):
     connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal('NewChannels',
             lambda channels: _new_channels_cb(connection, channels))
 
-def _connection_addded_cb(conn_watcher, connection):
+def _connection_added_cb(conn_watcher, connection):
     _monitor_connection(connection)
 
 def _connection_removed_cb(conn_watcher, connection):
@@ -327,7 +327,7 @@ def _connection_removed_cb(conn_watcher, connection):
 
 def init():
     conn_watcher = connection_watcher.get_instance()
-    conn_watcher.connect('connection-added', _connection_addded_cb)
+    conn_watcher.connect('connection-added', _connection_added_cb)
     conn_watcher.connect('connection-removed', _connection_removed_cb)
 
     for connection in conn_watcher.get_connections():
