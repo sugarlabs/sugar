@@ -20,12 +20,10 @@ import dbus
 import gtk
 
 from jarabe.model import shell
-from jarabe.model import owner
 from jarabe.model import bundleregistry
 
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
-_DBUS_OWNER_IFACE = "org.laptop.Shell.Owner"
 _DBUS_PATH = "/org/laptop/Shell"
 
 class UIService(dbus.service.Object):
@@ -53,15 +51,6 @@ class UIService(dbus.service.Object):
         dbus.service.Object.__init__(self, bus_name, _DBUS_PATH)
 
         self._shell_model = shell.get_model()
-
-    def start(self):
-        owner_model = owner.get_model()
-        owner_model.connect('nick-changed', self._owner_nick_changed_cb)
-        owner_model.connect('icon-changed', self._owner_icon_changed_cb)
-        owner_model.connect('color-changed', self._owner_color_changed_cb)
-
-        self._shell_model.connect('active-activity-changed',
-                                  self._cur_activity_changed_cb)
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="s")
@@ -96,36 +85,4 @@ class UIService(dbus.service.Object):
                          in_signature="s", out_signature="")
     def NotifyLaunchFailure(self, activity_id):
         shell.get_model().notify_launch_failed(activity_id)
-
-    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
-    def ColorChanged(self, color):
-        pass
-
-    def _owner_color_changed_cb(self, new_color):
-        self.ColorChanged(new_color.to_string())
-
-    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
-    def NickChanged(self, nick):
-        pass
-
-    def _owner_nick_changed_cb(self, new_nick):
-        self.NickChanged(new_nick)
-
-    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="ay")
-    def IconChanged(self, icon_data):
-        pass
-
-    def _owner_icon_changed_cb(self, new_icon):
-        self.IconChanged(dbus.ByteArray(new_icon))
-
-    @dbus.service.signal(_DBUS_OWNER_IFACE, signature="s")
-    def CurrentActivityChanged(self, activity_id):
-        pass
-
-    def _cur_activity_changed_cb(self, shell_model, new_activity):
-        new_id = ""
-        if new_activity:
-            new_id = new_activity.get_activity_id()
-        if new_id:
-            self.CurrentActivityChanged(new_id)
 

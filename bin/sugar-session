@@ -79,7 +79,6 @@ def start_ui_service():
     from jarabe.view.service import UIService
 
     ui_service = UIService()
-    ui_service.start()
 
 def start_session_manager():
     from jarabe.model.session import get_session_manager
