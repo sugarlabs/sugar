@@ -21,6 +21,7 @@
 #
 
 import os
+import locale
 from gettext import gettext as _
 import subprocess
 
@@ -52,6 +53,9 @@ def read_all_languages():
     return locales
 
 def _initialize():      
+    global _default_lang
+    _default_lang = '%s.%s' % locale.getdefaultlocale()
+
     if set_languages.__doc__ is None:
         # when running under 'python -OO', all __doc__ fields are None,
         # so += would fail -- and this function would be unnecessary anyway.
