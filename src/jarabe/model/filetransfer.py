@@ -325,15 +325,12 @@ def _connection_addded_cb(conn_watcher, connection):
 def _connection_removed_cb(conn_watcher, connection):
     logging.debug('connection removed %r', connection)
 
-_conn_watcher = None
-
 def init():
-    global _conn_watcher
-    _conn_watcher = connection_watcher.ConnectionWatcher()
-    _conn_watcher.connect('connection-added', _connection_addded_cb)
-    _conn_watcher.connect('connection-removed', _connection_removed_cb)
+    conn_watcher = connection_watcher.get_instance()
+    conn_watcher.connect('connection-added', _connection_addded_cb)
+    conn_watcher.connect('connection-removed', _connection_removed_cb)
 
-    for connection in _conn_watcher.get_connections():
+    for connection in conn_watcher.get_connections():
         _monitor_connection(connection)
 
 def start_transfer(buddy, file_name, title, description, mime_type):
@@ -342,7 +339,8 @@ def start_transfer(buddy, file_name, title, description, mime_type):
     new_file_transfer.send(None, file_transfer=outgoing_file_transfer)
 
 def file_transfer_available():
-    for connection in _conn_watcher.get_connections():
+    conn_watcher = connection_watcher.get_instance()
+    for connection in conn_watcher.get_connections():
 
         properties_iface = connection[dbus.PROPERTIES_IFACE]
         properties = properties_iface.GetAll(CONNECTION_INTERFACE_REQUESTS)
