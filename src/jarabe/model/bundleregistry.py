@@ -386,7 +386,7 @@ class BundleRegistry(gobject.GObject):
         elif not self.add_bundle(install_path):
             raise RegistrationException
 
-    def uninstall(self, bundle, force=False):        
+    def uninstall(self, bundle, force=False, delete_profile=False):
         # TODO treat ContentBundle in special way
         # needs rethinking while fixing ContentBundle support
         if isinstance(bundle, ContentBundle) or \
@@ -409,7 +409,7 @@ class BundleRegistry(gobject.GObject):
 
         install_path = act.get_path()
 
-        bundle.uninstall(install_path, force)
+        bundle.uninstall(install_path, force, delete_profile)
 
         if not self.remove_bundle(install_path):
             raise RegistrationException
