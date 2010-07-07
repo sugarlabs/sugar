@@ -594,16 +594,17 @@ class OlpcMeshDeviceView(ToolButton):
         self._channel = 0
 
         self._icon = PulsingIcon(icon_name=self._ICON_NAME)
-        self._icon.props.pulse_color = xocolor.XoColor( \
+        self._inactive_color = xocolor.XoColor( \
             "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
-        self._icon.props.base_color = profile.get_color()
+        self._icon.props.pulse_color = profile.get_color()
+        self._icon.props.base_color = self._inactive_color
 
         self.set_icon_widget(self._icon)
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_("Mesh Network"))
+        self._palette = WirelessPalette(_("Mesh Network"), can_create=False)
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
@@ -662,7 +663,14 @@ class OlpcMeshDeviceView(ToolButton):
             self._update_text()
 
     def _update_text(self):
-        text = _("Mesh Network") + " " + str(self._channel)
+        state = self._device_state
+        if state in (network.DEVICE_STATE_PREPARE, network.DEVICE_STATE_CONFIG,
+                     network.DEVICE_STATE_NEED_AUTH,
+                     network.DEVICE_STATE_IP_CONFIG,
+                     network.DEVICE_STATE_ACTIVATED):
+            text = _("Mesh Network") + " " + str(self._channel)
+        else:
+            text = _("Mesh Network")
         self._palette.props.primary_text = text
 
     def _update(self):
@@ -672,12 +680,20 @@ class OlpcMeshDeviceView(ToolButton):
                      network.DEVICE_STATE_CONFIG,
                      network.DEVICE_STATE_NEED_AUTH,
                      network.DEVICE_STATE_IP_CONFIG]:
+            self._icon.props.base_color = self._inactive_color
+            self._icon.props.pulse_color = profile.get_color()
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.DEVICE_STATE_ACTIVATED:
             address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected_with_channel(self._channel, address)
+            self._icon.props.base_color = profile.get_color()
             self._icon.props.pulsing = False
+        else:
+            self._icon.props.base_color = self._inactive_color
+            self._icon.props.pulsing = False
+            self._palette.set_disconnected()
+        self._update_text()
 
     def __deactivate_connection(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
