@@ -25,7 +25,7 @@ import locale
 from gettext import gettext as _
 import subprocess
 
-_default_lang = 'en_US.utf8'
+_default_lang = '%s.%s' % locale.getdefaultlocale()
 _standard_msg = _("Could not access ~/.i18n. Create standard settings.")
 
 def read_all_languages():
@@ -53,9 +53,6 @@ def read_all_languages():
     return locales
 
 def _initialize():      
-    global _default_lang
-    _default_lang = '%s.%s' % locale.getdefaultlocale()
-
     if set_languages.__doc__ is None:
         # when running under 'python -OO', all __doc__ fields are None,
         # so += would fail -- and this function would be unnecessary anyway.
