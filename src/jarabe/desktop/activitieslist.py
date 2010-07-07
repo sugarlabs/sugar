@@ -14,7 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import logging
+from gettext import gettext as _
 
 import gobject
 import gtk
@@ -23,8 +25,10 @@ import gconf
 
 from sugar import util
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import CanvasIcon, Icon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.alert import Alert
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 
@@ -34,11 +38,6 @@ from jarabe.view import launcher
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
-
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
 
     def __init__(self):
         logging.debug('STARTUP: Loading the activities list')
@@ -94,7 +93,33 @@ class ActivitiesList(gtk.VBox):
         entry.set_visible(entry.matches(self._query))
 
     def __erase_activated_cb(self, activity_icon, bundle_id):
-        self.emit('erase-activated', bundle_id)
+        registry = bundleregistry.get_registry()
+        activity_info = registry.get_bundle(bundle_id)
+
+        alert = Alert()
+        alert.props.title = _('Confirm erase')
+        alert.props.msg = \
+                _('Confirm erase: Do you want to permanently erase %s?') \
+                % activity_info.get_name()
+
+        cancel_icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(gtk.RESPONSE_CANCEL, _('Keep'), cancel_icon)
+
+        erase_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Erase'), erase_icon)
+
+        alert.connect('response', self.__erase_confirmation_dialog_response_cb,
+                bundle_id)
+
+        self.add_alert(alert)
+
+    def __erase_confirmation_dialog_response_cb(self, alert, response_id,
+                                                bundle_id):
+        self.remove_alert()
+        if response_id == gtk.RESPONSE_OK:
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(bundle_id)
+            registry.uninstall(bundle)
 
     def set_filter(self, query):
         self._query = query
@@ -150,11 +175,11 @@ class ActivityIcon(CanvasIcon):
         self._xocolor = XoColor(client.get_string("/desktop/sugar/user/color"))
 
     def create_palette(self):
-        palette = ActivityPalette(self._activity_info)
+        palette = ActivityListPalette(self._activity_info)
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
 
-    def __erase_activated_cb(self, palette):
+    def __erase_activated_cb(self, palette, bundle_id):
         self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def _color(self):
@@ -322,3 +347,79 @@ class FavoriteIcon(CanvasIcon):
                 icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
             elif event.detail == hippo.MOTION_DETAIL_LEAVE:
                 icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+
+class ActivityListPalette(ActivityPalette):
+    __gtype_name__ = 'SugarActivityListPalette'
+
+    __gsignals__ = {
+        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
+                             gobject.TYPE_NONE, ([str]))
+    }
+
+    def __init__(self, activity_info):
+        ActivityPalette.__init__(self, activity_info)
+
+        self._bundle_id = activity_info.get_bundle_id()
+        self._version = activity_info.get_activity_version()
+
+        registry = bundleregistry.get_registry()
+        self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                     self._version)
+
+        self._favorite_item = MenuItem('')
+        self._favorite_icon = Icon(icon_name='emblem-favorite',
+                icon_size=gtk.ICON_SIZE_MENU)
+        self._favorite_item.set_image(self._favorite_icon)
+        self._favorite_item.connect('activate',
+                                    self.__change_favorite_activate_cb)
+        self.menu.append(self._favorite_item)
+        self._favorite_item.show()
+
+        menu_item = MenuItem(_('Erase'), 'list-remove')
+        menu_item.connect('activate', self.__erase_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
+        if not os.access(activity_info.get_path(), os.W_OK):
+            menu_item.props.sensitive = False
+
+        registry = bundleregistry.get_registry()
+        self._activity_changed_sid = registry.connect('bundle_changed',
+                self.__activity_changed_cb)
+        self._update_favorite_item()
+
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, palette):
+        self.disconnect(self._activity_changed_sid)
+
+    def _update_favorite_item(self):
+        label = self._favorite_item.child
+        if self._favorite:
+            label.set_text(_('Remove favorite'))
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                         style.COLOR_TRANSPARENT.get_svg()))
+        else:
+            label.set_text(_('Make favorite'))
+            client = gconf.client_get_default()
+            xo_color = XoColor(client.get_string("/desktop/sugar/user/color"))
+
+        self._favorite_icon.props.xo_color = xo_color
+
+    def __change_favorite_activate_cb(self, menu_item):
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_favorite(self._bundle_id,
+                                     self._version,
+                                     not self._favorite)
+
+    def __activity_changed_cb(self, activity_registry, activity_info):
+        if activity_info.get_bundle_id() == self._bundle_id and \
+               activity_info.get_activity_version() == self._version:
+            registry = bundleregistry.get_registry()
+            self._favorite = registry.is_bundle_favorite(self._bundle_id,
+                                                         self._version)
+            self._update_favorite_item()
+
+    def __erase_activate_cb(self, menu_item):
+        self.emit('erase-activated', self._bundle_id)
+

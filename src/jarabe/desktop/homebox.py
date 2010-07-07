@@ -27,7 +27,6 @@ from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
 
-from jarabe.model import bundleregistry
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
@@ -47,10 +46,6 @@ class HomeBox(gtk.VBox):
         self._favorites_view = favoritesview.FavoritesView()
         self._list_view = ActivitiesList()
 
-        self._favorites_view.connect('erase-activated',
-                                     self.__erase_activated_cb)
-        self._list_view.connect('erase-activated', self.__erase_activated_cb)
-
         self._toolbar = HomeToolbar()
         self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
@@ -59,44 +54,6 @@ class HomeBox(gtk.VBox):
 
         self._set_view(_FAVORITES_VIEW)
 
-    def __erase_activated_cb(self, view, bundle_id):
-        registry = bundleregistry.get_registry()
-        activity_info = registry.get_bundle(bundle_id)
-
-        alert = Alert()
-        alert.props.title = _('Confirm erase')
-        alert.props.msg = \
-                _('Confirm erase: Do you want to permanently erase %s?') \
-                % activity_info.get_name()
-
-        cancel_icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(gtk.RESPONSE_CANCEL, _('Keep'), cancel_icon)
-
-        erase_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, _('Erase'), erase_icon)
-
-        if self._list_view in self.get_children():
-            self._list_view.add_alert(alert)
-        else:
-            self._favorites_view.add_alert(alert)
-        # TODO: If the favorite layouts didn't hardcoded the box size, we could
-        # just pack an alert between the toolbar and the canvas.
-        #self.pack_start(alert, False)
-        #self.reorder_child(alert, 1)
-        alert.connect('response', self.__erase_confirmation_dialog_response_cb,
-                bundle_id)
-
-    def __erase_confirmation_dialog_response_cb(self, alert, response_id,
-                                                bundle_id):
-        if self._list_view in self.get_children():
-            self._list_view.remove_alert()
-        else:
-            self._favorites_view.remove_alert()
-        if response_id == gtk.RESPONSE_OK:
-            registry = bundleregistry.get_registry()
-            bundle = registry.get_bundle(bundle_id)
-            registry.uninstall(bundle)
-            
     def show_software_updates_alert(self):
         alert = Alert()
         updater_icon = Icon(icon_name='module-updater', 

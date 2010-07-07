@@ -65,11 +65,6 @@ about the layout can be accessed with fields of the class."""
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
-
     def __init__(self, **kwargs):
         logging.debug('STARTUP: Loading the favorites view')
 
@@ -134,13 +129,9 @@ class FavoritesView(hippo.Canvas):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
         icon = ActivityIcon(activity_info, self._datastore_listener)
-        icon.connect('erase-activated', self.__erase_activated_cb)
         icon.props.size = style.STANDARD_ICON_SIZE
         self._box.insert_sorted(icon, 0, self._layout.compare_activities)
         self._layout.append(icon)
-
-    def __erase_activated_cb(self, activity_icon, bundle_id):
-        self.emit('erase-activated', bundle_id)
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
@@ -404,11 +395,6 @@ class ActivityIcon(CanvasIcon):
 
     _BORDER_WIDTH = style.zoom(3)
 
-    __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
-    }
-
     def __init__(self, activity_info, datastore_listener):
         CanvasIcon.__init__(self, cache=True,
                             file_name=activity_info.get_icon())
@@ -471,11 +457,7 @@ class ActivityIcon(CanvasIcon):
     def create_palette(self):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('activate', self.__palette_activate_cb)
-        palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
-
-    def __erase_activated_cb(self, palette):
-        self.emit('erase-activated', self._activity_info.get_bundle_id())
 
     def __palette_activate_cb(self, palette):
         self._activate()
