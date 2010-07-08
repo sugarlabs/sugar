@@ -151,6 +151,10 @@ class OwnerBuddyModel(BaseBuddyModel):
 class BuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarBuddyModel'
     def __init__(self, **kwargs):
+
+        self._account = None
+        self._contact_id = None
+
         BaseBuddyModel.__init__(self, **kwargs)
 
     def is_owner(self):
@@ -161,6 +165,24 @@ class BuddyModel(BaseBuddyModel):
 
     def get_buddy(self):
         raise NotImplementedError
+
+    def get_account(self):
+        return self._account
+
+    def set_account(self, account):
+        self._account = account
+
+    account = gobject.property(type=object, getter=get_account,
+                               setter=set_account)
+
+    def get_contact_id(self):
+        return self._contact_id
+
+    def set_contact_id(self, contact_id):
+        self._contact_id = contact_id
+
+    contact_id = gobject.property(type=object, getter=get_contact_id,
+                                  setter=set_contact_id)
 
 """        
         self._pservice = presenceservice.get_instance()

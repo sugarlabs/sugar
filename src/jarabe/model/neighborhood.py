@@ -113,6 +113,8 @@ class _Account(gobject.GObject):
     def __init__(self, account_path):
         gobject.GObject.__init__(self)
 
+        self.object_path = account_path
+
         self._connection = None
         self._buddy_handles = {}
         self._activity_handles = {}
@@ -449,13 +451,16 @@ class Neighborhood(gobject.GObject):
         logging.debug('__buddy_added_cb %r', properties)
 
         contact_id = properties[CONNECTION + '/contact-id']
+        assert contact_id is not None
 
         if contact_id in self._buddies:
             logging.debug('__buddy_added_cb buddy already tracked')
             return
 
         buddy = BuddyModel(
-                nick=properties[CONNECTION_INTERFACE_ALIASING + '/alias'])
+                nick=properties[CONNECTION_INTERFACE_ALIASING + '/alias'],
+                account=account.object_path,
+                contact_id=contact_id)
         self._buddies[contact_id] = buddy
 
         self.emit('buddy-added', buddy)
