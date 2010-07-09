@@ -18,9 +18,11 @@ import logging
 
 import gobject
 import gconf
+import dbus
 
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
+from sugar.profile import get_profile
 
 from jarabe.util.telepathy import connection_watcher
 
@@ -101,6 +103,8 @@ class OwnerBuddyModel(BaseBuddyModel):
         self.props.nick = client.get_string("/desktop/sugar/user/nick")
         self.props.color = XoColor(client.get_string("/desktop/sugar/user/color"))
 
+        self.props.key = get_profile().pubkey
+
         self.connect('notify::nick', self.__property_changed_cb)
         self.connect('notify::color', self.__property_changed_cb)
 
@@ -123,7 +127,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         if CONNECTION_INTERFACE_BUDDY_INFO in connection:
             properties = {}
             if self.props.key is not None:
-                properties['key'] = self.props.key
+                properties['key'] = dbus.ByteArray(self.props.key)
             if self.props.color is not None:
                 properties['color'] = self.props.color.to_string()
 
