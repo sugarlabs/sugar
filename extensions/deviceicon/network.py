@@ -27,6 +27,7 @@ import re
 import datetime
 import time
 import gtk
+import glib
 import gobject
 import gconf
 import dbus
@@ -471,7 +472,7 @@ class WirelessDeviceView(ToolButton):
         else:
             self._icon.props.badge_name = None
 
-        self._palette.props.primary_text = self._name
+        self._palette.props.primary_text = glib.markup_escape_text(self._name)
 
         self._update_state()
         self._update_color()
@@ -671,7 +672,8 @@ class OlpcMeshDeviceView(ToolButton):
                      network.DEVICE_STATE_NEED_AUTH,
                      network.DEVICE_STATE_IP_CONFIG,
                      network.DEVICE_STATE_ACTIVATED):
-            text = _("Mesh Network") + " " + str(self._channel)
+            text = (_("Mesh Network") + " " +
+                    glib.markup_escape_text(str(self._channel)))
         else:
             text = _("Mesh Network")
         self._palette.props.primary_text = text

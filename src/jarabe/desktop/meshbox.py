@@ -22,6 +22,7 @@ import hashlib
 
 import dbus
 import hippo
+import glib
 import gobject
 import gtk
 
@@ -157,7 +158,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
-        p = palette.Palette(primary_text=self._name,
+        p = palette.Palette(primary_text=glib.markup_escape_text(self._name),
                             icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
@@ -617,10 +618,12 @@ class ActivityView(hippo.CanvasBox):
         return icon
 
     def _create_palette(self):
+        p_text = glib.markup_escape_text(self._model.activity.props.name)
         p_icon = Icon(file=self._model.get_icon_name(),
                       xo_color=self._model.get_color())
         p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
-        p = palette.Palette(None, primary_text=self._model.activity.props.name,
+        p = palette.Palette(None,
+                            primary_text=p_text,
                             icon=p_icon)
 
         private = self._model.activity.props.private
