@@ -484,16 +484,7 @@ class ActivityIcon(CanvasIcon):
         if self._resume_mode and self._journal_entries:
             self._resume(self._journal_entries[0])
         else:
-            client = gconf.client_get_default()
-            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-            activity_id = activityfactory.create_activity_id()
-            launcher.add_launcher(activity_id,
-                                  self._activity_info.get_icon(),
-                                  xo_color)
-
-            handle = ActivityHandle(activity_id)
-            activityfactory.create(self._activity_info, handle)
+            misc.launch(self._activity_info)
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()

@@ -36,6 +36,7 @@ from sugar.activity.activityhandle import ActivityHandle
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
 from jarabe.view import launcher
+from jarabe.journal import misc
 
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
@@ -143,13 +144,7 @@ class ActivitiesTreeView(gtk.TreeView):
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(row[ListModel.COLUMN_BUNDLE_ID])
 
-        activity_id = activityfactory.create_activity_id()
-
-        client = gconf.client_get_default()
-        xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-        launcher.add_launcher(activity_id, bundle.get_icon(), xo_color)
-        activityfactory.create(bundle, ActivityHandle(activity_id))
+        misc.launch(bundle)
 
     def set_filter(self, query):
         self._query = query.lower()
