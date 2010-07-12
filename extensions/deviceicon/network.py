@@ -587,7 +587,7 @@ class OlpcMeshDeviceView(ToolButton):
     _ICON_NAME = 'network-mesh'
     FRAME_POSITION_RELATIVE = 302
 
-    def __init__(self, device):
+    def __init__(self, device, state):
         ToolButton.__init__(self)
 
         self._bus = dbus.SystemBus()
@@ -613,41 +613,24 @@ class OlpcMeshDeviceView(ToolButton):
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
+        self.update_state(state)
+
         self._device_props = dbus.Interface(self._device,
                                             'org.freedesktop.DBus.Properties')
-        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
-                              reply_handler=self.__get_device_props_reply_cb,
-                              error_handler=self.__get_device_props_error_cb)
         self._device_props.Get(_NM_OLPC_MESH_IFACE, 'ActiveChannel',
                             reply_handler=self.__get_active_channel_reply_cb,
                             error_handler=self.__get_active_channel_error_cb)
 
-        self._bus.add_signal_receiver(self.__state_changed_cb,
-                                      signal_name='StateChanged',
-                                      path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
         self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
                                       signal_name='PropertiesChanged',
                                       path=device.object_path,
                                       dbus_interface=_NM_OLPC_MESH_IFACE)
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__state_changed_cb,
-                                         signal_name='StateChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_OLPC_MESH_IFACE)
-
-    def __get_device_props_reply_cb(self, properties):
-        if 'State' in properties:
-            self._device_state = properties['State']
-            self._update()
-
-    def __get_device_props_error_cb(self, err):
-        logging.error('Error getting the device properties: %s', err)
 
     def __get_active_channel_reply_cb(self, channel):
         self._channel = channel
@@ -666,14 +649,7 @@ class OlpcMeshDeviceView(ToolButton):
             self._update_text()
 
     def _update_text(self):
-        state = self._device_state
-        if state in (network.DEVICE_STATE_PREPARE, network.DEVICE_STATE_CONFIG,
-                     network.DEVICE_STATE_NEED_AUTH,
-                     network.DEVICE_STATE_IP_CONFIG,
-                     network.DEVICE_STATE_ACTIVATED):
-            text = _("Mesh Network") + " " + str(self._channel)
-        else:
-            text = _("Mesh Network")
+        text = _("Mesh Network") + " " + str(self._channel)
         self._palette.props.primary_text = text
 
     def _update(self):
@@ -692,11 +668,11 @@ class OlpcMeshDeviceView(ToolButton):
             self._palette.set_connected_with_channel(self._channel, address)
             self._icon.props.base_color = profile.get_color()
             self._icon.props.pulsing = False
-        else:
-            self._icon.props.base_color = self._inactive_color
-            self._icon.props.pulsing = False
-            self._palette.set_disconnected()
         self._update_text()
+
+    def update_state(self, state):
+        self._device_state = state
+        self._update()
 
     def __deactivate_connection(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
@@ -901,18 +877,11 @@ class GsmDeviceView(TrayIcon):
         self._palette.connection_time_label.set_text(text)
 
 class WirelessDeviceObserver(object):
-    def __init__(self, device, tray, device_type):
+    def __init__(self, device, tray):
         self._device = device
         self._device_view = None
         self._tray = tray
-
-        if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
-            self._device_view = WirelessDeviceView(self._device)
-        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
-            self._device_view = OlpcMeshDeviceView(self._device)
-        else:
-            raise ValueError('Unimplemented device type %d' % device_type)
-
+        self._device_view = WirelessDeviceView(self._device)
         self._tray.add_device(self._device_view)
 
     def disconnect(self):
@@ -920,6 +889,63 @@ class WirelessDeviceObserver(object):
         self._tray.remove_device(self._device_view)
         del self._device_view
         self._device_view = None
+
+
+class MeshDeviceObserver(object):
+    def __init__(self, device, tray):
+        self._bus = dbus.SystemBus()
+        self._device = device
+        self._device_view = None
+        self._tray = tray
+
+        props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
+        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+                     reply_handler=self.__get_device_props_reply_cb,
+                     error_handler=self.__get_device_props_error_cb)
+
+        self._bus.add_signal_receiver(self.__state_changed_cb,
+                                      signal_name='StateChanged',
+                                      path=self._device.object_path,
+                                      dbus_interface=_NM_DEVICE_IFACE)
+
+    def _remove_device_view(self):
+        self._device_view.disconnect()
+        self._tray.remove_device(self._device_view)
+        self._device_view = None
+
+    def disconnect(self):
+        if self._device_view is not None:
+            self._remove_device_view()
+
+        self._bus.remove_signal_receiver(self.__state_changed_cb,
+                                         signal_name='StateChanged',
+                                         path=self._device.object_path,
+                                         dbus_interface=_NM_DEVICE_IFACE)
+
+    def __get_device_props_reply_cb(self, properties):
+        if 'State' in properties:
+            self._update_state(properties['State'])
+
+    def __get_device_props_error_cb(self, err):
+        logging.error('Error getting the device properties: %s', err)
+
+    def __state_changed_cb(self, new_state, old_state, reason):
+        self._update_state(new_state)
+
+    def _update_state(self, state):
+        if state in (network.DEVICE_STATE_PREPARE, network.DEVICE_STATE_CONFIG,
+                     network.DEVICE_STATE_NEED_AUTH,
+                     network.DEVICE_STATE_IP_CONFIG,
+                     network.DEVICE_STATE_ACTIVATED):
+            if self._device_view is not None:
+                self._device_view.update_state(state)
+                return
+
+            self._device_view = OlpcMeshDeviceView(self._device, state)
+            self._tray.add_device(self._device_view)
+        else:
+            if self._device_view is not None:
+                self._remove_device_view()
 
 
 class WiredDeviceObserver(object):
@@ -1023,9 +1049,11 @@ class NetworkManagerObserver(object):
         if device_type == network.DEVICE_TYPE_802_3_ETHERNET:
             device = WiredDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type in [network.DEVICE_TYPE_802_11_WIRELESS,
-                             network.DEVICE_TYPE_802_11_OLPC_MESH]:
-            device = WirelessDeviceObserver(nm_device, self._tray, device_type)
+        elif device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+            device = WirelessDeviceObserver(nm_device, self._tray)
+            self._devices[device_op] = device
+        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+            device = MeshDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
         elif device_type == network.DEVICE_TYPE_GSM_MODEM:
             device = GsmDeviceObserver(nm_device, self._tray)
