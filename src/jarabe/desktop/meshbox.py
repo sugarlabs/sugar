@@ -128,13 +128,9 @@ class ActivityView(hippo.CanvasBox):
         icon.destroy()
 
     def _clicked_cb(self, item):
-        shell_model = shell.get_model()
-        activity = shell_model.get_activity_by_id(self._model.activity_id)
-        if activity:
-            activity.get_window().activate(gtk.get_current_event_time())
-            return
-
-        self._model.join()
+        bundle = self._model.get_bundle()
+        misc.launch(bundle, activity_id=self._model.activity_id,
+                    color=self._model.get_color())
 
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
