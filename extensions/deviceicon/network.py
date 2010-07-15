@@ -672,8 +672,8 @@ class OlpcMeshDeviceView(ToolButton):
                      network.DEVICE_STATE_NEED_AUTH,
                      network.DEVICE_STATE_IP_CONFIG,
                      network.DEVICE_STATE_ACTIVATED):
-            text = (_("Mesh Network") + " " +
-                    glib.markup_escape_text(str(self._channel)))
+            text = (_("Mesh Network %s") %
+                    (glib.markup_escape_text(str(self._channel)),))
         else:
             text = _("Mesh Network")
         self._palette.props.primary_text = text
