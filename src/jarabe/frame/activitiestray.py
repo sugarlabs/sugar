@@ -116,8 +116,7 @@ class InviteButton(ToolButton):
         bundle = bundle_registry.get_bundle(invite.get_bundle_id())
 
         self._icon = Icon()
-        logging.info('KILL_PS get the inviter''s colors')
-        #self._icon.props.xo_color = activity_model.get_color()
+        self._icon.props.xo_color = invite.get_color()
         if bundle is not None:
             self._icon.props.file = bundle.get_icon()
         else:
@@ -134,8 +133,7 @@ class InviteButton(ToolButton):
         self._notif_icon.connect('button-release-event',
                                  self.__button_release_event_cb)
 
-        logging.info('KILL_PS get the inviter''s colors')
-        #self._notif_icon.props.xo_color = activity_model.get_color()
+        self._notif_icon.props.xo_color = invite.get_color()
         if bundle is not None:
             self._notif_icon.props.icon_filename = bundle.get_icon()
         else:
@@ -165,22 +163,7 @@ class InviteButton(ToolButton):
 
     def _launch(self):
         """Join the activity in the invite."""
-
-        shell_model = shell.get_model()
-        activity = shell_model.get_activity_by_id(self._activity_model.get_id())
-        if activity:
-            activity.get_window().activate(gtk.get_current_event_time())
-            return
-
-        registry = bundleregistry.get_registry()
-        bundle = registry.get_bundle(self._bundle_id)
-
-        launcher.add_launcher(self._activity_model.get_id(),
-                              bundle.get_icon(),
-                              self._activity_model.get_color())
-
-        handle = ActivityHandle(self._activity_model.get_id())
-        activityfactory.create(bundle, handle)
+        self._invite.join()
 
 
 class InvitePalette(Palette):

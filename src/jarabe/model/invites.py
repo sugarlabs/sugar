@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from functools import partial
 
 import gobject
 import dbus
@@ -27,23 +28,62 @@ from telepathy.interfaces import CHANNEL, \
                                  CHANNEL_TYPE_STREAM_TUBE, \
                                  CHANNEL_TYPE_TEXT, \
                                  CLIENT
+from telepathy.constants import HANDLE_TYPE_ROOM
+
+from sugar.graphics.xocolor import XoColor
 
 from jarabe.model import telepathyclient
+from jarabe.model import bundleregistry
+from jarabe.journal import misc
+
+CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
 
 class ActivityInvite(object):
     """Invitation to a shared activity."""
-    def __init__(self, dispatch_operation_path, channel, handler):
+    def __init__(self, dispatch_operation_path, channel, handler,
+                 activity_properties):
         self._dispatch_operation_path = dispatch_operation_path
         self._channel = channel
         self._handler = handler
 
+        if activity_properties is not None:
+            self._activity_properties = activity_properties
+        else:
+            self._activity_properties = {}
+
     def get_bundle_id(self):
-        return self._handler[len(CLIENT + '.'):]
+        if CLIENT in self._handler:
+            return self._handler[len(CLIENT + '.'):]
+        else:
+            return None
+
+    def get_color(self):
+        color = self._activity_properties.get('color', None)
+        return XoColor(color)
 
     def join(self):
         logging.error('ActivityInvite.join handler %r', self._handler)
-        
+
+        registry = bundleregistry.get_registry()
+        bundle_id = self.get_bundle_id()
+        bundle = registry.get_bundle(bundle_id)
+        if bundle is None:
+            self._call_handle_with()
+        else:
+            bus = dbus.SessionBus()
+            bus.add_signal_receiver(self.__name_owner_changed_cb,
+	                                'NameOwnerChanged',
+	                                'org.freedesktop.DBus',
+	                                arg0=self._handler)
+            misc.launch(bundle, color=self.get_color(), handle_invite=True)
+
+    def __name_owner_changed_cb(self, name, old_owner, new_owner):
+        logging.debug('ActivityInvite.__name_owner_changed_cb %r %r %r', name, new_owner, old_owner)
+        if name == self._handler and new_owner and not old_owner:
+            self._call_handle_with()
+
+    def _call_handle_with(self):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, self._dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
@@ -56,7 +96,6 @@ class ActivityInvite(object):
             raise error
         else:
             logging.debug('__handle_with_reply_cb')
-
 
 class Invites(gobject.GObject):
     __gsignals__ = {
@@ -83,11 +122,57 @@ class Invites(gobject.GObject):
     def __got_dispatch_operation_cb(self, **kwargs):
         logging.debug('__got_dispatch_operation_cb')
         dispatch_operation_path = kwargs['dispatch_operation_path']
-        channel, channel_properties = kwargs['channels'][0]
+        channel_path, channel_properties = kwargs['channels'][0]
+        properties = kwargs['properties']
+        channel_type = channel_properties[CHANNEL + '.ChannelType']
+        handle_type = channel_properties[CHANNEL + '.TargetHandleType']
 
+        if handle_type == HANDLE_TYPE_ROOM and \
+           channel_type == CHANNEL_TYPE_TEXT:
+            logging.debug('May be an activity, checking its properties')
+            connection_path = properties[CHANNEL_DISPATCH_OPERATION + '.Connection']
+            connection_name = connection_path.replace('/', '.')[1:]
+
+            bus = dbus.Bus()
+            connection = bus.get_object(connection_name, connection_path)
+            connection.GetProperties(
+                    channel_properties[CHANNEL + '.TargetHandle'],
+                    dbus_interface=CONNECTION_INTERFACE_ACTIVITY_PROPERTIES,
+                    reply_handler=partial(self.__get_properties_cb,
+                                          channel_path,
+                                          channel_properties,
+                                          dispatch_operation_path),
+                    error_handler=partial(self.__error_handler_cb,
+                                          channel_path,
+                                          channel_properties,
+                                          dispatch_operation_path))
+        else:
+            self._dispatch_non_sugar_invitation(channel_path,
+                                                channel_properties,
+                                                dispatch_operation_path)
+
+    def __get_properties_cb(self, channel_path, channel_properties,
+                            dispatch_operation_path, properties):
+        logging.debug('__get_properties_cb %r', properties)
+        handler = '%s.%s' % (CLIENT, properties['type'])
+        self._add_invite(dispatch_operation_path, channel_path, handler,
+                         properties)
+
+    def __error_handler_cb(self, channel_path, channel_properties,
+                           dispatch_operation_path, error):
+        logging.debug('__error_handler_cb %r', error)
+        if error.get_dbus_name() == 'org.freedesktop.Telepathy.Error.NotAvailable':
+            self._dispatch_non_sugar_invitation(channel_path,
+                                                channel_properties,
+                                                dispatch_operation_path)
+        else:
+            raise error
+
+    def _dispatch_non_sugar_invitation(self, channel_path, channel_properties,
+                                       dispatch_operation_path):
+        handler = None
         channel_type = channel_properties[CHANNEL + '.ChannelType']
         if channel_type == CHANNEL_TYPE_CONTACT_LIST:
-            handler = None
             self._handle_with(dispatch_operation_path, CLIENT + '.Sugar')
         elif channel_type == CHANNEL_TYPE_TEXT:
             handler = CLIENT + '.org.laptop.Chat'
@@ -98,11 +183,11 @@ class Invites(gobject.GObject):
         elif channel_type == CHANNEL_TYPE_STREAM_TUBE:
             handler = channel_properties[CHANNEL_TYPE_STREAM_TUBE + '.Service']
         else:
-            handler = None
             self._handle_with(dispatch_operation_path, '')
 
         if handler is not None:
-            self._add_invite(dispatch_operation_path, channel, handler)
+            logging.debug('Adding an invite from a non-Sugar client')
+            self._add_invite(dispatch_operation_path, channel_path, handler)
 
     def _handle_with(self, dispatch_operation_path, handler):
         logging.debug('_handle_with %r %r', dispatch_operation_path, handler)
@@ -119,14 +204,16 @@ class Invites(gobject.GObject):
         else:
             logging.debug('__handle_with_reply_cb')
 
-    def _add_invite(self, dispatch_operation_path, channel, handler):
+    def _add_invite(self, dispatch_operation_path, channel, handler,
+                    activity_properties=None):
         logging.debug('_add_invite %r %r %r', dispatch_operation_path, channel, handler)
         if dispatch_operation_path in self._dispatch_operations:
             # there is no point to have more than one invite for the same
             # dispatch operation
             return
 
-        invite = ActivityInvite(dispatch_operation_path, channel, handler)
+        invite = ActivityInvite(dispatch_operation_path, channel, handler,
+                                activity_properties)
         self._dispatch_operations[dispatch_operation_path] = invite
         self.emit('invite-added', invite)
 

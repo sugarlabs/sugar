@@ -80,13 +80,14 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
     def AddDispatchOperation(self, channels, dispatch_operation_path,
                              properties, success_cb, error_cb_):
         success_cb()
+        try:
+            logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels, dispatch_operation_path, properties)
 
-        logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels, dispatch_operation_path, properties)
-
-        self.got_dispatch_operation.send(self, channels=channels,
-                dispatch_operation_path=dispatch_operation_path,
-                properties=properties)
-
+            self.got_dispatch_operation.send(self, channels=channels,
+                    dispatch_operation_path=dispatch_operation_path,
+                    properties=properties)
+        except Exception, e:
+            logging.exception(e)
 
 _instance = None
 
