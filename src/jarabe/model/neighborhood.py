@@ -234,6 +234,11 @@ class _Account(gobject.GObject):
                 self._activity_handles[room_handle] = activity_id
                 self.emit('activity-added', room_handle, activity_id)
 
+                connection = self._connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+                connection.GetProperties(room_handle,
+                     reply_handler=partial(self.__get_properties_cb, room_handle),
+                     error_handler=self.__error_handler_cb)
+
             if not activity_id in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
             self._buddies_per_activity[activity_id].add(buddy_handle)
@@ -243,6 +248,10 @@ class _Account(gobject.GObject):
         for activity_id in self._activities_per_buddy[buddy_handle].copy():
             if not activity_id in current_activity_ids:
                 self._remove_activity(buddy_handle, activity_id)
+
+    def __get_properties_cb(self, room_handle, properties):
+        logging.debug('__get_properties_cb %r %r', room_handle, properties)
+        self._update_activity(room_handle, properties)
 
     def _remove_activity(self, buddy_handle, activity_id):
         if buddy_handle in self._buddies_per_activity[activity_id]:
@@ -261,6 +270,9 @@ class _Account(gobject.GObject):
 
     def __activity_properties_changed_cb(self, room_handle, properties):
         logging.debug('__activity_properties_changed_cb %r %r', room_handle, properties)
+        self._update_activity(room_handle, properties)
+
+    def _update_activity(self, room_handle, properties):
         if room_handle in self._activity_handles:
             self.emit('activity-updated', self._activity_handles[room_handle],
                       properties)
