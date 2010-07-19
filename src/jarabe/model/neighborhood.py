@@ -45,7 +45,7 @@ from telepathy.client import Connection, Channel
 from sugar.graphics.xocolor import XoColor
 from sugar import activity
 
-from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
+from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
@@ -397,7 +397,7 @@ class Neighborhood(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._buddies = {None: OwnerBuddyModel()}
+        self._buddies = {None: get_owner_instance()}
         self._activities = {}
         self._accounts = []
         self._create_accounts()

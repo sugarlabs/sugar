@@ -22,7 +22,7 @@ from sugar.graphics.tray import VTray, TrayIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
-from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
+from jarabe.model.buddy import BuddyModel, get_owner_instance
 
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
@@ -104,7 +104,7 @@ class FriendsTray(VTray):
         self.clear()
 
         # always display ourselves
-        self.add_buddy(OwnerBuddyModel())
+        self.add_buddy(get_owner_instance())
 
         if shared_activity is True:
             for buddy in activity_ps.get_joined_buddies():

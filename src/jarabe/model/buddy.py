@@ -159,6 +159,15 @@ class OwnerBuddyModel(BaseBuddyModel):
     def get_buddy(self):
         return None
 
+
+_owner_instance = None
+def get_owner_instance():
+    if _owner_instance is None:
+        global _owner_instance
+        _owner_instance = OwnerBuddyModel()
+    return _owner_instance
+
+
 class BuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarBuddyModel'
     def __init__(self, **kwargs):

@@ -40,7 +40,7 @@ from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view import launcher
-from jarabe.model.buddy import BuddyModel, OwnerBuddyModel
+from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
@@ -601,7 +601,7 @@ class OwnerIcon(BuddyIcon):
                                 gobject.TYPE_NONE, ([]))
     }
     def __init__(self, size):
-        BuddyIcon.__init__(self, buddy=OwnerBuddyModel(), size=size)
+        BuddyIcon.__init__(self, buddy=get_owner_instance(), size=size)
 
         self._power_manager = None
         self._palette_enabled = False
@@ -613,7 +613,7 @@ class OwnerIcon(BuddyIcon):
             return
 
         presence_service = presenceservice.get_instance()
-        palette = BuddyMenu(OwnerBuddyModel())
+        palette = BuddyMenu(get_owner_instance())
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')
