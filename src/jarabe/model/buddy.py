@@ -39,6 +39,7 @@ class BaseBuddyModel(gobject.GObject):
         self._color = None
         self._tags = None
         self._present = False
+        self._current_activity = None
 
         gobject.GObject.__init__(self, **kwargs)
 
@@ -81,10 +82,16 @@ class BaseBuddyModel(gobject.GObject):
     tags = gobject.property(type=object, getter=get_tags)
 
     def get_current_activity(self):
-        raise NotImplementedError
+        return self._current_activity
+
+    def set_current_activity(self, current_activity):
+        if self._current_activity != current_activity:
+            self._current_activity = current_activity
+            self.notify('current-activity')
 
     current_activity = gobject.property(type=object,
-                                        getter=get_current_activity)
+                                        getter=get_current_activity,
+                                        setter=set_current_activity)
 
     def is_owner(self):
         raise NotImplementedError
@@ -164,9 +171,6 @@ class BuddyModel(BaseBuddyModel):
     def is_owner(self):
         return False
 
-    def get_current_activity(self):
-        return None
-
     def get_buddy(self):
         raise NotImplementedError
 
@@ -233,11 +237,6 @@ class BuddyModel(BaseBuddyModel):
 
     def is_owner(self):
         return False
-
-    def get_current_activity(self):
-        if self._buddy:
-            return self._buddy.props.current_activity
-        return None
 
     def is_present(self):
         if self._buddy:

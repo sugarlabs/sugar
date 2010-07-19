@@ -66,6 +66,9 @@ class ActivityView(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self)
 
         self._model = model
+        self._model.connect('buddy-added', self.__buddy_added_cb)
+        self._model.connect('buddy-removed', self.__buddy_removed_cb)
+
         self._icons = {}
         self._palette = None
 
@@ -77,6 +80,9 @@ class ActivityView(hippo.CanvasBox):
 
         self._palette = self._create_palette()
         self._icon.set_palette(self._palette)
+
+        for buddy in self._model.props.buddies:
+            self._add_buddy(buddy)
 
     def _create_icon(self):
         icon = CanvasIcon(file_name=self._model.bundle.get_icon(),
@@ -118,13 +124,17 @@ class ActivityView(hippo.CanvasBox):
     def has_buddy_icon(self, key):
         return self._icons.has_key(key)
 
-    def add_buddy_icon(self, key, icon):
-        self._icons[key] = icon
+    def __buddy_added_cb(self, activity, buddy):
+        self._add_buddy(buddy)
+
+    def _add_buddy(self, buddy):
+        icon = BuddyIcon(buddy, style.STANDARD_ICON_SIZE)
+        self._icons[buddy.props.key] = icon
         self._layout.add(icon)
 
-    def remove_buddy_icon(self, key):
-        icon = self._icons[key]
-        del self._icons[key]
+    def __buddy_removed_cb(self, activity, buddy):
+        icon = self._icons[buddy.props.key]
+        del self._icons[buddy.props.key]
         icon.destroy()
 
     def _clicked_cb(self, item):
@@ -430,11 +440,10 @@ class MeshBox(gtk.VBox):
         self._layout_box.set_layout(self._layout)
 
         for buddy_model in self._model.get_buddies():
-            self._add_alone_buddy(buddy_model)
+            self._add_buddy(buddy_model)
 
         self._model.connect('buddy-added', self._buddy_added_cb)
         self._model.connect('buddy-removed', self._buddy_removed_cb)
-        self._model.connect('buddy-moved', self._buddy_moved_cb)
 
         for activity_model in self._model.get_activities():
             self._add_activity(activity_model)
@@ -458,16 +467,10 @@ class MeshBox(gtk.VBox):
         gtk.VBox.do_size_allocate(self, allocation)
 
     def _buddy_added_cb(self, model, buddy_model):
-        self._add_alone_buddy(buddy_model)
+        self._add_buddy(buddy_model)
 
     def _buddy_removed_cb(self, model, buddy_model):
         self._remove_buddy(buddy_model)
-
-    def _buddy_moved_cb(self, model, buddy_model, activity_model):
-        # Owner doesn't move from the center
-        if buddy_model.is_owner():
-            return
-        self._move_buddy(buddy_model, activity_model)
 
     def _activity_added_cb(self, model, activity_model):
         self._add_activity(activity_model)
@@ -475,7 +478,12 @@ class MeshBox(gtk.VBox):
     def _activity_removed_cb(self, model, activity_model):
         self._remove_activity(activity_model)
 
-    def _add_alone_buddy(self, buddy_model):
+    def _add_buddy(self, buddy_model):
+        logging.debug('MeshBox._add_buddy %r', buddy_model.props.key)
+        buddy_model.connect('notify::current-activity',
+                            self.__buddy_notify_current_activity_cb)
+        if buddy_model.props.current_activity is not None:
+            return
         icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
             self._owner_icon = icon
@@ -486,34 +494,20 @@ class MeshBox(gtk.VBox):
 
         self._buddies[buddy_model.props.key] = icon
 
-    def _remove_alone_buddy(self, buddy_model):
+    def _remove_buddy(self, buddy_model):
+        logging.debug('MeshBox._remove_buddy')
         icon = self._buddies[buddy_model.props.key]
         self._layout.remove(icon)
         del self._buddies[buddy_model.props.key]
         icon.destroy()
 
-    def _remove_buddy(self, buddy_model):
-        if self._buddies.has_key(buddy_model.props.key):
-            self._remove_alone_buddy(buddy_model)
-        else:
-            object_path = buddy_model.get_buddy().object_path()
-            for activity in self._activities.values():
-                if activity.has_buddy_icon(object_path):
-                    activity.remove_buddy_icon(object_path)
-
-    def _move_buddy(self, buddy_model, activity_model):
-        self._remove_buddy(buddy_model)
-
-        if activity_model == None:
-            self._add_alone_buddy(buddy_model)
-        elif activity_model.activity_id in self._activities:
-            activity = self._activities[activity_model.activity_id]
-
-            icon = BuddyIcon(buddy_model, style.STANDARD_ICON_SIZE)
-            activity.add_buddy_icon(buddy_model.get_buddy().object_path(), icon)
-
-            if hasattr(icon, 'set_filter'):
-                icon.set_filter(self._query)
+    def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
+        logging.debug('MeshBox.__buddy_notify_current_activity_cb')
+        if buddy_model.props.current_activity is None:
+            if not buddy_model.props.key in self._buddies:
+                self._add_buddy(buddy_model)
+        elif buddy_model.props.key in self._buddies:
+            self._remove_buddy(buddy_model)
 
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)

@@ -113,9 +113,9 @@ class BuddyMenu(Palette):
         panel.show()
 
     def _update_invite_menu(self, activity):
-        buddy_activity = self._buddy.get_current_activity()
+        buddy_activity = self._buddy.props.current_activity
         if buddy_activity is not None:
-            buddy_activity_id = buddy_activity.props.id
+            buddy_activity_id = buddy_activity.activity_id
         else:
             buddy_activity_id = None
 
