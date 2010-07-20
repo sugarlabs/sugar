@@ -175,33 +175,45 @@ class _Account(gobject.GObject):
     def __connection_ready_cb(self, connection):
         logging.debug('__connection_ready_cb %r', connection)
 
-        connection[CONNECTION_INTERFACE_ALIASING].connect_to_signal(
-                'AliasesChanged', self.__aliases_changed_cb)
+        connection[PROPERTIES_IFACE].Get(CONNECTION,
+                'SelfHandle',
+                reply_handler=self.__get_self_handle_cb,
+                error_handler=self.__error_handler_cb)
 
-        connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE].connect_to_signal(
-                'PresencesChanged', self.__presences_changed_cb)
+    def __get_self_handle_cb(self, self_handle):
+        self._self_handle = self_handle
 
-        if CONNECTION_INTERFACE_BUDDY_INFO in connection:
-            connection[CONNECTION_INTERFACE_BUDDY_INFO].connect_to_signal(
-                'PropertiesChanged', self.__buddy_info_updated_cb,
-                byte_arrays=True)
+        connection = self._connection[CONNECTION_INTERFACE_ALIASING]
+        connection.connect_to_signal('AliasesChanged',
+                                     self.__aliases_changed_cb)
 
-            connection[CONNECTION_INTERFACE_BUDDY_INFO].connect_to_signal(
-                    'ActivitiesChanged', self.__buddy_activities_changed_cb)
+        connection = self._connection[CONNECTION_INTERFACE_SIMPLE_PRESENCE]
+        connection.connect_to_signal('PresencesChanged',
+                                     self.__presences_changed_cb)
 
-            connection[CONNECTION_INTERFACE_BUDDY_INFO].connect_to_signal(
-                    'CurrentActivityChanged', self.__current_activity_changed_cb)
+        if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
+            connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+            connection.connect_to_signal('PropertiesChanged',
+                                         self.__buddy_info_updated_cb,
+                                         byte_arrays=True)
+
+            connection.connect_to_signal('ActivitiesChanged',
+                                         self.__buddy_activities_changed_cb)
+
+            connection.connect_to_signal('CurrentActivityChanged',
+                                         self.__current_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
-                            'properties', connection.object_path)
+                            'properties', self._connection.object_path)
 
-        if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in connection:
-            connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES].connect_to_signal(
+        if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._connection:
+            connection = self._connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+            connection.connect_to_signal(
                     'ActivityPropertiesChanged',
                     self.__activity_properties_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC activity '
-                            'properties', connection.object_path)
+                            'properties', self._connection.object_path)
 
         for target_id in 'subscribe', 'publish':
             properties = {
@@ -209,12 +221,12 @@ class _Account(gobject.GObject):
                     CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
                     CHANNEL + '.TargetID': target_id,
                     }
+            properties = dbus.Dictionary(properties, signature='sv')
+            connection = self._connection[CONNECTION_INTERFACE_REQUESTS]
             is_ours, channel_path, properties = \
-                    connection[CONNECTION_INTERFACE_REQUESTS].EnsureChannel(
-                            dbus.Dictionary(properties, signature='sv'))
-            print is_ours, channel_path
+                    connection.EnsureChannel(properties)
 
-            channel = Channel(connection.service_name, channel_path)
+            channel = Channel(self._connection.service_name, channel_path)
             channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
                       'MembersChanged', self.__members_changed_cb)
 
@@ -316,6 +328,15 @@ class _Account(gobject.GObject):
                       properties)
         else:
             logging.debug('__activity_properties_changed_cb unknown activity')
+            # We don't get ActivitiesChanged for the owner of the connection,
+            # so we query for its activities in order to find out.
+            if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
+                handle = self._self_handle
+                connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+                connection.GetActivities(
+                    handle,
+                    reply_handler=partial(self.__got_activities_cb, handle),
+                    error_handler=self.__error_handler_cb)
 
     def __members_changed_cb(self, message, added, removed, local_pending,
                              remote_pending, actor, reason):

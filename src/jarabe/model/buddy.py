@@ -114,6 +114,7 @@ class OwnerBuddyModel(BaseBuddyModel):
 
         self.connect('notify::nick', self.__property_changed_cb)
         self.connect('notify::color', self.__property_changed_cb)
+        self.connect('notify::current-activity', self.__current_activity_changed_cb)
 
         logging.info('KILL_PS should set the properties before the connection'
                      'is connected, if possible')
@@ -124,6 +125,25 @@ class OwnerBuddyModel(BaseBuddyModel):
 
     def __property_changed_cb(self, pspec):
         self._sync_properties()
+
+    def __current_activity_changed_cb(self, pspec):
+        conn_watcher = connection_watcher.get_instance()
+        for connection in conn_watcher.get_connections():
+            if self.props.current_activity is not None:
+                activity_id = self.props.current_activity.activity_id
+                room_handle = self.props.current_activity.room_handle
+            else:
+                activity_id = ''
+                room_handle = 0
+
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetCurrentProperty(
+                activity_id,
+                room_handle,
+                reply_handler=self.__set_current_activity_cb,
+                error_handler=self.__error_handler_cb)
+
+    def __set_current_activity_cb(self):
+        logging.debug('__set_current_activity_cb')
 
     def _sync_properties(self):
         conn_watcher = connection_watcher.get_instance()
@@ -162,8 +182,8 @@ class OwnerBuddyModel(BaseBuddyModel):
 
 _owner_instance = None
 def get_owner_instance():
+    global _owner_instance
     if _owner_instance is None:
-        global _owner_instance
         _owner_instance = OwnerBuddyModel()
     return _owner_instance
 
