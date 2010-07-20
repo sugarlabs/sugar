@@ -1,4 +1,4 @@
-Source: sugar-0.88
+Source: sugar-0.90
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
@@ -17,13 +17,13 @@ Build-Depends: devscripts (>= 2.10.7~),
  intltool,
  shared-mime-info,
  python-empy
-Standards-Version: 3.8.4
+Standards-Version: 3.9.0
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git;a=summary
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 XS-Python-Version: all
 
-Package: sucrose-0.88
+Package: sucrose-0.90
 Architecture: all
 Depends: ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -31,7 +31,7 @@ Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - Sucrose 0.88
+Description: Sugar graphical shell - Sucrose 0.90
  Sugar is a graphical user interface aimed at children.
  .
  Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
@@ -41,12 +41,13 @@ Description: Sugar graphical shell - Sucrose 0.88
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
 
-Package: sugar-session-0.88
+Package: sugar-session-0.90
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -59,12 +60,13 @@ Description: Sugar graphical shell - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-emulator-0.88
+Package: sugar-emulator-0.90
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -78,12 +80,13 @@ Description: Sugar graphical shell - emulator
  This package contains a wrapper script to run Sugar in a Xephyr window,
  making it possible to run it from inside another Desktop environment.
 
-Package: sugar-tools-0.88
+Package: sugar-tools-0.90
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -101,13 +104,14 @@ Description: Sugar graphical shell - window manager
   - sugar-launch
   - sugar-ui-check
 
-Package: python-jarabe-0.88
+Package: python-jarabe-0.90
 Section: python
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
