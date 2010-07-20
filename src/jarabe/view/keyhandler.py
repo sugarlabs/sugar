@@ -47,6 +47,8 @@ _actions_table = {
     'F2'                   : 'zoom_group',
     'F3'                   : 'zoom_home',
     'F4'                   : 'zoom_activity',
+    'F5'                   : 'open_search',
+    'F6'                   : 'frame',
     'F9'                   : 'brightness_down',
     'F10'                  : 'brightness_up',
     '<alt>F9'              : 'brightness_min',
