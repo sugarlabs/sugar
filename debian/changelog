@@ -1,10 +1,13 @@
-sugar-0.90 (0.88.1-2) UNRELEASED; urgency=low
+sugar-0.90 (0.89.1-1) experimental; urgency=low
 
+  * New upstream development release.
   * Switch packaging to upstream branch 0.90.
+  * Refresh patches.
   * Relax transitional conflicts to use Breaks: (not Conflicts:).
   * Bump claimed Policy compliance to standards-version to 3.9.0.
+  * Update copyright file: Extend some copyright years.
 
- -- Jonas Smedegaard <dr@jones.dk>  Tue, 20 Jul 2010 14:48:17 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 20 Jul 2010 15:09:44 +0200
 
 sugar-0.88 (0.88.1-1) unstable; urgency=low
 
