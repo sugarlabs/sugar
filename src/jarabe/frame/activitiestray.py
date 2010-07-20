@@ -49,6 +49,7 @@ from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.view import launcher
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
+from jarabe.journal import misc
 import jarabe.frame
 
 
@@ -172,22 +173,10 @@ class ActivityInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Join the activity in the invite."""
-
-        shell_model = shell.get_model()
-        activity = shell_model.get_activity_by_id(self._activity_model.get_id())
-        if activity:
-            activity.get_window().activate(gtk.get_current_event_time())
-            return
-
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(self._bundle_id)
 
-        launcher.add_launcher(self._activity_model.get_id(),
-                              bundle.get_icon(),
-                              self._activity_model.get_color())
-
-        handle = ActivityHandle(self._activity_model.get_id())
-        activityfactory.create(bundle, handle)
+        misc.launch(bundle, color=self._activity_model.get_color())
 
 class PrivateInviteButton(BaseInviteButton):
     """Invite to a private one to one channel"""
@@ -231,7 +220,7 @@ class PrivateInviteButton(BaseInviteButton):
 
     def _launch(self):
         """Start the activity with private channel."""
-        activityfactory.create_with_uri(self._bundle, self._private_channel)
+        misc.launch(self._bundle, uri=self._private_channel)
 
 class BaseInvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
@@ -280,8 +269,7 @@ class ActivityInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        handle = ActivityHandle(self._activity_model.get_id())
-        activityfactory.create(self._bundle, handle)
+        misc.launch(self._bundle, activity_id=self._activity_model.get_id())
 
     def _decline(self):
         invites = owner.get_model().get_invites()
@@ -306,7 +294,7 @@ class PrivateInvitePalette(BaseInvitePalette):
             self.set_primary_text(self._bundle_id)
 
     def _join(self):
-        activityfactory.create_with_uri(self._bundle, self._private_channel)
+        misc.launch(self._bundle, uri=self._private_channel)
 
         invites = owner.get_model().get_invites()
         invites.remove_private_channel(self._private_channel)

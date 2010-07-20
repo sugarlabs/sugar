@@ -309,7 +309,6 @@ class Toolbar(gtk.Toolbar):
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
         stop.connect('clicked', self.__stop_clicked_cb)
-        stop.show()
         self.insert(stop, -1)
         stop.show()
 
