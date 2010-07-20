@@ -47,12 +47,12 @@ from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop import keydialog
 from jarabe.model import bundleregistry
 from jarabe.model import network
-from jarabe.model import shell
 from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
+from jarabe.journal import misc
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -574,13 +574,15 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._update_color()
 
     def disconnect(self):
+        device_object_path = self._mesh_mgr.mesh_device.object_path
+
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
-                                         path=self._device.object_path,
+                                         path=device_object_path,
                                          dbus_interface=_NM_DEVICE_IFACE)
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
-                                         path=self._device.object_path,
+                                         path=device_object_path,
                                          dbus_interface=_NM_OLPC_MESH_IFACE)
 
 
@@ -654,21 +656,11 @@ class ActivityView(hippo.CanvasBox):
         icon.destroy()
 
     def _clicked_cb(self, item):
-        shell_model = shell.get_model()
-        activity = shell_model.get_activity_by_id(self._model.get_id())
-        if activity:
-            activity.get_window().activate(gtk.get_current_event_time())
-            return
-
         bundle_id = self._model.get_bundle_id()
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
 
-        launcher.add_launcher(self._model.get_id(),
-                              bundle.get_icon(),
-                              self._model.get_color())
-
-        handle = ActivityHandle(self._model.get_id())
-        activityfactory.create(bundle, handle)
+        misc.launch(bundle, activity_id=self._model.get_id(),
+                color=self._model.get_color())
 
     def set_filter(self, query):
         text_to_check = self._model.activity.props.name.lower() + \
@@ -821,6 +813,7 @@ class NetworkManagerObserver(object):
         self._bus = None
         self._devices = {}
         self._netmgr = None
+        self._olpc_mesh_device_o = None
 
     def listen(self):
         try:
@@ -885,6 +878,7 @@ class NetworkManagerObserver(object):
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
             self._devices[device_o] = DeviceObserver(self._box, device)
         elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+            self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
     def _get_device_path_error_cb(self, err):
@@ -899,12 +893,9 @@ class NetworkManagerObserver(object):
             observer.disconnect()
             del self._devices[device_o]
             return
-            
-        device = self._bus.get_object(_NM_SERVICE, device_o)
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
-            self._box.disable_olpc_mesh(device)
+
+        if self._olpc_mesh_device_o == device_o:
+            self._box.disable_olpc_mesh(device_o)
 
 class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'

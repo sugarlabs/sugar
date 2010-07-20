@@ -32,8 +32,8 @@ from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import shell
-from jarabe.view import launcher
 from jarabe.view.viewsource import setup_view_source
+from jarabe.journal import misc
 
 class BasePalette(Palette):
     def __init__(self, home_activity):
@@ -145,17 +145,7 @@ class ActivityPalette(Palette):
 
     def __start_activate_cb(self, menu_item):
         self.popdown(immediate=True)
-
-        client = gconf.client_get_default()
-        xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-        activity_id = activityfactory.create_activity_id()
-        launcher.add_launcher(activity_id,
-                              self._activity_info.get_icon(),
-                              xo_color)
-
-        handle = ActivityHandle(activity_id)
-        activityfactory.create(self._activity_info, handle)
+        misc.launch(self._activity_info)
 
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):

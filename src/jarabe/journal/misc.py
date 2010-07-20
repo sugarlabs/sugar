@@ -168,7 +168,7 @@ def resume(metadata, bundle_id=None):
                         bundle.get_bundle_id())
         installed_bundle = registry.get_bundle(bundle.get_bundle_id())
         if installed_bundle:
-            activityfactory.create(installed_bundle)
+            launch(installed_bundle)
         else:
             logging.error('Bundle %r is not installed.',
                           bundle.get_bundle_id())
@@ -192,16 +192,9 @@ def resume(metadata, bundle_id=None):
         logging.debug('activityfactory.creating with uri %s', uri)
 
         activity_bundle = registry.get_bundle(activities[0].get_bundle_id())
-        activityfactory.create_with_uri(activity_bundle, bundle.get_start_uri())
+        launch(activity_bundle, uri=uri)
     else:
         activity_id = metadata.get('activity_id', '')
-
-        if activity_id:
-            shell_model = shell.get_model()
-            activity = shell_model.get_activity_by_id(activity_id)
-            if activity:
-                activity.get_window().activate(gtk.get_current_event_time())
-                return
 
         if bundle_id is None:
             activities = get_activities(metadata)
@@ -219,14 +212,31 @@ def resume(metadata, bundle_id=None):
         else:
             object_id = model.copy(metadata, '/')
 
-        if activity_id:
-            launcher.add_launcher(activity_id, bundle.get_icon(),
-                    get_icon_color(metadata))
-            handle = ActivityHandle(object_id=object_id,
-                                    activity_id=activity_id)
-            activityfactory.create(bundle, handle)
-        else:
-            activityfactory.create_with_object_id(bundle, object_id)
+        launch(bundle, activity_id=activity_id, object_id=object_id,
+                color=get_icon_color(metadata))
+
+def launch(bundle, activity_id=None, object_id=None, uri=None, color=None):
+    if activity_id is None:
+        activity_id = activityfactory.create_activity_id()
+
+    logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
+            bundle.get_bundle_id(), activity_id, object_id, uri)
+
+    shell_model = shell.get_model()
+    activity = shell_model.get_activity_by_id(activity_id)
+    if activity is not None:
+        logging.debug('re-launch %r', activity.get_window())
+        activity.get_window().activate(gtk.get_current_event_time())
+        return
+
+    if color is None:
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+
+    launcher.add_launcher(activity_id, bundle.get_icon(), color)
+    activity_handle = ActivityHandle(activity_id=activity_id,
+            object_id=object_id, uri=uri)
+    activityfactory.create(bundle, activity_handle)
 
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')

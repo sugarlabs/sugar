@@ -21,10 +21,11 @@
 #
 
 import os
+import locale
 from gettext import gettext as _
 import subprocess
 
-_default_lang = 'en_US.utf8'
+_default_lang = '%s.%s' % locale.getdefaultlocale()
 _standard_msg = _("Could not access ~/.i18n. Create standard settings.")
 
 def read_all_languages():
