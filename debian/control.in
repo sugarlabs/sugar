@@ -35,6 +35,7 @@ Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -53,6 +54,7 @@ Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -72,6 +74,7 @@ Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}
@@ -96,6 +99,7 @@ Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
+Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 XB-Python-Version: ${python:Versions}

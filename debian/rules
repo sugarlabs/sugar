@@ -155,18 +155,18 @@ CDBS_REPLACES_sucrose-$(pkgbranch) = sugar
 # sugar until 0.82.9-5 (released with Lenny) split into
 # python-jarabe-0.86 and sugar-{session,emulator,tools}-0.86: can be
 # dropped after Squeeze+1
-CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_BREAKS_python-jarabe-$(pkgbranch) = sugar (<= 0.82.9-5)
 CDBS_REPLACES_python-jarabe-$(pkgbranch) = sugar (<= 0.82.9-5)
-CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_BREAKS_sugar-session-$(pkgbranch) = sugar (<= 0.82.9-5)
 CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar (<= 0.82.9-5)
-CDBS_CONFLICTS_sugar-emulator-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_BREAKS_sugar-emulator-$(pkgbranch) = sugar (<= 0.82.9-5)
 CDBS_REPLACES_sugar-emulator-$(pkgbranch) = sugar (<= 0.82.9-5)
-CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
+CDBS_BREAKS_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
 CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar (<= 0.82.9-5)
 
 # Journal, now part of Jarabe, was separately packaged upstream < 0.84
 # (released with Lenny): can be dropped after Squeeze+1
-CDBS_CONFLICTS_python-jarabe-$(pkgbranch) += , sugar-journal-activity
+CDBS_BREAKS_python-jarabe-$(pkgbranch) += , sugar-journal-activity
 CDBS_REPLACES_python-jarabe-$(pkgbranch) += , sugar-journal-activity
 
 # Needed for our packaging
