@@ -156,12 +156,22 @@ class BundleRegistry(gobject.GObject):
         self._write_favorites_file()
 
     def get_bundle(self, bundle_id):
-        """Returns an bundle given his service name"""
+        """Returns a bundle given service name or substring,
+        returns None if there is either no match, or more than one
+        match by substring."""
+        result = []
+        key = bundle_id.lower()
+
         for bundle in self._bundles:
-            if bundle.get_bundle_id() == bundle_id:
+            name = bundle.get_bundle_id()
+            if name == bundle_id:
                 return bundle
+            if key in name.lower():
+                result.append(bundle)
+        if len(result) == 1:
+            return result[0]
         return None
-    
+
     def __iter__(self):
         return self._bundles.__iter__()
 
