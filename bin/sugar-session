@@ -138,6 +138,12 @@ def set_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
+    try:
+        cleanup_logs()
+    except OSError, e:
+        # logs cleanup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'logs cleanup failed: %s' % e
     cleanup_logs()
     logger.start('shell')
 
