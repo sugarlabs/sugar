@@ -22,6 +22,7 @@ import os
 import time
 
 import dbus
+import dbus.service
 import gobject
 import ConfigParser
 import gconf
