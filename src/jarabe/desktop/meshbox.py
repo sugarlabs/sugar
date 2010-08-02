@@ -66,8 +66,8 @@ class ActivityView(hippo.CanvasBox):
         hippo.CanvasBox.__init__(self)
 
         self._model = model
-        self._model.connect('buddy-added', self.__buddy_added_cb)
-        self._model.connect('buddy-removed', self.__buddy_removed_cb)
+        self._model.connect('current-buddy-added', self.__buddy_added_cb)
+        self._model.connect('current-buddy-removed', self.__buddy_removed_cb)
 
         self._icons = {}
         self._palette = None
@@ -81,7 +81,7 @@ class ActivityView(hippo.CanvasBox):
         self._palette = self._create_palette()
         self._icon.set_palette(self._palette)
 
-        for buddy in self._model.props.buddies:
+        for buddy in self._model.props.current_buddies:
             self._add_buddy(buddy)
 
     def _create_icon(self):
