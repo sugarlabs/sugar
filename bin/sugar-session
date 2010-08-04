@@ -144,7 +144,6 @@ def main():
         # logs cleanup is not critical; it should not prevent sugar from
         # starting if (for example) the disk is full or read-only.
         print 'logs cleanup failed: %s' % e
-    cleanup_logs()
     logger.start('shell')
 
     set_fonts()
