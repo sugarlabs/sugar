@@ -39,11 +39,13 @@ from telepathy.interfaces import ACCOUNT, \
                                  CONNECTION_INTERFACE_REQUESTS, \
                                  CONNECTION_INTERFACE_SIMPLE_PRESENCE
 from telepathy.constants import HANDLE_TYPE_LIST, \
-                                CONNECTION_PRESENCE_TYPE_OFFLINE
+                                CONNECTION_PRESENCE_TYPE_OFFLINE, \
+                                CONNECTION_STATUS_CONNECTED
 from telepathy.client import Connection, Channel
 
 from sugar.graphics.xocolor import XoColor
 from sugar import activity
+from sugar.profile import get_profile
 
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
@@ -153,6 +155,10 @@ class _Account(gobject.GObject):
                                   gobject.TYPE_NONE, ([object, object])),
         'current-activity-updated': (gobject.SIGNAL_RUN_FIRST,
                                      gobject.TYPE_NONE, ([object, object])),
+        'connected':                (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
+        'disconnected':             (gobject.SIGNAL_RUN_FIRST,
+                                     gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, account_path):
@@ -171,12 +177,13 @@ class _Account(gobject.GObject):
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
         obj.Get(ACCOUNT, 'Connection',
                 reply_handler=self.__got_connection_cb,
-                error_handler=self.__error_handler_cb)
+                error_handler=partial(self.__error_handler_cb,
+                                      'Account.GetConnection'))
         obj.connect_to_signal(
             'AccountPropertyChanged', self.__account_property_changed_cb)
 
-    def __error_handler_cb(self, error):
-        raise RuntimeError(error)
+    def __error_handler_cb(self, function_name, error):
+        raise RuntimeError('Error when calling %s: %s' % (function_name, error))
 
     def __got_connection_cb(self, connection_path):
         logging.debug('__got_connection_cb %r', connection_path)
@@ -187,22 +194,46 @@ class _Account(gobject.GObject):
         self._prepare_connection(connection_path)
 
     def __account_property_changed_cb(self, properties):
+        logging.debug('__account_property_changed_cb %r', self.object_path)
         if properties.get('Connection', '/') != '/' and self._connection is None:
             self._prepare_connection(properties['Connection'])
 
     def _prepare_connection(self, connection_path):
+        self._connection_path = connection_path
         connection_name = connection_path.replace('/', '.')[1:]
 
         self._connection = Connection(connection_name, connection_path,
                                       ready_handler=self.__connection_ready_cb)
 
     def __connection_ready_cb(self, connection):
-        logging.debug('__connection_ready_cb %r', connection)
+        logging.debug('__connection_ready_cb %r', connection.object_path)
+        connection.connect_to_signal('StatusChanged',
+                                     self.__status_changed_cb)
 
         connection[PROPERTIES_IFACE].Get(CONNECTION,
-                'SelfHandle',
-                reply_handler=self.__get_self_handle_cb,
-                error_handler=self.__error_handler_cb)
+                'Status',
+                reply_handler=self.__get_status_cb,
+                error_handler=partial(self.__error_handler_cb,
+                                      'Connection.GetStatus'))
+
+    def __get_status_cb(self, status):
+        logging.debug('__get_status_cb %r %r', self._connection.object_path, status)
+        self._update_status(status)
+
+    def __status_changed_cb(self, status, reason):
+        logging.debug('__status_changed_cb %r %r', status, reason)
+        self._update_status(status)
+
+    def _update_status(self, status):
+        if status == CONNECTION_STATUS_CONNECTED:
+            self._connection[PROPERTIES_IFACE].Get(CONNECTION,
+                    'SelfHandle',
+                    reply_handler=self.__get_self_handle_cb,
+                    error_handler=partial(self.__error_handler_cb,
+                                          'Connection.GetSelfHandle'))
+            self.emit('connected')
+        else:
+            self.emit('disconnected')
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
@@ -257,7 +288,8 @@ class _Account(gobject.GObject):
             channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
                     'Members',
                     reply_handler=self.__get_members_ready_cb,
-                    error_handler=self.__error_handler_cb)
+                    error_handler=partial(self.__error_handler_cb,
+                                          'Connection.GetMembers'))
 
     def __aliases_changed_cb(self, aliases):
         logging.debug('__aliases_changed_cb')
@@ -309,7 +341,8 @@ class _Account(gobject.GObject):
                 connection = self._connection[CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
                 connection.GetProperties(room_handle,
                      reply_handler=partial(self.__get_properties_cb, room_handle),
-                     error_handler=self.__error_handler_cb)
+                     error_handler=partial(self.__error_handler_cb,
+                                           'ActivityProperties.GetProperties'))
 
             if not activity_id in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
@@ -370,7 +403,8 @@ class _Account(gobject.GObject):
                 connection.GetActivities(
                     handle,
                     reply_handler=partial(self.__got_activities_cb, handle),
-                    error_handler=self.__error_handler_cb)
+                    error_handler=partial(self.__error_handler_cb,
+                                          'BuddyInfo.Getactivities'))
 
     def __members_changed_cb(self, message, added, removed, local_pending,
                              remote_pending, actor, reason):
@@ -389,7 +423,8 @@ class _Account(gobject.GObject):
         self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
                 handles, interfaces, False,
                 reply_handler=self.__get_contact_attributes_cb,
-                error_handler=self.__error_handler_cb)
+                error_handler=partial(self.__error_handler_cb,
+                                      'Contacts.GetContactAttributes'))
 
     def __got_buddy_info_cb(self, handle, nick, properties):
         logging.debug('__got_buddy_info_cb %r', properties)
@@ -418,24 +453,47 @@ class _Account(gobject.GObject):
                     connection.GetProperties(
                         handle,
                         reply_handler=partial(self.__got_buddy_info_cb, handle, nick),
-                        error_handler=self.__error_handler_cb,
+                        error_handler=partial(self.__error_handler_cb,
+                                              'BuddyInfo.GetProperties'),
                         byte_arrays=True)
 
                     connection.GetActivities(
                         handle,
                         reply_handler=partial(self.__got_activities_cb, handle),
-                        error_handler=self.__error_handler_cb)
+                        error_handler=partial(self.__error_handler_cb,
+                                              'BuddyInfo.GetActivities'))
 
                     connection.GetCurrentActivity(
                         handle,
                         reply_handler=partial(self.__get_current_activity_cb, handle),
-                        error_handler=self.__error_handler_cb)
+                        error_handler=partial(self.__error_handler_cb,
+                                              'BuddyInfo.GetCurrentActivity'))
                 else:
                     self.emit('buddy-added', contact_id, nick, None)
 
     def __got_activities_cb(self, buddy_handle, activities):
         logging.debug('__got_activities_cb %r %r', buddy_handle, activities)
         self._update_buddy_activities(buddy_handle, activities)
+
+    def enable(self):
+        logging.debug('_Account.enable %s', self.object_path)
+        self._set_enabled(True)
+
+    def disable(self):
+        logging.debug('_Account.disable %s', self.object_path)
+        self._set_enabled(False)
+
+    def _set_enabled(self, value):
+        bus = dbus.Bus()
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, self.object_path)
+        obj.Set(ACCOUNT, 'Enabled', value,
+                reply_handler=self.__set_enabled_cb,
+                error_handler=partial(self.__error_handler_cb,
+                                      'Account.SetEnabled'),
+                dbus_interface='org.freedesktop.DBus.Properties')
+
+    def __set_enabled_cb(self):
+        logging.debug('__set_enabled_cb success')
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -454,62 +512,70 @@ class Neighborhood(gobject.GObject):
 
         self._buddies = {None: get_owner_instance()}
         self._activities = {}
-        self._accounts = []
-        self._create_accounts()
+        self._link_local_account = None
+        self._server_account = None
 
-    def _create_accounts(self):
         bus = dbus.Bus()
-
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+        account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
+                            dbus_interface=PROPERTIES_IFACE,
+                            reply_handler=self.__got_accounts_cb,
+                            error_handler=self.__error_handler_cb)
 
-        account_paths = account_manager.Get(ACCOUNT_MANAGER, 'ValidAccounts',
-                                            dbus_interface=PROPERTIES_IFACE)
+    def __got_accounts_cb(self, account_paths):
+        self._link_local_account = self._ensure_link_local_account(account_paths)
+        self._connect_to_account(self._link_local_account)
 
-        account_manager.connect_to_signal('AccountValidityChanged',
-            self.__account_validity_changed_cb)
+        self._server_account = self._ensure_server_account(account_paths)
+        self._connect_to_account(self._server_account)
 
-        self._ensure_link_local_account(account_manager, account_paths)
-        #self._ensure_server_account(account_manager, account_paths)
+    def __error_handler_cb(self, error):
+        raise RuntimeError(error)
 
-        for account_path in account_paths:
-            self._add_account(account_path)
-
-    def __account_validity_changed_cb(self, account_path, valid):
-        if valid:
-            self._add_account(account_path)
-        else:
-            raise NotImplementedError('TODO')
-
-    def _add_account(self, account_path):
-        account = _Account(account_path)
+    def _connect_to_account(self, account):
         account.connect('buddy-added', self.__buddy_added_cb)
         account.connect('buddy-updated', self.__buddy_updated_cb)
-        account.connect('buddy-joined-activity', self.__buddy_joined_activity_cb)
+        account.connect('buddy-joined-activity',
+                        self.__buddy_joined_activity_cb)
         account.connect('buddy-left-activity', self.__buddy_left_activity_cb)
         account.connect('activity-added', self.__activity_added_cb)
         account.connect('activity-updated', self.__activity_updated_cb)
         account.connect('activity-removed', self.__activity_removed_cb)
-        account.connect('current-activity-updated', self.__current_activity_updated_cb)
-        self._accounts.append(account)
+        account.connect('current-activity-updated',
+                        self.__current_activity_updated_cb)
+        account.connect('connected', self.__account_connected_cb)
+        account.connect('disconnected', self.__account_disconnected_cb)
 
-    def _ensure_link_local_account(self, account_manager, accounts):
-        # TODO: Is this the better way to check for an account?
-        for account in accounts:
-            if 'salut' in account:
+    def __account_connected_cb(self, account):
+        logging.debug('__account_connected_cb %s', account.object_path)
+        if account == self._server_account:
+            self._link_local_account.disable()
+
+    def __account_disconnected_cb(self, account):
+        logging.debug('__account_disconnected_cb %s', account.object_path)
+        if account == self._server_account:
+            self._link_local_account.enable()
+
+    def _ensure_link_local_account(self, account_paths):
+        for account_path in account_paths:
+            if 'salut' in account_path:
                 logging.debug('Already have a Salut account')
-                return
+                account = _Account(account_path)
+                account.enable()
+                return account
 
         logging.debug('Still dont have a Salut account, creating one')
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
+        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
 
         params = {
                 'nickname': nick,
                 'first-name': '',
                 'last-name': '',
-                #'jid': '%s@%s' % ('moc', 'mac'),
+                'jid': '%s@%s' % (self._sanitize_nick(nick), server),
                 'published-name': nick,
                 }
 
@@ -519,26 +585,32 @@ class Neighborhood(gobject.GObject):
                 'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
                 }
 
-        account = account_manager.CreateAccount('salut', 'local-xmpp',
-                                                'salut', params, properties)
-        accounts.append(account)
+        bus = dbus.Bus()
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
+        account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+        account_path = account_manager.CreateAccount('salut', 'local-xmpp',
+                                                     'salut', params, properties)
+        return _Account(account_path)
 
-    def _ensure_server_account(self, account_manager, accounts):
-        # TODO: Is this the better way to check for an account?
-        for account in accounts:
-            if 'gabble' in account:
+    def _ensure_server_account(self, account_paths):
+        for account_path in account_paths:
+            if 'gabble' in account_path:
                 logging.debug('Already have a Gabble account')
-                return
+                account = _Account(account_path)
+                account.enable()
+                return account
 
         logging.debug('Still dont have a Gabble account, creating one')
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
+        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        key_hash = get_profile().privkey_hash
 
         params = {
-                'account': '%s-mec@jabber2.sugarlabs.org' % nick,
-                'password': '***',
-                'server': 'jabber2.sugarlabs.org',
+                'account': '%s@%s' % (self._sanitize_nick(nick), server),
+                'password': key_hash,
+                'server': server,
                 'resource': 'sugar',
                 'require-encryption': True,
                 'ignore-ssl-errors': True,
@@ -553,9 +625,16 @@ class Neighborhood(gobject.GObject):
                 'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
                 }
 
-        account = account_manager.CreateAccount('gabble', 'jabber',
-                                                'jabber', params, properties)
-        accounts.append(account)
+        bus = dbus.Bus()
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
+        account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
+        account_path = account_manager.CreateAccount('gabble', 'jabber',
+                                                     'jabber', params,
+                                                     properties)
+        return _Account(account_path)
+
+    def _sanitize_nick(self, nick):
+        return nick.replace(' ', '_')
 
     def __buddy_added_cb(self, account, contact_id, nick, key):
         logging.debug('__buddy_added_cb %r', contact_id)
