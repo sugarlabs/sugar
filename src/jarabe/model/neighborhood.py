@@ -40,7 +40,8 @@ from telepathy.interfaces import ACCOUNT, \
                                  CONNECTION_INTERFACE_SIMPLE_PRESENCE
 from telepathy.constants import HANDLE_TYPE_LIST, \
                                 CONNECTION_PRESENCE_TYPE_OFFLINE, \
-                                CONNECTION_STATUS_CONNECTED
+                                CONNECTION_STATUS_CONNECTED, \
+                                CONNECTION_STATUS_DISCONNECTED
 from telepathy.client import Connection, Channel
 
 from sugar.graphics.xocolor import XoColor
@@ -173,8 +174,11 @@ class _Account(gobject.GObject):
         self._buddies_per_activity = {}
         self._activities_per_buddy = {}
 
+        self._start_listening()
+
+    def _start_listening(self):
         bus = dbus.Bus()
-        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account_path)
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, self.object_path)
         obj.Get(ACCOUNT, 'Connection',
                 reply_handler=self.__got_connection_cb,
                 error_handler=partial(self.__error_handler_cb,
@@ -186,7 +190,7 @@ class _Account(gobject.GObject):
         raise RuntimeError('Error when calling %s: %s' % (function_name, error))
 
     def __got_connection_cb(self, connection_path):
-        logging.debug('__got_connection_cb %r', connection_path)
+        logging.debug('_Account.__got_connection_cb %r', connection_path)
 
         if connection_path == '/':
             return
@@ -194,8 +198,14 @@ class _Account(gobject.GObject):
         self._prepare_connection(connection_path)
 
     def __account_property_changed_cb(self, properties):
-        logging.debug('__account_property_changed_cb %r', self.object_path)
-        if properties.get('Connection', '/') != '/' and self._connection is None:
+        logging.debug('_Account.__account_property_changed_cb %r %r %r',
+                      self.object_path, properties.get('Connection', None),
+                      self._connection)
+        if 'Connection' not in properties:
+            return
+        if properties['Connection'] == '/':
+            self._connection = None
+        elif self._connection is None:
             self._prepare_connection(properties['Connection'])
 
     def _prepare_connection(self, connection_path):
@@ -206,7 +216,7 @@ class _Account(gobject.GObject):
                                       ready_handler=self.__connection_ready_cb)
 
     def __connection_ready_cb(self, connection):
-        logging.debug('__connection_ready_cb %r', connection.object_path)
+        logging.debug('_Account.__connection_ready_cb %r', connection.object_path)
         connection.connect_to_signal('StatusChanged',
                                      self.__status_changed_cb)
 
@@ -217,11 +227,11 @@ class _Account(gobject.GObject):
                                       'Connection.GetStatus'))
 
     def __get_status_cb(self, status):
-        logging.debug('__get_status_cb %r %r', self._connection.object_path, status)
+        logging.debug('_Account.__get_status_cb %r %r', self._connection.object_path, status)
         self._update_status(status)
 
     def __status_changed_cb(self, status, reason):
-        logging.debug('__status_changed_cb %r %r', status, reason)
+        logging.debug('_Account.__status_changed_cb %r %r', status, reason)
         self._update_status(status)
 
     def _update_status(self, status):
@@ -245,6 +255,9 @@ class _Account(gobject.GObject):
             self._activities_per_buddy = {}
 
             self.emit('disconnected')
+
+        if status == CONNECTION_STATUS_DISCONNECTED:
+            self._connection = None
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
@@ -303,13 +316,13 @@ class _Account(gobject.GObject):
                                           'Connection.GetMembers'))
 
     def __aliases_changed_cb(self, aliases):
-        logging.debug('__aliases_changed_cb')
+        logging.debug('_Account.__aliases_changed_cb')
         for handle, alias in aliases:
             if handle in self._buddy_handles:
                 logging.debug('Got handle %r with nick %r, going to update', handle, alias)
 
     def __presences_changed_cb(self, presences):
-        logging.debug('__presences_changed_cb %r', presences)
+        logging.debug('_Account.__presences_changed_cb %r', presences)
         for handle, presence in presences.iteritems():
             if handle in self._buddy_handles:
                 presence_type, status_, message_ = presence
@@ -318,26 +331,25 @@ class _Account(gobject.GObject):
                     self.emit('buddy-removed', handle)
 
     def __buddy_info_updated_cb(self, handle, properties):
-        logging.debug('__buddy_info_updated_cb %r %r', handle, properties)
+        logging.debug('_Account.__buddy_info_updated_cb %r %r', handle, properties)
 
     def __current_activity_changed_cb(self, contact_handle, activity_id, room_handle):
-        logging.debug('__current_activity_changed_cb %r %r %r', contact_handle, activity_id, room_handle)
+        logging.debug('_Account.__current_activity_changed_cb %r %r %r', contact_handle, activity_id, room_handle)
         if contact_handle in self._buddy_handles:
             contact_id = self._buddy_handles[contact_handle]
             self.emit('current-activity-updated', contact_id, activity_id)
 
     def __get_current_activity_cb(self, contact_handle, activity_id, room_handle):
-        logging.debug('__get_current_activity_cb %r %r %r', contact_handle, activity_id, room_handle)
-        logging.debug('__get_current_activity_cb %r', self._buddy_handles)
+        logging.debug('_Account.__get_current_activity_cb %r %r %r', contact_handle, activity_id, room_handle)
         contact_id = self._buddy_handles[contact_handle]
         self.emit('current-activity-updated', contact_id, activity_id)
 
     def __buddy_activities_changed_cb(self, buddy_handle, activities):
-        logging.debug('__buddy_activities_changed_cb %r %r', buddy_handle, activities)
+        logging.debug('_Account.__buddy_activities_changed_cb %r %r', buddy_handle, activities)
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
-        logging.debug('_update_buddy_activities')
+        logging.debug('_Account._update_buddy_activities')
         if not buddy_handle in self._buddy_handles:
             self._buddy_handles[buddy_handle] = None
 
@@ -371,7 +383,7 @@ class _Account(gobject.GObject):
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
 
     def __get_properties_cb(self, room_handle, properties):
-        logging.debug('__get_properties_cb %r %r', room_handle, properties)
+        logging.debug('_Account.__get_properties_cb %r %r', room_handle, properties)
         self._update_activity(room_handle, properties)
 
     def _remove_buddy_from_activity(self, buddy_handle, activity_id):
@@ -397,7 +409,7 @@ class _Account(gobject.GObject):
             self.emit('activity-removed', activity_id)
 
     def __activity_properties_changed_cb(self, room_handle, properties):
-        logging.debug('__activity_properties_changed_cb %r %r', room_handle, properties)
+        logging.debug('_Account.__activity_properties_changed_cb %r %r', room_handle, properties)
         self._update_activity(room_handle, properties)
 
     def _update_activity(self, room_handle, properties):
@@ -405,7 +417,7 @@ class _Account(gobject.GObject):
             self.emit('activity-updated', self._activity_handles[room_handle],
                       properties)
         else:
-            logging.debug('__activity_properties_changed_cb unknown activity')
+            logging.debug('_Account.__activity_properties_changed_cb unknown activity')
             # We don't get ActivitiesChanged for the owner of the connection,
             # so we query for its activities in order to find out.
             if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
@@ -422,14 +434,14 @@ class _Account(gobject.GObject):
         self._add_buddy_handles(added)
 
     def __get_members_ready_cb(self, handles):
-        logging.debug('__get_members_ready_cb %r', handles)
+        logging.debug('_Account.__get_members_ready_cb %r', handles)
         if not handles:
             return
 
         self._add_buddy_handles(handles)
 
     def _add_buddy_handles(self, handles):
-        logging.debug('_add_buddy_handles %r', handles)
+        logging.debug('_Account._add_buddy_handles %r', handles)
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
         self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
                 handles, interfaces, False,
@@ -438,13 +450,13 @@ class _Account(gobject.GObject):
                                       'Contacts.GetContactAttributes'))
 
     def __got_buddy_info_cb(self, handle, nick, properties):
-        logging.debug('__got_buddy_info_cb %r', properties)
+        logging.debug('_Account.__got_buddy_info_cb %r', properties)
         self.emit('buddy-added', self._buddy_handles[handle], nick,
                   properties.get('key', None))
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __get_contact_attributes_cb(self, attributes):
-        logging.debug('__get_contact_attributes_cb %r', attributes.keys())
+        logging.debug('_Account.__get_contact_attributes_cb %r', attributes.keys())
 
         for handle in attributes.keys():
             nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
@@ -483,16 +495,18 @@ class _Account(gobject.GObject):
                     self.emit('buddy-added', contact_id, nick, None)
 
     def __got_activities_cb(self, buddy_handle, activities):
-        logging.debug('__got_activities_cb %r %r', buddy_handle, activities)
+        logging.debug('_Account.__got_activities_cb %r %r', buddy_handle, activities)
         self._update_buddy_activities(buddy_handle, activities)
 
     def enable(self):
         logging.debug('_Account.enable %s', self.object_path)
         self._set_enabled(True)
+        #self._start_listening()
 
     def disable(self):
         logging.debug('_Account.disable %s', self.object_path)
         self._set_enabled(False)
+        self._connection = None
 
     def _set_enabled(self, value):
         bus = dbus.Bus()
@@ -504,7 +518,7 @@ class _Account(gobject.GObject):
                 dbus_interface='org.freedesktop.DBus.Properties')
 
     def __set_enabled_cb(self):
-        logging.debug('__set_enabled_cb success')
+        logging.debug('_Account.__set_enabled_cb success')
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
@@ -675,9 +689,9 @@ class Neighborhood(gobject.GObject):
             buddy.props.color = XoColor(properties['color'])
 
     def __buddy_removed_cb(self, account, contact_id):
-        logging.debug('__buddy_removed_cb %r', contact_id)
+        logging.debug('Neighborhood.__buddy_removed_cb %r', contact_id)
         if contact_id not in self._buddies:
-            logging.debug('__buddy_removed_cb Unknown buddy with contact_id %r', contact_id)
+            logging.debug('Neighborhood.__buddy_removed_cb Unknown buddy with contact_id %r', contact_id)
             return
 
         buddy = self._buddies[contact_id]
