@@ -28,10 +28,10 @@ class BuddyIcon(CanvasIcon):
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
-        palette = BuddyMenu(buddy)
-        self.set_palette(palette)
-
         self._update_color()
+
+    def create_palette(self):
+        return BuddyMenu(self._buddy)
 
     def __buddy_notify_present_cb(self, buddy, pspec):
         # Update the icon's color when the buddy comes and goes
@@ -41,19 +41,18 @@ class BuddyIcon(CanvasIcon):
         self._update_color()
 
     def _update_color(self):
-
         # keep the icon in the palette in sync with the view
         palette = self.get_palette()
-        palette_icon = palette.props.icon
-
         if self._greyed_out:
             self.props.stroke_color = '#D5D5D5'
             self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-            palette_icon.props.stroke_color = '#D5D5D5'
-            palette_icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            if palette is not None:
+                palette.props.icon.props.stroke_color = self.props.stroke_color
+                palette.props.icon.props.fill_color = self.props.fill_color
         else:
             self.props.xo_color = self._buddy.get_color()
-            palette_icon.props.xo_color = self._buddy.get_color()
+            if palette is not None:
+                palette.props.icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
         self._greyed_out = (self._buddy.get_nick().lower().find(query) == -1) \

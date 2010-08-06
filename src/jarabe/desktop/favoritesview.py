@@ -603,7 +603,6 @@ class OwnerIcon(BuddyIcon):
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), size=size)
 
-        self._power_manager = None
         self._palette_enabled = False
         self._register_menu = None
 
