@@ -233,6 +233,17 @@ class _Account(gobject.GObject):
                                           'Connection.GetSelfHandle'))
             self.emit('connected')
         else:
+            for contact_handle, contact_id in self._buddy_handles.items():
+                self.emit('buddy-removed', contact_id)
+
+            for room_handle, activity_id in self._activity_handles.items():
+                self.emit('activity-removed', activity_id)
+
+            self._buddy_handles = {}
+            self._activity_handles = {}
+            self._buddies_per_activity = {}
+            self._activities_per_buddy = {}
+
             self.emit('disconnected')
 
     def __get_self_handle_cb(self, self_handle):
@@ -536,6 +547,7 @@ class Neighborhood(gobject.GObject):
     def _connect_to_account(self, account):
         account.connect('buddy-added', self.__buddy_added_cb)
         account.connect('buddy-updated', self.__buddy_updated_cb)
+        account.connect('buddy-removed', self.__buddy_removed_cb)
         account.connect('buddy-joined-activity',
                         self.__buddy_joined_activity_cb)
         account.connect('buddy-left-activity', self.__buddy_left_activity_cb)
@@ -661,6 +673,16 @@ class Neighborhood(gobject.GObject):
         buddy = self._buddies[contact_id]
         if 'color' in properties:
             buddy.props.color = XoColor(properties['color'])
+
+    def __buddy_removed_cb(self, account, contact_id):
+        logging.debug('__buddy_removed_cb %r', contact_id)
+        if contact_id not in self._buddies:
+            logging.debug('__buddy_removed_cb Unknown buddy with contact_id %r', contact_id)
+            return
+
+        buddy = self._buddies[contact_id]
+        del self._buddies[contact_id]
+        self.emit('buddy-removed', buddy)
 
     def __activity_added_cb(self, account, room_handle, activity_id):
         logging.debug('__activity_added_cb %r %r', room_handle, activity_id)
