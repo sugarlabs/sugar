@@ -294,26 +294,25 @@ class _Account(gobject.GObject):
             logging.warning('Connection %s does not support OLPC activity '
                             'properties', self._connection.object_path)
 
-        for target_id in 'subscribe', 'publish':
-            properties = {
-                    CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
-                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
-                    CHANNEL + '.TargetID': target_id,
-                    }
-            properties = dbus.Dictionary(properties, signature='sv')
-            connection = self._connection[CONNECTION_INTERFACE_REQUESTS]
-            is_ours, channel_path, properties = \
-                    connection.EnsureChannel(properties)
+        properties = {
+                CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
+                CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
+                CHANNEL + '.TargetID': 'subscribe',
+                }
+        properties = dbus.Dictionary(properties, signature='sv')
+        connection = self._connection[CONNECTION_INTERFACE_REQUESTS]
+        is_ours, channel_path, properties = \
+                connection.EnsureChannel(properties)
 
-            channel = Channel(self._connection.service_name, channel_path)
-            channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
-                      'MembersChanged', self.__members_changed_cb)
+        channel = Channel(self._connection.service_name, channel_path)
+        channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
+                  'MembersChanged', self.__members_changed_cb)
 
-            channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
-                    'Members',
-                    reply_handler=self.__get_members_ready_cb,
-                    error_handler=partial(self.__error_handler_cb,
-                                          'Connection.GetMembers'))
+        channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
+                'Members',
+                reply_handler=self.__get_members_ready_cb,
+                error_handler=partial(self.__error_handler_cb,
+                                      'Connection.GetMembers'))
 
     def __aliases_changed_cb(self, aliases):
         logging.debug('_Account.__aliases_changed_cb')
