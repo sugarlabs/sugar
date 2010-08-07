@@ -383,7 +383,8 @@ class _Account(gobject.GObject):
 
     def __get_properties_cb(self, room_handle, properties):
         logging.debug('_Account.__get_properties_cb %r %r', room_handle, properties)
-        self._update_activity(room_handle, properties)
+        if properties:
+            self._update_activity(room_handle, properties)
 
     def _remove_buddy_from_activity(self, buddy_handle, activity_id):
         if buddy_handle in self._buddies_per_activity[activity_id]:
