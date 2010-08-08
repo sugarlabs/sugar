@@ -502,7 +502,7 @@ class MeshBox(gtk.VBox):
         icon.destroy()
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
-        logging.debug('MeshBox.__buddy_notify_current_activity_cb')
+        logging.debug('MeshBox.__buddy_notify_current_activity_cb %s', buddy_model.props.current_activity)
         if buddy_model.props.current_activity is None:
             if not buddy_model.props.key in self._buddies:
                 self._add_buddy(buddy_model)

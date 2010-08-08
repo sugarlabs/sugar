@@ -336,6 +336,8 @@ class _Account(gobject.GObject):
         logging.debug('_Account.__current_activity_changed_cb %r %r %r', contact_handle, activity_id, room_handle)
         if contact_handle in self._buddy_handles:
             contact_id = self._buddy_handles[contact_handle]
+            if not activity_id and room_handle:
+                activity_id = self._activity_handles.get(room_handle, '')
             self.emit('current-activity-updated', contact_id, activity_id)
 
     def __get_current_activity_cb(self, contact_handle, activity_id, room_handle):
@@ -365,6 +367,16 @@ class _Account(gobject.GObject):
                      reply_handler=partial(self.__get_properties_cb, room_handle),
                      error_handler=partial(self.__error_handler_cb,
                                            'ActivityProperties.GetProperties'))
+
+                # Sometimes we'll get CurrentActivityChanged before we get to
+                # know about the activity so we miss the event. In that case,
+                # request again the current activity for this buddy.
+                connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+                connection.GetCurrentActivity(
+                    buddy_handle,
+                    reply_handler=partial(self.__get_current_activity_cb, buddy_handle),
+                    error_handler=partial(self.__error_handler_cb,
+                                          'BuddyInfo.GetCurrentActivity'))
 
             if not activity_id in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
@@ -746,6 +758,10 @@ class Neighborhood(gobject.GObject):
             logging.debug('__current_activity_updated_cb Unknown buddy with '
                           'contact_id %r', contact_id)
             return
+        if activity_id and activity_id not in self._activities:
+            logging.debug('__current_activity_updated_cb Unknown activity with '
+                          'id %s', activity_id)
+            activity_id = ''
 
         buddy = self._buddies[contact_id]
         if buddy.props.current_activity is not None:
