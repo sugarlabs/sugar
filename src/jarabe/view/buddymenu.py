@@ -19,6 +19,7 @@ from gettext import gettext as _
 
 import gtk
 import gconf
+import dbus
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
@@ -150,7 +151,16 @@ class BuddyMenu(Palette):
         activity = shell.get_model().get_active_activity()
         service = activity.get_service()
         if service:
-            service.Invite(self._buddy.props.account,
-                           self._buddy.props.contact_id)
+            try:
+                service.InviteContact(self._buddy.props.account,
+                                      self._buddy.props.contact_id)
+            except dbus.DBusException, e:
+                expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
+                        'org.freedesktop.DBus.Python.NotImplementedError']
+                if e.get_dbus_name() in expected_exceptions:
+                    logging.warning('Trying deprecated Activity.Invite')
+                    service.Invite(self._buddy.props.key)
+                else:
+                    raise
         else:
             logging.error('Invite failed, activity service not ')
