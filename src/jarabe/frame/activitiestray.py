@@ -517,12 +517,12 @@ class IncomingTransferButton(BaseTransferButton):
             logging.debug('__notify_state_cb COMPLETED')
             self._ds_object.metadata['progress'] = '100'
             self._ds_object.file_path = file_transfer.destination_path
-            datastore.write(self._ds_jobject, transfer_ownership=True,
+            datastore.write(self._ds_object, transfer_ownership=True,
                             reply_handler=self.__reply_handler_cb,
                             error_handler=self.__error_handler_cb)
         elif file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             logging.debug('__notify_state_cb CANCELLED')
-            object_id = self._jobject.object_id
+            object_id = self._ds_object.object_id
             if object_id is not None:
                 self._ds_object.destroy()
                 datastore.delete(object_id)
@@ -535,10 +535,11 @@ class IncomingTransferButton(BaseTransferButton):
         datastore.write(self._ds_object, update_mtime=False)
 
     def __reply_handler_cb(self):
-        logging.debug('__reply_handler_cb %r', self._object_id)
+        logging.debug('__reply_handler_cb %r', self._ds_object.object_id)
 
     def __error_handler_cb(self, error):
-        logging.debug('__error_handler_cb %r %s', self._object_id, error)
+        logging.debug('__error_handler_cb %r %s', self._ds_object.object_id,
+                      error)
 
     def __dismiss_clicked_cb(self, palette):
         self.remove()
