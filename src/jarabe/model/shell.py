@@ -30,6 +30,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.presence import presenceservice
 
 from jarabe.model.bundleregistry import get_registry
+from jarabe.model import neighborhood
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
@@ -147,14 +148,13 @@ class Activity(gobject.GObject):
         """
         pservice = presenceservice.get_instance()
 
-        logging.info('KILL_PS check in local list of activities')
         # HACK to suppress warning in logs when activity isn't found
         # (if it's locally launched and not shared yet)
         activity = None
-        #for act in pservice.get_activities():
-        #    if self._activity_id == act.props.id:
-        #        activity = act
-        #        break
+        for act in neighborhood.get_model().get_activities():
+            if self._activity_id == act.activity_id:
+                activity = act
+                break
 
         if activity != None:
             return XoColor(activity.props.color)
