@@ -19,6 +19,8 @@ import logging
 import gobject
 import gconf
 import dbus
+from telepathy.client import Connection
+from telepathy.interfaces import CONNECTION
 
 from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
@@ -107,8 +109,8 @@ class OwnerBuddyModel(BaseBuddyModel):
         self.props.present = True
 
         client = gconf.client_get_default()
-        self.props.nick = client.get_string("/desktop/sugar/user/nick")
-        self.props.color = XoColor(client.get_string("/desktop/sugar/user/color"))
+        self.props.nick = client.get_string('/desktop/sugar/user/nick')
+        self.props.color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         self.props.key = get_profile().pubkey
 
@@ -116,12 +118,27 @@ class OwnerBuddyModel(BaseBuddyModel):
         self.connect('notify::color', self.__property_changed_cb)
         self.connect('notify::current-activity', self.__current_activity_changed_cb)
 
-        logging.info('KILL_PS should set the properties before the connection'
-                     'is connected, if possible')
-        conn_watcher = connection_watcher.get_instance()
-        conn_watcher.connect('connection-added', self.__connection_added_cb)
+        bus = dbus.SessionBus()
+        bus.add_signal_receiver(
+                self.__name_owner_changed_cb,
+                signal_name='NameOwnerChanged',
+                dbus_interface='org.freedesktop.DBus')
 
-        self._sync_properties()
+        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
+            if service.startswith('org.freedesktop.Telepathy.Connection.'):
+                path = '/%s' % service.replace('.', '/')
+                Connection(service, path, bus,
+                           ready_handler=self.__connection_ready_cb)
+
+    def __connection_ready_cb(self, connection):
+        self._sync_properties_on_connection(connection)
+
+    def __name_owner_changed_cb(self, name, old, new):
+        if name.startswith(CONNECTION) and not old and new:
+            path = '/' + name.replace('.', '/')
+            connection = Connection(name, path,
+                                    ready_handler=self.__connection_ready_cb)
 
     def __property_changed_cb(self, pspec):
         self._sync_properties()
@@ -136,7 +153,7 @@ class OwnerBuddyModel(BaseBuddyModel):
                 activity_id = ''
                 room_handle = 0
 
-            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetCurrentProperty(
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetCurrentActivity(
                 activity_id,
                 room_handle,
                 reply_handler=self.__set_current_activity_cb,
