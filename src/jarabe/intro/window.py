@@ -36,16 +36,9 @@ from jarabe.intro import colorpicker
 _BACKGROUND_COLOR = style.COLOR_WHITE
 
 
-def create_profile(name, color=None, pixbuf=None):
-    if not pixbuf:
-        path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
-        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
-
+def create_profile(name, color=None):
     if not color:
         color = XoColor()
-
-    icon_path = os.path.join(env.get_profile_path(), 'buddy-icon.jpg')
-    pixbuf.save(icon_path, 'jpeg', {'quality': '85'})
 
     client = gconf.client_get_default()
     client.set_string('/desktop/sugar/user/nick', name)
