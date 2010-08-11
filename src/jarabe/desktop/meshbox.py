@@ -35,6 +35,7 @@ from sugar.activity.activityhandle import ActivityHandle
 from sugar.activity import activityfactory
 
 from jarabe.model import neighborhood
+from jarabe.model import buddy
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view import launcher
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
@@ -100,13 +101,8 @@ class ActivityView(hippo.CanvasBox):
                             primary_text=p_text,
                             icon=p_icon)
 
-        logging.info('KILL_PS display private activities in the neighborhood')
-        #private = self._model.activity.props.private
-        private = False
-
-        logging.info('KILL_PS check if we are already in this activity')
-        #joined = self._model.activity.props.joined
-        joined = False
+        private = self._model.props.private
+        joined = buddy.get_owner_instance() in self._model.props.buddies
 
         if joined:
             item = MenuItem(_('Resume'), 'activity-start')

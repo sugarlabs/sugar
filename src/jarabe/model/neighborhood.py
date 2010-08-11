@@ -106,6 +106,14 @@ class ActivityModel(gobject.GObject):
 
     name = gobject.property(type=object, getter=get_name, setter=set_name)
 
+    def is_private(self):
+        return self._private
+
+    def set_private(self, private):
+        self._private = private
+
+    private = gobject.property(type=object, getter=is_private, setter=set_private)
+
     def get_buddies(self):
         return self._buddies
 
@@ -738,6 +746,7 @@ class Neighborhood(gobject.GObject):
         activity.props.color = XoColor(properties['color'])
         activity.props.bundle = bundle
         activity.props.name = properties['name']
+        activity.props.private = properties['private']
 
         if is_new:
             self.emit('activity-added', activity)
