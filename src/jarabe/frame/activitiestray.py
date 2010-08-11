@@ -532,7 +532,7 @@ class IncomingTransferButton(BaseTransferButton):
         progress = file_transfer.props.transferred_bytes /      \
                    file_transfer.file_size
         self._ds_object.metadata['progress'] = str(progress * 100)
-        datastore.write(self._ds_object.object_id, update_mtime=False)
+        datastore.write(self._ds_object, update_mtime=False)
 
     def __reply_handler_cb(self):
         logging.debug('__reply_handler_cb %r', self._object_id)
