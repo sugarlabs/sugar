@@ -46,7 +46,6 @@ AM_GCONF_SOURCE_2
 AC_CONFIG_FILES([
 bin/Makefile
 bin/sugar
-bin/sugar-dbus-launch-helper
 data/icons/Makefile
 data/Makefile
 data/sugar-emulator.desktop

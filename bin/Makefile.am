@@ -9,7 +9,6 @@ python_scripts =		\
 
 bin_SCRIPTS = 			\
 	sugar			\
-	sugar-dbus-launch-helper	\
 	$(python_scripts)
 
-EXTRA_DIST = $(python_scripts) sugar.in sugar-dbus-launch-helper.in
+EXTRA_DIST = $(python_scripts) sugar.in
