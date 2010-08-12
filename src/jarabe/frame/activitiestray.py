@@ -282,10 +282,7 @@ class ActivitiesTray(HTray):
                 window.activate(gtk.get_current_event_time())
 
     def __invite_clicked_cb(self, icon, invite):
-        if hasattr(invite, 'get_activity_id'):
-            self._invites.remove_invite(invite)
-        else:
-            self._invites.remove_private_invite(invite)
+        self._invites.remove_invite(invite)
 
     def __invite_added_cb(self, invites, invite):
         self._add_invite(invite)

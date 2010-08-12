@@ -813,6 +813,12 @@ class Neighborhood(gobject.GObject):
     def get_activity(self, activity_id):
         return self._activities.get(activity_id, None)
 
+    def get_activity_by_room(self, room_handle):
+        for activity in self._activities.values():
+            if activity.room_handle == room_handle:
+                return activity
+        return None
+
     def get_activities(self):
         return self._activities.values()
 
