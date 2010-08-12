@@ -16,7 +16,6 @@
 
 import logging
 
-from sugar.presence import presenceservice
 from sugar.graphics.tray import VTray, TrayIcon
 
 from jarabe.view.buddymenu import BuddyMenu

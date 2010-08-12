@@ -22,7 +22,6 @@ import dbus
 from telepathy.client import Connection
 from telepathy.interfaces import CONNECTION
 
-from sugar.presence import presenceservice
 from sugar.graphics.xocolor import XoColor
 from sugar.profile import get_profile
 

@@ -23,7 +23,6 @@ import gconf
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
-from sugar.presence import presenceservice
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.model.buddy import get_owner_instance
