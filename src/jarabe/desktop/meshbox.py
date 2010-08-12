@@ -1,6 +1,7 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,19 +32,15 @@ from sugar.graphics import style
 from sugar.graphics import palette
 from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
-from sugar.activity.activityhandle import ActivityHandle
-from sugar.activity import activityfactory
 
 from jarabe.model import neighborhood
-from jarabe.model import buddy
+from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.view import launcher
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
-from jarabe.model import bundleregistry
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -102,7 +99,7 @@ class ActivityView(hippo.CanvasBox):
                             icon=p_icon)
 
         private = self._model.props.private
-        joined = buddy.get_owner_instance() in self._model.props.buddies
+        joined = get_owner_instance() in self._model.props.buddies
 
         if joined:
             item = MenuItem(_('Resume'), 'activity-start')
@@ -498,7 +495,8 @@ class MeshBox(gtk.VBox):
         icon.destroy()
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
-        logging.debug('MeshBox.__buddy_notify_current_activity_cb %s', buddy_model.props.current_activity)
+        logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
+                      buddy_model.props.current_activity)
         if buddy_model.props.current_activity is None:
             if not buddy_model.props.key in self._buddies:
                 self._add_buddy(buddy_model)

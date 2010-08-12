@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +38,8 @@ from jarabe.model import bundleregistry
 from jarabe.model import neighborhood
 from jarabe.journal import misc
 
-CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
+CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
+        'org.laptop.Telepathy.ActivityProperties'
 
 
 class ActivityInvite(object):
@@ -84,7 +86,8 @@ class ActivityInvite(object):
                         activity_id=activity_id)
 
     def __name_owner_changed_cb(self, name, old_owner, new_owner):
-        logging.debug('ActivityInvite.__name_owner_changed_cb %r %r %r', name, new_owner, old_owner)
+        logging.debug('ActivityInvite.__name_owner_changed_cb %r %r %r', name,
+                      new_owner, old_owner)
         if name == self._handler and new_owner and not old_owner:
             self._call_handle_with()
 
@@ -131,7 +134,8 @@ class Invites(gobject.GObject):
         if handle_type == HANDLE_TYPE_ROOM and \
            channel_type == CHANNEL_TYPE_TEXT:
             logging.debug('May be an activity, checking its properties')
-            connection_path = properties[CHANNEL_DISPATCH_OPERATION + '.Connection']
+            connection_path = properties[CHANNEL_DISPATCH_OPERATION +
+                                         '.Connection']
             connection_name = connection_path.replace('/', '.')[1:]
 
             bus = dbus.Bus()
@@ -159,7 +163,8 @@ class Invites(gobject.GObject):
     def __error_handler_cb(self, handle, channel_properties,
                            dispatch_operation_path, error):
         logging.debug('__error_handler_cb %r', error)
-        if error.get_dbus_name() == 'org.freedesktop.Telepathy.Error.NotAvailable':
+        exception_name = 'org.freedesktop.Telepathy.Error.NotAvailable'
+        if error.get_dbus_name() == exception_name:
             self._dispatch_non_sugar_invitation(handle,
                                                 channel_properties,
                                                 dispatch_operation_path)
@@ -177,7 +182,8 @@ class Invites(gobject.GObject):
         elif channel_type == CHANNEL_TYPE_STREAMED_MEDIA:
             handler = CLIENT + '.org.laptop.VideoChat'
         elif channel_type == CHANNEL_TYPE_DBUS_TUBE:
-            handler = channel_properties[CHANNEL_TYPE_DBUS_TUBE + '.ServiceName']
+            handler = channel_properties[CHANNEL_TYPE_DBUS_TUBE +
+                                         '.ServiceName']
         elif channel_type == CHANNEL_TYPE_STREAM_TUBE:
             handler = channel_properties[CHANNEL_TYPE_STREAM_TUBE + '.Service']
         else:
@@ -204,7 +210,8 @@ class Invites(gobject.GObject):
 
     def _add_invite(self, dispatch_operation_path, handle, handler,
                     activity_properties=None):
-        logging.debug('_add_invite %r %r %r', dispatch_operation_path, handle, handler)
+        logging.debug('_add_invite %r %r %r', dispatch_operation_path, handle,
+                      handler)
         if dispatch_operation_path in self._dispatch_operations:
             # there is no point to have more than one invite for the same
             # dispatch operation

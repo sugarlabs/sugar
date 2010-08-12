@@ -1,5 +1,6 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,20 +34,16 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon, get_icon_file_name
 from sugar.graphics.palette import Palette, WidgetInvoker
 from sugar.graphics.menuitem import MenuItem
-from sugar.activity.activityhandle import ActivityHandle
-from sugar.activity import activityfactory
 from sugar.datastore import datastore
 from sugar import mime
 from sugar import env
 
 from jarabe.model import shell
-from jarabe.model import neighborhood
 from jarabe.model import invites
 from jarabe.model import bundleregistry
 from jarabe.model import filetransfer
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
-from jarabe.view import launcher
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
@@ -197,9 +194,9 @@ class InvitePalette(Palette):
         self._invite.join()
 
     def __decline_activate_cb(self, menu_item):
-        invites = invites.get_instance()
+        invites_model = invites.get_instance()
         activity_id = self._activity_model.get_id()
-        invites.remove_activity(activity_id)
+        invites_model.remove_activity(activity_id)
 
 
 class ActivitiesTray(HTray):
@@ -284,10 +281,10 @@ class ActivitiesTray(HTray):
     def __invite_clicked_cb(self, icon, invite):
         self._invites.remove_invite(invite)
 
-    def __invite_added_cb(self, invites, invite):
+    def __invite_added_cb(self, invites_model, invite):
         self._add_invite(invite)
 
-    def __invite_removed_cb(self, invites, invite):
+    def __invite_removed_cb(self, invites_model, invite):
         self._remove_invite(invite)
 
     def _add_invite(self, invite):

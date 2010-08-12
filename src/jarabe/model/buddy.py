@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -109,13 +110,15 @@ class OwnerBuddyModel(BaseBuddyModel):
 
         client = gconf.client_get_default()
         self.props.nick = client.get_string('/desktop/sugar/user/nick')
-        self.props.color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = client.get_string('/desktop/sugar/user/color')
+        self.props.color = XoColor(color)
 
         self.props.key = get_profile().pubkey
 
         self.connect('notify::nick', self.__property_changed_cb)
         self.connect('notify::color', self.__property_changed_cb)
-        self.connect('notify::current-activity', self.__current_activity_changed_cb)
+        self.connect('notify::current-activity',
+                     self.__current_activity_changed_cb)
 
         bus = dbus.SessionBus()
         bus.add_signal_receiver(
@@ -123,8 +126,9 @@ class OwnerBuddyModel(BaseBuddyModel):
                 signal_name='NameOwnerChanged',
                 dbus_interface='org.freedesktop.DBus')
 
-        bus_object = bus.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-        for service in bus_object.ListNames(dbus_interface='org.freedesktop.DBus'):
+        bus_object = bus.get_object(dbus.BUS_DAEMON_NAME, dbus.BUS_DAEMON_PATH)
+        for service in bus_object.ListNames(
+                dbus_interface=dbus.BUS_DAEMON_IFACE):
             if service.startswith('org.freedesktop.Telepathy.Connection.'):
                 path = '/%s' % service.replace('.', '/')
                 Connection(service, path, bus,
@@ -136,8 +140,7 @@ class OwnerBuddyModel(BaseBuddyModel):
     def __name_owner_changed_cb(self, name, old, new):
         if name.startswith(CONNECTION) and not old and new:
             path = '/' + name.replace('.', '/')
-            connection = Connection(name, path,
-                                    ready_handler=self.__connection_ready_cb)
+            Connection(name, path, ready_handler=self.__connection_ready_cb)
 
     def __property_changed_cb(self, pspec):
         self._sync_properties()
@@ -193,7 +196,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         return True
 
     def get_buddy(self):
-        return None
+        raise NotImplementedError
 
 
 _owner_instance = None
@@ -243,3 +246,5 @@ class FriendBuddyModel(BuddyModel):
     def __init__(self, nick, key):
         BuddyModel.__init__(self, nick=nick, key=key)
 
+    def get_buddy(self):
+        raise NotImplementedError

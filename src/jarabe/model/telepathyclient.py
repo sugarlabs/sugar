@@ -63,8 +63,9 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
                          in_signature='ooa(oa{sv})aota{sv}', out_signature='')
     def HandleChannels(self, account, connection, channels, requests_satisfied,
                         user_action_time, handler_info):
-        logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account, connection,
-                channels, requests_satisfied, user_action_time, handler_info)
+        logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account,
+                      connection, channels, requests_satisfied,
+                      user_action_time, handler_info)
         for channel in channels:
             self.got_channel.send(self, account=account,
                                   connection=connection, channel=channel)
@@ -81,7 +82,8 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
                              properties, success_cb, error_cb_):
         success_cb()
         try:
-            logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels, dispatch_operation_path, properties)
+            logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels,
+                          dispatch_operation_path, properties)
 
             self.got_dispatch_operation.send(self, channels=channels,
                     dispatch_operation_path=dispatch_operation_path,

@@ -21,7 +21,7 @@ from sugar.graphics.tray import VTray, TrayIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
-from jarabe.model.buddy import BuddyModel, get_owner_instance
+from jarabe.model.buddy import get_owner_instance
 from jarabe.model import neighborhood
 
 class FriendIcon(TrayIcon):
@@ -70,7 +70,8 @@ class FriendsTray(VTray):
             item.destroy()
         self._buddies = {}
 
-    def __neighborhood_activity_added_cb(self, neighborhood, shared_activity):
+    def __neighborhood_activity_added_cb(self, neighborhood_model,
+                                         shared_activity):
         logging.debug('FriendsTray.__neighborhood_activity_added_cb')
         self.clear()
 

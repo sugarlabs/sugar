@@ -27,7 +27,6 @@ import dbus
 from sugar import wm
 from sugar import dispatch
 from sugar.graphics.xocolor import XoColor
-from sugar.presence import presenceservice
 
 from jarabe.model.bundleregistry import get_registry
 from jarabe.model import neighborhood
@@ -146,8 +145,6 @@ class Activity(gobject.GObject):
         have an entry (implying that this is not a Sugar-shared application)
         uses the local user's profile colour for the icon.
         """
-        pservice = presenceservice.get_instance()
-
         # HACK to suppress warning in logs when activity isn't found
         # (if it's locally launched and not shared yet)
         activity = None
@@ -358,7 +355,6 @@ class ShellModel(gobject.GObject):
         self._activities = []
         self._active_activity = None
         self._tabbing_activity = None
-        self._pservice = presenceservice.get_instance()
         self._launchers = {}
 
         self._screen.toggle_showing_desktop(True)

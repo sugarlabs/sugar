@@ -155,7 +155,8 @@ class BuddyMenu(Palette):
                 service.InviteContact(self._buddy.props.account,
                                       self._buddy.props.contact_id)
             except dbus.DBusException, e:
-                expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
+                expected_exceptions = [
+                        'org.freedesktop.DBus.Error.UnknownMethod',
                         'org.freedesktop.DBus.Python.NotImplementedError']
                 if e.get_dbus_name() in expected_exceptions:
                     logging.warning('Trying deprecated Activity.Invite')
