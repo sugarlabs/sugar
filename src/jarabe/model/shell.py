@@ -157,7 +157,7 @@ class Activity(gobject.GObject):
                 break
 
         if activity != None:
-            return XoColor(activity.props.color)
+            return activity.props.color
         else:
             client = gconf.client_get_default()
             return XoColor(client.get_string("/desktop/sugar/user/color"))
