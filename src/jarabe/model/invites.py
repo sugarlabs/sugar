@@ -82,7 +82,7 @@ class ActivityInvite(object):
 
             model = neighborhood.get_model()
             activity_id = model.get_activity_by_room(self._handle).activity_id
-            misc.launch(bundle, color=self.get_color(), handle_invite=True,
+            misc.launch(bundle, color=self.get_color(), invited=True,
                         activity_id=activity_id)
 
     def __name_owner_changed_cb(self, name, old_owner, new_owner):

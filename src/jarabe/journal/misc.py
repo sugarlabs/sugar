@@ -216,7 +216,7 @@ def resume(metadata, bundle_id=None):
                 color=get_icon_color(metadata))
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
-           handle_invite=False):
+           invited=False):
     if activity_id is None:
         activity_id = activityfactory.create_activity_id()
 
@@ -236,7 +236,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
     activity_handle = ActivityHandle(activity_id=activity_id,
-            object_id=object_id, uri=uri, handle_invite=handle_invite)
+            object_id=object_id, uri=uri, invited=invited)
     activityfactory.create(bundle, activity_handle)
 
 def is_activity_bundle(metadata):
