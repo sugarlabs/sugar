@@ -1315,7 +1315,6 @@ class MeshBox(gtk.VBox):
 
     def remove_adhoc_networks(self):
         for icon in self._adhoc_networks:
-            icon.disconnect()
             self._layout.remove(icon)
         self._adhoc_networks = []
 
