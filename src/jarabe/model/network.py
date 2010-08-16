@@ -117,7 +117,7 @@ def frequency_to_channel(frequency):
             2472: 13}
     if frequency not in ftoc:
         logging.warning("The frequency %s can not be mapped to a channel, " \
-                            "defaulting to channel 1.", frequncy)
+                            "defaulting to channel 1.", frequency)
         return 1
     return ftoc[frequency]
 
