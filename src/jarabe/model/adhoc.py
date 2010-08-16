@@ -82,11 +82,8 @@ class AdHocManager(gobject.GObject):
                                    ' only be called once.')
 
         self._device = device
-        props = dbus.Interface(device,
-                                   'org.freedesktop.DBus.Properties')
-        props.Get(_NM_DEVICE_IFACE, 'State',
-                  reply_handler=self.__get_device_state_reply_cb,
-                  error_handler=self.__get_state_error_cb)
+        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        self._device_state = props.Get(_NM_DEVICE_IFACE, 'State')
 
         self._bus.add_signal_receiver(self.__device_state_changed_cb,
                                       signal_name='StateChanged',
@@ -107,12 +104,6 @@ class AdHocManager(gobject.GObject):
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
                                          dbus_interface=_NM_WIRELESS_IFACE)
-
-    def __get_state_error_cb(self, err):
-        logging.debug('Error getting the device state: %s', err)
-
-    def __get_device_state_reply_cb(self, state):
-        self._device_state = state
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -148,7 +139,9 @@ class AdHocManager(gobject.GObject):
 
     def autoconnect(self):
         """Autoconnect to an Ad-hoc network"""
-        if self._have_configured_connections():
+        if self._device_state != network.DEVICE_STATE_DISCONNECTED:
+            return
+        elif self._have_configured_connections():
             self._autoconnect_adhoc_timer()
         else:
             self._autoconnect_adhoc()
