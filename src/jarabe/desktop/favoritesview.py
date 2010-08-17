@@ -612,7 +612,7 @@ class OwnerIcon(BuddyIcon):
             return
 
         presence_service = presenceservice.get_instance()
-        palette = BuddyMenu(get_owner_instance())
+        palette = BuddyMenu(self.buddy)
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')

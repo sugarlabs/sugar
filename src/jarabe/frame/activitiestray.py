@@ -293,6 +293,7 @@ class ActivitiesTray(HTray):
         item.connect('clicked', self.__invite_clicked_cb, invite)
         self.add_item(item)
         item.show()
+
         self._invite_to_item[invite] = item
 
     def _remove_invite(self, invite):

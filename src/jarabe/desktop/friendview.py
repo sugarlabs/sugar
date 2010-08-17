@@ -62,13 +62,13 @@ class FriendView(hippo.CanvasBox):
 
     def _update_activity(self):
         if not self._buddy.props.present or \
-                not self._buddy.props.current_activity:
+           not self._buddy.props.current_activity:
             self._remove_activity_icon()
             return
 
         # FIXME: use some sort of "unknown activity" icon rather
         # than hiding the icon?
-        name = self._get_new_icon_name(self._buddy.props.current_activity)
+        name = self._get_new_icon_name(self._buddy.current_activity)
         if name:
             self._activity_icon.props.file_name = name
             self._activity_icon.props.xo_color = self._buddy.props.color

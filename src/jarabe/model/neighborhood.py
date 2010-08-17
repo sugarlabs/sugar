@@ -198,6 +198,7 @@ class _Account(gobject.GObject):
         logging.debug('_Account.__got_connection_cb %r', connection_path)
 
         if connection_path == '/':
+            # Account has no connection, wait until it has one.
             return
 
         self._prepare_connection(connection_path)
@@ -543,7 +544,6 @@ class _Account(gobject.GObject):
     def enable(self):
         logging.debug('_Account.enable %s', self.object_path)
         self._set_enabled(True)
-        #self._start_listening()
 
     def disable(self):
         logging.debug('_Account.disable %s', self.object_path)
