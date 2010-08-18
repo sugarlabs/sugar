@@ -254,10 +254,17 @@ class Activity(gobject.GObject):
 
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
-            self._retrieve_service()
-            self.set_active(True)
-            self._name_owner_changed_handler.remove()
-            self._name_owner_changed_handler = None
+            if old and not new:
+                logging.debug('Activity._name_owner_changed_cb: ' \
+                        'activity %s went away', name)
+                self._name_owner_changed_handler.remove()
+                self._name_owner_changed_handler = None
+                self._service = None
+            elif not old and new:
+                logging.debug('Activity._name_owner_changed_cb: ' \
+                        'activity %s started up', name)
+                self._retrieve_service()
+                self.set_active(True)
 
     def set_active(self, state):
         """Propagate the current state to the activity object"""
