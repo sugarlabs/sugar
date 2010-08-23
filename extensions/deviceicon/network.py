@@ -540,7 +540,7 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_("Mesh Network"), can_create=False)
+        self._palette = WirelessPalette(_("Mesh Network"))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)

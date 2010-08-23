@@ -20,7 +20,8 @@ import gobject
 from sugar.graphics import style
 from sugar.graphics import animator
 
-from jarabe.desktop.myicon import MyIcon
+from jarabe.model.buddy import get_owner_instance
+from jarabe.view.buddyicon import BuddyIcon
 
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):
@@ -77,7 +78,8 @@ class TransitionBox(hippo.Canvas):
         self._layout = _Layout()
         self._box.set_layout(self._layout)
 
-        self._my_icon = MyIcon(style.XLARGE_ICON_SIZE)
+        self._my_icon = BuddyIcon(buddy=get_owner_instance(),
+                                  size=style.XLARGE_ICON_SIZE)
         self._box.append(self._my_icon)
 
         self._animator = animator.Animator(0.3)

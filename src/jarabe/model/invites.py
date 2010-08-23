@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,52 +15,95 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+from functools import partial
+
 import gobject
-from sugar.presence import presenceservice
+import dbus
+from telepathy.interfaces import CHANNEL, \
+                                 CHANNEL_DISPATCHER, \
+                                 CHANNEL_DISPATCH_OPERATION, \
+                                 CHANNEL_TYPE_CONTACT_LIST, \
+                                 CHANNEL_TYPE_DBUS_TUBE, \
+                                 CHANNEL_TYPE_STREAMED_MEDIA, \
+                                 CHANNEL_TYPE_STREAM_TUBE, \
+                                 CHANNEL_TYPE_TEXT, \
+                                 CLIENT
+from telepathy.constants import HANDLE_TYPE_ROOM
+
+from sugar.graphics.xocolor import XoColor
+
+from jarabe.model import telepathyclient
+from jarabe.model import bundleregistry
+from jarabe.model import neighborhood
+from jarabe.journal import misc
+
+CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
+        'org.laptop.Telepathy.ActivityProperties'
 
 
-class BaseInvite:
-    """Invitation to shared activity or private 1-1 Telepathy channel"""
-    def __init__(self, bundle_id):
-        """init for BaseInvite.
+class ActivityInvite(object):
+    """Invitation to a shared activity."""
+    def __init__(self, dispatch_operation_path, handle, handler,
+                 activity_properties):
+        self.dispatch_operation_path = dispatch_operation_path
+        self._handle = handle
+        self._handler = handler
 
-        bundle_id: string, e.g. 'org.laptop.Chat'
-        """
-        self._bundle_id = bundle_id
+        if activity_properties is not None:
+            self._activity_properties = activity_properties
+        else:
+            self._activity_properties = {}
 
     def get_bundle_id(self):
-        return self._bundle_id
+        if CLIENT in self._handler:
+            return self._handler[len(CLIENT + '.'):]
+        else:
+            return None
 
+    def get_color(self):
+        color = self._activity_properties.get('color', None)
+        return XoColor(color)
 
-class ActivityInvite(BaseInvite):
-    """Invitation to a shared activity."""
-    def __init__(self, bundle_id, activity_id):
-        BaseInvite.__init__(self, bundle_id)
-        self._activity_id = activity_id
+    def join(self):
+        logging.error('ActivityInvite.join handler %r', self._handler)
 
-    def get_activity_id(self):
-        return self._activity_id
+        registry = bundleregistry.get_registry()
+        bundle_id = self.get_bundle_id()
+        bundle = registry.get_bundle(bundle_id)
+        if bundle is None:
+            self._call_handle_with()
+        else:
+            bus = dbus.SessionBus()
+            bus.add_signal_receiver(self.__name_owner_changed_cb,
+	                                'NameOwnerChanged',
+	                                'org.freedesktop.DBus',
+	                                arg0=self._handler)
 
+            model = neighborhood.get_model()
+            activity_id = model.get_activity_by_room(self._handle).activity_id
+            misc.launch(bundle, color=self.get_color(), invited=True,
+                        activity_id=activity_id)
 
-class PrivateInvite(BaseInvite):
-    """Invitation to a private 1-1 Telepathy channel.
+    def __name_owner_changed_cb(self, name, old_owner, new_owner):
+        logging.debug('ActivityInvite.__name_owner_changed_cb %r %r %r', name,
+                      new_owner, old_owner)
+        if name == self._handler and new_owner and not old_owner:
+            self._call_handle_with()
 
-    This includes text chat or streaming media.
-    """
-    def __init__(self, bundle_id, private_channel):
-        """init for PrivateInvite.
+    def _call_handle_with(self):
+        bus = dbus.Bus()
+        obj = bus.get_object(CHANNEL_DISPATCHER, self.dispatch_operation_path)
+        dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
+        dispatch_operation.HandleWith(self._handler,
+                                      reply_handler=self.__handle_with_reply_cb,
+                                      error_handler=self.__handle_with_reply_cb)
 
-        bundle_id: string, e.g. 'org.laptop.Chat'
-        private_channel: string containing simplejson dump of Telepathy
-            bus, connection and channel
-        """
-        BaseInvite.__init__(self, bundle_id)
-        self._private_channel = private_channel
-
-    def get_private_channel(self):
-        """Telepathy channel info from private invitation"""
-        return self._private_channel
-
+    def __handle_with_reply_cb(self, error=None):
+        if error is not None:
+            raise error
+        else:
+            logging.debug('__handle_with_reply_cb')
 
 class Invites(gobject.GObject):
     __gsignals__ = {
@@ -72,52 +116,124 @@ class Invites(gobject.GObject):
     def __init__(self):
         gobject.GObject.__init__(self)
 
-        self._dict = {}
+        self._dispatch_operations = {}
 
-        ps = presenceservice.get_instance()
-        owner = ps.get_owner()
-        owner.connect('joined-activity', self._owner_joined_cb)
+        client_handler = telepathyclient.get_instance()
+        client_handler.got_dispatch_operation.connect(
+                self.__got_dispatch_operation_cb)
 
-    def add_invite(self, bundle_id, activity_id):
-        if activity_id in self._dict:
-            # there is no point to add more than one time
-            # an invite for the same activity
+    def __got_dispatch_operation_cb(self, **kwargs):
+        logging.debug('__got_dispatch_operation_cb')
+        dispatch_operation_path = kwargs['dispatch_operation_path']
+        channel_path, channel_properties = kwargs['channels'][0]
+        properties = kwargs['properties']
+        channel_type = channel_properties[CHANNEL + '.ChannelType']
+        handle_type = channel_properties[CHANNEL + '.TargetHandleType']
+        handle = channel_properties[CHANNEL + '.TargetHandle']
+
+        if handle_type == HANDLE_TYPE_ROOM and \
+           channel_type == CHANNEL_TYPE_TEXT:
+            logging.debug('May be an activity, checking its properties')
+            connection_path = properties[CHANNEL_DISPATCH_OPERATION +
+                                         '.Connection']
+            connection_name = connection_path.replace('/', '.')[1:]
+
+            bus = dbus.Bus()
+            connection = bus.get_object(connection_name, connection_path)
+            connection.GetProperties(
+                    channel_properties[CHANNEL + '.TargetHandle'],
+                    dbus_interface=CONNECTION_INTERFACE_ACTIVITY_PROPERTIES,
+                    reply_handler=partial(self.__get_properties_cb,
+                                          handle,
+                                          dispatch_operation_path),
+                    error_handler=partial(self.__error_handler_cb,
+                                          handle,
+                                          channel_properties,
+                                          dispatch_operation_path))
+        else:
+            self._dispatch_non_sugar_invitation(channel_path,
+                                                channel_properties,
+                                                dispatch_operation_path)
+
+    def __get_properties_cb(self, handle, dispatch_operation_path, properties):
+        logging.debug('__get_properties_cb %r', properties)
+        handler = '%s.%s' % (CLIENT, properties['type'])
+        self._add_invite(dispatch_operation_path, handle, handler, properties)
+
+    def __error_handler_cb(self, handle, channel_properties,
+                           dispatch_operation_path, error):
+        logging.debug('__error_handler_cb %r', error)
+        exception_name = 'org.freedesktop.Telepathy.Error.NotAvailable'
+        if error.get_dbus_name() == exception_name:
+            self._dispatch_non_sugar_invitation(handle,
+                                                channel_properties,
+                                                dispatch_operation_path)
+        else:
+            raise error
+
+    def _dispatch_non_sugar_invitation(self, handle, channel_properties,
+                                       dispatch_operation_path):
+        handler = None
+        channel_type = channel_properties[CHANNEL + '.ChannelType']
+        if channel_type == CHANNEL_TYPE_CONTACT_LIST:
+            self._handle_with(dispatch_operation_path, CLIENT + '.Sugar')
+        elif channel_type == CHANNEL_TYPE_TEXT:
+            handler = CLIENT + '.org.laptop.Chat'
+        elif channel_type == CHANNEL_TYPE_STREAMED_MEDIA:
+            handler = CLIENT + '.org.laptop.VideoChat'
+        elif channel_type == CHANNEL_TYPE_DBUS_TUBE:
+            handler = channel_properties[CHANNEL_TYPE_DBUS_TUBE +
+                                         '.ServiceName']
+        elif channel_type == CHANNEL_TYPE_STREAM_TUBE:
+            handler = channel_properties[CHANNEL_TYPE_STREAM_TUBE + '.Service']
+        else:
+            self._handle_with(dispatch_operation_path, '')
+
+        if handler is not None:
+            logging.debug('Adding an invite from a non-Sugar client')
+            self._add_invite(dispatch_operation_path, handle, handler)
+
+    def _handle_with(self, dispatch_operation_path, handler):
+        logging.debug('_handle_with %r %r', dispatch_operation_path, handler)
+        bus = dbus.Bus()
+        obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
+        dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
+        dispatch_operation.HandleWith(handler,
+                                      reply_handler=self.__handle_with_reply_cb,
+                                      error_handler=self.__handle_with_reply_cb)
+
+    def __handle_with_reply_cb(self, error=None):
+        if error is not None:
+            logging.error('__handle_with_reply_cb %r', error)
+        else:
+            logging.debug('__handle_with_reply_cb')
+
+    def _add_invite(self, dispatch_operation_path, handle, handler,
+                    activity_properties=None):
+        logging.debug('_add_invite %r %r %r', dispatch_operation_path, handle,
+                      handler)
+        if dispatch_operation_path in self._dispatch_operations:
+            # there is no point to have more than one invite for the same
+            # dispatch operation
             return
 
-        invite = ActivityInvite(bundle_id, activity_id)
-        self._dict[activity_id] = invite
-        self.emit('invite-added', invite)
-
-    def add_private_invite(self, private_channel, bundle_id):
-        if private_channel in self._dict:
-            # there is no point to add more than one invite for the
-            # same incoming connection
-            return
-
-        invite = PrivateInvite(bundle_id, private_channel)
-        self._dict[private_channel] = invite
+        invite = ActivityInvite(dispatch_operation_path, handle, handler,
+                                activity_properties)
+        self._dispatch_operations[dispatch_operation_path] = invite
         self.emit('invite-added', invite)
 
     def remove_invite(self, invite):
-        del self._dict[invite.get_activity_id()]
+        del self._dispatch_operations[invite.dispatch_operation_path]
         self.emit('invite-removed', invite)
-
-    def remove_private_invite(self, invite):
-        del self._dict[invite.get_private_channel()]
-        self.emit('invite-removed', invite)
-
-    def remove_activity(self, activity_id):
-        invite = self._dict.get(activity_id)
-        if invite is not None:
-            self.remove_invite(invite)
-
-    def remove_private_channel(self, private_channel):
-        invite = self._dict.get(private_channel)
-        if invite is not None:
-            self.remove_private_invite(invite)
-
-    def _owner_joined_cb(self, owner, activity):
-        self.remove_activity(activity.props.id)
 
     def __iter__(self):
-        return self._dict.values().__iter__()
+        return self._dispatch_operations.values().__iter__()
+
+
+_instance = None
+
+def get_instance():
+    global _instance
+    if not _instance:
+        _instance = Invites()
+    return _instance

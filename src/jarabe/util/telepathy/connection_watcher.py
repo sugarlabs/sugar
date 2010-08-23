@@ -93,6 +93,14 @@ class ConnectionWatcher(gobject.GObject):
     def get_connections(self):
         return self._connections.values()
 
+_instance = None
+
+def get_instance():
+    global _instance
+    if _instance is None:
+        _instance = ConnectionWatcher()
+    return _instance
+
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 

@@ -14,13 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.presence import presenceservice
+import logging
+
 from sugar.graphics.tray import VTray, TrayIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
-from jarabe.model.buddy import BuddyModel
+from jarabe.model.buddy import get_owner_instance
+from jarabe.model import neighborhood
 
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
@@ -36,35 +38,20 @@ class FriendsTray(VTray):
     def __init__(self):
         VTray.__init__(self)
 
-        self._activity_ps = None
-        self._joined_hid = -1
-        self._left_hid = -1
+        self._shared_activity = None
         self._buddies = {}
 
-        self._pservice = presenceservice.get_instance()
-        self._pservice.connect('activity-appeared',
-                               self.__activity_appeared_cb)
-
-        self._owner = self._pservice.get_owner()
-
-        # Add initial activities the PS knows about
-        self._pservice.get_activities_async( \
-                reply_handler=self._get_activities_cb)
-
         shell.get_model().connect('active-activity-changed',
-                                  self._active_activity_changed_cb)
+                                  self.__active_activity_changed_cb)
 
-    def _get_activities_cb(self, activities_list):
-        for act in activities_list:
-            self.__activity_appeared_cb(self._pservice, act)
+        neighborhood.get_model().connect('activity-added',
+                                         self.__neighborhood_activity_added_cb)
 
     def add_buddy(self, buddy):
         if self._buddies.has_key(buddy.props.key):
             return
 
-        model = BuddyModel(buddy=buddy)
-
-        icon = FriendIcon(model)
+        icon = FriendIcon(buddy)
         self.add_item(icon)
         icon.show()
 
@@ -83,39 +70,23 @@ class FriendsTray(VTray):
             item.destroy()
         self._buddies = {}
 
-    def __activity_appeared_cb(self, pservice, activity_ps):
-        activity = shell.get_model().get_active_activity()
-        if activity and activity_ps.props.id == activity.get_activity_id():
-            self._set_activity_ps(activity_ps, True)
-
-    def _set_activity_ps(self, activity_ps, shared_activity):
-        if self._activity_ps == activity_ps:
-            return
-
-        if self._joined_hid > 0:
-            self._activity_ps.disconnect(self._joined_hid)
-            self._joined_hid = -1
-        if self._left_hid > 0:
-            self._activity_ps.disconnect(self._left_hid)
-            self._left_hid = -1
-
-        self._activity_ps = activity_ps
-
+    def __neighborhood_activity_added_cb(self, neighborhood_model,
+                                         shared_activity):
+        logging.debug('FriendsTray.__neighborhood_activity_added_cb')
         self.clear()
 
         # always display ourselves
-        self.add_buddy(self._owner)
+        self.add_buddy(get_owner_instance())
 
-        if shared_activity is True:
-            for buddy in activity_ps.get_joined_buddies():
-                self.add_buddy(buddy)
+        self._set_current_activity(shared_activity.activity_id)
 
-            self._joined_hid = activity_ps.connect(
-                            'buddy-joined', self.__buddy_joined_cb)
-            self._left_hid = activity_ps.connect(
-                            'buddy-left', self.__buddy_left_cb)
+    def __active_activity_changed_cb(self, home_model, home_activity):
+        logging.debug('FriendsTray.__active_activity_changed_cb')
+        self.clear()
 
-    def _active_activity_changed_cb(self, home_model, home_activity):
+        # always display ourselves
+        self.add_buddy(get_owner_instance())
+
         if home_activity is None:
             return
 
@@ -123,19 +94,25 @@ class FriendsTray(VTray):
         if activity_id is None:
             return
 
-        # check if activity is shared
-        activity = None
-        for act in self._pservice.get_activities():
-            if activity_id == act.props.id:
-                activity = act
-                break
-        if activity:
-            self._set_activity_ps(activity, True)
-        else:
-            self._set_activity_ps(home_activity, False)
+        self._set_current_activity(activity_id)
 
-    def __buddy_joined_cb(self, activity, buddy):
+    def _set_current_activity(self, activity_id):
+        logging.debug('FriendsTray._set_current_activity')
+        neighborhood_model = neighborhood.get_model()
+        self._shared_activity = neighborhood_model.get_activity(activity_id)
+        if self._shared_activity is None:
+            return
+
+        for buddy in self._shared_activity.get_buddies():
+            self.add_buddy(buddy)
+
+        self._shared_activity.connect('buddy-added', self.__buddy_added_cb)
+        self._shared_activity.connect('buddy-removed', self.__buddy_removed_cb)
+
+    def __buddy_added_cb(self, activity, buddy):
+        logging.debug('FriendsTray.__buddy_added_cb')
         self.add_buddy(buddy)
 
-    def __buddy_left_cb(self, activity, buddy):
+    def __buddy_removed_cb(self, activity, buddy):
+        logging.debug('FriendsTray.__buddy_removed_cb')
         self.remove_buddy(buddy)

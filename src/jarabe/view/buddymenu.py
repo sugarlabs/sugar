@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +20,7 @@ from gettext import gettext as _
 
 import gtk
 import gconf
+import dbus
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
@@ -42,8 +44,7 @@ class BuddyMenu(Palette):
         self._active_activity_changed_hid = None
         self.connect('destroy', self.__destroy_cb)
 
-        self._buddy.connect('icon-changed', self._buddy_icon_changed_cb)
-        self._buddy.connect('nick-changed', self._buddy_nick_changed_cb)
+        self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
 
         if buddy.is_owner():
             self._add_my_items()
@@ -54,8 +55,7 @@ class BuddyMenu(Palette):
         if self._active_activity_changed_hid is not None:
             home_model = shell.get_model()
             home_model.disconnect(self._active_activity_changed_hid)
-        self._buddy.disconnect_by_func(self._buddy_icon_changed_cb)
-        self._buddy.disconnect_by_func(self._buddy_nick_changed_cb)
+        self._buddy.disconnect_by_func(self.__buddy_notify_nick_cb)
 
     def _add_buddy_items(self):
         if friends.get_model().has_buddy(self._buddy):
@@ -115,9 +115,9 @@ class BuddyMenu(Palette):
         panel.show()
 
     def _update_invite_menu(self, activity):
-        buddy_activity = self._buddy.get_current_activity()
+        buddy_activity = self._buddy.props.current_activity
         if buddy_activity is not None:
-            buddy_activity_id = buddy_activity.props.id
+            buddy_activity_id = buddy_activity.activity_id
         else:
             buddy_activity_id = None
 
@@ -139,11 +139,8 @@ class BuddyMenu(Palette):
     def _cur_activity_changed_cb(self, home_model, activity_model):
         self._update_invite_menu(activity_model)
 
-    def _buddy_icon_changed_cb(self, buddy):
-        pass
-
-    def _buddy_nick_changed_cb(self, buddy, nick):
-        self.set_primary_text(nick)
+    def __buddy_notify_nick_cb(self, buddy, pspec):
+        self.set_primary_text(buddy.props.nick)
 
     def _make_friend_cb(self, menuitem):
         friends.get_model().make_friend(self._buddy)
@@ -155,7 +152,17 @@ class BuddyMenu(Palette):
         activity = shell.get_model().get_active_activity()
         service = activity.get_service()
         if service:
-            buddy = self._buddy.get_buddy()
-            service.Invite(buddy.props.key)
+            try:
+                service.InviteContact(self._buddy.props.account,
+                                      self._buddy.props.contact_id)
+            except dbus.DBusException, e:
+                expected_exceptions = [
+                        'org.freedesktop.DBus.Error.UnknownMethod',
+                        'org.freedesktop.DBus.Python.NotImplementedError']
+                if e.get_dbus_name() in expected_exceptions:
+                    logging.warning('Trying deprecated Activity.Invite')
+                    service.Invite(self._buddy.props.key)
+                else:
+                    raise
         else:
             logging.error('Invite failed, activity service not ')
