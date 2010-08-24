@@ -108,8 +108,6 @@ class BaseResultSet(object):
         self._position = position
 
     def read(self):
-        logging.debug('ResultSet.read position: %r', self._position)
-
         if self._position == -1:
             self.seek(0)
 
@@ -184,8 +182,6 @@ class BaseResultSet(object):
             objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 del self._cache[-objects_excess:]
-        else:
-            logging.debug('cache hit and no need to grow the cache')
 
         return self._cache[self._position - self._offset]
 
