@@ -51,11 +51,12 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     COLUMN_ICON_COLOR = 3
     COLUMN_TITLE = 4
     COLUMN_TIMESTAMP = 5
-    COLUMN_FILESIZE = 6
-    COLUMN_PROGRESS = 7
-    COLUMN_BUDDY_1 = 8
-    COLUMN_BUDDY_2 = 9
-    COLUMN_BUDDY_3 = 10
+    COLUMN_CREATION_TIME = 6
+    COLUMN_FILESIZE = 7
+    COLUMN_PROGRESS = 8
+    COLUMN_BUDDY_1 = 9
+    COLUMN_BUDDY_2 = 10
+    COLUMN_BUDDY_3 = 11
 
     _COLUMN_TYPES = {COLUMN_UID:            str,
                      COLUMN_FAVORITE:       bool,
@@ -63,6 +64,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
                      COLUMN_ICON_COLOR:     object,
                      COLUMN_TITLE:          str,
                      COLUMN_TIMESTAMP:      str,
+                     COLUMN_CREATION_TIME:  str,
                      COLUMN_FILESIZE:       str,
                      COLUMN_PROGRESS:       int,
                      COLUMN_BUDDY_1:        object,
@@ -145,12 +147,13 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         timestamp = int(metadata.get('timestamp', 0))
         self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
 
-        creation_time = metadata.get('creation_time')
-        if creation_time is not None:
-            self._cached_row.append(
-                util.timestamp_to_elapsed_string(creation_time))
-        else:
+        try:
+            creation_time = float(metadata.get('creation_time'))
+        except (TypeError, ValueError):
             self._cached_row.append(_('Unknown'))
+        else:
+            self._cached_row.append(
+                util.timestamp_to_elapsed_string(float(creation_time)))
 
         try:
             size = int(metadata.get('filesize'))

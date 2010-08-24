@@ -37,7 +37,7 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.
-PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'filesize',
+PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'creation_time', 'filesize',
               'keep', 'buddies', 'icon-color', 'mime_type', 'progress',
               'activity', 'mountpoint', 'activity_id', 'bundle_id']
 
