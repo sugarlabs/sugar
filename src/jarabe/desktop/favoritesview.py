@@ -31,7 +31,6 @@ from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
-from sugar.presence import presenceservice
 from sugar import dispatch
 from sugar.datastore import datastore
 
@@ -40,7 +39,7 @@ from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view import launcher
-from jarabe.model.buddy import BuddyModel, get_owner_instance
+from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
@@ -611,8 +610,7 @@ class OwnerIcon(BuddyIcon):
             self._palette_enabled = True
             return
 
-        presence_service = presenceservice.get_instance()
-        palette = BuddyMenu(self.buddy)
+        palette = BuddyMenu(get_owner_instance())
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')
