@@ -502,6 +502,7 @@ class ListViewButton(RadioToolButton):
 
     _SORT_OPTIONS = [
         ('timestamp', 'view-lastedit', _('View by last edit')),
+        ('creation_time', 'view-created', _('View by creation date')),
         ('filesize', 'view-size', _('View by size')),
     ]
 
