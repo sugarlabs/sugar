@@ -89,7 +89,6 @@ session_expand_activities_missing += $(call sugar_expand_activities,write imagev
 #    jarabe.desktop.keydialog.WPAKeyDialog()
 #  * avahi-autoipd needed in jarabe/desktop/meshbox.py to establish
 #    NM_802_11_MODE_ADHOC
-#  * etoys required as part of sugar platform
 #  * openssh-client (ssh-keygen) needed in
 #    jarabe.window.create_profile()
 #  * alsa-utils needed by jarabe/model/sound.py to properly initialize
@@ -130,7 +129,7 @@ CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = $(emulator_exec)
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch), $(call session_expand_activities)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , python-xklavier, etoys
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , python-xklavier
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(tools_debug)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_missing)
 
