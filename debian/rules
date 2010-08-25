@@ -65,9 +65,11 @@ comma = ,
 # $(3): fallback flag (if non-empty unversioned fallback is added)
 sugar_expand_activities = $(foreach stem,$(1),$(comma) $(patsubst %,sugar-$(stem)-activity-%$(if $(3), | ),$(2))$(if $(if $(2),,true)$(3),sugar-$(stem)-activity))
 
+# activities
+# missing or non-free activities cannot be tightly related to
 session_expand_activities = $(call sugar_expand_activities,read browse,0.86,$(1))
-session_expand_activities_missing = $(call sugar_expand_activities,pippy,,$(1))
-session_expand_activities_missing += $(call sugar_expand_activities,write imageviewer jukebox,$(pkgbranch),$(1))
+session_expand_activities_relaxed = $(call sugar_expand_activities,pippy,,$(1))
+session_expand_activities_relaxed += $(call sugar_expand_activities,write imageviewer jukebox,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
 #  * python-wnck needed by python-jarabe (several places) and commands
@@ -124,14 +126,14 @@ CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-wnck | python-gnome2-deskto
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exec), dbus
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_audio)
-CDBS_SUGGESTS_sugar-session-$(pkgbranch) = $(call session_expand_activities_missing,true)
+CDBS_SUGGESTS_sugar-session-$(pkgbranch) = $(call session_expand_activities_relaxed,true)
 CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = $(emulator_exec)
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch), $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , python-xklavier
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(tools_debug)
-CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_missing)
+CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
 CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
