@@ -42,6 +42,7 @@ src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
 src/jarabe/desktop/keydialog.py
 src/jarabe/desktop/meshbox.py
+src/jarabe/desktop/networkviews.py
 src/jarabe/desktop/schoolserver.py
 src/jarabe/frame/activitiestray.py
 src/jarabe/frame/clipboardmenu.py
@@ -53,6 +54,7 @@ src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py
 src/jarabe/journal/journaltoolbox.py
+src/jarabe/journal/listmodel.py
 src/jarabe/journal/listview.py
 src/jarabe/journal/misc.py
 src/jarabe/journal/modalalert.py
