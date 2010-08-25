@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import os
 from gettext import gettext as _
 
 import gobject
@@ -35,7 +36,10 @@ class VolumesToolbar(gtk.Toolbar):
     __gsignals__ = {
         'volume-changed': (gobject.SIGNAL_RUN_FIRST,
                            gobject.TYPE_NONE,
-                           ([str]))
+                           ([str])),
+        'volume-error': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([str, str]))
     }
 
     def __init__(self):
@@ -81,6 +85,7 @@ class VolumesToolbar(gtk.Toolbar):
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
         button.connect('toggled', self._button_toggled_cb)
+        button.connect('volume-error', self.__volume_error_cb)
         position = self.get_item_index(self._volume_buttons[-1]) + 1
         self.insert(button, position)
         button.show()
@@ -89,6 +94,9 @@ class VolumesToolbar(gtk.Toolbar):
 
         if len(self.get_children()) > 1:
             self.show()
+
+    def __volume_error_cb(self, button, strerror, severity):
+        self.emit('volume-error', strerror, severity)
 
     def _button_toggled_cb(self, button):
         if button.props.active:
@@ -123,6 +131,12 @@ class VolumesToolbar(gtk.Toolbar):
         button.props.active = True
 
 class BaseButton(RadioToolButton):
+    __gsignals__ = {
+        'volume-error': (gobject.SIGNAL_RUN_FIRST,
+                           gobject.TYPE_NONE,
+                           ([str, str]))
+    }
+
     def __init__(self, mount_point):
         RadioToolButton.__init__(self)
 
@@ -137,7 +151,19 @@ class BaseButton(RadioToolButton):
                                info, timestamp):
         object_id = selection_data.data
         metadata = model.get(object_id)
-        model.copy(metadata, self.mount_point)
+        file_path = model.get_file(metadata['uid'])
+        if not file_path or not os.path.exists(file_path):
+            logging.warn('File does not exist')
+            self.emit('volume-error', _('Entries without a file cannot'
+                ' be copied'), _('Warning'))
+            return
+
+        try:
+            model.copy(metadata, self.mount_point)
+        except IOError:
+            logging.exception('BaseButton._drag_data_received_cb: Error'
+                'while copying')
+            self.emit('volume-error', _('Input/Output error'), _('Error'))
 
 class VolumeButton(BaseButton):
     def __init__(self, mount):

@@ -1,6 +1,6 @@
 # Copyright (C) 2008 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
-# Copyright (C) 2009 One Laptop per Child
+# Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2010 Plan Ceibal, Daniel Castelo
 #
@@ -23,6 +23,7 @@ import os
 import time
 
 import dbus
+import dbus.service
 import gobject
 import ConfigParser
 import gconf
@@ -99,6 +100,39 @@ GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
 _nm_settings = None
 _conn_counter = 0
 
+
+def frequency_to_channel(frequency):
+    """Returns the channel matching a given radio channel frequency. If a
+    frequency is not in the dictionary channel 1 will be returned.
+
+    Keyword arguments:
+    frequency -- The radio channel frequency in MHz.
+
+    Return: Channel
+
+    """
+    ftoc = {2412: 1, 2417: 2, 2422: 3, 2427: 4,
+            2432: 5, 2437: 6, 2442: 7, 2447: 8,
+            2452: 9, 2457: 10, 2462: 11, 2467: 12,
+            2472: 13}
+    if frequency not in ftoc:
+        logging.warning("The frequency %s can not be mapped to a channel, " \
+                            "defaulting to channel 1.", frequency)
+        return 1
+    return ftoc[frequency]
+
+def is_sugar_adhoc_network(ssid):
+    """Checks whether an access point is a sugar Ad-hoc network.
+
+    Keyword arguments:
+    ssid -- Ssid of the access point.
+
+    Return: Boolean
+
+    """
+    return ssid.startswith('Ad-hoc Network')
+
+
 class WirelessSecurity(object):
     def __init__(self):
         self.key_mgmt = None
@@ -126,6 +160,7 @@ class Wireless(object):
         self.security = None
         self.mode = None
         self.band = None
+        self.channel = None
 
     def get_dict(self):
         wireless = {'ssid': self.ssid}
@@ -135,6 +170,8 @@ class Wireless(object):
             wireless['mode'] = self.mode
         if self.band:
             wireless['band'] = self.band
+        if self.channel:
+            wireless['channel'] = self.channel
         return wireless
 
 
@@ -475,6 +512,7 @@ class AccessPoint(gobject.GObject):
         self.wpa_flags = 0
         self.rsn_flags = 0
         self.mode = 0
+        self.channel = 0
 
     def initialize(self):
         model_props = dbus.Interface(self.model,
@@ -544,6 +582,9 @@ class AccessPoint(gobject.GObject):
             self.rsn_flags = properties['RsnFlags']
         if 'Mode' in properties:
             self.mode = properties['Mode']
+        if 'Frequency' in properties:
+            self.channel = frequency_to_channel(properties['Frequency'])
+
         self._initialized = True
         self.emit('props-changed', old_hash)
 
