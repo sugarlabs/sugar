@@ -61,6 +61,7 @@ src/jarabe/journal/modalalert.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
 src/jarabe/journal/volumestoolbar.py
+src/jarabe/model/network.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/launcher.py
