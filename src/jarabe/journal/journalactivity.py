@@ -27,6 +27,8 @@ import statvfs
 import os
 
 from sugar.graphics.window import Window
+from sugar.graphics.alert import ErrorAlert
+
 from sugar.bundle.bundle import ZipExtractException, RegistrationException
 from sugar import env
 from sugar.activity import activityfactory
@@ -138,6 +140,15 @@ class JournalActivity(Window):
         self._critical_space_alert = None
         self._check_available_space()
 
+    def __alert_notify_cb(self, gobject, strerror, severity):
+        alert = ErrorAlert(title=severity, msg=strerror)
+        alert.connect('response', self.__alert_response_cb)
+        self.add_alert(alert)
+        alert.show()
+
+    def __alert_response_cb(self, alert, response_id):
+        self.remove_alert(alert)
+
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
@@ -161,6 +172,7 @@ class JournalActivity(Window):
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
                                       self.__volume_changed_cb)
+        self._volumes_toolbar.connect('volume-error', self.__alert_notify_cb)
         self._main_view.pack_start(self._volumes_toolbar, expand=False)
 
         search_toolbar = self._main_toolbox.search_toolbar

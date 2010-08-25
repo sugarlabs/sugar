@@ -329,5 +329,19 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/network/adhoc</key>
+      <applyto>/desktop/sugar/network/adhoc</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Sugar Ad-hoc networks</short>
+        <long>If TRUE, Sugar will show default Ad-hoc networks for
+	  channel 1,6 and 11. If Sugar sees no "known" network when
+	  it starts, it does autoconnect to an Ad-hoc network.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

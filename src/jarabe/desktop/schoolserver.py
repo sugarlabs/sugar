@@ -99,7 +99,7 @@ def register_laptop(url=REGISTER_URL):
     server = ServerProxy(url)
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
-    except (Error, socket.error):
+    except (Error, TypeError, socket.error):
         logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
 

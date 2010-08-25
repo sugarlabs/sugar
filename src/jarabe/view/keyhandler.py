@@ -41,6 +41,8 @@ _actions_table = {
     'F2'                   : 'zoom_group',
     'F3'                   : 'zoom_home',
     'F4'                   : 'zoom_activity',
+    'F5'                   : 'open_search',
+    'F6'                   : 'frame',
     'XF86AudioMute'        : 'volume_mute',
     'F11'                  : 'volume_down',
     'XF86AudioLowerVolume' : 'volume_down',

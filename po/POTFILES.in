@@ -28,6 +28,7 @@ extensions/cpsection/updater/view.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/network.py
 extensions/deviceicon/speaker.py
+extensions/deviceicon/touchpad.py
 extensions/deviceicon/volume.py
 extensions/globalkey/screenshot.py
 data/sugar.schemas.in
