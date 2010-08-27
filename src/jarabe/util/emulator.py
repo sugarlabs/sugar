@@ -116,6 +116,15 @@ def _start_window_manager():
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
+
+def _start_gnome_keyring():
+    cmd = ['gnome-keyring-daemon']
+
+    cmd.extend(['--components=secrets'])
+
+    gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
+
+
 def _setup_env(display, scaling, emulator_pid):
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
@@ -162,6 +171,8 @@ def main():
     _setup_env(display, options.scaling, str(server.pid))
 
     command = ['dbus-launch', '--exit-with-session']
+
+    _start_gnome_keyring()
 
     if not args:
         command.append('sugar')
