@@ -582,6 +582,13 @@ class Neighborhood(gobject.GObject):
         self._link_local_account = None
         self._server_account = None
 
+        client = gconf.client_get_default()
+        client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
+        client.notify_add('/desktop/sugar/collaboration/jabber_server',
+                          self.__jabber_server_changed_cb)
+        client.add_dir('/desktop/sugar/user/nick', gconf.CLIENT_PRELOAD_NONE)
+        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb)
+
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
         account_manager = dbus.Interface(obj, ACCOUNT_MANAGER)
@@ -649,9 +656,9 @@ class Neighborhood(gobject.GObject):
                 }
 
         properties = {
-                'org.freedesktop.Telepathy.Account.Enabled': True,
-                'org.freedesktop.Telepathy.Account.Nickname': nick,
-                'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
+                ACCOUNT + '.Enabled': True,
+                ACCOUNT + '.Nickname': nick,
+                ACCOUNT + '.ConnectAutomatically': True,
                 }
 
         bus = dbus.Bus()
@@ -690,9 +697,9 @@ class Neighborhood(gobject.GObject):
                 }
 
         properties = {
-                'org.freedesktop.Telepathy.Account.Enabled': True,
-                'org.freedesktop.Telepathy.Account.Nickname': nick,
-                'org.freedesktop.Telepathy.Account.ConnectAutomatically': True,
+                ACCOUNT + '.Enabled': True,
+                ACCOUNT + '.Nickname': nick,
+                ACCOUNT + '.ConnectAutomatically': True,
                 }
 
         bus = dbus.Bus()
@@ -702,6 +709,52 @@ class Neighborhood(gobject.GObject):
                                                      'jabber', params,
                                                      properties)
         return _Account(account_path)
+
+    def __jabber_server_changed_cb(self, client, timestamp, entry, *extra):
+        logging.debug('__jabber_server_changed_cb')
+
+        bus = dbus.Bus()
+        account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                 self._server_account.object_path)
+
+        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        nick = client.get_string('/desktop/sugar/user/nick')
+        account_name = '%s@%s' % (self._sanitize_nick(nick), server)
+        needs_reconnect = account.UpdateParameters({'server': server,
+                                                    'account': account_name,
+                                                    'register': True},
+                                                    dbus.Array([], 's'),
+                                                    dbus_interface=ACCOUNT)
+        if needs_reconnect:
+            account.Reconnect()
+
+        self._update_jid()
+
+    def __nick_changed_cb(self, client, timestamp, entry, *extra):
+        logging.debug('__nick_changed_cb')
+
+        nick = client.get_string('/desktop/sugar/user/nick')
+        for account in self._server_account, self._link_local_account:
+            bus = dbus.Bus()
+            obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account.object_path)
+            obj.Set(ACCOUNT, 'Nickname', nick, dbus_interface=PROPERTIES_IFACE)
+
+        self._update_jid()
+
+    def _update_jid(self):
+        bus = dbus.Bus()
+        account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                 self._link_local_account.object_path)
+
+        client = gconf.client_get_default()
+        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        nick = client.get_string('/desktop/sugar/user/nick')
+        jid = '%s@%s' % (self._sanitize_nick(nick), server)
+        needs_reconnect = account.UpdateParameters({'jid': jid},
+                                                   dbus.Array([], 's'),
+                                                   dbus_interface=ACCOUNT)
+        if needs_reconnect:
+            account.Reconnect()
 
     def _sanitize_nick(self, nick):
         return nick.replace(' ', '_')
