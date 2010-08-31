@@ -229,7 +229,7 @@ def main():
 
     client = gconf.client_get_default()
     client.set_string('/apps/metacity/general/mouse_button_modifier',
-                      'disabled')
+                      '<Super>')
 
     timezone = client.get_string('/desktop/sugar/date/timezone')
     if timezone is not None and timezone:
