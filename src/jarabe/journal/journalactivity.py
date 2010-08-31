@@ -140,8 +140,8 @@ class JournalActivity(Window):
         self._critical_space_alert = None
         self._check_available_space()
 
-    def __alert_notify_cb(self, gobject, strerror, severity):
-        alert = ErrorAlert(title=severity, msg=strerror)
+    def __volume_error_cb(self, gobject, message, severity):
+        alert = ErrorAlert(title=severity, msg=message)
         alert.connect('response', self.__alert_response_cb)
         self.add_alert(alert)
         alert.show()
@@ -172,7 +172,7 @@ class JournalActivity(Window):
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
                                       self.__volume_changed_cb)
-        self._volumes_toolbar.connect('volume-error', self.__alert_notify_cb)
+        self._volumes_toolbar.connect('volume-error', self.__volume_error_cb)
         self._main_view.pack_start(self._volumes_toolbar, expand=False)
 
         search_toolbar = self._main_toolbox.search_toolbar
@@ -183,7 +183,8 @@ class JournalActivity(Window):
         self._secondary_view = gtk.VBox()
 
         self._detail_toolbox = DetailToolbox()
-        entry_toolbar = self._detail_toolbox.entry_toolbar
+        self._detail_toolbox.entry_toolbar.connect('volume-error',
+                                                   self.__volume_error_cb)
 
         self._detail_view = DetailView()
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)

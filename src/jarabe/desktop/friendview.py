@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,14 +38,12 @@ class FriendView(hippo.CanvasBox):
         self._activity_icon = CanvasIcon(size=style.LARGE_ICON_SIZE)
         self._activity_icon_visible = False
 
-        if self._buddy.is_present():
-            self._buddy_appeared_cb(buddy)
+        self._update_activity()
 
-        self._buddy.connect('current-activity-changed',
-                            self._buddy_activity_changed_cb)
-        self._buddy.connect('appeared', self._buddy_appeared_cb)
-        self._buddy.connect('disappeared', self._buddy_disappeared_cb)
-        self._buddy.connect('color-changed', self._buddy_color_changed_cb)
+        self._buddy.connect('notify::current-activity',
+                            self.__buddy_notify_current_activity_cb)
+        self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
+        self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
     def _get_new_icon_name(self, ps_activity):
         registry = bundleregistry.get_registry()
@@ -58,30 +57,31 @@ class FriendView(hippo.CanvasBox):
             self.remove(self._activity_icon)
             self._activity_icon_visible = False
 
-    def _buddy_activity_changed_cb(self, buddy, ps_activity=None):
-        if not ps_activity:
+    def __buddy_notify_current_activity_cb(self, buddy, pspec):
+        self._update_activity()
+
+    def _update_activity(self):
+        if not self._buddy.props.present or \
+           not self._buddy.props.current_activity:
             self._remove_activity_icon()
             return
 
         # FIXME: use some sort of "unknown activity" icon rather
         # than hiding the icon?
-        name = self._get_new_icon_name(ps_activity)
+        name = self._get_new_icon_name(self._buddy.current_activity)
         if name:
             self._activity_icon.props.file_name = name
-            self._activity_icon.props.xo_color = buddy.get_color()
+            self._activity_icon.props.xo_color = self._buddy.props.color
             if not self._activity_icon_visible:
                 self.append(self._activity_icon, hippo.PACK_EXPAND)
                 self._activity_icon_visible = True
         else:
             self._remove_activity_icon()
 
-    def _buddy_appeared_cb(self, buddy):
-        home_activity = self._buddy.get_current_activity()
-        self._buddy_activity_changed_cb(buddy, home_activity)
+    def __buddy_notify_present_cb(self, buddy, pspec):
+        self._update_activity()
 
-    def _buddy_disappeared_cb(self, buddy):
-        self._buddy_activity_changed_cb(buddy, None)
-
-    def _buddy_color_changed_cb(self, buddy, color):
+    def __buddy_notify_color_cb(self, buddy, pspec):
         # TODO: shouldn't this change self._buddy_icon instead?
-        self._activity_icon.props.xo_color = buddy.get_color()
+        self._activity_icon.props.xo_color = buddy.props.color
+

@@ -27,9 +27,9 @@ import dbus
 from sugar import wm
 from sugar import dispatch
 from sugar.graphics.xocolor import XoColor
-from sugar.presence import presenceservice
 
 from jarabe.model.bundleregistry import get_registry
+from jarabe.model import neighborhood
 
 _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
@@ -145,18 +145,16 @@ class Activity(gobject.GObject):
         have an entry (implying that this is not a Sugar-shared application)
         uses the local user's profile colour for the icon.
         """
-        pservice = presenceservice.get_instance()
-
         # HACK to suppress warning in logs when activity isn't found
         # (if it's locally launched and not shared yet)
         activity = None
-        for act in pservice.get_activities():
-            if self._activity_id == act.props.id:
+        for act in neighborhood.get_model().get_activities():
+            if self._activity_id == act.activity_id:
                 activity = act
                 break
 
         if activity != None:
-            return XoColor(activity.props.color)
+            return activity.props.color
         else:
             client = gconf.client_get_default()
             return XoColor(client.get_string("/desktop/sugar/user/color"))
@@ -254,10 +252,17 @@ class Activity(gobject.GObject):
 
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
-            self._retrieve_service()
-            self.set_active(True)
-            self._name_owner_changed_handler.remove()
-            self._name_owner_changed_handler = None
+            if old and not new:
+                logging.debug('Activity._name_owner_changed_cb: ' \
+                        'activity %s went away', name)
+                self._name_owner_changed_handler.remove()
+                self._name_owner_changed_handler = None
+                self._service = None
+            elif not old and new:
+                logging.debug('Activity._name_owner_changed_cb: ' \
+                        'activity %s started up', name)
+                self._retrieve_service()
+                self.set_active(True)
 
     def set_active(self, state):
         """Propagate the current state to the activity object"""
@@ -350,7 +355,6 @@ class ShellModel(gobject.GObject):
         self._activities = []
         self._active_activity = None
         self._tabbing_activity = None
-        self._pservice = presenceservice.get_instance()
         self._launchers = {}
 
         self._screen.toggle_showing_desktop(True)

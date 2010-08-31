@@ -371,7 +371,7 @@ class ActivitiesList(gtk.VBox):
         if response_id == gtk.RESPONSE_OK:
             registry = bundleregistry.get_registry()
             bundle = registry.get_bundle(bundle_id)
-            registry.uninstall(bundle)
+            registry.uninstall(bundle, delete_profile=True)
 
 class ActivityListPalette(ActivityPalette):
     __gtype_name__ = 'SugarActivityListPalette'

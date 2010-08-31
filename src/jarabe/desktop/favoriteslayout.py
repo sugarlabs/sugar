@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2010 Sugar Labs
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,6 +33,13 @@ _logger = logging.getLogger('FavoritesLayout')
 
 _CELL_SIZE = 4
 _BASE_SCALE = 1000
+_INTERMEDIATE_B = (style.STANDARD_ICON_SIZE + style.SMALL_ICON_SIZE) / 2
+_INTERMEDIATE_A = (style.STANDARD_ICON_SIZE + _INTERMEDIATE_B) / 2
+_INTERMEDIATE_C = (_INTERMEDIATE_B + style.SMALL_ICON_SIZE) / 2
+_ICON_SIZES = [style.MEDIUM_ICON_SIZE, style.STANDARD_ICON_SIZE,
+               _INTERMEDIATE_A, _INTERMEDIATE_B, _INTERMEDIATE_C,
+               style.SMALL_ICON_SIZE]
+
 
 class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
     """Base class of the different layout types."""
@@ -185,9 +193,14 @@ _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
         style.STANDARD_ICON_SIZE * 2
 _MAXIMUM_RADIUS = (gtk.gdk.screen_height() - style.GRID_CELL_SIZE) / 2 - \
         style.STANDARD_ICON_SIZE - style.DEFAULT_SPACING
+_ICON_SPACING_FACTORS = [1.5, 1.4, 1.3, 1.2, 1.1, 1.0]
+_SPIRAL_SPACING_FACTORS = [1.5, 1.5, 1.5, 1.4, 1.3, 1.2]
+_MIMIMUM_RADIUS_ENCROACHMENT = 0.75
+_INITIAL_ANGLE = math.pi
+
 
 class RingLayout(FavoritesLayout):
-    """Lay out icons in a ring around the XO man."""
+    """Lay out icons in a ring or spiral around the XO man."""
 
     __gtype_name__ = 'RingLayout'
     icon_name = 'view-radial'
@@ -201,6 +214,7 @@ class RingLayout(FavoritesLayout):
     def __init__(self):
         FavoritesLayout.__init__(self)
         self._locked_children = {}
+        self._spiral_mode = False
 
     def append(self, icon, locked=False):
         FavoritesLayout.append(self, icon, locked)
@@ -221,32 +235,75 @@ class RingLayout(FavoritesLayout):
             self._locked_children[child] = (x, y)
 
     def _calculate_radius_and_icon_size(self, children_count):
-        # what's the radius required without downscaling?
-        distance = style.STANDARD_ICON_SIZE + style.DEFAULT_SPACING
+        """ Adjust the ring or spiral radius and icon size as needed. """
+        self._spiral_mode = False
+        distance = style.MEDIUM_ICON_SIZE + style.DEFAULT_SPACING * \
+            _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.MEDIUM_ICON_SIZE)]
+        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        if radius < _MAXIMUM_RADIUS:
+            return radius, style.MEDIUM_ICON_SIZE
+
+        distance = style.STANDARD_ICON_SIZE + style.DEFAULT_SPACING * \
+            _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.STANDARD_ICON_SIZE)]
+        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        if radius < _MAXIMUM_RADIUS:
+            return radius, style.STANDARD_ICON_SIZE
+
+        self._spiral_mode = True
         icon_size = style.STANDARD_ICON_SIZE
-        # circumference is 2*pi*r; we want this to be at least
-        # 'children_count * distance'
-        radius = children_count * distance / (2 * math.pi)
-        # limit computed radius to reasonable bounds.
-        radius = max(radius, _MINIMUM_RADIUS)
-        radius = min(radius, _MAXIMUM_RADIUS)
-        # recompute icon size from limited radius
-        if children_count > 0:
-            icon_size = (2 * math.pi * radius / children_count) \
-                        - style.DEFAULT_SPACING
-        # limit adjusted icon size.
-        icon_size = max(icon_size, style.SMALL_ICON_SIZE)
-        icon_size = min(icon_size, style.MEDIUM_ICON_SIZE)
+        angle, radius = self._calculate_angle_and_radius(children_count,
+                                                               icon_size)
+        while radius > _MAXIMUM_RADIUS:
+            i = _ICON_SIZES.index(icon_size)
+            if i < len(_ICON_SIZES) - 1:
+                icon_size = _ICON_SIZES[i + 1]
+                angle, radius = self._calculate_angle_and_radius(
+                    children_count, icon_size)
+            else:
+                break
         return radius, icon_size
 
-    def _calculate_position(self, radius, icon_size, index, children_count,
+    def _calculate_position(self, radius, icon_size, icon_index, children_count,
                             sin=math.sin, cos=math.cos):
+        """ Calculate an icon position on a circle or a spiral. """
         width, height = self.box.get_allocation()
-        angle = index * (2 * math.pi / children_count) - math.pi / 2
-        x = radius * cos(angle) + (width - icon_size) / 2
-        y = radius * sin(angle) + (height - icon_size -
-                                   (style.GRID_CELL_SIZE/2) ) / 2
+        if self._spiral_mode:
+            min_width_, box_width = self.box.get_width_request()
+            min_height_, box_height = self.box.get_height_request(box_width)
+            angle, radius = self._calculate_angle_and_radius(icon_index,
+                                                             icon_size)
+            x, y = self._convert_from_polar_to_cartesian(angle, radius,
+                                                         icon_size,
+                                                         width, height)
+        else:
+            angle = icon_index * (2 * math.pi / children_count) - math.pi / 2
+            x = radius * cos(angle) + (width - icon_size) / 2
+            y = radius * sin(angle) + (height - icon_size - \
+                                       (style.GRID_CELL_SIZE / 2)) / 2
         return x, y
+
+    def _convert_from_polar_to_cartesian(self, angle, radius, icon_size, width,
+                                         height):
+        """ Convert angle, radius to x, y """
+        x = int(math.sin(angle) * radius)
+        y = int(math.cos(angle) * radius)
+        x = - x + (width - icon_size) / 2
+        y = y + (height - icon_size - (style.GRID_CELL_SIZE / 2)) / 2
+        return x, y
+
+    def _calculate_angle_and_radius(self, icon_count, icon_size):
+        """ Based on icon_count and icon_size, calculate radius and angle. """
+        spiral_spacing = _SPIRAL_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
+        icon_spacing = icon_size + style.DEFAULT_SPACING * \
+            _ICON_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
+        angle = _INITIAL_ANGLE
+        radius = _MINIMUM_RADIUS - (icon_size * _MIMIMUM_RADIUS_ENCROACHMENT)
+        for i in range(icon_count):
+            circumference = radius * 2 * math.pi
+            n = circumference / icon_spacing
+            angle += (2 * math.pi / n)
+            radius += (float(icon_spacing) * spiral_spacing / n)
+        return angle, radius
 
     def _get_children_in_ring(self):
         children_in_ring = [child for child in self.box.get_layout_children() \

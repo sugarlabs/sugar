@@ -109,6 +109,16 @@ class SearchToolbar(gtk.Toolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
+        self._add_separator(expand=True)
+
+        self._sorting_button = SortingButton()
+        self._sorting_button.connect('clicked',
+                                     self.__sorting_button_clicked_cb)
+        self.insert(self._sorting_button, -1)
+        self._sorting_button.connect('sort-property-changed',
+                                     self.__sort_changed_cb)
+        self._sorting_button.show()
+
         # TODO: enable it when the DS supports saving the buddies.
         #self._with_search_combo = self._get_with_search_combo()
         #tool_item = ToolComboBox(self._with_search_combo)
@@ -154,6 +164,17 @@ class SearchToolbar(gtk.Toolbar):
         with_search.connect('changed', self._combo_changed_cb)
         return with_search
 
+    def _add_separator(self, expand=False):
+        separator = gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.GRID_CELL_SIZE,
+                                       style.GRID_CELL_SIZE)
+        self.insert(separator, -1)
+        separator.show()
+
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
         tool_item.set_expand(expand)
@@ -191,6 +212,14 @@ class SearchToolbar(gtk.Toolbar):
             if text:
                 query['query'] = text
 
+        property_, order = self._sorting_button.get_current_sort()
+
+        if order == gtk.SORT_ASCENDING:
+            sign = '+'
+        else:
+            sign = '-'
+        query['order_by'] = [sign + property_]
+
         return query
 
     def _get_date_range(self):
@@ -212,6 +241,12 @@ class SearchToolbar(gtk.Toolbar):
 
     def _combo_changed_cb(self, combo):
         self._update_if_needed()
+
+    def __sort_changed_cb(self, button):
+        self._update_if_needed()
+
+    def __sorting_button_clicked_cb(self, button):
+        self._sorting_button.palette.popup(immediate=True, state=1)
 
     def _update_if_needed(self):
         new_query = self._build_query()
@@ -329,6 +364,11 @@ class DetailToolbox(Toolbox):
         self.entry_toolbar.show()
 
 class EntryToolbar(gtk.Toolbar):
+    __gsignals__ = {
+        'volume-error': (gobject.SIGNAL_RUN_FIRST,
+                         gobject.TYPE_NONE,
+                         ([str, str]))
+        }
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -398,7 +438,22 @@ class EntryToolbar(gtk.Toolbar):
         misc.resume(self._metadata, service_name)
 
     def _copy_menu_item_activate_cb(self, menu_item, mount_point):
-        model.copy(self._metadata, mount_point)
+        file_path = model.get_file(self._metadata['uid'])
+
+        if not file_path or not os.path.exists(file_path):
+            logging.warn('Entries without a file cannot be copied.')
+            self.emit('volume-error',
+                      _('Entries without a file cannot be copied.'),
+                      _('Warning'))
+            return
+
+        try:
+            model.copy(self._metadata, mount_point)
+        except IOError, e:
+            logging.exception('Error while copying the entry. %s', e.strerror)
+            self.emit('volume-error', 
+                      _('Error while copying the entry. %s') % e.strerror,
+                      _('Error'))
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -456,3 +511,48 @@ class EntryToolbar(gtk.Toolbar):
                                 activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
+
+
+class SortingButton(ToolButton):
+    __gtype_name__ = 'JournalSortingButton'
+
+    __gsignals__ = {
+        'sort-property-changed': (gobject.SIGNAL_RUN_FIRST,
+                                  gobject.TYPE_NONE,
+                                  ([])),
+    }
+
+    _SORT_OPTIONS = [
+        ('timestamp', 'view-lastedit', _('Sort by date modified')),
+        ('creation_time', 'view-created', _('Sort by date created')),
+        ('filesize', 'view-size', _('Sort by size')),
+    ]
+
+    def __init__(self):
+        ToolButton.__init__(self)
+
+        self._property = 'timestamp'
+        self._order = gtk.SORT_ASCENDING
+
+        self.props.tooltip = _('Sort view')
+        self.props.icon_name = 'view-lastedit'
+
+        for property_, icon, label in self._SORT_OPTIONS:
+            button = MenuItem(icon_name=icon, text_label=label)
+            button.connect('activate',
+                           self.__sort_type_changed_cb,
+                           property_,
+                           icon)
+            button.show()
+            self.props.palette.menu.insert(button, -1)
+
+    def __sort_type_changed_cb(self, widget, property_, icon_name):
+        self._property = property_
+        #FIXME: Implement sorting order
+        self._order = gtk.SORT_ASCENDING
+        self.emit('sort-property-changed')
+
+        self.props.icon_name = icon_name
+
+    def get_current_sort(self):
+        return (self._property, self._order)

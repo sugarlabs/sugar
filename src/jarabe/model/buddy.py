@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
+# Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,169 +15,236 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.presence import presenceservice
-from sugar.graphics.xocolor import XoColor
+import logging
+
 import gobject
+import gconf
+import dbus
+from telepathy.client import Connection
+from telepathy.interfaces import CONNECTION
+
+from sugar.graphics.xocolor import XoColor
+from sugar.profile import get_profile
+
+from jarabe.util.telepathy import connection_watcher
 
 _NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
 
-class BuddyModel(gobject.GObject):
-    __gsignals__ = {
-        'appeared':                 (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
-        'disappeared':              (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
-        'nick-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'color-changed':            (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'icon-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([])),
-        'tags-changed':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'current-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT]))
-    }
+CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
-    def __init__(self, key=None, buddy=None, nick=None):
-        if (key and buddy) or (not key and not buddy):
-            raise RuntimeError("Must specify only _one_ of key or buddy.")
+class BaseBuddyModel(gobject.GObject):
+    __gtype_name__ = 'SugarBaseBuddyModel'
 
-        gobject.GObject.__init__(self)
-
+    def __init__(self, **kwargs):
+        self._key = None
+        self._nick = None
         self._color = None
         self._tags = None
-        self._ba_handler = None
-        self._pc_handler = None
-        self._dis_handler = None
-        self._bic_handler = None
-        self._cac_handler = None
+        self._present = False
+        self._current_activity = None
 
-        self._pservice = presenceservice.get_instance()
+        gobject.GObject.__init__(self, **kwargs)
 
-        self._buddy = None
+    def is_present(self):
+        return self._present
 
-        if not buddy:
-            self._key = key
-            # connect to the PS's buddy-appeared signal and
-            # wait for the buddy to appear
-            self._ba_handler = self._pservice.connect('buddy-appeared',
-                    self._buddy_appeared_cb)
-            # Set color to 'inactive'/'disconnected'
-            self._set_color_from_string(_NOT_PRESENT_COLOR)
-            self._nick = nick
+    def set_present(self, present):
+        self._present = present
 
-            self._pservice.get_buddies_async(reply_handler=self._get_buddies_cb)
-        else:
-            self._update_buddy(buddy)
-
-    def _get_buddies_cb(self, buddy_list):
-        buddy = None
-        for iter_buddy in buddy_list:
-            if iter_buddy.props.key == self._key:
-                buddy = iter_buddy
-                break
-
-        if buddy:
-            if self._ba_handler:
-                # Once we have the buddy, we no longer need to
-                # monitor buddy-appeared events
-                self._pservice.disconnect(self._ba_handler)
-                self._ba_handler = None
-
-            self._update_buddy(buddy)
-
-    def _set_color_from_string(self, color_string):
-        self._color = XoColor(color_string)
-
-    def get_key(self):
-        return self._key
+    present = gobject.property(type=bool, default=False, getter=is_present,
+                               setter=set_present)
 
     def get_nick(self):
         return self._nick
 
+    def set_nick(self, nick):
+        self._nick = nick
+
+    nick = gobject.property(type=object, getter=get_nick, setter=set_nick)
+
+    def get_key(self):
+        return self._key
+
+    def set_key(self, key):
+        self._key = key
+
+    key = gobject.property(type=object, getter=get_key, setter=set_key)
+
     def get_color(self):
         return self._color
+
+    def set_color(self, color):
+        self._color = color
+
+    color = gobject.property(type=object, getter=get_color, setter=set_color)
 
     def get_tags(self):
         return self._tags
 
-    def get_buddy(self):
-        return self._buddy
-
-    def is_owner(self):
-        if not self._buddy:
-            return False
-        return self._buddy.props.owner
-
-    def is_present(self):
-        if self._buddy:
-            return True
-        return False
+    tags = gobject.property(type=object, getter=get_tags)
 
     def get_current_activity(self):
-        if self._buddy:
-            return self._buddy.props.current_activity
-        return None
+        return self._current_activity
 
-    def _update_buddy(self, buddy):
-        if not buddy:
-            raise ValueError("Buddy cannot be None.")
+    def set_current_activity(self, current_activity):
+        if self._current_activity != current_activity:
+            self._current_activity = current_activity
+            self.notify('current-activity')
 
-        self._buddy = buddy
-        self._key = self._buddy.props.key
-        self._nick = self._buddy.props.nick
-        self._tags = self._buddy.props.tags
-        self._set_color_from_string(self._buddy.props.color)
+    current_activity = gobject.property(type=object,
+                                        getter=get_current_activity,
+                                        setter=set_current_activity)
 
-        self._pc_handler = self._buddy.connect('property-changed',
-                                               self._buddy_property_changed_cb)
-        self._bic_handler = self._buddy.connect('icon-changed',
-                                                self._buddy_icon_changed_cb)
+    def is_owner(self):
+        raise NotImplementedError
 
-    def _buddy_appeared_cb(self, pservice, buddy):
-        if self._buddy or buddy.props.key != self._key:
-            return
+    def get_buddy(self):
+        raise NotImplementedError
 
-        if self._ba_handler:
-            # Once we have the buddy, we no longer need to
-            # monitor buddy-appeared events
-            self._pservice.disconnect(self._ba_handler)
-            self._ba_handler = None
 
-        self._update_buddy(buddy)
-        self.emit('appeared')
+class OwnerBuddyModel(BaseBuddyModel):
+    __gtype_name__ = 'SugarOwnerBuddyModel'
+    def __init__(self):
+        BaseBuddyModel.__init__(self)
+        self.props.present = True
 
-    def _buddy_property_changed_cb(self, buddy, keys):
-        if not self._buddy:
-            return
-        if 'color' in keys:
-            self._set_color_from_string(self._buddy.props.color)
-            self.emit('color-changed', self.get_color())
-        if 'current-activity' in keys:
-            self.emit('current-activity-changed', buddy.props.current_activity)
-        if 'nick' in keys:
-            self._nick = self._buddy.props.nick
-            self.emit('nick-changed', self.get_nick())
-        if 'tags' in keys:
-            self._tags = self._buddy.props.tags
-            self.emit('tags-changed', self.get_tags())
+        client = gconf.client_get_default()
+        self.props.nick = client.get_string('/desktop/sugar/user/nick')
+        color = client.get_string('/desktop/sugar/user/color')
+        self.props.color = XoColor(color)
 
-    def _buddy_disappeared_cb(self, buddy):
-        if buddy != self._buddy:
-            return
-        self._buddy.disconnect(self._pc_handler)
-        self._buddy.disconnect(self._dis_handler)
-        self._buddy.disconnect(self._bic_handler)
-        self._buddy.disconnect(self._cac_handler)
-        self._set_color_from_string(_NOT_PRESENT_COLOR)
-        self.emit('disappeared')
-        self._buddy = None
+        self.props.key = get_profile().pubkey
 
-    def _buddy_icon_changed_cb(self, buddy):
-        self.emit('icon-changed')
+        self.connect('notify::nick', self.__property_changed_cb)
+        self.connect('notify::color', self.__property_changed_cb)
+        self.connect('notify::current-activity',
+                     self.__current_activity_changed_cb)
+
+        bus = dbus.SessionBus()
+        bus.add_signal_receiver(
+                self.__name_owner_changed_cb,
+                signal_name='NameOwnerChanged',
+                dbus_interface='org.freedesktop.DBus')
+
+        bus_object = bus.get_object(dbus.BUS_DAEMON_NAME, dbus.BUS_DAEMON_PATH)
+        for service in bus_object.ListNames(
+                dbus_interface=dbus.BUS_DAEMON_IFACE):
+            if service.startswith(CONNECTION + '.'):
+                path = '/%s' % service.replace('.', '/')
+                Connection(service, path, bus,
+                           ready_handler=self.__connection_ready_cb)
+
+    def __connection_ready_cb(self, connection):
+        self._sync_properties_on_connection(connection)
+
+    def __name_owner_changed_cb(self, name, old, new):
+        if name.startswith(CONNECTION + '.') and not old and new:
+            path = '/' + name.replace('.', '/')
+            Connection(name, path, ready_handler=self.__connection_ready_cb)
+
+    def __property_changed_cb(self, buddy, pspec):
+        self._sync_properties()
+
+    def __current_activity_changed_cb(self, buddy, pspec):
+        conn_watcher = connection_watcher.get_instance()
+        for connection in conn_watcher.get_connections():
+            if self.props.current_activity is not None:
+                activity_id = self.props.current_activity.activity_id
+                room_handle = self.props.current_activity.room_handle
+            else:
+                activity_id = ''
+                room_handle = 0
+
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetCurrentActivity(
+                activity_id,
+                room_handle,
+                reply_handler=self.__set_current_activity_cb,
+                error_handler=self.__error_handler_cb)
+
+    def __set_current_activity_cb(self):
+        logging.debug('__set_current_activity_cb')
+
+    def _sync_properties(self):
+        conn_watcher = connection_watcher.get_instance()
+        for connection in conn_watcher.get_connections():
+            self._sync_properties_on_connection(connection)
+
+    def _sync_properties_on_connection(self, connection):
+        if CONNECTION_INTERFACE_BUDDY_INFO in connection:
+            properties = {}
+            if self.props.key is not None:
+                properties['key'] = dbus.ByteArray(self.props.key)
+            if self.props.color is not None:
+                properties['color'] = self.props.color.to_string()
+
+            logging.debug('calling SetProperties with %r', properties)
+            connection[CONNECTION_INTERFACE_BUDDY_INFO].SetProperties(
+                properties,
+                reply_handler=self.__set_properties_cb,
+                error_handler=self.__error_handler_cb)
+
+    def __set_properties_cb(self):
+        logging.debug('__set_properties_cb')
+
+    def __error_handler_cb(self, error):
+        raise RuntimeError(error)
+
+    def __connection_added_cb(self, conn_watcher, connection):
+        self._sync_properties_on_connection(connection)
+
+    def is_owner(self):
+        return True
+
+    def get_buddy(self):
+        raise NotImplementedError
+
+
+_owner_instance = None
+def get_owner_instance():
+    global _owner_instance
+    if _owner_instance is None:
+        _owner_instance = OwnerBuddyModel()
+    return _owner_instance
+
+
+class BuddyModel(BaseBuddyModel):
+    __gtype_name__ = 'SugarBuddyModel'
+    def __init__(self, **kwargs):
+
+        self._account = None
+        self._contact_id = None
+
+        BaseBuddyModel.__init__(self, **kwargs)
+
+    def is_owner(self):
+        return False
+
+    def get_buddy(self):
+        raise NotImplementedError
+
+    def get_account(self):
+        return self._account
+
+    def set_account(self, account):
+        self._account = account
+
+    account = gobject.property(type=object, getter=get_account,
+                               setter=set_account)
+
+    def get_contact_id(self):
+        return self._contact_id
+
+    def set_contact_id(self, contact_id):
+        self._contact_id = contact_id
+
+    contact_id = gobject.property(type=object, getter=get_contact_id,
+                                  setter=set_contact_id)
+
+
+class FriendBuddyModel(BuddyModel):
+    __gtype_name__ = 'SugarFriendBuddyModel'
+    def __init__(self, nick, key):
+        BuddyModel.__init__(self, nick=nick, key=key)
+
+    def get_buddy(self):
+        raise NotImplementedError
