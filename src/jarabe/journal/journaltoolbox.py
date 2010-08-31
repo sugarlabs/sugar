@@ -112,7 +112,8 @@ class SearchToolbar(gtk.Toolbar):
         self._add_separator(expand=True)
 
         self._sorting_button = SortingButton()
-        self._sorting_button.connect('clicked', self.__sorting_button_clicked_cb)
+        self._sorting_button.connect('clicked',
+                                     self.__sorting_button_clicked_cb)
         self.insert(self._sorting_button, -1)
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
