@@ -142,10 +142,10 @@ class OwnerBuddyModel(BaseBuddyModel):
             path = '/' + name.replace('.', '/')
             Connection(name, path, ready_handler=self.__connection_ready_cb)
 
-    def __property_changed_cb(self, pspec):
+    def __property_changed_cb(self, buddy, pspec):
         self._sync_properties()
 
-    def __current_activity_changed_cb(self, pspec):
+    def __current_activity_changed_cb(self, buddy, pspec):
         conn_watcher = connection_watcher.get_instance()
         for connection in conn_watcher.get_connections():
             if self.props.current_activity is not None:
