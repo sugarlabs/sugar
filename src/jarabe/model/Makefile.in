@@ -125,6 +125,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
@@ -202,15 +203,15 @@ sugar_PYTHON = \
 	friends.py		\
 	invites.py		\
 	olpcmesh.py		\
-	owner.py		\
-	mimeregistry.py	\
+	mimeregistry.py		\
 	neighborhood.py		\
         network.py              \
         notifications.py        \
 	shell.py		\
 	screen.py		\
         session.py		\
-	sound.py
+	sound.py		\
+	telepathyclient.py
 
 all: all-am
 
