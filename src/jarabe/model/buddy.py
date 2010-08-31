@@ -129,7 +129,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         bus_object = bus.get_object(dbus.BUS_DAEMON_NAME, dbus.BUS_DAEMON_PATH)
         for service in bus_object.ListNames(
                 dbus_interface=dbus.BUS_DAEMON_IFACE):
-            if service.startswith('org.freedesktop.Telepathy.Connection.'):
+            if service.startswith(CONNECTION + '.'):
                 path = '/%s' % service.replace('.', '/')
                 Connection(service, path, bus,
                            ready_handler=self.__connection_ready_cb)
@@ -138,7 +138,7 @@ class OwnerBuddyModel(BaseBuddyModel):
         self._sync_properties_on_connection(connection)
 
     def __name_owner_changed_cb(self, name, old, new):
-        if name.startswith(CONNECTION) and not old and new:
+        if name.startswith(CONNECTION + '.') and not old and new:
             path = '/' + name.replace('.', '/')
             Connection(name, path, ready_handler=self.__connection_ready_cb)
 
