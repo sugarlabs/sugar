@@ -99,7 +99,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,write imagev
 #  * gvfs needed for GIO removable media support
 session_nm = network-manager
 session_gio = gvfs
-emulator_exec = xserver-xephyr, x11-utils
+emulator_exec = xserver-xephyr, x11-utils, gnome-keyring
 jarabe_initprofile = openssh-client
 jarabe_nm = wpasupplicant, avahi-autoipd
 jarabe_cp_cli_exec = x11-xserver-utils, lsb-release, ethtool, tzdata
