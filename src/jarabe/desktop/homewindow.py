@@ -45,8 +45,10 @@ class HomeWindow(gtk.Window):
         self._active = False
         self._fully_obscured = True
 
-        self.set_default_size(gtk.gdk.screen_width(),
-                              gtk.gdk.screen_height())
+        screen = self.get_screen()
+        screen.connect('size-changed', self.__screen_size_change_cb)
+        self.set_default_size(screen.get_width(),
+                              screen.get_height())
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
@@ -79,6 +81,9 @@ class HomeWindow(gtk.Window):
             self._home_box.suspend()
         elif level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
+
+    def __screen_size_change_cb(self, screen):
+        self.resize(screen.get_width(), screen.get_height())
 
     def _activate_view(self, level):
         if level == ShellModel.ZOOM_HOME:

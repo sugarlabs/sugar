@@ -79,7 +79,6 @@ def start_ui_service():
     from jarabe.view.service import UIService
 
     ui_service = UIService()
-    ui_service.start()
 
 def start_session_manager():
     from jarabe.model.session import get_session_manager
@@ -230,7 +229,7 @@ def main():
 
     client = gconf.client_get_default()
     client.set_string('/apps/metacity/general/mouse_button_modifier',
-                      'disabled')
+                      '<Super>')
 
     timezone = client.get_string('/desktop/sugar/date/timezone')
     if timezone is not None and timezone:

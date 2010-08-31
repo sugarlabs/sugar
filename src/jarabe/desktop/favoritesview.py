@@ -31,22 +31,21 @@ from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
-from sugar.presence import presenceservice
 from sugar import dispatch
 from sugar.datastore import datastore
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
+from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view import launcher
-from jarabe.model.buddy import BuddyModel
+from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
-from jarabe.desktop.myicon import MyIcon
 from jarabe.desktop import favoriteslayout
 
 _logger = logging.getLogger('FavoritesView')
@@ -82,7 +81,7 @@ class FavoritesView(hippo.Canvas):
         self._box.props.background_color = style.COLOR_WHITE.get_int()
         self.set_root(self._box)
 
-        self._my_icon = _MyIcon(style.XLARGE_ICON_SIZE)
+        self._my_icon = OwnerIcon(style.XLARGE_ICON_SIZE)
         self._my_icon.connect('register-activate', self.__register_activate_cb)
         self._box.append(self._my_icon)
 
@@ -593,17 +592,16 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self._home_activity = home_activity
         self._update()
 
-class _MyIcon(MyIcon):
-    __gtype_name__ = 'SugarFavoritesMyIcon'
+class OwnerIcon(BuddyIcon):
+    __gtype_name__ = 'SugarFavoritesOwnerIcon'
 
     __gsignals__ = {
         'register-activate' : (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([]))
     }
-    def __init__(self, scale):
-        MyIcon.__init__(self, scale)
+    def __init__(self, size):
+        BuddyIcon.__init__(self, buddy=get_owner_instance(), size=size)
 
-        self._power_manager = None
         self._palette_enabled = False
         self._register_menu = None
 
@@ -612,9 +610,7 @@ class _MyIcon(MyIcon):
             self._palette_enabled = True
             return
 
-        presence_service = presenceservice.get_instance()
-        owner = BuddyModel(buddy=presence_service.get_owner())
-        palette = BuddyMenu(owner)
+        palette = BuddyMenu(get_owner_instance())
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')

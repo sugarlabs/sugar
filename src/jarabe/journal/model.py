@@ -21,6 +21,7 @@ import time
 import shutil
 from stat import S_IFMT, S_IFDIR, S_IFREG
 import re
+from operator import itemgetter
 
 import gobject
 import dbus
@@ -36,9 +37,9 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.
-PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'keep', 'buddies',
-              'icon-color', 'mime_type', 'progress', 'activity', 'mountpoint',
-              'activity_id', 'bundle_id']
+PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'creation_time', 'filesize',
+              'keep', 'buddies', 'icon-color', 'mime_type', 'progress',
+              'activity', 'mountpoint', 'activity_id', 'bundle_id']
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
@@ -108,8 +109,6 @@ class BaseResultSet(object):
         self._position = position
 
     def read(self):
-        logging.debug('ResultSet.read position: %r', self._position)
-
         if self._position == -1:
             self.seek(0)
 
@@ -184,8 +183,6 @@ class BaseResultSet(object):
             objects_excess = len(self._cache) - cache_limit
             if objects_excess > 0:
                 del self._cache[-objects_excess:]
-        else:
-            logging.debug('cache hit and no need to grow the cache')
 
         return self._cache[self._position - self._offset]
 
@@ -246,6 +243,8 @@ class InplaceResultSet(BaseResultSet):
 
         self._mime_types = query.get('mime_type', [])
 
+        self._sort = query.get('order_by', ['+timestamp'])[0]
+
     def setup(self):
         self._file_list = []
         self._recurse_dir(self._mount_point)
@@ -254,7 +253,13 @@ class InplaceResultSet(BaseResultSet):
         self._stopped = True
 
     def setup_ready(self):
-        self._file_list.sort(lambda a, b: b[2] - a[2])
+        if self._sort[1:] == 'filesize':
+            keygetter = itemgetter(3)
+        else:
+            keygetter = itemgetter(2) # timestamp
+        self._file_list.sort(lambda a, b: b - a,
+                             key=keygetter,
+                             reverse=self._sort[0]=='-')
         self.ready.send(self)
 
     def find(self, query):
@@ -273,7 +278,7 @@ class InplaceResultSet(BaseResultSet):
         files = self._file_list[offset:offset + limit]
 
         entries = []
-        for file_path, stat, mtime_ in files:
+        for file_path, stat, mtime_, size_ in files:
             metadata = _get_file_metadata(file_path, stat)
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
@@ -331,7 +336,7 @@ class InplaceResultSet(BaseResultSet):
                             add_to_list = False
 
                     if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime))
+                        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size)
                         self._file_list.append(file_info)
 
                     self.progress.send(self)
@@ -344,6 +349,7 @@ def _get_file_metadata(path, stat):
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
+            'filesize': stat.st_size,
             'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',

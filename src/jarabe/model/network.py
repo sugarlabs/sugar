@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
 import logging
 import os
 import time
@@ -54,6 +55,49 @@ NM_CONNECTION_TYPE_GSM = 'gsm'
 NM_ACTIVE_CONNECTION_STATE_UNKNOWN = 0
 NM_ACTIVE_CONNECTION_STATE_ACTIVATING = 1
 NM_ACTIVE_CONNECTION_STATE_ACTIVATED = 2
+
+
+NM_DEVICE_STATE_REASON_UNKNOWN = 0
+NM_DEVICE_STATE_REASON_NONE = 1
+NM_DEVICE_STATE_REASON_NOW_MANAGED = 2
+NM_DEVICE_STATE_REASON_NOW_UNMANAGED = 3
+NM_DEVICE_STATE_REASON_CONFIG_FAILED = 4
+NM_DEVICE_STATE_REASON_CONFIG_UNAVAILABLE = 5
+NM_DEVICE_STATE_REASON_CONFIG_EXPIRED = 6
+NM_DEVICE_STATE_REASON_NO_SECRETS = 7
+NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT = 8
+NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED = 9
+NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED = 10
+NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT = 11
+NM_DEVICE_STATE_REASON_PPP_START_FAILED = 12
+NM_DEVICE_STATE_REASON_PPP_DISCONNECT = 13
+NM_DEVICE_STATE_REASON_PPP_FAILED = 14
+NM_DEVICE_STATE_REASON_DHCP_START_FAILED = 15
+NM_DEVICE_STATE_REASON_DHCP_ERROR = 16
+NM_DEVICE_STATE_REASON_DHCP_FAILED = 17
+NM_DEVICE_STATE_REASON_SHARED_START_FAILED = 18
+NM_DEVICE_STATE_REASON_SHARED_FAILED = 19
+NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED = 20
+NM_DEVICE_STATE_REASON_AUTOIP_ERROR = 21
+NM_DEVICE_STATE_REASON_AUTOIP_FAILED = 22
+NM_DEVICE_STATE_REASON_MODEM_BUSY = 23
+NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE = 24
+NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER = 25
+NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT = 26
+NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED = 27
+NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED = 28
+NM_DEVICE_STATE_REASON_GSM_APN_FAILED = 29
+NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING = 30
+NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED = 31
+NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT = 32
+NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED = 33
+NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED = 34
+NM_DEVICE_STATE_REASON_FIRMWARE_MISSING = 35
+NM_DEVICE_STATE_REASON_REMOVED = 36
+NM_DEVICE_STATE_REASON_SLEEPING = 37
+NM_DEVICE_STATE_REASON_CONNECTION_REMOVED = 38
+NM_DEVICE_STATE_REASON_USER_REQUESTED = 39
+NM_DEVICE_STATE_REASON_CARRIER = 40
 
 NM_802_11_AP_FLAGS_NONE = 0x00000000
 NM_802_11_AP_FLAGS_PRIVACY = 0x00000001
@@ -99,6 +143,103 @@ GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
 
 _nm_settings = None
 _conn_counter = 0
+
+_nm_device_state_reason_description = None
+
+def get_error_by_reason(reason):
+    global _nm_device_state_reason_description
+
+    if _nm_device_state_reason_description is None:
+        _nm_device_state_reason_description = {
+            NM_DEVICE_STATE_REASON_UNKNOWN: \
+                _("The reason for the device state change \ is unknown."),
+            NM_DEVICE_STATE_REASON_NONE: \
+                _("The state change is normal."),
+            NM_DEVICE_STATE_REASON_NOW_MANAGED: \
+                _("The device is now managed."),
+            NM_DEVICE_STATE_REASON_NOW_UNMANAGED: \
+                _("The device is no longer managed."),
+            NM_DEVICE_STATE_REASON_CONFIG_FAILED: \
+                _("The device could not be readied for configuration."),
+            NM_DEVICE_STATE_REASON_CONFIG_UNAVAILABLE : \
+                _("IP configuration could not be reserved " \
+                      "(no available address, timeout, etc)."),
+            NM_DEVICE_STATE_REASON_CONFIG_EXPIRED : \
+                _("The IP configuration is no longer valid."),
+            NM_DEVICE_STATE_REASON_NO_SECRETS : \
+                _("Secrets were required, but not provided."),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT : \
+                _("The 802.1X supplicant disconnected from "\
+                      "the access point or authentication server."),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED : \
+                _("Configuration of the 802.1X supplicant failed."),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED : \
+                _("The 802.1X supplicant quit or failed unexpectedly."),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT : \
+                _("The 802.1X supplicant took too long to authenticate."),
+            NM_DEVICE_STATE_REASON_PPP_START_FAILED : \
+                _("The PPP service failed to start within the allowed time."),
+            NM_DEVICE_STATE_REASON_PPP_DISCONNECT : \
+                _("The PPP service disconnected unexpectedly."),
+            NM_DEVICE_STATE_REASON_PPP_FAILED : \
+                _("The PPP service quit or failed unexpectedly."),
+            NM_DEVICE_STATE_REASON_DHCP_START_FAILED : \
+                _("The DHCP service failed to start within the allowed time."),
+            NM_DEVICE_STATE_REASON_DHCP_ERROR : \
+                _("The DHCP service reported an unexpected error."),
+            NM_DEVICE_STATE_REASON_DHCP_FAILED : \
+                _("The DHCP service quit or failed unexpectedly."),
+            NM_DEVICE_STATE_REASON_SHARED_START_FAILED : \
+                _("The shared connection service failed to start."),
+            NM_DEVICE_STATE_REASON_SHARED_FAILED : \
+                _("The shared connection service quit or " \
+                      "failed unexpectedly."),
+            NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED : \
+                _("The AutoIP service failed to start."),
+            NM_DEVICE_STATE_REASON_AUTOIP_ERROR : \
+                _("The AutoIP service reported an unexpected error."),
+            NM_DEVICE_STATE_REASON_AUTOIP_FAILED : \
+                _("The AutoIP service quit or failed unexpectedly."),
+            NM_DEVICE_STATE_REASON_MODEM_BUSY : \
+                _("Dialing failed because the line was busy."),
+            NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE : \
+                _("Dialing failed because there was no dial tone."),
+            NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER : \
+                _("Dialing failed because there was no carrier."),
+            NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT : \
+                _("Dialing timed out."),
+            NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED : \
+                _("Dialing failed."),
+            NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED : \
+                _("Modem initialization failed."),
+            NM_DEVICE_STATE_REASON_GSM_APN_FAILED : \
+                _("Failed to select the specified GSM APN."),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING : \
+                _("Not searching for networks."),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED : \
+                _("Network registration was denied."),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT : \
+                _("Network registration timed out."),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED : \
+                _("Failed to register with the requested GSM network."),
+            NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED : \
+                _("PIN check failed."),
+            NM_DEVICE_STATE_REASON_FIRMWARE_MISSING : \
+                _("Necessary firmware for the device may be missing."),
+            NM_DEVICE_STATE_REASON_REMOVED : \
+                _("The device was removed."),
+            NM_DEVICE_STATE_REASON_SLEEPING : \
+                _("NetworkManager went to sleep."),
+            NM_DEVICE_STATE_REASON_CONNECTION_REMOVED : \
+                _("The device's active connection was removed " \
+                      "or disappeared."),
+            NM_DEVICE_STATE_REASON_USER_REQUESTED : \
+                _("A user or client requested the disconnection."),
+            NM_DEVICE_STATE_REASON_CARRIER : \
+                _("The device's carrier/link changed.")}
+
+    return _nm_device_state_reason_description[reason]
+
 
 
 def frequency_to_channel(frequency):
@@ -480,17 +621,22 @@ class NMSettingsConnection(dbus.service.Object):
                          in_signature='sasb', out_signature='a{sa{sv}}')
     def GetSecrets(self, setting_name, hints, request_new, reply, error):
         logging.debug('Secrets requested for connection %s request_new=%s',
-            self.path, request_new)
-        if request_new or self._secrets is None:
-            # request_new is for example the case when the pw on the AP changes
-            response = SecretsResponse(self, reply, error)
-            try:
-                self.secrets_request.send(self, response=response)
-            except Exception:
-                logging.exception('Error requesting the secrets via dialog')
+                      self.path, request_new)
+        if self._settings.connection.type is not NM_CONNECTION_TYPE_GSM:
+            if request_new or self._secrets is None:
+                # request_new is for example the case when the pw on the AP changes
+                response = SecretsResponse(self, reply, error)
+                try:
+                    self.secrets_request.send(self, response=response)
+                except Exception:
+                    logging.exception('Error requesting the secrets via dialog')
+            else:
+                reply(self._secrets.get_dict())
         else:
-            reply(self._secrets.get_dict())
-
+            if not request_new:
+                reply(self._secrets.get_dict())
+            else:
+                raise Exception('The stored GSM secret has already been supplied ')
 
 class AccessPoint(gobject.GObject):
     __gsignals__ = {

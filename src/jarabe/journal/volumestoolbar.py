@@ -153,17 +153,19 @@ class BaseButton(RadioToolButton):
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
-            logging.warn('File does not exist')
-            self.emit('volume-error', _('Entries without a file cannot'
-                ' be copied'), _('Warning'))
+            logging.warn('Entries without a file cannot be copied.')
+            self.emit('volume-error',
+                      _('Entries without a file cannot be copied.'),
+                      _('Warning'))
             return
 
         try:
             model.copy(metadata, self.mount_point)
-        except IOError:
-            logging.exception('BaseButton._drag_data_received_cb: Error'
-                'while copying')
-            self.emit('volume-error', _('Input/Output error'), _('Error'))
+        except IOError, e:
+            logging.exception('Error while copying the entry. %s', e.strerror)
+            self.emit('volume-error',
+                      _('Error while copying the entry. %s') % e.strerror,
+                      _('Error'))
 
 class VolumeButton(BaseButton):
     def __init__(self, mount):

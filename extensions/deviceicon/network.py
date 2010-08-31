@@ -66,7 +66,7 @@ _GSM_STATE_NOT_READY = 0
 _GSM_STATE_DISCONNECTED = 1
 _GSM_STATE_CONNECTING = 2
 _GSM_STATE_CONNECTED = 3
-_GSM_STATE_NEED_AUTH = 4
+_GSM_STATE_FAILED = 4
 
 
 class WirelessPalette(Palette):
@@ -214,33 +214,52 @@ class GsmPalette(Palette):
         Palette.__init__(self, label=_('Wireless modem'))
 
         self._current_state = None
+        self._failed_connection = False
 
-        self._toggle_state_item = gtk.MenuItem('')
+        self._toggle_state_item = MenuItem('')
         self._toggle_state_item.connect('activate', self.__toggle_state_cb)
         self.menu.append(self._toggle_state_item)
         self._toggle_state_item.show()
 
-        self.set_state(_GSM_STATE_NOT_READY)
-
         self.info_box = gtk.VBox()
 
-        self.data_label = gtk.Label()
-        self.data_label.props.xalign = 0.0
-        label_alignment = self._add_widget_with_padding(self.data_label)
-        self.info_box.pack_start(label_alignment)
-        self.data_label.show()
+        self.error_title_label = gtk.Label("")
+        self.error_title_label.set_alignment(0, 0.5)
+        self.error_title_label.set_line_wrap(True)
+        self.info_box.pack_start(self.error_title_label)
+        self.error_description_label = gtk.Label("")
+        self.error_description_label.set_alignment(0, 0.5)
+        self.error_description_label.set_line_wrap(True)
+        self.info_box.pack_start(self.error_description_label)
+
+        self.connection_info_box = gtk.HBox()
+        icon = Icon(icon_name='data-upload', icon_size=gtk.ICON_SIZE_MENU)
+        self.connection_info_box.pack_start(icon)
+        icon.show()
+
+        self._data_label_up = gtk.Label()
+        self._data_label_up.props.xalign = 0.0
+        label_alignment = self._add_widget_with_padding(self._data_label_up)
+        self.connection_info_box.pack_start(label_alignment)
+        self._data_label_up.show()
         label_alignment.show()
 
-        self.connection_time_label = gtk.Label()
-        self.connection_time_label.props.xalign = 0.0
-        label_alignment = self._add_widget_with_padding( \
-                self.connection_time_label)
-        self.info_box.pack_start(label_alignment)
-        self.connection_time_label.show()
+        icon = Icon(icon_name='data-download', icon_size=gtk.ICON_SIZE_MENU)
+        self.connection_info_box.pack_start(icon)
+        icon.show()
+        self._data_label_down = gtk.Label()
+        self._data_label_down.props.xalign = 0.0
+        label_alignment = self._add_widget_with_padding(self._data_label_down)
+        self.connection_info_box.pack_start(label_alignment)
+        self._data_label_down.show()
         label_alignment.show()
+
+        self.info_box.pack_start(self.connection_info_box)
 
         self.info_box.show()
         self.set_content(self.info_box)
+
+        self.set_state(_GSM_STATE_NOT_READY)
 
     def _add_widget_with_padding(self, child, xalign=0, yalign=0.5):
         alignment = gtk.Alignment(xalign=xalign, yalign=yalign,
@@ -252,31 +271,41 @@ class GsmPalette(Palette):
         alignment.add(child)
         return alignment
 
-    def set_state(self, state):
+    def update_state(self, state, reason=0):
         self._current_state = state
-        self._update_label_and_text()
+        self._update_label_and_text(reason)
 
-    def _update_label_and_text(self):
+    def _update_label_and_text(self, reason=0):
         if self._current_state == _GSM_STATE_NOT_READY:
             self._toggle_state_item.get_child().set_label('...')
             self.props.secondary_text = _('Please wait...')
 
         elif self._current_state == _GSM_STATE_DISCONNECTED:
-            self._toggle_state_item.get_child().set_label(_('Connect'))
+            if not self._failed_connection:
+                self._toggle_state_item.get_child().set_label(_('Connect'))
             self.props.secondary_text = _('Disconnected')
+            icon = Icon(icon_name='dialog-ok', \
+                            icon_size=gtk.ICON_SIZE_MENU)
+            self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
             self._toggle_state_item.get_child().set_label(_('Cancel'))
             self.props.secondary_text = _('Connecting...')
+            icon = Icon(icon_name='dialog-cancel', \
+                            icon_size=gtk.ICON_SIZE_MENU)
+            self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTED:
+            self._failed_connection = False
             self._toggle_state_item.get_child().set_label(_('Disconnect'))
-            self.props.secondary_text = _('Connected')
+            self.update_connection_time()
+            icon = Icon(icon_name='media-eject', \
+                            icon_size=gtk.ICON_SIZE_MENU)
+            self._toggle_state_item.set_image(icon)
             
-        elif self._current_state == _GSM_STATE_NEED_AUTH:
-            self._toggle_state_item.get_child().set_label(_('Sim requires Pin/Puk'))
-            self.props.secondary_text = _('Authentication Error')
-            
+        elif self._current_state == _GSM_STATE_FAILED:
+            message_error = self._get_error_by_nm_reason(reason)
+            self.add_alert(message_error[0], message_error[1])
         else:
             raise ValueError('Invalid GSM state while updating label and ' \
                              'text, %s' % str(self._current_state))
@@ -285,16 +314,59 @@ class GsmPalette(Palette):
         if self._current_state == _GSM_STATE_NOT_READY:
             pass
         elif self._current_state == _GSM_STATE_DISCONNECTED:
+            self.error_title_label.hide()
+            self.error_description_label.hide()
             self.emit('gsm-connect')
         elif self._current_state == _GSM_STATE_CONNECTING:
             self.emit('gsm-disconnect')
         elif self._current_state == _GSM_STATE_CONNECTED:
             self.emit('gsm-disconnect')
-        elif self._current_state == _GSM_STATE_NEED_AUTH:
-            self.emit('gsm-disconnect')
         else:
             raise ValueError('Invalid GSM state while emitting signal, %s' % \
                              str(self._current_state))
+
+    def add_alert(self, error, suggestion):
+        self._failed_connection = True
+        self._toggle_state_item.get_child().set_label(_('Try connection again'))
+
+        title = _('Error: %s') % error
+        self.error_title_label.set_markup('<b>%s</b>' % title)
+        self.error_title_label.show()
+
+        message = _('Suggestion: %s') % suggestion
+        self.error_description_label.set_text(message)
+        self.error_description_label.show()
+
+    def update_connection_time(self, connection_time=None):
+        if connection_time is not None:
+            self.props.secondary_text = _('Connected for %s') % \
+                    connection_time.strftime('%H:%M:%S')
+        else:
+            self.props.secondary_text = _('Connected for %s') % '00:00:00'
+
+    def update_stats(self, in_bytes, out_bytes):
+        in_KBytes = in_bytes / 1024
+        out_KBytes = out_bytes / 1024
+        self._data_label_up.set_text(_("%d KB") % (out_KBytes))
+        self._data_label_down.set_text(_("%d KB") % (in_KBytes))
+
+    def _get_error_by_nm_reason(self, reason):
+        if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
+                      network.NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED]:
+            message = _('Check your Pin/Puk configuration.')
+        elif reason in [network.NM_DEVICE_STATE_REASON_PPP_DISCONNECT,
+                        network.NM_DEVICE_STATE_REASON_PPP_FAILED]:
+            message = _('Check your Access Point Name ' \
+                            '(APN) configuration')
+        elif reason in [network.NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER,
+                        network.NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT]:
+            message = _('Check the Number configuration.')
+        elif reason == network.NM_DEVICE_STATE_REASON_CONFIG_FAILED:
+            message = _('Check your configuration.')
+        else:
+            message = ''
+        message_tuple = (network.get_error_by_reason(reason), message)
+        return message_tuple
 
 
 class WirelessDeviceView(ToolButton):
@@ -704,6 +776,10 @@ class GsmDeviceView(TrayIcon):
                                         '/',
                                         reply_handler=self.__connect_cb,
                                         error_handler=self.__connect_error_cb)
+        else:
+            self._palette.add_alert(_('No GSM connection available.'), \
+                                        _('Create a connection in the ' \
+                                              'control panel.'))
 
     def __connect_cb(self, active_connection):
         logging.debug('Connected successfully to gsm device, %s',
@@ -736,16 +812,17 @@ class GsmDeviceView(TrayIcon):
         raise RuntimeError('Error when disconnecting gsm device, %s' % error)
 
     def __state_changed_cb(self, new_state, old_state, reason):
-        logging.debug('State: %s to %s, reason %s', old_state, new_state, reason)
-        self._update_state(int(new_state))
+        logging.debug('State: %s to %s, reason %s', old_state,
+                      new_state, reason)
+        self._update_state(int(new_state), int(old_state), int(reason))
 
     def __current_state_check_cb(self, properties):
-        self._update_state(int(properties['State']))
+        self._update_state(int(properties['State']), 0, 0)
 
     def __current_state_check_error_cb(self, error):
         raise RuntimeError('Error when checking gsm device state, %s' % error)
 
-    def _update_state(self, state):
+    def _update_state(self, state, old_state, reason):
         gsm_state = None
 
         if state is network.DEVICE_STATE_ACTIVATED:
@@ -753,20 +830,22 @@ class GsmDeviceView(TrayIcon):
             connection = network.find_gsm_connection()
             if connection is not None:
                 connection.set_connected()
-                self._connection_timestamp =  time.time() - \
+                self._connection_timestamp = time.time() - \
                         connection.get_settings().connection.timestamp
                 self._connection_time_handler = gobject.timeout_add_seconds( \
                         1, self.__connection_timecount_cb)
-                self._update_stats(0, 0)
-                self._update_connection_time()                
-                self._palette.info_box.show() 
+                self._palette.update_connection_time()
+                self._palette.update_stats(0, 0)
+                if self._palette is not None:
+                    self._palette.connection_info_box.show()
 
         elif state is network.DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
                 gobject.source_remove(self._connection_time_handler)
-            self._palette.info_box.hide() 
+            if self._palette is not None:
+                self._palette.connection_info_box.hide()
 
         elif state in [network.DEVICE_STATE_UNMANAGED,
                        network.DEVICE_STATE_UNAVAILABLE,
@@ -775,14 +854,15 @@ class GsmDeviceView(TrayIcon):
 
         elif state in [network.DEVICE_STATE_PREPARE,
                        network.DEVICE_STATE_CONFIG,
-                       network.DEVICE_STATE_IP_CONFIG]:
+                       network.DEVICE_STATE_IP_CONFIG,
+                       network.DEVICE_STATE_NEED_AUTH]:
             gsm_state = _GSM_STATE_CONNECTING
-            
-        elif state in [network.DEVICE_STATE_NEED_AUTH]:
-            gsm_state = _GSM_STATE_NEED_AUTH
-            
+
+        elif state == network.DEVICE_STATE_FAILED:
+            gsm_state = _GSM_STATE_FAILED
+
         if self._palette is not None:
-            self._palette.set_state(gsm_state)
+            self._palette.update_state(gsm_state, reason)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
@@ -791,24 +871,15 @@ class GsmDeviceView(TrayIcon):
                                          dbus_interface=_NM_DEVICE_IFACE)
 
     def __ppp_stats_changed_cb(self, in_bytes, out_bytes):
-        self._update_stats(in_bytes, out_bytes)
-
-    def _update_stats(self, in_bytes, out_bytes):
-        in_KBytes = in_bytes / 1024
-        out_KBytes = out_bytes / 1024
-        text = _("Data sent %d KB / received %d KB") % (out_KBytes, in_KBytes)
-        self._palette.data_label.set_text(text)
+        self._palette.update_stats(in_bytes, out_bytes)
 
     def __connection_timecount_cb(self):
         self._connection_timestamp = self._connection_timestamp + 1
-        self._update_connection_time()
+        connection_time = \
+            datetime.datetime.fromtimestamp(self._connection_timestamp)
+        self._palette.update_connection_time(connection_time)
         return True
 
-    def _update_connection_time(self):
-        connection_time = datetime.datetime.fromtimestamp( \
-                self._connection_timestamp)
-        text = _("Connection time ") + connection_time.strftime('%H : %M : %S')
-        self._palette.connection_time_label.set_text(text)
 
 class WirelessDeviceObserver(object):
     def __init__(self, device, tray):
