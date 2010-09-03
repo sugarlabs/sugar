@@ -328,6 +328,8 @@ class _Account(gobject.GObject):
             if handle in self._buddy_handles:
                 logging.debug('Got handle %r with nick %r, going to update',
                               handle, alias)
+                properties = {CONNECTION_INTERFACE_ALIASING + '/alias': alias}
+                self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __presences_changed_cb(self, presences):
         logging.debug('_Account.__presences_changed_cb %r', presences)
@@ -341,6 +343,7 @@ class _Account(gobject.GObject):
     def __buddy_info_updated_cb(self, handle, properties):
         logging.debug('_Account.__buddy_info_updated_cb %r %r', handle,
                       properties)
+        self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __current_activity_changed_cb(self, contact_handle, activity_id,
                                       room_handle):
