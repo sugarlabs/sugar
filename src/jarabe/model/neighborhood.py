@@ -16,6 +16,7 @@
 
 import logging
 from functools import partial
+from hashlib import sha1
 
 import gobject
 import gconf
@@ -648,13 +649,12 @@ class Neighborhood(gobject.GObject):
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
-        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
 
         params = {
                 'nickname': nick,
                 'first-name': '',
                 'last-name': '',
-                'jid': '%s@%s' % (self._sanitize_nick(nick), server),
+                'jid': self._get_jabber_account_id(),
                 'published-name': nick,
                 }
 
@@ -688,7 +688,7 @@ class Neighborhood(gobject.GObject):
         key_hash = get_profile().privkey_hash
 
         params = {
-                'account': '%s@%s' % (self._sanitize_nick(nick), server),
+                'account': self._get_jabber_account_id(),
                 'password': key_hash,
                 'server': server,
                 'resource': 'sugar',
@@ -713,6 +713,12 @@ class Neighborhood(gobject.GObject):
                                                      properties)
         return _Account(account_path)
 
+    def _get_jabber_account_id(self):
+        public_key_hash = sha1(get_profile().pubkey).hexdigest()
+        client = gconf.client_get_default()
+        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        return '%s@%s' % (public_key_hash, server)
+
     def __jabber_server_changed_cb(self, client, timestamp, entry, *extra):
         logging.debug('__jabber_server_changed_cb')
 
@@ -721,10 +727,9 @@ class Neighborhood(gobject.GObject):
                                  self._server_account.object_path)
 
         server = client.get_string('/desktop/sugar/collaboration/jabber_server')
-        nick = client.get_string('/desktop/sugar/user/nick')
-        account_name = '%s@%s' % (self._sanitize_nick(nick), server)
+        account_id = self._get_jabber_account_id()
         needs_reconnect = account.UpdateParameters({'server': server,
-                                                    'account': account_name,
+                                                    'account': account_id,
                                                     'register': True},
                                                     dbus.Array([], 's'),
                                                     dbus_interface=ACCOUNT)
@@ -749,18 +754,12 @@ class Neighborhood(gobject.GObject):
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
                                  self._link_local_account.object_path)
 
-        client = gconf.client_get_default()
-        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
-        nick = client.get_string('/desktop/sugar/user/nick')
-        jid = '%s@%s' % (self._sanitize_nick(nick), server)
-        needs_reconnect = account.UpdateParameters({'jid': jid},
+        account_id = self._get_jabber_account_id()
+        needs_reconnect = account.UpdateParameters({'jid': account_id},
                                                    dbus.Array([], 's'),
                                                    dbus_interface=ACCOUNT)
         if needs_reconnect:
             account.Reconnect()
-
-    def _sanitize_nick(self, nick):
-        return nick.replace(' ', '_')
 
     def __buddy_added_cb(self, account, contact_id, nick, key):
         logging.debug('__buddy_added_cb %r', contact_id)
