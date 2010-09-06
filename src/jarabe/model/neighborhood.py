@@ -199,10 +199,30 @@ class _Account(gobject.GObject):
         logging.debug('_Account.__got_connection_cb %r', connection_path)
 
         if connection_path == '/':
-            # Account has no connection, wait until it has one.
+            self._check_registration_error()
             return
 
         self._prepare_connection(connection_path)
+
+    def _check_registration_error(self):
+        """
+        See if a previous connection attempt failed and we need to unset
+        the register flag.
+        """
+        bus = dbus.Bus()
+        obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, self.object_path)
+        obj.Get(ACCOUNT, 'ConnectionError',
+                reply_handler=self.__got_connection_error_cb,
+                error_handler=partial(self.__error_handler_cb,
+                                      'Account.GetConnectionError'))
+
+    def __got_connection_error_cb(self, error):
+        logging.debug('_Account.__got_connection_error_cb %r', error)
+        if error == 'org.freedesktop.Telepathy.Error.RegistrationExists':
+            bus = dbus.Bus()
+            obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, self.object_path)
+            obj.UpdateParameters({'register': False}, [],
+                                 dbus_interface=ACCOUNT)
 
     def __account_property_changed_cb(self, properties):
         logging.debug('_Account.__account_property_changed_cb %r %r %r',
@@ -211,6 +231,7 @@ class _Account(gobject.GObject):
         if 'Connection' not in properties:
             return
         if properties['Connection'] == '/':
+            self._check_registration_error()
             self._connection = None
         elif self._connection is None:
             self._prepare_connection(properties['Connection'])
