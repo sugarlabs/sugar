@@ -55,6 +55,12 @@ CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
         'org.laptop.Telepathy.ActivityProperties'
 
+_QUERY_DBUS_TIMEOUT = 200
+"""
+Time in seconds to wait when querying contact properties. Some jabber servers
+will be very slow in returning these queries, so just be patient.
+"""
+
 class ActivityModel(gobject.GObject):
     __gsignals__ = {
         'current-buddy-added':   (gobject.SIGNAL_RUN_FIRST,
@@ -544,20 +550,23 @@ class _Account(gobject.GObject):
                                               nick),
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetProperties'),
-                        byte_arrays=True)
+                        byte_arrays=True,
+                        timeout=_QUERY_DBUS_TIMEOUT)
 
                     connection.GetActivities(
                         handle,
                         reply_handler=partial(self.__got_activities_cb, handle),
                         error_handler=partial(self.__error_handler_cb,
-                                              'BuddyInfo.GetActivities'))
+                                              'BuddyInfo.GetActivities'),
+                        timeout=_QUERY_DBUS_TIMEOUT)
 
                     connection.GetCurrentActivity(
                         handle,
                         reply_handler=partial(self.__get_current_activity_cb,
                                               handle),
                         error_handler=partial(self.__error_handler_cb,
-                                              'BuddyInfo.GetCurrentActivity'))
+                                              'BuddyInfo.GetCurrentActivity'),
+                        timeout=_QUERY_DBUS_TIMEOUT)
                 else:
                     self.emit('buddy-added', contact_id, nick, None)
 
