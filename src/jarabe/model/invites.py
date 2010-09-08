@@ -76,9 +76,9 @@ class ActivityInvite(object):
         else:
             bus = dbus.SessionBus()
             bus.add_signal_receiver(self.__name_owner_changed_cb,
-	                                'NameOwnerChanged',
-	                                'org.freedesktop.DBus',
-	                                arg0=self._handler)
+                                    'NameOwnerChanged',
+                                    'org.freedesktop.DBus',
+                                    arg0=self._handler)
 
             model = neighborhood.get_model()
             activity_id = model.get_activity_by_room(self._handle).activity_id
