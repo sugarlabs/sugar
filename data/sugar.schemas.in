@@ -343,5 +343,19 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/protected_activities</key>
+      <applyto>/desktop/sugar/protected_activities</applyto>
+      <owner>sugar</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <default>[]</default>
+      <locale name="C">
+        <short>Bundle IDs of protected activities</short>
+        <long>Users will not be allowed to erase these
+        activities through the list view.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
