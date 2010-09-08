@@ -20,6 +20,7 @@ import subprocess
 import sys
 import time
 from optparse import OptionParser
+from gettext import gettext as _
 
 import gtk
 import gobject
@@ -36,6 +37,7 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
     cmd.append('-ac') 
+    cmd += ['-title', _('Sugar in a window')]
 
     screen_size = (gtk.gdk.screen_width(), gtk.gdk.screen_height())
 
