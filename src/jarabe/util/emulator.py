@@ -124,10 +124,14 @@ def _setup_env(display, scaling, emulator_pid):
             env.get_profile_path(), 'logs', 'telepathy-gabble.log')
     os.environ['SALUT_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-salut.log')
+    os.environ['MC_LOGFILE'] = os.path.join(
+            env.get_profile_path(), 'logs', 'mission-control.log')
     os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
     os.environ['DISPLAY'] = ":%d" % (display)
     os.environ['SUGAR_EMULATOR_PID'] = emulator_pid
+    os.environ['MC_ACCOUNT_DIR'] = os.path.join(
+            env.get_profile_path(), 'accounts')
 
     if scaling:
         os.environ['SUGAR_SCALING'] = scaling
