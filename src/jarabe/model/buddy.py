@@ -98,9 +98,6 @@ class BaseBuddyModel(gobject.GObject):
     def is_owner(self):
         raise NotImplementedError
 
-    def get_buddy(self):
-        raise NotImplementedError
-
 
 class OwnerBuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarOwnerBuddyModel'
@@ -195,9 +192,6 @@ class OwnerBuddyModel(BaseBuddyModel):
     def is_owner(self):
         return True
 
-    def get_buddy(self):
-        raise NotImplementedError
-
 
 _owner_instance = None
 def get_owner_instance():
@@ -218,9 +212,6 @@ class BuddyModel(BaseBuddyModel):
 
     def is_owner(self):
         return False
-
-    def get_buddy(self):
-        raise NotImplementedError
 
     def get_account(self):
         return self._account
@@ -246,5 +237,3 @@ class FriendBuddyModel(BuddyModel):
     def __init__(self, nick, key):
         BuddyModel.__init__(self, nick=nick, key=key)
 
-    def get_buddy(self):
-        raise NotImplementedError
