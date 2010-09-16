@@ -160,7 +160,8 @@ class _Account(gobject.GObject):
         'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([object])),
         'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object, object])),
+                                 gobject.TYPE_NONE,
+                                 ([object, object, object, object])),
         'buddy-updated':        (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([object, object])),
         'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
@@ -538,7 +539,7 @@ class _Account(gobject.GObject):
     def __got_buddy_info_cb(self, handle, nick, properties):
         logging.debug('_Account.__got_buddy_info_cb %r', properties)
         self.emit('buddy-added', self._buddy_handles[handle], nick,
-                  properties.get('key', None))
+                  properties.get('key', None), handle)
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __get_contact_attributes_cb(self, attributes):
@@ -589,7 +590,7 @@ class _Account(gobject.GObject):
                                               'BuddyInfo.GetCurrentActivity'),
                         timeout=_QUERY_DBUS_TIMEOUT)
                 else:
-                    self.emit('buddy-added', contact_id, nick, None)
+                    self.emit('buddy-added', contact_id, nick, None, handle)
 
     def __got_activities_cb(self, buddy_handle, activities):
         logging.debug('_Account.__got_activities_cb %r %r', buddy_handle,
@@ -812,7 +813,7 @@ class Neighborhood(gobject.GObject):
         if needs_reconnect:
             account.Reconnect()
 
-    def __buddy_added_cb(self, account, contact_id, nick, key):
+    def __buddy_added_cb(self, account, contact_id, nick, key, handle):
         logging.debug('__buddy_added_cb %r', contact_id)
 
         if contact_id in self._buddies:
@@ -823,7 +824,8 @@ class Neighborhood(gobject.GObject):
                 nick=nick,
                 account=account.object_path,
                 contact_id=contact_id,
-                key=key)
+                key=key,
+                handle=handle)
         self._buddies[contact_id] = buddy
 
         self.emit('buddy-added', buddy)
@@ -947,6 +949,18 @@ class Neighborhood(gobject.GObject):
 
     def get_buddies(self):
         return self._buddies.values()
+
+    def get_buddy_by_key(self, key):
+        for buddy in self._buddies.values():
+            if buddy.key == key:
+                return buddy
+        return None
+
+    def get_buddy_by_handle(self, contact_handle):
+        for buddy in self._buddies.values():
+            if not buddy.is_owner() and buddy.handle == contact_handle:
+                return buddy
+        return None
 
     def get_activity(self, activity_id):
         return self._activities.get(activity_id, None)

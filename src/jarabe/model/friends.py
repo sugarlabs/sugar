@@ -21,8 +21,71 @@ from ConfigParser import ConfigParser
 import gobject
 import dbus
 
-from jarabe.model.buddy import BuddyModel
 from sugar import env
+from sugar.graphics.xocolor import XoColor
+
+from jarabe.model.buddy import BuddyModel
+from jarabe.model import neighborhood
+
+class FriendBuddyModel(BuddyModel):
+    __gtype_name__ = 'SugarFriendBuddyModel'
+
+    _NOT_PRESENT_COLOR = "#D5D5D5,#FFFFFF"
+
+    def __init__(self, nick, key):
+        self._online_buddy = None
+
+        BuddyModel.__init__(self, nick=nick, key=key)
+
+        neighborhood_model = neighborhood.get_model()
+        neighborhood_model.connect('buddy-added', self.__buddy_added_cb)
+        neighborhood_model.connect('buddy-removed', self.__buddy_removed_cb)
+
+        buddy = neighborhood_model.get_buddy_by_key(key)
+        if buddy is not None:
+            self._set_online_buddy(buddy)
+
+    def __buddy_added_cb(self, neighborhood, buddy):
+        if buddy.key != self.key:
+            return
+        self._set_online_buddy(buddy)
+
+    def _set_online_buddy(self, buddy):
+        self._online_buddy = buddy
+        self._online_buddy.connect('notify::color', self.__notify_color_cb)
+        self.notify('color')
+        self.notify('present')
+
+    def __buddy_removed_cb(self, neighborhood, buddy):
+        if buddy.key != self.key:
+            return
+        self._online_buddy = None
+        self.notify('color')
+        self.notify('present')
+
+    def __notify_color_cb(self, buddy, pspec):
+        self.notify('color')
+
+    def is_present(self):
+        return self._online_buddy is not None
+
+    present = gobject.property(type=bool, default=False, getter=is_present)
+
+    def get_color(self):
+        if self._online_buddy is not None:
+            return self._online_buddy.color
+        else:
+            return XoColor(FriendBuddyModel._NOT_PRESENT_COLOR)
+
+    color = gobject.property(type=object, getter=get_color)
+
+    def get_handle(self):
+        if self._online_buddy is not None:
+            return self._online_buddy.handle
+        else:
+            return None
+
+    handle = gobject.property(type=object, getter=get_handle)
 
 class Friends(gobject.GObject):
     __gsignals__ = {
@@ -49,6 +112,7 @@ class Friends(gobject.GObject):
 
     def make_friend(self, buddy):
         if not self.has_buddy(buddy):
+            buddy = FriendBuddyModel(key=buddy.key, nick=buddy.nick)
             self.add_friend(buddy)
             self.save()
 
@@ -70,7 +134,7 @@ class Friends(gobject.GObject):
                     # HACK: don't screw up on old friends files
                     if len(key) < 20:
                         continue
-                    buddy = BuddyModel(key=key, nick=cp.get(key, 'nick'))
+                    buddy = FriendBuddyModel(key=key, nick=cp.get(key, 'nick'))
                     self.add_friend(buddy)
         except Exception:
             logging.exception('Error parsing friends file')
