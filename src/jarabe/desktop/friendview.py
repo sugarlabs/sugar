@@ -19,7 +19,6 @@ import hippo
 
 from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
-from sugar.presence import presenceservice
 
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry
@@ -27,8 +26,6 @@ from jarabe.model import bundleregistry
 class FriendView(hippo.CanvasBox):
     def __init__(self, buddy, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
-
-        self._pservice = presenceservice.get_instance()
 
         self._buddy = buddy
         self._buddy_icon = BuddyIcon(buddy)
