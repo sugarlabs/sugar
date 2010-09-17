@@ -27,12 +27,16 @@ from telepathy.interfaces import ACCOUNT, \
                                  CHANNEL, \
                                  CHANNEL_INTERFACE_GROUP, \
                                  CHANNEL_TYPE_CONTACT_LIST, \
+                                 CHANNEL_TYPE_FILE_TRANSFER, \
+                                 CLIENT, \
                                  CONNECTION, \
                                  CONNECTION_INTERFACE_ALIASING, \
                                  CONNECTION_INTERFACE_CONTACTS, \
+                                 CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
                                  CONNECTION_INTERFACE_REQUESTS, \
                                  CONNECTION_INTERFACE_SIMPLE_PRESENCE
-from telepathy.constants import HANDLE_TYPE_LIST, \
+from telepathy.constants import HANDLE_TYPE_CONTACT, \
+                                HANDLE_TYPE_LIST, \
                                 CONNECTION_PRESENCE_TYPE_OFFLINE, \
                                 CONNECTION_STATUS_CONNECTED, \
                                 CONNECTION_STATUS_DISCONNECTED
@@ -297,6 +301,20 @@ class _Account(gobject.GObject):
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
 
+        if CONNECTION_INTERFACE_CONTACT_CAPABILITIES in self._connection:
+            interface = CONNECTION_INTERFACE_CONTACT_CAPABILITIES
+            connection = self._connection[interface]
+            client_name = CLIENT + '.Sugar.FileTransfer'
+            file_transfer_channel_class = {
+                    CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
+                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_CONTACT}
+            capabilities = []
+            connection.UpdateCapabilities(
+                [(client_name, [file_transfer_channel_class], capabilities)],
+                reply_handler=self.__update_capabilities_cb,
+                error_handler=partial(self.__error_handler_cb,
+                                      'Connection.UpdateCapabilities'))
+
         connection = self._connection[CONNECTION_INTERFACE_ALIASING]
         connection.connect_to_signal('AliasesChanged',
                                      self.__aliases_changed_cb)
@@ -349,6 +367,9 @@ class _Account(gobject.GObject):
                 reply_handler=self.__get_members_ready_cb,
                 error_handler=partial(self.__error_handler_cb,
                                       'Connection.GetMembers'))
+
+    def __update_capabilities_cb(self):
+        pass
 
     def __aliases_changed_cb(self, aliases):
         logging.debug('_Account.__aliases_changed_cb')
