@@ -391,8 +391,7 @@ class _Account(gobject.GObject):
                     self.emit('buddy-removed', handle)
 
     def __buddy_info_updated_cb(self, handle, properties):
-        logging.debug('_Account.__buddy_info_updated_cb %r %r', handle,
-                      properties)
+        logging.debug('_Account.__buddy_info_updated_cb %r', handle)
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __current_activity_changed_cb(self, contact_handle, activity_id,
@@ -413,8 +412,6 @@ class _Account(gobject.GObject):
         self.emit('current-activity-updated', contact_id, activity_id)
 
     def __buddy_activities_changed_cb(self, buddy_handle, activities):
-        logging.debug('_Account.__buddy_activities_changed_cb %r %r',
-                      buddy_handle, activities)
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
@@ -537,7 +534,7 @@ class _Account(gobject.GObject):
                                       'Contacts.GetContactAttributes'))
 
     def __got_buddy_info_cb(self, handle, nick, properties):
-        logging.debug('_Account.__got_buddy_info_cb %r', properties)
+        logging.debug('_Account.__got_buddy_info_cb %r', handle)
         self.emit('buddy-added', self._buddy_handles[handle], nick,
                   properties.get('key', None), handle)
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
@@ -831,7 +828,7 @@ class Neighborhood(gobject.GObject):
         self.emit('buddy-added', buddy)
 
     def __buddy_updated_cb(self, account, contact_id, properties):
-        logging.debug('__buddy_updated_cb %r %r', contact_id, properties)
+        logging.debug('__buddy_updated_cb %r', contact_id)
         if contact_id not in self._buddies:
             logging.debug('__buddy_updated_cb Unknown buddy with contact_id %r',
                           contact_id)
