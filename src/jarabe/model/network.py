@@ -952,7 +952,7 @@ def load_gsm_connection():
         except Exception:
             logging.exception('Error adding gsm connection to NMSettings.')
     else:
-        logging.exception('No gsm connection was set in GConf.')
+        logging.warning('No gsm connection was set in GConf.')
 
 
 def load_connections():
