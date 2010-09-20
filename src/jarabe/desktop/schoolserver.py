@@ -16,8 +16,9 @@
 
 import logging
 from gettext import gettext as _
-from xmlrpclib import ServerProxy, Error
+import xmlrpclib
 import socket
+import httplib
 import os
 from string import ascii_uppercase
 import random
@@ -30,6 +31,7 @@ from sugar import env
 from sugar.profile import get_profile
 
 REGISTER_URL = 'http://schoolserver:8080/'
+REGISTER_TIMEOUT = 8
 
 def generate_serial_number():
     """  Generates a serial number based on 3 random uppercase letters
@@ -76,6 +78,25 @@ def store_identifiers(serial_number, uuid, backup_url):
 class RegisterError(Exception):
     pass
 
+
+class TimeoutHTTP(httplib.HTTP):
+
+    def __init__(self, host='', port=None, strict=None, timeout=None):
+        if port == 0:
+            port = None
+        # FIXME: Depending on undocumented internals that can break between
+        # Python releases. Please have a look at SL #2350
+        self._setup(self._connection_class(host,
+                 port, strict, timeout=REGISTER_TIMEOUT))
+
+
+class TimeoutTransport(xmlrpclib.Transport):
+
+    def make_connection(self, host):
+        host, extra_headers, x509 = self.get_host_info(host)
+        return TimeoutHTTP(host, timeout=REGISTER_TIMEOUT)
+
+
 def register_laptop(url=REGISTER_URL):
 
     profile = get_profile()
@@ -99,10 +120,10 @@ def register_laptop(url=REGISTER_URL):
 
     nick = client.get_string('/desktop/sugar/user/nick')
 
-    server = ServerProxy(url)
+    server = xmlrpclib.ServerProxy(url, TimeoutTransport())
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
-    except (Error, TypeError, socket.error):
+    except (xmlrpclib.Error, TypeError, socket.error):
         logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
 
