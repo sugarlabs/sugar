@@ -387,8 +387,9 @@ class _Account(gobject.GObject):
             if handle in self._buddy_handles:
                 presence_type, status_, message_ = presence
                 if presence_type == CONNECTION_PRESENCE_TYPE_OFFLINE:
+                    contact_id = self._buddy_handles[handle]
                     del self._buddy_handles[handle]
-                    self.emit('buddy-removed', handle)
+                    self.emit('buddy-removed', contact_id)
 
     def __buddy_info_updated_cb(self, handle, properties):
         logging.debug('_Account.__buddy_info_updated_cb %r', handle)
