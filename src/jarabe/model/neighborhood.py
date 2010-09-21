@@ -829,6 +829,10 @@ class Neighborhood(gobject.GObject):
 
     def __buddy_updated_cb(self, account, contact_id, properties):
         logging.debug('__buddy_updated_cb %r', contact_id)
+        if contact_id is None:
+            # Don't know the contact-id yet, will get the full state later
+            return
+
         if contact_id not in self._buddies:
             logging.debug('__buddy_updated_cb Unknown buddy with contact_id %r',
                           contact_id)
