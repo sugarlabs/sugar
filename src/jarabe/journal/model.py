@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2008, One Laptop Per Child
+# Copyright (C) 2007, 2008, 2010 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -460,6 +460,7 @@ def delete(object_id):
     """
     if os.path.exists(object_id):
         os.unlink(object_id)
+        deleted.send(None, object_id=object_id)
     else:
         _get_datastore().delete(object_id)
 
@@ -504,6 +505,7 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
         destination_path = os.path.join(metadata['mountpoint'], file_name)
         shutil.copy(file_path, destination_path)
         object_id = destination_path
+        created.send(None, object_id=object_id)
 
     return object_id
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, 2010 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,17 +23,12 @@ import time
 import hippo
 import gobject
 import gtk
-import dbus
 
 from sugar.graphics import style
 from sugar.graphics.icon import CanvasIcon, Icon
 
 from jarabe.journal.collapsedentry import CollapsedEntry
 from jarabe.journal import model
-
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
-DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 UPDATE_INTERVAL = 300
 
@@ -109,19 +104,18 @@ class BaseListView(gtk.HBox):
         self._refresh_idle_handler = None
         self._update_dates_timer = None
 
-        bus = dbus.SessionBus()
-        datastore = dbus.Interface(
-            bus.get_object(DS_DBUS_SERVICE, DS_DBUS_PATH), DS_DBUS_INTERFACE)
-        self._datastore_created_handler = \
-                datastore.connect_to_signal('Created',
-                                             self.__datastore_created_cb)
-        self._datastore_updated_handler = \
-                datastore.connect_to_signal('Updated',
-                                            self.__datastore_updated_cb)
+        model.created.connect(self.__model_created_cb)
+        model.updated.connect(self.__model_updated_cb)
+        model.deleted.connect(self.__model_deleted_cb)
 
-        self._datastore_deleted_handler = \
-                datastore.connect_to_signal('Deleted',
-                                            self.__datastore_deleted_cb)
+    def __model_created_cb(self, sender, **kwargs):
+        self._set_dirty()
+
+    def __model_updated_cb(self, sender, **kwargs):
+        self._set_dirty()
+
+    def __model_deleted_cb(self, sender, **kwargs):
+        self._set_dirty()
 
     def __destroy_cb(self, widget):
         self._datastore_created_handler.remove()
@@ -462,15 +456,6 @@ class BaseListView(gtk.HBox):
         for entry in self._entries:
             if entry.get_visible():
                 entry.update_date()
-
-    def __datastore_created_cb(self, uid):
-        self._set_dirty()
-        
-    def __datastore_updated_cb(self, uid):
-        self._set_dirty()
-        
-    def __datastore_deleted_cb(self, uid):
-        self._set_dirty()
 
     def _set_dirty(self):
         if self._fully_obscured:
