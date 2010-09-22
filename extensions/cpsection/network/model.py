@@ -67,7 +67,7 @@ def _restart_jabber():
                             _PS_INTERFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available' % _PS_SERVICE)
-    ps.RestartServerConnection()
+    ps.RetryConnections()
 
 def print_radio():
     print ('off', 'on')[get_radio()]
