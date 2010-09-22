@@ -26,6 +26,7 @@ import dbus.service
 import gobject
 import ConfigParser
 import gconf
+import ctypes
 
 from sugar import dispatch
 from sugar import env
@@ -380,6 +381,16 @@ class NMSettingsConnection(dbus.service.Object):
             self._settings.connection.autoconnect = True
             self.Updated(self._settings.get_dict())
             self.save()
+
+        try:
+            # try to flush resolver cache - SL#1940
+            # ctypes' syntactic sugar does not work
+            # so we must get the func ptr explicitly
+            libc = ctypes.CDLL('libc.so.6')
+            res_init = getattr(libc, '__res_init')
+            res_init(None)
+        except:
+            logging.exception('Error calling libc.__res_init')
 
     def set_disconnected(self):
         if self._settings.connection.autoconnect:
