@@ -214,11 +214,16 @@ class ControlPanel(gtk.Window):
                          globals(), locals(), ['model'])
         model = ModelWrapper(mod)
 
-        self._section_view = view_class(model,
-                                        self._options[option]['alerts'])
+        try:
+            self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+            self._section_view = view_class(model,
+                                            self._options[option]['alerts'])
 
-        self._set_canvas(self._section_view)
-        self._section_view.show()
+            self._set_canvas(self._section_view)
+            self._section_view.show()
+        finally:
+            self.get_window().set_cursor(None)
+
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
         self._section_view.connect('request-close',
