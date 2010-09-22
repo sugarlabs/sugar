@@ -64,24 +64,15 @@ _GSM_STATE_CONNECTING = 2
 _GSM_STATE_CONNECTED = 3
 _GSM_STATE_NEED_AUTH = 4
 
-def frequency_to_channel(frequency):
-    ftoc = { 2412: 1, 2417: 2, 2422: 3, 2427: 4,
-             2432: 5, 2437: 6, 2442: 7, 2447: 8,
-             2452: 9, 2457: 10, 2462: 11, 2467: 12,
-             2472: 13}
-    return ftoc[frequency]
-
 class WirelessPalette(Palette):
     __gtype_name__ = 'SugarWirelessPalette'
 
     __gsignals__ = {
         'deactivate-connection' : (gobject.SIGNAL_RUN_FIRST,
-                                   gobject.TYPE_NONE, ([])),
-        'create-connection'     : (gobject.SIGNAL_RUN_FIRST,
-                                   gobject.TYPE_NONE, ([])),
+                                   gobject.TYPE_NONE, ([]))
     }
 
-    def __init__(self, primary_text, can_create=True):
+    def __init__(self, primary_text):
         Palette.__init__(self, label=primary_text)
 
         self._disconnect_item = None
@@ -112,12 +103,6 @@ class WirelessPalette(Palette):
         self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
         self.menu.append(self._disconnect_item)
 
-        if can_create:
-            self._adhoc_item = gtk.MenuItem(_('Create new wireless network'))
-            self._adhoc_item.connect('activate', self.__adhoc_activate_cb)
-            self.menu.append(self._adhoc_item)
-            self._adhoc_item.show()
-
     def set_connecting(self):
         self.props.secondary_text = _('Connecting...')
 
@@ -144,12 +129,9 @@ class WirelessPalette(Palette):
     def __disconnect_activate_cb(self, menuitem):
         self.emit('deactivate-connection')
 
-    def __adhoc_activate_cb(self, menuitem):
-        self.emit('create-connection')
-
     def _set_frequency(self, frequency):
         try:
-            channel = frequency_to_channel(frequency)
+            channel = network.frequency_to_channel(frequency)
         except KeyError:
             channel = 0
         self._set_channel(channel)
@@ -312,7 +294,6 @@ class GsmPalette(Palette):
 
 class WirelessDeviceView(ToolButton):
 
-    _ICON_NAME = 'network-wireless'
     FRAME_POSITION_RELATIVE = 302
 
     def __init__(self, device):
@@ -331,7 +312,7 @@ class WirelessDeviceView(ToolButton):
         self._active_ap_op = None
 
         self._icon = PulsingIcon()
-        self._icon.props.icon_name = get_icon_state(self._ICON_NAME, 0)
+        self._icon.props.icon_name = get_icon_state('network-wireless', 0)
         self._inactive_color = xocolor.XoColor( \
             "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
@@ -345,8 +326,6 @@ class WirelessDeviceView(ToolButton):
         self._palette = WirelessPalette(self._name)
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection_cb)
-        self._palette.connect('create-connection',
-                              self.__create_connection_cb)
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
@@ -415,11 +394,6 @@ class WirelessDeviceView(ToolButton):
     def __ap_properties_changed_cb(self, properties):
         self._update_properties(properties)
 
-    def _name_encodes_colors(self):
-        """Match #XXXXXX,#YYYYYY at the end of the network name"""
-        return self._name[-7] == '#' and self._name[-8] == ',' \
-            and self._name[-15] == '#'
-
     def _update_properties(self, properties):
         if 'Mode' in properties:
             self._mode = properties['Mode']
@@ -435,11 +409,9 @@ class WirelessDeviceView(ToolButton):
             self._frequency = properties['Frequency']
 
         if self._color == None:
-            if self._mode == network.NM_802_11_MODE_ADHOC \
-                    and self._name_encodes_colors():
-                encoded_color = self._name.split("#", 1)
-                if len(encoded_color) == 2:
-                    self._color = xocolor.XoColor('#' + encoded_color[1])
+            if self._mode == network.NM_802_11_MODE_ADHOC and \
+                    self._name.startswith('Ad-hoc Network'):
+                self._color = profile.get_color()
             else:
                 sh = sha.new()
                 data = self._name + hex(self._flags)
@@ -475,14 +447,27 @@ class WirelessDeviceView(ToolButton):
         else:
             state = network.DEVICE_STATE_UNKNOWN
 
-        if state == network.DEVICE_STATE_ACTIVATED:
-            icon_name = '%s-connected' % self._ICON_NAME
-        else:
-            icon_name = self._ICON_NAME
+        if self._mode != network.NM_802_11_MODE_ADHOC and \
+                self._name.startswith('Ad-hoc Network') == False:
+            if state == network.DEVICE_STATE_ACTIVATED:
+                icon_name = '%s-connected' % 'network-wireless'
+            else:
+                icon_name = 'network-wireless'
 
-        icon_name = get_icon_state(icon_name, self._strength)
-        if icon_name:
-            self._icon.props.icon_name = icon_name
+            icon_name = get_icon_state(icon_name, self._strength)
+            if icon_name:
+                self._icon.props.icon_name = icon_name
+        else:
+            try:
+                channel = network.frequency_to_channel(self._frequency)
+            except KeyError:
+                channel = 1
+            if state == network.DEVICE_STATE_ACTIVATED:
+                self._icon.props.icon_name = 'network-adhoc-%s-connected' \
+                        % channel
+            else:
+                self._icon.props.icon_name = 'network-adhoc-%s' % channel
+            self._icon.props.base_color = profile.get_color()
 
         if state == network.DEVICE_STATE_PREPARE or \
            state == network.DEVICE_STATE_CONFIG or \
@@ -526,54 +511,6 @@ class WirelessDeviceView(ToolButton):
                     netmgr.DeactivateConnection(conn_o)
                     break
 
-    def __create_connection_cb(self, palette, data=None):
-        """Create an 802.11 IBSS network.
-
-        The user's color is encoded at the end of the network name. The network
-        name is truncated so that it does not exceed the 32 byte SSID limit.
-        """
-        client = gconf.client_get_default()
-        nick = client.get_string('/desktop/sugar/user/nick').decode('utf-8')
-        color = client.get_string('/desktop/sugar/user/color')
-        color_suffix = ' %s' % color
-
-        format = _('%s\'s network').encode('utf-8')
-        extra_length = (len(format) - len('%s')) + len(color_suffix)
-        name_limit = 32 - extra_length
-
-        # truncate the nick and use a regex to drop any partial characters
-        # at the end
-        nick = nick.encode('utf-8')[:name_limit]
-        pattern = "([\xf6-\xf7][\x80-\xbf]{0,2}|[\xe0-\xef][\x80-\xbf]{0,1}|[\xc0-\xdf])$"
-        nick = re.sub(pattern, '', nick)
-
-        connection_name = format % nick
-        connection_name += color_suffix
-
-        connection = network.find_connection_by_ssid(connection_name)
-        if connection is None:
-            settings = Settings()
-            settings.connection.id = 'Auto ' + connection_name
-            uuid = settings.connection.uuid = unique_id()
-            settings.connection.type = '802-11-wireless'
-            settings.wireless.ssid = dbus.ByteArray(connection_name)
-            settings.wireless.band = 'bg'
-            settings.wireless.mode = 'adhoc'
-            settings.ip4_config = IP4Config()
-            settings.ip4_config.method = 'link-local'
-
-            connection = network.add_connection(uuid, settings)
-
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
-
-        netmgr.ActivateConnection(network.SETTINGS_SERVICE,
-                                  connection.path,
-                                  self._device.object_path,
-                                  '/',
-                                  reply_handler=self.__activate_reply_cb,
-                                  error_handler=self.__activate_error_cb)
-
     def __activate_reply_cb(self, connection):
         logging.debug('Network created: %s', connection)
 
@@ -604,7 +541,7 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_("Mesh Network"), can_create=False)
+        self._palette = WirelessPalette(_("Mesh Network"))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
