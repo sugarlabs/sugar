@@ -160,6 +160,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
+        self._update_icon()
         self._update_badge()
 
     def __update_active_ap(self, ap_path):
@@ -168,12 +169,10 @@ class WirelessNetworkView(CanvasPulsingIcon):
             # strength of that one
             self._active_ap = self._access_points[ap_path]
             self.update_strength()
-            self._update_state()
         elif self._active_ap is not None:
             # revert to showing state of strongest AP again
             self._active_ap = None
             self.update_strength()
-            self._update_state()  
 
     def __wireless_properties_changed_cb(self, properties):
         if 'ActiveAccessPoint' in properties:
@@ -193,27 +192,20 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def __get_device_state_reply_cb(self, state):
         self._device_state = state
-        self._update()
-
-    def __get_device_state_error_cb(self, err):
-        logging.error('Error getting the device state: %s', err)
-
-    def _update(self):
         self._update_state()
         self._update_color()
         self._update_badge()
 
-    def _update_state(self):
-        if self._active_ap is not None:
-            state = self._device_state
-        else:
-            state = network.DEVICE_STATE_UNKNOWN
+    def __get_device_state_error_cb(self, err):
+        logging.error('Error getting the device state: %s', err)
 
+    def _update_icon(self):
         if self._mode == network.NM_802_11_MODE_ADHOC and \
                 network.is_sugar_adhoc_network(self._name):
             channel = max([1] + [ap.channel for ap in
                                  self._access_points.values()])
-            if state == network.DEVICE_STATE_ACTIVATED:
+            if self._device_state == network.DEVICE_STATE_ACTIVATED and \
+                    self._active_ap is not None:
                 icon_name = 'network-adhoc-%s-connected' % channel
             else:
                 icon_name = 'network-adhoc-%s' % channel
@@ -221,11 +213,8 @@ class WirelessNetworkView(CanvasPulsingIcon):
             icon = self._palette.props.icon
             icon.props.icon_name = icon_name
         else:
-            if state == network.DEVICE_STATE_ACTIVATED:
-                connection = network.find_connection_by_ssid(self._name)
-                if connection:
-                    if self._mode == network.NM_802_11_MODE_INFRA:
-                        connection.set_connected()
+            if self._device_state == network.DEVICE_STATE_ACTIVATED and \
+                    self._active_ap is not None:
                 icon_name = '%s-connected' % _AP_ICON_NAME
             else:
                 icon_name = _AP_ICON_NAME
@@ -235,6 +224,12 @@ class WirelessNetworkView(CanvasPulsingIcon):
                 self.props.icon_name = icon_name
                 icon = self._palette.props.icon
                 icon.props.icon_name = icon_name
+
+    def _update_state(self):
+        if self._active_ap is not None:
+            state = self._device_state
+        else:
+            state = network.DEVICE_STATE_UNKNOWN
 
         if state == network.DEVICE_STATE_PREPARE or \
            state == network.DEVICE_STATE_CONFIG or \
@@ -246,6 +241,10 @@ class WirelessNetworkView(CanvasPulsingIcon):
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
         elif state == network.DEVICE_STATE_ACTIVATED:
+            connection = network.find_connection_by_ssid(self._name)
+            if connection is not None:
+                if self._mode == network.NM_802_11_MODE_INFRA:
+                    connection.set_connected()
             if self._disconnect_item:
                 self._disconnect_item.show()
             self._connect_item.hide()
@@ -415,7 +414,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def set_filter(self, query):
         self._greyed_out = self._name.lower().find(query) == -1
-        self._update_state()
+        self._update_icon()
         self._update_color()
 
     def create_keydialog(self, settings, response):
@@ -434,7 +433,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
         if new_strength != self._strength:
             self._strength = new_strength
-            self._update_state()
+            self._update_icon()
 
     def add_ap(self, ap):
         self._access_points[ap.model.object_path] = ap
