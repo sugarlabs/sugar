@@ -160,8 +160,7 @@ class _Account(gobject.GObject):
         'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([object])),
         'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE,
-                                 ([object, object, object, object])),
+                                 gobject.TYPE_NONE, ([object, object, object])),
         'buddy-updated':        (gobject.SIGNAL_RUN_FIRST,
                                  gobject.TYPE_NONE, ([object, object])),
         'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
@@ -536,8 +535,6 @@ class _Account(gobject.GObject):
 
     def __got_buddy_info_cb(self, handle, nick, properties):
         logging.debug('_Account.__got_buddy_info_cb %r', handle)
-        self.emit('buddy-added', self._buddy_handles[handle], nick,
-                  properties.get('key', None), handle)
         self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __get_contact_attributes_cb(self, attributes):
@@ -587,8 +584,8 @@ class _Account(gobject.GObject):
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetCurrentActivity'),
                         timeout=_QUERY_DBUS_TIMEOUT)
-                else:
-                    self.emit('buddy-added', contact_id, nick, None, handle)
+
+                self.emit('buddy-added', contact_id, nick, handle)
 
     def __got_activities_cb(self, buddy_handle, activities):
         logging.debug('_Account.__got_activities_cb %r %r', buddy_handle,
@@ -811,7 +808,7 @@ class Neighborhood(gobject.GObject):
         if needs_reconnect:
             account.Reconnect()
 
-    def __buddy_added_cb(self, account, contact_id, nick, key, handle):
+    def __buddy_added_cb(self, account, contact_id, nick, handle):
         logging.debug('__buddy_added_cb %r', contact_id)
 
         if contact_id in self._buddies:
@@ -822,11 +819,8 @@ class Neighborhood(gobject.GObject):
                 nick=nick,
                 account=account.object_path,
                 contact_id=contact_id,
-                key=key,
                 handle=handle)
         self._buddies[contact_id] = buddy
-
-        self.emit('buddy-added', buddy)
 
     def __buddy_updated_cb(self, account, contact_id, properties):
         logging.debug('__buddy_updated_cb %r', contact_id)
@@ -840,8 +834,20 @@ class Neighborhood(gobject.GObject):
             return
 
         buddy = self._buddies[contact_id]
+
+        is_new = buddy.props.key is None and 'key' in properties
+
         if 'color' in properties:
             buddy.props.color = XoColor(properties['color'])
+
+        if 'key' in properties:
+            buddy.props.key = properties['key']
+
+        if 'nick' in properties:
+            buddy.props.nick = properties['nick']
+
+        if is_new:
+            self.emit('buddy-added', buddy)
 
     def __buddy_removed_cb(self, account, contact_id):
         logging.debug('Neighborhood.__buddy_removed_cb %r', contact_id)
