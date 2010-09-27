@@ -42,7 +42,7 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
     screen_size = (gtk.gdk.screen_width(), gtk.gdk.screen_height())
 
     if (not dimensions) and (fullscreen is None) and \
-       (screen_size < default_dimensions):
+       (screen_size <= default_dimensions):
         # no forced settings, screen too small => fit screen
         fullscreen = True
     elif not dimensions:
