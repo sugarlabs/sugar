@@ -16,6 +16,7 @@
 
 import logging
 import os
+import statvfs
 from gettext import gettext as _
 
 import gobject
@@ -26,6 +27,7 @@ import gconf
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
 from sugar.graphics.xocolor import XoColor
+from sugar import env
 
 from jarabe.journal import model
 from jarabe.view.palettes import VolumePalette
@@ -47,7 +49,6 @@ class VolumesToolbar(gtk.Toolbar):
         self._mount_removed_hid = None
 
         button = JournalButton()
-        button.set_palette(Palette(_('Journal')))
         button.connect('toggled', self._button_toggled_cb)
         self.insert(button, 0)
         button.show()
@@ -207,3 +208,37 @@ class JournalButton(BaseButton):
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
+
+    def create_palette(self):
+        palette = JournalButtonPalette(self)
+        return palette
+
+
+class JournalButtonPalette(Palette):
+
+    def __init__(self, mount):
+        Palette.__init__(self, _('Journal'))
+        vbox = gtk.VBox()
+        self.set_content(vbox)
+        vbox.show()
+
+        self._progress_bar = gtk.ProgressBar()
+        vbox.add(self._progress_bar)
+        self._progress_bar.show()
+
+        self._free_space_label = gtk.Label()
+        self._free_space_label.set_alignment(0.5, 0.5)
+        vbox.add(self._free_space_label)
+        self._free_space_label.show()
+
+        self.connect('popup', self.__popup_cb)
+
+    def __popup_cb(self, palette):
+        stat = os.statvfs(env.get_profile_path())
+        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+
+        fraction = (total_space - free_space) / float(total_space)
+        self._progress_bar.props.fraction = fraction
+        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+                {'free_space': free_space / (1024 * 1024)}
