@@ -187,7 +187,7 @@ class ChooserListView(BaseListView):
         if event.window != tree_view.get_bin_window():
             return False
 
-        pos = tree_view.get_path_at_pos(event.x, event.y)
+        pos = tree_view.get_path_at_pos(int(event.x), int(event.y))
         if pos is None:
             return False
 
