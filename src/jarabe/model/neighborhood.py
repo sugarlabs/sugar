@@ -858,7 +858,9 @@ class Neighborhood(gobject.GObject):
 
         buddy = self._buddies[contact_id]
         del self._buddies[contact_id]
-        self.emit('buddy-removed', buddy)
+
+        if buddy.props.key is not None:
+            self.emit('buddy-removed', buddy)
 
     def __activity_added_cb(self, account, room_handle, activity_id):
         logging.debug('__activity_added_cb %r %r', room_handle, activity_id)
@@ -902,7 +904,9 @@ class Neighborhood(gobject.GObject):
             return
         activity = self._activities[activity_id]
         del self._activities[activity_id]
-        self.emit('activity-removed', activity)
+
+        if activity.props.bundle is not None:
+            self.emit('activity-removed', activity)
 
     def __current_activity_updated_cb(self, account, contact_id, activity_id):
         logging.debug('__current_activity_updated_cb %r %r', contact_id,
