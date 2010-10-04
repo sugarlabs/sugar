@@ -283,7 +283,8 @@ class _Account(gobject.GObject):
             self.emit('connected')
         else:
             for contact_handle, contact_id in self._buddy_handles.items():
-                self.emit('buddy-removed', contact_id)
+                if contact_id is not None:
+                    self.emit('buddy-removed', contact_id)
 
             for room_handle, activity_id in self._activity_handles.items():
                 self.emit('activity-removed', activity_id)
