@@ -27,6 +27,9 @@ import statvfs
 import os
 
 from sugar.graphics.window import Window
+from sugar.graphics.alert import Alert
+from sugar.graphics.icon import Icon
+
 from sugar.bundle.bundle import ZipExtractException, RegistrationException
 from sugar import env
 from sugar.activity import activityfactory
@@ -138,6 +141,18 @@ class JournalActivity(Window):
         self._critical_space_alert = None
         self._check_available_space()
 
+    def __volume_error_cb(self, gobject, message, severity):
+        alert = Alert(title=severity, msg=message)
+        icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, _('Ok'), icon)
+        icon.show()
+        alert.connect('response', self.__alert_response_cb)
+        self.add_alert(alert)
+        alert.show()
+
+    def __alert_response_cb(self, alert, response_id):
+        self.remove_alert(alert)
+
     def __realize_cb(self, window):
         wm.set_bundle_id(window.window, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
@@ -161,6 +176,8 @@ class JournalActivity(Window):
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
                                       self.__volume_changed_cb)
+        self._volumes_toolbar.connect('volume-error',
+                                      self.__volume_error_cb)
         self._main_view.pack_start(self._volumes_toolbar, expand=False)
 
         search_toolbar = self._main_toolbox.search_toolbar
@@ -171,8 +188,8 @@ class JournalActivity(Window):
         self._secondary_view = gtk.VBox()
 
         self._detail_toolbox = DetailToolbox()
-        entry_toolbar = self._detail_toolbox.entry_toolbar
-
+        self._detail_toolbox.entry_toolbar.connect('volume-error',
+                                                   self.__volume_error_cb)
         self._detail_view = DetailView()
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
         self._secondary_view.pack_end(self._detail_view)
