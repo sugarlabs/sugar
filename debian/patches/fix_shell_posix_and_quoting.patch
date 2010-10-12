@@ -1,0 +1,46 @@
+diff --git a/bin/sugar-emulator b/bin/sugar-emulator
+index 308aac7..991593e 100755
+--- a/bin/sugar-emulator
++++ b/bin/sugar-emulator
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
++if [ "$(id -u)" -eq 0 ] || [ "$(id -ru)" -eq 0 ] ; then
+ 	echo Refusing to run as root.
+ 	exit 3
+ fi
+diff --git a/bin/sugar.in b/bin/sugar.in
+index 12098db..feea2cf 100644
+--- a/bin/sugar.in
++++ b/bin/sugar.in
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
++if [ "$(id -u)" -eq 0 || "$(id -ru)" -eq 0 ] ; then
+ 	echo Refusing to run as root.
+ 	exit 3
+ fi
+@@ -60,11 +60,11 @@ export LANG="${LANG:-en_US.utf8}"
+ export LANGUAGE="${LANGUAGE:-${LANG}}"
+ 
+ # Set Sugar's telepathy accounts directory
+-export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
++export MC_ACCOUNT_DIR="$HOME/.sugar/$SUGAR_PROFILE/accounts"
+ 
+ # Workaround until gnome-keyring-daemon lets dbus activate it
+ # https://bugzilla.gnome.org/show_bug.cgi?id=628302
+-if test "$SUGAR_EMULATOR" = "yes" -a "$(type gnome-keyring-daemon)"; then
++if [ "$SUGAR_EMULATOR" = "yes" ] && which gnome-keyring-daemon >/dev/null; then
+     gnome-keyring-daemon --components=secrets &
+ fi
+ 
+@@ -77,6 +77,6 @@ if [ -f ~/.sugar/debug ]; then
+ fi
+ 
+ echo Xcursor.theme: sugar | xrdb -merge
+-metacity --no-force-fullscreen -d $DISPLAY &
++metacity --no-force-fullscreen -d "$DISPLAY" &
+ 
+ exec sugar-session
