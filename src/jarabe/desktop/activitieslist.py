@@ -401,13 +401,7 @@ class ActivityListPalette(ActivityPalette):
         self._favorite_item.show()
 
         if activity_info.is_user_activity():
-            menu_item = MenuItem(_('Erase'), 'list-remove')
-            menu_item.connect('activate', self.__erase_activate_cb)
-            self.menu.append(menu_item)
-            menu_item.show()
-
-            if not os.access(activity_info.get_path(), os.W_OK):
-                menu_item.props.sensitive = False
+            self._add_erase_option(registry, activity_info)
 
         registry = bundleregistry.get_registry()
         self._activity_changed_sid = registry.connect('bundle_changed',
@@ -415,6 +409,16 @@ class ActivityListPalette(ActivityPalette):
         self._update_favorite_item()
 
         self.connect('destroy', self.__destroy_cb)
+
+    def _add_erase_option(self, registry, activity_info):
+        menu_item = MenuItem(_('Erase'), 'list-remove')
+        menu_item.connect('activate', self.__erase_activate_cb)
+        self.menu.append(menu_item)
+        menu_item.show()
+
+        if not os.access(activity_info.get_path(), os.W_OK) or \
+            registry.is_activity_protected(self._bundle_id):
+                menu_item.props.sensitive = False
 
     def __destroy_cb(self, palette):
         self.disconnect(self._activity_changed_sid)

@@ -371,7 +371,7 @@ class IncomingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        icon_color = XoColor(file_transfer.buddy.props.color)
+        icon_color = file_transfer.buddy.props.color
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
@@ -396,7 +396,7 @@ class IncomingTransferButton(BaseTransferButton):
             self._ds_object.metadata['buddies'] = ''
             self._ds_object.metadata['preview'] = ''
             self._ds_object.metadata['icon-color'] = \
-                    file_transfer.buddy.props.color
+                    file_transfer.buddy.props.color.to_string()
             self._ds_object.metadata['mime_type'] = file_transfer.mime_type
         elif file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
             logging.debug('__notify_state_cb COMPLETED')

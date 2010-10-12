@@ -472,7 +472,6 @@ class MeshBox(gtk.VBox):
         self._remove_activity(activity_model)
 
     def _add_buddy(self, buddy_model):
-        logging.debug('MeshBox._add_buddy %r', buddy_model.props.key)
         buddy_model.connect('notify::current-activity',
                             self.__buddy_notify_current_activity_cb)
         if buddy_model.props.current_activity is not None:
