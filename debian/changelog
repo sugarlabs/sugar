@@ -1,10 +1,21 @@
-sugar-0.90 (0.89.7-1) UNRELEASED; urgency=low
+sugar-0.90 (0.90.2-1) unstable; urgency=low
 
-  * New upstream development release.
-  * Have sugar-emulator depend on (and python-jarabe suggest)
-    gnome-keyring.
+  * New upstream stable release.
+  * Update Fructose activity relations to match activities (but not
+    versions) at upstream release notes.
+  * Add patch to fix POSIX handling (a.k.a. bashisms) and quoting in
+    shell scripts.
+  * Have sugar-emulator recommend gnome-keyring, and sucrose depend on
+    it.
+  * Recommend (and for sucrose: depend on) modemmanager.
+  * Ease building with git-buildpackage: Git-ignore quilt .pc dir, and
+    add source local-options.
+  * Bump Policy compliance to standards-version 3.9.1.
+  * Shorten Vcs-* stanzas.
+  * Update copyright file: New copyright holders and years (same
+    licenses).
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 24 Sep 2010 01:06:57 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 12 Oct 2010 19:43:06 +0200
 
 sugar-0.90 (0.89.1-1) experimental; urgency=low
 
