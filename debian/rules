@@ -98,7 +98,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #    underlying audio channels (Sugar can only control main volume)
 #  * gdb needed by command sugar-launch
 #  * gvfs needed for GIO removable media support
-session_nm = network-manager
+session_nm = network-manager, modemmanager
 session_gio = gvfs
 emulator_exec = xserver-xephyr, x11-utils
 emulator_exec_try = gnome-keyring
