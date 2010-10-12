@@ -217,7 +217,7 @@ def resume(metadata, bundle_id=None):
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False):
-    if activity_id is None:
+    if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
 
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',

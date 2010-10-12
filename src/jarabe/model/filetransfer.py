@@ -31,6 +31,7 @@ from sugar.presence import presenceservice
 from sugar import dispatch
 
 from jarabe.util.telepathy import connection_watcher
+from jarabe.model import neighborhood
 
 FT_STATE_NONE = 0
 FT_STATE_PENDING = 1
@@ -140,11 +141,7 @@ class BaseFileTransfer(gobject.GObject):
         self.mime_type = props['ContentType']
 
         handle = channel_properties.Get(CHANNEL, 'TargetHandle')
-        presence_service = presenceservice.get_instance()
-        self.buddy = presence_service.get_buddy_by_telepathy_handle(
-                self._connection.service_name,
-                self._connection.object_path,
-                handle)
+        self.buddy = neighborhood.get_model().get_buddy_by_handle(handle)
 
     def __transferred_bytes_changed_cb(self, transferred_bytes):
         logging.debug('__transferred_bytes_changed_cb %r', transferred_bytes)
@@ -240,20 +237,18 @@ class OutgoingFileTransfer(BaseFileTransfer):
         self._splicer = None
         self._output_stream = None
 
-        self.buddy = buddy.get_buddy()
+        self.buddy = buddy
         self.title = title
         self.file_size = os.stat(file_name).st_size
         self.description = description
         self.mime_type = mime_type
 
     def __connection_ready_cb(self, connection):
-        handle = self._get_buddy_handle()
-
         requests = connection[CONNECTION_INTERFACE_REQUESTS]
         object_path, properties_ = requests.CreateChannel({
             CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
-            CHANNEL + '.TargetHandle': handle,
+            CHANNEL + '.TargetHandle': self.buddy.handle,
             CHANNEL_TYPE_FILE_TRANSFER + '.ContentType': self.mime_type,
             CHANNEL_TYPE_FILE_TRANSFER + '.Filename': self.title,
             CHANNEL_TYPE_FILE_TRANSFER + '.Size': self.file_size,
@@ -266,21 +261,6 @@ class OutgoingFileTransfer(BaseFileTransfer):
         self._socket_address = channel_file_transfer.ProvideFile(
                 SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
                 byte_arrays=True)
-
-    def _get_buddy_handle(self):
-        object_path = self.buddy.object_path()
-
-        bus = dbus.SessionBus()
-        remote_object = bus.get_object('org.laptop.Sugar.Presence', object_path)
-        ps_buddy = dbus.Interface(remote_object,
-                                  'org.laptop.Sugar.Presence.Buddy')
-
-        handles = ps_buddy.GetTelepathyHandles()
-        logging.debug('_get_buddy_handle %r', handles)
-
-        bus_name, object_path, handle = handles[0]
-
-        return handle
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('__notify_state_cb %r', self.props.state)

@@ -28,8 +28,6 @@ from sugar.profile import get_profile
 
 from jarabe.util.telepathy import connection_watcher
 
-_NOT_PRESENT_COLOR = "#d5d5d5,#FFFFFF"
-
 CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
 class BaseBuddyModel(gobject.GObject):
@@ -40,19 +38,9 @@ class BaseBuddyModel(gobject.GObject):
         self._nick = None
         self._color = None
         self._tags = None
-        self._present = False
         self._current_activity = None
 
         gobject.GObject.__init__(self, **kwargs)
-
-    def is_present(self):
-        return self._present
-
-    def set_present(self, present):
-        self._present = present
-
-    present = gobject.property(type=bool, default=False, getter=is_present,
-                               setter=set_present)
 
     def get_nick(self):
         return self._nick
@@ -98,15 +86,11 @@ class BaseBuddyModel(gobject.GObject):
     def is_owner(self):
         raise NotImplementedError
 
-    def get_buddy(self):
-        raise NotImplementedError
-
 
 class OwnerBuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarOwnerBuddyModel'
     def __init__(self):
         BaseBuddyModel.__init__(self)
-        self.props.present = True
 
         client = gconf.client_get_default()
         self.props.nick = client.get_string('/desktop/sugar/user/nick')
@@ -195,9 +179,6 @@ class OwnerBuddyModel(BaseBuddyModel):
     def is_owner(self):
         return True
 
-    def get_buddy(self):
-        raise NotImplementedError
-
 
 _owner_instance = None
 def get_owner_instance():
@@ -213,14 +194,12 @@ class BuddyModel(BaseBuddyModel):
 
         self._account = None
         self._contact_id = None
+        self._handle = None
 
         BaseBuddyModel.__init__(self, **kwargs)
 
     def is_owner(self):
         return False
-
-    def get_buddy(self):
-        raise NotImplementedError
 
     def get_account(self):
         return self._account
@@ -240,11 +219,10 @@ class BuddyModel(BaseBuddyModel):
     contact_id = gobject.property(type=object, getter=get_contact_id,
                                   setter=set_contact_id)
 
+    def get_handle(self):
+        return self._handle
 
-class FriendBuddyModel(BuddyModel):
-    __gtype_name__ = 'SugarFriendBuddyModel'
-    def __init__(self, nick, key):
-        BuddyModel.__init__(self, nick=nick, key=key)
+    def set_handle(self, handle):
+        self._handle = handle
 
-    def get_buddy(self):
-        raise NotImplementedError
+    handle = gobject.property(type=object, getter=get_handle, setter=set_handle)
