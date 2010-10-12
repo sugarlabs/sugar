@@ -192,6 +192,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/show_restart</key>
+      <applyto>/desktop/sugar/show_restart</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Restart</short>
+        <long>If TRUE, Sugar will show a "Restart" option.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/peripherals/keyboard/layouts</key>
       <applyto>/desktop/sugar/peripherals/keyboard/layouts</applyto>
       <owner>sugar</owner>

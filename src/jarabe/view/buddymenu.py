@@ -87,6 +87,12 @@ class BuddyMenu(Palette):
 
         client = gconf.client_get_default()
 
+        if client.get_bool('/desktop/sugar/show_restart'):
+            item = MenuItem(_('Restart'), 'system-restart')
+            item.connect('activate', self.__reboot_activate_cb)
+            self.menu.append(item)
+            item.show()
+
         if client.get_bool('/desktop/sugar/show_logout'):
             item = MenuItem(_('Logout'), 'system-logout')
             item.connect('activate', self.__logout_activate_cb)
