@@ -1,3 +1,11 @@
+sugar-0.90 (0.90.2-2) unstable; urgency=low
+
+  * Have sugar-session (not sucrose) provide unversioned sugar (and not
+    replace or conflict with it).
+  * Have sugar-session recommend sucrose.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 13 Oct 2010 09:25:05 +0200
+
 sugar-0.90 (0.90.2-1) unstable; urgency=low
 
   * New upstream stable release.
