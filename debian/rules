@@ -119,7 +119,8 @@ CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar-$(pkgbranch), python-suga
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-hippocanvas, python-gobject (>= 2.15.0), python-gtk2, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, python-gtksourceview2
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch), $(call session_expand_activities,true)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , python-xklavier
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(jarabe_cp_cli_exec)
 CDBS_RECOMMENDS_sugar-emulator-$(pkgbranch) += , $(emulator_exec_try)
@@ -133,7 +134,8 @@ CDBS_SUGGESTS_sugar-session-$(pkgbranch) = $(call session_expand_activities_rela
 CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = $(emulator_exec)
 
-CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch), $(call session_expand_activities)
+CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , python-xklavier
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(tools_debug), $(emulator_exec_try)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed)
