@@ -28,6 +28,8 @@ class BuddyIcon(CanvasIcon):
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
+        self.palette_invoker.cache_palette = False
+
         self._update_color()
 
     def create_palette(self):
