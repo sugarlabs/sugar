@@ -89,9 +89,12 @@ def register_laptop(url=REGISTER_URL):
     else:
         sn = generate_serial_number()
         uuid_ = str(uuid.uuid1())
-        setting_name = '/desktop/sugar/collaboration/jabber_server'
-        jabber_server = client.get_string(setting_name)
-        store_identifiers(sn, uuid_, jabber_server)
+
+    setting_name = '/desktop/sugar/collaboration/jabber_server'
+    jabber_server = client.get_string(setting_name)
+    store_identifiers(sn, uuid_, jabber_server)
+
+    if jabber_server:
         url = 'http://' + jabber_server + ':8080/'
 
     nick = client.get_string('/desktop/sugar/user/nick')
