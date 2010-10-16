@@ -156,7 +156,7 @@ class ClipboardTray(tray.VTray):
         if 'XdndDirectSave0' in context.targets:
             window = context.source_window
             prop_type, format_, filename = \
-                window.property_get('XdndDirectSave0','text/plain')
+                window.property_get('XdndDirectSave0', 'text/plain')
 
             # FIXME query the clipboard service for a filename?
             base_dir = tempfile.gettempdir()

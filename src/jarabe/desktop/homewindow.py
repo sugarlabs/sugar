@@ -29,9 +29,9 @@ from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
 
-_HOME_PAGE       = 0
-_GROUP_PAGE      = 1
-_MESH_PAGE       = 2
+_HOME_PAGE = 0
+_GROUP_PAGE = 1
+_MESH_PAGE = 2
 _TRANSITION_PAGE = 3
 
 _instance = None

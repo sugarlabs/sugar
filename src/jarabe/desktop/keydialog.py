@@ -26,7 +26,7 @@ from jarabe.model.network import Secrets
 
 
 IW_AUTH_ALG_OPEN_SYSTEM = 'open'
-IW_AUTH_ALG_SHARED_KEY  = 'shared'
+IW_AUTH_ALG_SHARED_KEY = 'shared'
 
 WEP_PASSPHRASE = 1
 WEP_HEX = 2

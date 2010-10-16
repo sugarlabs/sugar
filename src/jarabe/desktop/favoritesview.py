@@ -206,9 +206,9 @@ class FavoritesView(hippo.Canvas):
             icon_x, icon_y = icon.get_context().translate_to_widget(icon)
             icon_width, icon_height = icon.get_allocation()
 
-            if (x >= icon_x ) and (x <= icon_x + icon_width) and \
-                    (y >= icon_y ) and (y <= icon_y + icon_height) and \
-                    isinstance(icon, ActivityIcon):
+            if (x >= icon_x) and (x <= icon_x + icon_width) and \
+               (y >= icon_y) and (y <= icon_y + icon_height) and \
+               isinstance(icon, ActivityIcon):
                 return icon
         return None
 
@@ -603,8 +603,8 @@ class OwnerIcon(BuddyIcon):
     __gtype_name__ = 'SugarFavoritesOwnerIcon'
 
     __gsignals__ = {
-        'register-activate' : (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([]))
+        'register-activate': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                              ([])),
     }
 
     def __init__(self, size):

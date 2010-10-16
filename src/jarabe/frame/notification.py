@@ -27,9 +27,9 @@ class NotificationIcon(gtk.EventBox):
     __gtype_name__ = 'SugarNotificationIcon'
 
     __gproperties__ = {
-        'xo-color'      : (object, None, None, gobject.PARAM_READWRITE),
-        'icon-name'     : (str, None, None, None, gobject.PARAM_READWRITE),
-        'icon-filename' : (str, None, None, None, gobject.PARAM_READWRITE)
+        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
+        'icon-filename': (str, None, None, None, gobject.PARAM_READWRITE),
     }
 
     _PULSE_TIMEOUT = 3

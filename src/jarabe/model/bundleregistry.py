@@ -43,12 +43,12 @@ class BundleRegistry(gobject.GObject):
     """Tracks the available activity bundles"""
 
     __gsignals__ = {
-        'bundle-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
+        'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT])),
         'bundle-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([gobject.TYPE_PYOBJECT])),
         'bundle-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT]))
+                           ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self):

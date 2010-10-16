@@ -81,7 +81,7 @@ class BaseResultSet(object):
     """
 
     def __init__(self, query, page_size):
-        self._total_count  = -1
+        self._total_count = -1
         self._position = -1
         self._query = query
         self._page_size = page_size
@@ -268,7 +268,7 @@ class InplaceResultSet(BaseResultSet):
             keygetter = itemgetter(2) # timestamp
         self._file_list.sort(lambda a, b: b - a,
                              key=keygetter,
-                             reverse=self._sort[0]=='-')
+                             reverse=(self._sort[0] == '-'))
         self.ready.send(self)
 
     def find(self, query):
@@ -281,7 +281,7 @@ class InplaceResultSet(BaseResultSet):
         t = time.time()
 
         offset = int(query.get('offset', 0))
-        limit  = int(query.get('limit', len(self._file_list)))
+        limit = int(query.get('limit', len(self._file_list)))
         total_count = len(self._file_list)
 
         files = self._file_list[offset:offset + limit]

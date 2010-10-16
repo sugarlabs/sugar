@@ -94,10 +94,10 @@ class FriendBuddyModel(BuddyModel):
 
 class Friends(gobject.GObject):
     __gsignals__ = {
-        'friend-added':   (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object])),
-        'friend-removed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([str]))
+        'friend-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
+        'friend-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str])),
     }
 
     def __init__(self):

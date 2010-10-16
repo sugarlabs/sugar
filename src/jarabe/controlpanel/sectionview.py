@@ -23,14 +23,12 @@ class SectionView(gtk.VBox):
     __gtype_name__ = 'SugarSectionView'
 
     __gsignals__ = {
-        'request-close': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([]))
-        }
+        'request-close': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
 
     __gproperties__ = {
-        'is_valid'      : (bool, None, None, True,
-                           gobject.PARAM_READWRITE)
-        }
+        'is_valid': (bool, None, None, True, gobject.PARAM_READWRITE),
+    }
 
     _APPLY_TIMEOUT = 1000
 

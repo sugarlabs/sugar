@@ -368,14 +368,10 @@ class _SectionIcon(gtk.EventBox):
     __gtype_name__ = "SugarSectionIcon"
 
     __gproperties__ = {
-        'icon-name'    : (str, None, None, None,
-                          gobject.PARAM_READWRITE),
-        'pixel-size'   : (object, None, None,
-                          gobject.PARAM_READWRITE),
-        'xo-color'     : (object, None, None,
-                          gobject.PARAM_READWRITE),
-        'title'        : (str, None, None, None,
-                          gobject.PARAM_READWRITE)
+        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
+        'pixel-size': (object, None, None, gobject.PARAM_READWRITE),
+        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
+        'title': (str, None, None, None, gobject.PARAM_READWRITE),
     }
 
     def __init__(self, **kwargs):

@@ -39,7 +39,7 @@ def _initialize():
 
 
 def read_all_timezones(fn=_zone_tab):
-    fd = open (fn, 'r')
+    fd = open(fn, 'r')
     lines = fd.readlines()
     fd.close()
     timezones = []

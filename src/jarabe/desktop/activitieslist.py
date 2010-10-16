@@ -43,8 +43,8 @@ class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self):
@@ -260,8 +260,8 @@ class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererActivityIcon'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self, tree_view):
@@ -383,8 +383,8 @@ class ActivityListPalette(ActivityPalette):
     __gtype_name__ = 'SugarActivityListPalette'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self, activity_info):

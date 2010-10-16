@@ -181,14 +181,14 @@ class Language(SectionView):
 
     def _create_add_remove_box(self):
         '''Creates gtk.Hbox with add/remove buttons'''
-        add_icon =  Icon(icon_name='list-add')
+        add_icon = Icon(icon_name='list-add')
 
         add_button = gtk.Button()
         add_button.set_image(add_icon)
         add_button.connect('clicked',
                             self.__add_button_clicked_cb)
 
-        remove_icon =  Icon(icon_name='list-remove')
+        remove_icon = Icon(icon_name='list-remove')
         remove_button = gtk.Button()
         remove_button.set_image(remove_icon)
         remove_button.connect('clicked',
@@ -217,7 +217,7 @@ class Language(SectionView):
         selected_langs = self._get_selected_langs()
         last_lang = selected_langs[-1]
 
-        self._determine_add_remove_visibility(last_lang = last_lang)
+        self._determine_add_remove_visibility(last_lang=last_lang)
 
         self._changed = (selected_langs != self._selected_locales)
 
@@ -248,7 +248,7 @@ class Language(SectionView):
 
         return new_codes
 
-    def _determine_add_remove_visibility(self, last_lang = None):
+    def _determine_add_remove_visibility(self, last_lang=None):
         # We should not let users add fallback languages for English (USA)
         # This is because the software is not usually _translated_ into English
         # which means that the fallback gets selected automatically

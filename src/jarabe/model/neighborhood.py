@@ -71,14 +71,14 @@ _model = None
 
 class ActivityModel(gobject.GObject):
     __gsignals__ = {
-        'current-buddy-added':   (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object])),
-        'current-buddy-removed': (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object])),
-        'buddy-added':           (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object])),
-        'buddy-removed':         (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object])),
+        'current-buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                ([object])),
+        'current-buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                  ([object])),
+        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([object])),
+        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object])),
     }
 
     def __init__(self, activity_id, room_handle):
@@ -159,28 +159,26 @@ class ActivityModel(gobject.GObject):
 
 class _Account(gobject.GObject):
     __gsignals__ = {
-        'activity-added':       (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object])),
-        'activity-updated':     (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object])),
-        'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object])),
-        'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object, object])),
-        'buddy-updated':        (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object, object])),
-        'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object])),
-        'buddy-joined-activity': (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object, object])),
-        'buddy-left-activity':   (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE, ([object, object])),
+        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([object, object])),
+        'activity-updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([object, object])),
+        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([object])),
+        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([object, object, object])),
+        'buddy-updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object, object])),
+        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object])),
+        'buddy-joined-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                  ([object, object])),
+        'buddy-left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                ([object, object])),
         'current-activity-updated': (gobject.SIGNAL_RUN_FIRST,
                                      gobject.TYPE_NONE, ([object, object])),
-        'connected':                (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
-        'disconnected':             (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
+        'connected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'disconnected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, account_path):
@@ -623,14 +621,14 @@ class _Account(gobject.GObject):
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {
-        'activity-added':       (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object])),
-        'activity-removed':     (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object])),
-        'buddy-added':          (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object])),
-        'buddy-removed':        (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([object]))
+        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([object])),
+        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([object])),
+        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([object])),
+        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object])),
     }
 
     def __init__(self):

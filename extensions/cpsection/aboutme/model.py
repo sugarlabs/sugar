@@ -19,13 +19,14 @@ from gettext import gettext as _
 import gconf
 
 
-_COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
-           'orange': {'dark':'#9a5200', 'medium':'#c97e00', 'light':'#ffc169'},
-           'yellow': {'dark':'#807500', 'medium':'#be9e00', 'light':'#fffa00'},
-           'green': {'dark':'#008009', 'medium':'#00b20d', 'light':'#8bff7a'},
-           'blue': {'dark':'#00588c', 'medium':'#005fe4', 'light':'#bccdff'},
-           'purple': {'dark':'#5e008c', 'medium':'#7f00bf', 'light':'#d1a3ff'}
-           }
+_COLORS = {
+    'red': {'dark': '#b20008', 'medium': '#e6000a', 'light': '#ffadce'},
+    'orange': {'dark': '#9a5200', 'medium': '#c97e00', 'light': '#ffc169'},
+    'yellow': {'dark': '#807500', 'medium': '#be9e00', 'light': '#fffa00'},
+    'green': {'dark': '#008009', 'medium': '#00b20d', 'light': '#8bff7a'},
+    'blue': {'dark': '#00588c', 'medium': '#005fe4', 'light': '#bccdff'},
+    'purple': {'dark': '#5e008c', 'medium': '#7f00bf', 'light': '#d1a3ff'},
+}
 
 _MODIFIERS = ('dark', 'medium', 'light')
 

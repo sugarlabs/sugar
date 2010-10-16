@@ -473,8 +473,7 @@ class BaseTransferPalette(Palette):
     __gtype_name__ = "SugarBaseTransferPalette"
 
     __gsignals__ = {
-        'dismiss-clicked':          (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
+        'dismiss-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, file_transfer):

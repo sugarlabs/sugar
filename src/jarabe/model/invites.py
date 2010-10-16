@@ -111,10 +111,10 @@ class ActivityInvite(object):
 
 class Invites(gobject.GObject):
     __gsignals__ = {
-        'invite-added':   (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object])),
-        'invite-removed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object]))
+        'invite-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
+        'invite-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([object])),
     }
 
     def __init__(self):

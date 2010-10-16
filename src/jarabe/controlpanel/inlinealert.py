@@ -37,11 +37,9 @@ class InlineAlert(gtk.HBox):
     __gtype_name__ = 'SugarInlineAlert'
 
     __gproperties__ = {
-        'msg'    : (str, None, None, None,
-                    gobject.PARAM_READWRITE),
-        'icon'   : (object, None, None,
-                    gobject.PARAM_WRITABLE)
-        }
+        'msg': (str, None, None, None, gobject.PARAM_READWRITE),
+        'icon': (object, None, None, gobject.PARAM_WRITABLE),
+    }
 
     def __init__(self, **kwargs):
 

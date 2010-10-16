@@ -32,7 +32,7 @@ class DetailView(gtk.VBox):
     __gtype_name__ = 'DetailView'
 
     __gsignals__ = {
-        'go-back-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([]))
+        'go-back-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, **kwargs):

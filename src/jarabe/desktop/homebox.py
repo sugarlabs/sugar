@@ -59,7 +59,7 @@ class HomeBox(gtk.VBox):
     def show_software_updates_alert(self):
         alert = Alert()
         updater_icon = Icon(icon_name='module-updater',
-                    pixel_size = style.STANDARD_ICON_SIZE)
+                            pixel_size=style.STANDARD_ICON_SIZE)
         alert.props.icon = updater_icon
         updater_icon.show()
         alert.props.title = _('Software Update')
@@ -151,12 +151,10 @@ class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                           ([str])),
-        'view-changed':  (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([object]))
+        'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
     }
 
     def __init__(self):

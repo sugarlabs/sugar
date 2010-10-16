@@ -312,27 +312,22 @@ class ShellModel(gobject.GObject):
     """
 
     __gsignals__ = {
-        'activity-added':          (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'activity-removed':        (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
+        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT])),
         'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
+                                    ([gobject.TYPE_PYOBJECT])),
         'tabbing-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-started':          (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-completed':        (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-failed':           (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT]))
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
+        'launch-started': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'launch-completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT])),
+        'launch-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([gobject.TYPE_PYOBJECT])),
     }
 
     ZOOM_MESH = 0

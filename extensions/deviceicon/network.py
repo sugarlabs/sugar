@@ -74,8 +74,8 @@ class WirelessPalette(Palette):
     __gtype_name__ = 'SugarWirelessPalette'
 
     __gsignals__ = {
-        'deactivate-connection' : (gobject.SIGNAL_RUN_FIRST,
-                                   gobject.TYPE_NONE, ([]))
+        'deactivate-connection': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                  ([])),
     }
 
     def __init__(self, primary_text):
@@ -205,10 +205,8 @@ class GsmPalette(Palette):
     __gtype_name__ = 'SugarGsmPalette'
 
     __gsignals__ = {
-        'gsm-connect'         : (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([])),
-        'gsm-disconnect'      : (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([])),
+        'gsm-connect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'gsm-disconnect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):

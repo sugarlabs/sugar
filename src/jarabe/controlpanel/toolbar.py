@@ -37,7 +37,7 @@ class MainToolbar(gtk.Toolbar):
                             ([])),
         'search-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([str]))
+                          ([str])),
     }
 
     def __init__(self):
@@ -97,7 +97,7 @@ class SectionToolbar(gtk.Toolbar):
                             ([])),
         'accept-clicked': (gobject.SIGNAL_RUN_FIRST,
                             gobject.TYPE_NONE,
-                            ([]))
+                            ([])),
     }
 
     def __init__(self):

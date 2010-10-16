@@ -35,12 +35,10 @@ class VolumesToolbar(gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
 
     __gsignals__ = {
-        'volume-changed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
+        'volume-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([str])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
-                           ([str, str]))
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
     }
 
     def __init__(self):
@@ -134,9 +132,8 @@ class VolumesToolbar(gtk.Toolbar):
 
 class BaseButton(RadioToolButton):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
-                           ([str, str]))
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
     }
 
     def __init__(self, mount_point):

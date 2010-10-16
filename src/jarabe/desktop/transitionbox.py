@@ -68,8 +68,7 @@ class TransitionBox(hippo.Canvas):
     __gtype_name__ = 'SugarTransitionBox'
 
     __gsignals__ = {
-        'completed': (gobject.SIGNAL_RUN_FIRST,
-                      gobject.TYPE_NONE, ([]))
+        'completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):

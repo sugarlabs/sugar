@@ -172,8 +172,8 @@ class SpeakerPalette(Palette):
 
 class DeviceModel(gobject.GObject):
     __gproperties__ = {
-        'level'   : (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
-        'muted'   : (bool, None, None, False, gobject.PARAM_READWRITE),
+        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
+        'muted': (bool, None, None, False, gobject.PARAM_READWRITE),
     }
 
     def __init__(self):

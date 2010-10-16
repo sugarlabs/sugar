@@ -35,9 +35,7 @@ class ObjectChooser(gtk.Window):
     __gtype_name__ = 'ObjectChooser'
 
     __gsignals__ = {
-        'response': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([int]))
+        'response': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int])),
     }
 
     def __init__(self, parent=None, what_filter=''):

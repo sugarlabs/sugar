@@ -96,7 +96,7 @@ class _KeyListener(object):
 
 
 class Frame(object):
-    MODE_MOUSE    = 0
+    MODE_MOUSE = 0
     MODE_KEYBOARD = 1
     MODE_NON_INTERACTIVE = 2
 
@@ -183,7 +183,7 @@ class Frame(object):
 
         zoom_toolbar = ZoomToolbar()
         panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
-                box_width=4*style.GRID_CELL_SIZE))
+                box_width=4 * style.GRID_CELL_SIZE))
         zoom_toolbar.show()
 
         activities_tray = ActivitiesTray()

@@ -38,7 +38,7 @@ class Clipboard(gobject.GObject):
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([int])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([object]))
+                        ([object])),
     }
 
     def __init__(self):

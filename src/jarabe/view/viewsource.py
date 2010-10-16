@@ -132,10 +132,10 @@ class ViewSource(gtk.Window):
         file_name = ''
 
         activity_bundle = ActivityBundle(bundle_path)
-        command =  activity_bundle.get_command()
+        command = activity_bundle.get_command()
         if len(command.split(' ')) > 1:
             name = command.split(' ')[1].split('.')[0]
-            file_name =  name + '.py'
+            file_name = name + '.py'
             path = os.path.join(activity_bundle.get_path(), file_name)
             self._selected_file = path
 
@@ -260,11 +260,8 @@ class Toolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarViewSourceToolbar'
 
     __gsignals__ = {
-        'stop-clicked':    (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
-                            ([])),
-        'source-selected': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'stop-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'source-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                             ([str])),
     }
 

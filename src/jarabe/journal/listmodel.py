@@ -39,12 +39,8 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
 
     __gsignals__ = {
-        'ready':    (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([])),
-        'progress': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([])),
+        'ready': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'progress': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     COLUMN_UID = 0
@@ -60,18 +56,20 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     COLUMN_BUDDY_2 = 10
     COLUMN_BUDDY_3 = 11
 
-    _COLUMN_TYPES = {COLUMN_UID:            str,
-                     COLUMN_FAVORITE:       bool,
-                     COLUMN_ICON:           str,
-                     COLUMN_ICON_COLOR:     object,
-                     COLUMN_TITLE:          str,
-                     COLUMN_TIMESTAMP:      str,
-                     COLUMN_CREATION_TIME:  str,
-                     COLUMN_FILESIZE:       str,
-                     COLUMN_PROGRESS:       int,
-                     COLUMN_BUDDY_1:        object,
-                     COLUMN_BUDDY_3:        object,
-                     COLUMN_BUDDY_2:        object}
+    _COLUMN_TYPES = {
+        COLUMN_UID: str,
+        COLUMN_FAVORITE: bool,
+        COLUMN_ICON: str,
+        COLUMN_ICON_COLOR: object,
+        COLUMN_TITLE: str,
+        COLUMN_TIMESTAMP: str,
+        COLUMN_CREATION_TIME: str,
+        COLUMN_FILESIZE: str,
+        COLUMN_PROGRESS: int,
+        COLUMN_BUDDY_1: object,
+        COLUMN_BUDDY_3: object,
+        COLUMN_BUDDY_2: object,
+    }
 
     _PAGE_SIZE = 10
 

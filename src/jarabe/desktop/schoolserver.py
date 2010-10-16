@@ -40,7 +40,7 @@ def generate_serial_number():
 
     serial_part1 = []
 
-    for y_ in range(3) :
+    for y_ in range(3):
         serial_part1.append(random.choice(ascii_uppercase))
 
     serial_part1 = ''.join(serial_part1)

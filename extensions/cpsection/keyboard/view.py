@@ -47,8 +47,8 @@ class LayoutCombo(gtk.HBox):
     """
 
     __gsignals__ = {
-        'selection-changed' : (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-                            (gobject.TYPE_STRING, gobject.TYPE_INT))
+        'selection-changed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+                              (gobject.TYPE_STRING, gobject.TYPE_INT)),
         }
 
     def __init__(self, keyboard_manager, n):
@@ -59,7 +59,7 @@ class LayoutCombo(gtk.HBox):
         self.set_border_width(style.DEFAULT_SPACING)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        label = gtk.Label(' <b>%s</b> ' % str(n+1))
+        label = gtk.Label(' <b>%s</b> ' % str(n + 1))
         label.set_use_markup(True)
         label.modify_fg(gtk.STATE_NORMAL,
                     style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -71,7 +71,7 @@ class LayoutCombo(gtk.HBox):
         for description, name in self._keyboard_manager.get_languages():
             self._klang_store.append([name, description])
 
-        self._klang_combo = gtk.ComboBox(model = self._klang_store)
+        self._klang_combo = gtk.ComboBox(model=self._klang_store)
         self._klang_combo_changed_id = \
             self._klang_combo.connect('changed', self._klang_combo_changed_cb)
         cell = gtk.CellRendererText()
@@ -79,10 +79,10 @@ class LayoutCombo(gtk.HBox):
         cell.props.ellipsize_set = True
         self._klang_combo.pack_start(cell)
         self._klang_combo.add_attribute(cell, 'text', 1)
-        self.pack_start(self._klang_combo, expand=True, fill = True)
+        self.pack_start(self._klang_combo, expand=True, fill=True)
 
         self._kvariant_store = None
-        self._kvariant_combo = gtk.ComboBox(model = None)
+        self._kvariant_combo = gtk.ComboBox(model=None)
         self._kvariant_combo_changed_id = \
             self._kvariant_combo.connect('changed', \
                                 self._kvariant_combo_changed_cb)
@@ -91,7 +91,7 @@ class LayoutCombo(gtk.HBox):
         cell.props.ellipsize_set = True
         self._kvariant_combo.pack_start(cell)
         self._kvariant_combo.add_attribute(cell, 'text', 1)
-        self.pack_start(self._kvariant_combo, expand=True, fill = True)
+        self.pack_start(self._kvariant_combo, expand=True, fill=True)
 
         self._klang_combo.set_active(self._index)
 
@@ -157,8 +157,7 @@ class Keyboard(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        self._layout_table = gtk.Table(rows = 4, columns = 2, \
-                                                homogeneous = False)
+        self._layout_table = gtk.Table(rows=4, columns=2, homogeneous=False)
 
         self._keyboard_manager = model.KeyboardManager(self.get_display())
         self._layout_combo_list = []
@@ -202,7 +201,7 @@ class Keyboard(SectionView):
         for description, name in self._keyboard_manager.get_models():
             kmodel_store.append([name, description])
 
-        kmodel_combo = gtk.ComboBox(model = kmodel_store)
+        kmodel_combo = gtk.ComboBox(model=kmodel_store)
         cell = gtk.CellRendererText()
         cell.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         cell.props.ellipsize_set = True
@@ -216,7 +215,7 @@ class Keyboard(SectionView):
                     kmodel_combo.set_active_iter(row.iter)
                     break
 
-        box_kmodel.pack_start(kmodel_combo, expand = False)
+        box_kmodel.pack_start(kmodel_combo, expand=False)
         self._vbox.pack_start(box_kmodel, expand=False)
         box_kmodel.show_all()
 
@@ -261,7 +260,7 @@ class Keyboard(SectionView):
         for description, name in self._keyboard_manager.get_options_group():
             group_option_store.append([name, description])
 
-        group_option_combo = gtk.ComboBox(model = group_option_store)
+        group_option_combo = gtk.ComboBox(model=group_option_store)
         cell = gtk.CellRendererText()
         cell.props.ellipsize = pango.ELLIPSIZE_MIDDLE
         cell.props.ellipsize_set = True
@@ -282,7 +281,7 @@ class Keyboard(SectionView):
             if not found:
                 group_option_combo.set_active(0)
 
-        box_group_option.pack_start(group_option_combo, expand = False)
+        box_group_option.pack_start(group_option_combo, expand=False)
         self._vbox.pack_start(box_group_option, expand=False)
         box_group_option.show_all()
 
@@ -325,13 +324,13 @@ class Keyboard(SectionView):
         for i in range(0, self._keyboard_manager.get_max_layouts()):
             add_remove_box = self.__create_add_remove_box()
             self._layout_addremovebox_list.append(add_remove_box)
-            self._layout_table.attach(add_remove_box, 1, 2, i, i+1)
+            self._layout_table.attach(add_remove_box, 1, 2, i, i + 1)
 
             layout_combo = LayoutCombo(self._keyboard_manager, i)
             layout_combo.connect('selection-changed', \
                 self.__layout_combo_selection_changed_cb)
             self._layout_combo_list.append(layout_combo)
-            self._layout_table.attach(layout_combo, 0, 1, i, i+1)
+            self._layout_table.attach(layout_combo, 0, 1, i, i + 1)
 
             if i < len(self._klayouts):
                 layout_combo.show_all()
@@ -361,14 +360,14 @@ class Keyboard(SectionView):
 
     def __create_add_remove_box(self):
         '''Creates gtk.Hbox with add/remove buttons'''
-        add_icon =  Icon(icon_name='list-add')
+        add_icon = Icon(icon_name='list-add')
 
         add_button = gtk.Button()
         add_button.set_image(add_icon)
         add_button.connect('clicked',
                             self.__add_button_clicked_cb)
 
-        remove_icon =  Icon(icon_name='list-remove')
+        remove_icon = Icon(icon_name='list-remove')
         remove_button = gtk.Button()
         remove_button.set_image(remove_icon)
         remove_button.connect('clicked',

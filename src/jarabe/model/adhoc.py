@@ -55,7 +55,7 @@ class AdHocManager(gobject.GObject):
         'members-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                             ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
         'state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+                          ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
     _AUTOCONNECT_TIMEOUT = 30

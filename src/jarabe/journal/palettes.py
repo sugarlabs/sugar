@@ -41,8 +41,7 @@ class ObjectPalette(Palette):
     __gtype_name__ = 'ObjectPalette'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([str])),
     }
 
@@ -160,8 +159,8 @@ class FriendsMenu(gtk.Menu):
     __gtype_name__ = 'JournalFriendsMenu'
 
     __gsignals__ = {
-        'friend-selected'  : (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                              ([object])),
+        'friend-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([object])),
     }
 
     def __init__(self):

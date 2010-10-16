@@ -157,9 +157,8 @@ class MeshToolbar(gtk.Toolbar):
     __gtype_name__ = 'MeshToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([str]))
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([str])),
     }
 
     def __init__(self):
@@ -227,7 +226,7 @@ class DeviceObserver(gobject.GObject):
         'access-point-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
         'access-point-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                 ([gobject.TYPE_PYOBJECT]))
+                                 ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, device):

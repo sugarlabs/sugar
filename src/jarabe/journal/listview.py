@@ -65,9 +65,7 @@ class BaseListView(gtk.Bin):
     __gtype_name__ = 'JournalBaseListView'
 
     __gsignals__ = {
-        'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([]))
+        'clear-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):
@@ -373,8 +371,8 @@ class BaseListView(gtk.Bin):
 
         icon = CanvasIcon(size=style.LARGE_ICON_SIZE,
                           icon_name='activity-journal',
-                          stroke_color = style.COLOR_BUTTON_GREY.get_svg(),
-                          fill_color = style.COLOR_TRANSPARENT.get_svg())
+                          stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                          fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.append(icon)
 
         if message == MESSAGE_EMPTY_JOURNAL:
@@ -387,7 +385,7 @@ class BaseListView(gtk.Bin):
         text = hippo.CanvasText(text=text,
                 xalign=hippo.ALIGNMENT_CENTER,
                 font_desc=style.FONT_BOLD.get_pango_desc(),
-                color = style.COLOR_BUTTON_GREY.get_int())
+                color=style.COLOR_BUTTON_GREY.get_int())
         box.append(text)
 
         if message == MESSAGE_NO_MATCH:
@@ -468,9 +466,8 @@ class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
-                           ([object]))
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([object])),
     }
 
     def __init__(self):
@@ -579,8 +576,7 @@ class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererActivityIcon'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([str])),
     }
 

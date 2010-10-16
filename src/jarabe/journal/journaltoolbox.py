@@ -74,9 +74,8 @@ class SearchToolbar(gtk.Toolbar):
     __gtype_name__ = 'SearchToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([object]))
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object])),
         }
 
     def __init__(self):
@@ -369,9 +368,8 @@ class DetailToolbox(Toolbox):
 
 class EntryToolbar(gtk.Toolbar):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST,
-                         gobject.TYPE_NONE,
-                         ([str, str]))
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
         }
 
     def __init__(self):

@@ -439,7 +439,7 @@ class SunflowerLayout(RingLayout):
             # removed to make room for the "active activity" icon.
             x = r * cos(phi) + (width - icon_size) / 2
             y = r * sin(phi) + (height - icon_size - \
-                                (style.GRID_CELL_SIZE / 2) ) / 2
+                                (style.GRID_CELL_SIZE / 2)) / 2
 
             # skip allocations outside the allocation box.
             # give up once we can't fit
@@ -489,9 +489,9 @@ class BoxLayout(RingLayout):
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: cos_d(math.degrees(r) - 90)
 
-        return RingLayout._calculate_position\
-               (self, radius, icon_size, index, children_count,
-                sin=sin, cos=cos)
+        return RingLayout._calculate_position(self, radius, icon_size, index,
+                                              children_count, sin=sin,
+                                              cos=cos)
 
 
 class TriangleLayout(RingLayout):
@@ -547,6 +547,6 @@ class TriangleLayout(RingLayout):
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: sin_d(math.degrees(r))
 
-        return RingLayout._calculate_position\
-               (self, radius, icon_size, index, children_count,
-                sin=sin, cos=cos)
+        return RingLayout._calculate_position(self, radius, icon_size, index,
+                                              children_count, sin=sin,
+                                              cos=cos)

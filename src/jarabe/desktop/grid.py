@@ -31,9 +31,8 @@ _MAX_COLLISIONS_PER_REFRESH = 20
 
 class Grid(_sugarext.Grid):
     __gsignals__ = {
-        'child-changed' : (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT]))
+        'child-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, width, height):

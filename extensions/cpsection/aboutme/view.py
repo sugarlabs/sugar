@@ -96,7 +96,7 @@ def _next_index(current_index):
 def _previous_index(current_index):
     previous_index = current_index - 1
     if previous_index < 0:
-        previous_index = len(colors)-1
+        previous_index = len(colors) - 1
     return previous_index
 
 
@@ -131,7 +131,7 @@ class ColorPicker(EventIcon):
     __gsignals__ = {
         'color-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([object]))
+                          ([object])),
         }
 
     def __init__(self, picker):
@@ -184,12 +184,12 @@ class AboutMe(SectionView):
         self._color_alert = None
 
         self._pickers = {
-                _PREVIOUS_FILL_COLOR: ColorPicker(_PREVIOUS_FILL_COLOR),
-                _NEXT_FILL_COLOR: ColorPicker(_NEXT_FILL_COLOR),
-                _CURRENT_COLOR: ColorPicker(_CURRENT_COLOR),
-                _NEXT_STROKE_COLOR: ColorPicker(_NEXT_STROKE_COLOR),
-                _PREVIOUS_STROKE_COLOR: ColorPicker(_PREVIOUS_STROKE_COLOR)
-                }
+            _PREVIOUS_FILL_COLOR: ColorPicker(_PREVIOUS_FILL_COLOR),
+            _NEXT_FILL_COLOR: ColorPicker(_NEXT_FILL_COLOR),
+            _CURRENT_COLOR: ColorPicker(_CURRENT_COLOR),
+            _NEXT_STROKE_COLOR: ColorPicker(_NEXT_STROKE_COLOR),
+            _PREVIOUS_STROKE_COLOR: ColorPicker(_PREVIOUS_STROKE_COLOR),
+        }
 
         self._setup_color()
         initial_color = XoColor(self._model.get_color_xo())

@@ -25,10 +25,8 @@ _MAX_DELAY = 1000
 
 class EventArea(gobject.GObject):
     __gsignals__ = {
-        'enter': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE, ([])),
-        'leave': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE, ([]))
+        'enter': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'leave': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):
@@ -42,7 +40,7 @@ class EventArea(gobject.GObject):
         self._corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
 
         right = gtk.gdk.screen_width() - 1
-        bottom = gtk.gdk.screen_height() -1
+        bottom = gtk.gdk.screen_height() - 1
         width = gtk.gdk.screen_width() - 2
         height = gtk.gdk.screen_height() - 2
 

@@ -45,7 +45,7 @@ def create_profile(name, color=None, pixbuf=None):
         color = XoColor()
 
     icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-    pixbuf.save(icon_path, "jpeg", {"quality":"85"})
+    pixbuf.save(icon_path, "jpeg", {"quality": "85"})
 
     client = gconf.client_get_default()
     client.set_string("/desktop/sugar/user/nick", name)
@@ -65,8 +65,7 @@ def create_profile(name, color=None, pixbuf=None):
 
 class _Page(hippo.CanvasBox):
     __gproperties__ = {
-        'valid'    : (bool, None, None, False,
-                      gobject.PARAM_READABLE)
+        'valid': (bool, None, None, False, gobject.PARAM_READABLE),
     }
 
     def __init__(self, **kwargs):
@@ -147,7 +146,7 @@ class _ColorPage(_Page):
 class _IntroBox(hippo.CanvasBox):
     __gsignals__ = {
         'done': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
     PAGE_NAME = 0
