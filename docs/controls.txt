@@ -52,7 +52,7 @@ sugar.ToolButton (support for rollovers)
 * There is no palette but a tooltip.
 * Normal: Button grey rounded filled rectangle
 * Inactive: Button grey rounded stroked rectangle
-    
+
 sugar.ToggleIconButton
 
 * Toggled should be like Pressed
@@ -184,10 +184,10 @@ Palettes in ToolIconButton, IconButton
 * The popup will have a setPrimaryState(label, accelerator) method. For action buttons would be a MenuItem, for the others would only be a Label.
 * The primary state should already have the same width as the secondary state and the expandable areas.
 * Primary states appear and disappear automatically (with a short delay). A click outside makes it disappear instantly.
-* Secondary states appear after a delay, or with a single click on the icon. 
+* Secondary states appear after a delay, or with a single click on the icon.
 * Secondary disappears with the esc key, clicking outside the popup or clicking on a button inside.
 
-Toolbox    
+Toolbox
 * When an activity opens, the activity tab should be opened and the focus on the activity title.
 * We must provide an activity tab in the toolbox and would be good to also provide an standard Edit tab.
 

@@ -1,4 +1,4 @@
-''' This is the release process of the sugar tarballs sugar(shell), 
+''' This is the release process of the sugar tarballs sugar(shell),
 sugar-toolkit and sugar-base described in a pytish way and
 instructions for sugar packagers
 '''
@@ -10,9 +10,9 @@ for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
     Pull the latest sources.
     Increase the version number in configure.ac
     # this will create you a tarball and does a check if it builds fine
-    # e.g. it will check if all the files containing translations are 
+    # e.g. it will check if all the files containing translations are
     # in po/POTFILES.in
-    make distcheck 
+    make distcheck
 
     if that succeed:
         # commit the change, log it as "Release [version_number]" (e.g. 0.79.1)
@@ -26,7 +26,7 @@ for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
         break
 
     # Upload the package
-    Upload the tarball to 
+    Upload the tarball to
         shell.sugarlabs.org:/pub/sugarlabs/sources/sucrose/glucose/$name/$name-$version
 
     # Verify the upload of the package
@@ -34,16 +34,16 @@ for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
         http://download.sugarlabs.org/sources/sucrose/glucose/$name/$name-$version
 
 # Package sugar for Fedora
-# - For announcements of the Sucrose release subscribe at the sugar-devel 
+# - For announcements of the Sucrose release subscribe at the sugar-devel
 #   mailing list; you can filter for the [ANNOUNCE] tag
-# - Uploaded tarballs can be found at: 
+# - Uploaded tarballs can be found at:
 #   glucose: http://download.sugarlabs.org/sources/sucrose/glucose/$name/$name-$version
 #   fructose: http://download.sugarlabs.org/sources/sucrose/fructose/$name/$name-$version
 #   more about the taxonomy: http://sugarlabs.org/go/Taxonomy
-	
-# more info on fedora packaging: 
+
+# more info on fedora packaging:
 #     http://fedoraproject.org/wiki/PackageMaintainers/UpdatingPackageHowTo
-# request permissions to contribute to the fedora package: 
+# request permissions to contribute to the fedora package:
 #     https://admin.fedoraproject.org/pkgdb/packages/name/[package]
 
 if not cvs_package:
@@ -70,4 +70,4 @@ cvs commit -F clog
 make tag
 make build
 
-# Do the same for the other branches e.g. devel 
+# Do the same for the other branches e.g. devel

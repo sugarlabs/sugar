@@ -33,8 +33,8 @@ class Network(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
-        self._model = model     
-        self.restart_alerts = alerts           
+        self._model = model
+        self.restart_alerts = alerts
         self._jabber_sid = 0
         self._jabber_valid = True
         self._radio_valid = True
@@ -64,7 +64,7 @@ class Network(SectionView):
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = gtk.Label(_("Turn off the wireless radio to save " 
+        radio_info = gtk.Label(_("Turn off the wireless radio to save "
                                  "battery life"))
         radio_info.set_alignment(0, 0)
         radio_info.set_line_wrap(True)
@@ -93,7 +93,7 @@ class Network(SectionView):
             self._radio_alert.props.msg = self.restart_msg
             self._radio_alert.show()
 
-        history_info = gtk.Label(_("Discard network history if you " 
+        history_info = gtk.Label(_("Discard network history if you "
                                    "have trouble connecting to the network"))
         history_info.set_alignment(0, 0)
         history_info.set_line_wrap(True)
@@ -135,24 +135,24 @@ class Network(SectionView):
         box_server = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_server = gtk.Label(_('Server:'))
         label_server.set_alignment(1, 0.5)
-        label_server.modify_fg(gtk.STATE_NORMAL, 
+        label_server.modify_fg(gtk.STATE_NORMAL,
                                style.COLOR_SELECTION_GREY.get_gdk_color())
         box_server.pack_start(label_server, expand=False)
         group.add_widget(label_server)
-        label_server.show()        
+        label_server.show()
         self._entry = gtk.Entry()
         self._entry.set_alignment(0)
-        self._entry.modify_bg(gtk.STATE_INSENSITIVE, 
+        self._entry.modify_bg(gtk.STATE_INSENSITIVE,
                         style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(gtk.STATE_INSENSITIVE, 
-                          style.COLOR_WHITE.get_gdk_color())          
+        self._entry.modify_base(gtk.STATE_INSENSITIVE,
+                          style.COLOR_WHITE.get_gdk_color())
         self._entry.set_size_request(int(gtk.gdk.screen_width() / 3), -1)
         box_server.pack_start(self._entry, expand=False)
-        self._entry.show()      
+        self._entry.show()
         box_mesh.pack_start(box_server, expand=False)
         box_server.show()
-        
-        self._jabber_alert = InlineAlert()        
+
+        self._jabber_alert = InlineAlert()
         label_jabber_error = gtk.Label()
         group.add_widget(label_jabber_error)
         self._jabber_alert_box.pack_start(label_jabber_error, expand=False)
@@ -176,13 +176,13 @@ class Network(SectionView):
         self.setup()
 
     def setup(self):
-        self._entry.set_text(self._model.get_jabber())        
-        try:                        
-            radio_state = self._model.get_radio()        
+        self._entry.set_text(self._model.get_jabber())
+        try:
+            radio_state = self._model.get_radio()
         except self._model.ReadError, detail:
-            self._radio_alert.props.msg = detail                    
+            self._radio_alert.props.msg = detail
             self._radio_alert.show()
-        else:    
+        else:
             self._button.set_active(radio_state)
 
         self._jabber_valid = True
@@ -195,13 +195,13 @@ class Network(SectionView):
         self._network_configuration_reset_handler =  \
                 self._clear_history_button.connect( \
                         'clicked', self.__network_configuration_reset_cb)
-        
+
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
         self._entry.disconnect(self._jabber_change_handler)
         self._model.undo()
         self._jabber_alert.hide()
-        self._radio_alert.hide()        
+        self._radio_alert.hide()
 
     def _validate(self):
         if self._jabber_valid and self._radio_valid:
@@ -209,7 +209,7 @@ class Network(SectionView):
         else:
             self.props.is_valid = False
 
-    def __radio_toggled_cb(self, widget, data=None): 
+    def __radio_toggled_cb(self, widget, data=None):
         radio_state = widget.get_active()
         try:
             self._model.set_radio(radio_state)
@@ -217,18 +217,18 @@ class Network(SectionView):
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:
-            self._radio_valid = True            
+            self._radio_valid = True
 
         self._validate()
         return False
 
-    def __jabber_changed_cb(self, widget, data=None):        
+    def __jabber_changed_cb(self, widget, data=None):
         if self._jabber_sid:
             gobject.source_remove(self._jabber_sid)
-        self._jabber_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+        self._jabber_sid = gobject.timeout_add(_APPLY_TIMEOUT,
                                                self.__jabber_timeout_cb, widget)
-                
-    def __jabber_timeout_cb(self, widget):        
+
+    def __jabber_timeout_cb(self, widget):
         self._jabber_sid = 0
         if widget.get_text() == self._model.get_jabber:
             return
@@ -240,7 +240,7 @@ class Network(SectionView):
             self._jabber_alert.show()
             self.restart_alerts.append('jabber')
         else:
-            self._jabber_valid = True            
+            self._jabber_valid = True
             self._jabber_alert.hide()
 
         self._validate()

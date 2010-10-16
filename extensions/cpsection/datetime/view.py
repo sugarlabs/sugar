@@ -30,7 +30,7 @@ class TimeZone(SectionView):
 
         self._model = model
         self.restart_alerts = alerts
-        self._zone_sid = 0        
+        self._zone_sid = 0
         self._cursor_change_handler = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
@@ -42,18 +42,18 @@ class TimeZone(SectionView):
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                  'system-search')
         self._entry.add_clear_button()
-        self._entry.modify_bg(gtk.STATE_INSENSITIVE, 
+        self._entry.modify_bg(gtk.STATE_INSENSITIVE,
                         style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(gtk.STATE_INSENSITIVE, 
-                          style.COLOR_WHITE.get_gdk_color())          
+        self._entry.modify_base(gtk.STATE_INSENSITIVE,
+                          style.COLOR_WHITE.get_gdk_color())
         self.pack_start(self._entry, False)
-        self._entry.show()        
+        self._entry.show()
 
         self._scrolled_window = gtk.ScrolledWindow()
         self._scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self._scrolled_window.set_shadow_type(gtk.SHADOW_IN)
 
-        self._store = gtk.ListStore(gobject.TYPE_STRING)        
+        self._store = gtk.ListStore(gobject.TYPE_STRING)
         zones = model.read_all_timezones()
         for zone in zones:
             self._store.append([zone])
@@ -91,16 +91,16 @@ class TimeZone(SectionView):
         zone = self._model.get_timezone()
         for row in self._store:
             if zone == row[0]:
-                self._treeview.set_cursor(row.path, self._timezone_column, 
+                self._treeview.set_cursor(row.path, self._timezone_column,
                                           False)
-                self._treeview.scroll_to_cell(row.path, self._timezone_column, 
-                                              True, 0.5, 0.5)                
+                self._treeview.scroll_to_cell(row.path, self._timezone_column,
+                                              True, 0.5, 0.5)
                 break
-        
-        self.needs_restart = False  
+
+        self.needs_restart = False
         self._cursor_change_handler = self._treeview.connect( \
                 "cursor-changed", self.__zone_changed_cd)
-    
+
     def undo(self):
         self._treeview.disconnect(self._cursor_change_handler)
         self._model.undo()
@@ -121,18 +121,18 @@ class TimeZone(SectionView):
             return False
         if self._model.get_timezone() == self._store.get_value(row, 0):
             return False
-        
+
         if self._zone_sid:
             gobject.source_remove(self._zone_sid)
-        self._zone_sid = gobject.timeout_add(self._APPLY_TIMEOUT, 
+        self._zone_sid = gobject.timeout_add(self._APPLY_TIMEOUT,
                                              self.__zone_timeout_cb, row)
         return True
 
-    def __zone_timeout_cb(self, row):        
-        self._zone_sid = 0        
+    def __zone_timeout_cb(self, row):
+        self._zone_sid = 0
         self._model.set_timezone(self._store.get_value(row, 0))
         self.restart_alerts.append('zone')
-        self.needs_restart = True        
+        self.needs_restart = True
         self._zone_alert.props.msg = self.restart_msg
         self._zone_alert.show()
         return False

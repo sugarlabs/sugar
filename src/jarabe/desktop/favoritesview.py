@@ -386,7 +386,7 @@ class ActivityIcon(CanvasIcon):
                 break
 
     def _get_last_activity_async(self, bundle_id, properties):
-        query = {'activity': bundle_id} 
+        query = {'activity': bundle_id}
         datastore.find(query, sorting=['+timestamp'],
                        limit=self._MAX_RESUME_ENTRIES,
                        properties=properties,

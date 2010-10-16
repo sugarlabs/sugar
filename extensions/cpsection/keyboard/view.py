@@ -129,7 +129,7 @@ class LayoutCombo(gtk.HBox):
         model = combobox.get_model()
         lang = model.get(it, 0)[0]
         self._set_kvariant_store(lang)
-    
+
     def _kvariant_combo_changed_cb(self, combobox):
         it = combobox.get_active_iter()
         model = combobox.get_model()
@@ -145,16 +145,16 @@ class Keyboard(SectionView):
 
         self._kmodel = None
         self._selected_kmodel = None
-        
+
         self._klayouts = []
         self._selected_klayouts = []
-        
+
         self._group_switch_option = None
         self._selected_group_switch_option = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        
+
         self._layout_table = gtk.Table(rows = 4, columns = 2, \
                                                 homogeneous = False)
 
@@ -169,7 +169,7 @@ class Keyboard(SectionView):
 
         self._vbox = gtk.VBox()
         scrollwindow.add_with_viewport(self._vbox)
-        
+
         self.__kmodel_sid = None
         self.__layout_sid = None
         self.__group_switch_sid = None
@@ -177,7 +177,7 @@ class Keyboard(SectionView):
         self._setup_kmodel()
         self._setup_layouts()
         self._setup_group_switch_option()
-        
+
         self._vbox.show()
 
     def _setup_kmodel(self):
@@ -223,7 +223,7 @@ class Keyboard(SectionView):
     def __kmodel_changed_cb(self, combobox):
         if self.__kmodel_sid is not None:
             gobject.source_remove(self.__kmodel_sid)
-        self.__kmodel_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+        self.__kmodel_sid = gobject.timeout_add(_APPLY_TIMEOUT,
             self.__kmodel_timeout_cb, combobox)
 
     def __kmodel_timeout_cb(self, combobox):
@@ -290,7 +290,7 @@ class Keyboard(SectionView):
     def __group_switch_changed_cb(self, combobox):
         if self.__group_switch_sid is not None:
             gobject.source_remove(self.__group_switch_sid)
-        self.__group_switch_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+        self.__group_switch_sid = gobject.timeout_add(_APPLY_TIMEOUT,
             self.__group_switch_timeout_cb, combobox)
 
     def __group_switch_timeout_cb(self, combobox):
@@ -335,7 +335,7 @@ class Keyboard(SectionView):
             if i < len(self._klayouts):
                 layout_combo.show_all()
                 layout_combo.select_layout(self._klayouts[i])
-        
+
         self._vbox.pack_start(self._layout_table, expand=False)
         self._layout_table.set_size_request(self._vbox.size_request()[0], -1)
         self._layout_table.show()
@@ -387,7 +387,7 @@ class Keyboard(SectionView):
     def __add_button_clicked_cb(self, button):
         self._layout_combo_list[len(self._selected_klayouts)].show_all()
         self._update_klayouts()
-    
+
     def __remove_button_clicked_cb(self, button):
         self._layout_combo_list[len(self._selected_klayouts) - 1].hide()
         self._update_klayouts()
@@ -403,7 +403,7 @@ class Keyboard(SectionView):
 
         if self.__layout_sid is not None:
             gobject.source_remove(self.__layout_sid)
-        self.__layout_sid = gobject.timeout_add(_APPLY_TIMEOUT, 
+        self.__layout_sid = gobject.timeout_add(_APPLY_TIMEOUT,
             self.__layout_timeout_cb)
 
     def __layout_timeout_cb(self):

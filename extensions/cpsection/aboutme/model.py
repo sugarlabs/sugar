@@ -27,14 +27,14 @@ _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
            }
 
 _MODIFIERS = ('dark', 'medium', 'light')
-        
+
 def get_nick():
     client = gconf.client_get_default()
     return client.get_string("/desktop/sugar/user/nick")
 
 def print_nick():
     print get_nick()
-    
+
 def set_nick(nick):
     """Set the nickname.
     nick : e.g. 'walter'
@@ -64,16 +64,16 @@ def print_color():
             if _COLORS[color][hue] == tmp[1]:
                 fill_tuple = (color, hue)
 
-    if stroke_tuple is not None:            
-        print _('stroke:   color=%s hue=%s') % (stroke_tuple[0], 
+    if stroke_tuple is not None:
+        print _('stroke:   color=%s hue=%s') % (stroke_tuple[0],
                                                 stroke_tuple[1])
     else:
-        print _('stroke:   %s') % (tmp[0])        
-    if fill_tuple is not None:    
+        print _('stroke:   %s') % (tmp[0])
+    if fill_tuple is not None:
         print _('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
     else:
         print _('fill:     %s') % (tmp[1])
-        
+
 def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     """Set the system color by setting a fill and stroke color.
     fill : [red, orange, yellow, blue, green, purple]
@@ -81,20 +81,20 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     hue stroke : [dark, medium, light] (optional)
     hue fill : [dark, medium, light] (optional)
     """
-    
+
     if stroke_modifier not in _MODIFIERS or fill_modifier not in _MODIFIERS:
         print (_("Error in specified color modifiers."))
         return
     if stroke not in _COLORS or fill not in _COLORS:
         print (_("Error in specified colors."))
         return
-    
+
     if stroke_modifier == fill_modifier:
         if fill_modifier == 'medium':
             fill_modifier = 'light'
         else:
             fill_modifier = 'medium'
-            
+
     color = _COLORS[stroke][stroke_modifier] + ',' \
             + _COLORS[fill][fill_modifier]
 
@@ -107,7 +107,7 @@ def get_color_xo():
     return client.get_string("/desktop/sugar/user/color")
 
 def set_color_xo(color):
-    """Set a color with an XoColor 
+    """Set a color with an XoColor
     This method is used by the graphical user interface
     """
     client = gconf.client_get_default()

@@ -40,7 +40,7 @@ def get_serial_number():
     if serial_no is None:
         serial_no = _not_available
     return serial_no
-    
+
 def print_serial_number():
     serial_no = get_serial_number()
     if serial_no is None:
@@ -71,7 +71,7 @@ def get_build_number():
 def print_build_number():
     print get_build_number()
 
-def get_firmware_number():    
+def get_firmware_number():
     firmware_no = _read_file('/ofw/openprom/model')
     if firmware_no is None:
         firmware_no = _not_available
@@ -79,9 +79,9 @@ def get_firmware_number():
         firmware_no = re.split(" +", firmware_no)
         if len(firmware_no) == 3:
             firmware_no = firmware_no[1]
-    return firmware_no        
+    return firmware_no
 
-def print_firmware_number():    
+def print_firmware_number():
     print get_firmware_number()
 
 def get_wireless_firmware():

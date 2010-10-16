@@ -53,7 +53,7 @@ class EntryWithLabel(gtk.HBox):
     def __entry_changed_cb(self, widget, data=None):
         if self._timeout_sid:
             gobject.source_remove(self._timeout_sid)
-        self._timeout_sid = gobject.timeout_add(APPLY_TIMEOUT, 
+        self._timeout_sid = gobject.timeout_add(APPLY_TIMEOUT,
                                                 self.__timeout_cb)
 
     def __timeout_cb(self):
@@ -63,7 +63,7 @@ class EntryWithLabel(gtk.HBox):
             return False
 
         try:
-            self.set_value(self._entry.get_text()) 
+            self.set_value(self._entry.get_text())
         except ValueError:
             self._is_valid = False
         else:
@@ -74,13 +74,13 @@ class EntryWithLabel(gtk.HBox):
         return False
 
     def set_text_from_model(self):
-        self._entry.set_text(self.get_value()) 
+        self._entry.set_text(self.get_value())
 
     def get_value(self):
         raise NotImplementedError
 
     def set_value(self):
-        raise NotImplementedError    
+        raise NotImplementedError
 
     def _get_is_valid(self):
         return self._is_valid
@@ -209,12 +209,12 @@ class ModemConfiguration(SectionView):
         self._group.add_widget(self._pin_entry.label)
         self.pack_start(self._pin_entry, expand=False)
         self._pin_entry.show()
-        
+
         self._puk_entry = PukEntry(model)
         self._puk_entry.connect('notify::is-valid',
                                 self.__notify_is_valid_cb)
         self._group.add_widget(self._puk_entry.label)
-        self.pack_start(self._puk_entry, expand=False)        
+        self.pack_start(self._puk_entry, expand=False)
         self._puk_entry.show()
 
         self.setup()

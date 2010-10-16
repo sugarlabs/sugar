@@ -471,14 +471,14 @@ class SecretsGsm(object):
         self.password = None
         self.pin = None
         self.puk = None
-        
+
     def get_dict(self):
         secrets = {}
         if self.password is not None:
             secrets['password'] = self.password
         if self.pin is not None:
             secrets['pin'] = self.pin
-        if self.puk is not None:    
+        if self.puk is not None:
             secrets['puk'] = self.puk
         return {'gsm': secrets}
 
@@ -870,10 +870,10 @@ def load_gsm_connection():
 
     if username and number and apn:
         settings = SettingsGsm()
-        settings.gsm.username = username 
+        settings.gsm.username = username
         settings.gsm.number = number
         settings.gsm.apn = apn
-        
+
         secrets = SecretsGsm()
         secrets.pin = pin
         secrets.puk = puk

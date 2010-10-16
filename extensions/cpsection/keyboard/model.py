@@ -33,7 +33,7 @@ class KeyboardManager(object):
         self._configregistry.load(False)
         self._configrec = xklavier.ConfigRec()
         self._configrec.get_from_server(self._engine)
-	
+
         self._gconf_client = gconf.client_get_default()
 
     def _populate_one(self, config_registry, item, store):
@@ -48,7 +48,7 @@ class KeyboardManager(object):
         else:
             description = 'Default layout, %s' % item.get_description()
             variant = ''
-        
+
         store.append([description, ('%s(%s)' % (layout, variant))])
 
     def get_models(self):
@@ -96,7 +96,7 @@ class KeyboardManager(object):
         layouts = self._gconf_client.get_list(_LAYOUTS_KEY, gconf.VALUE_STRING)
         if layouts:
             return layouts
-        
+
         layouts = self._configrec.get_layouts()
         variants = self._configrec.get_variants()
 
@@ -126,7 +126,7 @@ class KeyboardManager(object):
                 return option
 
         return None
-    
+
     def get_max_layouts(self):
         """Return the maximum number of layouts supported simultaneously"""
         return self._engine.get_max_num_groups()
@@ -162,8 +162,8 @@ class KeyboardManager(object):
         for layout in layouts:
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
-            
+
         self._configrec.set_layouts(layouts_list)
         self._configrec.set_variants(variants_list)
-        self._configrec.activate(self._engine)        
-        
+        self._configrec.activate(self._engine)
+

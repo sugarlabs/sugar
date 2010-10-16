@@ -36,7 +36,7 @@ default_dimensions = (800, 600)
 def _run_xephyr(display, dpi, dimensions, fullscreen):
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)
-    cmd.append('-ac') 
+    cmd.append('-ac')
     cmd += ['-title', _('Sugar in a window')]
 
     screen_size = (gtk.gdk.screen_width(), gtk.gdk.screen_height())

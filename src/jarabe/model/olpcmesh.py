@@ -119,7 +119,7 @@ class OlpcMeshManager(object):
     def __eth_device_state_changed_cb(self, new_state, old_state, reason):
         """If a connection is activated on the eth device, stop trying our
         automatic connections.
-        
+
         """
         self._eth_device_state = new_state
         self._maybe_schedule_idle_check()

@@ -32,10 +32,10 @@ def _initialize():
         # when running under 'python -OO', all __doc__ fields are None,
         # so += would fail -- and this function would be unnecessary anyway.
         return
-    timezones = read_all_timezones()    
+    timezones = read_all_timezones()
     for timezone in timezones:
-        set_timezone.__doc__ += timezone + '\n'                        
-                
+        set_timezone.__doc__ += timezone + '\n'
+
 def read_all_timezones(fn=_zone_tab):
     fd = open (fn, 'r')
     lines = fd.readlines()
@@ -48,7 +48,7 @@ def read_all_timezones(fn=_zone_tab):
         if len(line) > 1:
             timezones.append(line[2])
     timezones.sort()
-   
+
     for offset in xrange(-12, 13):
         if offset < 0:
             tz = 'GMT%d' % offset
@@ -56,7 +56,7 @@ def read_all_timezones(fn=_zone_tab):
             tz = 'GMT+%d' % offset
         else:
             tz = 'GMT'
-        timezones.append(tz)    
+        timezones.append(tz)
     for offset in xrange(-12, 13):
         if offset < 0:
             tz = 'UTC%d' % offset
@@ -64,7 +64,7 @@ def read_all_timezones(fn=_zone_tab):
             tz = 'UTC+%d' % offset
         else:
             tz = 'UTC'
-        timezones.append(tz)    
+        timezones.append(tz)
     return timezones
 
 def get_timezone():
@@ -87,6 +87,6 @@ def set_timezone(timezone):
         raise ValueError(_("Error timezone does not exist."))
     return 1
 
-# inilialize the docstrings for the timezone 
+# inilialize the docstrings for the timezone
 _initialize()
 

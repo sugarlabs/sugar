@@ -264,7 +264,7 @@ class _Downloader(gobject.GObject):
         except:
             self.emit('error', traceback.format_exc())
             return
-            
+
         temp_file_path = self._get_temp_file_path(self.bundle_update.link)
         self._output_file = gio.File(temp_file_path)
         self._output_stream = self._output_file.create()

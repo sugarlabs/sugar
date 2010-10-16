@@ -68,7 +68,7 @@ class AboutComputer(SectionView):
         box_identity = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_serial = gtk.Label(_('Serial Number:'))
         label_serial.set_alignment(1, 0)
-        label_serial.modify_fg(gtk.STATE_NORMAL, 
+        label_serial.modify_fg(gtk.STATE_NORMAL,
                                style.COLOR_SELECTION_GREY.get_gdk_color())
         box_identity.pack_start(label_serial, expand=False)
         self._group.add_widget(label_serial)
@@ -83,7 +83,7 @@ class AboutComputer(SectionView):
         self._vbox.pack_start(vbox_identity, expand=False)
         vbox_identity.show()
 
-    def _setup_software(self):   
+    def _setup_software(self):
         separator_software = gtk.HSeparator()
         self._vbox.pack_start(separator_software, expand=False)
         separator_software.show()
@@ -99,7 +99,7 @@ class AboutComputer(SectionView):
         box_build = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_build = gtk.Label(_('Build:'))
         label_build.set_alignment(1, 0)
-        label_build.modify_fg(gtk.STATE_NORMAL, 
+        label_build.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         box_build.pack_start(label_build, expand=False)
         self._group.add_widget(label_build)
@@ -130,7 +130,7 @@ class AboutComputer(SectionView):
             box_firmware = gtk.HBox(spacing=style.DEFAULT_SPACING)
             label_firmware = gtk.Label(_('Firmware:'))
             label_firmware.set_alignment(1, 0)
-            label_firmware.modify_fg(gtk.STATE_NORMAL, 
+            label_firmware.modify_fg(gtk.STATE_NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())
             box_firmware.pack_start(label_firmware, expand=False)
             self._group.add_widget(label_firmware)

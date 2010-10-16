@@ -302,7 +302,7 @@ class GsmPalette(Palette):
             icon = Icon(icon_name='media-eject', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
-            
+
         elif self._current_state == _GSM_STATE_FAILED:
             message_error = self._get_error_by_nm_reason(reason)
             self.add_alert(message_error[0], message_error[1])
@@ -406,9 +406,9 @@ class WirelessDeviceView(ToolButton):
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
-        self._device_props = dbus.Interface(self._device, 
+        self._device_props = dbus.Interface(self._device,
                                             'org.freedesktop.DBus.Properties')
-        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True, 
+        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
                               reply_handler=self.__get_device_props_reply_cb,
                               error_handler=self.__get_device_props_error_cb)
 
@@ -497,7 +497,7 @@ class WirelessDeviceView(ToolButton):
                 digest = hash(sha_hash.digest())
                 index = digest % len(xocolor.colors)
 
-                self._color = xocolor.XoColor('%s,%s' % 
+                self._color = xocolor.XoColor('%s,%s' %
                                               (xocolor.colors[index][0],
                                                xocolor.colors[index][1]))
         self._update()

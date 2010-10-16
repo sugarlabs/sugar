@@ -74,7 +74,7 @@ def set_automatic_pm(enabled):
     bus = dbus.SystemBus()
     proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
     keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
-    
+
     if enabled == 'on' or enabled == 1:
         keystore.SetKey("suspend.automatic_pm", 1)
         enabled = True
@@ -97,11 +97,11 @@ def print_extreme_pm():
 
 def set_extreme_pm(enabled):
     """Extreme power management on/off."""
-    
+
     bus = dbus.SystemBus()
     proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
     keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
-    
+
     if enabled == 'on' or enabled == 1:
         keystore.SetKey("suspend.extreme_pm", 1)
         enabled = True

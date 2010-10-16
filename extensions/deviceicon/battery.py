@@ -47,7 +47,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, udi):
-        client = gconf.client_get_default()        
+        client = gconf.client_get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
@@ -105,7 +105,7 @@ class BatteryPalette(Palette):
 
     def __init__(self, primary_text):
         Palette.__init__(self, primary_text)
-            
+
         self._level = 0
         self._progress_bar = gtk.ProgressBar()
         self._progress_bar.set_size_request(
@@ -169,7 +169,7 @@ class DeviceModel(gobject.GObject):
 
     def __init__(self, udi):
         gobject.GObject.__init__(self)
-        
+
         bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)
         proxy = bus.get_object('org.freedesktop.Hal', udi,
                                follow_name_owner_changes=True)
@@ -215,7 +215,7 @@ class DeviceModel(gobject.GObject):
 
     def do_get_property(self, pspec):
         if pspec.name == 'level':
-            return self._level 
+            return self._level
         if pspec.name == 'charging':
             return self._charging
         if pspec.name == 'discharging':

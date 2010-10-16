@@ -63,11 +63,11 @@ def get_radio():
 
 def print_radio():
     print ('off', 'on')[get_radio()]
-    
+
 def set_radio(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
-    """    
+    """
     if state == 'on' or state == 1:
         try:
             bus = dbus.SystemBus()
@@ -105,12 +105,12 @@ def get_publish_information():
     client = gconf.client_get_default()
     publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
     return publish
-	
+
 def print_publish_information():
     print get_publish_information()
 
 def set_publish_information(value):
-    """ If set to true, Sugar will make you searchable for 
+    """ If set to true, Sugar will make you searchable for
     the other users of the Jabber server.
     value: 0/1
     """

@@ -145,7 +145,7 @@ class ActivityUpdater(SectionView):
             top_message = gobject.markup_escape_text(top_message)
 
         self._top_label.set_markup('<big>%s</big>' % top_message)
-        
+
         if not available_updates:
             self._clear_center()
         else:
@@ -176,7 +176,7 @@ class ActivityUpdater(SectionView):
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._clear_center()
 
-    def undo(self):        
+    def undo(self):
         self._model.cancel()
 
 class ProgressPane(gtk.VBox):

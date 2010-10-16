@@ -37,7 +37,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = gconf.client_get_default()        
+        client = gconf.client_get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)

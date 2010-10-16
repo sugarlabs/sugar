@@ -153,7 +153,7 @@ def fetch_update_info(bundle, completion_cb):
 
        completion_cb receives bundle, version, link, size and possibly an error
        message:
-       
+
        def completion_cb(bundle, version, link, size, error_message):
     '''
     global _fetcher

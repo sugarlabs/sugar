@@ -43,7 +43,7 @@ def read_all_languages():
             if locale.endswith('utf8') and len(lang):
                 locales.append((lang, territory, locale))
 
-    #FIXME: This is a temporary workaround for locales that are essential to 
+    #FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
     locales.append(('Kreyol', 'Haiti', 'ht_HT.utf8'))
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
@@ -52,7 +52,7 @@ def read_all_languages():
     locales.sort()
     return locales
 
-def _initialize():      
+def _initialize():
     if set_languages.__doc__ is None:
         # when running under 'python -OO', all __doc__ fields are None,
         # so += would fail -- and this function would be unnecessary anyway.
@@ -60,9 +60,9 @@ def _initialize():
     languages = read_all_languages()
     set_languages.__doc__ += '\n'
     for lang in languages:
-        set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' + 
+        set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' +
                                            lang[1].replace(' ', '_'))
-        
+
 def _write_i18n(langs):
     colon = ':'
     langstr = colon.join(langs)
@@ -82,13 +82,13 @@ def _write_i18n(langs):
 def get_languages():
     path = os.path.join(os.environ.get("HOME"), '.i18n')
     if not os.access(path, os.R_OK):
-        print _standard_msg 
+        print _standard_msg
         fd = open(path, 'w')
         fd.write('LANG="%s"\n' % _default_lang)
         fd.write('LANGUAGE="%s"\n' % _default_lang)
         fd.close()
         return [_default_lang]
-    
+
     fd = open(path, "r")
     lines = fd.readlines()
     fd.close()
@@ -123,10 +123,10 @@ def print_languages():
                 break
         if not found_lang:
             print (_("Language for code=%s could not be determined.") % code)
-    
+
 def set_languages(languages):
     """Set the system language.
-    languages : 
+    languages :
     """
     if isinstance(languages, str):
         # This came from the commandline
@@ -134,7 +134,7 @@ def set_languages(languages):
         if languages.endswith('utf8'):
             _write_i18n(languages)
             return 1
-        else:    
+        else:
             langs = read_all_languages()
             for lang, territory, locale in langs:
                 code = lang.replace(' ', '_') + '/' \

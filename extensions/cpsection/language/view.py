@@ -25,7 +25,7 @@ from sugar.graphics.icon import Icon
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
-_translate_language = lambda msg: gettext.dgettext('iso_639', msg) 
+_translate_language = lambda msg: gettext.dgettext('iso_639', msg)
 _translate_country = lambda msg: gettext.dgettext('iso_3166', msg)
 
 CLASS = 'Language'
@@ -69,14 +69,14 @@ class Language(SectionView):
         self.pack_start(scrolled, expand=True)
 
         self._table = gtk.Table(rows=1, columns=3, homogeneous=False)
-        self._table.set_border_width(style.DEFAULT_SPACING * 2)        
+        self._table.set_border_width(style.DEFAULT_SPACING * 2)
         self._table.show()
         scrolled.add_with_viewport(self._table)
 
         self._lang_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         self.pack_start(self._lang_alert_box, False)
 
-        self._lang_alert = InlineAlert()        
+        self._lang_alert = InlineAlert()
         self._lang_alert_box.pack_start(self._lang_alert)
         if 'lang' in self.restart_alerts:
             self._lang_alert.props.msg = self.restart_msg
@@ -89,7 +89,7 @@ class Language(SectionView):
         '''Adds a row to the table'''
 
         self._selected_lang_count += 1
-        
+
         self._table.resize(self._selected_lang_count, 3)
 
         label = gtk.Label(str=str(self._selected_lang_count))
@@ -98,8 +98,8 @@ class Language(SectionView):
         self._labels.append(label)
         self._attach_to_table(label, 0, 1, padding=1)
         label.show()
-        
-                
+
+
         store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         for language, country, code in self._available_locales:
             description = '%s (%s)' % (_translate_language(language), \
@@ -115,7 +115,7 @@ class Language(SectionView):
             for row in store:
                 lang = locale_code.split('.')[0]
                 lang_column = row[0].split('.')[0]
-                if lang in lang_column: 
+                if lang in lang_column:
                     combobox.set_active_iter(row.iter)
                     break
         else:
@@ -132,7 +132,7 @@ class Language(SectionView):
         self._attach_to_table(add_remove_box, 2, 3)
 
         add_remove_box.show_all()
-        
+
         if self._selected_lang_count > 1:
             previous_add_removes = self._add_remove_boxes[-2]
             previous_add_removes.hide_all()
@@ -154,7 +154,7 @@ class Language(SectionView):
         self._selected_lang_count -= 1
 
         label, add_remove_box, combobox, store_ = self._get_last_row()
-        
+
         label.destroy()
         add_remove_box.destroy()
         combobox.destroy()
@@ -218,7 +218,7 @@ class Language(SectionView):
         last_lang = selected_langs[-1]
 
         self._determine_add_remove_visibility(last_lang = last_lang)
-            
+
         self._changed = (selected_langs != self._selected_locales)
 
         if self._changed == False:
@@ -245,7 +245,7 @@ class Language(SectionView):
             model = combobox.get_model()
             lang_code = model.get(it, 0)[0]
             new_codes.append(lang_code)
-        
+
         return new_codes
 
     def _determine_add_remove_visibility(self, last_lang = None):
@@ -256,11 +256,11 @@ class Language(SectionView):
         if last_lang is None:
             selected_langs = self._get_selected_langs()
             last_lang = selected_langs[-1]
-            
+
         add_remove_box = self._add_remove_boxes[-1]
         buttons = add_remove_box.get_children()
         add_button, remove_button = buttons
-        
+
         if last_lang.startswith('en_US'):
             add_button.props.visible = False
         else:

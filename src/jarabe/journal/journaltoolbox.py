@@ -451,7 +451,7 @@ class EntryToolbar(gtk.Toolbar):
             model.copy(self._metadata, mount_point)
         except IOError, e:
             logging.exception('Error while copying the entry. %s', e.strerror)
-            self.emit('volume-error', 
+            self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
                       _('Error'))
 
