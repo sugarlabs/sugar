@@ -37,7 +37,8 @@ class EventArea(gobject.GObject):
         self._sids = {}
         client = gconf.client_get_default()
         self._edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
-        self._corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
+        self._corner_delay = client.get_int('/desktop/sugar/frame'
+                                            '/corner_delay')
 
         right = gtk.gdk.screen_width() - 1
         bottom = gtk.gdk.screen_height() - 1

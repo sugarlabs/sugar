@@ -49,8 +49,8 @@ class TreeView(gtk.TreeView):
         self.set_headers_visible(False)
 
     def do_size_request(self, requisition):
-        # HACK: We tell the model that the view is just resizing so it can avoid
-        # hitting both D-Bus and disk.
+        # HACK: We tell the model that the view is just resizing so it can
+        # avoid hitting both D-Bus and disk.
         tree_model = self.get_model()
         if tree_model is not None:
             tree_model.view_is_resizing = True
@@ -82,7 +82,8 @@ class BaseListView(gtk.Bin):
         self.connect('destroy', self.__destroy_cb)
 
         self._scrolled_window = gtk.ScrolledWindow()
-        self._scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self._scrolled_window.set_policy(gtk.POLICY_NEVER,
+                                         gtk.POLICY_AUTOMATIC)
         self.add(self._scrolled_window)
         self._scrolled_window.show()
 
@@ -142,7 +143,8 @@ class BaseListView(gtk.Bin):
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         column.props.fixed_width = self.cell_icon.props.width
         column.pack_start(self.cell_icon)
-        column.add_attribute(self.cell_icon, 'file-name', ListModel.COLUMN_ICON)
+        column.add_attribute(self.cell_icon, 'file-name',
+                             ListModel.COLUMN_ICON)
         column.add_attribute(self.cell_icon, 'xo-color',
                              ListModel.COLUMN_ICON_COLOR)
         self.tree_view.append_column(column)
@@ -164,7 +166,8 @@ class BaseListView(gtk.Bin):
         buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         self.tree_view.append_column(buddies_column)
 
-        for column_index in [ListModel.COLUMN_BUDDY_1, ListModel.COLUMN_BUDDY_2,
+        for column_index in [ListModel.COLUMN_BUDDY_1,
+                             ListModel.COLUMN_BUDDY_2,
                              ListModel.COLUMN_BUDDY_3]:
             cell_icon = CellRendererBuddy(self.tree_view,
                                           column_index=column_index)
@@ -198,7 +201,8 @@ class BaseListView(gtk.Bin):
         self.sort_column.props.resizable = True
         self.sort_column.props.clickable = True
         self.sort_column.pack_start(cell_text)
-        self.sort_column.add_attribute(cell_text, 'text', ListModel.COLUMN_TIMESTAMP)
+        self.sort_column.add_attribute(cell_text, 'text',
+                                       ListModel.COLUMN_TIMESTAMP)
         self.tree_view.append_column(self.sort_column)
 
     def _get_width_for_string(self, text):
@@ -322,12 +326,9 @@ class BaseListView(gtk.Bin):
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
         # a new search term is added.
-        if self._query.get('query', '') or self._query.get('mime_type', '') or \
-                self._query.get('keep', '') or self._query.get('mtime', '') or \
-                self._query.get('activity', ''):
-            return False
-        else:
-            return True
+        return not (self._query.get('query') or self._query.get('mime_type') or
+                    self._query.get('keep') or self._query.get('mtime') or
+                    self._query.get('activity'))
 
     def __model_progress_cb(self, tree_model):
         if self._progress_bar is None:
@@ -421,7 +422,7 @@ class BaseListView(gtk.Bin):
 
         while True:
             x, y, width, height = self.tree_view.get_cell_area(path,
-                                                               self.sort_column)
+                self.sort_column)
             x, y = self.tree_view.convert_tree_to_widget_coords(x, y)
             self.tree_view.queue_draw_area(x, y, width, height)
             if path == end_path:

@@ -77,8 +77,8 @@ class KeyboardManager(object):
     def get_options_group(self):
         """Return list of supported options for switching keyboard group"""
         options = []
-        self._configregistry.foreach_option(_GROUP_NAME, self._populate_one, \
-                                                                        options)
+        self._configregistry.foreach_option(_GROUP_NAME, self._populate_one,
+                                            options)
         options.sort()
         return options
 

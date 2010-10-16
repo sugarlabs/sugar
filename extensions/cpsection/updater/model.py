@@ -198,14 +198,17 @@ class UpdateModel(gobject.GObject):
         logging.debug('UpdateModel._cancel_checking')
         total = len(bundleregistry.get_registry())
         current = total - len(self._bundles_to_check)
-        self.emit('progress', UpdateModel.ACTION_CHECKING, '', current, current)
+        self.emit('progress', UpdateModel.ACTION_CHECKING, '', current,
+                  current)
         self._bundles_to_check = None
         self._cancelling = False
 
     def _cancel_updating(self):
         logging.debug('UpdateModel._cancel_updating')
-        current = self._total_bundles_to_update - len(self._bundles_to_update) - 1
-        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current, current)
+        current = (self._total_bundles_to_update -
+                   len(self._bundles_to_update) - 1)
+        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current,
+                  current)
 
         if self._downloader is not None:
             self._downloader.cancel()

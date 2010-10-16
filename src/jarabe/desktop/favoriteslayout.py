@@ -90,7 +90,8 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         if icon not in self.box.get_children():
             raise ValueError('Child not in box.')
 
-        if not(hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version')):
+        if not (hasattr(icon, 'get_bundle_id') and
+                hasattr(icon, 'get_version')):
             logging.debug('Not an activity icon %r', icon)
             return
 
@@ -242,13 +243,15 @@ class RingLayout(FavoritesLayout):
         self._spiral_mode = False
         distance = style.MEDIUM_ICON_SIZE + style.DEFAULT_SPACING * \
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.MEDIUM_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        radius = max(children_count * distance / (2 * math.pi),
+                     _MINIMUM_RADIUS)
         if radius < _MAXIMUM_RADIUS:
             return radius, style.MEDIUM_ICON_SIZE
 
         distance = style.STANDARD_ICON_SIZE + style.DEFAULT_SPACING * \
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.STANDARD_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        radius = max(children_count * distance / (2 * math.pi),
+                     _MINIMUM_RADIUS)
         if radius < _MAXIMUM_RADIUS:
             return radius, style.STANDARD_ICON_SIZE
 
@@ -266,8 +269,8 @@ class RingLayout(FavoritesLayout):
                 break
         return radius, icon_size
 
-    def _calculate_position(self, radius, icon_size, icon_index, children_count,
-                            sin=math.sin, cos=math.cos):
+    def _calculate_position(self, radius, icon_size, icon_index,
+                            children_count, sin=math.sin, cos=math.cos):
         """ Calculate an icon position on a circle or a spiral. """
         width, height = self.box.get_allocation()
         if self._spiral_mode:
@@ -408,7 +411,8 @@ class SunflowerLayout(RingLayout):
         return None, style.STANDARD_ICON_SIZE
 
     def adjust_index(self, i):
-        """Skip floret indices which end up outside the desired bounding box."""
+        """Skip floret indices which end up outside the desired bounding box.
+        """
         for idx in self.skipped_indices:
             if i < idx:
                 break

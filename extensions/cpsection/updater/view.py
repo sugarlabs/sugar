@@ -161,7 +161,8 @@ class ActivityUpdater(SectionView):
         self._model.check_updates()
 
     def __install_button_clicked_cb(self, button):
-        self._top_label.set_markup('<big>%s</big>' % _('Installing updates...'))
+        text = '<big>%s</big>' % _('Installing updates...')
+        self._top_label.set_markup(text)
         self._model.update(self._update_box.get_bundles_to_update())
 
     def __cancel_button_clicked_cb(self, button):

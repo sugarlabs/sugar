@@ -33,10 +33,14 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 TOUCHPAD_MODE_CAPACITIVE = 'capacitive'
 TOUCHPAD_MODE_RESISTIVE = 'resistive'
 TOUCHPAD_MODES = [TOUCHPAD_MODE_CAPACITIVE, TOUCHPAD_MODE_RESISTIVE]
-STATUS_TEXT = {TOUCHPAD_MODE_CAPACITIVE: _('finger'),
-               TOUCHPAD_MODE_RESISTIVE: _('stylus')}
-STATUS_ICON = {TOUCHPAD_MODE_CAPACITIVE: 'touchpad-' + TOUCHPAD_MODE_CAPACITIVE,
-               TOUCHPAD_MODE_RESISTIVE: 'touchpad-' + TOUCHPAD_MODE_RESISTIVE}
+STATUS_TEXT = {
+    TOUCHPAD_MODE_CAPACITIVE: _('finger'),
+    TOUCHPAD_MODE_RESISTIVE: _('stylus'),
+}
+STATUS_ICON = {
+    TOUCHPAD_MODE_CAPACITIVE: 'touchpad-' + TOUCHPAD_MODE_CAPACITIVE,
+    TOUCHPAD_MODE_RESISTIVE: 'touchpad-' + TOUCHPAD_MODE_RESISTIVE,
+}
 # NODE_PATH is used to communicate with the touchpad device.
 NODE_PATH = '/sys/devices/platform/i8042/serio1/ptmode'
 

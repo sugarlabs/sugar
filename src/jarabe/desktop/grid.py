@@ -187,7 +187,8 @@ class Grid(_sugarext.Grid):
         for c in self._children:
             intersection = child_rect.intersect(self._child_rects[c])
             if c != child and intersection.width > 0:
-                if c not in self._locked_children and c not in self._collisions:
+                if (c not in self._locked_children and
+                    c not in self._collisions):
                     collision_found = True
                     self._collisions.append(c)
 

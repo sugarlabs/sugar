@@ -51,7 +51,8 @@ class TimeZone(SectionView):
         self._entry.show()
 
         self._scrolled_window = gtk.ScrolledWindow()
-        self._scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self._scrolled_window.set_policy(gtk.POLICY_NEVER,
+                                         gtk.POLICY_AUTOMATIC)
         self._scrolled_window.set_shadow_type(gtk.SHADOW_IN)
 
         self._store = gtk.ListStore(gobject.TYPE_STRING)

@@ -41,8 +41,8 @@ class _ContextMap(object):
 
     def get_object_id(self, context):
         """Retrieves the object_id associated with context.
-        Will release the association when this function was called as many times
-        as the number of data_types that this clipboard object contains.
+        Will release the association when this function was called as many
+        times as the number of data_types that this clipboard object contains.
         """
         [object_id, data_types_left] = self._context_map[context]
 
@@ -194,12 +194,13 @@ class ClipboardTray(tray.VTray):
                 if selection.data == 'S':
                     window = context.source_window
 
-                    prop_type, format_, dest = \
-                            window.property_get('XdndDirectSave0', 'text/plain')
+                    prop_type, format_, dest = window.property_get(
+                        'XdndDirectSave0', 'text/plain')
 
                     clipboardservice = clipboard.get_instance()
-                    clipboardservice.add_object_format( \
-                            object_id, 'XdndDirectSave0', dest, on_disk=True)
+                    clipboardservice.add_object_format(object_id,
+                                                       'XdndDirectSave0',
+                                                       dest, on_disk=True)
             else:
                 self._add_selection(object_id, selection)
 

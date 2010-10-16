@@ -175,7 +175,8 @@ class FavoritesView(hippo.Canvas):
         height = allocation.height
 
         min_w_, my_icon_width = self._my_icon.get_width_request()
-        min_h_, my_icon_height = self._my_icon.get_height_request(my_icon_width)
+        min_h_, my_icon_height = self._my_icon.get_height_request(
+            my_icon_width)
         x = (width - my_icon_width) / 2
         y = (height - my_icon_height - style.GRID_CELL_SIZE) / 2
         self._layout.move_icon(self._my_icon, x, y, locked=True)
@@ -193,7 +194,8 @@ class FavoritesView(hippo.Canvas):
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
         if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
-            self._last_clicked_icon = self._get_icon_at_coords(event.x, event.y)
+            self._last_clicked_icon = self._get_icon_at_coords(event.x,
+                                                               event.y)
             if self._last_clicked_icon is not None:
                 self._pressed_button = event.button
                 self._press_start_x = event.x
@@ -398,8 +400,8 @@ class ActivityIcon(CanvasIcon):
                        error_handler=self.__get_last_activity_error_handler_cb)
 
     def __get_last_activity_reply_handler_cb(self, entries, total_count):
-        # If there's a problem with the DS index, we may get entries not related
-        # to this activity.
+        # If there's a problem with the DS index, we may get entries not
+        # related to this activity.
         checked_entries = []
         for entry in entries:
             if entry['activity'] == self.bundle_id:
@@ -624,7 +626,8 @@ class OwnerIcon(BuddyIcon):
         backup_url = client.get_string('/desktop/sugar/backup_url')
         if not backup_url:
             self._register_menu = MenuItem(_('Register'), 'media-record')
-            self._register_menu.connect('activate', self.__register_activate_cb)
+            self._register_menu.connect('activate',
+                                        self.__register_activate_cb)
             palette.menu.append(self._register_menu)
             self._register_menu.show()
 

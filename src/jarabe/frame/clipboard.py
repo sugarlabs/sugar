@@ -73,7 +73,7 @@ class Clipboard(gobject.GObject):
                           + ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
-            logging.debug('Added in-memory format of type ' + format_type + '.')
+            logging.debug('Added in-memory format of type %s.', format_type)
 
         self.emit('object-state-changed', cb_object)
 

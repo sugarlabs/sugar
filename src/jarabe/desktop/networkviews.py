@@ -381,7 +381,8 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def create_keydialog(self, settings, response):
         keydialog.create(self._name, self._flags, self._wpa_flags,
-                         self._rsn_flags, self._device_caps, settings, response)
+                         self._rsn_flags, self._device_caps, settings,
+                         response)
 
     def update_strength(self):
         if self._active_ap is not None:

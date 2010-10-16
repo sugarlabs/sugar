@@ -64,10 +64,10 @@ class VolumesToolbar(gtk.Toolbar):
 
     def _set_up_volumes(self):
         volume_monitor = gio.volume_monitor_get()
-        self._mount_added_hid = \
-                volume_monitor.connect('mount-added', self.__mount_added_cb)
-        self._mount_removed_hid = \
-                volume_monitor.connect('mount-removed', self.__mount_removed_cb)
+        self._mount_added_hid = volume_monitor.connect('mount-added',
+                                                       self.__mount_added_cb)
+        self._mount_removed_hid = volume_monitor.connect('mount-removed',
+            self.__mount_removed_cb)
 
         for mount in volume_monitor.get_mounts():
             self._add_button(mount)
@@ -146,8 +146,8 @@ class BaseButton(RadioToolButton):
                            gtk.gdk.ACTION_COPY)
         self.connect('drag-data-received', self._drag_data_received_cb)
 
-    def _drag_data_received_cb(self, widget, drag_context, x, y, selection_data,
-                               info, timestamp):
+    def _drag_data_received_cb(self, widget, drag_context, x, y,
+                               selection_data, info, timestamp):
         object_id = selection_data.data
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])

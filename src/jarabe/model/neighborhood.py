@@ -107,7 +107,8 @@ class ActivityModel(gobject.GObject):
     def set_bundle(self, bundle):
         self._bundle = bundle
 
-    bundle = gobject.property(type=object, getter=get_bundle, setter=set_bundle)
+    bundle = gobject.property(type=object, getter=get_bundle,
+                              setter=set_bundle)
 
     def get_name(self):
         return self._name
@@ -207,7 +208,8 @@ class _Account(gobject.GObject):
             'AccountPropertyChanged', self.__account_property_changed_cb)
 
     def __error_handler_cb(self, function_name, error):
-        raise RuntimeError('Error when calling %s: %s' % (function_name, error))
+        raise RuntimeError('Error when calling %s: %s' % (function_name,
+                                                          error))
 
     def __got_connection_cb(self, connection_path):
         logging.debug('_Account.__got_connection_cb %r', connection_path)
@@ -383,7 +385,8 @@ class _Account(gobject.GObject):
                 logging.debug('Got handle %r with nick %r, going to update',
                               handle, alias)
                 properties = {CONNECTION_INTERFACE_ALIASING + '/alias': alias}
-                self.emit('buddy-updated', self._buddy_handles[handle], properties)
+                self.emit('buddy-updated', self._buddy_handles[handle],
+                          properties)
 
     def __presences_changed_cb(self, presences):
         logging.debug('_Account.__presences_changed_cb %r', presences)
@@ -577,7 +580,8 @@ class _Account(gobject.GObject):
 
                     connection.GetActivities(
                         handle,
-                        reply_handler=partial(self.__got_activities_cb, handle),
+                        reply_handler=partial(self.__got_activities_cb,
+                                              handle),
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetActivities'),
                         timeout=_QUERY_DBUS_TIMEOUT)
@@ -640,7 +644,8 @@ class Neighborhood(gobject.GObject):
         self._server_account = None
 
         client = gconf.client_get_default()
-        client.add_dir('/desktop/sugar/collaboration', gconf.CLIENT_PRELOAD_NONE)
+        client.add_dir('/desktop/sugar/collaboration',
+                       gconf.CLIENT_PRELOAD_NONE)
         client.notify_add('/desktop/sugar/collaboration/jabber_server',
                           self.__jabber_server_changed_cb)
         client.add_dir('/desktop/sugar/user/nick', gconf.CLIENT_PRELOAD_NONE)
@@ -737,7 +742,8 @@ class Neighborhood(gobject.GObject):
 
         client = gconf.client_get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
-        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        server = client.get_string('/desktop/sugar/collaboration'
+                                   '/jabber_server')
         key_hash = get_profile().privkey_hash
 
         params = {
@@ -769,7 +775,8 @@ class Neighborhood(gobject.GObject):
     def _get_jabber_account_id(self):
         public_key_hash = sha1(get_profile().pubkey).hexdigest()
         client = gconf.client_get_default()
-        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        server = client.get_string('/desktop/sugar/collaboration'
+                                   '/jabber_server')
         return '%s@%s' % (public_key_hash, server)
 
     def __jabber_server_changed_cb(self, client, timestamp, entry, *extra):
@@ -779,7 +786,8 @@ class Neighborhood(gobject.GObject):
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
                                  self._server_account.object_path)
 
-        server = client.get_string('/desktop/sugar/collaboration/jabber_server')
+        server = client.get_string(
+            '/desktop/sugar/collaboration/jabber_server')
         account_id = self._get_jabber_account_id()
         needs_reconnect = account.UpdateParameters({'server': server,
                                                     'account': account_id,
@@ -835,8 +843,8 @@ class Neighborhood(gobject.GObject):
             return
 
         if contact_id not in self._buddies:
-            logging.debug('__buddy_updated_cb Unknown buddy with contact_id %r',
-                          contact_id)
+            logging.debug('__buddy_updated_cb Unknown buddy with contact_id'
+                          ' %r', contact_id)
             return
 
         buddy = self._buddies[contact_id]
@@ -922,8 +930,8 @@ class Neighborhood(gobject.GObject):
                           'contact_id %r', contact_id)
             return
         if activity_id and activity_id not in self._activities:
-            logging.debug('__current_activity_updated_cb Unknown activity with '
-                          'id %s', activity_id)
+            logging.debug('__current_activity_updated_cb Unknown activity with'
+                          ' id %s', activity_id)
             activity_id = ''
 
         buddy = self._buddies[contact_id]

@@ -178,8 +178,8 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to me.
-        # Why hippo isn't respecting the request size of these controls?
+        # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to
+        # me. Why hippo isn't respecting the request size of these controls?
 
         zoom_toolbar = ZoomToolbar()
         panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
@@ -198,7 +198,8 @@ class Frame(object):
 
         # TODO: same issue as in _create_top_panel()
         devices_tray = DevicesTray()
-        panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
+        panel.append(hippo.CanvasWidget(widget=devices_tray),
+                     hippo.PACK_EXPAND)
         devices_tray.show()
 
         return panel

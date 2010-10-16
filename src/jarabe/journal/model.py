@@ -38,9 +38,9 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.
-PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'creation_time', 'filesize',
-              'keep', 'buddies', 'icon-color', 'mime_type', 'progress',
-              'activity', 'mountpoint', 'activity_id', 'bundle_id']
+PROPERTIES = ['activity', 'activity_id', 'buddies', 'bundle_id',
+              'creation_time', 'filesize', 'icon-color', 'keep', 'mime_type',
+              'mountpoint', 'mtime', 'progress', 'timestamp', 'title', 'uid']
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
@@ -148,7 +148,8 @@ class BaseResultSet(object):
             self._cache.append_all(entries)
             self._offset = offset
 
-        elif remaining_forward_entries <= 0 and remaining_backwards_entries > 0:
+        elif (remaining_forward_entries <= 0 and
+              remaining_backwards_entries > 0):
 
             # Add one page to the end of cache
             logging.debug('appending one more page, offset: %r',
@@ -346,7 +347,8 @@ class InplaceResultSet(BaseResultSet):
                             add_to_list = False
 
                     if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size)
+                        file_info = (full_path, stat, int(stat.st_mtime),
+                                     stat.st_size)
                         self._file_list.append(file_info)
 
                     self.progress.send(self)

@@ -67,9 +67,9 @@ class UIService(dbus.service.Object):
     @dbus.service.method(_DBUS_SHELL_IFACE,
                          in_signature="s", out_signature="b")
     def ActivateActivity(self, activity_id):
-        """Switch to the window related to this activity_id and return a boolean
-        indicating if there is a real (ie. not a launcher window) activity
-        already open.
+        """Switch to the window related to this activity_id and return a
+        boolean indicating if there is a real (ie. not a launcher window)
+        activity already open.
         """
         activity = self._shell_model.get_activity_by_id(activity_id)
 

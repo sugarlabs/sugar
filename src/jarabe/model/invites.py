@@ -99,8 +99,8 @@ class ActivityInvite(object):
         obj = bus.get_object(CHANNEL_DISPATCHER, self.dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
         dispatch_operation.HandleWith(self._handler,
-                                      reply_handler=self.__handle_with_reply_cb,
-                                      error_handler=self.__handle_with_reply_cb)
+            reply_handler=self.__handle_with_reply_cb,
+            error_handler=self.__handle_with_reply_cb)
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:
@@ -203,8 +203,8 @@ class Invites(gobject.GObject):
         obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
         dispatch_operation.HandleWith(handler,
-                                      reply_handler=self.__handle_with_reply_cb,
-                                      error_handler=self.__handle_with_reply_cb)
+            reply_handler=self.__handle_with_reply_cb,
+            error_handler=self.__handle_with_reply_cb)
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:

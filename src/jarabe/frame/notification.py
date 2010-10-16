@@ -46,7 +46,8 @@ class NotificationIcon(gtk.EventBox):
         self.add(self._icon)
         self._icon.show()
 
-        gobject.timeout_add_seconds(self._PULSE_TIMEOUT, self.__stop_pulsing_cb)
+        gobject.timeout_add_seconds(self._PULSE_TIMEOUT,
+                                    self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 

@@ -72,7 +72,8 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
-        logging.debug('_drag_data_get_cb: requested target ' + selection.target)
+        logging.debug('_drag_data_get_cb: requested target %s',
+                      selection.target)
         data = self._cb_object.get_formats()[selection.target].get_data()
         selection.set(selection.target, 8, data)
 
@@ -80,8 +81,8 @@ class ClipboardIcon(RadioToolButton):
         logging.debug('ClipboardIcon._put_in_clipboard')
 
         if self._cb_object.get_percent() < 100:
-            raise ValueError('Object is not complete,' \
-                             ' cannot be put into the clipboard.')
+            raise ValueError('Object is not complete, cannot be put into the'
+                             ' clipboard.')
 
         targets = self._get_targets()
         if targets:

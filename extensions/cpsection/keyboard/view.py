@@ -241,7 +241,8 @@ class Keyboard(SectionView):
         return False
 
     def _setup_group_switch_option(self):
-        """Adds the controls for changing the group switch option of keyboard"""
+        """Adds the controls for changing the group switch option of keyboard
+        """
         separator_group_option = gtk.HSeparator()
         self._vbox.pack_start(separator_group_option, expand=False)
         separator_group_option.show_all()

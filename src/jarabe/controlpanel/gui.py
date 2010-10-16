@@ -261,11 +261,10 @@ class ControlPanel(gtk.Window):
                             keywords.append(item)
                         options[item]['keywords'] = keywords
                     else:
-                        _logger.error('There is no CLASS constant specifieds ' \
-                                          'in the view file \'%s\'.' % item)
+                        _logger.error('There is no CLASS constant specified'
+                                      ' in the view file %r.', item)
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                        ''.join(traceback.format_exception(*sys.exc_info())))
+                    logging.exception('Exception while loading extension:')
 
         return options
 

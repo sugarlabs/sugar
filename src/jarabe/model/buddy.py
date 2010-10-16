@@ -230,4 +230,5 @@ class BuddyModel(BaseBuddyModel):
     def set_handle(self, handle):
         self._handle = handle
 
-    handle = gobject.property(type=object, getter=get_handle, setter=set_handle)
+    handle = gobject.property(type=object, getter=get_handle,
+                              setter=set_handle)

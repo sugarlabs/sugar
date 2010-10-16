@@ -277,8 +277,7 @@ class BundleRegistry(gobject.GObject):
         default_bundle = None
 
         for bundle in self._bundles:
-            if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-
+            if mime_type in (bundle.get_mime_types() or []):
                 if bundle.get_bundle_id() == default_bundle_id:
                     default_bundle = bundle
                 elif self.get_default_for_type(mime_type) == \
@@ -334,7 +333,8 @@ class BundleRegistry(gobject.GObject):
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
         if key not in self._favorite_bundles:
-            raise ValueError('Bundle %s %s not favorite' % (bundle_id, version))
+            raise ValueError('Bundle %s %s not favorite' %
+                             (bundle_id, version))
 
         if self._favorite_bundles[key] is None:
             self._favorite_bundles[key] = {}

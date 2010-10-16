@@ -43,7 +43,8 @@ class DevicesTray(tray.HTray):
         index = 0
         relative_index = getattr(view, "FRAME_POSITION_RELATIVE", -1)
         for item in self.get_children():
-            current_relative_index = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+            current_relative_index = getattr(item, 'FRAME_POSITION_RELATIVE',
+                                             0)
             if current_relative_index >= relative_index:
                 index += 1
             else:

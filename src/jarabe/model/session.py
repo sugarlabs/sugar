@@ -56,9 +56,9 @@ class SessionManager(session.SessionManager):
             try:
                 bus = dbus.SystemBus()
                 proxy = bus.get_object('org.freedesktop.Hal',
-                                       '/org/freedesktop/Hal/devices/computer')
+                    '/org/freedesktop/Hal/devices/computer')
                 pm = dbus.Interface(proxy,
-                                    'org.freedesktop.Hal.Device.SystemPowerManagement')
+                    'org.freedesktop.Hal.Device.SystemPowerManagement')
 
                 if self._logout_mode == self.MODE_SHUTDOWN:
                     pm.Shutdown()
@@ -79,8 +79,8 @@ class SessionManager(session.SessionManager):
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
 
-        # Need to call this ASAP so the atexit handlers get called before we get
-        # killed by the X (dis)connection
+        # Need to call this ASAP so the atexit handlers get called before we
+        # get killed by the X (dis)connection
         sys.exit()
 
 

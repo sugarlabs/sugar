@@ -554,12 +554,12 @@ class NMSettingsConnection(dbus.service.Object):
     def set_connected(self):
         if self._settings.connection.type == NM_CONNECTION_TYPE_GSM:
             self._settings.connection.timestamp = int(time.time())
-        else:
-            if not self._settings.connection.autoconnect:
-                self._settings.connection.autoconnect = True
-                self._settings.connection.timestamp = int(time.time())
-                if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-                    self.save()
+        elif not self._settings.connection.autoconnect:
+            self._settings.connection.autoconnect = True
+            self._settings.connection.timestamp = int(time.time())
+            if (self._settings.connection.type ==
+                    NM_CONNECTION_TYPE_802_11_WIRELESS):
+                self.save()
 
         try:
             # try to flush resolver cache - SL#1940
@@ -573,7 +573,8 @@ class NMSettingsConnection(dbus.service.Object):
 
     def set_secrets(self, secrets):
         self._secrets = secrets
-        if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+        if self._settings.connection.type == \
+           NM_CONNECTION_TYPE_802_11_WIRELESS:
             self.save()
 
     def get_settings(self):
@@ -649,19 +650,22 @@ class NMSettingsConnection(dbus.service.Object):
                       self.path, request_new)
         if self._settings.connection.type is not NM_CONNECTION_TYPE_GSM:
             if request_new or self._secrets is None:
-                # request_new is for example the case when the pw on the AP changes
+                # request_new is for example the case when the pw on the AP
+                # changes
                 response = SecretsResponse(self, reply, error)
                 try:
                     self.secrets_request.send(self, response=response)
                 except Exception:
-                    logging.exception('Error requesting the secrets via dialog')
+                    logging.exception('Error requesting the secrets via'
+                                      ' dialog')
             else:
                 reply(self._secrets.get_dict())
         else:
             if not request_new:
                 reply(self._secrets.get_dict())
             else:
-                raise Exception('The stored GSM secret has already been supplied ')
+                raise Exception('The stored GSM secret has already been'
+                                ' supplied')
 
 
 class AccessPoint(gobject.GObject):
@@ -789,9 +793,10 @@ def find_connection_by_ssid(ssid):
 
     for conn_index in connections:
         connection = connections[conn_index]
-        if connection._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-            if connection._settings.wireless.ssid == ssid:
-                return connection
+        if connection._settings.connection.type == \
+           NM_CONNECTION_TYPE_802_11_WIRELESS and \
+           connection._settings.wireless.ssid == ssid:
+            return connection
 
     return None
 

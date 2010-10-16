@@ -131,7 +131,7 @@ class KeyHandler(object):
     def _primary_selection_cb(self, clipboard, text, user_data):
         logging.debug('KeyHandler._primary_selection_cb: %r', text)
         if text:
-            self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
+            self._get_speech_proxy().SayText(text, reply_handler=lambda: None,
                 error_handler=self._on_speech_err)
 
     def handle_say_text(self, event_time):

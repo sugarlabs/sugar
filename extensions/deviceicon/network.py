@@ -108,7 +108,8 @@ class WirelessPalette(Palette):
         self._disconnect_item = MenuItem(_('Disconnect...'))
         icon = Icon(icon_size=gtk.ICON_SIZE_MENU, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self._disconnect_item.connect('activate',
+                                      self.__disconnect_activate_cb)
         self.menu.append(self._disconnect_item)
 
     def set_connecting(self):
@@ -327,7 +328,8 @@ class GsmPalette(Palette):
 
     def add_alert(self, error, suggestion):
         self._failed_connection = True
-        self._toggle_state_item.get_child().set_label(_('Try connection again'))
+        action = _('Try connection again')
+        self._toggle_state_item.get_child().set_label(action)
 
         title = _('Error: %s') % error
         self.error_title_label.set_markup('<b>%s</b>' % title)
@@ -448,7 +450,8 @@ class WirelessDeviceView(ToolButton):
                 return
             self._active_ap_op = active_ap_op
             active_ap = self._bus.get_object(_NM_SERVICE, active_ap_op)
-            props = dbus.Interface(active_ap, 'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(active_ap,
+                                   'org.freedesktop.DBus.Properties')
 
             props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
                          reply_handler=self.__get_all_ap_props_reply_cb,
@@ -552,7 +555,8 @@ class WirelessDeviceView(ToolButton):
             self._icon.props.pulsing = True
         elif state == network.DEVICE_STATE_ACTIVATED:
             address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
-            self._palette.set_connected_with_frequency(self._frequency, address)
+            self._palette.set_connected_with_frequency(self._frequency,
+                                                       address)
             self._icon.props.pulsing = False
         else:
             self._icon.props.badge_name = None
@@ -683,7 +687,8 @@ class OlpcMeshDeviceView(ToolButton):
     def __deactivate_connection(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr, 'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(netmgr,
+                                      'org.freedesktop.DBus.Properties')
         active_connections_o = netmgr_props.Get(_NM_IFACE,
                                                 'ActiveConnections')
 
@@ -792,7 +797,8 @@ class GsmDeviceView(TrayIcon):
     def __gsm_disconnect_cb(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr, 'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(netmgr,
+                                      'org.freedesktop.DBus.Properties')
         active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:

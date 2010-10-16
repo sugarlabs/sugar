@@ -228,7 +228,8 @@ class Network(SectionView):
         if self._jabber_sid:
             gobject.source_remove(self._jabber_sid)
         self._jabber_sid = gobject.timeout_add(_APPLY_TIMEOUT,
-                                               self.__jabber_timeout_cb, widget)
+                                               self.__jabber_timeout_cb,
+                                               widget)
 
     def __jabber_timeout_cb(self, widget):
         self._jabber_sid = 0

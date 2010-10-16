@@ -149,9 +149,9 @@ class Frame(SectionView):
         self._corner_delay_is_valid = True
         self._edge_delay_is_valid = True
         self.needs_restart = False
-        self._corner_delay_change_handler = self._corner_delay_slider.connect( \
+        self._corner_delay_change_handler = self._corner_delay_slider.connect(
                 'value-changed', self.__corner_delay_changed_cb)
-        self._edge_delay_change_handler = self._edge_delay_slider.connect( \
+        self._edge_delay_change_handler = self._edge_delay_slider.connect(
                 'value-changed', self.__edge_delay_changed_cb)
 
     def undo(self):

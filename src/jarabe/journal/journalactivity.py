@@ -86,7 +86,8 @@ class JournalActivityDBusService(dbus.service.Object):
         chooser.destroy()
         del chooser
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is', out_signature='s')
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is',
+                         out_signature='s')
     def ChooseObject(self, parent_xid, what_filter=''):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:

@@ -208,7 +208,8 @@ class ActivitiesTray(HTray):
 
         self._home_model = shell.get_model()
         self._home_model.connect('activity-added', self.__activity_added_cb)
-        self._home_model.connect('activity-removed', self.__activity_removed_cb)
+        self._home_model.connect('activity-removed',
+                                 self.__activity_removed_cb)
         self._home_model.connect('active-activity-changed',
                                  self.__activity_changed_cb)
         self._home_model.connect('tabbing-activity-changed',

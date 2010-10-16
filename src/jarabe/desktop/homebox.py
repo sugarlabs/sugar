@@ -240,7 +240,7 @@ class HomeToolbar(gtk.Toolbar):
         if self._autosearch_timer:
             gobject.source_remove(self._autosearch_timer)
         self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self.__autosearch_timer_cb)
+            self.__autosearch_timer_cb)
 
     def __autosearch_timer_cb(self):
         self._autosearch_timer = None
