@@ -420,8 +420,8 @@ class ActivityListPalette(ActivityPalette):
         menu_item.show()
 
         if not os.access(activity_info.get_path(), os.W_OK) or \
-            registry.is_activity_protected(self._bundle_id):
-                menu_item.props.sensitive = False
+           registry.is_activity_protected(self._bundle_id):
+            menu_item.props.sensitive = False
 
     def __destroy_cb(self, palette):
         self.disconnect(self._activity_changed_sid)
