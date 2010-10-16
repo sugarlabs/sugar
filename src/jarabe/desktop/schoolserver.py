@@ -96,8 +96,8 @@ class TimeoutHTTP(httplib.HTTP):
 class TimeoutTransport(xmlrpclib.Transport):
 
     def make_connection(self, host):
-        host, extra_headers, x509 = self.get_host_info(host)
-        return TimeoutHTTP(host, timeout=REGISTER_TIMEOUT)
+        host, extra_headers, x509_ = self.get_host_info(host)
+        return _TimeoutHTTP(host, timeout=REGISTER_TIMEOUT)
 
 
 def register_laptop(url=REGISTER_URL):

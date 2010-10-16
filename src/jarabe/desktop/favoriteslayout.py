@@ -257,13 +257,13 @@ class RingLayout(FavoritesLayout):
 
         self._spiral_mode = True
         icon_size = style.STANDARD_ICON_SIZE
-        angle, radius = self._calculate_angle_and_radius(children_count,
-                                                               icon_size)
+        angle_, radius = self._calculate_angle_and_radius(children_count,
+                                                          icon_size)
         while radius > _MAXIMUM_RADIUS:
             i = _ICON_SIZES.index(icon_size)
             if i < len(_ICON_SIZES) - 1:
                 icon_size = _ICON_SIZES[i + 1]
-                angle, radius = self._calculate_angle_and_radius(
+                angle_, radius = self._calculate_angle_and_radius(
                     children_count, icon_size)
             else:
                 break
@@ -304,7 +304,7 @@ class RingLayout(FavoritesLayout):
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
         angle = _INITIAL_ANGLE
         radius = _MINIMUM_RADIUS - (icon_size * _MIMIMUM_RADIUS_ENCROACHMENT)
-        for i in range(icon_count):
+        for i_ in range(icon_count):
             circumference = radius * 2 * math.pi
             n = circumference / icon_spacing
             angle += (2 * math.pi / n)
