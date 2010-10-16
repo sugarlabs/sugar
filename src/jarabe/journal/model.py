@@ -265,7 +265,8 @@ class InplaceResultSet(BaseResultSet):
         if self._sort[1:] == 'filesize':
             keygetter = itemgetter(3)
         else:
-            keygetter = itemgetter(2) # timestamp
+            # timestamp
+            keygetter = itemgetter(2)
         self._file_list.sort(lambda a, b: b - a,
                              key=keygetter,
                              reverse=(self._sort[0] == '-'))

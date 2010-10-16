@@ -58,7 +58,7 @@ new_file_transfer = dispatch.Signal()
 
 # TODO Move to use splice_async() in Sugar 0.88
 class StreamSplicer(gobject.GObject):
-    _CHUNK_SIZE = 10240 # 10K
+    _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,

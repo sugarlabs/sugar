@@ -127,7 +127,7 @@ class HomeBox(gtk.VBox):
         else:
             raise ValueError('Invalid view: %r' % view)
 
-    _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
+    _REDRAW_TIMEOUT = 5 * 60 * 1000  # 5 minutes
 
     def resume(self):
         pass

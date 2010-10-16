@@ -229,7 +229,7 @@ class BundleUpdate(object):
 
 
 class _Downloader(gobject.GObject):
-    _CHUNK_SIZE = 10240 # 10K
+    _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
         'progress': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,

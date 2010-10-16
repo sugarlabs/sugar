@@ -552,13 +552,15 @@ class MeshBox(gtk.VBox):
         if self._adhoc_manager is not None and \
                 network.is_sugar_adhoc_network(ap.name) and \
                 ap.mode == network.NM_802_11_MODE_ADHOC:
-            if old_hash is None: # new Ad-hoc network finished initializing
+            if old_hash is None:
+                # new Ad-hoc network finished initializing
                 self._adhoc_manager.add_access_point(ap)
             # we are called as well in other cases but we do not need to
             # act here as we don't display signal strength for Ad-hoc networks
             return
 
-        if old_hash is None: # new AP finished initializing
+        if old_hash is None:
+            # new AP finished initializing
             self._add_ap_to_network(ap)
             return
 

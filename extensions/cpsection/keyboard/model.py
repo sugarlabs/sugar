@@ -20,7 +20,7 @@ import xklavier
 import gconf
 
 
-_GROUP_NAME = 'grp' # The XKB name for group switch options
+_GROUP_NAME = 'grp'  # The XKB name for group switch options
 
 _LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'
 _OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'

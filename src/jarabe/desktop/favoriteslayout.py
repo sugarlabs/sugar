@@ -447,7 +447,8 @@ class SunflowerLayout(RingLayout):
                 if y < 0 or y > (height - icon_size) or \
                        x < 0 or x > (width - icon_size):
                     self.skipped_indices.append(index)
-                    continue # try again
+                    # try again
+                    continue
 
             return x, y
 
@@ -484,7 +485,8 @@ class BoxLayout(RingLayout):
                 return (90 - d) / 45.
             if d < 225:
                 return -1
-            return cos_d(360 - d) # mirror around 180
+            # mirror around 180
+            return cos_d(360 - d)
 
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: cos_d(math.degrees(r) - 90)
@@ -531,7 +533,8 @@ class TriangleLayout(RingLayout):
                 return (d + 90) / 120.
             if d <= 90:
                 return (90 - d) / 60.
-            return -cos_d(180 - d) # mirror around 90
+            # mirror around 90
+            return -cos_d(180 - d)
 
         sqrt_3 = math.sqrt(3)
 
@@ -542,7 +545,8 @@ class TriangleLayout(RingLayout):
                 return ((d + 90) / 120.) * sqrt_3 - 1
             if d <= 90:
                 return sqrt_3 - 1
-            return sin_d(180 - d) # mirror around 90
+            # mirror around 90
+            return sin_d(180 - d)
 
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: sin_d(math.degrees(r))
