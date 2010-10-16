@@ -27,6 +27,11 @@ from jarabe.model.network import Secrets
 IW_AUTH_ALG_OPEN_SYSTEM = 'open'
 IW_AUTH_ALG_SHARED_KEY  = 'shared'
 
+WEP_PASSPHRASE = 1
+WEP_HEX = 2
+WEP_ASCII = 3
+
+
 def string_is_hex(key):
     is_hex = True
     for c in key:
@@ -108,9 +113,6 @@ class KeyDialog(gtk.Dialog):
     def get_response_object(self):
         return self._response
 
-WEP_PASSPHRASE = 1
-WEP_HEX = 2
-WEP_ASCII = 3
 
 class WEPKeyDialog(KeyDialog):
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,

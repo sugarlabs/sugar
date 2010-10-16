@@ -44,6 +44,12 @@ PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'creation_time', 'filesize',
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
 
+_datastore = None
+created = dispatch.Signal()
+updated = dispatch.Signal()
+deleted = dispatch.Signal()
+
+
 class _Cache(object):
 
     __gtype_name__ = 'model_Cache'
@@ -356,7 +362,7 @@ def _get_file_metadata(path, stat):
             'icon-color': client.get_string('/desktop/sugar/user/color'),
             'description': path}
 
-_datastore = None
+
 def _get_datastore():
     global _datastore
     if _datastore is None:
@@ -541,7 +547,3 @@ def _get_unique_file_name(mount_point, file_name):
 def is_editable(metadata):
     mountpoint = metadata.get('mountpoint', '/')
     return mountpoint == '/'
-
-created = dispatch.Signal()
-updated = dispatch.Signal()
-deleted = dispatch.Signal()

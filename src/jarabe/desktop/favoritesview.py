@@ -61,6 +61,9 @@ LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
 
+_favorites_settings = None
+
+
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
 
@@ -659,7 +662,6 @@ class FavoritesSetting(object):
 
     layout = property(get_layout, set_layout)
 
-_favorites_settings = None
 
 def get_settings():
     global _favorites_settings

@@ -65,6 +65,9 @@ Time in seconds to wait when querying contact properties. Some jabber servers
 will be very slow in returning these queries, so just be patient.
 """
 
+_model = None
+
+
 class ActivityModel(gobject.GObject):
     __gsignals__ = {
         'current-buddy-added':   (gobject.SIGNAL_RUN_FIRST,
@@ -987,7 +990,6 @@ class Neighborhood(gobject.GObject):
     def get_activities(self):
         return self._activities.values()
 
-_model = None
 
 def get_model():
     global _model

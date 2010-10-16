@@ -52,6 +52,9 @@ FT_REASON_REMOTE_ERROR = 6
 CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
+new_file_transfer = dispatch.Signal()
+
+
 # TODO Move to use splice_async() in Sugar 0.88
 class StreamSplicer(gobject.GObject):
     _CHUNK_SIZE = 10240 # 10K
@@ -337,7 +340,6 @@ def file_transfer_available():
 
         return False
 
-new_file_transfer = dispatch.Signal()
 
 if __name__ == '__main__':
     import tempfile

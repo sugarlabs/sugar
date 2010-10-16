@@ -33,6 +33,9 @@ _GROUP_PAGE      = 1
 _MESH_PAGE       = 2
 _TRANSITION_PAGE = 3
 
+_instance = None
+
+
 class HomeWindow(gtk.Window):
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
@@ -183,7 +186,6 @@ class HomeWindow(gtk.Window):
     def get_home_box(self):
         return self._home_box
 
-_instance = None
 
 def get_instance():
     global _instance

@@ -30,6 +30,9 @@ from jarabe.util.telepathy import connection_watcher
 
 CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
+_owner_instance = None
+
+
 class BaseBuddyModel(gobject.GObject):
     __gtype_name__ = 'SugarBaseBuddyModel'
 
@@ -180,7 +183,6 @@ class OwnerBuddyModel(BaseBuddyModel):
         return True
 
 
-_owner_instance = None
 def get_owner_instance():
     global _owner_instance
     if _owner_instance is None:

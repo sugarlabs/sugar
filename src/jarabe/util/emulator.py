@@ -30,9 +30,9 @@ from sugar import env
 
 ERROR_NO_DISPLAY = 30
 ERROR_NO_SERVER = 31
-
-
 default_dimensions = (800, 600)
+
+
 def _run_xephyr(display, dpi, dimensions, fullscreen):
     cmd = [ 'Xephyr' ]
     cmd.append(':%d' % display)

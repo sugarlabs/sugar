@@ -28,6 +28,10 @@ from telepathy.interfaces import CONN_INTERFACE
 from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
                                 CONNECTION_STATUS_DISCONNECTED
 
+
+_instance = None
+
+
 class ConnectionWatcher(gobject.GObject):
     __gsignals__ = {
         'connection-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -93,7 +97,6 @@ class ConnectionWatcher(gobject.GObject):
     def get_connections(self):
         return self._connections.values()
 
-_instance = None
 
 def get_instance():
     global _instance

@@ -59,6 +59,9 @@ _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
+_AUTOSEARCH_TIMEOUT = 1000
+
+
 class ActivityView(hippo.CanvasBox):
     def __init__(self, model):
         hippo.CanvasBox.__init__(self)
@@ -147,8 +150,6 @@ class ActivityView(hippo.CanvasBox):
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
-
-_AUTOSEARCH_TIMEOUT = 1000
 
 
 class MeshToolbar(gtk.Toolbar):

@@ -25,6 +25,9 @@ VOLUME_STEP = 10
 muted_changed = dispatch.Signal()
 volume_changed = dispatch.Signal()
 
+_volume = _sugarext.VolumeAlsa()
+
+
 def get_muted():
     return _volume.get_mute()
 
@@ -54,5 +57,3 @@ def restore():
     if env.is_emulator() is False:
         client = gconf.client_get_default()
         set_volume(client.get_int('/desktop/sugar/sound/volume'))
-
-_volume = _sugarext.VolumeAlsa()

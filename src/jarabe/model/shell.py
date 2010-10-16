@@ -35,6 +35,8 @@ _SERVICE_NAME = "org.laptop.Activity"
 _SERVICE_PATH = "/org/laptop/Activity"
 _SERVICE_INTERFACE = "org.laptop.Activity"
 
+_model = None
+
 
 class Activity(gobject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
@@ -630,8 +632,6 @@ class ShellModel(gobject.GObject):
             self.notify_launch_failed(activity_id)
         return False
 
-
-_model = None
 
 def get_model():
     global _model

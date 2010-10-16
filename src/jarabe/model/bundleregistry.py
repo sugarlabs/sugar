@@ -35,6 +35,10 @@ from sugar import env
 from jarabe import config
 from jarabe.model import mimeregistry
 
+
+_instance = None
+
+
 class BundleRegistry(gobject.GObject):
     """Tracks the available activity bundles"""
 
@@ -452,7 +456,6 @@ class BundleRegistry(gobject.GObject):
 
         self.install(bundle)
 
-_instance = None
 
 def get_registry():
     global _instance

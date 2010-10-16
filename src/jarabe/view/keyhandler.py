@@ -67,6 +67,9 @@ SPEECH_DBUS_SERVICE = 'org.laptop.Speech'
 SPEECH_DBUS_PATH = '/org/laptop/Speech'
 SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
 
+_instance = None
+
+
 class KeyHandler(object):
     def __init__(self, frame):
         self._frame = frame
@@ -230,7 +233,6 @@ class KeyHandler(object):
             return True
         return False
 
-_instance = None
 
 def setup(frame):
     global _instance

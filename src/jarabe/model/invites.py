@@ -41,6 +41,8 @@ from jarabe.journal import misc
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
         'org.laptop.Telepathy.ActivityProperties'
 
+_instance = None
+
 
 class ActivityInvite(object):
     """Invitation to a shared activity."""
@@ -229,8 +231,6 @@ class Invites(gobject.GObject):
     def __iter__(self):
         return self._dispatch_operations.values().__iter__()
 
-
-_instance = None
 
 def get_instance():
     global _instance

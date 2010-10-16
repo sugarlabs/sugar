@@ -26,6 +26,10 @@ from sugar import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
 
+
+_instance = None
+
+
 class Clipboard(gobject.GObject):
 
     __gsignals__ = {
@@ -140,7 +144,6 @@ class Clipboard(gobject.GObject):
 
         return 'file://' + new_file_path
 
-_instance = None
 
 def get_instance():
     global _instance

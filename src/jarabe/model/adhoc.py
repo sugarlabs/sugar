@@ -32,8 +32,9 @@ _NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
 _NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
-
 _adhoc_manager_instance = None
+
+
 def get_adhoc_manager_instance():
     global _adhoc_manager_instance
     if _adhoc_manager_instance is None:

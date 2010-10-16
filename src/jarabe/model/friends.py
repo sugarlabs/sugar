@@ -27,6 +27,10 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import neighborhood
 
+
+_model = None
+
+
 class FriendBuddyModel(BuddyModel):
     __gtype_name__ = 'SugarFriendBuddyModel'
 
@@ -176,7 +180,6 @@ class Friends(gobject.GObject):
                 reply_handler=friends_synced,
                 error_handler=friends_synced_error)
 
-_model = None
 
 def get_model():
     global _model

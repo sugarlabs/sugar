@@ -29,6 +29,9 @@ from sugar import dispatch
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
+_instance = None
+
+
 class TelepathyClient(dbus.service.Object, DBusProperties):
     def __init__(self):
         self._interfaces = set([CLIENT, CLIENT_HANDLER,
@@ -91,7 +94,6 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         except Exception, e:
             logging.exception(e)
 
-_instance = None
 
 def get_instance():
     global _instance

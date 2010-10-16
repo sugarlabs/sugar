@@ -53,6 +53,9 @@ J_DBUS_PATH = '/org/laptop/Journal'
 _SPACE_TRESHOLD = 52428800
 _BUNDLE_ID = 'org.laptop.JournalActivity'
 
+_journal = None
+
+
 class JournalActivityDBusService(dbus.service.Object):
     def __init__(self, parent):
         self._parent = parent
@@ -359,7 +362,6 @@ class JournalActivity(JournalWindow):
         self.show_main_view()
         self.search_grab_focus()
 
-_journal = None
 
 def get_journal():
     global _journal

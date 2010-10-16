@@ -27,6 +27,9 @@ _DBUS_SERVICE = "org.freedesktop.Notifications"
 _DBUS_IFACE = "org.freedesktop.Notifications"
 _DBUS_PATH = "/org/freedesktop/Notifications"
 
+_instance = None
+
+
 class NotificationService(dbus.service.Object):
     def __init__(self):
         bus = dbus.SessionBus()
@@ -82,7 +85,6 @@ class NotificationService(dbus.service.Object):
     def ActionInvoked(self, notification_id, action_key):
         pass
 
-_instance = None
 
 def get_service():
     global _instance
