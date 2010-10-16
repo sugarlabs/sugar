@@ -569,6 +569,7 @@ class NMSettingsConnection(dbus.service.Object):
             res_init = getattr(libc, '__res_init')
             res_init(None)
         except:
+            # pylint: disable=W0702
             logging.exception('Error calling libc.__res_init')
 
     def set_secrets(self, secrets):

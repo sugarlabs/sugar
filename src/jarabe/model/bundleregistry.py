@@ -219,6 +219,7 @@ class BundleRegistry(gobject.GObject):
             try:
                 self._add_bundle(folder)
             except:
+                # pylint: disable=W0702
                 logging.exception('Error while processing installed activity'
                                   ' bundle %s:', folder)
 
