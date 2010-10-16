@@ -108,10 +108,6 @@ class CurrentActivityPalette(BasePalette):
             self._home_activity.get_window().activate( \
                 gtk.get_current_event_time())
 
-    def __active_window_changed_cb(self, screen, previous_window=None):
-        setup_view_source()
-        self._screen.disconnect(self._active_window_changed_sid)
-
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
 
