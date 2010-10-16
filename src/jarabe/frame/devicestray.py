@@ -15,8 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import sys
-import traceback
 import logging
 
 from sugar.graphics import tray
@@ -36,8 +34,7 @@ class DevicesTray(tray.HTray):
                                      locals(), [module_name])
                     mod.setup(self)
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                        ''.join(traceback.format_exception(*sys.exc_info())))
+                    logging.exception('Exception while loading extension:')
 
     def add_device(self, view):
         index = 0

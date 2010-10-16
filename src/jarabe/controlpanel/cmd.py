@@ -18,7 +18,6 @@ import sys
 import getopt
 import os
 from gettext import gettext as _
-import traceback
 import logging
 
 from jarabe import config
@@ -69,8 +68,7 @@ def load_modules():
                 module = __import__('.'.join(('cpsection', item, 'model')),
                                     globals(), locals(), ['model'])
             except Exception:
-                logging.error('Exception while loading extension:\n' + \
-                    ''.join(traceback.format_exception(*sys.exc_info())))
+                logging.exception('Exception while loading extension:')
             else:
                 modules.append(module)
 

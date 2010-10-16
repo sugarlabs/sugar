@@ -17,7 +17,6 @@
 
 import os
 import logging
-import traceback
 
 import dbus
 import gtk
@@ -100,8 +99,7 @@ class KeyHandler(object):
                             raise ValueError('Key %r is already bound' % key)
                         _actions_table[key] = module
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                                  traceback.format_exc())
+                    logging.exception('Exception while loading extension:')
 
         self._key_grabber.grab_keys(_actions_table.keys())
 

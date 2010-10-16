@@ -17,7 +17,6 @@
 
 import os
 import logging
-import traceback
 
 import gconf
 import gobject
@@ -211,19 +210,17 @@ class BundleRegistry(gobject.GObject):
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
             except Exception:
-                logging.error('Error while processing installed activity ' \
-                              'bundle %s:\n%s' % \
-                                    (bundle_dir, traceback.format_exc()))
+                logging.exception('Error while processing installed activity'
+                                  ' bundle %s:', bundle_dir)
 
         bundle_dirs = bundles.keys()
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
         for folder in bundle_dirs:
             try:
                 self._add_bundle(folder)
-            except Exception, e:
-                logging.error('Error while processing installed activity ' \
-                              'bundle %s:\n%s' % \
-                                    (folder, traceback.format_exc()))
+            except:
+                logging.exception('Error while processing installed activity'
+                                  ' bundle %s:', folder)
 
     def add_bundle(self, bundle_path, install_mime_type=False):
         bundle = self._add_bundle(bundle_path, install_mime_type)
@@ -444,11 +441,10 @@ class BundleRegistry(gobject.GObject):
             try:
                 self.uninstall(bundle, force=True)
             except Exception:
-                logging.error('Uninstall failed, still trying to install ' \
-                    'newer bundle:\n' + \
-                    traceback.format_exc())
+                logging.exception('Uninstall failed, still trying to install'
+                                  ' newer bundle:')
         else:
-            logging.warning('Unable to uninstall system activity, ' \
+            logging.warning('Unable to uninstall system activity, '
                             'installing upgraded version in user activities')
 
         self.install(bundle)

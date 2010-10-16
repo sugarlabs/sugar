@@ -17,8 +17,6 @@
 
 import logging
 from gettext import gettext as _
-import sys
-import traceback
 import uuid
 
 import gtk
@@ -230,8 +228,7 @@ class JournalActivity(JournalWindow):
         try:
             self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:
-            logging.error('Exception while displaying entry:\n' + \
-                ''.join(traceback.format_exception(*sys.exc_info())))
+            logging.exception('Exception while displaying entry:')
 
         self.set_toolbar_box(self._detail_toolbox)
         self._detail_toolbox.show()
@@ -239,8 +236,7 @@ class JournalActivity(JournalWindow):
         try:
             self._detail_view.props.metadata = metadata
         except Exception:
-            logging.error('Exception while displaying entry:\n' + \
-                ''.join(traceback.format_exception(*sys.exc_info())))
+            logging.exception('Exception while displaying entry:')
 
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()

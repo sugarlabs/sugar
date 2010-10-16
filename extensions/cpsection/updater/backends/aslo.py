@@ -132,7 +132,7 @@ class _UpdateFetcher(object):
             try:
                 version = NormalizedVersion(document.find(_FIND_VERSION).text)
             except InvalidVersionError:
-                logging.error(traceback.format_exc())
+                logging.exception('Exception occured while parsing version')
                 version = '0'
 
             link = document.find(_FIND_LINK).text
@@ -140,7 +140,7 @@ class _UpdateFetcher(object):
             try:
                 size = long(document.find(_FIND_SIZE).text) * 1024
             except ValueError:
-                logging.error(traceback.format_exc())
+                logging.exception('Exception occured while parsing size')
                 size = 0
 
         global _fetcher
