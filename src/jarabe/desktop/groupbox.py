@@ -35,7 +35,7 @@ class GroupBox(hippo.Canvas):
     __gtype_name__ = 'SugarGroupBox'
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the group view")
+        logging.debug('STARTUP: Loading the group view')
 
         gobject.GObject.__init__(self)
 
@@ -49,7 +49,7 @@ class GroupBox(hippo.Canvas):
         self._box.set_layout(self._layout)
 
         client = gconf.client_get_default()
-        color = XoColor(client.get_string("/desktop/sugar/user/color"))
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
                                       xo_color=color)

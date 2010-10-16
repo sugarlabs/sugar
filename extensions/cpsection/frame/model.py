@@ -38,7 +38,7 @@ def set_corner_delay(delay):
     try:
         int(delay)
     except ValueError:
-        raise ValueError(_("Value must be an integer."))
+        raise ValueError(_('Value must be an integer.'))
     client = gconf.client_get_default()
     client.set_int('/desktop/sugar/frame/corner_delay', int(delay))
     return 0
@@ -63,7 +63,7 @@ def set_edge_delay(delay):
     try:
         int(delay)
     except ValueError:
-        raise ValueError(_("Value must be an integer."))
+        raise ValueError(_('Value must be an integer.'))
     client = gconf.client_get_default()
     client.set_int('/desktop/sugar/frame/edge_delay', int(delay))
     return 0

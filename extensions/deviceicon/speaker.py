@@ -205,15 +205,15 @@ class DeviceModel(gobject.GObject):
         return 'speaker'
 
     def do_get_property(self, pspec):
-        if pspec.name == "level":
+        if pspec.name == 'level':
             return self._get_level()
-        elif pspec.name == "muted":
+        elif pspec.name == 'muted':
             return self._get_muted()
 
     def do_set_property(self, pspec, value):
-        if pspec.name == "level":
+        if pspec.name == 'level':
             self._set_level(value)
-        elif pspec.name == "muted":
+        elif pspec.name == 'muted':
             self._set_muted(value)
 
 

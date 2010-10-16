@@ -77,7 +77,7 @@ class KeyDialog(gtk.Dialog):
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
                  response):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
-        self.set_title("Wireless Key Required")
+        self.set_title('Wireless Key Required')
 
         self._settings = settings
         self._response = response
@@ -128,9 +128,9 @@ class WEPKeyDialog(KeyDialog):
 
         # WEP key type
         self.key_store = gtk.ListStore(str, int)
-        self.key_store.append(["Passphrase (128-bit)", WEP_PASSPHRASE])
-        self.key_store.append(["Hex (40/128-bit)", WEP_HEX])
-        self.key_store.append(["ASCII (40/128-bit)", WEP_ASCII])
+        self.key_store.append(['Passphrase (128-bit)', WEP_PASSPHRASE])
+        self.key_store.append(['Hex (40/128-bit)', WEP_HEX])
+        self.key_store.append(['ASCII (40/128-bit)', WEP_ASCII])
 
         self.key_combo = gtk.ComboBox(self.key_store)
         cell = gtk.CellRendererText()
@@ -140,7 +140,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_combo.connect('changed', self._key_combo_changed_cb)
 
         hbox = gtk.HBox()
-        hbox.pack_start(gtk.Label(_("Key Type:")))
+        hbox.pack_start(gtk.Label(_('Key Type:')))
         hbox.pack_start(self.key_combo)
         hbox.show_all()
         self.vbox.pack_start(hbox)
@@ -150,8 +150,8 @@ class WEPKeyDialog(KeyDialog):
 
         # WEP authentication mode
         self.auth_store = gtk.ListStore(str, str)
-        self.auth_store.append(["Open System", IW_AUTH_ALG_OPEN_SYSTEM])
-        self.auth_store.append(["Shared Key", IW_AUTH_ALG_SHARED_KEY])
+        self.auth_store.append(['Open System', IW_AUTH_ALG_OPEN_SYSTEM])
+        self.auth_store.append(['Shared Key', IW_AUTH_ALG_SHARED_KEY])
 
         self.auth_combo = gtk.ComboBox(self.auth_store)
         cell = gtk.CellRendererText()
@@ -160,7 +160,7 @@ class WEPKeyDialog(KeyDialog):
         self.auth_combo.set_active(0)
 
         hbox = gtk.HBox()
-        hbox.pack_start(gtk.Label(_("Authentication Type:")))
+        hbox.pack_start(gtk.Label(_('Authentication Type:')))
         hbox.pack_start(self.auth_combo)
         hbox.show_all()
 
@@ -187,8 +187,8 @@ class WEPKeyDialog(KeyDialog):
 
     def print_security(self):
         (key, auth_alg) = self._get_security()
-        print "Key: %s" % key
-        print "Auth: %d" % auth_alg
+        print 'Key: %s' % key
+        print 'Auth: %d' % auth_alg
 
     def create_security(self):
         (key, auth_alg) = self._get_security()
@@ -226,7 +226,7 @@ class WPAKeyDialog(KeyDialog):
         self.add_key_entry()
 
         self.store = gtk.ListStore(str)
-        self.store.append([_("WPA & WPA2 Personal")])
+        self.store.append([_('WPA & WPA2 Personal')])
 
         self.combo = gtk.ComboBox(self.store)
         cell = gtk.CellRendererText()
@@ -235,7 +235,7 @@ class WPAKeyDialog(KeyDialog):
         self.combo.set_active(0)
 
         self.hbox = gtk.HBox()
-        self.hbox.pack_start(gtk.Label(_("Wireless Security:")))
+        self.hbox.pack_start(gtk.Label(_('Wireless Security:')))
         self.hbox.pack_start(self.combo)
         self.hbox.show_all()
 
@@ -255,21 +255,21 @@ class WPAKeyDialog(KeyDialog):
             from subprocess import Popen, PIPE
             p = Popen(['wpa_passphrase', ssid, key], stdout=PIPE)
             for line in p.stdout:
-                if line.strip().startswith("psk="):
+                if line.strip().startswith('psk='):
                     real_key = line.strip()[4:]
             if p.wait() != 0:
-                raise RuntimeError("Error hashing passphrase")
+                raise RuntimeError('Error hashing passphrase')
             if real_key and len(real_key) != 64:
                 real_key = None
 
         if not real_key:
-            raise RuntimeError("Invalid key")
+            raise RuntimeError('Invalid key')
 
         return real_key
 
     def print_security(self):
         key = self._get_security()
-        print "Key: %s" % key
+        print 'Key: %s' % key
 
     def create_security(self):
         secrets = Secrets(self._settings)
@@ -300,8 +300,8 @@ def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
         key_dialog = WPAKeyDialog(ssid, flags, wpa_flags, rsn_flags,
                                   dev_caps, settings, response)
 
-    key_dialog.connect("response", _key_dialog_response_cb)
-    key_dialog.connect("destroy", _key_dialog_destroy_cb)
+    key_dialog.connect('response', _key_dialog_response_cb)
+    key_dialog.connect('destroy', _key_dialog_destroy_cb)
     key_dialog.show_all()
 
 
@@ -320,9 +320,9 @@ def _key_dialog_response_cb(key_dialog, response_id):
         response.set_error(CanceledKeyRequestError())
     elif response_id == gtk.RESPONSE_OK:
         if not secrets:
-            raise RuntimeError("Invalid security arguments.")
+            raise RuntimeError('Invalid security arguments.')
         response.set_secrets(secrets)
     else:
-        raise RuntimeError("Unhandled key dialog response %d" % response_id)
+        raise RuntimeError('Unhandled key dialog response %d' % response_id)
 
     key_dialog.destroy()

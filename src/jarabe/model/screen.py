@@ -40,6 +40,6 @@ def _get_ohm():
 
 def set_dcon_freeze(frozen):
     try:
-        _get_ohm().SetKey("display.dcon_freeze", frozen)
+        _get_ohm().SetKey('display.dcon_freeze', frozen)
     except dbus.DBusException:
         logging.error('Cannot unfreeze the DCON')

@@ -78,8 +78,8 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
 
 def _check_server(display):
     result = subprocess.call(['xdpyinfo', '-display', ':%d' % display],
-                             stdout=open(os.devnull, "w"),
-                             stderr=open(os.devnull, "w"))
+                             stdout=open(os.devnull, 'w'),
+                             stderr=open(os.devnull, 'w'))
     return result == 0
 
 
@@ -129,7 +129,7 @@ def _setup_env(display, scaling, emulator_pid):
             env.get_profile_path(), 'logs', 'mission-control.log')
     os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
-    os.environ['DISPLAY'] = ":%d" % (display)
+    os.environ['DISPLAY'] = ':%d' % (display)
     os.environ['SUGAR_EMULATOR_PID'] = emulator_pid
     os.environ['MC_ACCOUNT_DIR'] = os.path.join(
             env.get_profile_path(), 'accounts')
@@ -142,7 +142,7 @@ def main():
     """Script-level operations"""
 
     parser = OptionParser()
-    parser.add_option('-d', '--dpi', dest='dpi', type="int",
+    parser.add_option('-d', '--dpi', dest='dpi', type='int',
                       help='Emulator dpi')
     parser.add_option('-s', '--scaling', dest='scaling',
                       help='Sugar scaling in %')

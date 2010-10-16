@@ -449,7 +449,7 @@ class OutgoingTransferButton(BaseTransferButton):
                 break
 
         client = gconf.client_get_default()
-        icon_color = XoColor(client.get_string("/desktop/sugar/user/color"))
+        icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
@@ -471,7 +471,7 @@ class OutgoingTransferButton(BaseTransferButton):
 class BaseTransferPalette(Palette):
     """Base palette class for frame or notification icon for file transfers
     """
-    __gtype_name__ = "SugarBaseTransferPalette"
+    __gtype_name__ = 'SugarBaseTransferPalette'
 
     __gsignals__ = {
         'dismiss-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
@@ -533,7 +533,7 @@ class BaseTransferPalette(Palette):
 class IncomingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for incoming file transfers
     """
-    __gtype_name__ = "SugarIncomingTransferPalette"
+    __gtype_name__ = 'SugarIncomingTransferPalette'
 
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
@@ -661,7 +661,7 @@ class IncomingTransferPalette(BaseTransferPalette):
 class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers
     """
-    __gtype_name__ = "SugarOutgoingTransferPalette"
+    __gtype_name__ = 'SugarOutgoingTransferPalette'
 
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)

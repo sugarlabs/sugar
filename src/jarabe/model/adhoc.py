@@ -160,7 +160,7 @@ class AdHocManager(gobject.GObject):
 
     def __idle_check_cb(self):
         if  self._device_state == network.DEVICE_STATE_DISCONNECTED:
-            logging.debug("Connect to Ad-hoc network due to inactivity.")
+            logging.debug('Connect to Ad-hoc network due to inactivity.')
             self._autoconnect_adhoc()
         return False
 
@@ -188,7 +188,7 @@ class AdHocManager(gobject.GObject):
         self._connect(channel)
 
     def _connect(self, channel):
-        name = "Ad-hoc Network %d" % channel
+        name = 'Ad-hoc Network %d' % channel
         connection = network.find_connection_by_ssid(name)
         if connection is None:
             settings = Settings()

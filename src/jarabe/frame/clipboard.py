@@ -86,9 +86,9 @@ class Clipboard(gobject.GObject):
     def set_object_percent(self, object_id, percent):
         cb_object = self._objects[object_id]
         if percent < 0 or percent > 100:
-            raise ValueError("invalid percentage")
+            raise ValueError('invalid percentage')
         if cb_object.get_percent() > percent:
-            raise ValueError("invalid percentage; less than current percent")
+            raise ValueError('invalid percentage; less than current percent')
         if cb_object.get_percent() == percent:
             # ignore setting same percentage
             return

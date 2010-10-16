@@ -89,7 +89,7 @@ def set_timezone(timezone):
         client = gconf.client_get_default()
         client.set_string('/desktop/sugar/date/timezone', timezone)
     else:
-        raise ValueError(_("Error timezone does not exist."))
+        raise ValueError(_('Error timezone does not exist.'))
     return 1
 
 # inilialize the docstrings for the timezone

@@ -100,18 +100,18 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return chooser_id
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature="ss")
+    @dbus.service.signal(J_DBUS_INTERFACE, signature='ss')
     def ObjectChooserResponse(self, chooser_id, object_id):
         pass
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature="s")
+    @dbus.service.signal(J_DBUS_INTERFACE, signature='s')
     def ObjectChooserCancelled(self, chooser_id):
         pass
 
 
 class JournalActivity(JournalWindow):
     def __init__(self):
-        logging.debug("STARTUP: Loading the journal")
+        logging.debug('STARTUP: Loading the journal')
         JournalWindow.__init__(self)
 
         self.set_title(_('Journal'))

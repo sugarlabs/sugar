@@ -135,7 +135,7 @@ class KeyHandler(object):
                 error_handler=self._on_speech_err)
 
     def handle_say_text(self, event_time):
-        clipboard = gtk.clipboard_get(selection="PRIMARY")
+        clipboard = gtk.clipboard_get(selection='PRIMARY')
         clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self, event_time):
@@ -202,7 +202,7 @@ class KeyHandler(object):
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
-                if not action in ["next_window", "previous_window"]:
+                if not action in ['next_window', 'previous_window']:
                     self._tabbing_handler.stop(event_time)
                     return True
 

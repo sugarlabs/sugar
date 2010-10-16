@@ -44,23 +44,23 @@ def create_profile(name, color=None, pixbuf=None):
     if not color:
         color = XoColor()
 
-    icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-    pixbuf.save(icon_path, "jpeg", {"quality": "85"})
+    icon_path = os.path.join(env.get_profile_path(), 'buddy-icon.jpg')
+    pixbuf.save(icon_path, 'jpeg', {'quality': '85'})
 
     client = gconf.client_get_default()
-    client.set_string("/desktop/sugar/user/nick", name)
-    client.set_string("/desktop/sugar/user/color", color.to_string())
+    client.set_string('/desktop/sugar/user/nick', name)
+    client.set_string('/desktop/sugar/user/color', color.to_string())
 
     # Generate keypair
     import commands
-    keypath = os.path.join(env.get_profile_path(), "owner.key")
+    keypath = os.path.join(env.get_profile_path(), 'owner.key')
     if not os.path.isfile(keypath):
         cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
         (s, o) = commands.getstatusoutput(cmd)
         if s != 0:
-            logging.error("Could not generate key pair: %d %s", s, o)
+            logging.error('Could not generate key pair: %d %s', s, o)
     else:
-        logging.error("Keypair exists, skip generation.")
+        logging.error('Keypair exists, skip generation.')
 
 
 class _Page(hippo.CanvasBox):
@@ -93,7 +93,7 @@ class _NamePage(_Page):
 
         self._intro = intro
 
-        label = hippo.CanvasText(text=_("Name:"))
+        label = hippo.CanvasText(text=_('Name:'))
         self.append(label)
 
         self._entry = CanvasEntry(box_width=style.zoom(300))
@@ -129,7 +129,7 @@ class _ColorPage(_Page):
                        spacing=style.DEFAULT_SPACING,
                        yalign=hippo.ALIGNMENT_CENTER, **kwargs)
 
-        self._label = hippo.CanvasText(text=_("Click to change color:"),
+        self._label = hippo.CanvasText(text=_('Click to change color:'),
                                        xalign=hippo.ALIGNMENT_CENTER)
         self.append(self._label)
 
@@ -288,16 +288,16 @@ class IntroWindow(gtk.Window):
         return False
 
     def __key_press_cb(self, widget, event):
-        if gtk.gdk.keyval_name(event.keyval) == "Return":
+        if gtk.gdk.keyval_name(event.keyval) == 'Return':
             self._intro_box.next()
             return True
-        elif gtk.gdk.keyval_name(event.keyval) == "Escape":
+        elif gtk.gdk.keyval_name(event.keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     w = IntroWindow()
     w.show()
     w.connect('destroy', gtk.main_quit)

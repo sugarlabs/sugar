@@ -645,7 +645,7 @@ class OwnerIcon(BuddyIcon):
 
 class FavoritesSetting(object):
 
-    _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
+    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 
     def __init__(self):
         client = gconf.client_get_default()

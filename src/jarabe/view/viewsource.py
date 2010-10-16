@@ -248,7 +248,7 @@ class DocumentButton(RadioToolButton):
                         error_handler=self.__internal_save_error_cb)
 
     def __internal_save_cb(self):
-        logging.debug("Saved Source object to datastore.")
+        logging.debug('Saved Source object to datastore.')
         self._jobject.destroy()
 
     def __internal_save_error_cb(self, err):

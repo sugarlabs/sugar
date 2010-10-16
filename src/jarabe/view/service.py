@@ -24,9 +24,9 @@ from jarabe.model import shell
 from jarabe.model import bundleregistry
 
 
-_DBUS_SERVICE = "org.laptop.Shell"
-_DBUS_SHELL_IFACE = "org.laptop.Shell"
-_DBUS_PATH = "/org/laptop/Shell"
+_DBUS_SERVICE = 'org.laptop.Shell'
+_DBUS_SHELL_IFACE = 'org.laptop.Shell'
+_DBUS_PATH = '/org/laptop/Shell'
 
 
 class UIService(dbus.service.Object):
@@ -56,7 +56,7 @@ class UIService(dbus.service.Object):
         self._shell_model = shell.get_model()
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
-                         in_signature="s", out_signature="s")
+                         in_signature='s', out_signature='s')
     def GetBundlePath(self, bundle_id):
         bundle = bundleregistry.get_registry().get_bundle(bundle_id)
         if bundle:
@@ -65,7 +65,7 @@ class UIService(dbus.service.Object):
             return ''
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
-                         in_signature="s", out_signature="b")
+                         in_signature='s', out_signature='b')
     def ActivateActivity(self, activity_id):
         """Switch to the window related to this activity_id and return a
         boolean indicating if there is a real (ie. not a launcher window)
@@ -80,11 +80,11 @@ class UIService(dbus.service.Object):
         return False
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
-                         in_signature="ss", out_signature="")
+                         in_signature='ss', out_signature='')
     def NotifyLaunch(self, bundle_id, activity_id):
         shell.get_model().notify_launch(activity_id, bundle_id)
 
     @dbus.service.method(_DBUS_SHELL_IFACE,
-                         in_signature="s", out_signature="")
+                         in_signature='s', out_signature='')
     def NotifyLaunchFailure(self, activity_id):
         shell.get_model().notify_launch_failed(activity_id)

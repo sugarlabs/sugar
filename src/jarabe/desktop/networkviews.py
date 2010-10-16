@@ -104,11 +104,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
         if self._mode != network.NM_802_11_MODE_ADHOC:
             if network.find_connection_by_ssid(self._name) is not None:
-                self.props.badge_name = "emblem-favorite"
-                self._palette_icon.props.badge_name = "emblem-favorite"
+                self.props.badge_name = 'emblem-favorite'
+                self._palette_icon.props.badge_name = 'emblem-favorite'
             elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-                self.props.badge_name = "emblem-locked"
-                self._palette_icon.props.badge_name = "emblem-locked"
+                self.props.badge_name = 'emblem-locked'
+                self._palette_icon.props.badge_name = 'emblem-locked'
             else:
                 self.props.badge_name = None
                 self._palette_icon.props.badge_name = None
@@ -269,18 +269,18 @@ class WirelessNetworkView(CanvasPulsingIcon):
         ciphers = []
         if pairwise:
             if flags & network.NM_802_11_AP_SEC_PAIR_TKIP:
-                ciphers.append("tkip")
+                ciphers.append('tkip')
             if flags & network.NM_802_11_AP_SEC_PAIR_CCMP:
-                ciphers.append("ccmp")
+                ciphers.append('ccmp')
         else:
             if flags & network.NM_802_11_AP_SEC_GROUP_WEP40:
-                ciphers.append("wep40")
+                ciphers.append('wep40')
             if flags & network.NM_802_11_AP_SEC_GROUP_WEP104:
-                ciphers.append("wep104")
+                ciphers.append('wep104')
             if flags & network.NM_802_11_AP_SEC_GROUP_TKIP:
-                ciphers.append("tkip")
+                ciphers.append('tkip')
             if flags & network.NM_802_11_AP_SEC_GROUP_CCMP:
-                ciphers.append("ccmp")
+                ciphers.append('ccmp')
         return ciphers
 
     def _get_security(self):
@@ -364,7 +364,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
         netmgr.ActivateConnection(network.SETTINGS_SERVICE, connection.path,
                                   self._device.object_path,
-                                  "/",
+                                  '/',
                                   reply_handler=self.__activate_reply_cb,
                                   error_handler=self.__activate_error_cb)
 
@@ -421,7 +421,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def is_olpc_mesh(self):
         return self._mode == network.NM_802_11_MODE_ADHOC \
-            and self.name == "olpc-mesh"
+            and self.name == 'olpc-mesh'
 
     def remove_all_aps(self):
         for ap in self._access_points.values():
@@ -486,7 +486,7 @@ class SugarAdhocView(CanvasPulsingIcon):
                 icon_name=self._ICON_NAME + str(self._channel),
                 icon_size=style.STANDARD_ICON_SIZE)
 
-        palette_ = palette.Palette(_("Ad-hoc Network %d") % self._channel,
+        palette_ = palette.Palette(_('Ad-hoc Network %d') % self._channel,
                                    icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
@@ -619,7 +619,7 @@ class OlpcMeshView(CanvasPulsingIcon):
         self.set_palette(self._palette)
 
     def _create_palette(self):
-        _palette = palette.Palette(_("Mesh Network %d") % self._channel)
+        _palette = palette.Palette(_('Mesh Network %d') % self._channel)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self.__connect_activate_cb)

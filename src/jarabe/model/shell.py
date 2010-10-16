@@ -31,9 +31,9 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.model.bundleregistry import get_registry
 from jarabe.model import neighborhood
 
-_SERVICE_NAME = "org.laptop.Activity"
-_SERVICE_PATH = "/org/laptop/Activity"
-_SERVICE_INTERFACE = "org.laptop.Activity"
+_SERVICE_NAME = 'org.laptop.Activity'
+_SERVICE_PATH = '/org/laptop/Activity'
+_SERVICE_INTERFACE = 'org.laptop.Activity'
 
 _model = None
 
@@ -83,8 +83,8 @@ class Activity(gobject.GObject):
             bus = dbus.SessionBus()
             self._name_owner_changed_handler = bus.add_signal_receiver(
                     self._name_owner_changed_cb,
-                    signal_name="NameOwnerChanged",
-                    dbus_interface="org.freedesktop.DBus")
+                    signal_name='NameOwnerChanged',
+                    dbus_interface='org.freedesktop.DBus')
 
         self._launch_completed_hid = get_model().connect('launch-completed',
                 self.__launch_completed_cb)
@@ -103,7 +103,7 @@ class Activity(gobject.GObject):
         can replace the launcher once we get its real window.
         """
         if not window:
-            raise ValueError("window must be valid")
+            raise ValueError('window must be valid')
         self._window = window
 
     def get_service(self):
@@ -159,7 +159,7 @@ class Activity(gobject.GObject):
             return activity.props.color
         else:
             client = gconf.client_get_default()
-            return XoColor(client.get_string("/desktop/sugar/user/color"))
+            return XoColor(client.get_string('/desktop/sugar/user/color'))
 
     def get_activity_id(self):
         """Retrieve the "activity_id" passed in to our constructor
@@ -247,7 +247,7 @@ class Activity(gobject.GObject):
         try:
             bus = dbus.SessionBus()
             proxy = bus.get_object(self._get_service_name(),
-                                   _SERVICE_PATH + "/" + self._activity_id)
+                                   _SERVICE_PATH + '/' + self._activity_id)
             self._service = dbus.Interface(proxy, _SERVICE_INTERFACE)
         except dbus.DBusException:
             self._service = None
@@ -277,7 +277,7 @@ class Activity(gobject.GObject):
         pass
 
     def _set_active_error(self, err):
-        logging.error("set_active() failed: %s", err)
+        logging.error('set_active() failed: %s', err)
 
     def _set_launch_status(self, value):
         get_model().disconnect(self._launch_completed_hid)
@@ -457,7 +457,7 @@ class ShellModel(gobject.GObject):
     def set_tabbing_activity(self, activity):
         """Sets the activity that is currently highlighted during tabbing"""
         self._tabbing_activity = activity
-        self.emit("tabbing-activity-changed", self._tabbing_activity)
+        self.emit('tabbing-activity-changed', self._tabbing_activity)
 
     def _set_active_activity(self, home_activity):
         if self._active_activity == home_activity:
@@ -603,7 +603,7 @@ class ShellModel(gobject.GObject):
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
-            logging.debug("Activity %s (%s) launch failed", activity_id,
+            logging.debug('Activity %s (%s) launch failed', activity_id,
                 home_activity.get_type())
             if self.get_launcher(activity_id) is not None:
                 self.emit('launch-failed', home_activity)

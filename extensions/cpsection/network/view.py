@@ -66,8 +66,8 @@ class Network(SectionView):
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = gtk.Label(_("Turn off the wireless radio to save "
-                                 "battery life"))
+        radio_info = gtk.Label(_('Turn off the wireless radio to save battery'
+                                 ' life'))
         radio_info.set_alignment(0, 0)
         radio_info.set_line_wrap(True)
         radio_info.show()
@@ -95,8 +95,8 @@ class Network(SectionView):
             self._radio_alert.props.msg = self.restart_msg
             self._radio_alert.show()
 
-        history_info = gtk.Label(_("Discard network history if you "
-                                   "have trouble connecting to the network"))
+        history_info = gtk.Label(_('Discard network history if you have'
+                                   ' trouble connecting to the network'))
         history_info.set_alignment(0, 0)
         history_info.set_line_wrap(True)
         history_info.show()

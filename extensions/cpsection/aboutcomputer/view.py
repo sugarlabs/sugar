@@ -175,30 +175,30 @@ class AboutComputer(SectionView):
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 
-        label_copyright = gtk.Label("© 2006-2010 One Laptop per Child "
-                                    "Association Inc, Sugar Labs Inc, "
-                                    "Red Hat Inc, Collabora Ltd "
-                                    "and Contributors.")
+        copyright_text = '© 2006-2010 One Laptop per Child Association Inc,' \
+                         ' Sugar Labs Inc, Red Hat Inc, Collabora Ltd and' \
+                         ' Contributors.'
+        label_copyright = gtk.Label(copyright_text)
         label_copyright.set_alignment(0, 0)
         label_copyright.set_size_request(gtk.gdk.screen_width() / 2, -1)
         label_copyright.set_line_wrap(True)
         label_copyright.show()
         vbox_copyright.pack_start(label_copyright, expand=False)
 
-        label_info = gtk.Label(_("Sugar is the graphical user interface that "
-                                 "you are looking at. Sugar is free software, "
-                                 "covered by the GNU General Public License, "
-                                 "and you are welcome to change it and/or "
-                                 "distribute copies of it under certain "
-                                 "conditions described therein."))
+        info_text = _('Sugar is the graphical user interface that you are'
+                      ' looking at. Sugar is free software, covered by the'
+                      ' GNU General Public License, and you are welcome to'
+                      ' change it and/or distribute copies of it under'
+                      ' certain conditions described therein.')
+        label_info = gtk.Label(info_text)
         label_info.set_alignment(0, 0)
         label_info.set_line_wrap(True)
         label_info.set_size_request(gtk.gdk.screen_width() / 2, -1)
         label_info.show()
         vbox_copyright.pack_start(label_info, expand=False)
 
-        expander = gtk.Expander(_("Full license:"))
-        expander.connect("notify::expanded", self.license_expander_cb)
+        expander = gtk.Expander(_('Full license:'))
+        expander.connect('notify::expanded', self.license_expander_cb)
         expander.show()
         vbox_copyright.pack_start(expander, expand=True)
 

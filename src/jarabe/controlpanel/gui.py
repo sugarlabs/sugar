@@ -76,7 +76,7 @@ class ControlPanel(gtk.Window):
         self.add(self._vbox)
         self._vbox.show()
 
-        self.connect("realize", self.__realize_cb)
+        self.connect('realize', self.__realize_cb)
 
         self._options = self._get_options()
         self._current_option = None
@@ -364,7 +364,7 @@ class ModelWrapper(object):
 
 
 class _SectionIcon(gtk.EventBox):
-    __gtype_name__ = "SugarSectionIcon"
+    __gtype_name__ = 'SugarSectionIcon'
 
     __gproperties__ = {
         'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),

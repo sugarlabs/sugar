@@ -438,7 +438,7 @@ class ActivityListPalette(ActivityPalette):
         else:
             label.set_text(_('Make favorite'))
             client = gconf.client_get_default()
-            xo_color = XoColor(client.get_string("/desktop/sugar/user/color"))
+            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         self._favorite_icon.props.xo_color = xo_color
 

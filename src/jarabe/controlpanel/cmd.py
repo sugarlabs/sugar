@@ -26,10 +26,10 @@ from jarabe import config
 
 _RESTART = 1
 
-_same_option_warning = _("sugar-control-panel: WARNING, found more than"
-                         " one option with the same name: %s module: %r")
-_no_option_error = _("sugar-control-panel: key=%s not an available option")
-_general_error = _("sugar-control-panel: %s")
+_same_option_warning = _('sugar-control-panel: WARNING, found more than one'
+                         ' option with the same name: %s module: %r')
+_no_option_error = _('sugar-control-panel: key=%s not an available option')
+_general_error = _('sugar-control-panel: %s')
 
 
 def cmd_help():
@@ -79,7 +79,7 @@ def load_modules():
 
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:], "h:s:g:c:l", [])
+        options, args = getopt.getopt(sys.argv[1:], 'h:s:g:c:l', [])
     except getopt.GetoptError:
         cmd_help()
         sys.exit(2)
@@ -92,7 +92,7 @@ def main():
 
     for option, key in options:
         found = 0
-        if option in ("-h"):
+        if option in ('-h'):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
                 if method:
@@ -103,7 +103,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-l"):
+        if option in ('-l'):
             for module in modules:
                 methods = dir(module)
                 print '%s:' % module.__name__.split('.')[1]
@@ -111,9 +111,9 @@ def main():
                     if method.startswith('get_'):
                         print '    %s' % method[4:]
                     elif method.startswith('clear_'):
-                        print "    %s (use the -c argument with this option)" \
+                        print '    %s (use the -c argument with this option)' \
                                 % method[6:]
-        if option in ("-g"):
+        if option in ('-g'):
             for module in modules:
                 method = getattr(module, 'print_' + key, None)
                 if method:
@@ -127,7 +127,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-s"):
+        if option in ('-s'):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
                 if method:
@@ -144,7 +144,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-c"):
+        if option in ('-c'):
             for module in modules:
                 method = getattr(module, 'clear_' + key, None)
                 if method:

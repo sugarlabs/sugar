@@ -109,10 +109,10 @@ if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print "new connection", conn.service_name
+        print 'new connection', conn.service_name
 
     def connection_removed_cb(conn_watcher, conn):
-        print "removed connection", conn.service_name
+        print 'removed connection', conn.service_name
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)

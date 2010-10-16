@@ -81,13 +81,13 @@ def set_automatic_pm(enabled):
     keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
 
     if enabled == 'on' or enabled == 1:
-        keystore.SetKey("suspend.automatic_pm", 1)
+        keystore.SetKey('suspend.automatic_pm', 1)
         enabled = True
     elif enabled == 'off' or enabled == 0:
-        keystore.SetKey("suspend.automatic_pm", 0)
+        keystore.SetKey('suspend.automatic_pm', 0)
         enabled = False
     else:
-        raise ValueError(_("Error in automatic pm argument, use on/off."))
+        raise ValueError(_('Error in automatic pm argument, use on/off.'))
 
     client = gconf.client_get_default()
     client.set_bool('/desktop/sugar/power/automatic', enabled)
@@ -111,13 +111,13 @@ def set_extreme_pm(enabled):
     keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
 
     if enabled == 'on' or enabled == 1:
-        keystore.SetKey("suspend.extreme_pm", 1)
+        keystore.SetKey('suspend.extreme_pm', 1)
         enabled = True
     elif enabled == 'off' or enabled == 0:
-        keystore.SetKey("suspend.extreme_pm", 0)
+        keystore.SetKey('suspend.extreme_pm', 0)
         enabled = False
     else:
-        raise ValueError(_("Error in extreme pm argument, use on/off."))
+        raise ValueError(_('Error in extreme pm argument, use on/off.'))
 
     client = gconf.client_get_default()
     client.set_bool('/desktop/sugar/power/extreme', enabled)

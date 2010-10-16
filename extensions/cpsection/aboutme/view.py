@@ -35,12 +35,12 @@ def _get_next_stroke_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
     while(colors[next_index][_FILL_COLOR] != \
               colors[current_index][_FILL_COLOR]):
         next_index = _next_index(next_index)
-    return "%s,%s" % (colors[next_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
 
 
@@ -49,12 +49,12 @@ def _get_previous_stroke_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
     while (colors[previous_index][_FILL_COLOR] != \
                colors[current_index][_FILL_COLOR]):
         previous_index = _previous_index(previous_index)
-    return "%s,%s" % (colors[previous_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
 
 
@@ -63,12 +63,12 @@ def _get_next_fill_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
     while (colors[next_index][_STROKE_COLOR] != \
                colors[current_index][_STROKE_COLOR]):
         next_index = _next_index(next_index)
-    return "%s,%s" % (colors[next_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
 
 
@@ -77,12 +77,12 @@ def _get_previous_fill_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
     while (colors[previous_index][_STROKE_COLOR] != \
                colors[current_index][_STROKE_COLOR]):
         previous_index = _previous_index(previous_index)
-    return "%s,%s" % (colors[previous_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
 
 
@@ -112,7 +112,7 @@ _PREVIOUS_STROKE_COLOR = 4
 
 
 class EventIcon(gtk.EventBox):
-    __gtype_name__ = "SugarEventIcon"
+    __gtype_name__ = 'SugarEventIcon'
 
     def __init__(self, **kwargs):
         gtk.EventBox.__init__(self)

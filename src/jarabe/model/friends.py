@@ -34,7 +34,7 @@ _model = None
 class FriendBuddyModel(BuddyModel):
     __gtype_name__ = 'SugarFriendBuddyModel'
 
-    _NOT_PRESENT_COLOR = "#D5D5D5,#FFFFFF"
+    _NOT_PRESENT_COLOR = '#D5D5D5,#FFFFFF'
 
     def __init__(self, nick, key):
         self._online_buddy = None

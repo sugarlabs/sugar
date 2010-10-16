@@ -30,7 +30,7 @@ APPLY_TIMEOUT = 1000
 
 
 class EntryWithLabel(gtk.HBox):
-    __gtype_name__ = "SugarEntryWithLabel"
+    __gtype_name__ = 'SugarEntryWithLabel'
 
     def __init__(self, label_text):
         gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
@@ -172,10 +172,9 @@ class ModemConfiguration(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
 
-        explanation = _("You will need to provide the following " \
-                            "information to set up a mobile " \
-                            "broadband connection to a cellular "\
-                            "(3G) network.")
+        explanation = _('You will need to provide the following information'
+                        ' to set up a mobile broadband connection to a'
+                        ' cellular (3G) network.')
         self._text = gtk.Label(explanation)
         self._text.set_width_chars(100)
         self._text.set_line_wrap(True)

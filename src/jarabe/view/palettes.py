@@ -125,7 +125,7 @@ class ActivityPalette(Palette):
         self._activity_info = activity_info
 
         client = gconf.client_get_default()
-        color = XoColor(client.get_string("/desktop/sugar/user/color"))
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
         activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=color,
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)

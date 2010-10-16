@@ -85,7 +85,7 @@ class ModalAlert(gtk.Window):
         self.add(self._main_view)
         self._main_view.show()
 
-        self.connect("realize", self.__realize_cb)
+        self.connect('realize', self.__realize_cb)
 
     def __realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)

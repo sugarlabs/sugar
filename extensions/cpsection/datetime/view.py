@@ -37,7 +37,7 @@ class TimeZone(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        self.connect("realize", self.__realize_cb)
+        self.connect('realize', self.__realize_cb)
 
         self._entry = iconentry.IconEntry()
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -101,7 +101,7 @@ class TimeZone(SectionView):
 
         self.needs_restart = False
         self._cursor_change_handler = self._treeview.connect( \
-                "cursor-changed", self.__zone_changed_cd)
+                'cursor-changed', self.__zone_changed_cd)
 
     def undo(self):
         self._treeview.disconnect(self._cursor_change_handler)

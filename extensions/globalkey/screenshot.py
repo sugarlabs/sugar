@@ -46,7 +46,7 @@ def handle_key_press(key):
                                     height=height)
     screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
                                     y_orig, 0, 0, width, height)
-    screenshot.save(file_path, "png")
+    screenshot.save(file_path, 'png')
 
     client = gconf.client_get_default()
     color = client.get_string('/desktop/sugar/user/color')

@@ -94,7 +94,7 @@ def get_date(metadata):
         return util.timestamp_to_elapsed_string(timestamp)
 
     if 'mtime' in metadata:
-        ti = time.strptime(metadata['mtime'], "%Y-%m-%dT%H:%M:%S")
+        ti = time.strptime(metadata['mtime'], '%Y-%m-%dT%H:%M:%S')
         return util.timestamp_to_elapsed_string(time.mktime(ti))
 
     return _('No date')

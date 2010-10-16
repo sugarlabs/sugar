@@ -33,7 +33,7 @@ _MODIFIERS = ('dark', 'medium', 'light')
 
 def get_nick():
     client = gconf.client_get_default()
-    return client.get_string("/desktop/sugar/user/nick")
+    return client.get_string('/desktop/sugar/user/nick')
 
 
 def print_nick():
@@ -45,17 +45,17 @@ def set_nick(nick):
     nick : e.g. 'walter'
     """
     if not nick:
-        raise ValueError(_("You must enter a name."))
+        raise ValueError(_('You must enter a name.'))
     if not isinstance(nick, unicode):
         nick = unicode(nick, 'utf-8')
     client = gconf.client_get_default()
-    client.set_string("/desktop/sugar/user/nick", nick)
+    client.set_string('/desktop/sugar/user/nick', nick)
     return 1
 
 
 def get_color():
     client = gconf.client_get_default()
-    return client.get_string("/desktop/sugar/user/color")
+    return client.get_string('/desktop/sugar/user/color')
 
 
 def print_color():
@@ -91,10 +91,10 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     """
 
     if stroke_modifier not in _MODIFIERS or fill_modifier not in _MODIFIERS:
-        print (_("Error in specified color modifiers."))
+        print (_('Error in specified color modifiers.'))
         return
     if stroke not in _COLORS or fill not in _COLORS:
-        print (_("Error in specified colors."))
+        print (_('Error in specified colors.'))
         return
 
     if stroke_modifier == fill_modifier:
@@ -107,13 +107,13 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
             + _COLORS[fill][fill_modifier]
 
     client = gconf.client_get_default()
-    client.set_string("/desktop/sugar/user/color", color)
+    client.set_string('/desktop/sugar/user/color', color)
     return 1
 
 
 def get_color_xo():
     client = gconf.client_get_default()
-    return client.get_string("/desktop/sugar/user/color")
+    return client.get_string('/desktop/sugar/user/color')
 
 
 def set_color_xo(color):
@@ -121,5 +121,5 @@ def set_color_xo(color):
     This method is used by the graphical user interface
     """
     client = gconf.client_get_default()
-    client.set_string("/desktop/sugar/user/color", color)
+    client.set_string('/desktop/sugar/user/color', color)
     return 1

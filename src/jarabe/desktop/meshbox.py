@@ -402,7 +402,7 @@ class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the mesh view")
+        logging.debug('STARTUP: Loading the mesh view')
 
         gobject.GObject.__init__(self)
 
@@ -545,8 +545,8 @@ class MeshBox(gtk.VBox):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
-                and ap.name == "olpc-mesh":
-            logging.debug("ignoring OLPC mesh IBSS")
+                and ap.name == 'olpc-mesh':
+            logging.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return
 
@@ -640,7 +640,7 @@ class MeshBox(gtk.VBox):
             if not net.is_olpc_mesh():
                 continue
 
-            logging.debug("removing OLPC mesh IBSS")
+            logging.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
             self._layout.remove(net)

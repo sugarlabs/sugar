@@ -41,7 +41,7 @@ class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the home view")
+        logging.debug('STARTUP: Loading the home view')
 
         gobject.GObject.__init__(self)
 

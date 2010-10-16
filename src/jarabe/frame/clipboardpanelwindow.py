@@ -36,7 +36,7 @@ class ClipboardPanelWindow(FrameWindow):
         # NOTE: we need to keep a reference to gtk.Clipboard in order to keep
         # listening to it.
         self._clipboard = gtk.Clipboard()
-        self._clipboard.connect("owner-change", self._owner_change_cb)
+        self._clipboard.connect('owner-change', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()
         canvas_widget = hippo.CanvasWidget(widget=self._clipboard_tray)
@@ -44,14 +44,14 @@ class ClipboardPanelWindow(FrameWindow):
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)
-        self.connect("drag_motion", self._clipboard_tray.drag_motion_cb)
-        self.connect("drag_leave", self._clipboard_tray.drag_leave_cb)
-        self.connect("drag_drop", self._clipboard_tray.drag_drop_cb)
-        self.connect("drag_data_received",
+        self.connect('drag_motion', self._clipboard_tray.drag_motion_cb)
+        self.connect('drag_leave', self._clipboard_tray.drag_leave_cb)
+        self.connect('drag_drop', self._clipboard_tray.drag_drop_cb)
+        self.connect('drag_data_received',
                      self._clipboard_tray.drag_data_received_cb)
 
     def _owner_change_cb(self, x_clipboard, event):
-        logging.debug("owner_change_cb")
+        logging.debug('owner_change_cb')
 
         if self._clipboard_tray.owns_clipboard():
             return

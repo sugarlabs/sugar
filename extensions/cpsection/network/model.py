@@ -93,7 +93,7 @@ def set_radio(state):
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
     else:
-        raise ValueError(_("Error in specified radio argument use on/off."))
+        raise ValueError(_('Error in specified radio argument use on/off.'))
 
     return 0
 
@@ -130,7 +130,7 @@ def set_publish_information(value):
     try:
         value = (False, True)[int(value)]
     except:
-        raise ValueError(_("Error in specified argument use 0/1."))
+        raise ValueError(_('Error in specified argument use 0/1.'))
 
     client = gconf.client_get_default()
     client.set_bool('/desktop/sugar/collaboration/publish_gadget', value)

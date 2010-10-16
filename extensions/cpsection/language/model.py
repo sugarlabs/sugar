@@ -27,7 +27,7 @@ import subprocess
 
 
 _default_lang = '%s.%s' % locale.getdefaultlocale()
-_standard_msg = _("Could not access ~/.i18n. Create standard settings.")
+_standard_msg = _('Could not access ~/.i18n. Create standard settings.')
 
 
 def read_all_languages():
@@ -70,7 +70,7 @@ def _initialize():
 def _write_i18n(langs):
     colon = ':'
     langstr = colon.join(langs)
-    path = os.path.join(os.environ.get("HOME"), '.i18n')
+    path = os.path.join(os.environ.get('HOME'), '.i18n')
     if not os.access(path, os.W_OK):
         print _standard_msg
         fd = open(path, 'w')
@@ -85,7 +85,7 @@ def _write_i18n(langs):
 
 
 def get_languages():
-    path = os.path.join(os.environ.get("HOME"), '.i18n')
+    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
     if not os.access(path, os.R_OK):
         print _standard_msg
         fd = open(path, 'w')
@@ -94,18 +94,18 @@ def get_languages():
         fd.close()
         return [_default_lang]
 
-    fd = open(path, "r")
+    fd = open(path, 'r')
     lines = fd.readlines()
     fd.close()
 
     langlist = None
 
     for line in lines:
-        if line.startswith("LANGUAGE="):
+        if line.startswith('LANGUAGE='):
             lang = line[9:].replace('"', '')
             lang = lang.strip()
             langlist = lang.split(':')
-        elif line.startswith("LANG="):
+        elif line.startswith('LANG='):
             lang = line[5:].replace('"', '')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
@@ -128,7 +128,7 @@ def print_languages():
                 found_lang = True
                 break
         if not found_lang:
-            print (_("Language for code=%s could not be determined.") % code)
+            print (_('Language for code=%s could not be determined.') % code)
 
 
 def set_languages(languages):

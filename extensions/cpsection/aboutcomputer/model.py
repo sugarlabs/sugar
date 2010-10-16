@@ -84,7 +84,7 @@ def get_firmware_number():
     if firmware_no is None:
         firmware_no = _not_available
     else:
-        firmware_no = re.split(" +", firmware_no)
+        firmware_no = re.split(' +', firmware_no)
         if len(firmware_no) == 3:
             firmware_no = firmware_no[1]
     return firmware_no
@@ -96,7 +96,7 @@ def print_firmware_number():
 
 def get_wireless_firmware():
     try:
-        info = subprocess.Popen(["/usr/sbin/ethtool", "-i", "eth0"],
+        info = subprocess.Popen(['/usr/sbin/ethtool', '-i', 'eth0'],
                                 stdout=subprocess.PIPE).stdout.readlines()
     except OSError:
         return _not_available
@@ -130,14 +130,14 @@ def _read_file(path):
 def get_license():
     license_file = os.path.join(config.data_path, 'GPLv2')
     lang = os.environ['LANG']
-    if lang.endswith("UTF-8"):
+    if lang.endswith('UTF-8'):
         lang = lang[:-6]
 
-    try_file = license_file + "." + lang
+    try_file = license_file + '.' + lang
     if os.path.isfile(try_file):
         license_file = try_file
     else:
-        try_file = license_file + "." + lang.split("_")[0]
+        try_file = license_file + '.' + lang.split('_')[0]
         if os.path.isfile(try_file):
             license_file = try_file
 

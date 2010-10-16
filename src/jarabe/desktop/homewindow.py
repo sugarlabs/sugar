@@ -79,7 +79,7 @@ class HomeWindow(gtk.Window):
                                      self.__zoom_level_changed_cb)
 
     def _deactivate_view(self, level):
-        group = palettegroup.get_group("default")
+        group = palettegroup.get_group('default')
         group.popdown()
         if level == ShellModel.ZOOM_HOME:
             self._home_box.suspend()

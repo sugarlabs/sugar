@@ -24,9 +24,9 @@ from sugar import dispatch
 from jarabe import config
 
 
-_DBUS_SERVICE = "org.freedesktop.Notifications"
-_DBUS_IFACE = "org.freedesktop.Notifications"
-_DBUS_PATH = "/org/freedesktop/Notifications"
+_DBUS_SERVICE = 'org.freedesktop.Notifications'
+_DBUS_IFACE = 'org.freedesktop.Notifications'
+_DBUS_PATH = '/org/freedesktop/Notifications'
 
 _instance = None
 
@@ -78,11 +78,11 @@ class NotificationService(dbus.service.Object):
     def GetServerInformation(self, name, vendor, version):
         return 'Sugar Shell', 'Sugar', config.version
 
-    @dbus.service.signal(_DBUS_IFACE, signature="uu")
+    @dbus.service.signal(_DBUS_IFACE, signature='uu')
     def NotificationClosed(self, notification_id, reason):
         pass
 
-    @dbus.service.signal(_DBUS_IFACE, signature="us")
+    @dbus.service.signal(_DBUS_IFACE, signature='us')
     def ActionInvoked(self, notification_id, action_key):
         pass
 

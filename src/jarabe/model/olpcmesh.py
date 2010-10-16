@@ -31,7 +31,7 @@ _NM_PATH = '/org/freedesktop/NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
 
-_XS_ANYCAST = "\xc0\x27\xc0\x27\xc0\x00"
+_XS_ANYCAST = '\xc0\x27\xc0\x27\xc0\x00'
 
 DEVICE_STATE_UNKNOWN = 0
 DEVICE_STATE_UNMANAGED = 1
@@ -149,7 +149,7 @@ class OlpcMeshManager(object):
     def _idle_check(self):
         if self._mesh_device_state == DEVICE_STATE_DISCONNECTED \
                 and self._eth_device_state == DEVICE_STATE_DISCONNECTED:
-            logging.debug("starting automesh due to inactivity")
+            logging.debug('starting automesh due to inactivity')
             self._start_automesh()
         return False
 
@@ -172,7 +172,7 @@ class OlpcMeshManager(object):
         logging.error('Failed to activate connection: %s', err)
 
     def _activate_connection(self, channel, anycast_address=None):
-        logging.debug("activate channel %d anycast %r",
+        logging.debug('activate channel %d anycast %r',
                       channel, anycast_address)
         proxy = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         network_manager = dbus.Interface(proxy, _NM_IFACE)

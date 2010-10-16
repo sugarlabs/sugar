@@ -50,7 +50,7 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
 
 
-IP_ADDRESS_TEXT_TEMPLATE = _("IP address: %s")
+IP_ADDRESS_TEXT_TEMPLATE = _('IP address: %s')
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
@@ -143,7 +143,7 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def _set_channel(self, channel):
-        self._channel_label.set_text("%s: %d" % (_("Channel"), channel))
+        self._channel_label.set_text('%s: %d' % (_('Channel'), channel))
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
@@ -191,7 +191,7 @@ class WiredPalette(Palette):
 
     def _inet_ntoa(self, iaddress):
         address = ['%s' % ((iaddress >> i) % 256) for i in [0, 8, 16, 24]]
-        return ".".join(address)
+        return '.'.join(address)
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
@@ -349,8 +349,8 @@ class GsmPalette(Palette):
     def update_stats(self, in_bytes, out_bytes):
         in_KBytes = in_bytes / 1024
         out_KBytes = out_bytes / 1024
-        self._data_label_up.set_text(_("%d KB") % (out_KBytes))
-        self._data_label_down.set_text(_("%d KB") % (in_KBytes))
+        self._data_label_up.set_text(_('%d KB') % (out_KBytes))
+        self._data_label_down.set_text(_('%d KB') % (in_KBytes))
 
     def _get_error_by_nm_reason(self, reason):
         if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
@@ -392,8 +392,8 @@ class WirelessDeviceView(ToolButton):
 
         self._icon = PulsingIcon()
         self._icon.props.icon_name = get_icon_state('network-wireless', 0)
-        self._inactive_color = xocolor.XoColor( \
-            "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
+        self._inactive_color = xocolor.XoColor(
+            '%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
         self._icon.props.pulse_color = self._inactive_color
         self._icon.props.base_color = self._inactive_color
@@ -513,7 +513,7 @@ class WirelessDeviceView(ToolButton):
 
     def _update(self):
         if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-            self._icon.props.badge_name = "emblem-locked"
+            self._icon.props.badge_name = 'emblem-locked'
         else:
             self._icon.props.badge_name = None
 
@@ -606,8 +606,8 @@ class OlpcMeshDeviceView(ToolButton):
         self._channel = 0
 
         self._icon = PulsingIcon(icon_name=self._ICON_NAME)
-        self._inactive_color = xocolor.XoColor( \
-            "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
+        self._inactive_color = xocolor.XoColor(
+            '%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
         self._icon.props.pulse_color = profile.get_color()
         self._icon.props.base_color = self._inactive_color
@@ -616,7 +616,7 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_("Mesh Network"))
+        self._palette = WirelessPalette(_('Mesh Network'))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
@@ -659,7 +659,7 @@ class OlpcMeshDeviceView(ToolButton):
 
     def _update_text(self):
         channel = str(self._channel)
-        text = _("Mesh Network %s") % glib.markup_escape_text(channel)
+        text = _('Mesh Network %s') % glib.markup_escape_text(channel)
         self._palette.props.primary_text = text
 
     def _update(self):
