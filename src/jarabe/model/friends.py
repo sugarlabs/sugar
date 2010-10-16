@@ -49,7 +49,7 @@ class FriendBuddyModel(BuddyModel):
         if buddy is not None:
             self._set_online_buddy(buddy)
 
-    def __buddy_added_cb(self, neighborhood, buddy):
+    def __buddy_added_cb(self, model_, buddy):
         if buddy.key != self.key:
             return
         self._set_online_buddy(buddy)
@@ -60,7 +60,7 @@ class FriendBuddyModel(BuddyModel):
         self.notify('color')
         self.notify('present')
 
-    def __buddy_removed_cb(self, neighborhood, buddy):
+    def __buddy_removed_cb(self, model_, buddy):
         if buddy.key != self.key:
             return
         self._online_buddy = None

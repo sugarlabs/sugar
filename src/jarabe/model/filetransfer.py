@@ -356,11 +356,12 @@ def file_transfer_available():
 if __name__ == '__main__':
     import tempfile
 
-    input_stream = gio.File('/home/tomeu/isos/Soas2-200904031934.iso').read()
-    output_stream = gio.File(tempfile.mkstemp()[1]).append_to()
+    test_file_name = '/home/tomeu/isos/Soas2-200904031934.iso'
+    test_input_stream = gio.File(test_file_name).read()
+    test_output_stream = gio.File(tempfile.mkstemp()[1]).append_to()
 
     # TODO: Use splice_async when it gets implemented
-    splicer = StreamSplicer(input_stream, output_stream)
+    splicer = StreamSplicer(test_input_stream, test_output_stream)
     splicer.start()
 
     loop = gobject.MainLoop()

@@ -50,7 +50,7 @@ def _generate_serial_number():
     return serial
 
 
-def _store_identifiers(serial_number, uuid, backup_url):
+def _store_identifiers(serial_number, uuid_, backup_url):
     """  Stores the serial number, uuid and backup_url
     in the identifier folder inside the profile directory
     so that these identifiers can be used for backup. """
@@ -68,7 +68,7 @@ def _store_identifiers(serial_number, uuid, backup_url):
     if os.path.exists(os.path.join(identifier_path, 'uuid')):
         os.remove(os.path.join(identifier_path, 'uuid'))
     uuid_file = open(os.path.join(identifier_path, 'uuid'), 'w')
-    uuid_file.write(uuid)
+    uuid_file.write(uuid_)
     uuid_file.close()
 
     if os.path.exists(os.path.join(identifier_path, 'backup_url')):
