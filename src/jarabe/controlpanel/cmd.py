@@ -33,7 +33,7 @@ _general_error = _("sugar-control-panel: %s")
 
 
 def cmd_help():
-    '''Print the help to the screen'''
+    """Print the help to the screen"""
     # TRANS: Translators, there's a empty line at the end of this string,
     # which must appear in the translated string (msgstr) as well.
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
@@ -49,14 +49,14 @@ def cmd_help():
 
 
 def note_restart():
-    '''Instructions how to restart sugar'''
+    """Instructions how to restart sugar"""
     print _('To apply your changes you have to restart sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
 
 def load_modules():
-    '''Build a list of pointers to available modules and import them.
-    '''
+    """Build a list of pointers to available modules and import them.
+    """
     modules = []
 
     path = os.path.join(config.ext_path, 'cpsection')

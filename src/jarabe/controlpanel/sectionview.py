@@ -50,5 +50,5 @@ class SectionView(gtk.VBox):
             return self._is_valid
 
     def undo(self):
-        '''Undo here the changes that have been made in this section.'''
+        """Undo here the changes that have been made in this section."""
         pass

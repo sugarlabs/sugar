@@ -360,7 +360,7 @@ class Keyboard(SectionView):
             i += 1
 
     def __create_add_remove_box(self):
-        '''Creates gtk.Hbox with add/remove buttons'''
+        """Creates gtk.Hbox with add/remove buttons"""
         add_icon = Icon(icon_name='list-add')
 
         add_button = gtk.Button()

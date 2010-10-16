@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-'''Activity information microformat parser.
+"""Activity information microformat parser.
 
 Activity information is embedded in HTML/XHTML/XML pages using a
 Resource Description Framework (RDF) http://www.w3.org/RDF/ .
@@ -46,7 +46,7 @@ An example::
         </RDF:Description>
     </em:targetApplication>
 </RDF:Description></RDF:RDF>
-'''
+"""
 
 import logging
 from xml.etree.ElementTree import XML
@@ -149,13 +149,13 @@ class _UpdateFetcher(object):
 
 
 def fetch_update_info(bundle, completion_cb):
-    '''Queries the server for a newer version of the ActivityBundle.
+    """Queries the server for a newer version of the ActivityBundle.
 
        completion_cb receives bundle, version, link, size and possibly an error
        message:
 
        def completion_cb(bundle, version, link, size, error_message):
-    '''
+    """
     global _fetcher
 
     if _fetcher is not None:

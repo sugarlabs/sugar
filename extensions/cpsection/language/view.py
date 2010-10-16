@@ -87,7 +87,7 @@ class Language(SectionView):
         self.setup()
 
     def _add_row(self, locale_code=None):
-        '''Adds a row to the table'''
+        """Adds a row to the table"""
 
         self._selected_lang_count += 1
 
@@ -149,7 +149,7 @@ class Language(SectionView):
                 ypadding=padding)
 
     def _delete_last_row(self):
-        '''Deletes the last row of the table'''
+        """Deletes the last row of the table"""
 
         self._selected_lang_count -= 1
 
@@ -180,7 +180,7 @@ class Language(SectionView):
         self._lang_alert.hide()
 
     def _create_add_remove_box(self):
-        '''Creates gtk.Hbox with add/remove buttons'''
+        """Creates gtk.Hbox with add/remove buttons"""
         add_icon = Icon(icon_name='list-add')
 
         add_button = gtk.Button()

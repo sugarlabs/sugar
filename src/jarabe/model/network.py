@@ -523,9 +523,9 @@ class NMSettings(dbus.service.Object):
 
 
 class SecretsResponse(object):
-    ''' Intermediate object to report the secrets from the dialog
+    """Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
-    '''
+    """
     def __init__(self, connection, reply_cb, error_cb):
         self._connection = connection
         self._reply_cb = reply_cb

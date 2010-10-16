@@ -334,11 +334,11 @@ class JournalActivity(JournalWindow):
         self._list_view.set_is_visible(visible)
 
     def _check_available_space(self):
-        ''' Check available space on device
+        """Check available space on device
 
             If the available space is below 50MB an alert will be
             shown which encourages to delete old journal entries.
-        '''
+        """
 
         if self._critical_space_alert:
             return

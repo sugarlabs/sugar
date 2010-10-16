@@ -1,7 +1,7 @@
-''' This is the release process of the sugar tarballs sugar(shell),
+""" This is the release process of the sugar tarballs sugar(shell),
 sugar-toolkit and sugar-base described in a pytish way and
 instructions for sugar packagers
-'''
+"""
 
 # Release sugar tarballs
 

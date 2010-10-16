@@ -92,6 +92,5 @@ class ModalAlert(gtk.Window):
         self.window.set_accept_focus(True)
 
     def __show_journal_cb(self, button):
-        '''The opener will listen on the destroy signal
-        '''
+        """The opener will listen on the destroy signal"""
         self.destroy()

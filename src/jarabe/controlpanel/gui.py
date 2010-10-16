@@ -229,13 +229,13 @@ class ControlPanel(gtk.Window):
                                   style.COLOR_WHITE.get_gdk_color())
 
     def set_section_view_auto_close(self):
-        '''Automatically close the control panel if there is "nothing to do"
-        '''
+        """Automatically close the control panel if there is "nothing to do"
+        """
         self._section_view.auto_close = True
 
     def _get_options(self):
-        '''Get the available option information from the extensions
-        '''
+        """Get the available option information from the extensions
+        """
         options = {}
 
         path = os.path.join(config.ext_path, 'cpsection')

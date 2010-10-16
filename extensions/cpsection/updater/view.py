@@ -182,8 +182,8 @@ class ActivityUpdater(SectionView):
 
 
 class ProgressPane(gtk.VBox):
-    '''Container which replaces the `ActivityPane` during refresh or
-    install.'''
+    """Container which replaces the `ActivityPane` during refresh or
+    install."""
 
     def __init__(self):
         gtk.VBox.__init__(self)
@@ -376,9 +376,7 @@ class UpdateListModel(gtk.ListStore):
 
 
 def _format_size(size):
-    '''
-    Convert a given size in bytes to a nicer better readable unit
-    '''
+    """Convert a given size in bytes to a nicer better readable unit"""
     if size == 0:
         # TRANS: download size is 0
         return _('None')
