@@ -109,7 +109,7 @@ class Friends(gobject.GObject):
         self.load()
 
     def has_buddy(self, buddy):
-        return self._friends.has_key(buddy.get_key())
+        return buddy.get_key() in self._friends
 
     def add_friend(self, buddy_info):
         self._friends[buddy_info.get_key()] = buddy_info

@@ -42,7 +42,7 @@ class JournalEntryBundle(Bundle):
         Bundle.__init__(self, path)
 
     def install(self, uid=''):
-        if os.environ.has_key('SUGAR_ACTIVITY_ROOT'):
+        if 'SUGAR_ACTIVITY_ROOT' in os.environ:
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
         else:

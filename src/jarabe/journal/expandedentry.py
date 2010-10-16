@@ -212,9 +212,7 @@ class ExpandedEntry(hippo.CanvasBox):
         height = style.zoom(240)
         box = hippo.CanvasBox()
 
-        if self._metadata.has_key('preview') and \
-                len(self._metadata['preview']) > 4:
-
+        if len(self._metadata.get('preview', '')) > 4:
             if self._metadata['preview'][1:4] == 'PNG':
                 preview_data = self._metadata['preview']
             else:
@@ -304,8 +302,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        if self._metadata.has_key('buddies') and \
-                self._metadata['buddies']:
+        if self._metadata.get('buddies'):
             buddies = simplejson.loads(self._metadata['buddies']).values()
             vbox.append(BuddyList(buddies))
             return vbox

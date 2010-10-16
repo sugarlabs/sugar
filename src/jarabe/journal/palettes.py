@@ -54,7 +54,7 @@ class ObjectPalette(Palette):
         activity_icon.props.file = misc.get_icon_name(metadata)
         activity_icon.props.xo_color = misc.get_icon_color(metadata)
 
-        if metadata.has_key('title'):
+        if 'title' in metadata:
             title = gobject.markup_escape_text(metadata['title'])
         else:
             title = _('Untitled')

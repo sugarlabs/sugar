@@ -50,7 +50,7 @@ class FriendsTray(VTray):
                                          self.__neighborhood_activity_added_cb)
 
     def add_buddy(self, buddy):
-        if self._buddies.has_key(buddy.props.key):
+        if buddy.props.key in self._buddies:
             return
 
         icon = FriendIcon(buddy)
@@ -60,7 +60,7 @@ class FriendsTray(VTray):
         self._buddies[buddy.props.key] = icon
 
     def remove_buddy(self, buddy):
-        if not self._buddies.has_key(buddy.props.key):
+        if buddy.props.key not in self._buddies:
             return
 
         self.remove_item(self._buddies[buddy.props.key])

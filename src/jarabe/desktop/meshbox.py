@@ -119,7 +119,7 @@ class ActivityView(hippo.CanvasBox):
         return p
 
     def has_buddy_icon(self, key):
-        return self._icons.has_key(key)
+        return key in self._icons
 
     def __buddy_added_cb(self, activity, buddy):
         self._add_buddy(buddy)

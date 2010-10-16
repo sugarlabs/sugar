@@ -292,10 +292,7 @@ class BundleRegistry(gobject.GObject):
         return result
 
     def get_default_for_type(self, mime_type):
-        if self._mime_defaults.has_key(mime_type):
-            return self._mime_defaults[mime_type]
-        else:
-            return None
+        return self._mime_defaults.get(mime_type)
 
     def _find_bundle(self, bundle_id, version):
         for bundle in self._bundles:

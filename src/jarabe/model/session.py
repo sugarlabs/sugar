@@ -75,7 +75,7 @@ class SessionManager(session.SessionManager):
     def _close_emulator(self):
         gtk.main_quit()
 
-        if os.environ.has_key('SUGAR_EMULATOR_PID'):
+        if 'SUGAR_EMULATOR_PID' in os.environ:
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
 
