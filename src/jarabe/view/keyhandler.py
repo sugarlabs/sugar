@@ -223,7 +223,7 @@ class KeyHandler(object):
         return False
 
     def _key_released_cb(self, grabber, keycode, state, event_time):
-        logging.debug('_key_released_cb: %i %i' % (keycode, state))
+        logging.debug('_key_released_cb: %i %i', keycode, state)
         if self._tabbing_handler.is_tabbing():
             # We stop tabbing and switch to the new window as soon as the
             # modifier key is raised again.

@@ -336,8 +336,8 @@ class NetworkManagerObserver(object):
                             settings = kwargs['connection'].get_settings()
                             net.create_keydialog(settings, kwargs['response'])
                 if not found:
-                    logging.error('Could not determine AP for'
-                                  ' specific object %s' % conn_o)
+                    logging.error('Could not determine AP for specific object'
+                                  ' %s', conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
@@ -602,7 +602,7 @@ class MeshBox(gtk.VBox):
 
         # it's not an error if the AP isn't found, since we might have ignored
         # it (e.g. olpc-mesh adhoc network)
-        logging.debug('Can not remove access point %s' % ap_o)
+        logging.debug('Can not remove access point %s', ap_o)
 
     def add_adhoc_networks(self, device):
         if self._adhoc_manager is None:
