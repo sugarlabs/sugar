@@ -17,7 +17,6 @@
 
 import os
 import tempfile
-import time
 from gettext import gettext as _
 
 import gtk

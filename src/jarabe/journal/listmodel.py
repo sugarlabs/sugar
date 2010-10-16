@@ -19,7 +19,6 @@ import logging
 import simplejson
 import gobject
 import gtk
-import time
 from gettext import gettext as _
 
 from sugar.graphics.xocolor import XoColor

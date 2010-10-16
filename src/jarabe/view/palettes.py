@@ -28,8 +28,6 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
-from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source

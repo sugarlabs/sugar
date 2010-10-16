@@ -30,12 +30,9 @@ from sugar.graphics.icon import Icon, CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
-from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
-from jarabe.view import launcher
 from jarabe.journal import misc
 
 

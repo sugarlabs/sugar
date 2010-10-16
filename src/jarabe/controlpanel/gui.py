@@ -17,8 +17,6 @@
 import os
 import logging
 from gettext import gettext as _
-import sys
-import traceback
 
 import gobject
 import gtk

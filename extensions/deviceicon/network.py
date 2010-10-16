@@ -23,7 +23,6 @@ import logging
 import hashlib
 import socket
 import struct
-import re
 import datetime
 import time
 import gtk
@@ -40,12 +39,9 @@ from sugar.graphics.tray import TrayIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import xocolor
-from sugar.util import unique_id
 from sugar import profile
 
 from jarabe.model import network
-from jarabe.model.network import Settings
-from jarabe.model.network import IP4Config
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
 

@@ -28,7 +28,6 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
 from sugar import mime
 
-from jarabe.model import bundleregistry
 from jarabe.model import friends
 from jarabe.model import filetransfer
 from jarabe.model import mimeregistry

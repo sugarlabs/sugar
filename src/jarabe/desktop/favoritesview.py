@@ -30,7 +30,6 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
 from sugar import dispatch
 from sugar.datastore import datastore
 
@@ -38,7 +37,6 @@ from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
-from jarabe.view import launcher
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
