@@ -95,6 +95,7 @@ class EventArea(gobject.GObject):
         invisible.connect('drag_leave', self._drag_leave_cb)
 
         invisible.realize()
+        # pylint: disable=E1101
         invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
                                     gtk.gdk.ENTER_NOTIFY_MASK |
                                     gtk.gdk.LEAVE_NOTIFY_MASK)

@@ -130,16 +130,17 @@ class Clipboard(gobject.GObject):
 
     def _copy_file(self, original_uri):
         uri = urlparse.urlparse(original_uri)
-        path_, file_name = os.path.split(uri.path)
+        path = uri.path  # pylint: disable=E1101
+        directory_, file_name = os.path.split(path)
 
         root, ext = os.path.splitext(file_name)
         if not ext or ext == '.':
-            mime_type = mime.get_for_file(uri.path)
+            mime_type = mime.get_for_file(path)
             ext = '.' + mime.get_primary_extension(mime_type)
 
         f_, new_file_path = tempfile.mkstemp(ext, root)
         del f_
-        shutil.copyfile(uri.path, new_file_path)
+        shutil.copyfile(path, new_file_path)
         os.chmod(new_file_path, 0644)
 
         return 'file://' + new_file_path
