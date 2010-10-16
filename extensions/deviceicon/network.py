@@ -697,8 +697,8 @@ class OlpcMeshDeviceView(ToolButton):
             try:
                 obj = self._bus.get_object(_NM_IFACE, ap_op)
                 props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-                type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-                if type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+                device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
+                if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
                     netmgr.DeactivateConnection(conn_o)
                     break
             except dbus.exceptions.DBusException:

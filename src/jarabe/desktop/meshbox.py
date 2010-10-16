@@ -523,25 +523,25 @@ class MeshBox(gtk.VBox):
     # add AP to its corresponding network icon on the desktop,
     # creating one if it doesn't already exist
     def _add_ap_to_network(self, ap):
-        hash = ap.network_hash()
-        if hash in self.wireless_networks:
-            self.wireless_networks[hash].add_ap(ap)
+        hash_value = ap.network_hash()
+        if hash_value in self.wireless_networks:
+            self.wireless_networks[hash_value].add_ap(ap)
         else:
             # this is a new network
             icon = WirelessNetworkView(ap)
-            self.wireless_networks[hash] = icon
+            self.wireless_networks[hash_value] = icon
             self._layout.add(icon)
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
-    def _remove_net_if_empty(self, net, hash):
+    def _remove_net_if_empty(self, net, hash_value):
         # remove a network if it has no APs left
         if net.num_aps() == 0:
             net.disconnect()
             self._layout.remove(net)
-            del self.wireless_networks[hash]
+            del self.wireless_networks[hash_value]
 
-    def _ap_props_changed_cb(self, ap, old_hash):
+    def _ap_props_changed_cb(self, ap, old_hash_value):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
@@ -553,28 +553,29 @@ class MeshBox(gtk.VBox):
         if self._adhoc_manager is not None and \
                 network.is_sugar_adhoc_network(ap.name) and \
                 ap.mode == network.NM_802_11_MODE_ADHOC:
-            if old_hash is None:
+            if old_hash_value is None:
                 # new Ad-hoc network finished initializing
                 self._adhoc_manager.add_access_point(ap)
             # we are called as well in other cases but we do not need to
             # act here as we don't display signal strength for Ad-hoc networks
             return
 
-        if old_hash is None:
+        if old_hash_value is None:
             # new AP finished initializing
             self._add_ap_to_network(ap)
             return
 
-        hash = ap.network_hash()
-        if old_hash == hash:
+        hash_value = ap.network_hash()
+        if old_hash_value == hash_value:
             # no change in network identity, so just update signal strengths
-            self.wireless_networks[hash].update_strength()
+            self.wireless_networks[hash_value].update_strength()
             return
 
         # properties change includes a change of the identity of the network
         # that it is on. so create this as a new network.
-        self.wireless_networks[old_hash].remove_ap(ap)
-        self._remove_net_if_empty(self.wireless_networks[old_hash], old_hash)
+        self.wireless_networks[old_hash_value].remove_ap(ap)
+        self._remove_net_if_empty(self.wireless_networks[old_hash_value],
+            old_hash_value)
         self._add_ap_to_network(ap)
 
     def add_access_point(self, device, ap_o):
@@ -636,7 +637,7 @@ class MeshBox(gtk.VBox):
 
         # the OLPC mesh can be recognised as a "normal" wifi network. remove
         # any such normal networks if they have been created
-        for hash, net in self.wireless_networks.iteritems():
+        for hash_value, net in self.wireless_networks.iteritems():
             if not net.is_olpc_mesh():
                 continue
 
@@ -644,7 +645,7 @@ class MeshBox(gtk.VBox):
             net.remove_all_aps()
             net.disconnect()
             self._layout.remove(net)
-            del self.wireless_networks[hash]
+            del self.wireless_networks[hash_value]
 
     def disable_olpc_mesh(self, mesh_device):
         for icon in self._mesh:
