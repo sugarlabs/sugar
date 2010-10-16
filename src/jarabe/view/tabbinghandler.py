@@ -21,7 +21,9 @@ import gtk
 
 from jarabe.model import shell
 
+
 _RAISE_DELAY = 250
+
 
 class TabbingHandler(object):
     def __init__(self, frame, modifier):
@@ -145,4 +147,3 @@ class TabbingHandler(object):
 
     def is_tabbing(self):
         return self._tabbing
-

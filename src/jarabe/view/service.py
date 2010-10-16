@@ -23,9 +23,11 @@ import gtk
 from jarabe.model import shell
 from jarabe.model import bundleregistry
 
+
 _DBUS_SERVICE = "org.laptop.Shell"
 _DBUS_SHELL_IFACE = "org.laptop.Shell"
 _DBUS_PATH = "/org/laptop/Shell"
+
 
 class UIService(dbus.service.Object):
     """Provides d-bus service to script the shell's operations
@@ -86,4 +88,3 @@ class UIService(dbus.service.Object):
                          in_signature="s", out_signature="")
     def NotifyLaunchFailure(self, activity_id):
         shell.get_model().notify_launch_failed(activity_id)
-

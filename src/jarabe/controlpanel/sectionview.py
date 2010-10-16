@@ -18,6 +18,7 @@ import gobject
 import gtk
 from gettext import gettext as _
 
+
 class SectionView(gtk.VBox):
     __gtype_name__ = 'SugarSectionView'
 

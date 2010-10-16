@@ -31,6 +31,7 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
 
+
 class ClipboardIcon(RadioToolButton):
     __gtype_name__ = 'SugarClipboardIcon'
 

@@ -28,6 +28,7 @@ from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
+
 _HOME_PAGE       = 0
 _GROUP_PAGE      = 1
 _MESH_PAGE       = 2
@@ -192,4 +193,3 @@ def get_instance():
     if not _instance:
         _instance = HomeWindow()
     return _instance
-

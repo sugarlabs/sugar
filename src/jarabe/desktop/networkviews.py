@@ -41,6 +41,7 @@ from jarabe.model.network import IP4Config
 from jarabe.model.network import WirelessSecurity
 from jarabe.model.adhoc import get_adhoc_manager_instance
 
+
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -438,6 +439,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                          path=self._device.object_path,
                                          dbus_interface=_NM_WIRELESS_IFACE)
 
+
 class SugarAdhocView(CanvasPulsingIcon):
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
@@ -712,4 +714,3 @@ class OlpcMeshView(CanvasPulsingIcon):
                                          signal_name='PropertiesChanged',
                                          path=device_object_path,
                                          dbus_interface=_NM_OLPC_MESH_IFACE)
-

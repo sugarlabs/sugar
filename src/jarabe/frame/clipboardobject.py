@@ -24,6 +24,7 @@ from gettext import gettext as _
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 
+
 class ClipboardObject(object):
 
     def __init__(self, object_path, name):
@@ -113,6 +114,7 @@ class ClipboardObject(object):
                 logging.debug('Chose %r!', format_)
 
         return format_
+
 
 class Format(object):
 

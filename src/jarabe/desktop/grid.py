@@ -22,10 +22,12 @@ import gtk
 
 from sugar import _sugarext
 
+
 _PLACE_TRIALS = 20
 _MAX_WEIGHT = 255
 _REFRESH_RATE = 200
 _MAX_COLLISIONS_PER_REFRESH = 20
+
 
 class Grid(_sugarext.Grid):
     __gsignals__ = {
@@ -33,6 +35,7 @@ class Grid(_sugarext.Grid):
                            gobject.TYPE_NONE,
                            ([gobject.TYPE_PYOBJECT]))
     }
+
     def __init__(self, width, height):
         gobject.GObject.__init__(self)
 

@@ -26,6 +26,7 @@ import gconf
 
 _zone_tab = '/usr/share/zoneinfo/zone.tab'
 
+
 def _initialize():
     '''Initialize the docstring of the set function'''
     if set_timezone.__doc__ is None:
@@ -35,6 +36,7 @@ def _initialize():
     timezones = read_all_timezones()
     for timezone in timezones:
         set_timezone.__doc__ += timezone + '\n'
+
 
 def read_all_timezones(fn=_zone_tab):
     fd = open (fn, 'r')
@@ -67,12 +69,15 @@ def read_all_timezones(fn=_zone_tab):
         timezones.append(tz)
     return timezones
 
+
 def get_timezone():
     client = gconf.client_get_default()
     return client.get_string('/desktop/sugar/date/timezone')
 
+
 def print_timezone():
     print get_timezone()
+
 
 def set_timezone(timezone):
     """Set the system timezone
@@ -89,4 +94,3 @@ def set_timezone(timezone):
 
 # inilialize the docstrings for the timezone
 _initialize()
-

@@ -22,6 +22,7 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+
 class Power(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)

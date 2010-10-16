@@ -104,6 +104,7 @@ def get_instance():
         _instance = ConnectionWatcher()
     return _instance
 
+
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 

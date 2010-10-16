@@ -25,8 +25,10 @@ import locale
 from gettext import gettext as _
 import subprocess
 
+
 _default_lang = '%s.%s' % locale.getdefaultlocale()
 _standard_msg = _("Could not access ~/.i18n. Create standard settings.")
+
 
 def read_all_languages():
     fdp = subprocess.Popen(['locale', '-av'], stdout=subprocess.PIPE)
@@ -52,6 +54,7 @@ def read_all_languages():
     locales.sort()
     return locales
 
+
 def _initialize():
     if set_languages.__doc__ is None:
         # when running under 'python -OO', all __doc__ fields are None,
@@ -62,6 +65,7 @@ def _initialize():
     for lang in languages:
         set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' +
                                            lang[1].replace(' ', '_'))
+
 
 def _write_i18n(langs):
     colon = ':'
@@ -78,6 +82,7 @@ def _write_i18n(langs):
         fd.write('LANG="%s"\n' % langs[0].strip("\n"))
         fd.write('LANGUAGE="%s"\n' % langstr)
         fd.close()
+
 
 def get_languages():
     path = os.path.join(os.environ.get("HOME"), '.i18n')
@@ -109,6 +114,7 @@ def get_languages():
     else:
         return langlist
 
+
 def print_languages():
     codes = get_languages()
 
@@ -123,6 +129,7 @@ def print_languages():
                 break
         if not found_lang:
             print (_("Language for code=%s could not be determined.") % code)
+
 
 def set_languages(languages):
     """Set the system language.
@@ -146,6 +153,6 @@ def set_languages(languages):
     else:
         _write_i18n(languages)
 
+
 # inilialize the docstrings for the language
 _initialize()
-

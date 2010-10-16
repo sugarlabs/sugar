@@ -23,12 +23,14 @@ import logging
 
 from jarabe import config
 
+
 _RESTART = 1
 
 _same_option_warning = _("sugar-control-panel: WARNING, found more than"
                          " one option with the same name: %s module: %r")
 _no_option_error = _("sugar-control-panel: key=%s not an available option")
 _general_error = _("sugar-control-panel: %s")
+
 
 def cmd_help():
     '''Print the help to the screen'''
@@ -45,10 +47,12 @@ def cmd_help():
     -c key       clear the current value for the key \n\
     ')
 
+
 def note_restart():
     '''Instructions how to restart sugar'''
     print _('To apply your changes you have to restart sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
+
 
 def load_modules():
     '''Build a list of pointers to available modules and import them.
@@ -71,6 +75,7 @@ def load_modules():
                 modules.append(module)
 
     return modules
+
 
 def main():
     try:

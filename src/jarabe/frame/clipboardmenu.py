@@ -35,6 +35,7 @@ from jarabe.frame import clipboard
 from jarabe.journal import misc
 from jarabe.model import bundleregistry
 
+
 class ClipboardMenu(Palette):
 
     def __init__(self, cb_object):

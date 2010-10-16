@@ -34,6 +34,7 @@ from sugar import dispatch
 from sugar import env
 from sugar.util import unique_id
 
+
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
 DEVICE_TYPE_GSM_MODEM = 3
@@ -147,6 +148,7 @@ _conn_counter = 0
 
 _nm_device_state_reason_description = None
 
+
 def get_error_by_reason(reason):
     global _nm_device_state_reason_description
 
@@ -242,7 +244,6 @@ def get_error_by_reason(reason):
     return _nm_device_state_reason_description[reason]
 
 
-
 def frequency_to_channel(frequency):
     """Returns the channel matching a given radio channel frequency. If a
     frequency is not in the dictionary channel 1 will be returned.
@@ -262,6 +263,7 @@ def frequency_to_channel(frequency):
                             "defaulting to channel 1.", frequency)
         return 1
     return ftoc[frequency]
+
 
 def is_sugar_adhoc_network(ssid):
     """Checks whether an access point is a sugar Ad-hoc network.
@@ -293,6 +295,7 @@ class WirelessSecurity(object):
         if self.group is not None:
             wireless_security['group'] = self.group
         return wireless_security
+
 
 class Wireless(object):
     nm_name = "802-11-wireless"
@@ -352,6 +355,7 @@ class Connection(object):
             connection['timestamp'] = self.timestamp
         return connection
 
+
 class IP4Config(object):
     def __init__(self):
         self.method = None
@@ -361,6 +365,7 @@ class IP4Config(object):
         if self.method is not None:
             ip4_config['method'] = self.method
         return ip4_config
+
 
 class Serial(object):
     def __init__(self):
@@ -374,6 +379,7 @@ class Serial(object):
 
         return serial
 
+
 class Ppp(object):
     def __init__(self):
         pass
@@ -381,6 +387,7 @@ class Ppp(object):
     def get_dict(self):
         ppp = {}
         return ppp
+
 
 class Gsm(object):
     def __init__(self):
@@ -399,6 +406,7 @@ class Gsm(object):
             gsm['username'] = self.username
 
         return gsm
+
 
 class Settings(object):
     def __init__(self, wireless_cfg=None):
@@ -421,6 +429,7 @@ class Settings(object):
         if self.ip4_config is not None:
             settings['ipv4'] = self.ip4_config.get_dict()
         return settings
+
 
 class Secrets(object):
     def __init__(self, settings):
@@ -447,6 +456,7 @@ class Secrets(object):
 
         return settings
 
+
 class SettingsGsm(object):
     def __init__(self):
         self.connection = Connection()
@@ -466,6 +476,7 @@ class SettingsGsm(object):
 
         return settings
 
+
 class SecretsGsm(object):
     def __init__(self):
         self.password = None
@@ -481,6 +492,7 @@ class SecretsGsm(object):
         if self.puk is not None:
             secrets['puk'] = self.puk
         return {'gsm': secrets}
+
 
 class NMSettings(dbus.service.Object):
     def __init__(self):
@@ -509,6 +521,7 @@ class NMSettings(dbus.service.Object):
         self.secrets_request.send(self, connection=sender,
                                   response=kwargs['response'])
 
+
 class SecretsResponse(object):
     ''' Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
@@ -524,6 +537,7 @@ class SecretsResponse(object):
 
     def set_error(self, error):
         self._error_cb(error)
+
 
 class NMSettingsConnection(dbus.service.Object):
     def __init__(self, path, settings, secrets):
@@ -649,6 +663,7 @@ class NMSettingsConnection(dbus.service.Object):
             else:
                 raise Exception('The stored GSM secret has already been supplied ')
 
+
 class AccessPoint(gobject.GObject):
     __gsignals__ = {
         'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -757,6 +772,7 @@ class AccessPoint(gobject.GObject):
                                          path=self.model.object_path,
                                          dbus_interface=NM_ACCESSPOINT_IFACE)
 
+
 def get_settings():
     global _nm_settings
     if _nm_settings is None:
@@ -766,6 +782,7 @@ def get_settings():
             logging.exception('Cannot create the UserSettings service.')
         load_connections()
     return _nm_settings
+
 
 def find_connection_by_ssid(ssid):
     connections = get_settings().connections
@@ -778,6 +795,7 @@ def find_connection_by_ssid(ssid):
 
     return None
 
+
 def add_connection(uuid, settings, secrets=None):
     global _conn_counter
 
@@ -787,6 +805,7 @@ def add_connection(uuid, settings, secrets=None):
     conn = NMSettingsConnection(path, settings, secrets)
     _nm_settings.add_connection(uuid, conn)
     return conn
+
 
 def load_wifi_connections():
     profile_path = env.get_profile_path()
@@ -893,9 +912,11 @@ def load_gsm_connection():
     else:
         logging.exception("No gsm connection was set in GConf.")
 
+
 def load_connections():
     load_wifi_connections()
     load_gsm_connection()
+
 
 def find_gsm_connection():
     connections = get_settings().connections

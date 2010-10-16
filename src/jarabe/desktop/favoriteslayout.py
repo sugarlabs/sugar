@@ -29,6 +29,7 @@ from sugar.graphics import style
 from jarabe.model import bundleregistry
 from jarabe.desktop.grid import Grid
 
+
 _logger = logging.getLogger('FavoritesLayout')
 
 _CELL_SIZE = 4
@@ -109,6 +110,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
     def allow_dnd(self):
         return False
 
+
 class RandomLayout(FavoritesLayout):
     """Lay out icons randomly; try to nudge them around to resolve overlaps."""
 
@@ -188,6 +190,7 @@ class RandomLayout(FavoritesLayout):
 
     def allow_dnd(self):
         return True
+
 
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
         style.STANDARD_ICON_SIZE * 2
@@ -351,6 +354,7 @@ class RingLayout(FavoritesLayout):
         else:
             return 0
 
+
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75
 """Chose a constant such that STANDARD_ICON_SIZE icons are nicely spaced."""
 
@@ -375,6 +379,7 @@ The sunflower angle is approximately 137.5 degrees.
 This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
 Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
 """
+
 
 class SunflowerLayout(RingLayout):
     """Spiral layout based on Fibonacci ratio in phyllotaxis.
@@ -446,6 +451,7 @@ class SunflowerLayout(RingLayout):
 
             return x, y
 
+
 class BoxLayout(RingLayout):
     """Lay out icons in a square around the XO man."""
 
@@ -486,6 +492,7 @@ class BoxLayout(RingLayout):
         return RingLayout._calculate_position\
                (self, radius, icon_size, index, children_count,
                 sin=sin, cos=cos)
+
 
 class TriangleLayout(RingLayout):
     """Lay out icons in a triangle around the XO man."""

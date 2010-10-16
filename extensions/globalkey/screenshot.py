@@ -31,6 +31,7 @@ from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']
 
+
 def handle_key_press(key):
     tmp_dir = os.path.join(env.get_profile_path(), 'data')
     fd, file_path = tempfile.mkstemp(dir=tmp_dir)
@@ -87,14 +88,15 @@ def handle_key_press(key):
         jobject.destroy()
         del jobject
 
+
 def _get_preview_data(screenshot):
     preview = screenshot.scale_simple(style.zoom(300), style.zoom(225),
                                       gtk.gdk.INTERP_BILINEAR)
     preview_data = []
+
     def save_func(buf, data):
         data.append(buf)
 
     preview.save_to_callback(save_func, 'png', user_data=preview_data)
 
     return dbus.ByteArray(''.join(preview_data))
-

@@ -38,6 +38,7 @@ from jarabe.view.palettes import ActivityPalette
 from jarabe.view import launcher
 from jarabe.journal import misc
 
+
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
@@ -154,6 +155,7 @@ class ActivitiesTreeView(gtk.TreeView):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
         return title is not None and title.lower().find(self._query) > -1
 
+
 class ListModel(gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
 
@@ -238,6 +240,7 @@ class ListModel(gtk.TreeModelSort):
     def refilter(self):
         self._model_filter.refilter()
 
+
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
 
@@ -251,6 +254,7 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
         self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+
 
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererActivityIcon'
@@ -289,6 +293,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 
     def __erase_activated_cb(self, palette, bundle_id):
         self.emit('erase-activated', bundle_id)
+
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
@@ -373,6 +378,7 @@ class ActivitiesList(gtk.VBox):
             bundle = registry.get_bundle(bundle_id)
             registry.uninstall(bundle, delete_profile=True)
 
+
 class ActivityListPalette(ActivityPalette):
     __gtype_name__ = 'SugarActivityListPalette'
 
@@ -452,4 +458,3 @@ class ActivityListPalette(ActivityPalette):
 
     def __erase_activate_cb(self, menu_item):
         self.emit('erase-activated', self._bundle_id)
-

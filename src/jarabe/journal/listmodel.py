@@ -29,9 +29,11 @@ from sugar import util
 from jarabe.journal import model
 from jarabe.journal import misc
 
+
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
+
 
 class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
@@ -219,4 +221,3 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             return True
 
         return False
-

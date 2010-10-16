@@ -37,10 +37,12 @@ from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from sugar import mime
 
+
 _SOURCE_FONT = pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
+
 
 def setup_view_source(activity):
     service = activity.get_service()
@@ -88,6 +90,7 @@ def setup_view_source(activity):
                              activity.get_title())
     map_activity_to_window[window_xid] = view_source
     view_source.show()
+
 
 class ViewSource(gtk.Window):
     __gtype_name__ = 'SugarViewSource'
@@ -195,6 +198,7 @@ class ViewSource(gtk.Window):
         else:
             self._source_display.file_path = None
 
+
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
@@ -250,6 +254,7 @@ class DocumentButton(RadioToolButton):
     def __internal_save_error_cb(self, err):
         logging.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
+
 
 class Toolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarViewSourceToolbar'
@@ -339,6 +344,7 @@ class Toolbar(gtk.Toolbar):
         if button.props.active:
             self.emit('source-selected', path)
 
+
 class FileViewer(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarFileViewer'
 
@@ -405,6 +411,7 @@ class FileViewer(gtk.ScrolledWindow):
             file_path = model.get_value(tree_iter, 1)
         self.emit('file-selected', file_path)
 
+
 class SourceDisplay(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
 
@@ -461,4 +468,3 @@ class SourceDisplay(gtk.ScrolledWindow):
         return self._file_path
 
     file_path = property(_get_file_path, _set_file_path)
-

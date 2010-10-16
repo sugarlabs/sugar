@@ -47,6 +47,7 @@ from jarabe.model.olpcmesh import OlpcMeshManager
 from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
+
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -228,6 +229,7 @@ class DeviceObserver(gobject.GObject):
         'access-point-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                                  ([gobject.TYPE_PYOBJECT]))
     }
+
     def __init__(self, device):
         gobject.GObject.__init__(self)
         self._bus = dbus.SystemBus()

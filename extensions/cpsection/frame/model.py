@@ -18,13 +18,16 @@
 from gettext import gettext as _
 import gconf
 
+
 def get_corner_delay():
     client = gconf.client_get_default()
     corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
     return corner_delay
 
+
 def print_corner_delay():
     print get_corner_delay()
+
 
 def set_corner_delay(delay):
     """Set a delay for the activation of the frame using hot corners.
@@ -40,13 +43,16 @@ def set_corner_delay(delay):
     client.set_int('/desktop/sugar/frame/corner_delay', int(delay))
     return 0
 
+
 def get_edge_delay():
     client = gconf.client_get_default()
     edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
     return edge_delay
 
+
 def print_edge_delay():
     print get_edge_delay()
+
 
 def set_edge_delay(delay):
     """Set a delay for the activation of the frame using warm edges.

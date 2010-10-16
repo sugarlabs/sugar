@@ -21,6 +21,7 @@ import pango
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
+
 class InlineAlert(gtk.HBox):
     """UI interface for Inline alerts
 
@@ -80,4 +81,3 @@ class InlineAlert(gtk.HBox):
     def do_get_property(self, pspec):
         if pspec.name == 'msg':
             return self._msg
-

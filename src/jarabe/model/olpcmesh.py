@@ -24,6 +24,7 @@ from jarabe.model.network import Settings
 from jarabe.model.network import OlpcMesh as OlpcMeshSettings
 from sugar.util import unique_id
 
+
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -42,6 +43,7 @@ DEVICE_STATE_NEED_AUTH = 6
 DEVICE_STATE_IP_CONFIG = 7
 DEVICE_STATE_ACTIVATED = 8
 DEVICE_STATE_FAILED = 9
+
 
 class OlpcMeshManager(object):
     def __init__(self, mesh_device):
@@ -211,4 +213,3 @@ class OlpcMeshManager(object):
         self._connection_queue.append((6, _XS_ANYCAST))
         self._connection_queue.append((1, _XS_ANYCAST))
         self._try_next_connection_from_queue()
-

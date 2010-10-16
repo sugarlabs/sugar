@@ -24,6 +24,7 @@ import dbus
 from jarabe.model import network
 from jarabe.model.network import Secrets
 
+
 IW_AUTH_ALG_OPEN_SYSTEM = 'open'
 IW_AUTH_ALG_SHARED_KEY  = 'shared'
 
@@ -39,6 +40,7 @@ def string_is_hex(key):
             is_hex = False
     return is_hex
 
+
 def string_is_ascii(string):
     try:
         string.encode('ascii')
@@ -46,11 +48,13 @@ def string_is_ascii(string):
     except UnicodeEncodeError:
         return False
 
+
 def string_to_hex(passphrase):
     key = ''
     for c in passphrase:
         key += '%02x' % ord(c)
     return key
+
 
 def hash_passphrase(passphrase):
     # passphrase must have a length of 64
@@ -62,10 +66,12 @@ def hash_passphrase(passphrase):
     passphrase = hashlib.md5(passphrase).digest()
     return string_to_hex(passphrase)[:26]
 
+
 class CanceledKeyRequestError(dbus.DBusException):
     def __init__(self):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
+
 
 class KeyDialog(gtk.Dialog):
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
@@ -211,6 +217,7 @@ class WEPKeyDialog(KeyDialog):
 
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
 
+
 class WPAKeyDialog(KeyDialog):
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
                  response):
@@ -283,6 +290,7 @@ class WPAKeyDialog(KeyDialog):
         self.set_response_sensitive(gtk.RESPONSE_OK, valid)
         return False
 
+
 def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
     if wpa_flags == network.NM_802_11_AP_SEC_NONE and \
             rsn_flags == network.NM_802_11_AP_SEC_NONE:
@@ -296,8 +304,10 @@ def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
     key_dialog.connect("destroy", _key_dialog_destroy_cb)
     key_dialog.show_all()
 
+
 def _key_dialog_destroy_cb(key_dialog, data=None):
     _key_dialog_response_cb(key_dialog, gtk.RESPONSE_CANCEL)
+
 
 def _key_dialog_response_cb(key_dialog, response_id):
     response = key_dialog.get_response_object()
@@ -316,4 +326,3 @@ def _key_dialog_response_cb(key_dialog, response_id):
         raise RuntimeError("Unhandled key dialog response %d" % response_id)
 
     key_dialog.destroy()
-

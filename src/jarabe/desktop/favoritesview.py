@@ -48,6 +48,7 @@ from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
 from jarabe.desktop import favoriteslayout
 
+
 _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
@@ -509,6 +510,7 @@ class ActivityIcon(CanvasIcon):
         self._resume_mode = resume_mode
         self._update()
 
+
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
 
@@ -557,6 +559,7 @@ class FavoritePalette(ActivityPalette):
         if entry is not None:
             self.emit('entry-activate', entry)
 
+
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
         CanvasIcon.__init__(self, cache=True)
@@ -595,6 +598,7 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self._home_activity = home_activity
         self._update()
 
+
 class OwnerIcon(BuddyIcon):
     __gtype_name__ = 'SugarFavoritesOwnerIcon'
 
@@ -602,6 +606,7 @@ class OwnerIcon(BuddyIcon):
         'register-activate' : (gobject.SIGNAL_RUN_FIRST,
                                 gobject.TYPE_NONE, ([]))
     }
+
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), size=size)
 
@@ -633,6 +638,7 @@ class OwnerIcon(BuddyIcon):
 
     def remove_register_menu(self):
         self.palette.menu.remove(self._register_menu)
+
 
 class FavoritesSetting(object):
 

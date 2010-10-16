@@ -23,11 +23,13 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+
 CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
 
 _APPLY_TIMEOUT = 3000
+
 
 class Network(SectionView):
     def __init__(self, model, alerts):

@@ -25,7 +25,9 @@ from sugar.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 
+
 APPLY_TIMEOUT = 1000
+
 
 class EntryWithLabel(gtk.HBox):
     __gtype_name__ = "SugarEntryWithLabel"
@@ -86,6 +88,7 @@ class EntryWithLabel(gtk.HBox):
         return self._is_valid
     is_valid = gobject.property(type=bool, getter=_get_is_valid, default=True)
 
+
 class UsernameEntry(EntryWithLabel):
     def __init__(self, model):
         EntryWithLabel.__init__(self, _('Username:'))
@@ -96,6 +99,7 @@ class UsernameEntry(EntryWithLabel):
 
     def set_value(self, username):
         self._model.set_username(username)
+
 
 class PasswordEntry(EntryWithLabel):
     def __init__(self, model):
@@ -108,6 +112,7 @@ class PasswordEntry(EntryWithLabel):
     def set_value(self, password):
         self._model.set_password(password)
 
+
 class NumberEntry(EntryWithLabel):
     def __init__(self, model):
         EntryWithLabel.__init__(self, _('Number:'))
@@ -118,6 +123,7 @@ class NumberEntry(EntryWithLabel):
 
     def set_value(self, number):
         self._model.set_number(number)
+
 
 class ApnEntry(EntryWithLabel):
     def __init__(self, model):
@@ -130,6 +136,7 @@ class ApnEntry(EntryWithLabel):
     def set_value(self, apn):
         self._model.set_apn(apn)
 
+
 class PinEntry(EntryWithLabel):
     def __init__(self, model):
         EntryWithLabel.__init__(self, _('Personal Identity Number (PIN):'))
@@ -140,6 +147,7 @@ class PinEntry(EntryWithLabel):
 
     def set_value(self, pin):
         self._model.set_pin(pin)
+
 
 class PukEntry(EntryWithLabel):
     def __init__(self, model):
@@ -247,4 +255,3 @@ class ModemConfiguration(SectionView):
         if entry.is_valid:
             self.needs_restart = True
         self._validate()
-

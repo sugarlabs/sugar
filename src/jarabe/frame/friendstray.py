@@ -24,6 +24,7 @@ from jarabe.model import shell
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import neighborhood
 
+
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
         TrayIcon.__init__(self, icon_name='computer-xo',
@@ -33,6 +34,7 @@ class FriendIcon(TrayIcon):
         self.palette = BuddyMenu(buddy)
         self.palette.props.icon_visible = False
         self.palette.set_group_id('frame')
+
 
 class FriendsTray(VTray):
     def __init__(self):

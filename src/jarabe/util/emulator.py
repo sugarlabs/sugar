@@ -118,6 +118,7 @@ def _start_window_manager():
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
+
 def _setup_env(display, scaling, emulator_pid):
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
@@ -135,6 +136,7 @@ def _setup_env(display, scaling, emulator_pid):
 
     if scaling:
         os.environ['SUGAR_SCALING'] = scaling
+
 
 def main():
     """Script-level operations"""

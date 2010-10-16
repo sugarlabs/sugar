@@ -20,6 +20,7 @@ from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+
 class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)

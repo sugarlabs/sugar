@@ -30,8 +30,10 @@ from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.spreadlayout import SpreadLayout
 
+
 class GroupBox(hippo.Canvas):
     __gtype_name__ = 'SugarGroupBox'
+
     def __init__(self):
         logging.debug("STARTUP: Loading the group view")
 

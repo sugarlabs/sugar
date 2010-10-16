@@ -21,8 +21,10 @@ import gobject
 
 from sugar.graphics.icon import Icon, CanvasIcon
 
+
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
+
 
 class Pulser(object):
     def __init__(self, icon):
@@ -82,6 +84,7 @@ class Pulser(object):
         self.update()
 
         return True
+
 
 class PulsingIcon(Icon):
     __gtype_name__ = 'SugarPulsingIcon'
@@ -160,6 +163,7 @@ class PulsingIcon(Icon):
         self._pulser.stop()
         if self._palette is not None:
             self._palette.destroy()
+
 
 class CanvasPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarCanvasPulsingIcon'

@@ -30,6 +30,7 @@ from sugar.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
+
 _ICON_NAME = 'battery'
 
 _STATUS_CHARGING = 0
@@ -41,6 +42,7 @@ _LEVEL_PROP = 'battery.charge_level.percentage'
 _CHARGING_PROP = 'battery.rechargeable.is_charging'
 _DISCHARGING_PROP = 'battery.rechargeable.is_discharging'
 _PRESENT_PROP = 'battery.present'
+
 
 class DeviceView(TrayIcon):
 
@@ -101,6 +103,7 @@ class DeviceView(TrayIcon):
     def _battery_status_changed_cb(self, pspec, param):
         self._update_info()
 
+
 class BatteryPalette(Palette):
 
     def __init__(self, primary_text):
@@ -154,6 +157,7 @@ class BatteryPalette(Palette):
 
         self.props.secondary_text = secondary_text
         self._status_label.set_text(status_text)
+
 
 class DeviceModel(gobject.GObject):
     __gproperties__ = {
@@ -240,6 +244,7 @@ class DeviceModel(gobject.GObject):
             elif change[0] == _PRESENT_PROP:
                 self._present = self._get_present()
                 self.notify('present')
+
 
 def setup(tray):
     bus = dbus.Bus(dbus.Bus.TYPE_SYSTEM)

@@ -32,6 +32,7 @@ from jarabe.model import sound
 
 _ICON_NAME = 'speaker'
 
+
 class DeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 103
@@ -85,6 +86,7 @@ class DeviceView(TrayIcon):
 
     def __speaker_status_changed_cb(self, pspec_, param_):
         self._update_info()
+
 
 class SpeakerPalette(Palette):
 
@@ -167,6 +169,7 @@ class SpeakerPalette(Palette):
         self._update_level()
         self._update_muted()
 
+
 class DeviceModel(gobject.GObject):
     __gproperties__ = {
         'level'   : (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
@@ -211,6 +214,7 @@ class DeviceModel(gobject.GObject):
             self._set_level(value)
         elif pspec.name == "muted":
             self._set_muted(value)
+
 
 def setup(tray):
     tray.add_device(DeviceView())

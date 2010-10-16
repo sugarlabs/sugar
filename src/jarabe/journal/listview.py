@@ -34,10 +34,12 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
 
+
 UPDATE_INTERVAL = 300
 
 MESSAGE_EMPTY_JOURNAL = 0
 MESSAGE_NO_MATCH = 1
+
 
 class TreeView(gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
@@ -57,6 +59,7 @@ class TreeView(gtk.TreeView):
         finally:
             if tree_model is not None:
                 tree_model.view_is_resizing = False
+
 
 class BaseListView(gtk.Bin):
     __gtype_name__ = 'JournalBaseListView'
@@ -460,6 +463,7 @@ class BaseListView(gtk.Bin):
         self.update_dates()
         return True
 
+
 class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
 
@@ -538,6 +542,7 @@ class ListView(BaseListView):
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False
 
+
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
 
@@ -551,6 +556,7 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
         self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+
 
 class CellRendererDetail(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererDetail'
@@ -567,6 +573,7 @@ class CellRendererDetail(CellRendererIcon):
         self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
+
 
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererActivityIcon'
@@ -610,6 +617,7 @@ class CellRendererActivityIcon(CellRendererIcon):
     show_palette = gobject.property(type=bool, default=True,
                                     setter=set_show_palette)
 
+
 class CellRendererBuddy(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererBuddy'
 
@@ -643,4 +651,3 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.xo_color = xo_color
 
     buddy = gobject.property(type=object, setter=set_buddy)
-

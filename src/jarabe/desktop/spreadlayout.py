@@ -22,10 +22,13 @@ from sugar.graphics import style
 
 from jarabe.desktop.grid import Grid
 
+
 _CELL_SIZE = 4.0
+
 
 class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSpreadLayout'
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._box = None
@@ -80,4 +83,3 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
 
     def _grid_child_changed_cb(self, grid, child):
         child.emit_request_changed()
-

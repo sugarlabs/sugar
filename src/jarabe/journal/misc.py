@@ -40,6 +40,7 @@ from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 
+
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
     for generic_type in generic_types:
@@ -54,6 +55,7 @@ def _get_icon_for_mime(mime_type):
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
             return file_name
+
 
 def get_icon_name(metadata):
     file_name = None
@@ -84,6 +86,7 @@ def get_icon_name(metadata):
 
     return file_name
 
+
 def get_date(metadata):
     """ Convert from a string in iso format to a more human-like format. """
     if metadata.has_key('timestamp'):
@@ -94,6 +97,7 @@ def get_date(metadata):
         return util.timestamp_to_elapsed_string(time.mktime(ti))
     else:
         return _('No date')
+
 
 def get_bundle(metadata):
     try:
@@ -123,6 +127,7 @@ def get_bundle(metadata):
         logging.exception('Incorrect bundle')
         return None
 
+
 def _get_activities_for_mime(mime_type):
     registry = bundleregistry.get_registry()
     result = registry.get_activities_for_type(mime_type)
@@ -132,6 +137,7 @@ def _get_activities_for_mime(mime_type):
                 if activity not in result:
                     result.append(activity)
     return result
+
 
 def get_activities(metadata):
     activities = []
@@ -150,6 +156,7 @@ def get_activities(metadata):
                 activities.append(activity_info)
 
     return activities
+
 
 def resume(metadata, bundle_id=None):
     registry = bundleregistry.get_registry()
@@ -206,7 +213,6 @@ def resume(metadata, bundle_id=None):
 
         bundle = registry.get_bundle(bundle_id)
 
-
         if metadata.get('mountpoint', '/') == '/':
             object_id = metadata['uid']
         else:
@@ -214,6 +220,7 @@ def resume(metadata, bundle_id=None):
 
         launch(bundle, activity_id=activity_id, object_id=object_id,
                 color=get_icon_color(metadata))
+
 
 def _launch_bundle(bundle):
     registry = bundleregistry.get_registry()
@@ -225,6 +232,7 @@ def _launch_bundle(bundle):
     else:
         logging.error('Bundle %r is not installed.',
                     bundle.get_bundle_id())
+
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False):
@@ -250,6 +258,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
             object_id=object_id, uri=uri, invited=invited)
     activityfactory.create(bundle, activity_handle)
 
+
 def _downgrade_option_alert(bundle):
     alert = ConfirmationAlert()
     alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
@@ -258,6 +267,7 @@ def _downgrade_option_alert(bundle):
     alert.connect('response', _downgrade_alert_response_cb, bundle)
     journalwindow.get_journal_window().add_alert(alert)
     alert.show()
+
 
 def _downgrade_alert_response_cb(alert, response_id, bundle):
     if response_id is gtk.RESPONSE_OK:
@@ -268,20 +278,25 @@ def _downgrade_alert_response_cb(alert, response_id, bundle):
     elif response_id is gtk.RESPONSE_CANCEL:
         journalwindow.get_journal_window().remove_alert(alert)
 
+
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')
     return mime_type == ActivityBundle.MIME_TYPE or \
            mime_type == ActivityBundle.DEPRECATED_MIME_TYPE
 
+
 def is_content_bundle(metadata):
     return metadata.get('mime_type', '') == ContentBundle.MIME_TYPE
+
 
 def is_journal_bundle(metadata):
     return metadata.get('mime_type', '') == JournalEntryBundle.MIME_TYPE
 
+
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
             is_journal_bundle(metadata)
+
 
 def get_icon_color(metadata):
     if metadata is None or not 'icon-color' in metadata:

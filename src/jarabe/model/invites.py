@@ -38,6 +38,7 @@ from jarabe.model import bundleregistry
 from jarabe.model import neighborhood
 from jarabe.journal import misc
 
+
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
         'org.laptop.Telepathy.ActivityProperties'
 
@@ -106,6 +107,7 @@ class ActivityInvite(object):
             raise error
         else:
             logging.debug('__handle_with_reply_cb')
+
 
 class Invites(gobject.GObject):
     __gsignals__ = {

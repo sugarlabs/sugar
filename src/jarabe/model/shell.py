@@ -638,4 +638,3 @@ def get_model():
     if _model is None:
         _model = ShellModel()
     return _model
-

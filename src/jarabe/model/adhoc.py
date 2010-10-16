@@ -24,6 +24,7 @@ from jarabe.model.network import Settings
 from sugar.util import unique_id
 from jarabe.model.network import IP4Config
 
+
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'

@@ -24,6 +24,7 @@ from sugar.graphics import iconentry
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+
 class TimeZone(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)

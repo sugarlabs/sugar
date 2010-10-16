@@ -48,6 +48,7 @@ from sugar.profile import get_profile
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
 
+
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
 ACCOUNT_MANAGER_PATH = '/org/freedesktop/Telepathy/AccountManager'
 CHANNEL_DISPATCHER_SERVICE = 'org.freedesktop.Telepathy.ChannelDispatcher'
@@ -79,6 +80,7 @@ class ActivityModel(gobject.GObject):
         'buddy-removed':         (gobject.SIGNAL_RUN_FIRST,
                                   gobject.TYPE_NONE, ([object])),
     }
+
     def __init__(self, activity_id, room_handle):
         gobject.GObject.__init__(self)
 
@@ -153,6 +155,7 @@ class ActivityModel(gobject.GObject):
         self.emit('current-buddy-removed', buddy)
 
     current_buddies = gobject.property(type=object, getter=get_current_buddies)
+
 
 class _Account(gobject.GObject):
     __gsignals__ = {
@@ -616,6 +619,7 @@ class _Account(gobject.GObject):
 
     def __set_enabled_cb(self):
         logging.debug('_Account.__set_enabled_cb success')
+
 
 class Neighborhood(gobject.GObject):
     __gsignals__ = {

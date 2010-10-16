@@ -462,4 +462,3 @@ def get_registry():
     if not _instance:
         _instance = BundleRegistry()
     return _instance
-

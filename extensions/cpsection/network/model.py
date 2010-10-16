@@ -25,18 +25,23 @@ _NM_IFACE = 'org.freedesktop.NetworkManager'
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
+
 class ReadError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
+
 
 def get_jabber():
     client = gconf.client_get_default()
     return client.get_string('/desktop/sugar/collaboration/jabber_server')
 
+
 def print_jabber():
     print get_jabber()
+
 
 def set_jabber(server):
     """Set the jabber server
@@ -46,6 +51,7 @@ def set_jabber(server):
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
 
     return 0
+
 
 def get_radio():
     try:
@@ -61,8 +67,10 @@ def get_radio():
     else:
         raise ReadError(_('State is unknown.'))
 
+
 def print_radio():
     print ('off', 'on')[get_radio()]
+
 
 def set_radio(state):
     """Turn Radio 'on' or 'off'
@@ -89,6 +97,7 @@ def set_radio(state):
 
     return 0
 
+
 def clear_registration():
     """Clear the registration with the schoolserver
     """
@@ -96,18 +105,22 @@ def clear_registration():
     client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
+
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
     pass
+
 
 def get_publish_information():
     client = gconf.client_get_default()
     publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
     return publish
 
+
 def print_publish_information():
     print get_publish_information()
+
 
 def set_publish_information(value):
     """ If set to true, Sugar will make you searchable for

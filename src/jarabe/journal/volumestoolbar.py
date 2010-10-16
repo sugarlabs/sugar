@@ -30,6 +30,7 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.journal import model
 from jarabe.view.palettes import VolumePalette
 
+
 class VolumesToolbar(gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
 
@@ -130,6 +131,7 @@ class VolumesToolbar(gtk.Toolbar):
         button = self._get_button_for_mount(mount)
         button.props.active = True
 
+
 class BaseButton(RadioToolButton):
     __gsignals__ = {
         'volume-error': (gobject.SIGNAL_RUN_FIRST,
@@ -167,6 +169,7 @@ class BaseButton(RadioToolButton):
                       _('Error while copying the entry. %s') % e.strerror,
                       _('Error'))
 
+
 class VolumeButton(BaseButton):
     def __init__(self, mount):
         self._mount = mount
@@ -197,6 +200,7 @@ class VolumeButton(BaseButton):
         #palette.set_group_id('frame')
         return palette
 
+
 class JournalButton(BaseButton):
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
@@ -206,4 +210,3 @@ class JournalButton(BaseButton):
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
-

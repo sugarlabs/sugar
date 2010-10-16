@@ -218,6 +218,7 @@ class UpdateModel(gobject.GObject):
         self._bundles_to_update = None
         self._cancelling = False
 
+
 class BundleUpdate(object):
 
     def __init__(self, bundle, version, link, size):

@@ -35,6 +35,7 @@ from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 
+
 class ObjectPalette(Palette):
 
     __gtype_name__ = 'ObjectPalette'
@@ -153,6 +154,7 @@ class ObjectPalette(Palette):
 
         filetransfer.start_transfer(buddy, file_name, title, description,
                                     mime_type)
+
 
 class FriendsMenu(gtk.Menu):
     __gtype_name__ = 'JournalFriendsMenu'

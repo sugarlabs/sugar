@@ -91,6 +91,7 @@ class FriendBuddyModel(BuddyModel):
 
     handle = gobject.property(type=object, getter=get_handle)
 
+
 class Friends(gobject.GObject):
     __gsignals__ = {
         'friend-added':   (gobject.SIGNAL_RUN_FIRST,

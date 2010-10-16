@@ -19,6 +19,7 @@ from sugar.graphics import style
 
 from jarabe.view.buddymenu import BuddyMenu
 
+
 class BuddyIcon(CanvasIcon):
     def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
@@ -60,4 +61,3 @@ class BuddyIcon(CanvasIcon):
         self._greyed_out = (self._buddy.get_nick().lower().find(query) == -1) \
                 and not self._buddy.is_owner()
         self._update_color()
-

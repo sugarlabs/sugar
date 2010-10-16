@@ -32,7 +32,9 @@ from sugar.graphics.xocolor import XoColor
 
 from jarabe.intro import colorpicker
 
+
 _BACKGROUND_COLOR = style.COLOR_WHITE
+
 
 def create_profile(name, color=None, pixbuf=None):
     if not pixbuf:
@@ -60,6 +62,7 @@ def create_profile(name, color=None, pixbuf=None):
     else:
         logging.error("Keypair exists, skip generation.")
 
+
 class _Page(hippo.CanvasBox):
     __gproperties__ = {
         'valid'    : (bool, None, None, False,
@@ -80,6 +83,7 @@ class _Page(hippo.CanvasBox):
 
     def activate(self):
         pass
+
 
 class _NamePage(_Page):
     def __init__(self, intro):
@@ -118,6 +122,7 @@ class _NamePage(_Page):
     def activate(self):
         self._entry.props.widget.grab_focus()
 
+
 class _ColorPage(_Page):
     def __init__(self, **kwargs):
         _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
@@ -137,6 +142,7 @@ class _ColorPage(_Page):
 
     def get_color(self):
         return self._cp.get_color()
+
 
 class _IntroBox(hippo.CanvasBox):
     __gsignals__ = {
@@ -254,6 +260,7 @@ class _IntroBox(hippo.CanvasBox):
         color = self._color_page.get_color()
 
         self.emit('done', name, color)
+
 
 class IntroWindow(gtk.Window):
     def __init__(self):

@@ -43,6 +43,7 @@ from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 
+
 _AUTOSEARCH_TIMEOUT = 1000
 
 _ACTION_ANYTIME = 0
@@ -67,6 +68,7 @@ class MainToolbox(Toolbox):
         self.search_toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         self.add_toolbar(_('Search'), self.search_toolbar)
         self.search_toolbar.show()
+
 
 class SearchToolbar(gtk.Toolbar):
     __gtype_name__ = 'SearchToolbar'
@@ -355,6 +357,7 @@ class SearchToolbar(gtk.Toolbar):
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False
 
+
 class DetailToolbox(Toolbox):
     def __init__(self):
         Toolbox.__init__(self)
@@ -363,12 +366,14 @@ class DetailToolbox(Toolbox):
         self.add_toolbar('', self.entry_toolbar)
         self.entry_toolbar.show()
 
+
 class EntryToolbar(gtk.Toolbar):
     __gsignals__ = {
         'volume-error': (gobject.SIGNAL_RUN_FIRST,
                          gobject.TYPE_NONE,
                          ([str, str]))
         }
+
     def __init__(self):
         gtk.Toolbar.__init__(self)
 

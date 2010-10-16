@@ -32,8 +32,10 @@ from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 
+
 _logger = logging.getLogger('ControlPanel')
 _MAX_COLUMNS = 5
+
 
 class ControlPanel(gtk.Window):
     __gtype_name__ = 'SugarControlPanel'
@@ -333,6 +335,7 @@ class ControlPanel(gtk.Window):
         section_is_valid = section_view.props.is_valid
         self._section_toolbar.accept_button.set_sensitive(section_is_valid)
 
+
 class ModelWrapper(object):
     def __init__(self, module):
         self._module = module
@@ -359,6 +362,7 @@ class ModelWrapper(object):
                     method(self._options[key])
                 except Exception, detail:
                     _logger.debug('Error undo option: %s', detail)
+
 
 class _SectionIcon(gtk.EventBox):
     __gtype_name__ = "SugarSectionIcon"

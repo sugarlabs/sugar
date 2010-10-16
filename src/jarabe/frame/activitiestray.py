@@ -98,7 +98,6 @@ class ActivityButton(RadioToolButton):
             self._icon.props.pulsing = False
 
 
-
 class InviteButton(ToolButton):
     """Invite to shared activity"""
     def __init__(self, invite):
@@ -313,6 +312,7 @@ class ActivitiesTray(HTray):
         self.add_item(button)
         button.show()
 
+
 class BaseTransferButton(ToolButton):
     """Button with a notification attached
     """
@@ -348,6 +348,7 @@ class BaseTransferButton(ToolButton):
             if file_transfer.reason_last_change == \
                filetransfer.FT_REASON_LOCAL_STOPPED:
                 self.remove()
+
 
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
@@ -429,6 +430,7 @@ class IncomingTransferButton(BaseTransferButton):
     def __dismiss_clicked_cb(self, palette):
         self.remove()
 
+
 class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
@@ -463,6 +465,7 @@ class OutgoingTransferButton(BaseTransferButton):
 
     def __dismiss_clicked_cb(self, palette):
         self.remove()
+
 
 class BaseTransferPalette(Palette):
     """Base palette class for frame or notification icon for file transfers
@@ -526,10 +529,12 @@ class BaseTransferPalette(Palette):
         total = self._format_size(self.file_transfer.file_size)
         self.progress_label.props.label = _('%s of %s') % (transferred, total)
 
+
 class IncomingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for incoming file transfers
     """
     __gtype_name__ = "SugarIncomingTransferPalette"
+
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
 
@@ -651,6 +656,7 @@ class IncomingTransferPalette(BaseTransferPalette):
 
     def __dismiss_activate_cb(self, menu_item):
         self.emit('dismiss-clicked')
+
 
 class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers

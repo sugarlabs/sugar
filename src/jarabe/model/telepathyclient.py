@@ -26,6 +26,7 @@ from telepathy.server import DBusProperties
 
 from sugar import dispatch
 
+
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 

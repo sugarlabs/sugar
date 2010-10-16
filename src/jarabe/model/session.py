@@ -24,7 +24,9 @@ import logging
 from sugar import session
 from sugar import env
 
+
 _session_manager = None
+
 
 class SessionManager(session.SessionManager):
     MODE_LOGOUT = 0
@@ -80,6 +82,7 @@ class SessionManager(session.SessionManager):
         # Need to call this ASAP so the atexit handlers get called before we get
         # killed by the X (dis)connection
         sys.exit()
+
 
 def get_session_manager():
     global _session_manager

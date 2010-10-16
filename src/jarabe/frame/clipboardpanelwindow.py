@@ -25,6 +25,7 @@ from jarabe.frame.clipboardtray import ClipboardTray
 
 from jarabe.frame import clipboard
 
+
 class ClipboardPanelWindow(FrameWindow):
     def __init__(self, frame, orientation):
         FrameWindow.__init__(self, orientation)
@@ -100,4 +101,3 @@ class ClipboardPanelWindow(FrameWindow):
                                          selection.type,
                                          selection.data,
                                          on_disk=False)
-

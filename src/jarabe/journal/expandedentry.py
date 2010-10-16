@@ -36,6 +36,7 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 
+
 class Separator(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, orientation):
         hippo.CanvasBox.__init__(self,
@@ -45,6 +46,7 @@ class Separator(hippo.CanvasBox, hippo.CanvasItem):
             self.props.box_width = style.LINE_WIDTH
         else:
             self.props.box_height = style.LINE_WIDTH
+
 
 class BuddyList(hippo.CanvasBox):
     def __init__(self, buddies):
@@ -60,6 +62,7 @@ class BuddyList(hippo.CanvasBox):
             icon.set_palette(BuddyPalette(buddy))
             hbox.append(icon)
             self.append(hbox)
+
 
 class ExpandedEntry(hippo.CanvasBox):
     def __init__(self):

@@ -32,6 +32,7 @@ from sugar import dispatch
 from sugar import mime
 from sugar import util
 
+
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
@@ -192,6 +193,7 @@ class BaseResultSet(object):
 
         return self._cache[self._position - self._offset]
 
+
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
     """
@@ -218,6 +220,7 @@ class DatastoreResultSet(BaseResultSet):
             entry['mountpoint'] = '/'
 
         return entries, total_count
+
 
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
@@ -350,6 +353,7 @@ class InplaceResultSet(BaseResultSet):
             except Exception:
                 logging.exception('Error reading file %r', full_path)
 
+
 def _get_file_metadata(path, stat):
     client = gconf.client_get_default()
     return {'uid': path,
@@ -376,14 +380,18 @@ def _get_datastore():
 
     return _datastore
 
+
 def _datastore_created_cb(object_id):
     created.send(None, object_id=object_id)
+
 
 def _datastore_updated_cb(object_id):
     updated.send(None, object_id=object_id)
 
+
 def _datastore_deleted_cb(object_id):
     deleted.send(None, object_id=object_id)
+
 
 def find(query_, page_size):
     """Returns a ResultSet
@@ -399,6 +407,7 @@ def find(query_, page_size):
     else:
         return InplaceResultSet(query, page_size, mount_points[0])
 
+
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
     while True:
@@ -406,6 +415,7 @@ def _get_mount_point(path):
             return dir_path
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
+
 
 def get(object_id):
     """Returns the metadata for an object
@@ -418,6 +428,7 @@ def get(object_id):
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
         metadata['mountpoint'] = '/'
     return metadata
+
 
 def get_file(object_id):
     """Returns the file for an object
@@ -432,6 +443,7 @@ def get_file(object_id):
             return util.TempFilePath(file_path)
         else:
             return None
+
 
 def get_file_size(object_id):
     """Return the file size for an object
@@ -448,11 +460,13 @@ def get_file_size(object_id):
 
     return 0
 
+
 def get_unique_values(key):
     """Returns a list with the different values a property has taken
     """
     empty_dict = dbus.Dictionary({}, signature='ss')
     return _get_datastore().get_uniquevaluesfor(key, empty_dict)
+
 
 def delete(object_id):
     """Removes an object from persistent storage
@@ -462,6 +476,7 @@ def delete(object_id):
         deleted.send(None, object_id=object_id)
     else:
         _get_datastore().delete(object_id)
+
 
 def copy(metadata, mount_point):
     """Copies an object to another mount point
@@ -473,6 +488,7 @@ def copy(metadata, mount_point):
     del metadata['uid']
 
     return write(metadata, file_path, transfer_ownership=False)
+
 
 def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
     """Creates or updates an entry for that id
@@ -508,6 +524,7 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
 
     return object_id
 
+
 def _get_file_name(title, mime_type):
     file_name = title
 
@@ -532,6 +549,7 @@ def _get_file_name(title, mime_type):
 
     return file_name
 
+
 def _get_unique_file_name(mount_point, file_name):
     if os.path.exists(os.path.join(mount_point, file_name)):
         i = 1
@@ -543,6 +561,7 @@ def _get_unique_file_name(mount_point, file_name):
             i += 1
 
     return file_name
+
 
 def is_editable(metadata):
     mountpoint = metadata.get('mountpoint', '/')

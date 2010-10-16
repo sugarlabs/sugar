@@ -23,10 +23,12 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
+
 _never =  _('never')
 _instantaneous = _('instantaneous')
 _seconds_label = _('%s seconds')
 _MAX_DELAY = 1000
+
 
 class Frame(SectionView):
     def __init__(self, model, alerts):

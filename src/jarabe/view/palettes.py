@@ -35,6 +35,7 @@ from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
 from jarabe.journal import misc
 
+
 class BasePalette(Palette):
     def __init__(self, home_activity):
         Palette.__init__(self)
@@ -147,6 +148,7 @@ class ActivityPalette(Palette):
         self.popdown(immediate=True)
         misc.launch(self._activity_info)
 
+
 class JournalPalette(BasePalette):
     def __init__(self, home_activity):
         self._home_activity = home_activity
@@ -198,6 +200,7 @@ class JournalPalette(BasePalette):
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
                 {'free_space': free_space / (1024 * 1024)}
 
+
 class VolumePalette(Palette):
     def __init__(self, mount):
         Palette.__init__(self, label=mount.get_name())
@@ -247,4 +250,3 @@ class VolumePalette(Palette):
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
                 {'free_space': free_space / (1024 * 1024)}
-

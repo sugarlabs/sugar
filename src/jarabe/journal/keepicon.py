@@ -22,6 +22,7 @@ from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+
 class KeepIcon(CanvasIcon):
     def __init__(self, keep):
         CanvasIcon.__init__(self, icon_name='emblem-favorite',

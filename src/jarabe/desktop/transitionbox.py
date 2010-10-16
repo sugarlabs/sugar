@@ -23,6 +23,7 @@ from sugar.graphics import animator
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
 
+
 class _Animation(animator.Animation):
     def __init__(self, icon, start_size, end_size):
         animator.Animation.__init__(self, 0.0, 1.0)
@@ -35,8 +36,10 @@ class _Animation(animator.Animation):
         d = (self.end_size - self.start_size) * current
         self._icon.props.size = self.start_size + d
 
+
 class _Layout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarTransitionBoxLayout'
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._box = None
@@ -59,6 +62,7 @@ class _Layout(gobject.GObject, hippo.CanvasLayout):
             child.allocate(x + (width - child_width) / 2,
                            y + (height - child_height) / 2,
                            child_width, child_height, origin_changed)
+
 
 class TransitionBox(hippo.Canvas):
     __gtype_name__ = 'SugarTransitionBox'

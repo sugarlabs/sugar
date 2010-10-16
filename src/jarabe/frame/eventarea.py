@@ -19,7 +19,9 @@ import gobject
 import wnck
 import gconf
 
+
 _MAX_DELAY = 1000
+
 
 class EventArea(gobject.GObject):
     __gsignals__ = {

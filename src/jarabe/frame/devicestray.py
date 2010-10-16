@@ -23,6 +23,7 @@ from sugar.graphics import tray
 
 from jarabe import config
 
+
 class DevicesTray(tray.HTray):
     def __init__(self):
         tray.HTray.__init__(self, align=tray.ALIGN_TO_END)

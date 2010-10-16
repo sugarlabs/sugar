@@ -49,6 +49,7 @@ from jarabe.model.network import IP4Config
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
 
+
 IP_ADDRESS_TEXT_TEMPLATE = _("IP address: %s")
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -198,6 +199,7 @@ class WiredPalette(Palette):
         else:
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
+
 
 class GsmPalette(Palette):
     __gtype_name__ = 'SugarGsmPalette'
@@ -749,6 +751,7 @@ class GsmDeviceView(TrayIcon):
                                       signal_name='PppStats',
                                       path=self._device.object_path,
                                       dbus_interface=_NM_SERIAL_IFACE)
+
     def create_palette(self):
         palette = GsmPalette()
 
@@ -1001,6 +1004,7 @@ class WiredDeviceObserver(object):
                 del self._device_view
                 self._device_view = None
 
+
 class GsmDeviceObserver(object):
     def __init__(self, device, tray):
         self._device = device
@@ -1014,6 +1018,7 @@ class GsmDeviceObserver(object):
         self._device_view.disconnect()
         self._tray.remove_device(self._device_view)
         self._device_view = None
+
 
 class NetworkManagerObserver(object):
     def __init__(self, tray):
@@ -1072,6 +1077,7 @@ class NetworkManagerObserver(object):
             device = self._devices[device_op]
             device.disconnect()
             del self._devices[device_op]
+
 
 def setup(tray):
     device_observer = NetworkManagerObserver(tray)

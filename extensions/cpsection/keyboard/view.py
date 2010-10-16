@@ -26,6 +26,7 @@ from sugar.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
 
+
 CLASS = 'Language'
 ICON = 'module-keyboard'
 TITLE = _('Keyboard')
@@ -36,6 +37,7 @@ _APPLY_TIMEOUT = 500
 #      src/jarabe/controlpanel/gui.py. We should get rid of these checks
 #      once python-xklavier has been packaged for all major distributions
 #      For more information, see: http://dev.sugarlabs.org/ticket/407
+
 
 class LayoutCombo(gtk.HBox):
 
@@ -306,7 +308,6 @@ class Keyboard(SectionView):
         except Exception:
             logging.exception('Could not set new keyboard group switch option')
 
-
         return False
 
     def _setup_layouts(self):
@@ -417,10 +418,8 @@ class Keyboard(SectionView):
 
         return False
 
-
     def undo(self):
         """Reverts back to the original keyboard configuration"""
         self._keyboard_manager.set_model(self._kmodel)
         self._keyboard_manager.set_layouts(self._klayouts)
         self._keyboard_manager.set_option_group(self._group_switch_option)
-

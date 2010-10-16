@@ -26,6 +26,7 @@ _LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'
 _OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
 _MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
+
 class KeyboardManager(object):
     def __init__(self, display):
         self._engine = xklavier.Engine(display)
@@ -166,4 +167,3 @@ class KeyboardManager(object):
         self._configrec.set_layouts(layouts_list)
         self._configrec.set_variants(variants_list)
         self._configrec.activate(self._engine)
-

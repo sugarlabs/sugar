@@ -19,6 +19,7 @@ import hippo
 
 from sugar.graphics import style
 
+
 class FrameWindow(gtk.Window):
     __gtype_name__ = 'SugarFrameWindow'
 

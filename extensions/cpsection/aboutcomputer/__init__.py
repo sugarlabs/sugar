@@ -19,4 +19,3 @@ from gettext import gettext as _
 CLASS = 'AboutComputer'
 ICON = 'module-about_my_computer'
 TITLE = _('About my Computer')
-

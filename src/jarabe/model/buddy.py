@@ -28,6 +28,7 @@ from sugar.profile import get_profile
 
 from jarabe.util.telepathy import connection_watcher
 
+
 CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 
 _owner_instance = None
@@ -92,6 +93,7 @@ class BaseBuddyModel(gobject.GObject):
 
 class OwnerBuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarOwnerBuddyModel'
+
     def __init__(self):
         BaseBuddyModel.__init__(self)
 
@@ -192,6 +194,7 @@ def get_owner_instance():
 
 class BuddyModel(BaseBuddyModel):
     __gtype_name__ = 'SugarBuddyModel'
+
     def __init__(self, **kwargs):
 
         self._account = None

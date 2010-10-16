@@ -26,6 +26,7 @@ from sugar.graphics.radiotoolbutton import RadioToolButton
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
+
 class ZoomToolbar(gtk.Toolbar):
     def __init__(self):
         gtk.Toolbar.__init__(self)
@@ -86,4 +87,3 @@ class ZoomToolbar(gtk.Toolbar):
             self._activity_button.props.active = True
         else:
             raise ValueError('Invalid zoom level: %r' % (new_level))
-

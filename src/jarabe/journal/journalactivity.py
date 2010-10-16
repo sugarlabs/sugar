@@ -46,6 +46,7 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 
+
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
@@ -105,6 +106,7 @@ class JournalActivityDBusService(dbus.service.Object):
     @dbus.service.signal(J_DBUS_INTERFACE, signature="s")
     def ObjectChooserCancelled(self, chooser_id):
         pass
+
 
 class JournalActivity(JournalWindow):
     def __init__(self):
@@ -370,6 +372,6 @@ def get_journal():
         _journal.show()
     return _journal
 
+
 def start():
     get_journal()
-

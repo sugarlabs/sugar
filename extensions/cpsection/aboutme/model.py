@@ -18,6 +18,7 @@
 from gettext import gettext as _
 import gconf
 
+
 _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
            'orange': {'dark':'#9a5200', 'medium':'#c97e00', 'light':'#ffc169'},
            'yellow': {'dark':'#807500', 'medium':'#be9e00', 'light':'#fffa00'},
@@ -28,12 +29,15 @@ _COLORS = {'red': {'dark':'#b20008', 'medium':'#e6000a', 'light':'#ffadce'},
 
 _MODIFIERS = ('dark', 'medium', 'light')
 
+
 def get_nick():
     client = gconf.client_get_default()
     return client.get_string("/desktop/sugar/user/nick")
 
+
 def print_nick():
     print get_nick()
+
 
 def set_nick(nick):
     """Set the nickname.
@@ -47,9 +51,11 @@ def set_nick(nick):
     client.set_string("/desktop/sugar/user/nick", nick)
     return 1
 
+
 def get_color():
     client = gconf.client_get_default()
     return client.get_string("/desktop/sugar/user/color")
+
 
 def print_color():
     color_string = get_color()
@@ -73,6 +79,7 @@ def print_color():
         print _('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
     else:
         print _('fill:     %s') % (tmp[1])
+
 
 def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     """Set the system color by setting a fill and stroke color.
@@ -102,9 +109,11 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     client.set_string("/desktop/sugar/user/color", color)
     return 1
 
+
 def get_color_xo():
     client = gconf.client_get_default()
     return client.get_string("/desktop/sugar/user/color")
+
 
 def set_color_xo(color):
     """Set a color with an XoColor

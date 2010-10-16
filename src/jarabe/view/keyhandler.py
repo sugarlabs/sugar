@@ -32,9 +32,11 @@ from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
 
+
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
+
 
 _actions_table = {
     'F1'                   : 'zoom_mesh',
@@ -241,4 +243,3 @@ def setup(frame):
         del _instance
 
     _instance = KeyHandler(frame)
-

@@ -35,6 +35,7 @@ from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
 from jarabe.frame.notification import NotificationIcon, NotificationWindow
 from jarabe.model import notifications
 
+
 TOP_RIGHT = 0
 TOP_LEFT = 1
 BOTTOM_RIGHT = 2
@@ -42,6 +43,7 @@ BOTTOM_LEFT = 3
 
 _FRAME_HIDING_DELAY = 500
 _NOTIFICATION_DURATION = 5000
+
 
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
@@ -51,6 +53,7 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         self._frame.move(current)
+
 
 class _MouseListener(object):
     def __init__(self, frame):
@@ -79,6 +82,7 @@ class _MouseListener(object):
         self._hide_sid = gobject.timeout_add(
                   _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
 
+
 class _KeyListener(object):
     def __init__(self, frame):
         self._frame = frame
@@ -89,6 +93,7 @@ class _KeyListener(object):
                 self._frame.hide()
         else:
             self._frame.show(Frame.MODE_KEYBOARD)
+
 
 class Frame(object):
     MODE_MOUSE    = 0
@@ -348,4 +353,3 @@ class Frame(object):
         # Do nothing for now. Our notification UI is so simple, there's no
         # point yet.
         pass
-

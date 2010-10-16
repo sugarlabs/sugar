@@ -22,6 +22,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+
 class ModalAlert(gtk.Window):
 
     __gtype_name__ = 'SugarModalAlert'
@@ -94,4 +95,3 @@ class ModalAlert(gtk.Window):
         '''The opener will listen on the destroy signal
         '''
         self.destroy()
-

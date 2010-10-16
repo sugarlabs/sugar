@@ -32,6 +32,7 @@ CLASS = 'Language'
 ICON = 'module-language'
 TITLE = gettext.gettext('Language')
 
+
 class Language(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
@@ -98,7 +99,6 @@ class Language(SectionView):
         self._labels.append(label)
         self._attach_to_table(label, 0, 1, padding=1)
         label.show()
-
 
         store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         for language, country, code in self._available_locales:
@@ -270,7 +270,6 @@ class Language(SectionView):
             remove_button.props.visible = False
         else:
             remove_button.props.visible = True
-
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0

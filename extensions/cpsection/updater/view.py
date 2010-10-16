@@ -179,6 +179,7 @@ class ActivityUpdater(SectionView):
     def undo(self):
         self._model.cancel()
 
+
 class ProgressPane(gtk.VBox):
     '''Container which replaces the `ActivityPane` during refresh or
     install.'''

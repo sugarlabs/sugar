@@ -27,6 +27,7 @@ from sugar.graphics.icon import CanvasIcon
 from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
+
 class DetailView(gtk.VBox):
     __gtype_name__ = 'DetailView'
 
@@ -83,6 +84,7 @@ class DetailView(gtk.VBox):
 
     metadata = gobject.property(
             type=object, getter=get_metadata, setter=set_metadata)
+
 
 class BackBar(hippo.CanvasBox):
     def __init__(self):

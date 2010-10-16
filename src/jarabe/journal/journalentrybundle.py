@@ -25,6 +25,7 @@ from sugar.bundle.bundle import Bundle, MalformedBundleException
 
 from jarabe.journal import model
 
+
 class JournalEntryBundle(Bundle):
     """A Journal entry bundle
 
@@ -91,4 +92,3 @@ class JournalEntryBundle(Bundle):
     def is_installed(self):
         # These bundles can be reinstalled as many times as desired.
         return False
-

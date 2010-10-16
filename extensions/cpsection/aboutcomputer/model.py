@@ -24,16 +24,20 @@ import errno
 
 from jarabe import config
 
+
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
+
 
 def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
             % (get_serial_number(), get_build_number(), get_firmware_number())
     return msg
 
+
 def print_aboutcomputer():
     print get_aboutcomputer()
+
 
 def get_serial_number():
     serial_no = _read_file('/ofw/serial-number')
@@ -41,11 +45,13 @@ def get_serial_number():
         serial_no = _not_available
     return serial_no
 
+
 def print_serial_number():
     serial_no = get_serial_number()
     if serial_no is None:
         serial_no = _not_available
     print serial_no
+
 
 def get_build_number():
     build_no = _read_file('/boot/olpc_build')
@@ -68,8 +74,10 @@ def get_build_number():
 
     return build_no
 
+
 def print_build_number():
     print get_build_number()
+
 
 def get_firmware_number():
     firmware_no = _read_file('/ofw/openprom/model')
@@ -81,8 +89,10 @@ def get_firmware_number():
             firmware_no = firmware_no[1]
     return firmware_no
 
+
 def print_firmware_number():
     print get_firmware_number()
+
 
 def get_wireless_firmware():
     try:
@@ -97,8 +107,10 @@ def get_wireless_firmware():
         wireless_firmware = _not_available
     return wireless_firmware
 
+
 def print_wireless_firmware():
     print get_wireless_firmware()
+
 
 def _read_file(path):
     if os.access(path, os.R_OK) == 0:
@@ -113,6 +125,7 @@ def _read_file(path):
     else:
         _logger.debug('No information in file or directory: %s', path)
         return None
+
 
 def get_license():
     license_file = os.path.join(config.data_path, 'GPLv2')

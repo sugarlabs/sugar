@@ -35,13 +35,16 @@ _logger = logging.getLogger('ControlPanel - Power')
 class ReadError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
+
 
 def using_powerd():
     # directory exists if powerd running, and it's recent
     # enough to be controllable.
     return os.access(POWERD_FLAG_DIR, os.W_OK)
+
 
 def get_automatic_pm():
     if using_powerd():
@@ -51,8 +54,10 @@ def get_automatic_pm():
     client = gconf.client_get_default()
     return client.get_bool('/desktop/sugar/power/automatic')
 
+
 def print_automatic_pm():
     print ('off', 'on')[get_automatic_pm()]
+
 
 def set_automatic_pm(enabled):
     """Automatic suspends on/off."""
@@ -88,12 +93,15 @@ def set_automatic_pm(enabled):
     client.set_bool('/desktop/sugar/power/automatic', enabled)
     return
 
+
 def get_extreme_pm():
     client = gconf.client_get_default()
     return client.get_bool('/desktop/sugar/power/extreme')
 
+
 def print_extreme_pm():
     print ('off', 'on')[get_extreme_pm()]
+
 
 def set_extreme_pm(enabled):
     """Extreme power management on/off."""

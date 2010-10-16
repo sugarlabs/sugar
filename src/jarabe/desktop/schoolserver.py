@@ -33,6 +33,7 @@ from sugar.profile import get_profile
 REGISTER_URL = 'http://schoolserver:8080/'
 REGISTER_TIMEOUT = 8
 
+
 def generate_serial_number():
     """  Generates a serial number based on 3 random uppercase letters
     and the last 8 digits of the current unix seconds. """
@@ -47,6 +48,7 @@ def generate_serial_number():
     serial = serial_part1 + serial_part2
 
     return serial
+
 
 def store_identifiers(serial_number, uuid, backup_url):
     """  Stores the serial number, uuid and backup_url
@@ -74,6 +76,7 @@ def store_identifiers(serial_number, uuid, backup_url):
     backup_url_file = open(os.path.join(identifier_path, 'backup_url'), 'w')
     backup_url_file.write(backup_url)
     backup_url_file.close()
+
 
 class RegisterError(Exception):
     pass
@@ -138,8 +141,10 @@ def register_laptop(url=REGISTER_URL):
 
     return True
 
+
 def have_ofw_tree():
     return os.path.exists('/ofw')
+
 
 def read_ofw(path):
     path = os.path.join('/ofw', path)

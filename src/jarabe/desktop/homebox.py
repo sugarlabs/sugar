@@ -30,10 +30,12 @@ from sugar.graphics.icon import Icon
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
+
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 _AUTOSEARCH_TIMEOUT = 1000
+
 
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
@@ -144,6 +146,7 @@ class HomeBox(gtk.VBox):
     def set_resume_mode(self, resume_mode):
         self._favorites_view.set_resume_mode(resume_mode)
 
+
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
 
@@ -246,6 +249,7 @@ class HomeToolbar(gtk.Toolbar):
         self.search_entry.activate()
         return False
 
+
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
 
@@ -295,4 +299,3 @@ class FavoritesButton(RadioToolButton):
     def _update_icon(self):
         self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
                                 .icon_name
-

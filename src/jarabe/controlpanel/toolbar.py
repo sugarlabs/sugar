@@ -25,6 +25,7 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics import iconentry
 from sugar.graphics import style
 
+
 class MainToolbar(gtk.Toolbar):
     """ Main toolbar of the control panel
     """
@@ -38,6 +39,7 @@ class MainToolbar(gtk.Toolbar):
                           gobject.TYPE_NONE,
                           ([str]))
     }
+
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -83,6 +85,7 @@ class MainToolbar(gtk.Toolbar):
     def __stop_clicked_cb(self, button):
         self.emit('stop-clicked')
 
+
 class SectionToolbar(gtk.Toolbar):
     """ Toolbar of the sections of the control panel
     """
@@ -96,6 +99,7 @@ class SectionToolbar(gtk.Toolbar):
                             gobject.TYPE_NONE,
                             ([]))
     }
+
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -154,4 +158,3 @@ class SectionToolbar(gtk.Toolbar):
 
     def __accept_button_clicked_cb(self, widget, data=None):
         self.emit('accept-clicked')
-

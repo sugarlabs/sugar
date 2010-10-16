@@ -22,6 +22,7 @@ from sugar.graphics.xocolor import XoColor
 
 from jarabe.view.pulsingicon import PulsingIcon
 
+
 class NotificationIcon(gtk.EventBox):
     __gtype_name__ = 'SugarNotificationIcon'
 
@@ -80,6 +81,7 @@ class NotificationIcon(gtk.EventBox):
 
     palette = property(_get_palette, _set_palette)
 
+
 class NotificationWindow(gtk.Window):
     __gtype_name__ = 'SugarNotificationWindow'
 
@@ -97,4 +99,3 @@ class NotificationWindow(gtk.Window):
 
         color = gtk.gdk.color_parse(style.COLOR_TOOLBAR_GREY.get_html())
         self.modify_bg(gtk.STATE_NORMAL, color)
-
