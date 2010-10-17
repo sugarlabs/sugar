@@ -103,21 +103,21 @@ def get_date(metadata):
 def get_bundle(metadata):
     try:
         if is_activity_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return ActivityBundle(file_path)
 
         elif is_content_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return ContentBundle(file_path)
 
         elif is_journal_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
