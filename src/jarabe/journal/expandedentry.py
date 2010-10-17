@@ -281,10 +281,15 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _format_date(self):
         if 'timestamp' in self._metadata:
-            timestamp = float(self._metadata['timestamp'])
-            return time.strftime('%x', time.localtime(timestamp))
-        else:
-            return _('No date')
+            try:
+                timestamp = float(self._metadata['timestamp'])
+            except (ValueError, TypeError):
+                logging.warning('Invalid timestamp for %r: %r',
+                                self._metadata['uid'],
+                                self._metadata['timestamp'])
+            else:
+                return time.strftime('%x', time.localtime(timestamp))
+        return _('No date')
 
     def _create_buddy_list(self):
 
