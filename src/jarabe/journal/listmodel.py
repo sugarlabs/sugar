@@ -140,11 +140,16 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             xo_color = misc.get_icon_color(metadata)
         self._cached_row.append(xo_color)
 
-        title = gobject.markup_escape_text(metadata.get('title', None))
-        self._cached_row.append('<b>%s</b>' % title)
+        title = gobject.markup_escape_text(metadata.get('title',
+                                           _('Untitled')))
+        self._cached_row.append('<b>%s</b>' % (title, ))
 
-        timestamp = int(metadata.get('timestamp', 0))
-        self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
+        try:
+            timestamp = float(metadata.get('timestamp', 0))
+        except (TypeError, ValueError):
+            self._cached_row.append(_('Unknown'))
+        else:
+            self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
 
         try:
             creation_time = float(metadata.get('creation_time'))
@@ -161,19 +166,37 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         else:
             self._cached_row.append(util.format_size(size))
 
-        self._cached_row.append(int(metadata.get('progress', 100)))
+        try:
+            progress = int(float(metadata.get('progress', 100)))
+        except (TypeError, ValueError):
+            progress = 100
+        self._cached_row.append(progress)
 
-        if metadata.get('buddies', ''):
-            buddies = simplejson.loads(metadata['buddies']).values()
-        else:
+        buddies = []
+        if metadata.get('buddies'):
+            try:
+                buddies = simplejson.loads(metadata['buddies']).values()
+            except simplejson.decoder.JSONDecodeError, exception:
+                logging.warning('Cannot decode buddies for %r: %s',
+                                metadata['uid'], exception)
+
+        if not isinstance(buddies, list):
+            logging.warning('Content of buddies for %r is not a list: %r',
+                            metadata['uid'], buddies)
             buddies = []
 
         for n_ in xrange(0, 3):
             if buddies:
-                nick, color = buddies.pop(0)
-                self._cached_row.append((nick, XoColor(color)))
-            else:
-                self._cached_row.append(None)
+                try:
+                    nick, color = buddies.pop(0)
+                except (AttributeError, ValueError), exception:
+                    logging.warning('Malformed buddies for %r: %s',
+                                    metadata['uid'], exception)
+                else:
+                    self._cached_row.append((nick, XoColor(color)))
+                    continue
+
+            self._cached_row.append(None)
 
         return self._cached_row[column]
 
