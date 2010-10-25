@@ -373,14 +373,17 @@ class BundleRegistry(gobject.GObject):
                 return True
         return False
 
-    def install(self, bundle, uid=None):
+    def install(self, bundle, uid=None, force_downgrade=False):
         activities_path = env.get_user_activities_path()
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
                     bundle.get_activity_version() <= \
                         installed_bundle.get_activity_version():
-                raise AlreadyInstalledException
+                if not force_downgrade:
+                    raise AlreadyInstalledException
+                else:
+                    self.uninstall(installed_bundle, force=True)
             elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
                 self.uninstall(installed_bundle, force=True)
 

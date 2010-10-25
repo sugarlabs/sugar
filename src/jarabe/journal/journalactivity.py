@@ -44,6 +44,7 @@ from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
+from jarabe.journal.journalwindow import JournalWindow
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -102,10 +103,10 @@ class JournalActivityDBusService(dbus.service.Object):
     def ObjectChooserCancelled(self, chooser_id):
         pass
 
-class JournalActivity(Window):
+class JournalActivity(JournalWindow):
     def __init__(self):
         logging.debug("STARTUP: Loading the journal")
-        Window.__init__(self)
+        JournalWindow.__init__(self)
 
         self.set_title(_('Journal'))
 

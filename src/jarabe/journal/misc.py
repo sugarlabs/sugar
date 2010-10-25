@@ -27,8 +27,10 @@ from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.icon import get_icon_file_name
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.alert import ConfirmationAlert
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.bundle import AlreadyInstalledException
 from sugar.bundle.contentbundle import ContentBundle
 from sugar import util
 
@@ -36,6 +38,7 @@ from jarabe.view import launcher
 from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
+from jarabe.journal import journalwindow
 
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
@@ -159,19 +162,16 @@ def resume(metadata, bundle_id=None):
         bundle = ActivityBundle(file_path)
         if not registry.is_installed(bundle):
             logging.debug('Installing activity bundle')
-            registry.install(bundle)
+            try:
+                registry.install(bundle)
+            except AlreadyInstalledException:
+                _downgrade_option_alert(bundle)
+                return
         else:
             logging.debug('Upgrading activity bundle')
             registry.upgrade(bundle)
 
-        logging.debug('activityfactory.creating bundle with id %r',
-                        bundle.get_bundle_id())
-        installed_bundle = registry.get_bundle(bundle.get_bundle_id())
-        if installed_bundle:
-            launch(installed_bundle)
-        else:
-            logging.error('Bundle %r is not installed.',
-                          bundle.get_bundle_id())
+        _install_bundle(bundle)
 
     elif is_content_bundle(metadata) and bundle_id is None:
 
@@ -215,6 +215,17 @@ def resume(metadata, bundle_id=None):
         launch(bundle, activity_id=activity_id, object_id=object_id,
                 color=get_icon_color(metadata))
 
+def _install_bundle(bundle):
+    registry = bundleregistry.get_registry()
+    logging.debug('activityfactory.creating bundle with id %r',
+                       bundle.get_bundle_id())
+    installed_bundle = registry.get_bundle(bundle.get_bundle_id())
+    if installed_bundle:
+        launch(installed_bundle)
+    else:
+        logging.error('Bundle %r is not installed.',
+                    bundle.get_bundle_id())
+
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False):
     if activity_id is None or not activity_id:
@@ -238,6 +249,24 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
     activity_handle = ActivityHandle(activity_id=activity_id,
             object_id=object_id, uri=uri, invited=invited)
     activityfactory.create(bundle, activity_handle)
+
+def _downgrade_option_alert(bundle):
+    alert = ConfirmationAlert()
+    alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
+    alert.props.msg = _('Do you want to downgrade to version %s\
+    ') % (bundle.get_activity_version())
+    alert.connect('response', _downgrade_alert_response_cb, bundle)
+    journalwindow.get_journal_window().add_alert(alert)
+    alert.show()
+
+def _downgrade_alert_response_cb(alert, response_id, bundle):
+    if response_id is gtk.RESPONSE_OK:
+        journalwindow.get_journal_window().remove_alert(alert)
+        registry = bundleregistry.get_registry()
+        registry.install(bundle, force_downgrade=True)
+        _install_bundle(bundle)
+    elif response_id is gtk.RESPONSE_CANCEL:
+        journalwindow.get_journal_window().remove_alert(alert)
 
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')
