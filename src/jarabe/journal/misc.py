@@ -171,7 +171,7 @@ def resume(metadata, bundle_id=None):
             logging.debug('Upgrading activity bundle')
             registry.upgrade(bundle)
 
-        _install_bundle(bundle)
+        _launch_bundle(bundle)
 
     elif is_content_bundle(metadata) and bundle_id is None:
 
@@ -215,7 +215,7 @@ def resume(metadata, bundle_id=None):
         launch(bundle, activity_id=activity_id, object_id=object_id,
                 color=get_icon_color(metadata))
 
-def _install_bundle(bundle):
+def _launch_bundle(bundle):
     registry = bundleregistry.get_registry()
     logging.debug('activityfactory.creating bundle with id %r',
                        bundle.get_bundle_id())
@@ -264,7 +264,7 @@ def _downgrade_alert_response_cb(alert, response_id, bundle):
         journalwindow.get_journal_window().remove_alert(alert)
         registry = bundleregistry.get_registry()
         registry.install(bundle, force_downgrade=True)
-        _install_bundle(bundle)
+        _launch_bundle(bundle)
     elif response_id is gtk.RESPONSE_CANCEL:
         journalwindow.get_journal_window().remove_alert(alert)
 
