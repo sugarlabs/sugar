@@ -81,8 +81,7 @@ class ObjectPalette(Palette):
             menu_item.set_submenu(start_with_menu)
 
         else:
-            resume_label = _('No activity to start entry')
-            menu_item = MenuItem(resume_label)
+            menu_item = MenuItem(_('No activity to start entry'))
             menu_item.set_sensitive(False)
             self.menu.append(menu_item)
             menu_item.show()
