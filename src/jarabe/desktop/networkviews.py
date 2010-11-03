@@ -528,9 +528,6 @@ class SugarAdhocView(CanvasPulsingIcon):
         else:
             icon_name = self._ICON_NAME + str(self._channel)
 
-        self.props.base_color = self._state_color
-        self._palette_icon.props.xo_color = self._state_color
-
         if icon_name is not None:
             self.props.icon_name = icon_name
             icon = self._palette.props.icon
@@ -560,6 +557,7 @@ class SugarAdhocView(CanvasPulsingIcon):
 
     def _update_color(self):
         if self._greyed_out:
+            self.props.pulsing = False
             self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
         else:
             self.props.base_color = self._state_color
@@ -568,12 +566,12 @@ class SugarAdhocView(CanvasPulsingIcon):
         if channel == self._channel:
             if has_members == True:
                 self._state_color = profile.get_color()
-                self.props.base_color = self._state_color
-                self._palette_icon.props.xo_color = self._state_color
             else:
                 color = '%s,%s' % (profile.get_color().get_stroke_color(),
                                    style.COLOR_TRANSPARENT.get_svg())
                 self._state_color = XoColor(color)
+
+            if not self._greyed_out:
                 self.props.base_color = self._state_color
                 self._palette_icon.props.xo_color = self._state_color
 
