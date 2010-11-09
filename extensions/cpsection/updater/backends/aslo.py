@@ -54,6 +54,9 @@ import traceback
 
 import gio
 
+from sugar.bundle.bundleversion import NormalizedVersion
+from sugar.bundle.bundleversion import InvalidVersionError
+
 from jarabe import config
 
 _FIND_DESCRIPTION = \
@@ -127,10 +130,10 @@ class _UpdateFetcher(object):
             size = None
         else:
             try:
-                version = int(document.find(_FIND_VERSION).text)
-            except ValueError:
+                version = NormalizedVersion(document.find(_FIND_VERSION).text)
+            except InvalidVersionError:
                 logging.error(traceback.format_exc())
-                version = 0
+                version = '0'
 
             link = document.find(_FIND_LINK).text
 

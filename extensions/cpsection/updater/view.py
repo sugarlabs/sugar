@@ -359,7 +359,7 @@ class UpdateListModel(gtk.ListStore):
             row[self.SELECTED] = True
             row[self.ICON_FILE_NAME] = bundle_update.bundle.get_icon()
 
-            details = _('From version %(current)d to %(new)s (Size: %(size)s)')
+            details = _('From version %(current)s to %(new)s (Size: %(size)s)')
             details = details % \
                     {'current': bundle_update.bundle.get_activity_version(),
                      'new': bundle_update.version,

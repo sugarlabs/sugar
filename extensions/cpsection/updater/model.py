@@ -33,6 +33,7 @@ import gio
 from sugar import env
 from sugar.datastore import datastore
 from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model import bundleregistry
 
@@ -83,7 +84,8 @@ class UpdateModel(gobject.GObject):
             logging.error('Error getting update information from server:\n'
                           '%s' % error_message)
 
-        if version is not None and version > bundle.get_activity_version():
+        if version is not None and \
+                version > NormalizedVersion(bundle.get_activity_version()):
             self.updates.append(BundleUpdate(bundle, version, link, size))
 
         if self._cancelling:
