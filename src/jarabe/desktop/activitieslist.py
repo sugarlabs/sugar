@@ -167,7 +167,7 @@ class ListModel(gtk.TreeModelSort):
     COLUMN_DATE_TEXT = 7
 
     def __init__(self):
-        self._model = gtk.ListStore(str, bool, str, str, int, str, int, str)
+        self._model = gtk.ListStore(str, bool, str, str, str, str, int, str)
         self._model_filter = self._model.filter_new()
         gtk.TreeModelSort.__init__(self, self._model_filter)
 
