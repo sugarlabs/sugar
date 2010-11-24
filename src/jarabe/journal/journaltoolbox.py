@@ -110,8 +110,6 @@ class SearchToolbar(gtk.Toolbar):
         self.insert(tool_item, -1)
         tool_item.show()
 
-        self._add_separator(expand=True)
-
         self._sorting_button = SortingButton()
         self._sorting_button.connect('clicked',
                                      self.__sorting_button_clicked_cb)
@@ -164,17 +162,6 @@ class SearchToolbar(gtk.Toolbar):
         with_search.set_active(0)
         with_search.connect('changed', self._combo_changed_cb)
         return with_search
-
-    def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.GRID_CELL_SIZE,
-                                       style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
 
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
