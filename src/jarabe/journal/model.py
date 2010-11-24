@@ -599,8 +599,8 @@ def _get_file_name(title, mime_type):
 def _get_unique_file_name(mount_point, file_name):
     if os.path.exists(os.path.join(mount_point, file_name)):
         i = 1
+        name, extension = os.path.splitext(file_name)
         while len(file_name) <= 255:
-            name, extension = os.path.splitext(file_name)
             file_name = name + '_' + str(i) + extension
             if not os.path.exists(os.path.join(mount_point, file_name)):
                 break
