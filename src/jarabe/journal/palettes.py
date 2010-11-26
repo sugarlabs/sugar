@@ -141,11 +141,6 @@ class ObjectPalette(Palette):
         self._temp_file_path = None
 
     def __erase_activate_cb(self, menu_item):
-        registry = bundleregistry.get_registry()
-
-        bundle = misc.get_bundle(self._metadata)
-        if bundle is not None and registry.is_installed(bundle):
-            registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
