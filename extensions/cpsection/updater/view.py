@@ -385,7 +385,7 @@ def _format_size(size):
         return _('1 KB')
     elif size < 1024 * 1024:
         # TRANS: download size of small updates, e.g. '250 KB'
-        return locale.format(_('%.0f KB'), size / 1024.0)
+        return locale.format_string(_('%.0f KB'), size / 1024.0)
     else:
         # TRANS: download size of updates, e.g. '2.3 MB'
-        return locale.format(_('%.1f MB'), size / 1024.0 / 1024)
+        return locale.format_string(_('%.1f MB'), size / 1024.0 / 1024)
