@@ -22,8 +22,16 @@ import subprocess
 from gettext import gettext as _
 import errno
 
+import dbus
+
 from jarabe import config
 
+
+_NM_SERVICE = 'org.freedesktop.NetworkManager'
+_NM_PATH = '/org/freedesktop/NetworkManager'
+_NM_IFACE = 'org.freedesktop.NetworkManager'
+_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
+_NM_DEVICE_TYPE_WIFI = 2
 
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
@@ -94,18 +102,62 @@ def print_firmware_number():
     print get_firmware_number()
 
 
+def _get_wireless_interfaces():
+    try:
+        bus = dbus.SystemBus()
+        manager_object = bus.get_object(_NM_SERVICE, _NM_PATH)
+        network_manager = dbus.Interface(manager_object, _NM_IFACE)
+    except dbus.DBusException:
+        _logger.warning('Cannot connect to NetworkManager, falling back to'
+                        ' static list of devices')
+        return ['wlan0', 'eth0']
+
+    interfaces = []
+    for device_path in network_manager.GetDevices():
+        device_object = bus.get_object(_NM_SERVICE, device_path)
+        properties = dbus.Interface(device_object,
+                                    'org.freedesktop.DBus.Properties')
+        device_type = properties.Get(_NM_DEVICE_IFACE, 'DeviceType')
+        if device_type != _NM_DEVICE_TYPE_WIFI:
+            continue
+
+        interfaces.append(properties.Get(_NM_DEVICE_IFACE, 'Interface'))
+
+    return interfaces
+
+
 def get_wireless_firmware():
-    try:
-        info = subprocess.Popen(['/usr/sbin/ethtool', '-i', 'eth0'],
-                                stdout=subprocess.PIPE).stdout.readlines()
-    except OSError:
+    environment = os.environ.copy()
+    environment['PATH'] = '%s:/usr/sbin' % (environment['PATH'], )
+    firmware_info = {}
+    for interface in _get_wireless_interfaces():
+        try:
+            output = subprocess.Popen(['ethtool', '-i', interface],
+                                      stdout=subprocess.PIPE,
+                                      env=environment).stdout.readlines()
+        except OSError:
+            _logger.exception('Error running ethtool for %r', interface)
+            continue
+
+        try:
+            version = ([line for line in output
+                        if line.startswith('firmware')][0].split()[1])
+        except IndexError:
+            _logger.exception('Error parsing ethtool output for %r',
+                              interface)
+            continue
+
+        firmware_info[interface] = version
+
+    if not firmware_info:
         return _not_available
-    try:
-        wireless_firmware = [line for line in info
-                             if line.startswith('firmware')][0].split()[1]
-    except IndexError:
-        wireless_firmware = _not_available
-    return wireless_firmware
+
+    if len(firmware_info) == 1:
+        return firmware_info.values()[0]
+
+    return ', '.join([_('%(interface)s: %(version)s') %
+                      {'interface': interface, 'version': version}
+                      for interface, version in firmware_info.items()])
 
 
 def print_wireless_firmware():
