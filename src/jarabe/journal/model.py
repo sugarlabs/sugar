@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2008, One Laptop Per Child
+# Copyright (C) 2007-2010, One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,10 +16,11 @@
 
 import logging
 import os
+import errno
 from datetime import datetime
 import time
 import shutil
-from stat import S_IFMT, S_IFDIR, S_IFREG
+from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
 from operator import itemgetter
 
@@ -230,7 +231,9 @@ class InplaceResultSet(BaseResultSet):
         BaseResultSet.__init__(self, query, page_size)
         self._mount_point = mount_point
         self._file_list = None
-        self._pending_directories = 0
+        self._pending_directories = []
+        self._visited_directories = []
+        self._pending_files = []
         self._stopped = False
 
         query_text = query.get('query', '')
@@ -257,7 +260,10 @@ class InplaceResultSet(BaseResultSet):
 
     def setup(self):
         self._file_list = []
-        self._recurse_dir(self._mount_point)
+        self._pending_directories = [self._mount_point]
+        self._visited_directories = []
+        self._pending_files = []
+        gobject.idle_add(self._scan)
 
     def stop(self):
         self._stopped = True
@@ -298,63 +304,100 @@ class InplaceResultSet(BaseResultSet):
 
         return entries, total_count
 
-    def _recurse_dir(self, dir_path):
-        self._pending_directories += 1
-        gobject.idle_add(self._idle_recurse_dir, dir_path)
-
-    def _idle_recurse_dir(self, dir_path):
-        try:
-            self._real_recurse_dir(dir_path)
-        finally:
-            self._pending_directories -= 1
-            if self._pending_directories == 0:
-                self.setup_ready()
-
-    def _real_recurse_dir(self, dir_path):
+    def _scan(self):
         if self._stopped:
+            return False
+
+        self.progress.send(self)
+
+        if self._pending_files:
+            self._scan_a_file()
+            return True
+
+        if self._pending_directories:
+            self._scan_a_directory()
+            return True
+
+        self.setup_ready()
+        self._visited_directories = []
+        return False
+
+    def _scan_a_file(self):
+        full_path = self._pending_files.pop(0)
+
+        try:
+            stat = os.lstat(full_path)
+        except OSError, e:
+            if e.errno != errno.ENOENT:
+                logging.exception(
+                    'Error reading metadata of file %r', full_path)
             return
 
-        try:
-            dirs = os.listdir(dir_path)
-        except Exception:
-            logging.exception('Error reading directory %r', dir_path)
-            dirs = []
+        if S_IFMT(stat.st_mode) == S_IFLNK:
+            try:
+                link = os.readlink(full_path)
+            except OSError, e:
+                logging.exception(
+                    'Error reading target of link %r', full_path)
+                return
 
-        for entry in dirs:
-            if entry.startswith('.'):
-                continue
-            full_path = dir_path + '/' + entry
+            if not os.path.abspath(link).startswith(self._mount_point):
+                return
+
             try:
                 stat = os.stat(full_path)
-                if S_IFMT(stat.st_mode) == S_IFDIR:
-                    self._recurse_dir(full_path)
 
-                elif S_IFMT(stat.st_mode) == S_IFREG:
-                    add_to_list = True
+            except OSError, e:
+                if e.errno != errno.ENOENT:
+                    logging.exception(
+                        'Error reading metadata of linked file %r', full_path)
+                return
 
-                    if self._regex is not None and \
-                            not self._regex.match(full_path):
-                        add_to_list = False
+        if S_IFMT(stat.st_mode) == S_IFDIR:
+            id_tuple = stat.st_ino, stat.st_dev
+            if not id_tuple in self._visited_directories:
+                self._visited_directories.append(id_tuple)
+                self._pending_directories.append(full_path)
+            return
 
-                    if None not in [self._date_start, self._date_end] and \
-                            (stat.st_mtime < self._date_start or
-                             stat.st_mtime > self._date_end):
-                        add_to_list = False
+        if S_IFMT(stat.st_mode) != S_IFREG:
+            return
 
-                    if self._mime_types:
-                        mime_type = gio.content_type_guess(filename=full_path)
-                        if mime_type not in self._mime_types:
-                            add_to_list = False
+        if self._regex is not None and \
+                not self._regex.match(full_path):
+            return
 
-                    if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime),
-                                     stat.st_size)
-                        self._file_list.append(file_info)
+        if self._date_start is not None and stat.st_mtime < self._date_start:
+            return
 
-                    self.progress.send(self)
+        if self._date_end is not None and stat.st_mtime > self._date_end:
+            return
 
-            except Exception:
-                logging.exception('Error reading file %r', full_path)
+        if self._mime_types:
+            mime_type = gio.content_type_guess(filename=full_path)
+            if mime_type not in self._mime_types:
+                return
+
+        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size)
+        self._file_list.append(file_info)
+
+        return
+
+    def _scan_a_directory(self):
+        dir_path = self._pending_directories.pop(0)
+
+        try:
+            entries = os.listdir(dir_path)
+        except OSError, e:
+            if e.errno != errno.EACCES:
+                logging.exception('Error reading directory %r', dir_path)
+            return
+
+        for entry in entries:
+            if entry.startswith('.'):
+                continue
+            self._pending_files.append(dir_path + '/' + entry)
+        return
 
 
 def _get_file_metadata(path, stat):
