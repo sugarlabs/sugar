@@ -27,7 +27,6 @@ import json
 
 import gobject
 import dbus
-import gconf
 import gio
 
 from sugar import dispatch
@@ -392,7 +391,6 @@ def _get_file_metadata(path, stat):
     if metadata:
         return metadata
 
-    client = gconf.client_get_default()
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
