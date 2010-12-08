@@ -19,9 +19,11 @@ import os
 from datetime import datetime
 import time
 import shutil
+import tempfile
 from stat import S_IFMT, S_IFDIR, S_IFREG
 import traceback
 import re
+import json
 
 import gobject
 import dbus
@@ -308,8 +310,10 @@ class InplaceResultSet(BaseResultSet):
         files = self._file_list[offset:offset + limit]
 
         entries = []
-        for file_path, stat, mtime_ in files:
-            metadata = _get_file_metadata(file_path, stat)
+        for file_path, stat, mtime_, metadata in files:
+            if metadata is None:
+                # FIXME: the find should fetch metadata
+                metadata = _get_file_metadata(file_path, stat)
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
@@ -333,10 +337,20 @@ class InplaceResultSet(BaseResultSet):
 
                 elif S_IFMT(stat.st_mode) == S_IFREG:
                     add_to_list = True
+                    metadata = None
 
                     if self._regex is not None and \
                             not self._regex.match(full_path):
                         add_to_list = False
+                        metadata = _get_file_metadata_from_json( \
+                            dir_path, entry, preview=False)
+                        if metadata is not None:
+                            for f in ['fulltext', 'title',
+                                      'description', 'tags']:
+                                if f in metadata and \
+                                        self._regex.match(metadata[f]):
+                                    add_to_list = True
+                                    break
 
                     if None not in [self._date_start, self._date_end] and \
                             (stat.st_mtime < self._date_start or
@@ -349,7 +363,7 @@ class InplaceResultSet(BaseResultSet):
                             add_to_list = False
 
                     if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime))
+                        file_info = (full_path, stat, int(stat.st_mtime), metadata)
                         self._file_list.append(file_info)
 
                     self.progress.send(self)
@@ -364,6 +378,17 @@ class InplaceResultSet(BaseResultSet):
             self._pending_directories -= 1
 
 def _get_file_metadata(path, stat):
+    """Returns the metadata from the corresponding file
+    on the external device or does create the metadata
+    based on the file properties.
+
+    """
+    filename = os.path.basename(path)
+    dir_path = os.path.dirname(path)
+    metadata = _get_file_metadata_from_json(dir_path, filename, preview=True)
+    if metadata:
+        return metadata
+
     client = gconf.client_get_default()
     return {'uid': path,
             'title': os.path.basename(path),
@@ -373,6 +398,36 @@ def _get_file_metadata(path, stat):
             'activity_id': '',
             'icon-color': client.get_string('/desktop/sugar/user/color'),
             'description': path}
+
+def _get_file_metadata_from_json(dir_path, filename, preview=False):
+    """Returns the metadata from the json file and the preview
+    stored on the external device.
+
+    """
+    metadata = None
+    metadata_path = os.path.join(dir_path,
+                          '.' + filename + '.metadata')
+    if os.path.exists(metadata_path):
+        try:
+            metadata = json.load(open(metadata_path))
+        except ValueError:
+            logging.debug("Could not read metadata for file %r on" \
+                              "external device.", filename)
+        else:
+            metadata['uid'] = os.path.join(dir_path, filename)
+    if preview:
+        preview_path = os.path.join(dir_path,
+                                    '.' + filename + '.preview')
+        if os.path.exists(preview_path):
+            try:
+                metadata['preview'] = dbus.ByteArray(open(preview_path).read())
+            except:
+                logging.debug("Could not read preview for file %r on" \
+                                  "external device.", filename)
+    else:
+        if metadata and 'preview' in metadata:
+            del(metadata['preview'])
+    return metadata
 
 _datastore = None
 def _get_datastore():
@@ -460,6 +515,16 @@ def delete(object_id):
     """
     if os.path.exists(object_id):
         os.unlink(object_id)
+        dir_path = os.path.dirname(object_id)
+        filename = os.path.basename(object_id)
+        old_files = [os.path.join(dir_path, '.' + filename + '.metadata'),
+                     os.path.join(dir_path, '.' + filename + '.preview')]
+        for old_file in old_files:
+            if os.path.exists(old_file):
+                try:
+                    os.unlink(old_file)
+                except:
+                    pass
         deleted.send(None, object_id=object_id)
     else:
         _get_datastore().delete(object_id)
@@ -495,26 +560,93 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
                                                  file_path,
                                                  transfer_ownership)
     else:
-        if not os.path.exists(file_path):
-            raise ValueError('Entries without a file cannot be copied to '
-                             'removable devices')
+        object_id = _write_entry_on_external_device(metadata, file_path)
 
-        file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+    return object_id
+
+def _write_entry_on_external_device(metadata, file_path):
+    """This creates and updates an entry copied from the
+    DS to external storage device. Besides copying the
+    associated file a hidden file for the preview and one
+    for the metadata are stored. We make sure that the
+    metadata and preview file are in the same directory
+    as the data file.
+
+    This function handles renames of an entry on the
+    external device and avoids name collisions. Renames are
+    handled failsafe.
+
+    """
+    if 'uid' in metadata and os.path.exists(metadata['uid']):
+        file_path = metadata['uid']
+
+    if not file_path or not os.path.exists(file_path):
+        raise ValueError('Entries without a file cannot be copied to '
+                         'removable devices')
+
+    file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+
+    destination_path = os.path.join(metadata['mountpoint'], file_name)
+    if destination_path != file_path:
         file_name = _get_unique_file_name(metadata['mountpoint'], file_name)
-
         destination_path = os.path.join(metadata['mountpoint'], file_name)
+        clean_name, extension_ = os.path.splitext(file_name)
+        metadata['title'] = clean_name
+
+    metadata_copy = metadata.copy()
+    del metadata_copy['mountpoint']
+    if 'uid' in metadata_copy:
+        del metadata_copy['uid']
+
+    if 'preview' in metadata_copy:
+        preview = metadata_copy['preview']
+        preview_fname = '.' + file_name + '.preview'
+        preview_path = os.path.join(metadata['mountpoint'], preview_fname)
+        metadata_copy['preview'] = preview_fname
+
+        (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
+        os.write(fh, preview)
+        os.close(fh)
+        os.rename(fn, preview_path)
+
+    metadata_path = os.path.join(metadata['mountpoint'],
+                                 '.' + file_name + '.metadata')
+    (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
+    os.write(fh, json.dumps(metadata_copy))
+    os.close(fh)
+    os.rename(fn, metadata_path)
+
+    if os.path.dirname(destination_path) == os.path.dirname(file_path):
+        old_file_path = file_path
+        if old_file_path != destination_path:
+            os.rename(file_path, destination_path)
+            old_fname = os.path.basename(file_path)
+            old_files = [os.path.join(metadata['mountpoint'],
+                                      '.' + old_fname + '.metadata'),
+                         os.path.join(metadata['mountpoint'],
+                                      '.' + old_fname + '.preview')]
+            for ofile in old_files:
+                if os.path.exists(ofile):
+                    try:
+                        os.unlink(ofile)
+                    except:
+                        pass
+    else:
         shutil.copy(file_path, destination_path)
-        object_id = destination_path
-        created.send(None, object_id=object_id)
+
+    object_id = destination_path
+    created.send(None, object_id=object_id)
 
     return object_id
 
 def _get_file_name(title, mime_type):
     file_name = title
 
-    extension = '.' + mime.get_primary_extension(mime_type)
-    if not file_name.endswith(extension):
-        file_name += extension
+    mime_extension = mime.get_primary_extension(mime_type)
+    if mime_extension:
+        extension = '.' + mime_extension
+        if not file_name.endswith(extension):
+            file_name += extension
 
     # Invalid characters in VFAT filenames. From
     # http://en.wikipedia.org/wiki/File_Allocation_Table
@@ -534,8 +666,8 @@ def _get_file_name(title, mime_type):
 def _get_unique_file_name(mount_point, file_name):
     if os.path.exists(os.path.join(mount_point, file_name)):
         i = 1
+        name, extension = os.path.splitext(file_name)
         while len(file_name) <= 255:
-            name, extension = os.path.splitext(file_name)
             file_name = name + '_' + str(i) + extension
             if not os.path.exists(os.path.join(mount_point, file_name)):
                 break
