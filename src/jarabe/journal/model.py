@@ -45,6 +45,8 @@ PROPERTIES = ['uid', 'title', 'mtime', 'timestamp', 'keep', 'buddies',
 
 PAGES_TO_CACHE = 5
 
+JOURNAL_METADATA_DIR = '.Sugar-Metadata'
+
 class _Cache(object):
 
     __gtype_name__ = 'model_Cache'
@@ -363,7 +365,8 @@ class InplaceResultSet(BaseResultSet):
                             add_to_list = False
 
                     if add_to_list:
-                        file_info = (full_path, stat, int(stat.st_mtime), metadata)
+                        file_info = (full_path, stat, int(stat.st_mtime),
+                                     metadata)
                         self._file_list.append(file_info)
 
                     self.progress.send(self)
@@ -396,7 +399,7 @@ def _get_file_metadata(path, stat):
             'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
-            'icon-color': client.get_string('/desktop/sugar/user/color'),
+            'icon-color': '',
             'description': path}
 
 def _get_file_metadata_from_json(dir_path, filename, preview=False):
@@ -405,8 +408,8 @@ def _get_file_metadata_from_json(dir_path, filename, preview=False):
 
     """
     metadata = None
-    metadata_path = os.path.join(dir_path,
-                          '.' + filename + '.metadata')
+    metadata_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                 filename + '.metadata')
     if os.path.exists(metadata_path):
         try:
             metadata = json.load(open(metadata_path))
@@ -416,8 +419,8 @@ def _get_file_metadata_from_json(dir_path, filename, preview=False):
         else:
             metadata['uid'] = os.path.join(dir_path, filename)
     if preview:
-        preview_path = os.path.join(dir_path,
-                                    '.' + filename + '.preview')
+        preview_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                    filename + '.preview')
         if os.path.exists(preview_path):
             try:
                 metadata['preview'] = dbus.ByteArray(open(preview_path).read())
@@ -517,8 +520,10 @@ def delete(object_id):
         os.unlink(object_id)
         dir_path = os.path.dirname(object_id)
         filename = os.path.basename(object_id)
-        old_files = [os.path.join(dir_path, '.' + filename + '.metadata'),
-                     os.path.join(dir_path, '.' + filename + '.preview')]
+        old_files = [os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                  filename + '.metadata'),
+                     os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                  filename + '.preview')]
         for old_file in old_files:
             if os.path.exists(old_file):
                 try:
@@ -598,10 +603,16 @@ def _write_entry_on_external_device(metadata, file_path):
     if 'uid' in metadata_copy:
         del metadata_copy['uid']
 
+    metadata_dir_path = os.path.join(metadata['mountpoint'],
+                                     JOURNAL_METADATA_DIR)
+    if not os.path.exists(metadata_dir_path):
+        os.mkdir(metadata_dir_path)
+
     if 'preview' in metadata_copy:
         preview = metadata_copy['preview']
-        preview_fname = '.' + file_name + '.preview'
-        preview_path = os.path.join(metadata['mountpoint'], preview_fname)
+        preview_fname = file_name + '.preview'
+        preview_path = os.path.join(metadata['mountpoint'],
+                                    JOURNAL_METADATA_DIR, preview_fname)
         metadata_copy['preview'] = preview_fname
 
         (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
@@ -610,7 +621,8 @@ def _write_entry_on_external_device(metadata, file_path):
         os.rename(fn, preview_path)
 
     metadata_path = os.path.join(metadata['mountpoint'],
-                                 '.' + file_name + '.metadata')
+                                 JOURNAL_METADATA_DIR,
+                                 file_name + '.metadata')
     (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
     os.write(fh, json.dumps(metadata_copy))
     os.close(fh)
@@ -622,9 +634,11 @@ def _write_entry_on_external_device(metadata, file_path):
             os.rename(file_path, destination_path)
             old_fname = os.path.basename(file_path)
             old_files = [os.path.join(metadata['mountpoint'],
-                                      '.' + old_fname + '.metadata'),
+                                      JOURNAL_METADATA_DIR,
+                                      old_fname + '.metadata'),
                          os.path.join(metadata['mountpoint'],
-                                      '.' + old_fname + '.preview')]
+                                      JOURNAL_METADATA_DIR,
+                                      old_fname + '.preview')]
             for ofile in old_files:
                 if os.path.exists(ofile):
                     try:
