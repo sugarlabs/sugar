@@ -31,8 +31,6 @@ def _run_xephyr(display, dpi, dimensions):
     cmd.append(':%d' % display)
     cmd.append('-ac') 
 
-    cmd.append('-fullscreen')
-    '''
     if dimensions is not None:
         cmd.append('-screen')
         cmd.append(dimensions)
@@ -41,7 +39,7 @@ def _run_xephyr(display, dpi, dimensions):
     else:
         cmd.append('-screen')
         cmd.append('%dx%d' % (1200, 900))
-    '''
+
     if dpi is None:
         dpi = gtk.settings_get_default().get_property('gtk-xft-dpi') / 1024
     if dpi > 0:

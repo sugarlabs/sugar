@@ -82,11 +82,11 @@ def setup(tray):
 def _setup_volumes(tray):
     volume_monitor = gio.volume_monitor_get()
 
-    #for volume in volume_monitor.get_volumes():
-    #    _mount(volume, tray)
-    #
-    #for mount in volume_monitor.get_mounts():
-    #    _add_device(mount, tray)
+    for volume in volume_monitor.get_volumes():
+        _mount(volume, tray)
+
+    for mount in volume_monitor.get_mounts():
+        _add_device(mount, tray)
 
     volume_monitor.connect('volume-added', _volume_added_cb, tray)
     volume_monitor.connect('mount-added', _mount_added_cb, tray)
