@@ -20,6 +20,7 @@ import logging
 import traceback
 import sys
 
+import gconf
 import gobject
 import gio
 import simplejson
@@ -62,6 +63,14 @@ class BundleRegistry(gobject.GObject):
 
         self._last_defaults_mtime = -1
         self._favorite_bundles = {}
+
+        client = gconf.client_get_default()
+        self._protected_activities = client.get_list(
+                                    '/desktop/sugar/protected_activities',
+                                     gconf.VALUE_STRING)
+
+        if self._protected_activities is None:
+            self._protected_activities = []
 
         try:
             self._load_favorites()
@@ -274,6 +283,9 @@ class BundleRegistry(gobject.GObject):
     def is_bundle_favorite(self, bundle_id, version):
         key = self._get_favorite_key(bundle_id, version)
         return key in self._favorite_bundles
+
+    def is_activity_protected(self, bundle_id):
+        return bundle_id in self._protected_activities
 
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
