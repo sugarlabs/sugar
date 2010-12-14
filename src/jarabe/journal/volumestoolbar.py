@@ -56,8 +56,9 @@ def _convert_entries(root):
 
     - entries that do not have an associated file are not
     converted.
-    - when done we write the file converted to the old metadat
-    directory, that we do not convert several times
+    - if an entry has no title we set it to Untitled and rename
+    the file accordingly, taking care of creating a unique
+    filename
 
     """
     try:
@@ -108,6 +109,16 @@ def _convert_entries(root):
                 continue
             if not os.path.exists(os.path.join(root, filename)):
                 continue
+
+            if metadata['title'] == '':
+                metadata['title'] = _('Untitled')
+                fn = model.get_file_name(metadata['title'],
+                                         metadata['mime_type'])
+                new_filename = model.get_unique_file_name(root, fn)
+                metadata['filename'] = new_filename
+                os.rename(os.path.join(root, filename),
+                          os.path.join(root, new_filename))
+                filename = new_filename
 
             preview_path = os.path.join(root, _JOURNAL_0_METADATA_DIR,
                                         'preview', uid)

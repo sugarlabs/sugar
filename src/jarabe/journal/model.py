@@ -24,6 +24,7 @@ from stat import S_IFMT, S_IFDIR, S_IFREG
 import traceback
 import re
 import json
+from gettext import gettext as _
 
 import gobject
 import dbus
@@ -587,11 +588,13 @@ def _write_entry_on_external_device(metadata, file_path):
         raise ValueError('Entries without a file cannot be copied to '
                          'removable devices')
 
-    file_name = _get_file_name(metadata['title'], metadata['mime_type'])
+    if metadata['title'] == '':
+        metadata['title'] = _('Untitled')
+    file_name = get_file_name(metadata['title'], metadata['mime_type'])
 
     destination_path = os.path.join(metadata['mountpoint'], file_name)
     if destination_path != file_path:
-        file_name = _get_unique_file_name(metadata['mountpoint'], file_name)
+        file_name = get_unique_file_name(metadata['mountpoint'], file_name)
         destination_path = os.path.join(metadata['mountpoint'], file_name)
         clean_name, extension_ = os.path.splitext(file_name)
         metadata['title'] = clean_name
@@ -651,7 +654,7 @@ def _write_entry_on_external_device(metadata, file_path):
 
     return object_id
 
-def _get_file_name(title, mime_type):
+def get_file_name(title, mime_type):
     file_name = title
 
     mime_extension = mime.get_primary_extension(mime_type)
@@ -675,7 +678,7 @@ def _get_file_name(title, mime_type):
     
     return file_name
 
-def _get_unique_file_name(mount_point, file_name):
+def get_unique_file_name(mount_point, file_name):
     if os.path.exists(os.path.join(mount_point, file_name)):
         i = 1
         name, extension = os.path.splitext(file_name)
