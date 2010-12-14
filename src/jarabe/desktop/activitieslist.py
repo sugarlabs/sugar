@@ -203,7 +203,7 @@ class ActivityEntry(hippo.CanvasBox, hippo.CanvasItem):
     __gtype_name__ = 'SugarActivityEntry'
 
     _TITLE_COL_WIDTH   = style.GRID_CELL_SIZE * 3
-    _VERSION_COL_WIDTH = style.GRID_CELL_SIZE * 1
+    _VERSION_COL_WIDTH = style.GRID_CELL_SIZE * 3
     _DATE_COL_WIDTH    = style.GRID_CELL_SIZE * 5
 
     def __init__(self, activity_info):
