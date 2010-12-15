@@ -73,6 +73,10 @@ def print_radio():
     print ('off', 'on')[get_radio()]
     
 def get_radio_nm():
+    """ Get the state of NetworkManager
+        The user can enable/disable wireless and/or networking
+        return true only if wireless and network are enabled
+    """
     bus = dbus.SystemBus()
     try:
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
@@ -80,39 +84,40 @@ def get_radio_nm():
     except dbus.DBusException:
         raise ReadError('%s service not available' % _NM_SERVICE)
 
-    state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
-    if state in (0, 1):
-        return state
+    state = nm_props.Get(_NM_IFACE, 'NetworkingEnabled')
+    wireless_state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
+    _logger.debug('nm state: %s' % state)
+    _logger.debug('nm wireless_state: %s' % wireless_state)
+    if state in (0, 1) and wireless_state in (0, 1):
+        _logger.debug('get_radio_nm returns: %s' % state)
+        return (state == 1) and (wireless_state == 1)
     else:
         raise ReadError(_('State is unknown.'))
 
-
-# set_radio_nm/get_radio_nm aren't currently used, but it's
-# rumored that in NM 0.8, NM will be able to adjust the
-# rfkill state itself.  if it does, and restores it at boot
-# time, we can go back to using NM.  leaving this code for now.
 def set_radio_nm(state):
-    """Turn Radio 'on' or 'off'
+    """Enable/disable NetworkManager
     state : 'on/off'
-    """    
-    if state == 'on' or state == 1:
-        bus = dbus.SystemBus()
-        try:
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
-    elif state == 'off' or state == 0:
-        bus = dbus.SystemBus()
-        try:
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
-    else:
+    """
+    if not state in ('on', 1, 'off', 0):
         raise ValueError(_("Error in specified radio argument use on/off."))
+
+    bus = dbus.SystemBus()
+    try:
+        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+        nm = dbus.Interface(obj, _NM_IFACE)
+    except dbus.DBusException:
+        raise ReadError('%s service not available' % _NM_SERVICE)
+
+    if state == 'on' or state == 1:
+        new_state = True
+    else:
+        new_state = False
+
+    prev_state = nm_props.Get(_NM_IFACE, 'NetworkingEnabled')
+    if prev_state != new_state:
+        nm.Enable(new_state)
+    nm_props.Set(_NM_IFACE, 'WirelessEnabled', new_state)
 
     return 0
 
@@ -133,7 +138,7 @@ RFKILL_STATE_FILE = '/home/olpc/.rfkill_block_wifi'
 def set_radio_rfkill(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
-    """    
+    """
     if state == 'on' or state == 1:
         os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "unblock", "wifi")
         # remove the flag file (checked at boot)
@@ -155,13 +160,14 @@ def set_radio_rfkill(state):
 
     return 0
 
-# get current status from rfkill
 def get_radio():
-    return get_radio_rfkill()
+    """Get status from rfkill and nm"""
+    return get_radio_rfkill() and get_radio_nm()
 
-# set new status to both the dot-file and rfkill
 def set_radio(state):
+    """ Set status to dot-file and rfkill, and nm"""
     set_radio_rfkill(state)
+    set_radio_nm(state)
 
 def clear_registration():
     """Clear the registration with the schoolserver
