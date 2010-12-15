@@ -16,6 +16,7 @@
 
 import logging
 
+import gobject
 import gtk
 
 from sugar.graphics import style
@@ -186,6 +187,19 @@ class HomeWindow(gtk.Window):
 
     def get_home_box(self):
         return self._home_box
+
+    def busy_during_delayed_action(self, action):
+        """Use busy cursor during execution of action, scheduled via idle_add.
+        """
+        def action_wrapper(old_cursor):
+            try:
+                action()
+            finally:
+                self.get_window().set_cursor(old_cursor)
+
+        old_cursor = self.get_window().get_cursor()
+        self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+        gobject.idle_add(action_wrapper, old_cursor)
 
 
 def get_instance():

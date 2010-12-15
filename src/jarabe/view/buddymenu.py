@@ -30,6 +30,7 @@ from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
+import jarabe.desktop.homewindow
 
 
 class BuddyMenu(Palette):
@@ -104,17 +105,18 @@ class BuddyMenu(Palette):
         self.menu.append(item)
         item.show()
 
+    def _quit(self, action):
+        home_window = jarabe.desktop.homewindow.get_instance()
+        home_window.busy_during_delayed_action(action)
+
     def __logout_activate_cb(self, menu_item):
-        session_manager = get_session_manager()
-        session_manager.logout()
+        self._quit(get_session_manager().logout)
 
     def __reboot_activate_cb(self, menu_item):
-        session_manager = get_session_manager()
-        session_manager.reboot()
+        self._quit(get_session_manager().reboot)
 
     def __shutdown_activate_cb(self, menu_item):
-        session_manager = get_session_manager()
-        session_manager.shutdown()
+        self._quit(get_session_manager().shutdown)
 
     def __controlpanel_activate_cb(self, menu_item):
         panel = ControlPanel()
