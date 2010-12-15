@@ -22,7 +22,6 @@ import time
 import shutil
 import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
-import traceback
 import re
 import json
 from gettext import gettext as _
