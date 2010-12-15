@@ -22,6 +22,7 @@ import time
 import shutil
 import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
+import traceback
 import re
 import json
 from gettext import gettext as _
@@ -347,7 +348,6 @@ class InplaceResultSet(BaseResultSet):
 
     def _scan_a_file(self):
         full_path = self._pending_files.pop(0)
-        metadata = None
 
         try:
             stat = os.lstat(full_path)
