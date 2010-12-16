@@ -89,7 +89,6 @@ def get_radio_nm():
     _logger.debug('nm state: %s' % state)
     _logger.debug('nm wireless_state: %s' % wireless_state)
     if state in (0, 1) and wireless_state in (0, 1):
-        _logger.debug('get_radio_nm returns: %s' % state)
         return (state == 1) and (wireless_state == 1)
     else:
         raise ReadError(_('State is unknown.'))
