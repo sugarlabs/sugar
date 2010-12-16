@@ -347,6 +347,7 @@ class InplaceResultSet(BaseResultSet):
 
     def _scan_a_file(self):
         full_path = self._pending_files.pop(0)
+        metadata = None
 
         try:
             stat = os.lstat(full_path)
