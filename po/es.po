@@ -397,7 +397,6 @@ msgid "Sim requires Pin/Puk"
 msgstr "Sim requiere Pin/Puk"
 
 #: ../extensions/deviceicon/network.py:273
-#, fuzzy
 msgid "Authentication Error"
 msgstr "Error de autenticación"
 
@@ -493,17 +492,14 @@ msgid "Font size that is used throughout the desktop."
 msgstr "Tamaño de letra que se utiliza en todo el escritorio."
 
 #: ../data/sugar.schemas.in.h:14
-#, fuzzy
 msgid "GSM network APN"
 msgstr "APN de red GSM"
 
 #: ../data/sugar.schemas.in.h:15
-#, fuzzy
 msgid "GSM network PIN"
 msgstr "PIN de red GSM"
 
 #: ../data/sugar.schemas.in.h:16
-#, fuzzy
 msgid "GSM network PUK"
 msgstr "PUK de red GSM"
 
@@ -520,7 +516,6 @@ msgid "GSM network password"
 msgstr "Contraseña de la red GSM"
 
 #: ../data/sugar.schemas.in.h:20
-#, fuzzy
 msgid "GSM network password configuration"
 msgstr "Configuración de password de red GSM"
 
@@ -541,7 +536,6 @@ msgid "GSM network username"
 msgstr "Nombre de usario de una red GSM"
 
 #: ../data/sugar.schemas.in.h:25
-#, fuzzy
 msgid "GSM network username configuration"
 msgstr "Configuración de nombre de usuario de red GSM"
 
@@ -866,12 +860,10 @@ msgid "Wireless Security:"
 msgstr "Seguridad inalámbrica:"
 
 #: ../src/jarabe/desktop/meshbox.py:526
-#, fuzzy, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Red Ad-hoc %d"
 
 #: ../src/jarabe/desktop/meshbox.py:657
-#, fuzzy, python-format
 msgid "Mesh Network %d"
 msgstr "Red Malla %d"
 
@@ -1090,7 +1082,6 @@ msgstr "Entradas sin un archivo no pueden ser copiadas"
 
 #: ../src/jarabe/journal/journaltoolbox.py:416
 #: ../src/jarabe/journal/volumestoolbar.py:288
-#, fuzzy, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Error copiando la entrada. %s"
 
@@ -1111,7 +1102,6 @@ msgid "Your Journal is empty"
 msgstr "Su diario está vacío"
 
 #: ../src/jarabe/journal/listview.py:36
-#, fuzzy
 msgid "No matching entries "
 msgstr "No hay entradas coincidentes "
 
