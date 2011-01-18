@@ -50,6 +50,7 @@ def create_profile(name, color=None, pixbuf=None):
     client = gconf.client_get_default()
     client.set_string('/desktop/sugar/user/nick', name)
     client.set_string('/desktop/sugar/user/color', color.to_string())
+    client.suggest_sync()
 
     # Generate keypair
     import commands
