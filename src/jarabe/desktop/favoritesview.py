@@ -330,7 +330,7 @@ class FavoritesView(hippo.Canvas):
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
                                 'with your school server.')
-            self._my_icon.remove_register_menu()
+            self._my_icon.set_registered()
 
         ok_icon = Icon(icon_name='dialog-ok')
         alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
@@ -622,12 +622,16 @@ class OwnerIcon(BuddyIcon):
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')
+
         if not backup_url:
             self._register_menu = MenuItem(_('Register'), 'media-record')
-            self._register_menu.connect('activate',
-                                        self.__register_activate_cb)
-            palette.menu.append(self._register_menu)
-            self._register_menu.show()
+        else:
+            self._register_menu = MenuItem(_('Register again'),
+                                           'media-record')
+
+        self._register_menu.connect('activate', self.__register_activate_cb)
+        palette.menu.append(self._register_menu)
+        self._register_menu.show()
 
         return palette
 
@@ -637,8 +641,12 @@ class OwnerIcon(BuddyIcon):
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
 
-    def remove_register_menu(self):
+    def set_registered(self):
         self.palette.menu.remove(self._register_menu)
+        self._register_menu = MenuItem(_('Register again'), 'media-record')
+        self._register_menu.connect('activate', self.__register_activate_cb)
+        self.palette.menu.append(self._register_menu)
+        self._register_menu.show()
 
 
 class FavoritesSetting(object):
