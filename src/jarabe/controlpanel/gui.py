@@ -32,7 +32,6 @@ from jarabe import config
 
 
 _logger = logging.getLogger('ControlPanel')
-_MAX_COLUMNS = 5
 
 
 class ControlPanel(gtk.Window):
@@ -40,6 +39,9 @@ class ControlPanel(gtk.Window):
 
     def __init__(self):
         gtk.Window.__init__(self)
+
+        self._max_columns = int(0.285 * (float(gtk.gdk.screen_width()) /
+            style.GRID_CELL_SIZE - 3))
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
@@ -110,6 +112,7 @@ class ControlPanel(gtk.Window):
 
         self._table = gtk.Table()
         self._table.set_col_spacings(style.GRID_CELL_SIZE)
+        self._table.set_row_spacings(style.GRID_CELL_SIZE)
         self._table.set_border_width(style.GRID_CELL_SIZE)
 
         self._scrolledwindow = gtk.ScrolledWindow()
@@ -134,8 +137,17 @@ class ControlPanel(gtk.Window):
         except ImportError:
             del self._options['keyboard']
 
-        row = 0
-        column = 2
+        # If the screen width only supports two columns, start
+        # placing from the second row.
+        if self._max_columns == 2:
+            row = 1
+            column = 0
+        else:
+            # About Me and About my computer are hardcoded below to use the
+            # first two slots so we need to leave them free.
+            row = 0
+            column = 2
+
         options = self._options.keys()
         options.sort()
 
@@ -157,7 +169,7 @@ class ControlPanel(gtk.Window):
                                    column, column + 1,
                                    row, row + 1)
                 column += 1
-                if column == _MAX_COLUMNS:
+                if column == self._max_columns:
                     column = 0
                     row += 1
 
