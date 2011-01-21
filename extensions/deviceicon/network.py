@@ -564,20 +564,12 @@ class WirelessDeviceView(ToolButton):
         self._icon.props.base_color = self._color
 
     def __deactivate_connection_cb(self, palette, data=None):
-        if self._active_ap_op is not None:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            netmgr = dbus.Interface(obj, _NM_IFACE)
-            netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
-            active_connections_o = netmgr_props.Get(_NM_IFACE,
-                                                    'ActiveConnections')
+        if self._mode == network.NM_802_11_MODE_INFRA:
+            connection = network.find_connection_by_ssid(self._name)
+            if connection:
+                connection.disable_autoconnect()
 
-            for conn_o in active_connections_o:
-                obj = self._bus.get_object(_NM_IFACE, conn_o)
-                props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-                ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
-                if ap_op == self._active_ap_op:
-                    netmgr.DeactivateConnection(conn_o)
-                    break
+        network.disconnect_access_points([self._active_ap_op])
 
     def __activate_reply_cb(self, connection):
         logging.debug('Network created: %s', connection)

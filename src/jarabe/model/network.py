@@ -130,11 +130,16 @@ NM_802_11_DEVICE_CAP_RSN = 0x00000020
 
 SETTINGS_SERVICE = 'org.freedesktop.NetworkManagerUserSettings'
 
+NM_SERVICE = 'org.freedesktop.NetworkManager'
+NM_IFACE = 'org.freedesktop.NetworkManager'
+NM_PATH = '/org/freedesktop/NetworkManager'
+NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 NM_SETTINGS_PATH = '/org/freedesktop/NetworkManagerSettings'
 NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
 NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
+NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
 GSM_USERNAME_PATH = '/desktop/sugar/network/gsm/username'
 GSM_PASSWORD_PATH = '/desktop/sugar/network/gsm/password'
@@ -591,6 +596,14 @@ class NMSettingsConnection(dbus.service.Object):
             # pylint: disable=W0702
             logging.exception('Error calling libc.__res_init')
 
+    def disable_autoconnect(self):
+        if self._settings.connection.type != NM_CONNECTION_TYPE_GSM and \
+               self._settings.connection.autoconnect:
+            self._settings.connection.autoconnect = False
+            self._settings.connection.timestamp = None
+            self.Updated(self._settings.get_dict())
+            self.save()
+
     def set_secrets(self, secrets):
         self._secrets = secrets
         if self._settings.connection.type == \
@@ -968,3 +981,27 @@ def clear_wifi_connections():
 
     config_path = _get_wifi_connections_path()
     _create_wifi_connections(config_path)
+
+
+def disconnect_access_points(ap_paths):
+    """
+    Disconnect all devices connected to any of the given access points.
+    """
+    bus = dbus.SystemBus()
+    netmgr_obj = bus.get_object(NM_SERVICE, NM_PATH)
+    netmgr = dbus.Interface(netmgr_obj, NM_IFACE)
+    netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
+    active_connection_paths = netmgr_props.Get(NM_IFACE, 'ActiveConnections')
+
+    for conn_path in active_connection_paths:
+        conn_obj = bus.get_object(NM_IFACE, conn_path)
+        conn_props = dbus.Interface(conn_obj, dbus.PROPERTIES_IFACE)
+        ap_path = conn_props.Get(NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+        if ap_path == '/' or ap_path not in ap_paths:
+            continue
+
+        dev_paths = conn_props.Get(NM_ACTIVE_CONN_IFACE, 'Devices')
+        for dev_path in dev_paths:
+            dev_obj = bus.get_object(NM_SERVICE, dev_path)
+            dev = dbus.Interface(dev_obj, NM_DEVICE_IFACE)
+            dev.Disconnect()

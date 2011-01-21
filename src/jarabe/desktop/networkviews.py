@@ -265,7 +265,13 @@ class WirelessNetworkView(CanvasPulsingIcon):
             self.props.base_color = self._color
 
     def _disconnect_activate_cb(self, item):
-        pass
+        if self._mode == network.NM_802_11_MODE_INFRA:
+            connection = network.find_connection_by_ssid(self._name)
+            if connection:
+                connection.disable_autoconnect()
+
+        ap_paths = self._access_points.keys()
+        network.disconnect_access_points(ap_paths)
 
     def _add_ciphers_from_flags(self, flags, pairwise):
         ciphers = []
