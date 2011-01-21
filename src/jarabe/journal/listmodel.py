@@ -147,9 +147,10 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         try:
             timestamp = float(metadata.get('timestamp', 0))
         except (TypeError, ValueError):
-            self._cached_row.append(_('Unknown'))
+            timestamp_content = _('Unknown')
         else:
-            self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
+            timestamp_content = util.timestamp_to_elapsed_string(timestamp)
+        self._cached_row.append(timestamp_content)
 
         try:
             creation_time = float(metadata.get('creation_time'))
