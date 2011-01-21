@@ -274,7 +274,7 @@ class InplaceResultSet(BaseResultSet):
         else:
             # timestamp
             keygetter = itemgetter(2)
-        self._file_list.sort(lambda a, b: b - a,
+        self._file_list.sort(lambda a, b: cmp(b, a),
                              key=keygetter,
                              reverse=(self._sort[0] == '-'))
         self.ready.send(self)
