@@ -65,8 +65,7 @@ class UpdateModel(gobject.GObject):
 
     def check_updates(self):
         self.updates = []
-        self._bundles_to_check = \
-                [bundle for bundle in bundleregistry.get_registry()]
+        self._bundles_to_check = list(bundleregistry.get_registry())
         self._check_next_update()
 
     def _check_next_update(self):
