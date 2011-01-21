@@ -72,6 +72,9 @@ class UpdateModel(gobject.GObject):
         total = len(bundleregistry.get_registry())
         current = total - len(self._bundles_to_check)
 
+        if not self._bundles_to_check:
+            return False
+
         bundle = self._bundles_to_check.pop()
         self.emit('progress', UpdateModel.ACTION_CHECKING, bundle.get_name(),
                   current, total)
