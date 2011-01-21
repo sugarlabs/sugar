@@ -31,9 +31,9 @@
       <default></default>
       <locale name="C">
         <short>User Color</short>
-        <long>Color for the XO icon that is used throughout the 
-	  desktop. The string is composed of the stroke color and fill 
-	  color, format is that of rbg colors. Example: #AC32FF,#9A5200 
+        <long>Color for the XO icon that is used throughout the
+	  desktop. The string is composed of the stroke color and fill
+	  color, format is that of rgb colors. Example: #AC32FF,#9A5200
 	</long>
       </locale>
     </schema>
