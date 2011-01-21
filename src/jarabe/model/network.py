@@ -521,6 +521,14 @@ class NMSettings(dbus.service.Object):
         self.secrets_request.send(self, connection=sender,
                                   response=kwargs['response'])
 
+    def clear_wifi_connections(self):
+        for uuid in self.connections.keys():
+            conn = self.connections[uuid]
+            if conn._settings.connection.type == \
+               NM_CONNECTION_TYPE_802_11_WIRELESS:
+                conn.Removed()
+                self.connections.pop(uuid)
+
 
 class SecretsResponse(object):
     """Intermediate object to report the secrets from the dialog
@@ -551,6 +559,16 @@ class NMSettingsConnection(dbus.service.Object):
         self._settings = settings
         self._secrets = secrets
 
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='')
+    def Removed(self):
+        pass
+
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='a{sa{sv}}')
+    def Updated(self, settings):
+        pass
+
     def set_connected(self):
         if self._settings.connection.type == NM_CONNECTION_TYPE_GSM:
             self._settings.connection.timestamp = int(time.time())
@@ -559,6 +577,7 @@ class NMSettingsConnection(dbus.service.Object):
             self._settings.connection.timestamp = int(time.time())
             if (self._settings.connection.type ==
                     NM_CONNECTION_TYPE_802_11_WIRELESS):
+                self.Updated(self._settings.get_dict())
                 self.save()
 
         try:
@@ -582,8 +601,7 @@ class NMSettingsConnection(dbus.service.Object):
         return self._settings
 
     def save(self):
-        profile_path = env.get_profile_path()
-        config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
+        config_path = _get_wifi_connections_path()
 
         config = ConfigParser.ConfigParser()
         try:
@@ -812,19 +830,25 @@ def add_connection(uuid, settings, secrets=None):
     return conn
 
 
-def load_wifi_connections():
+def _get_wifi_connections_path():
     profile_path = env.get_profile_path()
-    config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
+    return os.path.join(profile_path, 'nm', 'connections.cfg')
 
-    config = ConfigParser.ConfigParser()
+
+def _create_wifi_connections(config_path):
+    if not os.path.exists(os.path.dirname(config_path)):
+        os.makedirs(os.path.dirname(config_path), 0755)
+    f = open(config_path, 'w')
+    f.close()
+
+
+def load_wifi_connections():
+    config_path = _get_wifi_connections_path()
 
     if not os.path.exists(config_path):
-        if not os.path.exists(os.path.dirname(config_path)):
-            os.makedirs(os.path.dirname(config_path), 0755)
-        f = open(config_path, 'w')
-        config.write(f)
-        f.close()
+        _create_wifi_connections(config_path)
 
+    config = ConfigParser.ConfigParser()
     try:
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
@@ -932,3 +956,15 @@ def find_gsm_connection():
 
     logging.debug('There is no gsm connection in the NMSettings.')
     return None
+
+
+def have_wifi_connections():
+    return bool(get_settings().connections)
+
+
+def clear_wifi_connections():
+    if _nm_settings is not None:
+        _nm_settings.clear_wifi_connections()
+
+    config_path = _get_wifi_connections_path()
+    _create_wifi_connections(config_path)
