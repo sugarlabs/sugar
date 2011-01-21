@@ -75,7 +75,6 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._rsn_flags = initial_ap.rsn_flags
         self._device_caps = 0
         self._device_state = None
-        self._connection = None
         self._color = None
 
         if self._mode == network.NM_802_11_MODE_ADHOC and \
@@ -101,20 +100,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._palette = self._create_palette()
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
-
-        if self._mode != network.NM_802_11_MODE_ADHOC:
-            if network.find_connection_by_ssid(self._name) is not None:
-                self.props.badge_name = 'emblem-favorite'
-                self._palette_icon.props.badge_name = 'emblem-favorite'
-            elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-                self.props.badge_name = 'emblem-locked'
-                self._palette_icon.props.badge_name = 'emblem-locked'
-            else:
-                self.props.badge_name = None
-                self._palette_icon.props.badge_name = None
-        else:
-            self.props.badge_name = None
-            self._palette_icon.props.badge_name = None
+        self._update_badge()
 
         interface_props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
         interface_props.Get(_NM_DEVICE_IFACE, 'State',
@@ -160,6 +146,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._device_state = new_state
         self._update_state()
         self._update_icon()
+        self._update_badge()
 
     def __update_active_ap(self, ap_path):
         if ap_path in self._access_points:
@@ -192,6 +179,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._device_state = state
         self._update_state()
         self._update_color()
+        self._update_badge()
 
     def __get_device_state_error_cb(self, err):
         logging.error('Error getting the device state: %s', err)
@@ -221,6 +209,21 @@ class WirelessNetworkView(CanvasPulsingIcon):
                 self.props.icon_name = icon_name
                 icon = self._palette.props.icon
                 icon.props.icon_name = icon_name
+
+    def _update_badge(self):
+        if self._mode != network.NM_802_11_MODE_ADHOC:
+            if network.find_connection_by_ssid(self._name) is not None:
+                self.props.badge_name = 'emblem-favorite'
+                self._palette_icon.props.badge_name = 'emblem-favorite'
+            elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
+                self.props.badge_name = 'emblem-locked'
+                self._palette_icon.props.badge_name = 'emblem-locked'
+            else:
+                self.props.badge_name = None
+                self._palette_icon.props.badge_name = None
+        else:
+            self.props.badge_name = None
+            self._palette_icon.props.badge_name = None
 
     def _update_state(self):
         if self._active_ap is not None:
@@ -586,7 +589,6 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._greyed_out = False
         self._name = ''
         self._device_state = None
-        self._connection = None
         self._active = False
         device = mesh_mgr.mesh_device
 
