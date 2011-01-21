@@ -57,7 +57,7 @@ def get_radio():
     try:
         bus = dbus.SystemBus()
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available' % _NM_SERVICE)
 
@@ -80,7 +80,7 @@ def set_radio(state):
         try:
             bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
@@ -88,7 +88,7 @@ def set_radio(state):
         try:
             bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)

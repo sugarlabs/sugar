@@ -617,7 +617,7 @@ class _Account(gobject.GObject):
                 reply_handler=self.__set_enabled_cb,
                 error_handler=partial(self.__error_handler_cb,
                                       'Account.SetEnabled'),
-                dbus_interface='org.freedesktop.DBus.Properties')
+                dbus_interface=dbus.PROPERTIES_IFACE)
 
     def __set_enabled_cb(self):
         logging.debug('_Account.__set_enabled_cb success')

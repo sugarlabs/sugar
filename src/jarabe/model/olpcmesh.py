@@ -58,14 +58,12 @@ class OlpcMeshManager(object):
 
         """
 
-        props = dbus.Interface(self.mesh_device,
-                               'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(self.mesh_device, dbus.PROPERTIES_IFACE)
         props.Get(_NM_DEVICE_IFACE, 'State',
                   reply_handler=self.__get_mesh_state_reply_cb,
                   error_handler=self.__get_state_error_cb)
 
-        props = dbus.Interface(self.eth_device,
-                               'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(self.eth_device, dbus.PROPERTIES_IFACE)
         props.Get(_NM_DEVICE_IFACE, 'State',
                   reply_handler=self.__get_eth_state_reply_cb,
                   error_handler=self.__get_state_error_cb)
@@ -90,8 +88,7 @@ class OlpcMeshManager(object):
             self._start_automesh()
 
     def _get_companion_device(self):
-        props = dbus.Interface(self.mesh_device,
-                               'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(self.mesh_device, dbus.PROPERTIES_IFACE)
         eth_device_o = props.Get(_NM_OLPC_MESH_IFACE, 'Companion')
         return self._bus.get_object(_NM_SERVICE, eth_device_o)
 

@@ -116,8 +116,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
             self.props.badge_name = None
             self._palette_icon.props.badge_name = None
 
-        interface_props = dbus.Interface(self._device,
-                                         'org.freedesktop.DBus.Properties')
+        interface_props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
         interface_props.Get(_NM_DEVICE_IFACE, 'State',
                             reply_handler=self.__get_device_state_reply_cb,
                             error_handler=self.__get_device_state_error_cb)
@@ -593,8 +592,7 @@ class OlpcMeshView(CanvasPulsingIcon):
 
         self.connect('button-release-event', self.__button_release_event_cb)
 
-        interface_props = dbus.Interface(device,
-                                         'org.freedesktop.DBus.Properties')
+        interface_props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
         interface_props.Get(_NM_DEVICE_IFACE, 'State',
                             reply_handler=self.__get_device_state_reply_cb,
                             error_handler=self.__get_device_state_error_cb)

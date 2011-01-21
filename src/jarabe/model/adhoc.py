@@ -84,7 +84,7 @@ class AdHocManager(gobject.GObject):
                                    ' only be called once.')
 
         self._device = device
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
         self._device_state = props.Get(_NM_DEVICE_IFACE, 'State')
 
         self._bus.add_signal_receiver(self.__device_state_changed_cb,

@@ -405,7 +405,7 @@ class WirelessDeviceView(ToolButton):
         self._palette.set_group_id('frame')
 
         self._device_props = dbus.Interface(self._device,
-                                            'org.freedesktop.DBus.Properties')
+                                            dbus.PROPERTIES_IFACE)
         self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
                               reply_handler=self.__get_device_props_reply_cb,
                               error_handler=self.__get_device_props_error_cb)
@@ -446,8 +446,7 @@ class WirelessDeviceView(ToolButton):
                 return
             self._active_ap_op = active_ap_op
             active_ap = self._bus.get_object(_NM_SERVICE, active_ap_op)
-            props = dbus.Interface(active_ap,
-                                   'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(active_ap, dbus.PROPERTIES_IFACE)
 
             props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
                          reply_handler=self.__get_all_ap_props_reply_cb,
@@ -568,14 +567,13 @@ class WirelessDeviceView(ToolButton):
         if self._active_ap_op is not None:
             obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
             netmgr = dbus.Interface(obj, _NM_IFACE)
-            netmgr_props = dbus.Interface(
-                netmgr, 'org.freedesktop.DBus.Properties')
+            netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
             active_connections_o = netmgr_props.Get(_NM_IFACE,
                                                     'ActiveConnections')
 
             for conn_o in active_connections_o:
                 obj = self._bus.get_object(_NM_IFACE, conn_o)
-                props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+                props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
                 ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
                 if ap_op == self._active_ap_op:
                     netmgr.DeactivateConnection(conn_o)
@@ -621,7 +619,7 @@ class OlpcMeshDeviceView(ToolButton):
         self.update_state(state)
 
         self._device_props = dbus.Interface(self._device,
-                                            'org.freedesktop.DBus.Properties')
+                                            dbus.PROPERTIES_IFACE)
         self._device_props.Get(_NM_OLPC_MESH_IFACE, 'ActiveChannel',
                             reply_handler=self.__get_active_channel_reply_cb,
                             error_handler=self.__get_active_channel_error_cb)
@@ -683,20 +681,19 @@ class OlpcMeshDeviceView(ToolButton):
     def __deactivate_connection(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr,
-                                      'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
         active_connections_o = netmgr_props.Get(_NM_IFACE,
                                                 'ActiveConnections')
 
         for conn_o in active_connections_o:
             # The connection path for a mesh connection is the device itself.
             obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
 
             try:
                 obj = self._bus.get_object(_NM_IFACE, ap_op)
-                props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+                props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
                 device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
                 if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
                     netmgr.DeactivateConnection(conn_o)
@@ -760,7 +757,7 @@ class GsmDeviceView(TrayIcon):
 
         self._palette = palette
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
         props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__current_state_check_cb,
                      error_handler=self.__current_state_check_error_cb)
@@ -793,13 +790,12 @@ class GsmDeviceView(TrayIcon):
     def __gsm_disconnect_cb(self, palette, data=None):
         obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
         netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr,
-                                      'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
         active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
             obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             devices = props.Get(_NM_ACTIVE_CONN_IFACE, 'Devices')
             if self._device.object_path in devices:
                 netmgr.DeactivateConnection(
@@ -964,7 +960,7 @@ class WiredDeviceObserver(object):
         self._device_view = None
         self._tray = tray
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
         props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__get_device_props_reply_cb,
                      error_handler=self.__get_device_props_error_cb)
@@ -992,8 +988,7 @@ class WiredDeviceObserver(object):
 
     def _update_state(self, state):
         if state == network.DEVICE_STATE_ACTIVATED:
-            props = dbus.Interface(self._device,
-                                   'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
             address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
             speed = props.Get(_NM_WIRED_IFACE, 'Speed')
             self._device_view = WiredDeviceView(speed, address)
@@ -1053,7 +1048,7 @@ class NetworkManagerObserver(object):
 
     def _check_device(self, device_op):
         nm_device = self._bus.get_object(_NM_SERVICE, device_op)
-        props = dbus.Interface(nm_device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(nm_device, dbus.PROPERTIES_IFACE)
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.DEVICE_TYPE_802_3_ETHERNET:

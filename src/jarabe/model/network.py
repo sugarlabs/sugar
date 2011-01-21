@@ -692,8 +692,7 @@ class AccessPoint(gobject.GObject):
         self.channel = 0
 
     def initialize(self):
-        model_props = dbus.Interface(self.model,
-            'org.freedesktop.DBus.Properties')
+        model_props = dbus.Interface(self.model, dbus.PROPERTIES_IFACE)
         model_props.GetAll(NM_ACCESSPOINT_IFACE, byte_arrays=True,
                            reply_handler=self._ap_properties_changed_cb,
                            error_handler=self._get_all_props_error_cb)

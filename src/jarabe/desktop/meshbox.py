@@ -318,13 +318,12 @@ class NetworkManagerObserver(object):
         # FIXME It would be better to do all of this async, but I cannot think
         # of a good way to. NM could really use some love here.
 
-        netmgr_props = dbus.Interface(
-                            self._netmgr, 'org.freedesktop.DBus.Properties')
+        netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
         active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
             obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
                 ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
@@ -348,7 +347,7 @@ class NetworkManagerObserver(object):
 
     def _check_device(self, device_o):
         device = self._bus.get_object(_NM_SERVICE, device_o)
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
 
         device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
