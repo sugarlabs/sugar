@@ -27,6 +27,7 @@ extensions/cpsection/updater/__init__.py
 extensions/cpsection/updater/view.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/network.py
+extensions/deviceicon/resources.py
 extensions/deviceicon/speaker.py
 extensions/deviceicon/touchpad.py
 extensions/deviceicon/volume.py
