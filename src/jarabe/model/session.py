@@ -55,15 +55,15 @@ class SessionManager(session.SessionManager):
         elif self._logout_mode != self.MODE_LOGOUT:
             try:
                 bus = dbus.SystemBus()
-                proxy = bus.get_object('org.freedesktop.Hal',
-                    '/org/freedesktop/Hal/devices/computer')
+                proxy = bus.get_object('org.freedesktop.ConsoleKit',
+                                       '/org/freedesktop/ConsoleKit/Manager')
                 pm = dbus.Interface(proxy,
-                    'org.freedesktop.Hal.Device.SystemPowerManagement')
+                                    'org.freedesktop.ConsoleKit.Manager')
 
                 if self._logout_mode == self.MODE_SHUTDOWN:
-                    pm.Shutdown()
+                    pm.Stop()
                 elif self._logout_mode == self.MODE_REBOOT:
-                    pm.Reboot()
+                    pm.Restart()
             except:
                 logging.exception('Can not stop sugar')
                 self.session.cancel_shutdown()
