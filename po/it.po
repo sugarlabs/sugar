@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-23 01:15-0500\n"
-"PO-Revision-Date: 2011-02-09 14:03+0200\n"
+"PO-Revision-Date: 2011-02-09 17:49+0200\n"
 "Last-Translator: Carlo Falciola <cfalciola@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -648,7 +648,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:2
 msgid "Additional directories which can contain updated translations."
-msgstr ""
+msgstr "Ulteriori directory contenenti traduzioni aggiornate."
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
@@ -656,7 +656,7 @@ msgstr "URL di salvataggio"
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "ID dei pacchetti di attività protette"
 
 #: ../data/sugar.schemas.in.h:5
 msgid ""
@@ -696,7 +696,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Directory to search for translations"
-msgstr ""
+msgstr "Directory in cui cercare traduzioni"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Edge Delay"
@@ -720,51 +720,51 @@ msgstr "Dimensione del carattere utilizzato in tutto il sistema."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN"
-msgstr ""
+msgstr " APN rete GSM"
 
 #: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN"
-msgstr ""
+msgstr "PIN rete GSM"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK"
-msgstr ""
+msgstr "PUK rete GSM"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration"
-msgstr ""
+msgstr "configurazione di access point name rete GSM"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network number"
-msgstr ""
+msgstr "numero di rete GSM"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network password"
-msgstr ""
+msgstr "password di rete GSM"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration"
-msgstr ""
+msgstr "configurazione della password di rete GSM"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network personal identification number configuration"
-msgstr ""
+msgstr "configurazione del personal identification number (PIN) della rete GSM"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration"
-msgstr ""
+msgstr "configurazione della chiave personale di sblocco (PUK) della rete GSM"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration"
-msgstr ""
+msgstr "configurazione del numero telefonico della rete GSM"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network username"
-msgstr ""
+msgstr "username dela rete GSM"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration"
-msgstr ""
+msgstr "configurazione dello username della rete GSM"
 
 #: ../data/sugar.schemas.in.h:30
 msgid ""
@@ -779,9 +779,8 @@ msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "Se TRUE, Sugar mostrerà una opzione di \"Disconnessione\"."
 
 #: ../data/sugar.schemas.in.h:32
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Se TRUE, Sugar mostrerà una opzione di  \"Disconnessione\"."
+msgstr "Se TRUE, Sugar mostrerà una opzione di \"Riavvia\"."
 
 #: ../data/sugar.schemas.in.h:33
 msgid ""
@@ -851,11 +850,11 @@ msgstr "Mostra Disconnessione"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Show Restart"
-msgstr ""
+msgstr "Mostra Riavvia"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Mostra rete ad-hoc di Sugar"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Sound Muted"
@@ -893,6 +892,8 @@ msgstr "Nome Utente utilizzato in tutto il sistema."
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Gli utenti non saranno abilitati alla cancellazione di queste attività dalla "
+"Visualizzazione a lista"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Volume Level"
@@ -1148,7 +1149,7 @@ msgstr "Associa"
 #: ../src/jarabe/desktop/networkviews.py:489
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Rete Ad-hoc %d"
 
 # A complete translation in italian: "rete a maglie" becames a tautology
 #: ../src/jarabe/desktop/networkviews.py:622
@@ -1383,18 +1384,18 @@ msgstr "Copia"
 #: ../src/jarabe/journal/journaltoolbox.py:436
 #: ../src/jarabe/journal/volumestoolbar.py:157
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "Elementi senza file non possono essere copiati"
 
 #: ../src/jarabe/journal/journaltoolbox.py:445
 #: ../src/jarabe/journal/volumestoolbar.py:166
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Errore durante la copia dell'elemento. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:446
 #: ../src/jarabe/journal/volumestoolbar.py:167
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
