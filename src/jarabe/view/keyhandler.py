@@ -47,6 +47,8 @@ _actions_table = {
     'F2'                   : 'zoom_group',
     'F3'                   : 'zoom_home',
     'F4'                   : 'zoom_activity',
+    'F5'                   : 'open_search',
+    'F6'                   : 'frame',
     'F9'                   : 'brightness_down',
     'F10'                  : 'brightness_up',
     '<alt>F9'              : 'brightness_min',
@@ -249,9 +251,9 @@ class KeyHandler(object):
         # If either the xmodmap or xrandr command fails, check_call will fail
         # with CalledProcessError, which we raise.
         try:
-            subprocess.check_call(argv)
             subprocess.check_call(['xrandr', '-o', 
                                    states[self._screen_rotation]])
+            subprocess.check_call(argv)
         except OSError, e:
             if e.errno != errno.EINTR:
                 raise

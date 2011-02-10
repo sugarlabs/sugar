@@ -15,9 +15,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
 import dbus
 from gettext import gettext as _
+from jarabe.model import network
 import gconf
+import os
+
+_logger = logging.getLogger('ControlPanel - Network')
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -62,49 +67,106 @@ def _restart_jabber():
                             _PS_INTERFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available' % _PS_SERVICE)
-    ps.RestartServerConnection()
-
-def get_radio():
-    bus = dbus.SystemBus()
-    try:
-        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-    except dbus.DBusException:
-        raise ReadError('%s service not available' % _NM_SERVICE)
-
-    state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
-    if state in (0, 1):
-        return state
-    else:
-        raise ReadError(_('State is unknown.'))
+    ps.RetryConnections()
 
 def print_radio():
     print ('off', 'on')[get_radio()]
     
-def set_radio(state):
+def get_radio_nm():
+    """ Get the state of NetworkManager
+        The user can enable/disable wireless and/or networking
+        return true only if wireless and network are enabled
+    """
+    bus = dbus.SystemBus()
+    try:
+        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+    except dbus.DBusException:
+        raise ReadError('%s service not available' % _NM_SERVICE)
+
+    state = nm_props.Get(_NM_IFACE, 'NetworkingEnabled')
+    wireless_state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
+    _logger.debug('nm state: %s' % state)
+    _logger.debug('nm wireless_state: %s' % wireless_state)
+    if state in (0, 1) and wireless_state in (0, 1):
+        return (state == 1) and (wireless_state == 1)
+    else:
+        raise ReadError(_('State is unknown.'))
+
+def set_radio_nm(state):
+    """Enable/disable NetworkManager
+    state : 'on/off'
+    """
+    if not state in ('on', 1, 'off', 0):
+        raise ValueError(_("Error in specified radio argument use on/off."))
+
+    bus = dbus.SystemBus()
+    try:
+        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+        nm = dbus.Interface(obj, _NM_IFACE)
+    except dbus.DBusException:
+        raise ReadError('%s service not available' % _NM_SERVICE)
+
+    if state == 'on' or state == 1:
+        new_state = True
+    else:
+        new_state = False
+
+    prev_state = nm_props.Get(_NM_IFACE, 'NetworkingEnabled')
+    if prev_state != new_state:
+        nm.Enable(new_state)
+    nm_props.Set(_NM_IFACE, 'WirelessEnabled', new_state)
+
+    return 0
+
+def get_radio_rfkill():
+    pipe_stdout = os.popen('/sbin/rfkill list wifi', 'r')
+    try:
+        output = pipe_stdout.read()
+        _logger.debug('rfkill said: %s' % output)
+        blocked = " blocked: yes" in output
+        # if not soft- or hard-blocked, radio is on
+        return not blocked
+
+    finally:
+        pipe_stdout.close()
+
+RFKILL_STATE_FILE = '/home/olpc/.rfkill_block_wifi'
+
+def set_radio_rfkill(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
-    """    
+    """
     if state == 'on' or state == 1:
-        bus = dbus.SystemBus()
+        os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "unblock", "wifi")
+        # remove the flag file (checked at boot)
         try:
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
+            os.unlink(RFKILL_STATE_FILE)
+        except:
+            _logger.debug('File %s was not unlinked' % RFKILL_STATE_FILE)
     elif state == 'off' or state == 0:
-        bus = dbus.SystemBus()
+        os.spawnl(os.P_WAIT, "/sbin/rfkill", "rfkill", "block", "wifi")
+        # touch the flag file
         try:
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
+            fd = open(RFKILL_STATE_FILE, 'w')
+        except IOError:
+            _logger.debug('File %s is not writeable' % RFKILL_STATE_FILE)
+        else:
+            fd.close()
     else:
         raise ValueError(_("Error in specified radio argument use on/off."))
 
     return 0
+
+def get_radio():
+    """Get status from rfkill and nm"""
+    return get_radio_rfkill() and get_radio_nm()
+
+def set_radio(state):
+    """ Set status to dot-file and rfkill, and nm"""
+    set_radio_rfkill(state)
+    set_radio_nm(state)
 
 def clear_registration():
     """Clear the registration with the schoolserver
@@ -116,13 +178,16 @@ def clear_registration():
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    pass
+    network.clear_connections()
+
+def count_networks():
+    return network.count_connections()
 
 def get_publish_information():
     client = gconf.client_get_default()
     publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
     return publish
-	
+
 def print_publish_information():
     print get_publish_information()
 

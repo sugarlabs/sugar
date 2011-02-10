@@ -101,6 +101,8 @@ class Network(SectionView):
         self._clear_history_button = gtk.Button()
         self._clear_history_button.set_label(_('Discard network history'))
         box_clear_history.pack_start(self._clear_history_button, expand=False)
+        if self._model.count_networks() == 0:
+            self._clear_history_button.set_sensitive(False)
         self._clear_history_button.show()
         box_wireless.pack_start(box_clear_history, expand=False)
         box_clear_history.show()
@@ -208,7 +210,9 @@ class Network(SectionView):
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:
-            self._radio_valid = True            
+            self._radio_valid = True
+            if self._model.count_networks() != 0:
+                self._clear_history_button.set_sensitive(True)
 
         self._validate()
         return False
@@ -239,3 +243,5 @@ class Network(SectionView):
 
     def __network_configuration_reset_cb(self, widget):
         self._model.clear_networks()
+        if self._model.count_networks() == 0:
+            self._clear_history_button.set_sensitive(False)

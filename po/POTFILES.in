@@ -13,6 +13,8 @@ extensions/cpsection/frame/view.py
 extensions/cpsection/language/__init__.py
 extensions/cpsection/language/model.py
 extensions/cpsection/language/view.py
+extensions/cpsection/modemconfiguration/__init__.py
+extensions/cpsection/modemconfiguration/view.py
 extensions/cpsection/network/__init__.py
 extensions/cpsection/network/model.py
 extensions/cpsection/network/view.py
@@ -29,6 +31,7 @@ src/jarabe/controlpanel/cmd.py
 src/jarabe/controlpanel/gui.py
 src/jarabe/controlpanel/sectionview.py
 src/jarabe/controlpanel/toolbar.py
+src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py

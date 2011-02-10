@@ -68,22 +68,29 @@ class ObjectPalette(Palette):
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
-        if metadata.get('activity_id', ''):
-            resume_label = _('Resume')
-            resume_with_label = _('Resume with')
-        else:
-            resume_label = _('Start')
-            resume_with_label = _('Start with')
-        menu_item = MenuItem(resume_label, 'activity-start')
-        menu_item.connect('activate', self.__start_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        if misc.get_activities(metadata) or misc.is_bundle(metadata):
+            if metadata.get('activity_id', ''):
+                resume_label = _('Resume')
+                resume_with_label = _('Resume with')
+            else:
+                resume_label = _('Start')
+                resume_with_label = _('Start with')
+            menu_item = MenuItem(resume_label, 'activity-start')
+            menu_item.connect('activate', self.__start_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
 
-        menu_item = MenuItem(resume_with_label, 'activity-start')
-        self.menu.append(menu_item)
-        menu_item.show()
-        start_with_menu = StartWithMenu(self._metadata)
-        menu_item.set_submenu(start_with_menu)
+            menu_item = MenuItem(resume_with_label, 'activity-start')
+            self.menu.append(menu_item)
+            menu_item.show()
+            start_with_menu = StartWithMenu(self._metadata)
+            menu_item.set_submenu(start_with_menu)
+
+        else:
+            menu_item = MenuItem(_('No activity to start entry'))
+            menu_item.set_sensitive(False)
+            self.menu.append(menu_item)
+            menu_item.show()
 
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -134,11 +141,6 @@ class ObjectPalette(Palette):
         self._temp_file_path = None
 
     def __erase_activate_cb(self, menu_item):
-        registry = bundleregistry.get_registry()
-
-        bundle = misc.get_bundle(self._metadata)
-        if bundle is not None and registry.is_installed(bundle):
-            registry.uninstall(bundle)
         model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):

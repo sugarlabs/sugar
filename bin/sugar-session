@@ -138,7 +138,16 @@ def set_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
-    cleanup_logs()
+    try:
+        # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
+        data_dir = os.path.join(env.get_profile_path(), 'data')
+        shutil.rmtree(data_dir, ignore_errors=True)
+        os.makedirs(data_dir)
+        cleanup_logs()
+    except OSError, e:
+        # logs cleanup is not critical; it should not prevent sugar from
+        # starting if (for example) the disk is full or read-only.
+        print 'logs cleanup failed: %s' % e
     logger.start('shell')
 
     set_fonts()

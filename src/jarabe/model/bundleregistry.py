@@ -20,6 +20,7 @@ import logging
 import traceback
 import sys
 
+import gconf
 import gobject
 import gio
 import simplejson
@@ -27,6 +28,7 @@ import simplejson
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
 from jarabe.journal.journalentrybundle import JournalEntryBundle
+from sugar.bundle.bundleversion import NormalizedVersion
 from sugar.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar import env
@@ -61,6 +63,14 @@ class BundleRegistry(gobject.GObject):
 
         self._last_defaults_mtime = -1
         self._favorite_bundles = {}
+
+        client = gconf.client_get_default()
+        self._protected_activities = client.get_list(
+                                    '/desktop/sugar/protected_activities',
+                                     gconf.VALUE_STRING)
+
+        if self._protected_activities is None:
+            self._protected_activities = []
 
         try:
             self._load_favorites()
@@ -141,14 +151,16 @@ class BundleRegistry(gobject.GObject):
             return
 
         for bundle_id in default_activities:
-            max_version = -1
+            max_version = '0'
             for bundle in self._bundles:
                 if bundle.get_bundle_id() == bundle_id and \
-                        max_version < bundle.get_activity_version():
+                        NormalizedVersion(max_version) < \
+                        NormalizedVersion(bundle.get_activity_version()):
                     max_version = bundle.get_activity_version()
 
             key = self._get_favorite_key(bundle_id, max_version)
-            if max_version > -1 and key not in self._favorite_bundles:
+            if NormalizedVersion(max_version) > NormalizedVersion('0') and \
+                    key not in self._favorite_bundles:
                 self._favorite_bundles[key] = None
 
         logging.debug('After merging: %r' % self._favorite_bundles)
@@ -272,6 +284,9 @@ class BundleRegistry(gobject.GObject):
         key = self._get_favorite_key(bundle_id, version)
         return key in self._favorite_bundles
 
+    def is_activity_protected(self, bundle_id):
+        return bundle_id in self._protected_activities
+
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
         if key not in self._favorite_bundles:
@@ -324,8 +339,8 @@ class BundleRegistry(gobject.GObject):
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() == \
-                        installed_bundle.get_activity_version():
+                    NormalizedVersion(bundle.get_activity_version()) == \
+                    NormalizedVersion(installed_bundle.get_activity_version()):
                 return True
         return False
 
@@ -338,15 +353,15 @@ class BundleRegistry(gobject.GObject):
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() == \
-                        installed_bundle.get_activity_version():
+                    NormalizedVersion(bundle.get_activity_version()) <= \
+                    NormalizedVersion(installed_bundle.get_activity_version()):
                 raise AlreadyInstalledException
             elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
                 self.uninstall(installed_bundle, force=True)
 
         install_dir = env.get_user_activities_path()
         if isinstance(bundle, JournalEntryBundle):
-            install_path = bundle.install(install_dir, uid)
+            install_path = bundle.install(uid)
         else:
             install_path = bundle.install(install_dir)
 
@@ -371,7 +386,8 @@ class BundleRegistry(gobject.GObject):
 
         act = self.get_bundle(bundle.get_bundle_id())
         if not force and \
-                act.get_activity_version() != bundle.get_activity_version():
+                NormalizedVersion(act.get_activity_version()) != \
+                NormalizedVersion(bundle.get_activity_version()):
             logging.warning('Not uninstalling, different bundle present')
             return
         elif not act.get_path().startswith(env.get_user_activities_path()):

@@ -79,8 +79,8 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
     
     def _add_my_items(self):
-        item = MenuItem(_('My Settings'), 'preferences-system')
-        item.connect('activate', self.__controlpanel_activate_cb)
+        item = MenuItem(_('Shutdown'), 'system-shutdown')
+        item.connect('activate', self.__shutdown_activate_cb)
         self.menu.append(item)
         item.show()
 
@@ -92,13 +92,8 @@ class BuddyMenu(Palette):
             self.menu.append(item)
             item.show()
 
-        item = MenuItem(_('Restart'), 'system-restart')
-        item.connect('activate', self.__reboot_activate_cb)
-        self.menu.append(item)
-        item.show()
-
-        item = MenuItem(_('Shutdown'), 'system-shutdown')
-        item.connect('activate', self.__shutdown_activate_cb)
+        item = MenuItem(_('My Settings'), 'preferences-system')
+        item.connect('activate', self.__controlpanel_activate_cb)
         self.menu.append(item)
         item.show()
 

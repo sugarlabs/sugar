@@ -325,6 +325,11 @@ class DetailToolbox(Toolbox):
         self.entry_toolbar.show()
 
 class EntryToolbar(gtk.Toolbar):
+    __gsignals__ = {
+        'volume-error': (gobject.SIGNAL_RUN_FIRST,
+                         gobject.TYPE_NONE,
+                         ([str, str]))
+        }
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -394,7 +399,22 @@ class EntryToolbar(gtk.Toolbar):
         misc.resume(self._metadata, service_name)
 
     def _copy_menu_item_activate_cb(self, menu_item, mount):
-        model.copy(self._metadata, mount.get_root().get_path())
+        file_path = model.get_file(self._metadata['uid'])
+
+        if not file_path or not os.path.exists(file_path):
+            logging.warn('Entries without a file cannot be copied.')
+            self.emit('volume-error',
+                      _('Entries without a file cannot be copied.'),
+                      _('Warning'))
+            return
+
+        try:
+            model.copy(self._metadata, mount.get_root().get_path())
+        except (IOError, OSError), e:
+            logging.exception('Error while copying the entry. %s', e.strerror)
+            self.emit('volume-error',
+                      _('Error while copying the entry. %s') % e.strerror,
+                      _('Error'))
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()

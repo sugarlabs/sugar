@@ -204,5 +204,100 @@
        </locale>
      </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/username</key>
+      <applyto>/desktop/sugar/network/gsm/username</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network username</short>
+        <long>GSM network username configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/password</key>
+      <applyto>/desktop/sugar/network/gsm/password</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network password</short>
+        <long>GSM network password configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/number</key>
+      <applyto>/desktop/sugar/network/gsm/number</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>*99#</default>
+      <locale name="C">
+        <short>GSM network number</short>
+        <long>GSM network telephone number configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/apn</key>
+      <applyto>/desktop/sugar/network/gsm/apn</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network APN</short>
+        <long>GSM network access point name configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/pin</key>
+      <applyto>/desktop/sugar/network/gsm/pin</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network PIN</short>
+        <long>GSM network personal identification number configuration</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/network/gsm/puk</key>
+      <applyto>/desktop/sugar/network/gsm/puk</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>GSM network PUK</short>
+        <long>GSM network personal unlock key configuration</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/network/adhoc</key>
+      <applyto>/desktop/sugar/network/adhoc</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Sugar Ad-hoc networks</short>
+        <long>If TRUE, Sugar will show default Ad-hoc networks for
+	  channel 1,6 and 11. If Sugar sees no "known" network when
+	  it starts, it does autoconnect to an Ad-hoc network.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/protected_activities</key>
+      <applyto>/desktop/sugar/protected_activities</applyto>
+      <owner>sugar</owner>
+      <type>list</type>
+      <list_type>string</list_type>
+      <default>[]</default>
+      <locale name="C">
+        <short>Bundle IDs of protected activities</short>
+        <long>Users will not be allowed to erase these
+        activities through the list view.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

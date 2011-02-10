@@ -1,6 +1,7 @@
 # Copyright (C) 2008 Red Hat, Inc.
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
-# Copyright (C) 2009 One Laptop per Child
+# Copyright (C) 2009-2010 One Laptop per Child
+# Copyright (C) 2009 Paraguay Educa, Martin Abente
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,14 +22,20 @@ import os
 import time
 
 import dbus
+import dbus.service
 import gobject
 import ConfigParser
+import gconf
+import ctypes
 
 from sugar import dispatch
 from sugar import env
+from sugar.util import unique_id
 
 DEVICE_TYPE_802_3_ETHERNET = 1
 DEVICE_TYPE_802_11_WIRELESS = 2
+DEVICE_TYPE_GSM_MODEM = 3
+DEVICE_TYPE_802_11_OLPC_MESH = 6
 
 DEVICE_STATE_UNKNOWN = 0
 DEVICE_STATE_UNMANAGED = 1
@@ -40,6 +47,9 @@ DEVICE_STATE_NEED_AUTH = 6
 DEVICE_STATE_IP_CONFIG = 7
 DEVICE_STATE_ACTIVATED = 8
 DEVICE_STATE_FAILED = 9
+
+NM_CONNECTION_TYPE_802_11_WIRELESS = '802-11-wireless'
+NM_CONNECTION_TYPE_GSM = 'gsm'
 
 NM_ACTIVE_CONNECTION_STATE_UNKNOWN = 0
 NM_ACTIVE_CONNECTION_STATE_ACTIVATING = 1
@@ -80,8 +90,47 @@ NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
 NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
 NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
 
+GSM_USERNAME_PATH = '/desktop/sugar/network/gsm/username'
+GSM_PASSWORD_PATH = '/desktop/sugar/network/gsm/password'
+GSM_NUMBER_PATH = '/desktop/sugar/network/gsm/number'
+GSM_APN_PATH = '/desktop/sugar/network/gsm/apn'
+GSM_PIN_PATH = '/desktop/sugar/network/gsm/pin'
+GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
+
 _nm_settings = None
 _conn_counter = 0
+
+def frequency_to_channel(frequency):
+    """Returns the channel matching a given radio channel frequency. If a
+    frequency is not in the dictionary channel 1 will be returned.
+
+    Keyword arguments:
+    frequency -- The radio channel frequency in MHz.
+
+    Return: Channel
+
+    """
+    ftoc = {2412: 1, 2417: 2, 2422: 3, 2427: 4,
+            2432: 5, 2437: 6, 2442: 7, 2447: 8,
+            2452: 9, 2457: 10, 2462: 11, 2467: 12,
+            2472: 13}
+    if frequency not in ftoc:
+        logging.warning("The frequency %s can not be mapped to a channel, " \
+                            "defaulting to channel 1.", frequency)
+        return 1
+    return ftoc[frequency]
+
+def is_sugar_adhoc_network(ssid):
+    """Checks whether an access point is a sugar Ad-hoc network.
+
+    Keyword arguments:
+    ssid -- Ssid of the access point.
+
+    Return: Boolean
+
+    """
+    return ssid.startswith('Ad-hoc Network')
+
 
 class WirelessSecurity(object):
     def __init__(self):
@@ -103,11 +152,14 @@ class WirelessSecurity(object):
         return wireless_security
 
 class Wireless(object):
+    nm_name = "802-11-wireless"
+
     def __init__(self):
         self.ssid = None
         self.security = None
         self.mode = None
         self.band = None
+        self.channel = None
 
     def get_dict(self):
         wireless = {'ssid': self.ssid}
@@ -117,7 +169,26 @@ class Wireless(object):
             wireless['mode'] = self.mode
         if self.band:
             wireless['band'] = self.band
+        if self.channel:
+            wireless['channel'] = self.channel
         return wireless
+
+class OlpcMesh(object):
+    nm_name = "802-11-olpc-mesh"
+
+    def __init__(self, channel, anycast_addr):
+        self.channel = channel
+        self.anycast_addr = anycast_addr
+
+    def get_dict(self):
+        ret = {
+            "ssid": dbus.ByteArray("olpc-mesh"),
+            "channel": self.channel,
+        }
+
+        if self.anycast_addr:
+            ret["dhcp-anycast-address"] = dbus.ByteArray(self.anycast_addr)
+        return ret
 
 class Connection(object):
     def __init__(self):
@@ -146,17 +217,60 @@ class IP4Config(object):
             ip4_config['method'] = self.method
         return ip4_config
 
-class Settings(object):
+class Serial(object):
     def __init__(self):
+        self.baud = None
+
+    def get_dict(self):
+        serial = {}
+
+        if self.baud is not None:
+            serial['baud'] = self.baud
+
+        return serial
+
+class Ppp(object):
+    def __init__(self):
+        pass
+
+    def get_dict(self):
+        ppp = {}
+        return ppp
+
+class Gsm(object):
+    def __init__(self):
+        self.apn = None
+        self.number = None
+        self.username = None
+
+    def get_dict(self):
+        gsm = {}
+
+        if self.apn is not None:
+            gsm['apn'] = self.apn
+        if self.number is not None:
+            gsm['number'] = self.number
+        if self.username is not None:
+            gsm['username'] = self.username
+
+        return gsm
+
+class Settings(object):
+    def __init__(self, wireless_cfg=None):
         self.connection = Connection()
         self.wireless = Wireless()
         self.ip4_config = None
         self.wireless_security = None
 
+        if wireless_cfg is not None:
+            self.wireless = wireless_cfg
+        else:
+            self.wireless = Wireless()
+
     def get_dict(self):
         settings = {}
         settings['connection'] = self.connection.get_dict()
-        settings['802-11-wireless'] = self.wireless.get_dict()
+        settings[self.wireless.nm_name] = self.wireless.get_dict()
         if self.wireless_security is not None:
             settings['802-11-wireless-security'] = \
                 self.wireless_security.get_dict()
@@ -189,6 +303,41 @@ class Secrets(object):
 
         return settings
 
+class SettingsGsm(object):
+    def __init__(self):
+        self.connection = Connection()
+        self.ip4_config = IP4Config()
+        self.serial = Serial()
+        self.ppp = Ppp()
+        self.gsm = Gsm()
+
+    def get_dict(self):
+        settings = {}
+
+        settings['connection'] = self.connection.get_dict()
+        settings['serial'] = self.serial.get_dict()
+        settings['ppp'] = self.ppp.get_dict()
+        settings['gsm'] = self.gsm.get_dict()
+        settings['ipv4'] = self.ip4_config.get_dict()
+
+        return settings
+
+class SecretsGsm(object):
+    def __init__(self):
+        self.password = None
+        self.pin = None
+        self.puk = None
+        
+    def get_dict(self):
+        secrets = {}
+        if self.password is not None:
+            secrets['password'] = self.password
+        if self.pin is not None:
+            secrets['pin'] = self.pin
+        if self.puk is not None:    
+            secrets['puk'] = self.puk
+        return {'gsm': secrets}
+
 class NMSettings(dbus.service.Object):
     def __init__(self):
         bus = dbus.SystemBus()
@@ -207,14 +356,19 @@ class NMSettings(dbus.service.Object):
     def NewConnection(self, connection_path):
         pass
 
-    def add_connection(self, ssid, conn):
-        self.connections[ssid] = conn
+    def add_connection(self, uuid, conn):
+        self.connections[uuid] = conn
         conn.secrets_request.connect(self.__secrets_request_cb)
         self.NewConnection(conn.path)
 
     def __secrets_request_cb(self, sender, **kwargs):
         self.secrets_request.send(self, connection=sender,
                                   response=kwargs['response'])
+
+    def clear_connections(self):
+        for connection in self.connections.values():
+            connection.Removed()
+        self.connections = {}
 
 class SecretsResponse(object):
     ''' Intermediate object to report the secrets from the dialog
@@ -244,10 +398,40 @@ class NMSettingsConnection(dbus.service.Object):
         self._settings = settings
         self._secrets = secrets
 
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='')
+    def Removed(self):
+        pass
+
+    @dbus.service.signal(dbus_interface=NM_CONNECTION_IFACE,
+                         signature='a{sa{sv}}')
+    def Updated(self, settings):
+        pass
+
     def set_connected(self):
-        if not self._settings.connection.autoconnect:
-            self._settings.connection.autoconnect = True
+        if self._settings.connection.type == NM_CONNECTION_TYPE_GSM:
+             self._settings.connection.timestamp = int(time.time())
+        elif not self._settings.connection.autoconnect:
             self._settings.connection.timestamp = int(time.time())
+            self._settings.connection.autoconnect = True
+            self.Updated(self._settings.get_dict())
+            self.save()
+
+        try:
+            # try to flush resolver cache - SL#1940
+            # ctypes' syntactic sugar does not work
+            # so we must get the func ptr explicitly
+            libc = ctypes.CDLL('libc.so.6')
+            res_init = getattr(libc, '__res_init')
+            res_init(None)
+        except:
+            logging.exception('Error calling libc.__res_init')
+
+    def set_disconnected(self):
+        if self._settings.connection.autoconnect:
+            self._settings.connection.autoconnect = False
+            self._settings.connection.timestamp = None
+            self.Updated(self._settings.get_dict())
             self.save()
 
     def set_secrets(self, secrets):
@@ -258,6 +442,10 @@ class NMSettingsConnection(dbus.service.Object):
         return self._settings
 
     def save(self):
+	# We only save wifi settins
+        if self._settings.connection.type != NM_CONNECTION_TYPE_802_11_WIRELESS:
+		return
+
         profile_path = env.get_profile_path()
         config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
 
@@ -336,7 +524,6 @@ class NMSettingsConnection(dbus.service.Object):
         else:
             reply(self._secrets.get_dict())
 
-
 class AccessPoint(gobject.GObject):
     __gsignals__ = {
         'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -357,10 +544,10 @@ class AccessPoint(gobject.GObject):
         self.wpa_flags = 0
         self.rsn_flags = 0
         self.mode = 0
+        self.channel = 0
 
     def initialize(self):
-        model_props = dbus.Interface(self.model,
-            'org.freedesktop.DBus.Properties')
+        model_props = dbus.Interface(self.model, dbus.PROPERTIES_IFACE)
         model_props.GetAll(NM_ACCESSPOINT_IFACE, byte_arrays=True,
                            reply_handler=self._ap_properties_changed_cb,
                            error_handler=self._get_all_props_error_cb)
@@ -426,6 +613,8 @@ class AccessPoint(gobject.GObject):
             self.rsn_flags = properties['RsnFlags']
         if 'Mode' in properties:
             self.mode = properties['Mode']
+        if 'Frequency' in properties:
+            self.channel = frequency_to_channel(properties['Frequency'])
         self._initialized = True
         self.emit('props-changed', old_hash)
 
@@ -452,36 +641,38 @@ def get_settings():
         load_connections()
     return _nm_settings
 
-def find_connection(ssid):
+def find_connection_by_ssid(ssid):
     connections = get_settings().connections
-    if ssid in connections:
-        return connections[ssid]
-    else:
-        return None
 
-def add_connection(ssid, settings, secrets=None):
+    for conn_index in connections:
+        connection = connections[conn_index]
+        if connection._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
+            if connection._settings.wireless.ssid == ssid:
+                return connection
+
+    return None
+
+def add_connection(uuid, settings, secrets=None):
     global _conn_counter
 
     path = NM_SETTINGS_PATH + '/' + str(_conn_counter)
     _conn_counter += 1
 
     conn = NMSettingsConnection(path, settings, secrets)
-    _nm_settings.add_connection(ssid, conn)
+    _nm_settings.add_connection(uuid, conn)
     return conn
 
-def load_connections():
+def load_wifi_connections():
     profile_path = env.get_profile_path()
     config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
-
-    config = ConfigParser.ConfigParser()
 
     if not os.path.exists(config_path):
         if not os.path.exists(os.path.dirname(config_path)):
             os.makedirs(os.path.dirname(config_path), 0755)
         f = open(config_path, 'w')
-        config.write(f)
         f.close()
 
+    config = ConfigParser.ConfigParser()
     try:
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
@@ -534,4 +725,56 @@ def load_connections():
         except ConfigParser.Error, e:
             logging.error('Error reading section: %s' % e)
         else:
-            add_connection(ssid, settings, secrets)
+            add_connection(uuid, settings, secrets)
+
+def count_connections():
+    return len(get_settings().connections)
+
+def clear_connections():
+    _nm_settings.clear_connections()
+
+    profile_path = env.get_profile_path()
+    config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
+
+    if not os.path.exists(os.path.dirname(config_path)):
+        os.makedirs(os.path.dirname(config_path), 0755)
+    f = open(config_path, 'w')
+    f.close()
+
+def load_gsm_connection():
+    client = gconf.client_get_default()
+
+    settings = SettingsGsm()
+    settings.gsm.username = client.get_string(GSM_USERNAME_PATH) or ''
+    settings.gsm.number = client.get_string(GSM_NUMBER_PATH) or ''
+    settings.gsm.apn = client.get_string(GSM_APN_PATH) or ''
+
+    secrets = SecretsGsm()
+    secrets.pin = client.get_string(GSM_PIN_PATH) or ''
+    secrets.puk = client.get_string(GSM_PUK_PATH) or ''
+    secrets.password = client.get_string(GSM_PASSWORD_PATH) or ''
+
+    settings.connection.id = 'gsm'
+    settings.connection.type = NM_CONNECTION_TYPE_GSM
+    uuid = settings.connection.uuid = unique_id()
+    settings.connection.autoconnect = False
+    settings.ip4_config.method = 'auto'
+    settings.serial.baud = 115200
+
+    try:
+        add_connection(uuid, settings, secrets)
+    except Exception:
+        logging.exception('While adding gsm connection')
+
+def load_connections():
+    load_wifi_connections()
+    load_gsm_connection()
+
+def find_gsm_connection():
+    connections = get_settings().connections
+
+    for connection in connections.values():
+        if connection.get_settings().connection.type == NM_CONNECTION_TYPE_GSM:
+            return connection
+
+    return None

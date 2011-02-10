@@ -20,6 +20,7 @@ from xmlrpclib import ServerProxy, Error
 import socket
 import os
 import gconf
+import dbus
 
 from sugar.profile import get_profile
 
@@ -57,6 +58,8 @@ def register_laptop(url=REGISTER_URL):
 
     client.set_string('/desktop/sugar/collaboration/jabber_server',
                       data['jabberserver'])
+    _restart_jabber()
+
     client.set_string('/desktop/sugar/backup_url', data['backupurl'])
 
     return True
@@ -72,3 +75,19 @@ def read_ofw(path):
     data = fh.read().rstrip('\0\n')
     fh.close()
     return data
+
+def _restart_jabber():
+    """Call Sugar Presence Service to restart Telepathy CMs.
+
+    This allows restarting the jabber server connection when we change it.
+    """
+    _PS_SERVICE = "org.laptop.Sugar.Presence"
+    _PS_INTERFACE = "org.laptop.Sugar.Presence"
+    _PS_PATH = "/org/laptop/Sugar/Presence"
+    bus = dbus.SessionBus()
+    try:
+        ps = dbus.Interface(bus.get_object(_PS_SERVICE, _PS_PATH),
+                            _PS_INTERFACE)
+    except dbus.DBusException:
+        raise RegisterError('%s service not available' % _PS_SERVICE)
+    ps.RetryConnections()

@@ -66,7 +66,10 @@ def set_automatic_pm(enabled):
             else:
                 fd.close()
         else:
-            os.unlink(POWERD_INHIBIT_FLAG)
+            try:
+                os.unlink(POWERD_INHIBIT_FLAG)
+            except:
+                _logger.debug('File %s was not unlinked' % POWERD_INHIBIT_FLAG)
         return 0
 
     # ohmd
@@ -87,29 +90,3 @@ def set_automatic_pm(enabled):
     client.set_bool('/desktop/sugar/power/automatic', enabled)
     return 0
 
-def get_extreme_pm():
-    client = gconf.client_get_default()
-    return client.get_bool('/desktop/sugar/power/extreme')
-
-def print_extreme_pm():
-    print ('off', 'on')[get_extreme_pm()]
-
-def set_extreme_pm(enabled):
-    """Extreme power management on/off."""
-    
-    bus = dbus.SystemBus()
-    proxy = bus.get_object(OHM_SERVICE_NAME, OHM_SERVICE_PATH)
-    keystore = dbus.Interface(proxy, OHM_SERVICE_IFACE)
-    
-    if enabled == 'on' or enabled == 1:
-        keystore.SetKey("suspend.extreme_pm", 1)
-        enabled = True
-    elif enabled == 'off' or enabled == 0:
-        keystore.SetKey("suspend.extreme_pm", 0)
-        enabled = False
-    else:
-        raise ValueError(_("Error in extreme pm argument, use on/off."))
-
-    client = gconf.client_get_default()
-    client.set_bool('/desktop/sugar/power/extreme', enabled)
-    return 0
