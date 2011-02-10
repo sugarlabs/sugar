@@ -449,6 +449,9 @@ class ShellModel(gobject.GObject):
         return self._activities.index(obj)
 
     def _window_opened_cb(self, screen, window):
+        # badly behaved activities flip windows quickly
+        # trace it for debugging purposes dlo#10683
+        logging.debug('_window_opened_cb wnd %s' % window)
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             home_activity = None
 
@@ -476,7 +479,7 @@ class ShellModel(gobject.GObject):
 
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.' %
-                                   (home_activity.get_type(), startup_time))
+                                   (service_name, startup_time))
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
