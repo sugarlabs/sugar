@@ -172,13 +172,9 @@ class _IntroBox(hippo.CanvasBox):
             self._page = self.PAGE_COLOR
             if default_nick == 'system':
                 pwd_entry = pwd.getpwuid(os.getuid())
-                if pwd_entry.pw_gecos:
-                    nick = pwd_entry.pw_gecos.split(',')[0]
-                    self._name_page.set_name(nick)
-                else:
-                    self._name_page.set_name(pwd_entry.pw_name)
-            else:
-                self._name_page.set_name(default_nick)
+                default_nick = (pwd_entry.pw_gecos.split(',')[0] or
+                                pwd_entry.pw_name)
+            self._name_page.set_name(default_nick)
 
         self._setup_page()
 
