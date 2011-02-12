@@ -179,7 +179,7 @@ class BundleRegistry(gobject.GObject):
             if bundle.get_bundle_id() == bundle_id:
                 return bundle
         return None
-    
+
     def __iter__(self):
         return self._bundles.__iter__()
 
