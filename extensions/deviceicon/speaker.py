@@ -76,11 +76,11 @@ class DeviceView(TrayIcon):
         self.icon.props.xo_color = xo_color
 
     def __button_release_event_cb(self, widget, event):
-        if event.button == 1:
-            self._model.props.muted = not self._model.props.muted
-            return True
-        else:
+        if event.button != 1:
             return False
+
+        self.palette_invoker.notify_right_click()
+        return True
 
     def __expose_event_cb(self, *args):
         self._update_info()
