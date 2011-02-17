@@ -175,7 +175,7 @@ class AboutComputer(SectionView):
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 
-        copyright_text = '© 2006-2010 One Laptop per Child Association Inc,' \
+        copyright_text = '© 2006-2011 One Laptop per Child Association Inc,' \
                          ' Sugar Labs Inc, Red Hat Inc, Collabora Ltd and' \
                          ' Contributors.'
         label_copyright = gtk.Label(copyright_text)
