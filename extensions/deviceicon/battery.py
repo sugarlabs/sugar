@@ -191,7 +191,7 @@ class DeviceModel(gobject.GObject):
 
     def _fetch_properties_from_upower(self):
         """Get current values from UPower."""
-        # pylint: disable-msg=W0201
+        # pylint: disable=W0201
         try:
             dbus_props = self._battery_props_iface.GetAll(_UP_DEVICE_IFACE)
         except dbus.DBusException:
@@ -250,8 +250,8 @@ def setup(tray):
     upower = dbus.Interface(up_proxy, 'org.freedesktop.UPower')
 
     for device_path in upower.EnumerateDevices():
-        battery = bus.get_object('org.freedesktop.UPower', device_path)
-        batt_prop_iface = dbus.Interface(battery, dbus.PROPERTIES_IFACE)
-        device_type = batt_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
+        device = bus.get_object('org.freedesktop.UPower', device_path)
+        device_prop_iface = dbus.Interface(device, dbus.PROPERTIES_IFACE)
+        device_type = device_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
         if device_type == _UP_TYPE_BATTERY:
-            tray.add_device(DeviceView(battery))
+            tray.add_device(DeviceView(device))
