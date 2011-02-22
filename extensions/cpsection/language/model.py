@@ -67,9 +67,7 @@ def _initialize():
                                            lang[1].replace(' ', '_'))
 
 
-def _write_i18n(langs):
-    colon = ':'
-    langstr = colon.join(langs)
+def _write_i18n(lang_env, language_env):
     path = os.path.join(os.environ.get('HOME'), '.i18n')
     if not os.access(path, os.W_OK):
         print _standard_msg
@@ -79,8 +77,8 @@ def _write_i18n(langs):
         fd.close()
     else:
         fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % langs[0].strip("\n"))
-        fd.write('LANGUAGE="%s"\n' % langstr)
+        fd.write('LANG="%s"\n' % lang_env)
+        fd.write('LANGUAGE="%s"\n' % language_env)
         fd.close()
 
 
@@ -135,23 +133,27 @@ def set_languages(languages):
     """Set the system language.
     languages :
     """
-    if isinstance(languages, str):
-        # This came from the commandline
-        #TODO: Support multiple languages from the command line
-        if languages.endswith('utf8'):
-            _write_i18n(languages)
-            return 1
-        else:
-            langs = read_all_languages()
-            for lang, territory, locale in langs:
-                code = lang.replace(' ', '_') + '/' \
-                        + territory.replace(' ', '_')
-                if code == languages:
-                    _write_i18n(locale)
-                    return 1
-            print (_("Sorry I do not speak \'%s\'.") % languages)
+
+    if languages.endswith('utf8'):
+        set_languages_list([languages])
+        return 1
     else:
-        _write_i18n(languages)
+        langs = read_all_languages()
+        for lang, territory, locale in langs:
+            code = lang.replace(' ', '_') + '/' \
+                + territory.replace(' ', '_')
+            if code == languages:
+                set_languages_list([locale])
+                return 1
+        print (_("Sorry I do not speak \'%s\'.") % languages)
+
+
+def set_languages_list(languages):
+    """Set the system language using a list of preferred languages"""
+    colon = ':'
+    language_env = colon.join(languages)
+    lang_env = languages[0].strip('\n')
+    _write_i18n(lang_env, language_env)
 
 
 # inilialize the docstrings for the language

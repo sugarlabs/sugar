@@ -273,7 +273,7 @@ class Language(SectionView):
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
-        self._model.set_languages(codes)
+        self._model.set_languages_list(codes)
         self.restart_alerts.append('lang')
         self.needs_restart = True
         self._lang_alert.props.msg = self.restart_msg
