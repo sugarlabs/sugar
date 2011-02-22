@@ -1,4 +1,4 @@
-# Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2007, 2011, One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@ import gobject
 import gio
 import gtk
 import gconf
+import cPickle
+import xapian
+import simplejson
+import tempfile
+import shutil
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.palette import Palette
@@ -31,6 +36,126 @@ from sugar import env
 
 from jarabe.journal import model
 from jarabe.view.palettes import VolumePalette
+
+
+_JOURNAL_0_METADATA_DIR = '.olpc.store'
+
+
+def _get_id(document):
+    """Get the ID for the document in the xapian database."""
+    tl = document.termlist()
+    try:
+        term = tl.skip_to('Q').term
+        if len(term) == 0 or term[0] != 'Q':
+            return None
+        return term[1:]
+    except StopIteration:
+        return None
+
+
+def _convert_entries(root):
+    """Convert entries written by the datastore version 0.
+
+    The metadata and the preview will be written using the new
+    scheme for writing Journal entries to removable storage
+    devices.
+
+    - entries that do not have an associated file are not
+    converted.
+    - if an entry has no title we set it to Untitled and rename
+    the file accordingly, taking care of creating a unique
+    filename
+
+    """
+    try:
+        database = xapian.Database(os.path.join(root, _JOURNAL_0_METADATA_DIR,
+                                                'index'))
+    except xapian.DatabaseError:
+        logging.exception('Convert DS-0 Journal entries: error reading db: %s',
+                      os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
+        return
+
+    metadata_dir_path = os.path.join(root, model.JOURNAL_METADATA_DIR)
+    if not os.path.exists(metadata_dir_path):
+        try:
+            os.mkdir(metadata_dir_path)
+        except EnvironmentError:
+            logging.error('Convert DS-0 Journal entries: '
+                          'error creating the Journal metadata directory.')
+            return
+
+    for posting_item in database.postlist(''):
+        try:
+            document = database.get_document(posting_item.docid)
+        except xapian.DocNotFoundError, e:
+            logging.debug('Convert DS-0 Journal entries: error getting '
+                          'document %s: %s', posting_item.docid, e)
+            continue
+        _convert_entry(root, document)
+
+
+def _convert_entry(root, document):
+    try:
+        metadata_loaded = cPickle.loads(document.get_data())
+    except cPickle.PickleError, e:
+        logging.debug('Convert DS-0 Journal entries: '
+                      'error converting metadata: %s', e)
+        return
+
+    if not ('activity_id' in metadata_loaded and
+            'mime_type' in metadata_loaded and
+            'title' in metadata_loaded):
+        return
+
+    metadata = {}
+
+    uid = _get_id(document)
+    if uid is None:
+        return
+
+    for key, value in metadata_loaded.items():
+        metadata[str(key)] = str(value[0])
+
+    if 'uid' not in metadata:
+        metadata['uid'] = uid
+
+    filename = metadata.pop('filename', None)
+    if not filename:
+        return
+    if not os.path.exists(os.path.join(root, filename)):
+        return
+
+    if not metadata.get('title'):
+        metadata['title'] = _('Untitled')
+        fn = model.get_file_name(metadata['title'],
+                                 metadata['mime_type'])
+        new_filename = model.get_unique_file_name(root, fn)
+        os.rename(os.path.join(root, filename),
+                  os.path.join(root, new_filename))
+        filename = new_filename
+
+    preview_path = os.path.join(root, _JOURNAL_0_METADATA_DIR,
+                                'preview', uid)
+    if os.path.exists(preview_path):
+        preview_fname = filename + '.preview'
+        new_preview_path = os.path.join(root,
+                                        model.JOURNAL_METADATA_DIR,
+                                        preview_fname)
+        if not os.path.exists(new_preview_path):
+            shutil.copy(preview_path, new_preview_path)
+
+    metadata_fname = filename + '.metadata'
+    metadata_path = os.path.join(root, model.JOURNAL_METADATA_DIR,
+                                 metadata_fname)
+    if not os.path.exists(metadata_path):
+        (fh, fn) = tempfile.mkstemp(dir=root)
+        os.write(fh, simplejson.dumps(metadata))
+        os.close(fh)
+        os.rename(fn, metadata_path)
+
+        logging.debug('Convert DS-0 Journal entries: entry converted: '
+                      'file=%s metadata=%s',
+                      os.path.join(root, filename), metadata)
 
 
 class VolumesToolbar(gtk.Toolbar):
@@ -81,6 +206,11 @@ class VolumesToolbar(gtk.Toolbar):
 
     def _add_button(self, mount):
         logging.debug('VolumeToolbar._add_button: %r', mount.get_name())
+
+        if os.path.exists(os.path.join(mount.get_root().get_path(),
+                                       _JOURNAL_0_METADATA_DIR)):
+            logging.debug('Convert DS-0 Journal entries: starting conversion')
+            gobject.idle_add(_convert_entries, mount.get_root().get_path())
 
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
