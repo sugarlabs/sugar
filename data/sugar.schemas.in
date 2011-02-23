@@ -78,7 +78,7 @@
       <applyto>/desktop/sugar/date/timezone</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>UTC</default>
+      <default></default>
       <locale name="C">
         <short>Timezone</short>
         <long>Timezone setting for the system.</long>
