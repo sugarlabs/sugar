@@ -1,4 +1,4 @@
-# Copyright (C) 2007-2010, One Laptop per Child
+# Copyright (C) 2007-2011, One Laptop per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,13 +20,15 @@ import errno
 from datetime import datetime
 import time
 import shutil
+import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
 from operator import itemgetter
+import simplejson
+from gettext import gettext as _
 
 import gobject
 import dbus
-import gconf
 import gio
 
 from sugar import dispatch
@@ -45,6 +47,8 @@ PROPERTIES = ['activity', 'activity_id', 'buddies', 'bundle_id',
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
+
+JOURNAL_METADATA_DIR = '.Sugar-Metadata'
 
 _datastore = None
 created = dispatch.Signal()
@@ -295,8 +299,9 @@ class InplaceResultSet(BaseResultSet):
         files = self._file_list[offset:offset + limit]
 
         entries = []
-        for file_path, stat, mtime_, size_ in files:
-            metadata = _get_file_metadata(file_path, stat)
+        for file_path, stat, mtime_, size_, metadata in files:
+            if metadata is None:
+                metadata = _get_file_metadata(file_path, stat)
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
@@ -324,6 +329,7 @@ class InplaceResultSet(BaseResultSet):
 
     def _scan_a_file(self):
         full_path = self._pending_files.pop(0)
+        metadata = None
 
         try:
             stat = os.lstat(full_path)
@@ -365,7 +371,19 @@ class InplaceResultSet(BaseResultSet):
 
         if self._regex is not None and \
                 not self._regex.match(full_path):
-            return
+            metadata = _get_file_metadata(stat, full_path,
+                                          fetch_preview=False)
+            if not metadata:
+                return
+            add_to_list = False
+            for f in ['fulltext', 'title',
+                      'description', 'tags']:
+                if f in metadata and \
+                        self._regex.match(metadata[f]):
+                    add_to_list = True
+                    break
+            if not add_to_list:
+                return
 
         if self._date_start is not None and stat.st_mtime < self._date_start:
             return
@@ -378,7 +396,8 @@ class InplaceResultSet(BaseResultSet):
             if mime_type not in self._mime_types:
                 return
 
-        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size)
+        file_info = (full_path, stat, int(stat.st_mtime), stat.st_size,
+                     metadata)
         self._file_list.append(file_info)
 
         return
@@ -400,8 +419,21 @@ class InplaceResultSet(BaseResultSet):
         return
 
 
-def _get_file_metadata(path, stat):
-    client = gconf.client_get_default()
+def _get_file_metadata(path, stat, fetch_preview=True):
+    """Return the metadata from the corresponding file.
+
+    Reads the metadata stored in the json file or create the
+    metadata based on the file properties.
+
+    """
+    filename = os.path.basename(path)
+    dir_path = os.path.dirname(path)
+    metadata = _get_file_metadata_from_json(dir_path, filename, fetch_preview)
+    if metadata:
+        if 'filesize' not in metadata:
+            metadata['filesize'] = stat.st_size
+        return metadata
+
     return {'uid': path,
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
@@ -409,8 +441,50 @@ def _get_file_metadata(path, stat):
             'mime_type': gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
-            'icon-color': client.get_string('/desktop/sugar/user/color'),
+            'icon-color': '#000000,#ffffff',
             'description': path}
+
+
+def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
+    """Read the metadata from the json file and the preview
+    stored on the external device.
+
+    If the metadata is corrupted we do remove it and the preview as well.
+
+    """
+    metadata = None
+    metadata_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                 filename + '.metadata')
+    preview_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                filename + '.preview')
+
+    if not os.path.exists(metadata_path):
+        return None
+
+    try:
+        metadata = simplejson.load(open(metadata_path))
+    except (ValueError, EnvironmentError):
+        os.unlink(metadata_path)
+        if os.path.exists(preview_path):
+            os.unlink(preview_path)
+        logging.error('Could not read metadata for file %r on '
+                      'external device.', filename)
+        return None
+    else:
+        metadata['uid'] = os.path.join(dir_path, filename)
+
+    if not fetch_preview:
+        if 'preview' in metadata:
+            del(metadata['preview'])
+    else:
+        if os.path.exists(preview_path):
+            try:
+                metadata['preview'] = dbus.ByteArray(open(preview_path).read())
+            except EnvironmentError:
+                logging.debug('Could not read preview for file %r on '
+                              'external device.', filename)
+
+    return metadata
 
 
 def _get_datastore():
@@ -517,11 +591,24 @@ def get_unique_values(key):
 def delete(object_id):
     """Removes an object from persistent storage
     """
-    if os.path.exists(object_id):
-        os.unlink(object_id)
-        deleted.send(None, object_id=object_id)
-    else:
+    if not os.path.exists(object_id):
         _get_datastore().delete(object_id)
+    else:
+        os.unlink(object_id)
+        dir_path = os.path.dirname(object_id)
+        filename = os.path.basename(object_id)
+        old_files = [os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                  filename + '.metadata'),
+                     os.path.join(dir_path, JOURNAL_METADATA_DIR,
+                                  filename + '.preview')]
+        for old_file in old_files:
+            if os.path.exists(old_file):
+                try:
+                    os.unlink(old_file)
+                except EnvironmentError:
+                    logging.error('Could not remove metadata=%s '
+                                  'for file=%s', old_file, filename)
+        deleted.send(None, object_id=object_id)
 
 
 def copy(metadata, mount_point):
@@ -556,22 +643,107 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
                                                  file_path,
                                                  transfer_ownership)
     else:
-        if not os.path.exists(file_path):
-            raise ValueError('Entries without a file cannot be copied to '
-                             'removable devices')
-
-        file_name = _get_file_name(metadata['title'], metadata['mime_type'])
-        file_name = _get_unique_file_name(metadata['mountpoint'], file_name)
-
-        destination_path = os.path.join(metadata['mountpoint'], file_name)
-        shutil.copy(file_path, destination_path)
-        object_id = destination_path
-        created.send(None, object_id=object_id)
+        object_id = _write_entry_on_external_device(metadata, file_path)
 
     return object_id
 
 
-def _get_file_name(title, mime_type):
+def _rename_entry_on_external_device(file_path, destination_path,
+                                     metadata_dir_path):
+    """Rename an entry with the associated metadata on an external device."""
+    old_file_path = file_path
+    if old_file_path != destination_path:
+        os.rename(file_path, destination_path)
+        old_fname = os.path.basename(file_path)
+        old_files = [os.path.join(metadata_dir_path,
+                                  old_fname + '.metadata'),
+                     os.path.join(metadata_dir_path,
+                                  old_fname + '.preview')]
+        for ofile in old_files:
+            if os.path.exists(ofile):
+                try:
+                    os.unlink(ofile)
+                except EnvironmentError:
+                    logging.error('Could not remove metadata=%s '
+                                  'for file=%s', ofile, old_fname)
+
+
+def _write_entry_on_external_device(metadata, file_path):
+    """Create and update an entry copied from the
+    DS to an external storage device.
+
+    Besides copying the associated file a file for the preview
+    and one for the metadata are stored in the hidden directory
+    .Sugar-Metadata.
+
+    This function handles renames of an entry on the
+    external device and avoids name collisions. Renames are
+    handled failsafe.
+
+    """
+    if 'uid' in metadata and os.path.exists(metadata['uid']):
+        file_path = metadata['uid']
+
+    if not file_path or not os.path.exists(file_path):
+        raise ValueError('Entries without a file cannot be copied to '
+                         'removable devices')
+
+    if not metadata.get('title'):
+        metadata['title'] = _('Untitled')
+    file_name = get_file_name(metadata['title'], metadata['mime_type'])
+
+    destination_path = os.path.join(metadata['mountpoint'], file_name)
+    if destination_path != file_path:
+        file_name = get_unique_file_name(metadata['mountpoint'], file_name)
+        destination_path = os.path.join(metadata['mountpoint'], file_name)
+        clean_name, extension_ = os.path.splitext(file_name)
+        metadata['title'] = clean_name
+
+    metadata_copy = metadata.copy()
+    metadata_copy.pop('mountpoint', None)
+    metadata_copy.pop('uid', None)
+    metadata_copy.pop('filesize', None)
+
+    metadata_dir_path = os.path.join(metadata['mountpoint'],
+                                     JOURNAL_METADATA_DIR)
+    if not os.path.exists(metadata_dir_path):
+        os.mkdir(metadata_dir_path)
+
+    preview = None
+    if 'preview' in metadata_copy:
+        preview = metadata_copy['preview']
+        preview_fname = file_name + '.preview'
+        metadata_copy.pop('preview', None)
+
+    try:
+        metadata_json = simplejson.dumps(metadata_copy)
+    except EnvironmentError:
+        logging.error('Could not convert metadata to json.')
+    else:
+        (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
+        os.write(fh, metadata_json)
+        os.close(fh)
+        os.rename(fn, os.path.join(metadata_dir_path, file_name + '.metadata'))
+
+        if preview:
+            (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
+            os.write(fh, preview)
+            os.close(fh)
+            os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
+
+    if not os.path.dirname(destination_path) == os.path.dirname(file_path):
+        shutil.copy(file_path, destination_path)
+    else:
+        _rename_entry_on_external_device(file_path, destination_path,
+                                         metadata_dir_path)
+
+    object_id = destination_path
+    created.send(None, object_id=object_id)
+
+    return object_id
+
+
+def get_file_name(title, mime_type):
     file_name = title
 
     extension = mime.get_primary_extension(mime_type)
@@ -596,7 +768,7 @@ def _get_file_name(title, mime_type):
     return file_name
 
 
-def _get_unique_file_name(mount_point, file_name):
+def get_unique_file_name(mount_point, file_name):
     if os.path.exists(os.path.join(mount_point, file_name)):
         i = 1
         name, extension = os.path.splitext(file_name)
