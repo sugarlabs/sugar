@@ -34,7 +34,7 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         d = (self.end_size - self.start_size) * current
-        self._icon.props.size = self.start_size + d
+        self._icon.props.size = int(self.start_size + d)
 
 
 class _Layout(gobject.GObject, hippo.CanvasLayout):
