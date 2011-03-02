@@ -98,6 +98,7 @@ class AdHocManager(gobject.GObject):
                                       dbus_interface=_NM_WIRELESS_IFACE)
 
     def stop_listening(self):
+        self._listening_called = 0
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,

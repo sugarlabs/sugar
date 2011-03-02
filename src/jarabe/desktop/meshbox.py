@@ -607,7 +607,7 @@ class MeshBox(gtk.VBox):
     def add_adhoc_networks(self, device):
         if self._adhoc_manager is None:
             self._adhoc_manager = get_adhoc_manager_instance()
-            self._adhoc_manager.start_listening(device)
+        self._adhoc_manager.start_listening(device)
         self._add_adhoc_network_icon(1)
         self._add_adhoc_network_icon(6)
         self._add_adhoc_network_icon(11)
@@ -617,6 +617,7 @@ class MeshBox(gtk.VBox):
         for icon in self._adhoc_networks:
             self._layout.remove(icon)
         self._adhoc_networks = []
+        self._adhoc_manager.stop_listening()
 
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
