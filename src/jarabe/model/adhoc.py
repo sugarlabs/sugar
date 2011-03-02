@@ -58,7 +58,7 @@ class AdHocManager(gobject.GObject):
                           ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
-    _AUTOCONNECT_TIMEOUT = 30
+    _AUTOCONNECT_TIMEOUT = 60
     _CHANNEL_1 = 1
     _CHANNEL_6 = 6
     _CHANNEL_11 = 11
@@ -141,28 +141,21 @@ class AdHocManager(gobject.GObject):
         return len(network.get_settings().connections) > 0
 
     def autoconnect(self):
-        """Autoconnect to an Ad-hoc network"""
-        if self._device_state != network.DEVICE_STATE_DISCONNECTED:
-            return
-        elif self._have_configured_connections():
-            self._autoconnect_adhoc_timer()
-        else:
-            self._autoconnect_adhoc()
-
-    def _autoconnect_adhoc_timer(self):
         """Start a timer which basically looks for 30 seconds of inactivity
         on the device, then does autoconnect to an Ad-hoc network.
 
         """
         if self._idle_source != 0:
             gobject.source_remove(self._idle_source)
-        self._idle_source = gobject.timeout_add_seconds( \
-                self._AUTOCONNECT_TIMEOUT, self.__idle_check_cb)
+        self._idle_source = gobject.timeout_add_seconds(
+            self._AUTOCONNECT_TIMEOUT, self.__idle_check_cb)
 
     def __idle_check_cb(self):
-        if  self._device_state == network.DEVICE_STATE_DISCONNECTED:
+        if self._device_state == network.DEVICE_STATE_DISCONNECTED:
             logging.debug('Connect to Ad-hoc network due to inactivity.')
             self._autoconnect_adhoc()
+        else:
+            logging.debug('autoconnect Sugar Ad-hoc: already connected')
         return False
 
     def _autoconnect_adhoc(self):
@@ -196,6 +189,7 @@ class AdHocManager(gobject.GObject):
             settings.connection.id = name
             settings.connection.uuid = unique_id()
             settings.connection.type = '802-11-wireless'
+            settings.connection.autoconnect = True
             settings.wireless.ssid = dbus.ByteArray(name)
             settings.wireless.band = 'bg'
             settings.wireless.channel = channel
