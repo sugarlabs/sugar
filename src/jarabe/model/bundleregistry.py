@@ -382,6 +382,8 @@ class BundleRegistry(gobject.GObject):
         install_dir = env.get_user_activities_path()
         if isinstance(bundle, JournalEntryBundle):
             install_path = bundle.install(uid)
+        elif isinstance(bundle, ContentBundle):
+            install_path = bundle.install()
         else:
             install_path = bundle.install(install_dir)
 
