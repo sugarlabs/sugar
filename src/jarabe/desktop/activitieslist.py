@@ -424,7 +424,8 @@ class ActivityListPalette(ActivityPalette):
             menu_item.props.sensitive = False
 
     def __destroy_cb(self, palette):
-        self.disconnect(self._activity_changed_sid)
+        registry = bundleregistry.get_registry()
+        registry.disconnect(self._activity_changed_sid)
 
     def _update_favorite_item(self):
         label = self._favorite_item.child
