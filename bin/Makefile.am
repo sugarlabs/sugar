@@ -3,6 +3,7 @@ python_scripts =		\
 	sugar-control-panel	\
 	sugar-emulator		\
 	sugar-install-bundle	\
+	sugar-intro		\
 	sugar-launch		\
 	sugar-session		\
 	sugar-ui-check
