@@ -134,6 +134,10 @@ def set_languages(languages):
     languages :
     """
 
+    if isinstance(languages, list):
+        set_languages_list(languages)
+        return
+
     if languages.endswith('utf8'):
         set_languages_list([languages])
         return 1
