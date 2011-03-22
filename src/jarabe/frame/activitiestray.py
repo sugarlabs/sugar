@@ -541,7 +541,7 @@ class IncomingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = self.file_transfer.buddy.props.nick
-        self.props.secondary_text = _('Transfer from %r') % nick
+        self.props.secondary_text = _('Transfer from %s') % (nick,)
 
         self._update()
 
@@ -672,7 +672,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = file_transfer.buddy.props.nick
-        self.props.secondary_text = _('Transfer to %r') % nick
+        self.props.secondary_text = _('Transfer to %s') % (nick,)
 
         self._update()
 
