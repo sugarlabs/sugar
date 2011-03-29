@@ -695,6 +695,17 @@ class Neighborhood(gobject.GObject):
         if account == self._server_account:
             self._link_local_account.enable()
 
+    def _get_published_name(self):
+        """Construct the published name based on the public key
+
+        Limit the name to be only 8 characters maximum. The avahi
+        service name has a 64 character limit. It consists of
+        the room name, the published name and the host name.
+
+        """
+        public_key_hash = sha1(get_profile().pubkey).hexdigest()
+        return public_key_hash[:8]
+
     def _ensure_link_local_account(self, account_paths):
         for account_path in account_paths:
             if 'salut' in account_path:
@@ -713,7 +724,7 @@ class Neighborhood(gobject.GObject):
                 'first-name': '',
                 'last-name': '',
                 'jid': self._get_jabber_account_id(),
-                'published-name': nick,
+                'published-name': self._get_published_name(),
                 }
 
         properties = {
