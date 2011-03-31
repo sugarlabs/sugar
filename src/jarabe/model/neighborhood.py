@@ -800,12 +800,12 @@ class Neighborhood(gobject.GObject):
         server = client.get_string(
             '/desktop/sugar/collaboration/jabber_server')
         account_id = self._get_jabber_account_id()
-        needs_reconnect = account.UpdateParameters({'server': server,
-                                                    'account': account_id,
-                                                    'register': True},
-                                                    dbus.Array([], 's'),
-                                                    dbus_interface=ACCOUNT)
-        if needs_reconnect:
+        params_needing_reconnect = account.UpdateParameters(
+            {'server': server,
+             'account': account_id,
+             'register': True},
+            dbus.Array([], 's'), dbus_interface=ACCOUNT)
+        if params_needing_reconnect:
             account.Reconnect()
 
         self._update_jid()
@@ -814,10 +814,22 @@ class Neighborhood(gobject.GObject):
         logging.debug('__nick_changed_cb')
 
         nick = client.get_string('/desktop/sugar/user/nick')
-        for account in self._server_account, self._link_local_account:
-            bus = dbus.Bus()
-            obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, account.object_path)
-            obj.Set(ACCOUNT, 'Nickname', nick, dbus_interface=PROPERTIES_IFACE)
+
+        bus = dbus.Bus()
+        server_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                    self._server_account.object_path)
+        server_obj.Set(ACCOUNT, 'Nickname', nick,
+                       dbus_interface=PROPERTIES_IFACE)
+
+        link_local_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,
+                                        self._link_local_account.object_path)
+        link_local_obj.Set(ACCOUNT, 'Nickname', nick,
+                           dbus_interface=PROPERTIES_IFACE)
+        params_needing_reconnect = link_local_obj.UpdateParameters(
+            {'nickname': nick, 'published-name': self._get_published_name()},
+            dbus.Array([], 's'), dbus_interface=ACCOUNT)
+        if params_needing_reconnect:
+            link_local_obj.Reconnect()
 
         self._update_jid()
 
@@ -827,10 +839,9 @@ class Neighborhood(gobject.GObject):
                                  self._link_local_account.object_path)
 
         account_id = self._get_jabber_account_id()
-        needs_reconnect = account.UpdateParameters({'jid': account_id},
-                                                   dbus.Array([], 's'),
-                                                   dbus_interface=ACCOUNT)
-        if needs_reconnect:
+        params_needing_reconnect = account.UpdateParameters(
+            {'jid': account_id}, dbus.Array([], 's'), dbus_interface=ACCOUNT)
+        if params_needing_reconnect:
             account.Reconnect()
 
     def __buddy_added_cb(self, account, contact_id, nick, handle):
