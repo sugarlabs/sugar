@@ -331,11 +331,16 @@ class BaseTransferButton(ToolButton):
         self.notif_icon.connect('button-release-event',
                                  self.__button_release_event_cb)
 
+        self.connect('clicked', self.__button_clicked_cb)
+
     def __button_release_event_cb(self, icon, event):
         if self.notif_icon is not None:
             frame = jarabe.frame.get_view()
             frame.remove_notification(self.notif_icon)
             self.notif_icon = None
+
+    def __button_clicked_cb(self, button):
+        self.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def remove(self):
         frame = jarabe.frame.get_view()
