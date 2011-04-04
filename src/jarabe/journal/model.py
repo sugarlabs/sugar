@@ -717,7 +717,7 @@ def _write_entry_on_external_device(metadata, file_path):
 
     try:
         metadata_json = simplejson.dumps(metadata_copy)
-    except EnvironmentError:
+    except (UnicodeDecodeError, EnvironmentError):
         logging.error('Could not convert metadata to json.')
     else:
         (fh, fn) = tempfile.mkstemp(dir=metadata['mountpoint'])
