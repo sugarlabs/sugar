@@ -371,7 +371,7 @@ class InplaceResultSet(BaseResultSet):
 
         if self._regex is not None and \
                 not self._regex.match(full_path):
-            metadata = _get_file_metadata(stat, full_path,
+            metadata = _get_file_metadata(full_path, stat,
                                           fetch_preview=False)
             if not metadata:
                 return
