@@ -469,9 +469,12 @@ class EntryToolbar(gtk.Toolbar):
                 continue
             menu_item = MenuItem(mount.get_name())
 
-            # TODO: fallback to the more generic icons when needed
-            menu_item.set_image(Icon(icon_name=mount.get_icon().props.names[0],
-                                     icon_size=gtk.ICON_SIZE_MENU))
+            icon_theme = gtk.icon_theme_get_default()
+            for name in mount.get_icon().props.names:
+                if icon_theme.has_icon(name):
+                    menu_item.set_image(Icon(icon_name=name,
+                                             icon_size=gtk.ICON_SIZE_MENU))
+                    break
 
             menu_item.connect('activate',
                               self._copy_menu_item_activate_cb,
