@@ -6,414 +6,1907 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2007-12-23 10:33+0000\n"
-"Last-Translator: Khandakar Mujahidul Islam <suzan229@gmail.com>\n"
+"POT-Creation-Date: 2011-04-01 00:30-0400\n"
+"PO-Revision-Date: 2011-05-05 03:53+0200\n"
+"Last-Translator: Jamil Ahmed <itsjamil@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
+"Language: bn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.1\n"
 
-#: ../shell/intro/intro.py:67
-msgid "Name:"
-msgstr "নাম:"
+#: ../extensions/cpsection/aboutme/__init__.py:24
+msgid "About Me"
+msgstr "আমার সম্পর্কে"
 
-#: ../shell/intro/intro.py:96
-msgid "Click to change color:"
-msgstr "রং পরিবর্তন করতে ক্লিক:"
+#: ../extensions/cpsection/aboutme/model.py:48
+msgid "You must enter a name."
+msgstr "তোমার অবশ্যই একটি নাম প্রবেশ করাতে হবে।"
 
-#: ../shell/intro/intro.py:146
-msgid "Back"
-msgstr "পেছনে"
-
-#: ../shell/intro/intro.py:160
-msgid "Done"
-msgstr "করা হয়েছে"
-
-#: ../shell/intro/intro.py:163
-msgid "Next"
-msgstr "পরবর্তী"
-
-#: ../shell/view/BuddyMenu.py:59
-msgid "Remove friend"
-msgstr "বন্ধু মোছো"
-
-#: ../shell/view/BuddyMenu.py:62
-msgid "Make friend"
-msgstr "বন্ধু বানাও"
-
-#: ../shell/view/BuddyMenu.py:84
+#: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
-msgid "Invite to %s"
-msgstr "%s কে নিমণ্ত্রণ"
+msgid "stroke:   color=%s hue=%s"
+msgstr "স্ট্রোক:   রং=%s হিউ=%s"
 
-#: ../shell/view/clipboardmenu.py:58
-msgid "Remove"
-msgstr "মোছো"
-
-#: ../shell/view/clipboardmenu.py:63
-msgid "Open"
-msgstr "খোলো"
-
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "জার্নালে লেখ"
-
-#: ../shell/view/clipboardmenu.py:213
+#: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "ক্লীপবোর্ড বস্তু: %s।"
+msgid "stroke:   %s"
+msgstr "স্ট্রোক:   %s"
 
-#: ../shell/hardware/keydialog.py:149
-msgid "Key Type:"
-msgstr "কী ধরণ:"
-
-#: ../shell/hardware/keydialog.py:169
-msgid "Authentication Type:"
-msgstr "পরিচয় প্রমানের ধরণ:"
-
-#: ../shell/hardware/keydialog.py:250
-msgid "Encryption Type:"
-msgstr "এনক্রিপশন ধরণ:"
-
-#: ../shell/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr "শুরু হচ্ছে..."
-
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr "পুনরায় শুরু করুন"
-
-#: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:132
-msgid "Stop"
-msgstr "থামাও"
-
-#: ../shell/view/Shell.py:285
-msgid "Screenshot"
-msgstr "স্ক্রীণশট"
-
-#: ../shell/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr "পুনরায় চালু"
-
-#: ../shell/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "বন্ধ করো"
-
-#: ../shell/view/home/HomeBox.py:170
-msgid "Register"
-msgstr "রেজিস্টার"
-
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
-#: ../shell/view/devices/network/wireless.py:113
-#: ../shell/view/devices/network/mesh.py:83
-msgid "Disconnect..."
-msgstr "সংযোগ বিচ্ছিন্ন..."
-
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
-#: ../shell/view/devices/network/mesh.py:62
-#: ../shell/view/devices/network/mesh.py:66
-msgid "Mesh Network"
-msgstr "মেশ নেটওয়ার্ক"
-
-#: ../shell/view/home/MeshBox.py:300
-msgid "Join"
-msgstr "যোগ দাও"
-
-#: ../shell/view/devices/battery.py:38
-msgid "My Battery life"
-msgstr "আমার ব্যাটারীর জীবনসীমা"
-
-#: ../shell/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "ব্যাটারী চার্জ হচ্ছে"
-
-#: ../shell/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "ব্যাটারী চার্জ কমে যাচ্ছে"
-
-#: ../shell/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "ব্যাটারী পুরোপুরি চার্জ হয়েছে"
-
-#: ../shell/view/devices/network/wireless.py:61
-msgid "Disconnected"
-msgstr "সংযোগ বিচ্ছিন্ন"
-
-#: ../shell/view/devices/network/wireless.py:131
-msgid "Channel"
-msgstr "চ্যানেল"
-
-#: ../shell/view/frame/zoomtoolbar.py:42
-msgid "Neighborhood"
-msgstr "ছোটবেলা"
-
-#: ../shell/view/frame/zoomtoolbar.py:54
-msgid "Group"
-msgstr "দল"
-
-#: ../shell/view/frame/zoomtoolbar.py:66
-msgid "Home"
-msgstr "বাড়ি"
-
-#: ../shell/view/frame/zoomtoolbar.py:78
-msgid "Activity"
-msgstr "সক্রিয়তা"
-
-#: ../lib/sugar/activity/activity.py:115
-msgid "Share with:"
-msgstr "ভাগাভাগি করো:"
-
-#: ../lib/sugar/activity/activity.py:117
-msgid "Private"
-msgstr "ব্যাক্তিগত"
-
-#: ../lib/sugar/activity/activity.py:118
-msgid "My Neighborhood"
-msgstr "আমার ছেলেবেলা"
-
-#: ../lib/sugar/activity/activity.py:126
-msgid "Keep"
-msgstr "রাখো"
-
-#: ../lib/sugar/activity/activity.py:245
-msgid "Undo"
-msgstr "বাতিল করো"
-
-#: ../lib/sugar/activity/activity.py:250
-msgid "Redo"
-msgstr "আবার করো"
-
-#: ../lib/sugar/activity/activity.py:260
-msgid "Copy"
-msgstr "কপি"
-
-#: ../lib/sugar/activity/activity.py:265
-msgid "Paste"
-msgstr "সাঁটো"
-
-#: ../lib/sugar/activity/activity.py:454
+#: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
-msgid "%s Activity"
-msgstr "%s সক্রিয়তা"
+msgid "fill:     color=%s hue=%s"
+msgstr "ভরাট:     রং=%s হিউ=%s"
 
-#: ../lib/sugar/activity/activity.py:824
-msgid "Keep error"
-msgstr "ত্রুটি রেখে দাও"
-
-#: ../lib/sugar/activity/activity.py:825
-msgid "Keep error: all changes will be lost"
-msgstr "ত্রুটি রেখে দাও: সব পরিবর্তন হারিয়ে যাবে"
-
-#: ../lib/sugar/activity/activity.py:828
-msgid "Don't stop"
-msgstr "থামিও না"
-
-#: ../lib/sugar/activity/activity.py:831
-msgid "Stop anyway"
-msgstr "যে কোন ভাবে থামো"
-
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
-msgid "Cancel"
-msgstr "বাতিল"
-
-#: ../lib/sugar/graphics/alert.py:168
-msgid "Ok"
-msgstr "ঠিক আছে"
-
-#: ../lib/sugar/graphics/alert.py:216
-msgid "Continue"
-msgstr "এগিয়ে যাও"
-
-#: ../lib/sugar/graphics/alert.py:244
-msgid "OK"
-msgstr "ঠিক আছে"
-
-#: ../lib/sugar/graphics/objectchooser.py:175
+#: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
-msgid "%d year"
-msgstr "%d বছর"
+msgid "fill:     %s"
+msgstr "ভরাট:    %s"
 
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d years"
-msgstr "%d বছর"
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr "%d মাস"
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr "%d মাস"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr "%d সপ্তাহ"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr "%d সপ্তাহ"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr "%d দিন"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr "%d দিন"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr "%d ঘন্টা"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr "%d ঘন্টা"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr "%d মিনিট"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr "%d মিনিট"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr "%d সেকেন্ড"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr "%d সেকেন্ড"
-
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr " এবং "
-
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
-msgstr ", "
-
-#: ../shell/controlpanel/control.py:213
-msgid "To apply your changes you have to restart sugar.\n"
-msgstr "তোমার পরিবর্তন কার্যকর করার জন্য সুগার পুনরায় চালু করতে হবে।\n"
-
-#: ../shell/controlpanel/control.py:267
+#: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
 msgstr "উল্লেখিত রং পরিবর্তকে ত্রুটি।"
 
-#: ../shell/controlpanel/control.py:270
+#: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
 msgstr "উল্লেখিত রং এ ত্রুটি।"
 
-#: ../shell/controlpanel/control.py:307
-msgid "off"
-msgstr "off"
+#: ../extensions/cpsection/aboutme/view.py:235
+msgid "Click to change your color:"
+msgstr "রং পরিবর্তন করতে ক্লিক করুন:"
 
-#: ../shell/controlpanel/control.py:309
-msgid "on"
-msgstr "on"
+#: ../extensions/cpsection/aboutcomputer/__init__.py:21
+msgid "About my Computer"
+msgstr "আমার কম্পিউটার সম্পর্কে"
 
-#: ../shell/controlpanel/control.py:310
-msgid "State is unknown."
-msgstr "অবস্থানটি অজানা।"
+#: ../extensions/cpsection/aboutcomputer/model.py:37
+msgid "Not available"
+msgstr "পাওয়া যায় নি"
 
-#: ../shell/controlpanel/control.py:332
-msgid "Error in specified radio argument use on/off."
-msgstr "উল্লেখিত রেডিও প্রেরিত মান ব্যবহার on/off তে ত্রুটি।"
-
-#: ../shell/controlpanel/control.py:336
-msgid "Permission denied. You need to be root to run this method."
-msgstr "অনুমতি প্রত্যাখ্যাত। এই পন্থাটি চালাতে তোমাকে root হিসেবে কাজ করতে হবে।"
-
-#: ../shell/controlpanel/control.py:366
-msgid "Error in reading timezone"
-msgstr "সময় জোন পড়তে ত্রুটি"
-
-#: ../shell/controlpanel/control.py:397
+#: ../extensions/cpsection/aboutcomputer/model.py:158
 #, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr "সময় জোন (%s হতে) কপি করায় ত্রুটি: %s"
+msgid "%(interface)s: %(version)s"
+msgstr "%(interface)s: %(version)s"
 
-#: ../shell/controlpanel/control.py:402
-#, python-format
-msgid "Changing permission of timezone: %s"
-msgstr "সময় জোনের অনুমতি পরিবর্তন: %s"
+#: ../extensions/cpsection/aboutcomputer/view.py:61
+msgid "Identity"
+msgstr "পরিচয়"
 
-#: ../shell/controlpanel/control.py:412
+#: ../extensions/cpsection/aboutcomputer/view.py:70
+msgid "Serial Number:"
+msgstr "ক্রমিক সংখ্যা:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:92
+msgid "Software"
+msgstr "সফটওয়্যার"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:101
+msgid "Build:"
+msgstr "তৈরী করো:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:116
+msgid "Sugar:"
+msgstr "সুগার:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:132
+msgid "Firmware:"
+msgstr "ফার্মওয়্যার:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:147
+msgid "Wireless Firmware:"
+msgstr "তারবিহীন ফার্মওয়্যার:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:170
+msgid "Copyright and License"
+msgstr "কপিরাইট এবং লাইসেন্স"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:188
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"সুগার হচ্ছে একটি গ্রাফিকাল ব্যবহারকারী ইন্টারফেস যেমনটি আপনি দেখছেন। সুগার "
+"GNU জেনারেল পাবলিক লাইসেন্স এর আওতাধীন একটি মুক্ত সফটওয়্যার, এবং কিছু শর্ত "
+"সাপেক্ষে আপনি এটি নিজের প্রয়োজনমতো পরিবর্তন করতে বা এর অনুলিপি বিতরন করতে "
+"পারবেন।"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:200
+msgid "Full license:"
+msgstr "সম্পূর্ণ লাইসেন্স:"
+
+#: ../extensions/cpsection/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "তারিখ & সময়"
+
+#: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
 msgstr "ত্রুটিযুক্ত সময় জোনের অস্তিত্ব নেই।"
 
-#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "%s এ প্রবেশ করতে পারে নি। প্রমাণ মানসমূহ তৈরি করো।"
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+msgid "Timezone"
+msgstr "সময় অঞ্চল"
 
-#: ../shell/controlpanel/control.py:463
+#: ../extensions/cpsection/frame/__init__.py:21
+msgid "Frame"
+msgstr "ফ্রেম"
+
+#: ../extensions/cpsection/frame/model.py:41
+#: ../extensions/cpsection/frame/model.py:66
+msgid "Value must be an integer."
+msgstr "মানটি অবশ্যই পূর্ণ সংখ্যা হতে হবে।"
+
+#: ../extensions/cpsection/frame/view.py:27
+msgid "never"
+msgstr "কখনো নয়"
+
+#: ../extensions/cpsection/frame/view.py:28
+msgid "instantaneous"
+msgstr "এখনই"
+
+#: ../extensions/cpsection/frame/view.py:29
+#, python-format
+#, python-format,
+msgid "%s seconds"
+msgstr "%s সেকেন্ড"
+
+#: ../extensions/cpsection/frame/view.py:54
+msgid "Activation Delay"
+msgstr "কার্যকারিতার বিলম্ব"
+
+#: ../extensions/cpsection/frame/view.py:78
+msgid "Corner"
+msgstr "কোণ"
+
+#: ../extensions/cpsection/frame/view.py:113
+msgid "Edge"
+msgstr "কিনারা"
+
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:32
+msgid "Keyboard"
+msgstr "কীবোর্ড"
+
+#: ../extensions/cpsection/keyboard/view.py:190
+msgid "Keyboard Model"
+msgstr "কীবোর্ড মডেল"
+
+#: ../extensions/cpsection/keyboard/view.py:250
+msgid "Key(s) to change layout"
+msgstr "বহির্বিন্যাস পরিবর্তনের কী"
+
+#: ../extensions/cpsection/keyboard/view.py:319
+msgid "Keyboard Layout(s)"
+msgstr "কীবোর্ডের লেআউট"
+
+#: ../extensions/cpsection/language/__init__.py:21
+#: ../extensions/cpsection/language/view.py:33
+msgid "Language"
+msgstr "ভাষা"
+
+#: ../extensions/cpsection/language/model.py:30
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "~/.i18n এ প্রবেশ করতে পারে নি। আদর্শ সেটিং তৈরি করুন।"
+
+#: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "কোড=%s এর জন্য কোন ভাষা নির্ধারণ করা যায় নি।"
 
-#: ../shell/controlpanel/control.py:473
+#: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "দুঃখিত আমি '%s' বলতে পারি না।"
 
-#: ../shell/view/devices/network/mesh.py:105
-msgid "Connected to a School Mesh Portal"
-msgstr "একটি স্কুলের মেশ পোর্টালে সংযুক্ত"
+#: ../extensions/cpsection/language/view.py:57
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr ""
+"আপনার পছন্দ অনুসারে ভাষা সংযুক্ত করুন। যদি একটি অনুবাদ বিদ্যমান না হয়, "
+"তালিকার পরবর্তীটি ব্যবহৃত হবে।"
 
-#: ../shell/view/devices/network/mesh.py:107
-msgid "Looking for a School Mesh Portal..."
-msgstr "একটি স্কুল মেশ পোর্টাল খুজছি..."
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem Configuration"
+msgstr "মডেমের কনফিগারেশন"
 
-#: ../shell/view/devices/network/mesh.py:110
-msgid "Connected to an XO Mesh Portal"
-msgstr "একটি জো(XO) মেশ পোর্টালে সংযুক্ত"
+#: ../extensions/cpsection/modemconfiguration/view.py:94
+msgid "Username:"
+msgstr "ব্যবহারকারীর নাম:"
 
-#: ../shell/view/devices/network/mesh.py:112
-msgid "Looking for an XO Mesh Portal..."
-msgstr "একটি জো(XO) মেশ পোর্টাল খুজছি..."
+#: ../extensions/cpsection/modemconfiguration/view.py:106
+msgid "Password:"
+msgstr "পাসওয়ার্ড:"
 
-#: ../shell/view/devices/network/mesh.py:115
-msgid "Connected to a Simple Mesh"
-msgstr "একটি সাধারণ মেশ এ সংযুক্ত"
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Number:"
+msgstr "ক্রম:"
 
-#: ../shell/view/devices/network/mesh.py:117
-msgid "Starting a Simple Mesh"
-msgstr "একটি সাধারণ মেশ চালু করছি"
+#: ../extensions/cpsection/modemconfiguration/view.py:130
+msgid "Access Point Name (APN):"
+msgstr "প্রবেশের পয়েন্ট নাম (APN):"
 
-#: ../shell/view/devices/network/mesh.py:124
-msgid "Unknown Mesh"
-msgstr "অজানা মেশ"
+#: ../extensions/cpsection/modemconfiguration/view.py:142
+msgid "Personal Identity Number (PIN):"
+msgstr "ব্যক্তিগত পরিচয় নাম্বার (PIN):"
 
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
-msgid "About this XO"
-msgstr "XO সম্বন্ধে"
+#: ../extensions/cpsection/modemconfiguration/view.py:154
+msgid "Personal Unblocking Key (PUK):"
+msgstr "ব্যক্তিগত আনব্লক করার কী (PUK):"
 
-#: ../shell/view/home/HomeBox.py:222
-msgid "Not available"
-msgstr "পাওয়া যায় নি"
+#: ../extensions/cpsection/modemconfiguration/view.py:175
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr ""
+"একটি মোবাইল ব্রডব্যান্ড সংযোগকে সেলুলার (3G) নেটওয়ার্কে নির্ধারণ করতে "
+"নিম্নের তথ্যাবলী প্রদান করতে হবে।"
+
+#: ../extensions/cpsection/network/__init__.py:21
+#: ../extensions/cpsection/network/view.py:29
+msgid "Network"
+msgstr "নেটওয়ার্ক"
+
+#: ../extensions/cpsection/network/model.py:71
+msgid "State is unknown."
+msgstr "অবস্থানটি অজানা।"
+
+#: ../extensions/cpsection/network/model.py:99
+msgid "Error in specified radio argument use on/off."
+msgstr "উল্লেখিত রেডিও প্রেরিত মান ব্যবহার on/off তে ত্রুটি।"
+
+#: ../extensions/cpsection/network/model.py:140
+msgid "Error in specified argument use 0/1."
+msgstr "০/১ ব্যবহার করতে উল্লেখিত রেডিও প্রেরিত মানে ত্রুটি।"
+
+#: ../extensions/cpsection/network/view.py:61
+msgid "Wireless"
+msgstr "তারবিহীন"
+
+#: ../extensions/cpsection/network/view.py:69
+msgid "Turn off the wireless radio to save battery life"
+msgstr "ব্যাটারী সাশ্রয়ের জন্য তারবিহীন বেতার বন্ধ করুন"
+
+#: ../extensions/cpsection/network/view.py:82
+msgid "Radio"
+msgstr "বেতার"
+
+#: ../extensions/cpsection/network/view.py:98
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr "যদি আপনার সংযোগ পেতে অসুবিধা হয় তাহলে নেটওয়ার্কের ইতিহাস বাতিল করুন"
+
+#: ../extensions/cpsection/network/view.py:107
+msgid "Discard network history"
+msgstr "নেটওয়ার্কের ইতিহাস বাতিল"
+
+#: ../extensions/cpsection/network/view.py:122
+msgid "Collaboration"
+msgstr "সহযোগিতা"
+
+#: ../extensions/cpsection/network/view.py:130
+msgid ""
+"The server is the equivalent of what room you are in; people on the same "
+"server will be able to see each other, even when they aren't on the same "
+"network."
+msgstr ""
+"সার্ভার একটি রুমের মত কাজ করে; একই সার্ভারের সবাই একে অন্যকে দেখতে পাবে "
+"এমনকি একই নেটওয়ার্কে না থাকলেও দেখতে পায়।"
+
+#: ../extensions/cpsection/network/view.py:140
+msgid "Server:"
+msgstr "সার্ভার:"
+
+#: ../extensions/cpsection/power/__init__.py:21
+msgid "Power"
+msgstr "বিদ্যুৎ"
+
+#: ../extensions/cpsection/power/model.py:90
+msgid "Error in automatic pm argument, use on/off."
+msgstr "স্বয়ংক্রিয় pm আরগুমেন্টের ত্রুটি, চালু/বন্ধ ব্যবহার করুন।"
+
+#: ../extensions/cpsection/power/model.py:120
+msgid "Error in extreme pm argument, use on/off."
+msgstr "চূড়ান্ত pm আরগুমেন্টের ত্রুটি, চালু/বন্ধ ব্যবহার করুন।"
+
+#: ../extensions/cpsection/power/view.py:48
+msgid "Power management"
+msgstr "বিদুৎ ব্যবস্থাপনা"
+
+#: ../extensions/cpsection/power/view.py:58
+msgid "Automatic power management (increases battery life)"
+msgstr "স্বয়ংক্রিয় বিদুৎ ব্যবস্থাপনা (ব্যাটারির আয়ু বাড়ায়)"
+
+#: ../extensions/cpsection/power/view.py:86
+msgid ""
+"Extreme power management (disableswireless radio, increases battery life)"
+msgstr ""
+"সর্বোচ্চ বিদ্যুৎ ব্যবস্থাপনা (তারবিহীন বেতার নিষ্ক্রিয় করে, ব্যাটারির আয়ু "
+"বাড়ায়)"
+
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software update"
+msgstr "সফ্টওয়্যারের হালনাগাদ"
+
+#: ../extensions/cpsection/updater/view.py:63
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"সফ্টওয়্যারের হালনাগাদ ত্রুটিকে সঠিক করে, নিরাপত্তা আক্রম্যতা দূর করে, এবং "
+"নতুন বৈশিষ্ট্য প্রদান করে।"
+
+#: ../extensions/cpsection/updater/view.py:125
+#, python-format
+msgid "Checking %s..."
+msgstr "পরীক্ষা করা হচ্ছে %s..."
+
+#: ../extensions/cpsection/updater/view.py:127
+#, python-format
+msgid "Downloading %s..."
+msgstr "ডাউনলোড করা হচ্ছে %s..."
+
+#: ../extensions/cpsection/updater/view.py:129
+#, python-format
+msgid "Updating %s..."
+msgstr "হালনাগাদ করা হচ্ছে %s..."
+
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Your software is up-to-date"
+msgstr "আপনার সফ্টওয়্যারটি আধুনিক"
+
+#: ../extensions/cpsection/updater/view.py:141
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] "আপনি %s হালনাগাদ ইনস্টল করতে পারেন"
+msgstr[1] "আপনি %s হালনাগাদ ইনস্টল করতে পারেন"
+
+#: ../extensions/cpsection/updater/view.py:159
+msgid "Checking for updates..."
+msgstr "হালনাগাদ এর জন্য পরীক্ষা করা হচ্ছে..."
+
+#: ../extensions/cpsection/updater/view.py:164
+msgid "Installing updates..."
+msgstr "হালনাগাদ ইনস্টল করা হচ্ছে..."
+
+#: ../extensions/cpsection/updater/view.py:173
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] "%s হালনাগাদ ইনস্টল করা হয়েছে"
+msgstr[1] "%s হালনাগাদ ইনস্টল করা হয়েছে"
+
+#: ../extensions/cpsection/updater/view.py:255
+msgid "Install selected"
+msgstr "ইনস্টল নির্বাচিত"
+
+#: ../extensions/cpsection/updater/view.py:276
+#, python-format
+msgid "Download size: %s"
+msgstr "ডাউনলোড আকার: %s"
+
+#: ../extensions/cpsection/updater/view.py:364
+#, python-format
+msgid "From version %(current)s to %(new)s (Size: %(size)s)"
+msgstr "%(current)s সংস্করণ হতে %(new)s (Size: %(size)s)"
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:382
+msgid "None"
+msgstr "কোনটি না"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:385
+msgid "1 KB"
+msgstr "১ কিবা"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:388
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f কিবা"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:391
+#, python-format
+msgid "%.1f MB"
+msgstr "%.1f মেবা"
+
+#: ../extensions/deviceicon/battery.py:70
+msgid "My Battery"
+msgstr "আমার ব্যাটারি"
+
+#: ../extensions/deviceicon/battery.py:146
+msgid "Removed"
+msgstr "মুছে ফেলা হয়েছে"
+
+#: ../extensions/deviceicon/battery.py:149
+msgid "Charging"
+msgstr "চার্জ করা হচ্ছে"
+
+#: ../extensions/deviceicon/battery.py:152
+msgid "Very little power remaining"
+msgstr "খুব সামান্য বিদ্যুৎ বাকি আছে"
+
+#: ../extensions/deviceicon/battery.py:157
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d বাকি আছে"
+
+#: ../extensions/deviceicon/battery.py:160
+msgid "Charged"
+msgstr "চার্জ করা হয়েছে"
+
+#: ../extensions/deviceicon/network.py:49
+#, python-format
+msgid "IP address: %s"
+msgstr "IP ঠিকানা: %s"
+
+#: ../extensions/deviceicon/network.py:104
+msgid "Disconnect..."
+msgstr "সংযোগ বিচ্ছিন্ন..."
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:543
+#: ../src/jarabe/desktop/networkviews.py:671
+msgid "Connecting..."
+msgstr "সংযুক্ত করা হচ্ছে..."
+
+#: ../extensions/deviceicon/network.py:116
+#: ../extensions/deviceicon/network.py:182
+#: ../src/jarabe/desktop/networkviews.py:251
+#: ../src/jarabe/desktop/networkviews.py:549
+#: ../src/jarabe/desktop/networkviews.py:677
+msgid "Connected"
+msgstr "সংযোগ স্থাপিত হয়েছে"
+
+#: ../extensions/deviceicon/network.py:142
+msgid "Channel"
+msgstr "চ্যানেল"
+
+#: ../extensions/deviceicon/network.py:157
+msgid "Wired Network"
+msgstr "তারযুক্ত নেটওয়ার্ক"
+
+#: ../extensions/deviceicon/network.py:185
+msgid "Speed"
+msgstr "গতি"
+
+#: ../extensions/deviceicon/network.py:211
+msgid "Wireless modem"
+msgstr "তারবিহীন মডেম"
+
+#: ../extensions/deviceicon/network.py:278
+msgid "Please wait..."
+msgstr "অনুগ্রহ করে অপেক্ষা করুন..."
+
+#: ../extensions/deviceicon/network.py:282
+#: ../src/jarabe/desktop/networkviews.py:134
+#: ../src/jarabe/desktop/networkviews.py:500
+#: ../src/jarabe/desktop/networkviews.py:628
+msgid "Connect"
+msgstr "সংযুক্ত করুন"
+
+#: ../extensions/deviceicon/network.py:283
+msgid "Disconnected"
+msgstr "সংযোগ বিচ্ছিন্ন"
+
+#: ../extensions/deviceicon/network.py:289
+#: ../src/jarabe/controlpanel/toolbar.py:119
+#: ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/frame/activitiestray.py:587
+#: ../src/jarabe/frame/activitiestray.py:687
+#: ../src/jarabe/frame/activitiestray.py:715
+msgid "Cancel"
+msgstr "বাতিল"
+
+#: ../extensions/deviceicon/network.py:297
+#: ../src/jarabe/desktop/networkviews.py:138
+#: ../src/jarabe/desktop/networkviews.py:504
+msgid "Disconnect"
+msgstr "সংযোগ বিচ্ছিন্ন করুন"
+
+#: ../extensions/deviceicon/network.py:327
+msgid "Try connection again"
+msgstr "পুনরায় সংযোগের চেষ্টা করুন "
+
+#: ../extensions/deviceicon/network.py:330
+#, python-format
+msgid "Error: %s"
+msgstr "ত্রুটি: %s"
+
+#: ../extensions/deviceicon/network.py:334
+#, python-format
+msgid "Suggestion: %s"
+msgstr "পরামর্শ: %s"
+
+#: ../extensions/deviceicon/network.py:340
+#: ../extensions/deviceicon/network.py:343
+#, python-format
+msgid "Connected for %s"
+msgstr "%s এর জন্য সংযুক্ত"
+
+#: ../extensions/deviceicon/network.py:348
+#: ../extensions/deviceicon/network.py:349
+#, python-format
+msgid "%d KB"
+msgstr "%d কিবা"
+
+#: ../extensions/deviceicon/network.py:354
+msgid "Check your Pin/Puk configuration."
+msgstr "আপনার Pin/Puk কনফিগারেশন পরীক্ষা করুন।"
+
+#: ../extensions/deviceicon/network.py:357
+msgid "Check your Access Point Name (APN) configuration"
+msgstr "আপনার প্রবেশেযোগ্য পয়েন্ট নামের (APN) কনফিগারেশন পরীক্ষা করুন"
+
+#: ../extensions/deviceicon/network.py:361
+msgid "Check the Number configuration."
+msgstr "নাম্বার কনফিগারেশন পরীক্ষা করুন।"
+
+#: ../extensions/deviceicon/network.py:363
+msgid "Check your configuration."
+msgstr "আপনার কনফিগারেশন পরীক্ষা করুন।"
+
+#: ../extensions/deviceicon/network.py:605
+msgid "Mesh Network"
+msgstr "মেশ নেটওয়ার্ক"
+
+#: ../extensions/deviceicon/network.py:648
+#, python-format
+#, python-format,
+msgid "Mesh Network %s"
+msgstr "মেশ নেটওয়ার্ক %s"
+
+#: ../extensions/deviceicon/network.py:771
+msgid "No GSM connection available."
+msgstr "কোন GSM সংযোগ পাওয়া যায়নি।"
+
+#: ../extensions/deviceicon/network.py:772
+msgid "Create a connection in the control panel."
+msgstr "কন্ট্রোল প্যানেলে একটি সংযোগ তৈরি করুন।"
+
+#: ../extensions/deviceicon/speaker.py:60
+msgid "My Speakers"
+msgstr "আমার স্পিকার"
+
+#: ../extensions/deviceicon/speaker.py:136
+msgid "Unmute"
+msgstr "নিঃশব্দ নয়"
+
+#: ../extensions/deviceicon/speaker.py:139
+msgid "Mute"
+msgstr "নিঃশব্দ"
+
+#: ../extensions/deviceicon/touchpad.py:37
+msgid "finger"
+msgstr "আঙ্গুল"
+
+#: ../extensions/deviceicon/touchpad.py:38
+msgid "stylus"
+msgstr "স্টাইলাস"
+
+#: ../extensions/deviceicon/touchpad.py:67
+msgid "My touchpad"
+msgstr "আমার টাচপ্যাড"
+
+#: ../extensions/globalkey/screenshot.py:59
+msgid "Mesh"
+msgstr "মেশ"
+
+#: ../extensions/globalkey/screenshot.py:61
+#: ../src/jarabe/frame/zoomtoolbar.py:40
+msgid "Group"
+msgstr "দল"
+
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "Home"
+msgstr "বাড়ি"
+
+#: ../extensions/globalkey/screenshot.py:69
+#: ../src/jarabe/frame/zoomtoolbar.py:44
+msgid "Activity"
+msgstr "সক্রিয়তা"
+
+#: ../extensions/globalkey/screenshot.py:72
+msgid "Screenshot"
+msgstr "স্ক্রীণশট"
+
+#: ../extensions/globalkey/screenshot.py:74
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "\"%s\" এর স্ক্রিনশট"
+
+#: ../data/sugar.schemas.in.h:1
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr ""
+"শুরু করার সময় নিকে জিজ্ঞাসা করার জন্য \"নিস্ক্রিয়\"; UNIX অ্যাকাউন্টের দীর্ঘ "
+"নাম পুনরায় ব্যবহার করার জন্য \"সিস্টেম\"।"
+
+#: ../data/sugar.schemas.in.h:2
+msgid "Additional directories which can contain updated translations."
+msgstr "অতিরিক্ত ডিরেক্টরিতে হালনাগাদকৃত অনুবাদ থাকে।"
+
+#: ../data/sugar.schemas.in.h:3
+msgid "Backup URL"
+msgstr "ব্যাকআপ URL"
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Bundle IDs of protected activities"
+msgstr "সুরক্ষিত কাজের আইডি একজায়গায় করা"
+
+#: ../data/sugar.schemas.in.h:5
+msgid ""
+"Color for the XO icon that is used throughout the desktop. The string is "
+"composed of the stroke color and fill color, format is that of rgb colors. "
+"Example: #AC32FF,#9A5200"
+msgstr ""
+"ডেক্সটপ জুড়ে ব্যবহৃত হয় এমন XO আইকনের রং। এই স্ট্রিংটি রং এর আঁচড় এবং রঙের "
+"ভরাটের সমন্বয়ে গঠিত হয়, ফরম্যাটটি হলো rbg রঙের। উদাহরণ: #AC32FF,#9A5200"
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Corner Delay"
+msgstr "কোন বিলম্ব"
+
+#: ../data/sugar.schemas.in.h:7
+msgid "Default font face"
+msgstr "পূর্বনির্ধারিত ফন্টের চেহারা"
+
+#: ../data/sugar.schemas.in.h:8
+msgid "Default font size"
+msgstr "পূর্বনির্ধারিত ফন্টের আকার"
+
+#: ../data/sugar.schemas.in.h:9
+msgid "Default nick"
+msgstr "পূর্বনির্ধারিত নিক"
+
+#: ../data/sugar.schemas.in.h:10
+msgid "Delay for the activation of the frame using the corners."
+msgstr "কোন ব্যবহার করে ফ্রেম সক্রিয়করণের বিলম্ব।"
+
+#: ../data/sugar.schemas.in.h:11
+msgid "Delay for the activation of the frame using the edges."
+msgstr "ফ্রেমের পার্শ্ববর্তী অংশ ব্যবহার করে ফ্রেম সক্রিয়করণের বিলম্ব।"
+
+#: ../data/sugar.schemas.in.h:12
+msgid "Directory to search for translations"
+msgstr "অনুবাদ অনুসন্ধান করার জন্য ডিরেক্টরি"
+
+#: ../data/sugar.schemas.in.h:13
+msgid "Edge Delay"
+msgstr "ফ্রেমের পাশের অংশের বিলম্ব"
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Favorites Layout"
+msgstr "পছন্দনীয় বিন্যাস"
+
+#: ../data/sugar.schemas.in.h:15
+msgid "Favorites resume mode"
+msgstr "পছন্দনীয় পুনরায় শুরু করার মোড"
+
+#: ../data/sugar.schemas.in.h:16
+msgid "Font face that is used throughout the desktop."
+msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
+
+#: ../data/sugar.schemas.in.h:17
+msgid "Font size that is used throughout the desktop."
+msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
+
+#: ../data/sugar.schemas.in.h:18
+msgid "GSM network APN"
+msgstr "GSM নেটওয়ার্ক APN"
+
+#: ../data/sugar.schemas.in.h:19
+msgid "GSM network PIN"
+msgstr "GSM নেটওয়ার্ক PIN"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network PUK"
+msgstr "GSM নেটওয়ার্ক PUK"
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network access point name configuration"
+msgstr "GSM নেটওয়ার্কে প্রবেশের পয়েন্টের নাম কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network number"
+msgstr "GSM নেটওয়ার্ক নাম্বার"
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network password"
+msgstr "GSM নেটওয়ার্ক পাসওয়ার্ড"
+
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network password configuration"
+msgstr "GSM নেটওয়ার্ক পাসওয়ার্ড কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network personal identification number configuration"
+msgstr "GSM নেটওয়ার্ক ব্যক্তিগত পরিচয় প্রদানকারী নাম্বার কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network personal unlock key configuration"
+msgstr "GSM নেটওয়ার্ক ব্যক্তিগত আনলক কী কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network telephone number configuration"
+msgstr "GSM নেটওয়ার্ক টেলিফোন নাম্বার কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network username"
+msgstr "GSM নেটওয়ার্ক ব্যবহারকরীর নাম"
+
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network username configuration"
+msgstr "GSM নেটওয়ার্ক ব্যবহারকরীর নাম কনফিগারেশন"
+
+#: ../data/sugar.schemas.in.h:30
+msgid ""
+"If TRUE, Sugar will make us searchable for the other users of the Jabber "
+"server."
+msgstr ""
+"যদি TRUE হয় তাহলে সুগারের মাধ্যমে আমরা Jabber সার্ভারের অন্যান্য "
+"ব্যবহারকারীকে অনুসন্ধান করতে পারি।"
+
+#: ../data/sugar.schemas.in.h:31
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr "যদি সত্যি হয়, সুগার \"লগআউট\" অপশন প্রদর্শন করবে।"
+
+#: ../data/sugar.schemas.in.h:32
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr "যদি সত্যি হয়, সুগার \"পুনরায় শুরু করা\" অপশন প্রদর্শন করবে।"
+
+#: ../data/sugar.schemas.in.h:33
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+"যদি সত্যি হয়, সুগার চ্যানেল 1,6 এবং 11 এর জন্য পূর্বনির্ধারিত অ্যাড হক "
+"নেটওয়ার্ক প্রদর্শন করবে। যদি শুরু করার সময় সুগার কোনো \"জানা\" নেটওয়ার্ক না "
+"দেখে তবে এটা অ্যাড হক নেটওয়ার্কে স্বয়ংক্রিয়ভাবে সংযুক্ত হয়।"
+
+#: ../data/sugar.schemas.in.h:34
+msgid "Jabber Server"
+msgstr "Jabber সার্ভার"
+
+#: ../data/sugar.schemas.in.h:35
+msgid "Keyboard layouts"
+msgstr "কীবোর্ড লেআউট"
+
+#: ../data/sugar.schemas.in.h:36
+msgid "Keyboard model"
+msgstr "কীবোর্ড মডেল"
+
+#: ../data/sugar.schemas.in.h:37
+msgid "Keyboard options"
+msgstr "কীবোর্ড অপশন"
+
+#: ../data/sugar.schemas.in.h:38
+msgid "Layout of the favorites view."
+msgstr "পছন্দনীয় ভিউ এর বিন্যাস।"
+
+#: ../data/sugar.schemas.in.h:39
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr ""
+"কীবোর্ড লেআউটের তালিকা। ফরম বহির্বিন্যাসে (ভেরিয়েন্ট) প্রত্যেক প্রবেশ থাকতে "
+"হবে।"
+
+#: ../data/sugar.schemas.in.h:40
+msgid "List of keyboard options."
+msgstr "কীবোর্ড অপশনের তালিকা।"
+
+#: ../data/sugar.schemas.in.h:41
+msgid "Power Automatic"
+msgstr "স্বয়ংক্রিয় বিদ্যুৎ"
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Power Automatic."
+msgstr "স্বয়ংক্রিয় বিদ্যুৎ।"
+
+#: ../data/sugar.schemas.in.h:43
+msgid "Power Extreme"
+msgstr "সর্বোচ্চ পরিমান বিদ্যুৎ"
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Power Extreme."
+msgstr "সর্বোচ্চ পরিমান বিদ্যুৎ।"
+
+#: ../data/sugar.schemas.in.h:45
+msgid "Publish to Gadget"
+msgstr "গেজেটে প্রকাশ করো"
+
+#: ../data/sugar.schemas.in.h:46
+msgid "Setting for muting the sound device."
+msgstr "শব্দের যন্ত্র নীরব করার জন্য সেটিং।"
+
+#: ../data/sugar.schemas.in.h:47
+msgid "Show Log out"
+msgstr "লগআউট প্রদর্শন"
+
+#: ../data/sugar.schemas.in.h:48
+msgid "Show Restart"
+msgstr "পুনরায় শুরু প্রদর্শন"
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Show Sugar Ad-hoc networks"
+msgstr "সুগার এড-হক নেটওয়ার্ক প্রদর্শন"
+
+#: ../data/sugar.schemas.in.h:50
+msgid "Sound Muted"
+msgstr "নিঃশব্দ করার হয়েছে"
+
+#: ../data/sugar.schemas.in.h:51
+msgid "The keyboard model to be used"
+msgstr "কীবোর্ড মডেলটি ব্যবহার করতে হবে"
+
+#: ../data/sugar.schemas.in.h:53
+msgid "Timezone setting for the system."
+msgstr "সিস্টেমের জন্য সময়অঞ্চলের সেটিং।"
+
+#: ../data/sugar.schemas.in.h:54
+msgid "Url of the jabber server to use."
+msgstr "jabber সার্ভার ব্যবহারের জন্য Url।"
+
+#: ../data/sugar.schemas.in.h:55
+msgid "Url where the backup is saved to."
+msgstr "ব্যাকআপ সংরক্ষণ করার জন্য Url."
+
+#: ../data/sugar.schemas.in.h:56
+msgid "User Color"
+msgstr "ব্যবহারকারীর রং"
+
+#: ../data/sugar.schemas.in.h:57
+msgid "User Name"
+msgstr "ব্যবহারকারীর নাম"
+
+#: ../data/sugar.schemas.in.h:58
+msgid "User name that is used throughout the desktop."
+msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
+
+#: ../data/sugar.schemas.in.h:59
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr "ব্যবহারকারী এ ধরণের কার্যকলাপ তালিকা প্রদর্শনের সময় মুছে ফেলে না।"
+
+#: ../data/sugar.schemas.in.h:60
+msgid "Volume Level"
+msgstr "ভলিউমের মাত্রা"
+
+#: ../data/sugar.schemas.in.h:61
+msgid "Volume level for the sound device."
+msgstr "শব্দ যন্ত্রের জন্য ভলিউমের মাত্রা।"
+
+#: ../data/sugar.schemas.in.h:62
+msgid ""
+"When in resume mode, clicking on a favorite icon will cause the last entry "
+"for that activity to be resumed."
+msgstr ""
+"যখন পুনরায় শুরু করার মোডে থাকে তখন পছন্দনীয় আইকনে ক্লিক করলে কাজের জন্য শেষ "
+"এন্ট্রিটি পুনরায় কাজ শুরু করে।"
+
+#: ../src/jarabe/controlpanel/cmd.py:28
+#, python-format
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr ""
+"সুগার-কন্ট্রোল-প্যানেল: WARNING, একই নামের একাধিক অপশন খুঁজে পায়: %s মডিউল: "
+"%r"
+
+#: ../src/jarabe/controlpanel/cmd.py:30
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "সুগার-কন্ট্রোল-প্যানেল: কী=%s বিদ্যমান কোনো অপশন নয়"
+
+#: ../src/jarabe/controlpanel/cmd.py:31
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "সুগার-কন্ট্রোল-প্যানেল: %s"
+
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/jarabe/controlpanel/cmd.py:38
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+"ব্যবহারবিধি: সুগার-কন্ট্রোল-প্যানেল [অপশন] কী [আরগুমেন্ট ...]\n"
+"    সুগার পরিবেশের কন্ট্রোল। \n"
+"    অপশন: \n"
+"    -h           সহায়তা বর্তা প্রদদর্শন করে এবং প্রস্থান করে\n"
+"    -l           বিদ্যমান সকল অপশন তালিকা বদ্ধ করে\n"
+"    -h কী       কী সম্পর্কে তথ্য প্রদর্শন করে \n"
+"    -g কী       কী এর বর্তমান মান পাওয়া যায়\n"
+"    -s কী       কী এর বর্তমান মান নির্ধারণ করে \n"
+"    -c কী       কী এর বর্তমান মান মুছে ফেলে\n"
+" \n"
+"    "
+
+#: ../src/jarabe/controlpanel/cmd.py:52
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr "তোমার পরিবর্তন কার্যকর করার জন্য সুগার পুনরায় চালু করতে হবে।\n"
+
+#: ../src/jarabe/controlpanel/gui.py:296
+#: ../src/jarabe/journal/journaltoolbox.py:437
+#: ../src/jarabe/journal/volumestoolbar.py:289
+msgid "Warning"
+msgstr "সতর্কবানী"
+
+#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/sectionview.py:41
+msgid "Changes require restart"
+msgstr "পরিবর্তন করা হলে 'পুনরায় চালুকরণ' প্রয়োজন"
+
+#: ../src/jarabe/controlpanel/gui.py:300
+msgid "Cancel changes"
+msgstr "পরিবর্তন বাতিল করো"
+
+#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:72
+msgid "Later"
+msgstr "পরবর্তীতে"
+
+#: ../src/jarabe/controlpanel/gui.py:309
+msgid "Restart now"
+msgstr "এখনই পুনরায় চালু করো"
+
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
+msgid "Done"
+msgstr "করা হয়েছে"
+
+#: ../src/jarabe/controlpanel/toolbar.py:125
+#: ../src/jarabe/desktop/favoritesview.py:336
+msgid "Ok"
+msgstr "ঠিক আছে"
+
+#: ../src/jarabe/desktop/activitieslist.py:230
+#, python-format
+msgid "Version %s"
+msgstr "সংস্করণ %s"
+
+#: ../src/jarabe/desktop/activitieslist.py:354
+msgid "Confirm erase"
+msgstr "মুছে ফেলা নিশ্চিত করো"
+
+#: ../src/jarabe/desktop/activitieslist.py:356
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "মুছে ফেলা নিশ্চিত করো: তুমি কি স্থায়ীভাবে %s মুছে ফেলতে চাও?"
+
+#: ../src/jarabe/desktop/activitieslist.py:360
+#: ../src/jarabe/frame/clipboardmenu.py:64
+#: ../src/jarabe/view/viewsource.py:221
+msgid "Keep"
+msgstr "রাখো"
+
+#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/desktop/activitieslist.py:417
+#: ../src/jarabe/journal/journaltoolbox.py:391
+#: ../src/jarabe/journal/palettes.py:112
+msgid "Erase"
+msgstr "মোছো"
+
+#: ../src/jarabe/desktop/activitieslist.py:433
+msgid "Remove favorite"
+msgstr "পছন্দনীয় অপশন মুছে ফেলো"
+
+#: ../src/jarabe/desktop/activitieslist.py:437
+msgid "Make favorite"
+msgstr "পছন্দনীয় অপশন তৈরি করো"
+
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:127
+msgid "Freeform"
+msgstr "মুক্ত আকৃতি"
+
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:215
+msgid "Ring"
+msgstr "বৃত্ত"
+
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:402
+msgid "Spiral"
+msgstr "প্যাঁচানো"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:472
+msgid "Box"
+msgstr "বাক্স"
+
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:515
+msgid "Triangle"
+msgstr "ত্রিভুজ"
+
+#: ../src/jarabe/desktop/favoritesview.py:327
+msgid "Registration Failed"
+msgstr "নিবন্ধন ব্যর্থ হয়েছে"
+
+#: ../src/jarabe/desktop/favoritesview.py:328
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: ../src/jarabe/desktop/favoritesview.py:330
+msgid "Registration Successful"
+msgstr "সফলভাবে নিবন্ধিত হয়েছে"
+
+#: ../src/jarabe/desktop/favoritesview.py:331
+msgid "You are now registered with your school server."
+msgstr "তুমি এখন তোমার বিদ্যালয়ের সার্ভারের সাথে নিবন্ধিত।"
+
+#: ../src/jarabe/desktop/favoritesview.py:629
+msgid "Register"
+msgstr "রেজিস্টার"
+
+#: ../src/jarabe/desktop/favoritesview.py:631
+#: ../src/jarabe/desktop/favoritesview.py:648
+msgid "Register again"
+msgstr "পুনরায় নিবন্ধন"
+
+#: ../src/jarabe/desktop/homebox.py:65
+msgid "Software Update"
+msgstr "সফরওয়্যারের হালনাগাদ"
+
+#: ../src/jarabe/desktop/homebox.py:66
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"তোমার নতুন সফটওয়্যারের সাথে সুসংগতি নিশ্চিত করার জন্য তোমার কাজ হালনাগাদ করো"
+
+#: ../src/jarabe/desktop/homebox.py:75
+msgid "Check now"
+msgstr "এখনই পরীক্ষা করো"
+
+#: ../src/jarabe/desktop/homebox.py:193
+msgid "List view"
+msgstr "তালিকা ভিউ"
+
+#: ../src/jarabe/desktop/homebox.py:194
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/jarabe/desktop/homebox.py:257
+msgid "Favorites view"
+msgstr "পছন্দনীয় ভিউ"
+
+#: ../src/jarabe/desktop/homebox.py:258
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
+#: ../src/jarabe/desktop/keydialog.py:143
+msgid "Key Type:"
+msgstr "কী ধরণ:"
+
+#: ../src/jarabe/desktop/keydialog.py:163
+msgid "Authentication Type:"
+msgstr "পরিচয় প্রমানের ধরণ:"
+
+#: ../src/jarabe/desktop/keydialog.py:229
+msgid "WPA & WPA2 Personal"
+msgstr "WPA & WPA2 ব্যক্তিগত"
+
+#: ../src/jarabe/desktop/keydialog.py:238
+msgid "Wireless Security:"
+msgstr "তারবিহীন সংযোগের নিরাপত্তা:"
+
+#. TRANS: Action label for resuming an activity.
+#: ../src/jarabe/desktop/meshbox.py:109
+#: ../src/jarabe/frame/activitiestray.py:622
+#: ../src/jarabe/journal/journaltoolbox.py:485
+#: ../src/jarabe/journal/palettes.py:66 ../src/jarabe/view/palettes.py:78
+msgid "Resume"
+msgstr "পুনরায় শুরু করুন"
+
+#: ../src/jarabe/desktop/meshbox.py:114
+#: ../src/jarabe/frame/activitiestray.py:173
+msgid "Join"
+msgstr "যোগ দাও"
+
+#: ../src/jarabe/desktop/networkviews.py:497
+#, python-format
+msgid "Ad-hoc Network %d"
+msgstr "অ্যাড-হক নেটওয়ার্ক %d"
+
+#: ../src/jarabe/desktop/networkviews.py:626
+#, python-format
+#, python-format,
+msgid "Mesh Network %d"
+msgstr "মেশ নেটওয়ার্ক %d"
+
+#: ../src/jarabe/desktop/schoolserver.py:131
+msgid "Cannot connect to the server."
+msgstr "সার্ভার এর সাথে সংযুক্ত করতে পারে না।"
+
+#: ../src/jarabe/desktop/schoolserver.py:136
+msgid "The server could not complete the request."
+msgstr "সার্ভারটি অনুরোধ পাঠানো সম্পন্ন করতে পার না।"
+
+#: ../src/jarabe/frame/activitiestray.py:178
+#: ../src/jarabe/frame/activitiestray.py:559
+msgid "Decline"
+msgstr "প্রত্যাখ্যান করা"
+
+#: ../src/jarabe/frame/activitiestray.py:509
+#, python-format
+msgid "%dB"
+msgstr "%dবাইট"
+
+#: ../src/jarabe/frame/activitiestray.py:511
+#, python-format
+msgid "%dKB"
+msgstr "%dকিলোবাইট"
+
+#: ../src/jarabe/frame/activitiestray.py:513
+#, python-format
+msgid "%dMB"
+msgstr "%dমোগাবাইট"
+
+#: ../src/jarabe/frame/activitiestray.py:530
+#, python-format
+msgid "%s of %s"
+msgstr "%s, %s এর"
+
+#: ../src/jarabe/frame/activitiestray.py:544
+#, python-format
+#, python-format, 
+msgid "Transfer from %s"
+msgstr "%s হতে স্থানান্তর করো"
+
+#: ../src/jarabe/frame/activitiestray.py:554
+msgid "Accept"
+msgstr "গ্রহন করো"
+
+#: ../src/jarabe/frame/activitiestray.py:577
+#: ../src/jarabe/frame/activitiestray.py:705
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
+
+#: ../src/jarabe/frame/activitiestray.py:611
+#: ../src/jarabe/frame/activitiestray.py:740
+msgid "Dismiss"
+msgstr "অপসারণ করো"
+
+#: ../src/jarabe/frame/activitiestray.py:675
+#, python-format
+#, python-format, 
+msgid "Transfer to %s"
+msgstr "%s এ স্থানান্তর করো"
+
+#: ../src/jarabe/frame/clipboardmenu.py:54 ../src/jarabe/view/palettes.py:220
+msgid "Remove"
+msgstr "মোছো"
+
+#: ../src/jarabe/frame/clipboardmenu.py:59
+#: ../src/jarabe/frame/clipboardmenu.py:82
+msgid "Open"
+msgstr "খোলো"
+
+#: ../src/jarabe/frame/clipboardmenu.py:87
+msgid "Open with"
+msgstr "দ্বারা খোলো"
+
+#: ../src/jarabe/frame/clipboardobject.py:50
+#, python-format
+msgid "%s clipping"
+msgstr "%s ক্লিপ করছে"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:38
+msgid "Neighborhood"
+msgstr "ছোটবেলা"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:38
+msgid "F1"
+msgstr "F1"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:40
+msgid "F2"
+msgstr "F2"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:42
+msgid "F3"
+msgstr "F3"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:44
+msgid "F4"
+msgstr "F4"
+
+#: ../src/jarabe/intro/window.py:90
+msgid "Name:"
+msgstr "নাম:"
+
+#: ../src/jarabe/intro/window.py:126
+msgid "Click to change color:"
+msgstr "রং পরিবর্তন করতে ক্লিক:"
+
+#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
+msgid "Back"
+msgstr "পেছনে"
+
+#: ../src/jarabe/intro/window.py:204
+msgid "Next"
+msgstr "পরবর্তী"
+
+#: ../src/jarabe/journal/expandedentry.py:154
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:59
+#: ../src/jarabe/journal/volumestoolbar.py:129
+msgid "Untitled"
+msgstr "শিরোনামহীন"
+
+#: ../src/jarabe/journal/expandedentry.py:243
+msgid "No preview"
+msgstr "প্রিভিউ নেই"
+
+#: ../src/jarabe/journal/expandedentry.py:262
+#, python-format
+msgid "Kind: %s"
+msgstr "দয়া: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:262
+#: ../src/jarabe/journal/listmodel.py:150
+#: ../src/jarabe/journal/listmodel.py:158
+#: ../src/jarabe/journal/listmodel.py:166
+msgid "Unknown"
+msgstr "অজানা"
+
+#: ../src/jarabe/journal/expandedentry.py:263
+#, python-format
+msgid "Date: %s"
+msgstr "তারিখ: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:264
+#, python-format
+msgid "Size: %s"
+msgstr "আকার: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:292
+#: ../src/jarabe/journal/misc.py:108
+msgid "No date"
+msgstr "তারিখ নেই"
+
+#: ../src/jarabe/journal/expandedentry.py:299
+msgid "Participants:"
+msgstr "অংশগ্রহনকারী:"
+
+#: ../src/jarabe/journal/expandedentry.py:321
+msgid "Description:"
+msgstr "বিবরণ:"
+
+#: ../src/jarabe/journal/expandedentry.py:346
+msgid "Tags:"
+msgstr "ট্যাগ:"
+
+#: ../src/jarabe/journal/journalactivity.py:115
+#: ../src/jarabe/journal/journaltoolbox.py:456
+#: ../src/jarabe/journal/volumestoolbar.py:350
+msgid "Journal"
+msgstr "জার্নাল"
+
+#: ../src/jarabe/journal/journaltoolbox.py:69
+msgid "Search"
+msgstr "অনুসন্ধান"
+
+#: ../src/jarabe/journal/journaltoolbox.py:136
+msgid "Anytime"
+msgstr "যে কোন সময়"
+
+#: ../src/jarabe/journal/journaltoolbox.py:138
+msgid "Today"
+msgstr "আজ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:140
+msgid "Since yesterday"
+msgstr "গতকাল পর্যন্ত"
+
+# TRANS: Filter entries modified during the last 7 days.
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/jarabe/journal/journaltoolbox.py:142
+msgid "Past week"
+msgstr "পূর্ব সপ্তাহ"
+
+# TRANS: Filter entries modified during the last 30 days.
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/jarabe/journal/journaltoolbox.py:144
+msgid "Past month"
+msgstr "পূর্ব মাস"
+
+# TRANS: Filter entries modified during the last 356 days.
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/jarabe/journal/journaltoolbox.py:146
+msgid "Past year"
+msgstr "পূর্ব বছর"
+
+#: ../src/jarabe/journal/journaltoolbox.py:153
+msgid "Anyone"
+msgstr "যে কেউ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:155
+msgid "My friends"
+msgstr "আমার বন্ধুরা"
+
+#: ../src/jarabe/journal/journaltoolbox.py:156
+msgid "My class"
+msgstr "আমার ক্লাস"
+
+# TRANS: Item in a combo box that filters by entry type.
+#: ../src/jarabe/journal/journaltoolbox.py:298
+msgid "Anything"
+msgstr "যে কোন কিছু"
+
+#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/palettes.py:90
+msgid "Copy"
+msgstr "কপি"
+
+#: ../src/jarabe/journal/journaltoolbox.py:436
+#: ../src/jarabe/journal/volumestoolbar.py:288
+msgid "Entries without a file cannot be copied."
+msgstr "কোনো ফাইল ছাড়া এন্ট্রি অনুলিপি করা যায় না।"
+
+#: ../src/jarabe/journal/journaltoolbox.py:445
+#: ../src/jarabe/journal/volumestoolbar.py:297
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr "এন্ট্রি অনুলিপি করার সময় ত্রুটি। %s"
+
+#: ../src/jarabe/journal/journaltoolbox.py:446
+#: ../src/jarabe/journal/volumestoolbar.py:298
+msgid "Error"
+msgstr "ত্রুটি "
+
+# TRANS: Action label for starting an entry.
+#. TRANS: Action label for starting an entry.
+#: ../src/jarabe/journal/journaltoolbox.py:488
+#: ../src/jarabe/journal/palettes.py:69
+msgid "Start"
+msgstr "আরম্ভ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:516
+msgid "Sort by date modified"
+msgstr "পরিবর্ধনের তারিখ অনুযায়ী সাজানো"
+
+#: ../src/jarabe/journal/journaltoolbox.py:517
+msgid "Sort by date created"
+msgstr "তৈরি করা তারিখ অনুযায়ী সাজানো"
+
+#: ../src/jarabe/journal/journaltoolbox.py:518
+msgid "Sort by size"
+msgstr "আকার অনুযায়ী সাজানো"
+
+#: ../src/jarabe/journal/journaltoolbox.py:527
+msgid "Sort view"
+msgstr "প্রদর্শন ক্রমানুসারে সাজানো"
+
+#: ../src/jarabe/journal/listview.py:380
+msgid "Your Journal is empty"
+msgstr "আপনার জার্নালটি ফাঁকা"
+
+#: ../src/jarabe/journal/listview.py:382
+msgid "No matching entries"
+msgstr "এই রকম কোন এন্ট্রি নেই"
+
+#: ../src/jarabe/journal/listview.py:393
+msgid "Clear search"
+msgstr "অনুসন্ধান মুছে ফেলো"
+
+#: ../src/jarabe/journal/misc.py:273
+#, python-format
+msgid "Older Version Of %s Activity"
+msgstr "%s কার্যকলাপের পুরাতন সংস্করণ"
+
+#: ../src/jarabe/journal/misc.py:274
+#, python-format
+msgid "Do you want to downgrade to version %s"
+msgstr "আপনি %s সংস্করণে ডাউনগ্রেড করতে চান"
+
+#: ../src/jarabe/journal/modalalert.py:64
+msgid "Your Journal is full"
+msgstr "আপনার জার্নালটি পুর্ণ"
+
+#: ../src/jarabe/journal/modalalert.py:68
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr "অনুগ্রহ করে নতুন এন্ট্রির জন্য কিছু পুরাতন জার্নাল এন্ট্রি মুছুন।"
+
+#: ../src/jarabe/journal/modalalert.py:80
+msgid "Show Journal"
+msgstr "জার্নাল প্রদর্শন"
+
+#: ../src/jarabe/journal/objectchooser.py:146
+msgid "Choose an object"
+msgstr "অবজেক্ট নির্বাচন করুন"
+
+#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/view/viewsource.py:311
+msgid "Close"
+msgstr "বন্ধ"
+
+#: ../src/jarabe/journal/palettes.py:67
+msgid "Resume with"
+msgstr "সহায্যে পুনরায় শুরু করো"
+
+#: ../src/jarabe/journal/palettes.py:70
+msgid "Start with"
+msgstr "সাহায্যে শুরু করো"
+
+#: ../src/jarabe/journal/palettes.py:83 ../src/jarabe/journal/palettes.py:216
+msgid "No activity to start entry"
+msgstr "এন্ট্রিটি শুরু করার জন্য কোন কাজ নেই"
+
+#: ../src/jarabe/journal/palettes.py:98
+msgid "Send to"
+msgstr "পাঠাও"
+
+#: ../src/jarabe/journal/palettes.py:107
+msgid "View Details"
+msgstr "বিস্তারিত প্রদর্শন করো"
+
+#: ../src/jarabe/journal/palettes.py:181
+msgid "No friends present"
+msgstr "কোন বন্ধু উপস্থিত নেই"
+
+#: ../src/jarabe/journal/palettes.py:186
+msgid "No valid connection found"
+msgstr "কোন বৈধ সংযোগ পাওয়া যায়নি"
+
+#: ../src/jarabe/journal/palettes.py:214
+msgid "No activity to resume entry"
+msgstr "এন্ট্রিটি পুনরায় শুরু করার জন্য কোন কাজ নেই"
+
+#: ../src/jarabe/journal/volumestoolbar.py:373
+#: ../src/jarabe/view/palettes.py:194 ../src/jarabe/view/palettes.py:245
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "%(free_space)d মেগাবাইট ফাঁকা"
+
+#: ../src/jarabe/model/network.py:163
+msgid "The reason for the device state change is unknown."
+msgstr "ডিভাইসের অবস্থা পরিবর্তনের কারণ অজানা।"
+
+#: ../src/jarabe/model/network.py:165
+msgid "The state change is normal."
+msgstr "অবস্থা পরিবর্তন সাধারণ।"
+
+#: ../src/jarabe/model/network.py:167
+msgid "The device is now managed."
+msgstr "ডিভাইস এখন নিয়ন্ত্রিত।"
+
+#: ../src/jarabe/model/network.py:169
+msgid "The device is no longer managed."
+msgstr "ডিভাইস এখন আর নিয়ন্ত্রিত নয়।"
+
+#: ../src/jarabe/model/network.py:171
+msgid "The device could not be readied for configuration."
+msgstr "ডিভাইস কনফিগারেশনের জন্য তৈরি নয়।"
+
+#: ../src/jarabe/model/network.py:173
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr ""
+"IP কনফিগারেশন সংরক্ষন করা যায়নি (কোনো ঠিকানা বিদ্যমান নেই, সময় শেষ, "
+"ইত্যাদি)।"
+
+#: ../src/jarabe/model/network.py:176
+msgid "The IP configuration is no longer valid."
+msgstr "IP কনফিগারেশন আর কার্যকর নেই।"
+
+#: ../src/jarabe/model/network.py:178
+msgid "Secrets were required, but not provided."
+msgstr "গোপনীয়তা আবশ্যকীয়, কিন্তু দেয়া নেই।"
+
+#: ../src/jarabe/model/network.py:180
+msgid ""
+"The 802.1X supplicant disconnected from the access point or authentication "
+"server."
+msgstr ""
+"802.1X  সাপ্লিকেন্ট প্রবেশাধিকার পয়েন্ট বা প্রমাণীকরণ সার্ভার থেকে বিছিন্ন।"
+
+#: ../src/jarabe/model/network.py:183
+msgid "Configuration of the 802.1X supplicant failed."
+msgstr "802.1X সাপ্লিকেন্ট কনফিগারেশন ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:185
+msgid "The 802.1X supplicant quit or failed unexpectedly."
+msgstr "802.1X সাপ্লিকেন্ট কনফিগারেশন বন্ধ বা অপ্রত্যাশিতভাবে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:187
+msgid "The 802.1X supplicant took too long to authenticate."
+msgstr "802.1X সাপ্লিকেন্ট প্রমানীকরণ করতে অনেক সময় নিয়েছে।"
+
+#: ../src/jarabe/model/network.py:189
+msgid "The PPP service failed to start within the allowed time."
+msgstr "PPP সার্ভিস অনুমোদিত সময়ে শুরু করতে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:191
+msgid "The PPP service disconnected unexpectedly."
+msgstr "PPP সার্ভিস অপ্রত্যাশিতভাবে বিছিন্ন।"
+
+#: ../src/jarabe/model/network.py:193
+msgid "The PPP service quit or failed unexpectedly."
+msgstr "PPP সার্ভিস বন্ধ বা অপ্রত্যাশিতভাবে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:195
+msgid "The DHCP service failed to start within the allowed time."
+msgstr "DHCP সার্ভিস অনুমোদিত সময়ে শুরু করতে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:197
+msgid "The DHCP service reported an unexpected error."
+msgstr "DHCP সার্ভিস অপ্রত্যাশিত ত্রুটি রিপোর্ট করে।"
+
+#: ../src/jarabe/model/network.py:199
+msgid "The DHCP service quit or failed unexpectedly."
+msgstr "DHCP সার্ভিস বন্ধ বা অপ্রত্যাশিতভাবে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:201
+msgid "The shared connection service failed to start."
+msgstr "শেয়ারকৃত সংযোগ সার্ভিস শুরু করতে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:203
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "শেয়ারকৃত সংযোগ সার্ভিস বন্ধ বা অপ্রত্যাশিতভাবে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:206
+msgid "The AutoIP service failed to start."
+msgstr "AutoIP সার্ভিস শুরু করতে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:208
+msgid "The AutoIP service reported an unexpected error."
+msgstr "AutoIP সার্ভিস  ত্রুটি অপ্রত্যাশিত ত্রুটি রিপোর্ট করেছে।"
+
+#: ../src/jarabe/model/network.py:210
+msgid "The AutoIP service quit or failed unexpectedly."
+msgstr "AutoIP সার্ভিস বন্ধ বা অপ্রত্যাশিতভাবে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:212
+msgid "Dialing failed because the line was busy."
+msgstr "সংযোগ ব্যস্ত বলে ডায়ালিং ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:214
+msgid "Dialing failed because there was no dial tone."
+msgstr "কোনো ডায়াল টোন ছিলনা বলে ডায়ালিং ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:216
+msgid "Dialing failed because there was no carrier."
+msgstr "কোনো বাহক ছিলনা বলে ডায়ালিং ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:218
+msgid "Dialing timed out."
+msgstr "ডায়ালিং এর সময় শেষ।"
+
+#: ../src/jarabe/model/network.py:220
+msgid "Dialing failed."
+msgstr "ডায়ালিং ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:222
+msgid "Modem initialization failed."
+msgstr "মোডেম কাজ করা শুরু করা ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:224
+msgid "Failed to select the specified GSM APN"
+msgstr "নির্দিষ্ট GSM APN নির্বাচন করতে ব্যর্থ"
+
+#: ../src/jarabe/model/network.py:226
+msgid "Not searching for networks."
+msgstr "নেটওয়ার্কের জন্য অনুসন্ধান করা হচছে না।"
+
+#: ../src/jarabe/model/network.py:228
+msgid "Network registration was denied."
+msgstr "নেটওয়ার্ক নিবন্ধন বাতিল।"
+
+#: ../src/jarabe/model/network.py:230
+msgid "Network registration timed out."
+msgstr "নেটওয়ার্ক নিবন্ধনের সময় শেষ।"
+
+#: ../src/jarabe/model/network.py:232
+msgid "Failed to register with the requested GSM network."
+msgstr "অনুরোধকৃত GSM নেটওয়ার্ক দিয়ে নিবন্ধন করতে ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:234
+msgid "PIN check failed."
+msgstr "PIN পরীক্ষা ব্যর্থ।"
+
+#: ../src/jarabe/model/network.py:236
+msgid "Necessary firmware for the device may be missing."
+msgstr "ডিভাইসের প্রয়োজনীয় ফার্মওয়্যার অনুপস্থিত থাকতে পারে।"
+
+#: ../src/jarabe/model/network.py:238
+msgid "The device was removed."
+msgstr "ডিভাইস অপসারণ করা হয়েছে।"
+
+#: ../src/jarabe/model/network.py:240
+msgid "NetworkManager went to sleep."
+msgstr "NetworkManager নিস্ক্রিয়।"
+
+#: ../src/jarabe/model/network.py:242
+msgid "The device's active connection was removed or disappeared."
+msgstr "ডিভাইস এর সক্রিয় সংযোগ অপসারণ বা নিস্ক্রিয় করা হয়েছে।"
+
+#: ../src/jarabe/model/network.py:245
+msgid "A user or client requested the disconnection."
+msgstr "ব্যবহারকারী বা ক্লায়েন্ট সংযোগ বিচ্ছিন্ন করার জন্য অনুরোধ করেছে।"
+
+#: ../src/jarabe/model/network.py:247
+msgid "The device's carrier/link changed."
+msgstr "The device's carrier/link changed."
+
+#: ../src/jarabe/view/buddymenu.py:64
+msgid "Remove friend"
+msgstr "বন্ধু মোছো"
+
+#: ../src/jarabe/view/buddymenu.py:67
+msgid "Make friend"
+msgstr "বন্ধু বানাও"
+
+#: ../src/jarabe/view/buddymenu.py:84
+msgid "Shutdown"
+msgstr "বন্ধ করো"
+
+#: ../src/jarabe/view/buddymenu.py:92
+msgid "Restart"
+msgstr "পুনরায় চালাও"
+
+#: ../src/jarabe/view/buddymenu.py:98
+msgid "Logout"
+msgstr "লগ-আউট"
+
+#: ../src/jarabe/view/buddymenu.py:103
+msgid "My Settings"
+msgstr "আমার সেটিং"
+
+#: ../src/jarabe/view/buddymenu.py:139
+#, python-format
+msgid "Invite to %s"
+msgstr "%s কে নিমণ্ত্রণ"
+
+#: ../src/jarabe/view/launcher.py:190
+#, python-format
+msgid "<b>%s</b> failed to start."
+msgstr "<b>%s</b> শুরু করতে ব্যর্থ।"
+
+#: ../src/jarabe/view/palettes.py:46
+msgid "Starting..."
+msgstr "শুরু হচ্ছে..."
+
+#: ../src/jarabe/view/palettes.py:56
+msgid "Activity failed to start"
+msgstr "কাজ শুরু করতে ব্যর্থ"
+
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:85
+msgid "View Source"
+msgstr "উৎস প্রদর্শন"
+
+#: ../src/jarabe/view/palettes.py:96
+msgid "Stop"
+msgstr "থামাও"
+
+#: ../src/jarabe/view/palettes.py:132
+msgid "Start new"
+msgstr "নতুন শুরু"
+
+#: ../src/jarabe/view/palettes.py:172
+msgid "Show contents"
+msgstr "বিষয়বস্তু দেখাও"
+
+#: ../src/jarabe/view/viewsource.py:211
+msgid "Instance Source"
+msgstr "উদাহরণের উৎস"
+
+#: ../src/jarabe/view/viewsource.py:236
+msgid "Source"
+msgstr "উৎস"
+
+#: ../src/jarabe/view/viewsource.py:295
+msgid "Activity Bundle Source"
+msgstr "কার্যসমষ্টির উৎস"
+
+#: ../src/jarabe/view/viewsource.py:302
+#, python-format
+msgid "View source: %r"
+msgstr "উৎস দেখাও:%r"
+
+#: ../src/jarabe/util/emulator.py:40
+msgid "Sugar in a window"
+msgstr "উইন্ডোতে সুগার"
+
+#~ msgid "Add to journal"
+#~ msgstr "জার্নালে লেখ"
+
+#, python-format
+#~ msgid "Clipboard object: %s."
+#~ msgstr "ক্লীপবোর্ড বস্তু: %s।"
+
+#~ msgid "Encryption Type:"
+#~ msgstr "এনক্রিপশন ধরণ:"
+
+#~ msgid "Reboot"
+#~ msgstr "পুনরায় চালু"
+
+#~ msgid "My Battery life"
+#~ msgstr "আমার ব্যাটারীর জীবনসীমা"
+
+#~ msgid "Battery charging"
+#~ msgstr "ব্যাটারী চার্জ হচ্ছে"
+
+#~ msgid "Battery discharging"
+#~ msgstr "ব্যাটারী চার্জ কমে যাচ্ছে"
+
+#~ msgid "Battery fully charged"
+#~ msgstr "ব্যাটারী পুরোপুরি চার্জ হয়েছে"
+
+#~ msgid "Share with:"
+#~ msgstr "ভাগাভাগি করো:"
+
+#~ msgid "Private"
+#~ msgstr "ব্যাক্তিগত"
+
+#~ msgid "My Neighborhood"
+#~ msgstr "আমার ছেলেবেলা"
+
+#~ msgid "Undo"
+#~ msgstr "বাতিল করো"
+
+#~ msgid "Redo"
+#~ msgstr "আবার করো"
+
+#~ msgid "Paste"
+#~ msgstr "সাঁটো"
+
+#, python-format
+#~ msgid "%s Activity"
+#~ msgstr "%s সক্রিয়তা"
+
+#~ msgid "Keep error"
+#~ msgstr "ত্রুটি রেখে দাও"
+
+#~ msgid "Keep error: all changes will be lost"
+#~ msgstr "ত্রুটি রেখে দাও: সব পরিবর্তন হারিয়ে যাবে"
+
+#~ msgid "Don't stop"
+#~ msgstr "থামিও না"
+
+#~ msgid "Stop anyway"
+#~ msgstr "যে কোন ভাবে থামো"
+
+#~ msgid "Continue"
+#~ msgstr "এগিয়ে যাও"
+
+#~ msgid "OK"
+#~ msgstr "ঠিক আছে"
+
+#, python-format
+#~ msgid "%d year"
+#~ msgstr "%d বছর"
+
+#, python-format
+#~ msgid "%d years"
+#~ msgstr "%d বছর"
+
+#, python-format
+#~ msgid "%d month"
+#~ msgstr "%d মাস"
+
+#, python-format
+#~ msgid "%d months"
+#~ msgstr "%d মাস"
+
+#, python-format
+#~ msgid "%d week"
+#~ msgstr "%d সপ্তাহ"
+
+#, python-format
+#~ msgid "%d weeks"
+#~ msgstr "%d সপ্তাহ"
+
+#, python-format
+#~ msgid "%d day"
+#~ msgstr "%d দিন"
+
+#, python-format
+#~ msgid "%d days"
+#~ msgstr "%d দিন"
+
+#, python-format
+#~ msgid "%d hour"
+#~ msgstr "%d ঘন্টা"
+
+#, python-format
+#~ msgid "%d hours"
+#~ msgstr "%d ঘন্টা"
+
+#, python-format
+#~ msgid "%d minute"
+#~ msgstr "%d মিনিট"
+
+#, python-format
+#~ msgid "%d minutes"
+#~ msgstr "%d মিনিট"
+
+#, python-format
+#~ msgid "%d second"
+#~ msgstr "%d সেকেন্ড"
+
+#~ msgid " and "
+#~ msgstr " এবং "
+
+#~ msgid ", "
+#~ msgstr ", "
+
+#~ msgid "off"
+#~ msgstr "off"
+
+#~ msgid "on"
+#~ msgstr "on"
+
+#~ msgid "Permission denied. You need to be root to run this method."
+#~ msgstr "অনুমতি প্রত্যাখ্যাত। এই পন্থাটি চালাতে তোমাকে root হিসেবে কাজ করতে হবে।"
+
+#~ msgid "Error in reading timezone"
+#~ msgstr "সময় জোন পড়তে ত্রুটি"
+
+#, python-format
+#~ msgid "Error copying timezone (from %s): %s"
+#~ msgstr "সময় জোন (%s হতে) কপি করায় ত্রুটি: %s"
+
+#, python-format
+#~ msgid "Changing permission of timezone: %s"
+#~ msgstr "সময় জোনের অনুমতি পরিবর্তন: %s"
+
+#~ msgid "Connected to a School Mesh Portal"
+#~ msgstr "একটি স্কুলের মেশ পোর্টালে সংযুক্ত"
+
+#~ msgid "Looking for a School Mesh Portal..."
+#~ msgstr "একটি স্কুল মেশ পোর্টাল খুজছি..."
+
+#~ msgid "Connected to an XO Mesh Portal"
+#~ msgstr "একটি জো(XO) মেশ পোর্টালে সংযুক্ত"
+
+#~ msgid "Looking for an XO Mesh Portal..."
+#~ msgstr "একটি জো(XO) মেশ পোর্টাল খুজছি..."
+
+#~ msgid "Connected to a Simple Mesh"
+#~ msgstr "একটি সাধারণ মেশ এ সংযুক্ত"
+
+#~ msgid "Starting a Simple Mesh"
+#~ msgstr "একটি সাধারণ মেশ চালু করছি"
+
+#~ msgid "Unknown Mesh"
+#~ msgstr "অজানা মেশ"
+
+#~ msgid "About this XO"
+#~ msgstr "XO সম্বন্ধে"
+
+#~ msgid "Cannot compute CPU and memory usage statistics!"
+#~ msgstr "CPU এবং মেমরির ব্যবহার পরিসংখ্যান গণনা করা যাচ্ছেনা!"
+
+#, python-format
+#~ msgid "CPU in use: %d%%"
+#~ msgstr "CPU ব্যবহার করা হচ্ছে: %d%%"
+
+#, python-format
+#~ msgid "Memory in use: %d%%"
+#~ msgstr "মেমরি ব্যবহার করা হচ্ছে: %d%%"
+
+#~ msgid "System resources"
+#~ msgstr "সিস্টেম রিসোর্স"
