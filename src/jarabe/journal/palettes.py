@@ -143,6 +143,13 @@ class ObjectPalette(Palette):
         logging.debug('__friend_selected_cb')
         file_name = model.get_file(self._metadata['uid'])
 
+        if not file_name or not os.path.exists(file_name):
+            logging.warn('Entries without a file cannot be sent.')
+            self.emit('volume-error',
+                      _('Entries without a file cannot be sent.'),
+                      _('Warning'))
+            return
+
         title = str(self._metadata['title'])
         description = str(self._metadata.get('description', ''))
         mime_type = str(self._metadata['mime_type'])
