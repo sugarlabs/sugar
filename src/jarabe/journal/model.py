@@ -30,10 +30,12 @@ from gettext import gettext as _
 import gobject
 import dbus
 import gio
+import gconf
 
 from sugar import dispatch
 from sugar import mime
 from sugar import util
+from sugar.graphics.xocolor import XoColor
 
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
@@ -615,6 +617,9 @@ def copy(metadata, mount_point):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
+    if mount_point == '/' and metadata['icon-color'] == '#000000,#ffffff':
+        client = gconf.client_get_default()
+        metadata['icon-color'] = client.get_string('/desktop/sugar/user/color')
     file_path = get_file(metadata['uid'])
 
     metadata['mountpoint'] = mount_point
