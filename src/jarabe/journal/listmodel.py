@@ -163,9 +163,8 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         try:
             size = int(metadata.get('filesize'))
         except (TypeError, ValueError):
-            self._cached_row.append(_('Unknown'))
-        else:
-            self._cached_row.append(util.format_size(size))
+            size = None
+        self._cached_row.append(util.format_size(size))
 
         try:
             progress = int(float(metadata.get('progress', 100)))
