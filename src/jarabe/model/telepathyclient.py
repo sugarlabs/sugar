@@ -27,6 +27,7 @@ from telepathy.interfaces import CLIENT, \
 from telepathy.server import DBusProperties
 
 from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
+from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
 
 from sugar import dispatch
 
@@ -67,12 +68,19 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         return dbus.Array([filter_dict], signature='a{sv}')
 
     def __get_filters_approver_cb(self):
-        filt = {
+        activity_invitation = {
             CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_ROOM,
             }
-        filter_dict = dbus.Dictionary(filt, signature='sv')
+        filter_dict = dbus.Dictionary(activity_invitation, signature='sv')
         filters = dbus.Array([filter_dict], signature='a{sv}')
+
+        text_invitation = {
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
+            CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+            }
+        filter_dict = dbus.Dictionary(text_invitation, signature='sv')
+        filters.append(filter_dict)
 
         logging.debug('__get_filters_approver_cb %r', filters)
 
