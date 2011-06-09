@@ -532,11 +532,12 @@ def find(query_, page_size):
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
-    while True:
+    while dir_path:
         if os.path.ismount(dir_path):
             return dir_path
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
+    return None
 
 
 def get(object_id):
