@@ -24,6 +24,7 @@ from string import ascii_uppercase
 import random
 import time
 import uuid
+import sys
 
 import gconf
 
@@ -123,12 +124,18 @@ def register_laptop(url=_REGISTER_URL):
 
     nick = client.get_string('/desktop/sugar/user/nick')
 
-    server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
+    if sys.hexversion < 0x2070000:
+        server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
+    else:
+        socket.setdefaulttimeout(_REGISTER_TIMEOUT)
+        server = xmlrpclib.ServerProxy(url)
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
     except (xmlrpclib.Error, TypeError, socket.error):
         logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
+    finally:
+        socket.setdefaulttimeout(None)
 
     if data['success'] != 'OK':
         logging.error('Registration: server could not complete request: %s',
