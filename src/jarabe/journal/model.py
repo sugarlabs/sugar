@@ -782,5 +782,7 @@ def get_unique_file_name(mount_point, file_name):
 
 
 def is_editable(metadata):
-    mountpoint = metadata.get('mountpoint', '/')
-    return mountpoint == '/'
+    if metadata.get('mountpoint', '/') == '/':
+        return True
+    else:
+        return os.access(metadata['mountpoint'], os.W_OK)
