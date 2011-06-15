@@ -18,6 +18,7 @@ import logging
 from gettext import gettext as _
 import StringIO
 import time
+import os
 
 import hippo
 import cairo
@@ -406,7 +407,14 @@ class ExpandedEntry(hippo.CanvasBox):
             needs_update = True
 
         if needs_update:
-            model.write(self._metadata, update_mtime=False)
+            if self._metadata.get('mountpoint', '/') == '/':
+                model.write(self._metadata, update_mtime=False)
+            else:
+                old_file_path = os.path.join(self._metadata['mountpoint'],
+                        model.get_file_name(old_title,
+                        self._metadata['mime_type']))
+                model.write(self._metadata, file_path=old_file_path,
+                        update_mtime=False)
 
         self._update_title_sid = None
 
@@ -420,7 +428,15 @@ class ExpandedEntry(hippo.CanvasBox):
             self._metadata['keep'] = 0
         else:
             self._metadata['keep'] = 1
-        model.write(self._metadata, update_mtime=False)
+
+        if self._metadata.get('mountpoint', '/') == '/':
+            model.write(self._metadata, update_mtime=False)
+        else:
+            f_path = os.path.join(self._metadata['mountpoint'],
+                    model.get_file_name(self._metadata['title'],
+                    self._metadata['mime_type']))
+            model.write(self._metadata, file_path=f_path,
+                    update_mtime=False)
 
         keep_icon.props.keep = self.get_keep()
 
