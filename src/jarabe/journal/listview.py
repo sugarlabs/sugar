@@ -117,14 +117,24 @@ class BaseListView(gtk.Bin):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-    def __model_created_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_created_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
 
-    def __model_updated_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_updated_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
 
-    def __model_deleted_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_deleted_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
+
+    def _is_new_item_visible(self, object_id):
+        """Check if the created item is part of the currently selected view"""
+        if self._query['mountpoints'] == ['/']:
+            return not object_id.startswith('/')
+        else:
+            return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
         cell_favorite = CellRendererFavorite(self.tree_view)
