@@ -75,6 +75,10 @@ class FriendsTray(VTray):
     def __neighborhood_activity_added_cb(self, neighborhood_model,
                                          shared_activity):
         logging.debug('FriendsTray.__neighborhood_activity_added_cb')
+        active_activity = shell.get_model().get_active_activity()
+        if active_activity.get_activity_id() != shared_activity.activity_id:
+            return
+
         self.clear()
 
         # always display ourselves
