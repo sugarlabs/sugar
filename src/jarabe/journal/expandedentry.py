@@ -23,6 +23,7 @@ import os
 import hippo
 import cairo
 import gobject
+import glib
 import gtk
 import simplejson
 
@@ -386,7 +387,8 @@ class ExpandedEntry(hippo.CanvasBox):
         old_title = self._metadata.get('title', None)
         new_title = self._title.props.widget.props.text
         if old_title != new_title:
-            self._icon.palette.props.primary_text = new_title
+            label = glib.markup_escape_text(new_title)
+            self._icon.palette.props.primary_text = label
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True

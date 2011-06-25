@@ -18,6 +18,7 @@
 from gettext import gettext as _
 import logging
 
+import glib
 import gtk
 
 from sugar.graphics.palette import Palette
@@ -59,7 +60,7 @@ class ZoomToolbar(gtk.Toolbar):
         self.add(button)
         button.show()
 
-        palette = Palette(label)
+        palette = Palette(glib.markup_escape_text(label))
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)

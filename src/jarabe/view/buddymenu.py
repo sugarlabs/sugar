@@ -20,6 +20,7 @@ from gettext import gettext as _
 
 import gtk
 import gconf
+import glib
 import dbus
 
 from sugar.graphics.palette import Palette
@@ -40,7 +41,9 @@ class BuddyMenu(Palette):
         buddy_icon = Icon(icon_name='computer-xo',
                           xo_color=buddy.get_color(),
                           icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
-        Palette.__init__(self, None, primary_text=buddy.get_nick(),
+        nick = buddy.get_nick()
+        Palette.__init__(self, None,
+                         primary_text=glib.markup_escape_text(nick),
                          icon=buddy_icon)
         self._invite_menu = None
         self._active_activity_changed_hid = None
@@ -149,7 +152,7 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity_model)
 
     def __buddy_notify_nick_cb(self, buddy, pspec):
-        self.set_primary_text(buddy.props.nick)
+        self.set_primary_text(glib.markup_escape_text(buddy.props.nick))
 
     def _make_friend_cb(self, menuitem):
         friends.get_model().make_friend(self._buddy)
