@@ -61,6 +61,8 @@ class FriendBuddyModel(BuddyModel):
         self.notify('color')
         self.notify('present')
 
+        if buddy.nick != self.nick:
+            self.nick = buddy.nick
         if buddy.contact_id != self.contact_id:
             self.contact_id = buddy.contact_id
         if buddy.account != self.account:
