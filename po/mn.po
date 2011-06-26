@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-01 00:30-0400\n"
-"PO-Revision-Date: 2011-06-26 21:00+0200\n"
+"PO-Revision-Date: 2011-06-26 21:16+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -116,7 +116,7 @@ msgstr ""
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Огноо ба Цаг"
+msgstr "Огноо & Цаг"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
@@ -208,15 +208,15 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid "Username:"
-msgstr ""
+msgstr "Хэрэглэгчийн нэр:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:106
 msgid "Password:"
-msgstr ""
+msgstr "Нууц үг:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Number:"
-msgstr ""
+msgstr "Тоо:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:130
 msgid "Access Point Name (APN):"
@@ -508,12 +508,12 @@ msgstr "Салгах"
 
 #: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr ""
+msgstr "Дахиад шалгаж үзэх"
 
 #: ../extensions/deviceicon/network.py:330
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Алдаа: %s"
 
 #: ../extensions/deviceicon/network.py:334
 #, python-format
@@ -580,7 +580,7 @@ msgstr "Дуугүй болгох"
 
 #: ../extensions/deviceicon/touchpad.py:37
 msgid "finger"
-msgstr ""
+msgstr "хуруу"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
@@ -616,7 +616,7 @@ msgstr "Дэлгэцний зураг"
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "\"%s\"-н дэлгэцний зураг"
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
@@ -960,7 +960,7 @@ msgstr "Тийм"
 #: ../src/jarabe/desktop/activitieslist.py:230
 #, python-format
 msgid "Version %s"
-msgstr ""
+msgstr "Хувилбар %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:354
 msgid "Confirm erase"
@@ -1050,7 +1050,7 @@ msgstr "Бүртгүүлэх"
 #: ../src/jarabe/desktop/favoritesview.py:631
 #: ../src/jarabe/desktop/favoritesview.py:648
 msgid "Register again"
-msgstr ""
+msgstr "Дахиад бүртгүүлэх"
 
 #: ../src/jarabe/desktop/homebox.py:65
 msgid "Software Update"
@@ -1123,11 +1123,11 @@ msgstr "Тархалтын сүлжээ %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:131
 msgid "Cannot connect to the server."
-msgstr "Pa kapab konekte nan sèvè a."
+msgstr "Сервер холбогдох боломжгүй"
 
 #: ../src/jarabe/desktop/schoolserver.py:136
 msgid "The server could not complete the request."
-msgstr "Sèvè a pa kapab konplete rekèt la"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:178
 #: ../src/jarabe/frame/activitiestray.py:559
@@ -1361,7 +1361,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:446
 #: ../src/jarabe/journal/volumestoolbar.py:298
 msgid "Error"
-msgstr ""
+msgstr "Алдаа"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
