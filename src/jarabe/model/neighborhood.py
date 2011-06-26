@@ -552,6 +552,11 @@ class _Account(gobject.GObject):
         for handle in attributes.keys():
             nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
 
+            if handle == self._self_handle:
+                logging.debug('_Account.__get_contact_attributes_cb,' \
+                              ' do not add ourself %r', handle)
+                continue
+
             if handle in self._buddy_handles and \
                     not self._buddy_handles[handle] is None:
                 logging.debug('Got handle %r with nick %r, going to update',
