@@ -16,6 +16,7 @@
 
 from gettext import gettext as _
 import logging
+import os
 
 import gobject
 import gtk
