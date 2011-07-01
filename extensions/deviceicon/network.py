@@ -126,7 +126,8 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def set_disconnected(self):
-        self.props.primary_text = ''
+        label = glib.markup_escape_text(_('No wireless connection'))
+        self.props.primary_text = label
         self.props.secondary_text = ''
         self._disconnect_item.hide()
         self.set_content(None)
