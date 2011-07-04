@@ -1,5 +1,6 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2011 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,6 +37,10 @@ from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from sugar import mime
 
+
+_EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
+                       '.xo', '.tar', '.bz2', '.zip', '.gz')
+_EXCLUDE_NAMES = ['.deps', '.libs']
 
 _SOURCE_FONT = pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
@@ -388,16 +393,18 @@ class FileViewer(gtk.ScrolledWindow):
     def _add_dir_to_model(self, dir_path, parent=None):
         model = self._tree_view.get_model()
         for f in os.listdir(dir_path):
-            if not f.endswith('.pyc'):
-                full_path = os.path.join(dir_path, f)
-                if os.path.isdir(full_path):
-                    new_iter = model.append(parent, [f, full_path])
-                    self._add_dir_to_model(full_path, new_iter)
-                else:
-                    current_iter = model.append(parent, [f, full_path])
-                    if f == self._initial_filename:
-                        selection = self._tree_view.get_selection()
-                        selection.select_iter(current_iter)
+            if f.endswith(_EXCLUDE_EXTENSIONS) or f in _EXCLUDE_NAMES:
+                continue
+
+            full_path = os.path.join(dir_path, f)
+            if os.path.isdir(full_path):
+                new_iter = model.append(parent, [f, full_path])
+                self._add_dir_to_model(full_path, new_iter)
+            else:
+                current_iter = model.append(parent, [f, full_path])
+                if f == self._initial_filename:
+                    selection = self._tree_view.get_selection()
+                    selection.select_iter(current_iter)
 
     def __selection_changed_cb(self, selection):
         model, tree_iter = selection.get_selected()
