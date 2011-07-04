@@ -247,11 +247,11 @@ class DocumentButton(RadioToolButton):
                         error_handler=self.__internal_save_error_cb)
 
     def __internal_save_cb(self):
-        logging.debug('Saved Source object to datastore.')
+        _logger.debug('Saved Source object to datastore.')
         self._jobject.destroy()
 
     def __internal_save_error_cb(self, err):
-        logging.debug('Error saving Source object to datastore: %s', err)
+        _logger.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
 
 
@@ -443,7 +443,7 @@ class SourceDisplay(gtk.ScrolledWindow):
             return
 
         mime_type = mime.get_for_file(self._file_path)
-        logging.debug('Detected mime type: %r', mime_type)
+        _logger.debug('Detected mime type: %r', mime_type)
 
         language_manager = gtksourceview2.language_manager_get_default()
         detected_language = None
@@ -454,7 +454,7 @@ class SourceDisplay(gtk.ScrolledWindow):
                 break
 
         if detected_language is not None:
-            logging.debug('Detected language: %r',
+            _logger.debug('Detected language: %r',
                     detected_language.get_name())
 
         self._buffer.set_language(detected_language)
