@@ -47,6 +47,7 @@ from sugar.profile import get_profile
 
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
+from jarabe.model import shell
 
 
 ACCOUNT_MANAGER_SERVICE = 'org.freedesktop.Telepathy.AccountManager'
@@ -341,6 +342,9 @@ class _Account(gobject.GObject):
 
             connection.connect_to_signal('CurrentActivityChanged',
                                          self.__current_activity_changed_cb)
+            home_model = shell.get_model()
+            home_model.connect('active-activity-changed',
+                               self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
                             'properties', self._connection.object_path)
@@ -374,6 +378,29 @@ class _Account(gobject.GObject):
                 reply_handler=self.__get_members_ready_cb,
                 error_handler=partial(self.__error_handler_cb,
                                       'Connection.GetMembers'))
+
+    def __active_activity_changed_cb(self, model, home_activity):
+        room_handle = 0
+        home_activity_id = home_activity.get_activity_id()
+        for handle, activity_id in self._activity_handles.items():
+            if home_activity_id == activity_id:
+                room_handle = handle
+                break
+        if room_handle == 0:
+            home_activity_id = ''
+
+        connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+        connection.SetCurrentActivity(
+            home_activity_id,
+            room_handle,
+            reply_handler=self.__set_current_activity_cb,
+            error_handler=self.__set_current_activity_error_cb)
+
+    def __set_current_activity_cb(self):
+        logging.warning('_Account.__set_current_activity_cb')
+
+    def __set_current_activity_error_cb(self, error):
+        logging.debug('_Account.__set_current_activity__error_cb %r', error)
 
     def __update_capabilities_cb(self):
         pass
@@ -416,16 +443,18 @@ class _Account(gobject.GObject):
                                   room_handle):
         logging.debug('_Account.__get_current_activity_cb %r %r %r',
                       contact_handle, activity_id, room_handle)
-        contact_id = self._buddy_handles[contact_handle]
-        self.emit('current-activity-updated', contact_id, activity_id)
+
+        if contact_handle in self._buddy_handles:
+            contact_id = self._buddy_handles[contact_handle]
+            if not activity_id and room_handle:
+                activity_id = self._activity_handles.get(room_handle, '')
+            self.emit('current-activity-updated', contact_id, activity_id)
 
     def __buddy_activities_changed_cb(self, buddy_handle, activities):
         self._update_buddy_activities(buddy_handle, activities)
 
     def _update_buddy_activities(self, buddy_handle, activities):
         logging.debug('_Account._update_buddy_activities')
-        if not buddy_handle in self._buddy_handles:
-            self._buddy_handles[buddy_handle] = None
 
         if not buddy_handle in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
@@ -433,6 +462,19 @@ class _Account(gobject.GObject):
         for activity_id, room_handle in activities:
             if room_handle not in self._activity_handles:
                 self._activity_handles[room_handle] = activity_id
+
+                if buddy_handle == self._self_handle:
+                    home_model = shell.get_model()
+                    activity = home_model.get_active_activity()
+                    if activity.get_activity_id() == activity_id:
+                        connection = self._connection[
+                            CONNECTION_INTERFACE_BUDDY_INFO]
+                        connection.SetCurrentActivity(
+                            activity_id,
+                            room_handle,
+                            reply_handler=self.__set_current_activity_cb,
+                            error_handler=self.__set_current_activity_error_cb)
+
                 self.emit('activity-added', room_handle, activity_id)
 
                 connection = self._connection[
@@ -443,23 +485,25 @@ class _Account(gobject.GObject):
                      error_handler=partial(self.__error_handler_cb,
                                            'ActivityProperties.GetProperties'))
 
-                # Sometimes we'll get CurrentActivityChanged before we get to
-                # know about the activity so we miss the event. In that case,
-                # request again the current activity for this buddy.
-                connection = self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
-                connection.GetCurrentActivity(
-                    buddy_handle,
-                    reply_handler=partial(self.__get_current_activity_cb,
-                                          buddy_handle),
-                    error_handler=partial(self.__error_handler_cb,
-                                          'BuddyInfo.GetCurrentActivity'))
+                if buddy_handle != self._self_handle:
+                    # Sometimes we'll get CurrentActivityChanged before we get
+                    # to know about the activity so we miss the event. In that
+                    # case, request again the current activity for this buddy.
+                    connection = self._connection[
+                        CONNECTION_INTERFACE_BUDDY_INFO]
+                    connection.GetCurrentActivity(
+                        buddy_handle,
+                        reply_handler=partial(self.__get_current_activity_cb,
+                                              buddy_handle),
+                        error_handler=partial(self.__error_handler_cb,
+                                              'BuddyInfo.GetCurrentActivity'))
 
             if not activity_id in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
             self._buddies_per_activity[activity_id].add(buddy_handle)
             if activity_id not in self._activities_per_buddy[buddy_handle]:
                 self._activities_per_buddy[buddy_handle].add(activity_id)
-                if self._buddy_handles[buddy_handle] is not None:
+                if buddy_handle != self._self_handle:
                     self.emit('buddy-joined-activity',
                               self._buddy_handles[buddy_handle],
                               activity_id)
@@ -483,7 +527,7 @@ class _Account(gobject.GObject):
         if activity_id in self._activities_per_buddy[buddy_handle]:
             self._activities_per_buddy[buddy_handle].remove(activity_id)
 
-        if self._buddy_handles[buddy_handle] is not None:
+        if buddy_handle != self._self_handle:
             self.emit('buddy-left-activity',
                       self._buddy_handles[buddy_handle],
                       activity_id)
@@ -647,6 +691,7 @@ class Neighborhood(gobject.GObject):
         self._activities = {}
         self._link_local_account = None
         self._server_account = None
+        self._shell_model = shell.get_model()
 
         client = gconf.client_get_default()
         client.add_dir('/desktop/sugar/collaboration',
@@ -935,6 +980,8 @@ class Neighborhood(gobject.GObject):
         activity.props.private = properties['private']
 
         if is_new:
+            self._shell_model.add_shared_activity(activity_id,
+                                                  activity.props.color)
             self.emit('activity-added', activity)
 
     def __activity_removed_cb(self, account, activity_id):
@@ -945,6 +992,7 @@ class Neighborhood(gobject.GObject):
             return
         activity = self._activities[activity_id]
         del self._activities[activity_id]
+        self._shell_model.remove_shared_activity(activity_id)
 
         if activity.props.bundle is not None:
             self.emit('activity-removed', activity)

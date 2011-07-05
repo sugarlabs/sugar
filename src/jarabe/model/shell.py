@@ -29,7 +29,6 @@ from sugar import dispatch
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.model.bundleregistry import get_registry
-from jarabe.model import neighborhood
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'
@@ -53,7 +52,7 @@ class Activity(gobject.GObject):
     LAUNCH_FAILED = 1
     LAUNCHED = 2
 
-    def __init__(self, activity_info, activity_id, window=None):
+    def __init__(self, activity_info, activity_id, color, window=None):
         """Initialise the HomeActivity
 
         activity_info -- sugar.activity.registry.ActivityInfo instance,
@@ -73,6 +72,13 @@ class Activity(gobject.GObject):
         self._activity_info = activity_info
         self._launch_time = time.time()
         self._launch_status = Activity.LAUNCHING
+
+        if color is not None:
+            self._color = color
+        else:
+            client = gconf.client_get_default()
+            color = client.get_string('/desktop/sugar/user/color')
+            self._color = XoColor(color)
 
         if window is not None:
             self.add_window(window)
@@ -152,19 +158,7 @@ class Activity(gobject.GObject):
         have an entry (implying that this is not a Sugar-shared application)
         uses the local user's profile colour for the icon.
         """
-        # HACK to suppress warning in logs when activity isn't found
-        # (if it's locally launched and not shared yet)
-        activity = None
-        for act in neighborhood.get_model().get_activities():
-            if self._activity_id == act.activity_id:
-                activity = act
-                break
-
-        if activity != None:
-            return activity.props.color
-        else:
-            client = gconf.client_get_default()
-            return XoColor(client.get_string('/desktop/sugar/user/color'))
+        return self._color
 
     def get_activity_id(self):
         """Retrieve the "activity_id" passed in to our constructor
@@ -204,7 +198,7 @@ class Activity(gobject.GObject):
         activity to determine to which HomeActivity the newly
         launched window belongs.
         """
-	if self._windows:
+        if self._windows:
             return self._windows[0]
         return None
 
@@ -370,6 +364,7 @@ class ShellModel(gobject.GObject):
         self._zoom_level = self.ZOOM_HOME
         self._current_activity = None
         self._activities = []
+        self._shared_activities = {}
         self._active_activity = None
         self._tabbing_activity = None
         self._launchers = {}
@@ -470,6 +465,12 @@ class ShellModel(gobject.GObject):
         """Returns the activity that the user is currently working in"""
         return self._active_activity
 
+    def add_shared_activity(self, activity_id, color):
+        self._shared_activities[activity_id] = color
+
+    def remove_shared_activity(self, activity_id):
+        del self._shared_activities[activity_id]
+
     def get_tabbing_activity(self):
         """Returns the activity that is currently highlighted during tabbing"""
         return self._tabbing_activity
@@ -543,7 +544,9 @@ class ShellModel(gobject.GObject):
 
             if not home_activity:
                 logging.debug('first window registered for %s' % activity_id)
-                home_activity = Activity(activity_info, activity_id, window)
+                color = self._shared_activities.get(activity_id, None)
+                home_activity = Activity(activity_info, activity_id,
+                                         color, window)
                 self._add_activity(home_activity)
             else:
                 logging.debug('window registered for %s' % activity_id)
@@ -623,7 +626,8 @@ class ShellModel(gobject.GObject):
             raise ValueError("Activity service name '%s'" \
                              " was not found in the bundle registry."
                              % service_name)
-        home_activity = Activity(activity_info, activity_id)
+        color = self._shared_activities.get(activity_id, None)
+        home_activity = Activity(activity_info, activity_id, color)
         self._add_activity(home_activity)
 
         self._set_active_activity(home_activity)
