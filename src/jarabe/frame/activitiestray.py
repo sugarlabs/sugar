@@ -54,6 +54,7 @@ class ActivityButton(RadioToolButton):
         RadioToolButton.__init__(self, group=group)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.cache_palette = False
 
         self._home_activity = home_activity
         self._notify_launch_hid = None
