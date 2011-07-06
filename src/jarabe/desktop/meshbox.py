@@ -63,43 +63,24 @@ _OLPC_MESH_ICON_NAME = 'network-mesh'
 _AUTOSEARCH_TIMEOUT = 1000
 
 
-class ActivityView(hippo.CanvasBox):
-    def __init__(self, model):
-        hippo.CanvasBox.__init__(self)
-
+class _ActivityIcon(CanvasIcon):
+    def __init__(self, model, file_name, xo_color,
+                 size=style.STANDARD_ICON_SIZE):
+        CanvasIcon.__init__(self, file_name=file_name,
+                            xo_color=xo_color,
+                            size=size)
         self._model = model
-        self._model.connect('current-buddy-added', self.__buddy_added_cb)
-        self._model.connect('current-buddy-removed', self.__buddy_removed_cb)
+        self.connect('activated', self._clicked_cb)
 
-        self._icons = {}
-        self._palette = None
-
-        self._layout = SnowflakeLayout()
-        self.set_layout(self._layout)
-
-        self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
-
-        self._palette = self._create_palette()
-        self._icon.set_palette(self._palette)
-
-        for buddy in self._model.props.current_buddies:
-            self._add_buddy(buddy)
-
-    def _create_icon(self):
-        icon = CanvasIcon(file_name=self._model.bundle.get_icon(),
-                    xo_color=self._model.get_color(), cache=True,
-                    size=style.STANDARD_ICON_SIZE)
-        icon.connect('activated', self._clicked_cb)
-        return icon
-
-    def _create_palette(self):
-        p_text = glib.markup_escape_text(self._model.bundle.get_name())
+    def create_palette(self):
+        primary_text = glib.markup_escape_text(self._model.bundle.get_name())
+        secondary_text = glib.markup_escape_text(self._model.get_name())
         p_icon = Icon(file=self._model.bundle.get_icon(),
                       xo_color=self._model.get_color())
         p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
         p = palette.Palette(None,
-                            primary_text=p_text,
+                            primary_text=primary_text,
+                            secondary_text=secondary_text,
                             icon=p_icon)
 
         private = self._model.props.private
@@ -118,6 +99,40 @@ class ActivityView(hippo.CanvasBox):
 
         return p
 
+    def _clicked_cb(self, item):
+        bundle = self._model.get_bundle()
+        misc.launch(bundle, activity_id=self._model.activity_id,
+                    color=self._model.get_color())
+
+
+class ActivityView(hippo.CanvasBox):
+    def __init__(self, model):
+        hippo.CanvasBox.__init__(self)
+
+        self._model = model
+        self._model.connect('current-buddy-added', self.__buddy_added_cb)
+        self._model.connect('current-buddy-removed', self.__buddy_removed_cb)
+
+        self._icons = {}
+
+        self._layout = SnowflakeLayout()
+        self.set_layout(self._layout)
+
+        self._icon = self._create_icon()
+        self._layout.add(self._icon, center=True)
+
+        self._icon.palette_invoker.cache_palette = False
+
+        for buddy in self._model.props.current_buddies:
+            self._add_buddy(buddy)
+
+    def _create_icon(self):
+        icon = _ActivityIcon(self._model,
+                             file_name=self._model.bundle.get_icon(),
+                             xo_color=self._model.get_color(),
+                             size=style.STANDARD_ICON_SIZE)
+        return icon
+
     def has_buddy_icon(self, key):
         return key in self._icons
 
@@ -133,11 +148,6 @@ class ActivityView(hippo.CanvasBox):
         icon = self._icons[buddy.props.key]
         del self._icons[buddy.props.key]
         icon.destroy()
-
-    def _clicked_cb(self, item):
-        bundle = self._model.get_bundle()
-        misc.launch(bundle, activity_id=self._model.activity_id,
-                    color=self._model.get_color())
 
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
