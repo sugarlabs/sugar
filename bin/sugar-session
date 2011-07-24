@@ -259,16 +259,23 @@ def main():
 
     screen = wnck.screen_get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
+    _check_for_window_manager(screen)
 
     try:
         gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 
+
 def __window_manager_changed_cb(screen):
+    _check_for_window_manager(screen)
+
+
+def _check_for_window_manager(screen):
     wm_name = screen.get_window_manager_name()
     if wm_name is not None:
         screen.disconnect_by_func(__window_manager_changed_cb)
         bootstrap()
+
 
 main()
