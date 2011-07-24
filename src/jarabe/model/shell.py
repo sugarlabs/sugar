@@ -543,21 +543,21 @@ class ShellModel(gobject.GObject):
                 window.maximize()
 
             if not home_activity:
-                logging.debug('first window registered for %s' % activity_id)
+                logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
                 self._add_activity(home_activity)
             else:
-                logging.debug('window registered for %s' % activity_id)
+                logging.debug('window registered for %s', activity_id)
                 home_activity.add_window(window)
 
             if wm.get_sugar_window_type(window) != 'launcher' \
                     and home_activity.get_launch_status() == Activity.LAUNCHING:
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
-                logging.debug('%s launched in %f seconds.' %
-                    (activity_id, startup_time))
+                logging.debug('%s launched in %f seconds.',
+                              activity_id, startup_time)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
@@ -569,7 +569,8 @@ class ShellModel(gobject.GObject):
             if activity is not None:
                 activity.remove_window_by_xid(xid)
                 if activity.get_window() is None:
-                    logging.debug('last window gone - remove activity %s' % activity)
+                    logging.debug('last window gone - remove activity %s',
+                                  activity)
                     self._remove_activity(activity)
 
     def _get_activity_by_xid(self, xid):
