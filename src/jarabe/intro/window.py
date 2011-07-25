@@ -22,12 +22,10 @@ import pwd
 
 import gtk
 import gobject
-import hippo
 
 from sugar import env
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
-from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.intro import colorpicker
@@ -57,13 +55,13 @@ def create_profile(name, color=None):
         logging.error('Keypair exists, skip generation.')
 
 
-class _Page(hippo.CanvasBox):
+class _Page(gtk.VBox):
     __gproperties__ = {
         'valid': (bool, None, None, False, gobject.PARAM_READABLE),
     }
 
-    def __init__(self, **kwargs):
-        hippo.CanvasBox.__init__(self, **kwargs)
+    def __init__(self):
+        gtk.VBox.__init__(self)
         self.valid = False
 
     def set_valid(self, valid):
@@ -80,27 +78,23 @@ class _Page(hippo.CanvasBox):
 
 class _NamePage(_Page):
     def __init__(self, intro):
-        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                       background_color=_BACKGROUND_COLOR.get_int(),
-                       spacing=style.DEFAULT_SPACING,
-                       orientation=hippo.ORIENTATION_HORIZONTAL,)
-
+        _Page.__init__(self)
         self._intro = intro
 
-        label = hippo.CanvasText(text=_('Name:'))
-        self.append(label)
+        alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True)
 
-        self._entry = CanvasEntry(box_width=style.zoom(300))
-        self._entry.set_background(_BACKGROUND_COLOR.get_html())
+        hbox = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        alignment.add(hbox)
+
+        label = gtk.Label(_('Name:'))
+        hbox.pack_start(label, expand=False)
+
+        self._entry = gtk.Entry()
         self._entry.connect('notify::text', self._text_changed_cb)
-
-        widget = self._entry.props.widget
-        widget.set_max_length(45)
-
-        self.append(self._entry)
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            self.reverse()
+        self._entry.set_size_request(style.zoom(300), -1)
+        self._entry.set_max_length(45)
+        hbox.pack_start(self._entry, expand=False)
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -113,22 +107,21 @@ class _NamePage(_Page):
         self._entry.props.text = new_name
 
     def activate(self):
-        self._entry.props.widget.grab_focus()
+        self._entry.grab_focus()
 
 
 class _ColorPage(_Page):
-    def __init__(self, **kwargs):
-        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                       background_color=_BACKGROUND_COLOR.get_int(),
-                       spacing=style.DEFAULT_SPACING,
-                       yalign=hippo.ALIGNMENT_CENTER, **kwargs)
+    def __init__(self):
+        _Page.__init__(self)
 
-        self._label = hippo.CanvasText(text=_('Click to change color:'),
-                                       xalign=hippo.ALIGNMENT_CENTER)
-        self.append(self._label)
+        vbox = gtk.VBox(spacing=style.DEFAULT_SPACING)
+        self.pack_start(vbox, expand=True, fill=False)
 
-        self._cp = colorpicker.ColorPicker(xalign=hippo.ALIGNMENT_CENTER)
-        self.append(self._cp)
+        self._label = gtk.Label(_('Click to change color:'))
+        vbox.pack_start(self._label)
+
+        self._cp = colorpicker.ColorPicker()
+        vbox.pack_start(self._cp)
 
         self._color = self._cp.get_color()
         self.set_valid(True)
@@ -137,7 +130,7 @@ class _ColorPage(_Page):
         return self._cp.get_color()
 
 
-class _IntroBox(hippo.CanvasBox):
+class _IntroBox(gtk.VBox):
     __gsignals__ = {
         'done': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                  ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
@@ -150,8 +143,8 @@ class _IntroBox(hippo.CanvasBox):
     PAGE_LAST = PAGE_COLOR
 
     def __init__(self):
-        hippo.CanvasBox.__init__(self, padding=style.zoom(30),
-                                 background_color=_BACKGROUND_COLOR.get_int())
+        gtk.VBox.__init__(self)
+        self.set_border_width(style.zoom(30))
 
         self._page = self.PAGE_NAME
         self._name_page = _NamePage(self)
@@ -172,58 +165,57 @@ class _IntroBox(hippo.CanvasBox):
         self._setup_page()
 
     def _setup_page(self):
-        self.remove_all()
+        for child in self.get_children():
+            self.remove(child)
 
         if self._page == self.PAGE_NAME:
             self._current_page = self._name_page
         elif self._page == self.PAGE_COLOR:
             self._current_page = self._color_page
 
-        self.append(self._current_page, hippo.PACK_EXPAND)
+        self.pack_start(self._current_page, expand=True)
 
-        button_box = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
+        button_box = gtk.HButtonBox()
 
-        if self._page != self.PAGE_FIRST:
-            back_button = hippo.CanvasButton(text=_('Back'))
+        if self._page == self.PAGE_FIRST:
+            button_box.set_layout(gtk.BUTTONBOX_END)
+        else:
+            button_box.set_layout(gtk.BUTTONBOX_EDGE)
+            back_button = gtk.Button(_('Back'))
             image = Icon(icon_name='go-left')
-            back_button.props.widget.set_image(image)
-            back_button.connect('activated', self._back_activated_cb)
-            button_box.append(back_button)
+            back_button.set_image(image)
+            back_button.connect('clicked', self._back_activated_cb)
+            button_box.pack_start(back_button)
 
-        spacer = hippo.CanvasBox()
-        button_box.append(spacer, hippo.PACK_EXPAND)
-
-        self._next_button = hippo.CanvasButton()
+        self._next_button = gtk.Button()
         image = Icon(icon_name='go-right')
-        self._next_button.props.widget.set_image(image)
+        self._next_button.set_image(image)
 
         if self._page == self.PAGE_LAST:
-            self._next_button.props.text = _('Done')
-            self._next_button.connect('activated', self._done_activated_cb)
+            self._next_button.set_label(_('Done'))
+            self._next_button.connect('clicked', self._done_activated_cb)
         else:
-            self._next_button.props.text = _('Next')
-            self._next_button.connect('activated', self._next_activated_cb)
+            self._next_button.set_label(_('Next'))
+            self._next_button.connect('clicked', self._next_activated_cb)
 
         self._current_page.activate()
 
         self._update_next_button()
-        button_box.append(self._next_button)
+        button_box.pack_start(self._next_button)
 
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
-        self.append(button_box)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            button_box.reverse()
+        self.pack_start(button_box, expand=False)
+        self.show_all()
 
     def _update_next_button(self):
-        widget = self._next_button.props.widget
-        widget.props.sensitive = self._current_page.props.valid
+        self._next_button.set_sensitive(self._current_page.props.valid)
 
     def _page_valid_changed_cb(self, page, pspec):
         self._update_next_button()
 
-    def _back_activated_cb(self, item):
+    def _back_activated_cb(self, widget):
         self.back()
 
     def back(self):
@@ -231,7 +223,7 @@ class _IntroBox(hippo.CanvasBox):
             self._page -= 1
             self._setup_page()
 
-    def _next_activated_cb(self, item):
+    def _next_activated_cb(self, widget):
         self.next()
 
     def next(self):
@@ -241,7 +233,7 @@ class _IntroBox(hippo.CanvasBox):
             self._page += 1
             self._setup_page()
 
-    def _done_activated_cb(self, item):
+    def _done_activated_cb(self, widget):
         self.done()
 
     def done(self):
@@ -252,19 +244,19 @@ class _IntroBox(hippo.CanvasBox):
 
 
 class IntroWindow(gtk.Window):
+    __gtype_name__ = 'SugarIntroWindow'
+
     def __init__(self):
         gtk.Window.__init__(self)
 
         self.props.decorated = False
         self.maximize()
 
-        self._canvas = hippo.Canvas()
         self._intro_box = _IntroBox()
         self._intro_box.connect('done', self._done_cb)
-        self._canvas.set_root(self._intro_box)
 
-        self.add(self._canvas)
-        self._canvas.show()
+        self.add(self._intro_box)
+        self._intro_box.show()
         self.connect('key-press-event', self.__key_press_cb)
 
     def _done_cb(self, box, name, color):
