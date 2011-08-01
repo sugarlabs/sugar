@@ -101,7 +101,7 @@ class WirelessPalette(Palette):
         self._info.pack_start(_padded(self._ip_address_label))
         self._info.show_all()
 
-        self._disconnect_item = MenuItem(_('Disconnect...'))
+        self._disconnect_item = MenuItem(_('Disconnect'))
         icon = Icon(icon_size=gtk.ICON_SIZE_MENU, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
         self._disconnect_item.connect('activate',
