@@ -621,6 +621,8 @@ def copy(metadata, mount_point):
         client = gconf.client_get_default()
         metadata['icon-color'] = client.get_string('/desktop/sugar/user/color')
     file_path = get_file(metadata['uid'])
+    if file_path is None:
+        file_path = ''
 
     metadata['mountpoint'] = mount_point
     del metadata['uid']

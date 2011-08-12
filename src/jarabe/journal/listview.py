@@ -476,6 +476,8 @@ class ListView(BaseListView):
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([object])),
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
     }
 
     def __init__(self):
@@ -491,6 +493,7 @@ class ListView(BaseListView):
 
         self.cell_icon.connect('clicked', self.__icon_clicked_cb)
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
+        self.cell_icon.connect('volume-error', self.__volume_error_cb)
 
         cell_detail = CellRendererDetail(self.tree_view)
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
@@ -531,6 +534,9 @@ class ListView(BaseListView):
 
     def __detail_clicked_cb(self, cell, uid):
         self.emit('detail-clicked', uid)
+
+    def __volume_error_cb(self, cell, message, severity):
+        self.emit('volume-error', message, severity)
 
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
@@ -586,6 +592,8 @@ class CellRendererActivityIcon(CellRendererIcon):
     __gsignals__ = {
         'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([str])),
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str, str])),
     }
 
     def __init__(self, tree_view):
@@ -610,10 +618,15 @@ class CellRendererActivityIcon(CellRendererIcon):
         palette = ObjectPalette(metadata, detail=True)
         palette.connect('detail-clicked',
                         self.__detail_clicked_cb)
+        palette.connect('volume-error',
+                        self.__volume_error_cb)
         return palette
 
     def __detail_clicked_cb(self, palette, uid):
         self.emit('detail-clicked', uid)
+
+    def __volume_error_cb(self, palette, message, severity):
+        self.emit('volume-error', message, severity)
 
     def set_show_palette(self, show_palette):
         self._show_palette = show_palette

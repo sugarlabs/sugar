@@ -171,6 +171,7 @@ class JournalActivity(JournalWindow):
         self._list_view = ListView()
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
+        self._list_view.connect('volume-error', self.__volume_error_cb)
         self._main_view.pack_start(self._list_view)
         self._list_view.show()
 
