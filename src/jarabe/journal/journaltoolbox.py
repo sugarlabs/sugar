@@ -385,7 +385,7 @@ class EntryToolbar(gtk.Toolbar):
 
         self._duplicate = ToolButton()
         icon = Icon(icon_name='edit-duplicate', xo_color=color)
-        self._copy.set_icon_widget(icon)
+        self._duplicate.set_icon_widget(icon)
         self._duplicate.set_tooltip(_('Duplicate'))
         self.add(self._duplicate)
 
