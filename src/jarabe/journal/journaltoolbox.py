@@ -387,6 +387,7 @@ class EntryToolbar(gtk.Toolbar):
         icon = Icon(icon_name='edit-duplicate', xo_color=color)
         self._duplicate.set_icon_widget(icon)
         self._duplicate.set_tooltip(_('Duplicate'))
+        self._duplicate.connect('clicked', self._duplicate_clicked_cb)
         self.add(self._duplicate)
 
         separator = gtk.SeparatorToolItem()
@@ -477,7 +478,6 @@ class EntryToolbar(gtk.Toolbar):
         color = misc.get_icon_color(self._metadata)
         self._copy.get_icon_widget().props.xo_color = color
         if self._metadata['mountpoint'] == '/':
-            self._duplicate.connect('clicked', self._duplicate_clicked_cb)
             self._duplicate.show()
             icon = self._duplicate.get_icon_widget()
             icon.props.xo_color = color
