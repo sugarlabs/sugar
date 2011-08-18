@@ -112,7 +112,7 @@ def register_laptop(url=_REGISTER_URL):
 
     if _have_ofw_tree():
         sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
-        uuid_ = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_UUID))
+        uuid_ = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_UUID))
     elif _have_proc_device_tree():
         sn = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_SN))
         uuid_ = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_UUID))
