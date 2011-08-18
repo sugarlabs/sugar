@@ -33,6 +33,11 @@ _NM_IFACE = 'org.freedesktop.NetworkManager'
 _NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
 _NM_DEVICE_TYPE_WIFI = 2
 
+_OFW_TREE = '/ofw'
+_PROC_TREE = '/proc/device-tree'
+_SN = 'serial-number'
+_MODEL = 'openprom/model'
+
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
 
@@ -48,7 +53,11 @@ def print_aboutcomputer():
 
 
 def get_serial_number():
-    serial_no = _read_file('/ofw/serial-number')
+    serial_no = None
+    if os.path.exists(os.path.join(_OFW_TREE, _SN)):
+        serial_no = _read_file(os.path.join(_OFW_TREE, _SN))
+    elif os.path.exists(os.path.join(_PROC_TREE, _SN)):
+        serial_no = _read_file(os.path.join(_PROC_TREE, _SN))
     if serial_no is None:
         serial_no = _not_available
     return serial_no
@@ -88,7 +97,11 @@ def print_build_number():
 
 
 def get_firmware_number():
-    firmware_no = _read_file('/ofw/openprom/model')
+    firmware_no = None
+    if os.path.exists(os.path.join(_OFW_TREE, _MODEL)):
+        firmware_no = _read_file(os.path.join(_OFW_TREE, _MODEL))
+    elif os.path.exists(os.path.join(_PROC_TREE, _MODEL)):
+        firmware_no = _read_file(os.path.join(_PROC_TREE, _MODEL))
     if firmware_no is None:
         firmware_no = _not_available
     else:

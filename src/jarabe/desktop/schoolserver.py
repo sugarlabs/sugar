@@ -33,6 +33,10 @@ from sugar.profile import get_profile
 
 _REGISTER_URL = 'http://schoolserver:8080/'
 _REGISTER_TIMEOUT = 8
+_OFW_TREE = '/ofw'
+_PROC_TREE = '/proc/device-tree'
+_MFG_SN = 'mfg-data/SN'
+_MFG_UUID = 'mfg-data/U#'
 
 
 def _generate_serial_number():
@@ -107,13 +111,16 @@ def register_laptop(url=_REGISTER_URL):
     client = gconf.client_get_default()
 
     if _have_ofw_tree():
-        sn = _read_ofw('mfg-data/SN')
-        uuid_ = _read_ofw('mfg-data/U#')
-        sn = sn or 'SHF00000000'
-        uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
+        sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
+        uuid_ = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_UUID))
+    elif _have_proc_device_tree():
+        sn = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_SN))
+        uuid_ = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_UUID))
     else:
         sn = _generate_serial_number()
         uuid_ = str(uuid.uuid1())
+    sn = sn or 'SHF00000000'
+    uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
 
     setting_name = '/desktop/sugar/collaboration/jabber_server'
     jabber_server = client.get_string(setting_name)
@@ -150,11 +157,14 @@ def register_laptop(url=_REGISTER_URL):
 
 
 def _have_ofw_tree():
-    return os.path.exists('/ofw')
+    return os.path.exists(_OFW_TREE)
 
 
-def _read_ofw(path):
-    path = os.path.join('/ofw', path)
+def _have_proc_device_tree():
+    return os.path.exists(_PROC_TREE)
+
+
+def _read_mfg_data(path):
     if not os.path.exists(path):
         return None
     fh = open(path, 'r')
