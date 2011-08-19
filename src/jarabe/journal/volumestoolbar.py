@@ -16,6 +16,8 @@
 
 import logging
 import os
+import subprocess
+import errno
 import statvfs
 from gettext import gettext as _
 
@@ -51,6 +53,27 @@ def _get_id(document):
         return term[1:]
     except StopIteration:
         return None
+
+
+def _get_documents_path():
+    """Gets the path of the DOCUMENTS folder
+
+    If xdg-user-dir can not find the DOCUMENTS folder it will
+    return the user directory instead. It also handles
+    localization (i.e. translation) of the filenames.
+
+    Returns: Path to $HOME/DOCUMENTS or None if an error occurs
+    """
+    try:
+        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
+                                stdout=subprocess.PIPE)
+        documents_path = pipe.communicate()[0].strip()
+        if os.path.exists(documents_path):
+            return documents_path
+    except OSError, exception:
+        if exception.errno != errno.ENOENT:
+            logging.exception('Could not run xdg-user-dir')
+    return None
 
 
 def _convert_entries(root):
@@ -189,6 +212,8 @@ class VolumesToolbar(gtk.Toolbar):
         volume_monitor.disconnect(self._mount_removed_hid)
 
     def _set_up_volumes(self):
+        self._set_up_documents_button()
+
         volume_monitor = gio.volume_monitor_get()
         self._mount_added_hid = volume_monitor.connect('mount-added',
                                                        self.__mount_added_cb)
@@ -197,6 +222,19 @@ class VolumesToolbar(gtk.Toolbar):
 
         for mount in volume_monitor.get_mounts():
             self._add_button(mount)
+
+    def _set_up_documents_button(self):
+        documents_path = _get_documents_path()
+        if documents_path is not None:
+            button = DocumentsButton(documents_path)
+            button.props.group = self._volume_buttons[0]
+            button.set_palette(Palette(_('Documents')))
+            button.connect('toggled', self._button_toggled_cb)
+            button.show()
+
+            self.insert(button, -1)
+            self._volume_buttons.append(button)
+            self.show()
 
     def __mount_added_cb(self, volume_monitor, mount):
         self._add_button(mount)
@@ -372,3 +410,15 @@ class JournalButtonPalette(Palette):
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
                 {'free_space': free_space / (1024 * 1024)}
+
+
+class DocumentsButton(BaseButton):
+
+    def __init__(self, documents_path):
+        BaseButton.__init__(self, mount_point=documents_path)
+
+        self.props.named_icon = 'user-documents'
+
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.xo_color = color
