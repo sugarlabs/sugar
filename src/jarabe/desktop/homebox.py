@@ -55,6 +55,7 @@ class HomeBox(gtk.VBox):
         self._toolbar.show()
 
         self._set_view(_FAVORITES_VIEW)
+        self._query = ''
 
     def show_software_updates_alert(self):
         alert = Alert()
@@ -103,8 +104,9 @@ class HomeBox(gtk.VBox):
             panel.set_section_view_auto_close()
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        query = query.lower()
-        self._list_view.set_filter(query)
+        self._query = query.lower()
+        self._list_view.set_filter(self._query)
+        self._favorites_view.set_filter(self._query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -145,6 +147,9 @@ class HomeBox(gtk.VBox):
 
     def set_resume_mode(self, resume_mode):
         self._favorites_view.set_resume_mode(resume_mode)
+        if resume_mode and self._query != '':
+            self._list_view.set_filter(self._query)
+            self._favorites_view.set_filter(self._query)
 
 
 class HomeToolbar(gtk.Toolbar):
@@ -177,7 +182,6 @@ class HomeToolbar(gtk.Toolbar):
         self.search_entry.connect('activate', self.__entry_activated_cb)
         self.search_entry.connect('changed', self.__entry_changed_cb)
         tool_item.add(self.search_entry)
-        self.search_entry.set_sensitive(False)
         self.search_entry.show()
 
         self._add_separator(expand=True)
@@ -201,14 +205,8 @@ class HomeToolbar(gtk.Toolbar):
 
     def __view_button_toggled_cb(self, button, view):
         if button.props.active:
-            if view == _FAVORITES_VIEW:
-                self.search_entry.set_text('')
-                self.search_entry.set_sensitive(False)
-                self.emit('view-changed', view)
-            else:
-                self.search_entry.set_sensitive(True)
-                self.search_entry.grab_focus()
-                self.emit('view-changed', view)
+            self.search_entry.grab_focus()
+            self.emit('view-changed', view)
 
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
@@ -228,8 +226,6 @@ class HomeToolbar(gtk.Toolbar):
         if self._query != new_query:
             self._query = new_query
 
-            if self._query is not '':
-                self._list_button.props.active = True
             self.emit('query-changed', self._query)
 
     def __entry_changed_cb(self, entry):

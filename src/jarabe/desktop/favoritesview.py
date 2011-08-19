@@ -110,6 +110,16 @@ class FavoritesView(hippo.Canvas):
         favorites_settings.changed.connect(self.__settings_changed_cb)
         self._set_layout(favorites_settings.layout)
 
+    def set_filter(self, query):
+        query = query.strip()
+        for icon in self._box.get_children():
+            if icon not in [self._my_icon, self._current_activity]:
+                activity_name = icon._activity_info.get_name().lower()
+                if activity_name.find(query) > -1:
+                    icon.alpha = 1.0
+                else:
+                    icon.alpha = 0.33
+
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
         self._set_layout(favorites_settings.layout)
