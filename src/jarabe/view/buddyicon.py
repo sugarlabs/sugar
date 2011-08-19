@@ -19,12 +19,14 @@ from sugar.graphics import style
 
 from jarabe.view.buddymenu import BuddyMenu
 
+_FILTERED_ALPHA = 0.33
+
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
 
-        self._greyed_out = False
+        self._filtered = False
         self._buddy = buddy
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
@@ -46,18 +48,18 @@ class BuddyIcon(CanvasIcon):
     def _update_color(self):
         # keep the icon in the palette in sync with the view
         palette = self.get_palette()
-        if self._greyed_out:
-            self.props.stroke_color = '#D5D5D5'
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+        self.props.xo_color = self._buddy.get_color()
+        if self._filtered:
+            self.alpha = _FILTERED_ALPHA
             if palette is not None:
                 palette.props.icon.props.stroke_color = self.props.stroke_color
                 palette.props.icon.props.fill_color = self.props.fill_color
         else:
-            self.props.xo_color = self._buddy.get_color()
+            self.alpha = 1.0
             if palette is not None:
                 palette.props.icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
-        self._greyed_out = (self._buddy.get_nick().lower().find(query) == -1) \
+        self._filtered = (self._buddy.get_nick().lower().find(query) == -1) \
                 and not self._buddy.is_owner()
         self._update_color()

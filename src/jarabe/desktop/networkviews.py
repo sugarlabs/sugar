@@ -54,6 +54,8 @@ _NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
+_FILTERED_ALPHA = 0.33
+
 
 class WirelessNetworkView(CanvasPulsingIcon):
     def __init__(self, initial_ap):
@@ -66,7 +68,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._palette_icon = None
         self._disconnect_item = None
         self._connect_item = None
-        self._greyed_out = False
+        self._filtered = False
         self._name = initial_ap.name
         self._mode = initial_ap.mode
         self._strength = initial_ap.strength
@@ -258,11 +260,12 @@ class WirelessNetworkView(CanvasPulsingIcon):
             self.props.pulsing = False
 
     def _update_color(self):
-        if self._greyed_out:
+        self.props.base_color = self._color
+        if self._filtered:
             self.props.pulsing = False
-            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+            self.alpha = _FILTERED_ALPHA
         else:
-            self.props.base_color = self._color
+            self.alpha = 1.0
 
     def _disconnect_activate_cb(self, item):
         if self._mode == network.NM_802_11_MODE_INFRA:
@@ -383,7 +386,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         logging.error('Failed to activate connection: %s', err)
 
     def set_filter(self, query):
-        self._greyed_out = self._name.lower().find(query) == -1
+        self._filtered = self._name.lower().find(query) == -1
         self._update_icon()
         self._update_color()
 
@@ -469,7 +472,7 @@ class SugarAdhocView(CanvasPulsingIcon):
         self._disconnect_item = None
         self._connect_item = None
         self._palette_icon = None
-        self._greyed_out = False
+        self._filtered = False
 
         get_adhoc_manager_instance().connect('members-changed',
                                              self.__members_changed_cb)
@@ -556,11 +559,12 @@ class SugarAdhocView(CanvasPulsingIcon):
             self.props.pulsing = False
 
     def _update_color(self):
-        if self._greyed_out:
+        self.props.base_color = self._state_color
+        if self._filtered:
             self.props.pulsing = False
-            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+            self.alpha = _FILTERED_ALPHA
         else:
-            self.props.base_color = self._state_color
+            self.alpha = 1.0
 
     def __members_changed_cb(self, adhoc_manager, channel, has_members):
         if channel == self._channel:
@@ -571,13 +575,16 @@ class SugarAdhocView(CanvasPulsingIcon):
                                    style.COLOR_TRANSPARENT.get_svg())
                 self._state_color = XoColor(color)
 
-            if not self._greyed_out:
+            if not self._filtered:
                 self.props.base_color = self._state_color
                 self._palette_icon.props.xo_color = self._state_color
+                self.alpha = 1.0
+            else:
+                self.alpha = _FILTERED_ALPHA
 
     def set_filter(self, query):
         name = self._NAME + str(self._channel)
-        self._greyed_out = name.lower().find(query) == -1
+        self._filtered = name.lower().find(query) == -1
         self._update_color()
 
 
@@ -590,7 +597,7 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._mesh_mgr = mesh_mgr
         self._disconnect_item = None
         self._connect_item = None
-        self._greyed_out = False
+        self._filtered = False
         self._name = ''
         self._device_state = None
         self._active = False
@@ -684,10 +691,11 @@ class OlpcMeshView(CanvasPulsingIcon):
             self.props.pulsing = False
 
     def _update_color(self):
-        if self._greyed_out:
-            self.props.base_color = XoColor('#D5D5D5,#D5D5D5')
+        self.props.base_color = profile.get_color()
+        if self._filtered:
+            self.alpha = _FILTERED_ALPHA
         else:
-            self.props.base_color = profile.get_color()
+            self.alpha = 1.0
 
     def __connect_activate_cb(self, icon):
         self._connect()
@@ -705,7 +713,7 @@ class OlpcMeshView(CanvasPulsingIcon):
         logging.error('Failed to activate connection: %s', err)
 
     def set_filter(self, query):
-        self._greyed_out = (query != '')
+        self._filtered = (query != '')
         self._update_color()
 
     def disconnect(self):

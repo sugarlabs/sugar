@@ -61,6 +61,7 @@ _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
 _AUTOSEARCH_TIMEOUT = 1000
+_FILTERED_ALPHA = 0.33
 
 
 class _ActivityIcon(CanvasIcon):
@@ -152,12 +153,11 @@ class ActivityView(hippo.CanvasBox):
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
                 self._model.bundle.get_bundle_id().lower()
+        self._icon.props.xo_color = self._model.get_color()
         if text_to_check.find(query) == -1:
-            self._icon.props.stroke_color = '#D5D5D5'
-            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            self._icon.alpha = _FILTERED_ALPHA
         else:
-            self._icon.props.xo_color = self._model.get_color()
-
+            self._icon.alpha = 1.0
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
