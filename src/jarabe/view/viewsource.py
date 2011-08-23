@@ -370,7 +370,7 @@ class Toolbar(gtk.Toolbar):
             self._add_separator()
 
         self.activity_title_text = _('View source: %r') % title
-        self.sugar_toolkit_title_text = _('View Sugar toolkit source')
+        self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
         self.label = gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
         self.label.set_alignment(0, 0.5)
