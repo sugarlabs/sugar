@@ -17,6 +17,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import shutil
 import sys
 import logging
 from gettext import gettext as _
@@ -36,7 +37,10 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
+from sugar.env import get_user_activities_path
 from sugar import mime
+from jarabe.view.customizebundle import customize_activity_info, \
+    generate_bundle, generate_unique_id
 
 
 _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
@@ -250,7 +254,7 @@ class ViewSource(gtk.Window):
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
-    def __init__(self, file_name, document_path, title):
+    def __init__(self, file_name, document_path, title, bundle=False):
         RadioToolButton.__init__(self)
 
         self._document_path = document_path
@@ -267,14 +271,43 @@ class DocumentButton(RadioToolButton):
         self.set_icon_widget(icon)
         icon.show()
 
-        menu_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
-                    xo_color=XoColor(self._color))
+        if bundle:
+            menu_item = MenuItem(_('Duplicate'))
+            icon = Icon(icon_name='edit-duplicate',
+                        icon_size=gtk.ICON_SIZE_MENU,
+                        xo_color=XoColor(self._color))
+            menu_item.connect('activate', self.__copy_to_home_cb)
+        else:
+            menu_item = MenuItem(_('Keep'))
+            icon = Icon(icon_name='document-save',
+                        icon_size=gtk.ICON_SIZE_MENU,
+                        xo_color=XoColor(self._color))
+            menu_item.connect('activate', self.__keep_in_journal_cb)
+
         menu_item.set_image(icon)
 
-        menu_item.connect('activate', self.__keep_in_journal_cb)
         self.props.palette.menu.append(menu_item)
         menu_item.show()
+
+    def __copy_to_home_cb(self, menu_item):
+        """ Make a local copy of the activity bundle in
+        user_activities_path """
+
+        user_activities_path = get_user_activities_path()
+        nick = generate_unique_id()
+        new_basename = '%s_copy_of_%s' % (
+            nick, os.path.basename(self._document_path))
+        if not os.path.exists(os.path.join(user_activities_path,
+                                           new_basename)):
+            shutil.copytree(self._document_path,
+                            os.path.join(user_activities_path, new_basename),
+                            symlinks=True)
+            new_activity_name = customize_activity_info(
+                nick, user_activities_path, new_basename)
+            generate_bundle(new_activity_name, user_activities_path,
+                            new_basename)
+        else:
+            _logger.debug('%s already exists', new_basename)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
@@ -334,7 +367,8 @@ class Toolbar(gtk.Toolbar):
             self._add_separator()
 
         if bundle_path is not None and os.path.exists(bundle_path):
-            activity_button = RadioToolButton()
+            activity_button = DocumentButton(file_name, bundle_path, title,
+                                             bundle=True)
             icon = Icon(file=file_name,
                         icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
