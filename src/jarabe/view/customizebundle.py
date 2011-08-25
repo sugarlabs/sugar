@@ -16,15 +16,14 @@
 
 import os
 import glob
-import shutil
+import hashlib
 
 import gtk
 
-import hashlib
-
-import sugar.profile
+from sugar import profile
 from sugar.activity import bundlebuilder
 from sugar.datastore import datastore
+from sugar.env import get_user_activities_path
 
 import logging
 _logger = logging.getLogger('ViewSource')
@@ -46,11 +45,12 @@ SVG_END = '</svg>\n'
 
 
 def generate_unique_id():
-    """ Generate an id based on the user's nick name and their public key
-    (Based on schema used by IRC activity). """
+    """Generate an id based on the user's nick name and their public key
+    (Based on schema used by IRC activity).
 
-    nick = sugar.profile.get_nick_name()
-    pubkey = sugar.profile.get_pubkey()
+    """
+    nick = profile.get_nick_name()
+    pubkey = profile.get_pubkey()
     m = hashlib.sha1()
     m.update(pubkey)
     hexhash = m.hexdigest()
@@ -63,10 +63,15 @@ def generate_unique_id():
     return nick_letters + '_' + hexhash[:4]
 
 
-def generate_bundle(new_activity_name, user_activities_path, new_basename):
-    """ Generate a new .xo bundle for the activity and copy it into the
-    Journal. """
+def generate_bundle(nick, new_basename):
+    """Generate a new .xo bundle for the activity and copy it into the
+    Journal.
 
+    """
+    new_activity_name = _customize_activity_info(
+        nick, new_basename)
+
+    user_activities_path = get_user_activities_path()
     if os.path.exists(os.path.join(user_activities_path, new_basename,
                                    'dist')):
         for path in glob.glob(os.path.join(user_activities_path, new_basename,
@@ -76,7 +81,6 @@ def generate_bundle(new_activity_name, user_activities_path, new_basename):
     config = bundlebuilder.Config(source_dir=os.path.join(
             user_activities_path, new_basename),
             dist_name='%s-1.xo' % (new_activity_name))
-    bundlebuilder.cmd_fix_manifest(config, None)
     bundlebuilder.cmd_dist_xo(config, None)
 
     dsobject = datastore.create()
@@ -89,14 +93,16 @@ def generate_bundle(new_activity_name, user_activities_path, new_basename):
     dsobject.destroy()
 
 
-def customize_activity_info(nick, user_activities_path, new_basename):
-    """ Modify bundle_id in new activity.info file:
+def _customize_activity_info(nick, new_basename):
+    """Modify bundle_id in new activity.info file:
     (1) change the bundle_id to bundle_id_[NICKNAME];
     (2) change the activity_icon [NICKNAME]-activity-icon.svg;
     (3) set activity_version to 1;
     (4) modify the activity icon by applying a customize overlay.
+
     """
     new_activity_name = ''
+    user_activities_path = get_user_activities_path()
 
     info_old = open(os.path.join(user_activities_path, new_basename,
                                  'activity', 'activity.info'), 'r')
@@ -132,17 +138,19 @@ def customize_activity_info(nick, user_activities_path, new_basename):
               os.path.join(user_activities_path, new_basename,
                            'activity', 'activity.info'))
 
-    _create_custom_icon(user_activities_path, new_basename, icon_name)
+    _create_custom_icon(new_basename, icon_name)
 
     return new_activity_name
 
 
-def _create_custom_icon(user_activities_path, new_basename, icon_name):
-    """ Modify activity icon by overlaying a badge:
+def _create_custom_icon(new_basename, icon_name):
+    """Modify activity icon by overlaying a badge:
     (1) Extract the payload from the badge icon;
     (2) Add a transform to resize it and position it;
-    (3) Insert it into the activity icon. """
+    (3) Insert it into the activity icon.
 
+    """
+    user_activities_path = get_user_activities_path()
     badge_path = None
     for path in gtk.icon_theme_get_default().get_search_path():
         if os.path.exists(os.path.join(path, 'sugar', 'scalable',
@@ -184,7 +192,7 @@ def _create_custom_icon(user_activities_path, new_basename, icon_name):
 
 
 def _extract_svg_payload(fd):
-    """ Returns everything between <svg ...> and </svg> """
+    """Returns everything between <svg ...> and </svg>"""
     payload = ''
     looking_for_start_svg_token = True
     looking_for_close_token = True

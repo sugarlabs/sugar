@@ -39,9 +39,8 @@ from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
 from sugar.env import get_user_activities_path
 from sugar import mime
-from jarabe.view.customizebundle import customize_activity_info, \
-    generate_bundle, generate_unique_id
 
+from jarabe.view import customizebundle
 
 _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
                        '.xo', '.tar', '.bz2', '.zip', '.gz')
@@ -290,11 +289,9 @@ class DocumentButton(RadioToolButton):
         menu_item.show()
 
     def __copy_to_home_cb(self, menu_item):
-        """ Make a local copy of the activity bundle in
-        user_activities_path """
-
+        """Make a local copy of the activity bundle in user_activities_path"""
         user_activities_path = get_user_activities_path()
-        nick = generate_unique_id()
+        nick = customizebundle.generate_unique_id()
         new_basename = '%s_copy_of_%s' % (
             nick, os.path.basename(self._document_path))
         if not os.path.exists(os.path.join(user_activities_path,
@@ -302,10 +299,7 @@ class DocumentButton(RadioToolButton):
             shutil.copytree(self._document_path,
                             os.path.join(user_activities_path, new_basename),
                             symlinks=True)
-            new_activity_name = customize_activity_info(
-                nick, user_activities_path, new_basename)
-            generate_bundle(new_activity_name, user_activities_path,
-                            new_basename)
+            customizebundle.generate_bundle(nick, new_basename)
         else:
             _logger.debug('%s already exists', new_basename)
 
