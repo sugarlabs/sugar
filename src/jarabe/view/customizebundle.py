@@ -122,7 +122,7 @@ def _customize_activity_info(nick, new_basename):
             new_value = value
             icon_name = value
         elif name == 'name':
-            new_value = '%s copy of %s' % (nick, value)
+            new_value = '%s_copy_of_%s' % (nick, value)
             new_activity_name = new_value
         else:
             info_new.write(line)
