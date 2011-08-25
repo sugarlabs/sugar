@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-11 00:32-0500\n"
-"PO-Revision-Date: 2011-07-31 21:17+0200\n"
+"PO-Revision-Date: 2011-08-24 18:11+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -615,14 +615,12 @@ msgid "Favorites resume mode"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:13
-#, fuzzy
 msgid "Font face that is used throughout the desktop."
-msgstr "Хэрэглэгчийн нэр олон байдалд ашиглаж байдаг."
+msgstr "Их ашигладаг фонт."
 
 #: ../data/sugar.schemas.in.h:14
-#, fuzzy
 msgid "Font size that is used throughout the desktop."
-msgstr "Хэрэглэгчийн нэр олон байдалд ашиглаж байдаг."
+msgstr "Фонтийн хэмжээ."
 
 #: ../data/sugar.schemas.in.h:15
 msgid ""
@@ -952,9 +950,8 @@ msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:492
 #, python-format
-#, fuzzy
 msgid "Mesh Network %d"
-msgstr "Тархалтын сүлжээ"
+msgstr "Тархалтын сүлжээ %d"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -986,17 +983,17 @@ msgstr "Үл зөвшөөрөх"
 #: ../src/jarabe/frame/activitiestray.py:624
 #, python-format
 msgid "%dB"
-msgstr "%dB"
+msgstr "%d Байт"
 
 #: ../src/jarabe/frame/activitiestray.py:626
 #, python-format
 msgid "%dKB"
-msgstr "%dKB"
+msgstr "%d КБайт"
 
 #: ../src/jarabe/frame/activitiestray.py:628
 #, python-format
 msgid "%dMB"
-msgstr "%dMB"
+msgstr "%d МБайт"
 
 #: ../src/jarabe/frame/activitiestray.py:645
 #, python-format
