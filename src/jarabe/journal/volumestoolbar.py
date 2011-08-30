@@ -232,7 +232,8 @@ class VolumesToolbar(gtk.Toolbar):
             button.connect('toggled', self._button_toggled_cb)
             button.show()
 
-            self.insert(button, -1)
+            position = self.get_item_index(self._volume_buttons[-1]) + 1
+            self.insert(button, position)
             self._volume_buttons.append(button)
             self.show()
 
