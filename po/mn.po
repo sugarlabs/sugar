@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-11 00:32-0500\n"
-"PO-Revision-Date: 2011-08-24 18:11+0200\n"
+"PO-Revision-Date: 2011-09-02 13:25+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -1101,7 +1101,7 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "Хэмжээ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:286 ../src/jarabe/journal/misc.py:93
 msgid "No date"
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:91
 msgid "Send to"
-msgstr ""
+msgstr "Илгээх"
 
 #: ../src/jarabe/journal/palettes.py:100
 msgid "View Details"
@@ -1293,7 +1293,7 @@ msgstr "Зогсоох"
 
 #: ../src/jarabe/view/palettes.py:125
 msgid "Start new"
-msgstr ""
+msgstr "Шинээр эхлүүлэх"
 
 #: ../src/jarabe/view/palettes.py:174
 msgid "Show contents"
@@ -1310,7 +1310,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:233
 msgid "Source"
-msgstr ""
+msgstr "Эх үүсвэр"
 
 #: ../src/jarabe/view/viewsource.py:292
 msgid "Activity Bundle Source"
