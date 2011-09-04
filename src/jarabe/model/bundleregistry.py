@@ -360,7 +360,7 @@ class BundleRegistry(gobject.GObject):
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    NormalizedVersion(bundle.get_activity_version()) <= \
+                    NormalizedVersion(bundle.get_activity_version()) == \
                     NormalizedVersion(installed_bundle.get_activity_version()):
                 return True
         return False
