@@ -28,6 +28,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
+from sugar.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
@@ -217,7 +218,7 @@ class VolumePalette(Palette):
 
         self.connect('popup', self.__popup_cb)
 
-        menu_item = MenuItem(_('Remove'))
+        menu_item = MenuItem(pgettext('Volume', 'Remove'))
 
         icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
         menu_item.set_image(icon)

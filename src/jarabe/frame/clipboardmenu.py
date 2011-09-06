@@ -30,6 +30,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 from sugar import mime
 from sugar import env
+from sugar.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
@@ -51,7 +52,8 @@ class ClipboardMenu(Palette):
 
         self._progress_bar = None
 
-        self._remove_item = MenuItem(_('Remove'), 'list-remove')
+        self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
+                                     'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
         self.menu.append(self._remove_item)
         self._remove_item.show()
