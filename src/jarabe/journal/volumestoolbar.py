@@ -67,8 +67,9 @@ def _get_documents_path():
     try:
         pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
                                 stdout=subprocess.PIPE)
-        documents_path = pipe.communicate()[0].strip()
-        if os.path.exists(documents_path):
+        documents_path = os.path.normpath(pipe.communicate()[0].strip())
+        if os.path.exists(documents_path) and \
+                os.environ.get('HOME') != documents_path:
             return documents_path
     except OSError, exception:
         if exception.errno != errno.ENOENT:
