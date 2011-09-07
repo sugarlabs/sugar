@@ -800,9 +800,9 @@ def is_editable(metadata):
 def get_documents_path():
     """Gets the path of the DOCUMENTS folder
 
-    If xdg-user-dir can not find the DOCUMENTS folder it will
-    return the user directory instead. It also handles
-    localization (i.e. translation) of the filenames.
+    If xdg-user-dir can not find the DOCUMENTS folder it returns
+    $HOME, which we omit. xdg-user-dir handles localization
+    (i.e. translation) of the filenames.
 
     Returns: Path to $HOME/DOCUMENTS or None if an error occurs
     """
