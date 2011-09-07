@@ -16,8 +16,6 @@
 
 import logging
 import os
-import subprocess
-import errno
 import statvfs
 from gettext import gettext as _
 
@@ -53,28 +51,6 @@ def _get_id(document):
         return term[1:]
     except StopIteration:
         return None
-
-
-def _get_documents_path():
-    """Gets the path of the DOCUMENTS folder
-
-    If xdg-user-dir can not find the DOCUMENTS folder it will
-    return the user directory instead. It also handles
-    localization (i.e. translation) of the filenames.
-
-    Returns: Path to $HOME/DOCUMENTS or None if an error occurs
-    """
-    try:
-        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
-                                stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(pipe.communicate()[0].strip())
-        if os.path.exists(documents_path) and \
-                os.environ.get('HOME') != documents_path:
-            return documents_path
-    except OSError, exception:
-        if exception.errno != errno.ENOENT:
-            logging.exception('Could not run xdg-user-dir')
-    return None
 
 
 def _convert_entries(root):
@@ -225,7 +201,7 @@ class VolumesToolbar(gtk.Toolbar):
             self._add_button(mount)
 
     def _set_up_documents_button(self):
-        documents_path = _get_documents_path()
+        documents_path = model.get_documents_path()
         if documents_path is not None:
             button = DocumentsButton(documents_path)
             button.props.group = self._volume_buttons[0]

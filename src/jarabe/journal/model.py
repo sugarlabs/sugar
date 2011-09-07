@@ -17,6 +17,7 @@
 import logging
 import os
 import errno
+import subprocess
 from datetime import datetime
 import time
 import shutil
@@ -794,3 +795,25 @@ def is_editable(metadata):
         return True
     else:
         return os.access(metadata['mountpoint'], os.W_OK)
+
+
+def get_documents_path():
+    """Gets the path of the DOCUMENTS folder
+
+    If xdg-user-dir can not find the DOCUMENTS folder it will
+    return the user directory instead. It also handles
+    localization (i.e. translation) of the filenames.
+
+    Returns: Path to $HOME/DOCUMENTS or None if an error occurs
+    """
+    try:
+        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
+                                stdout=subprocess.PIPE)
+        documents_path = os.path.normpath(pipe.communicate()[0].strip())
+        if os.path.exists(documents_path) and \
+                os.environ.get('HOME') != documents_path:
+            return documents_path
+    except OSError, exception:
+        if exception.errno != errno.ENOENT:
+            logging.exception('Could not run xdg-user-dir')
+    return None

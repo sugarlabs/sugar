@@ -37,9 +37,6 @@ from jarabe.journal import misc
 
 UPDATE_INTERVAL = 300
 
-MESSAGE_EMPTY_JOURNAL = 0
-MESSAGE_NO_MATCH = 1
-
 
 class TreeView(gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
@@ -315,9 +312,16 @@ class BaseListView(gtk.Bin):
 
         if len(tree_model) == 0:
             if self._is_query_empty():
-                self._show_message(MESSAGE_EMPTY_JOURNAL)
+                if self._query['mountpoints'] == ['/']:
+                    self._show_message(_('Your Journal is empty'))
+                elif self._query['mountpoints'] == \
+                        [model.get_documents_path()]:
+                    self._show_message(_('Your documents folder is empty'))
+                else:
+                    self._show_message(_('The device is empty'))
             else:
-                self._show_message(MESSAGE_NO_MATCH)
+                self._show_message(_('No matching entries'),
+                                   show_clear_query=True)
         else:
             self._clear_message()
 
@@ -364,7 +368,7 @@ class BaseListView(gtk.Bin):
         self.add(self._scrolled_window)
         self._progress_bar = None
 
-    def _show_message(self, message):
+    def _show_message(self, message, show_clear_query=False):
         canvas = hippo.Canvas()
         self.remove(self.child)
         self.add(canvas)
@@ -383,20 +387,13 @@ class BaseListView(gtk.Bin):
                           fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.append(icon)
 
-        if message == MESSAGE_EMPTY_JOURNAL:
-            text = _('Your Journal is empty')
-        elif message == MESSAGE_NO_MATCH:
-            text = _('No matching entries')
-        else:
-            raise ValueError('Invalid message')
-
-        text = hippo.CanvasText(text=text,
+        text = hippo.CanvasText(text=message,
                 xalign=hippo.ALIGNMENT_CENTER,
                 font_desc=style.FONT_BOLD.get_pango_desc(),
                 color=style.COLOR_BUTTON_GREY.get_int())
         box.append(text)
 
-        if message == MESSAGE_NO_MATCH:
+        if show_clear_query:
             button = gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
