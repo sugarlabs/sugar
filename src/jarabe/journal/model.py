@@ -36,7 +36,6 @@ import gconf
 from sugar import dispatch
 from sugar import mime
 from sugar import util
-from sugar.graphics.xocolor import XoColor
 
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
