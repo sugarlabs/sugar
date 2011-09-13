@@ -48,8 +48,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-07 00:31-0400\n"
-"PO-Revision-Date: 2011-09-13 22:50+0200\n"
+"POT-Creation-Date: 2011-09-08 00:31-0400\n"
+"PO-Revision-Date: 2011-09-13 22:52+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -1015,7 +1015,7 @@ msgstr "Um die Änderungen zu übernehmen, muss Sugar neu gestartet werden.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:160
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:328
+#: ../src/jarabe/journal/volumestoolbar.py:305
 msgid "Warning"
 msgstr "Warnung"
 
@@ -1329,7 +1329,7 @@ msgstr "Vor"
 
 #: ../src/jarabe/journal/expandedentry.py:155
 #: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:63
-#: ../src/jarabe/journal/volumestoolbar.py:152
+#: ../src/jarabe/journal/volumestoolbar.py:129
 msgid "Untitled"
 msgstr "Ohne Titel"
 
@@ -1378,7 +1378,7 @@ msgstr "Stichwörter:"
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:453
 #: ../src/jarabe/journal/palettes.py:197
-#: ../src/jarabe/journal/volumestoolbar.py:389
+#: ../src/jarabe/journal/volumestoolbar.py:366
 msgid "Journal"
 msgstr "Tagebuch"
 
@@ -1445,14 +1445,14 @@ msgstr "Duplizieren"
 
 #: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:140 ../src/jarabe/journal/palettes.py:253
-#: ../src/jarabe/journal/volumestoolbar.py:336
+#: ../src/jarabe/journal/volumestoolbar.py:313
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Fehler beim Kopieren des Eintrags. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:423
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:337
+#: ../src/jarabe/journal/volumestoolbar.py:314
 msgid "Error"
 msgstr "Fehler"
 
@@ -1479,15 +1479,23 @@ msgstr "Nach Größe sortieren"
 msgid "Sort view"
 msgstr "Ansicht sortieren"
 
-#: ../src/jarabe/journal/listview.py:387
+#: ../src/jarabe/journal/listview.py:316
 msgid "Your Journal is empty"
 msgstr "Dein Tagebuch ist leer."
 
-#: ../src/jarabe/journal/listview.py:389
+#: ../src/jarabe/journal/listview.py:319
+msgid "Your documents folder is empty"
+msgstr "Dein Dokumentenverzeichnis ist leer."
+
+#: ../src/jarabe/journal/listview.py:321
+msgid "The device is empty"
+msgstr "Das Laufwerk ist leer."
+
+#: ../src/jarabe/journal/listview.py:323
 msgid "No matching entries"
 msgstr "Keine passenden Einträge"
 
-#: ../src/jarabe/journal/listview.py:400
+#: ../src/jarabe/journal/listview.py:397
 msgid "Clear search"
 msgstr "Suchfeld leeren"
 
@@ -1548,7 +1556,7 @@ msgid "Entries without a file cannot be sent."
 msgstr "Einträge ohne eine Datei lassen sich nicht senden."
 
 #: ../src/jarabe/journal/palettes.py:244 ../src/jarabe/journal/palettes.py:277
-#: ../src/jarabe/journal/volumestoolbar.py:327
+#: ../src/jarabe/journal/volumestoolbar.py:304
 msgid "Entries without a file cannot be copied."
 msgstr "Einträge ohne eine Datei lassen sich nicht kopieren."
 
@@ -1568,11 +1576,11 @@ msgstr "Keine gültige Verbindung gefunden"
 msgid "No activity to resume entry"
 msgstr "Keine Aktivität, um den Eintrag fortzusetzen"
 
-#: ../src/jarabe/journal/volumestoolbar.py:231
+#: ../src/jarabe/journal/volumestoolbar.py:208
 msgid "Documents"
 msgstr "Dokumente"
 
-#: ../src/jarabe/journal/volumestoolbar.py:412
+#: ../src/jarabe/journal/volumestoolbar.py:389
 #: ../src/jarabe/view/palettes.py:195 ../src/jarabe/view/palettes.py:246
 #, python-format
 msgid "%(free_space)d MB Free"
