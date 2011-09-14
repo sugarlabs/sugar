@@ -562,8 +562,10 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
-        self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        client = gconf.client_get_default()
+        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
+        self.props.prelit_fill_color = prelit_color.get_fill_color()
 
 
 class CellRendererDetail(CellRendererIcon):
