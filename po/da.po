@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-24 00:31-0400\n"
-"PO-Revision-Date: 2011-08-25 02:43+0200\n"
+"POT-Creation-Date: 2011-09-07 00:31-0400\n"
+"PO-Revision-Date: 2011-09-09 18:43+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
@@ -430,7 +430,7 @@ msgstr "Mit batteri"
 
 #: ../extensions/deviceicon/battery.py:146
 msgid "Removed"
-msgstr "Fjernet"
+msgstr "Ikke isat"
 
 #: ../extensions/deviceicon/battery.py:149
 msgid "Charging"
@@ -956,7 +956,7 @@ msgstr "For at dine ændringer træder i kraft skal du genstarte sukker.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:160
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:327
+#: ../src/jarabe/journal/volumestoolbar.py:328
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -1001,8 +1001,8 @@ msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Bekræft sletning: Vil du virkeligt permanent slette %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:360
-#: ../src/jarabe/frame/clipboardmenu.py:64
-#: ../src/jarabe/view/viewsource.py:270
+#: ../src/jarabe/frame/clipboardmenu.py:66
+#: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "Behold"
 
@@ -1121,7 +1121,7 @@ msgstr "Trådløs sikkerhed:"
 #: ../src/jarabe/desktop/meshbox.py:91
 #: ../src/jarabe/frame/activitiestray.py:628
 #: ../src/jarabe/journal/journaltoolbox.py:494
-#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/view/palettes.py:78
+#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/view/palettes.py:79
 msgid "Resume"
 msgstr "Genoptag"
 
@@ -1200,16 +1200,17 @@ msgstr "Afvis"
 msgid "Transfer to %s"
 msgstr "Overfør til %s"
 
-#: ../src/jarabe/frame/clipboardmenu.py:54 ../src/jarabe/view/palettes.py:220
+#: ../src/jarabe/frame/clipboardmenu.py:55
+msgctxt "Clipboard"
 msgid "Remove"
 msgstr "Fjern"
 
-#: ../src/jarabe/frame/clipboardmenu.py:59
-#: ../src/jarabe/frame/clipboardmenu.py:82
+#: ../src/jarabe/frame/clipboardmenu.py:61
+#: ../src/jarabe/frame/clipboardmenu.py:84
 msgid "Open"
 msgstr "Åbn"
 
-#: ../src/jarabe/frame/clipboardmenu.py:87
+#: ../src/jarabe/frame/clipboardmenu.py:89
 msgid "Open with"
 msgstr "Åbn med"
 
@@ -1305,7 +1306,7 @@ msgstr "Mærkater:"
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:453
 #: ../src/jarabe/journal/palettes.py:197
-#: ../src/jarabe/journal/volumestoolbar.py:388
+#: ../src/jarabe/journal/volumestoolbar.py:389
 msgid "Journal"
 msgstr "Logbog"
 
@@ -1362,20 +1363,20 @@ msgid "Copy to"
 msgstr "Kopier til"
 
 #: ../src/jarabe/journal/journaltoolbox.py:389
-#: ../src/jarabe/journal/palettes.py:103
+#: ../src/jarabe/journal/palettes.py:103 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "Duplikér"
 
 #: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:140 ../src/jarabe/journal/palettes.py:253
-#: ../src/jarabe/journal/volumestoolbar.py:335
+#: ../src/jarabe/journal/volumestoolbar.py:336
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Fejl under kopiering af posten. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:423
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:336
+#: ../src/jarabe/journal/volumestoolbar.py:337
 msgid "Error"
 msgstr "Fejl"
 
@@ -1440,7 +1441,7 @@ msgid "Choose an object"
 msgstr "Vælg et objekt"
 
 #: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:382
+#: ../src/jarabe/view/viewsource.py:410
 msgid "Close"
 msgstr "Luk"
 
@@ -1469,7 +1470,7 @@ msgid "Entries without a file cannot be sent."
 msgstr "Poster uden en fil kan ikke sendes."
 
 #: ../src/jarabe/journal/palettes.py:244 ../src/jarabe/journal/palettes.py:277
-#: ../src/jarabe/journal/volumestoolbar.py:326
+#: ../src/jarabe/journal/volumestoolbar.py:327
 msgid "Entries without a file cannot be copied."
 msgstr "Poster uden en fil kan ikke kopieres."
 
@@ -1493,8 +1494,8 @@ msgstr "Ingen aktivitet for genoptagelsespost"
 msgid "Documents"
 msgstr "Dokumenter"
 
-#: ../src/jarabe/journal/volumestoolbar.py:411
-#: ../src/jarabe/view/palettes.py:194 ../src/jarabe/view/palettes.py:245
+#: ../src/jarabe/journal/volumestoolbar.py:412
+#: ../src/jarabe/view/palettes.py:195 ../src/jarabe/view/palettes.py:246
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ledig"
@@ -1703,48 +1704,53 @@ msgstr "Invitér til %s"
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> mislykkede med at starte."
 
-#: ../src/jarabe/view/palettes.py:46
+#: ../src/jarabe/view/palettes.py:47
 msgid "Starting..."
 msgstr "Starter..."
 
-#: ../src/jarabe/view/palettes.py:56
+#: ../src/jarabe/view/palettes.py:57
 msgid "Activity failed to start"
 msgstr "Aktivitet mislykkede med at starte"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:85
+#: ../src/jarabe/view/palettes.py:86
 msgid "View Source"
 msgstr "Vis kilde"
 
-#: ../src/jarabe/view/palettes.py:96
+#: ../src/jarabe/view/palettes.py:97
 msgid "Stop"
 msgstr "Stop"
 
-#: ../src/jarabe/view/palettes.py:132
+#: ../src/jarabe/view/palettes.py:133
 msgid "Start new"
 msgstr "Start ny"
 
-#: ../src/jarabe/view/palettes.py:172
+#: ../src/jarabe/view/palettes.py:173
 msgid "Show contents"
 msgstr "Vis indhold"
 
-#: ../src/jarabe/view/viewsource.py:260
+#: ../src/jarabe/view/palettes.py:221
+msgctxt "Volume"
+msgid "Remove"
+msgstr "Fjern"
+
+#: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
 msgstr "Instans-kilde"
 
-#: ../src/jarabe/view/viewsource.py:285
+#: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
 msgstr "Kilde"
 
-#: ../src/jarabe/view/viewsource.py:346
+#: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
 msgstr "Kilde for aktivitetsbundt"
 
-#: ../src/jarabe/view/viewsource.py:365
+#: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
 msgstr "Sugar Værktøjssæt Kilde"
 
-#: ../src/jarabe/view/viewsource.py:372 ../src/jarabe/view/viewsource.py:373
+#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "Vis kilde: %r"
