@@ -32,7 +32,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon, get_icon_file_name
-from sugar.graphics.palette import Palette, WidgetInvoker
+from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.datastore import datastore
 from sugar import mime
@@ -101,6 +101,11 @@ class ActivityButton(RadioToolButton):
 
 class InviteButton(ToolButton):
     """Invite to shared activity"""
+
+    __gsignals__ = {
+        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
+
     def __init__(self, invite):
         ToolButton.__init__(self)
 
@@ -124,6 +129,7 @@ class InviteButton(ToolButton):
         palette = InvitePalette(invite)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
+        palette.connect('remove-invite', self.__remove_invite_cb)
         self.set_palette(palette)
 
         self._notif_icon = NotificationIcon()
@@ -136,35 +142,36 @@ class InviteButton(ToolButton):
         else:
             self._notif_icon.props.icon_name = 'image-missing'
 
-        palette = InvitePalette(invite)
-        palette.props.invoker = WidgetInvoker(self._notif_icon)
-        palette.set_group_id('frame')
-        self._notif_icon.palette = palette
-
         frame = jarabe.frame.get_view()
         frame.add_notification(self._notif_icon, gtk.CORNER_TOP_LEFT)
 
     def __button_release_event_cb(self, icon, event):
-        self.emit('clicked')
-
-    def __clicked_cb(self, button):
         if self._notif_icon is not None:
             frame = jarabe.frame.get_view()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
-            self._launch()
+            self._invite.join()
+            self.emit('remove-invite')
+
+    def __clicked_cb(self, button):
+        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+    def __remove_invite_cb(self, palette):
+        self.emit('remove-invite')
 
     def __destroy_cb(self, button):
-        frame = jarabe.frame.get_view()
-        frame.remove_notification(self._notif_icon)
-
-    def _launch(self):
-        """Join the activity in the invite."""
-        self._invite.join()
+        if self._notif_icon is not None:
+            frame = jarabe.frame.get_view()
+            frame.remove_notification(self._notif_icon)
+            self._notif_icon = None
 
 
 class InvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
+
+    __gsignals__ = {
+        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
 
     def __init__(self, invite):
         Palette.__init__(self, '')
@@ -192,11 +199,10 @@ class InvitePalette(Palette):
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
+        self.emit('remove-invite')
 
     def __decline_activate_cb(self, menu_item):
-        invites_model = invites.get_instance()
-        activity_id = self._activity_model.get_id()
-        invites_model.remove_activity(activity_id)
+        self.emit('remove-invite')
 
 
 class ActivitiesTray(HTray):
@@ -279,7 +285,7 @@ class ActivitiesTray(HTray):
             if window:
                 window.activate(gtk.get_current_event_time())
 
-    def __invite_clicked_cb(self, icon, invite):
+    def __remove_invite_cb(self, icon, invite):
         self._invites.remove_invite(invite)
 
     def __invite_added_cb(self, invites_model, invite):
@@ -291,10 +297,9 @@ class ActivitiesTray(HTray):
     def _add_invite(self, invite):
         """Add an invite"""
         item = InviteButton(invite)
-        item.connect('clicked', self.__invite_clicked_cb, invite)
+        item.connect('remove-invite', self.__remove_invite_cb, invite)
         self.add_item(item)
         item.show()
-
         self._invite_to_item[invite] = item
 
     def _remove_invite(self, invite):
