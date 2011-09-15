@@ -301,12 +301,7 @@ def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
                                   dev_caps, settings, response)
 
     key_dialog.connect('response', _key_dialog_response_cb)
-    key_dialog.connect('destroy', _key_dialog_destroy_cb)
     key_dialog.show_all()
-
-
-def _key_dialog_destroy_cb(key_dialog, data=None):
-    _key_dialog_response_cb(key_dialog, gtk.RESPONSE_CANCEL)
 
 
 def _key_dialog_response_cb(key_dialog, response_id):
@@ -315,7 +310,8 @@ def _key_dialog_response_cb(key_dialog, response_id):
     if response_id == gtk.RESPONSE_OK:
         secrets = key_dialog.create_security()
 
-    if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE]:
+    if response_id in [gtk.RESPONSE_CANCEL, gtk.RESPONSE_NONE,
+                       gtk.RESPONSE_DELETE_EVENT]:
         # key dialog dialog was canceled; send the error back to NM
         response.set_error(CanceledKeyRequestError())
     elif response_id == gtk.RESPONSE_OK:
