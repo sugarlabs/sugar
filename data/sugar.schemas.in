@@ -280,8 +280,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network username</short>
-        <long>GSM network username configuration</long>
+        <short>GSM network username (DEPRECATED/UNUSED)</short>
+        <long>GSM network username configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -291,8 +291,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network password</short>
-        <long>GSM network password configuration</long>
+        <short>GSM network password (DEPRECATED/UNUSED)</short>
+        <long>GSM network password configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -302,8 +302,8 @@
       <type>string</type>
       <default>*99#</default>
       <locale name="C">
-        <short>GSM network number</short>
-        <long>GSM network telephone number configuration</long>
+        <short>GSM network number (DEPRECATED/UNUSED)</short>
+        <long>GSM network telephone number configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -313,8 +313,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network APN</short>
-        <long>GSM network access point name configuration</long>
+        <short>GSM network APN (DEPRECATED/UNUSED)</short>
+        <long>GSM network access point name configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -324,8 +324,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network PIN</short>
-        <long>GSM network personal identification number configuration</long>
+        <short>GSM network PIN (DEPRECATED/UNUSED)</short>
+        <long>GSM network personal identification number configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -335,8 +335,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network PUK</short>
-        <long>GSM network personal unlock key configuration</long>
+        <short>GSM network PUK (DEPRECATED/UNUSED)</short>
+        <long>GSM network personal unlock key configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
 

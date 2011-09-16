@@ -48,17 +48,6 @@ from jarabe.view.pulsingicon import PulsingIcon
 
 IP_ADDRESS_TEXT_TEMPLATE = _('IP address: %s')
 
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_WIRED_IFACE = 'org.freedesktop.NetworkManager.Device.Wired'
-_NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
-_NM_SERIAL_IFACE = 'org.freedesktop.NetworkManager.Device.Serial'
-_NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
-_NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
-
 _GSM_STATE_NOT_READY = 0
 _GSM_STATE_DISCONNECTED = 1
 _GSM_STATE_CONNECTING = 2
@@ -413,24 +402,24 @@ class WirelessDeviceView(ToolButton):
 
         self._device_props = dbus.Interface(self._device,
                                             dbus.PROPERTIES_IFACE)
-        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        self._device_props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                               reply_handler=self.__get_device_props_reply_cb,
                               error_handler=self.__get_device_props_error_cb)
 
-        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+        self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
                                error_handler=self.__get_active_ap_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -447,22 +436,22 @@ class WirelessDeviceView(ToolButton):
                     self.__ap_properties_changed_cb,
                     signal_name='PropertiesChanged',
                     path=self._active_ap_op,
-                    dbus_interface=_NM_ACCESSPOINT_IFACE)
+                    dbus_interface=network.NM_ACCESSPOINT_IFACE)
             if active_ap_op == '/':
                 self._active_ap_op = None
                 return
             self._active_ap_op = active_ap_op
-            active_ap = self._bus.get_object(_NM_SERVICE, active_ap_op)
+            active_ap = self._bus.get_object(network.NM_SERVICE, active_ap_op)
             props = dbus.Interface(active_ap, dbus.PROPERTIES_IFACE)
 
-            props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
+            props.GetAll(network.NM_ACCESSPOINT_IFACE, byte_arrays=True,
                          reply_handler=self.__get_all_ap_props_reply_cb,
                          error_handler=self.__get_all_ap_props_error_cb)
 
             self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                           signal_name='PropertiesChanged',
                                           path=self._active_ap_op,
-                                          dbus_interface=_NM_ACCESSPOINT_IFACE)
+                                          dbus_interface=network.NM_ACCESSPOINT_IFACE)
 
     def __get_active_ap_error_cb(self, err):
         logging.error('Error getting the active access point: %s', err)
@@ -470,7 +459,7 @@ class WirelessDeviceView(ToolButton):
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
-        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+        self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
                                error_handler=self.__get_active_ap_error_cb)
 
@@ -528,11 +517,11 @@ class WirelessDeviceView(ToolButton):
         if self._active_ap_op is not None:
             state = self._device_state
         else:
-            state = network.DEVICE_STATE_UNKNOWN
+            state = network.NM_DEVICE_STATE_UNKNOWN
 
         if self._mode != network.NM_802_11_MODE_ADHOC and \
                 network.is_sugar_adhoc_network(self._name) == False:
-            if state == network.DEVICE_STATE_ACTIVATED:
+            if state == network.NM_DEVICE_STATE_ACTIVATED:
                 icon_name = '%s-connected' % 'network-wireless'
             else:
                 icon_name = 'network-wireless'
@@ -542,21 +531,19 @@ class WirelessDeviceView(ToolButton):
                 self._icon.props.icon_name = icon_name
         else:
             channel = network.frequency_to_channel(self._frequency)
-            if state == network.DEVICE_STATE_ACTIVATED:
+            if state == network.NM_DEVICE_STATE_ACTIVATED:
                 self._icon.props.icon_name = 'network-adhoc-%s-connected' \
                         % channel
             else:
                 self._icon.props.icon_name = 'network-adhoc-%s' % channel
             self._icon.props.base_color = profile.get_color()
 
-        if state == network.DEVICE_STATE_PREPARE or \
-           state == network.DEVICE_STATE_CONFIG or \
-           state == network.DEVICE_STATE_NEED_AUTH or \
-           state == network.DEVICE_STATE_IP_CONFIG:
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             self._palette.set_connecting()
             self._icon.props.pulsing = True
-        elif state == network.DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
+        elif state == network.NM_DEVICE_STATE_ACTIVATED:
+            address = self._device_props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected_with_frequency(self._frequency,
                                                        address)
             self._icon.props.pulsing = False
@@ -571,11 +558,6 @@ class WirelessDeviceView(ToolButton):
         self._icon.props.base_color = self._color
 
     def __deactivate_connection_cb(self, palette, data=None):
-        if self._mode == network.NM_802_11_MODE_INFRA:
-            connection = network.find_connection_by_ssid(self._name)
-            if connection:
-                connection.disable_autoconnect()
-
         network.disconnect_access_points([self._active_ap_op])
 
     def __activate_reply_cb(self, connection):
@@ -620,20 +602,20 @@ class OlpcMeshDeviceView(ToolButton):
 
         self._device_props = dbus.Interface(self._device,
                                             dbus.PROPERTIES_IFACE)
-        self._device_props.Get(_NM_OLPC_MESH_IFACE, 'ActiveChannel',
+        self._device_props.Get(network.NM_OLPC_MESH_IFACE, 'ActiveChannel',
                             reply_handler=self.__get_active_channel_reply_cb,
                             error_handler=self.__get_active_channel_error_cb)
 
         self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
                                       signal_name='PropertiesChanged',
                                       path=device.object_path,
-                                      dbus_interface=_NM_OLPC_MESH_IFACE)
+                                      dbus_interface=network.NM_OLPC_MESH_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_OLPC_MESH_IFACE)
+                                         dbus_interface=network.NM_OLPC_MESH_IFACE)
 
     def __get_active_channel_reply_cb(self, channel):
         self._channel = channel
@@ -659,16 +641,14 @@ class OlpcMeshDeviceView(ToolButton):
     def _update(self):
         state = self._device_state
 
-        if state in [network.DEVICE_STATE_PREPARE,
-                     network.DEVICE_STATE_CONFIG,
-                     network.DEVICE_STATE_NEED_AUTH,
-                     network.DEVICE_STATE_IP_CONFIG]:
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             self._icon.props.base_color = self._inactive_color
             self._icon.props.pulse_color = profile.get_color()
             self._palette.set_connecting()
             self._icon.props.pulsing = True
-        elif state == network.DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
+        elif state == network.NM_DEVICE_STATE_ACTIVATED:
+            address = self._device_props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected_with_channel(self._channel, address)
             self._icon.props.base_color = profile.get_color()
             self._icon.props.pulsing = False
@@ -679,23 +659,23 @@ class OlpcMeshDeviceView(ToolButton):
         self._update()
 
     def __deactivate_connection(self, palette, data=None):
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
+        obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+        netmgr = dbus.Interface(obj, network.NM_IFACE)
         netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
-        active_connections_o = netmgr_props.Get(_NM_IFACE,
+        active_connections_o = netmgr_props.Get(network.NM_IFACE,
                                                 'ActiveConnections')
 
         for conn_o in active_connections_o:
             # The connection path for a mesh connection is the device itself.
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-            ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+            ap_op = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
 
             try:
-                obj = self._bus.get_object(_NM_IFACE, ap_op)
+                obj = self._bus.get_object(network.NM_IFACE, ap_op)
                 props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-                device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-                if device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+                device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+                if device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
                     netmgr.DeactivateConnection(conn_o)
                     break
             except dbus.exceptions.DBusException:
@@ -742,11 +722,11 @@ class GsmDeviceView(TrayIcon):
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
         self._bus.add_signal_receiver(self.__ppp_stats_changed_cb,
                                       signal_name='PppStats',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_SERIAL_IFACE)
+                                      dbus_interface=network.NM_MODEM_IFACE)
 
     def create_palette(self):
         palette = GsmPalette()
@@ -758,7 +738,7 @@ class GsmDeviceView(TrayIcon):
         self._palette = palette
 
         props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__current_state_check_cb,
                      error_handler=self.__current_state_check_error_cb)
 
@@ -767,14 +747,9 @@ class GsmDeviceView(TrayIcon):
     def __gsm_connect_cb(self, palette, data=None):
         connection = network.find_gsm_connection()
         if connection is not None:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            netmgr = dbus.Interface(obj, _NM_IFACE)
-            netmgr.ActivateConnection(network.SETTINGS_SERVICE,
-                                        connection.path,
-                                        self._device.object_path,
-                                        '/',
-                                        reply_handler=self.__connect_cb,
-                                        error_handler=self.__connect_error_cb)
+            connection.activate(self._device.object_path,
+                                reply_handler=self.__connect_cb,
+                                error_handler=self.__connect_error_cb)
         else:
             self._palette.add_alert(_('No GSM connection available.'), \
                                         _('Create a connection in the ' \
@@ -788,15 +763,15 @@ class GsmDeviceView(TrayIcon):
         raise RuntimeError('Error when connecting to gsm device, %s' % error)
 
     def __gsm_disconnect_cb(self, palette, data=None):
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
+        obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+        netmgr = dbus.Interface(obj, network.NM_IFACE)
         netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
-        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-            devices = props.Get(_NM_ACTIVE_CONN_IFACE, 'Devices')
+            devices = props.Get(network.NM_ACTIVE_CONN_IFACE, 'Devices')
             if self._device.object_path in devices:
                 netmgr.DeactivateConnection(
                         conn_o,
@@ -824,13 +799,12 @@ class GsmDeviceView(TrayIcon):
     def _update_state(self, state, old_state, reason):
         gsm_state = None
 
-        if state is network.DEVICE_STATE_ACTIVATED:
+        if state is network.NM_DEVICE_STATE_ACTIVATED:
             gsm_state = _GSM_STATE_CONNECTED
             connection = network.find_gsm_connection()
             if connection is not None:
-                connection.set_connected()
                 self._connection_timestamp = time.time() - \
-                        connection.get_settings().connection.timestamp
+                        connection.get_settings('connection')['timestamp']
                 self._connection_time_handler = gobject.timeout_add_seconds( \
                         1, self.__connection_timecount_cb)
                 self._palette.update_connection_time()
@@ -838,7 +812,7 @@ class GsmDeviceView(TrayIcon):
                 if self._palette is not None:
                     self._palette.connection_info_box.show()
 
-        elif state is network.DEVICE_STATE_DISCONNECTED:
+        elif state is network.NM_DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
@@ -846,18 +820,16 @@ class GsmDeviceView(TrayIcon):
             if self._palette is not None:
                 self._palette.connection_info_box.hide()
 
-        elif state in [network.DEVICE_STATE_UNMANAGED,
-                       network.DEVICE_STATE_UNAVAILABLE,
-                       network.DEVICE_STATE_UNKNOWN]:
+        elif state in [network.NM_DEVICE_STATE_UNMANAGED,
+                       network.NM_DEVICE_STATE_UNAVAILABLE,
+                       network.NM_DEVICE_STATE_UNKNOWN]:
             gsm_state = _GSM_STATE_NOT_READY
 
-        elif state in [network.DEVICE_STATE_PREPARE,
-                       network.DEVICE_STATE_CONFIG,
-                       network.DEVICE_STATE_IP_CONFIG,
-                       network.DEVICE_STATE_NEED_AUTH]:
+        elif (state >= network.NM_DEVICE_STATE_PREPARE) and \
+             (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             gsm_state = _GSM_STATE_CONNECTING
 
-        elif state == network.DEVICE_STATE_FAILED:
+        elif state == network.NM_DEVICE_STATE_FAILED:
             gsm_state = _GSM_STATE_FAILED
 
         if self._palette is not None:
@@ -867,7 +839,7 @@ class GsmDeviceView(TrayIcon):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __ppp_stats_changed_cb(self, in_bytes, out_bytes):
         self._palette.update_stats(in_bytes, out_bytes)
@@ -903,14 +875,14 @@ class MeshDeviceObserver(object):
         self._tray = tray
 
         props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__get_device_props_reply_cb,
                      error_handler=self.__get_device_props_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def _remove_device_view(self):
         self._device_view.disconnect()
@@ -924,7 +896,7 @@ class MeshDeviceObserver(object):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -937,10 +909,8 @@ class MeshDeviceObserver(object):
         self._update_state(new_state)
 
     def _update_state(self, state):
-        if state in (network.DEVICE_STATE_PREPARE, network.DEVICE_STATE_CONFIG,
-                     network.DEVICE_STATE_NEED_AUTH,
-                     network.DEVICE_STATE_IP_CONFIG,
-                     network.DEVICE_STATE_ACTIVATED):
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_ACTIVATED):
             if self._device_view is not None:
                 self._device_view.update_state(state)
                 return
@@ -961,20 +931,20 @@ class WiredDeviceObserver(object):
         self._tray = tray
 
         props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__get_device_props_reply_cb,
                      error_handler=self.__get_device_props_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -987,10 +957,10 @@ class WiredDeviceObserver(object):
         self._update_state(new_state)
 
     def _update_state(self, state):
-        if state == network.DEVICE_STATE_ACTIVATED:
+        if state == network.NM_DEVICE_STATE_ACTIVATED:
             props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-            address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
-            speed = props.Get(_NM_WIRED_IFACE, 'Speed')
+            address = props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
+            speed = props.Get(network.NM_WIRED_IFACE, 'Speed')
             self._device_view = WiredDeviceView(speed, address)
             self._tray.add_device(self._device_view)
         else:
@@ -1023,10 +993,10 @@ class NetworkManagerObserver(object):
         self._tray = tray
 
         try:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            self._netmgr = dbus.Interface(obj, _NM_IFACE)
+            obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+            self._netmgr = dbus.Interface(obj, network.NM_IFACE)
         except dbus.DBusException:
-            logging.error('%s service not available', _NM_SERVICE)
+            logging.error('%s service not available', network.NM_SERVICE)
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -1034,10 +1004,10 @@ class NetworkManagerObserver(object):
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='DeviceRemoved',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
 
     def __get_devices_reply_cb(self, devices):
         for device_op in devices:
@@ -1047,20 +1017,20 @@ class NetworkManagerObserver(object):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_op):
-        nm_device = self._bus.get_object(_NM_SERVICE, device_op)
+        nm_device = self._bus.get_object(network.NM_SERVICE, device_op)
         props = dbus.Interface(nm_device, dbus.PROPERTIES_IFACE)
 
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_3_ETHERNET:
+        device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == network.NM_DEVICE_TYPE_ETHERNET:
             device = WiredDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+        elif device_type == network.NM_DEVICE_TYPE_WIFI:
             device = WirelessDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+        elif device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
             device = MeshDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_GSM_MODEM:
+        elif device_type == network.NM_DEVICE_TYPE_MODEM:
             device = GsmDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
 

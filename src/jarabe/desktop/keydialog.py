@@ -22,7 +22,6 @@ import gtk
 import dbus
 
 from jarabe.model import network
-from jarabe.model.network import Secrets
 
 
 IW_AUTH_ALG_OPEN_SYSTEM = 'open'
@@ -74,12 +73,10 @@ class CanceledKeyRequestError(dbus.DBusException):
 
 
 class KeyDialog(gtk.Dialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
-                 response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         gtk.Dialog.__init__(self, flags=gtk.DIALOG_MODAL)
         self.set_title('Wireless Key Required')
 
-        self._settings = settings
         self._response = response
         self._entry = None
         self._ssid = ssid
@@ -121,10 +118,9 @@ class KeyDialog(gtk.Dialog):
 
 
 class WEPKeyDialog(KeyDialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
-                 response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
-                           dev_caps, settings, response)
+                           dev_caps, response)
 
         # WEP key type
         self.key_store = gtk.ListStore(str, int)
@@ -192,10 +188,8 @@ class WEPKeyDialog(KeyDialog):
 
     def create_security(self):
         (key, auth_alg) = self._get_security()
-        secrets = Secrets(self._settings)
-        secrets.wep_key = key
-        secrets.auth_alg = auth_alg
-        return secrets
+        wsec = {'wep-key0': key, 'auth-alg': auth_alg}
+        return {'802-11-wireless-security': wsec}
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -219,10 +213,9 @@ class WEPKeyDialog(KeyDialog):
 
 
 class WPAKeyDialog(KeyDialog):
-    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, settings,
-                 response):
+    def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
-                           dev_caps, settings, response)
+                           dev_caps, response)
         self.add_key_entry()
 
         self.store = gtk.ListStore(str)
@@ -272,9 +265,8 @@ class WPAKeyDialog(KeyDialog):
         print 'Key: %s' % key
 
     def create_security(self):
-        secrets = Secrets(self._settings)
-        secrets.psk = self._get_security()
-        return secrets
+        wsec = {'psk': self._get_security()}
+        return {'802-11-wireless-security': wsec}
 
     def _update_response_sensitivity(self, ignored=None):
         key = self._entry.get_text()
@@ -291,14 +283,14 @@ class WPAKeyDialog(KeyDialog):
         return False
 
 
-def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, settings, response):
+def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
     if wpa_flags == network.NM_802_11_AP_SEC_NONE and \
             rsn_flags == network.NM_802_11_AP_SEC_NONE:
         key_dialog = WEPKeyDialog(ssid, flags, wpa_flags, rsn_flags,
-                                  dev_caps, settings, response)
+                                  dev_caps, response)
     else:
         key_dialog = WPAKeyDialog(ssid, flags, wpa_flags, rsn_flags,
-                                  dev_caps, settings, response)
+                                  dev_caps, response)
 
     key_dialog.connect('response', _key_dialog_response_cb)
     key_dialog.show_all()

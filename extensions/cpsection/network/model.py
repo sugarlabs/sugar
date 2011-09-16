@@ -15,6 +15,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
+
 import dbus
 from gettext import gettext as _
 import gconf
@@ -112,11 +114,21 @@ def clear_registration():
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    network.clear_wifi_connections()
+    try:
+        connections = network.get_connections()
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+        return
+    connections.clear()
 
 
 def have_networks():
-    return network.have_wifi_connections()
+    try:
+        connections = network.get_connections()
+        return len(connections.get_list()) > 0
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+        return False
 
 
 def get_publish_information():

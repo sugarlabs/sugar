@@ -25,14 +25,6 @@ from sugar.util import unique_id
 from jarabe.model.network import IP4Config
 
 
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
-_NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
-
 _adhoc_manager_instance = None
 
 
@@ -70,12 +62,16 @@ class AdHocManager(gobject.GObject):
         self._device = None
         self._idle_source = 0
         self._listening_called = 0
-        self._device_state = network.DEVICE_STATE_UNKNOWN
+        self._device_state = network.NM_DEVICE_STATE_UNKNOWN
 
         self._current_channel = None
         self._networks = {self._CHANNEL_1: None,
                           self._CHANNEL_6: None,
                           self._CHANNEL_11: None}
+
+        for channel in (self._CHANNEL_1, self._CHANNEL_6, self._CHANNEL_11):
+            if not self._find_connection(channel):
+                self._add_connection(channel)
 
     def start_listening(self, device):
         self._listening_called += 1
@@ -85,28 +81,28 @@ class AdHocManager(gobject.GObject):
 
         self._device = device
         props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
-        self._device_state = props.Get(_NM_DEVICE_IFACE, 'State')
+        self._device_state = props.Get(network.NM_DEVICE_IFACE, 'State')
 
         self._bus.add_signal_receiver(self.__device_state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
         self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
                                       signal_name='PropertiesChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
+                                      dbus_interface=network.NM_WIRELESS_IFACE)
 
     def stop_listening(self):
         self._listening_called = 0
         self._bus.remove_signal_receiver(self.__device_state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_WIRELESS_IFACE)
+                                         dbus_interface=network.NM_WIRELESS_IFACE)
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -115,10 +111,10 @@ class AdHocManager(gobject.GObject):
     def __wireless_properties_changed_cb(self, properties):
         if 'ActiveAccessPoint' in properties and \
                 properties['ActiveAccessPoint'] != '/':
-            active_ap = self._bus.get_object(_NM_SERVICE,
+            active_ap = self._bus.get_object(network.NM_SERVICE,
                                              properties['ActiveAccessPoint'])
             props = dbus.Interface(active_ap, dbus.PROPERTIES_IFACE)
-            props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
+            props.GetAll(network.NM_ACCESSPOINT_IFACE, byte_arrays=True,
                          reply_handler=self.__get_all_ap_props_reply_cb,
                          error_handler=self.__get_all_ap_props_error_cb)
 
@@ -137,13 +133,13 @@ class AdHocManager(gobject.GObject):
     def _update_state(self):
         self.emit('state-changed', self._current_channel, self._device_state)
 
-    def _have_configured_connections(self):
-        return len(network.get_settings().connections) > 0
-
     def autoconnect(self):
         """Start a timer which basically looks for 30 seconds of inactivity
         on the device, then does autoconnect to an Ad-hoc network.
 
+        This function may be called early on (e.g. when the device is still
+        in NM_DEVICE_STATE_UNMANAGED). It is assumed that initialisation
+        will complete quickly, and long before the timeout ticks.
         """
         if self._idle_source != 0:
             gobject.source_remove(self._idle_source)
@@ -151,7 +147,7 @@ class AdHocManager(gobject.GObject):
             self._AUTOCONNECT_TIMEOUT, self.__idle_check_cb)
 
     def __idle_check_cb(self):
-        if self._device_state == network.DEVICE_STATE_DISCONNECTED:
+        if self._device_state == network.NM_DEVICE_STATE_DISCONNECTED:
             logging.debug('Connect to Ad-hoc network due to inactivity.')
             self._autoconnect_adhoc()
         else:
@@ -164,13 +160,13 @@ class AdHocManager(gobject.GObject):
 
         """
         if self._networks[self._CHANNEL_1] is not None:
-            self._connect(self._CHANNEL_1)
+            self.activate_channel(self._CHANNEL_1)
         elif self._networks[self._CHANNEL_6] is not None:
-            self._connect(self._CHANNEL_6)
+            self.activate_channel(self._CHANNEL_6)
         elif self._networks[self._CHANNEL_11] is not None:
-            self._connect(self._CHANNEL_11)
+            self.activate_channel(self._CHANNEL_11)
         else:
-            self._connect(self._CHANNEL_1)
+            self.activate_channel(self._CHANNEL_1)
 
     def activate_channel(self, channel):
         """Activate a sugar Ad-hoc network.
@@ -179,57 +175,54 @@ class AdHocManager(gobject.GObject):
         channel -- Channel to connect to (should be 1, 6, 11)
 
         """
-        self._connect(channel)
+        connection = self._find_connection(channel)
+        if connection:
+            connection.activate(self._device.object_path)
 
-    def _connect(self, channel):
-        name = 'Ad-hoc Network %d' % channel
-        connection = network.find_connection_by_ssid(name)
-        if connection is None:
-            settings = Settings()
-            settings.connection.id = name
-            settings.connection.uuid = unique_id()
-            settings.connection.type = '802-11-wireless'
-            settings.connection.autoconnect = True
-            settings.wireless.ssid = dbus.ByteArray(name)
-            settings.wireless.band = 'bg'
-            settings.wireless.channel = channel
-            settings.wireless.mode = 'adhoc'
-            settings.ip4_config = IP4Config()
-            settings.ip4_config.method = 'link-local'
+    @staticmethod
+    def _get_connection_id(channel):
+        return '%s%d' % (network.ADHOC_CONNECTION_ID_PREFIX, channel)
 
-            connection = network.add_connection(name, settings)
+    def _add_connection(self, channel):
+        ssid = 'Ad-hoc Network %d' % (channel,)
+        settings = Settings()
+        settings.connection.id = self._get_connection_id(channel)
+        settings.connection.uuid = unique_id()
+        settings.connection.type = '802-11-wireless'
+        settings.connection.autoconnect = False
+        settings.wireless.ssid = dbus.ByteArray(ssid)
+        settings.wireless.band = 'bg'
+        settings.wireless.channel = channel
+        settings.wireless.mode = 'adhoc'
+        settings.ip4_config = IP4Config()
+        settings.ip4_config.method = 'link-local'
+        network.add_connection(settings)
 
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
-
-        netmgr.ActivateConnection(network.SETTINGS_SERVICE,
-                                  connection.path,
-                                  self._device.object_path,
-                                  '/',
-                                  reply_handler=self.__activate_reply_cb,
-                                  error_handler=self.__activate_error_cb)
+    def _find_connection(self, channel):
+        connection_id = self._get_connection_id(channel)
+        return network.find_connection_by_id(connection_id)
 
     def deactivate_active_channel(self):
         """Deactivate the current active channel."""
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
+        obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+        netmgr = dbus.Interface(obj, network.NM_IFACE)
 
         netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
-        netmgr_props.Get(_NM_IFACE, 'ActiveConnections', \
+        netmgr_props.Get(network.NM_IFACE, 'ActiveConnections', \
                 reply_handler=self.__get_active_connections_reply_cb,
                 error_handler=self.__get_active_connections_error_cb)
 
     def __get_active_connections_reply_cb(self, active_connections_o):
         for connection_o in active_connections_o:
-            obj = self._bus.get_object(_NM_IFACE, connection_o)
+            obj = self._bus.get_object(network.NM_IFACE, connection_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-            state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
+            state = props.Get(network.NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATED:
-                access_point_o = props.Get(_NM_ACTIVE_CONN_IFACE,
+                access_point_o = props.Get(network.NM_ACTIVE_CONN_IFACE,
                                            'SpecificObject')
                 if access_point_o != '/':
-                    obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-                    netmgr = dbus.Interface(obj, _NM_IFACE)
+                    obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+                    netmgr = dbus.Interface(obj, network.NM_IFACE)
                     netmgr.DeactivateConnection(connection_o)
 
     def __get_active_connections_error_cb(self, err):

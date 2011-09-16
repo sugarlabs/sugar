@@ -14,9 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  US
 
-import os
-import logging
 from gettext import gettext as _
+import logging
 
 import gtk
 import gobject
@@ -35,10 +34,6 @@ class EntryWithLabel(gtk.HBox):
     def __init__(self, label_text):
         gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
 
-        self._timeout_sid = 0
-        self._changed_handler = None
-        self._is_valid = True
-
         self.label = gtk.Label(label_text)
         self.label.modify_fg(gtk.STATE_NORMAL,
                         style.COLOR_SELECTION_GREY.get_gdk_color())
@@ -47,118 +42,14 @@ class EntryWithLabel(gtk.HBox):
         self.label.show()
 
         self._entry = gtk.Entry(25)
-        self._entry.connect('changed', self.__entry_changed_cb)
         self._entry.set_width_chars(25)
         self.pack_start(self._entry, expand=False)
         self._entry.show()
 
-    def __entry_changed_cb(self, widget, data=None):
-        if self._timeout_sid:
-            gobject.source_remove(self._timeout_sid)
-        self._timeout_sid = gobject.timeout_add(APPLY_TIMEOUT,
-                                                self.__timeout_cb)
+    def get_entry(self):
+        return self._entry
 
-    def __timeout_cb(self):
-        self._timeout_sid = 0
-
-        if self._entry.get_text() == self.get_value():
-            return False
-
-        try:
-            self.set_value(self._entry.get_text())
-        except ValueError:
-            self._is_valid = False
-        else:
-            self._is_valid = True
-
-        self.notify('is-valid')
-
-        return False
-
-    def set_text_from_model(self):
-        self._entry.set_text(self.get_value())
-
-    def get_value(self):
-        raise NotImplementedError
-
-    def set_value(self):
-        raise NotImplementedError
-
-    def _get_is_valid(self):
-        return self._is_valid
-    is_valid = gobject.property(type=bool, getter=_get_is_valid, default=True)
-
-
-class UsernameEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Username:'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_username()
-
-    def set_value(self, username):
-        self._model.set_username(username)
-
-
-class PasswordEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Password:'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_password()
-
-    def set_value(self, password):
-        self._model.set_password(password)
-
-
-class NumberEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Number:'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_number()
-
-    def set_value(self, number):
-        self._model.set_number(number)
-
-
-class ApnEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Access Point Name (APN):'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_apn()
-
-    def set_value(self, apn):
-        self._model.set_apn(apn)
-
-
-class PinEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Personal Identity Number (PIN):'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_pin()
-
-    def set_value(self, pin):
-        self._model.set_pin(pin)
-
-
-class PukEntry(EntryWithLabel):
-    def __init__(self, model):
-        EntryWithLabel.__init__(self, _('Personal Unblocking Key (PUK):'))
-        self._model = model
-
-    def get_value(self):
-        return self._model.get_puk()
-
-    def set_value(self, puk):
-        self._model.set_puk(puk)
+    entry = gobject.property(type=object, getter=get_entry)
 
 
 class ModemConfiguration(SectionView):
@@ -167,6 +58,7 @@ class ModemConfiguration(SectionView):
 
         self._model = model
         self.restart_alerts = alerts
+        self._timeout_sid = 0
 
         self.set_border_width(style.DEFAULT_SPACING)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -182,75 +74,71 @@ class ModemConfiguration(SectionView):
         self.pack_start(self._text, False)
         self._text.show()
 
-        self._username_entry = UsernameEntry(model)
-        self._username_entry.connect('notify::is-valid',
-                                     self.__notify_is_valid_cb)
+        self._username_entry = EntryWithLabel(_('Username:'))
+        self._username_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._username_entry.label)
         self.pack_start(self._username_entry, expand=False)
         self._username_entry.show()
 
-        self._password_entry = PasswordEntry(model)
-        self._password_entry.connect('notify::is-valid',
-                                     self.__notify_is_valid_cb)
+        self._password_entry = EntryWithLabel(_('Password:'))
+        self._password_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._password_entry.label)
         self.pack_start(self._password_entry, expand=False)
         self._password_entry.show()
 
-        self._number_entry = NumberEntry(model)
-        self._number_entry.connect('notify::is-valid',
-                                   self.__notify_is_valid_cb)
+        self._number_entry = EntryWithLabel(_('Number:'))
+        self._number_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._number_entry.label)
         self.pack_start(self._number_entry, expand=False)
         self._number_entry.show()
 
-        self._apn_entry = ApnEntry(model)
-        self._apn_entry.connect('notify::is-valid',
-                                self.__notify_is_valid_cb)
+        self._apn_entry = EntryWithLabel(_('Access Point Name (APN):'))
+        self._apn_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._apn_entry.label)
         self.pack_start(self._apn_entry, expand=False)
         self._apn_entry.show()
 
-        self._pin_entry = PinEntry(model)
-        self._pin_entry.connect('notify::is-valid',
-                                self.__notify_is_valid_cb)
+        self._pin_entry = EntryWithLabel(_('Personal Identity Number (PIN):'))
+        self._pin_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._pin_entry.label)
         self.pack_start(self._pin_entry, expand=False)
         self._pin_entry.show()
 
-        self._puk_entry = PukEntry(model)
-        self._puk_entry.connect('notify::is-valid',
-                                self.__notify_is_valid_cb)
-        self._group.add_widget(self._puk_entry.label)
-        self.pack_start(self._puk_entry, expand=False)
-        self._puk_entry.show()
-
         self.setup()
-
-    def setup(self):
-        self._username_entry.set_text_from_model()
-        self._password_entry.set_text_from_model()
-        self._number_entry.set_text_from_model()
-        self._apn_entry.set_text_from_model()
-        self._pin_entry.set_text_from_model()
-        self._puk_entry.set_text_from_model()
-
-        self.needs_restart = False
 
     def undo(self):
         self._model.undo()
 
-    def _validate(self):
-        if self._username_entry.is_valid and \
-            self._password_entry.is_valid and \
-                self._number_entry.is_valid and \
-                    self._apn_entry.is_valid and \
-                        self._pin_entry.is_valid and \
-                            self._puk_entry.is_valid:
-                                self.props.is_valid = True
-        else:
-            self.props.is_valid = False
+    def _populate_entry(self, entrywithlabel, text):
+        """Populate an entry with text, without triggering its 'changed'
+        handler."""
+        entry = entrywithlabel.entry
+        entry.handler_block_by_func(self.__entry_changed_cb)
+        entry.set_text(text)
+        entry.handler_unblock_by_func(self.__entry_changed_cb)
 
-    def __notify_is_valid_cb(self, entry, pspec):
-        if entry.is_valid:
-            self.needs_restart = True
-        self._validate()
+    def setup(self):
+        settings = self._model.get_modem_settings()
+        self._populate_entry(self._username_entry,
+            settings.get('username', ''))
+        self._populate_entry(self._number_entry, settings.get('number', ''))
+        self._populate_entry(self._apn_entry, settings.get('apn', ''))
+        self._populate_entry(self._password_entry,
+            settings.get('password', ''))
+        self._populate_entry(self._pin_entry, settings.get('pin', ''))
+
+    def __entry_changed_cb(self, widget, data=None):
+        if self._timeout_sid:
+            gobject.source_remove(self._timeout_sid)
+        self._timeout_sid = gobject.timeout_add(APPLY_TIMEOUT,
+                                                self.__timeout_cb)
+
+    def __timeout_cb(self):
+        self._timeout_sid = 0
+        settings = {}
+        settings['username'] = self._username_entry.entry.get_text()
+        settings['password'] = self._password_entry.entry.get_text()
+        settings['number'] = self._number_entry.entry.get_text()
+        settings['apn'] = self._apn_entry.entry.get_text()
+        settings['pin'] = self._pin_entry.entry.get_text()
+        self._model.set_modem_settings(settings)

@@ -48,15 +48,6 @@ from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
 
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
-_NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
-_NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
-
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
@@ -244,7 +235,7 @@ class DeviceObserver(gobject.GObject):
         self._bus = dbus.SystemBus()
         self.device = device
 
-        wireless = dbus.Interface(device, _NM_WIRELESS_IFACE)
+        wireless = dbus.Interface(device, network.NM_WIRELESS_IFACE)
         wireless.GetAccessPoints(
             reply_handler=self._get_access_points_reply_cb,
             error_handler=self._get_access_points_error_cb)
@@ -252,22 +243,22 @@ class DeviceObserver(gobject.GObject):
         self._bus.add_signal_receiver(self.__access_point_added_cb,
                                       signal_name='AccessPointAdded',
                                       path=device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
+                                      dbus_interface=network.NM_WIRELESS_IFACE)
         self._bus.add_signal_receiver(self.__access_point_removed_cb,
                                       signal_name='AccessPointRemoved',
                                       path=device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
+                                      dbus_interface=network.NM_WIRELESS_IFACE)
 
     def _get_access_points_reply_cb(self, access_points_o):
         for ap_o in access_points_o:
-            ap = self._bus.get_object(_NM_SERVICE, ap_o)
+            ap = self._bus.get_object(network.NM_SERVICE, ap_o)
             self.emit('access-point-added', ap)
 
     def _get_access_points_error_cb(self, err):
         logging.error('Failed to get access points: %s', err)
 
     def __access_point_added_cb(self, access_point_o):
-        ap = self._bus.get_object(_NM_SERVICE, access_point_o)
+        ap = self._bus.get_object(network.NM_SERVICE, access_point_o)
         self.emit('access-point-added', ap)
 
     def __access_point_removed_cb(self, access_point_o):
@@ -277,11 +268,11 @@ class DeviceObserver(gobject.GObject):
         self._bus.remove_signal_receiver(self.__access_point_added_cb,
                                          signal_name='AccessPointAdded',
                                          path=self.device.object_path,
-                                         dbus_interface=_NM_WIRELESS_IFACE)
+                                         dbus_interface=network.NM_WIRELESS_IFACE)
         self._bus.remove_signal_receiver(self.__access_point_removed_cb,
                                          signal_name='AccessPointRemoved',
                                          path=self.device.object_path,
-                                         dbus_interface=_NM_WIRELESS_IFACE)
+                                         dbus_interface=network.NM_WIRELESS_IFACE)
 
 
 class NetworkManagerObserver(object):
@@ -301,10 +292,9 @@ class NetworkManagerObserver(object):
     def listen(self):
         try:
             self._bus = dbus.SystemBus()
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            self._netmgr = dbus.Interface(obj, _NM_IFACE)
+            self._netmgr = network.get_manager()
         except dbus.DBusException:
-            logging.debug('%s service not available', _NM_SERVICE)
+            logging.debug('NetworkManager not available')
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -312,41 +302,40 @@ class NetworkManagerObserver(object):
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='DeviceRemoved',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__properties_changed_cb,
                                       signal_name='PropertiesChanged',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
 
-        settings = network.get_settings()
-        if settings is not None:
-            settings.secrets_request.connect(self.__secrets_request_cb)
+        secret_agent = network.get_secret_agent()
+        if secret_agent is not None:
+            secret_agent.secrets_request.connect(self.__secrets_request_cb)
 
     def __secrets_request_cb(self, **kwargs):
         # FIXME It would be better to do all of this async, but I cannot think
         # of a good way to. NM could really use some love here.
 
         netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
-        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-            state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
+            state = props.Get(network.NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
-                ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
                 found = False
                 if ap_o != '/':
                     for net in self._box.wireless_networks.values():
                         if net.find_ap(ap_o) is not None:
                             found = True
-                            settings = kwargs['connection'].get_settings()
-                            net.create_keydialog(settings, kwargs['response'])
+                            net.create_keydialog(kwargs['response'])
                 if not found:
-                    logging.error('Could not determine AP for specific object'
-                                  ' %s', conn_o)
+                    raise Exception('Could not determine AP for specific object'
+                                    ' %s' % conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
@@ -356,11 +345,11 @@ class NetworkManagerObserver(object):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_o):
-        device = self._bus.get_object(_NM_SERVICE, device_o)
+        device = self._bus.get_object(network.NM_SERVICE, device_o)
         props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
 
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+        device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == network.NM_DEVICE_TYPE_WIFI:
             self._devices[device_o] = DeviceObserver(device)
             self._devices[device_o].connect('access-point-added',
                                             self.__ap_added_cb)
@@ -368,7 +357,7 @@ class NetworkManagerObserver(object):
                                             self.__ap_removed_cb)
             if self._have_adhoc_networks:
                 self._box.add_adhoc_networks(device)
-        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+        elif device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
             self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
