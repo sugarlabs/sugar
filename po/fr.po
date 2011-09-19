@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-07 00:31-0400\n"
-"PO-Revision-Date: 2011-09-12 07:39+0200\n"
+"PO-Revision-Date: 2011-09-17 23:02+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Moi"
+msgstr "À propos de moi"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -1067,7 +1067,7 @@ msgstr "Triangle"
 
 #: ../src/jarabe/desktop/favoritesview.py:337
 msgid "Registration Failed"
-msgstr "Echec de l'enregistrement"
+msgstr "Échec de l'enregistrement"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 #, python-format
@@ -1571,7 +1571,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:183
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr "Echec de la configuration du supplicant 802.1X."
+msgstr "Échec de la configuration du supplicant 802.1X."
 
 #: ../src/jarabe/model/network.py:185
 msgid "The 802.1X supplicant quit or failed unexpectedly."
@@ -1583,7 +1583,7 @@ msgstr "Délai d'authentification trop long du supplicant 802.1X."
 
 #: ../src/jarabe/model/network.py:189
 msgid "The PPP service failed to start within the allowed time."
-msgstr "Echec du démarrage du service PPP dans le délai autorisé."
+msgstr "Échec du démarrage du service PPP dans le délai autorisé."
 
 #: ../src/jarabe/model/network.py:191
 msgid "The PPP service disconnected unexpectedly."
@@ -1595,7 +1595,7 @@ msgstr "Arrêt ou échec inattendu du service PPP."
 
 #: ../src/jarabe/model/network.py:195
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "Echec du démarrage du service DHCP dans le délai autorisé."
+msgstr "Échec du démarrage du service DHCP dans le délai autorisé."
 
 #: ../src/jarabe/model/network.py:197
 msgid "The DHCP service reported an unexpected error."
@@ -1607,7 +1607,7 @@ msgstr "Arrêt ou échec inattendu du service DHCP."
 
 #: ../src/jarabe/model/network.py:201
 msgid "The shared connection service failed to start."
-msgstr "Echec du démarrage du service de connexion partagée."
+msgstr "Échec du démarrage du service de connexion partagée."
 
 #: ../src/jarabe/model/network.py:203
 msgid "The shared connection service quit or failed unexpectedly."
@@ -1615,7 +1615,7 @@ msgstr "Arrêt ou échec inattendu du service de connexion partagée."
 
 #: ../src/jarabe/model/network.py:206
 msgid "The AutoIP service failed to start."
-msgstr "Echec du démarrage du service AutoIP."
+msgstr "Échec du démarrage du service AutoIP."
 
 #: ../src/jarabe/model/network.py:208
 msgid "The AutoIP service reported an unexpected error."
@@ -1627,15 +1627,15 @@ msgstr "Arrêt ou échec inattendu du service AutoIP."
 
 #: ../src/jarabe/model/network.py:212
 msgid "Dialing failed because the line was busy."
-msgstr "Echec de la numérotation car la ligne était occupée."
+msgstr "Échec de la numérotation car la ligne était occupée."
 
 #: ../src/jarabe/model/network.py:214
 msgid "Dialing failed because there was no dial tone."
-msgstr "Echec de la numérotation en l'absence de tonalité."
+msgstr "Échec de la numérotation en l'absence de tonalité."
 
 #: ../src/jarabe/model/network.py:216
 msgid "Dialing failed because there was no carrier."
-msgstr "Echec de la numérotation résultant de l'absence de porteuse."
+msgstr "Échec de la numérotation résultant de l'absence de porteuse."
 
 #: ../src/jarabe/model/network.py:218
 msgid "Dialing timed out."
@@ -1643,15 +1643,15 @@ msgstr "Délai de la numérotation dépassé."
 
 #: ../src/jarabe/model/network.py:220
 msgid "Dialing failed."
-msgstr "Echec de la numérotation."
+msgstr "Échec de la numérotation."
 
 #: ../src/jarabe/model/network.py:222
 msgid "Modem initialization failed."
-msgstr "Echec de l'initialisation du modem."
+msgstr "Échec de l'initialisation du modem."
 
 #: ../src/jarabe/model/network.py:224
 msgid "Failed to select the specified GSM APN"
-msgstr "Echec de la sélection de l'APN du GSM spécifié."
+msgstr "Échec de la sélection de l'APN du GSM spécifié."
 
 #: ../src/jarabe/model/network.py:226
 msgid "Not searching for networks."
@@ -1667,11 +1667,11 @@ msgstr "Enregistrement du réseau expiré."
 
 #: ../src/jarabe/model/network.py:232
 msgid "Failed to register with the requested GSM network."
-msgstr "Echec de l'enregistrement avec le réseau GSM demandé."
+msgstr "Échec de l'enregistrement avec le réseau GSM demandé."
 
 #: ../src/jarabe/model/network.py:234
 msgid "PIN check failed."
-msgstr "Echec de la vérification du code PIN."
+msgstr "Échec de la vérification du code PIN."
 
 #: ../src/jarabe/model/network.py:236
 msgid "Necessary firmware for the device may be missing."
@@ -1737,7 +1737,7 @@ msgstr "Démarrage..."
 
 #: ../src/jarabe/view/palettes.py:57
 msgid "Activity failed to start"
-msgstr "Echec du démarrage de l'activité"
+msgstr "Échec du démarrage de l'activité"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:86
