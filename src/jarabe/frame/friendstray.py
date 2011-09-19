@@ -30,10 +30,15 @@ class FriendIcon(TrayIcon):
         TrayIcon.__init__(self, icon_name='computer-xo',
                           xo_color=buddy.get_color())
 
+        self._buddy = buddy
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self.palette = BuddyMenu(buddy)
-        self.palette.props.icon_visible = False
-        self.palette.set_group_id('frame')
+        self.palette_invoker.cache_palette = False
+
+    def create_palette(self):
+        palette = BuddyMenu(self._buddy)
+        palette.props.icon_visible = False
+        palette.set_group_id('frame')
+        return palette
 
 
 class FriendsTray(VTray):
