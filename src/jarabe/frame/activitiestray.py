@@ -630,12 +630,16 @@ class IncomingTransferPalette(BaseTransferPalette):
             for item in self.menu.get_children():
                 self.menu.remove(item)
 
-            menu_item = MenuItem(_('Resume'), icon_name='dialog-cancel')
-            menu_item.connect('activate', self.__resume_activate_cb)
-            self.menu.append(menu_item)
-            menu_item.show()
-
-            self.update_progress()
+            if self.file_transfer.reason_last_change == \
+                    filetransfer.FT_REASON_REMOTE_STOPPED:
+                menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+                menu_item.connect('activate', self.__dismiss_activate_cb)
+                self.menu.append(menu_item)
+                menu_item.show()
+                text = _('The other participant canceled the file transfer')
+                label = gtk.Label(text)
+                self.set_content(label)
+                label.show()
 
     def __accept_activate_cb(self, menu_item):
         #TODO: figure out the best place to get rid of that temp file
@@ -661,9 +665,6 @@ class IncomingTransferPalette(BaseTransferPalette):
 
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
-
-    def __resume_activate_cb(self, menu_item):
-        self.file_transfer.resume()
 
     def __dismiss_activate_cb(self, menu_item):
         self.emit('dismiss-clicked')
