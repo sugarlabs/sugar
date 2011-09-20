@@ -21,6 +21,7 @@ from gettext import gettext as _
 
 import gobject
 import gio
+import glib
 import gtk
 import gconf
 import cPickle
@@ -205,7 +206,8 @@ class VolumesToolbar(gtk.Toolbar):
         if documents_path is not None:
             button = DocumentsButton(documents_path)
             button.props.group = self._volume_buttons[0]
-            button.set_palette(Palette(_('Documents')))
+            label = glib.markup_escape_text(_('Documents'))
+            button.set_palette(Palette(label))
             button.connect('toggled', self._button_toggled_cb)
             button.show()
 
@@ -363,7 +365,7 @@ class JournalButton(BaseButton):
 class JournalButtonPalette(Palette):
 
     def __init__(self, mount):
-        Palette.__init__(self, _('Journal'))
+        Palette.__init__(self, glib.markup_escape_text(_('Journal')))
         vbox = gtk.VBox()
         self.set_content(vbox)
         vbox.show()

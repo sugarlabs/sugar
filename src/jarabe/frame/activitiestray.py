@@ -24,6 +24,7 @@ import os
 import gobject
 import gconf
 import gio
+import glib
 import gtk
 
 from sugar.graphics import style
@@ -193,9 +194,11 @@ class InvitePalette(Palette):
         registry = bundleregistry.get_registry()
         self._bundle = registry.get_bundle(bundle_id)
         if self._bundle:
-            self.set_primary_text(self._bundle.get_name())
+            name = self._bundle.get_name()
         else:
-            self.set_primary_text(bundle_id)
+            name = bundle_id
+
+        self.set_primary_text(glib.markup_escape_text(name))
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
@@ -489,7 +492,7 @@ class BaseTransferPalette(Palette):
     }
 
     def __init__(self, file_transfer):
-        Palette.__init__(self, file_transfer.title)
+        Palette.__init__(self, glib.markup_escape_text(file_transfer.title))
 
         self.file_transfer = file_transfer
 
@@ -552,7 +555,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(self.file_transfer.buddy.props.nick)
-        self.props.secondary_text = _('Transfer from %s') % (nick,)
+        label = glib.markup_escape_text(_('Transfer from %s') % (nick,))
+        self.props.secondary_text = label
 
         self._update()
 
@@ -684,7 +688,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(file_transfer.buddy.props.nick)
-        self.props.secondary_text = _('Transfer to %s') % (nick,)
+        label = glib.markup_escape_text(_('Transfer to %s') % (nick,))
+        self.props.secondary_text = label
 
         self._update()
 

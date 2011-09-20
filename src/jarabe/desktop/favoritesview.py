@@ -21,6 +21,7 @@ import math
 
 import gobject
 import gconf
+import glib
 import gtk
 import hippo
 
@@ -543,7 +544,8 @@ class FavoritePalette(ActivityPalette):
                                icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
         if journal_entries:
-            self.props.secondary_text = journal_entries[0]['title']
+            title = journal_entries[0]['title']
+            self.props.secondary_text = glib.markup_escape_text(title)
 
             menu_items = []
             for entry in journal_entries:

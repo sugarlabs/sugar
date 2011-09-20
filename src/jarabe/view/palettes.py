@@ -20,6 +20,7 @@ from gettext import gettext as _
 import logging
 
 import gconf
+import glib
 import gtk
 
 from sugar import env
@@ -44,7 +45,7 @@ class BasePalette(Palette):
         if home_activity.props.launch_status == shell.Activity.LAUNCHING:
             self._notify_launch_hid = home_activity.connect( \
                     'notify::launch-status', self.__notify_launch_status_cb)
-            self.set_primary_text(_('Starting...'))
+            self.set_primary_text(glib.markup_escape_text(_('Starting...')))
         elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
             self._on_failed_launch()
         else:
@@ -54,7 +55,8 @@ class BasePalette(Palette):
         raise NotImplementedError
 
     def _on_failed_launch(self):
-        self.set_primary_text(_('Activity failed to start'))
+        message = _('Activity failed to start')
+        self.set_primary_text(glib.markup_escape_text(message))
 
     def __notify_launch_status_cb(self, home_activity, pspec):
         home_activity.disconnect(self._notify_launch_hid)
@@ -71,10 +73,13 @@ class CurrentActivityPalette(BasePalette):
         BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
-        self.props.primary_text = self._home_activity.get_activity_name()
+        activity_name = self._home_activity.get_activity_name()
+        if activity_name:
+            self.props.primary_text = glib.markup_escape_text(activity_name)
 
-        if self._home_activity.get_title() != self.props.primary_text:
-            self.props.secondary_text = self._home_activity.get_title()
+        title = self._home_activity.get_title()
+        if title and title != activity_name:
+            self.props.secondary_text = glib.markup_escape_text(title)
 
         menu_item = MenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
@@ -125,7 +130,8 @@ class ActivityPalette(Palette):
                              xo_color=color,
                              icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
-        Palette.__init__(self, primary_text=activity_info.get_name(),
+        name = activity_info.get_name()
+        Palette.__init__(self, primary_text=glib.markup_escape_text(name),
                          icon=activity_icon)
 
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
@@ -153,7 +159,8 @@ class JournalPalette(BasePalette):
         BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
-        self.set_primary_text(self._home_activity.get_title())
+        title = self._home_activity.get_title()
+        self.set_primary_text(glib.markup_escape_text(title))
 
         vbox = gtk.VBox()
         self.set_content(vbox)
@@ -201,7 +208,8 @@ class VolumePalette(Palette):
         Palette.__init__(self, label=mount.get_name())
         self._mount = mount
 
-        self.props.secondary_text = mount.get_root().get_path()
+        path = mount.get_root().get_path()
+        self.props.secondary_text = glib.markup_escape_text(path)
 
         vbox = gtk.VBox()
         self.set_content(vbox)

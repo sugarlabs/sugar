@@ -109,11 +109,12 @@ class WirelessPalette(Palette):
         self.menu.append(self._disconnect_item)
 
     def set_connecting(self):
-        self.props.secondary_text = _('Connecting...')
+        label = glib.markup_escape_text(_('Connecting...'))
+        self.props.secondary_text = label
 
     def _set_connected(self, iaddress):
         self.set_content(self._info)
-        self.props.secondary_text = _('Connected')
+        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
 
@@ -155,7 +156,8 @@ class WiredPalette(Palette):
     __gtype_name__ = 'SugarWiredPalette'
 
     def __init__(self):
-        Palette.__init__(self, label=_('Wired Network'))
+        label = glib.markup_escape_text(_('Wired Network'))
+        Palette.__init__(self, primary_text=label)
 
         self._speed_label = gtk.Label()
         self._speed_label.props.xalign = 0.0
@@ -180,7 +182,7 @@ class WiredPalette(Palette):
         self._info.show_all()
 
         self.set_content(self._info)
-        self.props.secondary_text = _('Connected')
+        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
 
     def set_connected(self, speed, iaddress):
         self._speed_label.set_text('%s: %d Mb/s' % (_('Speed'), speed))
@@ -208,8 +210,8 @@ class GsmPalette(Palette):
     }
 
     def __init__(self):
-
-        Palette.__init__(self, label=_('Wireless modem'))
+        label = glib.markup_escape_text(_('Wireless modem'))
+        Palette.__init__(self, primary_text=label)
 
         self._current_state = None
         self._failed_connection = False
@@ -276,19 +278,22 @@ class GsmPalette(Palette):
     def _update_label_and_text(self, reason=0):
         if self._current_state == _GSM_STATE_NOT_READY:
             self._toggle_state_item.get_child().set_label('...')
-            self.props.secondary_text = _('Please wait...')
+            label = glib.markup_escape_text(_('Please wait...'))
+            self.props.secondary_text = label
 
         elif self._current_state == _GSM_STATE_DISCONNECTED:
             if not self._failed_connection:
                 self._toggle_state_item.get_child().set_label(_('Connect'))
-            self.props.secondary_text = _('Disconnected')
+            label = glib.markup_escape_text(_('Disconnected'))
+            self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
             self._toggle_state_item.get_child().set_label(_('Cancel'))
-            self.props.secondary_text = _('Connecting...')
+            label = glib.markup_escape_text(_('Connecting...'))
+            self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
@@ -338,10 +343,11 @@ class GsmPalette(Palette):
 
     def update_connection_time(self, connection_time=None):
         if connection_time is not None:
-            self.props.secondary_text = _('Connected for %s') % \
-                    connection_time.strftime('%H:%M:%S')
+            formatted_time = connection_time.strftime('%H:%M:%S')
         else:
-            self.props.secondary_text = _('Connected for %s') % '00:00:00'
+            formatted_time = '00:00:00'
+        text = _('Connected for %s') % (formatted_time, )
+        self.props.secondary_text = glib.markup_escape_text(text)
 
     def update_stats(self, in_bytes, out_bytes):
         in_KBytes = in_bytes / 1024
@@ -603,7 +609,8 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_('Mesh Network'))
+        title = _('Mesh Network')
+        self._palette = WirelessPalette(glib.markup_escape_text(title))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
@@ -646,7 +653,7 @@ class OlpcMeshDeviceView(ToolButton):
 
     def _update_text(self):
         channel = str(self._channel)
-        text = _('Mesh Network %s') % glib.markup_escape_text(channel)
+        text = glib.markup_escape_text(_('Mesh Network %s') % (channel, ))
         self._palette.props.primary_text = text
 
     def _update(self):

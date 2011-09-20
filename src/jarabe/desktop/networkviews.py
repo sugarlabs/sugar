@@ -497,7 +497,8 @@ class SugarAdhocView(CanvasPulsingIcon):
                 icon_name=self._ICON_NAME + str(self._channel),
                 icon_size=style.STANDARD_ICON_SIZE)
 
-        palette_ = palette.Palette(_('Ad-hoc Network %d') % self._channel,
+        text = _('Ad-hoc Network %d') % (self._channel, )
+        palette_ = palette.Palette(glib.markup_escape_text(text),
                                    icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
@@ -630,7 +631,8 @@ class OlpcMeshView(CanvasPulsingIcon):
         self.set_palette(self._palette)
 
     def _create_palette(self):
-        _palette = palette.Palette(_('Mesh Network %d') % self._channel)
+        text = _('Mesh Network %d') % (self._channel, )
+        _palette = palette.Palette(glib.markup_escape_text(text))
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self.__connect_activate_cb)
