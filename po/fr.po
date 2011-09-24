@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-07 00:31-0400\n"
-"PO-Revision-Date: 2011-09-24 10:38+0200\n"
+"PO-Revision-Date: 2011-09-24 10:43+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -1659,7 +1659,7 @@ msgstr "Pas de recherche de réseaux."
 
 #: ../src/jarabe/model/network.py:228
 msgid "Network registration was denied."
-msgstr "Enregistrement du réseau refusé."
+msgstr "Enregistrement sur le réseau refusé."
 
 #: ../src/jarabe/model/network.py:230
 msgid "Network registration timed out."
@@ -1675,7 +1675,7 @@ msgstr "Échec de la vérification du code PIN."
 
 #: ../src/jarabe/model/network.py:236
 msgid "Necessary firmware for the device may be missing."
-msgstr "Le firmware requis pour le périphérique est peut-être absent."
+msgstr "Le micrologiciel requis pour le périphérique est peut-être absent."
 
 #: ../src/jarabe/model/network.py:238
 msgid "The device was removed."
