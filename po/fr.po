@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-07 00:31-0400\n"
-"PO-Revision-Date: 2011-09-17 23:02+0200\n"
+"PO-Revision-Date: 2011-09-24 10:38+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -1663,7 +1663,7 @@ msgstr "Enregistrement du réseau refusé."
 
 #: ../src/jarabe/model/network.py:230
 msgid "Network registration timed out."
-msgstr "Enregistrement du réseau expiré."
+msgstr "Enregistrement sur le réseau expiré."
 
 #: ../src/jarabe/model/network.py:232
 msgid "Failed to register with the requested GSM network."
@@ -1771,7 +1771,7 @@ msgstr "Source"
 
 #: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
-msgstr "Source du paquet activité"
+msgstr "Source du paquet de l'activité"
 
 #: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
