@@ -641,8 +641,9 @@ msgid "Keyboard layouts"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
-msgstr ""
+msgstr "Гарын загвар"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Keyboard options"
