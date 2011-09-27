@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-09-27 17:44+0200\n"
+"PO-Revision-Date: 2011-09-27 17:48+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sq\n"
@@ -23,7 +23,7 @@ msgstr "Rreth Meje"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "Vetem emri duhet shkruar"
+msgstr "Vetem emri duhet shkruar."
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
@@ -124,7 +124,7 @@ msgstr "Data & Koha"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr "Gabim zona e kohës nuk ekziston"
+msgstr "Gabim zona e kohës nuk ekziston."
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
 msgid "Timezone"
@@ -530,9 +530,9 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:355
 #: ../extensions/deviceicon/network.py:356
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "%d KB"
-msgstr "%dKB"
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:361
 msgid "Check your Pin/Puk configuration."
@@ -869,7 +869,7 @@ msgstr "Niveli i Volumit"
 
 #: ../data/sugar.schemas.in.h:61
 msgid "Volume level for the sound device."
-msgstr "Niveli i volumit për pajisjen"
+msgstr "Niveli i volumit për pajisjen."
 
 #: ../data/sugar.schemas.in.h:62
 msgid ""
@@ -1133,9 +1133,9 @@ msgstr "%s prej %s"
 
 #: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Transfer from %s"
-msgstr "Transfer nga %r"
+msgstr "Transfer nga %s"
 
 #: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
@@ -1159,9 +1159,9 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Transfer to %s"
-msgstr "Transfer tek %r"
+msgstr "Transfer tek %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
 #, fuzzy
@@ -1667,7 +1667,7 @@ msgstr ""
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
 msgid "Invite to %s"
-msgstr " Fto në %s"
+msgstr "Fto në %s"
 
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
