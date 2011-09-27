@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-11 00:32-0500\n"
-"PO-Revision-Date: 2011-09-02 13:25+0200\n"
+"PO-Revision-Date: 2011-09-27 12:55+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -87,7 +87,7 @@ msgstr "Хувилбар:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
-msgstr ""
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:131
 msgid "Firmware:"
