@@ -2,12 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-11 00:32-0500\n"
-"PO-Revision-Date: 2010-03-23 06:29+0200\n"
+"POT-Creation-Date: 2011-09-20 07:47-0400\n"
+"PO-Revision-Date: 2011-08-26 06:06+0200\n"
 "Last-Translator: korakurider <korakurider@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -15,49 +27,45 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.3\n"
+"X-Generator: Pootle 2.0.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
 msgstr "私について"
 
-#: ../extensions/cpsection/aboutme/model.py:43
+#: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
 msgstr "名前の入力が必要です"
 
-#: ../extensions/cpsection/aboutme/model.py:68
+#: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
 msgstr "線:   色=%s 色相=%s"
 
-#: ../extensions/cpsection/aboutme/model.py:71
+#: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
 msgstr "線:   %s"
 
-#: ../extensions/cpsection/aboutme/model.py:73
+#: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
 msgstr "塗りつぶし:   色=%s 色相=%s"
 
-#: ../extensions/cpsection/aboutme/model.py:75
+#: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
 msgstr "塗りつぶし:     %s"
 
-#: ../extensions/cpsection/aboutme/model.py:86
+#: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
 msgstr "カラーモディファイアの指定でエラー"
 
-#: ../extensions/cpsection/aboutme/model.py:89
+#: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
 msgstr "色の指定でエラー"
 
-#: ../extensions/cpsection/aboutme/view.py:94 ../src/jarabe/intro/window.py:93
-msgid "Name:"
-msgstr "名前:"
-
-#: ../extensions/cpsection/aboutme/view.py:128
+#: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
 msgstr "クリックして色を変更:"
 
@@ -65,43 +73,48 @@ msgstr "クリックして色を変更:"
 msgid "About my Computer"
 msgstr "私のコンピュータについて"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:28
+#: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
 msgstr "不明です"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:60
+#: ../extensions/cpsection/aboutcomputer/model.py:171
+#, python-format
+msgid "%(interface)s: %(version)s"
+msgstr "%(interface)s: %(version)s"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:61
 msgid "Identity"
 msgstr "個体の識別"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:69
+#: ../extensions/cpsection/aboutcomputer/view.py:70
 msgid "Serial Number:"
 msgstr "シリアル番号:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:91
+#: ../extensions/cpsection/aboutcomputer/view.py:92
 msgid "Software"
 msgstr "ソフトウェア"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:100
+#: ../extensions/cpsection/aboutcomputer/view.py:101
 msgid "Build:"
 msgstr "ビルド:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:115
+#: ../extensions/cpsection/aboutcomputer/view.py:116
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:131
+#: ../extensions/cpsection/aboutcomputer/view.py:132
 msgid "Firmware:"
 msgstr "ファームウェア:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:146
+#: ../extensions/cpsection/aboutcomputer/view.py:147
 msgid "Wireless Firmware:"
 msgstr "ワイヤレスファームウェア:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:169
+#: ../extensions/cpsection/aboutcomputer/view.py:170
 msgid "Copyright and License"
 msgstr "著作権とライセンス"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:184
+#: ../extensions/cpsection/aboutcomputer/view.py:188
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -111,7 +124,7 @@ msgstr ""
 "Sugarは、あなたが見ているグラフィカルユーザインターフェースです。Sugarはフリーソフトウェアで、GNU General Public Licen"
 "se（一般公衆利用許諾契約書）による保護対象です。ここに記載されている条件の範囲で、Sugarを変更したりコピーを配布することが自由に行えます。"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:196
+#: ../extensions/cpsection/aboutcomputer/view.py:200
 msgid "Full license:"
 msgstr "ライセンス全文:"
 
@@ -119,11 +132,11 @@ msgstr "ライセンス全文:"
 msgid "Date & Time"
 msgstr "日付・時刻"
 
-#: ../extensions/cpsection/datetime/model.py:87
+#: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
 msgstr "エラー：そのタイムゾーンは存在しません。"
 
-#: ../extensions/cpsection/datetime/view.py:68 ../data/sugar.schemas.in.h:33
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
 msgid "Timezone"
 msgstr "タイムゾーン"
 
@@ -131,50 +144,50 @@ msgstr "タイムゾーン"
 msgid "Frame"
 msgstr "フレーム"
 
-#: ../extensions/cpsection/frame/model.py:38
-#: ../extensions/cpsection/frame/model.py:60
+#: ../extensions/cpsection/frame/model.py:41
+#: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
 msgstr "値は整数でなくてはなりません"
 
-#: ../extensions/cpsection/frame/view.py:26
+#: ../extensions/cpsection/frame/view.py:27
 msgid "never"
 msgstr "表示しない"
 
-#: ../extensions/cpsection/frame/view.py:27
+#: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
 msgstr "すぐに表示"
 
-#: ../extensions/cpsection/frame/view.py:28
+#: ../extensions/cpsection/frame/view.py:29
 #, python-format
 msgid "%s seconds"
 msgstr "%s 秒"
 
-#: ../extensions/cpsection/frame/view.py:52
+#: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
 msgstr "表示するまでの時間"
 
-#: ../extensions/cpsection/frame/view.py:76
+#: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
 msgstr "画面の４すみ"
 
-#: ../extensions/cpsection/frame/view.py:111
+#: ../extensions/cpsection/frame/view.py:113
 msgid "Edge"
 msgstr "画面のふち"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
-#: ../extensions/cpsection/keyboard/view.py:31
+#: ../extensions/cpsection/keyboard/view.py:32
 msgid "Keyboard"
 msgstr "キーボード"
 
-#: ../extensions/cpsection/keyboard/view.py:189
+#: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
 msgstr "キーボードのモデル"
 
-#: ../extensions/cpsection/keyboard/view.py:248
+#: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
 msgstr "レイアウト変更に使うキー"
 
-#: ../extensions/cpsection/keyboard/view.py:318
+#: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
 msgstr "キーボードの配列"
 
@@ -183,21 +196,21 @@ msgstr "キーボードの配列"
 msgid "Language"
 msgstr "言語"
 
-#: ../extensions/cpsection/language/model.py:28
+#: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
 msgstr "~/.i18nにアクセスできませんでした。標準設定を作ってください。"
 
-#: ../extensions/cpsection/language/model.py:124
+#: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "コード%sの言語が不明です。"
 
-#: ../extensions/cpsection/language/model.py:144
+#: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "ごめんなさい。'%s'は話せません。"
 
-#: ../extensions/cpsection/language/view.py:56
+#: ../extensions/cpsection/language/view.py:57
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
@@ -207,71 +220,85 @@ msgstr "使いたい言語を順番に追加してください。翻訳されて
 msgid "Modem Configuration"
 msgstr "モデムの設定"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:90
+#: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid "Username:"
 msgstr "ユーザ名:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:106
 msgid "Password:"
 msgstr "パスワード:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:112
+#: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Number:"
 msgstr "番号:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:123
-msgid "APN:"
-msgstr "APN:"
+#: ../extensions/cpsection/modemconfiguration/view.py:130
+msgid "Access Point Name (APN):"
+msgstr "アクセスポイント名(APN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:142
+msgid "Personal Identity Number (PIN):"
+msgstr "個人識別番号(PIN)"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:154
+msgid "Personal Unblocking Key (PUK):"
+msgstr "個人暗証番号(PUK)"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:175
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr "3Gネットワークへの接続を設定するのに、以下の情報を指定する必要があります。"
 
 #: ../extensions/cpsection/network/__init__.py:21
-#: ../extensions/cpsection/network/view.py:28
+#: ../extensions/cpsection/network/view.py:29
 msgid "Network"
 msgstr "ネットワーク"
 
-#: ../extensions/cpsection/network/model.py:79
+#: ../extensions/cpsection/network/model.py:71
 msgid "State is unknown."
 msgstr "状態が不明です"
 
-#: ../extensions/cpsection/network/model.py:105
+#: ../extensions/cpsection/network/model.py:99
 msgid "Error in specified radio argument use on/off."
 msgstr "radio引数指定でエラー、on/offを使ってください。"
 
-#: ../extensions/cpsection/network/model.py:137
+#: ../extensions/cpsection/network/model.py:140
 msgid "Error in specified argument use 0/1."
 msgstr "引数指定でエラー、0/1を使ってください。"
 
-#: ../extensions/cpsection/network/view.py:59
+#: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
 msgstr "無線"
 
-#: ../extensions/cpsection/network/view.py:67
+#: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
 msgstr "電池を節約するため、無線を止める"
 
-#: ../extensions/cpsection/network/view.py:80
+#: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
 msgstr "電波"
 
-#: ../extensions/cpsection/network/view.py:96
+#: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr "ネットワーク接続で問題がある場合、接続履歴を破棄します"
 
-#: ../extensions/cpsection/network/view.py:105
+#: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
 msgstr "ネットワーク接続履歴を破棄"
 
-#: ../extensions/cpsection/network/view.py:118
+#: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
 msgstr "コラボレーション"
 
-#: ../extensions/cpsection/network/view.py:126
+#: ../extensions/cpsection/network/view.py:130
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr "サーバーは、あなたがいる部屋と同じようなものです。同じサーバー上にいる人は、違うネットワークにいてもお互いに相手が見えます。"
 
-#: ../extensions/cpsection/network/view.py:136
+#: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
 msgstr "サーバー:"
 
@@ -279,25 +306,25 @@ msgstr "サーバー:"
 msgid "Power"
 msgstr "電源"
 
-#: ../extensions/cpsection/power/model.py:54
+#: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr "automatic_pm 引数指定でエラー、 on/offを指定してください"
 
-#: ../extensions/cpsection/power/model.py:81
+#: ../extensions/cpsection/power/model.py:120
 msgid "Error in extreme pm argument, use on/off."
 msgstr "extreme_pm 引数指定のエラー、 on/offを指定してください。"
 
-#: ../extensions/cpsection/power/view.py:47
+#: ../extensions/cpsection/power/view.py:48
 msgid "Power management"
 msgstr "電源の管理"
 
-#: ../extensions/cpsection/power/view.py:57
+#: ../extensions/cpsection/power/view.py:58
 msgid "Automatic power management (increases battery life)"
 msgstr "自動的な電源管理（電池が長持ちします）"
 
-#: ../extensions/cpsection/power/view.py:85
+#: ../extensions/cpsection/power/view.py:86
 msgid ""
-"Extreme power management (disableswireless radio, increases battery life)"
+"Extreme power management (disables wireless radio, increases battery life)"
 msgstr "最大の電源管理（無線の電波を停めて、電池を長持ちさせます）"
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -343,25 +370,25 @@ msgstr "更新をチェックしています..."
 msgid "Installing updates..."
 msgstr "更新をインストールしています..."
 
-#: ../extensions/cpsection/updater/view.py:172
+#: ../extensions/cpsection/updater/view.py:173
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "％ｓ の更新がインストールされました"
 
-#: ../extensions/cpsection/updater/view.py:253
+#: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
 msgstr "選ばれているものをインストールする"
 
-#: ../extensions/cpsection/updater/view.py:274
+#: ../extensions/cpsection/updater/view.py:276
 #, python-format
 msgid "Download size: %s"
 msgstr "ダウンロードのサイズ: %s"
 
-#: ../extensions/cpsection/updater/view.py:362
+#: ../extensions/cpsection/updater/view.py:364
 #, python-format
-msgid "From version %(current)d to %(new)s (Size: %(size)s)"
-msgstr "現在のバージョン %(current)d から %(new)s (サイズ: %(size)s) へ"
+msgid "From version %(current)s to %(new)s (Size: %(size)s)"
+msgstr "現在のバージョン %(current)s から %(new)s (サイズ: %(size)s) へ"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
@@ -385,28 +412,28 @@ msgstr "%.0f KB"
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:58
+#: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "私の電池"
 
-#: ../extensions/deviceicon/battery.py:137
+#: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
 msgstr "取り外されています"
 
-#: ../extensions/deviceicon/battery.py:140
+#: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
 msgstr "充電中"
 
-#: ../extensions/deviceicon/battery.py:143
+#: ../extensions/deviceicon/battery.py:153
 msgid "Very little power remaining"
 msgstr "電池が残りわずかです"
 
-#: ../extensions/deviceicon/battery.py:149
+#: ../extensions/deviceicon/battery.py:158
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "残り %(hour)d:%(min).2d"
 
-#: ../extensions/deviceicon/battery.py:152
+#: ../extensions/deviceicon/battery.py:161
 msgid "Charged"
 msgstr "充電済み"
 
@@ -415,126 +442,176 @@ msgstr "充電済み"
 msgid "IP address: %s"
 msgstr "IPアドレス: %s"
 
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#: ../extensions/deviceicon/network.py:111
-msgid "Disconnect..."
-msgstr "切断..."
-
-#: ../extensions/deviceicon/network.py:116
-msgid "Create new wireless network"
-msgstr "無線ネットワークを作成"
+#: ../extensions/deviceicon/network.py:104
+#: ../extensions/deviceicon/network.py:303
+#: ../src/jarabe/desktop/networkviews.py:140
+#: ../src/jarabe/desktop/networkviews.py:508
+msgid "Disconnect"
+msgstr "切断"
 
 # Only show disconnect when there's a mesh device, because mesh takes
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:122
-#: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/meshbox.py:248 ../src/jarabe/desktop/meshbox.py:537
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:295
+#: ../src/jarabe/desktop/networkviews.py:243
+#: ../src/jarabe/desktop/networkviews.py:547
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connecting..."
 msgstr "接続しています..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:126
-#: ../extensions/deviceicon/network.py:198
-#: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/meshbox.py:254 ../src/jarabe/desktop/meshbox.py:543
+#: ../extensions/deviceicon/network.py:117
+#: ../extensions/deviceicon/network.py:185
+#: ../src/jarabe/desktop/networkviews.py:253
+#: ../src/jarabe/desktop/networkviews.py:553
+#: ../src/jarabe/desktop/networkviews.py:686
 msgid "Connected"
 msgstr "接続しました"
 
-#: ../extensions/deviceicon/network.py:158
+#: ../extensions/deviceicon/network.py:130
+msgid "No wireless connection"
+msgstr "無線接続がありません"
+
+#: ../extensions/deviceicon/network.py:144
 msgid "Channel"
 msgstr "チャンネル"
 
-#: ../extensions/deviceicon/network.py:173
+#: ../extensions/deviceicon/network.py:159
 msgid "Wired Network"
 msgstr "有線ネットワーク"
 
-#: ../extensions/deviceicon/network.py:201
+#: ../extensions/deviceicon/network.py:188
 msgid "Speed"
 msgstr "速度"
 
-#: ../extensions/deviceicon/network.py:228
+#: ../extensions/deviceicon/network.py:213
 msgid "Wireless modem"
 msgstr "無線モデム"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:281
 msgid "Please wait..."
 msgstr "お待ちください..."
 
-#: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/meshbox.py:164 ../src/jarabe/desktop/meshbox.py:494
+#: ../extensions/deviceicon/network.py:286
+#: ../src/jarabe/desktop/networkviews.py:136
+#: ../src/jarabe/desktop/networkviews.py:504
+#: ../src/jarabe/desktop/networkviews.py:637
 msgid "Connect"
 msgstr "接続"
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:287
 msgid "Disconnected"
 msgstr "切断されました"
 
-#: ../extensions/deviceicon/network.py:283
-#: ../src/jarabe/controlpanel/toolbar.py:115
-#: ../src/jarabe/desktop/homebox.py:68
-#: ../src/jarabe/frame/activitiestray.py:700
-#: ../src/jarabe/frame/activitiestray.py:799
-#: ../src/jarabe/frame/activitiestray.py:827
+#: ../extensions/deviceicon/network.py:294
+#: ../src/jarabe/controlpanel/toolbar.py:119
+#: ../src/jarabe/desktop/homebox.py:71
+#: ../src/jarabe/frame/activitiestray.py:602
+#: ../src/jarabe/frame/activitiestray.py:704
+#: ../src/jarabe/frame/activitiestray.py:732
 msgid "Cancel"
 msgstr "中止"
 
-#: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/desktop/meshbox.py:168
-msgid "Disconnect"
-msgstr "切断"
+#: ../extensions/deviceicon/network.py:333
+msgid "Try connection again"
+msgstr "もう一度接続を試してみてください"
 
-#: ../extensions/deviceicon/network.py:530
+#: ../extensions/deviceicon/network.py:336
 #, python-format
-msgid "%s's network"
-msgstr "%s のネットワーク"
+msgid "Error: %s"
+msgstr "エラー: %s"
 
-#: ../extensions/deviceicon/network.py:597
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:340
+#, python-format
+msgid "Suggestion: %s"
+msgstr "提案: %s"
+
+#: ../extensions/deviceicon/network.py:349
+#, python-format
+msgid "Connected for %s"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:355
+#: ../extensions/deviceicon/network.py:356
+#, python-format
+msgid "%d KB"
+msgstr "%d KB"
+
+#: ../extensions/deviceicon/network.py:361
+msgid "Check your Pin/Puk configuration."
+msgstr "PIN/PUKの設定を確認してください。"
+
+#: ../extensions/deviceicon/network.py:364
+msgid "Check your Access Point Name (APN) configuration"
+msgstr "アクセスポイント名の設定を確認してください。"
+
+#: ../extensions/deviceicon/network.py:368
+msgid "Check the Number configuration."
+msgstr "番号の設定を確認してください。"
+
+#: ../extensions/deviceicon/network.py:370
+msgid "Check your configuration."
+msgstr "設定を確認してください。"
+
+#: ../extensions/deviceicon/network.py:612
 msgid "Mesh Network"
 msgstr "メッシュネットワーク"
 
-#: ../extensions/deviceicon/network.py:857
+#: ../extensions/deviceicon/network.py:656
 #, python-format
-msgid "Data sent %d kb / received %d kb"
-msgstr "送信 %d kb/受信 %d kb"
+msgid "Mesh Network %s"
+msgstr "メッシュネットワーク %d"
 
-#: ../extensions/deviceicon/network.py:868
-msgid "Connection time "
-msgstr "接続時間 "
+#: ../extensions/deviceicon/network.py:779
+msgid "No GSM connection available."
+msgstr "GSM接続が使えません。"
 
-#: ../extensions/deviceicon/speaker.py:59
+#: ../extensions/deviceicon/network.py:780
+msgid "Create a connection in the control panel."
+msgstr "コントロールパネルで接続を設定してください。"
+
+#: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "私のスピーカー"
 
-#: ../extensions/deviceicon/speaker.py:133
+#: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
 msgstr "音を出す"
 
-#: ../extensions/deviceicon/speaker.py:136
+#: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
 msgstr "音を消す"
+
+#: ../extensions/deviceicon/touchpad.py:38
+msgid "finger"
+msgstr "指"
+
+#: ../extensions/deviceicon/touchpad.py:39
+msgid "stylus"
+msgstr "スタイラス"
+
+#: ../extensions/deviceicon/touchpad.py:68
+msgid "My touchpad"
+msgstr "私のタッチパッド"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
 msgstr "メッシュ"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "Group"
 msgstr "グループ"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Home"
 msgstr "ホーム"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Activity"
 msgstr "アクティビティ"
 
@@ -554,169 +631,255 @@ msgid ""
 msgstr "初期化の際ニックネームを確認する場合は \"disabled\"を、UNIXアカウントの長い名前を再利用するには\"system\"を指定してください"
 
 #: ../data/sugar.schemas.in.h:2
+msgid "Additional directories which can contain updated translations."
+msgstr "更新された翻訳データを置く追加ディレクトリ"
+
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "バックアップURL"
 
-#: ../data/sugar.schemas.in.h:3
+#: ../data/sugar.schemas.in.h:4
+msgid "Bundle IDs of protected activities"
+msgstr "保護されたアクティビティのバンドルID"
+
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
-"composed of the stroke color and fill color, format is that of rbg colors. "
+"composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
 "デスクトップで使われるXOアイコンの色。文字列は線と塗りつぶしの色で構成されます。フォーマットは赤青緑の形式です。例： #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "四隅の遅延"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "デフォルトのフォント種類"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "デフォルトのフォントサイズ"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "デフォルトのニックネーム"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "画面四隅でフレームを起動する際の遅延"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "画面四辺でフレームを起動する際の遅延"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:12
+msgid "Directory to search for translations"
+msgstr "翻訳データを検索するディレクトリ"
+
+#: ../data/sugar.schemas.in.h:13
 msgid "Edge Delay"
 msgstr "四辺の遅延"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "お気に入りのレイアウト"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "お気に入り復元モード"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "デスクトップで使われるフォント種類"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "デスクトップで使われるフォントサイズ"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:18
+msgid "GSM network APN"
+msgstr "GSMネットワークのAPN"
+
+#: ../data/sugar.schemas.in.h:19
+msgid "GSM network PIN"
+msgstr "GSMネットワークのPIN"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network PUK"
+msgstr "GSMネットワークのPUK"
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network access point name configuration"
+msgstr "GSMネットワークのアクセスポイント名の設定"
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network number"
+msgstr "GSMネットワーク番号"
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network password"
+msgstr "GSMネットワークのパスワード"
+
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network password configuration"
+msgstr "GSMネットワークのパスワード設定"
+
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network personal identification number configuration"
+msgstr "GSMネットワークのPINコード設定"
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network personal unlock key configuration"
+msgstr "GSMネットワークのPUKコード設定"
+
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network telephone number configuration"
+msgstr "GSMネットワークの電話番号設定"
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network username"
+msgstr "GSMネットワークのユーザ名"
+
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network username configuration"
+msgstr "GSMネットワークのユーザ名設定"
+
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr "ONの場合、SugarはJabberサーバーの他のユーザが私たちを検索できるようにします"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "もしONなら、Sugarはログアウト オプションを表示します。"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:32
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr "もしONなら、Sugarは再起動 オプションを表示します。"
+
+#: ../data/sugar.schemas.in.h:33
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+"もしONなら、Sugarはチャンネル1,6,11のデフォルトのアドホックネットワークを表示します。もしSugar起動時に名前つきネットワークが見つからな"
+"いと、自動的にアドホックネットワークに接続します。"
+
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Jabberサーバー"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "キーボードの配列"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "キーボードのモデル"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "キーボードのオプション"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "お気に入り表示のレイアウト"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "キーボード配列のリスト。"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "キーボードオプションのリスト"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:41
 msgid "Power Automatic"
 msgstr "電源設定-自動"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:42
 msgid "Power Automatic."
 msgstr "電源設定-自動"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Extreme"
 msgstr "電源設定-最大"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme."
 msgstr "電源設定-最大"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "ガジェットに送信"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:46
 msgid "Setting for muting the sound device."
 msgstr "サウンド装置の音を消す"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:47
 msgid "Show Log out"
 msgstr "ログアウト を表示"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:48
+msgid "Show Restart"
+msgstr "再起動 を表示"
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Show Sugar Ad-hoc networks"
+msgstr "アドホックネットワークを表示"
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Sound Muted"
 msgstr "消音されました"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:51
 msgid "The keyboard model to be used"
 msgstr "使用するキーボードのモデル"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:53
 msgid "Timezone setting for the system."
 msgstr "システムのタイムゾーン設定"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:54
 msgid "Url of the jabber server to use."
 msgstr "使用するJabberサーバーのURL"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:55
 msgid "Url where the backup is saved to."
 msgstr "バックアップが保存されるURL"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:56
 msgid "User Color"
 msgstr "ユーザの色"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:57
 msgid "User Name"
 msgstr "ユーザの名前"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:58
 msgid "User name that is used throughout the desktop."
 msgstr "デスクトップで使われるユーザ名"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:59
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr "リスト表示で、これらのアクティビティを削除することはできません。"
+
+#: ../data/sugar.schemas.in.h:60
 msgid "Volume Level"
 msgstr "音量レベル"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:61
 msgid "Volume level for the sound device."
 msgstr "サウンド装置の音量レベル"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:62
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -743,7 +906,7 @@ msgstr "sugar-control-panel: %s"
 # which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
-#: ../src/jarabe/controlpanel/cmd.py:37
+#: ../src/jarabe/controlpanel/cmd.py:38
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -767,50 +930,52 @@ msgstr ""
 "-c key このキーの設定を消去\n"
 "   "
 
-#: ../src/jarabe/controlpanel/cmd.py:50
+#: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "変更を適用するにはsugarを再起動しなければいけません。\n"
 
-#: ../src/jarabe/controlpanel/gui.py:281
+#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
+#: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "注意"
 
-#: ../src/jarabe/controlpanel/gui.py:282
-#: ../src/jarabe/controlpanel/sectionview.py:42
+#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "変更には再起動が必要です"
 
-#: ../src/jarabe/controlpanel/gui.py:285
+#: ../src/jarabe/controlpanel/gui.py:300
 msgid "Cancel changes"
 msgstr "変更を取りやめる"
 
-#: ../src/jarabe/controlpanel/gui.py:290 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "あとで"
 
-#: ../src/jarabe/controlpanel/gui.py:294
+#: ../src/jarabe/controlpanel/gui.py:309
 msgid "Restart now"
 msgstr "今すぐ再起動"
 
-#: ../src/jarabe/controlpanel/toolbar.py:61 ../src/jarabe/intro/window.py:206
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
 msgid "Done"
 msgstr "完了"
 
-#: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/favoritesview.py:333
+#: ../src/jarabe/controlpanel/toolbar.py:125
+#: ../src/jarabe/desktop/favoritesview.py:347
 msgid "Ok"
 msgstr "了解"
 
-#: ../src/jarabe/desktop/activitieslist.py:236
+#: ../src/jarabe/desktop/activitieslist.py:230
 #, python-format
 msgid "Version %s"
 msgstr "バージョン %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:356
 msgid "Confirm erase"
 msgstr "消去の確認"
 
-#: ../src/jarabe/desktop/activitieslist.py:359
+#: ../src/jarabe/desktop/activitieslist.py:358
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "消去の確認： %s を完全に消去しますか？"
@@ -819,383 +984,463 @@ msgstr "消去の確認： %s を完全に消去しますか？"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:363
-#: ../src/jarabe/frame/clipboardmenu.py:63
-#: ../src/jarabe/view/viewsource.py:218
+#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/frame/clipboardmenu.py:67
+#: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "ジャーナルに保存"
 
-#: ../src/jarabe/desktop/activitieslist.py:366
-#: ../src/jarabe/desktop/activitieslist.py:409
-#: ../src/jarabe/journal/journaltoolbox.py:360
-#: ../src/jarabe/journal/palettes.py:105
+#: ../src/jarabe/desktop/activitieslist.py:365
+#: ../src/jarabe/desktop/activitieslist.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "消去する"
 
-#: ../src/jarabe/desktop/activitieslist.py:430
+#: ../src/jarabe/desktop/activitieslist.py:435
 msgid "Remove favorite"
 msgstr "お気に入りから削除"
 
-#: ../src/jarabe/desktop/activitieslist.py:434
+#: ../src/jarabe/desktop/activitieslist.py:439
 msgid "Make favorite"
 msgstr "お気に入りに登録"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:116
+#: ../src/jarabe/desktop/favoriteslayout.py:127
 msgid "Freeform"
 msgstr "自由に並べる"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:198
+#: ../src/jarabe/desktop/favoriteslayout.py:215
 msgid "Ring"
 msgstr "円に並べる"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:337
+#: ../src/jarabe/desktop/favoriteslayout.py:402
 msgid "Spiral"
 msgstr "渦巻きに並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:404
+#: ../src/jarabe/desktop/favoriteslayout.py:472
 msgid "Box"
 msgstr "箱型に並べる"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:445
+#: ../src/jarabe/desktop/favoriteslayout.py:515
 msgid "Triangle"
 msgstr "三角形に並べる"
 
-#: ../src/jarabe/desktop/favoritesview.py:324
+#: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
 msgstr "登録失敗"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:339
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:327
+#: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
 msgstr "登録成功"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
 msgstr "あなたはスクールサーバーに登録されました"
 
-#: ../src/jarabe/desktop/favoritesview.py:630
+#: ../src/jarabe/desktop/favoritesview.py:641
 msgid "Register"
 msgstr "登録"
 
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/favoritesview.py:643
+#: ../src/jarabe/desktop/favoritesview.py:660
+msgid "Register again"
+msgstr "もう一度登録"
+
+#: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
 msgstr "ソフトウェアの更新"
 
-#: ../src/jarabe/desktop/homebox.py:64
+#: ../src/jarabe/desktop/homebox.py:67
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "新しいソフトウェアとの互換性を保つため、アクティビティを更新してください"
 
-#: ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/desktop/homebox.py:76
 msgid "Check now"
 msgstr "今すぐ調べる"
 
-#: ../src/jarabe/desktop/homebox.py:192
+#: ../src/jarabe/desktop/homebox.py:197
 msgid "List view"
 msgstr "リスト表示"
 
-#: ../src/jarabe/desktop/homebox.py:193
+#: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/jarabe/desktop/homebox.py:255
+#: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
 msgstr "お気に入り"
 
-#: ../src/jarabe/desktop/homebox.py:256
+#: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:135
+#: ../src/jarabe/desktop/keydialog.py:143
 msgid "Key Type:"
 msgstr "キーのタイプ:"
 
-#: ../src/jarabe/desktop/keydialog.py:155
+#: ../src/jarabe/desktop/keydialog.py:163
 msgid "Authentication Type:"
 msgstr "認証タイプ:"
 
-#: ../src/jarabe/desktop/keydialog.py:220
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA と WPA2パーソナル"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "無線のセキュリティ:"
 
-#: ../src/jarabe/desktop/meshbox.py:492
+# TRANS: Action label for resuming an activity.
+#. TRANS: Action label for resuming an activity.
+#: ../src/jarabe/desktop/meshbox.py:91
+#: ../src/jarabe/journal/journaltoolbox.py:494
+#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+msgid "Resume"
+msgstr "再開"
+
+#: ../src/jarabe/desktop/meshbox.py:96
+#: ../src/jarabe/frame/activitiestray.py:182
+msgid "Join"
+msgstr "参加"
+
+#: ../src/jarabe/desktop/networkviews.py:500
+#, python-format
+msgid "Ad-hoc Network %d"
+msgstr "アドホックネットワーク %d"
+
+#: ../src/jarabe/desktop/networkviews.py:634
 #, python-format
 msgid "Mesh Network %d"
 msgstr "メッシュネットワーク %d"
 
-# TRANS: Action label for resuming an activity.
-#. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:629
-#: ../src/jarabe/frame/activitiestray.py:735
-#: ../src/jarabe/journal/journaltoolbox.py:428
-#: ../src/jarabe/journal/palettes.py:65 ../src/jarabe/view/palettes.py:67
-msgid "Resume"
-msgstr "再開"
-
-#: ../src/jarabe/desktop/meshbox.py:634
-#: ../src/jarabe/frame/activitiestray.py:233
-msgid "Join"
-msgstr "参加"
-
-#: ../src/jarabe/desktop/schoolserver.py:103
+#: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
 msgstr "サーバーに接続できません"
 
-#: ../src/jarabe/desktop/schoolserver.py:108
+#: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
 msgstr "サーバーは要求の処理を完了できませんでした"
 
-#: ../src/jarabe/frame/activitiestray.py:238
-#: ../src/jarabe/frame/activitiestray.py:672
+#: ../src/jarabe/frame/activitiestray.py:187
+#: ../src/jarabe/frame/activitiestray.py:574
 msgid "Decline"
 msgstr "断る"
 
-#: ../src/jarabe/frame/activitiestray.py:624
+#: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:626
+#: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:628
+#: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:645
+#: ../src/jarabe/frame/activitiestray.py:544
 #, python-format
 msgid "%s of %s"
 msgstr "%s の %s"
 
-#: ../src/jarabe/frame/activitiestray.py:657
+#: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
-msgid "Transfer from %r"
-msgstr "%rから転送"
+#, python-format,
+msgid "Transfer from %s"
+msgstr "%sから転送"
 
-#: ../src/jarabe/frame/activitiestray.py:667
+#: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
 msgstr "受け入れる"
 
-#: ../src/jarabe/frame/activitiestray.py:690
-#: ../src/jarabe/frame/activitiestray.py:817
+#: ../src/jarabe/frame/activitiestray.py:592
+#: ../src/jarabe/frame/activitiestray.py:722
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:724
-#: ../src/jarabe/frame/activitiestray.py:852
+#: ../src/jarabe/frame/activitiestray.py:626
+#: ../src/jarabe/frame/activitiestray.py:639
+#: ../src/jarabe/frame/activitiestray.py:757
 msgid "Dismiss"
 msgstr "閉じる"
 
-#: ../src/jarabe/frame/activitiestray.py:787
-#, python-format
-msgid "Transfer to %r"
-msgstr "%rへ転送"
+#: ../src/jarabe/frame/activitiestray.py:643
+msgid "The other participant canceled the file transfer"
+msgstr ""
 
-#: ../src/jarabe/frame/clipboardmenu.py:53 ../src/jarabe/view/palettes.py:221
+#: ../src/jarabe/frame/activitiestray.py:691
+#, python-format
+#, python-format,
+msgid "Transfer to %s"
+msgstr "%sへ転送"
+
+#: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
+msgctxt "Clipboard"
 msgid "Remove"
 msgstr "削除"
 
-#: ../src/jarabe/frame/clipboardmenu.py:58
-#: ../src/jarabe/frame/clipboardmenu.py:81
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/frame/clipboardmenu.py:85
 msgid "Open"
 msgstr "開く"
 
-#: ../src/jarabe/frame/clipboardmenu.py:86
+#: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
 msgstr "次のもので開く："
 
-#: ../src/jarabe/frame/clipboardobject.py:49
+#: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
 msgstr "%sのクリッピング"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:37
+#: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "Neighborhood"
 msgstr "お隣さん"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:37
+#: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:128
+#: ../src/jarabe/intro/window.py:90
+msgid "Name:"
+msgstr "名前:"
+
+#: ../src/jarabe/intro/window.py:126
 msgid "Click to change color:"
 msgstr "クリックして色を変更:"
 
-#: ../src/jarabe/intro/window.py:192 ../src/jarabe/journal/detailview.py:103
+#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "戻る"
 
-#: ../src/jarabe/intro/window.py:209
+#: ../src/jarabe/intro/window.py:204
 msgid "Next"
 msgstr "進む"
 
-#: ../src/jarabe/journal/expandedentry.py:152
-#: ../src/jarabe/journal/palettes.py:59
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "タイトル無し"
 
-#: ../src/jarabe/journal/expandedentry.py:243
+#: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
 msgstr "プレビュー無し"
 
-#: ../src/jarabe/journal/expandedentry.py:262
+#: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
 msgstr "種類: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:262
+#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/listmodel.py:150
+#: ../src/jarabe/journal/listmodel.py:158
 msgid "Unknown"
 msgstr "不明"
 
-#: ../src/jarabe/journal/expandedentry.py:263
+#: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
 msgid "Date: %s"
 msgstr "日付： %s"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
 msgid "Size: %s"
 msgstr "サイズ: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:286 ../src/jarabe/journal/misc.py:93
+#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "日付無し"
 
-#: ../src/jarabe/journal/expandedentry.py:293
+#: ../src/jarabe/journal/expandedentry.py:301
 msgid "Participants:"
 msgstr "参加者:"
 
-#: ../src/jarabe/journal/expandedentry.py:316
+#: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
 msgstr "説明:"
 
-#: ../src/jarabe/journal/expandedentry.py:341
+#: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
 msgstr "タグ:"
 
-#: ../src/jarabe/journal/journalactivity.py:108
-#: ../src/jarabe/journal/volumestoolbar.py:47
+#: ../src/jarabe/journal/journalactivity.py:115
+#: ../src/jarabe/journal/journaltoolbox.py:453
+#: ../src/jarabe/journal/palettes.py:198
+#: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "ジャーナル"
 
-#: ../src/jarabe/journal/journaltoolbox.py:67
+#: ../src/jarabe/journal/journaltoolbox.py:71
 msgid "Search"
 msgstr "検索"
 
-#: ../src/jarabe/journal/journaltoolbox.py:126
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Anytime"
 msgstr "すべての期間"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:140
 msgid "Today"
 msgstr "今日"
 
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:142
 msgid "Since yesterday"
 msgstr "昨日から後"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:144
 msgid "Past week"
 msgstr "過去１週間"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Past month"
 msgstr "過去１ヶ月"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "Past year"
 msgstr "過去１年"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:155
 msgid "Anyone"
 msgstr "誰でも"
 
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:157
 msgid "My friends"
 msgstr "私の友だち"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My class"
 msgstr "私のクラス"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:300
 msgid "Anything"
 msgstr "すべての種類"
 
-# TODO: Add "Start with" menu item
-#: ../src/jarabe/journal/journaltoolbox.py:350
-#: ../src/jarabe/journal/palettes.py:83
-msgid "Copy"
-msgstr "コピー"
+#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/palettes.py:93
+msgid "Copy to"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:389
+#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+msgid "Duplicate"
+msgstr "複製"
+
+#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:315
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr "コピー中にエラーになりました。%s"
+
+#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
+#: ../src/jarabe/journal/volumestoolbar.py:316
+msgid "Error"
+msgstr "エラー"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:431
-#: ../src/jarabe/journal/palettes.py:68
+#: ../src/jarabe/journal/journaltoolbox.py:497
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "開始"
 
-#: ../src/jarabe/journal/listview.py:373
+#: ../src/jarabe/journal/journaltoolbox.py:525
+msgid "Sort by date modified"
+msgstr "更新日で並べ替える"
+
+#: ../src/jarabe/journal/journaltoolbox.py:526
+msgid "Sort by date created"
+msgstr "作成日で並べ替える"
+
+#: ../src/jarabe/journal/journaltoolbox.py:527
+msgid "Sort by size"
+msgstr "サイズで並べ替える"
+
+#: ../src/jarabe/journal/journaltoolbox.py:536
+msgid "Sort view"
+msgstr "並べ替え表示"
+
+#: ../src/jarabe/journal/listview.py:316
 msgid "Your Journal is empty"
 msgstr "ジャーナルが空です"
 
-#: ../src/jarabe/journal/listview.py:375
+#: ../src/jarabe/journal/listview.py:319
+msgid "Your documents folder is empty"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:321
+msgid "The device is empty"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:323
 msgid "No matching entries"
 msgstr "あてはまるものが無いです"
 
-#: ../src/jarabe/journal/listview.py:386
+#: ../src/jarabe/journal/listview.py:397
 msgid "Clear search"
 msgstr "検索をクリア"
 
-#: ../src/jarabe/journal/modalalert.py:63
+#: ../src/jarabe/journal/misc.py:273
+#, python-format
+msgid "Older Version Of %s Activity"
+msgstr "%s アクティビティの古いバージョン"
+
+#: ../src/jarabe/journal/misc.py:274
+#, python-format
+#, python-format,
+msgid "Do you want to downgrade to version %s"
+msgstr "古いバージョン %s に戻しますか"
+
+#: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
 msgstr "ジャーナルが満杯です"
 
-#: ../src/jarabe/journal/modalalert.py:67
+#: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr "新しいものが入るよう、ジャーナルの中身の古いものをどれか削除してください"
 
-#: ../src/jarabe/journal/modalalert.py:79
+#: ../src/jarabe/journal/modalalert.py:80
 msgid "Show Journal"
 msgstr "ジャーナルを表示"
 
@@ -1204,109 +1449,349 @@ msgid "Choose an object"
 msgstr "オブジェクトを選ぶ"
 
 #: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:308
+#: ../src/jarabe/view/viewsource.py:410
 msgid "Close"
 msgstr "閉じる"
 
-#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
 msgstr "次のアクティビティで再開"
 
-#: ../src/jarabe/journal/palettes.py:69
+#: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
 msgstr "次のアクティビティで開始"
 
-#: ../src/jarabe/journal/palettes.py:91
-msgid "Send to"
-msgstr "次に送る"
-
-#: ../src/jarabe/journal/palettes.py:100
-msgid "View Details"
-msgstr "詳細を表示"
-
-#: ../src/jarabe/journal/palettes.py:178
-msgid "No friends present"
-msgstr "お友達がいません"
-
-#: ../src/jarabe/journal/palettes.py:183
-msgid "No valid connection found"
-msgstr "正しい接続がありません"
-
-#: ../src/jarabe/journal/palettes.py:211
-msgid "No activity to resume entry"
-msgstr "エントリを再開するアクティビティがありません"
-
-#: ../src/jarabe/journal/palettes.py:213
+#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
 msgstr "エントリを開始するアクティビティがありません"
 
-#: ../src/jarabe/view/buddymenu.py:62
-msgid "Remove friend"
-msgstr "お友だちの登録削除"
+#: ../src/jarabe/journal/palettes.py:112
+msgid "Send to"
+msgstr "次に送る"
 
-#: ../src/jarabe/view/buddymenu.py:65
-msgid "Make friend"
-msgstr "お友だちを登録"
+#: ../src/jarabe/journal/palettes.py:121
+msgid "View Details"
+msgstr "詳細を表示"
 
-#: ../src/jarabe/view/buddymenu.py:82
-msgid "Shutdown"
-msgstr "シャットダウン"
+#: ../src/jarabe/journal/palettes.py:160
+msgid "Entries without a file cannot be sent."
+msgstr "ファイルがないエントリは送信できません。"
 
-#: ../src/jarabe/view/buddymenu.py:90
-msgid "Logout"
-msgstr "ログアウト"
+#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
+#: ../src/jarabe/journal/volumestoolbar.py:306
+msgid "Entries without a file cannot be copied."
+msgstr "ファイルがないエントリはコピーできません。"
 
-#: ../src/jarabe/view/buddymenu.py:95
-msgid "My Settings"
-msgstr "私の設定"
+#: ../src/jarabe/journal/palettes.py:267
+msgid "Clipboard"
+msgstr "クリップボード"
 
-#: ../src/jarabe/view/buddymenu.py:130
-#, python-format
-msgid "Invite to %s"
-msgstr "%s に招待する"
+#: ../src/jarabe/journal/palettes.py:322
+msgid "No friends present"
+msgstr "お友達がいません"
 
-#: ../src/jarabe/view/palettes.py:45
-msgid "Starting..."
-msgstr "起動中..."
+#: ../src/jarabe/journal/palettes.py:327
+msgid "No valid connection found"
+msgstr "正しい接続がありません"
 
-#. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:74
-msgid "View Source"
-msgstr "ソースコードを表示"
+#: ../src/jarabe/journal/palettes.py:355
+msgid "No activity to resume entry"
+msgstr "エントリを再開するアクティビティがありません"
 
-#: ../src/jarabe/view/palettes.py:85
-msgid "Stop"
-msgstr "停止"
+#: ../src/jarabe/journal/volumestoolbar.py:209
+msgid "Documents"
+msgstr "ドキュメント"
 
-#: ../src/jarabe/view/palettes.py:125
-msgid "Start new"
-msgstr "新しく開始する"
-
-#: ../src/jarabe/view/palettes.py:174
-msgid "Show contents"
-msgstr "内容を表示"
-
-#: ../src/jarabe/view/palettes.py:196 ../src/jarabe/view/palettes.py:246
+#: ../src/jarabe/journal/volumestoolbar.py:391
+#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB 空き"
 
-#: ../src/jarabe/view/viewsource.py:208
+#: ../src/jarabe/model/network.py:163
+msgid "The reason for the device state change is unknown."
+msgstr "デバイスの状態変化の理由は不明です。"
+
+#: ../src/jarabe/model/network.py:165
+msgid "The state change is normal."
+msgstr "デバイスの状態変化の理由は不明です。"
+
+#: ../src/jarabe/model/network.py:167
+msgid "The device is now managed."
+msgstr "デバイスは管理されています。"
+
+#: ../src/jarabe/model/network.py:169
+msgid "The device is no longer managed."
+msgstr "デバイスはもう管理されていません。"
+
+#: ../src/jarabe/model/network.py:171
+msgid "The device could not be readied for configuration."
+msgstr "デバイスの設定準備ができませんでした。"
+
+#: ../src/jarabe/model/network.py:173
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr "IP設定を予約できませんでした（アドレスの空きがない、タイムアウトなど）。"
+
+#: ../src/jarabe/model/network.py:176
+msgid "The IP configuration is no longer valid."
+msgstr "IP設定は正しくありません。"
+
+#: ../src/jarabe/model/network.py:178
+msgid "Secrets were required, but not provided."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:180
+msgid ""
+"The 802.1X supplicant disconnected from the access point or authentication "
+"server."
+msgstr "802.1X サプリカントはアクセスポイントまたは認証サーバーから切断されました。"
+
+#: ../src/jarabe/model/network.py:183
+msgid "Configuration of the 802.1X supplicant failed."
+msgstr "802.1X サプリカントの設定が失敗しました。"
+
+#: ../src/jarabe/model/network.py:185
+msgid "The 802.1X supplicant quit or failed unexpectedly."
+msgstr "802.1X サプリカントは終了したか、失敗しました。"
+
+#: ../src/jarabe/model/network.py:187
+msgid "The 802.1X supplicant took too long to authenticate."
+msgstr "802.1X サプリカントは時間がかかり過ぎて認証できませんでした。"
+
+#: ../src/jarabe/model/network.py:189
+msgid "The PPP service failed to start within the allowed time."
+msgstr "PPPサービスが許容される時間内に起動できませんでした。"
+
+#: ../src/jarabe/model/network.py:191
+msgid "The PPP service disconnected unexpectedly."
+msgstr "PPPサービスは予期なく切断されました。"
+
+#: ../src/jarabe/model/network.py:193
+msgid "The PPP service quit or failed unexpectedly."
+msgstr "PPPサービスは予期なく終了したか失敗しました。"
+
+#: ../src/jarabe/model/network.py:195
+msgid "The DHCP service failed to start within the allowed time."
+msgstr "DHCPサービスが許容される時間内に起動できませんでした。"
+
+#: ../src/jarabe/model/network.py:197
+msgid "The DHCP service reported an unexpected error."
+msgstr "DHCPサービスが予期せぬエラーになりました。"
+
+#: ../src/jarabe/model/network.py:199
+msgid "The DHCP service quit or failed unexpectedly."
+msgstr "DHCPサービスは予期なく終了したか失敗しました。"
+
+#: ../src/jarabe/model/network.py:201
+msgid "The shared connection service failed to start."
+msgstr "共有接続サービスが起動できませんでした。"
+
+#: ../src/jarabe/model/network.py:203
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "共有接続サービスは予期なく終了したか失敗しました。"
+
+#: ../src/jarabe/model/network.py:206
+msgid "The AutoIP service failed to start."
+msgstr "AutoIPサービスが起動できませんでした。"
+
+#: ../src/jarabe/model/network.py:208
+msgid "The AutoIP service reported an unexpected error."
+msgstr "AutoIPサービスが予期せぬエラーになりました。"
+
+#: ../src/jarabe/model/network.py:210
+msgid "The AutoIP service quit or failed unexpectedly."
+msgstr "AutoIPサービスは予期なく終了したか失敗しました。"
+
+#: ../src/jarabe/model/network.py:212
+msgid "Dialing failed because the line was busy."
+msgstr "回線が話し中でダイヤルに失敗しました。"
+
+#: ../src/jarabe/model/network.py:214
+msgid "Dialing failed because there was no dial tone."
+msgstr "発信音がないのでダイヤルできませんでした。"
+
+#: ../src/jarabe/model/network.py:216
+msgid "Dialing failed because there was no carrier."
+msgstr "回線が切断されたのでダイヤルできませんでした。"
+
+#: ../src/jarabe/model/network.py:218
+msgid "Dialing timed out."
+msgstr "ダイヤルがタイムアウトしました。"
+
+#: ../src/jarabe/model/network.py:220
+msgid "Dialing failed."
+msgstr "ダイヤルできませんでした。"
+
+#: ../src/jarabe/model/network.py:222
+msgid "Modem initialization failed."
+msgstr "モデムの初期化が失敗しました。"
+
+#: ../src/jarabe/model/network.py:224
+msgid "Failed to select the specified GSM APN"
+msgstr "指定されたGSMアクセスポイントの選択が失敗しました。"
+
+#: ../src/jarabe/model/network.py:226
+msgid "Not searching for networks."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:228
+msgid "Network registration was denied."
+msgstr "ネットワーク登録は拒否されました。"
+
+#: ../src/jarabe/model/network.py:230
+msgid "Network registration timed out."
+msgstr "ネットワーク登録がタイムアウトしました。"
+
+#: ../src/jarabe/model/network.py:232
+msgid "Failed to register with the requested GSM network."
+msgstr "要求されたGSMネットワークの登録が失敗しました。"
+
+#: ../src/jarabe/model/network.py:234
+msgid "PIN check failed."
+msgstr "PINコードのチェックが失敗しました。"
+
+#: ../src/jarabe/model/network.py:236
+msgid "Necessary firmware for the device may be missing."
+msgstr "デバイスに必要なファームウェアが無いのかもしれません。"
+
+#: ../src/jarabe/model/network.py:238
+msgid "The device was removed."
+msgstr "デバイスが取り外されました。"
+
+#: ../src/jarabe/model/network.py:240
+msgid "NetworkManager went to sleep."
+msgstr "ネットワークマネージャはスリープ状態になりました。"
+
+#: ../src/jarabe/model/network.py:242
+msgid "The device's active connection was removed or disappeared."
+msgstr "デバイスの有効な接続が無くなりました。"
+
+#: ../src/jarabe/model/network.py:245
+msgid "A user or client requested the disconnection."
+msgstr "ユーザまたはクライアントが切断を要求しました。"
+
+#: ../src/jarabe/model/network.py:247
+msgid "The device's carrier/link changed."
+msgstr "デバイスの回線/リンクが変わりました。"
+
+#: ../src/jarabe/view/buddymenu.py:67
+msgid "Remove friend"
+msgstr "お友だちの登録削除"
+
+#: ../src/jarabe/view/buddymenu.py:70
+msgid "Make friend"
+msgstr "お友だちを登録"
+
+#: ../src/jarabe/view/buddymenu.py:87
+msgid "Shutdown"
+msgstr "シャットダウン"
+
+#: ../src/jarabe/view/buddymenu.py:95
+msgid "Restart"
+msgstr "再起動"
+
+#: ../src/jarabe/view/buddymenu.py:101
+msgid "Logout"
+msgstr "ログアウト"
+
+#: ../src/jarabe/view/buddymenu.py:106
+msgid "My Settings"
+msgstr "私の設定"
+
+#: ../src/jarabe/view/buddymenu.py:142
+#, python-format
+msgid "Invite to %s"
+msgstr "%s に招待する"
+
+#: ../src/jarabe/view/launcher.py:145
+#, python-format
+msgid "<b>%s</b> failed to start."
+msgstr "<b>%s</b> は起動できませんでした。"
+
+#: ../src/jarabe/view/palettes.py:48
+msgid "Starting..."
+msgstr "起動中..."
+
+#: ../src/jarabe/view/palettes.py:58
+msgid "Activity failed to start"
+msgstr "アクティビティが起動できませんでした"
+
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:91
+msgid "View Source"
+msgstr "ソースコードを表示"
+
+#: ../src/jarabe/view/palettes.py:102
+msgid "Stop"
+msgstr "停止"
+
+#: ../src/jarabe/view/palettes.py:139
+msgid "Start new"
+msgstr "新しく開始する"
+
+#: ../src/jarabe/view/palettes.py:180
+msgid "Show contents"
+msgstr "内容を表示"
+
+#: ../src/jarabe/view/palettes.py:229
+#, fuzzy
+msgctxt "Volume"
+msgid "Remove"
+msgstr "削除"
+
+#: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
 msgstr "インスタンスのソースコード"
 
-#: ../src/jarabe/view/viewsource.py:233
+#: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
 msgstr "ソースコード"
 
-#: ../src/jarabe/view/viewsource.py:292
+#: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
 msgstr "アクティビティバンドルのソースコード"
 
-#: ../src/jarabe/view/viewsource.py:299
+#: ../src/jarabe/view/viewsource.py:393
+msgid "Sugar Toolkit Source"
+msgstr "Sugarツールキットのソースコード"
+
+#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "ソースを表示: %r"
+
+#: ../src/jarabe/util/emulator.py:40
+msgid "Sugar in a window"
+msgstr ""
+
+# TODO: Add "Start with" menu item
+#~ msgid "Copy"
+#~ msgstr "コピー"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#~ msgid "Disconnect..."
+#~ msgstr "切断..."
+
+#~ msgid "APN:"
+#~ msgstr "APN:"
+
+#~ msgid "Create new wireless network"
+#~ msgstr "無線ネットワークを作成"
+
+#, python-format
+#~ msgid "%s's network"
+#~ msgstr "%s のネットワーク"
+
+#, python-format
+#~ msgid "Data sent %d kb / received %d kb"
+#~ msgstr "送信 %d kb/受信 %d kb"
+
+#~ msgid "Connection time "
+#~ msgstr "接続時間 "
 
 #~ msgid "Title"
 #~ msgstr "表題"
@@ -1323,17 +1808,11 @@ msgstr "ソースを表示: %r"
 #~ msgid "Unmount"
 #~ msgstr "取りはずす"
 
-#~ msgid "Restart"
-#~ msgstr "再起動"
-
 #~ msgid ""
 #~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 #~ msgstr ""
 #~ "(C) 2008 One Laptop per Child Association Inc; Red Hat Inc; and "
 #~ "Contributors."
-
-#~ msgid "Document"
-#~ msgstr "ドキュメント"
 
 #~ msgid "Resume by default"
 #~ msgstr "デフォルトのアクティビティで再開"
