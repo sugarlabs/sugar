@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-23 11:55-0400\n"
-"PO-Revision-Date: 2009-09-24 19:08-0400\n"
-"Last-Translator: Eduardo H. Silva <HoboPrimate@gmail.com>\n"
+"PO-Revision-Date: 2011-09-28 18:33+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -242,7 +242,7 @@ msgid ""
 "broadband connection to a cellular (3G) network."
 msgstr ""
 "Precisarás de fornecer as seguintes informações para configurar uma conexão "
-"de banda larga móvel a uma rede de telemóvel (3G) "
+"de banda larga móvel a uma rede de telemóvel (3G)."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
@@ -392,7 +392,7 @@ msgstr "Tamanho da transferência: %s"
 #, python-format, 
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "Da versão %(current)d para a versão %(new)s (Tamanho: %(size)s)"
+msgstr "Da versão %(current)s para a versão %(new)s (Tamanho: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
@@ -912,7 +912,7 @@ msgid ""
 "%s module: %r"
 msgstr ""
 "sugar-control-panel: AVISO, foram encontradas mais que uma opção com o mesmo "
-"nome: módulo %s: %r "
+"nome: módulo %s: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -1055,7 +1055,7 @@ msgstr "Caixa"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
 msgid "Triangle"
-msgstr "Triângulo "
+msgstr "Triângulo"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
@@ -1187,9 +1187,9 @@ msgid "%s of %s"
 msgstr "%s de %s"
 
 #: ../src/jarabe/frame/activitiestray.py:558
-#, python-format, fuzzy
+#, python-format, 
 msgid "Transfer from %s"
-msgstr "Transferência de %r"
+msgstr "Transferência de %s"
 
 #: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
@@ -1212,9 +1212,9 @@ msgid "The other participant canceled the file transfer"
 msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:691
-#, python-format, fuzzy
+#, python-format, 
 msgid "Transfer to %s"
-msgstr "Transferir para %r"
+msgstr "Transferir para %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
 #, fuzzy
