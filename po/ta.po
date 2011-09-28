@@ -167,20 +167,24 @@ msgstr "விளிம்பு"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:31
+#: ../extensions/cpsection/keyboard/view.py:32
 msgid "Keyboard"
-msgstr ""
+msgstr "விசைத்தட்டு"
 
 #: ../extensions/cpsection/keyboard/view.py:187
+#: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
-msgstr ""
+msgstr "விசைத்தட்டு மாதிரி"
 
 #: ../extensions/cpsection/keyboard/view.py:243
+#: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "தளக்கோலங்களை மாற்றுவதற்கான விசை"
 
 #: ../extensions/cpsection/keyboard/view.py:311
+#: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "விசைப்பலகை தளக்கோலங்கள்"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -294,65 +298,77 @@ msgstr ""
 "ஆயுளை கொடுத்தல்)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software update"
-msgstr "மென் பொருளைப் புதுப்பித்தல்"
+msgstr "மென்பொருளைப் புதுப்பித்தல்"
 
 #: ../extensions/cpsection/updater/view.py:62
+#: ../extensions/cpsection/updater/view.py:63
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"மென்பொருள் புதுபித்தலின் பிழைகளை திருத்து, பாதுகாப்பு தடையங்களை நீக்கவும் "
+"மற்றும் புதிய பண்புகளை கொடுக்கவும்"
 
 #: ../extensions/cpsection/updater/view.py:122
+#: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "சோதிக்கிறது %s..."
 
 #: ../extensions/cpsection/updater/view.py:124
+#: ../extensions/cpsection/updater/view.py:127
 #, python-format
 msgid "Downloading %s..."
-msgstr ""
+msgstr "பதிவிறக்கப்படுகிறது %s..."
 
 #: ../extensions/cpsection/updater/view.py:126
+#: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "புதிப்பிக்கப்படுகிறது %s..."
 
 #: ../extensions/cpsection/updater/view.py:135
+#: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
-msgstr ""
+msgstr "உங்களுடைய மென்பொருள் புத்தம் புதியது"
 
 #: ../extensions/cpsection/updater/view.py:137
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "நீங்கள் மேம்பாட்டை %s நிறுவலாம்"
+msgstr[1] "நீங்கள் மேம்பாடுகளை %s நிறுவலாம்"
 
 #: ../extensions/cpsection/updater/view.py:155
+#: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
-msgstr ""
+msgstr "மேம்பாடுகளுக்கு சோதிக்கிறது..."
 
 #: ../extensions/cpsection/updater/view.py:160
+#: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr ""
+msgstr "மேம்பாடுகள் நிறுவப்படுகிறது..."
 
 #: ../extensions/cpsection/updater/view.py:165
+#: ../extensions/cpsection/updater/view.py:173
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s மேம்பாடு நிறுவப்பட்டது"
+msgstr[1] "%s மேம்பாடுகள் நிறுவப்பட்டன"
 
 #: ../extensions/cpsection/updater/view.py:244
+#: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
-msgstr ""
+msgstr "தெறிவு செய்தவைகளை நிறுவு"
 
 #: ../extensions/cpsection/updater/view.py:265
+#: ../extensions/cpsection/updater/view.py:276
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "பதிவிறக்கிய அளவு: %s"
 
 #: ../extensions/cpsection/updater/view.py:353
 #, python-format
@@ -361,26 +377,29 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:373
-#, fuzzy
+#: ../extensions/cpsection/updater/view.py:382
 msgid "None"
-msgstr "முடிந்து விட்டது"
+msgstr "ஒன்றுமில்லை"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:376
+#: ../extensions/cpsection/updater/view.py:385
 msgid "1 KB"
-msgstr ""
+msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:379
+#: ../extensions/cpsection/updater/view.py:388
 #, python-format
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:391
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MB"
 
 #: ../extensions/deviceicon/battery.py:58
 msgid "My Battery"
@@ -544,29 +563,36 @@ msgid "Jabber Server"
 msgstr "Jabber வழங்கி (கணினி)"
 
 #: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
-msgstr ""
+msgstr "விசைப்பலகை தளக்கோலங்கள்"
 
 #: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
-msgstr ""
+msgstr "விசைப்பலகை மாதிரி"
 
 #: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
-msgstr ""
+msgstr "விசைப்பலகை விருப்பங்கள்"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Layout of the favorites view."
 msgstr "விருப்பத்தித்குரிய செயற்பாட்டின் தளக்கோலதின் பார்வை"
 
 #: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
+"விசைப்பலகை மாதிறிகளின் பட்டியல். அனைத்து மாதிறிகளும் தளக்கோல வடிவத்தில் "
+"இருக்கனும்"
 
 #: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
-msgstr ""
+msgstr "விசைப்பலகை மாதிறிகளின் பட்டியல்."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Power Automatic"
@@ -601,8 +627,9 @@ msgid "Sound Muted"
 msgstr "ஒலியை நிறுத்து"
 
 #: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:51
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "இந்த விசைப்பலகை மாதிறி பயன்படுத்தப்படும்"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "Timezone setting for the system."
@@ -1016,23 +1043,29 @@ msgid "No preview"
 msgstr "பார்வை இன்மை"
 
 #: ../src/jarabe/journal/expandedentry.py:229
+#: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "அன்பான: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:229
+#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/listmodel.py:150
+#: ../src/jarabe/journal/listmodel.py:158
 msgid "Unknown"
-msgstr ""
+msgstr "அறியப்படாதது"
 
 #: ../src/jarabe/journal/expandedentry.py:230
+#: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
 msgid "Date: %s"
-msgstr ""
+msgstr "திகதி: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:231
+#: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "அளவு: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:253 ../src/jarabe/journal/misc.py:92
 msgid "No date"
