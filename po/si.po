@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-24 00:31-0400\n"
+"POT-Creation-Date: 2011-09-23 11:55-0400\n"
 "PO-Revision-Date: 2011-09-02 05:23+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Sinhala <si@li.org>\n"
@@ -366,7 +366,8 @@ msgid "Your software is up-to-date"
 msgstr "ඔබගේ මෘදුකාංගය යාවත්කාල වී ඇත"
 
 #: ../extensions/cpsection/updater/view.py:141
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "ඔබට %s යාවත්කාලය ස්ථාපනය කල හැක"
@@ -381,7 +382,8 @@ msgid "Installing updates..."
 msgstr "යාවත්කාල ස්ථාපනය කරමින්..."
 
 #: ../extensions/cpsection/updater/view.py:173
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "%s යාවත්කාලය ස්ථාපනය කරන ලදි"
@@ -423,28 +425,28 @@ msgstr "%.0f KB"
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:70
+#: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "මගේ බැටරිය"
 
-#: ../extensions/deviceicon/battery.py:146
+#: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
 msgstr "ඉවත් කරන ලදී"
 
-#: ../extensions/deviceicon/battery.py:149
+#: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
 msgstr "ආරෝපණය වෙමින්"
 
-#: ../extensions/deviceicon/battery.py:152
+#: ../extensions/deviceicon/battery.py:153
 msgid "Very little power remaining"
 msgstr "ඉතා සුළු බලයක් ඉතිරිව පවතී"
 
-#: ../extensions/deviceicon/battery.py:157
+#: ../extensions/deviceicon/battery.py:158
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d ඉතිරියි"
 
-#: ../extensions/deviceicon/battery.py:160
+#: ../extensions/deviceicon/battery.py:161
 msgid "Charged"
 msgstr "ආරෝපිතයි"
 
@@ -454,9 +456,9 @@ msgid "IP address: %s"
 msgstr "IP ලිපිනය: %s"
 
 #: ../extensions/deviceicon/network.py:104
-#: ../extensions/deviceicon/network.py:298
+#: ../extensions/deviceicon/network.py:303
 #: ../src/jarabe/desktop/networkviews.py:140
-#: ../src/jarabe/desktop/networkviews.py:507
+#: ../src/jarabe/desktop/networkviews.py:508
 msgid "Disconnect"
 msgstr "විසන්ධි කරන්න"
 
@@ -467,146 +469,145 @@ msgstr "විසන්ධි කරන්න"
 # method for a device either (for various reasons) so this doesn't<br />
 # have a good mapping
 #: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:291
+#: ../extensions/deviceicon/network.py:295
 #: ../src/jarabe/desktop/networkviews.py:243
-#: ../src/jarabe/desktop/networkviews.py:546
-#: ../src/jarabe/desktop/networkviews.py:678
+#: ../src/jarabe/desktop/networkviews.py:547
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connecting..."
 msgstr "සම්බන්ධවෙමින්..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:116
-#: ../extensions/deviceicon/network.py:183
+#: ../extensions/deviceicon/network.py:117
+#: ../extensions/deviceicon/network.py:185
 #: ../src/jarabe/desktop/networkviews.py:253
-#: ../src/jarabe/desktop/networkviews.py:552
-#: ../src/jarabe/desktop/networkviews.py:684
+#: ../src/jarabe/desktop/networkviews.py:553
+#: ../src/jarabe/desktop/networkviews.py:686
 msgid "Connected"
 msgstr "සම්බන්ධ විය"
 
-#: ../extensions/deviceicon/network.py:129
+#: ../extensions/deviceicon/network.py:130
 msgid "No wireless connection"
 msgstr "රැහැන් රහිත සම්බන්ධතා නැත"
 
-#: ../extensions/deviceicon/network.py:143
+#: ../extensions/deviceicon/network.py:144
 msgid "Channel"
 msgstr "නාලිකාව"
 
-#: ../extensions/deviceicon/network.py:158
+#: ../extensions/deviceicon/network.py:159
 msgid "Wired Network"
 msgstr "රැහැන් සහිත ජාලය"
 
-#: ../extensions/deviceicon/network.py:186
+#: ../extensions/deviceicon/network.py:188
 msgid "Speed"
 msgstr "වේගය"
 
-#: ../extensions/deviceicon/network.py:212
+#: ../extensions/deviceicon/network.py:213
 msgid "Wireless modem"
 msgstr "රැහැන් රහිත මොඩමය"
 
-#: ../extensions/deviceicon/network.py:279
+#: ../extensions/deviceicon/network.py:281
 msgid "Please wait..."
 msgstr "කරුණාකර රැදී සිටින්න..."
 
-#: ../extensions/deviceicon/network.py:283
+#: ../extensions/deviceicon/network.py:286
 #: ../src/jarabe/desktop/networkviews.py:136
-#: ../src/jarabe/desktop/networkviews.py:503
-#: ../src/jarabe/desktop/networkviews.py:635
+#: ../src/jarabe/desktop/networkviews.py:504
+#: ../src/jarabe/desktop/networkviews.py:637
 msgid "Connect"
 msgstr "සම්බන්ධ වෙන්න"
 
-#: ../extensions/deviceicon/network.py:284
+#: ../extensions/deviceicon/network.py:287
 msgid "Disconnected"
 msgstr "විසන්ධිවී ඇත"
 
-#: ../extensions/deviceicon/network.py:290
+#: ../extensions/deviceicon/network.py:294
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:593
-#: ../src/jarabe/frame/activitiestray.py:693
-#: ../src/jarabe/frame/activitiestray.py:721
+#: ../src/jarabe/frame/activitiestray.py:602
+#: ../src/jarabe/frame/activitiestray.py:704
+#: ../src/jarabe/frame/activitiestray.py:732
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
-#: ../extensions/deviceicon/network.py:328
+#: ../extensions/deviceicon/network.py:333
 msgid "Try connection again"
 msgstr "සම්බන්ධතාවය නැවත උත්සහ කරන්න"
 
-#: ../extensions/deviceicon/network.py:331
+#: ../extensions/deviceicon/network.py:336
 #, python-format
 msgid "Error: %s"
 msgstr "දෝශය: %s"
 
-#: ../extensions/deviceicon/network.py:335
+#: ../extensions/deviceicon/network.py:340
 #, python-format
 msgid "Suggestion: %s"
 msgstr "යෝජනාව: %s"
 
-#: ../extensions/deviceicon/network.py:341
-#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:349
 #, python-format
 msgid "Connected for %s"
 msgstr "%s සඳහා සම්බන්ධ විය"
 
-#: ../extensions/deviceicon/network.py:349
-#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:355
+#: ../extensions/deviceicon/network.py:356
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:355
+#: ../extensions/deviceicon/network.py:361
 msgid "Check your Pin/Puk configuration."
 msgstr "ඔබගේ PIN/PUK වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:358
+#: ../extensions/deviceicon/network.py:364
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "ඔබගේ ප්‍රවේශ අග්‍ර නාම (APN) වින්‍යාසගත කිරීම පරීක්ෂා කරන්න"
 
-#: ../extensions/deviceicon/network.py:362
+#: ../extensions/deviceicon/network.py:368
 msgid "Check the Number configuration."
 msgstr "ඔබගේ අංක වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:370
 msgid "Check your configuration."
 msgstr "ඔබගේ වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:606
+#: ../extensions/deviceicon/network.py:612
 msgid "Mesh Network"
 msgstr "දැල් ජාලය"
 
-#: ../extensions/deviceicon/network.py:649
+#: ../extensions/deviceicon/network.py:656
 #, python-format
 msgid "Mesh Network %s"
 msgstr "දැල් ජාලය %s"
 
-#: ../extensions/deviceicon/network.py:772
+#: ../extensions/deviceicon/network.py:779
 msgid "No GSM connection available."
 msgstr "GSM සම්බන්ධතා නැත."
 
-#: ../extensions/deviceicon/network.py:773
+#: ../extensions/deviceicon/network.py:780
 msgid "Create a connection in the control panel."
 msgstr "පාලක පැනලයේ සම්බන්ධතාවයක් තනන්න."
 
-#: ../extensions/deviceicon/speaker.py:60
+#: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "මගේ ස්පීකර"
 
-#: ../extensions/deviceicon/speaker.py:136
+#: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
 msgstr "නිෂ්ශබ්දතාව නවතන්න"
 
-#: ../extensions/deviceicon/speaker.py:139
+#: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
 msgstr "නිශ්ශබ්ද කරන්න"
 
-#: ../extensions/deviceicon/touchpad.py:37
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
 msgstr "ඇගිල්ල"
 
-#: ../extensions/deviceicon/touchpad.py:38
+#: ../extensions/deviceicon/touchpad.py:39
 msgid "stylus"
 msgstr "පන්හිඳ"
 
-#: ../extensions/deviceicon/touchpad.py:67
+#: ../extensions/deviceicon/touchpad.py:68
 msgid "My touchpad"
 msgstr "මගේ ස්පර්ශ පුවරුව"
 
@@ -615,17 +616,17 @@ msgid "Mesh"
 msgstr "දැලැස"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:40
+#: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "Group"
 msgstr "සමූහය"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:42
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Home"
 msgstr "නිවස"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:44
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Activity"
 msgstr "ක්‍රියාකාරකම"
 
@@ -961,9 +962,9 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "ඔබගේ වෙනස්කිරීම් බලපෑම සඳහා ෂුගර් යළි ඇරඹිය යුතුය.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:160
-#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:327
+#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
+#: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "අවවාදයයි"
 
@@ -989,7 +990,7 @@ msgid "Done"
 msgstr "කළා"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:346
+#: ../src/jarabe/desktop/favoritesview.py:347
 msgid "Ok"
 msgstr "හරි"
 
@@ -998,11 +999,11 @@ msgstr "හරි"
 msgid "Version %s"
 msgstr "%s වෙළුම"
 
-#: ../src/jarabe/desktop/activitieslist.py:354
+#: ../src/jarabe/desktop/activitieslist.py:356
 msgid "Confirm erase"
 msgstr "මකා දැමීම ස්ථීර කරන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:356
+#: ../src/jarabe/desktop/activitieslist.py:358
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "මකා දැමීම ස්ථීරයි: ඔබට %s සදහටම මකා දැමීමට අවශ්‍යයද?"
@@ -1011,24 +1012,24 @@ msgstr "මකා දැමීම ස්ථීරයි: ඔබට %s සදහ�
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:360
-#: ../src/jarabe/frame/clipboardmenu.py:64
-#: ../src/jarabe/view/viewsource.py:270
+#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/frame/clipboardmenu.py:67
+#: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "තබාගන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:363
-#: ../src/jarabe/desktop/activitieslist.py:417
+#: ../src/jarabe/desktop/activitieslist.py:365
+#: ../src/jarabe/desktop/activitieslist.py:419
 #: ../src/jarabe/journal/journaltoolbox.py:398
-#: ../src/jarabe/journal/palettes.py:125
+#: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "මකන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:433
+#: ../src/jarabe/desktop/activitieslist.py:435
 msgid "Remove favorite"
 msgstr "අභිරුචිය ඉවත් කරන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:437
+#: ../src/jarabe/desktop/activitieslist.py:439
 msgid "Make favorite"
 msgstr "අභිරුචියක් කරන්න"
 
@@ -1062,29 +1063,29 @@ msgstr "පෙට්ටිය"
 msgid "Triangle"
 msgstr "ත්‍රිකෝණය"
 
-#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
 msgstr "ලියාපදිංචිය අසමත් විය"
 
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:339
 #, python-format
 msgid "%s"
 msgstr "%s"
 
-#: ../src/jarabe/desktop/favoritesview.py:340
+#: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
 msgstr "ලියාපදිංචිය සාර්ථක විය"
 
-#: ../src/jarabe/desktop/favoritesview.py:341
+#: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
 msgstr "ඔබ දැන් ඔබගේ පාසල් සේවාදායකය සමඟ ලියාපදිංචි වී ඇත."
 
-#: ../src/jarabe/desktop/favoritesview.py:639
+#: ../src/jarabe/desktop/favoritesview.py:641
 msgid "Register"
 msgstr "ලියාපදිංචි කරන්න"
 
-#: ../src/jarabe/desktop/favoritesview.py:641
-#: ../src/jarabe/desktop/favoritesview.py:658
+#: ../src/jarabe/desktop/favoritesview.py:643
+#: ../src/jarabe/desktop/favoritesview.py:660
 msgid "Register again"
 msgstr "නැවත ලියාපදිංචි වෙන්න"
 
@@ -1135,14 +1136,13 @@ msgstr "රැහැන් රහිත ආරක්ෂණය:"
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:91
-#: ../src/jarabe/frame/activitiestray.py:628
 #: ../src/jarabe/journal/journaltoolbox.py:494
-#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/view/palettes.py:78
+#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "නැවත අරඹන්න"
 
 #: ../src/jarabe/desktop/meshbox.py:96
-#: ../src/jarabe/frame/activitiestray.py:174
+#: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "එකතු වෙන්න"
 
@@ -1151,7 +1151,7 @@ msgstr "එකතු වෙන්න"
 msgid "Ad-hoc Network %d"
 msgstr "%d Ad-hoc ජාලය"
 
-#: ../src/jarabe/desktop/networkviews.py:633
+#: ../src/jarabe/desktop/networkviews.py:634
 #, python-format
 msgid "Mesh Network %d"
 msgstr "දැල් ජාලය %d"
@@ -1164,68 +1164,75 @@ msgstr "සේවාදායකයට සම්බන්ධ විය නොහ
 msgid "The server could not complete the request."
 msgstr "සේවාදායකයට අයදුම සම්පූර්ණ කළ නොහැක."
 
-#: ../src/jarabe/frame/activitiestray.py:179
-#: ../src/jarabe/frame/activitiestray.py:565
+#: ../src/jarabe/frame/activitiestray.py:187
+#: ../src/jarabe/frame/activitiestray.py:574
 msgid "Decline"
 msgstr "ප්‍රතික්ෂේප කරනවා"
 
-#: ../src/jarabe/frame/activitiestray.py:515
+#: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:517
+#: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:519
+#: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:536
+#: ../src/jarabe/frame/activitiestray.py:544
 #, python-format
 msgid "%s of %s"
 msgstr "%s න් %s"
 
-#: ../src/jarabe/frame/activitiestray.py:550
+#: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer from %s"
 msgstr "%s සිට හුවමාරු කරන්න"
 
-#: ../src/jarabe/frame/activitiestray.py:560
+#: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
 msgstr "අනුමත කරනවා"
 
-#: ../src/jarabe/frame/activitiestray.py:583
-#: ../src/jarabe/frame/activitiestray.py:711
+#: ../src/jarabe/frame/activitiestray.py:592
+#: ../src/jarabe/frame/activitiestray.py:722
 #, python-format
 msgid "%s (%s)"
 msgstr "%s (%s)"
 
-#: ../src/jarabe/frame/activitiestray.py:617
-#: ../src/jarabe/frame/activitiestray.py:746
+#: ../src/jarabe/frame/activitiestray.py:626
+#: ../src/jarabe/frame/activitiestray.py:639
+#: ../src/jarabe/frame/activitiestray.py:757
 msgid "Dismiss"
 msgstr "නිෂ්ප්‍රභ කරනවා"
 
-#: ../src/jarabe/frame/activitiestray.py:681
+#: ../src/jarabe/frame/activitiestray.py:643
+msgid "The other participant canceled the file transfer"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer to %s"
 msgstr "%s ට හුවමාරු කරන්න"
 
-#: ../src/jarabe/frame/clipboardmenu.py:54 ../src/jarabe/view/palettes.py:220
+#: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
+msgctxt "Clipboard"
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
 
-#: ../src/jarabe/frame/clipboardmenu.py:59
-#: ../src/jarabe/frame/clipboardmenu.py:82
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/frame/clipboardmenu.py:85
 msgid "Open"
 msgstr "විවෘත කරන්න"
 
-#: ../src/jarabe/frame/clipboardmenu.py:87
+#: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
 msgstr "විවෘත කළ යුත්තේ"
 
@@ -1234,23 +1241,23 @@ msgstr "විවෘත කළ යුත්තේ"
 msgid "%s clipping"
 msgstr "කප්පාදුව %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:38
+#: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "Neighborhood"
 msgstr "වටපිටාව"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:38
+#: ../src/jarabe/frame/zoomtoolbar.py:39
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:40
+#: ../src/jarabe/frame/zoomtoolbar.py:41
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:42
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:44
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F4"
 msgstr "F4"
 
@@ -1270,58 +1277,58 @@ msgstr "ආපසු"
 msgid "Next"
 msgstr "ඊළඟ"
 
-#: ../src/jarabe/journal/expandedentry.py:155
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:63
-#: ../src/jarabe/journal/volumestoolbar.py:152
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "ශීර්ෂ පාඨ නොමැති"
 
-#: ../src/jarabe/journal/expandedentry.py:244
+#: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
 msgstr "පූර්වදර්ශනයක් නැත"
 
-#: ../src/jarabe/journal/expandedentry.py:263
+#: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
 msgstr "වර්ගය: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:263
+#: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
 msgid "Unknown"
 msgstr "නොදනී"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
 msgid "Date: %s"
 msgstr "දිනය: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:265
+#: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
 msgid "Size: %s"
 msgstr "ප්‍රමාණය: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:293
+#: ../src/jarabe/journal/expandedentry.py:294
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "දිනයක් නැත"
 
-#: ../src/jarabe/journal/expandedentry.py:300
+#: ../src/jarabe/journal/expandedentry.py:301
 msgid "Participants:"
 msgstr "සහභාගිවන්නන්:"
 
-#: ../src/jarabe/journal/expandedentry.py:322
+#: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
 msgstr "විස්තරය:"
 
-#: ../src/jarabe/journal/expandedentry.py:347
+#: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
 msgstr "හැඳුනුම් වදන්:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:453
-#: ../src/jarabe/journal/palettes.py:197
-#: ../src/jarabe/journal/volumestoolbar.py:388
+#: ../src/jarabe/journal/palettes.py:198
+#: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "ජ'නලය"
 
@@ -1377,32 +1384,32 @@ msgid "Anything"
 msgstr "ඕනෑ දෙයක්"
 
 #: ../src/jarabe/journal/journaltoolbox.py:381
-#: ../src/jarabe/journal/palettes.py:92
+#: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
 msgstr "වෙත පිටපත් කරන්න"
 
 #: ../src/jarabe/journal/journaltoolbox.py:389
-#: ../src/jarabe/journal/palettes.py:103
+#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "අනුපිටපත"
 
 #: ../src/jarabe/journal/journaltoolbox.py:422
-#: ../src/jarabe/journal/palettes.py:140 ../src/jarabe/journal/palettes.py:253
-#: ../src/jarabe/journal/volumestoolbar.py:335
+#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "ප්‍රවේශය පිටපත් කිරීමේදී දෝෂයක්. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:423
-#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:336
+#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
+#: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
 msgstr "දෝශය"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:497
-#: ../src/jarabe/journal/palettes.py:73
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "ආරම්භ කරන්න"
 
@@ -1422,15 +1429,23 @@ msgstr "ප්‍රමාණය අනුව සුබෙදන්න"
 msgid "Sort view"
 msgstr "දසුන සුබෙදන්න"
 
-#: ../src/jarabe/journal/listview.py:387
+#: ../src/jarabe/journal/listview.py:316
 msgid "Your Journal is empty"
 msgstr "ඔබගේ ජර්නලය හිස්ය"
 
-#: ../src/jarabe/journal/listview.py:389
+#: ../src/jarabe/journal/listview.py:319
+msgid "Your documents folder is empty"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:321
+msgid "The device is empty"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:323
 msgid "No matching entries"
 msgstr "ගැළපෙන ප්‍රවේශ නැත"
 
-#: ../src/jarabe/journal/listview.py:400
+#: ../src/jarabe/journal/listview.py:397
 msgid "Clear search"
 msgstr "සෙවීම පවිත්‍ර කරන්න"
 
@@ -1461,61 +1476,61 @@ msgid "Choose an object"
 msgstr "වස්තුවක් තෝරන්න"
 
 #: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:382
+#: ../src/jarabe/view/viewsource.py:410
 msgid "Close"
 msgstr "චසාදමන්න"
 
-#: ../src/jarabe/journal/palettes.py:71
+#: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
 msgstr "සමඟ නැවත අරඹන්න"
 
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
 msgstr "සමඟ ආරම්භ කරන්න"
 
-#: ../src/jarabe/journal/palettes.py:87 ../src/jarabe/journal/palettes.py:356
+#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
 msgstr "ආරම්භක ප්‍රවේශය සඳහා ක්‍රියාකාරකමක් නොමැත"
 
-#: ../src/jarabe/journal/palettes.py:111
+#: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
 msgstr "වෙත යවන්න"
 
-#: ../src/jarabe/journal/palettes.py:120
+#: ../src/jarabe/journal/palettes.py:121
 msgid "View Details"
 msgstr "තොරතුරු දර්ශනය කරන්න"
 
-#: ../src/jarabe/journal/palettes.py:159
+#: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
 msgstr "ගොනුවක් නැතිව ප්‍රවේශයක් යැවිය නොහැක."
 
-#: ../src/jarabe/journal/palettes.py:244 ../src/jarabe/journal/palettes.py:277
-#: ../src/jarabe/journal/volumestoolbar.py:326
+#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
+#: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
 msgstr "ගොනුවක් නැතිව ප්‍රවේශයක් පිටපත් කල නොහැක."
 
-#: ../src/jarabe/journal/palettes.py:266
+#: ../src/jarabe/journal/palettes.py:267
 msgid "Clipboard"
 msgstr "පසුරු පුවරුව"
 
-#: ../src/jarabe/journal/palettes.py:321
+#: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
 msgstr "දැනට මිතුරන් නොමැත"
 
-#: ../src/jarabe/journal/palettes.py:326
+#: ../src/jarabe/journal/palettes.py:327
 msgid "No valid connection found"
 msgstr "වලංගු සබඳතාවක් හමුනොවුණි"
 
-#: ../src/jarabe/journal/palettes.py:354
+#: ../src/jarabe/journal/palettes.py:355
 msgid "No activity to resume entry"
 msgstr "නැවත ඇරඹුම් ප්‍රවේශය සඳහා ක්‍රියාකාරකමක් නොමැත"
 
-#: ../src/jarabe/journal/volumestoolbar.py:231
+#: ../src/jarabe/journal/volumestoolbar.py:209
 msgid "Documents"
 msgstr "ලිපි"
 
-#: ../src/jarabe/journal/volumestoolbar.py:411
-#: ../src/jarabe/view/palettes.py:194 ../src/jarabe/view/palettes.py:245
+#: ../src/jarabe/journal/volumestoolbar.py:391
+#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ඉතිරියි"
@@ -1689,31 +1704,31 @@ msgstr "පරිශීලක හෝ සේවාදායකයෙක් වි
 msgid "The device's carrier/link changed."
 msgstr "මෙවලමේ වාහකයා/සබැඳිය වෙනස් විය."
 
-#: ../src/jarabe/view/buddymenu.py:64
+#: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
 msgstr "මිතුරා ඉවත් කරන්න"
 
-#: ../src/jarabe/view/buddymenu.py:67
+#: ../src/jarabe/view/buddymenu.py:70
 msgid "Make friend"
 msgstr "මිතුරු වන්න"
 
-#: ../src/jarabe/view/buddymenu.py:84
+#: ../src/jarabe/view/buddymenu.py:87
 msgid "Shutdown"
 msgstr "වසා දමන්න"
 
-#: ../src/jarabe/view/buddymenu.py:92
+#: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
 msgstr "යළි ආරම්භ කරන්න"
 
-#: ../src/jarabe/view/buddymenu.py:98
+#: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
 msgstr "පිවිසුමෙන් ඉවත්වන්න"
 
-#: ../src/jarabe/view/buddymenu.py:103
+#: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
 msgstr "මගේ සැකසුම්"
 
-#: ../src/jarabe/view/buddymenu.py:139
+#: ../src/jarabe/view/buddymenu.py:142
 #, python-format
 msgid "Invite to %s"
 msgstr "%s ට අඬගහන්න"
@@ -1723,48 +1738,54 @@ msgstr "%s ට අඬගහන්න"
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> ආරම්භ කිරීමට අසාර්ථක විය."
 
-#: ../src/jarabe/view/palettes.py:46
+#: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
 msgstr "ආරම්භවේ..."
 
-#: ../src/jarabe/view/palettes.py:56
+#: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
 msgstr "ක්‍රියාකාරකම ආරම්භ කිරීම අසාර්ථක විය"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:85
+#: ../src/jarabe/view/palettes.py:91
 msgid "View Source"
 msgstr "මූලය පෙන්වන්න"
 
-#: ../src/jarabe/view/palettes.py:96
+#: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
 msgstr "නවත්වන්න"
 
-#: ../src/jarabe/view/palettes.py:132
+#: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
 msgstr "නව ආරම්භ කරන්න"
 
-#: ../src/jarabe/view/palettes.py:172
+#: ../src/jarabe/view/palettes.py:180
 msgid "Show contents"
 msgstr "අන්තර්ගතය පෙන්වන්න"
 
-#: ../src/jarabe/view/viewsource.py:260
+#: ../src/jarabe/view/palettes.py:229
+#, fuzzy
+msgctxt "Volume"
+msgid "Remove"
+msgstr "ඉවත් කරන්න"
+
+#: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
 msgstr "අවස්ථානික මූලය"
 
-#: ../src/jarabe/view/viewsource.py:285
+#: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
 msgstr "මූලාශ්‍රය"
 
-#: ../src/jarabe/view/viewsource.py:346
+#: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
 msgstr "මූල පොදි ක්‍රියාකාරකම"
 
-#: ../src/jarabe/view/viewsource.py:365
+#: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
 msgstr "Sugar මෙවලම් මූලය"
 
-#: ../src/jarabe/view/viewsource.py:372 ../src/jarabe/view/viewsource.py:373
+#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "මූලය පෙන්වන්න: %r"
