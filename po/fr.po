@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-09-26 19:48+0200\n"
+"PO-Revision-Date: 2011-09-29 08:32+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -960,7 +960,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "Redémarrer sugar pour que les changements prennent effet.\n"
+msgstr "Relancer Sugar pour que les changements prennent effet.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -983,7 +983,7 @@ msgstr "Plus tard"
 
 #: ../src/jarabe/controlpanel/gui.py:309
 msgid "Restart now"
-msgstr "Maintenant"
+msgstr "Relancer maintenant"
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
 msgid "Done"
@@ -1492,7 +1492,7 @@ msgstr "Commencer avec"
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
-msgstr "Acune activité pour démarrer l'entrée"
+msgstr "Aucune activité pour démarrer l'entrée"
 
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
