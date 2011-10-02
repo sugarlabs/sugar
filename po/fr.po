@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-09-29 08:32+0200\n"
+"PO-Revision-Date: 2011-10-02 18:19+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -71,7 +71,7 @@ msgstr "Cliquer pour changer de couleur :"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Mon ordinateur"
+msgstr "À propos de mon ordinateur"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
@@ -132,7 +132,7 @@ msgstr "Licence complète :"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Date & heure"
+msgstr "Date et heure"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
@@ -306,8 +306,8 @@ msgid ""
 "network."
 msgstr ""
 "Le serveur est comparable à la pièce dans laquelle vous vous trouvez : les "
-"personnes présentes sur le même serveur pourront se voir même si elles ne se "
-"trouvent pas sur le même réseau."
+"personnes connectées au même serveur pourront se voir même si elles se "
+"trouvent sur des réseaux différents."
 
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
