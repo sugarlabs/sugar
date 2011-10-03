@@ -21,6 +21,7 @@ import logging
 import glib
 import gtk
 
+from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
@@ -34,6 +35,9 @@ class ZoomToolbar(gtk.Toolbar):
 
         # we shouldn't be mirrored in RTL locales
         self.set_direction(gtk.TEXT_DIR_LTR)
+
+        # ask not to be collapsed if possible
+        self.set_size_request(4 * style.GRID_CELL_SIZE, -1)
 
         self._mesh_button = self._add_button('zoom-neighborhood',
                 _('Neighborhood'), _('F1'), shell.ShellModel.ZOOM_MESH)

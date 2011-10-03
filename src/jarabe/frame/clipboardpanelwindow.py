@@ -18,7 +18,6 @@ import logging
 from urlparse import urlparse
 
 import gtk
-import hippo
 
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardtray import ClipboardTray
@@ -39,8 +38,8 @@ class ClipboardPanelWindow(FrameWindow):
         self._clipboard.connect('owner-change', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()
-        canvas_widget = hippo.CanvasWidget(widget=self._clipboard_tray)
-        self.append(canvas_widget, hippo.PACK_EXPAND)
+        self._clipboard_tray.show()
+        self.append(self._clipboard_tray)
 
         # Receiving dnd drops
         self.drag_dest_set(0, [], 0)

@@ -18,7 +18,6 @@ import logging
 
 import gtk
 import gobject
-import hippo
 
 from sugar.graphics import animator
 from sugar.graphics import style
@@ -178,17 +177,12 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to
-        # me. Why hippo isn't respecting the request size of these controls?
-
         zoom_toolbar = ZoomToolbar()
-        panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
-                box_width=4 * style.GRID_CELL_SIZE))
+        panel.append(zoom_toolbar, expand=False)
         zoom_toolbar.show()
 
         activities_tray = ActivitiesTray()
-        panel.append(hippo.CanvasWidget(widget=activities_tray),
-                hippo.PACK_EXPAND)
+        panel.append(activities_tray)
         activities_tray.show()
 
         return panel
@@ -196,10 +190,8 @@ class Frame(object):
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        # TODO: same issue as in _create_top_panel()
         devices_tray = DevicesTray()
-        panel.append(hippo.CanvasWidget(widget=devices_tray),
-                     hippo.PACK_EXPAND)
+        panel.append(devices_tray)
         devices_tray.show()
 
         return panel
@@ -208,7 +200,7 @@ class Frame(object):
         panel = self._create_panel(gtk.POS_RIGHT)
 
         tray = FriendsTray()
-        panel.append(hippo.CanvasWidget(widget=tray), hippo.PACK_EXPAND)
+        panel.append(tray)
         tray.show()
 
         return panel
