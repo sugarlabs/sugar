@@ -147,8 +147,7 @@ def setup_keyboard_cb():
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
 
-        if layouts_list is not None and layouts_list is not [] \
-                and variants_list is not None and variants_list is not []:
+        if layouts_list and variants_list:
             configrec.set_layouts(layouts_list)
             configrec.set_variants(variants_list)
 
@@ -159,7 +158,7 @@ def setup_keyboard_cb():
 
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
-        if options is not [] and options is not None:
+        if options:
             configrec.set_options(options)
 
         configrec.activate(engine)
