@@ -127,6 +127,7 @@ def setup_keyboard_cb():
     logging.debug('STARTUP: setup_keyboard_cb')
 
     gconf_client = gconf.client_get_default()
+    have_config = False
 
     try:
         display = gtk.gdk.display_get_default()
@@ -148,20 +149,24 @@ def setup_keyboard_cb():
             variants_list.append(layout.split('(')[1][:-1])
 
         if layouts_list and variants_list:
+            have_config = True
             configrec.set_layouts(layouts_list)
             configrec.set_variants(variants_list)
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
         if model:
+            have_config = True
             configrec.set_model(model)
 
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
         if options:
+            have_config = True
             configrec.set_options(options)
 
-        configrec.activate(engine)
+        if have_config:
+            configrec.activate(engine)
     except Exception:
         logging.exception('Error during keyboard configuration')
 

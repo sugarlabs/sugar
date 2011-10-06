@@ -232,7 +232,6 @@
       <applyto>/desktop/sugar/peripherals/keyboard/model</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>evdev</default>
       <locale name="C">
         <short>Keyboard model</short>
         <long>The keyboard model to be used</long>
