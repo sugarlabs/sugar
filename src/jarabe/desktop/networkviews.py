@@ -149,6 +149,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._update_state()
         self._update_icon()
         self._update_badge()
+        self._update_color()
 
     def __update_active_ap(self, ap_path):
         if ap_path in self._access_points:
@@ -558,6 +559,7 @@ class SugarAdhocView(CanvasPulsingIcon):
             self._connect_item.show()
             self._palette.props.secondary_text = None
             self.props.pulsing = False
+        self._update_color()
 
     def _update_color(self):
         self.props.base_color = self._state_color
@@ -650,6 +652,7 @@ class OlpcMeshView(CanvasPulsingIcon):
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update()
+        self._update_color()
 
     def __get_active_channel_reply_cb(self, channel):
         self._active = (channel == self._channel)
