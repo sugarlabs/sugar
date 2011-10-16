@@ -24,6 +24,7 @@ import time
 
 import gobject
 import gio
+import glib
 import gtk
 
 from sugar.graphics.palette import Palette
@@ -319,19 +320,33 @@ class SearchToolbar(gtk.Toolbar):
 
             for service_name in model.get_unique_values('activity'):
                 activity_info = registry.get_bundle(service_name)
-                if not activity_info is None:
-                    if os.path.exists(activity_info.get_icon()):
+                if activity_info is None:
+                    continue
+
+                if service_name == current_value:
+                    combo_model = self._what_search_combo.get_model()
+                    current_value_index = len(combo_model)
+
+                # try activity-provided icon
+                if os.path.exists(activity_info.get_icon()):
+                    try:
                         self._what_search_combo.append_item(service_name,
                                 activity_info.get_name(),
                                 file_name=activity_info.get_icon())
+                    except glib.GError, exception:
+                        logging.warning('Falling back to default icon for'
+                                        ' "what" filter because %r (%r) has an'
+                                        ' invalid icon: %s',
+                                        activity_info.get_name(),
+                                        str(service_name), exception)
                     else:
-                        self._what_search_combo.append_item(service_name,
-                                activity_info.get_name(),
-                                icon_name='application-octet-stream')
+                        continue
 
-                    if service_name == current_value:
-                        current_value_index = \
-                                len(self._what_search_combo.get_model()) - 1
+                # fall back to generic icon
+                self._what_search_combo.append_item(service_name,
+                        activity_info.get_name(),
+                        icon_name='application-octet-stream')
+
         finally:
             self._what_search_combo.handler_unblock(
                     self._what_combo_changed_sid)
