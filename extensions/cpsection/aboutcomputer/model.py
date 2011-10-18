@@ -35,6 +35,7 @@ _NM_DEVICE_TYPE_WIFI = 2
 
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
+_DMI_DIRECTORY = '/sys/class/dmi/id'
 _SN = 'serial-number'
 _MODEL = 'openprom/model'
 
@@ -96,18 +97,29 @@ def print_build_number():
     print get_build_number()
 
 
+def _parse_firmware_number(firmware_no):
+    if firmware_no is None:
+        firmware_no = _not_available
+    else:
+        # try to extract Open Firmware version from OLPC style version
+        # string, e.g. "CL2   Q4B11  Q4B"
+        if firmware_no.startswith('CL'):
+            firmware_no = firmware_no[6:13]
+    return firmware_no
+
+
 def get_firmware_number():
     firmware_no = None
     if os.path.exists(os.path.join(_OFW_TREE, _MODEL)):
         firmware_no = _read_file(os.path.join(_OFW_TREE, _MODEL))
+        firmware_no = _parse_firmware_number(firmware_no)
     elif os.path.exists(os.path.join(_PROC_TREE, _MODEL)):
         firmware_no = _read_file(os.path.join(_PROC_TREE, _MODEL))
-    if firmware_no is None:
-        firmware_no = _not_available
-    else:
-        firmware_no = re.split(' +', firmware_no)
-        if len(firmware_no) == 3:
-            firmware_no = firmware_no[1]
+        firmware_no = _parse_firmware_number(firmware_no)
+    elif os.path.exists(os.path.join(_DMI_DIRECTORY, 'bios_version')):
+        firmware_no = _read_file(os.path.join(_DMI_DIRECTORY, 'bios_version'))
+        if firmware_no is None:
+            firmware_no = _not_available
     return firmware_no
 
 
