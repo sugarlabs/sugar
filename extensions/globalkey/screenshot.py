@@ -28,7 +28,7 @@ from sugar.graphics import style
 from sugar import env
 from jarabe.model import shell
 
-BOUND_KEYS = []
+BOUND_KEYS = ['<alt>1', 'Print']
 
 
 def handle_key_press(key):
