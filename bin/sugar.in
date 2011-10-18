@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
 	echo Refusing to run as root.
@@ -80,5 +79,4 @@ fi
 echo Xcursor.theme: sugar | xrdb -merge
 metacity --no-force-fullscreen -d $DISPLAY &
 
-sugar-intro
 exec sugar-session
