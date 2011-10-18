@@ -535,17 +535,6 @@ class NMSettings(dbus.service.Object):
                 self.connections.pop(uuid)
 
 
-class DummyNMSettings(object):
-    """
-    Dummy object used when we don't own the NetworkManager user settings.
-    """
-
-    connections = {}
-
-    def clear_wifi_connections(self):
-        logging.debug('DummyNMSettings.clear_wifi_connections called')
-
-
 class SecretsResponse(object):
     """Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
@@ -826,8 +815,6 @@ def get_settings():
             _nm_settings = NMSettings()
         except dbus.DBusException:
             logging.exception('Cannot create the UserSettings service.')
-            _nm_settings = DummyNMSettings()
-
         load_connections()
     return _nm_settings
 
