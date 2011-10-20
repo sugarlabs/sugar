@@ -44,6 +44,7 @@ class TreeView(gtk.TreeView):
     def __init__(self):
         gtk.TreeView.__init__(self)
         self.set_headers_visible(False)
+        self.set_enable_search(False)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can

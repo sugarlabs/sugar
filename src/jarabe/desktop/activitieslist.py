@@ -116,6 +116,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self.append_column(column)
 
         self.set_search_column(ListModel.COLUMN_TITLE)
+        self.set_enable_search(False)
 
     def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
