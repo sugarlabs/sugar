@@ -144,7 +144,7 @@ class ExpandedEntry(hippo.CanvasBox):
             return
         self._metadata = metadata
 
-        self._keep_icon.keep = (int(metadata.get('keep', 0)) == 1)
+        self._keep_icon.keep = (str(metadata.get('keep', 0)) == '1')
 
         self._icon = self._create_icon()
         self._icon_box.clear()
@@ -419,7 +419,7 @@ class ExpandedEntry(hippo.CanvasBox):
         self._update_title_sid = None
 
     def get_keep(self):
-        return int(self._metadata.get('keep', 0)) == 1
+        return (str(self._metadata.get('keep', 0)) == '1')
 
     def _keep_icon_activated_cb(self, keep_icon):
         if self.get_keep():
