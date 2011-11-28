@@ -30,6 +30,7 @@ from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 
+POWERD_FLAG_DIR = '/etc/powerd/flags'
 
 _logger = logging.getLogger('ControlPanel')
 
@@ -129,7 +130,7 @@ class ControlPanel(gtk.Window):
                                    self.__search_changed_cb)
 
     def _setup_options(self):
-        if not os.path.exists('/ofw'):
+        if not os.access(POWERD_FLAG_DIR, os.W_OK):
             del self._options['power']
 
         try:
