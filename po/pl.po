@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-09-26 21:51+0200\n"
+"POT-Creation-Date: 2011-11-17 00:32-0500\n"
+"PO-Revision-Date: 2011-12-11 12:38+0200\n"
 "Last-Translator: Jakub <jamarat@o2.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "Language: pl\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "O mnie"
+msgstr "Imię i Kolor"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -70,63 +70,63 @@ msgstr "Kliknij aby zmienić swój kolor:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "O moim komputerze"
+msgstr "Mój komputer"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:42
+#: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
 msgstr "Niedostępne"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:171
+#: ../extensions/cpsection/aboutcomputer/model.py:183
 #, python-format
 msgid "%(interface)s: %(version)s"
 msgstr "%(interface)s: %(version)s"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:61
+#: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
-msgstr "Tożsamość"
+msgstr "Dane techniczne"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:70
+#: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
 msgstr "Numer seryjny:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:92
+#: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
 msgstr "Oprogramowanie"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:101
+#: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
-msgstr "System:"
+msgstr "Wersja:"
 
 # Jak ma się po polsku nazywać Sugar?!?
-#: ../extensions/cpsection/aboutcomputer/view.py:116
+#: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
-msgstr "Cukier:"
+msgstr "Wersja OS DROPS:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:132
+#: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
-msgstr "Firmware:"
+msgstr "Wbudowane:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:147
+#: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
-msgstr "Firmware łączności bezprzewodowej:"
+msgstr "Wbudowane łączności bezprzewodowej:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:170
+#: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
 msgstr "Prawa autorskie i licencja"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:188
+#: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Cukier jest graficznym interfejsem użytkownika, na który patrzysz. Cukier "
-"jest wolnym oprogramowaniem, podlegającym zapisom licencji GNU General "
-"Public License. Mile widzialne jest zmiana i/lub dystrybuowanie jego kopii w "
-"ramach warunków opisanych w owej licencji."
+"Drops jest graficznym interfejsem użytkownika, na który patrzysz. Drops jest "
+"wolnym oprogramowaniem, podlegającym zapisom licencji GNU General Public "
+"License. Mile widzialne jest zmiana i/lub dystrybuowanie jego kopii w ramach "
+"warunków opisanych w owej licencji."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:200
+#: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
 msgstr "Pełna licencja:"
 
@@ -144,7 +144,7 @@ msgstr "Strefa czasowa"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr "Ramka"
+msgstr "Ustawienia Ramki"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
@@ -225,32 +225,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Konfiguracja modemu"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:94
-msgid "Username:"
-msgstr "Użytkownik:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:106
-msgid "Password:"
-msgstr "Hasło:"
-
-# chyba telefonu...
-#: ../extensions/cpsection/modemconfiguration/view.py:118
-msgid "Number:"
-msgstr "Numer (telefonu):"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:130
-msgid "Access Point Name (APN):"
-msgstr "Nazwa punktu dostępu (APN):"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:142
-msgid "Personal Identity Number (PIN):"
-msgstr "Numer PIN:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:154
-msgid "Personal Unblocking Key (PUK):"
-msgstr "Numer PUK:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:175
+#: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -258,20 +233,41 @@ msgstr ""
 "Musisz wprowadzić następujące informacje aby skonfigurować modem "
 "szerokopasmowej łączności bezprzewodowej w sieci 3G."
 
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "Użytkownik:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "Hasło:"
+
+# chyba telefonu...
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "Numer (telefonu):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr "Nazwa punktu dostępu (APN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr "Numer PIN:"
+
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
 msgstr "Sieć"
 
-#: ../extensions/cpsection/network/model.py:71
+#: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
 msgstr "Stan nieznany."
 
-#: ../extensions/cpsection/network/model.py:99
+#: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "Błąd w podanym argumencie radia użyj Włącz/Wyłącz"
+msgstr "Błąd w podanym argumencie radia użyj Włącz/Wyłącz."
 
-#: ../extensions/cpsection/network/model.py:140
+#: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr "Błąd w podanym argumencie, użyj 0/1."
 
@@ -281,7 +277,7 @@ msgstr "Bezprzewodowy"
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Wyłącz łączność bezprzewodową (radio) aby oszczędzać baterie."
+msgstr "Wyłącz łączność bezprzewodową (radio) aby oszczędzać baterie"
 
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
@@ -291,7 +287,7 @@ msgstr "Radio"
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Usuń historię połączeń sieciowych jeżeli masz problemy z połączeniem się z "
-"siecią."
+"siecią"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
@@ -373,15 +369,15 @@ msgstr "Uaktualniam %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
-msgstr "Używasz najnowszej wersji oprogramowania."
+msgstr "Używasz najnowszej wersji oprogramowania"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "Możesz zainstalować %s uaktualnienie."
-msgstr[1] "Możesz zainstalować %s uaktualnienia."
-msgstr[2] "Możesz zainstalować %s uaktualnień."
+msgstr[0] "Możesz zainstalować %s uaktualnienie"
+msgstr[1] "Możesz zainstalować %s uaktualnienia"
+msgstr[2] "Możesz zainstalować %s uaktualnień"
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
@@ -395,9 +391,9 @@ msgstr "Instaluję uaktualnienia..."
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "Zostało zainstalowane %s uaktualnienie."
-msgstr[1] "Zostały zainstalowane %s uaktualnienia."
-msgstr[2] "Zostało zainstalowane %s uaktualnień."
+msgstr[0] "Zostało zainstalowane %s uaktualnienie"
+msgstr[1] "Zostały zainstalowane %s uaktualnienia"
+msgstr[2] "Zostało zainstalowane %s uaktualnień"
 
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
@@ -465,10 +461,10 @@ msgstr "Naładowana"
 msgid "IP address: %s"
 msgstr "Adres IP: %s"
 
-#: ../extensions/deviceicon/network.py:104
-#: ../extensions/deviceicon/network.py:303
-#: ../src/jarabe/desktop/networkviews.py:140
-#: ../src/jarabe/desktop/networkviews.py:508
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
 msgstr "Rozłącz"
 
@@ -476,58 +472,58 @@ msgstr "Rozłącz"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:295
-#: ../src/jarabe/desktop/networkviews.py:243
-#: ../src/jarabe/desktop/networkviews.py:547
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:237
+#: ../src/jarabe/desktop/networkviews.py:527
+#: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
 msgstr "Łączenie..."
 
-#: ../extensions/deviceicon/network.py:117
-#: ../extensions/deviceicon/network.py:185
-#: ../src/jarabe/desktop/networkviews.py:253
-#: ../src/jarabe/desktop/networkviews.py:553
-#: ../src/jarabe/desktop/networkviews.py:686
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:244
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
 msgstr "Połączony"
 
-#: ../extensions/deviceicon/network.py:130
+#: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
 msgstr "Brak połączenia bezprzewodowego"
 
-#: ../extensions/deviceicon/network.py:144
+#: ../extensions/deviceicon/network.py:133
 msgid "Channel"
 msgstr "Kanał"
 
-#: ../extensions/deviceicon/network.py:159
+#: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
 msgstr "Sieć przewodowa"
 
-#: ../extensions/deviceicon/network.py:188
+#: ../extensions/deviceicon/network.py:177
 msgid "Speed"
 msgstr "Prędkość"
 
-#: ../extensions/deviceicon/network.py:213
+#: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
 msgstr "Modem bezprzewodowy"
 
-#: ../extensions/deviceicon/network.py:281
+#: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
 msgstr "Proszę czekać..."
 
-#: ../extensions/deviceicon/network.py:286
-#: ../src/jarabe/desktop/networkviews.py:136
-#: ../src/jarabe/desktop/networkviews.py:504
-#: ../src/jarabe/desktop/networkviews.py:637
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:124
+#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
 msgstr "Połącz"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
 msgstr "Rozłączony"
 
-#: ../extensions/deviceicon/network.py:294
+#: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
 #: ../src/jarabe/frame/activitiestray.py:602
@@ -536,63 +532,63 @@ msgstr "Rozłączony"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
 msgstr "Próbuj połączyć ponownie"
 
-#: ../extensions/deviceicon/network.py:336
+#: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
 msgstr "Błąd: %s"
 
-#: ../extensions/deviceicon/network.py:340
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Wskazówka: %s"
 
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:338
 #, python-format
 #, python-format,
 msgid "Connected for %s"
 msgstr "Połączono z %s"
 
-#: ../extensions/deviceicon/network.py:355
-#: ../extensions/deviceicon/network.py:356
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:350
 msgid "Check your Pin/Puk configuration."
 msgstr "Sprawdź konfigurację numerów PIN i PUK."
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Sprawdź konfigurację nazwy punktu dostępu (APN)."
+msgstr "Sprawdź konfigurację nazwy punktu dostępu (APN)"
 
-#: ../extensions/deviceicon/network.py:368
+#: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
 msgstr "Sprawdź jaki podałeś w konfiguracji numer (telefonu)."
 
-#: ../extensions/deviceicon/network.py:370
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
 msgstr "Sprawdź konfigurację (sieci)."
 
-#: ../extensions/deviceicon/network.py:612
+#: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
 msgstr "Sieć"
 
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:638
 #, python-format
 #, python-format,
 msgid "Mesh Network %s"
 msgstr "Sieć kratowa %s"
 
-#: ../extensions/deviceicon/network.py:779
+#: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
 msgstr "Brak połączenia GSM."
 
-#: ../extensions/deviceicon/network.py:780
+#: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
 msgstr "Stwórz połączenie w panelu sterowania."
 
@@ -625,17 +621,17 @@ msgid "Mesh"
 msgstr "Krata"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
 msgstr "Grupa"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
 msgstr "Dom"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
 msgstr "Czynność"
 
@@ -727,52 +723,54 @@ msgid "Font size that is used throughout the desktop."
 msgstr "Rozmiar czcionki używany na pulpicie."
 
 #: ../data/sugar.schemas.in.h:18
-msgid "GSM network APN"
-msgstr "Nazwa punktu dostępu (APN) sieci GSM"
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr "GSM network APN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:19
-msgid "GSM network PIN"
-msgstr "Kod PIN sieci GSM (karty SIM)"
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr "GSM network PIN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:20
-msgid "GSM network PUK"
-msgstr "Kod PUK sieci GSM (karty SIM)"
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr "GSM network PUK (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:21
-msgid "GSM network access point name configuration"
-msgstr "Konfiguracja nazwy punktu dostępu (APN) sieci GSM"
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr "GSM network access point name configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:22
-msgid "GSM network number"
-msgstr "Numer sieci GSM"
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr "GSM network number (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:23
-msgid "GSM network password"
-msgstr "Hasło sieci GSM"
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr "GSM network password (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:24
-msgid "GSM network password configuration"
-msgstr "Konfiguracja hasła sieci GSM"
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr "GSM network password configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:25
-msgid "GSM network personal identification number configuration"
-msgstr "Konfiguracja kodu PIN sieci GSM (karty SIM)"
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:26
-msgid "GSM network personal unlock key configuration"
-msgstr "Konfiguracja kodu PUK sieci GSM (karty SIM)"
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:27
-msgid "GSM network telephone number configuration"
-msgstr "Konfiguracja numeru telefonu sieci GSM"
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:28
-msgid "GSM network username"
-msgstr "Nazwa użytkownika sieci GSM"
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr "GSM network username (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:29
-msgid "GSM network username configuration"
-msgstr "Konfiguracja nazwy użytkownika sieci GSM"
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr "GSM network username configuration (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid ""
@@ -824,7 +822,7 @@ msgstr "Układ widoku ulubionych."
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
-"Lista układów klawiatur. Każdy wpis powinien być w postaci układ(zmienna)."
+"Lista układów klawiatur. Każdy wpis powinien być w postaci układ(zmienna)"
 
 #: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
@@ -991,7 +989,7 @@ msgstr "Odłóż na później"
 msgid "Restart now"
 msgstr "Restartuj teraz"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
 msgid "Done"
 msgstr "Zakończono"
 
@@ -1000,16 +998,16 @@ msgstr "Zakończono"
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:230
+#: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
 msgid "Version %s"
 msgstr "Wersja %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:356
+#: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
 msgstr "Potwierdź usunięcie"
 
-#: ../src/jarabe/desktop/activitieslist.py:358
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Potwierdź usunięcie: Czy chcesz na stałe usunąć %s?"
@@ -1018,24 +1016,24 @@ msgstr "Potwierdź usunięcie: Czy chcesz na stałe usunąć %s?"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "Zachowaj"
 
-#: ../src/jarabe/desktop/activitieslist.py:365
-#: ../src/jarabe/desktop/activitieslist.py:419
-#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "Usuń"
 
-#: ../src/jarabe/desktop/activitieslist.py:435
+#: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
 msgstr "Usuń ulubione"
 
-#: ../src/jarabe/desktop/activitieslist.py:439
+#: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
 msgstr "Ustaw jako ulubione"
 
@@ -1098,7 +1096,7 @@ msgstr "Uaktualnienie oprogramowania"
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Uaktualnij swoje \"czynności\" aby zapewnić ich zgodność z nowym "
-"(uaktualnionym) oprogramowaniem."
+"(uaktualnionym) oprogramowaniem"
 
 #: ../src/jarabe/desktop/homebox.py:76
 msgid "Check now"
@@ -1106,7 +1104,7 @@ msgstr "Sprawdź teraz"
 
 #: ../src/jarabe/desktop/homebox.py:197
 msgid "List view"
-msgstr "Widok listy"
+msgstr "Wszystkie Aktywności"
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
@@ -1114,47 +1112,47 @@ msgstr "<Ctrl>2"
 
 #: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
-msgstr "Widok ulubionych"
+msgstr "Moje Aktywności"
 
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:143
+#: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
 msgstr "Rodzaj klucza:"
 
-#: ../src/jarabe/desktop/keydialog.py:163
+#: ../src/jarabe/desktop/keydialog.py:159
 msgid "Authentication Type:"
 msgstr "Rodzaj uwierzytelniania:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
 msgstr "Zabezpieczenia sieci bezprzewodowej:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:91
-#: ../src/jarabe/journal/journaltoolbox.py:494
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "Wznów"
 
-#: ../src/jarabe/desktop/meshbox.py:96
+#: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Dołącz"
 
-#: ../src/jarabe/desktop/networkviews.py:500
+#: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr "Sieć ad-hoc &d"
+msgstr "Sieć ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:634
+#: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
 #, python-format,
 msgid "Mesh Network %d"
@@ -1247,23 +1245,23 @@ msgstr "Otwórz z"
 msgid "%s clipping"
 msgstr "%s (do schowka)"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
 msgstr "Sąsiedztwo"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
 msgstr "F4"
 
@@ -1271,15 +1269,15 @@ msgstr "F4"
 msgid "Name:"
 msgstr "Imię:"
 
-#: ../src/jarabe/intro/window.py:126
+#: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
 msgstr "Kliknij aby zmienić kolor:"
 
-#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Wstecz"
 
-#: ../src/jarabe/intro/window.py:204
+#: ../src/jarabe/intro/window.py:198
 msgid "Next"
 msgstr "Dalej"
 
@@ -1332,125 +1330,125 @@ msgid "Tags:"
 msgstr "Tagi:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:453
+#: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "Dziennik"
 
-#: ../src/jarabe/journal/journaltoolbox.py:71
+#: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
 msgstr "Szukaj"
 
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr "Zawsze"
 
-#: ../src/jarabe/journal/journaltoolbox.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
 msgstr "Dziś"
 
-#: ../src/jarabe/journal/journaltoolbox.py:142
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
 msgstr "Od wczoraj"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
 msgstr "ubiegłym tygodniu"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
 msgstr "ubiegłym miesiącu"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
 msgstr "ubiegłym roku"
 
-#: ../src/jarabe/journal/journaltoolbox.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
 msgstr "Ktokolwiek"
 
-#: ../src/jarabe/journal/journaltoolbox.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
 msgstr "Moi przyjaciele"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
 msgstr "Moja klasa"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:300
+#: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
 msgstr "Cokolwiek"
 
-#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
 msgstr "Kopiuj do"
 
-#: ../src/jarabe/journal/journaltoolbox.py:389
+#: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "Duplikuj"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Błąd podczas kopiowania wpisu: %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
 msgstr "Błąd"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:497
+#: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "Uruchom"
 
-#: ../src/jarabe/journal/journaltoolbox.py:525
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
 msgstr "Sortuj wg daty modyfikacji"
 
-#: ../src/jarabe/journal/journaltoolbox.py:526
+#: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
 msgstr "Sortuj wg daty utworzenia"
 
-#: ../src/jarabe/journal/journaltoolbox.py:527
+#: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
 msgstr "Sortuj wg rozmiaru"
 
-#: ../src/jarabe/journal/journaltoolbox.py:536
+#: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
 msgstr "Sortowanie"
 
-#: ../src/jarabe/journal/listview.py:316
+#: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
 msgstr "Twój dziennik jest pusty"
 
-#: ../src/jarabe/journal/listview.py:319
+#: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
 msgstr "Twój katalog z dokumentami jest pusty"
 
-#: ../src/jarabe/journal/listview.py:321
+#: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
 msgstr "Nie ma nic na urządzeniu"
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
 msgstr "Brak pasujących wpisów"
 
-#: ../src/jarabe/journal/listview.py:397
+#: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
 msgstr "Wyczyść wyszukiwanie"
 
@@ -1508,7 +1506,7 @@ msgstr "Pokaż szczegóły"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr "Wpisy bez pliku nie będą wysłane"
+msgstr "Wpisy bez pliku nie będą wysłane."
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
@@ -1541,186 +1539,207 @@ msgstr "Dokumenty"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB wolnego miejsca"
 
-#: ../src/jarabe/model/network.py:163
+#: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
 msgstr "Nieznany jest powód zmiany stanu urządzenia."
 
-#: ../src/jarabe/model/network.py:165
+#: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
 msgstr "Zmiana stanu jest normalna."
 
-#: ../src/jarabe/model/network.py:167
+#: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
 msgstr "Urządzenie jest pod kontrolą."
 
-#: ../src/jarabe/model/network.py:169
+#: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
 msgstr "Nie kontroluję już urządzenia."
 
-#: ../src/jarabe/model/network.py:171
+#: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
 msgstr "Urządzenie nie może być przygotowane do konfiguracji."
 
-#: ../src/jarabe/model/network.py:173
+#: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 "Nie można skonfigurować adresu IP (brak adresu w puli serwera DHCP, "
 "przekroczony czas oczekiwania lub inne)."
 
-#: ../src/jarabe/model/network.py:176
+#: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
 msgstr "Konfiguracja adresu IP zdezaktualizowała się (nie jest już poprawna)."
 
-#: ../src/jarabe/model/network.py:178
+#: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
 msgstr "Były wymagane \"sekretne dane\" ale nie zostały dostarczone."
 
-#: ../src/jarabe/model/network.py:180
+#: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "Dostawca 802.1X rozłączył z punktu dostępu lub serwera autoryzacji."
 
-#: ../src/jarabe/model/network.py:183
+#: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "Konfiguracja dostawcy protokołu 802.1X nie powiodła się."
 
-#: ../src/jarabe/model/network.py:185
+#: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "Dostawca protokołu 802.1X nieoczekiwanie zepsuł się lub odłączył."
 
-#: ../src/jarabe/model/network.py:187
+#: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "Zbyt długo trwała autoryzacja dostawcy protokołu 802.1X."
 
-#: ../src/jarabe/model/network.py:189
+#: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
 msgstr ""
 "Usługa PPP uruchamia się za długo, nie zdążyła się uruchomić w dozwolonym "
 "czasie."
 
-#: ../src/jarabe/model/network.py:191
+#: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
 msgstr "Usługa PPP nieoczekiwanie rozłączyła połączenie."
 
-#: ../src/jarabe/model/network.py:193
+#: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "Usługa PPP nieoczekiwanie zepsuła się lub odłączyła."
 
-#: ../src/jarabe/model/network.py:195
+#: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
 msgstr ""
 "Usługa DHCP uruchamia się za długo, nie zdążyła się uruchomić w dozwolonym "
 "czasie."
 
-#: ../src/jarabe/model/network.py:197
+#: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
 msgstr "Usługa DHCP nieoczekiwanie zgłosiła błąd."
 
-#: ../src/jarabe/model/network.py:199
+#: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "Usługa DHCP nieoczekiwanie zepsuła się lub odłączyła."
 
-#: ../src/jarabe/model/network.py:201
+#: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
 msgstr ""
 "Usługa współdzielonego połączenia (shared connection) nie zdołała się "
 "uruchomić."
 
-#: ../src/jarabe/model/network.py:203
+#: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
 "Usługa współdzielonego połączenia (shared connection) nieoczekiwanie zepsuła "
 "się lub odłączyła."
 
-#: ../src/jarabe/model/network.py:206
+#: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
 msgstr "Usługa AutoIP nie zdołała się uruchomić."
 
-#: ../src/jarabe/model/network.py:208
+#: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
 msgstr "Usługa AutoIP nieoczekiwanie zgłosiła błąd."
 
-#: ../src/jarabe/model/network.py:210
+#: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "Usługa AutoIP nieoczekiwanie zepsuła się lub odłączyła."
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
 msgstr "Nie można się dodzwonić, gdyż linia telefoniczna jest zajęta."
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
 msgstr ""
 "Nie można się dodzwonić, gdyż nie ma sygnału telefonicznego (sprawdź "
 "podłączenie kabla telefonicznego)."
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
 msgstr ""
 "Nie można się dodzwonić, gdyż nie ma tzw. sygnału nośnego (czy pod podanym "
 "nr tel na pewno jest modem?)."
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
 msgstr "Próby dodzwonienia się trwały za długo."
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
 msgstr "Próby dodzwonienia się nie powiodły się."
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
 msgstr "Nie powiodła się inicjalizacja modemu."
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr "Nie można wybrać podanego APN sieci GSM."
+msgstr "Nie można wybrać podanego APN sieci GSM"
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
 msgstr "Nie szukam sieci."
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
 msgstr "Odmówiono rejestracji w sieci."
 
-#: ../src/jarabe/model/network.py:230
+#: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
 msgstr "Próba rejestracji w sieci trwała zbyt długo."
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
 msgstr "Nie powiodła się rejestracja w sieci GSM."
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
 msgstr "Podano zły kod PIN."
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
 msgstr "Być może brakuje odpowiedniego oprogramowania (firmware) urządzenia."
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
 msgstr "Urządzenie zostało usunięte."
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
 msgstr "Menadżer sieci (NetworkManager) przeszedł w stan uśpienia."
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
 msgstr "Aktywne połączenie urządzenia zostało usunięte lub zniknęło."
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
 msgstr "Użytkownik lub klient zażądał rozłączenia."
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
 msgstr "Zmienił się sygnał nośny lub połączenie urządzenia."
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr "Przyjmujemy, że będzie używane istniejące połączenie."
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr "\"Supplicant\" jest już dostępny."
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr "Nie można znaleźć modemu w systemie."
+
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr ""
+"Połączenie Bluetooth nie powiodło się lub próbowano zbyt długo się połączyć."
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
+msgstr "Nieużywane."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1744,7 +1763,7 @@ msgstr "Wyloguj"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr "Moje ustawienia"
+msgstr "Ustawienia"
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
@@ -1810,6 +1829,45 @@ msgstr "Pokaż źródło: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar w oknie"
+
+#~ msgid "Personal Unblocking Key (PUK):"
+#~ msgstr "Numer PUK:"
+
+#~ msgid "GSM network APN"
+#~ msgstr "Nazwa punktu dostępu (APN) sieci GSM"
+
+#~ msgid "GSM network PIN"
+#~ msgstr "Kod PIN sieci GSM (karty SIM)"
+
+#~ msgid "GSM network PUK"
+#~ msgstr "Kod PUK sieci GSM (karty SIM)"
+
+#~ msgid "GSM network access point name configuration"
+#~ msgstr "Konfiguracja nazwy punktu dostępu (APN) sieci GSM"
+
+#~ msgid "GSM network number"
+#~ msgstr "Numer sieci GSM"
+
+#~ msgid "GSM network password"
+#~ msgstr "Hasło sieci GSM"
+
+#~ msgid "GSM network password configuration"
+#~ msgstr "Konfiguracja hasła sieci GSM"
+
+#~ msgid "GSM network personal identification number configuration"
+#~ msgstr "Konfiguracja kodu PIN sieci GSM (karty SIM)"
+
+#~ msgid "GSM network personal unlock key configuration"
+#~ msgstr "Konfiguracja kodu PUK sieci GSM (karty SIM)"
+
+#~ msgid "GSM network telephone number configuration"
+#~ msgstr "Konfiguracja numeru telefonu sieci GSM"
+
+#~ msgid "GSM network username"
+#~ msgstr "Nazwa użytkownika sieci GSM"
+
+#~ msgid "GSM network username configuration"
+#~ msgstr "Konfiguracja nazwy użytkownika sieci GSM"
 
 # TODO: Add "Start with" menu item
 #~ msgid "Copy"
