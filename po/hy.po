@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-11-22 22:23+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2011-11-17 00:32-0500\n"
+"PO-Revision-Date: 2011-12-12 17:33+0200\n"
+"Last-Translator: anush.mkrtchyan <anush.mkrtchyan@ca1492.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -23,12 +23,12 @@ msgstr "իմ մասին"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "Դուք պետ է մուտքագրեք անուն:"
+msgstr "Դուք պետ է մուտքագրեք որևէ անուն:"
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "գիծ.   գույն=%s երանգ=%s"
+msgstr "գիծ.  գույն=%s երանգ=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
@@ -38,7 +38,7 @@ msgstr "գիծ.   %s"
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "լցնել.     գույն=%s երանգ=%s"
+msgstr "լցնել. գույն=%s երանգ=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
@@ -61,48 +61,48 @@ msgstr "Քլիք գույնը փոփոխելու համար."
 msgid "About my Computer"
 msgstr "Իմ Համակարգչի մասին"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:42
+#: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
 msgstr "Մատչելի չէ"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:171
+#: ../extensions/cpsection/aboutcomputer/model.py:183
 #, python-format
 msgid "%(interface)s: %(version)s"
 msgstr "%(interface)s: %(version)s"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:61
+#: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
 msgstr "Ինքնություն"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:70
+#: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr "Շարքյին Համար."
+msgstr "Ապրանքշարային Համար."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:92
+#: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
 msgstr "Ծրագրային մատակարարում"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:101
+#: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
 msgstr "Կառուցել."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:116
+#: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
 msgstr "Sugar."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:132
+#: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
 msgstr "Ծրագրաշար."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:147
+#: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
 msgstr "Անլար Ծրագրաշար."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:170
+#: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
 msgstr "Հեղինակային իրավունք և Արտոնագիր"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:188
+#: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -111,9 +111,9 @@ msgid ""
 msgstr ""
 "Sugar-ը օգտվողի հետ հաղորդակցող այն գծագրային ծրագիրն է, որ դուք տեսում եք: "
 "Sugar-ը անվճար ծրագիր է և կարգավորվում է GNU General Public արտոնագրով: Դուք "
-"կարող եք օգտագործել և տարածել այն որոշակի ներքոշյալ պայմանների ներքո:"
+"կարող եք օգտագործել և տարածել այն  ներքոշյալ որոշակի պայմաններով."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:200
+#: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
 msgstr "Ամբողջական Արտոնագիր."
 
@@ -136,7 +136,7 @@ msgstr "Շրջանակ"
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "Առժեքը պետք է տրվի ամբողջ թվով:"
+msgstr "Արժեքը պետք է տրվի ամբողջ թվով:"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
@@ -149,7 +149,7 @@ msgstr "ակնթարթային"
 #: ../extensions/cpsection/frame/view.py:29
 #, python-format
 msgid "%s seconds"
-msgstr "%s վարկյան"
+msgstr "%s վայրկյան"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
@@ -159,6 +159,7 @@ msgstr "Ակտիվացման Հետաձգում"
 msgid "Corner"
 msgstr "Անկույն"
 
+# եզր
 #: ../extensions/cpsection/frame/view.py:113
 msgid "Edge"
 msgstr "Կող"
@@ -170,11 +171,12 @@ msgstr "Ստեղնաշար"
 
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
-msgstr "Ստեղնաշարի Մոդել"
+msgstr "Ստեղնաշարի օրինակ"
 
+# բանալի/գաղտնաբառ/կոդ
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr "Դասավորությունը փոփոխման ծածքաբառեր"
+msgstr "Դասավորության փոփոխման բանալի"
 
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
@@ -187,7 +189,7 @@ msgstr "Լեզու"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Հնարավոր չէ մուտք գործել ~/.i18n. Ստեղծել ստանդարտ կարգավորումներ:"
+msgstr "Հնարավոր չէ մուտք գործել ~/.i18n. Ստեղծել ստանդարտ սահմանումներ:"
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
@@ -204,59 +206,55 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Ավելացրեք լեզուները ձեր նախընտրած հաջորդականությամբ: Եթե թարգմանությունը "
-"մատչելի չէ, կօգտագործվի ցուցակով հաջյորդը:"
+"Ավելացրեք լեզուները ձեր նախընտրած հաջորդականությամբ: Եթե թարգմանություն չկա` "
+"կօգտագործվի ցուցակով հաջորդը:"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
 msgstr "Մոդեմի կազմաձևումը"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:94
-msgid "Username:"
-msgstr "Մականուն."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:106
-msgid "Password:"
-msgstr "Գաղտնաբառ."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:118
-msgid "Number:"
-msgstr "Համար."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:130
-msgid "Access Point Name (APN):"
-msgstr "Միացման Կետի Անունը (APN)."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:142
-msgid "Personal Identity Number (PIN):"
-msgstr "Անձնական Անհատական Համար (PIN)."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:154
-msgid "Personal Unblocking Key (PUK):"
-msgstr "Անձնական Արգելափակման բացման Գաղտնաբառ (PUK)."
-
-#: ../extensions/cpsection/modemconfiguration/view.py:175
+#: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
 "Շարժական լայնաշերտ բջջային (3G) ցանցին միանալու համար ձեզ անհրաժեշտ է "
-"տրամադրել հետևյալ տեղեկությունները`:"
+"տրամադրել հետևյալ տեղեկությունները:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "Օգտագործողի անունը."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "Գաղտնաբառ."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "Համար."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr "Միացման Կետի Անունը (APN)."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr "Անձնական Համարը (PIN)."
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
-msgstr "Ցանց"
+msgstr "Համացանց"
 
-#: ../extensions/cpsection/network/model.py:71
+#: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
 msgstr "Կարգավիճակն անհայտ է:"
 
-#: ../extensions/cpsection/network/model.py:99
+#: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "Վրիպում ընտրված ռադիո տիրույթում` օգտագործել on/off:"
+msgstr "Վրիպում ընտրված շառավղի տիրույթում` օգտագործել on/off:"
 
-#: ../extensions/cpsection/network/model.py:140
+#: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr "Վրիպում ընտրված տիրույթում` օգտագործել 0/1:"
 
@@ -266,15 +264,16 @@ msgstr "Անլար"
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Անջատել անլար ռադիո սարքերը մարտկոցի հզորությունը տնտեսելու համար"
+msgstr "Անջատել ալեհավաքը` մարտկոցի հզորությունը տնտեսելու համար"
 
+# անտենա
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
-msgstr "Ռադիո"
+msgstr "Ալեհավաք"
 
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr "Ջնջել ցանցին միացման պատմությունը միացման խնդիրների ծագման դեպքում"
+msgstr "Միացման խնդիրների ծագման դեպքում ջնջել ցանցին միացման պատմությունը"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
@@ -290,7 +289,7 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Սերվերը համառժեք է բոլոր օգտվողների համար անկախ նրանց իրական գտնվելու "
+"Սերվերը համարժեք է բոլոր օգտվողների համար` անկախ նրանց իրական գտնվելու "
 "վայրից: Օգտվողները կարող են տեսնել միմյանց, նույնիսկ եթե նրանք նույն ցանցում "
 "չեն:"
 
@@ -302,6 +301,7 @@ msgstr "Սերվեր."
 msgid "Power"
 msgstr "Սնուցում"
 
+# pm - power management -սնուցման կառավարում
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Վրիպում ավտոմատիկ pm տիրույթում՝ օգտագործել on/off:"
@@ -323,7 +323,7 @@ msgstr ""
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Սնուցման արտակարգ կառավարում (անջատում է անլար ռադիո սարքերը, երկարացնում է "
+"Սնուցման արտակարգ կառավարում (անջատում է անլար անտենան, երկարացնում է "
 "մարտկոցի կյանքի տևողությունը)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -359,10 +359,11 @@ msgstr "Ձեր ծրագրերը արդիականացված են"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
+#, python-format, 
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "Դուք կարող եք տեղադրել %s արդիականացումը"
-msgstr[1] ""
+msgstr[0] "Դուք կարող եք տեղադրել %s արդիականացումը "
+msgstr[1] "Դուք կարող եք տեղադրել %s արդիականացումը"
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
@@ -370,14 +371,15 @@ msgstr "Արդիականացումների որոնում..."
 
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr "Արդիականացումների տեղադրում"
+msgstr "Արդիականացումների տեղադրում..."
 
 #: ../extensions/cpsection/updater/view.py:173
 #, python-format
+#, python-format, 
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "Արդիականացումների %s տեղադրված է"
-msgstr[1] ""
+msgstr[0] "%s արդիականացումը  տեղադրվեց"
+msgstr[1] "%s արդիականացումը  տեղադրվեց"
 
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
@@ -445,65 +447,65 @@ msgstr "Լիցքվորոած է"
 msgid "IP address: %s"
 msgstr "IP հասցեն է` %s"
 
-#: ../extensions/deviceicon/network.py:104
-#: ../extensions/deviceicon/network.py:303
-#: ../src/jarabe/desktop/networkviews.py:140
-#: ../src/jarabe/desktop/networkviews.py:508
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
 msgstr "Անջատել"
 
-#: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:295
-#: ../src/jarabe/desktop/networkviews.py:243
-#: ../src/jarabe/desktop/networkviews.py:547
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:237
+#: ../src/jarabe/desktop/networkviews.py:527
+#: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
 msgstr "Միացում..."
 
-#: ../extensions/deviceicon/network.py:117
-#: ../extensions/deviceicon/network.py:185
-#: ../src/jarabe/desktop/networkviews.py:253
-#: ../src/jarabe/desktop/networkviews.py:553
-#: ../src/jarabe/desktop/networkviews.py:686
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:244
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
 msgstr "Միացած է"
 
-#: ../extensions/deviceicon/network.py:130
+#: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
 msgstr "Առանց հաղորդալարի կապ չկա"
 
-#: ../extensions/deviceicon/network.py:144
+#: ../extensions/deviceicon/network.py:133
 msgid "Channel"
 msgstr "Կապուղի"
 
-#: ../extensions/deviceicon/network.py:159
+#: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
 msgstr "Լարային ցանց"
 
-#: ../extensions/deviceicon/network.py:188
+#: ../extensions/deviceicon/network.py:177
 msgid "Speed"
 msgstr "Արագություն"
 
-#: ../extensions/deviceicon/network.py:213
+#: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
 msgstr "Անլար մոդեմ"
 
-#: ../extensions/deviceicon/network.py:281
+#: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
 msgstr "Խնդրում ենք սպասել..."
 
-#: ../extensions/deviceicon/network.py:286
-#: ../src/jarabe/desktop/networkviews.py:136
-#: ../src/jarabe/desktop/networkviews.py:504
-#: ../src/jarabe/desktop/networkviews.py:637
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:124
+#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
 msgstr "Միացնել"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
 msgstr "Միացած չէ"
 
-#: ../extensions/deviceicon/network.py:294
+#: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
 #: ../src/jarabe/frame/activitiestray.py:602
@@ -512,61 +514,61 @@ msgstr "Միացած չէ"
 msgid "Cancel"
 msgstr "Չեղարկել"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
 msgstr "Կրկին փորձեք միանալ"
 
-#: ../extensions/deviceicon/network.py:336
+#: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
 msgstr "Վրիպում. %s"
 
-#: ../extensions/deviceicon/network.py:340
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Առաջարկություն` %s"
 
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
 msgstr "Միացած է %s"
 
-#: ../extensions/deviceicon/network.py:355
-#: ../extensions/deviceicon/network.py:356
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:350
 msgid "Check your Pin/Puk configuration."
 msgstr "Ստուգեք ձեր PIN/PUK կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "Ստուգեք ձեր Միացման Կետի Անվանման (APN) կազմաձևումը"
 
-#: ../extensions/deviceicon/network.py:368
+#: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
 msgstr "Ստուգեք ձեր Համարի կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:370
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
 msgstr "Ստուգեք ձեր կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:612
+#: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
 msgstr "Բջջային Ցանց"
 
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:638
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Բջջային Ցանց %s"
 
-#: ../extensions/deviceicon/network.py:779
+#: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
 msgstr "GSM միացումն մատչելի չէ:"
 
-#: ../extensions/deviceicon/network.py:780
+#: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
 msgstr "Ստեղծել միացում կառավարման վահանակի միջոցով:"
 
@@ -580,7 +582,7 @@ msgstr "Միացնել Ձայնը"
 
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
-msgstr "Անջատել Ձայնը"
+msgstr "Անձայն"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
@@ -599,17 +601,17 @@ msgid "Mesh"
 msgstr "Բջիջ"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
 msgstr "Խումբ"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
 msgstr "Տուն"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
 msgstr "Գործունեություն"
 
@@ -702,53 +704,60 @@ msgstr "Սեղանադրում օգտագործվող տառատեսակ:"
 msgid "Font size that is used throughout the desktop."
 msgstr "Սեղանադրում օգտագործվող տառաչափս:"
 
+# GSM-  Համընդհանուր շարժական հեռահաղորդակցության համակարգ
+# APN - Մուտքի Կետի Ավանում
 #: ../data/sugar.schemas.in.h:18
-msgid "GSM network APN"
-msgstr "GSM ցանցի APN"
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի APN (DEPRECATED/UNUSED)"
 
+# PIN Անձը հաստատող համար
 #: ../data/sugar.schemas.in.h:19
-msgid "GSM network PIN"
-msgstr "GSM ցանցի PIN"
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի PIN-ը (DEPRECATED/UNUSED) "
 
+# PUK - Արգելափակումը բացող անձնական բանալի/կոդ
 #: ../data/sugar.schemas.in.h:20
-msgid "GSM network PUK"
-msgstr "GSM ցանցի PUK"
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի PUK (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:21
-msgid "GSM network access point name configuration"
-msgstr "GSM ցանցի միացման կետի անվանման կազմաձևում"
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի մուտքի կետի անվան կազմաձևում (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:22
-msgid "GSM network number"
-msgstr "GSM ցանցի համարը"
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի համար (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:23
-msgid "GSM network password"
-msgstr "GSM ցանցի գաղտնաբառը"
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի գաղտնաբառ (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:24
-msgid "GSM network password configuration"
-msgstr "GSM ցանցի գաղտնաբառի կազմաձևում"
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ցացնի գաղտնաբառի կազմաձևում (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:25
-msgid "GSM network personal identification number configuration"
-msgstr "GSM ցանցի անհատական անձնական համարանիշի կազմաձևում"
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ցանցի անձը հաստատող համարի կազմաձևում (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:26
-msgid "GSM network personal unlock key configuration"
-msgstr "GSM ցանցի անհատական անձնական բացման եղանակի կազմաձևում"
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr ""
+"GSM ցանցի արգելափակումը բացող անձնական բանալու կազմաձևում "
+"(DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:27
-msgid "GSM network telephone number configuration"
-msgstr "GSM ցանցի հեռախոսային համարի կազմաձևում"
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ցանցի հեռախոսահամրի կազմաձևում (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:28
-msgid "GSM network username"
-msgstr "GSM ցանցի օգտվողի մականունը"
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr "GSM ցանցի մուտքանուն (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:29
-msgid "GSM network username configuration"
-msgstr "GSM ցանցի օգտվողի մականունի կազմաձևում"
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ցանցի մուտքանվան կազմաձևում (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid ""
@@ -904,7 +913,7 @@ msgid ""
 "%s module: %r"
 msgstr ""
 "sugar-կառավար վահանակ. ԶԳՈՒՇԱՑՈՒՄ, գտնվել է ավելի քան մեկ տարբերակ նույն "
-"անունով.%s մոդուլը.%r"
+"անունով.%s մոդուլը. %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -969,7 +978,7 @@ msgstr "Հետո"
 msgid "Restart now"
 msgstr "Վերամեկնարկել հիմա"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
 msgid "Done"
 msgstr "Պատրաստ է"
 
@@ -978,38 +987,38 @@ msgstr "Պատրաստ է"
 msgid "Ok"
 msgstr "OK"
 
-#: ../src/jarabe/desktop/activitieslist.py:230
+#: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
 msgid "Version %s"
 msgstr "Տարբերակ %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:356
+#: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
 msgstr "Հաստատեք ջնջելը"
 
-#: ../src/jarabe/desktop/activitieslist.py:358
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Հաստատեք ջնջելը. Արդյո՞ք ցանկանում եք ընդմիշտ ջնջել %s:"
 
-#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "Պահել"
 
-#: ../src/jarabe/desktop/activitieslist.py:365
-#: ../src/jarabe/desktop/activitieslist.py:419
-#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "Ջնջել"
 
-#: ../src/jarabe/desktop/activitieslist.py:435
+#: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
 msgstr "Ջնջել ընտրյալը"
 
-#: ../src/jarabe/desktop/activitieslist.py:439
+#: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
 msgstr "Նշանակել ընտրյալը"
 
@@ -1094,40 +1103,40 @@ msgstr "Ընտրյալների տեսքով"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:143
+#: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
 msgstr "Ստեղնատեսակը."
 
-#: ../src/jarabe/desktop/keydialog.py:163
+#: ../src/jarabe/desktop/keydialog.py:159
 msgid "Authentication Type:"
 msgstr "Նույնականացման Տեսակը."
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Անհատական"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
 msgstr "Անլար կապի անվտանգության."
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:91
-#: ../src/jarabe/journal/journaltoolbox.py:494
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "Շարունակել"
 
-#: ../src/jarabe/desktop/meshbox.py:96
+#: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Միանալ"
 
-#: ../src/jarabe/desktop/networkviews.py:500
+#: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ժամանակավոր Ցանց %d"
 
-#: ../src/jarabe/desktop/networkviews.py:634
+#: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Բջջային Ցանց %d"
@@ -1167,7 +1176,7 @@ msgstr "%s %s-ից"
 
 #: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer from %s"
 msgstr "Տեղափոխում %s -ից"
 
@@ -1193,7 +1202,7 @@ msgstr "Մյուս մասնակիցը չեղարկեց ֆայլի փոխանցմ
 
 #: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer to %s"
 msgstr "Տեղափոխել %s"
 
@@ -1216,23 +1225,23 @@ msgstr "Բացել ....-ով"
 msgid "%s clipping"
 msgstr "%s ամրացում"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
 msgstr "Հարևաններ"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
 msgstr "F4"
 
@@ -1240,15 +1249,15 @@ msgstr "F4"
 msgid "Name:"
 msgstr "Անուն."
 
-#: ../src/jarabe/intro/window.py:126
+#: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
 msgstr "Քլիք գույնը փոխելու համար."
 
-#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Հետ"
 
-#: ../src/jarabe/intro/window.py:204
+#: ../src/jarabe/intro/window.py:198
 msgid "Next"
 msgstr "Հաջորդ"
 
@@ -1301,121 +1310,121 @@ msgid "Tags:"
 msgstr "Պիտակներ."
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:453
+#: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "Մատյան"
 
-#: ../src/jarabe/journal/journaltoolbox.py:71
+#: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
 msgstr "Որոնում"
 
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr "Ցանկացած ժամանակ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
 msgstr "Այսօր"
 
-#: ../src/jarabe/journal/journaltoolbox.py:142
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
 msgstr "Երեկվանից"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
 msgstr "Վերջին շաբաթվա ընթացքում"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
 msgstr "Վերջին ամսվա ընթացքում"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
 msgstr "Վերջին տարվա ընթացքում"
 
-#: ../src/jarabe/journal/journaltoolbox.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
 msgstr "Բոլորը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
 msgstr "Իմ ընկերները"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
 msgstr "Իմ դասարանը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:300
+#: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
 msgstr "Ամեն ինչը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
 msgstr "Կրկնօրինակել"
 
-#: ../src/jarabe/journal/journaltoolbox.py:389
+#: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "Կրկնօրինակել"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Գրառման պատճենահանման վրիպում: %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
 msgstr "Վրիպում"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:497
+#: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "Մեկնարկ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:525
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
 msgstr "Դասավորել ըստ փոփոխման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:526
+#: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
 msgstr "Դասավորել ըստ ստեղծման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:527
+#: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
 msgstr "Դասավորել ըստ չափսի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:536
+#: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
 msgstr "Դասավորված տեսք"
 
-#: ../src/jarabe/journal/listview.py:316
+#: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
 msgstr "Ձեր Մատյանը դաատրկ է"
 
-#: ../src/jarabe/journal/listview.py:319
+#: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
 msgstr "Ձեր թղթապանակը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:321
+#: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
 msgstr "Սարքը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
 msgstr "Չկա համընկնող գրառում"
 
-#: ../src/jarabe/journal/listview.py:397
+#: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
 msgstr "Մաքրել որոնումը"
 
@@ -1507,177 +1516,198 @@ msgstr "Փաստաթղթեր"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d ՄԲ ազատ"
 
-#: ../src/jarabe/model/network.py:163
+#: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
 msgstr "Սարքի վիճակի փոփոխության պատճառը անհայտ է:"
 
-#: ../src/jarabe/model/network.py:165
+#: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
 msgstr "Վիճակի փոփոխությունը սովորական է:"
 
-#: ../src/jarabe/model/network.py:167
+#: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
 msgstr "Սարքը այժմ կառավարվող է:"
 
-#: ../src/jarabe/model/network.py:169
+#: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
 msgstr "Սարքը այլևս կառավարվող չէ:"
 
-#: ../src/jarabe/model/network.py:171
+#: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
 msgstr "Սարքի կարգավորումները չեն կարդացվում:"
 
-#: ../src/jarabe/model/network.py:173
+#: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 "IP կոնֆիգուրացիան չի կարող հաստատվել (չկա հասանելի հասցե, ժամասպառ, և այլն):"
 
-#: ../src/jarabe/model/network.py:176
+#: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
 msgstr "IP կոնֆիգուրացիան այլևս վավեր չէ:"
 
-#: ../src/jarabe/model/network.py:178
+#: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
 msgstr "Գաղտնիքներ էր պահանջվում, բայց չեն տրամադրվել:"
 
-#: ../src/jarabe/model/network.py:180
+#: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "802.1X հայցողը անջատված է միացման կետից կամ վավերացման սերվերից:"
 
-#: ../src/jarabe/model/network.py:183
+#: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "802.1X հայցողի կարգավորումների վրիպւմ:"
 
-#: ../src/jarabe/model/network.py:185
+#: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "802.1X հայցողը անսպասելիորեն ավարտեց կամ անջատվեց:"
 
-#: ../src/jarabe/model/network.py:187
+#: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "802.1X դիմորդի վավերացումը շատ երկար տեւեց:"
 
-#: ../src/jarabe/model/network.py:189
+#: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
 msgstr "PPP սպասարկումը թույլատրված ժամկետում չսկսեց:"
 
-#: ../src/jarabe/model/network.py:191
+#: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
 msgstr "PPP սպասարկումն անսպասելիորեն անջատվեց:"
 
-#: ../src/jarabe/model/network.py:193
+#: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "PPP սպասարկումն անսպասելիորեն դադարեց կամ անհաջողության մատնվեց:"
 
-#: ../src/jarabe/model/network.py:195
+#: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "DHCP սպասարկումը թույկատրված ժամկետում չսկսեց:"
 
-#: ../src/jarabe/model/network.py:197
+#: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
 msgstr "DHCP սպասարկումն անսպասելի սխալ հաղորդեց:"
 
-#: ../src/jarabe/model/network.py:199
+#: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "DHCP սպասարկումն անսպասելիորեն դադարեց կամ անհաջողության մատնվեց:"
 
-#: ../src/jarabe/model/network.py:201
+#: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
 msgstr "Ընդհանուր միացման սպասարկումը չսկսեց:"
 
-#: ../src/jarabe/model/network.py:203
+#: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
 "Ընդհանուր միացման սպասարկումն անսպասելիորեն դադարեց կամ անհաջողության "
 "մատնվեց:"
 
-#: ../src/jarabe/model/network.py:206
+#: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
 msgstr "AutoIP սպասարկումը չսկսեց:"
 
-#: ../src/jarabe/model/network.py:208
+#: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
 msgstr "AutoIP սպասարկումն անսպասելի սխալ հաղորդեց:"
 
-#: ../src/jarabe/model/network.py:210
+#: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "AutoIP սպասարկումն անսպասելիորեն դադարեց կամ անհաջողության մատնվեց:"
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
 msgstr "Զանգահարել չհաջողվեց, որովհետեւ գիծը զբաղված էր:"
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
 msgstr "Զանգահարել չհաջողվեց, որովհետեւ զանգի ձայնանշան չկար:"
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
 msgstr ""
 "Զանգահարել չհաջողվեց ծառայություն մատուցող ընկերության բացակայության "
 "պատճառով:"
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
 msgstr "Զանգահարման համար թույլատրված ժամանակը սպառվեց:"
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
 msgstr "Զանգահարել չհաջողվեց:"
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
 msgstr "Մոդեմի գործարկումը չհաջողվեց:"
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
 msgstr "Չկարողացավ ընտրել տրված GSM APN-ը"
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
 msgstr "Ցանցեր չի փնտրում:"
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
 msgstr "Ցանցի գրանցումը մերժվեց:"
 
-#: ../src/jarabe/model/network.py:230
+#: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
 msgstr "Ցանցի գրանցման համար հատկացված ժամանակը սպառվեց:"
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
 msgstr "Չկարողացավ գրանցվել տվյալ GSM ցանցում:"
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
 msgstr "Անձնական համարի ստուգումը չհաջողվեց:"
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
 msgstr "Սարքի անհրաժեշտ ծրագրային ապահովումը պակասում է:"
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
 msgstr "Սարքը հանվել է:"
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
 msgstr "Ցանցային կառավարիչը քուն մտավ:"
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
 msgstr "Սարքի գործուն կապը հանվեց կամ անհետացավ:"
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
 msgstr "Օգտագործողը կամ հաճախորդը խնդրեց կապի դադարեցում:"
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
 msgstr "Սարքին կապի ծառայություն մատուցողը / հանգույցը փոխվեց:"
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr "Սարքի գոյություն ունեցող կապը ընդունվեց:"
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr "\"supplicant\" - ծրագրային կիրառումը մատչելի է:"
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr "Մոդեմը չհայտնաբերվեց:"
+
+# Bluetooth – ինդուստրիալ մասնագիր (ստանդարտ) է անլար (ռադիո) անձնական ցանցերի (PANs) համար։
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr "Bluetooth կապը ձախողվեց կամ Ժամանակը սպառված է:"
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
+msgstr "Չօգտագործվող:"
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1728,7 +1758,7 @@ msgstr "Դիտել աղբյուրը"
 
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
-msgstr "Կանգառ"
+msgstr "Կանգնեցնել"
 
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
@@ -1767,6 +1797,45 @@ msgstr "Դիտել աղբյուրը. %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Շաքարը պատուհանում"
+
+#~ msgid "Personal Unblocking Key (PUK):"
+#~ msgstr "Արգելափակումը բացող անձնական Գաղտնաբառ (PUK)."
+
+#~ msgid "GSM network APN"
+#~ msgstr "GSM ցանցի APN"
+
+#~ msgid "GSM network PIN"
+#~ msgstr "GSM ցանցի PIN"
+
+#~ msgid "GSM network PUK"
+#~ msgstr "GSM ցանցի PUK"
+
+#~ msgid "GSM network access point name configuration"
+#~ msgstr "GSM ցանցի միացման կետի անվանման կազմաձևում"
+
+#~ msgid "GSM network number"
+#~ msgstr "GSM ցանցի համարը"
+
+#~ msgid "GSM network password"
+#~ msgstr "GSM ցանցի գաղտնաբառը"
+
+#~ msgid "GSM network password configuration"
+#~ msgstr "GSM ցանցի գաղտնաբառի կազմաձևում"
+
+#~ msgid "GSM network personal identification number configuration"
+#~ msgstr "GSM ցանցի անհատական անձնական համարանիշի կազմաձևում"
+
+#~ msgid "GSM network personal unlock key configuration"
+#~ msgstr "GSM ցանցի անհատական անձնական բացման եղանակի կազմաձևում"
+
+#~ msgid "GSM network telephone number configuration"
+#~ msgstr "GSM ցանցի հեռախոսային համարի կազմաձևում"
+
+#~ msgid "GSM network username"
+#~ msgstr "GSM ցանցի օգտվողի մականունը"
+
+#~ msgid "GSM network username configuration"
+#~ msgstr "GSM ցանցի օգտվողի մականունի կազմաձևում"
 
 #~ msgid "Copy"
 #~ msgstr "Կրկնօրինակ"
