@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-17 00:32-0500\n"
-"PO-Revision-Date: 2011-12-12 13:42+0200\n"
+"PO-Revision-Date: 2011-12-16 09:40+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -301,9 +301,9 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"Le serveur est comparable à la pièce dans laquelle vous vous trouvez : les "
-"personnes connectées au même serveur pourront se voir même si elles se "
-"trouvent sur des réseaux différents."
+"Le serveur est comparable à la pièce où vous êtes ; les personnes connectées "
+"au même serveur pourront se voir même si elles ne sont pas sur le même "
+"réseau."
 
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
@@ -554,7 +554,7 @@ msgstr "Vérifiez votre configuration Pin/Puk."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Vérifiez la configuration de votre nom de point d'accès (APN)."
+msgstr "Vérifiez la configuration de votre nom de point d'accès (APN)"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
@@ -951,15 +951,15 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Usage: sugar-control-panel [ option ] clé [ args ... ] \n"
+"Usage : sugar-control-panel [ option ] clé [ args ... ] \n"
 "    Contrôle de l'environnement sugar. \n"
 "    Options: \n"
-"    -h           afficher ce message d'aide et quitter \n"
-"    -l           afficher la liste des options disponibles \n"
+"    -h             afficher ce message d'aide et quitter \n"
+"    -l             afficher la liste des options disponibles \n"
 "    -h clé       afficher les informations sur cette clé \n"
 "    -g clé       obtenir la valeur actuelle associée à cette clé \n"
 "    -s clé       définir la valeur actuelle de cette clé \n"
-"    "
+"    -c clé \n"
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart sugar.\n"
@@ -1665,7 +1665,7 @@ msgstr "Échec de l'initialisation du modem."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr "Échec de la sélection de l'APN du GSM spécifié."
+msgstr "Échec de la sélection de l'APN du GSM spécifié"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
