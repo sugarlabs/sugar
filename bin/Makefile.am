@@ -1,5 +1,4 @@
 python_scripts =		\
-	sugar-activity		\
 	sugar-control-panel	\
 	sugar-emulator		\
 	sugar-install-bundle	\
