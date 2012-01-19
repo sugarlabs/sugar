@@ -347,7 +347,7 @@ class GsmPalette(Palette):
     def _get_error_by_nm_reason(self, reason):
         if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
                       network.NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED]:
-            message = _('Check your Pin/Puk configuration.')
+            message = _('Check your PIN/PUK configuration.')
         elif reason in [network.NM_DEVICE_STATE_REASON_PPP_DISCONNECT,
                         network.NM_DEVICE_STATE_REASON_PPP_FAILED]:
             message = _('Check your Access Point Name ' \

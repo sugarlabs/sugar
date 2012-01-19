@@ -69,7 +69,7 @@
       <default></default>
       <locale name="C">
         <short>Backup URL</short>
-        <long>Url where the backup is saved to.</long>
+        <long>URL where the backup is saved to.</long>
       </locale>
     </schema>
 
@@ -140,7 +140,7 @@
       <default>jabber.sugarlabs.org</default>
       <locale name="C">
         <short>Jabber Server</short>
-        <long>Url of the jabber server to use.</long>
+        <long>URL of the jabber server to use.</long>
       </locale>
     </schema>
 
