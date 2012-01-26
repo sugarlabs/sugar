@@ -56,10 +56,9 @@ class ClipboardPanelWindow(FrameWindow):
             return
 
         cb_service = clipboard.get_instance()
-        key = cb_service.add_object(name="")
-        cb_service.set_object_percent(key, percent=0)
 
         targets = x_clipboard.wait_for_targets()
+        cb_selections = []
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
                               'MULTIPLE', 'SAVE_TARGETS'):
@@ -68,9 +67,14 @@ class ClipboardPanelWindow(FrameWindow):
                 if not selection:
                     logging.warning('no data for selection target %s.', target)
                     continue
-                self._add_selection(key, selection)
+                cb_selections.append(selection)
 
-        cb_service.set_object_percent(key, percent=100)
+        if len(cb_selections) > 0:
+            key = cb_service.add_object(name="")
+            cb_service.set_object_percent(key, percent=0)
+            for selection in cb_selections:
+                self._add_selection(key, selection)
+            cb_service.set_object_percent(key, percent=100)
 
     def _add_selection(self, key, selection):
         if not selection.data:
