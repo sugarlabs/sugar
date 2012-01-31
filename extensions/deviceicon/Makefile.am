@@ -5,5 +5,6 @@ sugar_PYTHON = 		\
 	battery.py	\
 	network.py	\
 	speaker.py	\
+	speech.py	\
 	touchpad.py	\
 	volume.py

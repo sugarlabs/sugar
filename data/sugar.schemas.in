@@ -368,5 +368,29 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/speech/pitch</key>
+      <applyto>/desktop/sugar/speech/pitch</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Pitch value for the speech sugar service</short>
+        <long>Pitch value used by the speech service in Sugar</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/speech/rate</key>
+      <applyto>/desktop/sugar/speech/rate</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Rate value for the speech sugar service</short>
+        <long>Rate value used by the speech service in Sugar</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

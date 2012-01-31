@@ -16,4 +16,5 @@ sugar_PYTHON =			\
 	screen.py		\
         session.py		\
 	sound.py		\
+	speech.py		\
 	telepathyclient.py
