@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-08-24 18:10+0200\n"
+"POT-Creation-Date: 2011-11-17 00:32-0500\n"
+"PO-Revision-Date: 2011-11-26 03:05+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: vi\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -73,48 +73,48 @@ msgstr "Nhấn chuột để thay đổi màu :"
 msgid "About my Computer"
 msgstr "Giới thiệu máy tính này"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:42
+#: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
 msgstr "Không sẵn sàng"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:171
+#: ../extensions/cpsection/aboutcomputer/model.py:183
 #, python-format
 msgid "%(interface)s: %(version)s"
 msgstr "%(interface)s: %(version)s"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:61
+#: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
 msgstr "Cá tính"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:70
+#: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
 msgstr "Số sản xuất:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:92
+#: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
 msgstr "Phần mềm"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:101
+#: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
 msgstr "Bản xây dựng:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:116
+#: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:132
+#: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
 msgstr "Phần vững:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:147
+#: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
 msgstr "Phần vững không dây:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:170
+#: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
 msgstr "Tác quyền và Giấy phép"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:188
+#: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -125,7 +125,7 @@ msgstr ""
 "do, được bao quát bởi Giấy Phép Công Cộng GNU (GPL), thì bạn có quyền sửa "
 "đổi và/hay phân phối lại bản sao nó với các điều kiện GPL."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:200
+#: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
 msgstr "Giấy phép đầy đủ :"
 
@@ -224,50 +224,48 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Cấu hình mô-đêm"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:94
-msgid "Username:"
-msgstr "Tên người dùng:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:106
-msgid "Password:"
-msgstr "Mật khẩu :"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:118
-msgid "Number:"
-msgstr "Số :"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:130
-msgid "Access Point Name (APN):"
-msgstr ""
-
-#: ../extensions/cpsection/modemconfiguration/view.py:142
-msgid "Personal Identity Number (PIN):"
-msgstr ""
-
-#: ../extensions/cpsection/modemconfiguration/view.py:154
-msgid "Personal Unblocking Key (PUK):"
-msgstr ""
-
-#: ../extensions/cpsection/modemconfiguration/view.py:175
+#: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Bạn cần cung cấp các thông tin sau đây để thiết lập kết nối băng rộng di "
+"động tới mạng di động 3G."
+
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "Tên người dùng:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "Mật khẩu :"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "Số :"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr "Tên điểm truy nhập"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr "Số định danh cá nhân (PIN)"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
 msgstr "Mạng"
 
-#: ../extensions/cpsection/network/model.py:71
+#: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
 msgstr "Không rõ tình trạng."
 
-#: ../extensions/cpsection/network/model.py:99
+#: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
 msgstr "Lỗi trong đối số chọn một đã ghi rõ bật/tắt."
 
-#: ../extensions/cpsection/network/model.py:140
+#: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr "Lỗi trong đối số chỉ định: dùng 0/1."
 
@@ -399,9 +397,8 @@ msgstr "Kích cỡ tải về: %s"
 
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
-#, fuzzy
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "Từ phiên bản %(current)d lên %(new)s (Kích cỡ : %(size)s)"
+msgstr "Từ phiên bản %(current)s lên %(new)s (Kích cỡ : %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
@@ -455,66 +452,66 @@ msgstr "Sạc đầy"
 msgid "IP address: %s"
 msgstr "Địa chỉ IP: %s"
 
-#: ../extensions/deviceicon/network.py:104
-#: ../extensions/deviceicon/network.py:303
-#: ../src/jarabe/desktop/networkviews.py:140
-#: ../src/jarabe/desktop/networkviews.py:508
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
 
-#: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:295
-#: ../src/jarabe/desktop/networkviews.py:243
-#: ../src/jarabe/desktop/networkviews.py:547
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:237
+#: ../src/jarabe/desktop/networkviews.py:527
+#: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:117
-#: ../extensions/deviceicon/network.py:185
-#: ../src/jarabe/desktop/networkviews.py:253
-#: ../src/jarabe/desktop/networkviews.py:553
-#: ../src/jarabe/desktop/networkviews.py:686
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:244
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
 msgstr "Đã kết nối"
 
-#: ../extensions/deviceicon/network.py:130
+#: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
-msgstr ""
+msgstr "Không có kết nối không dây"
 
-#: ../extensions/deviceicon/network.py:144
+#: ../extensions/deviceicon/network.py:133
 msgid "Channel"
 msgstr "Kênh"
 
-#: ../extensions/deviceicon/network.py:159
+#: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
 msgstr "Mạng theo dây"
 
-#: ../extensions/deviceicon/network.py:188
+#: ../extensions/deviceicon/network.py:177
 msgid "Speed"
 msgstr "Tốc độ"
 
-#: ../extensions/deviceicon/network.py:213
+#: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
 msgstr "Mô-đem vô tuyến"
 
-#: ../extensions/deviceicon/network.py:281
+#: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
 msgstr "Hãy đợi..."
 
-#: ../extensions/deviceicon/network.py:286
-#: ../src/jarabe/desktop/networkviews.py:136
-#: ../src/jarabe/desktop/networkviews.py:504
-#: ../src/jarabe/desktop/networkviews.py:637
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:124
+#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
 msgstr "Kết nối"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
 msgstr "Bị ngắt kết nối"
 
-#: ../extensions/deviceicon/network.py:294
+#: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
 #: ../src/jarabe/frame/activitiestray.py:602
@@ -523,63 +520,62 @@ msgstr "Bị ngắt kết nối"
 msgid "Cancel"
 msgstr "Thôi"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:336
+#: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
 msgstr "Lỗi: %s"
 
-#: ../extensions/deviceicon/network.py:340
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:355
-#: ../extensions/deviceicon/network.py:356
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
 #, python-format
 #, fuzzy
 msgid "%d KB"
 msgstr "%dKB"
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:350
 msgid "Check your Pin/Puk configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:368
+#: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:370
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:612
+#: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
 msgstr "Mạng mắc lưới"
 
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:638
 #, python-format
-#, fuzzy
 msgid "Mesh Network %s"
-msgstr "Mạng mắc lưới %d"
+msgstr "Mạng mắc lưới %s"
 
-#: ../extensions/deviceicon/network.py:779
+#: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:780
+#: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
 msgstr ""
 
@@ -612,17 +608,17 @@ msgid "Mesh"
 msgstr "Mesh"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
 msgstr "Nhóm"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
 msgstr "Nhà"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
 msgstr "Hoạt động"
 
@@ -714,51 +710,52 @@ msgid "Font size that is used throughout the desktop."
 msgstr "Kích cỡ phông chữ được sử dụng trên toàn bộ môi trường."
 
 #: ../data/sugar.schemas.in.h:18
-msgid "GSM network APN"
+msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:19
-msgid "GSM network PIN"
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:20
-msgid "GSM network PUK"
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:21
-msgid "GSM network access point name configuration"
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:22
-msgid "GSM network number"
+msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:23
-msgid "GSM network password"
+msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:24
-msgid "GSM network password configuration"
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:25
-msgid "GSM network personal identification number configuration"
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:26
-msgid "GSM network personal unlock key configuration"
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:27
-msgid "GSM network telephone number configuration"
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:28
-msgid "GSM network username"
+msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:29
-msgid "GSM network username configuration"
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:30
@@ -940,7 +937,6 @@ msgid ""
 msgstr ""
 "Sử dụng: sugar-control-panel [ tùy_chọn ] khoá [ đối_số ... ]\n"
 "    Điều khiển môi trường sugar.\n"
-"\n"
 "    Tùy chọn:\n"
 "     -h           hiển thị trợ giúp này và thoát\n"
 "    -l           liệt kê tất cả các tùy chọn sẵn sàng\n"
@@ -977,7 +973,7 @@ msgstr "Về sau"
 msgid "Restart now"
 msgstr "Khởi chạy lại ngay"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
 msgid "Done"
 msgstr "Hoàn tất"
 
@@ -986,38 +982,38 @@ msgstr "Hoàn tất"
 msgid "Ok"
 msgstr "OK"
 
-#: ../src/jarabe/desktop/activitieslist.py:230
+#: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
 msgid "Version %s"
 msgstr "Phiên bản %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:356
+#: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
 msgstr "Xác nhận việc xoá"
 
-#: ../src/jarabe/desktop/activitieslist.py:358
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Xác nhận việc xoá: bạn có muốn xoá hẳn %s không?"
 
-#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "Giữ"
 
-#: ../src/jarabe/desktop/activitieslist.py:365
-#: ../src/jarabe/desktop/activitieslist.py:419
-#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "Xoá"
 
-#: ../src/jarabe/desktop/activitieslist.py:435
+#: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
 msgstr "Bỏ Ưa thích"
 
-#: ../src/jarabe/desktop/activitieslist.py:439
+#: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
 msgstr "Đặt Ưa thích"
 
@@ -1105,41 +1101,41 @@ msgstr "Xem Ưa thích"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:143
+#: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
 msgstr "Kiểu khoá:"
 
-#: ../src/jarabe/desktop/keydialog.py:163
+#: ../src/jarabe/desktop/keydialog.py:159
 msgid "Authentication Type:"
 msgstr "Cách xác thực:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
 msgstr "WPA và WPA2 Cá nhân"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
 msgstr "Bảo mật Không dây:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:91
-#: ../src/jarabe/journal/journaltoolbox.py:494
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "Tiếp tục"
 
-#: ../src/jarabe/desktop/meshbox.py:96
+#: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Vào"
 
-#: ../src/jarabe/desktop/networkviews.py:500
+#: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:634
+#: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Mạng mắc lưới %d"
@@ -1179,9 +1175,9 @@ msgstr "%s trên %s"
 
 #: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 msgid "Transfer from %s"
-msgstr "Truyền từ %r"
+msgstr "Truyền từ %s"
 
 #: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
@@ -1205,9 +1201,9 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 msgid "Transfer to %s"
-msgstr "Truyền tới %r"
+msgstr "Truyền tới %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
 #, fuzzy
@@ -1229,23 +1225,23 @@ msgstr "Mở bằng"
 msgid "%s clipping"
 msgstr "đoạn trích %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
 msgstr "Hàng xóm"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
 msgstr "F4"
 
@@ -1253,15 +1249,15 @@ msgstr "F4"
 msgid "Name:"
 msgstr "Tên:"
 
-#: ../src/jarabe/intro/window.py:126
+#: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
 msgstr "Nhấn vào để thay đổi mảu:"
 
-#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Lùi"
 
-#: ../src/jarabe/intro/window.py:204
+#: ../src/jarabe/intro/window.py:198
 msgid "Next"
 msgstr "Tiếp"
 
@@ -1314,81 +1310,81 @@ msgid "Tags:"
 msgstr "Thẻ:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:453
+#: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "Nhật ký"
 
-#: ../src/jarabe/journal/journaltoolbox.py:71
+#: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
 msgstr "Tìm kiếm"
 
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr "Lúc nào"
 
-#: ../src/jarabe/journal/journaltoolbox.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
 msgstr "Hôm nay"
 
-#: ../src/jarabe/journal/journaltoolbox.py:142
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
 msgstr "Kể từ ngày hôm qua"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
 msgstr "Tuần qua"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
 msgstr "Tháng qua"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
 msgstr "Năm qua"
 
-#: ../src/jarabe/journal/journaltoolbox.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
 msgstr "Bất cứ ai"
 
-#: ../src/jarabe/journal/journaltoolbox.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
 msgstr "Bạn bè"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
 msgstr "Cùng lớp"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:300
+#: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
 msgstr "Bất cứ gì"
 
-#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:389
+#: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "Nhân đôi"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
@@ -1396,44 +1392,44 @@ msgstr "Lỗi"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:497
+#: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "Khởi chạy"
 
-#: ../src/jarabe/journal/journaltoolbox.py:525
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:526
+#: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:527
+#: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:536
+#: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:316
+#: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
 msgstr "Nhật ký của bạn còn trống"
 
-#: ../src/jarabe/journal/listview.py:319
+#: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:321
+#: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
 msgstr "Không tìm thấy"
 
-#: ../src/jarabe/journal/listview.py:397
+#: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
 msgstr "Xoá trường tìm"
 
@@ -1526,171 +1522,191 @@ msgstr "Tài liệu"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB còn rảnh"
 
-#: ../src/jarabe/model/network.py:163
+#: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:165
+#: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:167
+#: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:169
+#: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:171
+#: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:173
+#: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:176
+#: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:178
+#: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:180
+#: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:183
+#: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:185
+#: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:187
+#: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:189
+#: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:191
+#: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:193
+#: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:195
+#: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:197
+#: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:199
+#: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:201
+#: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:203
+#: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:206
+#: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:208
+#: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:210
+#: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
 msgstr ""
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:230
+#: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
 msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:67
