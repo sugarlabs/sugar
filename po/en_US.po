@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-17 00:32-0500\n"
-"PO-Revision-Date: 2011-12-11 09:28+0200\n"
+"POT-Creation-Date: 2012-02-03 00:32-0500\n"
+"PO-Revision-Date: 2012-02-03 08:21+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_US\n"
@@ -142,7 +142,7 @@ msgstr "Date & Time"
 msgid "Error timezone does not exist."
 msgstr "Error timezone does not exist."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "Timezone"
 
@@ -581,6 +581,32 @@ msgstr "No GSM connection available."
 msgid "Create a connection in the control panel."
 msgstr "Create a connection in the control panel."
 
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr "Speech"
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr "Say selected text"
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr "Stop playback"
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr "Pitch"
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr "Rate"
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr "Pause playback"
+
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "My Speakers"
@@ -818,88 +844,104 @@ msgid "List of keyboard options."
 msgstr "List of keyboard options."
 
 #: ../data/sugar.schemas.in.h:41
+msgid "Pitch value for the speech sugar service"
+msgstr "Pitch value for the speech sugar service"
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Pitch value used by the speech service in Sugar"
+msgstr "Pitch value used by the speech service in Sugar"
+
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Power Automatic"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Automatic."
 msgstr "Power Automatic."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Extreme"
 msgstr "Power Extreme"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme."
 msgstr "Power Extreme."
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "Publish to Gadget"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr "Rate value for the speech sugar service"
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr "Rate value used by the speech service in Sugar"
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
 msgstr "Setting for muting the sound device."
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "Show Log out"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
 msgstr "Show Restart"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Show Sugar Ad-hoc networks"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "Sound Muted"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
 msgstr "The keyboard model to be used"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
 msgstr "Timezone setting for the system."
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:58
 msgid "Url of the jabber server to use."
 msgstr "URL of the jabber server to use."
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:59
 msgid "Url where the backup is saved to."
 msgstr "URL where the backup is saved to."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "User Color"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "User Name"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
 msgstr "User name that is used throughout the desktop."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Users will not be allowed to erase these activities through the list view."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
 msgstr "Volume Level"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
 msgstr "Volume level for the sound device."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -956,26 +998,26 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "To apply your changes you have to restart sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "Warning"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "Changes require restart"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "Cancel changes"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "Later"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "Restart now"
 
