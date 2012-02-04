@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-17 00:32-0500\n"
-"PO-Revision-Date: 2011-12-14 04:04+0200\n"
+"POT-Creation-Date: 2012-02-03 00:32-0500\n"
+"PO-Revision-Date: 2012-02-04 05:17+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
@@ -137,7 +137,7 @@ msgstr "Dato & tid"
 msgid "Error timezone does not exist."
 msgstr "Fejl tidszone eksisterer ikke."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "Tidszone"
 
@@ -575,6 +575,32 @@ msgstr "Ingen tilgængelig GSM-forbindelse."
 msgid "Create a connection in the control panel."
 msgstr "Opret en forbindelse i kontrolpanelet."
 
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr "Tale"
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr "Oplæs valgte tekst"
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr "Stop afspilning"
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr "Toneleje"
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr "Hastighed"
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr "Sæt afspilning på pause"
+
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "Mine højttalere"
@@ -815,89 +841,105 @@ msgid "List of keyboard options."
 msgstr "Liste med tastaturvalgmuligheder."
 
 #: ../data/sugar.schemas.in.h:41
+msgid "Pitch value for the speech sugar service"
+msgstr "Værdi på toneleje for sugars taletjeneste"
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Pitch value used by the speech service in Sugar"
+msgstr "Værdien på toneleje som anvendes af taletjenesten i Sugar"
+
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Automatisk strømstyring"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Automatic."
 msgstr "Automatisk strømstyring."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Extreme"
 msgstr "Ekstrem strømstyring"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme."
 msgstr "Ekstrem strømstyring."
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "Publicér til Gadget"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr "Værdi for hastighed for sugars taletjeneste"
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr "Værdi for hastighed som anvendes af taletjenesten i Sugar"
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
 msgstr "Indstilling til at slå lyd fra lydenhed."
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "Vis Log ud"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
 msgstr "Vis Genstart"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Vis Sugar ad-hoc netværk"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "Lyd slået fra"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
 msgstr "Tastaturmodellen som skal anvendes"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
 msgstr "Tidzone-indstilling for systemet."
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:58
 msgid "Url of the jabber server to use."
 msgstr "Url som jabber-server skal anvende."
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:59
 msgid "Url where the backup is saved to."
 msgstr "Url hvor sikkerhedskopi gemmes til."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "Brugerfarve"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "Brugernavn"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
 msgstr "Brugernavn som gennemgående anvendes på skrivebordet."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Brugere vil ikke have tilladelse til at slette disse aktiviteter gennem "
 "listevisningen."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
 msgstr "Lydstyrke"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
 msgstr "Lydstyrke for lydenheden."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -954,26 +996,26 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "For at dine ændringer træder i kraft skal du genstarte sukker.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "Advarsel"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "Ændringer kræver genstart"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "Fortryd ændringer"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "Senere"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "Genstart nu"
 
@@ -1196,7 +1238,7 @@ msgstr "Afvis"
 
 #: ../src/jarabe/frame/activitiestray.py:643
 msgid "The other participant canceled the file transfer"
-msgstr "Den anden deltager afbrød filoverførslen."
+msgstr "Den anden deltager afbrød filoverførslen"
 
 #: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
