@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-17 00:32-0500\n"
-"PO-Revision-Date: 2011-12-15 07:24+0200\n"
-"Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
+"POT-Creation-Date: 2012-02-03 00:32-0500\n"
+"PO-Revision-Date: 2012-02-06 07:12+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -122,8 +122,8 @@ msgid ""
 "therein."
 msgstr ""
 "अहिले तपाईंले हेरिराखेको ग्रफीकल युजर इन्टरफेस सुगर हो।सुगर फ्री सफ्टवेर हो, "
-" जुन GNU जनरल पब्लिक अनुमति पत्रले हेर्छ, र तोकिएको नियमअनुसार तपाईंले "
-"यसलाई परिवर्तन गरेर नियम अनुसार अरुलाई दिन सक्नुहुनेछ।"
+"जुन GNU जनरल पब्लिक अनुमति पत्रले हेर्छ, र तोकिएको नियमअनुसार तपाईंले यसलाई "
+"परिवर्तन गरेर नियम अनुसार अरुलाई दिन सक्नुहुनेछ।"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
@@ -137,7 +137,7 @@ msgstr "मिती & समय"
 msgid "Error timezone does not exist."
 msgstr "त्रुटि, समयक्षेत्र उपलब्ध छैन।"
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "समयक्षेत्र"
 
@@ -262,7 +262,7 @@ msgstr "अवस्था अज्ञात छ।"
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr " बन्द/खुला प्रयोग गर्ने तोकिएको रेडियो निर्देशनलमा त्रुटि छ।"
+msgstr "बन्द/खुला प्रयोग गर्ने तोकिएको रेडियो निर्देशनलमा त्रुटि छ।"
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
@@ -329,7 +329,7 @@ msgstr "स्वचालित (अटोम्याटिक) पावर �
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"चरम पावर व्यास्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याटरीको जीवन  वृद्धि "
+"चरम पावर व्यास्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याटरीको जीवन वृद्धि "
 "गर्छ)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -584,6 +584,32 @@ msgstr "कुनै पनि GSM कनेक्सन उपलब्ध छ�
 msgid "Create a connection in the control panel."
 msgstr "कन्ट्रोल पानेल मा नयाँ कनेक्सन बनाऊ ।"
 
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr "भाषण"
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr "चुनिएका पाठ भन"
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr "पाशर्व बन्द गर"
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr "पिच"
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr "गति"
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr "पाशर्व रोक"
+
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "मेरो स्पिकरहरु"
@@ -815,90 +841,106 @@ msgstr "कुञ्जीपाटी सजावटको सूची।ह�
 
 #: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
-msgstr "कुञ्जीपाटी  विकल्पको सूची"
+msgstr "कुञ्जीपाटी विकल्पको सूची"
 
 #: ../data/sugar.schemas.in.h:41
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "स्वचालित शक्ती"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Automatic."
 msgstr "स्वचालित शक्ती."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Extreme"
 msgstr "अत्यधिक शक्ती"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme."
 msgstr "अत्यधिक शक्ती."
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "यन्त्रमा प्रकाशित गर"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
 msgstr "ध्वनि यन्त्रको आवाज बन्द गर्ने सेटिङ्ग।"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "लग आउट देखाउनुहोस्"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
 msgstr "रिइस्टार्ट बट्न देखाउ।"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
 msgstr "सुगर Ad-hoc नेटवर्क दोखाउ।"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "आवाज बन्द"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
-msgstr "प्रयोग गरिने कुञ्जीपाटी नमुना "
+msgstr "प्रयोग गरिने कुञ्जीपाटी नमुना"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
-msgstr " प्रणालीको लागि समय अंचल सेटिङ्ग।"
+msgstr "प्रणालीको लागि समय अंचल सेटिङ्ग।"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:58
 msgid "Url of the jabber server to use."
 msgstr "चलाउनलाई ज्याबर सर्भरको Url"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:59
 msgid "Url where the backup is saved to."
 msgstr "ब्याकप बचत गर्ने ठाउँको Url"
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "युजरको रङ्ग"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "युजरको नाम"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
 msgstr "डेस्कटपभरि प्रयोग हुने युजरको नाम।"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr "प्रयोगकर्ताले सूची दृशयबाट यी क्रियाकलापहरु मेटाउन पाउनु हुनेछैन।"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
 msgstr "आवाजको स्तह"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
 msgstr "घ्वनि यन्त्रको लागि आवाजको स्तह ।"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -955,28 +997,28 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart sugar.\n"
-msgstr "परिवर्तन लागू गर्न सुगर पुन:शुरु गर्नु पर्छ । \n"
+msgstr "परिवर्तन लागू गर्न सुगर पुन:शुरु गर्नु पर्छ ।\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "सावधान"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "परिवर्तनका लागि पुण: सुरु गर्न आवश्यक छ"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "परिवर्तनहरु रद्द गर"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "पछि"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "पुन: सुरु गर"
 
@@ -1188,7 +1230,7 @@ msgstr "%s को %s"
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
-msgstr "%r बाट सार्नुहोस"
+msgstr "%s बाट सार्नुहोस"
 
 #: ../src/jarabe/frame/activitiestray.py:569
 msgid "Accept"
@@ -1214,7 +1256,7 @@ msgstr "अर्को सहभागीले फाइल सार्ने
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
-msgstr "%r मा सार्नुहोस"
+msgstr "%s मा सार्नुहोस"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
 msgctxt "Clipboard"
@@ -1437,7 +1479,7 @@ msgstr "यन्त्र खाली छ"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
-msgstr "मिल्ने लेखा छैन "
+msgstr "मिल्ने लेखा छैन"
 
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
@@ -1496,7 +1538,7 @@ msgstr "वृत्तांत हेर"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr "फाइल नभएको प्रविष्टिहरु पठाउन  सकिदैन।"
+msgstr "फाइल नभएको प्रविष्टिहरु पठाउन सकिदैन।"
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
@@ -1606,7 +1648,7 @@ msgstr "अप्रत्याशित रूपमा DHCP सेवा ब�
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr " भाग गएको जडान सुरु हुन असफल भयो।"
+msgstr "भाग गएको जडान सुरु हुन असफल भयो।"
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
