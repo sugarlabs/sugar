@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-17 00:32-0500\n"
-"PO-Revision-Date: 2011-10-06 09:38+0200\n"
+"POT-Creation-Date: 2012-02-03 00:32-0500\n"
+"PO-Revision-Date: 2012-02-08 18:09+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: rw\n"
@@ -138,7 +138,7 @@ msgstr "Itariki n`igihe"
 msgid "Error timezone does not exist."
 msgstr "Ikosa rya timezone ntiribaho."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "Timezone"
 
@@ -327,17 +327,15 @@ msgid "Automatic power management (increases battery life)"
 msgstr "Ubugenzuzi bw`ingufu buri otomatike (ongera ubuzima bwa batiri)"
 
 #: ../extensions/cpsection/power/view.py:86
-#, fuzzy
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Imicungire yo mu rwego rwo hejuru y'ingufu (ihagarikwa rya radiyo idakoresha "
-"urusinga, yongera ubuzima bwa bateri)"
+"Imicungire yo mu rwego rwo hejuru y'umuriro (ihagarikwa rya radiyo "
+"idakoresha urusinga, byongera ubuzima bwa bateri)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software update"
-msgstr "Ihindurwa rya software"
+msgstr "Ishyirwa ku gihe rya software"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -370,8 +368,8 @@ msgstr "Software yawe yashizwe ku gihe"
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ushobora kwinjiza %s y'ivugurura"
+msgstr[1] "ushobora kwinjiza %s y'amavugurura"
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
@@ -400,7 +398,7 @@ msgstr "Zana ibingana na: %s"
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr ""
+msgstr "Kuva kuri verisiyo %(current)s kujya kuri %(new)s (Ingano: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
@@ -479,9 +477,8 @@ msgid "Connected"
 msgstr "Byahujwe"
 
 #: ../extensions/deviceicon/network.py:119
-#, fuzzy
 msgid "No wireless connection"
-msgstr "Nta kwihuza"
+msgstr "Nta guhuzwa kw'umurongo udakoresha intsinga"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
@@ -497,11 +494,11 @@ msgstr "Umuvuduko"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
-msgstr ""
+msgstr "Modemu idakoresha intsinga"
 
 #: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
-msgstr ""
+msgstr "ihangane gato..."
 
 #: ../extensions/deviceicon/network.py:275
 #: ../src/jarabe/desktop/networkviews.py:124
@@ -525,7 +522,7 @@ msgstr "Kuraho"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
-msgstr ""
+msgstr "Ongera ugerageze guhuza"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
@@ -535,12 +532,12 @@ msgstr "Ikosa: %s"
 #: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "ibyifuzo: %s"
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Bihujwe kuri %s"
 
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
@@ -550,19 +547,19 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your Pin/Puk configuration."
-msgstr ""
+msgstr "Genzura uko PIN/PUK yawe imeze."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Genzura uko umurongo uguhuza wawe umeze(APN)"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Genzura umubare w'iboneza."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr ""
+msgstr "Genzura iboneza ryawe."
 
 #: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
@@ -570,16 +567,41 @@ msgstr "Urusobe rwa rezo"
 
 #: ../extensions/deviceicon/network.py:638
 #, python-format
-#, fuzzy
 msgid "Mesh Network %s"
-msgstr "Urusobe rwa rezo %s"
+msgstr "Rezo ya Mesh %s"
 
 #: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Nta guhuzwa kwa GSM guhari."
 
 #: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
+msgstr "Kora ihuza muri control panel."
+
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
 msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:61
@@ -596,15 +618,15 @@ msgstr "Kuraho ijwi"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "urutoki"
 
 #: ../extensions/deviceicon/touchpad.py:39
 msgid "stylus"
-msgstr ""
+msgstr "stylus"
 
 #: ../extensions/deviceicon/touchpad.py:68
 msgid "My touchpad"
-msgstr ""
+msgstr "Touchpad yanjye"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
@@ -632,7 +654,7 @@ msgstr "Ekara ntoya"
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "ifoto ya ekara \"%s\""
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
@@ -664,18 +686,16 @@ msgid "Corner Delay"
 msgstr "Gutinda kw'inguni"
 
 #: ../data/sugar.schemas.in.h:7
-#, fuzzy
 msgid "Default font face"
-msgstr "Imyandikire yizanamo"
+msgstr "Imyandikire yicyitegererezo"
 
 #: ../data/sugar.schemas.in.h:8
-#, fuzzy
 msgid "Default font size"
-msgstr "Imyandikire yizanamo"
+msgstr "Ingano y'amagambo y'ikitegerezo"
 
 #: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
-msgstr ""
+msgstr "Nick yicyitegererezo"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
@@ -687,7 +707,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Directory to search for translations"
-msgstr ""
+msgstr "Umuyoboro w'ishakiro ry'ubusemuro"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Edge Delay"
@@ -702,12 +722,14 @@ msgid "Favorites resume mode"
 msgstr "Uburyo bw'isubukura wihitiyemo"
 
 #: ../data/sugar.schemas.in.h:16
+#, fuzzy
 msgid "Font face that is used throughout the desktop."
-msgstr ""
+msgstr "izina rikoreswa kuri desktop hose."
 
 #: ../data/sugar.schemas.in.h:17
+#, fuzzy
 msgid "Font size that is used throughout the desktop."
-msgstr ""
+msgstr "izina rikoreswa kuri desktop hose."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -767,11 +789,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
+msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kuvamo\""
 
 #: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
+msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kongera gutangira\""
 
 #: ../data/sugar.schemas.in.h:33
 msgid ""
@@ -785,18 +807,16 @@ msgid "Jabber Server"
 msgstr "Seriveri Jabber"
 
 #: ../data/sugar.schemas.in.h:35
-#, fuzzy
 msgid "Keyboard layouts"
-msgstr "Imimerere ya keyboard"
+msgstr "Imimerere ya keyboard "
 
 #: ../data/sugar.schemas.in.h:36
-#, fuzzy
 msgid "Keyboard model"
-msgstr "ubwoko bwa keyboard"
+msgstr "ubwoko bwa keyboard "
 
 #: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
-msgstr ""
+msgstr "ihitamo rya Keyboard "
 
 #: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
@@ -809,95 +829,114 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
-msgstr ""
+msgstr "Irondora ry'ubwoko bwa keyboard."
 
 #: ../data/sugar.schemas.in.h:41
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Umuriro otomatike"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Automatic."
 msgstr "Umuriro otomatike."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Extreme"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "Amamaza kuri Gadget"
 
-#: ../data/sugar.schemas.in.h:46
-msgid "Setting for muting the sound device."
-msgstr "Setinga kuzimya ijwi ry'igikoresho"
-
-#: ../data/sugar.schemas.in.h:47
-msgid "Show Log out"
-msgstr ""
-
 #: ../data/sugar.schemas.in.h:48
-msgid "Show Restart"
+msgid "Rate value for the speech sugar service"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:49
-msgid "Show Sugar Ad-hoc networks"
+msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:50
+msgid "Setting for muting the sound device."
+msgstr "Setinga kuzimya ijwi ry'igikoresho"
+
+#: ../data/sugar.schemas.in.h:51
+msgid "Show Log out"
+msgstr "Erekana Log out"
+
+#: ../data/sugar.schemas.in.h:52
+msgid "Show Restart"
+msgstr "Erekana Kongera gutangiza"
+
+#: ../data/sugar.schemas.in.h:53
+msgid "Show Sugar Ad-hoc networks"
+msgstr "Erekana imiyooboro ya Sugar Ad-hoc"
+
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "Ijwi rya zimijwe"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "Ubwoko bwa Keyboard bwo gukoreswa"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:58
 msgid "Url of the jabber server to use."
-msgstr ""
+msgstr "Url ya server jabber yo gukoreswa."
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:59
 msgid "Url where the backup is saved to."
-msgstr ""
+msgstr "Url y'aho backup ibikwa."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "Koresha Ibara"
 
-#: ../data/sugar.schemas.in.h:57
-#, fuzzy
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "Izina ry'ukoresha"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "izina rikoreswa kuri desktop hose."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Abakoresha mudasobwa ntabwo bazemererwa gusiba igikorwa banyuze kureba "
+"irondora."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
-msgstr ""
+msgstr "ingano y'ijwi"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "ingano y'ijwi y'igikoresho gisohora amajwi."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"Uri mu buryo bw'isubukura, gukanda kucyo wahisemo biratuma ibyakozwe "
+"bwanyuma kuri icyo gikorwa bisubukurwa."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -949,26 +988,26 @@ msgstr ""
 msgid "To apply your changes you have to restart sugar.\n"
 msgstr "Kugirango ibyahinduwe bikore ugomba kongera gutangira sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "Icyitonderwa"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "impinduka zikenera  kongera gutangira"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "Kureka impinduka"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "nyumaho gato"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "kongera gutangira ubu"
 
@@ -983,7 +1022,7 @@ msgstr "Ok"
 
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 msgid "Version %s"
 msgstr "Verisiyo %s"
 
@@ -1038,7 +1077,7 @@ msgstr "Nyamwihinahine"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
 msgid "Box"
-msgstr ""
+msgstr "Agasanduku"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
@@ -1069,7 +1108,7 @@ msgstr "Kwiyandikisha"
 #: ../src/jarabe/desktop/favoritesview.py:643
 #: ../src/jarabe/desktop/favoritesview.py:660
 msgid "Register again"
-msgstr ""
+msgstr "Ongera wiyandikishe"
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
@@ -1088,7 +1127,6 @@ msgid "List view"
 msgstr "Ibigaragara ku rutonde"
 
 #: ../src/jarabe/desktop/homebox.py:198
-#, fuzzy
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
@@ -1097,7 +1135,6 @@ msgid "Favorites view"
 msgstr "Reba ibyagushimishije"
 
 #: ../src/jarabe/desktop/homebox.py:254
-#, fuzzy
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
@@ -1111,11 +1148,11 @@ msgstr "Ubwoko bwo Kwivuga:"
 
 #: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA & WPA2 yihariye"
 
 #: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
-msgstr ""
+msgstr "Umutekano w'umuyoboro udakoresha intsinga:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1133,7 +1170,7 @@ msgstr "Huza"
 #: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Umuyoboro Ad-hoc %d"
 
 #: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
@@ -1155,36 +1192,33 @@ msgstr "Kwanga"
 
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
-#, fuzzy
 msgid "%dB"
-msgstr "%d KB"
+msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 msgid "%dKB"
-msgstr "%d KB"
+msgstr "%dKB"
 
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
-#, fuzzy
 msgid "%dMB"
-msgstr "%d KB"
+msgstr "%dMB"
 
 #: ../src/jarabe/frame/activitiestray.py:544
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s bya %s"
 
 #: ../src/jarabe/frame/activitiestray.py:558
 #, python-format
 msgid "Transfer from %s"
-msgstr ""
+msgstr "Vana kuri %s"
 
 #: ../src/jarabe/frame/activitiestray.py:569
-#, fuzzy
 msgid "Accept"
-msgstr "Kwemera"
+msgstr "Emeza"
 
 #: ../src/jarabe/frame/activitiestray.py:592
 #: ../src/jarabe/frame/activitiestray.py:722
@@ -1196,19 +1230,18 @@ msgstr "%s (%s)"
 #: ../src/jarabe/frame/activitiestray.py:639
 #: ../src/jarabe/frame/activitiestray.py:757
 msgid "Dismiss"
-msgstr ""
+msgstr "Sezerera"
 
 #: ../src/jarabe/frame/activitiestray.py:643
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "undi mufatanyije yahagaritse iyohereza ry'ubutumwa"
 
 #: ../src/jarabe/frame/activitiestray.py:691
 #, python-format
 msgid "Transfer to %s"
-msgstr ""
+msgstr "Ohereza kuri %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "Kuraho"
@@ -1233,19 +1266,19 @@ msgstr "Ubuturanyi"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:90
 msgid "Name:"
@@ -1276,7 +1309,7 @@ msgstr "Nta kibanziriza"
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "Ubwoko: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
@@ -1371,22 +1404,20 @@ msgstr "Icyo aricyo cyose"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
-#, fuzzy
 msgid "Copy to"
-msgstr "Gukoporora ku"
+msgstr "Kopororera ku"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
-#, fuzzy
 msgid "Duplicate"
-msgstr "Gusubiramo"
+msgstr "Subiramo"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Ikosa mu gukoporora icyinzizwa. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
@@ -1403,19 +1434,19 @@ msgstr "Tangira"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Tandukanya uhereye ku itariki byahinduriweho"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
-msgstr ""
+msgstr "Tandukanya uhereye ku itariki byakorewe"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr ""
+msgstr "Tandukanya uhereye ku ngano"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
-msgstr ""
+msgstr "Tandukanya ukureba"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
@@ -1423,30 +1454,29 @@ msgstr "Ikinyamakuru cyawe ntakintu cyanditsemo"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Ububiko bw'inyandiko zawe burimo ubusa"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "Igikoresho kiriho ubusa"
 
 #: ../src/jarabe/journal/listview.py:324
-#, fuzzy
 msgid "No matching entries"
-msgstr "Nta bihuje bibonetse"
+msgstr "Nta bihuye n'ibyinjijwe bibonetse"
 
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
-msgstr ""
+msgstr "Kuraho ishakisha"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Verisiyo ya kera y'igikorwa %s"
 
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Ese ushako kumanura kuri versio %s"
 
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
@@ -1471,53 +1501,50 @@ msgstr "Funga"
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
-msgstr ""
+msgstr "Subukura na"
 
 #: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
-msgstr ""
+msgstr "Tangiza"
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
-msgstr ""
+msgstr "Nta Gikorwa cyafungura ibyinjijwe"
 
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
-msgstr ""
+msgstr "Ohereza kuri"
 
 #: ../src/jarabe/journal/palettes.py:121
-#, fuzzy
 msgid "View Details"
-msgstr "Kwerekana Birambuye"
+msgstr "Reba Birambuye"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "Ibyinjijwe bidafite ububiko ntibishobora kwoherezwa."
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "ibinjijwe bidafite ububiko ntibishobora gukopororwa."
 
 #: ../src/jarabe/journal/palettes.py:267
-#, fuzzy
 msgid "Clipboard"
-msgstr "Ububikokoporora"
+msgstr "Clipboard"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
-msgstr ""
+msgstr "Nta shuti zihari"
 
 #: ../src/jarabe/journal/palettes.py:327
 msgid "No valid connection found"
-msgstr ""
+msgstr "Nta muyoboro ubonetse"
 
 #: ../src/jarabe/journal/palettes.py:355
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "Nta gikorwa cyasubukura icyinjizwe"
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
-#, fuzzy
 msgid "Documents"
 msgstr "Inyandiko"
 
@@ -1529,19 +1556,19 @@ msgstr "%(free_space)d MB Free"
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Impamvu y'ihinduka ry'imiterere y'igikororesho ntizwi."
 
 #: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
-msgstr ""
+msgstr "Ihinduka rirasanzwe."
 
 #: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
-msgstr ""
+msgstr "Ubu igikoresho kiragenzuwe."
 
 #: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Igikoresho ntikikigenzuwe."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
@@ -1558,7 +1585,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Amabanga yasabwe, ariko ntiyatanzwe."
 
 #: ../src/jarabe/model/network.py:228
 msgid ""
@@ -1580,67 +1607,67 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Servise ya PPP yananiwe gutangira mu gihe kemewe."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "Sevise ya PPP yavuye kumurongo bitunguranye."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Service ya PPP yavuyeho cyangwa yananiwe bitunguranye."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Service ya DHCP yananiwe gutangira mu gihe cyemewe."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "Service ya DHCP yagaragaje ikosa ritunguranye."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Service ya DHCP yavuyeho cyangwa yananiwe bitunguranye."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Service y'umuyoboro uhuriweho yananiwe gutangira."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Service y'umuyoboro uhuriweho yavuyeho cyangwa yananiwe bitunguranye."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Service ya AutoIP yananiwe gutangira."
 
 #: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "Service ya AutoIP yagaragaje ikosa ritunguranye."
 
 #: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Service ya AutoIP yavuyeho cyangwa yananiwe bitunguranye."
 
 #: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Guhamagara byananiranye kubera umurongo wari uri gukoreswa."
 
 #: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Guhamagara byananiranye kubera nta jwi rihamagara ririmo."
 
 #: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Guhamagara byananiranye kubera nta cyohereza gihari."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Guhamagara byarengeje igihe."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
-msgstr ""
+msgstr "Guhamagara byananiranye."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
@@ -1648,35 +1675,35 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Ihitamo rya GSM APN yagaragajwe ryananiranye"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Ntabwo uri gushakisha imiyoboro."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Kwandikisha umuyoboro byahakanwe."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Kwandikisha umuyoboro byarengeje igihe."
 
 #: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Kwandikisha ukoresheje umuyoboro GSM wasabwe byananiranye."
 
 #: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
-msgstr ""
+msgstr "Igenzura rya PIN ryananiranye."
 
 #: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Firmware ikenewe y'igikoresho ishobora kuba ibura."
 
 #: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
-msgstr ""
+msgstr "Igikoresho cyakuweho."
 
 #: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
@@ -1688,7 +1715,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "uwukoresha cyangwa umukiriya yasabwe kwitandukanya ku muyoboro."
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
@@ -1731,13 +1758,12 @@ msgid "Restart"
 msgstr "Kongera gutangira"
 
 #: ../src/jarabe/view/buddymenu.py:101
-#, fuzzy
 msgid "Logout"
-msgstr "Gufunga"
+msgstr "Funga"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr ""
+msgstr "Amahitamo yanjye"
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
@@ -1747,7 +1773,7 @@ msgstr "Tumira ku %s"
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b> yananiwe gutangira."
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
@@ -1755,38 +1781,35 @@ msgstr "Gutangira..."
 
 #: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Igikorwa cyananiwe gutangira"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
 msgid "View Source"
-msgstr ""
+msgstr "Reba inkomoko"
 
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
 msgstr "Hagarara"
 
 #: ../src/jarabe/view/palettes.py:139
-#, fuzzy
 msgid "Start new"
-msgstr "Gutangira a Gishya"
+msgstr "Tangira igisha"
 
 #: ../src/jarabe/view/palettes.py:180
 msgid "Show contents"
 msgstr "Erekana ibigize"
 
 #: ../src/jarabe/view/palettes.py:229
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Kuraho"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
-msgstr ""
+msgstr "Inkomoko itunguranye"
 
 #: ../src/jarabe/view/viewsource.py:312
-#, fuzzy
 msgid "Source"
 msgstr "Inkomoko"
 
@@ -1796,16 +1819,16 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Inkomoko ya Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "Reba inkomoko: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
-msgstr ""
+msgstr "Sugar mu idirishya"
 
 #~ msgid "Personal Unblocking Key (PUK):"
 #~ msgstr "Urufunguzo Bwite Rwihariye(PUK):"
@@ -1865,3 +1888,33 @@ msgstr ""
 
 #~ msgid "No matching entries "
 #~ msgstr "Nta bihuje bibonetse "
+
+#~ msgid "GSM network username configuration"
+#~ msgstr "Gushyiraho izina ry'ukoresha umuyoboro GSM"
+
+#~ msgid "GSM network password"
+#~ msgstr "ijambobanga ry'umuyoboro GSM"
+
+#~ msgid "GSM network number"
+#~ msgstr "Numero y'umuyoboro GSM"
+
+#~ msgid "GSM network PIN"
+#~ msgstr "PIN y'umuyoboro GSM"
+
+#~ msgid "GSM network APN"
+#~ msgstr "APN y'umuyoboro GSM"
+
+#~ msgid "GSM network access point name configuration"
+#~ msgstr "Gushyiramo izina rya \"access point\" y'umunara GSM"
+
+#~ msgid "GSM network PUK"
+#~ msgstr "PUK y'umuyoboro GSM"
+
+#~ msgid "Personal Unblocking Key (PUK):"
+#~ msgstr "Urufunguzo Bwite Rwihariye(PUK):"
+
+#~ msgid "GSM network password configuration"
+#~ msgstr "gushyiraho ijambobanga ry'umuyoboro GSM"
+
+#~ msgid "GSM network username"
+#~ msgstr "Izina ry'ukoresha umuyoboro GSM"
