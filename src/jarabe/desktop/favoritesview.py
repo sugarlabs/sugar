@@ -336,7 +336,7 @@ class FavoritesView(hippo.Canvas):
             schoolserver.register_laptop()
         except RegisterError, e:
             alert.props.title = _('Registration Failed')
-            alert.props.msg = _('%s') % e
+            alert.props.msg = '%s' % e
         else:
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
