@@ -152,7 +152,7 @@
       <default>false</default>
       <locale name="C">
         <short>Power Automatic</short>
-        <long>Power Automatic.</long>
+        <long>Automatic power management (increases battery life)</long>
       </locale>
     </schema>
     <schema>
@@ -163,7 +163,7 @@
       <default>false</default>
       <locale name="C">
         <short>Power Extreme</short>
-        <long>Power Extreme. </long>
+        <long>Extreme power management (disables wireless radio, increases battery life)</long>
       </locale>
     </schema>
 
