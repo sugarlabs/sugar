@@ -6,415 +6,1789 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-18 18:19+0000\n"
-"PO-Revision-Date: 2008-01-11 21:14+0000\n"
-"Last-Translator: Yuan Chao <yuanchao@gmail.com>\n"
+"POT-Creation-Date: 2012-02-10 00:32-0500\n"
+"PO-Revision-Date: 2012-02-10 07:23+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.0.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.5\n"
 
-#: ../shell/intro/intro.py:67
-msgid "Name:"
-msgstr "姓名:"
+#: ../extensions/cpsection/aboutme/__init__.py:24
+msgid "About Me"
+msgstr "关于我"
 
-#: ../shell/intro/intro.py:96
-msgid "Click to change color:"
-msgstr "点击来改变颜色:"
+#: ../extensions/cpsection/aboutme/model.py:48
+msgid "You must enter a name."
+msgstr "输入姓名"
 
-#: ../shell/intro/intro.py:146
-msgid "Back"
-msgstr "后退"
-
-#: ../shell/intro/intro.py:160
-msgid "Done"
-msgstr "完成"
-
-#: ../shell/intro/intro.py:163
-msgid "Next"
-msgstr "下一步"
-
-#: ../shell/view/BuddyMenu.py:59
-msgid "Remove friend"
-msgstr "删除好友"
-
-#: ../shell/view/BuddyMenu.py:62
-msgid "Make friend"
-msgstr "结交好友"
-
-#: ../shell/view/BuddyMenu.py:84
+#: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
-msgid "Invite to %s"
-msgstr "邀请到%s"
+msgid "stroke:   color=%s hue=%s"
+msgstr "画笔: 颜色=%s 色调=%s"
 
-#: ../shell/view/clipboardmenu.py:58
-msgid "Remove"
-msgstr "删除"
-
-#: ../shell/view/clipboardmenu.py:63
-msgid "Open"
-msgstr "打开"
-
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../shell/view/clipboardmenu.py:73
-msgid "Add to journal"
-msgstr "增添到日志中"
-
-#: ../shell/view/clipboardmenu.py:213
+#: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "剪贴板物件: %s."
+msgid "stroke:   %s"
+msgstr "画笔: %s"
 
-#: ../shell/hardware/keydialog.py:149
-msgid "Key Type:"
-msgstr "密钥类型:"
-
-#: ../shell/hardware/keydialog.py:169
-msgid "Authentication Type:"
-msgstr "验证类型:"
-
-#: ../shell/hardware/keydialog.py:250
-msgid "Encryption Type:"
-msgstr "加密类型:"
-
-#: ../shell/view/home/activitiesdonut.py:90
-msgid "Starting..."
-msgstr "开始..."
-
-#: ../shell/view/home/activitiesdonut.py:104 ../shell/view/home/MeshBox.py:295
-msgid "Resume"
-msgstr "继续"
-
-#: ../shell/view/home/activitiesdonut.py:111
-#: ../lib/sugar/activity/activity.py:132
-msgid "Stop"
-msgstr "停止"
-
-#: ../shell/view/Shell.py:285
-msgid "Screenshot"
-msgstr "屏幕抓图"
-
-#: ../shell/view/home/HomeBox.py:159
-msgid "Reboot"
-msgstr "重新启动"
-
-#: ../shell/view/home/HomeBox.py:164
-msgid "Shutdown"
-msgstr "关闭系统"
-
-#: ../shell/view/home/HomeBox.py:170
-msgid "Register"
-msgstr "注册"
-
-#. Only show disconnect when there's a mesh device, because mesh takes
-#. priority over the normal wireless device.  NM doesn't have a "disconnect"
-#. method for a device either (for various reasons) so this doesn't
-#. have a good mapping
-#: ../shell/view/home/MeshBox.py:90 ../shell/view/home/MeshBox.py:197
-#: ../shell/view/devices/network/wireless.py:113
-#: ../shell/view/devices/network/mesh.py:83
-msgid "Disconnect..."
-msgstr "断开..."
-
-#: ../shell/view/home/MeshBox.py:195 ../shell/view/devices/network/mesh.py:37
-#: ../shell/view/devices/network/mesh.py:62
-#: ../shell/view/devices/network/mesh.py:66
-msgid "Mesh Network"
-msgstr "网状网络"
-
-#: ../shell/view/home/MeshBox.py:300
-msgid "Join"
-msgstr "加入"
-
-#: ../shell/view/devices/battery.py:38
-msgid "My Battery life"
-msgstr "我的电池状态"
-
-#: ../shell/view/devices/battery.py:94
-msgid "Battery charging"
-msgstr "电池充电中"
-
-#: ../shell/view/devices/battery.py:96
-msgid "Battery discharging"
-msgstr "电池放电中"
-
-#: ../shell/view/devices/battery.py:98
-msgid "Battery fully charged"
-msgstr "电池充电完成"
-
-#: ../shell/view/devices/network/wireless.py:61
-msgid "Disconnected"
-msgstr "已切断"
-
-#: ../shell/view/devices/network/wireless.py:131
-msgid "Channel"
-msgstr "频道"
-
-#: ../shell/view/frame/zoomtoolbar.py:42
-msgid "Neighborhood"
-msgstr "邻居"
-
-#: ../shell/view/frame/zoomtoolbar.py:54
-msgid "Group"
-msgstr "组"
-
-#: ../shell/view/frame/zoomtoolbar.py:66
-msgid "Home"
-msgstr "家"
-
-#: ../shell/view/frame/zoomtoolbar.py:78
-msgid "Activity"
-msgstr "活动"
-
-#: ../lib/sugar/activity/activity.py:115
-msgid "Share with:"
-msgstr "共享:"
-
-#: ../lib/sugar/activity/activity.py:117
-msgid "Private"
-msgstr "私人"
-
-#: ../lib/sugar/activity/activity.py:118
-msgid "My Neighborhood"
-msgstr "我的邻居"
-
-#: ../lib/sugar/activity/activity.py:126
-msgid "Keep"
-msgstr "保持"
-
-#: ../lib/sugar/activity/activity.py:245
-msgid "Undo"
-msgstr "撤销"
-
-#: ../lib/sugar/activity/activity.py:250
-msgid "Redo"
-msgstr "重复"
-
-#: ../lib/sugar/activity/activity.py:260
-msgid "Copy"
-msgstr "复制"
-
-#: ../lib/sugar/activity/activity.py:265
-msgid "Paste"
-msgstr "粘贴"
-
-#: ../lib/sugar/activity/activity.py:454
+#: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
-msgid "%s Activity"
-msgstr "%s 的活动"
+msgid "fill:     color=%s hue=%s"
+msgstr "填充: 颜色=%s 色调=%s"
 
-#: ../lib/sugar/activity/activity.py:824
-msgid "Keep error"
-msgstr "保持错误"
-
-#: ../lib/sugar/activity/activity.py:825
-msgid "Keep error: all changes will be lost"
-msgstr "保持错误:所有改动都将撤销"
-
-#: ../lib/sugar/activity/activity.py:828
-msgid "Don't stop"
-msgstr "不停止"
-
-#: ../lib/sugar/activity/activity.py:831
-msgid "Stop anyway"
-msgstr "停止吧"
-
-#: ../lib/sugar/graphics/alert.py:164 ../lib/sugar/graphics/alert.py:206
-msgid "Cancel"
-msgstr "取消"
-
-#: ../lib/sugar/graphics/alert.py:168
-msgid "Ok"
-msgstr "确定"
-
-#: ../lib/sugar/graphics/alert.py:216
-msgid "Continue"
-msgstr "继续"
-
-#: ../lib/sugar/graphics/alert.py:244
-msgid "OK"
-msgstr "确定"
-
-#: ../lib/sugar/graphics/objectchooser.py:175
+#: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
-msgid "%d year"
-msgstr "%d 年"
+msgid "fill:     %s"
+msgstr "填充: %s"
 
-#: ../lib/sugar/graphics/objectchooser.py:175
-#, python-format
-msgid "%d years"
-msgstr "%d 年"
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d month"
-msgstr "%d 月"
-
-#: ../lib/sugar/graphics/objectchooser.py:176
-#, python-format
-msgid "%d months"
-msgstr "%d 月"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d week"
-msgstr "%d 星期"
-
-#: ../lib/sugar/graphics/objectchooser.py:177
-#, python-format
-msgid "%d weeks"
-msgstr "%d 星期"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d day"
-msgstr "%d 天"
-
-#: ../lib/sugar/graphics/objectchooser.py:178
-#, python-format
-msgid "%d days"
-msgstr "%d 天"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hour"
-msgstr "%d 小时"
-
-#: ../lib/sugar/graphics/objectchooser.py:179
-#, python-format
-msgid "%d hours"
-msgstr "%d 小时"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minute"
-msgstr "%d 分钟"
-
-#: ../lib/sugar/graphics/objectchooser.py:180
-#, python-format
-msgid "%d minutes"
-msgstr "%d 分钟"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d second"
-msgstr "%d 秒"
-
-#: ../lib/sugar/graphics/objectchooser.py:181
-#, python-format
-msgid "%d seconds"
-msgstr "%d 秒"
-
-#: ../lib/sugar/graphics/objectchooser.py:191
-msgid " and "
-msgstr "和"
-
-#: ../lib/sugar/graphics/objectchooser.py:193
-msgid ", "
-msgstr ","
-
-# 如何翻译sugar?
-#: ../shell/controlpanel/control.py:213
-msgid "To apply your changes you have to restart sugar.\n"
-msgstr "你需要重新启动系统, 让改变生效.\n"
-
-#: ../shell/controlpanel/control.py:267
+#: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
 msgstr "给定变化色时发生错误"
 
-#: ../shell/controlpanel/control.py:270
+#: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
 msgstr "给定颜色时发生错误"
 
-#: ../shell/controlpanel/control.py:307
-msgid "off"
-msgstr "关闭"
+#: ../extensions/cpsection/aboutme/view.py:235
+msgid "Click to change your color:"
+msgstr "点击改变颜色:"
 
-#: ../shell/controlpanel/control.py:309
-msgid "on"
-msgstr "开启"
+#: ../extensions/cpsection/aboutcomputer/__init__.py:21
+msgid "About my Computer"
+msgstr "关於我的电脑"
 
-#: ../shell/controlpanel/control.py:310
-msgid "State is unknown."
-msgstr "未知状态"
+#: ../extensions/cpsection/aboutcomputer/model.py:43
+msgid "Not available"
+msgstr "不可用"
 
-#: ../shell/controlpanel/control.py:332
-msgid "Error in specified radio argument use on/off."
-msgstr "给定无线信号开/关时发生错误"
+#: ../extensions/cpsection/aboutcomputer/view.py:59
+msgid "Identity"
+msgstr "身份"
 
-#: ../shell/controlpanel/control.py:336
-msgid "Permission denied. You need to be root to run this method."
-msgstr "权限不足. 你需要管理员权限来执行."
+#: ../extensions/cpsection/aboutcomputer/view.py:68
+msgid "Serial Number:"
+msgstr "序列号："
 
-#: ../shell/controlpanel/control.py:366
-msgid "Error in reading timezone"
-msgstr "阅读时区资料时发生错误"
+#: ../extensions/cpsection/aboutcomputer/view.py:90
+msgid "Software"
+msgstr "软件"
 
-#: ../shell/controlpanel/control.py:397
-#, python-format
-msgid "Error copying timezone (from %s): %s"
-msgstr "从 %s 复制时区资料时发生错误: %s"
+#: ../extensions/cpsection/aboutcomputer/view.py:99
+msgid "Build:"
+msgstr "构建"
 
-#: ../shell/controlpanel/control.py:402
-#, python-format
-msgid "Changing permission of timezone: %s"
-msgstr "改变时区设置的权限: %s"
+#: ../extensions/cpsection/aboutcomputer/view.py:114
+msgid "Sugar:"
+msgstr "Sugar:"
 
-#: ../shell/controlpanel/control.py:412
+#: ../extensions/cpsection/aboutcomputer/view.py:129
+msgid "Firmware:"
+msgstr "固件:"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:144
+msgid "Wireless Firmware:"
+msgstr "无线固件："
+
+#: ../extensions/cpsection/aboutcomputer/view.py:167
+msgid "Copyright and License"
+msgstr "版权与许可"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:185
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr "Sugar 是您目前所看到的图像用户界面。Sugar 是一个免费软件，以 GNU 的 GPL 授权。欢迎您依据授权条例更改或散布本软件。"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:197
+msgid "Full license:"
+msgstr "完整许可:"
+
+#: ../extensions/cpsection/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "日期与时间"
+
+#: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
 msgstr "错误, 时区资料不存在."
 
-#: ../shell/controlpanel/control.py:417 ../shell/controlpanel/control.py:436
-#, python-format
-msgid "Could not access %s. Create standard settings."
-msgstr "不能访问%s. 创建标准设置."
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+msgid "Timezone"
+msgstr "时区"
 
-#: ../shell/controlpanel/control.py:463
+#: ../extensions/cpsection/frame/__init__.py:21
+msgid "Frame"
+msgstr "框架"
+
+#: ../extensions/cpsection/frame/model.py:41
+#: ../extensions/cpsection/frame/model.py:66
+msgid "Value must be an integer."
+msgstr "值必须是整数。"
+
+#: ../extensions/cpsection/frame/view.py:27
+msgid "never"
+msgstr "永不"
+
+#: ../extensions/cpsection/frame/view.py:28
+msgid "instantaneous"
+msgstr "即时"
+
+#: ../extensions/cpsection/frame/view.py:29
+#, python-format
+msgid "%s seconds"
+msgstr "%s 秒"
+
+#: ../extensions/cpsection/frame/view.py:54
+msgid "Activation Delay"
+msgstr "激活延迟"
+
+#: ../extensions/cpsection/frame/view.py:78
+msgid "Corner"
+msgstr "角落"
+
+#: ../extensions/cpsection/frame/view.py:113
+msgid "Edge"
+msgstr "边缘"
+
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:32
+msgid "Keyboard"
+msgstr "键盘"
+
+#: ../extensions/cpsection/keyboard/view.py:190
+msgid "Keyboard Model"
+msgstr "键盘型号"
+
+#: ../extensions/cpsection/keyboard/view.py:250
+msgid "Key(s) to change layout"
+msgstr "改变布局的快捷键"
+
+#: ../extensions/cpsection/keyboard/view.py:319
+msgid "Keyboard Layout(s)"
+msgstr "键盘布局"
+
+#: ../extensions/cpsection/language/__init__.py:21
+#: ../extensions/cpsection/language/view.py:33
+msgid "Language"
+msgstr "语言"
+
+#: ../extensions/cpsection/language/model.py:30
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "无法读取~/.i18n. 创建标准设置."
+
+#: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
 msgstr "无法确定代码为 %s 的语言"
 
-#: ../shell/controlpanel/control.py:473
+#: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
 msgstr "对不起，我不会说 '%s'"
 
-#: ../shell/view/devices/network/mesh.py:105
-msgid "Connected to a School Mesh Portal"
-msgstr "已连接到一个学校网状网络门户"
+#: ../extensions/cpsection/language/view.py:57
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr "请根据你的喜好添加语言。如果所选的语言未有翻译提供，便会采用列表上的下一种语言。"
 
-#: ../shell/view/devices/network/mesh.py:107
-msgid "Looking for a School Mesh Portal..."
-msgstr "寻找学校网状网络门户中..."
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem Configuration"
+msgstr "数据机设定"
 
-#: ../shell/view/devices/network/mesh.py:110
-msgid "Connected to an XO Mesh Portal"
-msgstr "已连接到一个XO网状网络门户"
+#: ../extensions/cpsection/modemconfiguration/view.py:67
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr "设置移动3G网络需要提供下面的信息。"
 
-#: ../shell/view/devices/network/mesh.py:112
-msgid "Looking for an XO Mesh Portal..."
-msgstr "寻找XO网状网络门户中..."
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "用户名："
 
-#: ../shell/view/devices/network/mesh.py:115
-msgid "Connected to a Simple Mesh"
-msgstr "已连接到一个简单网状网络"
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "密码∶"
 
-#: ../shell/view/devices/network/mesh.py:117
-msgid "Starting a Simple Mesh"
-msgstr "创建一个简单网状网络"
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "号码："
 
-#: ../shell/view/devices/network/mesh.py:124
-msgid "Unknown Mesh"
-msgstr "未知网状网络"
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr "接入点名称 (APN):"
 
-#: ../shell/view/home/HomeBox.py:175 ../shell/view/home/HomeBox.py:216
-msgid "About this XO"
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr "个人身份号码 (PIN):"
+
+#: ../extensions/cpsection/network/__init__.py:21
+#: ../extensions/cpsection/network/view.py:29
+msgid "Network"
+msgstr "网络"
+
+#: ../extensions/cpsection/network/model.py:73
+msgid "State is unknown."
+msgstr "未知状态"
+
+#: ../extensions/cpsection/network/model.py:101
+msgid "Error in specified radio argument use on/off."
+msgstr "给定无线信号开/关时发生错误"
+
+#: ../extensions/cpsection/network/model.py:152
+msgid "Error in specified argument use 0/1."
+msgstr "指定的参数错误，请使用0/1"
+
+#: ../extensions/cpsection/network/view.py:61
+msgid "Wireless"
+msgstr "无线"
+
+#: ../extensions/cpsection/network/view.py:69
+msgid "Turn off the wireless radio to save battery life"
+msgstr "请关闭无线网络信号来增加电池使用时间"
+
+#: ../extensions/cpsection/network/view.py:82
+msgid "Radio"
+msgstr "无线网络信号"
+
+#: ../extensions/cpsection/network/view.py:98
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr "如果您无法连接网络，请尝试清除网络历史资料"
+
+#: ../extensions/cpsection/network/view.py:107
+msgid "Discard network history"
+msgstr "清除网络历史资料"
+
+#: ../extensions/cpsection/network/view.py:122
+msgid "Collaboration"
+msgstr "协作"
+
+#: ../extensions/cpsection/network/view.py:130
+msgid ""
+"The server is the equivalent of what room you are in; people on the same "
+"server will be able to see each other, even when they aren't on the same "
+"network."
+msgstr "服务器相当于你是所在的房间；在同一服务器上的人们将能够看到对方，即使他们不在同一网络上。"
+
+#: ../extensions/cpsection/network/view.py:140
+msgid "Server:"
+msgstr "服务器:"
+
+#: ../extensions/cpsection/power/__init__.py:21
+msgid "Power"
+msgstr "电源"
+
+#: ../extensions/cpsection/power/model.py:90
+msgid "Error in automatic pm argument, use on/off."
+msgstr "自动省电管理开关发生错误。"
+
+#: ../extensions/cpsection/power/model.py:120
+msgid "Error in extreme pm argument, use on/off."
+msgstr "极度省电管理开关发生错误。"
+
+#: ../extensions/cpsection/power/view.py:48
+msgid "Power management"
+msgstr "省电管理"
+
+#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+msgid "Automatic power management (increases battery life)"
+msgstr "自动省电管理(延长电池寿命)"
+
+#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "极低电源管理（关闭无线，增加电池使用时间）"
+
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software update"
+msgstr "软件更新"
+
+#: ../extensions/cpsection/updater/view.py:63
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr "软件更新修正错误，消除安全漏洞，和提供新的功能。"
+
+#: ../extensions/cpsection/updater/view.py:125
+#, python-format
+msgid "Checking %s..."
+msgstr "正在检查 %s…"
+
+#: ../extensions/cpsection/updater/view.py:127
+#, python-format
+msgid "Downloading %s..."
+msgstr "正在下载 %s…"
+
+#: ../extensions/cpsection/updater/view.py:129
+#, python-format
+msgid "Updating %s..."
+msgstr "正在更新 %s…"
+
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Your software is up-to-date"
+msgstr "您的软件是最新的"
+
+#: ../extensions/cpsection/updater/view.py:141
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] "你可以安装 %s个更新"
+
+#: ../extensions/cpsection/updater/view.py:159
+msgid "Checking for updates..."
+msgstr "正在检查更新…"
+
+#: ../extensions/cpsection/updater/view.py:164
+msgid "Installing updates..."
+msgstr "正在安装更新…"
+
+#: ../extensions/cpsection/updater/view.py:173
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] "已安装 %s个更新"
+
+#: ../extensions/cpsection/updater/view.py:255
+msgid "Install selected"
+msgstr "安装已选择的更新"
+
+#: ../extensions/cpsection/updater/view.py:276
+#, python-format
+msgid "Download size: %s"
+msgstr "下载大小：%s"
+
+#: ../extensions/cpsection/updater/view.py:364
+#, python-format
+msgid "From version %(current)s to %(new)s (Size: %(size)s)"
+msgstr "從版本 %(current)s 更新到 %(new)s （大小：%(size)s）"
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:382
+msgid "None"
+msgstr "无"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:385
+msgid "1 KB"
+msgstr "1千字节"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:388
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f 千字节"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:391
+#, python-format
+msgid "%.1f MB"
+msgstr "%.1f 兆字节"
+
+#: ../extensions/deviceicon/battery.py:71
+msgid "My Battery"
+msgstr "我的电池状态"
+
+#: ../extensions/deviceicon/battery.py:147
+msgid "Removed"
+msgstr "已删除"
+
+#: ../extensions/deviceicon/battery.py:150
+msgid "Charging"
+msgstr "充电中"
+
+#: ../extensions/deviceicon/battery.py:153
+msgid "Very little power remaining"
+msgstr "电量不足"
+
+#. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+#. only translate the word "remaining"
+#: ../extensions/deviceicon/battery.py:160
+#, python-format
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "剩余电量 %(hour)d:%(min).2d"
+
+#: ../extensions/deviceicon/battery.py:163
+msgid "Charged"
+msgstr "充电完毕"
+
+#: ../extensions/deviceicon/network.py:49
+#, python-format
+msgid "IP address: %s"
+msgstr "IP 位址：%s"
+
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:490
+msgid "Disconnect"
+msgstr "断开连接"
+
+# Only show disconnect when there's a mesh device, because mesh takes
+# priority over the normal wireless device.  NM doesn't have a "disconnect"
+# method for a device either (for various reasons) so this doesn't
+# have a good mapping
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:237
+#: ../src/jarabe/desktop/networkviews.py:527
+#: ../src/jarabe/desktop/networkviews.py:662
+msgid "Connecting..."
+msgstr "正在连线…"
+
+# TODO: show the channel number
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:244
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
+msgid "Connected"
+msgstr "已连接"
+
+#: ../extensions/deviceicon/network.py:119
+msgid "No wireless connection"
+msgstr "没有无线网络"
+
+#: ../extensions/deviceicon/network.py:133
+msgid "Channel"
+msgstr "频道"
+
+#: ../extensions/deviceicon/network.py:148
+msgid "Wired Network"
+msgstr "有线网络"
+
+#: ../extensions/deviceicon/network.py:177
+msgid "Speed"
+msgstr "速度"
+
+#: ../extensions/deviceicon/network.py:202
+msgid "Wireless modem"
+msgstr "无线数据机"
+
+#: ../extensions/deviceicon/network.py:270
+msgid "Please wait..."
+msgstr "请稍候…"
+
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:124
+#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:618
+msgid "Connect"
+msgstr "连接"
+
+#: ../extensions/deviceicon/network.py:276
+msgid "Disconnected"
+msgstr "已切断"
+
+#: ../extensions/deviceicon/network.py:283
+#: ../src/jarabe/controlpanel/toolbar.py:119
+#: ../src/jarabe/desktop/homebox.py:71
+#: ../src/jarabe/frame/activitiestray.py:603
+#: ../src/jarabe/frame/activitiestray.py:705
+#: ../src/jarabe/frame/activitiestray.py:733
+msgid "Cancel"
+msgstr "取消"
+
+#: ../extensions/deviceicon/network.py:322
+msgid "Try connection again"
+msgstr "请再尝试连线"
+
+#: ../extensions/deviceicon/network.py:325
+#, python-format
+msgid "Error: %s"
+msgstr "错误：%s"
+
+#: ../extensions/deviceicon/network.py:329
+#, python-format
+msgid "Suggestion: %s"
+msgstr "建议：%s"
+
+#: ../extensions/deviceicon/network.py:338
+#, python-format
+msgid "Connected for %s"
+msgstr "已连接到%s"
+
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
+#, python-format
+msgid "%d KB"
+msgstr "%d 千字节"
+
+#: ../extensions/deviceicon/network.py:350
+#, fuzzy
+msgid "Check your PIN/PUK configuration."
+msgstr "请检查你的PIN/PUK配置。"
+
+#: ../extensions/deviceicon/network.py:353
+msgid "Check your Access Point Name (APN) configuration"
+msgstr "请检查你的接入点名称（APN）配置。"
+
+#: ../extensions/deviceicon/network.py:357
+msgid "Check the Number configuration."
+msgstr "请检查号码配置。"
+
+#: ../extensions/deviceicon/network.py:359
+msgid "Check your configuration."
+msgstr "请检查你的配置。"
+
+#: ../extensions/deviceicon/network.py:594
+msgid "Mesh Network"
+msgstr "无线网格网络"
+
+#: ../extensions/deviceicon/network.py:638
+#, python-format
+#, python-format,
+msgid "Mesh Network %s"
+msgstr "无线网格网络 %s"
+
+#: ../extensions/deviceicon/network.py:754
+msgid "No GSM connection available."
+msgstr "没有可用的GSM连接。"
+
+#: ../extensions/deviceicon/network.py:755
+msgid "Create a connection in the control panel."
+msgstr "在控制面板中创建新的连接。"
+
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
 msgstr ""
 
-#: ../shell/view/home/HomeBox.py:222
-msgid "Not available"
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
 msgstr ""
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speaker.py:61
+msgid "My Speakers"
+msgstr "我的喇叭"
+
+#: ../extensions/deviceicon/speaker.py:138
+msgid "Unmute"
+msgstr "取消静音"
+
+#: ../extensions/deviceicon/speaker.py:141
+msgid "Mute"
+msgstr "静音"
+
+#: ../extensions/deviceicon/touchpad.py:38
+msgid "finger"
+msgstr "手指"
+
+#: ../extensions/deviceicon/touchpad.py:39
+msgid "stylus"
+msgstr "手写笔"
+
+#: ../extensions/deviceicon/touchpad.py:68
+msgid "My touchpad"
+msgstr "我的触控板"
+
+#: ../extensions/globalkey/screenshot.py:59
+msgid "Mesh"
+msgstr "网状网络"
+
+#: ../extensions/globalkey/screenshot.py:61
+#: ../src/jarabe/frame/zoomtoolbar.py:45
+msgid "Group"
+msgstr "我的群组"
+
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/frame/zoomtoolbar.py:47
+msgid "Home"
+msgstr "我的家"
+
+#: ../extensions/globalkey/screenshot.py:69
+#: ../src/jarabe/frame/zoomtoolbar.py:49
+msgid "Activity"
+msgstr "活动"
+
+#: ../extensions/globalkey/screenshot.py:72
+msgid "Screenshot"
+msgstr "屏幕抓图"
+
+#: ../extensions/globalkey/screenshot.py:74
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr "\"%s\"的截屏"
+
+#: ../data/sugar.schemas.in.h:1
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr "\"disabled\" 当初始化的时候会询问昵称； \"system\"重用了UNIX系统账户。"
+
+#: ../data/sugar.schemas.in.h:2
+msgid "Additional directories which can contain updated translations."
+msgstr "额外的目录中包含已更新的翻译。"
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Backup URL"
+msgstr "备份网址"
+
+#: ../data/sugar.schemas.in.h:5
+msgid "Bundle IDs of protected activities"
+msgstr "受保护活动的包编号"
+
+#: ../data/sugar.schemas.in.h:6
+msgid ""
+"Color for the XO icon that is used throughout the desktop. The string is "
+"composed of the stroke color and fill color, format is that of rgb colors. "
+"Example: #AC32FF,#9A5200"
+msgstr "XO的图标颜色使用于整个桌面。笔触和填充颜色组成的字符串格式是RGB颜色。例如：＃AC32FF，＃9A5200"
+
+#: ../data/sugar.schemas.in.h:7
+msgid "Corner Delay"
+msgstr "转角延迟"
+
+#: ../data/sugar.schemas.in.h:8
+msgid "Default font face"
+msgstr "默认字体"
+
+#: ../data/sugar.schemas.in.h:9
+msgid "Default font size"
+msgstr "默认字体大小"
+
+#: ../data/sugar.schemas.in.h:10
+msgid "Default nick"
+msgstr "默认昵称"
+
+#: ../data/sugar.schemas.in.h:11
+msgid "Delay for the activation of the frame using the corners."
+msgstr "延迟激活使用转角的框。"
+
+#: ../data/sugar.schemas.in.h:12
+msgid "Delay for the activation of the frame using the edges."
+msgstr "延迟激活使用边沿的框。"
+
+#: ../data/sugar.schemas.in.h:13
+msgid "Directory to search for translations"
+msgstr "搜索翻译的目录"
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Edge Delay"
+msgstr "边沿延迟"
+
+#: ../data/sugar.schemas.in.h:16
+msgid "Favorites Layout"
+msgstr "最爱的布局"
+
+#: ../data/sugar.schemas.in.h:17
+msgid "Favorites resume mode"
+msgstr "最爱的恢复模式"
+
+#: ../data/sugar.schemas.in.h:18
+msgid "Font face that is used throughout the desktop."
+msgstr "整个桌面使用的字体。"
+
+#: ../data/sugar.schemas.in.h:19
+msgid "Font size that is used throughout the desktop."
+msgstr "整个桌面使用的字体大小。"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:27
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:30
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:31
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:32
+msgid ""
+"If TRUE, Sugar will make us searchable for the other users of the Jabber "
+"server."
+msgstr "如果为TRUE，Sugar可以让我们被Jabber服务器的其他用户搜索。"
+
+#: ../data/sugar.schemas.in.h:33
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr "如果为TRUE，Sugar会显示“注销”选项。"
+
+#: ../data/sugar.schemas.in.h:34
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr "如果为TRUE，Sugar会显示“重启”选项。"
+
+#: ../data/sugar.schemas.in.h:35
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+"如果为TRUE，Sugar会显示频道为1,6和11的缺省Ad-hoc网络。如果启动时没有发现任何“已知”网络，Suger不会自动连接到Ad-hoc网络。"
+
+#: ../data/sugar.schemas.in.h:36
+msgid "Jabber Server"
+msgstr "Jabber服务器"
+
+#: ../data/sugar.schemas.in.h:37
+msgid "Keyboard layouts"
+msgstr "键盘布局"
+
+#: ../data/sugar.schemas.in.h:38
+msgid "Keyboard model"
+msgstr "键盘型号"
+
+#: ../data/sugar.schemas.in.h:39
+msgid "Keyboard options"
+msgstr "键盘选项"
+
+#: ../data/sugar.schemas.in.h:40
+msgid "Layout of the favorites view."
+msgstr "最爱的视图布局。"
+
+#: ../data/sugar.schemas.in.h:41
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr "键盘布局列表。每一个条目应当在窗体布局（改版）中"
+
+#: ../data/sugar.schemas.in.h:42
+msgid "List of keyboard options."
+msgstr "键盘选项列表"
+
+#: ../data/sugar.schemas.in.h:43
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:45
+msgid "Power Automatic"
+msgstr "功率自动"
+
+#: ../data/sugar.schemas.in.h:46
+msgid "Power Extreme"
+msgstr "功率极限"
+
+#: ../data/sugar.schemas.in.h:47
+msgid "Publish to Gadget"
+msgstr "发布到“道具”"
+
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:50
+msgid "Setting for muting the sound device."
+msgstr "设备设置为静音。"
+
+#: ../data/sugar.schemas.in.h:51
+msgid "Show Log out"
+msgstr "显示“注销”"
+
+#: ../data/sugar.schemas.in.h:52
+msgid "Show Restart"
+msgstr "显示“重启”"
+
+#: ../data/sugar.schemas.in.h:53
+msgid "Show Sugar Ad-hoc networks"
+msgstr "显示“Sugar Ad-hoc 网络”"
+
+#: ../data/sugar.schemas.in.h:54
+msgid "Sound Muted"
+msgstr "已静音"
+
+#: ../data/sugar.schemas.in.h:55
+msgid "The keyboard model to be used"
+msgstr "要使用的键盘型号"
+
+#: ../data/sugar.schemas.in.h:57
+msgid "Timezone setting for the system."
+msgstr "系统时区设置。"
+
+#: ../data/sugar.schemas.in.h:58
+#, fuzzy
+msgid "URL of the jabber server to use."
+msgstr "要使用的Jabber服务器网址"
+
+#: ../data/sugar.schemas.in.h:59
+#, fuzzy
+msgid "URL where the backup is saved to."
+msgstr "保存备份的网址。"
+
+#: ../data/sugar.schemas.in.h:60
+msgid "User Color"
+msgstr "用户颜色"
+
+#: ../data/sugar.schemas.in.h:61
+msgid "User Name"
+msgstr "用户名"
+
+#: ../data/sugar.schemas.in.h:62
+msgid "User name that is used throughout the desktop."
+msgstr "整个桌面使用的用户名。"
+
+#: ../data/sugar.schemas.in.h:63
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr "在列表视图中不能擦除活动。"
+
+#: ../data/sugar.schemas.in.h:64
+msgid "Volume Level"
+msgstr "音量大小"
+
+#: ../data/sugar.schemas.in.h:65
+msgid "Volume level for the sound device."
+msgstr "声音设备的音量。"
+
+#: ../data/sugar.schemas.in.h:66
+msgid ""
+"When in resume mode, clicking on a favorite icon will cause the last entry "
+"for that activity to be resumed."
+msgstr "在恢复模式时，点击一个喜欢的图标上，该活动的最后一个条目将被恢复。"
+
+#: ../src/jarabe/controlpanel/cmd.py:28
+#, python-format
+#, python-format, fuzzy
+msgid ""
+"sugar-control-panel: WARNING, found more than one option with the same name: "
+"%s module: %r"
+msgstr "sugar控制面板：警告，于模式: %r中找到多个以此名字命名的选项: %s "
+
+#: ../src/jarabe/controlpanel/cmd.py:30
+#, python-format
+msgid "sugar-control-panel: key=%s not an available option"
+msgstr "sugar控制面板：key=%s 不是一个可选选项"
+
+#: ../src/jarabe/controlpanel/cmd.py:31
+#, python-format
+msgid "sugar-control-panel: %s"
+msgstr "sugar控制面板：%s"
+
+# TRANS: Translators, there's a empty line at the end of this string,
+# which must appear in the translated string (msgstr) as well.
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/jarabe/controlpanel/cmd.py:38
+msgid ""
+"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
+"    Control for the sugar environment. \n"
+"    Options: \n"
+"    -h           show this help message and exit \n"
+"    -l           list all the available options \n"
+"    -h key       show information about this key \n"
+"    -g key       get the current value of the key \n"
+"    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
+"    "
+msgstr ""
+"用法：sugar-控制面板 【选项】键值【参数...】\n"
+"        sugar环境控制。\n"
+"        选项：\n"
+"        -h  显示帮助信息并退出 \n"
+"        -l 列出所有可用选项 \n"
+"        -h key 显示该键相关信息 \n"
+"        -g key 获得该键当前键值 \n"
+"        -s key 设置该键当前键值 \n"
+"        -c key 清除该键当前键值 \n"
+
+# 如何翻译sugar?
+#: ../src/jarabe/controlpanel/cmd.py:52
+#, fuzzy
+msgid "To apply your changes you have to restart Sugar.\n"
+msgstr "重启系统使改变生效.\n"
+
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
+#: ../src/jarabe/journal/volumestoolbar.py:307
+msgid "Warning"
+msgstr "警告"
+
+#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/sectionview.py:41
+msgid "Changes require restart"
+msgstr "更改需重启系统"
+
+#: ../src/jarabe/controlpanel/gui.py:301
+msgid "Cancel changes"
+msgstr "取消更改"
+
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+msgid "Later"
+msgstr "稍后"
+
+#: ../src/jarabe/controlpanel/gui.py:310
+msgid "Restart now"
+msgstr "立即重启"
+
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+msgid "Done"
+msgstr "完成"
+
+#: ../src/jarabe/controlpanel/toolbar.py:125
+#: ../src/jarabe/desktop/favoritesview.py:347
+msgid "Ok"
+msgstr "确定"
+
+#: ../src/jarabe/desktop/activitieslist.py:231
+#, python-format
+msgid "Version %s"
+msgstr "版本%s"
+
+#: ../src/jarabe/desktop/activitieslist.py:357
+msgid "Confirm erase"
+msgstr "确认删除"
+
+#: ../src/jarabe/desktop/activitieslist.py:359
+#, python-format
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "确认删除：是否永久删除 %s ？"
+
+# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
+# TODO: Implement stopping downloads
+# self._stop_item.connect('activate', self._stop_item_activate_cb)
+# self.append_menu_item(self._stop_item)
+#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/frame/clipboardmenu.py:67
+#: ../src/jarabe/view/viewsource.py:280
+msgid "Keep"
+msgstr "保持"
+
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
+#: ../src/jarabe/journal/palettes.py:126
+msgid "Erase"
+msgstr "删除"
+
+#: ../src/jarabe/desktop/activitieslist.py:436
+msgid "Remove favorite"
+msgstr "移除偏好"
+
+#: ../src/jarabe/desktop/activitieslist.py:440
+msgid "Make favorite"
+msgstr "指定偏好"
+
+# TRANS: label for the freeform layout in the favorites view
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:127
+msgid "Freeform"
+msgstr "自由形式"
+
+# if it means the shape of the layout, maybe "环形"
+# if it means the content of the layout, maybe "铃声"
+# TRANS: label for the ring layout in the favorites view
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:215
+msgid "Ring"
+msgstr "环形"
+
+# TRANS: label for the spiral layout in the favorites view
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:402
+msgid "Spiral"
+msgstr "螺旋形"
+
+# TRANS: label for the box layout in the favorites view
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:472
+msgid "Box"
+msgstr "方形"
+
+# TRANS: label for the box layout in the favorites view
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:515
+msgid "Triangle"
+msgstr "三角形"
+
+#: ../src/jarabe/desktop/favoritesview.py:338
+msgid "Registration Failed"
+msgstr "注册失败"
+
+#: ../src/jarabe/desktop/favoritesview.py:341
+msgid "Registration Successful"
+msgstr "注册成功"
+
+#: ../src/jarabe/desktop/favoritesview.py:342
+msgid "You are now registered with your school server."
+msgstr "您已成功注册到校园服务器。"
+
+#: ../src/jarabe/desktop/favoritesview.py:641
+msgid "Register"
+msgstr "注册"
+
+#: ../src/jarabe/desktop/favoritesview.py:643
+#: ../src/jarabe/desktop/favoritesview.py:660
+msgid "Register again"
+msgstr "重新注册"
+
+#: ../src/jarabe/desktop/homebox.py:66
+msgid "Software Update"
+msgstr "软件更新"
+
+#: ../src/jarabe/desktop/homebox.py:67
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr "更新活动使其与新版软件兼容"
+
+#: ../src/jarabe/desktop/homebox.py:76
+msgid "Check now"
+msgstr "立即检查"
+
+#: ../src/jarabe/desktop/homebox.py:197
+msgid "List view"
+msgstr "列表"
+
+#: ../src/jarabe/desktop/homebox.py:198
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/jarabe/desktop/homebox.py:253
+msgid "Favorites view"
+msgstr "最爱的视图"
+
+#: ../src/jarabe/desktop/homebox.py:254
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
+#: ../src/jarabe/desktop/keydialog.py:139
+msgid "Key Type:"
+msgstr "密钥类型:"
+
+#: ../src/jarabe/desktop/keydialog.py:159
+msgid "Authentication Type:"
+msgstr "验证类型:"
+
+#: ../src/jarabe/desktop/keydialog.py:222
+msgid "WPA & WPA2 Personal"
+msgstr "WPA＆WPA2个人"
+
+#: ../src/jarabe/desktop/keydialog.py:231
+msgid "Wireless Security:"
+msgstr "无线安全："
+
+# TRANS: Action label for resuming an activity.
+#. TRANS: Action label for resuming an activity.
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
+#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+msgid "Resume"
+msgstr "恢复"
+
+#: ../src/jarabe/desktop/meshbox.py:87
+#: ../src/jarabe/frame/activitiestray.py:182
+msgid "Join"
+msgstr "加入"
+
+#: ../src/jarabe/desktop/networkviews.py:482
+#, python-format
+msgid "Ad-hoc Network %d"
+msgstr "Ad-hoc网络%d"
+
+#: ../src/jarabe/desktop/networkviews.py:615
+#, python-format
+#, python-format,
+msgid "Mesh Network %d"
+msgstr "网状网络%d"
+
+#: ../src/jarabe/desktop/schoolserver.py:143
+msgid "Cannot connect to the server."
+msgstr "无法连接到服务器。"
+
+#: ../src/jarabe/desktop/schoolserver.py:150
+msgid "The server could not complete the request."
+msgstr "服务器无法处理请求。"
+
+#: ../src/jarabe/frame/activitiestray.py:187
+#: ../src/jarabe/frame/activitiestray.py:575
+msgid "Decline"
+msgstr "拒绝"
+
+#: ../src/jarabe/frame/activitiestray.py:523
+#, python-format
+msgid "%dB"
+msgstr "%d字节"
+
+#: ../src/jarabe/frame/activitiestray.py:525
+#, python-format
+#, python-format,
+msgid "%dKB"
+msgstr "%d千字节"
+
+#: ../src/jarabe/frame/activitiestray.py:527
+#, python-format
+msgid "%dMB"
+msgstr "%d兆字节"
+
+#. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
+#: ../src/jarabe/frame/activitiestray.py:545
+#, python-format
+msgid "%s of %s"
+msgstr "%s 中的 %s"
+
+#: ../src/jarabe/frame/activitiestray.py:559
+#, python-format
+msgid "Transfer from %s"
+msgstr "传送自 %s"
+
+#: ../src/jarabe/frame/activitiestray.py:570
+msgid "Accept"
+msgstr "接受"
+
+#: ../src/jarabe/frame/activitiestray.py:627
+#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:758
+msgid "Dismiss"
+msgstr "关闭"
+
+#: ../src/jarabe/frame/activitiestray.py:644
+msgid "The other participant canceled the file transfer"
+msgstr "对方已取消档案传输"
+
+#: ../src/jarabe/frame/activitiestray.py:692
+#, python-format
+msgid "Transfer to %s"
+msgstr "传送到 %s"
+
+#: ../src/jarabe/frame/clipboardmenu.py:56
+msgctxt "Clipboard"
+msgid "Remove"
+msgstr "删除"
+
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/frame/clipboardmenu.py:85
+msgid "Open"
+msgstr "打开"
+
+#: ../src/jarabe/frame/clipboardmenu.py:90
+msgid "Open with"
+msgstr "打开方式"
+
+#: ../src/jarabe/frame/clipboardobject.py:50
+#, python-format
+msgid "%s clipping"
+msgstr "%s 裁剪"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "Neighborhood"
+msgstr "邻居"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "F1"
+msgstr "F1"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:45
+msgid "F2"
+msgstr "F2"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:47
+msgid "F3"
+msgstr "F3"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:49
+msgid "F4"
+msgstr "F4"
+
+#: ../src/jarabe/intro/window.py:90
+msgid "Name:"
+msgstr "姓名:"
+
+#: ../src/jarabe/intro/window.py:120
+msgid "Click to change color:"
+msgstr "点击来改变颜色:"
+
+#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+msgid "Back"
+msgstr "后退"
+
+#: ../src/jarabe/intro/window.py:198
+msgid "Next"
+msgstr "下一步"
+
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/volumestoolbar.py:130
+msgid "Untitled"
+msgstr "无标题"
+
+#: ../src/jarabe/journal/expandedentry.py:245
+msgid "No preview"
+msgstr "无预览"
+
+#: ../src/jarabe/journal/expandedentry.py:264
+#, python-format
+msgid "Kind: %s"
+msgstr "种类: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/listmodel.py:150
+#: ../src/jarabe/journal/listmodel.py:158
+msgid "Unknown"
+msgstr "未知"
+
+#: ../src/jarabe/journal/expandedentry.py:265
+#, python-format
+msgid "Date: %s"
+msgstr "日期： %s"
+
+#: ../src/jarabe/journal/expandedentry.py:266
+#, python-format
+msgid "Size: %s"
+msgstr "大小：%s"
+
+#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/misc.py:108
+msgid "No date"
+msgstr "无日期"
+
+#: ../src/jarabe/journal/expandedentry.py:301
+msgid "Participants:"
+msgstr "参与者:"
+
+#: ../src/jarabe/journal/expandedentry.py:323
+msgid "Description:"
+msgstr "说明:"
+
+#: ../src/jarabe/journal/expandedentry.py:348
+msgid "Tags:"
+msgstr "标签:"
+
+#: ../src/jarabe/journal/journalactivity.py:115
+#: ../src/jarabe/journal/journaltoolbox.py:468
+#: ../src/jarabe/journal/palettes.py:198
+#: ../src/jarabe/journal/volumestoolbar.py:368
+msgid "Journal"
+msgstr "日志"
+
+#: ../src/jarabe/journal/journaltoolbox.py:72
+msgid "Search"
+msgstr "搜索"
+
+#: ../src/jarabe/journal/journaltoolbox.py:139
+msgid "Anytime"
+msgstr "任何时间"
+
+#: ../src/jarabe/journal/journaltoolbox.py:141
+msgid "Today"
+msgstr "今天"
+
+#: ../src/jarabe/journal/journaltoolbox.py:143
+msgid "Since yesterday"
+msgstr "一天内"
+
+# TRANS: Filter entries modified during the last 7 days.
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/jarabe/journal/journaltoolbox.py:145
+msgid "Past week"
+msgstr "上一周"
+
+# TRANS: Filter entries modified during the last 30 days.
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/jarabe/journal/journaltoolbox.py:147
+msgid "Past month"
+msgstr "上个月"
+
+# TRANS: Filter entries modified during the last 356 days.
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/jarabe/journal/journaltoolbox.py:149
+msgid "Past year"
+msgstr "上一年"
+
+#: ../src/jarabe/journal/journaltoolbox.py:156
+msgid "Anyone"
+msgstr "任何人"
+
+#: ../src/jarabe/journal/journaltoolbox.py:158
+msgid "My friends"
+msgstr "我的好友"
+
+#: ../src/jarabe/journal/journaltoolbox.py:159
+msgid "My class"
+msgstr "我的类别"
+
+# TRANS: Item in a combo box that filters by entry type.
+#: ../src/jarabe/journal/journaltoolbox.py:301
+msgid "Anything"
+msgstr "所有类别"
+
+#: ../src/jarabe/journal/journaltoolbox.py:396
+#: ../src/jarabe/journal/palettes.py:93
+msgid "Copy to"
+msgstr "复制到"
+
+#: ../src/jarabe/journal/journaltoolbox.py:404
+#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+msgid "Duplicate"
+msgstr "复制"
+
+#: ../src/jarabe/journal/journaltoolbox.py:437
+#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:315
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr "复制条目出错。%s"
+
+#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
+#: ../src/jarabe/journal/volumestoolbar.py:316
+msgid "Error"
+msgstr "错误"
+
+# TRANS: Action label for starting an entry.
+#. TRANS: Action label for starting an entry.
+#: ../src/jarabe/journal/journaltoolbox.py:512
+#: ../src/jarabe/journal/palettes.py:74
+msgid "Start"
+msgstr "启动"
+
+#: ../src/jarabe/journal/journaltoolbox.py:540
+msgid "Sort by date modified"
+msgstr "以更新日期排列"
+
+#: ../src/jarabe/journal/journaltoolbox.py:541
+msgid "Sort by date created"
+msgstr "以建立日期排列"
+
+#: ../src/jarabe/journal/journaltoolbox.py:542
+msgid "Sort by size"
+msgstr "以大小排列"
+
+#: ../src/jarabe/journal/journaltoolbox.py:551
+msgid "Sort view"
+msgstr "视图排序"
+
+#: ../src/jarabe/journal/listview.py:317
+msgid "Your Journal is empty"
+msgstr "空白日志"
+
+#: ../src/jarabe/journal/listview.py:320
+msgid "Your documents folder is empty"
+msgstr "您的文档文件夹为空"
+
+#: ../src/jarabe/journal/listview.py:322
+msgid "The device is empty"
+msgstr "设备为空"
+
+#: ../src/jarabe/journal/listview.py:324
+msgid "No matching entries"
+msgstr "没有匹配的条目"
+
+#: ../src/jarabe/journal/listview.py:398
+msgid "Clear search"
+msgstr "清除搜索"
+
+#: ../src/jarabe/journal/misc.py:273
+#, python-format
+msgid "Older Version Of %s Activity"
+msgstr "旧版本的%s活动"
+
+#: ../src/jarabe/journal/misc.py:274
+#, python-format
+msgid "Do you want to downgrade to version %s"
+msgstr "要降级到版本%s"
+
+#: ../src/jarabe/journal/modalalert.py:64
+msgid "Your Journal is full"
+msgstr "日志空间已满"
+
+#: ../src/jarabe/journal/modalalert.py:68
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr "请删除一些旧的日志条目以腾出空间给新的日志。"
+
+#: ../src/jarabe/journal/modalalert.py:80
+msgid "Show Journal"
+msgstr "显示日志"
+
+#: ../src/jarabe/journal/objectchooser.py:146
+msgid "Choose an object"
+msgstr "选择对象"
+
+#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/view/viewsource.py:410
+msgid "Close"
+msgstr "关闭"
+
+#: ../src/jarabe/journal/palettes.py:72
+msgid "Resume with"
+msgstr "恢复"
+
+#: ../src/jarabe/journal/palettes.py:75
+msgid "Start with"
+msgstr "开始"
+
+#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+msgid "No activity to start entry"
+msgstr "没有活动要开始"
+
+#: ../src/jarabe/journal/palettes.py:112
+msgid "Send to"
+msgstr "发送到"
+
+#: ../src/jarabe/journal/palettes.py:121
+msgid "View Details"
+msgstr "查看详细信息"
+
+#: ../src/jarabe/journal/palettes.py:160
+msgid "Entries without a file cannot be sent."
+msgstr "不能发送没有文件的条目。"
+
+#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
+#: ../src/jarabe/journal/volumestoolbar.py:306
+msgid "Entries without a file cannot be copied."
+msgstr "不能复制没有文件的条目。"
+
+#: ../src/jarabe/journal/palettes.py:267
+msgid "Clipboard"
+msgstr "剪贴板"
+
+#: ../src/jarabe/journal/palettes.py:322
+msgid "No friends present"
+msgstr "朋友不存在"
+
+#: ../src/jarabe/journal/palettes.py:327
+msgid "No valid connection found"
+msgstr "未找到有效的连接"
+
+#: ../src/jarabe/journal/palettes.py:355
+msgid "No activity to resume entry"
+msgstr "没有活动要恢复"
+
+#: ../src/jarabe/journal/volumestoolbar.py:209
+msgid "Documents"
+msgstr "文档"
+
+#: ../src/jarabe/journal/volumestoolbar.py:391
+#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
+#, python-format
+msgid "%(free_space)d MB Free"
+msgstr "剩余%(free_space)d MB 空间"
+
+#: ../src/jarabe/model/network.py:211
+msgid "The reason for the device state change is unknown."
+msgstr "设备状态变化的原因未知。"
+
+#: ../src/jarabe/model/network.py:213
+msgid "The state change is normal."
+msgstr "状态变化是正常的。"
+
+#: ../src/jarabe/model/network.py:215
+msgid "The device is now managed."
+msgstr "设备管理中。"
+
+#: ../src/jarabe/model/network.py:217
+msgid "The device is no longer managed."
+msgstr "设备不在管理中。"
+
+#: ../src/jarabe/model/network.py:219
+msgid "The device could not be readied for configuration."
+msgstr "设备未就绪。"
+
+#: ../src/jarabe/model/network.py:221
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr "IP配置不能保留（没有可用的地址，超时等）。"
+
+#: ../src/jarabe/model/network.py:224
+msgid "The IP configuration is no longer valid."
+msgstr "IP配置不再合法。"
+
+#: ../src/jarabe/model/network.py:226
+msgid "Secrets were required, but not provided."
+msgstr "需要密钥，请提供。"
+
+#: ../src/jarabe/model/network.py:228
+msgid ""
+"The 802.1X supplicant disconnected from the access point or authentication "
+"server."
+msgstr "802.1X请求被接入点或认证服务器断开。"
+
+#: ../src/jarabe/model/network.py:231
+msgid "Configuration of the 802.1X supplicant failed."
+msgstr "802.1X请求配置失败。"
+
+#: ../src/jarabe/model/network.py:233
+msgid "The 802.1X supplicant quit or failed unexpectedly."
+msgstr "802.1X请求退出或意外失败。"
+
+#: ../src/jarabe/model/network.py:235
+msgid "The 802.1X supplicant took too long to authenticate."
+msgstr "802.1X请求认证超时。"
+
+#: ../src/jarabe/model/network.py:237
+msgid "The PPP service failed to start within the allowed time."
+msgstr "PPP服务启动超时。"
+
+#: ../src/jarabe/model/network.py:239
+msgid "The PPP service disconnected unexpectedly."
+msgstr "PPP服务意外断开。"
+
+#: ../src/jarabe/model/network.py:241
+msgid "The PPP service quit or failed unexpectedly."
+msgstr "PPP服务退出或意外失败。"
+
+#: ../src/jarabe/model/network.py:243
+msgid "The DHCP service failed to start within the allowed time."
+msgstr "DHCP服务启动超时。"
+
+#: ../src/jarabe/model/network.py:245
+msgid "The DHCP service reported an unexpected error."
+msgstr "DHCP服务意外错误。"
+
+#: ../src/jarabe/model/network.py:247
+msgid "The DHCP service quit or failed unexpectedly."
+msgstr "DHCP服务退出或意外失败。"
+
+#: ../src/jarabe/model/network.py:249
+msgid "The shared connection service failed to start."
+msgstr "共享连接服务启动失败。"
+
+#: ../src/jarabe/model/network.py:251
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "共享连接服务退出或意外失败。"
+
+#: ../src/jarabe/model/network.py:254
+msgid "The AutoIP service failed to start."
+msgstr "自动IP服务​​无法启动。"
+
+#: ../src/jarabe/model/network.py:256
+msgid "The AutoIP service reported an unexpected error."
+msgstr "自动IP服务​​意外错误。"
+
+#: ../src/jarabe/model/network.py:258
+msgid "The AutoIP service quit or failed unexpectedly."
+msgstr "自动IP服务退出或意外失败。"
+
+#: ../src/jarabe/model/network.py:260
+msgid "Dialing failed because the line was busy."
+msgstr "拨号失败，线路忙。"
+
+#: ../src/jarabe/model/network.py:262
+msgid "Dialing failed because there was no dial tone."
+msgstr "拨号失败，没有拨号音。"
+
+#: ../src/jarabe/model/network.py:264
+msgid "Dialing failed because there was no carrier."
+msgstr "拨号失败，没有运营商网络。"
+
+#: ../src/jarabe/model/network.py:266
+msgid "Dialing timed out."
+msgstr "拨号超时。"
+
+#: ../src/jarabe/model/network.py:268
+msgid "Dialing failed."
+msgstr "拨号失败。"
+
+#: ../src/jarabe/model/network.py:270
+msgid "Modem initialization failed."
+msgstr "调制解调器初始化失败。"
+
+#: ../src/jarabe/model/network.py:272
+msgid "Failed to select the specified GSM APN"
+msgstr "无法选择指定的GSM的APN"
+
+#: ../src/jarabe/model/network.py:274
+msgid "Not searching for networks."
+msgstr "不搜索网络。"
+
+#: ../src/jarabe/model/network.py:276
+msgid "Network registration was denied."
+msgstr "网络注册被拒绝。"
+
+#: ../src/jarabe/model/network.py:278
+msgid "Network registration timed out."
+msgstr "网络注册超时。"
+
+#: ../src/jarabe/model/network.py:280
+msgid "Failed to register with the requested GSM network."
+msgstr "无法注册请求的GSM网络。"
+
+#: ../src/jarabe/model/network.py:282
+msgid "PIN check failed."
+msgstr "PIN检查失败。"
+
+#: ../src/jarabe/model/network.py:284
+msgid "Necessary firmware for the device may be missing."
+msgstr "设备必需的固件可能会丢失。"
+
+#: ../src/jarabe/model/network.py:286
+msgid "The device was removed."
+msgstr "设备已被删除。"
+
+#: ../src/jarabe/model/network.py:288
+msgid "NetworkManager went to sleep."
+msgstr "“网络管理员”进入休眠状态。"
+
+#: ../src/jarabe/model/network.py:290
+msgid "The device's active connection was removed or disappeared."
+msgstr "设备的活动连接被删除或消失。"
+
+#: ../src/jarabe/model/network.py:293
+msgid "A user or client requested the disconnection."
+msgstr "用户或客户端请求断开。"
+
+#: ../src/jarabe/model/network.py:295
+msgid "The device's carrier/link changed."
+msgstr "设备的运营商/链路改变。"
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
+msgstr ""
+
+#: ../src/jarabe/view/buddymenu.py:67
+msgid "Remove friend"
+msgstr "删除好友"
+
+#: ../src/jarabe/view/buddymenu.py:70
+msgid "Make friend"
+msgstr "结交好友"
+
+#: ../src/jarabe/view/buddymenu.py:87
+msgid "Shutdown"
+msgstr "关机"
+
+#: ../src/jarabe/view/buddymenu.py:95
+msgid "Restart"
+msgstr "重启"
+
+#: ../src/jarabe/view/buddymenu.py:101
+msgid "Logout"
+msgstr "登出"
+
+#: ../src/jarabe/view/buddymenu.py:106
+msgid "My Settings"
+msgstr "我的设定"
+
+#: ../src/jarabe/view/buddymenu.py:142
+#, python-format
+msgid "Invite to %s"
+msgstr "邀请到%s"
+
+#: ../src/jarabe/view/launcher.py:145
+#, python-format
+msgid "<b>%s</b> failed to start."
+msgstr "<b>%s</b>启动失败。"
+
+#: ../src/jarabe/view/palettes.py:48
+msgid "Starting..."
+msgstr "启动中..."
+
+#: ../src/jarabe/view/palettes.py:58
+msgid "Activity failed to start"
+msgstr "活动启动失败。"
+
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:91
+msgid "View Source"
+msgstr "查看源代码"
+
+#: ../src/jarabe/view/palettes.py:102
+msgid "Stop"
+msgstr "停止"
+
+#: ../src/jarabe/view/palettes.py:139
+msgid "Start new"
+msgstr "开始新的"
+
+#: ../src/jarabe/view/palettes.py:180
+msgid "Show contents"
+msgstr "显示内容"
+
+#: ../src/jarabe/view/palettes.py:229
+msgctxt "Volume"
+msgid "Remove"
+msgstr "删除"
+
+#: ../src/jarabe/view/viewsource.py:263
+msgid "Instance Source"
+msgstr "实例源代码"
+
+#: ../src/jarabe/view/viewsource.py:312
+msgid "Source"
+msgstr "源代码"
+
+#: ../src/jarabe/view/viewsource.py:374
+msgid "Activity Bundle Source"
+msgstr "活动包源代码"
+
+#: ../src/jarabe/view/viewsource.py:393
+msgid "Sugar Toolkit Source"
+msgstr "Sugar工具包源代码"
+
+#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#, python-format
+msgid "View source: %r"
+msgstr "查看源代码：%r"
+
+#: ../src/jarabe/util/emulator.py:40
+msgid "Sugar in a window"
+msgstr "窗口化Sugar"
+
