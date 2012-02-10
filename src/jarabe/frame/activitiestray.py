@@ -541,6 +541,7 @@ class BaseTransferPalette(Palette):
         transferred = self._format_size(
                 self.file_transfer.props.transferred_bytes)
         total = self._format_size(self.file_transfer.file_size)
+        # TRANS: file transfer, bytes transferred, e.g. 128 of 1024
         self.progress_label.props.label = _('%s of %s') % (transferred, total)
 
 
@@ -589,7 +590,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label(_('%s (%s)') % (size, type_description))
+            label = gtk.Label('%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 
@@ -719,7 +720,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label(_('%s (%s)') % (size, type_description))
+            label = gtk.Label('%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 

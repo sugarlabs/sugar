@@ -155,6 +155,8 @@ class BatteryPalette(Palette):
                 minutes_remaining = self._time // 60
                 remaining_hourpart = minutes_remaining // 60
                 remaining_minpart = minutes_remaining % 60
+                # TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+                # only translate the word "remaining"
                 secondary_text = _('%(hour)d:%(min).2d remaining') % \
                         {'hour': remaining_hourpart, 'min': remaining_minpart}
         else:

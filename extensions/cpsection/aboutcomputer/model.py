@@ -180,7 +180,7 @@ def get_wireless_firmware():
     if len(firmware_info) == 1:
         return firmware_info.values()[0]
 
-    return ', '.join([_('%(interface)s: %(version)s') %
+    return ', '.join(['%(interface)s: %(version)s' %
                       {'interface': interface, 'version': version}
                       for interface, version in firmware_info.items()])
 

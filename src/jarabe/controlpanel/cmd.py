@@ -49,7 +49,7 @@ def cmd_help():
 
 def note_restart():
     """Instructions how to restart sugar"""
-    print _('To apply your changes you have to restart sugar.\n' +
+    print _('To apply your changes you have to restart Sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
 
