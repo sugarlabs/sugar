@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-01-12 08:19+0200\n"
+"PO-Revision-Date: 2012-02-11 03:03+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn\n"
@@ -536,9 +536,8 @@ msgid "%d KB"
 msgstr "%d কিবা"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "আপনার Pin/Puk কনফিগারেশন পরীক্ষা করুন।"
+msgstr "আপনার PIN/PUK কনফিগারেশন পরীক্ষা করুন।"
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
@@ -887,14 +886,12 @@ msgid "Timezone setting for the system."
 msgstr "সিস্টেমের জন্য সময়অঞ্চলের সেটিং।"
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "jabber সার্ভার ব্যবহারের জন্য Url।"
+msgstr "jabber সার্ভার ব্যবহারের জন্য URL।"
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "ব্যাকআপ সংরক্ষণ করার জন্য Url."
+msgstr "ব্যাকআপ সংরক্ষণ করার জন্য URL।"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -975,7 +972,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "তোমার পরিবর্তন কার্যকর করার জন্য সুগার পুনরায় চালু করতে হবে।\n"
 
@@ -1820,4 +1816,3 @@ msgstr "উৎস দেখাও:%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "উইন্ডোতে সুগার"
-
