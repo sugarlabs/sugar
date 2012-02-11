@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 09:14+0200\n"
+"PO-Revision-Date: 2012-02-11 07:39+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sw\n"
@@ -149,7 +149,7 @@ msgstr "%s sekunde"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Activation wachelewa "
+msgstr "Activation wachelewa"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -170,7 +170,7 @@ msgstr "mfano wa kinanda"
 
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr "funguo za kubadilisha kuweka "
+msgstr "funguo za kubadilisha kuweka"
 
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
@@ -205,7 +205,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Upangiaji wa Modem "
+msgstr "Upangiaji wa Modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
@@ -229,7 +229,7 @@ msgstr "idadi"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
-msgstr "jina ya kupata uhakika(APN) "
+msgstr "jina ya kupata uhakika (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
@@ -270,7 +270,7 @@ msgstr "kuondokana na historia ya mtandao kama una shida ya kuunganisha mtandao"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
-msgstr "Kuondokana na historia ya mtandao "
+msgstr "Kuondokana na historia ya mtandao"
 
 #: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
@@ -467,7 +467,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
-msgstr "Mkondo "
+msgstr "Mkondo"
 
 #: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
@@ -1200,7 +1200,7 @@ msgstr "Fungua"
 
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
-msgstr "Fungua kwa "
+msgstr "Fungua kwa"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
@@ -1772,4 +1772,3 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
