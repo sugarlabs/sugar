@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-03 09:41+0200\n"
-"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
+"PO-Revision-Date: 2012-02-11 07:32+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
@@ -536,7 +536,6 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "ඔබගේ PIN/PUK වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
@@ -887,14 +886,12 @@ msgid "Timezone setting for the system."
 msgstr "පද්ධතිය සඳහා වේලාකලාප සැකසුම්."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "Jabber සේවාදායකය භාවිතය සඳහා වන Urlය."
+msgstr "Jabber සේවාදායකය භාවිතය සඳහා වන URLය."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "උපස්ථය සුරකිය යුතු ස්ථානයේ Urlය."
+msgstr "උපස්ථය සුරකිය යුතු ස්ථානයේ URLය."
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -978,7 +975,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "ඔබගේ වෙනස්කිරීම් බලපෑම සඳහා ෂුගර් යළි ඇරඹිය යුතුය.\n"
 
@@ -1823,4 +1819,3 @@ msgstr "මූලය පෙන්වන්න: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar කවුළුවක"
-
