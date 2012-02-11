@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:59+0200\n"
+"PO-Revision-Date: 2012-02-11 07:14+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pap\n"
@@ -377,7 +377,6 @@ msgstr "Tamaño di download: %s"
 
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
-#, fuzzy
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "Di vershon %(current)s pa %(new)s (Tamaño: %(size)s)"
 
@@ -525,9 +524,8 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
-#, fuzzy
 msgid "%d KB"
-msgstr "%dKB"
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
@@ -883,14 +881,12 @@ msgid "Timezone setting for the system."
 msgstr "Konfigurashon di e zona di orario pa e sistema."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "Url pa usa pa e sirbidó jabber."
+msgstr "URL pa usa pa e sirbidó jabber."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "Url kaminda e backup ta wardá."
+msgstr "URL kaminda e backup ta wardá."
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -1807,4 +1803,3 @@ msgstr "Mira fuente: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
