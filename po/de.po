@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 22:30+0200\n"
+"PO-Revision-Date: 2012-02-11 22:39+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
@@ -599,11 +599,11 @@ msgstr "Wiedergabe beenden"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr "Tonhöhe"
+msgstr "Stimmlage"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr "Rate"
+msgstr "Sprechrate"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -854,11 +854,11 @@ msgstr "Liste der Tastatureinstellungen."
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr "Tonhöhenwert des Sugar-Dienstes Sprache"
+msgstr "Stimmlage des Sugar-Dienstes Sprache"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "Wert der Tonhöhe, die vom Sprachdienst in Sugar benutzt wird"
+msgstr "Die Stimmlage, die vom Sprachdienst in Sugar benutzt wird"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
