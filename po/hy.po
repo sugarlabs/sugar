@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-03 23:00+0200\n"
+"PO-Revision-Date: 2012-02-11 03:01+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
@@ -537,7 +537,6 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "Ստուգեք ձեր PIN/PUK կազմաձևումը:"
 
@@ -902,12 +901,10 @@ msgid "Timezone setting for the system."
 msgstr "Համակարգի ժամագոտու կարգավորումը:"
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "Jabber սերվերի Url հասցեն:"
+msgstr "Jabber սերվերի URL հասցեն:"
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "Պահեստային պատճեների պահպանման URL հասցեն:"
 
@@ -992,9 +989,8 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Ձեր փոփոխությունները կիրառելու համար դուք պետք է վերամեկնարկեք sugar-ը:\n"
+msgstr "Ձեր փոփոխությունները կիրառելու համար դուք պետք է վերամեկնարկեք Sugar-ը:\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1828,4 +1824,3 @@ msgstr "Դիտել աղբյուրը. %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar-ը պատուհանում"
-
