@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-09-30 09:48+0200\n"
-"Last-Translator: pavlos hatzopoulos <phatzopoulos@gmail.com>\n"
+"PO-Revision-Date: 2012-02-11 04:47+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -541,9 +541,8 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "Ελέγξτε τις ρυθμίσεις Pin/Puk."
+msgstr "Ελέγξτε τις ρυθμίσεις PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
@@ -895,14 +894,12 @@ msgid "Timezone setting for the system."
 msgstr "Ρύθμιση ζώνης ώρας συστήματος."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "Url του εξυπηρετητή jabber που θα χρησιμοποιηθεί."
+msgstr "URL του εξυπηρετητή jabber που θα χρησιμοποιηθεί."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "Url όπου αποθηκεύτηκε το αντίγραφο ασφάλειας."
+msgstr "URL όπου αποθηκεύτηκε το αντίγραφο ασφάλειας."
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -985,9 +982,8 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το sugar.\n"
+msgstr "Για να εφαρμοστούν οι αλλαγές σου θα πρέπει να επανεκκινήσεις το Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1826,4 +1822,3 @@ msgstr "Προβολή πηγής: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Το Sugar σε παράθυρο"
-
