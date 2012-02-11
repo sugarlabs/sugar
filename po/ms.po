@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:54+0200\n"
+"PO-Revision-Date: 2012-02-11 06:49+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ms\n"
@@ -532,7 +532,6 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "Periksa konfigurasi PIN/PUK anda."
 
@@ -883,12 +882,10 @@ msgid "Timezone setting for the system."
 msgstr "Seting zon masa bagi sistem."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "URL bagi pelayan jabber yang digunakan."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "URL di mana sandaran di simpan."
 
@@ -1158,21 +1155,19 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
-#, fuzzy
 msgid "%dB"
-msgstr "%d KB"
+msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "%dKB"
-msgstr "%d KB"
+msgstr "%dKB"
 
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
-#, fuzzy
 msgid "%dMB"
-msgstr "%d KB"
+msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
@@ -1789,4 +1784,3 @@ msgstr "Lihat sumber: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar dalam tetingkap"
-
