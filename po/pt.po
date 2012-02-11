@@ -2,23 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-17 00:32-0500\n"
+"POT-Creation-Date: 2012-02-10 00:32-0500\n"
 "PO-Revision-Date: 2012-01-23 00:40+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,11 +65,6 @@ msgstr "Sobre o meu Computador"
 msgid "Not available"
 msgstr "Não disponível"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:183
-#, python-format
-msgid "%(interface)s: %(version)s"
-msgstr "%(interface)s: %(version)s"
-
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
 msgstr "Identidade"
@@ -138,7 +121,7 @@ msgstr "Data & Hora"
 msgid "Error timezone does not exist."
 msgstr "Erro: fuso horário não existe."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "Fuso horário"
 
@@ -322,11 +305,11 @@ msgstr "Erro no argumento de gestão de energia extrema, utiliza on/off."
 msgid "Power management"
 msgstr "Gestão de energia"
 
-#: ../extensions/cpsection/power/view.py:58
+#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Gestão automática de energia (aumenta o tempo de bateria)"
 
-#: ../extensions/cpsection/power/view.py:86
+#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
@@ -438,12 +421,14 @@ msgstr "A carregar"
 msgid "Very little power remaining"
 msgstr "Resta muito pouca energia"
 
-#: ../extensions/deviceicon/battery.py:158
+#. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+#. only translate the word "remaining"
+#: ../extensions/deviceicon/battery.py:160
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d restantes"
 
-#: ../extensions/deviceicon/battery.py:161
+#: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
 msgstr "Carregada"
 
@@ -518,9 +503,9 @@ msgstr "Desligado"
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:602
-#: ../src/jarabe/frame/activitiestray.py:704
-#: ../src/jarabe/frame/activitiestray.py:732
+#: ../src/jarabe/frame/activitiestray.py:603
+#: ../src/jarabe/frame/activitiestray.py:705
+#: ../src/jarabe/frame/activitiestray.py:733
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -540,7 +525,7 @@ msgstr "Sugestão: %s"
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Connected for %s"
 msgstr "Ligado há %s"
 
@@ -551,7 +536,8 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-msgid "Check your Pin/Puk configuration."
+#, fuzzy
+msgid "Check your PIN/PUK configuration."
 msgstr "Verifica a configuração do PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:353
@@ -582,6 +568,33 @@ msgstr "Nenhuma ligação GSM disponível."
 #: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
 msgstr "Criar uma ligação no painel de controlo."
+
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:106
+#, fuzzy
+msgid "Rate"
+msgstr "Data"
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -647,15 +660,15 @@ msgstr ""
 msgid "Additional directories which can contain updated translations."
 msgstr "Directórios adicionais que podem conter traduções actualizadas."
 
-#: ../data/sugar.schemas.in.h:3
+#: ../data/sugar.schemas.in.h:4
 msgid "Backup URL"
 msgstr "URL da cópia de segurança"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:5
 msgid "Bundle IDs of protected activities"
 msgstr "Identificações (Bundle IDs) de actividades protegidas"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:6
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -665,109 +678,109 @@ msgstr ""
 "composto pela cor de traço e de preenchimento, e o formato é o das cores "
 "rgb. Por exemplo: #AC32FF, #9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
 msgstr "Atraso nos cantos"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
 msgstr "Tipo de letra por omissão"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:9
 msgid "Default font size"
 msgstr "Tamanho de letra por omissão"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:10
 msgid "Default nick"
 msgstr "Nome por omissão"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Atraso na activação da moldura utilizando os cantos."
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:12
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Atraso na activação da moldura utilizando os lados."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
 msgstr "Directório para procurar por traduções"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Atraso nos lados"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
 msgstr "Disposição dos favoritos"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
 msgstr "Modo de continuação dos favoritos"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:18
 msgid "Font face that is used throughout the desktop."
 msgstr "Tipo de letra que é utilizado em todo o ambiente gráfico."
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:19
 msgid "Font size that is used throughout the desktop."
 msgstr "Tamanho de letra que é utilizado em todo o ambiente gráfico."
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "APN da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "PIN da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "PUK da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "Configuração do nome do ponto de acesso da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "Número da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:25
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "Palavra-Chave da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "Configuração da palavra-chave da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:27
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "Configuração do número de identificação pessoal da rede GSM (OBSOLETO/NÃO "
 "UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "Configuração da chave pessoal de desbloqueamento da rede GSM (OBSOLETO/NÃO "
 "UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "Configuração do número de telefone da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "Nome de utilizador da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:31
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "Configuração do nome de utilizador da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:32
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -775,16 +788,16 @@ msgstr ""
 "Se TRUE (verdadeiro), o Sugar irá tornar-nos pesquisáveis pelos outros "
 "utilizadores do servidor Jabber."
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:33
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr ""
 "Se TRUE (verdadeiro), o Sugar irá mostrar uma opção de \"Terminar a sessão\"."
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "Se TRUE (verdadeiro), o Sugar irá mostrar uma opção de \"Reiniciar\"."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -794,121 +807,131 @@ msgstr ""
 "os canais 1, 6 e 11. Se o Sugar não vê nenhuma rede \"conhecida\" quando "
 "inicia, liga-se automaticamente a uma rede Ad-hoc."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:36
 msgid "Jabber Server"
 msgstr "Servidor Jabber"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard layouts"
 msgstr "Disposições de teclado"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:38
 msgid "Keyboard model"
 msgstr "Modelo de teclado"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:39
 msgid "Keyboard options"
 msgstr "Opções de teclado"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
 msgstr "Disposição da vista de favoritos."
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:41
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Lista de disposições de teclado. Cada entrada deve estar no formato "
 "disposição(variante)"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
 msgstr "Lista de opções de teclado."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:43
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
 msgstr "Energia automática"
 
-#: ../data/sugar.schemas.in.h:42
-msgid "Power Automatic."
-msgstr "Energia automática."
-
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme"
 msgstr "Energia extrema"
 
-#: ../data/sugar.schemas.in.h:44
-msgid "Power Extreme."
-msgstr "Energia Extrema."
-
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "Publicar ao Gadget"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
 msgstr "Definição para silenciar o dispositivo de som."
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "Mostrar Terminar a sessão"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
 msgstr "Mostar Reiniciar"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Mostrar redes Ad-hoc do Sugar"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "Som silenciado"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
 msgstr "O modelo de teclado a ser utilizado"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
 msgstr "Definição do fuso horário para o sistema."
 
-#: ../data/sugar.schemas.in.h:54
-msgid "Url of the jabber server to use."
+#: ../data/sugar.schemas.in.h:58
+#, fuzzy
+msgid "URL of the jabber server to use."
 msgstr "O Url do servidor jabber a utilizar."
 
-#: ../data/sugar.schemas.in.h:55
-msgid "Url where the backup is saved to."
+#: ../data/sugar.schemas.in.h:59
+#, fuzzy
+msgid "URL where the backup is saved to."
 msgstr "O Url onde a cópia de segurança é guardada."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "Cor do utilizador"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "Nome do utilizador"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
 msgstr "Nome do utilizador que é utilizado em todo o ambiente gráfico."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Não será permitido aos utilizadores eliminarem estas actividades na visão em "
 "lista."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
 msgstr "Volume de som"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
 msgstr "Volume de som para o dispositivo de som."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -964,29 +987,30 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-msgid "To apply your changes you have to restart sugar.\n"
+#, fuzzy
+msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Para aplicar as alterações tens que reiniciar o sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "As alterações feitas necessitam que reinicies"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "Cancelar alterações"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "Mais tarde"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "Reiniciar agora"
 
@@ -1071,11 +1095,6 @@ msgstr "Triângulo"
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
 msgstr "O Registo Falhou"
-
-#: ../src/jarabe/desktop/favoritesview.py:339
-#, python-format
-msgid "%s"
-msgstr "%s"
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
@@ -1172,7 +1191,7 @@ msgid "The server could not complete the request."
 msgstr "Não foi possível ao servidor completar o pedido."
 
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:574
+#: ../src/jarabe/frame/activitiestray.py:575
 msgid "Decline"
 msgstr "Recusar"
 
@@ -1191,38 +1210,33 @@ msgstr "%dKB"
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:544
+#. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
+#: ../src/jarabe/frame/activitiestray.py:545
 #, python-format
 msgid "%s of %s"
 msgstr "%s de %s"
 
-#: ../src/jarabe/frame/activitiestray.py:558
+#: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "Transferência de %s"
 
-#: ../src/jarabe/frame/activitiestray.py:569
+#: ../src/jarabe/frame/activitiestray.py:570
 msgid "Accept"
 msgstr "Aceitar"
 
-#: ../src/jarabe/frame/activitiestray.py:592
-#: ../src/jarabe/frame/activitiestray.py:722
-#, python-format
-msgid "%s (%s)"
-msgstr "%s (%s)"
-
-#: ../src/jarabe/frame/activitiestray.py:626
-#: ../src/jarabe/frame/activitiestray.py:639
-#: ../src/jarabe/frame/activitiestray.py:757
+#: ../src/jarabe/frame/activitiestray.py:627
+#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:758
 msgid "Dismiss"
 msgstr "Ignorar"
 
-#: ../src/jarabe/frame/activitiestray.py:643
+#: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
 msgstr "O outro participante cancelou a transferência de ficheiro"
 
-#: ../src/jarabe/frame/activitiestray.py:691
+#: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
@@ -1824,283 +1838,3 @@ msgstr "Ver código-fonte: %r"
 msgid "Sugar in a window"
 msgstr "Sugar numa janela"
 
-#~ msgid "Personal Unblocking Key (PUK):"
-#~ msgstr "Chave Pessoal para Desbloquar (PUK):"
-
-#~ msgid "GSM network APN"
-#~ msgstr "APN da rede GSM"
-
-#~ msgid "GSM network PIN"
-#~ msgstr "PIN da rede GSM"
-
-#~ msgid "GSM network PUK"
-#~ msgstr "PUK da rede GSM"
-
-#~ msgid "GSM network access point name configuration"
-#~ msgstr "Configuração do nome de ponto de acesso da rede GSM"
-
-#~ msgid "GSM network number"
-#~ msgstr "Número da rede GSM"
-
-#~ msgid "GSM network password"
-#~ msgstr "Palavra-Chave da rede GSM"
-
-#~ msgid "GSM network password configuration"
-#~ msgstr "Configuração da palavra-chave da rede GSM"
-
-#~ msgid "GSM network personal identification number configuration"
-#~ msgstr "Configuração do número de identificação pessoal da rede GSM"
-
-#~ msgid "GSM network personal unlock key configuration"
-#~ msgstr "Configuração da chave pessoal de desbloqueamento da rede GSM"
-
-#~ msgid "GSM network telephone number configuration"
-#~ msgstr "Configuração do número de telefone da rede GSM"
-
-#~ msgid "GSM network username"
-#~ msgstr "Nome de utilizador da rede GSM"
-
-#~ msgid "GSM network username configuration"
-#~ msgstr "Configuração do nome de utilizador da rede GSM"
-
-# TODO: Add "Start with" menu item
-#~ msgid "Copy"
-#~ msgstr "Copiar"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#~ msgid "Disconnect..."
-#~ msgstr "Desligar..."
-
-#~ msgid "System resources"
-#~ msgstr "Recursos do Sistema"
-
-#, python-format
-#~ msgid "CPU in use: %d%%"
-#~ msgstr "CPU em uso : %d%%"
-
-#, python-format
-#~ msgid "Memory in use: %d%%"
-#~ msgstr "Memória em uso : %d%%"
-
-#~ msgid "Cannot compute CPU and memory usage statistics!"
-#~ msgstr "Não é possível calcular as estatísticas de uso de CPU e memória!"
-
-#~ msgid "Create new wireless network"
-#~ msgstr "Criar uma nova rede sem fios"
-
-#, python-format
-#, fuzzy
-#~ msgid "%s's network"
-#~ msgstr "Rede %s do %s"
-
-#~ msgid "Title"
-#~ msgstr "Título"
-
-#~ msgid "Version"
-#~ msgstr "Versão"
-
-#~ msgid "Date"
-#~ msgstr "Data"
-
-#~ msgid "Cannot obtain data needed for registration."
-#~ msgstr "Não foi possível obter os dados necessários para o registo."
-
-#~ msgid "Unmount"
-#~ msgstr "Remover"
-
-#~ msgid ""
-#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-#~ msgstr ""
-#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; e Contribuidores."
-
-#~ msgid "Resume by default"
-#~ msgstr "Continuar por omissão"
-
-#~ msgid "Encryption Type:"
-#~ msgstr "Tipo de Encriptação:"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#~ msgid "Disconnecting..."
-#~ msgstr "A Desligar..."
-
-#~ msgid "About my XO"
-#~ msgstr "Sobre o meu XO"
-
-#~ msgid "Connected to a School Mesh Portal"
-#~ msgstr "Ligado a um Portal Mesh de Escola"
-
-#~ msgid "Looking for a School Mesh Portal..."
-#~ msgstr "À procura de um Portal Mesh de Escola..."
-
-#~ msgid "Connected to an XO Mesh Portal"
-#~ msgstr "Ligado a um Portal Mesh de XO"
-
-#~ msgid "Looking for an XO Mesh Portal..."
-#~ msgstr "À procura de um Portal Mesh de XO..."
-
-#~ msgid "Connected to a Simple Mesh"
-#~ msgstr "Ligado a uma Mesh Simples"
-
-#~ msgid "Starting a Simple Mesh"
-#~ msgstr "A iniciar uma Mesh Simples"
-
-#~ msgid "Unknown Mesh"
-#~ msgstr "Mesh Desconhecida"
-
-#, python-format
-#~ msgid "Clipboard object: %s."
-#~ msgstr "Objecto da Área de Transferência: %s"
-
-#~ msgid "You must enter a server."
-#~ msgstr "Precisas de introduzir um servidor."
-
-#~ msgid "Control Panel"
-#~ msgstr "Painel de Controlo"
-
-#~ msgid "© 2008 One Laptop per Child Assocation "
-#~ msgstr "© 2008 One Laptop per Child Association"
-
-#~ msgid "Sugar is the graphical user interface that "
-#~ msgstr "Sugar é a interface gráfica que estás a utilizar."
-
-#~ msgid "off"
-#~ msgstr "desligar"
-
-#~ msgid "on"
-#~ msgstr "ligar"
-
-#~ msgid "Permission denied. You need to be root to run this method."
-#~ msgstr "Permissão negada.  Tens que ser administrador para correr este método."
-
-#~ msgid "Error in reading timezone"
-#~ msgstr "Erro ao ler a zona horária"
-
-#, python-format
-#~ msgid "Error copying timezone (from %s): %s"
-#~ msgstr "Erro ao copiar a zona horária (de %s): %s"
-
-#, python-format
-#~ msgid "Changing permission of timezone: %s"
-#~ msgstr "Modificando permissão da zona horária: %s"
-
-#~ msgid "Add to journal"
-#~ msgstr "Adicionar ao Diário"
-
-#~ msgid "Reboot"
-#~ msgstr "Reiniciar"
-
-#~ msgid "My Battery life"
-#~ msgstr "Energia da bateria"
-
-#~ msgid "Battery charging"
-#~ msgstr "Bateria a carregar"
-
-#~ msgid "Battery discharging"
-#~ msgstr "Bateria a descarregar"
-
-#~ msgid "Battery fully charged"
-#~ msgstr "Bateria totalmente carregada"
-
-#~ msgid "Share with:"
-#~ msgstr "Partilhar com:"
-
-#~ msgid "Private"
-#~ msgstr "Privado"
-
-#~ msgid "My Neighborhood"
-#~ msgstr "Minha Vizinhança"
-
-#~ msgid "Undo"
-#~ msgstr "Desfazer"
-
-#~ msgid "Redo"
-#~ msgstr "Refazer"
-
-#~ msgid "Paste"
-#~ msgstr "Colar"
-
-#, python-format
-#~ msgid "%s Activity"
-#~ msgstr "%s Actividade"
-
-#~ msgid "Keep error"
-#~ msgstr "Guardar erro"
-
-#~ msgid "Keep error: all changes will be lost"
-#~ msgstr "Guardar erro: todas as mudanças serão perdidas"
-
-#~ msgid "Don't stop"
-#~ msgstr "Não pares"
-
-#~ msgid "Stop anyway"
-#~ msgstr "Parar à mesma"
-
-#~ msgid "Continue"
-#~ msgstr "Continuar"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#, python-format
-#~ msgid "%d year"
-#~ msgstr "%d ano"
-
-#, python-format
-#~ msgid "%d years"
-#~ msgstr "%d anos"
-
-#, python-format
-#~ msgid "%d month"
-#~ msgstr "%d mês"
-
-#, python-format
-#~ msgid "%d months"
-#~ msgstr "%d meses"
-
-#, python-format
-#~ msgid "%d week"
-#~ msgstr "%d semana"
-
-#, python-format
-#~ msgid "%d weeks"
-#~ msgstr "%d semanas"
-
-#, python-format
-#~ msgid "%d day"
-#~ msgstr "%d dia"
-
-#, python-format
-#~ msgid "%d days"
-#~ msgstr "%d dias"
-
-#, python-format
-#~ msgid "%d hour"
-#~ msgstr "%d hora"
-
-#, python-format
-#~ msgid "%d hours"
-#~ msgstr "%d horas"
-
-#, python-format
-#~ msgid "%d minute"
-#~ msgstr "%d minuto"
-
-#, python-format
-#~ msgid "%d minutes"
-#~ msgstr "%d minutos"
-
-#, python-format
-#~ msgid "%d second"
-#~ msgstr "%d segundo"
-
-#~ msgid " and "
-#~ msgstr " e "
-
-#~ msgid ", "
-#~ msgstr ", "
