@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 04:45+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-02-11 22:30+0200\n"
+"Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -585,30 +585,29 @@ msgstr "Verbindung in der Menüleiste erstellen."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Sprache"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "Sage ausgewählten Text"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Wiedergabe beenden"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "Tonhöhe"
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "Datum"
+msgstr "Rate"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "Wiedergabe anhalten"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -855,11 +854,11 @@ msgstr "Liste der Tastatureinstellungen."
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Tonhöhenwert des Sugar-Dienstes Sprache"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Wert der Tonhöhe, die vom Sprachdienst in Sugar benutzt wird"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
@@ -876,11 +875,11 @@ msgstr "Veröffentlichen auf Gerät"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Sprechrate für den Sugar-Dienst Sprache"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Die Rate, die vom Sprachdienst in Sugar benutzt wird"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -1748,9 +1747,8 @@ msgid "The device's existing connection was assumed."
 msgstr "Eine bestehende Verbindung für dieses Gerät wurde vermutet."
 
 #: ../src/jarabe/model/network.py:299
-#, fuzzy
 msgid "The supplicant is now available."
-msgstr "Der Antragsteller ist jetzt verfügbar."
+msgstr "Der Empfänger ist jetzt verfügbar."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
