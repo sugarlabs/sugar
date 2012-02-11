@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-11-26 03:05+0200\n"
+"PO-Revision-Date: 2012-02-11 07:54+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: vi\n"
@@ -527,9 +527,8 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
-#, fuzzy
 msgid "%d KB"
-msgstr "%dKB"
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
@@ -880,12 +879,10 @@ msgid "Timezone setting for the system."
 msgstr "Thiết lập múi giờ cho hệ thống."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "Địa chỉ URL của máy phục vụ Jabber cần dùng."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "Địa chỉ URL vào đó lưu bản sao lưu."
 
@@ -969,9 +966,8 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Để áp dụng các thay đổi thì cần phải khởi chạy lại pn sugar.\n"
+msgstr "Để áp dụng các thay đổi thì cần phải khởi chạy lại pn Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1811,4 +1807,3 @@ msgstr "Xem nguồn: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
