@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-09-12 16:38+0200\n"
-"Last-Translator: <saulleoart@gmail.com>\n"
+"PO-Revision-Date: 2012-02-11 04:51+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hus\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -545,9 +545,8 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "Ka tsab met'a' an t'ojojóxtaláb k'al a Pin/Puk."
+msgstr "Ka tsab met'a' an t'ojojóxtaláb k'al a PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
@@ -933,12 +932,10 @@ msgid "Timezone setting for the system."
 msgstr "T'ojojóxtaláb ti xe'ets k'íj abal tin puwéltal."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "URL an tólmix buk'ul Jabber abal ki eyendha'."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "URL jutaj ki dhaya' an backup."
 
@@ -1030,9 +1027,8 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Abal ka dhaya' axi a jalk'uy in yejenchal ka tsab tujchij sugar.\n"
+msgstr "Abal ka dhaya' axi a jalk'uy in yejenchal ka tsab tujchij Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1871,4 +1867,3 @@ msgstr "Tsu'uw an dhuche' inkintal: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar ti jun i met'nib"
-
