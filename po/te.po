@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-11-27 06:09+0200\n"
+"PO-Revision-Date: 2012-02-11 07:47+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: te\n"
@@ -934,7 +934,6 @@ msgstr "షుగర్-కంట్రోల్-పేనల్: %s"
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -946,10 +945,9 @@ msgid ""
 "    -s key       set the current value for the key \n"
 "    -c key       clear the current value for the key \n"
 "    "
-msgstr "షుగర్-కంట్రోల్-పేనల్:"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "మీ మార్పులు పనిచేయడానికి సుగరును తిరిగి మొదలు పెట్టండి.\n"
 
@@ -1089,18 +1087,16 @@ msgid "List view"
 msgstr "వరసగా చూడు"
 
 #: ../src/jarabe/desktop/homebox.py:198
-#, fuzzy
 msgid "<Ctrl>2"
-msgstr "<Ctrl>L"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
 msgstr "ఇష్టమైనవి చూచుటకు"
 
 #: ../src/jarabe/desktop/homebox.py:254
-#, fuzzy
 msgid "<Ctrl>1"
-msgstr "<Ctrl>L"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
@@ -1791,4 +1787,3 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
