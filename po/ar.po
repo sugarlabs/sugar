@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-09-23 11:30+0200\n"
-"Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
+"PO-Revision-Date: 2012-02-11 02:56+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -542,7 +542,6 @@ msgid "%d KB"
 msgstr "%d ك.بايت"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "راجع ضبط رقم المعرف الشخصي أو مفتاح القفل."
 
@@ -888,12 +887,10 @@ msgid "Timezone setting for the system."
 msgstr "المنطقة الزمنية للنظام."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "مسار خادوم جابِر الذي سيستخدم."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "مسار مكان الحفظ الاحتياطي."
 
@@ -972,7 +969,6 @@ msgstr ""
 "          "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "تحتاج لإعادة تشغيل «سُكّر» لتُطبق التغييرات.\n"
 
