@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 07:23+0200\n"
+"PO-Revision-Date: 2012-02-11 03:22+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -519,7 +519,6 @@ msgid "%d KB"
 msgstr "%d 千字节"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "请检查你的PIN/PUK配置。"
 
@@ -861,12 +860,10 @@ msgid "Timezone setting for the system."
 msgstr "系统时区设置。"
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "要使用的Jabber服务器网址"
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "保存备份的网址。"
 
@@ -948,7 +945,6 @@ msgstr ""
 
 # 如何翻译sugar?
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "重启系统使改变生效.\n"
 
@@ -1791,4 +1787,3 @@ msgstr "查看源代码：%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "窗口化Sugar"
-
