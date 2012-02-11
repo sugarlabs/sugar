@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:42+0200\n"
+"PO-Revision-Date: 2012-02-11 04:50+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hi\n"
@@ -890,12 +890,10 @@ msgid "Timezone setting for the system."
 msgstr "सिस्टम के लिए समयक्षेत्र सेटिंग."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "प्रयोग किए जाने वाले जैबर सर्वर का यूआरएल."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "यूआरएल जहाँ बैकअप सहेजा जाना है."
 
@@ -982,7 +980,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "अपने परिवर्तनों को लागू करने के लिए आपको शुगर को पुनरारंभ करना होगा.\n"
 
@@ -1822,4 +1819,3 @@ msgstr "स्रोत देखें: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar खिड़की मे"
-
