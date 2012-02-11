@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:28+0200\n"
+"PO-Revision-Date: 2012-02-11 03:11+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ca\n"
@@ -253,9 +253,8 @@ msgstr "Error en l'argument de ràdio especificat, useu on/off"
 # 1- manca una coma al text original
 # 2- He posat on/off
 #: ../extensions/cpsection/network/model.py:152
-#, fuzzy
 msgid "Error in specified argument use 0/1."
-msgstr "Error en l'argument de ràdio especificat, useu on/off"
+msgstr "Error en l'argument especificat, useu 0/1."
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
@@ -536,9 +535,8 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
-#, fuzzy
 msgid "%d KB"
-msgstr "%dKB"
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
@@ -564,7 +562,6 @@ msgstr "Xarxa Mesh"
 # Aquí he agafat l'original "mesh", en comptes de fer-ne una traducció
 #: ../extensions/deviceicon/network.py:638
 #, python-format
-#, fuzzy
 msgid "Mesh Network %s"
 msgstr "Xarxa Mesh %s"
 
@@ -886,7 +883,6 @@ msgid "Timezone setting for the system."
 msgstr "Configuració de zona horària pel sistema."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "URL del servidor de Jabber per utilitzar."
 
@@ -959,7 +955,6 @@ msgid ""
 msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Per aplicar els canvis, cal reiniciar el Sugar.\n"
 
@@ -1149,7 +1144,6 @@ msgstr ""
 # Aquí he agafat l'original "mesh", en comptes de fer-ne una traducció
 #: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
-#, fuzzy
 msgid "Mesh Network %d"
 msgstr "Xarxa Mesh %d"
 
@@ -1805,4 +1799,3 @@ msgstr "Veure codi font: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
