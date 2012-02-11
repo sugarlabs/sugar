@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:27+0200\n"
+"PO-Revision-Date: 2012-02-11 03:08+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: bg\n"
@@ -957,7 +957,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Моля, рестартирайте графичната среда, за да влязат в сила промените.\n"
 
@@ -1813,4 +1812,3 @@ msgstr ""
 # TODO: Add "Start with" menu item
 #~ msgid "Copy"
 #~ msgstr "Копиране"
-
