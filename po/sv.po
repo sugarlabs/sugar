@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 09:15+0200\n"
+"PO-Revision-Date: 2012-02-11 07:42+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -528,9 +528,8 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
-#, fuzzy
 msgid "%d KB"
-msgstr "%dKB"
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
@@ -586,9 +585,8 @@ msgid "Pitch"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "Datum"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -887,12 +885,10 @@ msgid "Timezone setting for the system."
 msgstr "Systemets tidszonsinställning."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "URL för den jabber-server som skall användas."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "URL för den plats där säkerhetskopieringar skall lagras."
 
@@ -977,7 +973,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "För att förändringarna ska träda i kraft behöver du starta om Socker.\n"
 
@@ -1827,4 +1822,3 @@ msgstr "Se källa: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
