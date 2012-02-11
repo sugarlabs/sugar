@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-06 07:32+0200\n"
-"Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
+"PO-Revision-Date: 2012-02-11 06:57+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -537,7 +537,6 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "तिम्रो PIN/PUK विन्यासको जाँच गर।"
 
@@ -886,14 +885,12 @@ msgid "Timezone setting for the system."
 msgstr "प्रणालीको लागि समय अंचल सेटिङ्ग।"
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "चलाउनलाई ज्याबर सर्भरको Url"
+msgstr "चलाउनलाई ज्याबर सर्भरको URL"
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "ब्याकप बचत गर्ने ठाउँको Url"
+msgstr "ब्याकप बचत गर्ने ठाउँको URL"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -976,7 +973,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "परिवर्तन लागू गर्न सुगर पुन:शुरु गर्नु पर्छ ।\n"
 
@@ -1817,4 +1813,3 @@ msgstr "स्रोत दृश्य : %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "सञ्झ्यालमा सुगर"
-
