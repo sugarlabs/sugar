@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:49+0200\n"
+"PO-Revision-Date: 2012-02-11 06:38+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: km\n"
@@ -887,7 +887,6 @@ msgid "URL of the jabber server to use."
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "អភ័យដ្ឋាន​ដែល​ជា​ទីកន្លែង​រក្សា​ឯកសារ​ទុក"
 
@@ -1797,4 +1796,3 @@ msgstr "មើល​ប្រភព%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
