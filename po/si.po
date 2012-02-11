@@ -1,15 +1,3 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # translation of sugar.po to Sinhala
 # Rashan Anushka <rashan.uoc@gmail.com>, 2008.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
@@ -18,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-20 07:47-0400\n"
-"PO-Revision-Date: 2011-09-02 05:23+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-02-10 00:32-0500\n"
+"PO-Revision-Date: 2012-02-03 09:41+0200\n"
+"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -73,48 +61,43 @@ msgstr "ඔබගේ පාට වෙනස් කිරීමට ක්ලි�
 msgid "About my Computer"
 msgstr "මගේ පරිගණකය ගැන"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:42
+#: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
 msgstr "නොපවතී"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:171
-#, python-format
-msgid "%(interface)s: %(version)s"
-msgstr "%(interface)s: %(version)s"
-
-#: ../extensions/cpsection/aboutcomputer/view.py:61
+#: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
 msgstr "අනන්‍යතාව"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:70
+#: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
 msgstr "අනුක්‍රමික අංකය:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:92
+#: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
 msgstr "මෘදුකාංගය"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:101
+#: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
 msgstr "ගොඩ නැඟුම:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:116
+#: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:132
+#: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
 msgstr "ස්ථීරාංග:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:147
+#: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
 msgstr "රැහැන් රහිත ස්ථිරාංග:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:170
+#: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
 msgstr "කතු හිමිකම හා වරපත"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:188
+#: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -125,7 +108,7 @@ msgstr ""
 "පොදු බලපත්‍රය මගින් ආවරණය වන නිදහස් මෘදුකාංගයක් වන අතර එහි සඳහන් ඇතැම් "
 "කොන්දේසි වලට යටත්ව මෙය වෙනස් කිරීමට හා/හෝ පිටපත් බෙදාහැරීමට ඔබට හැකිය."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:200
+#: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
 msgstr "පූර්ණ බලපත්‍රය:"
 
@@ -137,7 +120,7 @@ msgstr "දිනය සහ වේලාව"
 msgid "Error timezone does not exist."
 msgstr "දෝෂයකි වේලාකලාපය නොපවතී."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:52
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
 msgstr "වේලා කලාපය"
 
@@ -223,31 +206,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "මොඩම වින්‍යාසගත කිරීම"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:94
-msgid "Username:"
-msgstr "පරිශීලක නාමය:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:106
-msgid "Password:"
-msgstr "මුරපදය:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:118
-msgid "Number:"
-msgstr "අංකය:"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:130
-msgid "Access Point Name (APN):"
-msgstr "ප්‍රවේශන ස්තාන නාමය (APN):"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:142
-msgid "Personal Identity Number (PIN):"
-msgstr "පුද්ගලික හදුනා ගැණිමේ අංකය (PIN):"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:154
-msgid "Personal Unblocking Key (PUK):"
-msgstr "පුද්ගලික අඟුළු ඇරීමේ යතුර (PUK):"
-
-#: ../extensions/cpsection/modemconfiguration/view.py:175
+#: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -255,20 +214,40 @@ msgstr ""
 "ජංගම (3G) ජාලයකට පුළුල් පරාස සම්බන්ධතාවයක් ඇති කිරීමට ඔබට පහත තොරතුරු "
 "ලබාදීමට අවශ්‍ය වනු ඇත."
 
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "පරිශීලක නාමය:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "මුරපදය:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "අංකය:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr "ප්‍රවේශන ස්තාන නාමය (APN):"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr "පුද්ගලික හදුනා ගැණිමේ අංකය (PIN):"
+
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
 msgstr "ජාලය"
 
-#: ../extensions/cpsection/network/model.py:71
+#: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
 msgstr "තත්ත්වය නොදනී."
 
-#: ../extensions/cpsection/network/model.py:99
+#: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
 msgstr "නිරූපිත රේඩියෝ විතර්කයේ දෝෂයකි on/off භාවිතා කරන්න."
 
-#: ../extensions/cpsection/network/model.py:140
+#: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr "නිරූපිත විතර්කයේ දෝෂයකි 0/1 භාවිතා කරන්න."
 
@@ -325,11 +304,11 @@ msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි,
 msgid "Power management"
 msgstr "බල කළමණාකරණය"
 
-#: ../extensions/cpsection/power/view.py:58
+#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "ස්වයංක්‍රීය බල කළමණාකරණය (බැටරි ආයු කාලය වැඩි කරයි)"
 
-#: ../extensions/cpsection/power/view.py:86
+#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
@@ -441,12 +420,14 @@ msgstr "ආරෝපණය වෙමින්"
 msgid "Very little power remaining"
 msgstr "ඉතා සුළු බලයක් ඉතිරිව පවතී"
 
-#: ../extensions/deviceicon/battery.py:158
+#. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+#. only translate the word "remaining"
+#: ../extensions/deviceicon/battery.py:160
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d ඉතිරියි"
 
-#: ../extensions/deviceicon/battery.py:161
+#: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
 msgstr "ආරෝපිතයි"
 
@@ -455,10 +436,10 @@ msgstr "ආරෝපිතයි"
 msgid "IP address: %s"
 msgstr "IP ලිපිනය: %s"
 
-#: ../extensions/deviceicon/network.py:104
-#: ../extensions/deviceicon/network.py:303
-#: ../src/jarabe/desktop/networkviews.py:140
-#: ../src/jarabe/desktop/networkviews.py:508
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:128
+#: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
 msgstr "විසන්ධි කරන්න"
 
@@ -468,124 +449,151 @@ msgstr "විසන්ධි කරන්න"
 # NM doesn't have a "disconnect"<br />
 # method for a device either (for various reasons) so this doesn't<br />
 # have a good mapping
-#: ../extensions/deviceicon/network.py:112
-#: ../extensions/deviceicon/network.py:295
-#: ../src/jarabe/desktop/networkviews.py:243
-#: ../src/jarabe/desktop/networkviews.py:547
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:237
+#: ../src/jarabe/desktop/networkviews.py:527
+#: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
 msgstr "සම්බන්ධවෙමින්..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:117
-#: ../extensions/deviceicon/network.py:185
-#: ../src/jarabe/desktop/networkviews.py:253
-#: ../src/jarabe/desktop/networkviews.py:553
-#: ../src/jarabe/desktop/networkviews.py:686
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:244
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
 msgstr "සම්බන්ධ විය"
 
-#: ../extensions/deviceicon/network.py:130
+#: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
 msgstr "රැහැන් රහිත සම්බන්ධතා නැත"
 
-#: ../extensions/deviceicon/network.py:144
+#: ../extensions/deviceicon/network.py:133
 msgid "Channel"
 msgstr "නාලිකාව"
 
-#: ../extensions/deviceicon/network.py:159
+#: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
 msgstr "රැහැන් සහිත ජාලය"
 
-#: ../extensions/deviceicon/network.py:188
+#: ../extensions/deviceicon/network.py:177
 msgid "Speed"
 msgstr "වේගය"
 
-#: ../extensions/deviceicon/network.py:213
+#: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
 msgstr "රැහැන් රහිත මොඩමය"
 
-#: ../extensions/deviceicon/network.py:281
+#: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
 msgstr "කරුණාකර රැදී සිටින්න..."
 
-#: ../extensions/deviceicon/network.py:286
-#: ../src/jarabe/desktop/networkviews.py:136
-#: ../src/jarabe/desktop/networkviews.py:504
-#: ../src/jarabe/desktop/networkviews.py:637
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:124
+#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
 msgstr "සම්බන්ධ වෙන්න"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
 msgstr "විසන්ධිවී ඇත"
 
-#: ../extensions/deviceicon/network.py:294
+#: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:602
-#: ../src/jarabe/frame/activitiestray.py:704
-#: ../src/jarabe/frame/activitiestray.py:732
+#: ../src/jarabe/frame/activitiestray.py:603
+#: ../src/jarabe/frame/activitiestray.py:705
+#: ../src/jarabe/frame/activitiestray.py:733
 msgid "Cancel"
 msgstr "අවලංගු කරන්න"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
 msgstr "සම්බන්ධතාවය නැවත උත්සහ කරන්න"
 
-#: ../extensions/deviceicon/network.py:336
+#: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
 msgstr "දෝශය: %s"
 
-#: ../extensions/deviceicon/network.py:340
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
 msgstr "යෝජනාව: %s"
 
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
 msgstr "%s සඳහා සම්බන්ධ විය"
 
-#: ../extensions/deviceicon/network.py:355
-#: ../extensions/deviceicon/network.py:356
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:361
-msgid "Check your Pin/Puk configuration."
+#: ../extensions/deviceicon/network.py:350
+#, fuzzy
+msgid "Check your PIN/PUK configuration."
 msgstr "ඔබගේ PIN/PUK වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "ඔබගේ ප්‍රවේශ අග්‍ර නාම (APN) වින්‍යාසගත කිරීම පරීක්ෂා කරන්න"
 
-#: ../extensions/deviceicon/network.py:368
+#: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
 msgstr "ඔබගේ අංක වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:370
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
 msgstr "ඔබගේ වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:612
+#: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
 msgstr "දැල් ජාලය"
 
-#: ../extensions/deviceicon/network.py:656
+#: ../extensions/deviceicon/network.py:638
 #, python-format
 msgid "Mesh Network %s"
 msgstr "දැල් ජාලය %s"
 
-#: ../extensions/deviceicon/network.py:779
+#: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
 msgstr "GSM සම්බන්ධතා නැත."
 
-#: ../extensions/deviceicon/network.py:780
+#: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
 msgstr "පාලක පැනලයේ සම්බන්ධතාවයක් තනන්න."
+
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr "කතාව"
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -616,17 +624,17 @@ msgid "Mesh"
 msgstr "දැලැස"
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
 msgstr "සමූහය"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
 msgstr "නිවස"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
 msgstr "ක්‍රියාකාරකම"
 
@@ -651,15 +659,15 @@ msgstr ""
 msgid "Additional directories which can contain updated translations."
 msgstr "යාවත්කාල කල පරිවර්තන අඩංගු විය හැකි අමතර නාමාවලි."
 
-#: ../data/sugar.schemas.in.h:3
+#: ../data/sugar.schemas.in.h:4
 msgid "Backup URL"
 msgstr "උපස්ථ URL"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:5
 msgid "Bundle IDs of protected activities"
 msgstr "ආකර්ෂා කල ක්‍රියාකාරකම් ID එකට එක් කරන්න"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:6
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -668,103 +676,104 @@ msgstr ""
 "වැඩතලය පුරා භාවිතා වන XO අයිකනය සඳහා වර්ණය. වර්ණය ඉරි වර්ණයෙන් සහ පිරවුම් "
 "වර්ණයෙන් තැනී ඇත, ආකෘතිය rgb වර්ණ ආකෘතිය වේ. උදාහරණ: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
 msgstr "මුළු ප්‍රමාදය"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
 msgstr "පෙරනිමි ෆොන්ට වර්ගය"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:9
 msgid "Default font size"
 msgstr "පෙරනිමි ෆොන්ට ප්‍රමාණය"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:10
 msgid "Default nick"
 msgstr "පෙරනිමි විකට නම"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
 msgstr "මුළු භාවිත කර රාමුව සක්‍රිය කිරීමේ ප්‍රමාදය."
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:12
 msgid "Delay for the activation of the frame using the edges."
 msgstr "දාර භාවිත කර රාමුව සක්‍රිය කිරීමේ ප්‍රමාදය."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
 msgstr "පරිවර්ථන සඳහා සෙවීමට නාමාවලිය"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "දාර ප්‍රමාදය"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
 msgstr "ප්‍රියතම වින්‍යාසය"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
 msgstr "ප්‍රියතම නැවත ඇරඹුම් ආකාරය"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:18
 msgid "Font face that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන ෆොන්ට නාමය."
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:19
 msgid "Font size that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන ෆොන්ට ප්‍රමාණය."
 
-#: ../data/sugar.schemas.in.h:18
-msgid "GSM network APN"
-msgstr "GSM ජාල APN"
-
-#: ../data/sugar.schemas.in.h:19
-msgid "GSM network PIN"
-msgstr "GSM ජාල PIN"
-
 #: ../data/sugar.schemas.in.h:20
-msgid "GSM network PUK"
-msgstr "GSM ජාල PUK"
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:21
-msgid "GSM network access point name configuration"
-msgstr "GSM ජාල ප්‍රවේශ අග්‍ර නාම වින්‍යාසගත කිරීම"
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:22
-msgid "GSM network number"
-msgstr "GSM ජාල අංකය"
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:23
-msgid "GSM network password"
-msgstr "GSM ජාල මුරපදය"
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:24
-msgid "GSM network password configuration"
-msgstr "GSM ජාල මුරපද වින්‍යාසගත කිරීම"
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:25
-msgid "GSM network personal identification number configuration"
-msgstr "GSM ජාල පුද්ගල හඳුනාගැනීමේ අංක වින්‍යාසගත කිරීම"
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:26
-msgid "GSM network personal unlock key configuration"
-msgstr "GSM ජාල පුද්ගලික අඟුළු ඇරීමේ අංක වින්‍යාසගත කිරීම"
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:27
-msgid "GSM network telephone number configuration"
-msgstr "GSM ජාල දුරකථන අංක වින්‍යාසගත කිරීම"
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:28
-msgid "GSM network username"
-msgstr "GSM ජාල පරිශීලක නාමය"
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:29
-msgid "GSM network username configuration"
-msgstr "GSM ජාල පරිශීලක නාම වින්‍යාසගත කිරීම"
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:30
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:31
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:32
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -772,15 +781,15 @@ msgstr ""
 "සත්‍ය නම්, Jabber සේවාදායයේ අනෙකුත් පරිශීලකයන් සඳහා Suger අපව සෙවිමට හැකි "
 "කරයි."
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:33
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "TRUE නම්, Sugar \"පරිශීලක ඉවත් වීම\" විකල්පයක් පෙන්වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "TRUE නම්, Sugar \"නැවත ආරම්භ කරන්න\" විකල්පයක් පෙන්වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -790,120 +799,130 @@ msgstr ""
 "ආරම්භ කරන අවස්ථාවේ එක \"දන්නා\" ජාල නොදකීනම්, එය ස්වයංව Ad-hoc ජාලයකට සම්බන්ධ "
 "වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:36
 msgid "Jabber Server"
 msgstr "Jabber සේවාදායකය"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard layouts"
 msgstr "යතුරුපුවරු පිරිසැලසුම්"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:38
 msgid "Keyboard model"
 msgstr "යතුරුපුවරු වර්ගය"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:39
 msgid "Keyboard options"
 msgstr "යතුරු පුවරු විකල්ප"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
 msgstr "ප්‍රියතම දැක්ම සඳහා වින්‍යාසය."
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:41
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "යතුරු පුවරු ලැයිස්තු පිරිසැලසුම්. සෑම ප්‍රවේශයක්ම පිරිසැලසුම් (විචල) ආකාරයේ "
 "විය යුතුය"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:42
 msgid "List of keyboard options."
 msgstr "යතුරු පුවරු විකල්ප ලැයිස්තුව."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:43
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
 msgstr "බලය ස්වයංක්‍රීය"
 
-#: ../data/sugar.schemas.in.h:42
-msgid "Power Automatic."
-msgstr "බලය ස්වයංක්‍රීය."
-
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme"
 msgstr "බලය උපරිම"
 
-#: ../data/sugar.schemas.in.h:44
-msgid "Power Extreme."
-msgstr "බලය උපරිම."
-
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
 msgstr "ගැජට්ටුවේ පළකරන්න"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
 msgstr "ශබ්ද උපාංගහ නිහඬ‍කිරීමට සැකසුම."
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "පරිශීලක ඉවත් වීම පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
 msgstr "නැවත ආරම්භ කිරීම පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Sugar Ad-hoc ජාල පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
 msgstr "ශබ්දය නිහඬය"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
 msgstr "භාවිතා කිරීමට යතුරු පුවරු වර්ගය"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
 msgstr "පද්ධතිය සඳහා වේලාකලාප සැකසුම්."
 
-#: ../data/sugar.schemas.in.h:54
-msgid "Url of the jabber server to use."
+#: ../data/sugar.schemas.in.h:58
+#, fuzzy
+msgid "URL of the jabber server to use."
 msgstr "Jabber සේවාදායකය භාවිතය සඳහා වන Urlය."
 
-#: ../data/sugar.schemas.in.h:55
-msgid "Url where the backup is saved to."
+#: ../data/sugar.schemas.in.h:59
+#, fuzzy
+msgid "URL where the backup is saved to."
 msgstr "උපස්ථය සුරකිය යුතු ස්ථානයේ Urlය."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:60
 msgid "User Color"
 msgstr "පරිශීලක වර්ණය"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:61
 msgid "User Name"
 msgstr "පරිශීලක නම"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන පරිශීලක නම."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:63
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "පරිශීලකයින්ට ලැයිස්තු දසුන හරහා මෙම ක්‍රියාකාරකම් මැකීමට අවසර නොදෙනු ඇත."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
 msgstr "ශබ්ද මට්ටම"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
 msgstr "ශබ්ද උපාංගය සඳහා ශබ්ද මට්ටම."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -959,33 +978,34 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-msgid "To apply your changes you have to restart sugar.\n"
+#, fuzzy
+msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "ඔබගේ වෙනස්කිරීම් බලපෑම සඳහා ෂුගර් යළි ඇරඹිය යුතුය.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:296 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "අවවාදයයි"
 
-#: ../src/jarabe/controlpanel/gui.py:297
+#: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "වෙනස්කිරීම සඳහා යළි ඇරඹුමක් අවශ්‍යවේ"
 
-#: ../src/jarabe/controlpanel/gui.py:300
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "වෙනස් කිරීම් අවලංගු කරන්න"
 
-#: ../src/jarabe/controlpanel/gui.py:305 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
 msgstr "පසුව"
 
-#: ../src/jarabe/controlpanel/gui.py:309
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
 msgstr "දැන් යළි ආරම්භ කරන්න"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:201
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
 msgid "Done"
 msgstr "කළා"
 
@@ -994,16 +1014,16 @@ msgstr "කළා"
 msgid "Ok"
 msgstr "හරි"
 
-#: ../src/jarabe/desktop/activitieslist.py:230
+#: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
 msgid "Version %s"
 msgstr "%s වෙළුම"
 
-#: ../src/jarabe/desktop/activitieslist.py:356
+#: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
 msgstr "මකා දැමීම ස්ථීර කරන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:358
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "මකා දැමීම ස්ථීරයි: ඔබට %s සදහටම මකා දැමීමට අවශ්‍යයද?"
@@ -1012,24 +1032,24 @@ msgstr "මකා දැමීම ස්ථීරයි: ඔබට %s සදහ�
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:362
+#: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
 msgstr "තබාගන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:365
-#: ../src/jarabe/desktop/activitieslist.py:419
-#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
 msgstr "මකන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:435
+#: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
 msgstr "අභිරුචිය ඉවත් කරන්න"
 
-#: ../src/jarabe/desktop/activitieslist.py:439
+#: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
 msgstr "අභිරුචියක් කරන්න"
 
@@ -1066,11 +1086,6 @@ msgstr "ත්‍රිකෝණය"
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
 msgstr "ලියාපදිංචිය අසමත් විය"
-
-#: ../src/jarabe/desktop/favoritesview.py:339
-#, python-format
-msgid "%s"
-msgstr "%s"
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
@@ -1117,41 +1132,41 @@ msgstr "කැමති දසුන"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:143
+#: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
 msgstr "යතුරු වර්ගය:"
 
-#: ../src/jarabe/desktop/keydialog.py:163
+#: ../src/jarabe/desktop/keydialog.py:159
 msgid "Authentication Type:"
 msgstr "සත්‍යාපන වර්ගය:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 පෞද්ගලික"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
 msgstr "රැහැන් රහිත ආරක්ෂණය:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:91
-#: ../src/jarabe/journal/journaltoolbox.py:494
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "නැවත අරඹන්න"
 
-#: ../src/jarabe/desktop/meshbox.py:96
+#: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "එකතු වෙන්න"
 
-#: ../src/jarabe/desktop/networkviews.py:500
+#: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "%d Ad-hoc ජාලය"
 
-#: ../src/jarabe/desktop/networkviews.py:634
+#: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
 msgid "Mesh Network %d"
 msgstr "දැල් ජාලය %d"
@@ -1165,7 +1180,7 @@ msgid "The server could not complete the request."
 msgstr "සේවාදායකයට අයදුම සම්පූර්ණ කළ නොහැක."
 
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:574
+#: ../src/jarabe/frame/activitiestray.py:575
 msgid "Decline"
 msgstr "ප්‍රතික්ෂේප කරනවා"
 
@@ -1184,38 +1199,33 @@ msgstr "%dKB"
 msgid "%dMB"
 msgstr "%dMB"
 
-#: ../src/jarabe/frame/activitiestray.py:544
+#. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
+#: ../src/jarabe/frame/activitiestray.py:545
 #, python-format
 msgid "%s of %s"
 msgstr "%s න් %s"
 
-#: ../src/jarabe/frame/activitiestray.py:558
+#: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "%s සිට හුවමාරු කරන්න"
 
-#: ../src/jarabe/frame/activitiestray.py:569
+#: ../src/jarabe/frame/activitiestray.py:570
 msgid "Accept"
 msgstr "අනුමත කරනවා"
 
-#: ../src/jarabe/frame/activitiestray.py:592
-#: ../src/jarabe/frame/activitiestray.py:722
-#, python-format
-msgid "%s (%s)"
-msgstr "%s (%s)"
-
-#: ../src/jarabe/frame/activitiestray.py:626
-#: ../src/jarabe/frame/activitiestray.py:639
-#: ../src/jarabe/frame/activitiestray.py:757
+#: ../src/jarabe/frame/activitiestray.py:627
+#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:758
 msgid "Dismiss"
 msgstr "නිෂ්ප්‍රභ කරනවා"
 
-#: ../src/jarabe/frame/activitiestray.py:643
+#: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:691
+#: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
@@ -1241,23 +1251,23 @@ msgstr "විවෘත කළ යුත්තේ"
 msgid "%s clipping"
 msgstr "කප්පාදුව %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
 msgstr "වටපිටාව"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:39
+#: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:41
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
 msgstr "F4"
 
@@ -1265,15 +1275,15 @@ msgstr "F4"
 msgid "Name:"
 msgstr "නම:"
 
-#: ../src/jarabe/intro/window.py:126
+#: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
 msgstr "පාට වෙනස් කිරීමට ක්ලික් කරන්න:"
 
-#: ../src/jarabe/intro/window.py:187 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "ආපසු"
 
-#: ../src/jarabe/intro/window.py:204
+#: ../src/jarabe/intro/window.py:198
 msgid "Next"
 msgstr "ඊළඟ"
 
@@ -1326,81 +1336,81 @@ msgid "Tags:"
 msgstr "හැඳුනුම් වදන්:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:453
+#: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "ජ'නලය"
 
-#: ../src/jarabe/journal/journaltoolbox.py:71
+#: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
 msgstr "සෙවිම"
 
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr "ඕනෑම වෙලාවක"
 
-#: ../src/jarabe/journal/journaltoolbox.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
 msgstr "අද"
 
-#: ../src/jarabe/journal/journaltoolbox.py:142
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
 msgstr "ඊයේ සිට"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:144
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
 msgstr "පසුගිය සතිය"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
 msgstr "පසුගිය මාසය"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
 msgstr "පසුගිය වසර"
 
-#: ../src/jarabe/journal/journaltoolbox.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
 msgstr "ඕනෑම අයෙක්"
 
-#: ../src/jarabe/journal/journaltoolbox.py:157
+#: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
 msgstr "මාගේ මිතුරන්"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
 msgstr "මාගේ පන්තිය"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:300
+#: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
 msgstr "ඕනෑ දෙයක්"
 
-#: ../src/jarabe/journal/journaltoolbox.py:381
+#: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
 msgstr "වෙත පිටපත් කරන්න"
 
-#: ../src/jarabe/journal/journaltoolbox.py:389
+#: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "අනුපිටපත"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "ප්‍රවේශය පිටපත් කිරීමේදී දෝෂයක්. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
@@ -1408,44 +1418,44 @@ msgstr "දෝශය"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:497
+#: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
 msgstr "ආරම්භ කරන්න"
 
-#: ../src/jarabe/journal/journaltoolbox.py:525
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
 msgstr "විකරණ කල දිනය අනුව සුබෙදන්න"
 
-#: ../src/jarabe/journal/journaltoolbox.py:526
+#: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
 msgstr "තැනුම් දිනය අනුව සුබෙදන්න"
 
-#: ../src/jarabe/journal/journaltoolbox.py:527
+#: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
 msgstr "ප්‍රමාණය අනුව සුබෙදන්න"
 
-#: ../src/jarabe/journal/journaltoolbox.py:536
+#: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
 msgstr "දසුන සුබෙදන්න"
 
-#: ../src/jarabe/journal/listview.py:316
+#: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
 msgstr "ඔබගේ ජර්නලය හිස්ය"
 
-#: ../src/jarabe/journal/listview.py:319
+#: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:321
+#: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
 msgstr "ගැළපෙන ප්‍රවේශ නැත"
 
-#: ../src/jarabe/journal/listview.py:397
+#: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
 msgstr "සෙවීම පවිත්‍ර කරන්න"
 
@@ -1535,174 +1545,194 @@ msgstr "ලිපි"
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ඉතිරියි"
 
-#: ../src/jarabe/model/network.py:163
+#: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
 msgstr "මෙවලම් තත්ව වෙනස් වීමට හේතුව නොදනී."
 
-#: ../src/jarabe/model/network.py:165
+#: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
 msgstr "තත්ව මාරුව සාමාන්‍යයි."
 
-#: ../src/jarabe/model/network.py:167
+#: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
 msgstr "දැන් මෙවලම කළමණාකරණය කර ඇත."
 
-#: ../src/jarabe/model/network.py:169
+#: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
 msgstr "මෙවලම තවදුරටත් කළමණාකරණය නොවනු ඇත."
 
-#: ../src/jarabe/model/network.py:171
+#: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
 msgstr "මෙවලම වින්‍යසගත කිරීම සඳහා නැවත ඇමතීමට නොහැකි විය."
 
-#: ../src/jarabe/model/network.py:173
+#: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 "IP වින්‍යාසගත කිරීම ආපසු කිරීමට නොහැකි විය (ලිපිනය නැත, කාලය ඉක්මවීම ආදිය)."
 
-#: ../src/jarabe/model/network.py:176
+#: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
 msgstr "IP වින්‍යාසගත කිරීම තචදුරටත් වලංගු නැත."
 
-#: ../src/jarabe/model/network.py:178
+#: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
 msgstr "රහස් අවශ්‍ය වුවත් සපයා නැත."
 
-#: ../src/jarabe/model/network.py:180
+#: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
 "802.1X supplicant ප්‍රවේශ අග්‍රයෙන් හෝ අවසර දීමේ සේවාදායකයෙන් විසන්ධි විය."
 
-#: ../src/jarabe/model/network.py:183
+#: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "802.1X supplicant හි වින්‍යාසගත කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:185
+#: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "802.1X supplicant බලාපොරොත්තු නොවූ ලෙස ඉවත් විය හෝ අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:187
+#: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "802.1X supplicant අවසර දීමට බොහෝ කාලයක් ගනු ලැබුනි."
 
-#: ../src/jarabe/model/network.py:189
+#: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
 msgstr "PPP සේවාව අවසර දුන් කාලය ඇතුළත ආරම්භ කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:191
+#: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
 msgstr "PPP සේවාව බලාපොරොත්තු නොවූ විසන්ධි විය."
 
-#: ../src/jarabe/model/network.py:193
+#: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "PPP සේවාව බලාපොරොත්තු නොවූ ලෙස ඉවත් විය හෝ අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:195
+#: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "DHCP සේවාව අවසර දුන් කාලය ඇතුළත ආරම්භ කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:197
+#: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
 msgstr "DHCP සේවාව බලාපොරොත්තු නොවූ ලෙස දෝෂයක් වාර්තා කරන ලදි."
 
-#: ../src/jarabe/model/network.py:199
+#: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "DHCP සේවාව බලාපොරොත්තු නොවූ ලෙස ඉවත් විය හෝ අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:201
+#: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
 msgstr "හවුල් කල සම්බන්ධතා සේවාව ආරම්භ කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:203
+#: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr "හවුල් කල සම්බන්ධතා සේවාව බලාපොරොත්තු නොවූ ලෙස ඉවත් විය හෝ අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:206
+#: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
 msgstr "AutoIP සේවාව ආරම්භ කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:208
+#: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
 msgstr "AutoIP සේවාව බලාපොරොත්තු නොවූ ලෙස දෝෂයක් වාර්තා කරන ලදි."
 
-#: ../src/jarabe/model/network.py:210
+#: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "AutoIP සේවාව බලාපොරොත්තු නොවූ ලෙස ඉවත් විය හෝ අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
 msgstr "මාර්ගය කාර්ය බහුල වීම නිසා ඇමතීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
 msgstr "ඇමතීමේ නාදයක් නොමැති වීම නිසා ඇමතීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
 msgstr "වාහකයෙක් නොමැති වීම නිසා ඇමතීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
 msgstr "ඇමතීමේ කාලය අවසාන විය."
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
 msgstr "ඇමතීම අසාර්ථකයි."
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
 msgstr "මොඩමය ආරම්භ වීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
 msgstr "විශේෂණය කල GSM APN තේරීමට අසාර්ථක විය"
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
 msgstr "ජාල සඳහා නොසොයමින්."
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
 msgstr "ජාල ලියාපදිංචි කිරීම ප්‍රතික්ෂේප කරන ලදි."
 
-#: ../src/jarabe/model/network.py:230
+#: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
 msgstr "ජාල ලියාපදිංචියේ කාලය ඉක්ම විය."
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
 msgstr "ඉල්ලීම කල GSM ජාලය සමඟ ලියාපදිංචි වීමට අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
 msgstr "PIN පරීක්ෂා කිරීම අසාර්ථක විය."
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
 msgstr "මෙවමට අවශ්‍ය firmware නැතිවී තිබෙන්නට හැක."
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
 msgstr "මෙවලම ඉවත් කරන ලදි."
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
 msgstr "NetworkManager නිද්‍රාවට පත් විය."
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
 msgstr "මෙවලමේ සක්‍රිය සම්බන්ධතාවය ඉවත් කරන ලද හෝ නොපෙනී යන ලදි."
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
 msgstr "පරිශීලක හෝ සේවාදායකයෙක් විසන්ධි කිරීම ඉල්ලා සිටින ලදි."
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
 msgstr "මෙවලමේ වාහකයා/සබැඳිය වෙනස් විය."
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1794,167 +1824,3 @@ msgstr "මූලය පෙන්වන්න: %r"
 msgid "Sugar in a window"
 msgstr "Sugar කවුළුවක"
 
-# TODO: Add "Start with" menu item
-#~ msgid "Copy"
-#~ msgstr "පිටපත් කරන්න"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#~ msgid "Disconnect..."
-#~ msgstr "විසන්ධි කරන්න..."
-
-#~ msgid "Create new wireless network"
-#~ msgstr "නව රැහැන් රහිත ජාලයක් සාදන්න"
-
-#, python-format
-#, fuzzy
-#~ msgid "%s's network"
-#~ msgstr "%sගේ ජාලය"
-
-#~ msgid "Cannot obtain data needed for registration."
-#~ msgstr "ලියාපදිංචිය සඳහා අවශ්‍ය දත්ත ලබා ගත නොහැක."
-
-#~ msgid "Unmount"
-#~ msgstr "අස්ථාපනය කරන්න"
-
-#~ msgid ""
-#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-#~ msgstr ""
-#~ "© 2008 One Laptop per Child Association Inc; Red Hat Inc; හා සහදායකයින්."
-
-#~ msgid "Encryption Type:"
-#~ msgstr "සංකේතන වර්ගය:"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#~ msgid "Disconnecting..."
-#~ msgstr "විසන්ධිවේ..."
-
-#~ msgid "About my XO"
-#~ msgstr "මගේ XO ගැන"
-
-#~ msgid "Connected to a School Mesh Portal"
-#~ msgstr "පාසල් දැලැස් බිහිදොරකට සම්බන්ධ විය"
-
-#~ msgid "Looking for a School Mesh Portal..."
-#~ msgstr "පාසල් දැලැස් බිහිදොරක් සොයයි..."
-
-#~ msgid "Connected to an XO Mesh Portal"
-#~ msgstr "XO දැලැස් බිහිදොරකට සම්බන්ධ විය"
-
-#~ msgid "Looking for an XO Mesh Portal..."
-#~ msgstr "XO දැලැස් බිහිදොරක් සොයයි..."
-
-#~ msgid "Connected to a Simple Mesh"
-#~ msgstr "සරල දැලැස් බිහිදොරකට සම්බන්ධ විය"
-
-#~ msgid "Starting a Simple Mesh"
-#~ msgstr "සරල දැලැස් බිහිදොරක් ආරම්භ කෙරේ"
-
-#~ msgid "Unknown Mesh"
-#~ msgstr "නොදන්නා දැලැසකි"
-
-#~ msgid "Settings"
-#~ msgstr "සිටුවම්"
-
-#, python-format
-#~ msgid "Clipboard object: %s."
-#~ msgstr "පසුරු පුවරු වස්තුව: %s."
-
-#~ msgid "You must enter a server."
-#~ msgstr "ඔබ විසින් සේවාදායකයක් ඇතුලත් කළ යුතුය."
-
-#~ msgid "Control Panel"
-#~ msgstr "පාලක පුවරුව"
-
-#~ msgid "<Ctrl>R"
-#~ msgstr "<Ctrl>R"
-
-#~ msgid "off"
-#~ msgstr "අක්‍රීය කරන්න"
-
-#~ msgid "on"
-#~ msgstr "සක්‍රීය කරන්න"
-
-#~ msgid "Permission denied. You need to be root to run this method."
-#~ msgstr "අවසර දිය නොහැක. මෙම විධිය ක්‍රියාත්මක කිරීමට ඔබ root විය යුතුය."
-
-#~ msgid "Error in reading timezone"
-#~ msgstr "වේලා කලාපය කියවීමේ දෝෂයකි"
-
-#, python-format
-#~ msgid "Error copying timezone (from %s): %s"
-#~ msgstr "වේලා කලාපය පිටපත් කිරීමේ දෝෂයකි (%s ගෙන්): %s"
-
-#, python-format
-#~ msgid "Changing permission of timezone: %s"
-#~ msgstr "වේලා කලාපයේ අවසර වෙනස් කෙරේ: %s"
-
-#~ msgid "About this XO"
-#~ msgstr "මෙම XO ගැන"
-
-# self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-# TODO: Implement stopping downloads
-# self._stop_item.connect('activate', self._stop_item_activate_cb)
-# self.append_menu_item(self._stop_item)
-#~ msgid "Add to journal"
-#~ msgstr "ජර්නලයට එක් කරන්න"
-
-#~ msgid "Reboot"
-#~ msgstr "යළි අරඹන්න"
-
-#~ msgid "My Battery life"
-#~ msgstr "මගේ බැටරි ආයු කාලය"
-
-#~ msgid "Battery charging"
-#~ msgstr "බැටරිය ආරෝපණය වේ"
-
-#~ msgid "Battery discharging"
-#~ msgstr "බැටරිය විසර්ජනය වේ"
-
-#~ msgid "Battery fully charged"
-#~ msgstr "බැටරිය සම්පූර්ණයෙන්ම ආරෝපිතයි"
-
-#~ msgid "Share with:"
-#~ msgstr "සමඟ බෙදාගන්න:"
-
-#~ msgid "Private"
-#~ msgstr "පුද්ගලික"
-
-#~ msgid "My Neighborhood"
-#~ msgstr "මගේ වටපිටාව"
-
-#~ msgid "Undo"
-#~ msgstr "පෙර ලෙස"
-
-#~ msgid "Redo"
-#~ msgstr "නැවත කරන්න"
-
-#~ msgid "Paste"
-#~ msgstr "අලවන්න"
-
-#, python-format
-#~ msgid "%s Activity"
-#~ msgstr "%s ක්‍රියාකාරකම"
-
-#~ msgid "Keep error"
-#~ msgstr "නබා ගැනීමේ දෝෂයකි"
-
-#~ msgid "Keep error: all changes will be lost"
-#~ msgstr "තබා ගැනීමේ දෝෂයකි: සියළු වෙනස් කිරීම් නැතිවනු ඇත"
-
-#~ msgid "Don't stop"
-#~ msgstr "නවත්වන්න එපා"
-
-#~ msgid "Stop anyway"
-#~ msgstr "කෙසේ හෝ නවත්වන්න"
-
-#~ msgid "Continue"
-#~ msgstr "පවත්වාගෙන යන්න"
-
-#~ msgid "OK"
-#~ msgstr "හරි"
