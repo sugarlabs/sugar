@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-01-23 00:40+0200\n"
-"Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
+"PO-Revision-Date: 2012-02-11 07:25+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -536,7 +536,6 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
 msgstr "Verifica a configuração do PIN/PUK."
 
@@ -588,9 +587,8 @@ msgid "Pitch"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "Data"
+msgstr ""
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -895,14 +893,12 @@ msgid "Timezone setting for the system."
 msgstr "Definição do fuso horário para o sistema."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr "O Url do servidor jabber a utilizar."
+msgstr "O URL do servidor jabber a utilizar."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr "O Url onde a cópia de segurança é guardada."
+msgstr "O URL onde a cópia de segurança é guardada."
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -987,9 +983,8 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Para aplicar as alterações tens que reiniciar o sugar.\n"
+msgstr "Para aplicar as alterações tens que reiniciar o Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1837,4 +1832,3 @@ msgstr "Ver código-fonte: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar numa janela"
-
