@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-11-28 10:41+0200\n"
-"Last-Translator: hombresiniestro <mkerz@me.com>\n"
+"PO-Revision-Date: 2012-02-11 04:45+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -551,9 +551,8 @@ msgid "%d KB"
 msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "Überprüfe deine Pin/Puk-Einstellungen."
+msgstr "Überprüfe deine PIN/PUK-Einstellungen."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
@@ -912,12 +911,10 @@ msgid "Timezone setting for the system."
 msgstr "Zeitzoneneinstellung des Systems."
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "URL des zu nutzenden Jabber-Servers."
 
 #: ../data/sugar.schemas.in.h:59
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "URL, unter der das Backup gespeichert wird."
 
@@ -1004,7 +1001,6 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Um die Änderungen zu übernehmen, muss Sugar neu gestartet werden.\n"
 
@@ -1856,4 +1852,3 @@ msgstr "Quelltext anzeigen: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar in einem Fenster"
-
