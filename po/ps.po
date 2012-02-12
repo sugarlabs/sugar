@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 07:18+0200\n"
+"PO-Revision-Date: 2012-02-12 22:54+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ps\n"
@@ -28,9 +28,7 @@ msgstr "تاسو باید خپل نوم داخل کړی.."
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
-"ټک:   رنګ=%s چیغه=%s\n"
-"\n"
+msgstr "ټک:   رنګ=%s چیغه=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
@@ -973,9 +971,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr ""
-"د خپلو بدلونونو د تطبیقولو لپاره باید شوګر بیاچالان كړئ.\n"
-"\n"
+msgstr "د خپلو بدلونونو د تطبیقولو لپاره باید شوګر بیاچالان كړئ.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
