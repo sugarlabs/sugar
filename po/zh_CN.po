@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 03:22+0200\n"
+"PO-Revision-Date: 2012-02-12 23:07+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -904,7 +904,7 @@ msgstr "在恢复模式时，点击一个喜欢的图标上，该活动的最后
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr "sugar控制面板：警告，于模式: %r中找到多个以此名字命名的选项: %s "
+msgstr "sugar控制面板：警告，于模式: %r中找到多个以此名字命名的选项: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -942,6 +942,7 @@ msgstr ""
 "        -g key 获得该键当前键值 \n"
 "        -s key 设置该键当前键值 \n"
 "        -c key 清除该键当前键值 \n"
+"    "
 
 # 如何翻译sugar?
 #: ../src/jarabe/controlpanel/cmd.py:52
