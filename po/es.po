@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:08+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-02-12 02:29+0200\n"
+"Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -571,25 +571,25 @@ msgstr "Crear una conexión en el panel de control."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Decir"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr "Digame texto seleccionado"
+msgstr "Decir texto seleccionado"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr "Parar la grabacion."
+msgstr "Parar la grabación"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr "Tono Vocal"
+msgstr "Tono"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "Velocidad"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -864,11 +864,11 @@ msgstr "Publicar en Gadget"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Valor de velocidad para el servicio de habla de Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Valor de velocidad usado por el servicio de habla de Sugar"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -1843,4 +1843,3 @@ msgstr "Ver código fuente: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar en una ventana"
-
