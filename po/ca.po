@@ -1183,7 +1183,7 @@ msgstr "%s sobre %s"
 
 #: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer from %s"
 msgstr "Transferència des de %s"
 
@@ -1203,7 +1203,7 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer to %s"
 msgstr "Transferència a %s"
 
