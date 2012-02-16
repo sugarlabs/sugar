@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-04-01 06:10+0200\n"
+"PO-Revision-Date: 2012-02-16 17:36+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sk\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -1385,7 +1385,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
-msgstr "Neboli nájdené žiadne vyhovujúce záznamy "
+msgstr "Neboli nájdené žiadne vyhovujúce záznamy"
 
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
@@ -1752,4 +1752,3 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-
