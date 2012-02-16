@@ -2,99 +2,101 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-02-16 07:59+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.6.0\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr ""
+msgstr "О мени"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr ""
+msgstr "Ви морате унети име."
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgstr "замах: боја=%s нијанса=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "замах: %s"
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "пуњење: боја=%s нијанса=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "пуњење: %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "Грешка у одређеној боји модификатора."
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr ""
+msgstr "Грешка у одређеним бојама."
 
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr ""
+msgstr "Кликни да промениш своју боју."
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr ""
+msgstr "О мом Рачунару"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr ""
+msgstr "Није доступан"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
-msgstr ""
+msgstr "Идентитет"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr ""
+msgstr "Сериски број:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
-msgstr ""
+msgstr "Софтвер"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
-msgstr ""
+msgstr "Грађен:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
-msgstr ""
+msgstr "Шечер:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
-msgstr ""
+msgstr "Фирмвер:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
-msgstr ""
+msgstr "Безжични Фирмвер:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
-msgstr ""
+msgstr "Ауторска права и Лиценца"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
@@ -103,169 +105,177 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
+"Шећер је графички кориснички интерфејс који гледате. Шећер је слободан "
+"софтвер, покривен ГНУ Генерала Друштвена Лиценса, а ви сте добродошли да "
+"промените и / или дистрибуирате копије њему под одређеним условима који су "
+"описани у њој."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
-msgstr ""
+msgstr "Пуна лиценца:"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr ""
+msgstr "Датум & Време"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "Грешка временска зона не постоји."
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
-msgstr ""
+msgstr "Временска зона"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Кадар"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr ""
+msgstr "Вредност мора бити цели број."
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
-msgstr ""
+msgstr "никад"
 
 #: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
-msgstr ""
+msgstr "тренутан"
 
 #: ../extensions/cpsection/frame/view.py:29
 #, python-format
 msgid "%s seconds"
-msgstr ""
+msgstr "%s секунди"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr ""
+msgstr "Кашњење Активирања"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
-msgstr ""
+msgstr "Угао"
 
 #: ../extensions/cpsection/frame/view.py:113
 msgid "Edge"
-msgstr ""
+msgstr "Ивица"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
 msgid "Keyboard"
-msgstr ""
+msgstr "Тастатура"
 
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
-msgstr ""
+msgstr "Модел Тастатуре"
 
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "Кључ(еви) да промените распоред"
 
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "Распоред(и) тастатуре"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
 msgid "Language"
-msgstr ""
+msgstr "Језик"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr ""
+msgstr "Није могао да приступи ~/.i18n. Направи стандарна подешавања."
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Језик за код=%s није могао бити утврђен."
 
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Извини ја не говорим '%s'."
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"Додај језике редоследом којим желите. Ако превод није доступан, следећи на "
+"листи ће се користити."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr ""
+msgstr "Конфигурација Модема"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Би морате обезбедити следеће информације да би подесили мобилну интернет "
+"конекцију на мобилну (3Г) мрежу."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
-msgstr ""
+msgstr "Корисничко име:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:83
 msgid "Password:"
-msgstr ""
+msgstr "Лозинка:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:89
 msgid "Number:"
-msgstr ""
+msgstr "Број:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "Име приступне тачке (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Лични идентификациони број (PIN):"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
-msgstr ""
+msgstr "Мрежа"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
-msgstr ""
+msgstr "Стање је непознато."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Грешка у одређеном радио аргументу користи за укључивање / искључивање."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr ""
+msgstr "Грешка у наведеном аргументу употреби 0/1."
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
-msgstr ""
+msgstr "Безжични"
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr ""
+msgstr "Искључите бежични радио да спасете живот батерије"
 
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
-msgstr ""
+msgstr "Радио"
 
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr ""
+msgstr "Одбаците историју мрежу ако имате проблема повезивања на мрежу"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
-msgstr ""
+msgstr "Одбаците историју мреже"
 
 #: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
-msgstr ""
+msgstr "Сарадња"
 
 #: ../extensions/cpsection/network/view.py:130
 msgid ""
@@ -273,161 +283,169 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Сервер је еквивалентант од онога што сте у собу; људи на истом серверу ће "
+"моћи да виде једни друге, чак и када нису на истој мрежи."
 
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
-msgstr ""
+msgstr "Сервер:"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr ""
+msgstr "Струја"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr ""
+msgstr "Грешка у аутоматском пм аргументу, користите укључивање / искључивање."
 
 #: ../extensions/cpsection/power/model.py:120
 msgid "Error in extreme pm argument, use on/off."
-msgstr ""
+msgstr "Грешка у екстремном пм аргументу, користите укључивање / искључивање."
 
 #: ../extensions/cpsection/power/view.py:48
 msgid "Power management"
-msgstr ""
+msgstr "Напајање"
 
 #: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "Аутоматско управљање напајањем (повећава век трајања батерије)"
 
 #: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
+"Екстримно управљање напајањем (онемогућава бежични радио, повећава век "
+"трајања батерије)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
-msgstr ""
+msgstr "Ажурирање софтвера"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"Софтверска ажурирања исправљају грешке, елиминишу безбедност рањивости, и "
+"обезбеђује нове карактеристике."
 
 #: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "Проверава %s..."
 
 #: ../extensions/cpsection/updater/view.py:127
 #, python-format
 msgid "Downloading %s..."
-msgstr ""
+msgstr "Преузимава %s..."
 
 #: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Ажурира %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
-msgstr ""
+msgstr "Ваш софтвер је актуелан"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ЈеднинаТи можеш инсталирати % ажурирано"
+msgstr[1] "МножинаВи можете инсталирати % ажурирано"
+msgstr[2] ""
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Провера да ли постоје исправке..."
 
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr ""
+msgstr "Инсталирање исправки..."
 
 #: ../extensions/cpsection/updater/view.py:173
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "% исправке је инсталирано"
+msgstr[1] "% исправака је инсталирано"
+msgstr[2] ""
 
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
-msgstr ""
+msgstr "Инсталација изабрана"
 
 #: ../extensions/cpsection/updater/view.py:276
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "Величина преузимања: %s"
 
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr ""
+msgstr "Од верзије %(current)s до %(new)s (Величина: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
 msgid "None"
-msgstr ""
+msgstr "Ниједан"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
 msgid "1 KB"
-msgstr ""
+msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:388
 #, python-format
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:391
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MB"
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr ""
+msgstr "Моја Батерија"
 
 #: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
-msgstr ""
+msgstr "Уклоњено"
 
 #: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
-msgstr ""
+msgstr "Пуни"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Very little power remaining"
-msgstr ""
+msgstr "Веома мало струје остало"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:160
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d преостаје"
 
 #: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
-msgstr ""
+msgstr "Напуњено"
 
 #: ../extensions/deviceicon/network.py:49
 #, python-format
 msgid "IP address: %s"
-msgstr ""
+msgstr "ИП адреса: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
-msgstr ""
+msgstr "Искључено"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
@@ -435,7 +453,7 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:527
 #: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
-msgstr ""
+msgstr "Прикључује..."
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
@@ -443,42 +461,42 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:533
 #: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
-msgstr ""
+msgstr "Повезан"
 
 #: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
-msgstr ""
+msgstr "Нема безжичне конекције"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
-msgstr ""
+msgstr "Канал"
 
 #: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
-msgstr ""
+msgstr "Повезана Мрежа"
 
 #: ../extensions/deviceicon/network.py:177
 msgid "Speed"
-msgstr ""
+msgstr "Брзина"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
-msgstr ""
+msgstr "Безжични модем"
 
 #: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
-msgstr ""
+msgstr "Молимо сачекајте..."
 
 #: ../extensions/deviceicon/network.py:275
 #: ../src/jarabe/desktop/networkviews.py:124
 #: ../src/jarabe/desktop/networkviews.py:486
 #: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
-msgstr ""
+msgstr "Повежи"
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
-msgstr ""
+msgstr "Ископчан"
 
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
@@ -487,134 +505,134 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:705
 #: ../src/jarabe/frame/activitiestray.py:733
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
-msgstr ""
+msgstr "Покушај повезивање поново"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Грешка: %s"
 
 #: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Предлог: %s"
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Повезан за %s"
 
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "%d KB"
-msgstr ""
+msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Провери своју PIN/PUK конфигурацију."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Проверите своје име приступне тачке (APN) конфигурацију"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Проверите Број конфигурације."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr ""
+msgstr "Провери своју конфигурацију."
 
 #: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
-msgstr ""
+msgstr "Меш Мрежа"
 
 #: ../extensions/deviceicon/network.py:638
 #, python-format
 msgid "Mesh Network %s"
-msgstr ""
+msgstr "Меш Мрежа %s"
 
 #: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Нема ГСМ доступне конекције."
 
 #: ../extensions/deviceicon/network.py:755
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Направите конекцију у контролном панелу."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Говор"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "Кажи изабран текст"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Заустави пуштање"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "Висина тона"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "Стопа"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "Паузирај пуштање"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr ""
+msgstr "Моји звучњаци"
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
-msgstr ""
+msgstr "Укључи"
 
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
-msgstr ""
+msgstr "Заглуви"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "прст"
 
 #: ../extensions/deviceicon/touchpad.py:39
 msgid "stylus"
-msgstr ""
+msgstr "грамафонска игла"
 
 #: ../extensions/deviceicon/touchpad.py:68
 msgid "My touchpad"
-msgstr ""
+msgstr "Мој тачпед"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
-msgstr ""
+msgstr "Меш"
 
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
-msgstr ""
+msgstr "Група"
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
-msgstr ""
+msgstr "Кућа"
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
-msgstr ""
+msgstr "Активност"
 
 #: ../extensions/globalkey/screenshot.py:72
 msgid "Screenshot"
@@ -630,18 +648,20 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
+"\"онемогућенo\" да упиташ ницк на иницијализацији, \"систем\" да поново користи "
+"УНИКС дуго име налога."
 
 #: ../data/sugar.schemas.in.h:2
 msgid "Additional directories which can contain updated translations."
-msgstr ""
+msgstr "Додатни директоријуми који могу да садрже ажуриране преводе."
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Backup URL"
-msgstr ""
+msgstr "Резервна УРЛ адреса"
 
 #: ../data/sugar.schemas.in.h:5
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Пакет ИД-ова од заштићених активности"
 
 #: ../data/sugar.schemas.in.h:6
 msgid ""
@@ -652,27 +672,27 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
-msgstr ""
+msgstr "Кутак Кашњења"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
-msgstr ""
+msgstr "Уобичајно лице фонта"
 
 #: ../data/sugar.schemas.in.h:9
 msgid "Default font size"
-msgstr ""
+msgstr "Уобичајна величина фонта"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Default nick"
-msgstr ""
+msgstr "Уобичанји ницк"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "Кашњење активирања оквира са коришћењем чошкова."
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Кашњење активирања оквира са коришћењем ивица."
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
@@ -773,12 +793,14 @@ msgid "Jabber Server"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:37
+#, fuzzy
 msgid "Keyboard layouts"
-msgstr ""
+msgstr "Распоред(и) тастатуре"
 
 #: ../data/sugar.schemas.in.h:38
+#, fuzzy
 msgid "Keyboard model"
-msgstr ""
+msgstr "Модел Тастатуре"
 
 #: ../data/sugar.schemas.in.h:39
 msgid "Keyboard options"
@@ -953,8 +975,9 @@ msgid "Restart now"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#, fuzzy
 msgid "Done"
-msgstr ""
+msgstr "Ниједан"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
@@ -1043,8 +1066,9 @@ msgid "Register again"
 msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:66
+#, fuzzy
 msgid "Software Update"
-msgstr ""
+msgstr "Ажурирање софтвера"
 
 #: ../src/jarabe/desktop/homebox.py:67
 msgid "Update your activities to ensure compatibility with your new software"
@@ -1105,8 +1129,9 @@ msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
+#, python-format, 
 msgid "Mesh Network %d"
-msgstr ""
+msgstr "Меш Мрежа %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
@@ -1124,17 +1149,18 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
+#, python-format, 
 msgid "%dKB"
-msgstr ""
+msgstr "%dKB"
 
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
@@ -1167,9 +1193,10 @@ msgid "Transfer to %s"
 msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr ""
+msgstr "Уклоњено"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
@@ -1210,8 +1237,9 @@ msgid "Name:"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:120
+#, fuzzy
 msgid "Click to change color:"
-msgstr ""
+msgstr "Кликни да промениш своју боју."
 
 #: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
@@ -1721,9 +1749,10 @@ msgid "Show contents"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:229
+#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr ""
+msgstr "Уклоњено"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
