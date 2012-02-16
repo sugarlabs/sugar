@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 06:31+0200\n"
+"PO-Revision-Date: 2012-02-16 09:01+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -963,6 +963,7 @@ msgstr "sugar-control-panel: %s"
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
+#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -983,6 +984,7 @@ msgstr ""
 "    -h key       mostra informazioni sulla \"key\" \n"
 "    -g key       stampa il valore corrente della \"key\" \n"
 "    -s key       assegna il valore corrente alla \"key\" \n"
+"    -c key       pulisci il valore corrente alla \"key\" \n"
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
