@@ -900,6 +900,7 @@ msgid ""
 msgstr "在回復模式下，點選偏好的圖示將回復該活動前一次的使用狀態"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
+#, python-format
 #, python-format, fuzzy
 #, python-format,
 msgid ""
