@@ -426,7 +426,7 @@ msgstr "ថាមពលនៅសល់តិចតួចណាស់"
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:160
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d នៅសល់"
 
@@ -1178,7 +1178,7 @@ msgstr "%s នៃ%s"
 
 #: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Transfer from %s"
 msgstr "ផ្ទេរ​មកពី%s"
 
