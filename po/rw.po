@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 06:40+0200\n"
+"PO-Revision-Date: 2012-02-16 08:57+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Sugar Labs\n"
 "Language: rw\n"
@@ -24,7 +24,7 @@ msgstr "Ibinyerecyeyeho"
 # fFce8G  <a href="http://vlwhnwvydbsr.com/">vlwhnwvydbsr</a>, [url=http://fufapswjexnd.com/]fufapswjexnd[/url], [link=http://imtaznvbwfck.com/]imtaznvbwfck[/link], http://hwkbxoqlvlyh.com/
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "ugomba kwinjiza izina"
+msgstr "Ugomba kwinjiza izina."
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
@@ -52,11 +52,11 @@ msgstr "Ikosa mu mpindura y'ibara yavuzwe."
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "Ikosa mu mabara yavuzwe"
+msgstr "Ikosa mu mabara yavuzwe."
 
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr "kanda kugirango uhindure irange"
+msgstr "kanda kugirango uhindure irange:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -72,11 +72,11 @@ msgstr "Ikiranga"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr "Serial Number:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
-msgstr "porogaramu"
+msgstr "Porogaramu"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
@@ -107,11 +107,11 @@ msgid ""
 msgstr ""
 "Sugar ni garafike user interface muri kureba.Sugar ni software "
 "y'ubuntu,igengwa na Lisense ya GNU,kandi ushobora kuyihindura cyangwa "
-"gutanga amacopies ukurikije uburenganzira bugenga ikoporora buhari"
+"gutanga amacopies ukurikije uburenganzira bugenga ikoporora buhari."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
-msgstr "License yuzuye"
+msgstr "License yuzuye:"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -123,7 +123,7 @@ msgstr "Ikosa rya timezone ntiribaho."
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
-msgstr "Timezone"
+msgstr ""
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -132,7 +132,7 @@ msgstr "Frame"
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "umubare ugomba kuba udafite undi mubare inyuma yakitso"
+msgstr "umubare ugomba kuba udafite undi mubare inyuma yakitso."
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
@@ -149,7 +149,7 @@ msgstr "%s amasegonda"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Activation Delay"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -183,7 +183,7 @@ msgstr "Ururimi"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Could not access ~/.i18n. Create standard settings."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
@@ -193,7 +193,7 @@ msgstr "Ururimi rwa code=%s ntirushoboye kuboneka."
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Ihangane sinshoboye kuvuga '%s'"
+msgstr "Ihangane sinshoboye kuvuga '%s'."
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
@@ -242,7 +242,7 @@ msgstr "Rezo"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
-msgstr "States ntizizwi"
+msgstr "States ntizizwi."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
@@ -250,7 +250,7 @@ msgstr "Ikosain specified radio argument use on/off."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr "Ikosa muri argument yasobanuwe koresha 0/1"
+msgstr "Ikosa muri argument yasobanuwe koresha 0/1."
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
@@ -360,7 +360,7 @@ msgstr "Kugenzura ibiri ku gihe..."
 
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr "Gushyiramo ibiri ku gihe"
+msgstr "Gushyiramo ibiri ku gihe..."
 
 #: ../extensions/cpsection/updater/view.py:173
 #, python-format
@@ -774,11 +774,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:33
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kuvamo\""
+msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kuvamo\"."
 
 #: ../data/sugar.schemas.in.h:34
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kongera gutangira\""
+msgstr "Niba Ari Ukuri, Sugar irerekana amahitamo yo \"Kongera gutangira\"."
 
 #: ../data/sugar.schemas.in.h:35
 msgid ""
@@ -805,7 +805,7 @@ msgstr "ihitamo rya Keyboard "
 
 #: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
-msgstr "Ingano y'ishusho wihitiyemo"
+msgstr "Ingano y'ishusho wihitiyemo."
 
 #: ../data/sugar.schemas.in.h:41
 msgid ""
@@ -846,7 +846,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
-msgstr "Setinga kuzimya ijwi ry'igikoresho"
+msgstr "Setinga kuzimya ijwi ry'igikoresho."
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
@@ -956,10 +956,11 @@ msgstr ""
 "              Uburyo: \n"
 "              -h           yerekana inyandiko yo gufasha no kurekeraho \n"
 "              -l            itondagura uburyo bwose buboneka \n"
-"              -h urufunguzo          yerekana inkuru ijyanye n'uru rufunguzo "
+"              -h urufunguzo          yerekana inkuru ijyanye n'uru rufunguzo\n"
 "              -g urufunguzo          izana agaciro k'urufunguzo \n"
 "              -s urufunguzo          ihindura agaciro k'urufunguzo \n"
-"               "
+"              -c urufunguzo          Kuraho agaciro gasanzwe k'urufunguzo \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
@@ -1071,7 +1072,7 @@ msgstr "Kwiyandikisha byatunganye"
 
 #: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
-msgstr "Ubu wanditswe muri server y`ishuri"
+msgstr "Ubu wanditswe muri server y`ishuri."
 
 #: ../src/jarabe/desktop/favoritesview.py:641
 msgid "Register"
@@ -1451,7 +1452,7 @@ msgstr "Ikinyamakuru cyawe kiruzuye"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr "Siba ibishaje mu kinyamakuru kugirango ubone umwanya w'ibishya"
+msgstr "Siba ibishaje mu kinyamakuru kugirango ubone umwanya w'ibishya."
 
 #: ../src/jarabe/journal/modalalert.py:80
 msgid "Show Journal"
