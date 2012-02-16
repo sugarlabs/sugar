@@ -1136,7 +1136,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Mesh Network %d"
 msgstr "Rangkaian jejaring %d"
 
@@ -1160,7 +1160,7 @@ msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%dKB"
 msgstr "%dKB"
 
