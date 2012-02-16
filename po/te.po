@@ -929,8 +929,6 @@ msgstr "షుగర్-కంట్రోల్-పేనల్: key=%s అవ�
 msgid "sugar-control-panel: %s"
 msgstr "షుగర్-కంట్రోల్-పేనల్: %s"
 
-# TRANS: Translators, there's a empty line at the end of this string,
-# which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
