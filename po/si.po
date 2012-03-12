@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 07:32+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-12 05:45+0200\n"
+"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
@@ -576,23 +576,23 @@ msgstr "කතාව"
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "තෝරාගත් පෙළ කියවන්න"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "පිළිවැයීම නවත්වන්න"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "තාරතාව"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "අනුපාතය"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "පිළිවැයීම විරාමය"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -725,7 +725,7 @@ msgstr "වැඩතලය පුරා භාවිත වන ෆොන්ට �
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
@@ -1728,7 +1728,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "භාවිත නොකළ"
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1790,7 +1790,6 @@ msgid "Show contents"
 msgstr "අන්තර්ගතය පෙන්වන්න"
 
 #: ../src/jarabe/view/palettes.py:229
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
