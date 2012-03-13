@@ -115,7 +115,7 @@ class FavoritesView(hippo.Canvas):
         query = query.strip()
         for icon in self._box.get_children():
             if icon not in [self._my_icon, self._current_activity]:
-                activity_name = icon._activity_info.get_name().lower()
+                activity_name = icon.get_activity_name().lower()
                 if activity_name.find(query) > -1:
                     icon.alpha = 1.0
                 else:
@@ -507,6 +507,9 @@ class ActivityIcon(CanvasIcon):
     def get_version(self):
         return self._activity_info.get_activity_version()
     version = property(get_version, None)
+
+    def get_activity_name(self):
+        return self._activity_info.get_name()
 
     def _get_installation_time(self):
         return self._activity_info.get_installation_time()
