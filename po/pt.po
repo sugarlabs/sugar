@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-09 00:32+0200\n"
+"PO-Revision-Date: 2012-03-09 08:45+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -802,8 +802,8 @@ msgid ""
 "hoc network."
 msgstr ""
 "Se TRUE (verdadeiro), o Sugar irá mostrar as redes Ad-hoc por omissão para "
-"os canais 1, 6 e 11. Se o Sugar não vê nenhuma rede \"conhecida\" quando "
-"inicia, liga-se automaticamente a uma rede Ad-hoc."
+"os canais 1, 6 e 11. Se o Sugar não ver nenhuma rede \"conhecida\" quando "
+"iniciar, liga-se automaticamente a uma rede Ad-hoc."
 
 #: ../data/sugar.schemas.in.h:36
 msgid "Jabber Server"
@@ -1601,7 +1601,7 @@ msgstr "A configuração do suplicante 802.1X falhou."
 
 #: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr "O suplicante 802.1x fechou ou falhou inesperadamente."
+msgstr "O suplicante 802.1x terminou ou falhou inesperadamente."
 
 #: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
@@ -1609,7 +1609,7 @@ msgstr "O suplicante 802.1X demorou muito tempo para autenticar."
 
 #: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
-msgstr "O serviço PPP falhou a iniciar dentro do tempo permitido."
+msgstr "Não foi possível iniciar o serviço PPP dentro do tempo concedido."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
@@ -1617,11 +1617,11 @@ msgstr "O serviço PPP desligou-se inesperadamente."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "O serviço PPP fechou ou falhou inesperadamente."
+msgstr "O serviço PPP terminou ou falhou inesperadamente."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "O serviço DHCP falhou a iniciar dentro do tempo permitido."
+msgstr "Não foi possível iniciar o serviço DHCP dentro do tempo concedido."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
@@ -1629,19 +1629,19 @@ msgstr "O serviço DHCP relatou um erro inesperado."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr "O serviço DHCP fechou ou falhou inesperadamente."
+msgstr "O serviço DHCP terminou ou falhou inesperadamente."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr "O serviço de ligação partilhada falhou ao iniciar."
+msgstr "Não foi possível iniciar o serviço de ligação partilhada."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "O serviço de ligação partilhada fechou ou falhou inesperadamente."
+msgstr "O serviço de ligação partilhada terminou ou falhou inesperadamente."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
-msgstr "O serviço AutoIP falhou a iniciar."
+msgstr "Não foi possível iniciar o serviço AutoIP."
 
 #: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
@@ -1649,7 +1649,7 @@ msgstr "O serviço AutoIP relatou um erro inesperado."
 
 #: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "O serviço AutoIP fechou ou falhou inesperadamente."
+msgstr "O serviço AutoIP terminou ou falhou inesperadamente."
 
 #: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
@@ -1776,7 +1776,7 @@ msgstr "Convidar para %s"
 #, python-format
 #, python-format,
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> falhou a iniciar."
+msgstr "Não foi possível iniciar <b>%s</b>."
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
@@ -1784,7 +1784,7 @@ msgstr "A Iniciar..."
 
 #: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
-msgstr "A atividade falhou a iniciar"
+msgstr "Não foi possível iniciar a atividade"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91

@@ -1756,4 +1756,3 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-

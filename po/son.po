@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-11-04 09:01+0200\n"
+"PO-Revision-Date: 2012-03-05 03:56+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: son\n"
@@ -62,8 +62,9 @@ msgid "About my Computer"
 msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
+#, fuzzy
 msgid "Not available"
-msgstr ""
+msgstr "Ši duwandi"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
@@ -86,8 +87,9 @@ msgid "Sugar:"
 msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:129
+#, fuzzy
 msgid "Firmware:"
-msgstr ""
+msgstr "Kunehere-jejebu:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
@@ -118,12 +120,14 @@ msgid "Error timezone does not exist."
 msgstr ""
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#, fuzzy
 msgid "Timezone"
-msgstr ""
+msgstr "Waati ganda"
 
 #: ../extensions/cpsection/frame/__init__.py:21
+#, fuzzy
 msgid "Frame"
-msgstr ""
+msgstr "Kunga"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
@@ -157,8 +161,9 @@ msgstr ""
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
+#, fuzzy
 msgid "Keyboard"
-msgstr ""
+msgstr "Kufal-ize walha"
 
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
@@ -174,8 +179,9 @@ msgstr ""
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "Šenni"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
@@ -208,12 +214,14 @@ msgid ""
 msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
+#, fuzzy
 msgid "Username:"
-msgstr ""
+msgstr "Goykaw maa:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:83
+#, fuzzy
 msgid "Password:"
-msgstr ""
+msgstr "Šennikufal:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:89
 msgid "Number:"
@@ -229,8 +237,9 @@ msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
+#, fuzzy
 msgid "Network"
-msgstr ""
+msgstr "Sankay"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
@@ -276,12 +285,14 @@ msgid ""
 msgstr ""
 
 #: ../extensions/cpsection/network/view.py:140
+#, fuzzy
 msgid "Server:"
-msgstr ""
+msgstr "Feršikaw:"
 
 #: ../extensions/cpsection/power/__init__.py:21
+#, fuzzy
 msgid "Power"
-msgstr ""
+msgstr "Sahã"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
@@ -315,9 +326,9 @@ msgid ""
 msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:125
-#, python-format
+#, python-format, fuzzy
 msgid "Checking %s..."
-msgstr ""
+msgstr "Goo ma %s koroši..."
 
 #: ../extensions/cpsection/updater/view.py:127
 #, python-format
@@ -408,25 +419,26 @@ msgstr ""
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:160
-#, python-format
+#, python-format, fuzzy
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d cindi"
 
 #: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:49
-#, python-format
+#, python-format, fuzzy
 msgid "IP address: %s"
-msgstr ""
+msgstr "IP aderesu"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:490
+#, fuzzy
 msgid "Disconnect"
-msgstr ""
+msgstr "Ciyari dunbu"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
@@ -457,8 +469,9 @@ msgid "Wired Network"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:177
+#, fuzzy
 msgid "Speed"
-msgstr ""
+msgstr "Cahãri"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
@@ -498,9 +511,9 @@ msgid "Error: %s"
 msgstr "Firka: %s"
 
 #: ../extensions/deviceicon/network.py:329
-#, python-format
+#, python-format, fuzzy
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Honnandiyan: %s"
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
@@ -557,16 +570,19 @@ msgid "Say selected text"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:83
+#, fuzzy
 msgid "Stop playback"
-msgstr ""
+msgstr "Heenandi kayandi"
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Kayyan"
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "Hĩise"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -577,8 +593,9 @@ msgid "My Speakers"
 msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:138
+#, fuzzy
 msgid "Unmute"
-msgstr ""
+msgstr "Jinde kaa"
 
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
@@ -602,13 +619,15 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
+#, fuzzy
 msgid "Group"
-msgstr ""
+msgstr "Marga"
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
+#, fuzzy
 msgid "Home"
-msgstr ""
+msgstr "Šintin"
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -865,8 +884,9 @@ msgid "User Color"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:61
+#, fuzzy
 msgid "User Name"
-msgstr ""
+msgstr "Goykaw maa"
 
 #: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
@@ -952,9 +972,8 @@ msgid "Restart now"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
-#, fuzzy
 msgid "Done"
-msgstr "Baffoo"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
@@ -962,9 +981,9 @@ msgid "Ok"
 msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:231
-#, python-format
+#, python-format, fuzzy
 msgid "Version %s"
-msgstr ""
+msgstr "Dumi %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
@@ -978,15 +997,17 @@ msgstr ""
 #: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
+#, fuzzy
 msgid "Keep"
-msgstr ""
+msgstr "Gaabu"
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
 #: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
+#, fuzzy
 msgid "Erase"
-msgstr ""
+msgstr "Tuusu"
 
 #: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
@@ -1013,13 +1034,15 @@ msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
+#, fuzzy
 msgid "Box"
-msgstr ""
+msgstr "Bata"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
+#, fuzzy
 msgid "Triangle"
-msgstr ""
+msgstr "Kanjehinza"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
@@ -1034,8 +1057,9 @@ msgid "You are now registered with your school server."
 msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:641
+#, fuzzy
 msgid "Register"
-msgstr ""
+msgstr "Boŋ maa hantum"
 
 #: ../src/jarabe/desktop/favoritesview.py:643
 #: ../src/jarabe/desktop/favoritesview.py:660
@@ -1055,8 +1079,9 @@ msgid "Check now"
 msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:197
+#, fuzzy
 msgid "List view"
-msgstr ""
+msgstr "Maašeede gunari"
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
@@ -1095,8 +1120,9 @@ msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
+#, fuzzy
 msgid "Join"
-msgstr ""
+msgstr "huru batu ra"
 
 #: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
@@ -1148,8 +1174,9 @@ msgid "Transfer from %s"
 msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:570
+#, fuzzy
 msgid "Accept"
-msgstr ""
+msgstr "Yadda"
 
 #: ../src/jarabe/frame/activitiestray.py:627
 #: ../src/jarabe/frame/activitiestray.py:640
@@ -1167,14 +1194,16 @@ msgid "Transfer to %s"
 msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr ""
+msgstr "Kaa"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
+#, fuzzy
 msgid "Open"
-msgstr ""
+msgstr "Feeri"
 
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
@@ -1186,8 +1215,9 @@ msgid "%s clipping"
 msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
+#, fuzzy
 msgid "Neighborhood"
-msgstr ""
+msgstr "Taalammataray"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
@@ -1206,26 +1236,30 @@ msgid "F4"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:90
+#, fuzzy
 msgid "Name:"
-msgstr ""
+msgstr "Maa:"
 
 #: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#, fuzzy
 msgid "Back"
-msgstr ""
+msgstr "Banda"
 
 #: ../src/jarabe/intro/window.py:198
+#, fuzzy
 msgid "Next"
-msgstr ""
+msgstr "JIne"
 
 #: ../src/jarabe/journal/expandedentry.py:156
 #: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
+#, fuzzy
 msgid "Untitled"
-msgstr ""
+msgstr "Bila-nda-maa"
 
 #: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
@@ -1239,18 +1273,19 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "Šibayante"
 
 #: ../src/jarabe/journal/expandedentry.py:265
-#, python-format
+#, python-format, fuzzy
 msgid "Date: %s"
-msgstr ""
+msgstr "Han: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:266
-#, python-format
+#, python-format, fuzzy
 msgid "Size: %s"
-msgstr ""
+msgstr "Adadu: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:294
 #: ../src/jarabe/journal/misc.py:108
@@ -1262,8 +1297,9 @@ msgid "Participants:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:323
+#, fuzzy
 msgid "Description:"
-msgstr ""
+msgstr "Šilbayyan:"
 
 #: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
@@ -1416,8 +1452,9 @@ msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Daabu"
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
@@ -1449,8 +1486,9 @@ msgid "Entries without a file cannot be copied."
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:267
+#, fuzzy
 msgid "Clipboard"
-msgstr ""
+msgstr "Deeji-walha"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
@@ -1465,8 +1503,9 @@ msgid "No activity to resume entry"
 msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "Takaddawey"
 
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
@@ -1674,8 +1713,9 @@ msgid "Shutdown"
 msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:95
+#, fuzzy
 msgid "Restart"
-msgstr ""
+msgstr "Tunandi taaga"
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
@@ -1730,8 +1770,9 @@ msgid "Instance Source"
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:312
+#, fuzzy
 msgid "Source"
-msgstr ""
+msgstr "Aššil"
 
 #: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
@@ -1749,4 +1790,3 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-

@@ -577,30 +577,29 @@ msgstr "أنشي اتصالا من لوحة التحكم."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "الكلام"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "انطق النص المحدد"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "أوقف التشغيل"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "الحدة"
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "التاريخ"
+msgstr "المعدَّل"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "ألبِث التشغيل"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -1210,7 +1209,7 @@ msgstr "ارفض"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "ألغى الشخص الآخر نقل الملف"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1431,11 +1430,11 @@ msgstr "دفترك خالِ"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "مجلد المستندات فارغ"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "الجهاز فارغ"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1668,7 +1667,7 @@ msgstr "انتهت مهلة تسجيل الشبكة."
 
 #: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "فشل تسجيل شبكة الهاتف المحمول المطلوبة."
 
 #: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
@@ -1676,47 +1675,47 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "البرمجيات المضمنة التي يحتاجها الجهاز غير متاحة."
 
 #: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
-msgstr ""
+msgstr "أزيل الجهاز."
 
 #: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "ذهب NetworkManager للنوم."
 
 #: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "أزيل أو اختفى الاتصال النشط مع الجهاز."
 
 #: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "طلب مستخدم أو عميل قطع الاتصال."
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "تغيّر مزوّد\\رابط الجهاز."
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "استُخدم الاتصال الموجود مع الجهاز."
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "”المتوسل“ متاح الآن."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "تعذّر العثور على المودم."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "فشل اتصال بلوتوث أو انتهت مدته."
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "غير مستخدمة."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"

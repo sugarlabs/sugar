@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 04:51+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-14 03:43+0200\n"
+"Last-Translator: usuariotenek002 <usuariotenek02@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hus\n"
 "MIME-Version: 1.0\n"
@@ -579,29 +579,29 @@ msgstr "Inkiy jun i ts'ot'k'oxtaláb ti ok'nom mét'nib."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Káw"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "ka uluw an kàw xi kwajat tàkudh"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "ka kuba' xi kwajat ts'at'at"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "Janidhtaláb"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "adhik"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "ka kuba' xi ts'at'adh"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -758,52 +758,65 @@ msgstr "In puwél an dhuche' axi u eynal ti patal an walekdhuchumtaláb."
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "APN ti al an polts'oxtalàb GSM (xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PIN ti al an polts'oxtalàb GSM (xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PUK ti al an polts'oxtalàb GSM (xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"An t'ojojòxtalàb k'al bij an tuk abal ka otsits (APN) al an polts'oxtalàb "
+"GSM (xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Ajixtalàb k'al an polts'oxtalàb GSM(xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Tsinatbijlàb k'al an polts'oxtalàb GSM (xi yab eynal/yan èynenek)"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"T'ojojoxtalàb kal an tsinatbijlàb k'al an polts'oxtalàb GSM (xi yab "
+"eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:27
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"An t'ojojoxtalàb ti ajixtalàb  al an kwetem t'ojlàb(PIN) kal an "
+"polts'oxtalàb GSM (xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"T'ojojoxtalàb kal an èxbadh dhuche' xi kwajat tonk'idh (PUK) kal an "
+"polts'oxtalàb GSM(xi yab èynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"An t'ojojoxtalàb kal an ajixtalàb ti tsipiti t'ilòm pat'al kal an "
+"polts'oxtalàb GSM(xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
+"In bijlabil an eyendhom k'al an polts'oxtalàb GSM(xi yab eynal/yab èynenek)"
 
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"T'ojojoxtalàb k'al in bijlabil an eyendhom k'al an polts'oxtalàb GSM (xi yab "
+"eynal/yab èynenek)"
 
 # walka' habilitar, walkatalab activacion
 #: ../data/sugar.schemas.in.h:32

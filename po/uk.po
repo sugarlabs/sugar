@@ -2,100 +2,111 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-12 22:54+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ps\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Translate Toolkit 1.6.0\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "زما په اړه"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "تاسو باید خپل نوم داخل کړی.."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "ټک:   رنګ=%s چیغه=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr "ټک:   %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "ټک:   ډکول=%s چیغه=%s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr "ډکول:     %s"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr "د بدلووني په ځانګړي رنګ ټاكنه كې تېروتنه."
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "په ټاكلو رنګونو كې تېروتنې"
+msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr "د رنګ د بدلون لپاره ټك كړئ:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "زما د کمپیوټر په اړه"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr "موجود ندی"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
-msgstr "پیژندنه"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr "لړیزه شمیره"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
-msgstr "پوستکالی"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
-msgstr "جوړول:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:114
 msgid "Sugar:"
-msgstr "شوګر:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:129
 msgid "Firmware:"
-msgstr "منځکالی:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
-msgstr "بېسیمه سختاری:"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
-msgstr "کاپي-حق او جواز"
+msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
@@ -104,60 +115,56 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"شوګر کښنیز کارن مخیال دی چې ته یې وینې. شوګر یو وړیا ساوتري دی٬ چې په GNU "
-"عمومي ولسي جواز سره جوړ شوی٬ او تاسې ته ښه راغلاست ویل کېږي که دا بدلول یا د "
-"دې نقلونه نورو خلکو ته ورکول غواړئ خو د هغو خاصو شرایطو سره سم چې دلته "
-"تشریح کېږي."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
-msgstr "بشپړ جواز:"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "نیټه او وخت"
+msgstr ""
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr "تېروتنه، د وخت ساحه شتون نلري."
+msgstr ""
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
-msgstr "د وخت ساحه"
+msgstr ""
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr "چوکاټ"
+msgstr ""
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "ارزښت باید صحیح عدد وي."
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
-msgstr "هیڅکله نه"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
-msgstr "سمدستي"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:29
 #, python-format
 msgid "%s seconds"
-msgstr "%s ثانیې"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "د فعالولو ځنډ"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
-msgstr "ګوټ"
+msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:113
 msgid "Edge"
-msgstr "څنډه"
+msgstr ""
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
@@ -179,21 +186,21 @@ msgstr ""
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
 msgid "Language"
-msgstr "ژبه"
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "لاسرسی ونشو ~/.i۱۸n. کره امستنې جوړې کړه."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "د كوډ=%s لپاره ژبه مالومه نكړاى شوه."
+msgstr ""
 
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "بښنه غواړم زه خبرې نه كوم '%s'."
+msgstr ""
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
@@ -234,43 +241,43 @@ msgstr ""
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
-msgstr "جال"
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
-msgstr "ايالت ناڅرګند دى."
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "په مشخص راډيوي بحث كې تېروتنې روښانول\\بندول وكاروئ."
+msgstr ""
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr "په مشخص بحث كې تېروتنې روښانول\\بندول وكاروئ."
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
-msgstr "بېسیم"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr "د بیسیم راډیو تڼۍ بنده کړئ تر څو د بټرۍ ژوند وساتئ"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
-msgstr "رادیو"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr "د جال مخینه وغورځوئ که تاسې د جال سره په پیوستېدو کې ستونځه لرئ"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
-msgstr "د جال مخینه غورځول"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
-msgstr "ملګرتیا"
+msgstr ""
 
 #: ../extensions/cpsection/network/view.py:130
 msgid ""
@@ -278,43 +285,39 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"پالنګر د هغې کوټې سره برابر دی چې تاسې پکې یاست؛ د همدغه یو پالنګر خلک به د "
-"یو بل د لیدلو توان ولري. که هغوی په یوه شبکه کې نه هم وي."
 
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
-msgstr "پالنګر:"
+msgstr ""
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr "برېښنا"
+msgstr ""
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "تیروتنه په خپلکاری pm ارزښتوړی کې، روښانول/بندول وکاروئ."
+msgstr ""
 
 #: ../extensions/cpsection/power/model.py:120
 msgid "Error in extreme pm argument, use on/off."
-msgstr "تیروتنه د پای pm ارزښتوړي کې، روښانول/بندول وکاروئ."
+msgstr ""
 
 #: ../extensions/cpsection/power/view.py:48
 msgid "Power management"
-msgstr "د بریښنا سمبالښت"
+msgstr ""
 
 #: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
-msgstr "د برېښنا خپلکاری سمبالښت (د بټرۍ ژوند زیاتوي)"
+msgstr ""
 
 #: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
-msgstr "د بریښنا زیات سمبالښت (بیسیم رادیو بندوي، د بټرۍ ژوند زیاتوي)"
+msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software update"
-msgstr "هډوتري اوسمهالول"
+msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -379,9 +382,8 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
-#, fuzzy
 msgid "None"
-msgstr "وشو"
+msgstr ""
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
@@ -402,65 +404,58 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr "زما بیټري"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
-msgstr "لیرې شو"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
-msgstr "چارج کېږي"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Very little power remaining"
-msgstr "ډیره لږه بریښنا پاتې ده"
+msgstr ""
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:160
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(hour)d:%(min).2d2d پاتې دي"
+msgstr ""
 
 #: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
-msgstr "چارج شو"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:49
 #, python-format
 msgid "IP address: %s"
-msgstr "IP پته : %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
-msgstr "ناپيوستول"
+msgstr ""
 
-# Only show disconnect when there's a mesh device, because mesh takes&lt;br /&gt;<br />
-# priority over the normal wireless device.&lt;span class="translation-space"&gt; &lt;/span&gt;<br />
-# &lt;span class="translation-space"&gt; &lt;/span&gt;<br />
-# NM doesn't have a "disconnect"&lt;br /&gt;<br />
-# method for a device either (for various reasons) so this doesn't&lt;br /&gt;<br />
-# have a good mapping
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
 #: ../src/jarabe/desktop/networkviews.py:237
 #: ../src/jarabe/desktop/networkviews.py:527
 #: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
-msgstr "پیوستېږي ..."
+msgstr ""
 
-# TODO: show the channel number
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
 #: ../src/jarabe/desktop/networkviews.py:244
 #: ../src/jarabe/desktop/networkviews.py:533
 #: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
-msgstr "پیوست شو"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
@@ -468,15 +463,15 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
-msgstr "چېنل"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
-msgstr "سیمي جال"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:177
 msgid "Speed"
-msgstr "چټکتيا"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
@@ -491,11 +486,11 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:486
 #: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
-msgstr "پیوستول"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
-msgstr "ناپيوسته شو"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
@@ -504,7 +499,7 @@ msgstr "ناپيوسته شو"
 #: ../src/jarabe/frame/activitiestray.py:705
 #: ../src/jarabe/frame/activitiestray.py:733
 msgid "Cancel"
-msgstr "لغوه"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
@@ -528,9 +523,8 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
-#, fuzzy
 msgid "%d KB"
-msgstr "%dKB"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
@@ -548,17 +542,14 @@ msgstr ""
 msgid "Check your configuration."
 msgstr ""
 
-# only temporarily
 #: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
-msgstr "بڼلې جال"
+msgstr ""
 
-# only temporarily
 #: ../extensions/deviceicon/network.py:638
 #, python-format
-#, fuzzy
 msgid "Mesh Network %s"
-msgstr "بڼلې جال"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
@@ -596,15 +587,15 @@ msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "زما لوړغږي"
+msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
-msgstr "غږیز"
+msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
-msgstr "بېغږه"
+msgstr ""
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
@@ -620,32 +611,31 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
-msgstr "بڼ"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
-msgstr "ډله"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
-msgstr "کور"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
-msgstr "چارندتیا"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:72
 msgid "Screenshot"
-msgstr "پرده انځور"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
-#, python-format, fuzzy
 msgid "Screenshot of \"%s\""
-msgstr "د پرده انځور"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
@@ -659,25 +649,22 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Backup URL"
-msgstr "شاتړ یوارایل"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:5
 msgid "Bundle IDs of protected activities"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:6
-#, fuzzy
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"د ایکس او نښکې رنګ چې په ټول ډېسکټاپ کارول کېږي. سلسله د وار او ډکولو د رنګ "
-"نه جوړه شوې. بڼه یې د rbg رنګونو ده. بېلګه: #AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
-msgstr "د ګوټ ځنډ"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
@@ -693,11 +680,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
-msgstr "د ګوټونو په کارولو د چوکاټ د فعالولو ځنډ."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Delay for the activation of the frame using the edges."
-msgstr "د څنډو په کارولو د چوکاټ د فعالولو ځنډ."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
@@ -705,25 +692,23 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
-msgstr "د څنډې ځنډ"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
-msgstr "د خوښې هډوانه"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
-msgstr "د خوښو د راګرځولو اکر"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:18
-#, fuzzy
 msgid "Font face that is used throughout the desktop."
-msgstr "هغه کارن نوم چې په ټول ډېسکټاپ کارول کېږي."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:19
-#, fuzzy
 msgid "Font size that is used throughout the desktop."
-msgstr "هغه کارن نوم چې په ټول ډېسکټاپ کارول کېږي."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -779,8 +764,6 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"که ریښتیا وي. شوګر به مونږ د جیبر پالنګر د نورو کاروونکو لپاره د لټون وړ "
-"کړي. "
 
 #: ../data/sugar.schemas.in.h:33
 msgid "If TRUE, Sugar will show a \"Log out\" option."
@@ -799,7 +782,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:36
 msgid "Jabber Server"
-msgstr "جیبر پالنګر"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:37
 msgid "Keyboard layouts"
@@ -815,7 +798,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
-msgstr "د خوښو د لید هډوانه"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:41
 msgid ""
@@ -836,15 +819,15 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
-msgstr "خپلکارې برېښنا"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Power Extreme"
-msgstr "د برېښنا اخري حد"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Publish to Gadget"
-msgstr "هوښیار توکي ته خپرول"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
@@ -856,7 +839,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
-msgstr "د غږ وزلې د بندولو امستنه."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
@@ -872,7 +855,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
-msgstr "غږ بند شو"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
@@ -880,27 +863,27 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Timezone setting for the system."
-msgstr "سیستم لپاره د وخت د ساحې امستنې."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:58
 msgid "URL of the jabber server to use."
-msgstr "کارولو لپاره د جیبر پالنګر یوارایل."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:59
 msgid "URL where the backup is saved to."
-msgstr "د هغه ځای یوارایل چې شاتړ پکې خوندي شوی."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
-msgstr "کارن رنګ"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:61
 msgid "User Name"
-msgstr "کارن نوم"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
-msgstr "هغه کارن نوم چې په ټول ډېسکټاپ کارول کېږي."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:63
 msgid ""
@@ -909,19 +892,17 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
-msgstr "د غږ کچه"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
-msgstr "د غږ وزلې لپاره د غږ کچه."
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"کله چې د راګرځولو په اکر کې وي٬ د خوښې په نښکه به کلیکول د دغې فعالیت اخري "
-"چاره راوګرځوي."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -929,21 +910,17 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
-"شوګر-مهار-پاڼه: خبرداری، له یو څخه زیات غوراوي د ورته نوم لپاره پیدا شو: %s "
-"موډول: %r "
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr "شوګر-مهار-پاڼه: كيلي=%s يو ناموجود غوراوی دی"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr " شوګر-مهار-پاڼه %s"
+msgstr ""
 
-# TRANS: Translators, there's a empty line at the end of this string,<br />
-# which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
@@ -959,52 +936,42 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"شوګر-مهار-پاڼه[] کیلی [] \n"
-" مهار د د بوری چاپیریال لپاره.  \n"
-"    غوراوی: \n"
-"    -h           دغه د مرستې استوزه وښایه او ووځه \n"
-"    -l         شته غوراوی وښایه \n"
-"    -h کیلی      د دې کیلی په اړه خبرتیاوې وښایه  \n"
-"    -g کیلی       د کیلی شته ارزښت تر لاسه کړۍ \n"
-"    -s کیلی      اوسنی ارزښت د کیلی لپاره وټاکۍ \n"
-"    -c کیلی       د کیلی لپاره اوسنی ارزښت پاک کړۍ \n"
-"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "د خپلو بدلونونو د تطبیقولو لپاره باید شوګر بیاچالان كړئ.\n"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
-msgstr "خبرداری"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr "بدلونونه بیا بیاچالانول غواړي"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
-msgstr "بدلونونه لغوه کول"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
-msgstr "وروسته"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
-msgstr "اوس بیاچالان کړه"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
 msgid "Done"
-msgstr "وشو"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
 msgid "Ok"
-msgstr "هو"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
@@ -1013,78 +980,74 @@ msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
-msgstr "لرېکول باوري کړئ"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "لرېکول باوري کړئ: آیا د تل لپاره غواړئ %s لېرې کړئ؟ "
+msgstr ""
 
-# self._stop_item = MenuItem(_('Stop download'), 'stock-close')<br />
-# TODO: Implement stopping downloads<br />
-# self._stop_item.connect('activate', self._stop_item_activate_cb)<br />
-# self.append_menu_item(self._stop_item)
 #: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
-msgstr "خوندي کول"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
 #: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
-msgstr "لرې کول"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
-msgstr "خواپوری لرې کول"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
-msgstr "خواپورې جوړول"
+msgstr ""
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:127
 msgid "Freeform"
-msgstr "ازاده بڼه"
+msgstr ""
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:215
 msgid "Ring"
-msgstr "زنګ"
+msgstr ""
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:402
 msgid "Spiral"
-msgstr "سپیرال"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
 msgid "Box"
-msgstr "بکس"
+msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
 msgid "Triangle"
-msgstr "درې ګوټه"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
-msgstr "ثبتېدل ونشول"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
-msgstr "ثبتېدل بریالي شول"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
-msgstr "تاسې اوس د خپل ښوونڅی د پالنګر سره ثبت شوي یاست."
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:641
 msgid "Register"
-msgstr "ثبتول"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:643
 #: ../src/jarabe/desktop/favoritesview.py:660
@@ -1093,122 +1056,118 @@ msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
-msgstr "هډوتري اوسمهالول"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:67
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr "نوي ساوتري سره د توافق د باوري کولو لپاره خپلې چارې اوسمهال کړئ"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:76
 msgid "Check now"
-msgstr "اوس وګوره"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:197
 msgid "List view"
-msgstr "جدول لید"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
-msgstr "<Crtl> ۲"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
-msgstr "د غورو لید"
+msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
-msgstr "<Ctrl>۱"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:139
 msgid "Key Type:"
-msgstr "د كیلي ډول:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:159
 msgid "Authentication Type:"
-msgstr "د كره توب ډول:"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:222
 msgid "WPA & WPA2 Personal"
-msgstr "WPA & WPA2 شخصي"
+msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:231
 msgid "Wireless Security:"
-msgstr "بېسیمه امنیت:"
+msgstr ""
 
-# TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
-msgstr "راګرځول"
+msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
-msgstr "ګډون کول"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-# only temporarily
 #: ../src/jarabe/desktop/networkviews.py:615
 #, python-format
-#, fuzzy
 msgid "Mesh Network %d"
-msgstr "بڼلې جال"
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
-msgstr "له پالنګر سره نشي نښلېدی."
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
-msgstr "پالنګر ستاسو غوښتنه نشي بشپړولی."
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:187
 #: ../src/jarabe/frame/activitiestray.py:575
 msgid "Decline"
-msgstr "ردول"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 msgid "%dB"
-msgstr "%dB"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 msgid "%dKB"
-msgstr "%dKB"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dMB"
-msgstr "%dMB"
+msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
 #, python-format
 msgid "%s of %s"
-msgstr "%s of %s"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
-#, python-format, fuzzy
 msgid "Transfer from %s"
-msgstr "څخه لېږدول"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:570
 msgid "Accept"
-msgstr "منل"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:627
 #: ../src/jarabe/frame/activitiestray.py:640
 #: ../src/jarabe/frame/activitiestray.py:758
 msgid "Dismiss"
-msgstr "لېرې کول"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
@@ -1216,34 +1175,31 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
-#, python-format, fuzzy
 msgid "Transfer to %s"
-msgstr "ته لېږدول"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "لرې كول"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
 msgid "Open"
-msgstr "پرانېستل"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
-msgstr "سره پرانېستل"
+msgstr ""
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
-#, python-format, fuzzy
 msgid "%s clipping"
-msgstr "کلیپول"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
-msgstr "ګاونډ"
+msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
@@ -1263,29 +1219,29 @@ msgstr ""
 
 #: ../src/jarabe/intro/window.py:90
 msgid "Name:"
-msgstr "نوم:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
-msgstr "د رنګ بدلولو لپاره کلیک کړئ:"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
-msgstr "شا ته"
+msgstr ""
 
 #: ../src/jarabe/intro/window.py:198
 msgid "Next"
-msgstr "بل"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:156
 #: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
-msgstr "ناسرلیکی"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
-msgstr "مخکتنه نشته"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
@@ -1311,73 +1267,73 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:294
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
-msgstr "نېټه نشته"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:301
 msgid "Participants:"
-msgstr "برخه اخیستونکي:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
-msgstr "تشریح:"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
-msgstr "علامې"
+msgstr ""
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
-msgstr "ژورنال"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
-msgstr "لټون"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
-msgstr "هر وخت"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
-msgstr "نن"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
-msgstr "له پرونه"
+msgstr ""
 
 #. TRANS: Filter entries modified during the last 7 days.
 #: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
-msgstr "تېره اونۍ"
+msgstr ""
 
 #. TRANS: Filter entries modified during the last 30 days.
 #: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
-msgstr "تېره میاشت"
+msgstr ""
 
 #. TRANS: Filter entries modified during the last 356 days.
 #: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
-msgstr "تېر کال"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
-msgstr "هر څوک"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
-msgstr "زما دوستان"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
-msgstr "زما ټولګی"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
-msgstr "هر څه"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
@@ -1402,12 +1358,11 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-# TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
-msgstr "پیل"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
@@ -1427,7 +1382,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
-msgstr "ستا ژورنال خالي دی"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
@@ -1438,13 +1393,12 @@ msgid "The device is empty"
 msgstr ""
 
 #: ../src/jarabe/journal/listview.py:324
-#, fuzzy
 msgid "No matching entries"
-msgstr "ورته توري نشته"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
-msgstr "لټون پاکول"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
@@ -1458,44 +1412,44 @@ msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
-msgstr "ستاسې ژورنال ډک دی"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr "مهرباني وکړئ ځینې پخوانۍ لیکنې ړنګې کړئ چې نویو لیکنو ته ځای پېدا شي."
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:80
 msgid "Show Journal"
-msgstr "ژورنال ښودل"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
-msgstr "یو څیز غوره کړه"
+msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
 msgid "Close"
-msgstr "بندول"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
-msgstr "سره راګرځول"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
-msgstr "سره پېلول"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
-msgstr "د لیکنې د پېلولو لپاره فعالیت نشته"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
-msgstr "ته لېږل"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:121
 msgid "View Details"
-msgstr "جزييات کتل"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
@@ -1512,15 +1466,15 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
-msgstr "دوستان موجود ندي"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:327
 msgid "No valid connection found"
-msgstr "باوري پېوستون ونه موندل شو"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:355
 msgid "No activity to resume entry"
-msgstr "د لیکنې راګرځولو لپاره فعالیت نشته"
+msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
 msgid "Documents"
@@ -1530,7 +1484,7 @@ msgstr ""
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB خالی"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
@@ -1721,32 +1675,32 @@ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
-msgstr "ملګري لېرې کړه"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:70
 msgid "Make friend"
-msgstr "ملګري جوړ کړه"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:87
 msgid "Shutdown"
-msgstr "بندول"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
-msgstr "بیاچالانول"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
-msgstr "وتل"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr "زما امستنې"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
 msgid "Invite to %s"
-msgstr "%s ته بلنه ورکول"
+msgstr ""
 
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
@@ -1755,7 +1709,7 @@ msgstr ""
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
-msgstr "پيلونه..."
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
@@ -1764,11 +1718,11 @@ msgstr ""
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
 msgid "View Source"
-msgstr "سرچینه کتل"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
-msgstr "درول"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
@@ -1776,25 +1730,24 @@ msgstr ""
 
 #: ../src/jarabe/view/palettes.py:180
 msgid "Show contents"
-msgstr "منځپانګې ښودل"
+msgstr ""
 
 #: ../src/jarabe/view/palettes.py:229
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr "لرې كول"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
-msgstr "سمدستي سرچینه"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
-msgstr "سرچینه"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
-msgstr "د فعالیت بنډل سرچینه"
+msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
@@ -1802,9 +1755,8 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
 #, python-format
-#, python-format, fuzzy
 msgid "View source: %r"
-msgstr "سرچینه کتل:"
+msgstr ""
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"

@@ -656,6 +656,7 @@ msgid "Screenshot"
 msgstr "عکس صفحه"
 
 #: ../extensions/globalkey/screenshot.py:74
+#, python-format
 #, python-format, fuzzy
 msgid "Screenshot of \"%s\""
 msgstr "عکس صفحه از"
@@ -1198,22 +1199,26 @@ msgid "Decline"
 msgstr "کاهش"
 
 #: ../src/jarabe/frame/activitiestray.py:523
+#, python-format
 #, python-format, fuzzy
 msgid "%dB"
 msgstr "db%"
 
 #: ../src/jarabe/frame/activitiestray.py:525
+#, python-format
 #, python-format, fuzzy
 msgid "%dKB"
 msgstr "dkb%"
 
 #: ../src/jarabe/frame/activitiestray.py:527
+#, python-format
 #, python-format, fuzzy
 msgid "%dMB"
 msgstr "dmb%"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
+#, python-format
 #, python-format, fuzzy
 msgid "%s of %s"
 msgstr "از"
@@ -1265,6 +1270,7 @@ msgid "Open with"
 msgstr "بازکردن با"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
+#, python-format
 #, python-format, fuzzy
 msgid "%s clipping"
 msgstr "چیدن"
@@ -1836,6 +1842,7 @@ msgid "Sugar Toolkit Source"
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#, python-format
 #, python-format, fuzzy
 msgid "View source: %r"
 msgstr "نمایش منبع %r"
@@ -1843,4 +1850,3 @@ msgstr "نمایش منبع %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
-

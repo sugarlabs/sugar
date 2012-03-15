@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-16 08:57+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-02 09:45+0200\n"
+"Last-Translator: Jimmy <jimmy@laptop.org>\n"
 "Language-Team: Sugar Labs\n"
 "Language: rw\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr "Ikosa mu mabara yavuzwe."
 
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr "kanda kugirango uhindure irange:"
+msgstr "Kanda kugirango uhindure ibara:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -64,7 +64,7 @@ msgstr "Ibyerekeye mudasobwa yanjye"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr "ntabwo biboneka"
+msgstr "Ntibibashije kuboneka"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
@@ -72,7 +72,7 @@ msgstr "Ikiranga"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr ""
+msgstr "Numero ya seri:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
@@ -96,7 +96,7 @@ msgstr "Wireless Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
-msgstr "Uburenganzira bw'ikoporora na License"
+msgstr "Uburenganzira bw'ikoporora n'amabwiriza"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
@@ -111,7 +111,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
-msgstr "License yuzuye:"
+msgstr "Uburenganzira bwuzuye:"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -119,11 +119,11 @@ msgstr "Itariki n`igihe"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr "Ikosa rya timezone ntiribaho."
+msgstr "Ikosa timezone ntiribaho."
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
-msgstr ""
+msgstr "Igihe fatizo"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -149,7 +149,7 @@ msgstr "%s amasegonda"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr ""
+msgstr "Gutinda kwa activation"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -183,7 +183,7 @@ msgstr "Ururimi"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr ""
+msgstr "Ntibishobotse kwinjira ~/.i18n. Rema ibipimo nyabyo."
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
@@ -565,29 +565,29 @@ msgstr "Kora ihuza muri control panel."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Ijambo"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "Vuga interuro yahiswemo"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Hagarika Gukina"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "Pitch"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "Rate"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "Hagarika akanya gato gukina"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"

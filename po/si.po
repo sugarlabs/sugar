@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-12 05:45+0200\n"
-"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
+"PO-Revision-Date: 2012-03-12 09:17+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
@@ -728,12 +728,14 @@ msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:21
+#, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල PIN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:22
+#, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල PUK (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
@@ -1728,7 +1730,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr "භාවිත නොකළ"
+msgstr "භාවිත නොකළ."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"

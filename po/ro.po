@@ -342,6 +342,7 @@ msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
@@ -357,6 +358,7 @@ msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"

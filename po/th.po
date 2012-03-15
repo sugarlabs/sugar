@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 07:49+0200\n"
+"PO-Revision-Date: 2012-03-06 17:06+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
@@ -656,15 +656,20 @@ msgid "Bundle IDs of protected activities"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:6
+#, fuzzy
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"สีสำหรับไอคอน XO จะถูกใช้ทั้งหน้าจอ "
+"ค่าจะประกอบด้วยการระบายสีและใส่สีในรูปแบบของสี rbg ตัวอย่าง : # AC32FF, # "
+"9A5200"
 
 #: ../data/sugar.schemas.in.h:7
+#, fuzzy
 msgid "Corner Delay"
-msgstr ""
+msgstr "corner ล่าช้า"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
@@ -679,24 +684,28 @@ msgid "Default nick"
 msgstr "ชื่อย่อที่ตั้งให้แบบอัตโนมัติ"
 
 #: ../data/sugar.schemas.in.h:11
+#, fuzzy
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "เกิดความล่าช้าในการเปิดใช้งานเฟรม ของ corners"
 
 #: ../data/sugar.schemas.in.h:12
+#, fuzzy
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "เกิดความล่าช้าในการเปิดใช้งานเฟรม ของ edge"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
 msgstr "รายการเพื่อหาคำแปล"
 
 #: ../data/sugar.schemas.in.h:14
+#, fuzzy
 msgid "Edge Delay"
-msgstr ""
+msgstr "เกิดความล่าช้าของ Edge"
 
 #: ../data/sugar.schemas.in.h:16
+#, fuzzy
 msgid "Favorites Layout"
-msgstr ""
+msgstr "แบบที่ชอบ"
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Favorites resume mode"
@@ -781,8 +790,9 @@ msgid ""
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:36
+#, fuzzy
 msgid "Jabber Server"
-msgstr ""
+msgstr "เครื่องแม่ข่าย Jabber"
 
 #: ../data/sugar.schemas.in.h:37
 msgid "Keyboard layouts"
@@ -797,8 +807,9 @@ msgid "Keyboard options"
 msgstr "ตัวเลือกแป้นพิมพ์"
 
 #: ../data/sugar.schemas.in.h:40
+#, fuzzy
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "รูปแบบและมุมมองของหน้าที่ชอบ"
 
 #: ../data/sugar.schemas.in.h:41
 msgid ""
@@ -826,8 +837,9 @@ msgid "Power Extreme"
 msgstr "การใช้พลังงานสูงสุด"
 
 #: ../data/sugar.schemas.in.h:47
+#, fuzzy
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "เผยแพร่ไปยัง Gadget"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
@@ -866,12 +878,14 @@ msgid "Timezone setting for the system."
 msgstr "การตั้งค่าโซนเวลาสำหรับระบบ"
 
 #: ../data/sugar.schemas.in.h:58
+#, fuzzy
 msgid "URL of the jabber server to use."
-msgstr ""
+msgstr "URL ของ เครื่องแม่ข่ายของ Jabber ถูกใช้"
 
 #: ../data/sugar.schemas.in.h:59
+#, fuzzy
 msgid "URL where the backup is saved to."
-msgstr ""
+msgstr "สำรองข้อมูล URL เก็บไว้ที่"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
@@ -900,27 +914,30 @@ msgid "Volume level for the sound device."
 msgstr "ระดับเสียงสำหรับอุปกรณ์เสียง"
 
 #: ../data/sugar.schemas.in.h:66
+#, fuzzy
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"เมื่อคุณต้องการกลับมาสู่โหมดเดิม ให้คลิกที่ไอคอนของ Favorite "
+"แล้วกิจกรรมสุดท้ายที่คุณทำไปก็จะกลับมา"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, python-format
+#, python-format, fuzzy
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr ""
+msgstr "แผงควบคุม: คำเตือน, พบตัวเลือกที่ชื่อเหมือนกันมากกว่า 1: %s มอดูล: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
-#, python-format
+#, python-format, fuzzy
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "แผงควบคุม: ปุ่ม =%s ไม่สามารถใช้ได้"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
-#, python-format
+#, python-format, fuzzy
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "แผงควบคุม: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -939,8 +956,9 @@ msgid ""
 msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
+#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr ""
+msgstr "ถ้าคุณทำการเปลี่ยนแปลงคุณจะต้อง ปิดและเปิด Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -950,16 +968,18 @@ msgstr "แจ้งเตือน"
 
 #: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
+#, fuzzy
 msgid "Changes require restart"
-msgstr ""
+msgstr "การทำการเปลี่ยนแปลงใด ๆ จะต้อง restart ด้วย"
 
 #: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
 msgstr "ยกเลิกการเปลี่ยนแปลง"
 
 #: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#, fuzzy
 msgid "Later"
-msgstr ""
+msgstr "ภายหลัง"
 
 #: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
@@ -1002,12 +1022,14 @@ msgid "Erase"
 msgstr "ลบ"
 
 #: ../src/jarabe/desktop/activitieslist.py:436
+#, fuzzy
 msgid "Remove favorite"
-msgstr ""
+msgstr "เอารายการโปรดออก"
 
 #: ../src/jarabe/desktop/activitieslist.py:440
+#, fuzzy
 msgid "Make favorite"
-msgstr ""
+msgstr "สร้างรายการโปรด"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:127
@@ -1044,12 +1066,14 @@ msgid "Registration Successful"
 msgstr "การลงทะเบียนสำเร็จ"
 
 #: ../src/jarabe/desktop/favoritesview.py:342
+#, fuzzy
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "ขณะนี้คุณกำลังลงทะเบียนที่เครื่องแม่ข่ายที่โรงเรียนของคุณ"
 
 #: ../src/jarabe/desktop/favoritesview.py:641
+#, fuzzy
 msgid "Register"
-msgstr ""
+msgstr "ลงทะเบียน"
 
 #: ../src/jarabe/desktop/favoritesview.py:643
 #: ../src/jarabe/desktop/favoritesview.py:660
@@ -1065,20 +1089,23 @@ msgid "Update your activities to ensure compatibility with your new software"
 msgstr "ปรับปรุงกิจกรรมของคุณเพื่อให้แน่ใจว่าเข้ากันได้กับซอฟต์แวร์ใหม่ของคุณ"
 
 #: ../src/jarabe/desktop/homebox.py:76
+#, fuzzy
 msgid "Check now"
-msgstr ""
+msgstr "ตรวจสอบเดี๋ยวนี้"
 
 #: ../src/jarabe/desktop/homebox.py:197
+#, fuzzy
 msgid "List view"
-msgstr ""
+msgstr "ดูแบบเป็นรายการ"
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
 #: ../src/jarabe/desktop/homebox.py:253
+#, fuzzy
 msgid "Favorites view"
-msgstr ""
+msgstr "ดู Favorites"
 
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
@@ -1097,8 +1124,9 @@ msgid "WPA & WPA2 Personal"
 msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:231
+#, fuzzy
 msgid "Wireless Security:"
-msgstr ""
+msgstr "ความปลอดภัยของเครือข่ายไร้สาย"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1197,9 +1225,9 @@ msgid "Open with"
 msgstr "เปิดด้วย"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
-#, python-format
+#, python-format, fuzzy
 msgid "%s clipping"
-msgstr ""
+msgstr "%s การตัด"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
@@ -1274,8 +1302,9 @@ msgid "No date"
 msgstr "ไม่มีวันที่"
 
 #: ../src/jarabe/journal/expandedentry.py:301
+#, fuzzy
 msgid "Participants:"
-msgstr ""
+msgstr "ผู้เข้าร่วมประชุม"
 
 #: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
@@ -1389,8 +1418,9 @@ msgid "Sort view"
 msgstr "แสดงแบบจัดเรียง"
 
 #: ../src/jarabe/journal/listview.py:317
+#, fuzzy
 msgid "Your Journal is empty"
-msgstr ""
+msgstr "บันทึกประจำวันของคุณว่างเปล่า"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
@@ -1419,16 +1449,19 @@ msgid "Do you want to downgrade to version %s"
 msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:64
+#, fuzzy
 msgid "Your Journal is full"
-msgstr ""
+msgstr "บันทึกประจำวันของคุณเต็ม"
 
 #: ../src/jarabe/journal/modalalert.py:68
+#, fuzzy
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr ""
+msgstr "กรุณาลบบันทึกเก่าบางรายการเพื่อเพิ่มพื้นที่ให้บันทึกอันใหม่"
 
 #: ../src/jarabe/journal/modalalert.py:80
+#, fuzzy
 msgid "Show Journal"
-msgstr ""
+msgstr "แสดงบันทึกประจำวัน"
 
 #: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
@@ -1469,8 +1502,9 @@ msgid "Entries without a file cannot be copied."
 msgstr "ไม่สามารถคัดลอกโดยไม่เลือกไฟล์"
 
 #: ../src/jarabe/journal/palettes.py:267
+#, fuzzy
 msgid "Clipboard"
-msgstr ""
+msgstr "คลิปบอร์ด"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"

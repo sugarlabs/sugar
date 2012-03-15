@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-15 01:42+0200\n"
-"Last-Translator: Xin <dram.wang@gmail.com>\n"
+"PO-Revision-Date: 2012-03-15 03:17+0200\n"
+"Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -571,9 +571,8 @@ msgid "Pitch"
 msgstr "音高"
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "频率"
+msgstr "速率"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -706,52 +705,52 @@ msgstr "整个桌面使用的字体大小。"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络的APN（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络的PIN（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络的PUK（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络的接入点配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络号码（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络密码（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络密码配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:27
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络个人识别号码配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络个人解锁码配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络电话号码配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络用户名（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM网络用户名配置（不推荐/未使用）"
 
 #: ../data/sugar.schemas.in.h:32
 msgid ""
@@ -806,11 +805,11 @@ msgstr "键盘选项列表"
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Sugar语音服务的音调值"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar语音服务中使用的音调值"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
@@ -826,11 +825,11 @@ msgstr "发布到“道具”"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Sugar语音服务的速率值"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar语音服务中使用的速率值"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -1683,15 +1682,15 @@ msgstr "设备的运营商/链路改变。"
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "采用设备的现有连接。"
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "请求者可用。"
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "无法找到调制解调器。"
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
