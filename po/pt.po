@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-09 08:45+0200\n"
+"PO-Revision-Date: 2012-03-20 21:50+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -407,7 +407,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr "Minha Bateria"
+msgstr "A Minha Bateria"
 
 #: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
@@ -596,7 +596,7 @@ msgstr "Pausar reprodução"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "Meus Altifalantes"
+msgstr "Os Meus Altifalantes"
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
@@ -616,7 +616,7 @@ msgstr "caneta"
 
 #: ../extensions/deviceicon/touchpad.py:68
 msgid "My touchpad"
-msgstr "Meu touchpad"
+msgstr "O Meu touchpad"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
@@ -674,7 +674,7 @@ msgid ""
 msgstr ""
 "A cor do ícone XO que é utilizada em todo o ambiente gráfico. O texto é "
 "composto pela cor de traço e de preenchimento, e o formato é o das cores "
-"rgb. Por exemplo: #AC32FF, #9A5200"
+"RGB. Por exemplo: #AC32FF, #9A5200"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
@@ -1093,7 +1093,7 @@ msgstr "O Registo Falhou"
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
-msgstr "O Registo teve Sucesso"
+msgstr "O Registo Teve Sucesso"
 
 #: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
@@ -1387,11 +1387,11 @@ msgstr "Qualquer Pessoa"
 
 #: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
-msgstr "Meus amigos"
+msgstr "Os meus amigos"
 
 #: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
-msgstr "Minha turma"
+msgstr "A minha turma"
 
 # TRANS: Item in a combo box that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:301
@@ -1765,7 +1765,7 @@ msgstr "Terminar Sessão"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr "Minhas Definições"
+msgstr "As Minhas Definições"
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
