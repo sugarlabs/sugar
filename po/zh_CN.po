@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-21 06:27+0200\n"
+"PO-Revision-Date: 2012-03-21 06:46+0200\n"
 "Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -123,7 +123,7 @@ msgstr "时区"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr "框架"
+msgstr "边框"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
@@ -145,7 +145,7 @@ msgstr "%s 秒"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "激活延迟"
+msgstr "显示边框的延迟时间"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -673,11 +673,11 @@ msgstr "默认昵称"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
-msgstr "延迟激活使用转角的框。"
+msgstr "屏幕四角触发边框显示的延迟时间。"
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Delay for the activation of the frame using the edges."
-msgstr "延迟激活使用边沿的框。"
+msgstr "屏幕边缘触发边框显示的延迟时间。"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Directory to search for translations"
