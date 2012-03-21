@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-21 06:46+0200\n"
+"PO-Revision-Date: 2012-03-21 13:29+0200\n"
 "Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -580,7 +580,7 @@ msgstr "暂停播放"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "我的喇叭"
+msgstr "我的扬声器"
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
@@ -1003,7 +1003,7 @@ msgstr "确认删除：是否永久删除 %s ？"
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
-msgstr "保持"
+msgstr "保存"
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
@@ -1245,7 +1245,7 @@ msgstr "姓名:"
 
 #: ../src/jarabe/intro/window.py:120
 msgid "Click to change color:"
-msgstr "点击来改变颜色:"
+msgstr "点击改变颜色："
 
 #: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
@@ -1359,7 +1359,7 @@ msgstr "我的类别"
 # TRANS: Item in a combo box that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
-msgstr "所有类别"
+msgstr "所有类型"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
@@ -1393,19 +1393,19 @@ msgstr "启动"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
-msgstr "以更新日期排列"
+msgstr "按修改日期排序"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
-msgstr "以建立日期排列"
+msgstr "按新建日期排序"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr "以大小排列"
+msgstr "按大小排序"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
-msgstr "视图排序"
+msgstr "排序方式"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
