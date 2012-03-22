@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2011-10-08 05:25+0200\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 21:36+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
@@ -1100,13 +1100,13 @@ msgstr "ההרשמה הצליחה"
 msgid "You are now registered with your school server."
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 #, fuzzy
 msgid "Register"
 msgstr "הרשמה"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr ""
 
@@ -1857,7 +1857,13 @@ msgstr ""
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format
+#, fuzzy
+msgid "View source: %s"
+msgstr "צפה בקוד המקור: %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 #, python-format, fuzzy
 msgid "View source: %r"
