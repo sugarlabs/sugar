@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-20 21:50+0200\n"
-"Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 20:41+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -1099,12 +1099,12 @@ msgstr "O Registo Teve Sucesso"
 msgid "You are now registered with your school server."
 msgstr "Estás agora registado com o teu servidor escolar."
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "Registar"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr "Registar novamente"
 
@@ -1824,7 +1824,12 @@ msgstr "Código-fonte do Pacote de Atividade"
 msgid "Sugar Toolkit Source"
 msgstr "Código-fonte do Sugar Toolkit"
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format, 
+msgid "View source: %s"
+msgstr "Ver código-fonte: %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "Ver código-fonte: %r"
