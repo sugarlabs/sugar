@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-11 04:33+0200\n"
+"PO-Revision-Date: 2012-03-22 02:05+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "Language: zh_TW\n"
@@ -553,30 +553,29 @@ msgstr "在控制台建立新連線"
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "語音"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "朗讀選取的文字"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "停止播放"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "音高"
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "日期"
+msgstr "速度"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "暫停播放"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -705,52 +704,52 @@ msgstr "預設字體大小將套用於整個桌面環境"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路APN (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路PIN (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路PUK (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路APN設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路號碼 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路密碼 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路密碼設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:27
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路PIN設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路PUK設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路號碼設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路使用者名稱 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM網路使用者名稱設定 (過時不再使用)"
 
 #: ../data/sugar.schemas.in.h:32
 msgid ""
@@ -806,11 +805,11 @@ msgstr "鍵盤排列列表"
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Sugar語音合成音高"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar語音合成服務的音高值"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
@@ -826,11 +825,11 @@ msgstr "發佈到小工具"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Sugar語音合成服務的速度值"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Sugar語音合成服務的速度值"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -900,8 +899,8 @@ msgid ""
 msgstr "在回復模式下，點選偏好的圖示將回復該活動前一次的使用狀態"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, python-format
-#, python-format, fuzzy
+#, python-format, 
+#, python-format, 
 #, python-format,
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
@@ -1681,23 +1680,23 @@ msgstr "裝置的連線已經改變"
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "裝置現有的連線已採用"
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "請求者可使用"
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "找不到數據機"
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "藍牙連線失敗或逾時"
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "未使用"
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"

@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-06 17:06+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-22 11:46+0200\n"
+"Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -1157,7 +1157,7 @@ msgstr "ไม่สามารถเชื่อมต่อกับเคร
 
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
-msgstr "เครื่องแม่ข่ายไม่สามารถดำเนินการให้ได้"
+msgstr "เซิร์ฟเวอร์ไม่สามารถดำเนินการตามคำขอ"
 
 #: ../src/jarabe/frame/activitiestray.py:187
 #: ../src/jarabe/frame/activitiestray.py:575
@@ -1210,7 +1210,6 @@ msgid "Transfer to %s"
 msgstr "โอนย้ายไป %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "เอาออก"
@@ -1225,9 +1224,9 @@ msgid "Open with"
 msgstr "เปิดด้วย"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
-#, python-format, fuzzy
+#, python-format, 
 msgid "%s clipping"
-msgstr "%s การตัด"
+msgstr "การตัด %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
@@ -1302,9 +1301,8 @@ msgid "No date"
 msgstr "ไม่มีวันที่"
 
 #: ../src/jarabe/journal/expandedentry.py:301
-#, fuzzy
 msgid "Participants:"
-msgstr "ผู้เข้าร่วมประชุม"
+msgstr "ผู้เข้าร่วม"
 
 #: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
@@ -1312,7 +1310,7 @@ msgstr "รายละเอียด:"
 
 #: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
-msgstr "แท็ก:"
+msgstr "ป้ายกำกับ:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
@@ -1380,7 +1378,7 @@ msgstr "คัดลอกไปยัง"
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
-msgstr "สร้างสำเนา"
+msgstr "ทำซ้ำ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
@@ -1403,11 +1401,11 @@ msgstr "เริ่ม"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
-msgstr "เรียงตามวันแก้ไข"
+msgstr "เรียงตามวันที่แก้ไข"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
-msgstr "เรียงตามวันสร้าง"
+msgstr "เรียงตามวันที่สร้าง"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
@@ -1418,21 +1416,20 @@ msgid "Sort view"
 msgstr "แสดงแบบจัดเรียง"
 
 #: ../src/jarabe/journal/listview.py:317
-#, fuzzy
 msgid "Your Journal is empty"
 msgstr "บันทึกประจำวันของคุณว่างเปล่า"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "โฟลเดอร์เอกสารของคุณว่างเปล่า"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "อุปกรณ์ว่างเปล่า"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
-msgstr ""
+msgstr "ไม่มีรายการที่ตรงกัน"
 
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
@@ -1441,25 +1438,22 @@ msgstr "ล้างการค้นหา"
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "รุ่นเก่าของกิจกรรม %s"
 
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "คุณต้องการที่จะลดระดับรุ่น %s"
 
 #: ../src/jarabe/journal/modalalert.py:64
-#, fuzzy
 msgid "Your Journal is full"
 msgstr "บันทึกประจำวันของคุณเต็ม"
 
 #: ../src/jarabe/journal/modalalert.py:68
-#, fuzzy
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr "กรุณาลบบันทึกเก่าบางรายการเพื่อเพิ่มพื้นที่ให้บันทึกอันใหม่"
+msgstr "กรุณาลบบันทึกเก่าบางรายการเพื่อเพิ่มพื้นที่ให้บันทึกใหม่"
 
 #: ../src/jarabe/journal/modalalert.py:80
-#, fuzzy
 msgid "Show Journal"
 msgstr "แสดงบันทึกประจำวัน"
 
@@ -1474,15 +1468,15 @@ msgstr "ปิด"
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
-msgstr "ดำเนินการต่อโดยเริ่มจาก"
+msgstr "ทำต่อโดย"
 
 #: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
-msgstr "เริ่มจาก"
+msgstr "เริ่มด้วย"
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
-msgstr "ไม่เลือกกิจกรรมเพื่อเริ่ม"
+msgstr "ไม่มีรายการกิจกรรมที่จะเริ่ม"
 
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
@@ -1494,12 +1488,12 @@ msgstr "ดูรายละเอียด"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr "ไม่สามารถส่งโดยไม่เลือกไฟล์"
+msgstr "การกรอกข้อมูลโดยไม่มีไฟล์ไม่สามารถส่ง"
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
-msgstr "ไม่สามารถคัดลอกโดยไม่เลือกไฟล์"
+msgstr "การกรอกข้อมูลโดยไม่มีไฟล์ไม่สามารถคัดลอก"
 
 #: ../src/jarabe/journal/palettes.py:267
 #, fuzzy
