@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-12 22:54+0200\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 21:13+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ps\n"
@@ -1082,12 +1082,12 @@ msgstr "ثبتېدل بریالي شول"
 msgid "You are now registered with your school server."
 msgstr "تاسې اوس د خپل ښوونڅی د پالنګر سره ثبت شوي یاست."
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "ثبتول"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr ""
 
@@ -1800,11 +1800,17 @@ msgstr "د فعالیت بنډل سرچینه"
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format
+#, fuzzy
+msgid "View source: %s"
+msgstr "سرچینه کتل: %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 #, python-format, fuzzy
 msgid "View source: %r"
-msgstr "سرچینه کتل:"
+msgstr "سرچینه کتل: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
