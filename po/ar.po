@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-15 06:18+0200\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 21:02+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -1081,12 +1081,12 @@ msgstr "نجح التسجيل"
 msgid "You are now registered with your school server."
 msgstr "الآن، أنت مسجّل في خادوم مدرستك."
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "سجّل"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr "أعِد التشغيل مرة أخرى"
 
@@ -1797,7 +1797,12 @@ msgstr "مصدر حزمة النشاط"
 msgid "Sugar Toolkit Source"
 msgstr "مصدر عُدة الأدوات سكّر"
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format, 
+msgid "View source: %s"
+msgstr "اعرض مصدر: %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "اعرض مصدر: %r"
