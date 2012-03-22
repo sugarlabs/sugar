@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-19 12:42+0200\n"
-"Last-Translator: olenz <olaf@lenz.name>\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 20:50+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -1116,12 +1116,12 @@ msgstr "Anmeldung erfolgreich"
 msgid "You are now registered with your school server."
 msgstr "Du bist nun an deinem Schulserver angemeldet."
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "Am Schulserver anmelden"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr "Erneut Anmelden"
 
@@ -1842,7 +1842,12 @@ msgstr "Quelltext des Aktivitätenbündels"
 msgid "Sugar Toolkit Source"
 msgstr "Quelltext des Sugar-Werkzeugkastens"
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format, 
+msgid "View source: %s"
+msgstr "Quelltext anzeigen: %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "Quelltext anzeigen: %r"
