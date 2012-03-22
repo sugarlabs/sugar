@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-03-22 02:05+0200\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 20:48+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "Language: zh_TW\n"
@@ -899,8 +899,7 @@ msgid ""
 msgstr "在回復模式下，點選偏好的圖示將回復該活動前一次的使用狀態"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, python-format, 
-#, python-format, 
+#, python-format
 #, python-format,
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
@@ -1062,12 +1061,12 @@ msgstr "註冊成功"
 msgid "You are now registered with your school server."
 msgstr "您已經成功註冊到校園主機"
 
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "註冊"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr "重新註冊"
 
@@ -1778,7 +1777,12 @@ msgstr "預裝活動原始碼"
 msgid "Sugar Toolkit Source"
 msgstr "Sugar 工具庫原始碼"
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format, 
+msgid "View source: %s"
+msgstr "查看原始碼： %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
 msgstr "查看原始碼： %r"
