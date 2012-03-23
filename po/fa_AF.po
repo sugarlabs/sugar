@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-10 00:32-0500\n"
-"PO-Revision-Date: 2012-02-10 08:36+0200\n"
+"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"PO-Revision-Date: 2012-03-22 21:14+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Dari <LL@li.org>\n"
 "Language: fa_AF\n"
@@ -1106,12 +1106,12 @@ msgstr "شما حالا با سرورمکتب تان ثبت نام شدید"
 #  (poterminology) /home/sayamindu/test/fa_AF/TamTamMini.activity.po (1)
 #  (poterminology) /home/sayamindu/test/fa_AF/sugar.po (1)
 #  (poterminology) /home/sayamindu/test/fa_AF/TamTamJam.activity.po (1)
-#: ../src/jarabe/desktop/favoritesview.py:641
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "ثبت نام کردن"
 
-#: ../src/jarabe/desktop/favoritesview.py:643
-#: ../src/jarabe/desktop/favoritesview.py:660
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr ""
 
@@ -1841,7 +1841,12 @@ msgstr "منبع مجموعه فعالیت"
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:400 ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format
+msgid "View source: %s"
+msgstr "نمایش منبع %s"
+
+#: ../src/jarabe/view/viewsource.py:401
 #, python-format
 #, python-format, fuzzy
 msgid "View source: %r"
