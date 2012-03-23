@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-22 20:41+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-23 20:02+0200\n"
+"Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -1165,7 +1165,7 @@ msgstr "Continuar"
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
-msgstr "Entrar"
+msgstr "Juntar-me"
 
 #: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
