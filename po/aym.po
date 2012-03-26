@@ -2,6 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -18,81 +19,81 @@ msgstr ""
 #  "Acerca de mí"
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Nuqamanta"
+msgstr "Luräwinakajata"
 
 #  "Debe ingresar un nombre."
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "Sutiykitapuni churay."
+msgstr "Maya sutimpi chimpt'ma."
 
 #  "borde:   color=%s tonalidad=%s"
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr "muyunkuna:   lipi=%s tonalidad=%s"
+msgstr "%s=sami  %s=samichajata: qawaya"
 
 #  "borde:   %s"
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr "muyunkuna:   %s"
+msgstr "...... %s qawaya"
 
 #  "relleno:     color=%s tonalidad=%s"
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr "hunt'ana:     llimp'i=%s tonalidad=%s\""
+msgstr "%s=sami %s=samichjata: phuqachata"
 
 #  "relleno:     %s"
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr "hunt'ana:     %s"
+msgstr "%s     : phuqachata"
 
 #  "Error en modificadores de color especificados."
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr "Pantay aqllasqa llimp'ikunapi."
+msgstr "Samichatanaka chiqachäwi pantjasa phuqachata."
 
 #  "Error en colores especificados."
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "Pantay aqllasqa llimp'ikunapi."
+msgstr "Samichatanaka pantjasa phuqachata."
 
 #  "Clic para cambiar su color:"
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr "Llimp'iykita aqllanapaq klik ruway:"
+msgstr "Samichata mayjt'ayañataki q'upt'ma:"
 
 #  "Acerca de mi computadora"
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Computadoraymanta"
+msgstr "Kumputaruraja tuqita"
 
 #  "No disponible"
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr "Mana jap'ikunchu"
+msgstr "Jani wakisiri"
 
 #  "Identidad"
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
-msgstr "Kawsaypi"
+msgstr "Kankaña"
 
 #  "Número de serie:"
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
-msgstr "Yupana serial nisqa:"
+msgstr "Jakhu chimpu:"
 
 #  "Software"
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
-msgstr "Software"
+msgstr "Wakichäwi"
 
 #  "Ensamble:"
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
-msgstr "Ruwasqa kuti:"
+msgstr "Apthapiña:"
 
 #  "Azúcar:"
 #: ../extensions/cpsection/aboutcomputer/view.py:114
@@ -107,12 +108,12 @@ msgstr "Firmware:"
 #  "Firmware de la red inalámbrica:"
 #: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
-msgstr "Firmware jila llika inala:"
+msgstr "Red inalámbrica wakisiri Firmware:"
 
 #  "Licencia y derechos de autor"
 #: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
-msgstr "Mañakuy Nocaq Ruaskaita"
+msgstr "Wakichirina wakisiripa"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:185
 msgid ""
@@ -121,199 +122,191 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
+"Sugar wakichäwixa jumataki uchatawa. Sugar sata software wakichäwixa "
+"taqitakiwa, ukaxa GNU kamachinakana qhananchasi, ukata maynita mayniru "
+"t'uqiyañawa wakisi."
 
 #  "Licencia completa:"
 #: ../extensions/cpsection/aboutcomputer/view.py:197
 msgid "Full license:"
-msgstr "Lli'punte mañakuy:"
+msgstr "Taqi wakisiri:"
 
 #  "Fecha y hora"
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Punchaypis Horapis"
+msgstr "Urumpi urasampi"
 
 #  "Error, zona horaria no existe."
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr "Pantay: horaqpa suyun mana kanchu."
+msgstr "Pantjasiwa, pacha chinuwa chhaqi."
 
 #  "Zona horaria"
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
 msgid "Timezone"
-msgstr "Horaqpa suyun"
+msgstr "Pacha chinu suyu"
 
+#  "Cuadro"
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Wakichata"
 
 #  "El valor debe ser un número entero."
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "Tukuy kanan huk llipin yupana."
+msgstr "Chanipaxa parisa jakhuñapawa."
 
 #  "nunca"
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
-msgstr "ni haykaqpis"
+msgstr "janipuniwa"
 
 #  "instantáneo"
 #: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
-msgstr "usqhay"
+msgstr "mäpita"
 
-#  "%s segundos"
 #: ../extensions/cpsection/frame/view.py:29
 #, python-format
 msgid "%s seconds"
-msgstr "%s segundokuna"
+msgstr "%s pacha ch'ich'inaka"
 
 #  "Retraso de activación"
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Qallarinapaq qhipay"
+msgstr "Qhantayaña qhipartayäwi"
 
 #  "Esquina"
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
-msgstr "Muyurina"
+msgstr "K'uchu"
 
 #  "Borde"
 #: ../extensions/cpsection/frame/view.py:113
 msgid "Edge"
-msgstr "Muyumnim"
+msgstr "Qawaya"
 
 #  "Teclado"
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
 msgid "Keyboard"
-msgstr "Ñit'ina"
+msgstr "Qillqa q'upt'aña"
 
 #  "Modelo de teclado"
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
-msgstr "Sumaq ñit'ina chhalay"
+msgstr "Kasta qillqaña"
 
 #  "Tecla(s) para cambiar el diseño"
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr "Ñit'ina wakpaq ñit'ina(kuna)"
+msgstr "Wakichatanaka mayjt'ayaña q'upt'aña"
 
-#  "Diseño(s) de teclado"
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
-msgstr "Ñit'ina(kuna) chhalay"
+msgstr "Qillqaña yänaka"
 
 #  "Idioma"
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
 msgid "Language"
-msgstr "Simi"
+msgstr "Aru"
 
-#  "No se puede acceder a ~/.i18n. Crear configuración internacional estándar."
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "Mana ~/.i18n\"pi yaykuyta atikunchu."
+msgstr "Janiwa wakisiti ~/.i18n. Taqina mantañapataki wakichata."
 
-#  "El lenguaje del código=%s no pudo ser determinado."
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "Chimpu=%s, chay simi mana riqsisqachu."
+msgstr "código=%s aruxa janiwa amuyasiti."
 
-#  "Lo siento, yo no hablo '%s'."
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
-#, python-format,
 msgid "Sorry I do not speak '%s'."
-msgstr "Sentine, mana rimanichi '%s'."
+msgstr "Jichhasti, janiwa yatkti '%s'."
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"Arunaka wakisipanjama siqintma. Aru chanipa jani utjipana, siqina arkiri "
+"aruwa chhijllasini."
 
-#  "Configuración del módem"
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Modem nisqata kamachina"
+msgstr "módem wakichäwi wakichaña"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"(3G) telefonía celular wakichäwinakaparu mantañatakixa akïri yatiyañanakawa "
+"wakisi."
 
-#  "Nombre de usuario:"
 #: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
-msgstr "Runa suti:"
+msgstr "Apnaqirini sutipa:"
 
-#  "Contraseña:"
 #: ../extensions/cpsection/modemconfiguration/view.py:83
 msgid "Password:"
-msgstr "Pakasqa simi:"
+msgstr "Jist'araña:"
 
-#  "Número:"
 #: ../extensions/cpsection/modemconfiguration/view.py:89
 msgid "Number:"
-msgstr "Yupana:"
+msgstr "Jakhu:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "Qhantayaña chiqana sutipa (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Sapa mayni chimpupa jakhu (PIN):"
 
-#  "Red"
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
 msgid "Network"
-msgstr "Llik'a"
+msgstr "Mayachasïwi"
 
-#  "Estado desconocido."
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
-msgstr "Ima mana riqsisqa."
+msgstr "Jani yatita kankaña."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Pantjatawa, rayru qhantayañatakixa akïri limt'ma on/off."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr ""
+msgstr "Panjatawa, wakisiriru katusa limt'ma 0/1."
 
-#  "Inalámbrica"
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
-msgstr "Inalámbrica"
+msgstr "Wayra taypita"
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr ""
+msgstr "Wayra raryu jiwasa qhanayaña jakañapa ch'amanchañataki"
 
-#  "Radio"
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
-msgstr "Uyarinapaq"
+msgstr "Raryu"
 
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr ""
+msgstr "Pantjata mistupana, mayachasïwi sartäwinaka amuyañäni"
 
-#  "Descarte historial de la red"
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
-msgstr "Llik'amanta yuyarinata chinkachiy"
+msgstr "Mayachasiña saräwinaka qhananchma"
 
-#  "Colaboración"
 #: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
-msgstr "Yanapanakuna"
+msgstr "Yanapaña"
 
 #: ../extensions/cpsection/network/view.py:130
 msgid ""
@@ -321,251 +314,219 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Katuqirixa mayachasiña irptiri utankiwa; ukana taqina mayachasisa "
+"yanapasipxi, qawata mayaru tukupxi."
 
-#  "Servidor:"
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
-msgstr "Sirwidur:"
+msgstr "Katuqiri:"
 
-#  "Energía"
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr "Atina"
+msgstr "Ch'ama"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr ""
+msgstr "Pantjata automatic pm amuyt'awipa janiwa/jisa."
 
 #: ../extensions/cpsection/power/model.py:120
 msgid "Error in extreme pm argument, use on/off."
-msgstr ""
+msgstr "Pantjata extreme pm amuyt'awipa janiwa/jisa."
 
-#  "Manejo de energía"
 #: ../extensions/cpsection/power/view.py:48
 msgid "Power management"
-msgstr "Energia nisqap kamachinan"
+msgstr "ch'amana apnaqawipa"
 
 #: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "kipqaki ch'ama apnaqawipa (batteria jaya jaqañataqi)"
 
 #: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
+msgstr "Wali ch'ama apnaqawipa (radio apaqaña, batteria jaya jaqaña)"
 
-#  "Actualización de software"
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
-msgstr "Software kunanchana"
+msgstr "amuyt'awi machaqaptayana"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"amuyt'awi machaqaptayañanaka pantjatanaka askichaña, pantjatanaka jarqayaña, "
+"machaq amuyt'awinaka."
 
-#  "Probando %s..."
 #: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
-msgstr "%s ta mallichkan..."
+msgstr "Yant'aski %s..."
 
-#  "Descargando %s..."
 #: ../extensions/cpsection/updater/view.py:127
 #, python-format
 msgid "Downloading %s..."
-msgstr "%s ta urayachispa..."
+msgstr "q'ipiraski %s..."
 
-#  "Actualizando %s..."
 #: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Updating %s..."
-msgstr "%s ta kunanchachkan..."
+msgstr ""
 
-#  "Tu software esta actualizado"
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
-msgstr "Softwara nisqaykita kunanchanña"
+msgstr "amuyt'awimaxa machaqaptayatawa"
 
-#  "Puedes instalar %s actualización"
-#  "Puedes instalar %s actualizaciones"
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] "%s kunanchanata churayta atinki"
+msgstr[0] ""
 msgstr[1] ""
 
-#  "Buscando actualizaciones..."
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
-msgstr "Kunanchanakunata maskhachkan..."
+msgstr "machaqaptayañanaka thaqaski..."
 
-#  "Instalando actualizaciones..."
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr "Kunanchanakunata churachkan..."
+msgstr "machaqaptayaña ut'ayaski..."
 
-#  "%s actualización fue instalada"
-#  "%s actualizaciones fueron instaladas"
 #: ../extensions/cpsection/updater/view.py:173
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "%s kunanchanata churaran"
-msgstr[1] "%s kunanchanakunata churaran"
+msgstr[0] ""
+msgstr[1] ""
 
-#  "Instalación seleccionada"
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
-msgstr "Aqllasqa churanapaq"
+msgstr "machaqaptayaña ajllitaxiwa"
 
-#  "Tamaño de descarga: %s"
 #: ../extensions/cpsection/updater/view.py:276
 #, python-format
 msgid "Download size: %s"
-msgstr "Urayachinapaq jayk'a: %s"
+msgstr ""
 
-#  "Desde la version %(current)s hacia %(new)s (Size: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr "%(current)s kutimanta %(new)s kutiman (Jayk'a: %(size)s)"
+msgstr ""
 
-#  "Ninguno"
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
 msgid "None"
-msgstr "Ni ima"
+msgstr "ni maya"
 
-#  "1 KB"
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
 msgid "1 KB"
-msgstr "1 KB"
+msgstr "maya KB"
 
-#  "%.0f KB"
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:388
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
-#  "%.1f MB"
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:391
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#  "Mi batería"
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr "Bateria nisqay"
+msgstr "nayana watiriyaja"
 
-#  "Eliminado"
 #: ../extensions/deviceicon/battery.py:147
 msgid "Removed"
-msgstr "Mana t'inkisqa"
+msgstr "apsuta"
 
-#  "Cargando"
 #: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
-msgstr "Hunt'achkan"
+msgstr "Ch'ama uchaskiwa"
 
-#  "Queda muy poca batería"
 #: ../extensions/deviceicon/battery.py:153
 msgid "Very little power remaining"
-msgstr "Bateriamanta pisillata kachkan"
+msgstr "pisi ch'amanikxiwa watiriyaxa"
 
-#  "Quedan %(hour)d:%(min).2d"
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
 #: ../extensions/deviceicon/battery.py:160
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "%(hour)d:%(min).2d qhipachkan"
+msgstr ""
 
 #  "Cargada"
 #: ../extensions/deviceicon/battery.py:163
 msgid "Charged"
-msgstr "Huntasqaña"
+msgstr "q'ipxaruta"
 
-#  "Direccion IP: %s"
 #: ../extensions/deviceicon/network.py:49
 #, python-format
 msgid "IP address: %s"
-msgstr "Direccion IP: %s"
+msgstr "thaki katjawi IP: %s"
 
-#  "Desconectar"
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:128
 #: ../src/jarabe/desktop/networkviews.py:490
 msgid "Disconnect"
-msgstr "T'aqachiy"
+msgstr "jaljtayaña"
 
-#  "Conectando..."
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
 #: ../src/jarabe/desktop/networkviews.py:237
 #: ../src/jarabe/desktop/networkviews.py:527
 #: ../src/jarabe/desktop/networkviews.py:662
 msgid "Connecting..."
-msgstr "T'inkichachkan..."
+msgstr "Mayachasa..."
 
-#  "Conectado"
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
 #: ../src/jarabe/desktop/networkviews.py:244
 #: ../src/jarabe/desktop/networkviews.py:533
 #: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connected"
-msgstr "T'inkisqa"
+msgstr "Mayachata"
 
-#  "No hay conexión inalámbrica"
 #: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
-msgstr "Inalámbrica t'inkina mana kanchu"
+msgstr "Jani mayachaña utjiti"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
-msgstr ""
+msgstr "thaki"
 
-#  "Red Cableada"
 #: ../extensions/deviceicon/network.py:148
 msgid "Wired Network"
-msgstr "Cableada llik'a"
+msgstr "Chinu taypit mayachasiña"
 
 #: ../extensions/deviceicon/network.py:177
 msgid "Speed"
-msgstr ""
+msgstr "Ratuki"
 
-#  "Módem inalámbrico"
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
-msgstr "Módem inalámbrico"
+msgstr ""
 
-#  "Espere por favor..."
 #: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
-msgstr "Suyariy..."
+msgstr ""
 
-#  "Conectar"
 #: ../extensions/deviceicon/network.py:275
 #: ../src/jarabe/desktop/networkviews.py:124
 #: ../src/jarabe/desktop/networkviews.py:486
 #: ../src/jarabe/desktop/networkviews.py:618
 msgid "Connect"
-msgstr "T'inkiy"
+msgstr "Mayachaña"
 
-#  "Desconectado"
 #: ../extensions/deviceicon/network.py:276
+#, fuzzy
 msgid "Disconnected"
-msgstr "Mana t'inkisqachu"
+msgstr "jaljtayaña"
 
-#  "Cancelar"
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
 #: ../src/jarabe/desktop/homebox.py:71
@@ -573,67 +534,57 @@ msgstr "Mana t'inkisqachu"
 #: ../src/jarabe/frame/activitiestray.py:705
 #: ../src/jarabe/frame/activitiestray.py:733
 msgid "Cancel"
-msgstr "Chinkachiy"
+msgstr "Tukuyaña"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
 msgstr ""
 
-#  "Error: %s"
 #: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
-msgstr "Pantay: %s"
+msgstr "Pantjata: %s"
 
-#  "Sugerencia: %s"
 #: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
-msgstr "Allinchanapaq: %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
 msgstr ""
 
-#  "%d KB"
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-# "Revise la configuración de su Pin/Puk."
 #: ../extensions/deviceicon/network.py:350
-#, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "PIN/PUK kamachinaykita chiqaqchay."
+msgstr ""
 
-#  "Revise la configuración del nombre de su punto de acceso (APN)"
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr "Nombre de punto de acceso (APN) kamachinata chiqaqchay"
+msgstr ""
 
-#  "Revise el Número en la configuración."
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr "Yupanap kamachinanta chiqaqchay."
+msgstr ""
 
-#  "Revise su configuración."
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr "Kamachinaykita chiqaqchay."
+msgstr ""
 
-#  "Red Malla"
 #: ../extensions/deviceicon/network.py:594
 msgid "Mesh Network"
-msgstr "Red Malla"
+msgstr ""
 
-#  "Red Malla %s"
 #: ../extensions/deviceicon/network.py:638
 #, python-format
 msgid "Mesh Network %s"
-msgstr "Red Malla %s"
+msgstr ""
 
 #: ../extensions/deviceicon/network.py:754
 msgid "No GSM connection available."
@@ -669,56 +620,48 @@ msgstr ""
 msgid "Pause playback"
 msgstr ""
 
-#  "Mis parlantes"
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "Parlante nisqaykuna"
+msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
 msgstr ""
 
-#  "Silenciar"
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
-msgstr "Ch'inyachiy"
+msgstr "Amukt'ayaña"
 
-#  "dedo"
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr "ruk'ana"
+msgstr ""
 
-#  "estilo"
 #: ../extensions/deviceicon/touchpad.py:39
 msgid "stylus"
-msgstr "qillqana"
+msgstr ""
 
-#  "Mi superficie táctil"
 #: ../extensions/deviceicon/touchpad.py:68
 msgid "My touchpad"
-msgstr "Mi superficie táctil"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
 msgstr ""
 
-#  "Grupo"
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
-msgstr "Huñu"
+msgstr ""
 
-#  "Hogar"
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
-msgstr "Wasi"
+msgstr ""
 
-#  "Actividad"
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
-msgstr "Ruwana"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:72
 msgid "Screenshot"
@@ -754,10 +697,9 @@ msgid ""
 "Example: #AC32FF,#9A5200"
 msgstr ""
 
-#  "Retraso de las Esquinas"
 #: ../data/sugar.schemas.in.h:7
 msgid "Corner Delay"
-msgstr "K'uchupi suyana"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Default font face"
@@ -785,7 +727,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
-msgstr ""
+msgstr "Qawaya Qhipt'awi"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -877,17 +819,16 @@ msgstr ""
 msgid "Jabber Server"
 msgstr ""
 
-# "Diseño(s) de teclado"
 #: ../data/sugar.schemas.in.h:37
 #, fuzzy
 msgid "Keyboard layouts"
-msgstr "Ñit'ina(kuna) chhalay"
+msgstr "Qillqaña yänaka"
 
 # "Modelo de teclado"
 #: ../data/sugar.schemas.in.h:38
 #, fuzzy
 msgid "Keyboard model"
-msgstr "Sumaq ñit'ina chhalay"
+msgstr "Kasta qillqaña"
 
 #: ../data/sugar.schemas.in.h:39
 msgid "Keyboard options"
@@ -938,25 +879,21 @@ msgstr ""
 msgid "Setting for muting the sound device."
 msgstr ""
 
-#  "Mostrar Terminar Sesión"
 #: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
-msgstr "Lluqsinata rikhurichiy"
+msgstr ""
 
-#  "Mostrar Reiniciar"
 #: ../data/sugar.schemas.in.h:52
 msgid "Show Restart"
-msgstr "Qallarinata rikhurichiy"
+msgstr ""
 
-#  "Mostrar redes específicas de Azúcar"
 #: ../data/sugar.schemas.in.h:53
 msgid "Show Sugar Ad-hoc networks"
-msgstr "Azucarpa llik'akunanta rikhurichiy"
+msgstr ""
 
-#  "Sonido silenciado"
 #: ../data/sugar.schemas.in.h:54
 msgid "Sound Muted"
-msgstr "Ch'inyachisqa"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
@@ -974,15 +911,13 @@ msgstr ""
 msgid "URL where the backup is saved to."
 msgstr ""
 
-#  "Color del usuario"
 #: ../data/sugar.schemas.in.h:60
 msgid "User Color"
-msgstr "Hap'iqmasip llimp'in"
+msgstr ""
 
-#  "Nombre de usuario"
 #: ../data/sugar.schemas.in.h:61
 msgid "User Name"
-msgstr "Hap'iqmasip sutin"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
@@ -993,10 +928,9 @@ msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 
-#  "Nivel de volumen"
 #: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
-msgstr "Hayk'a chanra"
+msgstr ""
 
 #: ../data/sugar.schemas.in.h:65
 msgid "Volume level for the sound device."
@@ -1045,48 +979,43 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr ""
 
-#  "Advertencia"
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
-msgstr "Willay"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr ""
 
-#  "Cancelar cambios"
 #: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
-msgstr "T'krasqakunata chinkachiy"
+msgstr ""
 
-#  "Después"
 #: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
-msgstr "Qhipamanta"
+msgstr ""
 
-#  "Reiniciar ahora"
 #: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
-msgstr "Kunan qallariy"
+msgstr ""
 
-#  "Hecho"
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#, fuzzy
 msgid "Done"
-msgstr "Ruwasqaña"
+msgstr "ni maya"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
 msgid "Ok"
 msgstr ""
 
-#  "Versión %s"
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
 msgid "Version %s"
-msgstr "Kuti %s"
+msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
@@ -1102,55 +1031,47 @@ msgstr ""
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
 msgid "Keep"
-msgstr "Kikinchata waqaychay"
+msgstr "Imaña"
 
-#  "Borrar"
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
 #: ../src/jarabe/journal/journaltoolbox.py:413
 #: ../src/jarabe/journal/palettes.py:126
 msgid "Erase"
-msgstr "Chinkachiy"
+msgstr ""
 
-#  "Remover favorito"
 #: ../src/jarabe/desktop/activitieslist.py:436
 msgid "Remove favorite"
-msgstr "Aqllasqata chinkachiy"
+msgstr ""
 
-#  "Hacer favorito"
 #: ../src/jarabe/desktop/activitieslist.py:440
 msgid "Make favorite"
-msgstr "Aqllasqata ruway"
+msgstr ""
 
-#  "Forma libre"
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:127
 msgid "Freeform"
-msgstr "Qispi siq'ichasqa"
+msgstr ""
 
-#  "Anillo"
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:215
 msgid "Ring"
-msgstr "Siwi"
+msgstr ""
 
-#  "Espiral"
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:402
 msgid "Spiral"
-msgstr "Espiral"
+msgstr ""
 
-#  "Caja"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
 msgid "Box"
-msgstr "Tawak'uchu"
+msgstr ""
 
-#  "Triángulo"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
 msgid "Triangle"
-msgstr "Kimsak'uchu"
+msgstr "Kimsa k'uchu"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
@@ -1164,46 +1085,40 @@ msgstr ""
 msgid "You are now registered with your school server."
 msgstr ""
 
-#  "Registro"
 #: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
-msgstr "Qillqachina"
+msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
 msgstr ""
 
-#  "Actualización de Software"
 #: ../src/jarabe/desktop/homebox.py:66
+#, fuzzy
 msgid "Software Update"
-msgstr "Software kunanchana"
+msgstr "amuyt'awi machaqaptayana"
 
 #: ../src/jarabe/desktop/homebox.py:67
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 
-#  "Pruebe ahora"
 #: ../src/jarabe/desktop/homebox.py:76
 msgid "Check now"
-msgstr "Kunan chiqaqchay"
+msgstr ""
 
-#  "Vista en lista"
 #: ../src/jarabe/desktop/homebox.py:197
 msgid "List view"
-msgstr "Siqipi qhaway"
+msgstr ""
 
-#  "<Ctrl>2"
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#  "Vista de favoritos"
 #: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
-msgstr "Aqllasqakuna qhaway"
+msgstr ""
 
-#  "<Ctrl>1"
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
@@ -1224,143 +1139,121 @@ msgstr ""
 msgid "Wireless Security:"
 msgstr ""
 
-#  "Retomar"
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
-msgstr "Hukmanta ruway"
+msgstr "Jutiri"
 
-#  "Unirse"
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
-msgstr "Huñunakuy"
+msgstr ""
 
 #: ../src/jarabe/desktop/networkviews.py:482
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-# "Red Malla %s"
 #: ../src/jarabe/desktop/networkviews.py:615
-#, python-format, fuzzy
+#, python-format
 msgid "Mesh Network %d"
-msgstr "Red Malla %s"
+msgstr ""
 
-#  "No se puede conectar al servidor."
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
-msgstr "Servidorman mana t'inkiyta atinchu."
+msgstr ""
 
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
 msgstr ""
 
-#  "Rechazar"
 #: ../src/jarabe/frame/activitiestray.py:187
 #: ../src/jarabe/frame/activitiestray.py:575
 msgid "Decline"
-msgstr "Ama niy"
+msgstr ""
 
-#  "%dB"
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#  "%dKB"
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#  "%dMB"
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
-#  "%s de %s"
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
 #, python-format
 msgid "%s of %s"
-msgstr "%s de %s"
+msgstr ""
 
-#  "Transferencia desde %s"
 #: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
 msgid "Transfer from %s"
-msgstr "%s manta apachina"
+msgstr ""
 
-#  "Aceptar"
 #: ../src/jarabe/frame/activitiestray.py:570
 msgid "Accept"
-msgstr "Ari niy"
+msgstr ""
 
-#  "Descartar"
 #: ../src/jarabe/frame/activitiestray.py:627
 #: ../src/jarabe/frame/activitiestray.py:640
 #: ../src/jarabe/frame/activitiestray.py:758
 msgid "Dismiss"
-msgstr "Qhichuy"
+msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
 msgstr ""
 
-#  "Transferir a %s"
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
 msgid "Transfer to %s"
-msgstr "%s man apachiy"
+msgstr ""
 
-#  "Eliminar"
 #: ../src/jarabe/frame/clipboardmenu.py:56
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Chinkachiy"
+msgstr "Chhaqtayaña"
 
-#  "Abrir"
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
 msgid "Open"
-msgstr "Kichay"
+msgstr "Uñantaña"
 
-#  "Abrir con"
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
-msgstr "Imawan kichay"
+msgstr ""
 
-#  "recorte de %s"
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "%s nisqaqpa rutuynin"
+msgstr ""
 
-#  "Vecindario"
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
-msgstr "Suyucha"
+msgstr "Wakisirinaka"
 
-#  "F1"
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
 msgstr "F1"
 
-#  "F2"
 #: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "F2"
 msgstr "F2"
 
-#  "F3"
 #: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "F3"
 msgstr "F3"
 
-#  "F4"
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "F4"
 msgstr "F4"
@@ -1370,130 +1263,113 @@ msgstr "F4"
 msgid "Name:"
 msgstr "Suti:"
 
-#  "Clic para cambiar de color:"
+# "Clic para cambiar su color:"
 #: ../src/jarabe/intro/window.py:120
+#, fuzzy
 msgid "Click to change color:"
-msgstr "Llimp'ita tikranapaq klik ruway:"
+msgstr "Samichata mayjt'ayañataki q'upt'ma:"
 
-#  "Atrás"
 #: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
-msgstr "Kutichiy"
+msgstr ""
 
-#  "Siguiente"
 #: ../src/jarabe/intro/window.py:198
 msgid "Next"
-msgstr "Qatiq"
+msgstr "Jutiri"
 
-#  "Sin título"
 #: ../src/jarabe/journal/expandedentry.py:156
 #: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
-msgstr "Mana sutiyuq"
+msgstr ""
 
-#  "Sin vista previa"
 #: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
-msgstr "Qhawanaraq mana kanchu"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
 msgstr ""
 
-#  "Desconocido"
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
 msgid "Unknown"
-msgstr "Mana riqsisqachu"
+msgstr "Jani uñt'ata"
 
-#  "Fecha: %s"
 #: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
 msgid "Date: %s"
-msgstr "Punchay: %s"
+msgstr "Uru chimpu: %s"
 
-#  "Tamaño: %s"
 #: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
 msgid "Size: %s"
-msgstr "Sayaynin: %s"
+msgstr "Taña: %s"
 
-#  "Sin fecha"
 #: ../src/jarabe/journal/expandedentry.py:294
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
-msgstr "Mana p'unchawyuq"
+msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:301
 msgid "Participants:"
 msgstr ""
 
-#  "Descripción:"
 #: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
-msgstr "Aswan willay:"
+msgstr ""
 
-#  "Etiquetas:"
 #: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
-msgstr "Sutichaq:"
+msgstr ""
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
-msgstr ""
+msgstr "Sapüru luräwi"
 
-#  "Buscar"
 #: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
-msgstr "Maskhay"
+msgstr ""
 
-#  "Cualquier momento"
 #: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
-msgstr "Tukuy pacha"
+msgstr ""
 
-#  "Hoy"
 #: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
-msgstr "Kunan p'unchaw"
+msgstr ""
 
-#  "Desde ayer"
 #: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
-msgstr "Qaynamanta"
+msgstr ""
 
-#  "Última semana"
 #. TRANS: Filter entries modified during the last 7 days.
 #: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Past week"
-msgstr "Ñawpaq semana"
+msgstr ""
 
-#  "Último mes"
 #. TRANS: Filter entries modified during the last 30 days.
 #: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "Past month"
-msgstr "Ñawpaq killa"
+msgstr ""
 
-#  "Último año"
 #. TRANS: Filter entries modified during the last 356 days.
 #: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "Past year"
-msgstr "Ñawpaq wata"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
 msgstr ""
 
-#  "Mis amigos"
 #: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
-msgstr "Masiykuna"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
@@ -1503,17 +1379,15 @@ msgstr ""
 msgid "Anything"
 msgstr ""
 
-#  "Copiar a"
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
-msgstr "Mayman kikinchay"
+msgstr ""
 
-#  "Duplicar"
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
-msgstr "Kikinchay"
+msgstr "Payaptayaña"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
@@ -1522,19 +1396,17 @@ msgstr "Kikinchay"
 msgid "Error while copying the entry. %s"
 msgstr ""
 
-#  "Error"
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
-msgstr "Pantay"
+msgstr "Pantjata"
 
-#  "Iniciar"
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
-msgstr "Qallariy"
+msgstr "Qalltawi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
@@ -1544,98 +1416,84 @@ msgstr ""
 msgid "Sort by date created"
 msgstr ""
 
-#  "Ordenar por tamaño"
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr "Sayayninwan siqichay"
+msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
 msgstr ""
 
-#  "Su diario está vacío"
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
-msgstr "Diario nisqaykiqa chusaq kachkan"
+msgstr ""
 
-#  "Tu carpeta de documentos está vacía"
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr "Wayaqaykiqa chusaq kachkan"
+msgstr ""
 
-#  "El dispositivo está vacío"
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr "Dispositivo nisqaqa chusaq kachkan"
+msgstr ""
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
 msgstr ""
 
-#  "Limpiar búsqueda"
 #: ../src/jarabe/journal/listview.py:398
 msgid "Clear search"
-msgstr "Maskhanata pichay"
+msgstr ""
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr ""
 
-#  "¿Desea instalar la versión %s, mas antigua?    "
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Mawk'a %s churayta munankichu?"
+msgstr ""
 
-#  "Su diario está lleno"
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
-msgstr "Diario nisqaykiqa hunt'asqa"
+msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 
-#  "Mostrar diario"
 #: ../src/jarabe/journal/modalalert.py:80
 msgid "Show Journal"
-msgstr "Diario nisqata rikhurichiy"
+msgstr ""
 
-#  "Escoja un objeto"
 #: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
-msgstr "Huk imata aqllay"
+msgstr ""
 
-#  "Cerrar"
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
 msgid "Close"
-msgstr "Wisq'ay"
+msgstr "Jiwayaña"
 
-#  "Reiniciar con"
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
-msgstr "Imawan hukmanta qallariy"
+msgstr ""
 
-#  "Empezar con"
 #: ../src/jarabe/journal/palettes.py:75
 msgid "Start with"
-msgstr "Imawan qallariy"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
 msgstr ""
 
-#  "Enviar a"
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
-msgstr "Piman apachiy"
+msgstr ""
 
-#  "Ver detalles"
 #: ../src/jarabe/journal/palettes.py:121
 msgid "View Details"
-msgstr "Aswan qhaway"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
@@ -1646,36 +1504,31 @@ msgstr ""
 msgid "Entries without a file cannot be copied."
 msgstr ""
 
-#  "Portapapeles"
 #: ../src/jarabe/journal/palettes.py:267
 msgid "Clipboard"
-msgstr "Laphikunata apaq"
+msgstr "Laphi k'ipi"
 
-#  "No hay amigos presentes"
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
-msgstr "Mana masikunaqa kankuchu"
+msgstr ""
 
-#  "No se encontró una conexión válida"
 #: ../src/jarabe/journal/palettes.py:327
 msgid "No valid connection found"
-msgstr "Mana allin t'inkinata maskhasqachu"
+msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:355
 msgid "No activity to resume entry"
 msgstr ""
 
-#  "Documentos"
 #: ../src/jarabe/journal/volumestoolbar.py:209
 msgid "Documents"
-msgstr "Qillqa q'ipikuna"
+msgstr ""
 
-#  "%(free_space)d MB libres"
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB Qispisqa"
+msgstr ""
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
@@ -1702,10 +1555,9 @@ msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 
-#  "La configuración IP ya no es válida."
 #: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
-msgstr "IP kamachinaqa mana allinñachu."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
@@ -1789,10 +1641,9 @@ msgstr ""
 msgid "Dialing timed out."
 msgstr ""
 
-#  "Llamada falló."
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
-msgstr "Waqyanaqa pantaran."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
@@ -1866,82 +1717,69 @@ msgstr ""
 msgid "Unused."
 msgstr ""
 
-#  "Remover amigo"
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
-msgstr "Masita chinkachiy"
+msgstr ""
 
-#  "Agregar amigo"
 #: ../src/jarabe/view/buddymenu.py:70
 msgid "Make friend"
-msgstr "Masita yapay"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:87
 msgid "Shutdown"
 msgstr ""
 
-#  "Reiniciar"
 #: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
-msgstr "Hukmanta qallariy"
+msgstr "Wasitata qalltaña"
 
-#  "Salir"
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
-msgstr "Lluqsiy"
+msgstr ""
 
-#  "Mis ajustes"
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr "Aqllasqaykuna"
+msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
 msgid "Invite to %s"
 msgstr ""
 
-#  "<b>%s</b> falló al iniciar."
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> qallarispa pantaran."
+msgstr ""
 
-#  "Iniciando..."
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
-msgstr "Qallarichkan..."
+msgstr ""
 
-#  "Actividad falló al iniciar"
 #: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
-msgstr "Ruwanaqa qallarispa pantaran"
+msgstr ""
 
-#  "Ver fuente"
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
 msgid "View Source"
-msgstr "Chimputa qhaway"
+msgstr ""
 
-#  "Parar"
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
-msgstr "Sayachiy"
+msgstr "Sayt'ayaña"
 
-#  "Empezar nuevo"
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
-msgstr "Musuqta qallariy"
+msgstr ""
 
-#  "Mostrar contenidos"
 #: ../src/jarabe/view/palettes.py:180
 msgid "Show contents"
-msgstr "Ukhunpi qhaway"
+msgstr ""
 
-#  "Quitar"
 #: ../src/jarabe/view/palettes.py:229
 msgctxt "Volume"
 msgid "Remove"
-msgstr "Qhichuy"
+msgstr "Chhaqtayaña"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
@@ -1949,7 +1787,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
-msgstr ""
+msgstr "Naktayiri"
 
 #: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
@@ -1959,34 +1797,32 @@ msgstr ""
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-# "Ver código fuente: %r"
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, fuzzy
+#, python-format
 msgid "View source: %s"
-msgstr "Qhaway chimputa: %r"
+msgstr ""
 
-#  "Ver código fuente: %r"
 #: ../src/jarabe/view/viewsource.py:401
 #, python-format
 msgid "View source: %r"
-msgstr "Qhaway chimputa: %r"
+msgstr ""
 
-#  "Sugar en una ventana"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
-msgstr "Juk qhawanapi Azucar"
+msgstr "Mis'ki wakichawi"
+
+#~ msgid "Personal Unblocking Key (PUK):"
+#~ msgstr "Qhantayaña sayt'ayata jist'araña (PUK):"
 
 #  "%(interface)s: %(version)s"
 #, python-format
 #~ msgid "%(interface)s: %(version)s"
 #~ msgstr "%(interface)s: %(version)s"
 
-#  "%s"
 #, python-format
 #~ msgid "%s"
 #~ msgstr "%s"
 
-#  "%s (%s)"
 #, python-format
 #~ msgid "%s (%s)"
 #~ msgstr "%s (%s)"
