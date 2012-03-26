@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import os.path
 import logging
 from gettext import gettext as _
 import gconf
@@ -24,6 +25,7 @@ import gtk
 import gobject
 
 from sugar import env
+from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
@@ -43,16 +45,27 @@ def create_profile(name, color=None):
     client.set_string('/desktop/sugar/user/color', color.to_string())
     client.suggest_sync()
 
+    if profile.get_pubkey() and profile.get_profile().privkey_hash:
+        logging.info('Valid key pair found, skipping generation.')
+        return
+
     # Generate keypair
     import commands
     keypath = os.path.join(env.get_profile_path(), 'owner.key')
-    if not os.path.isfile(keypath):
-        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
-        (s, o) = commands.getstatusoutput(cmd)
-        if s != 0:
-            logging.error('Could not generate key pair: %d %s', s, o)
-    else:
-        logging.error('Keypair exists, skip generation.')
+    if os.path.exists(keypath):
+        os.rename(keypath, keypath + '.broken')
+        logging.warning('Existing private key %s moved to %s.broken',
+                        keypath, keypath)
+
+    if os.path.exists(keypath + '.pub'):
+        os.rename(keypath + '.pub', keypath + '.pub.broken')
+        logging.warning('Existing public key %s.pub moved to %s.pub.broken',
+                        keypath, keypath)
+
+    cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
+    (s, o) = commands.getstatusoutput(cmd)
+    if s != 0:
+        logging.error('Could not generate key pair: %d %s', s, o)
 
 
 class _Page(gtk.VBox):
