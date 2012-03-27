@@ -51,11 +51,11 @@ _actions_table = {
     'XF86AudioRaiseVolume': 'volume_up',
     '<alt>F11': 'volume_min',
     '<alt>F12': 'volume_max',
-    '0x93': 'frame',
+    'XF86MenuKB': 'frame',
     '<alt>Tab': 'next_window',
     '<alt><shift>Tab': 'previous_window',
     '<alt>Escape': 'close_window',
-    '0xDC': 'open_search',
+    'XF86WebCam': 'open_search',
 # the following are intended for emulator users
     '<alt><shift>f': 'frame',
     '<alt><shift>q': 'quit_emulator',
