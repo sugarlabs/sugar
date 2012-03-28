@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2011-04-24 02:59+0200\n"
+"PO-Revision-Date: 2012-03-28 23:40+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ug\n"
+"Language: ur\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.0.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -380,19 +380,19 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
-msgstr "..s% جانچ کی جا رہی"
+msgstr "..%s جانچ کی جا رہی"
 
 # s٪  ڈاؤن لوڈ کیا جا رہا ہے...
 #: ../extensions/cpsection/updater/view.py:127
 #, python-format
 msgid "Downloading %s..."
-msgstr "s% ڈاؤن لوڈ کیا جا رہا ہے..."
+msgstr "%s ڈاؤن لوڈ کیا جا رہا ہے..."
 
 # s٪ اپ ڈیٹ کیا جا رہا ہے...
 #: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Updating %s..."
-msgstr "s% اپ ڈیٹ کیا جا رہا ہے..."
+msgstr "%s اپ ڈیٹ کیا جا رہا ہے..."
 
 # آپ کا سافٹ ویئر اپ ڈیٹ ہے
 #: ../extensions/cpsection/updater/view.py:139
@@ -430,7 +430,7 @@ msgstr "منتخب کردہ انسٹال کریں"
 #: ../extensions/cpsection/updater/view.py:276
 #, python-format
 msgid "Download size: %s"
-msgstr "ڈاؤن لوڈ کا سائز : s%"
+msgstr "ڈاؤن لوڈ کا سائز : %s"
 
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
@@ -495,7 +495,7 @@ msgstr "چارج ہو گئی ہے"
 #: ../extensions/deviceicon/network.py:49
 #, python-format
 msgid "IP address: %s"
-msgstr "IP ایڈریس : s%"
+msgstr "IP ایڈریس : %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
@@ -582,19 +582,19 @@ msgstr "کنکشن کی پھر سے کوشش کریں"
 #: ../extensions/deviceicon/network.py:325
 #, python-format
 msgid "Error: %s"
-msgstr "غلطی s%"
+msgstr "غلطی %s"
 
 # تجاویز s%
 #: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
-msgstr "تجاویز s%"
+msgstr "تجاویز %s"
 
 #  منسلک ہے s%
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr "منسلک ہے s%"
+msgstr "منسلک ہے %s"
 
 # %d KB
 #: ../extensions/deviceicon/network.py:344
@@ -607,7 +607,7 @@ msgstr "%d KB"
 #: ../extensions/deviceicon/network.py:350
 #, fuzzy
 msgid "Check your PIN/PUK configuration."
-msgstr "اپنا PIN / Puk ترتیب چیک کریں."
+msgstr "اپنا PIN / PUK ترتیب چیک کریں."
 
 # اپنئ رسائی نقطہ کے نام کی ترتیب (APN) چیک کریں
 #: ../extensions/deviceicon/network.py:353
@@ -724,7 +724,7 @@ msgstr "سکرين شاٹ"
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr "\"s%\" کے اسکرین شاٹ"
+msgstr "\"%s\" کے اسکرین شاٹ"
 
 # ابتدا پر نک پوچھنے کو "غیر فعال کر دیا گیا"،  UNIX "نظام" اکاؤنٹ کے تہت طویل نام کو دوبارہ استعمال کرنے کے لئے.
 #: ../data/sugar.schemas.in.h:1
@@ -1265,21 +1265,25 @@ msgstr ""
 msgid "Decline"
 msgstr "منظور نہیں ہوا"
 
+# %d KB
 #: ../src/jarabe/frame/activitiestray.py:523
-#, python-format
+#, python-format, fuzzy
 msgid "%dB"
-msgstr ""
+msgstr "%dB"
 
 # %d KB
 #: ../src/jarabe/frame/activitiestray.py:525
+#, python-format
 #, python-format, fuzzy
 msgid "%dKB"
-msgstr "%d KB"
+msgstr "%dKB"
 
+# %d KB
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
+#, fuzzy
 msgid "%dMB"
-msgstr ""
+msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
