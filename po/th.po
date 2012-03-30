@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-29 12:50+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-03-30 03:26+0200\n"
+"Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -70,16 +70,14 @@ msgid "Identity"
 msgstr "เอกลักษณ์"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
-#, fuzzy
 msgid "Serial Number:"
-msgstr "หมายเลขลำดับ:"
+msgstr "Serial Number:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
 msgid "Software"
 msgstr "ซอฟต์แวร์"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
-#, fuzzy
 msgid "Build:"
 msgstr "สร้าง:"
 
@@ -936,7 +934,6 @@ msgstr "แผงควบคุมชูการ์: %s"
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
-#, fuzzy
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -1775,12 +1772,10 @@ msgid "Source"
 msgstr "ที่มา"
 
 #: ../src/jarabe/view/viewsource.py:374
-#, fuzzy
 msgid "Activity Bundle Source"
 msgstr "Activity Bundle Source"
 
 #: ../src/jarabe/view/viewsource.py:393
-#, fuzzy
 msgid "Sugar Toolkit Source"
 msgstr "Sugar Toolkit Source"
 
