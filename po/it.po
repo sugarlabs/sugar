@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-22 21:03+0200\n"
+"PO-Revision-Date: 2012-04-02 05:47+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -470,8 +470,9 @@ msgid "Connected"
 msgstr "Connesso"
 
 #: ../extensions/deviceicon/network.py:119
+#, fuzzy
 msgid "No wireless connection"
-msgstr ""
+msgstr "Nessuna connessione wireless"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
@@ -548,7 +549,7 @@ msgstr "Verifica la configurazione dell'Access Point Name (APN)"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr "Verifica la configurazione del Numero"
+msgstr "Verifica la configurazione del Numero."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
@@ -580,16 +581,19 @@ msgstr ""
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
+#, fuzzy
 msgid "Say selected text"
-msgstr ""
+msgstr "Dire il testo selezionato"
 
 #: ../extensions/deviceicon/speech.py:83
+#, fuzzy
 msgid "Stop playback"
-msgstr ""
+msgstr "Interrompere la riproduzione"
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Intonazione"
 
 #: ../extensions/deviceicon/speech.py:106
 #, fuzzy
@@ -597,8 +601,9 @@ msgid "Rate"
 msgstr "Data"
 
 #: ../extensions/deviceicon/speech.py:133
+#, fuzzy
 msgid "Pause playback"
-msgstr ""
+msgstr "Pausa di riproduzione"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -733,53 +738,73 @@ msgid "Font size that is used throughout the desktop."
 msgstr "Dimensione del carattere utilizzato in tutto il sistema."
 
 #: ../data/sugar.schemas.in.h:20
+#, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "APN rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:21
+#, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PIN rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:22
+#, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PUK rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:23
+#, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"configurazione di access point name rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:24
+#, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "numero di rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:25
+#, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "password di rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:26
+#, fuzzy
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "configurazione della password di rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:27
+#, fuzzy
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"configurazione del personal identification number (PIN) della rete GSM "
+"(DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:28
+#, fuzzy
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"configurazione della chiave personale di sblocco (PUK) della rete GSM "
+"(DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:29
+#, fuzzy
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"configurazione del numero telefonico della rete GSM "
+"(DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:30
+#, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "username dela rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:31
+#, fuzzy
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"configurazione dello username della rete GSM (DISAPPROVATO/INUTILIZZATO)"
 
 #: ../data/sugar.schemas.in.h:32
 msgid ""
@@ -839,12 +864,14 @@ msgid "List of keyboard options."
 msgstr "Lista di opzioni per la tastiera."
 
 #: ../data/sugar.schemas.in.h:43
+#, fuzzy
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Valore del intonazione per il servizio vocale di Sugar"
 
 #: ../data/sugar.schemas.in.h:44
+#, fuzzy
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Intonazione valore utilizzato dal servizio vocale a Sugar"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
@@ -859,12 +886,14 @@ msgid "Publish to Gadget"
 msgstr "Pubblica su Gadget"
 
 #: ../data/sugar.schemas.in.h:48
+#, fuzzy
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Valore del frequenza per il servizio vocale di Sugar"
 
 #: ../data/sugar.schemas.in.h:49
+#, fuzzy
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Frequenza valore utilizzato dal servizio vocale a Sugar"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -919,7 +948,7 @@ msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Gli utenti non saranno abilitati alla cancellazione di queste attività dalla "
-"Visualizzazione a lista"
+"Visualizzazione a lista."
 
 #: ../data/sugar.schemas.in.h:64
 msgid "Volume Level"
@@ -1111,8 +1140,9 @@ msgstr "Registra"
 
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
+#, fuzzy
 msgid "Register again"
-msgstr ""
+msgstr "Registra ancora"
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
@@ -1235,8 +1265,9 @@ msgid "Dismiss"
 msgstr "Abbandona"
 
 #: ../src/jarabe/frame/activitiestray.py:644
+#, fuzzy
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "L'altro partecipante ha annullato il trasferimento di file"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1414,8 +1445,9 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#, fuzzy
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplica"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
@@ -1438,32 +1470,38 @@ msgid "Start"
 msgstr "Avvia"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
+#, fuzzy
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Ordinato per data di modifica"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
+#, fuzzy
 msgid "Sort by date created"
-msgstr ""
+msgstr "Ordinato per data di creazione"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
+#, fuzzy
 msgid "Sort by size"
-msgstr ""
+msgstr "Ordinato per dimensione"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
+#, fuzzy
 msgid "Sort view"
-msgstr ""
+msgstr "Vista per ordinamento"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
 msgstr "Il tuo Diario è vuoto"
 
 #: ../src/jarabe/journal/listview.py:320
+#, fuzzy
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "La cartella documenti è vuota"
 
 #: ../src/jarabe/journal/listview.py:322
+#, fuzzy
 msgid "The device is empty"
-msgstr ""
+msgstr "Il dispositivo è vuoto"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1474,14 +1512,14 @@ msgid "Clear search"
 msgstr "Annulla ricerca"
 
 #: ../src/jarabe/journal/misc.py:273
-#, python-format
+#, python-format, fuzzy
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Versione precedente di %s attività"
 
 #: ../src/jarabe/journal/misc.py:274
-#, python-format
+#, python-format, fuzzy
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Voi ritornare alla versione %s"
 
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
@@ -1529,16 +1567,16 @@ msgstr "Visualizza Dettagli"
 #: ../src/jarabe/journal/palettes.py:160
 #, fuzzy
 msgid "Entries without a file cannot be sent."
-msgstr "Elementi senza file non possono essere copiati"
+msgstr "Elementi senza file non possono essere copiati."
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
-msgstr "Elementi senza file non possono essere copiati"
+msgstr "Elementi senza file non possono essere copiati."
 
 #: ../src/jarabe/journal/palettes.py:267
 msgid "Clipboard"
-msgstr ""
+msgstr "Cartella appunti"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
@@ -1564,191 +1602,242 @@ msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Liberi"
 
 #: ../src/jarabe/model/network.py:211
+#, fuzzy
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "La ragione per il cambiamento di stato del dispositivo è sconosciuta."
 
 #: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
 msgstr "Il cambiamento di stato è normale."
 
 #: ../src/jarabe/model/network.py:215
+#, fuzzy
 msgid "The device is now managed."
-msgstr ""
+msgstr "Il dispositivo è ora gestito."
 
 #: ../src/jarabe/model/network.py:217
+#, fuzzy
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Il dispositivo non è più gestito."
 
 #: ../src/jarabe/model/network.py:219
+#, fuzzy
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "Il dispositivo non è più gestito."
 
 #: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"La configurazione IP non può essere riservata (indirizzo non disponibile, "
+"timeout, ecc)."
 
 #: ../src/jarabe/model/network.py:224
+#, fuzzy
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "La configurazione IP non è più valida."
 
 #: ../src/jarabe/model/network.py:226
+#, fuzzy
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Sono state richieste informazioni riservate, ma non sono state fornite."
 
 #: ../src/jarabe/model/network.py:228
+#, fuzzy
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"Il richiedente 802.1X è stato disconnesso dal punto di accesso o dal server "
+"di autenticazione."
 
 #: ../src/jarabe/model/network.py:231
+#, fuzzy
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "La configurazione del richiedente 802.1X è fallita."
 
 #: ../src/jarabe/model/network.py:233
+#, fuzzy
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "Il richiedente 802.1X si è chiuso o ha fallito in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:235
+#, fuzzy
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "Il richiedente 802.1X ha richiesto troppo tempo per l'autenticazione."
 
 #: ../src/jarabe/model/network.py:237
+#, fuzzy
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Il servizio PPP non si è attivato nel tempo stabilito."
 
 #: ../src/jarabe/model/network.py:239
+#, fuzzy
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "Il servizio PPP si è disconnesso in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:241
+#, fuzzy
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Il servizio PPP è terminato o mancato in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:243
+#, fuzzy
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Il servizio DHCP non si è attivato nel tempo stabilito."
 
 #: ../src/jarabe/model/network.py:245
+#, fuzzy
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "Il servizio DHCP ha riportato un errore imprevisto."
 
 #: ../src/jarabe/model/network.py:247
+#, fuzzy
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Il servizio DHCP è terminato o mancato in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:249
+#, fuzzy
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Il servizio di connessione condivisa non si è attivato."
 
 #: ../src/jarabe/model/network.py:251
+#, fuzzy
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
+"Il servizio di connessione condivisa è terminato o mancato in modo "
+"imprevisto."
 
 #: ../src/jarabe/model/network.py:254
+#, fuzzy
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Il servizio AutoIP non si è attivato."
 
 #: ../src/jarabe/model/network.py:256
+#, fuzzy
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "Il servizio AutoIP ha riportato un errore imprevisto."
 
 #: ../src/jarabe/model/network.py:258
+#, fuzzy
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Il servizio AutoIP è terminato o mancato in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:260
+#, fuzzy
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "La composizione del numero è fallita perché la linea era occupata."
 
 #: ../src/jarabe/model/network.py:262
+#, fuzzy
 msgid "Dialing failed because there was no dial tone."
 msgstr ""
+"La composizione del numero è fallita perché non c'era il segnale di linea."
 
 #: ../src/jarabe/model/network.py:264
+#, fuzzy
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "La composizione del numero è fallita perché non c'era la linea."
 
 #: ../src/jarabe/model/network.py:266
+#, fuzzy
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Tempo scaduto per comporre il numero."
 
 #: ../src/jarabe/model/network.py:268
+#, fuzzy
 msgid "Dialing failed."
-msgstr ""
+msgstr "Composizione del numero fallita."
 
 #: ../src/jarabe/model/network.py:270
+#, fuzzy
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Inizializzazione del modem fallita."
 
 #: ../src/jarabe/model/network.py:272
+#, fuzzy
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "La selezione di GSM APN specificato è fallita"
 
 #: ../src/jarabe/model/network.py:274
+#, fuzzy
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Ricerca di reti inattiva."
 
 #: ../src/jarabe/model/network.py:276
+#, fuzzy
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Registrazione alla rete negata."
 
 #: ../src/jarabe/model/network.py:278
+#, fuzzy
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Registrazione alla rete scaduta."
 
 #: ../src/jarabe/model/network.py:280
+#, fuzzy
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "La registrazione alla rete GSM richiesta è fallita."
 
 #: ../src/jarabe/model/network.py:282
+#, fuzzy
 msgid "PIN check failed."
-msgstr ""
+msgstr "Controllo del PIN respinto."
 
 #: ../src/jarabe/model/network.py:284
+#, fuzzy
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Firmware per il dispositivo mancante."
 
 #: ../src/jarabe/model/network.py:286
+#, fuzzy
 msgid "The device was removed."
-msgstr ""
+msgstr "Il dispositivo è stato rimosso."
 
 #: ../src/jarabe/model/network.py:288
+#, fuzzy
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "NetworkManager è in pausa."
 
 #: ../src/jarabe/model/network.py:290
+#, fuzzy
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "La connessione attiva del dispositivo è stata rimossa o è scomparsa."
 
 #: ../src/jarabe/model/network.py:293
+#, fuzzy
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Disconnessione richiesta dall'utente."
 
 #: ../src/jarabe/model/network.py:295
+#, fuzzy
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Il collegamento del dispositivo è cambiato."
 
 #: ../src/jarabe/model/network.py:297
+#, fuzzy
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "Connessione esistente del dispositivo è stata assunta."
 
 #: ../src/jarabe/model/network.py:299
+#, fuzzy
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Il supplicant è ora disponibile."
 
 #: ../src/jarabe/model/network.py:301
+#, fuzzy
 msgid "The modem could not be found."
-msgstr ""
+msgstr "Il modem non è stato trovato."
 
 #: ../src/jarabe/model/network.py:303
+#, fuzzy
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "La connessione Bluetooth non riuscita o scaduta."
 
 #: ../src/jarabe/model/network.py:305
+#, fuzzy
 msgid "Unused."
-msgstr ""
+msgstr "Inutilizzato."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1780,17 +1869,18 @@ msgid "Invite to %s"
 msgstr "Invito per %s"
 
 #: ../src/jarabe/view/launcher.py:145
-#, python-format
+#, python-format, fuzzy
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b> non è riuscito ad avviarsi."
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
 msgstr "Inizio..."
 
 #: ../src/jarabe/view/palettes.py:58
+#, fuzzy
 msgid "Activity failed to start"
-msgstr ""
+msgstr "L'attività ha fallito l'avvio"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
@@ -1828,8 +1918,9 @@ msgid "Activity Bundle Source"
 msgstr "Sorgente della Attività"
 
 #: ../src/jarabe/view/viewsource.py:393
+#, fuzzy
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Sorgente della Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:400
 #, python-format, 
@@ -1842,5 +1933,6 @@ msgid "View source: %r"
 msgstr "Vedi codice sorgente: %r"
 
 #: ../src/jarabe/util/emulator.py:40
+#, fuzzy
 msgid "Sugar in a window"
-msgstr ""
+msgstr "Sugar in una finestra"
