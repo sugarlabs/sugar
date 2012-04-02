@@ -543,13 +543,13 @@ class MeshBox(gtk.VBox):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
-                and ap.name == 'olpc-mesh':
+                and ap.ssid == 'olpc-mesh':
             logging.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return
 
         if self._adhoc_manager is not None and \
-                network.is_sugar_adhoc_network(ap.name) and \
+                network.is_sugar_adhoc_network(ap.ssid) and \
                 ap.mode == network.NM_802_11_MODE_ADHOC:
             if old_hash_value is None:
                 # new Ad-hoc network finished initializing

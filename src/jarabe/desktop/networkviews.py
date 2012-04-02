@@ -60,7 +60,8 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._disconnect_item = None
         self._connect_item = None
         self._filtered = False
-        self._name = initial_ap.name
+        self._ssid = initial_ap.ssid
+        self._display_name = network.ssid_to_display_name(self._ssid)
         self._mode = initial_ap.mode
         self._strength = initial_ap.strength
         self._flags = initial_ap.flags
@@ -71,11 +72,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self._color = None
 
         if self._mode == network.NM_802_11_MODE_ADHOC and \
-                network.is_sugar_adhoc_network(self._name):
+                network.is_sugar_adhoc_network(self._ssid):
             self._color = profile.get_color()
         else:
             sha_hash = hashlib.sha1()
-            data = self._name + hex(self._flags)
+            data = self._ssid + hex(self._flags)
             sha_hash.update(data)
             digest = hash(sha_hash.digest())
             index = digest % len(xocolor.colors)
@@ -118,8 +119,8 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
-        p = palette.Palette(primary_text=glib.markup_escape_text(self._name),
-                            icon=self._palette_icon)
+        label = glib.markup_escape_text(self._display_name)
+        p = palette.Palette(primary_text=label, icon=self._palette_icon)
 
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self.__connect_activate_cb)
@@ -182,7 +183,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def _update_icon(self):
         if self._mode == network.NM_802_11_MODE_ADHOC and \
-                network.is_sugar_adhoc_network(self._name):
+                network.is_sugar_adhoc_network(self._ssid):
             channel = max([1] + [ap.channel for ap in
                                  self._access_points.values()])
             if self._device_state == network.NM_DEVICE_STATE_ACTIVATED and \
@@ -208,7 +209,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def _update_badge(self):
         if self._mode != network.NM_802_11_MODE_ADHOC:
-            if network.find_connection_by_ssid(self._name) is not None:
+            if network.find_connection_by_ssid(self._ssid) is not None:
                 self.props.badge_name = 'emblem-favorite'
                 self._palette_icon.props.badge_name = 'emblem-favorite'
             elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
@@ -333,19 +334,20 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def _connect(self):
         # Activate existing connection, if there is one
-        connection = network.find_connection_by_ssid(self._name)
+        connection = network.find_connection_by_ssid(self._ssid)
         if connection:
-            logging.debug("Activating existing connection for %s", self._name)
+            logging.debug('Activating existing connection for SSID %r',
+                          self._ssid)
             connection.activate(self._device)
             return
 
         # Otherwise, create new connection and activate it
-        logging.debug("Creating new connection for %s", self._name)
+        logging.debug('Creating new connection for SSID %r', self._ssid)
         settings = Settings()
-        settings.connection.id = str(self._name)
+        settings.connection.id = self._display_name
         settings.connection.uuid = unique_id()
         settings.connection.type = '802-11-wireless'
-        settings.wireless.ssid = self._name
+        settings.wireless.ssid = self._ssid
 
         if self._mode == network.NM_802_11_MODE_INFRA:
             settings.wireless.mode = 'infrastructure'
@@ -366,12 +368,12 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                             self.get_first_ap().model)
 
     def set_filter(self, query):
-        self._filtered = self._name.lower().find(query) == -1
+        self._filtered = self._display_name.lower().find(query) == -1
         self._update_icon()
         self._update_color()
 
     def create_keydialog(self, response):
-        keydialog.create(self._name, self._flags, self._wpa_flags,
+        keydialog.create(self._ssid, self._flags, self._wpa_flags,
                          self._rsn_flags, self._device_caps, response)
 
     def update_strength(self):
@@ -414,7 +416,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
 
     def is_olpc_mesh(self):
         return self._mode == network.NM_802_11_MODE_ADHOC \
-            and self.name == 'olpc-mesh'
+            and self._ssid == 'olpc-mesh'
 
     def remove_all_aps(self):
         for ap in self._access_points.values():
@@ -580,7 +582,6 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._disconnect_item = None
         self._connect_item = None
         self._filtered = False
-        self._name = ''
         self._device_state = None
         self._active = False
         device = mesh_mgr.mesh_device

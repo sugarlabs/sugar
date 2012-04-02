@@ -87,8 +87,9 @@ class KeyDialog(gtk.Dialog):
 
         self.set_has_separator(False)
 
-        label = gtk.Label("A wireless encryption key is required for\n" \
-                          " the wireless network '%s'." % self._ssid)
+        display_name = network.ssid_to_display_name(ssid)
+        label = gtk.Label(_("A wireless encryption key is required for\n"
+                            " the wireless network '%s'.") % (display_name, ))
         self.vbox.pack_start(label)
 
         self.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,

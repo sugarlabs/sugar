@@ -609,7 +609,7 @@ class AccessPoint(gobject.GObject):
         self._initialized = False
         self._bus = dbus.SystemBus()
 
-        self.name = ''
+        self.ssid = ''
         self.strength = 0
         self.flags = 0
         self.wpa_flags = 0
@@ -663,7 +663,7 @@ class AccessPoint(gobject.GObject):
         else:
             fl |= 1 << 6
 
-        hashstr = str(fl) + '@' + self.name
+        hashstr = str(fl) + '@' + self.ssid
         return hash(hashstr)
 
     def _update_properties(self, properties):
@@ -673,7 +673,7 @@ class AccessPoint(gobject.GObject):
             old_hash = None
 
         if 'Ssid' in properties:
-            self.name = properties['Ssid']
+            self.ssid = properties['Ssid']
         if 'Strength' in properties:
             self.strength = properties['Strength']
         if 'Flags' in properties:
@@ -1051,3 +1051,46 @@ def disconnect_access_points(ap_paths):
             dev_obj = bus.get_object(NM_SERVICE, dev_path)
             dev = dbus.Interface(dev_obj, NM_DEVICE_IFACE)
             dev.Disconnect()
+
+
+def _is_non_printable(char):
+    """
+    Return True if char is a non-printable unicode character, False otherwise
+    """
+    return (char < u' ') or (u'~' < char < u'\xA0') or (char == u'\xAD')
+
+
+def ssid_to_display_name(ssid):
+    """Convert an SSID into a unicode string for recognising Access Points
+
+    Return a unicode string that's useful for recognising and
+    distinguishing between Access Points (APs).
+
+    IEEE 802.11 defines SSIDs as arbitrary byte sequences. As random
+    bytes are not very user-friendly, most APs use some human-readable
+    character string as SSID. However, because there's no standard
+    specifying what encoding to use, AP vendors chose various
+    different encodings. Since there's also no indication of what
+    encoding was used for a particular SSID, the best we can do for
+    turning an SSID into a displayable string is to try a couple of
+    encodings based on some heuristic.
+
+    We're currently using the following heuristic:
+
+    1. If the SSID is a valid character string consisting only of
+       printable characters in one of the following encodings (tried in
+       the given order), decode it accordingly:
+       UTF-8, ISO-8859-1, Windows-1251.
+    2. Return a hex dump of the SSID.
+    """
+    for encoding in ['utf-8', 'iso-8859-1', 'windows-1251']:
+        try:
+            display_name = unicode(ssid, encoding)
+        except UnicodeDecodeError:
+            continue
+
+        if not [True for char in display_name if _is_non_printable(char)]:
+            # Only printable characters
+            return display_name
+
+    return ':'.join(['%02x' % (ord(byte), ) for byte in ssid])
