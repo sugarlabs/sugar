@@ -728,12 +728,20 @@ def get_secret_agent():
     return _secret_agent
 
 
-def _activate_reply_cb(connection):
-    logging.debug('Activated connection: %s', connection)
+def _activate_reply_cb(connection_path):
+    logging.debug('Activated connection: %s', connection_path)
 
 
 def _activate_error_cb(err):
     logging.error('Failed to activate connection: %s', err)
+
+
+def _add_and_activate_reply_cb(settings_path, connection_path):
+    logging.debug('Added and activated connection: %s', connection_path)
+
+
+def _add_and_activate_error_cb(err):
+    logging.error('Failed to add and activate connection: %s', err)
 
 
 class Connection(gobject.GObject):
@@ -900,10 +908,11 @@ def activate_connection_by_path(connection, device_o,
 
 
 def add_and_activate_connection(device_o, settings, specific_object):
-    get_manager().AddAndActivateConnection(settings.get_dict(), device_o,
-                                           specific_object,
-                                           reply_handler=_activate_reply_cb,
-                                           error_handler=_activate_error_cb)
+    manager = get_manager()
+    manager.AddAndActivateConnection(settings.get_dict(), device_o,
+                                     specific_object,
+                                     reply_handler=_add_and_activate_reply_cb,
+                                     error_handler=_add_and_activate_error_cb)
 
 
 def _migrate_old_wifi_connections():
