@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-22 20:50+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-11 12:29+0200\n"
+"Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -454,8 +454,8 @@ msgstr "IP-Addresse: %s"
 # (mschlager) war 'Nicht verbunden', ich würde aber eher erwarten, dass das die Beschriftung eines Menüeintrags ist, mit dem man eine Verbindung trennt, was dann in der Folge die Meldung 'Disconnecting...' liefert.
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "Verbindung trennen"
 
@@ -465,18 +465,18 @@ msgstr "Verbindung trennen"
 # have a good mapping
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "Verbinde..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "Verbunden"
 
@@ -506,9 +506,9 @@ msgid "Please wait..."
 msgstr "Bitte warten..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "Verbinden"
 
@@ -566,20 +566,20 @@ msgstr "Überprüfe deine Einstellung der Nummer."
 msgid "Check your configuration."
 msgstr "Überprüfe deine Einstellungen."
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "Maschennetzwerk"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Maschennetzwerk %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "Keine GSM-Verbindung verfügbar."
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "Verbindung in der Menüleiste erstellen."
 
@@ -1026,7 +1026,7 @@ msgstr "Später"
 msgid "Restart now"
 msgstr "Jetzt neu starten"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "Fertig"
 
@@ -1155,19 +1155,28 @@ msgstr "Favoritenansicht"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+"Für das Drahtlosnetzwerk '%s'\n"
+"wird ein Netzwerkschlüssel benötigt."
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "Schlüsseltyp:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "Authentifizierungstyp:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr "WLAN-Sicherheit:"
 
@@ -1184,12 +1193,12 @@ msgstr "Fortsetzen"
 msgid "Join"
 msgstr "Beitreten"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc-Netzwerk %d"
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Maschennetzwerk %d"
@@ -1294,20 +1303,20 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "Name:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "Klicken zum Wechseln der Farbe:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Zurück"
 
 # (Markus S.) war 'Nächste'
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "Vor"
 
@@ -1843,7 +1852,8 @@ msgid "Sugar Toolkit Source"
 msgstr "Quelltext des Sugar-Werkzeugkastens"
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "View source: %s"
 msgstr "Quelltext anzeigen: %s"
 
