@@ -19,7 +19,7 @@ from jarabe.view.viewsource import setup_view_source
 from jarabe.model import shell
 
 
-BOUND_KEYS = ['0xEC', '<alt><shift>v']
+BOUND_KEYS = ['XF86KbdLightOnOff', '<alt><shift>v']
 
 
 def handle_key_press(key):
