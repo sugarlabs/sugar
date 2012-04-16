@@ -350,6 +350,8 @@ class NetworkManagerObserver(object):
 
         device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
         if device_type == network.NM_DEVICE_TYPE_WIFI:
+            if device_o in self._devices:
+                return
             self._devices[device_o] = DeviceObserver(device)
             self._devices[device_o].connect('access-point-added',
                                             self.__ap_added_cb)
@@ -358,6 +360,8 @@ class NetworkManagerObserver(object):
             if self._have_adhoc_networks:
                 self._box.add_adhoc_networks(device)
         elif device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
+            if device_o == self._olpc_mesh_device_o:
+                return
             self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
@@ -378,6 +382,7 @@ class NetworkManagerObserver(object):
 
         if self._olpc_mesh_device_o == device_o:
             self._box.disable_olpc_mesh(device_o)
+            self._olpc_mesh_device_o = None
 
     def __ap_added_cb(self, device_observer, access_point):
         self._box.add_access_point(device_observer.device, access_point)

@@ -1020,6 +1020,9 @@ class NetworkManagerObserver(object):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_op):
+        if device_op in self._devices:
+            return
+
         nm_device = self._bus.get_object(network.NM_SERVICE, device_op)
         props = dbus.Interface(nm_device, dbus.PROPERTIES_IFACE)
 
