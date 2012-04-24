@@ -21,6 +21,7 @@ import urlparse
 import tempfile
 
 import gobject
+import gtk
 
 from sugar import mime
 
@@ -101,6 +102,9 @@ class Clipboard(gobject.GObject):
     def delete_object(self, object_id):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
+        if not self._objects:
+            gtk_clipboard = gtk.Clipboard()
+            gtk_clipboard.clear()
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)
 

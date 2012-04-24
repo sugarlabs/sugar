@@ -123,6 +123,11 @@ class ClipboardTray(tray.VTray):
         icon = self._icons[object_id]
         self.remove_item(icon)
         del self._icons[object_id]
+        # select the last available icon
+        if self._icons:
+            last_icon = self.get_children()[-1]
+            last_icon.props.active = True
+
         logging.debug('ClipboardTray: %r was deleted', object_id)
 
     def drag_motion_cb(self, widget, context, x, y, time):
