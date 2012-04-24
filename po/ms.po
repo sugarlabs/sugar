@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
 "PO-Revision-Date: 2012-03-22 21:12+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -441,24 +441,24 @@ msgstr "Alamat IP: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "Nyahsambung"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "Sambung..."
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "Disambung"
 
@@ -487,9 +487,9 @@ msgid "Please wait..."
 msgstr "Sila tunggu..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "Sambung"
 
@@ -547,20 +547,20 @@ msgstr "Periksa konfigurasi Nombor."
 msgid "Check your configuration."
 msgstr "Periksa konfigurasi anda."
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "Rangkaian jejaring"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Rangkaian jejaring %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "Tiada sambungan GSM."
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "Cipta satu sambungan dalan panel kawalan."
 
@@ -981,7 +981,7 @@ msgstr ""
 msgid "Restart now"
 msgstr ""
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 #, fuzzy
 msgid "Done"
 msgstr "Semua tiada"
@@ -1101,19 +1101,26 @@ msgstr ""
 msgid "<Ctrl>1"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr ""
 
@@ -1129,12 +1136,12 @@ msgstr ""
 msgid "Join"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 #, python-format,
 msgid "Mesh Network %d"
@@ -1239,19 +1246,19 @@ msgstr ""
 msgid "F4"
 msgstr ""
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "Nama:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "Klik untuk tukar warna anda:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr ""
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr ""
 
@@ -1777,7 +1784,8 @@ msgid "Sugar Toolkit Source"
 msgstr "Sumber set peralatan Sugar"
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "View source: %s"
 msgstr "Lihat sumber: %s"
 

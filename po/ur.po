@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-28 23:40+0200\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-09 19:10+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ur\n"
@@ -404,6 +404,7 @@ msgstr "آپ کا سافٹ ویئر اپ ڈیٹ ہے"
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] ""
+msgstr[1] ""
 
 # اپ ڈیٹس کے لئے جانچ کی جا رہی...
 #: ../extensions/cpsection/updater/view.py:159
@@ -420,6 +421,7 @@ msgstr "اپ ڈیٹس کی انسٹالیشن ہورہی ہے..."
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] ""
+msgstr[1] ""
 
 #  منتخب کردہ انسٹال کریں
 #: ../extensions/cpsection/updater/view.py:255
@@ -499,8 +501,8 @@ msgstr "IP ایڈریس : %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "منقطع کریں"
 
@@ -510,17 +512,17 @@ msgstr "منقطع کریں"
 # have a good mapping
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "کنيکشن مل رہا ہے۔۔۔"
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "کنيکشن ہو گيا ہے"
 
@@ -554,9 +556,9 @@ msgid "Please wait..."
 msgstr "براہ مہربانی انتظار کریں..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "کنيکٹ"
 
@@ -624,23 +626,23 @@ msgstr "نمبر ترتیب کو چیک کریں."
 msgid "Check your configuration."
 msgstr "اپنی کنفیگریشن کو چیک کریں."
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "ميش نيٹ ورک"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 #, python-format,
 msgid "Mesh Network %s"
 msgstr "ميش نيٹ ورک %s"
 
 # کوئی GSM کنکشن دستیاب نہیں ہے.
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "کوئی GSM کنکشن دستیاب نہیں ہے."
 
 # کنٹرول پینل میں ایک کنکشن بنائیں.
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "کنٹرول پینل میں ایک کنکشن بنائیں."
 
@@ -659,8 +661,9 @@ msgid "Stop playback"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "سطح"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
@@ -822,53 +825,65 @@ msgid "Font size that is used throughout the desktop."
 msgstr "فونٹ سائزجو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے."
 
 #: ../data/sugar.schemas.in.h:20
+#, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک APNGSM نیٹ ورک APN"
 
 #: ../data/sugar.schemas.in.h:21
+#, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک PIN"
 
 #: ../data/sugar.schemas.in.h:22
+#, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک PUK"
 
 #: ../data/sugar.schemas.in.h:23
+#, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک تک رسائی کے نقطہ نام کی ترتیب"
 
 #: ../data/sugar.schemas.in.h:24
+#, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک نمبر"
 
 #: ../data/sugar.schemas.in.h:25
+#, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک پاس ورڈ"
 
 #: ../data/sugar.schemas.in.h:26
+#, fuzzy
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک پاس ورڈ کی ترتیب"
 
 #: ../data/sugar.schemas.in.h:27
+#, fuzzy
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک کی ذاتی شناختی نمبر کی ترتیب"
 
 #: ../data/sugar.schemas.in.h:28
+#, fuzzy
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک کی ذاتی کھولنے کی کلید کی ترتیب"
 
 #: ../data/sugar.schemas.in.h:29
+#, fuzzy
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک ٹیلی فون نمبر کی ترتیب"
 
 #: ../data/sugar.schemas.in.h:30
+#, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک صارف کا نام"
 
 #: ../data/sugar.schemas.in.h:31
+#, fuzzy
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM نیٹ ورک صارف کا نام کی ترتیب"
 
 # اگر یہ سچ ہے تو شوگر ہمیں جیبر سرور کے دیگر صارفین کے لئے تلاش کرنا آسان بنا دے گا.
 #: ../data/sugar.schemas.in.h:32
@@ -1087,7 +1102,7 @@ msgstr "بعد ميں"
 msgid "Restart now"
 msgstr "ابھی دوبارہ چلائيں"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "مکمل"
 
@@ -1213,19 +1228,26 @@ msgstr "پسندیدگان نظارہ"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "اصل قسم:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "اجاذت دينے کی قسم:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr ""
 
@@ -1241,12 +1263,12 @@ msgstr "پھر شروع کريں"
 msgid "Join"
 msgstr "شرکت کريں"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 #, python-format,
 msgid "Mesh Network %d"
@@ -1267,6 +1289,7 @@ msgstr "منظور نہیں ہوا"
 
 # %d KB
 #: ../src/jarabe/frame/activitiestray.py:523
+#, python-format
 #, python-format, fuzzy
 msgid "%dB"
 msgstr "%dB"
@@ -1356,19 +1379,19 @@ msgstr ""
 msgid "F4"
 msgstr ""
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "نام:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "رنگ تبديل کرنے کے ليے کلک کريں:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "واپس"
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "آگے"
 
