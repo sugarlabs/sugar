@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-04-02 05:47+0200\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-02 06:39+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -447,25 +447,25 @@ msgstr "Indirizzo IP: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "Disconnetti"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "Connessione..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "Connesso"
 
@@ -495,9 +495,9 @@ msgid "Please wait..."
 msgstr "Attendi..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "Connetti"
 
@@ -556,21 +556,21 @@ msgid "Check your configuration."
 msgstr "Verifica la configurazione."
 
 # A complete translation in italian: "rete a maglie" becames a tautology
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "Rete Mesh"
 
 # A complete translation in italian: "rete a maglie" becames a tautology
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Rete Mesh %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "Connessione GSM non disponibile."
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "Definisci una connessione nel Pannello di Controllo."
 
@@ -1043,7 +1043,7 @@ msgstr "Dopo"
 msgid "Restart now"
 msgstr "Riavvia adesso"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "Fatto"
 
@@ -1174,19 +1174,26 @@ msgstr "Visualizza i Preferiti"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "Tipo Chiave:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "Tipo di Autenticazione:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr "Wireless Security:"
 
@@ -1203,13 +1210,13 @@ msgstr "Riprendi"
 msgid "Join"
 msgstr "Associa"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Rete Ad-hoc %d"
 
 # A complete translation in italian: "rete a maglie" becames a tautology
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Rete Mesh %d"
@@ -1316,19 +1323,19 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "Seleziona per cambiare colore:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Indietro"
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "Prossimo"
 
@@ -1512,11 +1519,13 @@ msgid "Clear search"
 msgstr "Annulla ricerca"
 
 #: ../src/jarabe/journal/misc.py:273
+#, python-format
 #, python-format, fuzzy
 msgid "Older Version Of %s Activity"
 msgstr "Versione precedente di %s attività"
 
 #: ../src/jarabe/journal/misc.py:274
+#, python-format
 #, python-format, fuzzy
 msgid "Do you want to downgrade to version %s"
 msgstr "Voi ritornare alla versione %s"
@@ -1565,9 +1574,8 @@ msgid "View Details"
 msgstr "Visualizza Dettagli"
 
 #: ../src/jarabe/journal/palettes.py:160
-#, fuzzy
 msgid "Entries without a file cannot be sent."
-msgstr "Elementi senza file non possono essere copiati."
+msgstr "Elementi senza file non possono essere inviato."
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
@@ -1623,9 +1631,10 @@ msgstr "Il dispositivo non è più gestito."
 #: ../src/jarabe/model/network.py:219
 #, fuzzy
 msgid "The device could not be readied for configuration."
-msgstr "Il dispositivo non è più gestito."
+msgstr "Il dispositivo non può essere pronto per la configurazione."
 
 #: ../src/jarabe/model/network.py:221
+#, fuzzy
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
@@ -1869,6 +1878,7 @@ msgid "Invite to %s"
 msgstr "Invito per %s"
 
 #: ../src/jarabe/view/launcher.py:145
+#, python-format
 #, python-format, fuzzy
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> non è riuscito ad avviarsi."
@@ -1923,7 +1933,8 @@ msgid "Sugar Toolkit Source"
 msgstr "Sorgente della Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "View source: %s"
 msgstr "Vedi codice sorgente: %s"
 

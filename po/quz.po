@@ -6,14 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-24 06:02+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: quz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #  "Acerca de mí"
 #: ../extensions/cpsection/aboutme/__init__.py:24
@@ -501,26 +503,26 @@ msgstr "Direccion IP: %s"
 #  "Desconectar"
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "T'aqachiy"
 
 #  "Conectando..."
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "T'inkichachkan..."
 
 #  "Conectado"
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "T'inkisqa"
 
@@ -554,9 +556,9 @@ msgstr "Suyariy..."
 
 #  "Conectar"
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "T'inkiy"
 
@@ -625,21 +627,21 @@ msgid "Check your configuration."
 msgstr "Kamachinaykita chiqaqchay."
 
 #  "Red Malla"
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "Red Malla"
 
 #  "Red Malla %s"
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Red Malla %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr ""
 
@@ -1073,7 +1075,7 @@ msgid "Restart now"
 msgstr "Kunan qallariy"
 
 #  "Hecho"
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "Ruwasqaña"
 
@@ -1208,19 +1210,26 @@ msgstr "Aqllasqakuna qhaway"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr ""
 
@@ -1238,16 +1247,17 @@ msgstr "Hukmanta ruway"
 msgid "Join"
 msgstr "Huñunakuy"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
 # "Red Malla %s"
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
+#, python-format
 #, python-format, fuzzy
 msgid "Mesh Network %d"
-msgstr "Red Malla %s"
+msgstr "Red Malla %d"
 
 #  "No se puede conectar al servidor."
 #: ../src/jarabe/desktop/schoolserver.py:143
@@ -1366,22 +1376,22 @@ msgid "F4"
 msgstr "F4"
 
 #  "Nombre:"
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "Suti:"
 
 #  "Clic para cambiar de color:"
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "Llimp'ita tikranapaq klik ruway:"
 
 #  "Atrás"
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Kutichiy"
 
 #  "Siguiente"
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "Qatiq"
 
@@ -1961,9 +1971,10 @@ msgstr ""
 
 # "Ver código fuente: %r"
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, fuzzy
+#, python-format
+#, python-format, 
 msgid "View source: %s"
-msgstr "Qhaway chimputa: %r"
+msgstr "Qhaway chimputa: %s"
 
 #  "Ver código fuente: %r"
 #: ../src/jarabe/view/viewsource.py:401

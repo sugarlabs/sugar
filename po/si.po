@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-22 20:59+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-23 08:50+0200\n"
+"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
@@ -438,8 +438,8 @@ msgstr "IP ලිපිනය: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "විසන්ධි කරන්න"
 
@@ -451,18 +451,18 @@ msgstr "විසන්ධි කරන්න"
 # have a good mapping
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "සම්බන්ධවෙමින්..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "සම්බන්ධ විය"
 
@@ -491,9 +491,9 @@ msgid "Please wait..."
 msgstr "කරුණාකර රැදී සිටින්න..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "සම්බන්ධ වෙන්න"
 
@@ -551,20 +551,20 @@ msgstr "ඔබගේ අංක වින්‍යාසගත කිරීම �
 msgid "Check your configuration."
 msgstr "ඔබගේ වින්‍යාසගත කිරීම පරීක්ෂා කරන්න."
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "දැල් ජාලය"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "දැල් ජාලය %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "GSM සම්බන්ධතා නැත."
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "පාලක පැනලයේ සම්බන්ධතාවයක් තනන්න."
 
@@ -728,37 +728,33 @@ msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:21
-#, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල PIN (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:22
-#, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල PUK (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල ප්‍රවේශන ස්ථාන නාමය සකසන්න (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:24
-#, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
+msgstr "GSM ජාල අංකය (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:25
-#, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
+msgstr "GSM ජාල මුරපදය (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල මුරපදය සකසන්න (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:27
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල පුද්ගලික හැඳිනුම් අංකය සකසන්න (DEPRECATED/UNUSED) "
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
@@ -769,13 +765,12 @@ msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:30
-#, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
+msgstr "GSM ජාල පරිශීලක නාමය (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල පරිශීලක නාමය සකසන්න (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:32
 msgid ""
@@ -904,7 +899,7 @@ msgstr "පරිශීලක වර්ණය"
 
 #: ../data/sugar.schemas.in.h:61
 msgid "User Name"
-msgstr "පරිශීලක නම"
+msgstr "පරිශීලක නමය"
 
 #: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
@@ -1006,7 +1001,7 @@ msgstr "පසුව"
 msgid "Restart now"
 msgstr "දැන් යළි ආරම්භ කරන්න"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "කළා"
 
@@ -1086,11 +1081,11 @@ msgstr "ත්‍රිකෝණය"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
-msgstr "ලියාපදිංචිය අසමත් විය"
+msgstr "ලියාපදිංචිය අසාර්ථකයි"
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
-msgstr "ලියාපදිංචිය සාර්ථක විය"
+msgstr "ලියාපදිංචිය සාර්ථකයි"
 
 #: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
@@ -1133,19 +1128,26 @@ msgstr "කැමති දසුන"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "යතුරු වර්ගය:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "සත්‍යාපන වර්ගය:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 පෞද්ගලික"
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr "රැහැන් රහිත ආරක්ෂණය:"
 
@@ -1162,12 +1164,12 @@ msgstr "නැවත අරඹන්න"
 msgid "Join"
 msgstr "එකතු වෙන්න"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "%d Ad-hoc ජාලය"
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
 msgstr "දැල් ජාලය %d"
@@ -1272,19 +1274,19 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "නම:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "පාට වෙනස් කිරීමට ක්ලික් කරන්න:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "ආපසු"
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "ඊළඟ"
 
@@ -1816,7 +1818,8 @@ msgid "Sugar Toolkit Source"
 msgstr "Sugar මෙවලම් මූලය"
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "View source: %s"
 msgstr "මූලය පෙන්වන්න: %s"
 

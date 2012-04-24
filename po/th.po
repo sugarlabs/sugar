@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-30 03:26+0200\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-17 04:50+0200\n"
 "Last-Translator: Meechai <malaku38@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
@@ -432,24 +432,24 @@ msgstr "IP address: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "ตัดการเชื่อมต่อ"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "กำลังเชื่อมต่อ..."
 
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "เชื่อมต่อแล้ว"
 
@@ -478,9 +478,9 @@ msgid "Please wait..."
 msgstr "กรุณารอสักครู่..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "เชื่อมต่อ"
 
@@ -538,20 +538,20 @@ msgstr "ตรวจสอบการตั้งหมายเลข"
 msgid "Check your configuration."
 msgstr "ตรวจสอบการตั้งค่าของคุณ"
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "เครือข่ายตาข่าย"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "เครือข่ายตาข่าย %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "ไม่มีการเชื่อมต่อระบบ GSM ที่ใช้ได้"
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "สร้างการเชื่อมต่อบนแผงควบคุม"
 
@@ -911,7 +911,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
-#, python-format, 
+#, python-format,
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
@@ -921,13 +921,13 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr "แผงควบคุมชูการ์: คีย์=%s ไม่สามารถตัวเลือกที่ใช้ได้"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "sugar-control-panel: %s"
 msgstr "แผงควบคุมชูการ์: %s"
 
@@ -984,7 +984,7 @@ msgstr "ภายหลัง"
 msgid "Restart now"
 msgstr "ภายหลัง"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "เรียบร้อยแล้ว"
 
@@ -1102,19 +1102,28 @@ msgstr "แสดงรายการโปรด"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+"คีย์การเข้ารหัสเป็นสิ่งจำเป็นสำหรับ \n"
+"เครือข่ายไร้สาย '%s'"
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "ชนิดกุญแจ:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "รูปแบบการยืนยันตัวบุคคล:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 ส่วนบุคคล"
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr "ความปลอดภัยของเครือข่ายไร้สาย:"
 
@@ -1131,12 +1140,12 @@ msgstr "ทำต่อ"
 msgid "Join"
 msgstr "ร่วม"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "เครือข่าย Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
 msgstr "เครือข่ายตาข่าย %d"
@@ -1239,19 +1248,19 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "ชื่อ:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "คลิกเพื่อเปลี่ยนสี:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "กลับ"
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "ถัดไป"
 
@@ -1780,7 +1789,8 @@ msgid "Sugar Toolkit Source"
 msgstr "Sugar Toolkit Source"
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "View source: %s"
 msgstr "ดูที่มา: %s"
 

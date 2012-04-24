@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-14 00:32-0400\n"
-"PO-Revision-Date: 2012-03-22 21:03+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-04-23 17:04+0200\n"
+"Last-Translator: Jimmy <jimmy@laptop.org>\n"
 "Language-Team: Sugar Labs\n"
 "Language: rw\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,6 @@ msgstr ""
 msgid "About Me"
 msgstr "Ibinyerecyeyeho"
 
-# fFce8G  <a href="http://vlwhnwvydbsr.com/">vlwhnwvydbsr</a>, [url=http://fufapswjexnd.com/]fufapswjexnd[/url], [link=http://imtaznvbwfck.com/]imtaznvbwfck[/link], http://hwkbxoqlvlyh.com/
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
 msgstr "Ugomba kwinjiza izina."
@@ -114,8 +113,9 @@ msgid "Full license:"
 msgstr "Uburenganzira bwuzuye:"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
+#, fuzzy
 msgid "Date & Time"
-msgstr "Itariki n`igihe"
+msgstr "Itariki n'igihe"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
@@ -286,8 +286,9 @@ msgstr ""
 "kubonana ku murongo,niyo bataba bari kuri rezo zimwe."
 
 #: ../extensions/cpsection/network/view.py:140
+#, fuzzy
 msgid "Server:"
-msgstr "Server:"
+msgstr "Seriveri:"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
@@ -439,25 +440,25 @@ msgstr "IP address: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:128
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "Tandukanya"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:237
-#: ../src/jarabe/desktop/networkviews.py:527
-#: ../src/jarabe/desktop/networkviews.py:662
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
 msgstr "Ihuza..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:244
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
 msgstr "Byahujwe"
 
@@ -486,9 +487,9 @@ msgid "Please wait..."
 msgstr "ihangane gato..."
 
 #: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:124
-#: ../src/jarabe/desktop/networkviews.py:486
-#: ../src/jarabe/desktop/networkviews.py:618
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
 msgid "Connect"
 msgstr "Huza"
 
@@ -546,20 +547,20 @@ msgstr "Genzura umubare w'iboneza."
 msgid "Check your configuration."
 msgstr "Genzura iboneza ryawe."
 
-#: ../extensions/deviceicon/network.py:594
+#: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
 msgstr "Urusobe rwa rezo"
 
-#: ../extensions/deviceicon/network.py:638
+#: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Rezo ya Mesh %s"
 
-#: ../extensions/deviceicon/network.py:754
+#: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
 msgstr "Nta guhuzwa kwa GSM guhari."
 
-#: ../extensions/deviceicon/network.py:755
+#: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
 msgstr "Kora ihuza muri control panel."
 
@@ -582,8 +583,9 @@ msgid "Pitch"
 msgstr "Pitch"
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr "Rate"
+msgstr "Igipimo"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -989,14 +991,15 @@ msgstr "nyumaho gato"
 msgid "Restart now"
 msgstr "kongera gutangira ubu"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:195
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
 msgstr "Icyakozwe"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
+#, fuzzy
 msgid "Ok"
-msgstr "Ok"
+msgstr "Nibyo"
 
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
@@ -1092,8 +1095,9 @@ msgid "Update your activities to ensure compatibility with your new software"
 msgstr "Hindura ibikorwa byawe kugirango bihuze na progaramu nshya yawe"
 
 #: ../src/jarabe/desktop/homebox.py:76
+#, fuzzy
 msgid "Check now"
-msgstr "Check now"
+msgstr "Genzura ubu"
 
 #: ../src/jarabe/desktop/homebox.py:197
 msgid "List view"
@@ -1111,19 +1115,26 @@ msgstr "Reba ibyagushimishije"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/desktop/keydialog.py:139
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
 msgstr "Ubwoko bw'Urufunguzo:"
 
-#: ../src/jarabe/desktop/keydialog.py:159
+#: ../src/jarabe/desktop/keydialog.py:160
 msgid "Authentication Type:"
 msgstr "Ubwoko bwo Kwivuga:"
 
-#: ../src/jarabe/desktop/keydialog.py:222
+#: ../src/jarabe/desktop/keydialog.py:223
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 yihariye"
 
-#: ../src/jarabe/desktop/keydialog.py:231
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
 msgstr "Umutekano w'umuyoboro udakoresha intsinga:"
 
@@ -1140,12 +1151,12 @@ msgstr "Subukura"
 msgid "Join"
 msgstr "Huza"
 
-#: ../src/jarabe/desktop/networkviews.py:482
+#: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Umuyoboro Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:615
+#: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Urusobe rwa rezo %d"
@@ -1248,19 +1259,19 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:90
+#: ../src/jarabe/intro/window.py:103
 msgid "Name:"
 msgstr "Izina:"
 
-#: ../src/jarabe/intro/window.py:120
+#: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr "Kanda uhindure ibara:"
 
-#: ../src/jarabe/intro/window.py:184 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
 msgstr "Inyuma"
 
-#: ../src/jarabe/intro/window.py:198
+#: ../src/jarabe/intro/window.py:211
 msgid "Next"
 msgstr "Ibikurikira"
 
@@ -1706,8 +1717,9 @@ msgid "The Bluetooth connection failed or timed out."
 msgstr ""
 
 #: ../src/jarabe/model/network.py:305
+#, fuzzy
 msgid "Unused."
-msgstr ""
+msgstr "Ntikoreshejwe"
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1791,7 +1803,7 @@ msgstr "Inkomoko ya Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:400
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "View source: %s"
 msgstr "Reba inkomoko: %s"
 
