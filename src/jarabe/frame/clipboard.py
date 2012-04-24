@@ -36,7 +36,9 @@ class Clipboard(gobject.GObject):
         'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([object])),
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([int])),
+                        ([long])),
+        'object-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([long])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([object])),
     }
@@ -51,9 +53,28 @@ class Clipboard(gobject.GObject):
         self._next_id += 1
         return self._next_id
 
-    def add_object(self, name):
-        logging.debug('Clipboard.add_object')
-        object_id = self._get_next_object_id()
+    def add_object(self, name, data_hash=None):
+        """ Add a object to the clipboard
+
+        Keyword arguments:
+        name -- object name
+        data_hash -- hash to check if the object is already
+                     in the clipboard, generated with hash()
+                     over the data to be added
+
+        Return: object_id or None if the object is not added
+
+        """
+        logging.debug('Clipboard.add_object: hash %s', data_hash)
+        if data_hash is None:
+            object_id = self._get_next_object_id()
+        else:
+            object_id = data_hash
+        if object_id in self._objects:
+            logging.debug('Clipboard.add_object: object already in clipboard,'
+                          ' selecting previous entry instead')
+            self.emit('object-selected', object_id)
+            return None
         self._objects[object_id] = ClipboardObject(object_id, name)
         self.emit('object-added', self._objects[object_id])
         return object_id

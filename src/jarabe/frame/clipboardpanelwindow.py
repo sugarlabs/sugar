@@ -16,6 +16,7 @@
 
 import logging
 from urlparse import urlparse
+import hashlib
 
 import gtk
 
@@ -59,22 +60,55 @@ class ClipboardPanelWindow(FrameWindow):
 
         targets = x_clipboard.wait_for_targets()
         cb_selections = []
+        if targets is None:
+            return
+
+        target_is_uri = False
         for target in targets:
             if target not in ('TIMESTAMP', 'TARGETS',
                               'MULTIPLE', 'SAVE_TARGETS'):
                 logging.debug('Asking for target %s.', target)
+                if target == 'text/uri-list':
+                    target_is_uri = True
+
                 selection = x_clipboard.wait_for_contents(target)
                 if not selection:
                     logging.warning('no data for selection target %s.', target)
                     continue
                 cb_selections.append(selection)
 
+        if target_is_uri:
+            uri = selection.data
+            filename = uri[len('file://'):].strip()
+            md5 = self._md5_for_file(filename)
+            data_hash = hash(md5)
+        else:
+            data_hash = hash(selection.data)
+
         if len(cb_selections) > 0:
-            key = cb_service.add_object(name="")
+            key = cb_service.add_object(name="", data_hash=data_hash)
+            if key is None:
+                return
             cb_service.set_object_percent(key, percent=0)
             for selection in cb_selections:
                 self._add_selection(key, selection)
             cb_service.set_object_percent(key, percent=100)
+
+    def _md5_for_file(self, file_name):
+        '''Calculate md5 for file data
+
+        Calculating block wise to prevent issues with big files in memory
+        '''
+        block_size = 8192
+        md5 = hashlib.md5()
+        f = open(file_name, 'r')
+        while True:
+            data = f.read(block_size)
+            if not data:
+                break
+            md5.update(data)
+        f.close()
+        return md5.digest()
 
     def _add_selection(self, key, selection):
         if not selection.data:

@@ -57,6 +57,7 @@ class ClipboardIcon(RadioToolButton):
         cb_service = clipboard.get_instance()
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
+        cb_service.connect('object-selected', self._object_selected_cb)
 
         child = self.get_child()
         child.connect('drag_data_get', self._drag_data_get_cb)
@@ -128,16 +129,25 @@ class ClipboardIcon(RadioToolButton):
         # Clipboard object became complete. Make it the active one.
         if self._current_percent < 100 and cb_object.get_percent() == 100:
             self.props.active = True
+            self.show_notification()
 
-            self._notif_icon = NotificationIcon()
-            self._notif_icon.props.icon_name = self._icon.props.icon_name
-            self._notif_icon.props.xo_color = \
-                    XoColor('%s,%s' % (self._icon.props.stroke_color,
-                                       self._icon.props.fill_color))
-            frame = jarabe.frame.get_view()
-            frame.add_notification(self._notif_icon,
-                                   gtk.CORNER_BOTTOM_LEFT)
         self._current_percent = cb_object.get_percent()
+
+    def _object_selected_cb(self, cb_service, object_id):
+        if object_id != self._cb_object.get_id():
+            return
+        self.props.active = True
+        self.show_notification()
+        logging.debug('ClipboardIcon: %r was selected', object_id)
+
+    def show_notification(self):
+        self._notif_icon = NotificationIcon()
+        self._notif_icon.props.icon_name = self._icon.props.icon_name
+        self._notif_icon.props.xo_color = \
+                XoColor('%s,%s' % (self._icon.props.stroke_color,
+                                   self._icon.props.fill_color))
+        frame = jarabe.frame.get_view()
+        frame.add_notification(self._notif_icon, gtk.CORNER_BOTTOM_LEFT)
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
