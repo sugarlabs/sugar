@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-13 18:11+0200\n"
+"PO-Revision-Date: 2012-04-26 16:17+0200\n"
 "Last-Translator: Eduardo H. <hoboprimate@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -1451,7 +1451,7 @@ msgstr "Ordenar por tamanho"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
-msgstr "Vista de ordenação"
+msgstr "Ordenar vista"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
