@@ -885,11 +885,11 @@ msgstr "K'elab k'al i jolat takudhtaláb ti dhuchumtaláb."
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Dhuchadh in jalbíl an káw tolmixtaláb Sugar."
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Dhuchadh in jalbíl xi éynal k’al an káw tolmixtaláb Sugar."
 
 # kwetem  automatico     bledhóm  manejo conducir
 #: ../data/sugar.schemas.in.h:45
@@ -906,11 +906,11 @@ msgstr "Ki tejwa'mejdha' ti Gadget"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Jalbíl in adhík abal an káw tolmixtaláb Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Jalbíl in adhík xi éynal k’al an káw tolmixtaláb Sugar"
 
 # tsi'batmedha'
 #: ../data/sugar.schemas.in.h:50
@@ -1190,7 +1190,7 @@ msgstr "<Ctrl>1"
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
-msgstr ""
+msgstr "Jun i tsinat exbadh dhuche’ yejentál abal\n an yab ts’ájlidh tsolóm '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1281,7 +1281,7 @@ msgstr "Ka t'ixk'a'"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "Xi jún an t’ojnal in t’apiy an dhuchlab xi k’wajatak in abnál"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1496,11 +1496,11 @@ msgstr "A chudhél dhuchlab kwa'ajat jolat"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "A dhayáb-úwil yab jant’oj in kwa’al"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "An punk’udh eyendhanél k’wajat naptal"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1781,23 +1781,23 @@ msgstr "An ne'edhom/t'apidhbél k'al an punk'udh ayendhanél jalk'unenek."
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "Axi k’wajat an ts’ot’k’oxtaláb ti punk’udh eyendhanél tsab éyan."
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "An kónol k’wajatits jolat."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "An modem yab ka ejtow ka ela’."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "An ts’ot’k’oxtaláb Bluetooth odhej kom owey ti aychix."
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "Yab éynal."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
