@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-27 12:56+0200\n"
+"PO-Revision-Date: 2012-04-27 13:13+0200\n"
 "Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -199,13 +199,13 @@ msgstr "请根据你的喜好添加语言。如果所选的语言未有翻译提
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "数据机设定"
+msgstr "调制解调器配置"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
-msgstr "设置移动3G网络需要提供下面的信息。"
+msgstr "为建立移动宽带连接到移动（3G）网络，你需要提供以下信息。"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
@@ -250,15 +250,15 @@ msgstr "无线"
 
 #: ../extensions/cpsection/network/view.py:69
 msgid "Turn off the wireless radio to save battery life"
-msgstr "请关闭无线网络信号来增加电池使用时间"
+msgstr "关闭无线网络信号以增加电池使用时间"
 
 #: ../extensions/cpsection/network/view.py:82
 msgid "Radio"
-msgstr "无线网络信号"
+msgstr "无线信号"
 
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr "如果您无法连接网络，请尝试清除网络历史资料"
+msgstr "如果你无法连接网络，请尝试清除网络历史资料"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
@@ -273,11 +273,11 @@ msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
-msgstr "服务器相当于你是所在的房间；在同一服务器上的人们将能够看到对方，即使他们不在同一网络上。"
+msgstr "服务器相当于你所在的房间；在同一服务器上的人们将能够看到对方，即使他们不在同一网络上。"
 
 #: ../extensions/cpsection/network/view.py:140
 msgid "Server:"
-msgstr "服务器:"
+msgstr "服务器："
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
@@ -312,7 +312,7 @@ msgstr "软件更新"
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
-msgstr "软件更新修正错误，消除安全漏洞，和提供新的功能。"
+msgstr "软件更新会修正错误，消除安全漏洞，以及提供新的功能。"
 
 #: ../extensions/cpsection/updater/view.py:125
 #, python-format
@@ -1418,11 +1418,11 @@ msgstr "排序方式"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
-msgstr "空白日志"
+msgstr "你的日志是空的"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr "您的文档文件夹为空"
+msgstr "你的文件夹是空的"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
@@ -1731,7 +1731,7 @@ msgstr "注销"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr "我的设定"
+msgstr "我的设置"
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
