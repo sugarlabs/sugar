@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-12 02:33+0200\n"
+"PO-Revision-Date: 2012-04-27 12:56+0200\n"
 "Last-Translator: Xin <dram.wang@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -1727,7 +1727,7 @@ msgstr "重启"
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
-msgstr "登出"
+msgstr "注销"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
