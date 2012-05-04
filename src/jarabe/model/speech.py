@@ -169,18 +169,20 @@ class _GstSpeechPlayer(gobject.GObject):
 
         bus = self._pipeline.get_bus()
         bus.add_signal_watch()
-        bus.connect('message::element', self.__pipe_message_cb)
+        bus.connect('message', self.__pipe_message_cb)
 
     def __pipe_message_cb(self, bus, message):
-        if message.structure.get_name() == 'espeak-mark' and \
-                message.structure['mark'] == 'end':
+        if message.type == gst.MESSAGE_EOS:
+            self._pipeline.set_state(gst.STATE_NULL)
+            self.emit('stop')
+        elif message.type == gst.MESSAGE_ERROR:
+            self._pipeline.set_state(gst.STATE_NULL)
             self.emit('stop')
 
     def speak(self, pitch, rate, voice_name, text):
         # TODO workaround for http://bugs.sugarlabs.org/ticket/1801
         if not [i for i in text if i.isalnum()]:
             return
-        text = text + '<mark name="end>"></mark>'
 
         self.make_pipeline('espeak name=espeak ! autoaudiosink')
         src = self._pipeline.get_by_name('espeak')
