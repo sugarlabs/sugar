@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-27 13:13+0200\n"
-"Last-Translator: Xin <dram.wang@gmail.com>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-07 09:28+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -287,22 +287,13 @@ msgstr "电源"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "自动省电管理开关发生错误。"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "极度省电管理开关发生错误。"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "省电管理"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "自动省电管理(延长电池寿命)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "极低电源管理（关闭无线，增加电池使用时间）"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -594,11 +585,11 @@ msgstr "静音"
 msgid "finger"
 msgstr "手指"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "手写笔"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "我的触控板"
 
@@ -686,6 +677,11 @@ msgstr "搜索翻译的目录"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "边沿延迟"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "极低电源管理（关闭无线，增加电池使用时间）"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -899,7 +895,7 @@ msgid ""
 msgstr "在恢复模式时，点击一个喜欢的图标上，该活动的最后一个条目将被恢复。"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, python-format
+#, python-format, fuzzy
 #, python-format,
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
@@ -1803,6 +1799,9 @@ msgstr "查看源代码：%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "窗口化Sugar"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "极度省电管理开关发生错误。"
 
 #~ msgid "GSM network username configuration"
 #~ msgstr "GSM网络用户名配置"
