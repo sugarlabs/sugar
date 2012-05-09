@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-05-01 00:34-0400\n"
-"PO-Revision-Date: 2012-05-07 09:28+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-05-09 16:12+0200\n"
+"Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -895,12 +895,12 @@ msgid ""
 msgstr "在恢复模式时，点击一个喜欢的图标上，该活动的最后一个条目将被恢复。"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
-#, python-format, fuzzy
+#, python-format, , 
 #, python-format,
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr "sugar控制面板：警告，在“%r”模块中发现多个以“%r”命名的选项"
+msgstr "Sugar控制台：警告，发现重复的选项名称：%s存在于模组%r 中"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
