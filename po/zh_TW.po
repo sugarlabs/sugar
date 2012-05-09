@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 20:48+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-09 16:14+0200\n"
+"Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: Yuan CHAO <yuanchao@gmail.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -287,22 +287,13 @@ msgstr "電源"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "自動省電管理開關發生錯誤"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "極度省電管理開關發生錯誤"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "電源管理"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "自動電源管理模式 (增加電池使用時間)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "積極電源管理模式 (關閉無線網路，增加電池使用時間)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -593,11 +584,11 @@ msgstr "喇叭靜音"
 msgid "finger"
 msgstr "手指"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "形式"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "我的觸控版"
 
@@ -685,6 +676,11 @@ msgstr "到檢索翻譯的目錄"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "邊緣觸發延遲"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "積極電源管理模式 (關閉無線網路，增加電池使用時間)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -904,7 +900,7 @@ msgstr "在回復模式下，點選偏好的圖示將回復該活動前一次的
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
-msgstr "Sugar控制台：警告，於模組 %r 中發現重複的選項名稱：%s"
+msgstr "Sugar控制台：警告，發現重複的選項名稱：%s於模組 %r 中"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -1103,7 +1099,7 @@ msgstr "<Ctrl>1"
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
-msgstr ""
+msgstr "無線網路 '%s' 需要加密密碼"
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1798,3 +1794,6 @@ msgstr "查看原始碼： %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "將Sugar放入視窗"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "極度省電管理開關發生錯誤"
