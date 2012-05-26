@@ -9,7 +9,6 @@ Standards-Version: 3.9.1
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
-XS-Python-Version: all
 
 Package: sucrose-0.90
 Architecture: all
@@ -38,7 +37,6 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - window manager
  Sugar is a graphical user interface aimed at children.
  .
@@ -57,7 +55,6 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - emulator
  Sugar is a graphical user interface aimed at children.
  .
@@ -77,7 +74,6 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - window manager
  Sugar is a graphical user interface aimed at children.
  .
@@ -102,7 +98,6 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - library
  Sugar is a graphical user interface aimed at children.
  .
