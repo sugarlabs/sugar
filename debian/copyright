@@ -7,26 +7,26 @@ Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar
  git://git.sugarlabs.org/sugar/mainline.git
 
 Files: *
-Copyright:
-  2002-2003, Erik Max Francis <max@alcyone.com>
+Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
   2006-2007, Owen Williams
   2006-2008, Red Hat, Inc
-  2007-2010, One Laptop Per Child Association Inc
+  2006-2012, One Laptop Per Child Association Inc
   2007, Eduardo Silva <edsiper@gmail.com>
   2008-2009, Tomeu Vizoso
   2008, Benjamin Berg <benjamin@sipsolutions.net>
   2008, Martin Dengler
   2008, Red Hat, Inc
+  2009-2010, Sugar Labs
+  2009-2011, Walter Bender
   2009, Aleksey Lim
   2009, James Zaki
   2009, Martin Abente
   2009, Paraguay Educa
   2009, Simon Schampijer
-  2009-2010, Sugar Labs
-  2009-2010, Walter Bender
   2010, Collabora Ltd. <http://www.collabora.co.uk/>
   2010, Daniel Castelo
   2010, Plan Ceibal
+  2010, Software for Education, Entertainment and Training
 License: GPL-2+
 
 Files: */Makefile.in
