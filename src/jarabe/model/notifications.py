@@ -23,9 +23,13 @@ from sugar import dispatch
 
 from jarabe import config
 
-_DBUS_SERVICE = "org.freedesktop.Notifications"
-_DBUS_IFACE = "org.freedesktop.Notifications"
-_DBUS_PATH = "/org/freedesktop/Notifications"
+
+_DBUS_SERVICE = 'org.freedesktop.Notifications'
+_DBUS_IFACE = 'org.freedesktop.Notifications'
+_DBUS_PATH = '/org/freedesktop/Notifications'
+
+_instance = None
+
 
 class NotificationService(dbus.service.Object):
     def __init__(self):
@@ -43,7 +47,8 @@ class NotificationService(dbus.service.Object):
                hints, expire_timeout):
 
         logging.debug('Received notification: %r', [app_name, replaces_id,
-                      '<app_icon>', summary, body, actions, '<hints>', expire_timeout])
+                      '<app_icon>', summary, body, actions, '<hints>',
+                      expire_timeout])
 
         if replaces_id > 0:
             notification_id = replaces_id
@@ -73,16 +78,14 @@ class NotificationService(dbus.service.Object):
     def GetServerInformation(self, name, vendor, version):
         return 'Sugar Shell', 'Sugar', config.version
 
-
-    @dbus.service.signal(_DBUS_IFACE, signature="uu")
+    @dbus.service.signal(_DBUS_IFACE, signature='uu')
     def NotificationClosed(self, notification_id, reason):
         pass
 
-    @dbus.service.signal(_DBUS_IFACE, signature="us")
+    @dbus.service.signal(_DBUS_IFACE, signature='us')
     def ActionInvoked(self, notification_id, action_key):
         pass
 
-_instance = None
 
 def get_service():
     global _instance
@@ -90,6 +93,6 @@ def get_service():
         _instance = NotificationService()
     return _instance
 
+
 def init():
     get_service()
-

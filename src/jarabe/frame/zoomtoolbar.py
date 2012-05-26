@@ -18,13 +18,16 @@
 from gettext import gettext as _
 import logging
 
+import glib
 import gtk
 
+from sugar.graphics import style
 from sugar.graphics.palette import Palette
 from sugar.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
+
 
 class ZoomToolbar(gtk.Toolbar):
     def __init__(self):
@@ -32,6 +35,9 @@ class ZoomToolbar(gtk.Toolbar):
 
         # we shouldn't be mirrored in RTL locales
         self.set_direction(gtk.TEXT_DIR_LTR)
+
+        # ask not to be collapsed if possible
+        self.set_size_request(4 * style.GRID_CELL_SIZE, -1)
 
         self._mesh_button = self._add_button('zoom-neighborhood',
                 _('Neighborhood'), _('F1'), shell.ShellModel.ZOOM_MESH)
@@ -58,7 +64,7 @@ class ZoomToolbar(gtk.Toolbar):
         self.add(button)
         button.show()
 
-        palette = Palette(label)
+        palette = Palette(glib.markup_escape_text(label))
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)
@@ -86,4 +92,3 @@ class ZoomToolbar(gtk.Toolbar):
             self._activity_button.props.active = True
         else:
             raise ValueError('Invalid zoom level: %r' % (new_level))
-

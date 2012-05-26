@@ -25,6 +25,7 @@ from sugar.bundle.bundle import Bundle, MalformedBundleException
 
 from jarabe.journal import model
 
+
 class JournalEntryBundle(Bundle):
     """A Journal entry bundle
 
@@ -41,7 +42,7 @@ class JournalEntryBundle(Bundle):
         Bundle.__init__(self, path)
 
     def install(self, uid=''):
-        if os.environ.has_key('SUGAR_ACTIVITY_ROOT'):
+        if 'SUGAR_ACTIVITY_ROOT' in os.environ:
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
         else:
@@ -91,4 +92,3 @@ class JournalEntryBundle(Bundle):
     def is_installed(self):
         # These bundles can be reinstalled as many times as desired.
         return False
-

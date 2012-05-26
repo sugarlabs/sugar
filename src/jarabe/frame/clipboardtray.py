@@ -27,6 +27,7 @@ from sugar.graphics import style
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon
 
+
 class _ContextMap(object):
     """Maps a drag context to the clipboard object involved in the dragging."""
     def __init__(self):
@@ -40,8 +41,8 @@ class _ContextMap(object):
 
     def get_object_id(self, context):
         """Retrieves the object_id associated with context.
-        Will release the association when this function was called as many times
-        as the number of data_types that this clipboard object contains.
+        Will release the association when this function was called as many
+        times as the number of data_types that this clipboard object contains.
         """
         [object_id, data_types_left] = self._context_map[context]
 
@@ -55,6 +56,7 @@ class _ContextMap(object):
 
     def has_context(self, context):
         return context in self._context_map
+
 
 class ClipboardTray(tray.VTray):
 
@@ -121,6 +123,11 @@ class ClipboardTray(tray.VTray):
         icon = self._icons[object_id]
         self.remove_item(icon)
         del self._icons[object_id]
+        # select the last available icon
+        if self._icons:
+            last_icon = self.get_children()[-1]
+            last_icon.props.active = True
+
         logging.debug('ClipboardTray: %r was deleted', object_id)
 
     def drag_motion_cb(self, widget, context, x, y, time):
@@ -154,7 +161,7 @@ class ClipboardTray(tray.VTray):
         if 'XdndDirectSave0' in context.targets:
             window = context.source_window
             prop_type, format_, filename = \
-                window.property_get('XdndDirectSave0','text/plain')
+                window.property_get('XdndDirectSave0', 'text/plain')
 
             # FIXME query the clipboard service for a filename?
             base_dir = tempfile.gettempdir()
@@ -192,12 +199,13 @@ class ClipboardTray(tray.VTray):
                 if selection.data == 'S':
                     window = context.source_window
 
-                    prop_type, format_, dest = \
-                            window.property_get('XdndDirectSave0', 'text/plain')
+                    prop_type, format_, dest = window.property_get(
+                        'XdndDirectSave0', 'text/plain')
 
                     clipboardservice = clipboard.get_instance()
-                    clipboardservice.add_object_format( \
-                            object_id, 'XdndDirectSave0', dest, on_disk=True)
+                    clipboardservice.add_object_format(object_id,
+                                                       'XdndDirectSave0',
+                                                       dest, on_disk=True)
             else:
                 self._add_selection(object_id, selection)
 
@@ -213,4 +221,3 @@ class ClipboardTray(tray.VTray):
             return True
         else:
             return False
-

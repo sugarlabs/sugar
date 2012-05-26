@@ -35,12 +35,12 @@ def _get_next_stroke_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
     while(colors[next_index][_FILL_COLOR] != \
               colors[current_index][_FILL_COLOR]):
         next_index = _next_index(next_index)
-    return "%s,%s" % (colors[next_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
 
 
@@ -49,12 +49,12 @@ def _get_previous_stroke_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
     while (colors[previous_index][_FILL_COLOR] != \
                colors[current_index][_FILL_COLOR]):
         previous_index = _previous_index(previous_index)
-    return "%s,%s" % (colors[previous_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
 
 
@@ -63,12 +63,12 @@ def _get_next_fill_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
     while (colors[next_index][_STROKE_COLOR] != \
                colors[current_index][_STROKE_COLOR]):
         next_index = _next_index(next_index)
-    return "%s,%s" % (colors[next_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
 
 
@@ -77,12 +77,12 @@ def _get_previous_fill_color(color):
         as color. """
     current_index = _get_current_index(color)
     if current_index == -1:
-        return "%s,%s" % (color.stroke, color.fill)
+        return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
     while (colors[previous_index][_STROKE_COLOR] != \
                colors[current_index][_STROKE_COLOR]):
         previous_index = _previous_index(previous_index)
-    return "%s,%s" % (colors[previous_index][_STROKE_COLOR],
+    return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
 
 
@@ -96,7 +96,7 @@ def _next_index(current_index):
 def _previous_index(current_index):
     previous_index = current_index - 1
     if previous_index < 0:
-        previous_index = len(colors)-1
+        previous_index = len(colors) - 1
     return previous_index
 
 
@@ -112,7 +112,7 @@ _PREVIOUS_STROKE_COLOR = 4
 
 
 class EventIcon(gtk.EventBox):
-    __gtype_name__ = "SugarEventIcon"
+    __gtype_name__ = 'SugarEventIcon'
 
     def __init__(self, **kwargs):
         gtk.EventBox.__init__(self)
@@ -131,7 +131,7 @@ class ColorPicker(EventIcon):
     __gsignals__ = {
         'color-changed': (gobject.SIGNAL_RUN_FIRST,
                           gobject.TYPE_NONE,
-                          ([object]))
+                          ([object])),
         }
 
     def __init__(self, picker):
@@ -184,12 +184,12 @@ class AboutMe(SectionView):
         self._color_alert = None
 
         self._pickers = {
-                _PREVIOUS_FILL_COLOR: ColorPicker(_PREVIOUS_FILL_COLOR),
-                _NEXT_FILL_COLOR: ColorPicker(_NEXT_FILL_COLOR),
-                _CURRENT_COLOR: ColorPicker(_CURRENT_COLOR),
-                _NEXT_STROKE_COLOR: ColorPicker(_NEXT_STROKE_COLOR),
-                _PREVIOUS_STROKE_COLOR: ColorPicker(_PREVIOUS_STROKE_COLOR)
-                }
+            _PREVIOUS_FILL_COLOR: ColorPicker(_PREVIOUS_FILL_COLOR),
+            _NEXT_FILL_COLOR: ColorPicker(_NEXT_FILL_COLOR),
+            _CURRENT_COLOR: ColorPicker(_CURRENT_COLOR),
+            _NEXT_STROKE_COLOR: ColorPicker(_NEXT_STROKE_COLOR),
+            _PREVIOUS_STROKE_COLOR: ColorPicker(_PREVIOUS_STROKE_COLOR),
+        }
 
         self._setup_color()
         initial_color = XoColor(self._model.get_color_xo())

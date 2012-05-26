@@ -20,4 +20,3 @@ CLASS = 'Power'
 ICON = 'module-power'
 TITLE = _('Power')
 KEYWORDS = ['automatic', 'extreme', 'power', 'suspend', 'battery']
-

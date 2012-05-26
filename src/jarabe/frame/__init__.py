@@ -16,7 +16,9 @@
 
 from jarabe.frame.frame import Frame
 
+
 _view = None
+
 
 def get_view():
     global _view

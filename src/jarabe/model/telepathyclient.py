@@ -19,15 +19,24 @@ import logging
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import CLIENT, \
+                                 CHANNEL, \
+                                 CHANNEL_TYPE_TEXT, \
                                  CLIENT_APPROVER, \
                                  CLIENT_HANDLER, \
                                  CLIENT_INTERFACE_REQUESTS
 from telepathy.server import DBusProperties
 
+from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
+from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
+
 from sugar import dispatch
+
 
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'
 SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
+
+_instance = None
+
 
 class TelepathyClient(dbus.service.Object, DBusProperties):
     def __init__(self):
@@ -45,19 +54,37 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
             'Interfaces': lambda: list(self._interfaces),
           })
         self._implement_property_get(CLIENT_HANDLER, {
-            'HandlerChannelFilter': self.__get_filters_cb,
+            'HandlerChannelFilter': self.__get_filters_handler_cb,
           })
         self._implement_property_get(CLIENT_APPROVER, {
-            'ApproverChannelFilter': self.__get_filters_cb,
+            'ApproverChannelFilter': self.__get_filters_approver_cb,
           })
 
         self.got_channel = dispatch.Signal()
         self.got_dispatch_operation = dispatch.Signal()
 
-    def __get_filters_cb(self):
-        logging.debug('__get_filters_cb')
+    def __get_filters_handler_cb(self):
         filter_dict = dbus.Dictionary({}, signature='sv')
         return dbus.Array([filter_dict], signature='a{sv}')
+
+    def __get_filters_approver_cb(self):
+        activity_invitation = {
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
+            CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_ROOM,
+            }
+        filter_dict = dbus.Dictionary(activity_invitation, signature='sv')
+        filters = dbus.Array([filter_dict], signature='a{sv}')
+
+        text_invitation = {
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
+            CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+            }
+        filter_dict = dbus.Dictionary(text_invitation, signature='sv')
+        filters.append(filter_dict)
+
+        logging.debug('__get_filters_approver_cb %r', filters)
+
+        return filters
 
     @dbus.service.method(dbus_interface=CLIENT_HANDLER,
                          in_signature='ooa(oa{sv})aota{sv}', out_signature='')
@@ -91,7 +118,6 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         except Exception, e:
             logging.exception(e)
 
-_instance = None
 
 def get_instance():
     global _instance

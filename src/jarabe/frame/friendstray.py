@@ -24,15 +24,22 @@ from jarabe.model import shell
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import neighborhood
 
+
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
         TrayIcon.__init__(self, icon_name='computer-xo',
                           xo_color=buddy.get_color())
 
+        self._buddy = buddy
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self.palette = BuddyMenu(buddy)
-        self.palette.props.icon_visible = False
-        self.palette.set_group_id('frame')
+        self.palette_invoker.cache_palette = False
+
+    def create_palette(self):
+        palette = BuddyMenu(self._buddy)
+        palette.props.icon_visible = False
+        palette.set_group_id('frame')
+        return palette
+
 
 class FriendsTray(VTray):
     def __init__(self):
@@ -48,7 +55,7 @@ class FriendsTray(VTray):
                                          self.__neighborhood_activity_added_cb)
 
     def add_buddy(self, buddy):
-        if self._buddies.has_key(buddy.props.key):
+        if buddy.props.key in self._buddies:
             return
 
         icon = FriendIcon(buddy)
@@ -58,7 +65,7 @@ class FriendsTray(VTray):
         self._buddies[buddy.props.key] = icon
 
     def remove_buddy(self, buddy):
-        if not self._buddies.has_key(buddy.props.key):
+        if buddy.props.key not in self._buddies:
             return
 
         self.remove_item(self._buddies[buddy.props.key])
@@ -73,6 +80,10 @@ class FriendsTray(VTray):
     def __neighborhood_activity_added_cb(self, neighborhood_model,
                                          shared_activity):
         logging.debug('FriendsTray.__neighborhood_activity_added_cb')
+        active_activity = shell.get_model().get_active_activity()
+        if active_activity.get_activity_id() != shared_activity.activity_id:
+            return
+
         self.clear()
 
         # always display ourselves

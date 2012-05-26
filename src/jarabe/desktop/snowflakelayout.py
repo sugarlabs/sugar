@@ -21,11 +21,14 @@ import hippo
 
 from sugar.graphics import style
 
+
 _BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
+
 class SnowflakeLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSnowflakeLayout'
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._nflakes = 0

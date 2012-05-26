@@ -1,11 +1,11 @@
-AC_INIT([Sugar],[0.90.3],[],[sugar])
+AC_INIT([Sugar],[0.96.1],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.90.1"
+SUCROSE_VERSION="0.96.1"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
@@ -18,7 +18,7 @@ PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gconf-2.0)
 
 # Setup GETTEXT
 #
-ALL_LINGUAS="af am ar ay bg bi bn_IN bn ca cpp cs da de dz el en es fa_AF fa ff fil fr gu ha he hi ht hu id ig is it ja km ko kos mg mi mk ml mn mr ms mvo nb ne nl pa pap pis pl ps pt_BR pt qu ro ru rw sd si sk sl sq sv sw ta te th tpi tr tvl tzo ug ur vi wa yo zh_CN zh_TW"
+ALL_LINGUAS="af am ar aym bg bi bn_IN bn ca cs da de dz el en es fa_AF fa ff fil fr gu ha he hi ht hu id ig is it ja km ko kos mg mi mk ml mn mr ms mvo nb ne nl pa pap pl ps pt_BR pt quz ro ru rw sd si sk sl sq sv sw ta te th tr tvl tzo ug ur vi wa yo zh_CN zh_TW"
 
 GETTEXT_PACKAGE=sugar
 AC_PROG_INTLTOOL([0.33])

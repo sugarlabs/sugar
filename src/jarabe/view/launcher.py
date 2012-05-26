@@ -18,16 +18,13 @@ import logging
 from gettext import gettext as _
 
 import gtk
-import hippo
 import gobject
 
 from sugar import wm
 from sugar.graphics import style
-from sugar.graphics import animator
-from sugar.graphics.xocolor import XoColor
 
 from jarabe.model import shell
-from jarabe.view.pulsingicon import CanvasPulsingIcon
+from jarabe.view.pulsingicon import PulsingIcon
 
 
 class LaunchWindow(gtk.Window):
@@ -51,12 +48,15 @@ class LaunchWindow(gtk.Window):
         canvas.pack_start(header, expand=False)
 
         self._activity_id = activity_id
-        self._box = LaunchBox(activity_id, icon_path, icon_color)
-        box = hippo.Canvas()
-        box.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
-        box.set_root(self._box)
-        box.show()
-        canvas.pack_start(box)
+
+        self._activity_icon = PulsingIcon(file=icon_path,
+                                          pixel_size=style.XLARGE_ICON_SIZE)
+        self._activity_icon.set_base_color(icon_color)
+        self._activity_icon.set_zooming(style.SMALL_ICON_SIZE,
+                                        style.XLARGE_ICON_SIZE, 10)
+        self._activity_icon.set_pulsing(True)
+        self._activity_icon.show()
+        canvas.pack_start(self._activity_icon)
 
         footer = gtk.VBox(spacing=style.DEFAULT_SPACING)
         footer.set_size_request(-1, bar_size)
@@ -78,11 +78,16 @@ class LaunchWindow(gtk.Window):
         screen = gtk.gdk.screen_get_default()
         screen.connect('size-changed', self.__size_changed_cb)
 
+        self._home = shell.get_model()
+        self._home.connect('active-activity-changed',
+                           self.__active_activity_changed_cb)
+
+        self.connect('destroy', self.__destroy_cb)
+
         self._update_size()
 
     def show(self):
         self.present()
-        self._box.zoom_in()
 
     def _update_size(self):
         self.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
@@ -95,65 +100,15 @@ class LaunchWindow(gtk.Window):
     def __size_changed_cb(self, screen):
         self._update_size()
 
-
-class LaunchBox(hippo.CanvasBox):
-
-    def __init__(self, activity_id, icon_path, icon_color):
-        gobject.GObject.__init__(self, orientation=hippo.ORIENTATION_VERTICAL)
-
-        self._activity_id = activity_id
-        self._activity_icon = CanvasPulsingIcon(
-            file_name=icon_path,
-            pulse_color=icon_color,
-            background_color=style.COLOR_WHITE.get_gdk_color())
-        self.append(self._activity_icon, hippo.PACK_EXPAND)
-
-        # FIXME support non-xo colors in CanvasPulsingIcon
-        self._activity_icon.props.base_color = \
-            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                               style.COLOR_TRANSPARENT.get_svg()))
-
-        self._animator = animator.Animator(1.0)
-
-        self._home = shell.get_model()
-        self._home.connect('active-activity-changed',
-                           self.__active_activity_changed_cb)
-
-        self.connect('destroy', self.__destroy_cb)
-
-    def __destroy_cb(self, box):
-        self._activity_icon.props.pulsing = False
-        self._home.disconnect_by_func(self.__active_activity_changed_cb)
-
-    def zoom_in(self):
-        self._activity_icon.props.size = style.STANDARD_ICON_SIZE
-
-        self._animator.remove_all()
-        self._animator.add(_Animation(self._activity_icon,
-                                      style.STANDARD_ICON_SIZE,
-                                      style.XLARGE_ICON_SIZE))
-        self._animator.start()
-        self._activity_icon.props.pulsing = True
-
     def __active_activity_changed_cb(self, model, activity):
         if activity.get_activity_id() == self._activity_id:
             self._activity_icon.props.paused = False
         else:
             self._activity_icon.props.paused = True
 
-
-class _Animation(animator.Animation):
-
-    def __init__(self, icon, start_size, end_size):
-        animator.Animation.__init__(self, 0.0, 1.0)
-
-        self._icon = icon
-        self.start_size = start_size
-        self.end_size = end_size
-
-    def next_frame(self, current):
-        d = (self.end_size - self.start_size) * current
-        self._icon.props.size = int(self.start_size + d)
+    def __destroy_cb(self, box):
+        self._activity_icon.props.pulsing = False
+        self._home.disconnect_by_func(self.__active_activity_changed_cb)
 
 
 def setup():

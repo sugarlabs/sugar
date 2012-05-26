@@ -20,6 +20,7 @@ import os
 
 import gtk
 import gconf
+import glib
 
 import logging
 
@@ -30,15 +31,15 @@ from sugar.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
-TOUCHPAD_MODE_CAPACITIVE = 'capacitive'
-TOUCHPAD_MODE_RESISTIVE = 'resistive'
-TOUCHPAD_MODES = [TOUCHPAD_MODE_CAPACITIVE, TOUCHPAD_MODE_RESISTIVE]
-STATUS_TEXT = {TOUCHPAD_MODE_CAPACITIVE: _('finger'),
-               TOUCHPAD_MODE_RESISTIVE: _('stylus')}
-STATUS_ICON = {TOUCHPAD_MODE_CAPACITIVE: 'touchpad-' + TOUCHPAD_MODE_CAPACITIVE,
-               TOUCHPAD_MODE_RESISTIVE: 'touchpad-' + TOUCHPAD_MODE_RESISTIVE}
+TOUCHPAD_MODE_MOUSE = 'mouse'
+TOUCHPAD_MODE_PENTABLET = 'pentablet'
+
+TOUCHPAD_MODES = (TOUCHPAD_MODE_MOUSE, TOUCHPAD_MODE_PENTABLET)
+STATUS_TEXT = (_('finger'), _('stylus'))
+STATUS_ICON = ('touchpad-capacitive', 'touchpad-resistive')
+
 # NODE_PATH is used to communicate with the touchpad device.
-NODE_PATH = '/sys/devices/platform/i8042/serio1/ptmode'
+NODE_PATH = '/sys/devices/platform/i8042/serio1/hgpk_mode'
 
 
 class DeviceView(TrayIcon):
@@ -60,7 +61,8 @@ class DeviceView(TrayIcon):
     def create_palette(self):
         """ Create a palette for this icon; called by the Sugar framework
         when a palette needs to be displayed. """
-        self.palette = ResourcePalette(_('My touchpad'), self.icon)
+        label = glib.markup_escape_text(_('My touchpad'))
+        self.palette = ResourcePalette(label, self.icon)
         self.palette.set_group_id('frame')
         return self.palette
 
@@ -99,7 +101,7 @@ class ResourcePalette(Palette):
 
     def toggle_mode(self):
         """ Toggle the touchpad mode. """
-        self._mode = TOUCHPAD_MODES[1 - TOUCHPAD_MODES.index(self._mode)]
+        self._mode = 1 - self._mode
         _write_touchpad_mode(self._mode)
         self._update()
 
@@ -109,24 +111,36 @@ def setup(tray):
     Frame. """
     if os.path.exists(NODE_PATH):
         tray.add_device(DeviceView())
-        _write_touchpad_mode(TOUCHPAD_MODE_CAPACITIVE)
+        _write_touchpad_mode_str(TOUCHPAD_MODE_MOUSE)
+
+
+def _read_touchpad_mode_str():
+    """ Read the touchpad mode string from the node path. """
+    node_file_handle = open(NODE_PATH, 'r')
+    text = node_file_handle.read().strip().lower()
+    node_file_handle.close()
+    return text
 
 
 def _read_touchpad_mode():
-    """ Read the touchpad mode from the node path. """
-    node_file_handle = open(NODE_PATH, 'r')
-    text = node_file_handle.read()
-    node_file_handle.close()
+    """ Read the touchpad mode and return the mode index. """
+    mode_str = _read_touchpad_mode_str()
+    if mode_str not in TOUCHPAD_MODES:
+        return None
+    return TOUCHPAD_MODES.index(mode_str)
 
-    return TOUCHPAD_MODES[int(text[0])]
 
-
-def _write_touchpad_mode(touchpad):
+def _write_touchpad_mode_str(mode_str):
     """ Write the touchpad mode to the node path. """
     try:
         node_file_handle = open(NODE_PATH, 'w')
     except IOError, e:
         logging.error('Error opening %s for writing: %s', NODE_PATH, e)
         return
-    node_file_handle.write(str(TOUCHPAD_MODES.index(touchpad)))
+    node_file_handle.write(mode_str)
     node_file_handle.close()
+
+
+def _write_touchpad_mode(mode_num):
+    """ Look up the mode (by index) and write to node path. """
+    return _write_touchpad_mode_str(TOUCHPAD_MODES[mode_num])

@@ -20,6 +20,7 @@ import urlparse
 import os
 import logging
 import gconf
+import glib
 
 import gtk
 
@@ -30,10 +31,12 @@ from sugar.graphics.xocolor import XoColor
 from sugar.datastore import datastore
 from sugar import mime
 from sugar import env
+from sugar.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
 from jarabe.model import bundleregistry
+
 
 class ClipboardMenu(Palette):
 
@@ -50,7 +53,8 @@ class ClipboardMenu(Palette):
 
         self._progress_bar = None
 
-        self._remove_item = MenuItem(_('Remove'), 'list-remove')
+        self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
+                                     'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
         self.menu.append(self._remove_item)
         self._remove_item.show()
@@ -159,10 +163,11 @@ class ClipboardMenu(Palette):
         self._update()
 
     def _update(self):
-        self.props.primary_text = self._cb_object.get_name()
+        name = self._cb_object.get_name()
+        self.props.primary_text = glib.markup_escape_text(name)
         preview = self._cb_object.get_preview()
         if preview:
-            self.props.secondary_text = preview
+            self.props.secondary_text = glib.markup_escape_text(preview)
         self._update_progress_bar()
         self._update_items_visibility()
         self._update_open_submenu()
@@ -212,7 +217,8 @@ class ClipboardMenu(Palette):
         if most_significant_mime_type == 'text/uri-list':
             uris = mime.split_uri_list(format_.get_data())
             if len(uris) == 1 and uris[0].startswith('file://'):
-                file_path = urlparse.urlparse(uris[0]).path
+                parsed_url = urlparse.urlparse(uris[0])
+                file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
@@ -221,7 +227,8 @@ class ClipboardMenu(Palette):
                 mime_type = 'text/uri-list'
         else:
             if format_.is_on_disk():
-                file_path = urlparse.urlparse(format_.get_data()).path
+                parsed_url = urlparse.urlparse(format_.get_data())
+                file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:

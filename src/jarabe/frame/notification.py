@@ -22,13 +22,14 @@ from sugar.graphics.xocolor import XoColor
 
 from jarabe.view.pulsingicon import PulsingIcon
 
+
 class NotificationIcon(gtk.EventBox):
     __gtype_name__ = 'SugarNotificationIcon'
 
     __gproperties__ = {
-        'xo-color'      : (object, None, None, gobject.PARAM_READWRITE),
-        'icon-name'     : (str, None, None, None, gobject.PARAM_READWRITE),
-        'icon-filename' : (str, None, None, None, gobject.PARAM_READWRITE)
+        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
+        'icon-filename': (str, None, None, None, gobject.PARAM_READWRITE),
     }
 
     _PULSE_TIMEOUT = 3
@@ -45,7 +46,8 @@ class NotificationIcon(gtk.EventBox):
         self.add(self._icon)
         self._icon.show()
 
-        gobject.timeout_add_seconds(self._PULSE_TIMEOUT, self.__stop_pulsing_cb)
+        gobject.timeout_add_seconds(self._PULSE_TIMEOUT,
+                                    self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
 
@@ -80,6 +82,7 @@ class NotificationIcon(gtk.EventBox):
 
     palette = property(_get_palette, _set_palette)
 
+
 class NotificationWindow(gtk.Window):
     __gtype_name__ = 'SugarNotificationWindow'
 
@@ -97,4 +100,3 @@ class NotificationWindow(gtk.Window):
 
         color = gtk.gdk.color_parse(style.COLOR_TOOLBAR_GREY.get_html())
         self.modify_bg(gtk.STATE_NORMAL, color)
-

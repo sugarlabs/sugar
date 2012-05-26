@@ -21,6 +21,7 @@ import math
 
 import gobject
 import gconf
+import glib
 import gtk
 import hippo
 
@@ -30,7 +31,6 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
 from sugar.graphics.xocolor import XoColor
 from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
 from sugar import dispatch
 from sugar.datastore import datastore
 
@@ -38,7 +38,6 @@ from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette, ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
-from jarabe.view import launcher
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
@@ -47,6 +46,7 @@ from jarabe.journal import misc
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
 from jarabe.desktop import favoriteslayout
+
 
 _logger = logging.getLogger('FavoritesView')
 
@@ -60,6 +60,9 @@ LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
+
+_favorites_settings = None
+
 
 class FavoritesView(hippo.Canvas):
     __gtype_name__ = 'SugarFavoritesView'
@@ -107,6 +110,16 @@ class FavoritesView(hippo.Canvas):
         favorites_settings = get_settings()
         favorites_settings.changed.connect(self.__settings_changed_cb)
         self._set_layout(favorites_settings.layout)
+
+    def set_filter(self, query):
+        query = query.strip()
+        for icon in self._box.get_children():
+            if icon not in [self._my_icon, self._current_activity]:
+                activity_name = icon.get_activity_name().lower()
+                if activity_name.find(query) > -1:
+                    icon.alpha = 1.0
+                else:
+                    icon.alpha = 0.33
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
@@ -171,7 +184,8 @@ class FavoritesView(hippo.Canvas):
         height = allocation.height
 
         min_w_, my_icon_width = self._my_icon.get_width_request()
-        min_h_, my_icon_height = self._my_icon.get_height_request(my_icon_width)
+        min_h_, my_icon_height = self._my_icon.get_height_request(
+            my_icon_width)
         x = (width - my_icon_width) / 2
         y = (height - my_icon_height - style.GRID_CELL_SIZE) / 2
         self._layout.move_icon(self._my_icon, x, y, locked=True)
@@ -189,7 +203,8 @@ class FavoritesView(hippo.Canvas):
     # TODO: Dnd methods. This should be merged somehow inside hippo-canvas.
     def __button_press_event_cb(self, widget, event):
         if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
-            self._last_clicked_icon = self._get_icon_at_coords(event.x, event.y)
+            self._last_clicked_icon = self._get_icon_at_coords(event.x,
+                                                               event.y)
             if self._last_clicked_icon is not None:
                 self._pressed_button = event.button
                 self._press_start_x = event.x
@@ -202,9 +217,9 @@ class FavoritesView(hippo.Canvas):
             icon_x, icon_y = icon.get_context().translate_to_widget(icon)
             icon_width, icon_height = icon.get_allocation()
 
-            if (x >= icon_x ) and (x <= icon_x + icon_width) and \
-                    (y >= icon_y ) and (y <= icon_y + icon_height) and \
-                    isinstance(icon, ActivityIcon):
+            if (x >= icon_x) and (x <= icon_x + icon_width) and \
+               (y >= icon_y) and (y <= icon_y + icon_height) and \
+               isinstance(icon, ActivityIcon):
                 return icon
         return None
 
@@ -273,7 +288,7 @@ class FavoritesView(hippo.Canvas):
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
-            logging.warn('Unknown favorites layout: %r' % layout)
+            logging.warn('Unknown favorites layout: %r', layout)
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
@@ -321,12 +336,12 @@ class FavoritesView(hippo.Canvas):
             schoolserver.register_laptop()
         except RegisterError, e:
             alert.props.title = _('Registration Failed')
-            alert.props.msg = _('%s') % e
+            alert.props.msg = '%s' % e
         else:
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered ' \
                                 'with your school server.')
-            self._my_icon.remove_register_menu()
+            self._my_icon.set_registered()
 
         ok_icon = Icon(icon_name='dialog-ok')
         alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
@@ -386,7 +401,7 @@ class ActivityIcon(CanvasIcon):
                 break
 
     def _get_last_activity_async(self, bundle_id, properties):
-        query = {'activity': bundle_id} 
+        query = {'activity': bundle_id}
         datastore.find(query, sorting=['+timestamp'],
                        limit=self._MAX_RESUME_ENTRIES,
                        properties=properties,
@@ -394,8 +409,8 @@ class ActivityIcon(CanvasIcon):
                        error_handler=self.__get_last_activity_error_handler_cb)
 
     def __get_last_activity_reply_handler_cb(self, entries, total_count):
-        # If there's a problem with the DS index, we may get entries not related
-        # to this activity.
+        # If there's a problem with the DS index, we may get entries not
+        # related to this activity.
         checked_entries = []
         for entry in entries:
             if entry['activity'] == self.bundle_id:
@@ -493,6 +508,9 @@ class ActivityIcon(CanvasIcon):
         return self._activity_info.get_activity_version()
     version = property(get_version, None)
 
+    def get_activity_name(self):
+        return self._activity_info.get_name()
+
     def _get_installation_time(self):
         return self._activity_info.get_installation_time()
     installation_time = property(_get_installation_time, None)
@@ -505,6 +523,7 @@ class ActivityIcon(CanvasIcon):
     def set_resume_mode(self, resume_mode):
         self._resume_mode = resume_mode
         self._update()
+
 
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
@@ -528,7 +547,8 @@ class FavoritePalette(ActivityPalette):
                                icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
 
         if journal_entries:
-            self.props.secondary_text = journal_entries[0]['title']
+            title = journal_entries[0]['title']
+            self.props.secondary_text = glib.markup_escape_text(title)
 
             menu_items = []
             for entry in journal_entries:
@@ -553,6 +573,7 @@ class FavoritePalette(ActivityPalette):
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
             self.emit('entry-activate', entry)
+
 
 class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
     def __init__(self):
@@ -592,15 +613,19 @@ class CurrentActivityIcon(CanvasIcon, hippo.CanvasItem):
         self._home_activity = home_activity
         self._update()
 
+
 class OwnerIcon(BuddyIcon):
     __gtype_name__ = 'SugarFavoritesOwnerIcon'
 
     __gsignals__ = {
-        'register-activate' : (gobject.SIGNAL_RUN_FIRST,
-                                gobject.TYPE_NONE, ([]))
+        'register-activate': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                              ([])),
     }
+
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), size=size)
+
+        self.palette_invoker.cache_palette = True
 
         self._palette_enabled = False
         self._register_menu = None
@@ -614,11 +639,16 @@ class OwnerIcon(BuddyIcon):
 
         client = gconf.client_get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')
+
         if not backup_url:
             self._register_menu = MenuItem(_('Register'), 'media-record')
-            self._register_menu.connect('activate', self.__register_activate_cb)
-            palette.menu.append(self._register_menu)
-            self._register_menu.show()
+        else:
+            self._register_menu = MenuItem(_('Register again'),
+                                           'media-record')
+
+        self._register_menu.connect('activate', self.__register_activate_cb)
+        palette.menu.append(self._register_menu)
+        self._register_menu.show()
 
         return palette
 
@@ -628,12 +658,17 @@ class OwnerIcon(BuddyIcon):
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
 
-    def remove_register_menu(self):
+    def set_registered(self):
         self.palette.menu.remove(self._register_menu)
+        self._register_menu = MenuItem(_('Register again'), 'media-record')
+        self._register_menu.connect('activate', self.__register_activate_cb)
+        self.palette.menu.append(self._register_menu)
+        self._register_menu.show()
+
 
 class FavoritesSetting(object):
 
-    _FAVORITES_KEY = "/desktop/sugar/desktop/favorites_layout"
+    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 
     def __init__(self):
         client = gconf.client_get_default()
@@ -659,7 +694,6 @@ class FavoritesSetting(object):
 
     layout = property(get_layout, set_layout)
 
-_favorites_settings = None
 
 def get_settings():
     global _favorites_settings

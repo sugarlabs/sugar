@@ -18,20 +18,21 @@ import sys
 import getopt
 import os
 from gettext import gettext as _
-import traceback
 import logging
 
 from jarabe import config
 
+
 _RESTART = 1
 
-_same_option_warning = _("sugar-control-panel: WARNING, found more than"
-                         " one option with the same name: %s module: %r")
-_no_option_error = _("sugar-control-panel: key=%s not an available option")
-_general_error = _("sugar-control-panel: %s")
+_same_option_warning = _('sugar-control-panel: WARNING, found more than one'
+                         ' option with the same name: %s module: %r')
+_no_option_error = _('sugar-control-panel: key=%s not an available option')
+_general_error = _('sugar-control-panel: %s')
+
 
 def cmd_help():
-    '''Print the help to the screen'''
+    """Print the help to the screen"""
     # TRANS: Translators, there's a empty line at the end of this string,
     # which must appear in the translated string (msgstr) as well.
     print _('Usage: sugar-control-panel [ option ] key [ args ... ] \n\
@@ -45,14 +46,16 @@ def cmd_help():
     -c key       clear the current value for the key \n\
     ')
 
+
 def note_restart():
-    '''Instructions how to restart sugar'''
-    print _('To apply your changes you have to restart sugar.\n' +
+    """Instructions how to restart sugar"""
+    print _('To apply your changes you have to restart Sugar.\n' +
             'Hit ctrl+alt+erase on the keyboard to trigger a restart.')
 
+
 def load_modules():
-    '''Build a list of pointers to available modules and import them.
-    '''
+    """Build a list of pointers to available modules and import them.
+    """
     modules = []
 
     path = os.path.join(config.ext_path, 'cpsection')
@@ -65,16 +68,16 @@ def load_modules():
                 module = __import__('.'.join(('cpsection', item, 'model')),
                                     globals(), locals(), ['model'])
             except Exception:
-                logging.error('Exception while loading extension:\n' + \
-                    ''.join(traceback.format_exception(*sys.exc_info())))
+                logging.exception('Exception while loading extension:')
             else:
                 modules.append(module)
 
     return modules
 
+
 def main():
     try:
-        options, args = getopt.getopt(sys.argv[1:], "h:s:g:c:l", [])
+        options, args = getopt.getopt(sys.argv[1:], 'h:s:g:c:l', [])
     except getopt.GetoptError:
         cmd_help()
         sys.exit(2)
@@ -87,7 +90,7 @@ def main():
 
     for option, key in options:
         found = 0
-        if option in ("-h"):
+        if option in ('-h'):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
                 if method:
@@ -98,7 +101,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-l"):
+        if option in ('-l'):
             for module in modules:
                 methods = dir(module)
                 print '%s:' % module.__name__.split('.')[1]
@@ -106,9 +109,9 @@ def main():
                     if method.startswith('get_'):
                         print '    %s' % method[4:]
                     elif method.startswith('clear_'):
-                        print "    %s (use the -c argument with this option)" \
+                        print '    %s (use the -c argument with this option)' \
                                 % method[6:]
-        if option in ("-g"):
+        if option in ('-g'):
             for module in modules:
                 method = getattr(module, 'print_' + key, None)
                 if method:
@@ -122,7 +125,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-s"):
+        if option in ('-s'):
             for module in modules:
                 method = getattr(module, 'set_' + key, None)
                 if method:
@@ -139,7 +142,7 @@ def main():
                         print _(_same_option_warning % (key, module))
             if found == 0:
                 print _(_no_option_error % key)
-        if option in ("-c"):
+        if option in ('-c'):
             for module in modules:
                 method = getattr(module, 'clear_' + key, None)
                 if method:

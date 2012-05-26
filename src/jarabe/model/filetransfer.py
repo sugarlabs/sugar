@@ -33,6 +33,7 @@ from sugar import dispatch
 from jarabe.util.telepathy import connection_watcher
 from jarabe.model import neighborhood
 
+
 FT_STATE_NONE = 0
 FT_STATE_PENDING = 1
 FT_STATE_ACCEPTED = 2
@@ -52,14 +53,18 @@ FT_REASON_REMOTE_ERROR = 6
 CHANNEL_TYPE_FILE_TRANSFER = \
         'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
+new_file_transfer = dispatch.Signal()
+
+
 # TODO Move to use splice_async() in Sugar 0.88
 class StreamSplicer(gobject.GObject):
-    _CHUNK_SIZE = 10240 # 10K
+    _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
         'finished': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,
                      ([])),
     }
+
     def __init__(self, input_stream, output_stream):
         gobject.GObject.__init__(self)
 
@@ -104,6 +109,7 @@ class StreamSplicer(gobject.GObject):
             self._output_stream.write_async(data, self.__write_async_cb,
                                             gobject.PRIORITY_LOW,
                                             user_data=data)
+
 
 class BaseFileTransfer(gobject.GObject):
 
@@ -176,6 +182,7 @@ class BaseFileTransfer(gobject.GObject):
     def cancel(self):
         self.channel[CHANNEL].Close()
 
+
 class IncomingFileTransfer(BaseFileTransfer):
     def __init__(self, connection, object_path, props):
         BaseFileTransfer.__init__(self, connection)
@@ -219,6 +226,7 @@ class IncomingFileTransfer(BaseFileTransfer):
             # TODO: Use splice_async when it gets implemented
             self._splicer = StreamSplicer(input_stream, output_stream)
             self._splicer.start()
+
 
 class OutgoingFileTransfer(BaseFileTransfer):
     def __init__(self, buddy, file_name, title, description, mime_type):
@@ -283,6 +291,7 @@ class OutgoingFileTransfer(BaseFileTransfer):
     def cancel(self):
         self.channel[CHANNEL].Close()
 
+
 def _new_channels_cb(connection, channels):
     for object_path, props in channels:
         if props[CHANNEL + '.ChannelType'] == CHANNEL_TYPE_FILE_TRANSFER and \
@@ -294,16 +303,20 @@ def _new_channels_cb(connection, channels):
                                                           object_path, props)
             new_file_transfer.send(None, file_transfer=incoming_file_transfer)
 
+
 def _monitor_connection(connection):
     logging.debug('connection added %r', connection)
     connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal('NewChannels',
             lambda channels: _new_channels_cb(connection, channels))
 
+
 def _connection_added_cb(conn_watcher, connection):
     _monitor_connection(connection)
 
+
 def _connection_removed_cb(conn_watcher, connection):
     logging.debug('connection removed %r', connection)
+
 
 def init():
     conn_watcher = connection_watcher.get_instance()
@@ -313,10 +326,12 @@ def init():
     for connection in conn_watcher.get_connections():
         _monitor_connection(connection)
 
+
 def start_transfer(buddy, file_name, title, description, mime_type):
     outgoing_file_transfer = OutgoingFileTransfer(buddy, file_name, title,
                                                   description, mime_type)
     new_file_transfer.send(None, file_transfer=outgoing_file_transfer)
+
 
 def file_transfer_available():
     conn_watcher = connection_watcher.get_instance()
@@ -337,18 +352,17 @@ def file_transfer_available():
 
         return False
 
-new_file_transfer = dispatch.Signal()
 
 if __name__ == '__main__':
     import tempfile
 
-    input_stream = gio.File('/home/tomeu/isos/Soas2-200904031934.iso').read()
-    output_stream = gio.File(tempfile.mkstemp()[1]).append_to()
+    test_file_name = '/home/tomeu/isos/Soas2-200904031934.iso'
+    test_input_stream = gio.File(test_file_name).read()
+    test_output_stream = gio.File(tempfile.mkstemp()[1]).append_to()
 
     # TODO: Use splice_async when it gets implemented
-    splicer = StreamSplicer(input_stream, output_stream)
+    splicer = StreamSplicer(test_input_stream, test_output_stream)
     splicer.start()
 
     loop = gobject.MainLoop()
     loop.run()
-

@@ -29,6 +29,7 @@ from sugar.graphics import style
 from jarabe.model import bundleregistry
 from jarabe.desktop.grid import Grid
 
+
 _logger = logging.getLogger('FavoritesLayout')
 
 _CELL_SIZE = 4
@@ -89,7 +90,8 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
         if icon not in self.box.get_children():
             raise ValueError('Child not in box.')
 
-        if not(hasattr(icon, 'get_bundle_id') and hasattr(icon, 'get_version')):
+        if not (hasattr(icon, 'get_bundle_id') and
+                hasattr(icon, 'get_version')):
             logging.debug('Not an activity icon %r', icon)
             return
 
@@ -108,6 +110,7 @@ class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
 
     def allow_dnd(self):
         return False
+
 
 class RandomLayout(FavoritesLayout):
     """Lay out icons randomly; try to nudge them around to resolve overlaps."""
@@ -189,6 +192,7 @@ class RandomLayout(FavoritesLayout):
     def allow_dnd(self):
         return True
 
+
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
         style.STANDARD_ICON_SIZE * 2
 _MAXIMUM_RADIUS = (gtk.gdk.screen_height() - style.GRID_CELL_SIZE) / 2 - \
@@ -239,32 +243,34 @@ class RingLayout(FavoritesLayout):
         self._spiral_mode = False
         distance = style.MEDIUM_ICON_SIZE + style.DEFAULT_SPACING * \
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.MEDIUM_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        radius = max(children_count * distance / (2 * math.pi),
+                     _MINIMUM_RADIUS)
         if radius < _MAXIMUM_RADIUS:
             return radius, style.MEDIUM_ICON_SIZE
 
         distance = style.STANDARD_ICON_SIZE + style.DEFAULT_SPACING * \
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.STANDARD_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi), _MINIMUM_RADIUS)
+        radius = max(children_count * distance / (2 * math.pi),
+                     _MINIMUM_RADIUS)
         if radius < _MAXIMUM_RADIUS:
             return radius, style.STANDARD_ICON_SIZE
 
         self._spiral_mode = True
         icon_size = style.STANDARD_ICON_SIZE
-        angle, radius = self._calculate_angle_and_radius(children_count,
-                                                               icon_size)
+        angle_, radius = self._calculate_angle_and_radius(children_count,
+                                                          icon_size)
         while radius > _MAXIMUM_RADIUS:
             i = _ICON_SIZES.index(icon_size)
             if i < len(_ICON_SIZES) - 1:
                 icon_size = _ICON_SIZES[i + 1]
-                angle, radius = self._calculate_angle_and_radius(
+                angle_, radius = self._calculate_angle_and_radius(
                     children_count, icon_size)
             else:
                 break
         return radius, icon_size
 
-    def _calculate_position(self, radius, icon_size, icon_index, children_count,
-                            sin=math.sin, cos=math.cos):
+    def _calculate_position(self, radius, icon_size, icon_index,
+                            children_count, sin=math.sin, cos=math.cos):
         """ Calculate an icon position on a circle or a spiral. """
         width, height = self.box.get_allocation()
         if self._spiral_mode:
@@ -298,7 +304,7 @@ class RingLayout(FavoritesLayout):
             _ICON_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
         angle = _INITIAL_ANGLE
         radius = _MINIMUM_RADIUS - (icon_size * _MIMIMUM_RADIUS_ENCROACHMENT)
-        for i in range(icon_count):
+        for i_ in range(icon_count):
             circumference = radius * 2 * math.pi
             n = circumference / icon_spacing
             angle += (2 * math.pi / n)
@@ -351,6 +357,7 @@ class RingLayout(FavoritesLayout):
         else:
             return 0
 
+
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75
 """Chose a constant such that STANDARD_ICON_SIZE icons are nicely spaced."""
 
@@ -375,6 +382,7 @@ The sunflower angle is approximately 137.5 degrees.
 This is the golden angle: http://en.wikipedia.org/wiki/Golden_angle
 Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
 """
+
 
 class SunflowerLayout(RingLayout):
     """Spiral layout based on Fibonacci ratio in phyllotaxis.
@@ -403,7 +411,8 @@ class SunflowerLayout(RingLayout):
         return None, style.STANDARD_ICON_SIZE
 
     def adjust_index(self, i):
-        """Skip floret indices which end up outside the desired bounding box."""
+        """Skip floret indices which end up outside the desired bounding box.
+        """
         for idx in self.skipped_indices:
             if i < idx:
                 break
@@ -434,7 +443,7 @@ class SunflowerLayout(RingLayout):
             # removed to make room for the "active activity" icon.
             x = r * cos(phi) + (width - icon_size) / 2
             y = r * sin(phi) + (height - icon_size - \
-                                (style.GRID_CELL_SIZE / 2) ) / 2
+                                (style.GRID_CELL_SIZE / 2)) / 2
 
             # skip allocations outside the allocation box.
             # give up once we can't fit
@@ -442,9 +451,11 @@ class SunflowerLayout(RingLayout):
                 if y < 0 or y > (height - icon_size) or \
                        x < 0 or x > (width - icon_size):
                     self.skipped_indices.append(index)
-                    continue # try again
+                    # try again
+                    continue
 
             return x, y
+
 
 class BoxLayout(RingLayout):
     """Lay out icons in a square around the XO man."""
@@ -478,14 +489,16 @@ class BoxLayout(RingLayout):
                 return (90 - d) / 45.
             if d < 225:
                 return -1
-            return cos_d(360 - d) # mirror around 180
+            # mirror around 180
+            return cos_d(360 - d)
 
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: cos_d(math.degrees(r) - 90)
 
-        return RingLayout._calculate_position\
-               (self, radius, icon_size, index, children_count,
-                sin=sin, cos=cos)
+        return RingLayout._calculate_position(self, radius, icon_size, index,
+                                              children_count, sin=sin,
+                                              cos=cos)
+
 
 class TriangleLayout(RingLayout):
     """Lay out icons in a triangle around the XO man."""
@@ -524,7 +537,8 @@ class TriangleLayout(RingLayout):
                 return (d + 90) / 120.
             if d <= 90:
                 return (90 - d) / 60.
-            return -cos_d(180 - d) # mirror around 90
+            # mirror around 90
+            return -cos_d(180 - d)
 
         sqrt_3 = math.sqrt(3)
 
@@ -535,11 +549,12 @@ class TriangleLayout(RingLayout):
                 return ((d + 90) / 120.) * sqrt_3 - 1
             if d <= 90:
                 return sqrt_3 - 1
-            return sin_d(180 - d) # mirror around 90
+            # mirror around 90
+            return sin_d(180 - d)
 
         cos = lambda r: cos_d(math.degrees(r))
         sin = lambda r: sin_d(math.degrees(r))
 
-        return RingLayout._calculate_position\
-               (self, radius, icon_size, index, children_count,
-                sin=sin, cos=cos)
+        return RingLayout._calculate_position(self, radius, icon_size, index,
+                                              children_count, sin=sin,
+                                              cos=cos)

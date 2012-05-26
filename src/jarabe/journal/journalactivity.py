@@ -17,8 +17,6 @@
 
 import logging
 from gettext import gettext as _
-import sys
-import traceback
 import uuid
 
 import gtk
@@ -44,6 +42,8 @@ from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
+from jarabe.journal.journalwindow import JournalWindow
+
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -51,6 +51,9 @@ J_DBUS_PATH = '/org/laptop/Journal'
 
 _SPACE_TRESHOLD = 52428800
 _BUNDLE_ID = 'org.laptop.JournalActivity'
+
+_journal = None
+
 
 class JournalActivityDBusService(dbus.service.Object):
     def __init__(self, parent):
@@ -81,7 +84,8 @@ class JournalActivityDBusService(dbus.service.Object):
         chooser.destroy()
         del chooser
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is', out_signature='s')
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='is',
+                         out_signature='s')
     def ChooseObject(self, parent_xid, what_filter=''):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
@@ -94,18 +98,19 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return chooser_id
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature="ss")
+    @dbus.service.signal(J_DBUS_INTERFACE, signature='ss')
     def ObjectChooserResponse(self, chooser_id, object_id):
         pass
 
-    @dbus.service.signal(J_DBUS_INTERFACE, signature="s")
+    @dbus.service.signal(J_DBUS_INTERFACE, signature='s')
     def ObjectChooserCancelled(self, chooser_id):
         pass
 
-class JournalActivity(Window):
+
+class JournalActivity(JournalWindow):
     def __init__(self):
-        logging.debug("STARTUP: Loading the journal")
-        Window.__init__(self)
+        logging.debug('STARTUP: Loading the journal')
+        JournalWindow.__init__(self)
 
         self.set_title(_('Journal'))
 
@@ -166,6 +171,7 @@ class JournalActivity(Window):
         self._list_view = ListView()
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
+        self._list_view.connect('volume-error', self.__volume_error_cb)
         self._main_view.pack_start(self._list_view)
         self._list_view.show()
 
@@ -223,8 +229,7 @@ class JournalActivity(Window):
         try:
             self._detail_toolbox.entry_toolbar.set_metadata(metadata)
         except Exception:
-            logging.error('Exception while displaying entry:\n' + \
-                ''.join(traceback.format_exception(*sys.exc_info())))
+            logging.exception('Exception while displaying entry:')
 
         self.set_toolbar_box(self._detail_toolbox)
         self._detail_toolbox.show()
@@ -232,8 +237,7 @@ class JournalActivity(Window):
         try:
             self._detail_view.props.metadata = metadata
         except Exception:
-            logging.error('Exception while displaying entry:\n' + \
-                ''.join(traceback.format_exception(*sys.exc_info())))
+            logging.exception('Exception while displaying entry:')
 
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()
@@ -327,11 +331,11 @@ class JournalActivity(Window):
         self._list_view.set_is_visible(visible)
 
     def _check_available_space(self):
-        ''' Check available space on device
+        """Check available space on device
 
             If the available space is below 50MB an alert will be
             shown which encourages to delete old journal entries.
-        '''
+        """
 
         if self._critical_space_alert:
             return
@@ -358,7 +362,6 @@ class JournalActivity(Window):
         self.show_main_view()
         self.search_grab_focus()
 
-_journal = None
 
 def get_journal():
     global _journal
@@ -367,6 +370,6 @@ def get_journal():
         _journal.show()
     return _journal
 
+
 def start():
     get_journal()
-

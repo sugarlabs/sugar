@@ -29,14 +29,13 @@ from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import SearchToolbar
 from jarabe.journal.volumestoolbar import VolumesToolbar
 
+
 class ObjectChooser(gtk.Window):
 
     __gtype_name__ = 'ObjectChooser'
 
     __gsignals__ = {
-        'response': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([int]))
+        'response': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int])),
     }
 
     def __init__(self, parent=None, what_filter=''):
@@ -136,6 +135,7 @@ class ObjectChooser(gtk.Window):
         visible = event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
+
 class TitleBox(VolumesToolbar):
     __gtype_name__ = 'TitleBox'
 
@@ -161,6 +161,7 @@ class TitleBox(VolumesToolbar):
 
         self.insert(tool_item, -1)
         tool_item.show()
+
 
 class ChooserListView(BaseListView):
     __gtype_name__ = 'ChooserListView'
@@ -196,4 +197,3 @@ class ChooserListView(BaseListView):
         self.emit('entry-activated', uid)
 
         return False
-

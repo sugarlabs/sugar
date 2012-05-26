@@ -30,16 +30,18 @@ from sugar.graphics.icon import Icon
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
+
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 _AUTOSEARCH_TIMEOUT = 1000
 
+
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the home view")
+        logging.debug('STARTUP: Loading the home view')
 
         gobject.GObject.__init__(self)
 
@@ -53,11 +55,12 @@ class HomeBox(gtk.VBox):
         self._toolbar.show()
 
         self._set_view(_FAVORITES_VIEW)
+        self._query = ''
 
     def show_software_updates_alert(self):
         alert = Alert()
         updater_icon = Icon(icon_name='module-updater',
-                    pixel_size = style.STANDARD_ICON_SIZE)
+                            pixel_size=style.STANDARD_ICON_SIZE)
         alert.props.icon = updater_icon
         updater_icon.show()
         alert.props.title = _('Software Update')
@@ -101,8 +104,9 @@ class HomeBox(gtk.VBox):
             panel.set_section_view_auto_close()
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        query = query.lower()
-        self._list_view.set_filter(query)
+        self._query = query.lower()
+        self._list_view.set_filter(self._query)
+        self._favorites_view.set_filter(self._query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -125,7 +129,7 @@ class HomeBox(gtk.VBox):
         else:
             raise ValueError('Invalid view: %r' % view)
 
-    _REDRAW_TIMEOUT = 5 * 60 * 1000 # 5 minutes
+    _REDRAW_TIMEOUT = 5 * 60 * 1000  # 5 minutes
 
     def resume(self):
         pass
@@ -143,17 +147,19 @@ class HomeBox(gtk.VBox):
 
     def set_resume_mode(self, resume_mode):
         self._favorites_view.set_resume_mode(resume_mode)
+        if resume_mode and self._query != '':
+            self._list_view.set_filter(self._query)
+            self._favorites_view.set_filter(self._query)
+
 
 class HomeToolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarHomeToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                           ([str])),
-        'view-changed':  (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([object]))
+        'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
     }
 
     def __init__(self):
@@ -176,7 +182,6 @@ class HomeToolbar(gtk.Toolbar):
         self.search_entry.connect('activate', self.__entry_activated_cb)
         self.search_entry.connect('changed', self.__entry_changed_cb)
         tool_item.add(self.search_entry)
-        self.search_entry.set_sensitive(False)
         self.search_entry.show()
 
         self._add_separator(expand=True)
@@ -200,14 +205,8 @@ class HomeToolbar(gtk.Toolbar):
 
     def __view_button_toggled_cb(self, button, view):
         if button.props.active:
-            if view == _FAVORITES_VIEW:
-                self.search_entry.set_text('')
-                self.search_entry.set_sensitive(False)
-                self.emit('view-changed', view)
-            else:
-                self.search_entry.set_sensitive(True)
-                self.search_entry.grab_focus()
-                self.emit('view-changed', view)
+            self.search_entry.grab_focus()
+            self.emit('view-changed', view)
 
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
@@ -227,8 +226,6 @@ class HomeToolbar(gtk.Toolbar):
         if self._query != new_query:
             self._query = new_query
 
-            if self._query is not '':
-                self._list_button.props.active = True
             self.emit('query-changed', self._query)
 
     def __entry_changed_cb(self, entry):
@@ -239,12 +236,13 @@ class HomeToolbar(gtk.Toolbar):
         if self._autosearch_timer:
             gobject.source_remove(self._autosearch_timer)
         self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self.__autosearch_timer_cb)
+            self.__autosearch_timer_cb)
 
     def __autosearch_timer_cb(self):
         self._autosearch_timer = None
         self.search_entry.activate()
         return False
+
 
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
@@ -295,4 +293,3 @@ class FavoritesButton(RadioToolButton):
     def _update_icon(self):
         self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
                                 .icon_name
-

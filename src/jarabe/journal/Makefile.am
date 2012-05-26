@@ -6,6 +6,7 @@ sugar_PYTHON =				\
 	journalactivity.py		\
 	journalentrybundle.py		\
 	journaltoolbox.py		\
+	journalwindow.py		\
 	keepicon.py			\
 	listmodel.py			\
 	listview.py			\

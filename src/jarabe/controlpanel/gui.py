@@ -17,8 +17,6 @@
 import os
 import logging
 from gettext import gettext as _
-import sys
-import traceback
 
 import gobject
 import gtk
@@ -32,14 +30,19 @@ from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 
+POWERD_FLAG_DIR = '/etc/powerd/flags'
+
 _logger = logging.getLogger('ControlPanel')
-_MAX_COLUMNS = 5
+
 
 class ControlPanel(gtk.Window):
     __gtype_name__ = 'SugarControlPanel'
 
     def __init__(self):
         gtk.Window.__init__(self)
+
+        self._max_columns = int(0.285 * (float(gtk.gdk.screen_width()) /
+            style.GRID_CELL_SIZE - 3))
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
@@ -74,7 +77,7 @@ class ControlPanel(gtk.Window):
         self.add(self._vbox)
         self._vbox.show()
 
-        self.connect("realize", self.__realize_cb)
+        self.connect('realize', self.__realize_cb)
 
         self._options = self._get_options()
         self._current_option = None
@@ -110,6 +113,7 @@ class ControlPanel(gtk.Window):
 
         self._table = gtk.Table()
         self._table.set_col_spacings(style.GRID_CELL_SIZE)
+        self._table.set_row_spacings(style.GRID_CELL_SIZE)
         self._table.set_border_width(style.GRID_CELL_SIZE)
 
         self._scrolledwindow = gtk.ScrolledWindow()
@@ -126,7 +130,7 @@ class ControlPanel(gtk.Window):
                                    self.__search_changed_cb)
 
     def _setup_options(self):
-        if not os.path.exists('/ofw'):
+        if not os.access(POWERD_FLAG_DIR, os.W_OK):
             del self._options['power']
 
         try:
@@ -134,8 +138,17 @@ class ControlPanel(gtk.Window):
         except ImportError:
             del self._options['keyboard']
 
-        row = 0
-        column = 2
+        # If the screen width only supports two columns, start
+        # placing from the second row.
+        if self._max_columns == 2:
+            row = 1
+            column = 0
+        else:
+            # About Me and About my computer are hardcoded below to use the
+            # first two slots so we need to leave them free.
+            row = 0
+            column = 2
+
         options = self._options.keys()
         options.sort()
 
@@ -157,7 +170,7 @@ class ControlPanel(gtk.Window):
                                    column, column + 1,
                                    row, row + 1)
                 column += 1
-                if column == _MAX_COLUMNS:
+                if column == self._max_columns:
                     column = 0
                     row += 1
 
@@ -214,11 +227,16 @@ class ControlPanel(gtk.Window):
                          globals(), locals(), ['model'])
         model = ModelWrapper(mod)
 
-        self._section_view = view_class(model,
-                                        self._options[option]['alerts'])
+        try:
+            self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+            self._section_view = view_class(model,
+                                            self._options[option]['alerts'])
 
-        self._set_canvas(self._section_view)
-        self._section_view.show()
+            self._set_canvas(self._section_view)
+            self._section_view.show()
+        finally:
+            self.get_window().set_cursor(None)
+
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
         self._section_view.connect('request-close',
@@ -227,13 +245,13 @@ class ControlPanel(gtk.Window):
                                   style.COLOR_WHITE.get_gdk_color())
 
     def set_section_view_auto_close(self):
-        '''Automatically close the control panel if there is "nothing to do"
-        '''
+        """Automatically close the control panel if there is "nothing to do"
+        """
         self._section_view.auto_close = True
 
     def _get_options(self):
-        '''Get the available option information from the extensions
-        '''
+        """Get the available option information from the extensions
+        """
         options = {}
 
         path = os.path.join(config.ext_path, 'cpsection')
@@ -259,11 +277,9 @@ class ControlPanel(gtk.Window):
                             keywords.append(item)
                         options[item]['keywords'] = keywords
                     else:
-                        _logger.error('There is no CLASS constant specifieds ' \
-                                          'in the view file \'%s\'.' % item)
+                        _logger.error('no CLASS attribute in %r', item)
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                        ''.join(traceback.format_exception(*sys.exc_info())))
+                    logging.exception('Exception while loading extension:')
 
         return options
 
@@ -333,6 +349,7 @@ class ControlPanel(gtk.Window):
         section_is_valid = section_view.props.is_valid
         self._section_toolbar.accept_button.set_sensitive(section_is_valid)
 
+
 class ModelWrapper(object):
     def __init__(self, module):
         self._module = module
@@ -360,18 +377,15 @@ class ModelWrapper(object):
                 except Exception, detail:
                     _logger.debug('Error undo option: %s', detail)
 
+
 class _SectionIcon(gtk.EventBox):
-    __gtype_name__ = "SugarSectionIcon"
+    __gtype_name__ = 'SugarSectionIcon'
 
     __gproperties__ = {
-        'icon-name'    : (str, None, None, None,
-                          gobject.PARAM_READWRITE),
-        'pixel-size'   : (object, None, None,
-                          gobject.PARAM_READWRITE),
-        'xo-color'     : (object, None, None,
-                          gobject.PARAM_READWRITE),
-        'title'        : (str, None, None, None,
-                          gobject.PARAM_READWRITE)
+        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
+        'pixel-size': (object, None, None, gobject.PARAM_READWRITE),
+        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
+        'title': (str, None, None, None, gobject.PARAM_READWRITE),
     }
 
     def __init__(self, **kwargs):

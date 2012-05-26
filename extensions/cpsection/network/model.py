@@ -15,9 +15,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
+
 import dbus
 from gettext import gettext as _
 import gconf
+
+from jarabe.model import network
+
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
 _NM_PATH = '/org/freedesktop/NetworkManager'
@@ -25,18 +30,23 @@ _NM_IFACE = 'org.freedesktop.NetworkManager'
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
+
 class ReadError(Exception):
     def __init__(self, value):
         self.value = value
+
     def __str__(self):
         return repr(self.value)
+
 
 def get_jabber():
     client = gconf.client_get_default()
     return client.get_string('/desktop/sugar/collaboration/jabber_server')
 
+
 def print_jabber():
     print get_jabber()
+
 
 def set_jabber(server):
     """Set the jabber server
@@ -47,11 +57,12 @@ def set_jabber(server):
 
     return 0
 
+
 def get_radio():
     try:
         bus = dbus.SystemBus()
         obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
     except dbus.DBusException:
         raise ReadError('%s service not available' % _NM_SERVICE)
 
@@ -61,18 +72,20 @@ def get_radio():
     else:
         raise ReadError(_('State is unknown.'))
 
+
 def print_radio():
     print ('off', 'on')[get_radio()]
-    
+
+
 def set_radio(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
-    """    
+    """
     if state == 'on' or state == 1:
         try:
             bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
@@ -80,14 +93,15 @@ def set_radio(state):
         try:
             bus = dbus.SystemBus()
             obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
+            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
         except dbus.DBusException:
             raise ReadError('%s service not available' % _NM_SERVICE)
         nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
     else:
-        raise ValueError(_("Error in specified radio argument use on/off."))
+        raise ValueError(_('Error in specified radio argument use on/off.'))
 
     return 0
+
 
 def clear_registration():
     """Clear the registration with the schoolserver
@@ -96,28 +110,46 @@ def clear_registration():
     client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
+
 def clear_networks():
     """Clear saved passwords and network configurations.
     """
-    pass
+    try:
+        connections = network.get_connections()
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+        return
+    connections.clear()
+
+
+def have_networks():
+    try:
+        connections = network.get_connections()
+        return len(connections.get_list()) > 0
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+        return False
+
 
 def get_publish_information():
     client = gconf.client_get_default()
     publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
     return publish
-	
+
+
 def print_publish_information():
     print get_publish_information()
 
+
 def set_publish_information(value):
-    """ If set to true, Sugar will make you searchable for 
+    """ If set to true, Sugar will make you searchable for
     the other users of the Jabber server.
     value: 0/1
     """
     try:
         value = (False, True)[int(value)]
     except:
-        raise ValueError(_("Error in specified argument use 0/1."))
+        raise ValueError(_('Error in specified argument use 0/1.'))
 
     client = gconf.client_get_default()
     client.set_bool('/desktop/sugar/collaboration/publish_gadget', value)

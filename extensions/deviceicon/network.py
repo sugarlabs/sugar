@@ -23,7 +23,6 @@ import logging
 import hashlib
 import socket
 import struct
-import re
 import datetime
 import time
 import gtk
@@ -40,27 +39,14 @@ from sugar.graphics.tray import TrayIcon
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics import xocolor
-from sugar.util import unique_id
 from sugar import profile
 
 from jarabe.model import network
-from jarabe.model.network import Settings
-from jarabe.model.network import IP4Config
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.pulsingicon import PulsingIcon
 
-IP_ADDRESS_TEXT_TEMPLATE = _("IP address: %s")
 
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_WIRED_IFACE = 'org.freedesktop.NetworkManager.Device.Wired'
-_NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
-_NM_SERIAL_IFACE = 'org.freedesktop.NetworkManager.Device.Serial'
-_NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
-_NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
+IP_ADDRESS_TEXT_TEMPLATE = _('IP address: %s')
 
 _GSM_STATE_NOT_READY = 0
 _GSM_STATE_DISCONNECTED = 1
@@ -73,8 +59,8 @@ class WirelessPalette(Palette):
     __gtype_name__ = 'SugarWirelessPalette'
 
     __gsignals__ = {
-        'deactivate-connection' : (gobject.SIGNAL_RUN_FIRST,
-                                   gobject.TYPE_NONE, ([]))
+        'deactivate-connection': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                                  ([])),
     }
 
     def __init__(self, primary_text):
@@ -104,18 +90,20 @@ class WirelessPalette(Palette):
         self._info.pack_start(_padded(self._ip_address_label))
         self._info.show_all()
 
-        self._disconnect_item = MenuItem(_('Disconnect...'))
+        self._disconnect_item = MenuItem(_('Disconnect'))
         icon = Icon(icon_size=gtk.ICON_SIZE_MENU, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self._disconnect_item.connect('activate',
+                                      self.__disconnect_activate_cb)
         self.menu.append(self._disconnect_item)
 
     def set_connecting(self):
-        self.props.secondary_text = _('Connecting...')
+        label = glib.markup_escape_text(_('Connecting...'))
+        self.props.secondary_text = label
 
     def _set_connected(self, iaddress):
         self.set_content(self._info)
-        self.props.secondary_text = _('Connected')
+        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
 
@@ -128,7 +116,8 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def set_disconnected(self):
-        self.props.primary_text = ''
+        label = glib.markup_escape_text(_('No wireless connection'))
+        self.props.primary_text = label
         self.props.secondary_text = ''
         self._disconnect_item.hide()
         self.set_content(None)
@@ -141,7 +130,7 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def _set_channel(self, channel):
-        self._channel_label.set_text("%s: %d" % (_("Channel"), channel))
+        self._channel_label.set_text('%s: %d' % (_('Channel'), channel))
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
@@ -156,7 +145,8 @@ class WiredPalette(Palette):
     __gtype_name__ = 'SugarWiredPalette'
 
     def __init__(self):
-        Palette.__init__(self, label=_('Wired Network'))
+        label = glib.markup_escape_text(_('Wired Network'))
+        Palette.__init__(self, primary_text=label)
 
         self._speed_label = gtk.Label()
         self._speed_label.props.xalign = 0.0
@@ -181,7 +171,7 @@ class WiredPalette(Palette):
         self._info.show_all()
 
         self.set_content(self._info)
-        self.props.secondary_text = _('Connected')
+        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
 
     def set_connected(self, speed, iaddress):
         self._speed_label.set_text('%s: %d Mb/s' % (_('Speed'), speed))
@@ -189,7 +179,7 @@ class WiredPalette(Palette):
 
     def _inet_ntoa(self, iaddress):
         address = ['%s' % ((iaddress >> i) % 256) for i in [0, 8, 16, 24]]
-        return ".".join(address)
+        return '.'.join(address)
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
@@ -199,19 +189,18 @@ class WiredPalette(Palette):
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
 
+
 class GsmPalette(Palette):
     __gtype_name__ = 'SugarGsmPalette'
 
     __gsignals__ = {
-        'gsm-connect'         : (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([])),
-        'gsm-disconnect'      : (gobject.SIGNAL_RUN_FIRST,
-                                 gobject.TYPE_NONE, ([])),
+        'gsm-connect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'gsm-disconnect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):
-
-        Palette.__init__(self, label=_('Wireless modem'))
+        label = glib.markup_escape_text(_('Wireless modem'))
+        Palette.__init__(self, primary_text=label)
 
         self._current_state = None
         self._failed_connection = False
@@ -278,19 +267,22 @@ class GsmPalette(Palette):
     def _update_label_and_text(self, reason=0):
         if self._current_state == _GSM_STATE_NOT_READY:
             self._toggle_state_item.get_child().set_label('...')
-            self.props.secondary_text = _('Please wait...')
+            label = glib.markup_escape_text(_('Please wait...'))
+            self.props.secondary_text = label
 
         elif self._current_state == _GSM_STATE_DISCONNECTED:
             if not self._failed_connection:
                 self._toggle_state_item.get_child().set_label(_('Connect'))
-            self.props.secondary_text = _('Disconnected')
+            label = glib.markup_escape_text(_('Disconnected'))
+            self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
             self._toggle_state_item.get_child().set_label(_('Cancel'))
-            self.props.secondary_text = _('Connecting...')
+            label = glib.markup_escape_text(_('Connecting...'))
+            self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
@@ -302,7 +294,7 @@ class GsmPalette(Palette):
             icon = Icon(icon_name='media-eject', \
                             icon_size=gtk.ICON_SIZE_MENU)
             self._toggle_state_item.set_image(icon)
-            
+
         elif self._current_state == _GSM_STATE_FAILED:
             message_error = self._get_error_by_nm_reason(reason)
             self.add_alert(message_error[0], message_error[1])
@@ -327,7 +319,8 @@ class GsmPalette(Palette):
 
     def add_alert(self, error, suggestion):
         self._failed_connection = True
-        self._toggle_state_item.get_child().set_label(_('Try connection again'))
+        action = _('Try connection again')
+        self._toggle_state_item.get_child().set_label(action)
 
         title = _('Error: %s') % error
         self.error_title_label.set_markup('<b>%s</b>' % title)
@@ -339,21 +332,22 @@ class GsmPalette(Palette):
 
     def update_connection_time(self, connection_time=None):
         if connection_time is not None:
-            self.props.secondary_text = _('Connected for %s') % \
-                    connection_time.strftime('%H:%M:%S')
+            formatted_time = connection_time.strftime('%H:%M:%S')
         else:
-            self.props.secondary_text = _('Connected for %s') % '00:00:00'
+            formatted_time = '00:00:00'
+        text = _('Connected for %s') % (formatted_time, )
+        self.props.secondary_text = glib.markup_escape_text(text)
 
     def update_stats(self, in_bytes, out_bytes):
         in_KBytes = in_bytes / 1024
         out_KBytes = out_bytes / 1024
-        self._data_label_up.set_text(_("%d KB") % (out_KBytes))
-        self._data_label_down.set_text(_("%d KB") % (in_KBytes))
+        self._data_label_up.set_text(_('%d KB') % (out_KBytes))
+        self._data_label_down.set_text(_('%d KB') % (in_KBytes))
 
     def _get_error_by_nm_reason(self, reason):
         if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
                       network.NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED]:
-            message = _('Check your Pin/Puk configuration.')
+            message = _('Check your PIN/PUK configuration.')
         elif reason in [network.NM_DEVICE_STATE_REASON_PPP_DISCONNECT,
                         network.NM_DEVICE_STATE_REASON_PPP_FAILED]:
             message = _('Check your Access Point Name ' \
@@ -380,7 +374,8 @@ class WirelessDeviceView(ToolButton):
         self._device = device
         self._device_props = None
         self._flags = 0
-        self._name = ''
+        self._ssid = ''
+        self._display_name = ''
         self._mode = network.NM_802_11_MODE_UNKNOWN
         self._strength = 0
         self._frequency = 0
@@ -390,8 +385,8 @@ class WirelessDeviceView(ToolButton):
 
         self._icon = PulsingIcon()
         self._icon.props.icon_name = get_icon_state('network-wireless', 0)
-        self._inactive_color = xocolor.XoColor( \
-            "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
+        self._inactive_color = xocolor.XoColor(
+            '%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
         self._icon.props.pulse_color = self._inactive_color
         self._icon.props.base_color = self._inactive_color
@@ -400,32 +395,32 @@ class WirelessDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(self._name)
+        self._palette = WirelessPalette(self._display_name)
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection_cb)
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
 
-        self._device_props = dbus.Interface(self._device, 
-                                            'org.freedesktop.DBus.Properties')
-        self._device_props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True, 
+        self._device_props = dbus.Interface(self._device,
+                                            dbus.PROPERTIES_IFACE)
+        self._device_props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                               reply_handler=self.__get_device_props_reply_cb,
                               error_handler=self.__get_device_props_error_cb)
 
-        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+        self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
                                error_handler=self.__get_active_ap_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -442,22 +437,22 @@ class WirelessDeviceView(ToolButton):
                     self.__ap_properties_changed_cb,
                     signal_name='PropertiesChanged',
                     path=self._active_ap_op,
-                    dbus_interface=_NM_ACCESSPOINT_IFACE)
+                    dbus_interface=network.NM_ACCESSPOINT_IFACE)
             if active_ap_op == '/':
                 self._active_ap_op = None
                 return
             self._active_ap_op = active_ap_op
-            active_ap = self._bus.get_object(_NM_SERVICE, active_ap_op)
-            props = dbus.Interface(active_ap, 'org.freedesktop.DBus.Properties')
+            active_ap = self._bus.get_object(network.NM_SERVICE, active_ap_op)
+            props = dbus.Interface(active_ap, dbus.PROPERTIES_IFACE)
 
-            props.GetAll(_NM_ACCESSPOINT_IFACE, byte_arrays=True,
+            props.GetAll(network.NM_ACCESSPOINT_IFACE, byte_arrays=True,
                          reply_handler=self.__get_all_ap_props_reply_cb,
                          error_handler=self.__get_all_ap_props_error_cb)
 
             self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                           signal_name='PropertiesChanged',
                                           path=self._active_ap_op,
-                                          dbus_interface=_NM_ACCESSPOINT_IFACE)
+                                          dbus_interface=network.NM_ACCESSPOINT_IFACE)
 
     def __get_active_ap_error_cb(self, err):
         logging.error('Error getting the active access point: %s', err)
@@ -465,7 +460,7 @@ class WirelessDeviceView(ToolButton):
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
         self._update_state()
-        self._device_props.Get(_NM_WIRELESS_IFACE, 'ActiveAccessPoint',
+        self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
                                error_handler=self.__get_active_ap_error_cb)
 
@@ -477,7 +472,8 @@ class WirelessDeviceView(ToolButton):
             self._mode = properties['Mode']
             self._color = None
         if 'Ssid' in properties:
-            self._name = properties['Ssid']
+            self._ssid = properties['Ssid']
+            self._display_name = network.ssid_to_display_name(self._ssid)
             self._color = None
         if 'Strength' in properties:
             self._strength = properties['Strength']
@@ -488,16 +484,16 @@ class WirelessDeviceView(ToolButton):
 
         if self._color == None:
             if self._mode == network.NM_802_11_MODE_ADHOC and \
-                    network.is_sugar_adhoc_network(self._name):
+                    network.is_sugar_adhoc_network(self._ssid):
                 self._color = profile.get_color()
             else:
                 sha_hash = hashlib.sha1()
-                data = self._name + hex(self._flags)
+                data = self._ssid + hex(self._flags)
                 sha_hash.update(data)
                 digest = hash(sha_hash.digest())
                 index = digest % len(xocolor.colors)
 
-                self._color = xocolor.XoColor('%s,%s' % 
+                self._color = xocolor.XoColor('%s,%s' %
                                               (xocolor.colors[index][0],
                                                xocolor.colors[index][1]))
         self._update()
@@ -510,11 +506,12 @@ class WirelessDeviceView(ToolButton):
 
     def _update(self):
         if self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-            self._icon.props.badge_name = "emblem-locked"
+            self._icon.props.badge_name = 'emblem-locked'
         else:
             self._icon.props.badge_name = None
 
-        self._palette.props.primary_text = glib.markup_escape_text(self._name)
+        label = glib.markup_escape_text(self._display_name)
+        self._palette.props.primary_text = label
 
         self._update_state()
         self._update_color()
@@ -523,11 +520,11 @@ class WirelessDeviceView(ToolButton):
         if self._active_ap_op is not None:
             state = self._device_state
         else:
-            state = network.DEVICE_STATE_UNKNOWN
+            state = network.NM_DEVICE_STATE_UNKNOWN
 
         if self._mode != network.NM_802_11_MODE_ADHOC and \
-                network.is_sugar_adhoc_network(self._name) == False:
-            if state == network.DEVICE_STATE_ACTIVATED:
+                network.is_sugar_adhoc_network(self._ssid) == False:
+            if state == network.NM_DEVICE_STATE_ACTIVATED:
                 icon_name = '%s-connected' % 'network-wireless'
             else:
                 icon_name = 'network-wireless'
@@ -537,22 +534,21 @@ class WirelessDeviceView(ToolButton):
                 self._icon.props.icon_name = icon_name
         else:
             channel = network.frequency_to_channel(self._frequency)
-            if state == network.DEVICE_STATE_ACTIVATED:
+            if state == network.NM_DEVICE_STATE_ACTIVATED:
                 self._icon.props.icon_name = 'network-adhoc-%s-connected' \
                         % channel
             else:
                 self._icon.props.icon_name = 'network-adhoc-%s' % channel
             self._icon.props.base_color = profile.get_color()
 
-        if state == network.DEVICE_STATE_PREPARE or \
-           state == network.DEVICE_STATE_CONFIG or \
-           state == network.DEVICE_STATE_NEED_AUTH or \
-           state == network.DEVICE_STATE_IP_CONFIG:
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             self._palette.set_connecting()
             self._icon.props.pulsing = True
-        elif state == network.DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
-            self._palette.set_connected_with_frequency(self._frequency, address)
+        elif state == network.NM_DEVICE_STATE_ACTIVATED:
+            address = self._device_props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
+            self._palette.set_connected_with_frequency(self._frequency,
+                                                       address)
             self._icon.props.pulsing = False
         else:
             self._icon.props.badge_name = None
@@ -565,21 +561,7 @@ class WirelessDeviceView(ToolButton):
         self._icon.props.base_color = self._color
 
     def __deactivate_connection_cb(self, palette, data=None):
-        if self._active_ap_op is not None:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            netmgr = dbus.Interface(obj, _NM_IFACE)
-            netmgr_props = dbus.Interface(
-                netmgr, 'org.freedesktop.DBus.Properties')
-            active_connections_o = netmgr_props.Get(_NM_IFACE,
-                                                    'ActiveConnections')
-
-            for conn_o in active_connections_o:
-                obj = self._bus.get_object(_NM_IFACE, conn_o)
-                props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-                ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
-                if ap_op == self._active_ap_op:
-                    netmgr.DeactivateConnection(conn_o)
-                    break
+        network.disconnect_access_points([self._active_ap_op])
 
     def __activate_reply_cb(self, connection):
         logging.debug('Network created: %s', connection)
@@ -602,8 +584,8 @@ class OlpcMeshDeviceView(ToolButton):
         self._channel = 0
 
         self._icon = PulsingIcon(icon_name=self._ICON_NAME)
-        self._inactive_color = xocolor.XoColor( \
-            "%s,%s" % (style.COLOR_BUTTON_GREY.get_svg(),
+        self._inactive_color = xocolor.XoColor(
+            '%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                        style.COLOR_TRANSPARENT.get_svg()))
         self._icon.props.pulse_color = profile.get_color()
         self._icon.props.base_color = self._inactive_color
@@ -612,7 +594,8 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-        self._palette = WirelessPalette(_("Mesh Network"))
+        title = _('Mesh Network')
+        self._palette = WirelessPalette(glib.markup_escape_text(title))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
@@ -621,21 +604,21 @@ class OlpcMeshDeviceView(ToolButton):
         self.update_state(state)
 
         self._device_props = dbus.Interface(self._device,
-                                            'org.freedesktop.DBus.Properties')
-        self._device_props.Get(_NM_OLPC_MESH_IFACE, 'ActiveChannel',
+                                            dbus.PROPERTIES_IFACE)
+        self._device_props.Get(network.NM_OLPC_MESH_IFACE, 'ActiveChannel',
                             reply_handler=self.__get_active_channel_reply_cb,
                             error_handler=self.__get_active_channel_error_cb)
 
         self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
                                       signal_name='PropertiesChanged',
                                       path=device.object_path,
-                                      dbus_interface=_NM_OLPC_MESH_IFACE)
+                                      dbus_interface=network.NM_OLPC_MESH_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
                                          signal_name='PropertiesChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_OLPC_MESH_IFACE)
+                                         dbus_interface=network.NM_OLPC_MESH_IFACE)
 
     def __get_active_channel_reply_cb(self, channel):
         self._channel = channel
@@ -655,22 +638,20 @@ class OlpcMeshDeviceView(ToolButton):
 
     def _update_text(self):
         channel = str(self._channel)
-        text = _("Mesh Network %s") % glib.markup_escape_text(channel)
+        text = glib.markup_escape_text(_('Mesh Network %s') % (channel, ))
         self._palette.props.primary_text = text
 
     def _update(self):
         state = self._device_state
 
-        if state in [network.DEVICE_STATE_PREPARE,
-                     network.DEVICE_STATE_CONFIG,
-                     network.DEVICE_STATE_NEED_AUTH,
-                     network.DEVICE_STATE_IP_CONFIG]:
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             self._icon.props.base_color = self._inactive_color
             self._icon.props.pulse_color = profile.get_color()
             self._palette.set_connecting()
             self._icon.props.pulsing = True
-        elif state == network.DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
+        elif state == network.NM_DEVICE_STATE_ACTIVATED:
+            address = self._device_props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
             self._palette.set_connected_with_channel(self._channel, address)
             self._icon.props.base_color = profile.get_color()
             self._icon.props.pulsing = False
@@ -681,23 +662,23 @@ class OlpcMeshDeviceView(ToolButton):
         self._update()
 
     def __deactivate_connection(self, palette, data=None):
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr, 'org.freedesktop.DBus.Properties')
-        active_connections_o = netmgr_props.Get(_NM_IFACE,
+        obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+        netmgr = dbus.Interface(obj, network.NM_IFACE)
+        netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
+        active_connections_o = netmgr_props.Get(network.NM_IFACE,
                                                 'ActiveConnections')
 
         for conn_o in active_connections_o:
             # The connection path for a mesh connection is the device itself.
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-            ap_op = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+            ap_op = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
 
             try:
-                obj = self._bus.get_object(_NM_IFACE, ap_op)
-                props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-                type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-                if type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+                obj = self._bus.get_object(network.NM_IFACE, ap_op)
+                props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+                device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+                if device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
                     netmgr.DeactivateConnection(conn_o)
                     break
             except dbus.exceptions.DBusException:
@@ -744,11 +725,12 @@ class GsmDeviceView(TrayIcon):
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
         self._bus.add_signal_receiver(self.__ppp_stats_changed_cb,
                                       signal_name='PppStats',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_SERIAL_IFACE)
+                                      dbus_interface=network.NM_MODEM_IFACE)
+
     def create_palette(self):
         palette = GsmPalette()
 
@@ -758,8 +740,8 @@ class GsmDeviceView(TrayIcon):
 
         self._palette = palette
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__current_state_check_cb,
                      error_handler=self.__current_state_check_error_cb)
 
@@ -768,14 +750,9 @@ class GsmDeviceView(TrayIcon):
     def __gsm_connect_cb(self, palette, data=None):
         connection = network.find_gsm_connection()
         if connection is not None:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            netmgr = dbus.Interface(obj, _NM_IFACE)
-            netmgr.ActivateConnection(network.SETTINGS_SERVICE,
-                                        connection.path,
-                                        self._device.object_path,
-                                        '/',
-                                        reply_handler=self.__connect_cb,
-                                        error_handler=self.__connect_error_cb)
+            connection.activate(self._device.object_path,
+                                reply_handler=self.__connect_cb,
+                                error_handler=self.__connect_error_cb)
         else:
             self._palette.add_alert(_('No GSM connection available.'), \
                                         _('Create a connection in the ' \
@@ -789,15 +766,15 @@ class GsmDeviceView(TrayIcon):
         raise RuntimeError('Error when connecting to gsm device, %s' % error)
 
     def __gsm_disconnect_cb(self, palette, data=None):
-        obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-        netmgr = dbus.Interface(obj, _NM_IFACE)
-        netmgr_props = dbus.Interface(netmgr, 'org.freedesktop.DBus.Properties')
-        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+        obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+        netmgr = dbus.Interface(obj, network.NM_IFACE)
+        netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
+        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-            devices = props.Get(_NM_ACTIVE_CONN_IFACE, 'Devices')
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+            devices = props.Get(network.NM_ACTIVE_CONN_IFACE, 'Devices')
             if self._device.object_path in devices:
                 netmgr.DeactivateConnection(
                         conn_o,
@@ -825,13 +802,12 @@ class GsmDeviceView(TrayIcon):
     def _update_state(self, state, old_state, reason):
         gsm_state = None
 
-        if state is network.DEVICE_STATE_ACTIVATED:
+        if state is network.NM_DEVICE_STATE_ACTIVATED:
             gsm_state = _GSM_STATE_CONNECTED
             connection = network.find_gsm_connection()
             if connection is not None:
-                connection.set_connected()
                 self._connection_timestamp = time.time() - \
-                        connection.get_settings().connection.timestamp
+                        connection.get_settings('connection')['timestamp']
                 self._connection_time_handler = gobject.timeout_add_seconds( \
                         1, self.__connection_timecount_cb)
                 self._palette.update_connection_time()
@@ -839,7 +815,7 @@ class GsmDeviceView(TrayIcon):
                 if self._palette is not None:
                     self._palette.connection_info_box.show()
 
-        elif state is network.DEVICE_STATE_DISCONNECTED:
+        elif state is network.NM_DEVICE_STATE_DISCONNECTED:
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
@@ -847,18 +823,16 @@ class GsmDeviceView(TrayIcon):
             if self._palette is not None:
                 self._palette.connection_info_box.hide()
 
-        elif state in [network.DEVICE_STATE_UNMANAGED,
-                       network.DEVICE_STATE_UNAVAILABLE,
-                       network.DEVICE_STATE_UNKNOWN]:
+        elif state in [network.NM_DEVICE_STATE_UNMANAGED,
+                       network.NM_DEVICE_STATE_UNAVAILABLE,
+                       network.NM_DEVICE_STATE_UNKNOWN]:
             gsm_state = _GSM_STATE_NOT_READY
 
-        elif state in [network.DEVICE_STATE_PREPARE,
-                       network.DEVICE_STATE_CONFIG,
-                       network.DEVICE_STATE_IP_CONFIG,
-                       network.DEVICE_STATE_NEED_AUTH]:
+        elif (state >= network.NM_DEVICE_STATE_PREPARE) and \
+             (state <= network.NM_DEVICE_STATE_IP_CONFIG):
             gsm_state = _GSM_STATE_CONNECTING
 
-        elif state == network.DEVICE_STATE_FAILED:
+        elif state == network.NM_DEVICE_STATE_FAILED:
             gsm_state = _GSM_STATE_FAILED
 
         if self._palette is not None:
@@ -868,7 +842,7 @@ class GsmDeviceView(TrayIcon):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __ppp_stats_changed_cb(self, in_bytes, out_bytes):
         self._palette.update_stats(in_bytes, out_bytes)
@@ -904,14 +878,14 @@ class MeshDeviceObserver(object):
         self._tray = tray
 
         props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__get_device_props_reply_cb,
                      error_handler=self.__get_device_props_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def _remove_device_view(self):
         self._device_view.disconnect()
@@ -925,7 +899,7 @@ class MeshDeviceObserver(object):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -938,10 +912,8 @@ class MeshDeviceObserver(object):
         self._update_state(new_state)
 
     def _update_state(self, state):
-        if state in (network.DEVICE_STATE_PREPARE, network.DEVICE_STATE_CONFIG,
-                     network.DEVICE_STATE_NEED_AUTH,
-                     network.DEVICE_STATE_IP_CONFIG,
-                     network.DEVICE_STATE_ACTIVATED):
+        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
+           (state <= network.NM_DEVICE_STATE_ACTIVATED):
             if self._device_view is not None:
                 self._device_view.update_state(state)
                 return
@@ -961,21 +933,21 @@ class WiredDeviceObserver(object):
         self._device_view = None
         self._tray = tray
 
-        props = dbus.Interface(self._device, 'org.freedesktop.DBus.Properties')
-        props.GetAll(_NM_DEVICE_IFACE, byte_arrays=True,
+        props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
+        props.GetAll(network.NM_DEVICE_IFACE, byte_arrays=True,
                      reply_handler=self.__get_device_props_reply_cb,
                      error_handler=self.__get_device_props_error_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
                                       path=self._device.object_path,
-                                      dbus_interface=_NM_DEVICE_IFACE)
+                                      dbus_interface=network.NM_DEVICE_IFACE)
 
     def disconnect(self):
         self._bus.remove_signal_receiver(self.__state_changed_cb,
                                          signal_name='StateChanged',
                                          path=self._device.object_path,
-                                         dbus_interface=_NM_DEVICE_IFACE)
+                                         dbus_interface=network.NM_DEVICE_IFACE)
 
     def __get_device_props_reply_cb(self, properties):
         if 'State' in properties:
@@ -988,11 +960,10 @@ class WiredDeviceObserver(object):
         self._update_state(new_state)
 
     def _update_state(self, state):
-        if state == network.DEVICE_STATE_ACTIVATED:
-            props = dbus.Interface(self._device,
-                                   'org.freedesktop.DBus.Properties')
-            address = props.Get(_NM_DEVICE_IFACE, 'Ip4Address')
-            speed = props.Get(_NM_WIRED_IFACE, 'Speed')
+        if state == network.NM_DEVICE_STATE_ACTIVATED:
+            props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
+            address = props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
+            speed = props.Get(network.NM_WIRED_IFACE, 'Speed')
             self._device_view = WiredDeviceView(speed, address)
             self._tray.add_device(self._device_view)
         else:
@@ -1000,6 +971,7 @@ class WiredDeviceObserver(object):
                 self._tray.remove_device(self._device_view)
                 del self._device_view
                 self._device_view = None
+
 
 class GsmDeviceObserver(object):
     def __init__(self, device, tray):
@@ -1015,6 +987,7 @@ class GsmDeviceObserver(object):
         self._tray.remove_device(self._device_view)
         self._device_view = None
 
+
 class NetworkManagerObserver(object):
     def __init__(self, tray):
         self._bus = dbus.SystemBus()
@@ -1023,10 +996,10 @@ class NetworkManagerObserver(object):
         self._tray = tray
 
         try:
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            self._netmgr = dbus.Interface(obj, _NM_IFACE)
+            obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+            self._netmgr = dbus.Interface(obj, network.NM_IFACE)
         except dbus.DBusException:
-            logging.error('%s service not available', _NM_SERVICE)
+            logging.error('%s service not available', network.NM_SERVICE)
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -1034,10 +1007,10 @@ class NetworkManagerObserver(object):
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='DeviceRemoved',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
 
     def __get_devices_reply_cb(self, devices):
         for device_op in devices:
@@ -1047,20 +1020,23 @@ class NetworkManagerObserver(object):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_op):
-        nm_device = self._bus.get_object(_NM_SERVICE, device_op)
-        props = dbus.Interface(nm_device, 'org.freedesktop.DBus.Properties')
+        if device_op in self._devices:
+            return
 
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_3_ETHERNET:
+        nm_device = self._bus.get_object(network.NM_SERVICE, device_op)
+        props = dbus.Interface(nm_device, dbus.PROPERTIES_IFACE)
+
+        device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == network.NM_DEVICE_TYPE_ETHERNET:
             device = WiredDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+        elif device_type == network.NM_DEVICE_TYPE_WIFI:
             device = WirelessDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+        elif device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
             device = MeshDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
-        elif device_type == network.DEVICE_TYPE_GSM_MODEM:
+        elif device_type == network.NM_DEVICE_TYPE_MODEM:
             device = GsmDeviceObserver(nm_device, self._tray)
             self._devices[device_op] = device
 
@@ -1072,6 +1048,7 @@ class NetworkManagerObserver(object):
             device = self._devices[device_op]
             device.disconnect()
             del self._devices[device_op]
+
 
 def setup(tray):
     device_observer = NetworkManagerObserver(tray)

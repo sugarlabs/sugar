@@ -2,126 +2,447 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Rit Lim <rit.lim@gmail.com>, 2008.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-21 00:30-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"PO-Revision-Date: 2012-03-22 21:17+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: km\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 1.1.0rc2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Pootle 2.0.5\n"
 
-#: ../src/intro/intro.py:65 ../src/controlpanel/view/aboutme.py:100
-msgid "Name:"
-msgstr "ឈ្មោះ: "
+#: ../extensions/cpsection/aboutme/__init__.py:24
+msgid "About Me"
+msgstr "អំពី​ខ្ញុំ"
 
-#: ../src/intro/intro.py:94
-msgid "Click to change color:"
-msgstr "ដូរ​ព័ណ"
+#: ../extensions/cpsection/aboutme/model.py:48
+msgid "You must enter a name."
+msgstr "អ្នក​ត្រូវ​តែ​បញ្ចូល​ឈ្មោះ"
 
-#: ../src/intro/intro.py:145
-msgid "Back"
-msgstr "ថយ​ក្រោយ"
-
-#: ../src/intro/intro.py:159 ../src/controlpanel/toolbar.py:61
-msgid "Done"
-msgstr "រួច​ហើយ"
-
-#: ../src/intro/intro.py:162
-msgid "Next"
-msgstr "ថតទៅ​មុខ"
-
-#: ../src/view/BuddyMenu.py:58
-msgid "Remove friend"
-msgstr "ដក​មិត្ត​ចេញ"
-
-#: ../src/view/BuddyMenu.py:61
-msgid "Make friend"
-msgstr "កសាង​មិត្ត​ភាព"
-
-#: ../src/view/BuddyMenu.py:91
+#: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
-msgid "Invite to %s"
-msgstr "អញ្ជើញទៅ %s"
+msgid "stroke:   color=%s hue=%s"
+msgstr ""
 
-#: ../src/view/clipboardmenu.py:48
-msgid "Remove"
+#: ../extensions/cpsection/aboutme/model.py:78
+#, python-format
+msgid "stroke:   %s"
+msgstr ""
+
+#: ../extensions/cpsection/aboutme/model.py:80
+#, python-format
+msgid "fill:     color=%s hue=%s"
+msgstr ""
+
+#: ../extensions/cpsection/aboutme/model.py:82
+#, python-format
+msgid "fill:     %s"
+msgstr ""
+
+#: ../extensions/cpsection/aboutme/model.py:94
+msgid "Error in specified color modifiers."
+msgstr "កំណែ​សំរាប់​ពណ៌​នេះ​មាន​បញ្ហា"
+
+#: ../extensions/cpsection/aboutme/model.py:97
+msgid "Error in specified colors."
+msgstr "ពណ៌​នេះ​មាន​បញ្ហា"
+
+#: ../extensions/cpsection/aboutme/view.py:235
+msgid "Click to change your color:"
+msgstr "ចុច​ដើម្បី​ដូរ​ពិណ​របស់​អ្នក ៖"
+
+#: ../extensions/cpsection/aboutcomputer/__init__.py:21
+msgid "About my Computer"
+msgstr "អំពី​កុំព្យូទ័រ​របស់ខ្ញុំ"
+
+#: ../extensions/cpsection/aboutcomputer/model.py:43
+msgid "Not available"
+msgstr "មិន​អាច​រក​បាន"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:59
+msgid "Identity"
+msgstr "អត្តសញ្ញាណ"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:68
+msgid "Serial Number:"
+msgstr "លេខសំគាល់ ៖"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:90
+msgid "Software"
+msgstr "សូសវែ"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:99
+msgid "Build:"
+msgstr "ដំឡើង ៖"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:114
+msgid "Sugar:"
+msgstr "ស្ករ ៖"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:129
+msgid "Firmware:"
+msgstr "ហ្វឹមវែ ៖"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:144
+msgid "Wireless Firmware:"
+msgstr "ហ្វឹមវែ ឥត​ខ្សែ"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:167
+msgid "Copyright and License"
+msgstr "កម្មសិទ្ឋិ​បញ្ញា​និង​អាជ្ញាប័ណ្ណ"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:185
+msgid ""
+"Sugar is the graphical user interface that you are looking at. Sugar is free "
+"software, covered by the GNU General Public License, and you are welcome to "
+"change it and/or distribute copies of it under certain conditions described "
+"therein."
+msgstr ""
+"ស្ករ​ (Sugar) ជា​ប្រភេទ​រូបភាព​ផ្ទៃ​ខាង​មុខ​របស់​អ្នក​ប្រើប្រាស់ "
+"ដែល​អ្នក​អាច​រក​បាន ស្ករ​(Sugar)គឺ​ជា​សេរីភាព​សូសវែ​ (software) "
+"ទទួល​ខុស​ត្រូវ​ដោយ GNU ជា​អាជ្ញាប័ណ្ណ​សាធារណ​ទូទៅ "
+"ហើយ​ស្វាគមន៍​ទៅ​លើ​ការ​ប្តូរ ចំលង​ចែកចាយ ដែល​មាន​លក្ខណ​ដែល​បាន​ចែង​នៅ​ទី​នេះ"
+
+#: ../extensions/cpsection/aboutcomputer/view.py:197
+msgid "Full license:"
+msgstr "អាជ្ញាប័ណ្ណ​ពេញលេញ ៖"
+
+#: ../extensions/cpsection/datetime/__init__.py:21
+msgid "Date & Time"
+msgstr "ថ្ងៃនិងម៉ោង"
+
+#: ../extensions/cpsection/datetime/model.py:92
+msgid "Error timezone does not exist."
+msgstr "មានបញ្ហា ។ ដំបន់​ម៉ោង​នេះ​អត់​មាន​ទេ"
+
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+msgid "Timezone"
+msgstr "ម៉ោងប្រចំតំបន់"
+
+#: ../extensions/cpsection/frame/__init__.py:21
+msgid "Frame"
+msgstr "សុំ"
+
+#: ../extensions/cpsection/frame/model.py:41
+#: ../extensions/cpsection/frame/model.py:66
+msgid "Value must be an integer."
+msgstr "តំលៃ​ត្រូវតែ​ជា​លេខ"
+
+#: ../extensions/cpsection/frame/view.py:27
+msgid "never"
+msgstr "មិនដែល"
+
+#: ../extensions/cpsection/frame/view.py:28
+msgid "instantaneous"
+msgstr "ដែល​កើត​ឡើង​ភ្លាម​ៗ"
+
+#: ../extensions/cpsection/frame/view.py:29
+#, python-format
+msgid "%s seconds"
+msgstr "%s វិនាទី"
+
+#: ../extensions/cpsection/frame/view.py:54
+msgid "Activation Delay"
+msgstr "ពន្យារការ​ធ្វើ​សកម្មភាព"
+
+#: ../extensions/cpsection/frame/view.py:78
+msgid "Corner"
+msgstr "កាច់ជ្រុង"
+
+#: ../extensions/cpsection/frame/view.py:113
+msgid "Edge"
+msgstr "ក្រប"
+
+#: ../extensions/cpsection/keyboard/__init__.py:21
+#: ../extensions/cpsection/keyboard/view.py:32
+msgid "Keyboard"
+msgstr "ក្តារ​ចុច"
+
+#: ../extensions/cpsection/keyboard/view.py:190
+msgid "Keyboard Model"
+msgstr "ម៉ូដែល​ក្ដារចុច"
+
+#: ../extensions/cpsection/keyboard/view.py:250
+msgid "Key(s) to change layout"
+msgstr ""
+
+#: ../extensions/cpsection/keyboard/view.py:319
+msgid "Keyboard Layout(s)"
+msgstr "ប្លង់​ក្ដារ​ចុច"
+
+#: ../extensions/cpsection/language/__init__.py:21
+#: ../extensions/cpsection/language/view.py:33
+msgid "Language"
+msgstr "ភាសា"
+
+#: ../extensions/cpsection/language/model.py:30
+msgid "Could not access ~/.i18n. Create standard settings."
+msgstr "មិន​អាច​អាន ~/i១៨n បាន​ទេ ។ បង្កើត​និយាម​​​សម្រាប់​កំណត់"
+
+#: ../extensions/cpsection/language/model.py:129
+#, python-format
+msgid "Language for code=%s could not be determined."
+msgstr "កូដ​សំរាប់​ភាលា​ code=%s មិន​អាន​រក​ឃើញ​ទេ"
+
+#: ../extensions/cpsection/language/model.py:152
+#, python-format
+msgid "Sorry I do not speak '%s'."
+msgstr "សូម​ទោស ខ្ញុំ​មិន​ចេះ​និយាយ​ភាសា '%s' ទេ"
+
+#: ../extensions/cpsection/language/view.py:57
+msgid ""
+"Add languages in the order you prefer. If a translation is not available, "
+"the next in the list will be used."
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/__init__.py:21
+msgid "Modem Configuration"
+msgstr "ការ​កំណត់​រចនាសម្ព័ន្ធ​ម៉ូដឹម"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:67
+msgid ""
+"You will need to provide the following information to set up a mobile "
+"broadband connection to a cellular (3G) network."
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/view.py:77
+msgid "Username:"
+msgstr "ឈ្មោះអ្នក​ប្រើ ៖"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:83
+msgid "Password:"
+msgstr "ពាក្យ​សម្ងាត់ ៖"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:89
+msgid "Number:"
+msgstr "លេខ"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:95
+msgid "Access Point Name (APN):"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/view.py:101
+msgid "Personal Identity Number (PIN):"
+msgstr ""
+
+#: ../extensions/cpsection/network/__init__.py:21
+#: ../extensions/cpsection/network/view.py:29
+msgid "Network"
+msgstr "បណ្ដាញ"
+
+#: ../extensions/cpsection/network/model.py:73
+msgid "State is unknown."
+msgstr "ស្ថានភាព​មិន​ស្គាល់"
+
+#: ../extensions/cpsection/network/model.py:101
+msgid "Error in specified radio argument use on/off."
+msgstr "មាន​បញ្ហានៅ​ក្នុង​វិទ្យុនេះដែលប្រើ បិទ​/បើក"
+
+#: ../extensions/cpsection/network/model.py:152
+msgid "Error in specified argument use 0/1."
+msgstr ""
+"​មាន​​បញ្ហា​នៅ​​ក្នុង​ការ​កំណត់​​នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
+
+#: ../extensions/cpsection/network/view.py:61
+msgid "Wireless"
+msgstr "ឥត​ខ្សែ"
+
+#: ../extensions/cpsection/network/view.py:69
+msgid "Turn off the wireless radio to save battery life"
+msgstr "បិត​ប្រព័ន្ឋ​វិទ្យុឥត​​ខ្សែ​ដើម្បី​សន្សំ​ថ្ម"
+
+#: ../extensions/cpsection/network/view.py:82
+msgid "Radio"
+msgstr "វិទ្យុ"
+
+#: ../extensions/cpsection/network/view.py:98
+msgid "Discard network history if you have trouble connecting to the network"
+msgstr "ផ្តាច់​ប្រព័ន្ឋ​ជាមុន​ប្រសិន​បើ​មាន​បញ្ហា​ដល់​ភ្ជាប់​ប្រព័ន្ឋ​បណ្ដាញ"
+
+#: ../extensions/cpsection/network/view.py:107
+msgid "Discard network history"
+msgstr "ផ្តាច់​ប្រព័ន្ឋ​ជាមុន​ប្រសិន"
+
+#: ../extensions/cpsection/network/view.py:122
+msgid "Collaboration"
+msgstr "សហប្រតិបត្តិការ"
+
+#: ../extensions/cpsection/network/view.py:130
+msgid ""
+"The server is the equivalent of what room you are in; people on the same "
+"server will be able to see each other, even when they aren't on the same "
+"network."
+msgstr ""
+"ម៉ាស៊ីន​មេ​គឺ​ស្មើ​ទៅ​នឹង​អ្វី​ដែល​នៅ​ក្នុង​បន្ទប់​មួយ​អញ្ចឹង​ដែរ "
+"មនុស្ស​ដែល​នៅ​ក្នុង​ម៉ាស៊ីន​មេ​​មួយ​នឹង​អាច​មើល​ឃើញ​គ្នី​គ្នា​ដទៃ​ទៀត​បាន "
+"ទោះបី​ជា​ពួក​គេ​មិន​នៅ​ក្នុង​ប្រព័ន្ធ​បណ្ដាញ​តែ​មួយ​ក៏ដោយ"
+
+#: ../extensions/cpsection/network/view.py:140
+msgid "Server:"
+msgstr "ម៉ាស៊ីន​មេ ៖"
+
+#: ../extensions/cpsection/power/__init__.py:21
+msgid "Power"
+msgstr "ថាមពល"
+
+#: ../extensions/cpsection/power/model.py:90
+msgid "Error in automatic pm argument, use on/off."
+msgstr ""
+"កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ស្វ័យប្រវត្ត pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ "
+"បិត/បើក"
+
+#: ../extensions/cpsection/power/model.py:120
+msgid "Error in extreme pm argument, use on/off."
+msgstr ""
+"កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ឆ្លាស់ pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
+
+#: ../extensions/cpsection/power/view.py:48
+msgid "Power management"
+msgstr "ការគ្រប់គ្រងថាមពល"
+
+#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+msgid "Automatic power management (increases battery life)"
+msgstr "ការ​គ្រប់គ្រង​ថាមពល​ស្វ័យប្រវត្ត (ដើម្បី​ប្រើប្រាស់​ថ្ម​បាន​យូរ)"
+
+#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"ការគ្រប់គ្រង​ថាមពល​ឆ្លាស់ (ផ្ដាច់​ប្រព័ន្ធ​វិទ្យុ​ឥត​ខ្សែ "
+"ដើម្បី​​ប្រើប្រាស់​​ថ្ម​​បាន​​យូរ)"
+
+#: ../extensions/cpsection/updater/__init__.py:21
+msgid "Software update"
+msgstr "បច្ចុប្បន្នភាព​របស់​​​កម្មវិធី"
+
+#: ../extensions/cpsection/updater/view.py:63
+msgid ""
+"Software updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"កែ​កំហុស​សុសវែរ​អោយ​ទាន់សម័យ កាត់​ចោល​នូវ​កា​ខ្វះខាត​​កំហុស​សន្តិសុខ និង "
+"ផ្តល់​ជូន​លក្ខណៈ​ថ្មីៗ"
+
+#: ../extensions/cpsection/updater/view.py:125
+#, python-format
+#, python-format,
+msgid "Checking %s..."
+msgstr "កំពុង​ពិនិត្យ​មើល %s..."
+
+#: ../extensions/cpsection/updater/view.py:127
+#, python-format
+msgid "Downloading %s..."
+msgstr "កំពុងទាញយក %s..."
+
+#: ../extensions/cpsection/updater/view.py:129
+#, python-format
+msgid "Updating %s..."
+msgstr "កំពុង​ធ្វើ​បច្ចុប្បន្នភាព %s..."
+
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Your software is up-to-date"
+msgstr "ប្រព័ន្ធ​របស់​អ្នក​ទាន់សម័យ"
+
+#: ../extensions/cpsection/updater/view.py:141
+#, python-format
+msgid "You can install %s update"
+msgid_plural "You can install %s updates"
+msgstr[0] ""
+
+#: ../extensions/cpsection/updater/view.py:159
+msgid "Checking for updates..."
+msgstr "កំពុង​ពិនិត្យ​រក​មើលបច្ចុប្បន្នភាព..."
+
+#: ../extensions/cpsection/updater/view.py:164
+msgid "Installing updates..."
+msgstr "ដំឡើង​បច្ចុប្បន្នភាព"
+
+#: ../extensions/cpsection/updater/view.py:173
+#, python-format
+msgid "%s update was installed"
+msgid_plural "%s updates were installed"
+msgstr[0] ""
+
+#: ../extensions/cpsection/updater/view.py:255
+msgid "Install selected"
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:276
+#, python-format
+msgid "Download size: %s"
+msgstr "ទំហំ​ទាញយក ៖ %s"
+
+#: ../extensions/cpsection/updater/view.py:364
+#, python-format
+msgid "From version %(current)s to %(new)s (Size: %(size)s)"
+msgstr ""
+
+#. TRANS: download size is 0
+#: ../extensions/cpsection/updater/view.py:382
+msgid "None"
+msgstr "គ្មាន"
+
+#. TRANS: download size of very small updates
+#: ../extensions/cpsection/updater/view.py:385
+msgid "1 KB"
+msgstr "1 គីឡូបៃ"
+
+#. TRANS: download size of small updates, e.g. '250 KB'
+#: ../extensions/cpsection/updater/view.py:388
+#, python-format
+msgid "%.0f KB"
+msgstr "%.0f គីឡូបៃ"
+
+#. TRANS: download size of updates, e.g. '2.3 MB'
+#: ../extensions/cpsection/updater/view.py:391
+#, python-format
+msgid "%.1f MB"
+msgstr "%.1f MB"
+
+#: ../extensions/deviceicon/battery.py:71
+msgid "My Battery"
+msgstr "ថ្មរបស់ខ្ញុំ"
+
+#: ../extensions/deviceicon/battery.py:147
+msgid "Removed"
 msgstr "យក​ចេញ"
 
-#: ../src/view/clipboardmenu.py:53 ../src/view/clipboardmenu.py:79
-msgid "Open"
-msgstr "បើក"
+#: ../extensions/deviceicon/battery.py:150
+msgid "Charging"
+msgstr "កំពុងបញ្ចូល"
 
-#. self._stop_item = MenuItem(_('Stop download'), 'stock-close')
-#. TODO: Implement stopping downloads
-#. self._stop_item.connect('activate', self._stop_item_activate_cb)
-#. self.append_menu_item(self._stop_item)
-#: ../src/view/clipboardmenu.py:63
-msgid "Keep"
-msgstr ""
+#: ../extensions/deviceicon/battery.py:153
+msgid "Very little power remaining"
+msgstr "ថាមពលនៅសល់តិចតួចណាស់"
 
-#: ../src/view/clipboardmenu.py:84
-msgid "Open with"
-msgstr ""
-
-#: ../src/view/clipboardmenu.py:212
+#. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
+#. only translate the word "remaining"
+#: ../extensions/deviceicon/battery.py:160
 #, python-format
-msgid "Clipboard object: %s."
-msgstr "ក្ដារ​ខ្ទាស់​វត្ថុ: %s."
+#, python-format,
+msgid "%(hour)d:%(min).2d remaining"
+msgstr "%(hour)d:%(min).2d នៅសល់"
 
-#: ../src/hardware/keydialog.py:150
-msgid "Key Type:"
-msgstr "ប្រភេទ​ឆ្នុច: "
+#: ../extensions/deviceicon/battery.py:163
+msgid "Charged"
+msgstr "បានបញ្ចូល"
 
-#: ../src/hardware/keydialog.py:170
-msgid "Authentication Type:"
-msgstr "ប្រភេទផ្ទៀង: "
+#: ../extensions/deviceicon/network.py:49
+#, python-format
+msgid "IP address: %s"
+msgstr "អាសយដ្ឋាន​ភ្ជាប់​​អ៊ីនធឺណិត ៖ %s"
 
-#: ../src/hardware/keydialog.py:251
-msgid "Encryption Type:"
-msgstr "ប្រភេទ​អ៊ិនគ្រីប: "
-
-#: ../src/view/Shell.py:262
-msgid "Screenshot"
-msgstr "រូបថត​អេក្រង់​"
-
-#: ../src/view/home/HomeBox.py:147
-msgid "List view"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:148
-msgid "<Ctrl>L"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:204
-msgid "Favorites view"
-msgstr ""
-
-#: ../src/view/home/HomeBox.py:205
-msgid "<Ctrl>R"
-msgstr ""
-
-#. TRANS: label for the freeform layout in the favorites view
-#: ../src/view/home/HomeBox.py:211
-msgid "Freeform"
-msgstr ""
-
-#. TRANS: label for the ring layout in the favorites view
-#: ../src/view/home/HomeBox.py:218
-msgid "Ring"
-msgstr ""
-
-#: ../src/view/home/MeshBox.py:97
-msgid "Connect"
-msgstr ""
-
-#: ../src/view/home/MeshBox.py:106
-#, fuzzy
+#: ../extensions/deviceicon/network.py:93
+#: ../extensions/deviceicon/network.py:292
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:492
 msgid "Disconnect"
 msgstr "ផ្ដាច់"
 
@@ -129,123 +450,497 @@ msgstr "ផ្ដាច់"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../src/view/home/MeshBox.py:118
-#, fuzzy
-msgid "Disconnecting..."
-msgstr "ផ្ដាច់បណ្ដាញ"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#: ../src/view/home/MeshBox.py:152
-#, fuzzy
+#: ../extensions/deviceicon/network.py:101
+#: ../extensions/deviceicon/network.py:284
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:529
+#: ../src/jarabe/desktop/networkviews.py:663
 msgid "Connecting..."
-msgstr "ផ្ដាច់បណ្ដាញ"
+msgstr "តភ្ជាប់..."
 
-#. TODO: show the channel number
-#: ../src/view/home/MeshBox.py:159
+# TODO: show the channel number
+#: ../extensions/deviceicon/network.py:106
+#: ../extensions/deviceicon/network.py:174
+#: ../src/jarabe/desktop/networkviews.py:245
+#: ../src/jarabe/desktop/networkviews.py:535
+#: ../src/jarabe/desktop/networkviews.py:669
 msgid "Connected"
+msgstr "ត​ភ្ជាប់​ហើយ"
+
+#: ../extensions/deviceicon/network.py:119
+msgid "No wireless connection"
 msgstr ""
 
-#: ../src/view/home/MeshBox.py:211 ../src/view/devices/network/mesh.py:38
-#: ../src/view/devices/network/mesh.py:65
-#: ../src/view/devices/network/mesh.py:69
-msgid "Mesh Network"
-msgstr "បណ្ដាញត"
-
-# Only show disconnect when there's a mesh device, because mesh takes
-# priority over the normal wireless device.  NM doesn't have a "disconnect"
-# method for a device either (for various reasons) so this doesn't
-# have a good mapping
-#: ../src/view/home/MeshBox.py:214 ../src/view/devices/network/wireless.py:116
-#: ../src/view/devices/network/mesh.py:86
-msgid "Disconnect..."
-msgstr "ផ្ដាច់បណ្ដាញ"
-
-#: ../src/view/home/MeshBox.py:302 ../src/view/palettes.py:60
-msgid "Resume"
-msgstr "បន្ត"
-
-#: ../src/view/home/MeshBox.py:307 ../src/view/frame/activitiestray.py:219
-msgid "Join"
-msgstr "ចូល​រួម"
-
-#: ../src/view/devices/battery.py:42
-msgid "My Battery"
-msgstr ""
-
-#: ../src/view/devices/battery.py:111
-msgid "Charging"
-msgstr ""
-
-#: ../src/view/devices/battery.py:114
-msgid "Very little power remaining"
-msgstr ""
-
-#: ../src/view/devices/battery.py:120
-#, python-format
-msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
-
-#: ../src/view/devices/battery.py:124
-msgid "Charged"
-msgstr ""
-
-#: ../src/view/devices/speaker.py:40
-msgid "My Speakers"
-msgstr ""
-
-#: ../src/view/devices/speaker.py:104
-msgid "Unmute"
-msgstr ""
-
-#: ../src/view/devices/speaker.py:107
-msgid "Mute"
-msgstr ""
-
-#: ../src/view/devices/network/wireless.py:64
-msgid "Disconnected"
-msgstr "ផ្ដាច់"
-
-#: ../src/view/devices/network/wireless.py:134
+#: ../extensions/deviceicon/network.py:133
 msgid "Channel"
 msgstr "ប៉ុស្ដិ៍"
 
-#: ../src/view/frame/zoomtoolbar.py:34
-msgid "Neighborhood"
-msgstr "ភូមិ"
+#: ../extensions/deviceicon/network.py:148
+msgid "Wired Network"
+msgstr "ខ្សែ​បណ្ដាញ"
 
-#: ../src/view/frame/zoomtoolbar.py:36
+#: ../extensions/deviceicon/network.py:177
+msgid "Speed"
+msgstr "ល្បឿន"
+
+#: ../extensions/deviceicon/network.py:202
+msgid "Wireless modem"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:270
+msgid "Please wait..."
+msgstr "សូម​រង់ចាំ..."
+
+#: ../extensions/deviceicon/network.py:275
+#: ../src/jarabe/desktop/networkviews.py:125
+#: ../src/jarabe/desktop/networkviews.py:488
+#: ../src/jarabe/desktop/networkviews.py:619
+msgid "Connect"
+msgstr "ភ្ជាប់"
+
+#: ../extensions/deviceicon/network.py:276
+msgid "Disconnected"
+msgstr "ផ្ដាច់ចេញ"
+
+#: ../extensions/deviceicon/network.py:283
+#: ../src/jarabe/controlpanel/toolbar.py:119
+#: ../src/jarabe/desktop/homebox.py:71
+#: ../src/jarabe/frame/activitiestray.py:603
+#: ../src/jarabe/frame/activitiestray.py:705
+#: ../src/jarabe/frame/activitiestray.py:733
+msgid "Cancel"
+msgstr "បោះបង់"
+
+#: ../extensions/deviceicon/network.py:322
+msgid "Try connection again"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:325
+#, python-format
+msgid "Error: %s"
+msgstr "កំហុស ៖ %s"
+
+#: ../extensions/deviceicon/network.py:329
+#, python-format
+#, python-format,
+msgid "Suggestion: %s"
+msgstr "ការ​ផ្តល់​យោ​បល់ ៖ %s"
+
+#: ../extensions/deviceicon/network.py:338
+#, python-format
+msgid "Connected for %s"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:344
+#: ../extensions/deviceicon/network.py:345
+#, python-format
+msgid "%d KB"
+msgstr "%d គីឡូបៃ"
+
+#: ../extensions/deviceicon/network.py:350
+msgid "Check your PIN/PUK configuration."
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:353
+msgid "Check your Access Point Name (APN) configuration"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:357
+msgid "Check the Number configuration."
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:359
+msgid "Check your configuration."
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:597
+msgid "Mesh Network"
+msgstr "បណ្ដាញត"
+
+#: ../extensions/deviceicon/network.py:641
+#, python-format
+msgid "Mesh Network %s"
+msgstr "បណ្ដាញត %s"
+
+#: ../extensions/deviceicon/network.py:757
+msgid "No GSM connection available."
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:758
+msgid "Create a connection in the control panel."
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:52
+msgid "Speech"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:77
+#: ../extensions/deviceicon/speech.py:138
+#: ../extensions/deviceicon/speech.py:143
+msgid "Say selected text"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:83
+msgid "Stop playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:97
+msgid "Pitch"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:106
+msgid "Rate"
+msgstr ""
+
+#: ../extensions/deviceicon/speech.py:133
+msgid "Pause playback"
+msgstr ""
+
+#: ../extensions/deviceicon/speaker.py:61
+msgid "My Speakers"
+msgstr "ឧបលួរ​របស់​ខ្ញុំ"
+
+#: ../extensions/deviceicon/speaker.py:138
+msgid "Unmute"
+msgstr "មិនស្ងាត់"
+
+#: ../extensions/deviceicon/speaker.py:141
+msgid "Mute"
+msgstr "ស្ងាត់"
+
+#: ../extensions/deviceicon/touchpad.py:38
+msgid "finger"
+msgstr ""
+
+#: ../extensions/deviceicon/touchpad.py:39
+msgid "stylus"
+msgstr "ដែក​ចារ"
+
+#: ../extensions/deviceicon/touchpad.py:68
+msgid "My touchpad"
+msgstr ""
+
+#: ../extensions/globalkey/screenshot.py:59
+msgid "Mesh"
+msgstr "សំណាញ់"
+
+#: ../extensions/globalkey/screenshot.py:61
+#: ../src/jarabe/frame/zoomtoolbar.py:45
 msgid "Group"
 msgstr "ក្រុម"
 
-#: ../src/view/frame/zoomtoolbar.py:38
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/frame/zoomtoolbar.py:47
 msgid "Home"
 msgstr "ផ្ទះ"
 
-#: ../src/view/frame/zoomtoolbar.py:40
+#: ../extensions/globalkey/screenshot.py:69
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Activity"
 msgstr "សកម្មភាព"
 
-#: ../src/controlpanel/cmd.py:26
+#: ../extensions/globalkey/screenshot.py:72
+msgid "Screenshot"
+msgstr "រូបថត​អេក្រង់"
+
+#: ../extensions/globalkey/screenshot.py:74
+#, python-format
+msgid "Screenshot of \"%s\""
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:1
+msgid ""
+"\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
+"long name."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:2
+msgid "Additional directories which can contain updated translations."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Backup URL"
+msgstr "កន្លែង​ចំលង​ទុក"
+
+#: ../data/sugar.schemas.in.h:5
+msgid "Bundle IDs of protected activities"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:6
+#, fuzzy
+msgid ""
+"Color for the XO icon that is used throughout the desktop. The string is "
+"composed of the stroke color and fill color, format is that of rgb colors. "
+"Example: #AC32FF,#9A5200"
+msgstr ""
+"ពណ៌​រួប​តំណាង XO ដែល​ត្រូវ​បាន​ប្រើប្រាស់​លើ​ពាសពេញ​ផ្ទៃ​តុ "
+"ដែល​ជា​ការ​កំណត់​សំគាល់​រាង​និង​ផ្ទៃ​ពណ៌​ដើម្បី​កំណត់​ពណ៌ rgb ឧទាហរណ៍ "
+"#AC៣២FF,#៩A៥២០០"
+
+#: ../data/sugar.schemas.in.h:7
+msgid "Corner Delay"
+msgstr "ពន្យារកាច់ជ្រុង"
+
+#: ../data/sugar.schemas.in.h:8
+msgid "Default font face"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:9
+msgid "Default font size"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:10
+msgid "Default nick"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:11
+msgid "Delay for the activation of the frame using the corners."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:12
+msgid "Delay for the activation of the frame using the edges."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:13
+msgid "Directory to search for translations"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:14
+msgid "Edge Delay"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:16
+msgid "Favorites Layout"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:17
+msgid "Favorites resume mode"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:18
+#, fuzzy
+msgid "Font face that is used throughout the desktop."
+msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
+
+#: ../data/sugar.schemas.in.h:19
+#, fuzzy
+msgid "Font size that is used throughout the desktop."
+msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
+
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:27
+msgid ""
+"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:30
+msgid "GSM network username (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:31
+msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:32
+msgid ""
+"If TRUE, Sugar will make us searchable for the other users of the Jabber "
+"server."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:33
+msgid "If TRUE, Sugar will show a \"Log out\" option."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:34
+msgid "If TRUE, Sugar will show a \"Restart\" option."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:35
+msgid ""
+"If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
+"Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
+"hoc network."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:36
+msgid "Jabber Server"
+msgstr "ម៉ាស៊ីនបម្រើ Jabber"
+
+#: ../data/sugar.schemas.in.h:37
+msgid "Keyboard layouts"
+msgstr "ប្លង់​ក្ដារ​ចុច ៖"
+
+#: ../data/sugar.schemas.in.h:38
+msgid "Keyboard model"
+msgstr "ម៉ូដែល​ក្ដារចុច"
+
+#: ../data/sugar.schemas.in.h:39
+msgid "Keyboard options"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:40
+msgid "Layout of the favorites view."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:41
+msgid ""
+"List of keyboard layouts. Each entry should be in the form layout(variant)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:42
+msgid "List of keyboard options."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:43
+msgid "Pitch value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Pitch value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:45
+msgid "Power Automatic"
+msgstr "ថាមពល​ស្វ័យប្រវត្ត"
+
+#: ../data/sugar.schemas.in.h:46
+msgid "Power Extreme"
+msgstr "ថាមពល​ឆ្លាស់"
+
+#: ../data/sugar.schemas.in.h:47
+msgid "Publish to Gadget"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:48
+msgid "Rate value for the speech sugar service"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:49
+msgid "Rate value used by the speech service in Sugar"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:50
+msgid "Setting for muting the sound device."
+msgstr "កំណត់​មិន​ឲ្យ​ឧបករណ៍​សំឡេង​ឮ"
+
+#: ../data/sugar.schemas.in.h:51
+msgid "Show Log out"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:52
+msgid "Show Restart"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:53
+msgid "Show Sugar Ad-hoc networks"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:54
+msgid "Sound Muted"
+msgstr "ត្រូវបានបិទសំឡេង"
+
+#: ../data/sugar.schemas.in.h:55
+msgid "The keyboard model to be used"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:57
+msgid "Timezone setting for the system."
+msgstr "ម៉ោង​តំបន់​ត្រូវ​បាន​កំណត់​នៅ​ក្នុង​ប្រពន្ធ"
+
+#: ../data/sugar.schemas.in.h:58
+msgid "URL of the jabber server to use."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:59
+msgid "URL where the backup is saved to."
+msgstr "អភ័យដ្ឋាន​ដែល​ជា​ទីកន្លែង​រក្សា​ឯកសារ​ទុក"
+
+#: ../data/sugar.schemas.in.h:60
+msgid "User Color"
+msgstr "ពណ៌អ្នកប្រើ"
+
+#: ../data/sugar.schemas.in.h:61
+msgid "User Name"
+msgstr "ឈ្មោះអ្នកប្រើ"
+
+#: ../data/sugar.schemas.in.h:62
+msgid "User name that is used throughout the desktop."
+msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
+
+#: ../data/sugar.schemas.in.h:63
+msgid ""
+"Users will not be allowed to erase these activities through the list view."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:64
+msgid "Volume Level"
+msgstr "ទំហំកំរិត"
+
+#: ../data/sugar.schemas.in.h:65
+msgid "Volume level for the sound device."
+msgstr "ទំហំ​កម្រិត​​សម្រាប់​ប្រើ​លើ​ឧបករណ៍​សំឡេង"
+
+#: ../data/sugar.schemas.in.h:66
+msgid ""
+"When in resume mode, clicking on a favorite icon will cause the last entry "
+"for that activity to be resumed."
+msgstr ""
+
+#: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
 
-#: ../src/controlpanel/cmd.py:28
+#: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr "sugar-control-panel: key=%s ជម្រើស​អត់​មាន​ទេ"
 
-#: ../src/controlpanel/cmd.py:29
+#: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-#: ../src/controlpanel/cmd.py:33
+#. TRANS: Translators, there's a empty line at the end of this string,
+#. which must appear in the translated string (msgstr) as well.
+#: ../src/jarabe/controlpanel/cmd.py:38
 msgid ""
 "Usage: sugar-control-panel [ option ] key [ args ... ] \n"
 "    Control for the sugar environment. \n"
@@ -255,330 +950,862 @@ msgid ""
 "    -h key       show information about this key \n"
 "    -g key       get the current value of the key \n"
 "    -s key       set the current value for the key \n"
+"    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Usage: sugar-control-panel [ option ] key [ args ... ] \n"
-"Control for the sugar environment. \n"
-"Options: \n"
-"-h show this help message and exit \n"
-"-l list all the available options \n"
-"-h key show information about this key \n"
-"-g key get the current value of the key \n"
-"-s key set the current value for the key \n"
-"	"
 
-#: ../src/controlpanel/cmd.py:45
-msgid "To apply your changes you have to restart sugar.\n"
-msgstr ""
+#: ../src/jarabe/controlpanel/cmd.py:52
+msgid "To apply your changes you have to restart Sugar.\n"
+msgstr "ដើម្បី​ទទួល​បាន​សំណើ​សុំ​អោយ​ប្តូរ​ត្រូវ​ចាប់​ផ្តើម​ស៊ូហ្គឺ​ឡើង​វិញ\n"
 
-#: ../src/controlpanel/toolbar.py:115
-msgid "Cancel"
-msgstr ""
-
-#: ../src/controlpanel/toolbar.py:121
-msgid "Ok"
-msgstr ""
-
-#: ../src/controlpanel/sectionview.py:34 ../src/controlpanel/gui.py:250
-msgid "Changes require restart"
-msgstr ""
-
-#: ../src/controlpanel/gui.py:249
+# This is assuming the context is a warning message, like, "Warning: this operation will be permanent."
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
+#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
+#: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
-msgstr ""
+msgstr "ប្រយ័ត្ន"
 
-#: ../src/controlpanel/gui.py:253
+#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/sectionview.py:41
+msgid "Changes require restart"
+msgstr "ការ​ប្តូរ​តំរូវ​អោយ​ចាប់​​ផ្តើម​ម៉ាស៊ីន​ឡើង​វិញ"
+
+#: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
-msgstr ""
+msgstr "បោះបង់ការប្តូរ"
 
-#: ../src/controlpanel/gui.py:257
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
-msgstr ""
+msgstr "បន្ទាប់"
 
-#: ../src/controlpanel/gui.py:261
+#: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
-msgstr ""
+msgstr "ចាប់​​ផ្តើម​ឡើង​វិញ​ឥឡូវនេះ"
 
-#: ../src/controlpanel/model/aboutme.py:44
-msgid "You must enter a name."
-msgstr ""
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+msgid "Done"
+msgstr "រួច​ហើយ"
 
-#: ../src/controlpanel/model/aboutme.py:67
+#: ../src/jarabe/controlpanel/toolbar.py:125
+#: ../src/jarabe/desktop/favoritesview.py:347
+msgid "Ok"
+msgstr "យល់ព្រម"
+
+#: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
-msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgid "Version %s"
+msgstr "កំណែ %s"
 
-#: ../src/controlpanel/model/aboutme.py:70
+#: ../src/jarabe/desktop/activitieslist.py:357
+msgid "Confirm erase"
+msgstr "បញ្ជាក់លុបចេញ"
+
+#: ../src/jarabe/desktop/activitieslist.py:359
 #, python-format
-msgid "stroke:   %s"
-msgstr ""
+msgid "Confirm erase: Do you want to permanently erase %s?"
+msgstr "បញ្ជាក់លុបចេញ តើអ្នកចង់លុបចេញជា​អចិន្ត្រៃយ %s?"
 
-#: ../src/controlpanel/model/aboutme.py:72
-#, python-format
-msgid "fill:     color=%s hue=%s"
-msgstr ""
+#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/frame/clipboardmenu.py:67
+#: ../src/jarabe/view/viewsource.py:280
+msgid "Keep"
+msgstr "រក្សាទុក"
 
-#: ../src/controlpanel/model/aboutme.py:74
-#, python-format
-msgid "fill:     %s"
-msgstr ""
+#: ../src/jarabe/desktop/activitieslist.py:366
+#: ../src/jarabe/desktop/activitieslist.py:420
+#: ../src/jarabe/journal/journaltoolbox.py:413
+#: ../src/jarabe/journal/palettes.py:126
+msgid "Erase"
+msgstr "លុប"
 
-#: ../src/controlpanel/model/aboutme.py:85
-msgid "Error in specified color modifiers."
-msgstr "កំណែ​សំរាប់​ពណ៌​នេះ​មាន​បញ្ហា"
+#: ../src/jarabe/desktop/activitieslist.py:436
+msgid "Remove favorite"
+msgstr "យក​ចេញ​ពី​​សំណព្វ"
 
-#: ../src/controlpanel/model/aboutme.py:88
-msgid "Error in specified colors."
-msgstr "ពណ៌​នេះ​មាន​បញ្ហា"
+#: ../src/jarabe/desktop/activitieslist.py:440
+msgid "Make favorite"
+msgstr "រក្សា​ទុក​សណព្វ"
 
-#: ../src/controlpanel/model/aboutxo.py:24
-msgid "Not available"
-msgstr "មិន​អាច​រក​បាន"
+#. TRANS: label for the freeform layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:127
+msgid "Freeform"
+msgstr "ទម្រង់​សេរី"
 
-#: ../src/controlpanel/model/datetime.py:85
-msgid "Error timezone does not exist."
-msgstr "មានបញ្ហា ។ ដំបន់​ម៉ោង​នេះ​អត់​មាន​ទេ"
+#. TRANS: label for the ring layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:215
+msgid "Ring"
+msgstr "រោទ៍"
 
-#: ../src/controlpanel/model/frame.py:38 ../src/controlpanel/model/frame.py:60
-msgid "Value must be an integer."
-msgstr ""
+#. TRANS: label for the spiral layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:402
+msgid "Spiral"
+msgstr "កួច"
 
-#: ../src/controlpanel/model/language.py:28
-#, fuzzy
-msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "មិន​អាច​អាន %s បាន​ទេ ។ បង្កើតស្ដង់ដារ​​សំរាប់​ការ​រៀបចំ"
+# TRANS: label for the box layout in the favorites view
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:472
+msgid "Box"
+msgstr "ប្រអប់"
 
-#: ../src/controlpanel/model/language.py:104
-#, python-format
-msgid "Language for code=%s could not be determined."
-msgstr "កូដ​សំរាប់​ភាលា​ code=%s មិន​អាន​រក​ឃើញ​ទេ"
+# TRANS: label for the box layout in the favorites view
+#. TRANS: label for the box layout in the favorites view
+#: ../src/jarabe/desktop/favoriteslayout.py:515
+msgid "Triangle"
+msgstr "ត្រីកោណ"
 
-#: ../src/controlpanel/model/language.py:121
-#, python-format
-msgid "Sorry I do not speak '%s'."
-msgstr "សូម​ទោស ខ្ញុំ​មិន​ចេះ​និយាយ​ភាសា '%s' ទេ"
+#: ../src/jarabe/desktop/favoritesview.py:338
+msgid "Registration Failed"
+msgstr "បរាជ័យ​ចុះ​ឈ្មោះ"
 
-#: ../src/controlpanel/model/network.py:48
-msgid "You must enter a server."
-msgstr ""
+#: ../src/jarabe/desktop/favoritesview.py:341
+msgid "Registration Successful"
+msgstr "ចុះ​ឈ្មោះ​បាន​ជោគជ័យ"
 
-#: ../src/controlpanel/model/network.py:63
-msgid "State is unknown."
-msgstr "ស្ថានភាព​មិន​ស្គាល់"
+#: ../src/jarabe/desktop/favoritesview.py:342
+msgid "You are now registered with your school server."
+msgstr "ឥឡូវ​នេះ​អ្នក​បាន​ចុះ​ឈ្មោះ​ទៅ​ក្នុង​ម៉ាស៊ីន​របស់​សាលា"
 
-#: ../src/controlpanel/model/network.py:83
-msgid "Error in specified radio argument use on/off."
-msgstr "​មាន​បញ្ហានៅ​ក្នុង​វិទ្យុនេះ"
-
-#: ../src/controlpanel/view/aboutme.py:32
-msgid "About Me"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutme.py:134
-#, fuzzy
-msgid "Click to change your color:"
-msgstr "ដូរ​ព័ណ"
-
-#: ../src/controlpanel/view/aboutxo.py:26
-msgid "About my XO"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutxo.py:47
-msgid "Identity"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutxo.py:56
-msgid "Serial Number:"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutxo.py:79
-msgid "Software"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutxo.py:88
-msgid "Build:"
-msgstr ""
-
-#: ../src/controlpanel/view/aboutxo.py:103
-msgid "Firmware:"
-msgstr ""
-
-#: ../src/controlpanel/view/datetime.py:29
-msgid "Date & Time"
-msgstr ""
-
-#: ../src/controlpanel/view/datetime.py:72
-msgid "Timezone"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:28
-msgid "Frame"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:30
-msgid "never"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:31
-msgid "instantaneous"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:32
-#, python-format
-msgid "%s seconds"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:56
-msgid "Activation Delay"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:80
-msgid "Corner"
-msgstr ""
-
-#: ../src/controlpanel/view/frame.py:115
-msgid "Edge"
-msgstr ""
-
-#: ../src/controlpanel/view/language.py:29
-#: ../src/controlpanel/view/language.py:74
-msgid "Language"
-msgstr ""
-
-#: ../src/controlpanel/view/network.py:28
-msgid "Network"
-msgstr ""
-
-#: ../src/controlpanel/view/network.py:53
-msgid "Wireless"
-msgstr ""
-
-#: ../src/controlpanel/view/network.py:61
-msgid "Radio:"
-msgstr ""
-
-#: ../src/controlpanel/view/network.py:94
-msgid "Mesh"
-msgstr ""
-
-#: ../src/controlpanel/view/network.py:103
-msgid "Server:"
-msgstr ""
-
-#: ../src/view/devices/network/mesh.py:108
-msgid "Connected to a School Mesh Portal"
-msgstr "ផ្ជាប់នឹង​បណ្តាញ​ត​របស់​សាលា"
-
-#: ../src/view/devices/network/mesh.py:110
-msgid "Looking for a School Mesh Portal..."
-msgstr "ស្វែង​រក​បណ្តាញ​ត​របស់​សាលា"
-
-#: ../src/view/devices/network/mesh.py:113
-msgid "Connected to an XO Mesh Portal"
-msgstr "ផ្ជាប់​នឹង​បណ្ដាញត​ XO"
-
-#: ../src/view/devices/network/mesh.py:115
-msgid "Looking for an XO Mesh Portal..."
-msgstr "ស្វែង​រក​បណ្តាញ​ត​របស់​ XO"
-
-#: ../src/view/devices/network/mesh.py:118
-msgid "Connected to a Simple Mesh"
-msgstr "ផ្ជាប់​នឹង​បណ្ដាញ​ស៊ីមផល"
-
-#: ../src/view/devices/network/mesh.py:120
-msgid "Starting a Simple Mesh"
-msgstr "ចាប់​ផ្ដើម​បណ្ដាញ​ស៊ីមផល"
-
-#: ../src/view/devices/network/mesh.py:127
-msgid "Unknown Mesh"
-msgstr "បណ្ដាញ​គ្មាន​សំគាល់"
-
-#: ../src/view/frame/activitiestray.py:224
-msgid "Decline"
-msgstr ""
-
-#: ../src/view/home/favoritesview.py:351
-msgid "Control Panel"
-msgstr ""
-
-#: ../src/view/home/favoritesview.py:362
-msgid "Restart"
-msgstr ""
-
-#: ../src/view/home/favoritesview.py:367
-msgid "Shutdown"
-msgstr "បិទ"
-
-#: ../src/view/home/favoritesview.py:373
+#: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
 msgstr "ចុះ​ឈ្មោះ"
 
-#: ../src/view/palettes.py:41
-msgid "Starting..."
-msgstr "ចាប់​ផ្ដើម..."
+#: ../src/jarabe/desktop/favoritesview.py:646
+#: ../src/jarabe/desktop/favoritesview.py:663
+msgid "Register again"
+msgstr "ចុះឈ្មោះ​​ម្តង​ទៀត"
 
-#: ../src/view/palettes.py:71
-msgid "Stop"
-msgstr "ឈប់"
+#: ../src/jarabe/desktop/homebox.py:66
+msgid "Software Update"
+msgstr "សុសវែរទាន់សម័យ"
 
-#: ../src/view/palettes.py:96
+#: ../src/jarabe/desktop/homebox.py:67
+msgid "Update your activities to ensure compatibility with your new software"
+msgstr ""
+"សូមបញ្ជាក់សកម្មភាពរបស់អ្នកអោយទាន់សម័យ ដែលអាចធ្វើការជាមួយសុសវែរថ្មីរបស់អ្នក"
+
+#: ../src/jarabe/desktop/homebox.py:76
+msgid "Check now"
+msgstr "ពិនិត្យមើលឥឡូវនេះ"
+
+#: ../src/jarabe/desktop/homebox.py:197
+msgid "List view"
+msgstr "បញ្ជីមើល"
+
+#: ../src/jarabe/desktop/homebox.py:198
+msgid "<Ctrl>2"
+msgstr "<បញ្ជា>២"
+
+#: ../src/jarabe/desktop/homebox.py:253
+msgid "Favorites view"
+msgstr "ពេញនិយមមើល"
+
+#: ../src/jarabe/desktop/homebox.py:254
+msgid "<Ctrl>1"
+msgstr "<បញ្ជា>១"
+
+#: ../src/jarabe/desktop/keydialog.py:91
+#, python-format
+msgid ""
+"A wireless encryption key is required for\n"
+" the wireless network '%s'."
+msgstr ""
+
+#: ../src/jarabe/desktop/keydialog.py:140
+msgid "Key Type:"
+msgstr "ប្រភេទ​ឆ្នុច ៖"
+
+#: ../src/jarabe/desktop/keydialog.py:160
+msgid "Authentication Type:"
+msgstr "ប្រភេទផ្ទៀង ៖"
+
+#: ../src/jarabe/desktop/keydialog.py:223
+msgid "WPA & WPA2 Personal"
+msgstr "WPA & WPA2 ផ្ទាល់ខ្លួន"
+
+#: ../src/jarabe/desktop/keydialog.py:232
+msgid "Wireless Security:"
+msgstr "ប្រព័ន្ធ​សន្តិសុខ​ឥត​ខ្សែ ៖"
+
+# TRANS: Action label for resuming an activity.
+#. TRANS: Action label for resuming an activity.
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:509
+#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+msgid "Resume"
+msgstr "បន្ត"
+
+#: ../src/jarabe/desktop/meshbox.py:87
+#: ../src/jarabe/frame/activitiestray.py:182
+msgid "Join"
+msgstr "ចូល​រួម"
+
+#: ../src/jarabe/desktop/networkviews.py:484
+#, python-format
+msgid "Ad-hoc Network %d"
+msgstr ""
+
+#: ../src/jarabe/desktop/networkviews.py:616
+#, python-format
+msgid "Mesh Network %d"
+msgstr "បណ្ដាញត %d"
+
+#: ../src/jarabe/desktop/schoolserver.py:143
+msgid "Cannot connect to the server."
+msgstr "មិនអាចតភ្ជាប់ជាមួយម៉ាស៊ីន​មេ"
+
+#: ../src/jarabe/desktop/schoolserver.py:150
+msgid "The server could not complete the request."
+msgstr "ម៉ាស៊ីន​មេ​មិន​អាច​បញ្ចប់​ដល់​សំណើ"
+
+#: ../src/jarabe/frame/activitiestray.py:187
+#: ../src/jarabe/frame/activitiestray.py:575
+msgid "Decline"
+msgstr "ច្រានចោល"
+
+#: ../src/jarabe/frame/activitiestray.py:523
+#, python-format
+msgid "%dB"
+msgstr "%dB"
+
+#: ../src/jarabe/frame/activitiestray.py:525
+#, python-format
+msgid "%dKB"
+msgstr "%dKB"
+
+#: ../src/jarabe/frame/activitiestray.py:527
+#, python-format
+msgid "%dMB"
+msgstr "%dMB"
+
+#. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
+#: ../src/jarabe/frame/activitiestray.py:545
+#, python-format
+msgid "%s of %s"
+msgstr "%s នៃ%s"
+
+#: ../src/jarabe/frame/activitiestray.py:559
+#, python-format
+#, python-format,
+msgid "Transfer from %s"
+msgstr "ផ្ទេរ​មកពី%s"
+
+#: ../src/jarabe/frame/activitiestray.py:570
+msgid "Accept"
+msgstr "ព្រមទទួល"
+
+#: ../src/jarabe/frame/activitiestray.py:627
+#: ../src/jarabe/frame/activitiestray.py:640
+#: ../src/jarabe/frame/activitiestray.py:758
+msgid "Dismiss"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:644
+msgid "The other participant canceled the file transfer"
+msgstr ""
+
+#: ../src/jarabe/frame/activitiestray.py:692
+#, python-format
+#, python-format, fuzzy
+msgid "Transfer to %s"
+msgstr "ផ្ទេរ​ទៅ​កាន់ %s"
+
+#: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
+msgctxt "Clipboard"
+msgid "Remove"
+msgstr "យក​ចេញ"
+
+#: ../src/jarabe/frame/clipboardmenu.py:62
+#: ../src/jarabe/frame/clipboardmenu.py:85
+msgid "Open"
+msgstr "បើក"
+
+#: ../src/jarabe/frame/clipboardmenu.py:90
+msgid "Open with"
+msgstr "បើកជាមួយ"
+
+#: ../src/jarabe/frame/clipboardobject.py:50
+#, python-format
+msgid "%s clipping"
+msgstr "%s កាត់យកចេញ"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "Neighborhood"
+msgstr "ភូមិ"
+
+#: ../src/jarabe/frame/zoomtoolbar.py:43
+msgid "F1"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:45
+msgid "F2"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:47
+msgid "F3"
+msgstr ""
+
+#: ../src/jarabe/frame/zoomtoolbar.py:49
+msgid "F4"
+msgstr ""
+
+#: ../src/jarabe/intro/window.py:103
+msgid "Name:"
+msgstr "ឈ្មោះ"
+
+#: ../src/jarabe/intro/window.py:133
+msgid "Click to change color:"
+msgstr "ដូរ​ព័ណ"
+
+#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+msgid "Back"
+msgstr "ថយ​ក្រោយ"
+
+#: ../src/jarabe/intro/window.py:211
+msgid "Next"
+msgstr "ថតទៅ​មុខ"
+
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/volumestoolbar.py:130
+msgid "Untitled"
+msgstr "គ្មាន​ចំណង​ជើង"
+
+#: ../src/jarabe/journal/expandedentry.py:245
+msgid "No preview"
+msgstr "អត់មានព្រាង"
+
+#: ../src/jarabe/journal/expandedentry.py:264
+#, python-format
+msgid "Kind: %s"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/listmodel.py:150
+#: ../src/jarabe/journal/listmodel.py:158
+msgid "Unknown"
+msgstr "មិន​ស្គាល់"
+
+#: ../src/jarabe/journal/expandedentry.py:265
+#, python-format
+msgid "Date: %s"
+msgstr "កាល​បរិច្ឆេទ ៖ %s"
+
+#: ../src/jarabe/journal/expandedentry.py:266
+#, python-format
+msgid "Size: %s"
+msgstr "ទំហំ ៖ %s"
+
+#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/misc.py:108
+msgid "No date"
+msgstr "អត់​មាន​ថ្ងៃ​ខែ"
+
+#: ../src/jarabe/journal/expandedentry.py:301
+msgid "Participants:"
+msgstr "អ្នកចូលរួម ៖"
+
+#: ../src/jarabe/journal/expandedentry.py:323
+msgid "Description:"
+msgstr "ពិពណ៌នា ៖"
+
+#: ../src/jarabe/journal/expandedentry.py:348
+msgid "Tags:"
+msgstr "គំនូស ៖"
+
+#: ../src/jarabe/journal/journalactivity.py:115
+#: ../src/jarabe/journal/journaltoolbox.py:468
+#: ../src/jarabe/journal/palettes.py:198
+#: ../src/jarabe/journal/volumestoolbar.py:368
+msgid "Journal"
+msgstr "កំណត់​ប្រចាំ​ថ្ងៃ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:72
+msgid "Search"
+msgstr "ស្វែងរក"
+
+#: ../src/jarabe/journal/journaltoolbox.py:139
+msgid "Anytime"
+msgstr "វេលា​ណា​ក៏​បាន"
+
+#: ../src/jarabe/journal/journaltoolbox.py:141
+msgid "Today"
+msgstr "ថ្ងៃ​នេះ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:143
+msgid "Since yesterday"
+msgstr "តាំង​ពី​ម្សិលមិញ"
+
+# TRANS: Filter entries modified during the last 7 days.
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/jarabe/journal/journaltoolbox.py:145
+msgid "Past week"
+msgstr "អាទិត្យ​មុន"
+
+# TRANS: Filter entries modified during the last 30 days.
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/jarabe/journal/journaltoolbox.py:147
+msgid "Past month"
+msgstr "ខែ​មុន"
+
+# TRANS: Filter entries modified during the last 356 days.
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/jarabe/journal/journaltoolbox.py:149
+msgid "Past year"
+msgstr "ឆ្នាំ​មុន"
+
+#: ../src/jarabe/journal/journaltoolbox.py:156
+msgid "Anyone"
+msgstr "អ្នកណាក៏​ដោយ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:158
+msgid "My friends"
+msgstr "មិត្ត​ខ្ញុំ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:159
+msgid "My class"
+msgstr "ថ្នាក់​ខ្ញុំ"
+
+# TRANS: Item in a combo box that filters by entry type.
+#: ../src/jarabe/journal/journaltoolbox.py:301
+msgid "Anything"
+msgstr "អ្វី​ទាំង​អស់"
+
+#: ../src/jarabe/journal/journaltoolbox.py:396
+#: ../src/jarabe/journal/palettes.py:93
+#, fuzzy
+msgid "Copy to"
+msgstr "​ចម្លង​ទៅ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:404
+#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+msgid "Duplicate"
+msgstr "ស្ទួន"
+
+#: ../src/jarabe/journal/journaltoolbox.py:437
+#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:315
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
+#: ../src/jarabe/journal/volumestoolbar.py:316
+msgid "Error"
+msgstr "កំហុស"
+
+# TRANS: Action label for starting an entry.
+#. TRANS: Action label for starting an entry.
+#: ../src/jarabe/journal/journaltoolbox.py:512
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Start"
+msgstr "ចាប់​ផ្ដើម"
+
+#: ../src/jarabe/journal/journaltoolbox.py:540
+msgid "Sort by date modified"
 msgstr ""
 
-#: ../src/view/palettes.py:119
-msgid "Remove favorite"
+#: ../src/jarabe/journal/journaltoolbox.py:541
+msgid "Sort by date created"
 msgstr ""
 
-#: ../src/view/palettes.py:123
-msgid "Make favorite"
+#: ../src/jarabe/journal/journaltoolbox.py:542
+msgid "Sort by size"
+msgstr "តម្រៀប​តាម​ទំហំ"
+
+#: ../src/jarabe/journal/journaltoolbox.py:551
+msgid "Sort view"
 msgstr ""
 
-#: ../src/view/palettes.py:169
-msgid "Show contents"
+#: ../src/jarabe/journal/listview.py:317
+#, fuzzy
+msgid "Your Journal is empty"
+msgstr "ទិនានុប្បវត្តិ​របស់​អ្នក​បាន​ពេញ"
+
+#: ../src/jarabe/journal/listview.py:320
+msgid "Your documents folder is empty"
 msgstr ""
 
-#: ../src/view/palettes.py:193
+#: ../src/jarabe/journal/listview.py:322
+msgid "The device is empty"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:324
+msgid "No matching entries"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:398
+msgid "Clear search"
+msgstr "សំអាតស្វែងរក"
+
+#: ../src/jarabe/journal/misc.py:273
+#, python-format
+msgid "Older Version Of %s Activity"
+msgstr ""
+
+#: ../src/jarabe/journal/misc.py:274
+#, python-format
+msgid "Do you want to downgrade to version %s"
+msgstr ""
+
+#: ../src/jarabe/journal/modalalert.py:64
+msgid "Your Journal is full"
+msgstr "ទិនានុប្បវត្តិ​របស់​អ្នក​បាន​ពេញ"
+
+#: ../src/jarabe/journal/modalalert.py:68
+msgid "Please delete some old Journal entries to make space for new ones."
+msgstr ""
+"មេត្តាលុបចេញនូវទានានុប្បវត្តិដែលបញ្ចូលចាស់ៗដើម្បីទុកកន្លែងទំនេរដល់ទានានុប្បវ"
+"ត្តិថ្មី"
+
+#: ../src/jarabe/journal/modalalert.py:80
+msgid "Show Journal"
+msgstr "បង្ហាញទានានុប្បវត្តិ"
+
+#: ../src/jarabe/journal/objectchooser.py:146
+msgid "Choose an object"
+msgstr "ជ្រើសរើសវត្ថុ"
+
+#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/view/viewsource.py:410
+msgid "Close"
+msgstr "បិទ"
+
+#: ../src/jarabe/journal/palettes.py:72
+msgid "Resume with"
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:75
+msgid "Start with"
+msgstr "ចាប់​ផ្ដើមជាមួយ"
+
+#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+msgid "No activity to start entry"
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:112
+msgid "Send to"
+msgstr "ផ្ញើទៅកាន់"
+
+#: ../src/jarabe/journal/palettes.py:121
+msgid "View Details"
+msgstr "មើល​សេចក្តី​លម្អិត"
+
+#: ../src/jarabe/journal/palettes.py:160
+msgid "Entries without a file cannot be sent."
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
+#: ../src/jarabe/journal/volumestoolbar.py:306
+msgid "Entries without a file cannot be copied."
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:267
+msgid "Clipboard"
+msgstr "ក្ដារ​តម្បៀត​ខ្ទាស់"
+
+#: ../src/jarabe/journal/palettes.py:322
+msgid "No friends present"
+msgstr "គ្មាន​មិត្តភ័ក្ដិ​នៅ​ពេល​នេះ​ទេ"
+
+#: ../src/jarabe/journal/palettes.py:327
+msgid "No valid connection found"
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:355
+msgid "No activity to resume entry"
+msgstr ""
+
+#: ../src/jarabe/journal/volumestoolbar.py:209
+msgid "Documents"
+msgstr "ឯកសារ"
+
+#: ../src/jarabe/journal/volumestoolbar.py:391
+#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr ""
 
-#~ msgid "off"
-#~ msgstr "បិត"
+#: ../src/jarabe/model/network.py:211
+msgid "The reason for the device state change is unknown."
+msgstr ""
 
-#~ msgid "on"
-#~ msgstr "បើក"
+#: ../src/jarabe/model/network.py:213
+msgid "The state change is normal."
+msgstr ""
 
-#~ msgid "Permission denied. You need to be root to run this method."
-#~ msgstr "គ្មានអនុញ្ញាត ។ វិធី​សាស្ត្រ​នេះ​ត្រូវ​ការ​មេ​"
+#: ../src/jarabe/model/network.py:215
+msgid "The device is now managed."
+msgstr ""
 
-#~ msgid "Error in reading timezone"
-#~ msgstr "មាន​បញ្ហាក្នុង​ការ​អាន​ដំបន់ម៉ោង​"
+#: ../src/jarabe/model/network.py:217
+msgid "The device is no longer managed."
+msgstr ""
 
+#: ../src/jarabe/model/network.py:219
+msgid "The device could not be readied for configuration."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:221
+msgid ""
+"IP configuration could not be reserved (no available address, timeout, etc)."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:224
+msgid "The IP configuration is no longer valid."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:226
+msgid "Secrets were required, but not provided."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:228
+msgid ""
+"The 802.1X supplicant disconnected from the access point or authentication "
+"server."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:231
+msgid "Configuration of the 802.1X supplicant failed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:233
+msgid "The 802.1X supplicant quit or failed unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:235
+msgid "The 802.1X supplicant took too long to authenticate."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:237
+msgid "The PPP service failed to start within the allowed time."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:239
+msgid "The PPP service disconnected unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:241
+msgid "The PPP service quit or failed unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:243
+msgid "The DHCP service failed to start within the allowed time."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:245
+msgid "The DHCP service reported an unexpected error."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:247
+msgid "The DHCP service quit or failed unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:249
+msgid "The shared connection service failed to start."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:251
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:254
+msgid "The AutoIP service failed to start."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:256
+msgid "The AutoIP service reported an unexpected error."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:258
+msgid "The AutoIP service quit or failed unexpectedly."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:260
+msgid "Dialing failed because the line was busy."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:262
+msgid "Dialing failed because there was no dial tone."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:264
+msgid "Dialing failed because there was no carrier."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:266
+msgid "Dialing timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:268
+msgid "Dialing failed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:270
+msgid "Modem initialization failed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:272
+msgid "Failed to select the specified GSM APN"
+msgstr ""
+
+#: ../src/jarabe/model/network.py:274
+msgid "Not searching for networks."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:276
+msgid "Network registration was denied."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:278
+msgid "Network registration timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:280
+msgid "Failed to register with the requested GSM network."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:282
+msgid "PIN check failed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:284
+msgid "Necessary firmware for the device may be missing."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:286
+msgid "The device was removed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:288
+msgid "NetworkManager went to sleep."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:290
+msgid "The device's active connection was removed or disappeared."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:293
+msgid "A user or client requested the disconnection."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:295
+msgid "The device's carrier/link changed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:297
+msgid "The device's existing connection was assumed."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:299
+msgid "The supplicant is now available."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:301
+msgid "The modem could not be found."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:303
+msgid "The Bluetooth connection failed or timed out."
+msgstr ""
+
+#: ../src/jarabe/model/network.py:305
+msgid "Unused."
+msgstr ""
+
+#: ../src/jarabe/view/buddymenu.py:67
+msgid "Remove friend"
+msgstr "ដក​មិត្ត​ចេញ"
+
+#: ../src/jarabe/view/buddymenu.py:70
+msgid "Make friend"
+msgstr "កសាង​មិត្ត​ភាព"
+
+#: ../src/jarabe/view/buddymenu.py:87
+msgid "Shutdown"
+msgstr "បិទ"
+
+#: ../src/jarabe/view/buddymenu.py:95
+msgid "Restart"
+msgstr "ចាប់​ផ្ដើមឡើងវិញ"
+
+#: ../src/jarabe/view/buddymenu.py:101
+msgid "Logout"
+msgstr "ចាកចេញ"
+
+#: ../src/jarabe/view/buddymenu.py:106
+msgid "My Settings"
+msgstr "ការ​កំណត់​របស់​ខ្ញុំ"
+
+#: ../src/jarabe/view/buddymenu.py:142
 #, python-format
-#~ msgid "Error copying timezone (from %s): %s"
-#~ msgstr "មាន​បញ្ហាក្នុង​ការ​ចំលង់​ដំបន់ម៉ោង​ (​ពី %s): %s"
+msgid "Invite to %s"
+msgstr "អញ្ជើញទៅ %s"
 
+#: ../src/jarabe/view/launcher.py:145
 #, python-format
-#~ msgid "Changing permission of timezone: %s"
-#~ msgstr "​ដូរ​សេចក្ដី​អនុញ្ញាត​នៃ​ដំបន់​ម៉ោង: %s"
+msgid "<b>%s</b> failed to start."
+msgstr ""
 
-#~ msgid "About this XO"
-#~ msgstr "អំពី XO នេះ"
+#: ../src/jarabe/view/palettes.py:48
+msgid "Starting..."
+msgstr "ចាប់​ផ្ដើម..."
 
-#~ msgid "Add to journal"
-#~ msgstr "បញ្ចូលក្នុងកំណន់​ប្រចាំ​ថ្ងៃ"
+#: ../src/jarabe/view/palettes.py:58
+msgid "Activity failed to start"
+msgstr ""
 
-#~ msgid "Reboot"
-#~ msgstr "ចាប់​ផ្ដើម​ឡើង​វិញ"
+#. TODO: share-with, keep
+#: ../src/jarabe/view/palettes.py:91
+msgid "View Source"
+msgstr "មើល​ប្រភព"
 
-#~ msgid "My Battery life"
-#~ msgstr "អាយុថាមពល"
+#: ../src/jarabe/view/palettes.py:102
+msgid "Stop"
+msgstr "ឈប់"
 
-#~ msgid "Battery charging"
-#~ msgstr "កំពុង​សាក​ថាមពល"
+#: ../src/jarabe/view/palettes.py:139
+msgid "Start new"
+msgstr ""
 
-#~ msgid "Battery discharging"
-#~ msgstr "កំពុង​ប្រើ​ថាមពល"
+#: ../src/jarabe/view/palettes.py:180
+msgid "Show contents"
+msgstr "បង្ហាញ​មាតិកា"
 
-#~ msgid "Battery fully charged"
-#~ msgstr "ថាមពល​សាក​ពេញ​ហើយ"
+#: ../src/jarabe/view/palettes.py:229
+#, fuzzy
+msgctxt "Volume"
+msgid "Remove"
+msgstr "យក​ចេញ"
+
+#: ../src/jarabe/view/viewsource.py:263
+msgid "Instance Source"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:312
+msgid "Source"
+msgstr "ប្រភព"
+
+#: ../src/jarabe/view/viewsource.py:374
+msgid "Activity Bundle Source"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:393
+msgid "Sugar Toolkit Source"
+msgstr ""
+
+#: ../src/jarabe/view/viewsource.py:400
+#, python-format
+#, python-format,
+msgid "View source: %s"
+msgstr "មើល​ប្រភព%s"
+
+#: ../src/jarabe/view/viewsource.py:401
+#, python-format
+msgid "View source: %r"
+msgstr "មើល​ប្រភព%r"
+
+#: ../src/jarabe/util/emulator.py:40
+msgid "Sugar in a window"
+msgstr ""

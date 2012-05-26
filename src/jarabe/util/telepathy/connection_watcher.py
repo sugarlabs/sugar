@@ -28,12 +28,16 @@ from telepathy.interfaces import CONN_INTERFACE
 from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
                                 CONNECTION_STATUS_DISCONNECTED
 
+
+_instance = None
+
+
 class ConnectionWatcher(gobject.GObject):
     __gsignals__ = {
         'connection-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([gobject.TYPE_PYOBJECT])),
         'connection-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT]))
+                        ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, bus=None):
@@ -93,7 +97,6 @@ class ConnectionWatcher(gobject.GObject):
     def get_connections(self):
         return self._connections.values()
 
-_instance = None
 
 def get_instance():
     global _instance
@@ -101,14 +104,15 @@ def get_instance():
         _instance = ConnectionWatcher()
     return _instance
 
+
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
     def connection_added_cb(conn_watcher, conn):
-        print "new connection", conn.service_name
+        print 'new connection', conn.service_name
 
     def connection_removed_cb(conn_watcher, conn):
-        print "removed connection", conn.service_name
+        print 'removed connection', conn.service_name
 
     watcher = ConnectionWatcher()
     watcher.connect('connection-added', connection_added_cb)

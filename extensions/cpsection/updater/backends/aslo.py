@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-'''Activity information microformat parser.
+"""Activity information microformat parser.
 
 Activity information is embedded in HTML/XHTML/XML pages using a
 Resource Description Framework (RDF) http://www.w3.org/RDF/ .
@@ -46,13 +46,16 @@ An example::
         </RDF:Description>
     </em:targetApplication>
 </RDF:Description></RDF:RDF>
-'''
+"""
 
 import logging
 from xml.etree.ElementTree import XML
 import traceback
 
 import gio
+
+from sugar.bundle.bundleversion import NormalizedVersion
+from sugar.bundle.bundleversion import InvalidVersionError
 
 from jarabe import config
 
@@ -127,17 +130,17 @@ class _UpdateFetcher(object):
             size = None
         else:
             try:
-                version = int(document.find(_FIND_VERSION).text)
-            except ValueError:
-                logging.error(traceback.format_exc())
-                version = 0
+                version = NormalizedVersion(document.find(_FIND_VERSION).text)
+            except InvalidVersionError:
+                logging.exception('Exception occured while parsing version')
+                version = '0'
 
             link = document.find(_FIND_LINK).text
 
             try:
                 size = long(document.find(_FIND_SIZE).text) * 1024
             except ValueError:
-                logging.error(traceback.format_exc())
+                logging.exception('Exception occured while parsing size')
                 size = 0
 
         global _fetcher
@@ -146,13 +149,13 @@ class _UpdateFetcher(object):
 
 
 def fetch_update_info(bundle, completion_cb):
-    '''Queries the server for a newer version of the ActivityBundle.
+    """Queries the server for a newer version of the ActivityBundle.
 
        completion_cb receives bundle, version, link, size and possibly an error
        message:
-       
+
        def completion_cb(bundle, version, link, size, error_message):
-    '''
+    """
     global _fetcher
 
     if _fetcher is not None:

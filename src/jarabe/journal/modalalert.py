@@ -22,6 +22,7 @@ from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+
 class ModalAlert(gtk.Window):
 
     __gtype_name__ = 'SugarModalAlert'
@@ -84,14 +85,12 @@ class ModalAlert(gtk.Window):
         self.add(self._main_view)
         self._main_view.show()
 
-        self.connect("realize", self.__realize_cb)
+        self.connect('realize', self.__realize_cb)
 
     def __realize_cb(self, widget):
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.window.set_accept_focus(True)
 
     def __show_journal_cb(self, button):
-        '''The opener will listen on the destroy signal
-        '''
+        """The opener will listen on the destroy signal"""
         self.destroy()
-

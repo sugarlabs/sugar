@@ -30,20 +30,18 @@ from sugar.graphics.icon import Icon, CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.alert import Alert
-from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
 
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
-from jarabe.view import launcher
 from jarabe.journal import misc
+
 
 class ActivitiesTreeView(gtk.TreeView):
     __gtype_name__ = 'SugarActivitiesTreeView'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self):
@@ -118,6 +116,7 @@ class ActivitiesTreeView(gtk.TreeView):
         self.append_column(column)
 
         self.set_search_column(ListModel.COLUMN_TITLE)
+        self.set_enable_search(False)
 
     def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
@@ -154,6 +153,7 @@ class ActivitiesTreeView(gtk.TreeView):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
         return title is not None and title.lower().find(self._query) > -1
 
+
 class ListModel(gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
 
@@ -167,7 +167,7 @@ class ListModel(gtk.TreeModelSort):
     COLUMN_DATE_TEXT = 7
 
     def __init__(self):
-        self._model = gtk.ListStore(str, bool, str, str, int, str, int, str)
+        self._model = gtk.ListStore(str, bool, str, str, str, str, int, str)
         self._model_filter = self._model.filter_new()
         gtk.TreeModelSort.__init__(self, self._model_filter)
 
@@ -238,6 +238,7 @@ class ListModel(gtk.TreeModelSort):
     def refilter(self):
         self._model_filter.refilter()
 
+
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
 
@@ -249,15 +250,18 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
-        self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        client = gconf.client_get_default()
+        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
+        self.props.prelit_fill_color = prelit_color.get_fill_color()
+
 
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererActivityIcon'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self, tree_view):
@@ -289,6 +293,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 
     def __erase_activated_cb(self, palette, bundle_id):
         self.emit('erase-activated', bundle_id)
+
 
 class ActivitiesList(gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
@@ -373,12 +378,13 @@ class ActivitiesList(gtk.VBox):
             bundle = registry.get_bundle(bundle_id)
             registry.uninstall(bundle, delete_profile=True)
 
+
 class ActivityListPalette(ActivityPalette):
     __gtype_name__ = 'SugarActivityListPalette'
 
     __gsignals__ = {
-        'erase-activated' : (gobject.SIGNAL_RUN_FIRST,
-                             gobject.TYPE_NONE, ([str]))
+        'erase-activated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                            ([str])),
     }
 
     def __init__(self, activity_info):
@@ -417,11 +423,12 @@ class ActivityListPalette(ActivityPalette):
         menu_item.show()
 
         if not os.access(activity_info.get_path(), os.W_OK) or \
-            registry.is_activity_protected(self._bundle_id):
-                menu_item.props.sensitive = False
+           registry.is_activity_protected(self._bundle_id):
+            menu_item.props.sensitive = False
 
     def __destroy_cb(self, palette):
-        self.disconnect(self._activity_changed_sid)
+        registry = bundleregistry.get_registry()
+        registry.disconnect(self._activity_changed_sid)
 
     def _update_favorite_item(self):
         label = self._favorite_item.child
@@ -432,7 +439,7 @@ class ActivityListPalette(ActivityPalette):
         else:
             label.set_text(_('Make favorite'))
             client = gconf.client_get_default()
-            xo_color = XoColor(client.get_string("/desktop/sugar/user/color"))
+            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         self._favorite_icon.props.xo_color = xo_color
 
@@ -452,4 +459,3 @@ class ActivityListPalette(ActivityPalette):
 
     def __erase_activate_cb(self, menu_item):
         self.emit('erase-activated', self._bundle_id)
-

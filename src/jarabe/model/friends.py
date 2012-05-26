@@ -27,15 +27,20 @@ from sugar.graphics.xocolor import XoColor
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import neighborhood
 
+
+_model = None
+
+
 class FriendBuddyModel(BuddyModel):
     __gtype_name__ = 'SugarFriendBuddyModel'
 
-    _NOT_PRESENT_COLOR = "#D5D5D5,#FFFFFF"
+    _NOT_PRESENT_COLOR = '#D5D5D5,#FFFFFF'
 
-    def __init__(self, nick, key):
+    def __init__(self, nick, key, account=None, contact_id=None):
         self._online_buddy = None
 
-        BuddyModel.__init__(self, nick=nick, key=key)
+        BuddyModel.__init__(self, nick=nick, key=key, account=account,
+                            contact_id=contact_id)
 
         neighborhood_model = neighborhood.get_model()
         neighborhood_model.connect('buddy-added', self.__buddy_added_cb)
@@ -45,7 +50,7 @@ class FriendBuddyModel(BuddyModel):
         if buddy is not None:
             self._set_online_buddy(buddy)
 
-    def __buddy_added_cb(self, neighborhood, buddy):
+    def __buddy_added_cb(self, model_, buddy):
         if buddy.key != self.key:
             return
         self._set_online_buddy(buddy)
@@ -56,7 +61,14 @@ class FriendBuddyModel(BuddyModel):
         self.notify('color')
         self.notify('present')
 
-    def __buddy_removed_cb(self, neighborhood, buddy):
+        if buddy.nick != self.nick:
+            self.nick = buddy.nick
+        if buddy.contact_id != self.contact_id:
+            self.contact_id = buddy.contact_id
+        if buddy.account != self.account:
+            self.account = buddy.account
+
+    def __buddy_removed_cb(self, model_, buddy):
         if buddy.key != self.key:
             return
         self._online_buddy = None
@@ -87,12 +99,13 @@ class FriendBuddyModel(BuddyModel):
 
     handle = gobject.property(type=object, getter=get_handle)
 
+
 class Friends(gobject.GObject):
     __gsignals__ = {
-        'friend-added':   (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object])),
-        'friend-removed': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([str]))
+        'friend-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
+        'friend-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str])),
     }
 
     def __init__(self):
@@ -104,7 +117,7 @@ class Friends(gobject.GObject):
         self.load()
 
     def has_buddy(self, buddy):
-        return self._friends.has_key(buddy.get_key())
+        return buddy.get_key() in self._friends
 
     def add_friend(self, buddy_info):
         self._friends[buddy_info.get_key()] = buddy_info
@@ -112,7 +125,9 @@ class Friends(gobject.GObject):
 
     def make_friend(self, buddy):
         if not self.has_buddy(buddy):
-            buddy = FriendBuddyModel(key=buddy.key, nick=buddy.nick)
+            buddy = FriendBuddyModel(key=buddy.key, nick=buddy.nick,
+                                     account=buddy.account,
+                                     contact_id=buddy.contact_id)
             self.add_friend(buddy)
             self.save()
 
@@ -151,32 +166,6 @@ class Friends(gobject.GObject):
         cp.write(fileobject)
         fileobject.close()
 
-        self._sync_friends()
-
-    def _sync_friends(self):
-        # XXX: temporary hack
-        # remove this when the shell service has a D-Bus API for buddies
-
-        def friends_synced():
-            pass
-
-        def friends_synced_error(e):
-            logging.error('Error asking presence service to sync friends: %s',
-                e)
-
-        keys = []
-        for friend in self:
-            keys.append(friend.get_key())
-
-        bus = dbus.SessionBus()
-        ps = bus.get_object('org.laptop.Sugar.Presence',
-            '/org/laptop/Sugar/Presence')
-        psi = dbus.Interface(ps, 'org.laptop.Sugar.Presence')
-        psi.SyncFriends(keys,
-                reply_handler=friends_synced,
-                error_handler=friends_synced_error)
-
-_model = None
 
 def get_model():
     global _model

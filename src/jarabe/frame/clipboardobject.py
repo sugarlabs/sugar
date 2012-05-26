@@ -24,6 +24,7 @@ from gettext import gettext as _
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
 
+
 class ClipboardObject(object):
 
     def __init__(self, object_path, name):
@@ -105,14 +106,17 @@ class ClipboardObject(object):
         if format_ == 'text/uri-list':
             data = self._formats['text/uri-list'].get_data()
             uri = urlparse.urlparse(mime.split_uri_list(data)[0], 'file')
-            if uri.scheme == 'file':
-                if os.path.exists(uri.path):
-                    format_ = mime.get_for_file(uri.path)
+            scheme = uri.scheme  # pylint: disable=E1101
+            if scheme == 'file':
+                path = uri.path  # pylint: disable=E1101
+                if os.path.exists(path):
+                    format_ = mime.get_for_file(path)
                 else:
-                    format_ = mime.get_from_file_name(uri.path)
+                    format_ = mime.get_from_file_name(path)
                 logging.debug('Chose %r!', format_)
 
         return format_
+
 
 class Format(object):
 
@@ -126,8 +130,9 @@ class Format(object):
     def destroy(self):
         if self._on_disk:
             uri = urlparse.urlparse(self._data)
-            if os.path.isfile(uri.path):
-                os.remove(uri.path)
+            path = uri.path  # pylint: disable=E1101
+            if os.path.isfile(path):
+                os.remove(path)
 
     def get_type(self):
         return self._type

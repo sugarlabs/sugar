@@ -1,5 +1,6 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
+# Copyright (C) 2011 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +17,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import shutil
+import sys
 import logging
-import traceback
 from gettext import gettext as _
 
 import gobject
@@ -35,12 +37,20 @@ from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.datastore import datastore
+from sugar.env import get_user_activities_path
 from sugar import mime
+
+from jarabe.view import customizebundle
+
+_EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
+                       '.xo', '.tar', '.bz2', '.zip', '.gz')
+_EXCLUDE_NAMES = ['.deps', '.libs']
 
 _SOURCE_FONT = pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
+
 
 def setup_view_source(activity):
     service = activity.get_service()
@@ -52,9 +62,9 @@ def setup_view_source(activity):
             expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
                     'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.error(traceback.format_exc())
+                logging.exception('Exception occured in HandleViewSource():')
         except Exception:
-            logging.error(traceback.format_exc())
+            logging.exception('Exception occured in HandleViewSource():')
 
     window_xid = activity.get_xid()
     if window_xid is None:
@@ -76,26 +86,36 @@ def setup_view_source(activity):
             expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
                     'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
-                logging.error(traceback.format_exc())
+                logging.exception('Exception occured in GetDocumentPath():')
         except Exception:
-            logging.error(traceback.format_exc())
+            logging.exception('Exception occured in GetDocumentPath():')
 
     if bundle_path is None and document_path is None:
         _logger.debug('Activity without bundle_path nor document_path')
         return
 
+    sugar_toolkit_path = None
+    for path in sys.path:
+        if path.endswith('site-packages'):
+            if os.path.exists(os.path.join(path, 'sugar')):
+                sugar_toolkit_path = os.path.join(path, 'sugar')
+                break
+
     view_source = ViewSource(window_xid, bundle_path, document_path,
-                             activity.get_title())
+                             sugar_toolkit_path, activity.get_title())
     map_activity_to_window[window_xid] = view_source
     view_source.show()
+
 
 class ViewSource(gtk.Window):
     __gtype_name__ = 'SugarViewSource'
 
-    def __init__(self, window_xid, bundle_path, document_path, title):
+    def __init__(self, window_xid, bundle_path, document_path,
+                 sugar_toolkit_path, title):
         gtk.Window.__init__(self)
 
-        logging.debug('ViewSource paths: %r %r', bundle_path, document_path)
+        _logger.debug('ViewSource paths: %r %r %r', bundle_path,
+                      document_path, sugar_toolkit_path)
 
         self.set_decorated(False)
         self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
@@ -106,6 +126,7 @@ class ViewSource(gtk.Window):
         self.set_size_request(width, height)
 
         self._parent_window_xid = window_xid
+        self._sugar_toolkit_path = sugar_toolkit_path
 
         self.connect('realize', self.__realize_cb)
         self.connect('destroy', self.__destroy_cb, document_path)
@@ -115,7 +136,8 @@ class ViewSource(gtk.Window):
         self.add(vbox)
         vbox.show()
 
-        toolbar = Toolbar(title, bundle_path, document_path)
+        toolbar = Toolbar(title, bundle_path, document_path,
+                          sugar_toolkit_path)
         vbox.pack_start(toolbar, expand=False)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
@@ -125,26 +147,44 @@ class ViewSource(gtk.Window):
         vbox.pack_start(pane)
         pane.show()
 
-        self._selected_file = None
+        self._selected_bundle_file = None
+        self._selected_sugar_file = None
         file_name = ''
 
         activity_bundle = ActivityBundle(bundle_path)
-        command =  activity_bundle.get_command()
+        command = activity_bundle.get_command()
         if len(command.split(' ')) > 1:
-            name = command.split(' ')[1].split('.')[0]
-            file_name =  name + '.py'
+            name = command.split(' ')[1].split('.')[-1]
+            tmppath = command.split(' ')[1].replace('.', '/')
+            file_name = tmppath[0:-(len(name) + 1)] + '.py'
             path = os.path.join(activity_bundle.get_path(), file_name)
-            self._selected_file = path
+            self._selected_bundle_file = path
 
-        self._file_viewer = FileViewer(bundle_path, file_name)
-        self._file_viewer.connect('file-selected', self.__file_selected_cb)
-        pane.add1(self._file_viewer)
-        self._file_viewer.show()
+        # Split the tree pane into two vertical panes, one of which
+        # will be hidden
+        tree_panes = gtk.VPaned()
+        tree_panes.show()
+
+        self._bundle_source_viewer = FileViewer(bundle_path, file_name)
+        self._bundle_source_viewer.connect('file-selected',
+                                           self.__file_selected_cb)
+        tree_panes.add1(self._bundle_source_viewer)
+        self._bundle_source_viewer.show()
+
+        file_name = 'env.py'
+        self._selected_sugar_file = os.path.join(sugar_toolkit_path, file_name)
+        self._sugar_source_viewer = FileViewer(sugar_toolkit_path, file_name)
+        self._sugar_source_viewer.connect('file-selected',
+                                          self.__file_selected_cb)
+        tree_panes.add2(self._sugar_source_viewer)
+        self._sugar_source_viewer.hide()
+
+        pane.add1(tree_panes)
 
         self._source_display = SourceDisplay()
         pane.add2(self._source_display)
         self._source_display.show()
-        self._source_display.file_path = self._selected_file
+        self._source_display.file_path = self._selected_bundle_file
 
         if document_path is not None:
             self._select_source(document_path)
@@ -171,12 +211,23 @@ class ViewSource(gtk.Window):
 
     def _select_source(self, path):
         if os.path.isfile(path):
+            _logger.debug('_select_source called with file: %r', path)
             self._source_display.file_path = path
-            self._file_viewer.hide()
+            self._bundle_source_viewer.hide()
+            self._sugar_source_viewer.hide()
+        elif path == self._sugar_toolkit_path:
+            _logger.debug('_select_source called with sugar toolkit path: %r',
+                          path)
+            self._sugar_source_viewer.set_path(path)
+            self._source_display.file_path = self._selected_sugar_file
+            self._sugar_source_viewer.show()
+            self._bundle_source_viewer.hide()
         else:
-            self._file_viewer.set_path(path)
-            self._source_display.file_path = self._selected_file
-            self._file_viewer.show()
+            _logger.debug('_select_source called with path: %r', path)
+            self._bundle_source_viewer.set_path(path)
+            self._source_display.file_path = self._selected_bundle_file
+            self._bundle_source_viewer.show()
+            self._sugar_source_viewer.hide()
 
     def __destroy_cb(self, window, document_path):
         del map_activity_to_window[self._parent_window_xid]
@@ -191,14 +242,18 @@ class ViewSource(gtk.Window):
     def __file_selected_cb(self, file_viewer, file_path):
         if file_path is not None and os.path.isfile(file_path):
             self._source_display.file_path = file_path
-            self._selected_file = file_path
+            if file_viewer == self._bundle_source_viewer:
+                self._selected_bundle_file = file_path
+            else:
+                self._selected_sugar_file = file_path
         else:
             self._source_display.file_path = None
+
 
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
-    def __init__(self, file_name, document_path, title):
+    def __init__(self, file_name, document_path, title, bundle=False):
         RadioToolButton.__init__(self)
 
         self._document_path = document_path
@@ -215,14 +270,38 @@ class DocumentButton(RadioToolButton):
         self.set_icon_widget(icon)
         icon.show()
 
-        menu_item = MenuItem(_('Keep'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
-                    xo_color=XoColor(self._color))
+        if bundle:
+            menu_item = MenuItem(_('Duplicate'))
+            icon = Icon(icon_name='edit-duplicate',
+                        icon_size=gtk.ICON_SIZE_MENU,
+                        xo_color=XoColor(self._color))
+            menu_item.connect('activate', self.__copy_to_home_cb)
+        else:
+            menu_item = MenuItem(_('Keep'))
+            icon = Icon(icon_name='document-save',
+                        icon_size=gtk.ICON_SIZE_MENU,
+                        xo_color=XoColor(self._color))
+            menu_item.connect('activate', self.__keep_in_journal_cb)
+
         menu_item.set_image(icon)
 
-        menu_item.connect('activate', self.__keep_in_journal_cb)
         self.props.palette.menu.append(menu_item)
         menu_item.show()
+
+    def __copy_to_home_cb(self, menu_item):
+        """Make a local copy of the activity bundle in user_activities_path"""
+        user_activities_path = get_user_activities_path()
+        nick = customizebundle.generate_unique_id()
+        new_basename = '%s_copy_of_%s' % (
+            nick, os.path.basename(self._document_path))
+        if not os.path.exists(os.path.join(user_activities_path,
+                                           new_basename)):
+            shutil.copytree(self._document_path,
+                            os.path.join(user_activities_path, new_basename),
+                            symlinks=True)
+            customizebundle.generate_bundle(nick, new_basename)
+        else:
+            _logger.debug('%s already exists', new_basename)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
@@ -244,29 +323,29 @@ class DocumentButton(RadioToolButton):
                         error_handler=self.__internal_save_error_cb)
 
     def __internal_save_cb(self):
-        logging.debug("Saved Source object to datastore.")
+        _logger.debug('Saved Source object to datastore.')
         self._jobject.destroy()
 
     def __internal_save_error_cb(self, err):
-        logging.debug('Error saving Source object to datastore: %s', err)
+        _logger.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
+
 
 class Toolbar(gtk.Toolbar):
     __gtype_name__ = 'SugarViewSourceToolbar'
 
     __gsignals__ = {
-        'stop-clicked':    (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
-                            ([])),
-        'source-selected': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'stop-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'source-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                             ([str])),
     }
 
-    def __init__(self, title, bundle_path, document_path):
+    def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
         gtk.Toolbar.__init__(self)
 
         document_button = None
+        self.bundle_path = bundle_path
+        self.sugar_toolkit_path = sugar_toolkit_path
 
         self._add_separator()
 
@@ -282,7 +361,8 @@ class Toolbar(gtk.Toolbar):
             self._add_separator()
 
         if bundle_path is not None and os.path.exists(bundle_path):
-            activity_button = RadioToolButton()
+            activity_button = DocumentButton(file_name, bundle_path, title,
+                                             bundle=True)
             icon = Icon(file=file_name,
                         icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
@@ -298,11 +378,31 @@ class Toolbar(gtk.Toolbar):
             activity_button.show()
             self._add_separator()
 
-        text = _('View source: %r') % title
-        label = gtk.Label()
-        label.set_markup('<b>%s</b>' % text)
-        label.set_alignment(0, 0.5)
-        self._add_widget(label)
+        if sugar_toolkit_path is not None:
+            sugar_button = RadioToolButton()
+            icon = Icon(icon_name='computer-xo',
+                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
+            sugar_button.set_icon_widget(icon)
+            icon.show()
+            if document_button is not None:
+                sugar_button.props.group = document_button
+            else:
+                sugar_button.props.group = activity_button
+            sugar_button.props.tooltip = _('Sugar Toolkit Source')
+            sugar_button.connect('toggled', self.__button_toggled_cb,
+                                 sugar_toolkit_path)
+            self.insert(sugar_button, -1)
+            sugar_button.show()
+            self._add_separator()
+
+        self.activity_title_text = _('View source: %s') % title
+        self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
+        self.label = gtk.Label()
+        self.label.set_markup('<b>%s</b>' % self.activity_title_text)
+        self.label.set_alignment(0, 0.5)
+        self._add_widget(self.label)
 
         self._add_separator(True)
 
@@ -338,6 +438,11 @@ class Toolbar(gtk.Toolbar):
     def __button_toggled_cb(self, button, path):
         if button.props.active:
             self.emit('source-selected', path)
+        if path == self.sugar_toolkit_path:
+            self.label.set_markup('<b>%s</b>' % self.sugar_toolkit_title_text)
+        else:  # Use activity title for either bundle path or document path
+            self.label.set_markup('<b>%s</b>' % self.activity_title_text)
+
 
 class FileViewer(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarFileViewer'
@@ -379,23 +484,26 @@ class FileViewer(gtk.ScrolledWindow):
         self.emit('file-selected', None)
         if self._path == path:
             return
+
         self._path = path
         self._tree_view.set_model(gtk.TreeStore(str, str))
+        self._model = self._tree_view.get_model()
         self._add_dir_to_model(path)
 
     def _add_dir_to_model(self, dir_path, parent=None):
-        model = self._tree_view.get_model()
         for f in os.listdir(dir_path):
-            if not f.endswith('.pyc'):
-                full_path = os.path.join(dir_path, f)
-                if os.path.isdir(full_path):
-                    new_iter = model.append(parent, [f, full_path])
-                    self._add_dir_to_model(full_path, new_iter)
-                else:
-                    current_iter = model.append(parent, [f, full_path])
-                    if f == self._initial_filename:
-                        selection = self._tree_view.get_selection()
-                        selection.select_iter(current_iter)
+            if f.endswith(_EXCLUDE_EXTENSIONS) or f in _EXCLUDE_NAMES:
+                continue
+
+            full_path = os.path.join(dir_path, f)
+            if os.path.isdir(full_path):
+                new_iter = self._model.append(parent, [f, full_path])
+                self._add_dir_to_model(full_path, new_iter)
+            else:
+                current_iter = self._model.append(parent, [f, full_path])
+                if f == self._initial_filename:
+                    selection = self._tree_view.get_selection()
+                    selection.select_iter(current_iter)
 
     def __selection_changed_cb(self, selection):
         model, tree_iter = selection.get_selected()
@@ -404,6 +512,7 @@ class FileViewer(gtk.ScrolledWindow):
         else:
             file_path = model.get_value(tree_iter, 1)
         self.emit('file-selected', file_path)
+
 
 class SourceDisplay(gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
@@ -431,8 +540,6 @@ class SourceDisplay(gtk.ScrolledWindow):
         self._file_path = None
 
     def _set_file_path(self, file_path):
-        if file_path == self._file_path:
-            return
         self._file_path = file_path
 
         if self._file_path is None:
@@ -440,7 +547,7 @@ class SourceDisplay(gtk.ScrolledWindow):
             return
 
         mime_type = mime.get_for_file(self._file_path)
-        logging.debug('Detected mime type: %r', mime_type)
+        _logger.debug('Detected mime type: %r', mime_type)
 
         language_manager = gtksourceview2.language_manager_get_default()
         detected_language = None
@@ -451,7 +558,7 @@ class SourceDisplay(gtk.ScrolledWindow):
                 break
 
         if detected_language is not None:
-            logging.debug('Detected language: %r',
+            _logger.debug('Detected language: %r',
                     detected_language.get_name())
 
         self._buffer.set_language(detected_language)
@@ -461,4 +568,3 @@ class SourceDisplay(gtk.ScrolledWindow):
         return self._file_path
 
     file_path = property(_get_file_path, _set_file_path)
-

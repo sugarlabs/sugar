@@ -8,6 +8,7 @@ from sugar.profile import get_profile
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile
 
+
 def check_profile():
     profile = get_profile()
 

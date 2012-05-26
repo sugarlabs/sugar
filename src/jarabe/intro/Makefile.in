@@ -14,7 +14,6 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -65,9 +64,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(imagedir)"
+am__installdirs = "$(DESTDIR)$(sugardir)"
 py_compile = $(top_srcdir)/py-compile
-DATA = $(image_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -131,6 +129,8 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POFILES = @POFILES@
 POSUB = @POSUB@
 PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
@@ -195,9 +195,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-imagedir = $(pythondir)/jarabe/intro
-image_DATA = default-picture.png
-EXTRA_DIST = $(conf_DATA) $(image_DATA)
 sugardir = $(pythondir)/jarabe/intro
 sugar_PYTHON = \
 	__init__.py	\
@@ -275,26 +272,6 @@ uninstall-sugarPYTHON:
 	cd "$(DESTDIR)$(sugardir)" && rm -f $$filesc || exit $$?; \
 	echo " ( cd '$(DESTDIR)$(sugardir)' && rm -f" $$fileso ")"; \
 	cd "$(DESTDIR)$(sugardir)" && rm -f $$fileso
-install-imageDATA: $(image_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(imagedir)" || $(MKDIR_P) "$(DESTDIR)$(imagedir)"
-	@list='$(image_DATA)'; test -n "$(imagedir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(imagedir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(imagedir)" || exit $$?; \
-	done
-
-uninstall-imageDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(image_DATA)'; test -n "$(imagedir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(imagedir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(imagedir)" && rm -f $$files
 tags: TAGS
 TAGS:
 
@@ -334,9 +311,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(DATA)
+all-am: Makefile
 installdirs:
-	for dir in "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(imagedir)"; do \
+	for dir in "$(DESTDIR)$(sugardir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -384,7 +361,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-imageDATA install-sugarPYTHON
+install-data-am: install-sugarPYTHON
 
 install-dvi: install-dvi-am
 
@@ -428,7 +405,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-imageDATA uninstall-sugarPYTHON
+uninstall-am: uninstall-sugarPYTHON
 
 .MAKE: install-am install-strip
 
@@ -436,13 +413,12 @@ uninstall-am: uninstall-imageDATA uninstall-sugarPYTHON
 	distclean-generic distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-imageDATA install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip install-sugarPYTHON installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am uninstall uninstall-am uninstall-imageDATA \
-	uninstall-sugarPYTHON
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip install-sugarPYTHON installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic pdf pdf-am ps ps-am uninstall \
+	uninstall-am uninstall-sugarPYTHON
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

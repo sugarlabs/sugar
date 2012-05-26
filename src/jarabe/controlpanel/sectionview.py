@@ -18,18 +18,17 @@ import gobject
 import gtk
 from gettext import gettext as _
 
+
 class SectionView(gtk.VBox):
     __gtype_name__ = 'SugarSectionView'
 
     __gsignals__ = {
-        'request-close': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([]))
-        }
+        'request-close': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
 
     __gproperties__ = {
-        'is_valid'      : (bool, None, None, True,
-                           gobject.PARAM_READWRITE)
-        }
+        'is_valid': (bool, None, None, True, gobject.PARAM_READWRITE),
+    }
 
     _APPLY_TIMEOUT = 1000
 
@@ -51,5 +50,5 @@ class SectionView(gtk.VBox):
             return self._is_valid
 
     def undo(self):
-        '''Undo here the changes that have been made in this section.'''
+        """Undo here the changes that have been made in this section."""
         pass

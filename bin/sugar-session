@@ -127,6 +127,7 @@ def setup_keyboard_cb():
     logging.debug('STARTUP: setup_keyboard_cb')
 
     gconf_client = gconf.client_get_default()
+    have_config = False
 
     try:
         display = gtk.gdk.display_get_default()
@@ -147,22 +148,25 @@ def setup_keyboard_cb():
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
 
-        if layouts_list is not None and layouts_list is not [] \
-                and variants_list is not None and variants_list is not []:
+        if layouts_list and variants_list:
+            have_config = True
             configrec.set_layouts(layouts_list)
             configrec.set_variants(variants_list)
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
         if model:
+            have_config = True
             configrec.set_model(model)
 
         options = gconf_client.get_list(\
             '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
-        if options is not [] and options is not None:
+        if options:
+            have_config = True
             configrec.set_options(options)
 
-        configrec.activate(engine)
+        if have_config:
+            configrec.activate(engine)
     except Exception:
         logging.exception('Error during keyboard configuration')
 
@@ -241,6 +245,10 @@ def main():
     # even when we initially get blocked on the intro screen
     gobject.idle_add(unfreeze_dcon_cb)
 
+    # make sure we have the correct cursor in the intro screen
+    # TODO #3204
+    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
+        logging.warning('Can not reset cursor')
     intro.check_profile()
 
     start_ui_service()
@@ -259,16 +267,23 @@ def main():
 
     screen = wnck.screen_get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
+    _check_for_window_manager(screen)
 
     try:
         gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 
+
 def __window_manager_changed_cb(screen):
+    _check_for_window_manager(screen)
+
+
+def _check_for_window_manager(screen):
     wm_name = screen.get_window_manager_name()
     if wm_name is not None:
         screen.disconnect_by_func(__window_manager_changed_cb)
         bootstrap()
+
 
 main()

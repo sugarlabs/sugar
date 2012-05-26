@@ -19,4 +19,3 @@ from gettext import gettext as _
 CLASS = 'Keyboard'
 ICON = 'module-keyboard'
 TITLE = _('Keyboard')
-
