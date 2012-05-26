@@ -14,6 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import math
+
 import hippo
 import gobject
 import gtk
@@ -22,10 +24,13 @@ from sugar.graphics import style
 
 from jarabe.desktop.grid import Grid
 
+
 _CELL_SIZE = 4.0
+
 
 class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     __gtype_name__ = 'SugarSpreadLayout'
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self._box = None
@@ -75,9 +80,10 @@ class SpreadLayout(gobject.GObject, hippo.CanvasLayout):
     def _get_child_grid_size(self, child):
         min_width, width = child.get_width_request()
         min_height, height = child.get_height_request(width)
+        width = math.ceil(width / _CELL_SIZE)
+        height = math.ceil(height / _CELL_SIZE)
 
-        return int(width / _CELL_SIZE), int(height / _CELL_SIZE)
+        return int(width), int(height)
 
     def _grid_child_changed_cb(self, grid, child):
         child.emit_request_changed()
-

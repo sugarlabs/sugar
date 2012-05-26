@@ -19,14 +19,14 @@ import gobject
 import wnck
 import gconf
 
+
 _MAX_DELAY = 1000
+
 
 class EventArea(gobject.GObject):
     __gsignals__ = {
-        'enter': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE, ([])),
-        'leave': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE, ([]))
+        'enter': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'leave': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):
@@ -37,10 +37,11 @@ class EventArea(gobject.GObject):
         self._sids = {}
         client = gconf.client_get_default()
         self._edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
-        self._corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
+        self._corner_delay = client.get_int('/desktop/sugar/frame'
+                                            '/corner_delay')
 
         right = gtk.gdk.screen_width() - 1
-        bottom = gtk.gdk.screen_height() -1
+        bottom = gtk.gdk.screen_height() - 1
         width = gtk.gdk.screen_width() - 2
         height = gtk.gdk.screen_height() - 2
 
@@ -94,6 +95,7 @@ class EventArea(gobject.GObject):
         invisible.connect('drag_leave', self._drag_leave_cb)
 
         invisible.realize()
+        # pylint: disable=E1101
         invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
                                     gtk.gdk.ENTER_NOTIFY_MASK |
                                     gtk.gdk.LEAVE_NOTIFY_MASK)

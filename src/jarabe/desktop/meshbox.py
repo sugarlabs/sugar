@@ -47,55 +47,32 @@ from jarabe.model.olpcmesh import OlpcMeshManager
 from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
-_NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
-_NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
-_NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
 
-class ActivityView(hippo.CanvasBox):
-    def __init__(self, model):
-        hippo.CanvasBox.__init__(self)
+_AUTOSEARCH_TIMEOUT = 1000
+_FILTERED_ALPHA = 0.33
 
+
+class _ActivityIcon(CanvasIcon):
+    def __init__(self, model, file_name, xo_color,
+                 size=style.STANDARD_ICON_SIZE):
+        CanvasIcon.__init__(self, file_name=file_name,
+                            xo_color=xo_color,
+                            size=size)
         self._model = model
-        self._model.connect('current-buddy-added', self.__buddy_added_cb)
-        self._model.connect('current-buddy-removed', self.__buddy_removed_cb)
+        self.connect('activated', self._clicked_cb)
 
-        self._icons = {}
-        self._palette = None
-
-        self._layout = SnowflakeLayout()
-        self.set_layout(self._layout)
-
-        self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
-
-        self._palette = self._create_palette()
-        self._icon.set_palette(self._palette)
-
-        for buddy in self._model.props.current_buddies:
-            self._add_buddy(buddy)
-
-    def _create_icon(self):
-        icon = CanvasIcon(file_name=self._model.bundle.get_icon(),
-                    xo_color=self._model.get_color(), cache=True,
-                    size=style.STANDARD_ICON_SIZE)
-        icon.connect('activated', self._clicked_cb)
-        return icon
-
-    def _create_palette(self):
-        p_text = glib.markup_escape_text(self._model.bundle.get_name())
+    def create_palette(self):
+        primary_text = glib.markup_escape_text(self._model.bundle.get_name())
+        secondary_text = glib.markup_escape_text(self._model.get_name())
         p_icon = Icon(file=self._model.bundle.get_icon(),
                       xo_color=self._model.get_color())
         p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
         p = palette.Palette(None,
-                            primary_text=p_text,
+                            primary_text=primary_text,
+                            secondary_text=secondary_text,
                             icon=p_icon)
 
         private = self._model.props.private
@@ -114,8 +91,42 @@ class ActivityView(hippo.CanvasBox):
 
         return p
 
+    def _clicked_cb(self, item):
+        bundle = self._model.get_bundle()
+        misc.launch(bundle, activity_id=self._model.activity_id,
+                    color=self._model.get_color())
+
+
+class ActivityView(hippo.CanvasBox):
+    def __init__(self, model):
+        hippo.CanvasBox.__init__(self)
+
+        self._model = model
+        self._model.connect('current-buddy-added', self.__buddy_added_cb)
+        self._model.connect('current-buddy-removed', self.__buddy_removed_cb)
+
+        self._icons = {}
+
+        self._layout = SnowflakeLayout()
+        self.set_layout(self._layout)
+
+        self._icon = self._create_icon()
+        self._layout.add(self._icon, center=True)
+
+        self._icon.palette_invoker.cache_palette = False
+
+        for buddy in self._model.props.current_buddies:
+            self._add_buddy(buddy)
+
+    def _create_icon(self):
+        icon = _ActivityIcon(self._model,
+                             file_name=self._model.bundle.get_icon(),
+                             xo_color=self._model.get_color(),
+                             size=style.STANDARD_ICON_SIZE)
+        return icon
+
     def has_buddy_icon(self, key):
-        return self._icons.has_key(key)
+        return key in self._icons
 
     def __buddy_added_cb(self, activity, buddy):
         self._add_buddy(buddy)
@@ -130,34 +141,25 @@ class ActivityView(hippo.CanvasBox):
         del self._icons[buddy.props.key]
         icon.destroy()
 
-    def _clicked_cb(self, item):
-        bundle = self._model.get_bundle()
-        misc.launch(bundle, activity_id=self._model.activity_id,
-                    color=self._model.get_color())
-
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
                 self._model.bundle.get_bundle_id().lower()
+        self._icon.props.xo_color = self._model.get_color()
         if text_to_check.find(query) == -1:
-            self._icon.props.stroke_color = '#D5D5D5'
-            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            self._icon.alpha = _FILTERED_ALPHA
         else:
-            self._icon.props.xo_color = self._model.get_color()
-
+            self._icon.alpha = 1.0
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
-
-_AUTOSEARCH_TIMEOUT = 1000
 
 
 class MeshToolbar(gtk.Toolbar):
     __gtype_name__ = 'MeshToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([str]))
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([str])),
     }
 
     def __init__(self):
@@ -225,36 +227,38 @@ class DeviceObserver(gobject.GObject):
         'access-point-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                                ([gobject.TYPE_PYOBJECT])),
         'access-point-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                 ([gobject.TYPE_PYOBJECT]))
+                                 ([gobject.TYPE_PYOBJECT])),
     }
+
     def __init__(self, device):
         gobject.GObject.__init__(self)
         self._bus = dbus.SystemBus()
         self.device = device
 
-        wireless = dbus.Interface(device, _NM_WIRELESS_IFACE)
-        wireless.GetAccessPoints(reply_handler=self._get_access_points_reply_cb,
-                                 error_handler=self._get_access_points_error_cb)
+        wireless = dbus.Interface(device, network.NM_WIRELESS_IFACE)
+        wireless.GetAccessPoints(
+            reply_handler=self._get_access_points_reply_cb,
+            error_handler=self._get_access_points_error_cb)
 
         self._bus.add_signal_receiver(self.__access_point_added_cb,
                                       signal_name='AccessPointAdded',
                                       path=device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
+                                      dbus_interface=network.NM_WIRELESS_IFACE)
         self._bus.add_signal_receiver(self.__access_point_removed_cb,
                                       signal_name='AccessPointRemoved',
                                       path=device.object_path,
-                                      dbus_interface=_NM_WIRELESS_IFACE)
+                                      dbus_interface=network.NM_WIRELESS_IFACE)
 
     def _get_access_points_reply_cb(self, access_points_o):
         for ap_o in access_points_o:
-            ap = self._bus.get_object(_NM_SERVICE, ap_o)
+            ap = self._bus.get_object(network.NM_SERVICE, ap_o)
             self.emit('access-point-added', ap)
 
     def _get_access_points_error_cb(self, err):
         logging.error('Failed to get access points: %s', err)
 
     def __access_point_added_cb(self, access_point_o):
-        ap = self._bus.get_object(_NM_SERVICE, access_point_o)
+        ap = self._bus.get_object(network.NM_SERVICE, access_point_o)
         self.emit('access-point-added', ap)
 
     def __access_point_removed_cb(self, access_point_o):
@@ -264,11 +268,11 @@ class DeviceObserver(gobject.GObject):
         self._bus.remove_signal_receiver(self.__access_point_added_cb,
                                          signal_name='AccessPointAdded',
                                          path=self.device.object_path,
-                                         dbus_interface=_NM_WIRELESS_IFACE)
+                                         dbus_interface=network.NM_WIRELESS_IFACE)
         self._bus.remove_signal_receiver(self.__access_point_removed_cb,
                                          signal_name='AccessPointRemoved',
                                          path=self.device.object_path,
-                                         dbus_interface=_NM_WIRELESS_IFACE)
+                                         dbus_interface=network.NM_WIRELESS_IFACE)
 
 
 class NetworkManagerObserver(object):
@@ -288,10 +292,9 @@ class NetworkManagerObserver(object):
     def listen(self):
         try:
             self._bus = dbus.SystemBus()
-            obj = self._bus.get_object(_NM_SERVICE, _NM_PATH)
-            self._netmgr = dbus.Interface(obj, _NM_IFACE)
+            self._netmgr = network.get_manager()
         except dbus.DBusException:
-            logging.debug('%s service not available', _NM_SERVICE)
+            logging.debug('NetworkManager not available')
             return
 
         self._netmgr.GetDevices(reply_handler=self.__get_devices_reply_cb,
@@ -299,42 +302,40 @@ class NetworkManagerObserver(object):
 
         self._bus.add_signal_receiver(self.__device_added_cb,
                                       signal_name='DeviceAdded',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__device_removed_cb,
                                       signal_name='DeviceRemoved',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
         self._bus.add_signal_receiver(self.__properties_changed_cb,
                                       signal_name='PropertiesChanged',
-                                      dbus_interface=_NM_IFACE)
+                                      dbus_interface=network.NM_IFACE)
 
-        settings = network.get_settings()
-        if settings is not None:
-            settings.secrets_request.connect(self.__secrets_request_cb)
+        secret_agent = network.get_secret_agent()
+        if secret_agent is not None:
+            secret_agent.secrets_request.connect(self.__secrets_request_cb)
 
     def __secrets_request_cb(self, **kwargs):
         # FIXME It would be better to do all of this async, but I cannot think
         # of a good way to. NM could really use some love here.
 
-        netmgr_props = dbus.Interface(
-                            self._netmgr, 'org.freedesktop.DBus.Properties')
-        active_connections_o = netmgr_props.Get(_NM_IFACE, 'ActiveConnections')
+        netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
+        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
 
         for conn_o in active_connections_o:
-            obj = self._bus.get_object(_NM_IFACE, conn_o)
-            props = dbus.Interface(obj, 'org.freedesktop.DBus.Properties')
-            state = props.Get(_NM_ACTIVE_CONN_IFACE, 'State')
+            obj = self._bus.get_object(network.NM_IFACE, conn_o)
+            props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+            state = props.Get(network.NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
-                ap_o = props.Get(_NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
                 found = False
                 if ap_o != '/':
                     for net in self._box.wireless_networks.values():
                         if net.find_ap(ap_o) is not None:
                             found = True
-                            settings = kwargs['connection'].get_settings()
-                            net.create_keydialog(settings, kwargs['response'])
+                            net.create_keydialog(kwargs['response'])
                 if not found:
-                    logging.error('Could not determine AP for'
-                                  ' specific object %s' % conn_o)
+                    raise Exception('Could not determine AP for specific object'
+                                    ' %s' % conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
@@ -344,11 +345,13 @@ class NetworkManagerObserver(object):
         logging.error('Failed to get devices: %s', err)
 
     def _check_device(self, device_o):
-        device = self._bus.get_object(_NM_SERVICE, device_o)
-        props = dbus.Interface(device, 'org.freedesktop.DBus.Properties')
+        device = self._bus.get_object(network.NM_SERVICE, device_o)
+        props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
 
-        device_type = props.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type == network.DEVICE_TYPE_802_11_WIRELESS:
+        device_type = props.Get(network.NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == network.NM_DEVICE_TYPE_WIFI:
+            if device_o in self._devices:
+                return
             self._devices[device_o] = DeviceObserver(device)
             self._devices[device_o].connect('access-point-added',
                                             self.__ap_added_cb)
@@ -356,7 +359,9 @@ class NetworkManagerObserver(object):
                                             self.__ap_removed_cb)
             if self._have_adhoc_networks:
                 self._box.add_adhoc_networks(device)
-        elif device_type == network.DEVICE_TYPE_802_11_OLPC_MESH:
+        elif device_type == network.NM_DEVICE_TYPE_OLPC_MESH:
+            if device_o == self._olpc_mesh_device_o:
+                return
             self._olpc_mesh_device_o = device_o
             self._box.enable_olpc_mesh(device)
 
@@ -377,6 +382,7 @@ class NetworkManagerObserver(object):
 
         if self._olpc_mesh_device_o == device_o:
             self._box.disable_olpc_mesh(device_o)
+            self._olpc_mesh_device_o = None
 
     def __ap_added_cb(self, device_observer, access_point):
         self._box.add_access_point(device_observer.device, access_point)
@@ -399,7 +405,7 @@ class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the mesh view")
+        logging.debug('STARTUP: Loading the mesh view')
 
         gobject.GObject.__init__(self)
 
@@ -520,56 +526,59 @@ class MeshBox(gtk.VBox):
     # add AP to its corresponding network icon on the desktop,
     # creating one if it doesn't already exist
     def _add_ap_to_network(self, ap):
-        hash = ap.network_hash()
-        if hash in self.wireless_networks:
-            self.wireless_networks[hash].add_ap(ap)
+        hash_value = ap.network_hash()
+        if hash_value in self.wireless_networks:
+            self.wireless_networks[hash_value].add_ap(ap)
         else:
             # this is a new network
             icon = WirelessNetworkView(ap)
-            self.wireless_networks[hash] = icon
+            self.wireless_networks[hash_value] = icon
             self._layout.add(icon)
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
-    def _remove_net_if_empty(self, net, hash):
+    def _remove_net_if_empty(self, net, hash_value):
         # remove a network if it has no APs left
         if net.num_aps() == 0:
             net.disconnect()
             self._layout.remove(net)
-            del self.wireless_networks[hash]
+            del self.wireless_networks[hash_value]
 
-    def _ap_props_changed_cb(self, ap, old_hash):
+    def _ap_props_changed_cb(self, ap, old_hash_value):
         # if we have mesh hardware, ignore OLPC mesh networks that appear as
         # normal wifi networks
         if len(self._mesh) > 0 and ap.mode == network.NM_802_11_MODE_ADHOC \
-                and ap.name == "olpc-mesh":
-            logging.debug("ignoring OLPC mesh IBSS")
+                and ap.ssid == 'olpc-mesh':
+            logging.debug('ignoring OLPC mesh IBSS')
             ap.disconnect()
             return
 
         if self._adhoc_manager is not None and \
-                network.is_sugar_adhoc_network(ap.name) and \
+                network.is_sugar_adhoc_network(ap.ssid) and \
                 ap.mode == network.NM_802_11_MODE_ADHOC:
-            if old_hash is None: # new Ad-hoc network finished initializing
+            if old_hash_value is None:
+                # new Ad-hoc network finished initializing
                 self._adhoc_manager.add_access_point(ap)
             # we are called as well in other cases but we do not need to
             # act here as we don't display signal strength for Ad-hoc networks
             return
 
-        if old_hash is None: # new AP finished initializing
+        if old_hash_value is None:
+            # new AP finished initializing
             self._add_ap_to_network(ap)
             return
 
-        hash = ap.network_hash()
-        if old_hash == hash:
+        hash_value = ap.network_hash()
+        if old_hash_value == hash_value:
             # no change in network identity, so just update signal strengths
-            self.wireless_networks[hash].update_strength()
+            self.wireless_networks[hash_value].update_strength()
             return
 
         # properties change includes a change of the identity of the network
         # that it is on. so create this as a new network.
-        self.wireless_networks[old_hash].remove_ap(ap)
-        self._remove_net_if_empty(self.wireless_networks[old_hash], old_hash)
+        self.wireless_networks[old_hash_value].remove_ap(ap)
+        self._remove_net_if_empty(self.wireless_networks[old_hash_value],
+            old_hash_value)
         self._add_ap_to_network(ap)
 
     def add_access_point(self, device, ap_o):
@@ -597,12 +606,12 @@ class MeshBox(gtk.VBox):
 
         # it's not an error if the AP isn't found, since we might have ignored
         # it (e.g. olpc-mesh adhoc network)
-        logging.debug('Can not remove access point %s' % ap_o)
+        logging.debug('Can not remove access point %s', ap_o)
 
     def add_adhoc_networks(self, device):
         if self._adhoc_manager is None:
             self._adhoc_manager = get_adhoc_manager_instance()
-            self._adhoc_manager.start_listening(device)
+        self._adhoc_manager.start_listening(device)
         self._add_adhoc_network_icon(1)
         self._add_adhoc_network_icon(6)
         self._add_adhoc_network_icon(11)
@@ -612,6 +621,7 @@ class MeshBox(gtk.VBox):
         for icon in self._adhoc_networks:
             self._layout.remove(icon)
         self._adhoc_networks = []
+        self._adhoc_manager.stop_listening()
 
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
@@ -631,15 +641,15 @@ class MeshBox(gtk.VBox):
 
         # the OLPC mesh can be recognised as a "normal" wifi network. remove
         # any such normal networks if they have been created
-        for hash, net in self.wireless_networks.iteritems():
+        for hash_value, net in self.wireless_networks.iteritems():
             if not net.is_olpc_mesh():
                 continue
 
-            logging.debug("removing OLPC mesh IBSS")
+            logging.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
             self._layout.remove(net)
-            del self.wireless_networks[hash]
+            del self.wireless_networks[hash_value]
 
     def disable_olpc_mesh(self, mesh_device):
         for icon in self._mesh:

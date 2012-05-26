@@ -16,28 +16,36 @@
 
 import logging
 from gettext import gettext as _
-from xmlrpclib import ServerProxy, Error
+import xmlrpclib
 import socket
+import httplib
 import os
 from string import ascii_uppercase
 import random
 import time
 import uuid
+import sys
 
 import gconf
 
 from sugar import env
 from sugar.profile import get_profile
 
-REGISTER_URL = 'http://schoolserver:8080/'
+_REGISTER_URL = 'http://schoolserver:8080/'
+_REGISTER_TIMEOUT = 8
+_OFW_TREE = '/ofw'
+_PROC_TREE = '/proc/device-tree'
+_MFG_SN = 'mfg-data/SN'
+_MFG_UUID = 'mfg-data/U#'
 
-def generate_serial_number():
+
+def _generate_serial_number():
     """  Generates a serial number based on 3 random uppercase letters
     and the last 8 digits of the current unix seconds. """
 
     serial_part1 = []
 
-    for y_ in range(3) :
+    for y_ in range(3):
         serial_part1.append(random.choice(ascii_uppercase))
 
     serial_part1 = ''.join(serial_part1)
@@ -46,7 +54,8 @@ def generate_serial_number():
 
     return serial
 
-def store_identifiers(serial_number, uuid, backup_url):
+
+def _store_identifiers(serial_number, uuid_, backup_url):
     """  Stores the serial number, uuid and backup_url
     in the identifier folder inside the profile directory
     so that these identifiers can be used for backup. """
@@ -64,7 +73,7 @@ def store_identifiers(serial_number, uuid, backup_url):
     if os.path.exists(os.path.join(identifier_path, 'uuid')):
         os.remove(os.path.join(identifier_path, 'uuid'))
     uuid_file = open(os.path.join(identifier_path, 'uuid'), 'w')
-    uuid_file.write(uuid)
+    uuid_file.write(uuid_)
     uuid_file.close()
 
     if os.path.exists(os.path.join(identifier_path, 'backup_url')):
@@ -73,35 +82,67 @@ def store_identifiers(serial_number, uuid, backup_url):
     backup_url_file.write(backup_url)
     backup_url_file.close()
 
+
 class RegisterError(Exception):
     pass
 
-def register_laptop(url=REGISTER_URL):
+
+class _TimeoutHTTP(httplib.HTTP):
+
+    def __init__(self, host='', port=None, strict=None, timeout=None):
+        if port == 0:
+            port = None
+        # FIXME: Depending on undocumented internals that can break between
+        # Python releases. Please have a look at SL #2350
+        self._setup(self._connection_class(host,
+                 port, strict, timeout=_REGISTER_TIMEOUT))
+
+
+class _TimeoutTransport(xmlrpclib.Transport):
+
+    def make_connection(self, host):
+        host, extra_headers, x509_ = self.get_host_info(host)
+        return _TimeoutHTTP(host, timeout=_REGISTER_TIMEOUT)
+
+
+def register_laptop(url=_REGISTER_URL):
 
     profile = get_profile()
     client = gconf.client_get_default()
 
-    if have_ofw_tree():
-        sn = read_ofw('mfg-data/SN')
-        uuid_ = read_ofw('mfg-data/U#')
-        sn = sn or 'SHF00000000'
-        uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
+    if _have_ofw_tree():
+        sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
+        uuid_ = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_UUID))
+    elif _have_proc_device_tree():
+        sn = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_SN))
+        uuid_ = _read_mfg_data(os.path.join(_PROC_TREE, _MFG_UUID))
     else:
-        sn = generate_serial_number()
+        sn = _generate_serial_number()
         uuid_ = str(uuid.uuid1())
-        setting_name = '/desktop/sugar/collaboration/jabber_server'
-        jabber_server = client.get_string(setting_name)
-        store_identifiers(sn, uuid_, jabber_server)
+    sn = sn or 'SHF00000000'
+    uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
+
+    setting_name = '/desktop/sugar/collaboration/jabber_server'
+    jabber_server = client.get_string(setting_name)
+    _store_identifiers(sn, uuid_, jabber_server)
+
+    if jabber_server:
         url = 'http://' + jabber_server + ':8080/'
 
     nick = client.get_string('/desktop/sugar/user/nick')
 
-    server = ServerProxy(url)
+    if sys.hexversion < 0x2070000:
+        server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
+    else:
+        socket.setdefaulttimeout(_REGISTER_TIMEOUT)
+        server = xmlrpclib.ServerProxy(url)
     try:
         data = server.register(sn, nick, uuid_, profile.pubkey)
-    except (Error, TypeError, socket.error):
+    except (xmlrpclib.Error, TypeError, socket.error):
         logging.exception('Registration: cannot connect to server')
         raise RegisterError(_('Cannot connect to the server.'))
+    finally:
+        socket.setdefaulttimeout(None)
 
     if data['success'] != 'OK':
         logging.error('Registration: server could not complete request: %s',
@@ -114,11 +155,16 @@ def register_laptop(url=REGISTER_URL):
 
     return True
 
-def have_ofw_tree():
-    return os.path.exists('/ofw')
 
-def read_ofw(path):
-    path = os.path.join('/ofw', path)
+def _have_ofw_tree():
+    return os.path.exists(_OFW_TREE)
+
+
+def _have_proc_device_tree():
+    return os.path.exists(_PROC_TREE)
+
+
+def _read_mfg_data(path):
     if not os.path.exists(path):
         return None
     fh = open(path, 'r')

@@ -1,0 +1,73 @@
+""" This is the release process of the sugar tarballs sugar(shell),
+sugar-toolkit and sugar-base described in a pytish way and
+instructions for sugar packagers
+"""
+
+# Release sugar tarballs
+
+for package in [sugar, sugar-toolkit, sugar-base, sugar-artwork]:
+    # Release a new version in git
+    Pull the latest sources.
+    Increase the version number in configure.ac
+    # this will create you a tarball and does a check if it builds fine
+    # e.g. it will check if all the files containing translations are
+    # in po/POTFILES.in
+    make distcheck
+
+    if that succeed:
+        # commit the change, log it as "Release [version_number]" (e.g. 0.79.1)
+        git commit -a
+        # Tag the release:
+        git tag v[version_number]
+        # Then push both the tag and the change:
+        git push --tags
+        git push
+    else:
+        break
+
+    # Upload the package
+    Upload the tarball to
+        shell.sugarlabs.org:/pub/sugarlabs/sources/sucrose/glucose/$name/$name-$version
+
+    # Verify the upload of the package
+    Check that the package has been uploaded fine: \
+        http://download.sugarlabs.org/sources/sucrose/glucose/$name/$name-$version
+
+# Package sugar for Fedora
+# - For announcements of the Sucrose release subscribe at the sugar-devel
+#   mailing list; you can filter for the [ANNOUNCE] tag
+# - Uploaded tarballs can be found at:
+#   glucose: http://download.sugarlabs.org/sources/sucrose/glucose/$name/$name-$version
+#   fructose: http://download.sugarlabs.org/sources/sucrose/fructose/$name/$name-$version
+#   more about the taxonomy: http://sugarlabs.org/go/Taxonomy
+
+# more info on fedora packaging:
+#     http://fedoraproject.org/wiki/PackageMaintainers/UpdatingPackageHowTo
+# request permissions to contribute to the fedora package:
+#     https://admin.fedoraproject.org/pkgdb/packages/name/[package]
+
+if not cvs_package:
+    # Get sugar from fedora cvs:
+    CVSROOT=:ext:erikos@cvs.fedoraproject.org:/cvs/pkgs cvs co [package]
+    cd cvs_package
+else:
+    cd cvs_package
+    cvs update
+
+cd current release
+make new-sources FILES="[tarball-created-with-make_distcheck]"
+
+# Change the version in the spec
+Bump the release number
+Edit the Changelog
+# verify your changes
+cvs diff -u
+make srpm
+
+make clog
+cvs commit -F clog
+
+make tag
+make build
+
+# Do the same for the other branches e.g. devel

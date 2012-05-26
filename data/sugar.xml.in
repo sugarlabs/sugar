@@ -8,4 +8,8 @@
     <_comment>Sugar content bundle</_comment>
     <glob pattern="*.xol"/>
   </mime-type>
+  <mime-type type="application/vnd.olpc-journal-entry">
+    <_comment>Sugar Journal entry bundle</_comment>
+    <glob pattern="*.xoj"/>
+  </mime-type>
 </mime-info>

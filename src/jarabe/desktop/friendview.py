@@ -23,6 +23,7 @@ from sugar.graphics import style
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry
 
+
 class FriendView(hippo.CanvasBox):
     def __init__(self, buddy, **kwargs):
         hippo.CanvasBox.__init__(self, **kwargs)
@@ -81,4 +82,3 @@ class FriendView(hippo.CanvasBox):
     def __buddy_notify_color_cb(self, buddy, pspec):
         # TODO: shouldn't this change self._buddy_icon instead?
         self._activity_icon.props.xo_color = buddy.props.color
-

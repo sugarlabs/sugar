@@ -15,13 +15,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
-import sys
-import traceback
 import logging
 
 from sugar.graphics import tray
 
 from jarabe import config
+
 
 class DevicesTray(tray.HTray):
     def __init__(self):
@@ -35,14 +34,14 @@ class DevicesTray(tray.HTray):
                                      locals(), [module_name])
                     mod.setup(self)
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                        ''.join(traceback.format_exception(*sys.exc_info())))
+                    logging.exception('Exception while loading extension:')
 
     def add_device(self, view):
         index = 0
-        relative_index = getattr(view, "FRAME_POSITION_RELATIVE", -1)
+        relative_index = getattr(view, 'FRAME_POSITION_RELATIVE', -1)
         for item in self.get_children():
-            current_relative_index = getattr(item, "FRAME_POSITION_RELATIVE", 0)
+            current_relative_index = getattr(item, 'FRAME_POSITION_RELATIVE',
+                                             0)
             if current_relative_index >= relative_index:
                 index += 1
             else:

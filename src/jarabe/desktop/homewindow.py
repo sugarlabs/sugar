@@ -16,6 +16,7 @@
 
 import logging
 
+import gobject
 import gtk
 
 from sugar.graphics import style
@@ -28,10 +29,14 @@ from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
-_HOME_PAGE       = 0
-_GROUP_PAGE      = 1
-_MESH_PAGE       = 2
+
+_HOME_PAGE = 0
+_GROUP_PAGE = 1
+_MESH_PAGE = 2
 _TRANSITION_PAGE = 3
+
+_instance = None
+
 
 class HomeWindow(gtk.Window):
     def __init__(self):
@@ -75,7 +80,7 @@ class HomeWindow(gtk.Window):
                                      self.__zoom_level_changed_cb)
 
     def _deactivate_view(self, level):
-        group = palettegroup.get_group("default")
+        group = palettegroup.get_group('default')
         group.popdown()
         if level == ShellModel.ZOOM_HOME:
             self._home_box.suspend()
@@ -183,11 +188,22 @@ class HomeWindow(gtk.Window):
     def get_home_box(self):
         return self._home_box
 
-_instance = None
+    def busy_during_delayed_action(self, action):
+        """Use busy cursor during execution of action, scheduled via idle_add.
+        """
+        def action_wrapper(old_cursor):
+            try:
+                action()
+            finally:
+                self.get_window().set_cursor(old_cursor)
+
+        old_cursor = self.get_window().get_cursor()
+        self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+        gobject.idle_add(action_wrapper, old_cursor)
+
 
 def get_instance():
     global _instance
     if not _instance:
         _instance = HomeWindow()
     return _instance
-

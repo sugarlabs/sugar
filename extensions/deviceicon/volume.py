@@ -28,7 +28,9 @@ from jarabe.journal import journalactivity
 from jarabe.view.palettes import VolumePalette
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
+
 _icons = {}
+
 
 class DeviceView(TrayIcon):
 
@@ -70,8 +72,10 @@ class DeviceView(TrayIcon):
         journal.reveal()
         return True
 
+
 def setup(tray):
     gobject.idle_add(_setup_volumes, tray)
+
 
 def _setup_volumes(tray):
     volume_monitor = gio.volume_monitor_get()
@@ -86,8 +90,10 @@ def _setup_volumes(tray):
     volume_monitor.connect('mount-added', _mount_added_cb, tray)
     volume_monitor.connect('mount-removed', _mount_removed_cb, tray)
 
+
 def _volume_added_cb(volume_monitor, volume, tray):
     _mount(volume, tray)
+
 
 def _mount(volume, tray):
     # Follow Nautilus behaviour here
@@ -102,20 +108,23 @@ def _mount(volume, tray):
         #TODO: pass None as mount_operation, or better, SugarMountOperation
         volume.mount(gtk.MountOperation(tray.get_toplevel()), _mount_cb)
 
+
 def _mount_cb(volume, result):
     logging.debug('_mount_cb %r %r', volume, result)
     volume.mount_finish(result)
 
+
 def _mount_added_cb(volume_monitor, mount, tray):
     _add_device(mount, tray)
+
 
 def _mount_removed_cb(volume_monitor, mount, tray):
     icon = _icons[mount]
     tray.remove_device(icon)
     del _icons[mount]
 
+
 def _add_device(mount, tray):
     icon = DeviceView(mount)
     _icons[mount] = icon
     tray.add_device(icon)
-

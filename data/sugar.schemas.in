@@ -31,9 +31,9 @@
       <default></default>
       <locale name="C">
         <short>User Color</short>
-        <long>Color for the XO icon that is used throughout the 
-	  desktop. The string is composed of the stroke color and fill 
-	  color, format is that of rbg colors. Example: #AC32FF,#9A5200 
+        <long>Color for the XO icon that is used throughout the
+	  desktop. The string is composed of the stroke color and fill
+	  color, format is that of rgb colors. Example: #AC32FF,#9A5200
 	</long>
       </locale>
     </schema>
@@ -69,7 +69,7 @@
       <default></default>
       <locale name="C">
         <short>Backup URL</short>
-        <long>Url where the backup is saved to.</long>
+        <long>URL where the backup is saved to.</long>
       </locale>
     </schema>
 
@@ -78,7 +78,7 @@
       <applyto>/desktop/sugar/date/timezone</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>UTC</default>
+      <default></default>
       <locale name="C">
         <short>Timezone</short>
         <long>Timezone setting for the system.</long>
@@ -140,7 +140,7 @@
       <default>jabber.sugarlabs.org</default>
       <locale name="C">
         <short>Jabber Server</short>
-        <long>Url of the jabber server to use.</long>
+        <long>URL of the jabber server to use.</long>
       </locale>
     </schema>
 
@@ -152,7 +152,7 @@
       <default>false</default>
       <locale name="C">
         <short>Power Automatic</short>
-        <long>Power Automatic.</long>
+        <long>Automatic power management (increases battery life)</long>
       </locale>
     </schema>
     <schema>
@@ -163,7 +163,7 @@
       <default>false</default>
       <locale name="C">
         <short>Power Extreme</short>
-        <long>Power Extreme. </long>
+        <long>Extreme power management (disables wireless radio, increases battery life)</long>
       </locale>
     </schema>
 
@@ -188,6 +188,18 @@
       <locale name="C">
         <short>Show Log out</short>
         <long>If TRUE, Sugar will show a "Log out" option.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/show_restart</key>
+      <applyto>/desktop/sugar/show_restart</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Restart</short>
+        <long>If TRUE, Sugar will show a "Restart" option.</long>
       </locale>
     </schema>
 
@@ -220,7 +232,6 @@
       <applyto>/desktop/sugar/peripherals/keyboard/model</applyto>
       <owner>sugar</owner>
       <type>string</type>
-      <default>evdev</default>
       <locale name="C">
         <short>Keyboard model</short>
         <long>The keyboard model to be used</long>
@@ -269,8 +280,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network username</short>
-        <long>GSM network username configuration</long>
+        <short>GSM network username (DEPRECATED/UNUSED)</short>
+        <long>GSM network username configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -280,8 +291,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network password</short>
-        <long>GSM network password configuration</long>
+        <short>GSM network password (DEPRECATED/UNUSED)</short>
+        <long>GSM network password configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -291,8 +302,8 @@
       <type>string</type>
       <default>*99#</default>
       <locale name="C">
-        <short>GSM network number</short>
-        <long>GSM network telephone number configuration</long>
+        <short>GSM network number (DEPRECATED/UNUSED)</short>
+        <long>GSM network telephone number configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -302,8 +313,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network APN</short>
-        <long>GSM network access point name configuration</long>
+        <short>GSM network APN (DEPRECATED/UNUSED)</short>
+        <long>GSM network access point name configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -313,8 +324,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network PIN</short>
-        <long>GSM network personal identification number configuration</long>
+        <short>GSM network PIN (DEPRECATED/UNUSED)</short>
+        <long>GSM network personal identification number configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
     <schema>
@@ -324,8 +335,8 @@
       <type>string</type>
       <default></default>
       <locale name="C">
-        <short>GSM network PUK</short>
-        <long>GSM network personal unlock key configuration</long>
+        <short>GSM network PUK (DEPRECATED/UNUSED)</short>
+        <long>GSM network personal unlock key configuration (DEPRECATED/UNUSED)</long>
       </locale>
     </schema>
 
@@ -354,6 +365,30 @@
         <short>Bundle IDs of protected activities</short>
         <long>Users will not be allowed to erase these
         activities through the list view.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/speech/pitch</key>
+      <applyto>/desktop/sugar/speech/pitch</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Pitch value for the speech sugar service</short>
+        <long>Pitch value used by the speech service in Sugar</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/speech/rate</key>
+      <applyto>/desktop/sugar/speech/rate</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Rate value for the speech sugar service</short>
+        <long>Rate value used by the speech service in Sugar</long>
       </locale>
     </schema>
 

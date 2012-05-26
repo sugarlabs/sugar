@@ -17,6 +17,7 @@
 from gettext import gettext as _
 import gconf
 
+import glib
 import gobject
 import gtk
 
@@ -32,12 +33,13 @@ from jarabe.model import sound
 
 _ICON_NAME = 'speaker'
 
+
 class DeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = gconf.client_get_default()        
+        client = gconf.client_get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
@@ -56,7 +58,8 @@ class DeviceView(TrayIcon):
         self._update_info()
 
     def create_palette(self):
-        palette = SpeakerPalette(_('My Speakers'), model=self._model)
+        label = glib.markup_escape_text(_('My Speakers'))
+        palette = SpeakerPalette(label, model=self._model)
         palette.set_group_id('frame')
         return palette
 
@@ -70,21 +73,23 @@ class DeviceView(TrayIcon):
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                           style.COLOR_WHITE.get_svg()))
 
-        self.icon.props.icon_name = get_icon_state(name, current_level, step=-1)
+        self.icon.props.icon_name = get_icon_state(name, current_level,
+                                                   step=-1)
         self.icon.props.xo_color = xo_color
 
     def __button_release_event_cb(self, widget, event):
-        if event.button == 1:
-            self._model.props.muted = not self._model.props.muted
-            return True
-        else:
+        if event.button != 1:
             return False
+
+        self.palette_invoker.notify_right_click()
+        return True
 
     def __expose_event_cb(self, *args):
         self._update_info()
 
     def __speaker_status_changed_cb(self, pspec_, param_):
         self._update_info()
+
 
 class SpeakerPalette(Palette):
 
@@ -167,10 +172,11 @@ class SpeakerPalette(Palette):
         self._update_level()
         self._update_muted()
 
+
 class DeviceModel(gobject.GObject):
     __gproperties__ = {
-        'level'   : (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
-        'muted'   : (bool, None, None, False, gobject.PARAM_READWRITE),
+        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
+        'muted': (bool, None, None, False, gobject.PARAM_READWRITE),
     }
 
     def __init__(self):
@@ -201,16 +207,17 @@ class DeviceModel(gobject.GObject):
         return 'speaker'
 
     def do_get_property(self, pspec):
-        if pspec.name == "level":
+        if pspec.name == 'level':
             return self._get_level()
-        elif pspec.name == "muted":
+        elif pspec.name == 'muted':
             return self._get_muted()
 
     def do_set_property(self, pspec, value):
-        if pspec.name == "level":
+        if pspec.name == 'level':
             self._set_level(value)
-        elif pspec.name == "muted":
+        elif pspec.name == 'muted':
             self._set_muted(value)
+
 
 def setup(tray):
     tray.add_device(DeviceView())

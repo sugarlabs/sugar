@@ -18,11 +18,13 @@ import logging
 
 import dbus
 
+
 _HARDWARE_MANAGER_INTERFACE = 'org.freedesktop.ohm.Keystore'
 _HARDWARE_MANAGER_SERVICE = 'org.freedesktop.ohm'
 _HARDWARE_MANAGER_OBJECT_PATH = '/org/freedesktop/ohm/Keystore'
 
 _ohm_service = None
+
 
 def _get_ohm():
     global _ohm_service
@@ -35,9 +37,9 @@ def _get_ohm():
 
     return _ohm_service
 
+
 def set_dcon_freeze(frozen):
     try:
-        _get_ohm().SetKey("display.dcon_freeze", frozen)
+        _get_ohm().SetKey('display.dcon_freeze', frozen)
     except dbus.DBusException:
         logging.error('Cannot unfreeze the DCON')
-

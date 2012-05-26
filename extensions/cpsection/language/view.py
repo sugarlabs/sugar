@@ -25,12 +25,13 @@ from sugar.graphics.icon import Icon
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
-_translate_language = lambda msg: gettext.dgettext('iso_639', msg) 
+_translate_language = lambda msg: gettext.dgettext('iso_639', msg)
 _translate_country = lambda msg: gettext.dgettext('iso_3166', msg)
 
 CLASS = 'Language'
 ICON = 'module-language'
 TITLE = gettext.gettext('Language')
+
 
 class Language(SectionView):
     def __init__(self, model, alerts):
@@ -53,9 +54,9 @@ class Language(SectionView):
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
-        explanation = gettext.gettext("Add languages in the order you prefer." \
-                                          " If a translation is not available,"\
-                                          " the next in the list will be used.")
+        explanation = gettext.gettext('Add languages in the order you prefer.'
+                                      ' If a translation is not available,'
+                                      ' the next in the list will be used.')
         self._text = gtk.Label(explanation)
         self._text.set_width_chars(100)
         self._text.set_line_wrap(True)
@@ -69,14 +70,14 @@ class Language(SectionView):
         self.pack_start(scrolled, expand=True)
 
         self._table = gtk.Table(rows=1, columns=3, homogeneous=False)
-        self._table.set_border_width(style.DEFAULT_SPACING * 2)        
+        self._table.set_border_width(style.DEFAULT_SPACING * 2)
         self._table.show()
         scrolled.add_with_viewport(self._table)
 
         self._lang_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
         self.pack_start(self._lang_alert_box, False)
 
-        self._lang_alert = InlineAlert()        
+        self._lang_alert = InlineAlert()
         self._lang_alert_box.pack_start(self._lang_alert)
         if 'lang' in self.restart_alerts:
             self._lang_alert.props.msg = self.restart_msg
@@ -86,10 +87,10 @@ class Language(SectionView):
         self.setup()
 
     def _add_row(self, locale_code=None):
-        '''Adds a row to the table'''
+        """Adds a row to the table"""
 
         self._selected_lang_count += 1
-        
+
         self._table.resize(self._selected_lang_count, 3)
 
         label = gtk.Label(str=str(self._selected_lang_count))
@@ -98,8 +99,7 @@ class Language(SectionView):
         self._labels.append(label)
         self._attach_to_table(label, 0, 1, padding=1)
         label.show()
-        
-                
+
         store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         for language, country, code in self._available_locales:
             description = '%s (%s)' % (_translate_language(language), \
@@ -115,7 +115,7 @@ class Language(SectionView):
             for row in store:
                 lang = locale_code.split('.')[0]
                 lang_column = row[0].split('.')[0]
-                if lang in lang_column: 
+                if lang in lang_column:
                     combobox.set_active_iter(row.iter)
                     break
         else:
@@ -132,7 +132,7 @@ class Language(SectionView):
         self._attach_to_table(add_remove_box, 2, 3)
 
         add_remove_box.show_all()
-        
+
         if self._selected_lang_count > 1:
             previous_add_removes = self._add_remove_boxes[-2]
             previous_add_removes.hide_all()
@@ -149,12 +149,12 @@ class Language(SectionView):
                 ypadding=padding)
 
     def _delete_last_row(self):
-        '''Deletes the last row of the table'''
+        """Deletes the last row of the table"""
 
         self._selected_lang_count -= 1
 
         label, add_remove_box, combobox, store_ = self._get_last_row()
-        
+
         label.destroy()
         add_remove_box.destroy()
         combobox.destroy()
@@ -180,15 +180,15 @@ class Language(SectionView):
         self._lang_alert.hide()
 
     def _create_add_remove_box(self):
-        '''Creates gtk.Hbox with add/remove buttons'''
-        add_icon =  Icon(icon_name='list-add')
+        """Creates gtk.Hbox with add/remove buttons"""
+        add_icon = Icon(icon_name='list-add')
 
         add_button = gtk.Button()
         add_button.set_image(add_icon)
         add_button.connect('clicked',
                             self.__add_button_clicked_cb)
 
-        remove_icon =  Icon(icon_name='list-remove')
+        remove_icon = Icon(icon_name='list-remove')
         remove_button = gtk.Button()
         remove_button.set_image(remove_icon)
         remove_button.connect('clicked',
@@ -217,8 +217,8 @@ class Language(SectionView):
         selected_langs = self._get_selected_langs()
         last_lang = selected_langs[-1]
 
-        self._determine_add_remove_visibility(last_lang = last_lang)
-            
+        self._determine_add_remove_visibility(last_lang=last_lang)
+
         self._changed = (selected_langs != self._selected_locales)
 
         if self._changed == False:
@@ -245,10 +245,10 @@ class Language(SectionView):
             model = combobox.get_model()
             lang_code = model.get(it, 0)[0]
             new_codes.append(lang_code)
-        
+
         return new_codes
 
-    def _determine_add_remove_visibility(self, last_lang = None):
+    def _determine_add_remove_visibility(self, last_lang=None):
         # We should not let users add fallback languages for English (USA)
         # This is because the software is not usually _translated_ into English
         # which means that the fallback gets selected automatically
@@ -256,11 +256,11 @@ class Language(SectionView):
         if last_lang is None:
             selected_langs = self._get_selected_langs()
             last_lang = selected_langs[-1]
-            
+
         add_remove_box = self._add_remove_boxes[-1]
         buttons = add_remove_box.get_children()
         add_button, remove_button = buttons
-        
+
         if last_lang.startswith('en_US'):
             add_button.props.visible = False
         else:
@@ -271,10 +271,9 @@ class Language(SectionView):
         else:
             remove_button.props.visible = True
 
-
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
-        self._model.set_languages(codes)
+        self._model.set_languages_list(codes)
         self.restart_alerts.append('lang')
         self.needs_restart = True
         self._lang_alert.props.msg = self.restart_msg

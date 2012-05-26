@@ -16,72 +16,68 @@
 
 import math
 
-import gtk
 import gobject
 
 from sugar.graphics.icon import Icon, CanvasIcon
+from sugar.graphics import style
 
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
+_MINIMAL_ALPHA_VALUE = 0.33
+
 
 class Pulser(object):
     def __init__(self, icon):
         self._pulse_hid = None
         self._icon = icon
-        self._level = 0
         self._phase = 0
+        self._start_scale = 1.0
+        self._end_scale = 1.0
+        self._zoom_steps = 1
+        self._current_zoom_step = 1
+        self._current_scale_step = 1
+
+    def set_zooming(self, start_scale, end_scale, zoom_steps):
+        """ Set start and end scale and number of steps in zoom animation """
+        self._start_scale = start_scale
+        self._end_scale = end_scale
+        self._zoom_steps = zoom_steps
+        self._current_scale_step = abs(self._start_scale - self._end_scale) / \
+                self._zoom_steps
+        self._icon.scale = self._start_scale
 
     def start(self, restart=False):
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
             self._pulse_hid = gobject.timeout_add(_INTERVAL, self.__pulse_cb)
+        if self._start_scale != self._end_scale:
+            self._icon.scale = self._start_scale + \
+                    self._current_scale_step * self._current_zoom_step
 
     def stop(self):
         if self._pulse_hid is not None:
             gobject.source_remove(self._pulse_hid)
             self._pulse_hid = None
         self._icon.xo_color = self._icon.get_base_color()
+        self._phase = 0
+        self._icon.alpha = 1.0
 
     def update(self):
-        if self._icon.get_pulsing():
-            base_color = self._icon.get_base_color()
-            pulse_color = self._icon.get_pulse_color()
-
-            base_stroke = self._get_as_rgba(base_color.get_stroke_color())
-            pulse_stroke = self._get_as_rgba(pulse_color.get_stroke_color())
-            base_fill = self._get_as_rgba(base_color.get_fill_color())
-            pulse_fill = self._get_as_rgba(pulse_color.get_fill_color())
-
-            self._icon.set_stroke_color(
-                self._get_color_string(base_stroke, pulse_stroke))
-            self._icon.set_fill_color(
-                self._get_color_string(base_fill, pulse_fill))
-        else:
-            self._icon.xo_color = self._icon.base_color
-
-    def _get_as_rgba(self, html_color):
-        if html_color == 'none':
-            return 1.0, 1.0, 1.0
-        else:
-            color = gtk.gdk.color_parse(html_color)
-            return color.red / 65535.0,     \
-                   color.green / 65535.0,   \
-                   color.blue / 65535.0
-
-    def _get_color_string(self, orig_color, target_color):
-        r = orig_color[0] + self._level * (target_color[0] - orig_color[0])
-        g = orig_color[1] + self._level * (target_color[1] - orig_color[1])
-        b = orig_color[2] + self._level * (target_color[2] - orig_color[2])
-
-        return '#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255))
+        self._icon.xo_color = self._icon.base_color
+        self._icon.alpha = _MINIMAL_ALPHA_VALUE + \
+                (1 - _MINIMAL_ALPHA_VALUE) * (math.cos(self._phase) + 1) / 2
 
     def __pulse_cb(self):
         self._phase += _STEP
-        self._level = (math.sin(self._phase) + 1) / 2
+        if self._current_zoom_step <= self._zoom_steps and \
+            self._start_scale != self._end_scale:
+            self._icon.scale = self._start_scale + \
+                    self._current_scale_step * self._current_zoom_step
+            self._current_zoom_step += 1
         self.update()
-
         return True
+
 
 class PulsingIcon(Icon):
     __gtype_name__ = 'SugarPulsingIcon'
@@ -114,6 +110,17 @@ class PulsingIcon(Icon):
 
     def get_base_color(self):
         return self._base_color
+
+    def set_zooming(self, start_size=style.SMALL_ICON_SIZE,
+                               end_size=style.XLARGE_ICON_SIZE,
+                               zoom_steps=10):
+        if start_size > end_size:
+            start_scale = 1.0
+            end_scale = float(end_size) / start_size
+        else:
+            start_scale = float(start_size) / end_size
+            end_scale = 1.0
+        self._pulser.set_zooming(start_scale, end_scale, zoom_steps)
 
     base_color = gobject.property(
         type=object, getter=get_base_color, setter=set_base_color)
@@ -160,6 +167,7 @@ class PulsingIcon(Icon):
         self._pulser.stop()
         if self._palette is not None:
             self._palette.destroy()
+
 
 class CanvasPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarCanvasPulsingIcon'

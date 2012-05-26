@@ -25,8 +25,10 @@ import locale
 from gettext import gettext as _
 import subprocess
 
+
 _default_lang = '%s.%s' % locale.getdefaultlocale()
-_standard_msg = _("Could not access ~/.i18n. Create standard settings.")
+_standard_msg = _('Could not access ~/.i18n. Create standard settings.')
+
 
 def read_all_languages():
     fdp = subprocess.Popen(['locale', '-av'], stdout=subprocess.PIPE)
@@ -43,7 +45,7 @@ def read_all_languages():
             if locale.endswith('utf8') and len(lang):
                 locales.append((lang, territory, locale))
 
-    #FIXME: This is a temporary workaround for locales that are essential to 
+    #FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
     locales.append(('Kreyol', 'Haiti', 'ht_HT.utf8'))
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
@@ -52,7 +54,8 @@ def read_all_languages():
     locales.sort()
     return locales
 
-def _initialize():      
+
+def _initialize():
     if set_languages.__doc__ is None:
         # when running under 'python -OO', all __doc__ fields are None,
         # so += would fail -- and this function would be unnecessary anyway.
@@ -60,13 +63,12 @@ def _initialize():
     languages = read_all_languages()
     set_languages.__doc__ += '\n'
     for lang in languages:
-        set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' + 
+        set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' +
                                            lang[1].replace(' ', '_'))
-        
-def _write_i18n(langs):
-    colon = ':'
-    langstr = colon.join(langs)
-    path = os.path.join(os.environ.get("HOME"), '.i18n')
+
+
+def _write_i18n(lang_env, language_env):
+    path = os.path.join(os.environ.get('HOME'), '.i18n')
     if not os.access(path, os.W_OK):
         print _standard_msg
         fd = open(path, 'w')
@@ -75,32 +77,33 @@ def _write_i18n(langs):
         fd.close()
     else:
         fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % langs[0].strip("\n"))
-        fd.write('LANGUAGE="%s"\n' % langstr)
+        fd.write('LANG="%s"\n' % lang_env)
+        fd.write('LANGUAGE="%s"\n' % language_env)
         fd.close()
 
+
 def get_languages():
-    path = os.path.join(os.environ.get("HOME"), '.i18n')
+    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
     if not os.access(path, os.R_OK):
-        print _standard_msg 
+        print _standard_msg
         fd = open(path, 'w')
         fd.write('LANG="%s"\n' % _default_lang)
         fd.write('LANGUAGE="%s"\n' % _default_lang)
         fd.close()
         return [_default_lang]
-    
-    fd = open(path, "r")
+
+    fd = open(path, 'r')
     lines = fd.readlines()
     fd.close()
 
     langlist = None
 
     for line in lines:
-        if line.startswith("LANGUAGE="):
+        if line.startswith('LANGUAGE='):
             lang = line[9:].replace('"', '')
             lang = lang.strip()
             langlist = lang.split(':')
-        elif line.startswith("LANG="):
+        elif line.startswith('LANG='):
             lang = line[5:].replace('"', '')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
@@ -108,6 +111,7 @@ def get_languages():
         return [lang]
     else:
         return langlist
+
 
 def print_languages():
     codes = get_languages()
@@ -122,30 +126,39 @@ def print_languages():
                 found_lang = True
                 break
         if not found_lang:
-            print (_("Language for code=%s could not be determined.") % code)
-    
+            print (_('Language for code=%s could not be determined.') % code)
+
+
 def set_languages(languages):
     """Set the system language.
-    languages : 
+    languages :
     """
-    if isinstance(languages, str):
-        # This came from the commandline
-        #TODO: Support multiple languages from the command line
-        if languages.endswith('utf8'):
-            _write_i18n(languages)
-            return 1
-        else:    
-            langs = read_all_languages()
-            for lang, territory, locale in langs:
-                code = lang.replace(' ', '_') + '/' \
-                        + territory.replace(' ', '_')
-                if code == languages:
-                    _write_i18n(locale)
-                    return 1
-            print (_("Sorry I do not speak \'%s\'.") % languages)
+
+    if isinstance(languages, list):
+        set_languages_list(languages)
+        return
+
+    if languages.endswith('utf8'):
+        set_languages_list([languages])
+        return 1
     else:
-        _write_i18n(languages)
+        langs = read_all_languages()
+        for lang, territory, locale in langs:
+            code = lang.replace(' ', '_') + '/' \
+                + territory.replace(' ', '_')
+            if code == languages:
+                set_languages_list([locale])
+                return 1
+        print (_("Sorry I do not speak \'%s\'.") % languages)
+
+
+def set_languages_list(languages):
+    """Set the system language using a list of preferred languages"""
+    colon = ':'
+    language_env = colon.join(languages)
+    lang_env = languages[0].strip('\n')
+    _write_i18n(lang_env, language_env)
+
 
 # inilialize the docstrings for the language
 _initialize()
-

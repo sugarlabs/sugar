@@ -18,7 +18,6 @@ import logging
 
 import gtk
 import gobject
-import hippo
 
 from sugar.graphics import animator
 from sugar.graphics import style
@@ -35,6 +34,7 @@ from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
 from jarabe.frame.notification import NotificationIcon, NotificationWindow
 from jarabe.model import notifications
 
+
 TOP_RIGHT = 0
 TOP_LEFT = 1
 BOTTOM_RIGHT = 2
@@ -42,6 +42,7 @@ BOTTOM_LEFT = 3
 
 _FRAME_HIDING_DELAY = 500
 _NOTIFICATION_DURATION = 5000
+
 
 class _Animation(animator.Animation):
     def __init__(self, frame, end):
@@ -51,6 +52,7 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         self._frame.move(current)
+
 
 class _MouseListener(object):
     def __init__(self, frame):
@@ -79,6 +81,7 @@ class _MouseListener(object):
         self._hide_sid = gobject.timeout_add(
                   _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
 
+
 class _KeyListener(object):
     def __init__(self, frame):
         self._frame = frame
@@ -90,13 +93,14 @@ class _KeyListener(object):
         else:
             self._frame.show(Frame.MODE_KEYBOARD)
 
+
 class Frame(object):
-    MODE_MOUSE    = 0
+    MODE_MOUSE = 0
     MODE_KEYBOARD = 1
     MODE_NON_INTERACTIVE = 2
 
     def __init__(self):
-        logging.debug("STARTUP: Loading the frame")
+        logging.debug('STARTUP: Loading the frame')
         self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')
@@ -173,17 +177,12 @@ class Frame(object):
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
-        # TODO: setting box_width and hippo.PACK_EXPAND looks like a hack to me.
-        # Why hippo isn't respecting the request size of these controls?
-
         zoom_toolbar = ZoomToolbar()
-        panel.append(hippo.CanvasWidget(widget=zoom_toolbar,
-                box_width=4*style.GRID_CELL_SIZE))
+        panel.append(zoom_toolbar, expand=False)
         zoom_toolbar.show()
 
         activities_tray = ActivitiesTray()
-        panel.append(hippo.CanvasWidget(widget=activities_tray),
-                hippo.PACK_EXPAND)
+        panel.append(activities_tray)
         activities_tray.show()
 
         return panel
@@ -191,9 +190,8 @@ class Frame(object):
     def _create_bottom_panel(self):
         panel = self._create_panel(gtk.POS_BOTTOM)
 
-        # TODO: same issue as in _create_top_panel()
         devices_tray = DevicesTray()
-        panel.append(hippo.CanvasWidget(widget=devices_tray), hippo.PACK_EXPAND)
+        panel.append(devices_tray)
         devices_tray.show()
 
         return panel
@@ -202,7 +200,7 @@ class Frame(object):
         panel = self._create_panel(gtk.POS_RIGHT)
 
         tray = FriendsTray()
-        panel.append(hippo.CanvasWidget(widget=tray), hippo.PACK_EXPAND)
+        panel.append(tray)
         tray.show()
 
         return panel
@@ -348,4 +346,3 @@ class Frame(object):
         # Do nothing for now. Our notification UI is so simple, there's no
         # point yet.
         pass
-

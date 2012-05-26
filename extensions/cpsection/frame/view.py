@@ -23,10 +23,12 @@ from sugar.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
-_never =  _('never')
+
+_never = _('never')
 _instantaneous = _('instantaneous')
 _seconds_label = _('%s seconds')
 _MAX_DELAY = 1000
+
 
 class Frame(SectionView):
     def __init__(self, model, alerts):
@@ -43,7 +45,7 @@ class Frame(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)        
+        self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
 
         separator = gtk.HSeparator()
         self.pack_start(separator, expand=False)
@@ -67,25 +69,25 @@ class Frame(SectionView):
         self._setup_edge()
 
         self.pack_start(self._box_sliders, expand=False)
-        self._box_sliders.show()                
+        self._box_sliders.show()
 
         self.setup()
 
-    def _setup_corner(self):   
+    def _setup_corner(self):
         box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_delay = gtk.Label(_('Corner'))
         label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(gtk.STATE_NORMAL, 
+        label_delay.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         box_delay.pack_start(label_delay, expand=False)
         self._group.add_widget(label_delay)
-        label_delay.show()        
-          
-        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY, 
+        label_delay.show()
+
+        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
         self._corner_delay_slider = gtk.HScale(adj)
         self._corner_delay_slider.set_digits(0)
-        self._corner_delay_slider.connect('format-value', 
+        self._corner_delay_slider.connect('format-value',
                                           self.__corner_delay_format_cb)
         box_delay.pack_start(self._corner_delay_slider)
         self._corner_delay_slider.show()
@@ -105,22 +107,22 @@ class Frame(SectionView):
         if 'corner_delay' in self.restart_alerts:
             self._corner_delay_alert.props.msg = self.restart_msg
             self._corner_delay_alert.show()
-        
-    def _setup_edge(self):           
+
+    def _setup_edge(self):
         box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_delay = gtk.Label(_('Edge'))
         label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(gtk.STATE_NORMAL, 
+        label_delay.modify_fg(gtk.STATE_NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         box_delay.pack_start(label_delay, expand=False)
         self._group.add_widget(label_delay)
-        label_delay.show()        
-          
-        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY, 
+        label_delay.show()
+
+        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
         self._edge_delay_slider = gtk.HScale(adj)
         self._edge_delay_slider.set_digits(0)
-        self._edge_delay_slider.connect('format-value', 
+        self._edge_delay_slider.connect('format-value',
                                         self.__edge_delay_format_cb)
         box_delay.pack_start(self._edge_delay_slider)
         self._edge_delay_slider.show()
@@ -140,24 +142,24 @@ class Frame(SectionView):
         if 'edge_delay' in self.restart_alerts:
             self._edge_delay_alert.props.msg = self.restart_msg
             self._edge_delay_alert.show()
-        
+
     def setup(self):
         self._corner_delay_slider.set_value(self._model.get_corner_delay())
         self._edge_delay_slider.set_value(self._model.get_edge_delay())
         self._corner_delay_is_valid = True
         self._edge_delay_is_valid = True
         self.needs_restart = False
-        self._corner_delay_change_handler = self._corner_delay_slider.connect( \
+        self._corner_delay_change_handler = self._corner_delay_slider.connect(
                 'value-changed', self.__corner_delay_changed_cb)
-        self._edge_delay_change_handler = self._edge_delay_slider.connect( \
+        self._edge_delay_change_handler = self._edge_delay_slider.connect(
                 'value-changed', self.__edge_delay_changed_cb)
-            
-    def undo(self):        
+
+    def undo(self):
         self._corner_delay_slider.disconnect(self._corner_delay_change_handler)
         self._edge_delay_slider.disconnect(self._edge_delay_change_handler)
         self._model.undo()
-        self._corner_delay_alert.hide()        
-        self._edge_delay_alert.hide()        
+        self._corner_delay_alert.hide()
+        self._edge_delay_alert.hide()
 
     def _validate(self):
         if self._edge_delay_is_valid and self._corner_delay_is_valid:
@@ -165,15 +167,15 @@ class Frame(SectionView):
         else:
             self.props.is_valid = False
 
-    def __corner_delay_changed_cb(self, scale, data=None):        
+    def __corner_delay_changed_cb(self, scale, data=None):
         if self._corner_delay_sid:
             gobject.source_remove(self._corner_delay_sid)
         self._corner_delay_sid = gobject.timeout_add( \
                 self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
-                
-    def __corner_delay_timeout_cb(self, scale):        
+
+    def __corner_delay_timeout_cb(self, scale):
         self._corner_delay_sid = 0
-        if scale.get_value() == self._model.get_corner_delay():       
+        if scale.get_value() == self._model.get_corner_delay():
             return
         try:
             self._model.set_corner_delay(scale.get_value())
@@ -182,12 +184,12 @@ class Frame(SectionView):
             self._corner_delay_is_valid = False
         else:
             self._corner_delay_alert.props.msg = self.restart_msg
-            self._corner_delay_is_valid = True            
+            self._corner_delay_is_valid = True
             self.needs_restart = True
             self.restart_alerts.append('corner_delay')
-                        
+
         self._validate()
-        self._corner_delay_alert.show()        
+        self._corner_delay_alert.show()
         return False
 
     def __corner_delay_format_cb(self, scale, value):
@@ -198,15 +200,15 @@ class Frame(SectionView):
         else:
             return _seconds_label % (value / _MAX_DELAY)
 
-    def __edge_delay_changed_cb(self, scale, data=None):        
+    def __edge_delay_changed_cb(self, scale, data=None):
         if self._edge_delay_sid:
             gobject.source_remove(self._edge_delay_sid)
         self._edge_delay_sid = gobject.timeout_add( \
                 self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
-                
-    def __edge_delay_timeout_cb(self, scale):        
+
+    def __edge_delay_timeout_cb(self, scale):
         self._edge_delay_sid = 0
-        if scale.get_value() == self._model.get_edge_delay():       
+        if scale.get_value() == self._model.get_edge_delay():
             return
         try:
             self._model.set_edge_delay(scale.get_value())
@@ -215,12 +217,12 @@ class Frame(SectionView):
             self._edge_delay_is_valid = False
         else:
             self._edge_delay_alert.props.msg = self.restart_msg
-            self._edge_delay_is_valid = True            
+            self._edge_delay_is_valid = True
             self.needs_restart = True
             self.restart_alerts.append('edge_delay')
-                        
+
         self._validate()
-        self._edge_delay_alert.show()        
+        self._edge_delay_alert.show()
         return False
 
     def __edge_delay_format_cb(self, scale, value):

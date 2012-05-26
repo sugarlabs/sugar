@@ -22,6 +22,7 @@ from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+
 class KeepIcon(CanvasIcon):
     def __init__(self, keep):
         CanvasIcon.__init__(self, icon_name='emblem-favorite',
@@ -54,6 +55,10 @@ class KeepIcon(CanvasIcon):
     def __motion_notify_event_cb(self, icon, event):
         if not self._keep:
             if event.detail == hippo.MOTION_DETAIL_ENTER:
-                icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+                client = gconf.client_get_default()
+                prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+                icon.props.stroke_color = prelit_color.get_stroke_color()
+                icon.props.fill_color = prelit_color.get_fill_color()
             elif event.detail == hippo.MOTION_DETAIL_LEAVE:
+                icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
                 icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()

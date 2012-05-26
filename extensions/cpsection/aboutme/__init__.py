@@ -24,5 +24,3 @@ ICON = 'module-about_me'
 TITLE = _('About Me')
 client = gconf.client_get_default()
 COLOR = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-

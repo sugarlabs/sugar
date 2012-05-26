@@ -18,10 +18,12 @@ import logging
 from gettext import gettext as _
 import StringIO
 import time
+import os
 
 import hippo
 import cairo
 import gobject
+import glib
 import gtk
 import simplejson
 
@@ -36,6 +38,7 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 
+
 class Separator(hippo.CanvasBox, hippo.CanvasItem):
     def __init__(self, orientation):
         hippo.CanvasBox.__init__(self,
@@ -45,6 +48,7 @@ class Separator(hippo.CanvasBox, hippo.CanvasItem):
             self.props.box_width = style.LINE_WIDTH
         else:
             self.props.box_height = style.LINE_WIDTH
+
 
 class BuddyList(hippo.CanvasBox):
     def __init__(self, buddies):
@@ -60,6 +64,7 @@ class BuddyList(hippo.CanvasBox):
             icon.set_palette(BuddyPalette(buddy))
             hbox.append(icon)
             self.append(hbox)
+
 
 class ExpandedEntry(hippo.CanvasBox):
     def __init__(self):
@@ -139,7 +144,7 @@ class ExpandedEntry(hippo.CanvasBox):
             return
         self._metadata = metadata
 
-        self._keep_icon.keep = (int(metadata.get('keep', 0)) == 1)
+        self._keep_icon.keep = (str(metadata.get('keep', 0)) == '1')
 
         self._icon = self._create_icon()
         self._icon_box.clear()
@@ -209,9 +214,7 @@ class ExpandedEntry(hippo.CanvasBox):
         height = style.zoom(240)
         box = hippo.CanvasBox()
 
-        if self._metadata.has_key('preview') and \
-                len(self._metadata['preview']) > 4:
-
+        if len(self._metadata.get('preview', '')) > 4:
             if self._metadata['preview'][1:4] == 'PNG':
                 preview_data = self._metadata['preview']
             else:
@@ -280,10 +283,15 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _format_date(self):
         if 'timestamp' in self._metadata:
-            timestamp = float(self._metadata['timestamp'])
-            return time.strftime('%x', time.localtime(timestamp))
-        else:
-            return _('No date')
+            try:
+                timestamp = float(self._metadata['timestamp'])
+            except (ValueError, TypeError):
+                logging.warning('Invalid timestamp for %r: %r',
+                                self._metadata['uid'],
+                                self._metadata['timestamp'])
+            else:
+                return time.strftime('%x', time.localtime(timestamp))
+        return _('No date')
 
     def _create_buddy_list(self):
 
@@ -301,8 +309,7 @@ class ExpandedEntry(hippo.CanvasBox):
 
         vbox.append(text)
 
-        if self._metadata.has_key('buddies') and \
-                self._metadata['buddies']:
+        if self._metadata.get('buddies'):
             buddies = simplejson.loads(self._metadata['buddies']).values()
             vbox.append(BuddyList(buddies))
             return vbox
@@ -373,16 +380,15 @@ class ExpandedEntry(hippo.CanvasBox):
     def _tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
 
-    def _update_entry(self):
+    def _update_entry(self, needs_update=False):
         if not model.is_editable(self._metadata):
             return
-
-        needs_update = False
 
         old_title = self._metadata.get('title', None)
         new_title = self._title.props.widget.props.text
         if old_title != new_title:
-            self._icon.palette.props.primary_text = new_title
+            label = glib.markup_escape_text(new_title)
+            self._icon.palette.props.primary_text = label
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
@@ -401,22 +407,26 @@ class ExpandedEntry(hippo.CanvasBox):
             needs_update = True
 
         if needs_update:
-            model.write(self._metadata, update_mtime=False)
+            if self._metadata.get('mountpoint', '/') == '/':
+                model.write(self._metadata, update_mtime=False)
+            else:
+                old_file_path = os.path.join(self._metadata['mountpoint'],
+                        model.get_file_name(old_title,
+                        self._metadata['mime_type']))
+                model.write(self._metadata, file_path=old_file_path,
+                        update_mtime=False)
 
         self._update_title_sid = None
 
     def get_keep(self):
-        return int(self._metadata.get('keep', 0)) == 1
+        return (str(self._metadata.get('keep', 0)) == '1')
 
     def _keep_icon_activated_cb(self, keep_icon):
-        if not model.is_editable(self._metadata):
-            return
         if self.get_keep():
             self._metadata['keep'] = 0
         else:
             self._metadata['keep'] = 1
-        model.write(self._metadata, update_mtime=False)
-
+        self._update_entry(needs_update=True)
         keep_icon.props.keep = self.get_keep()
 
     def _icon_button_release_event_cb(self, button, event):

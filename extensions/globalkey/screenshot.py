@@ -17,7 +17,6 @@
 
 import os
 import tempfile
-import time
 from gettext import gettext as _
 
 import gtk
@@ -30,6 +29,7 @@ from sugar import env
 from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']
+
 
 def handle_key_press(key):
     tmp_dir = os.path.join(env.get_profile_path(), 'data')
@@ -45,7 +45,7 @@ def handle_key_press(key):
                                     height=height)
     screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
                                     y_orig, 0, 0, width, height)
-    screenshot.save(file_path, "png")
+    screenshot.save(file_path, 'png')
 
     client = gconf.client_get_default()
     color = client.get_string('/desktop/sugar/user/color')
@@ -87,14 +87,15 @@ def handle_key_press(key):
         jobject.destroy()
         del jobject
 
+
 def _get_preview_data(screenshot):
     preview = screenshot.scale_simple(style.zoom(300), style.zoom(225),
                                       gtk.gdk.INTERP_BILINEAR)
     preview_data = []
+
     def save_func(buf, data):
         data.append(buf)
 
     preview.save_to_callback(save_func, 'png', user_data=preview_data)
 
     return dbus.ByteArray(''.join(preview_data))
-

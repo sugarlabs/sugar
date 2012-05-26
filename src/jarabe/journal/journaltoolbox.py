@@ -24,8 +24,10 @@ import time
 
 import gobject
 import gio
+import glib
 import gtk
 
+from sugar.graphics.palette import Palette
 from sugar.graphics.toolbox import Toolbox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
@@ -37,11 +39,13 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics import iconentry
 from sugar.graphics import style
 from sugar import mime
-from sugar import profile
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
+from jarabe.journal.palettes import ClipboardMenu
+from jarabe.journal.palettes import VolumeMenu
+
 
 _AUTOSEARCH_TIMEOUT = 1000
 
@@ -68,13 +72,13 @@ class MainToolbox(Toolbox):
         self.add_toolbar(_('Search'), self.search_toolbar)
         self.search_toolbar.show()
 
+
 class SearchToolbar(gtk.Toolbar):
     __gtype_name__ = 'SearchToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([object]))
+        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([object])),
         }
 
     def __init__(self):
@@ -108,8 +112,6 @@ class SearchToolbar(gtk.Toolbar):
         tool_item = ToolComboBox(self._when_search_combo)
         self.insert(tool_item, -1)
         tool_item.show()
-
-        self._add_separator(expand=True)
 
         self._sorting_button = SortingButton()
         self._sorting_button.connect('clicked',
@@ -163,17 +165,6 @@ class SearchToolbar(gtk.Toolbar):
         with_search.set_active(0)
         with_search.connect('changed', self._combo_changed_cb)
         return with_search
-
-    def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.GRID_CELL_SIZE,
-                                       style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
 
     def _add_widget(self, widget, expand=False):
         tool_item = gtk.ToolItem()
@@ -329,19 +320,33 @@ class SearchToolbar(gtk.Toolbar):
 
             for service_name in model.get_unique_values('activity'):
                 activity_info = registry.get_bundle(service_name)
-                if not activity_info is None:
-                    if os.path.exists(activity_info.get_icon()):
+                if activity_info is None:
+                    continue
+
+                if service_name == current_value:
+                    combo_model = self._what_search_combo.get_model()
+                    current_value_index = len(combo_model)
+
+                # try activity-provided icon
+                if os.path.exists(activity_info.get_icon()):
+                    try:
                         self._what_search_combo.append_item(service_name,
                                 activity_info.get_name(),
                                 file_name=activity_info.get_icon())
+                    except glib.GError, exception:
+                        logging.warning('Falling back to default icon for'
+                                        ' "what" filter because %r (%r) has an'
+                                        ' invalid icon: %s',
+                                        activity_info.get_name(),
+                                        str(service_name), exception)
                     else:
-                        self._what_search_combo.append_item(service_name,
-                                activity_info.get_name(),
-                                icon_name='application-octet-stream')
+                        continue
 
-                    if service_name == current_value:
-                        current_value_index = \
-                                len(self._what_search_combo.get_model()) - 1
+                # fall back to generic icon
+                self._what_search_combo.append_item(service_name,
+                        activity_info.get_name(),
+                        icon_name='application-octet-stream')
+
         finally:
             self._what_search_combo.handler_unblock(
                     self._what_combo_changed_sid)
@@ -355,6 +360,7 @@ class SearchToolbar(gtk.Toolbar):
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False
 
+
 class DetailToolbox(Toolbox):
     def __init__(self):
         Toolbox.__init__(self)
@@ -363,12 +369,13 @@ class DetailToolbox(Toolbox):
         self.add_toolbar('', self.entry_toolbar)
         self.entry_toolbar.show()
 
+
 class EntryToolbar(gtk.Toolbar):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST,
-                         gobject.TYPE_NONE,
-                         ([str, str]))
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
         }
+
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -380,18 +387,23 @@ class EntryToolbar(gtk.Toolbar):
         self.add(self._resume)
         self._resume.show()
 
-        self._copy = ToolButton()
-
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
         self._copy.set_icon_widget(icon)
         icon.show()
-
-        self._copy.set_tooltip(_('Copy'))
+        self._copy.set_tooltip(_('Copy to'))
         self._copy.connect('clicked', self._copy_clicked_cb)
         self.add(self._copy)
         self._copy.show()
+
+        self._duplicate = ToolButton()
+        icon = Icon(icon_name='edit-duplicate', xo_color=color)
+        self._duplicate.set_icon_widget(icon)
+        self._duplicate.set_tooltip(_('Duplicate'))
+        self._duplicate.connect('clicked', self._duplicate_clicked_cb)
+        self.add(self._duplicate)
 
         separator = gtk.SeparatorToolItem()
         self.add(separator)
@@ -406,25 +418,24 @@ class EntryToolbar(gtk.Toolbar):
     def set_metadata(self, metadata):
         self._metadata = metadata
         self._refresh_copy_palette()
+        self._refresh_duplicate_palette()
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
         misc.resume(self._metadata)
 
     def _copy_clicked_cb(self, button):
-        clipboard = gtk.Clipboard()
-        clipboard.set_with_data([('text/uri-list', 0, 0)],
-                                self.__clipboard_get_func_cb,
-                                self.__clipboard_clear_func_cb)
+        button.palette.popup(immediate=True, state=Palette.SECONDARY)
 
-    def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
-        # Get hold of a reference so the temp file doesn't get deleted
-        self._temp_file_path = model.get_file(self._metadata['uid'])
-        selection_data.set_uris(['file://' + self._temp_file_path])
-
-    def __clipboard_clear_func_cb(self, clipboard, data):
-        # Release and delete the temp file
-        self._temp_file_path = None
+    def _duplicate_clicked_cb(self, button):
+        file_path = model.get_file(self._metadata['uid'])
+        try:
+            model.copy(self._metadata, '/')
+        except IOError, e:
+            logging.exception('Error while copying the entry.')
+            self.emit('volume-error',
+                      _('Error while copying the entry. %s') % (e.strerror, ),
+                      _('Error'))
 
     def _erase_button_clicked_cb(self, button):
         registry = bundleregistry.get_registry()
@@ -437,24 +448,6 @@ class EntryToolbar(gtk.Toolbar):
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)
 
-    def _copy_menu_item_activate_cb(self, menu_item, mount_point):
-        file_path = model.get_file(self._metadata['uid'])
-
-        if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
-            self.emit('volume-error',
-                      _('Entries without a file cannot be copied.'),
-                      _('Warning'))
-            return
-
-        try:
-            model.copy(self._metadata, mount_point)
-        except IOError, e:
-            logging.exception('Error while copying the entry. %s', e.strerror)
-            self.emit('volume-error', 
-                      _('Error while copying the entry. %s') % e.strerror,
-                      _('Error'))
-
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
 
@@ -462,32 +455,53 @@ class EntryToolbar(gtk.Toolbar):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
+        clipboard_menu = ClipboardMenu(self._metadata)
+        clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
+                                      icon_size=gtk.ICON_SIZE_MENU))
+        clipboard_menu.connect('volume-error', self.__volume_error_cb)
+        palette.menu.append(clipboard_menu)
+        clipboard_menu.show()
+
         if self._metadata['mountpoint'] != '/':
-            journal_item = MenuItem(_('Journal'))
-            journal_item.set_image(Icon(
-                    icon_name='activity-journal',
-                    xo_color=profile.get_color(),
-                    icon_size=gtk.ICON_SIZE_MENU))
-            journal_item.connect('activate',
-                    self._copy_menu_item_activate_cb, '/')
-            journal_item.show()
-            palette.menu.append(journal_item)
+            client = gconf.client_get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
+            journal_menu.set_image(Icon(icon_name='activity-journal',
+                                        xo_color=color,
+                                        icon_size=gtk.ICON_SIZE_MENU))
+            journal_menu.connect('volume-error', self.__volume_error_cb)
+            palette.menu.append(journal_menu)
+            journal_menu.show()
 
         volume_monitor = gio.volume_monitor_get()
+        icon_theme = gtk.icon_theme_get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
-            menu_item = MenuItem(mount.get_name())
+            volume_menu = VolumeMenu(self._metadata, mount.get_name(),
+                                     mount.get_root().get_path())
+            for name in mount.get_icon().props.names:
+                if icon_theme.has_icon(name):
+                    volume_menu.set_image(Icon(icon_name=name,
+                                               icon_size=gtk.ICON_SIZE_MENU))
+                    break
+            volume_menu.connect('volume-error', self.__volume_error_cb)
+            palette.menu.append(volume_menu)
+            volume_menu.show()
 
-            # TODO: fallback to the more generic icons when needed
-            menu_item.set_image(Icon(icon_name=mount.get_icon().props.names[0],
-                                     icon_size=gtk.ICON_SIZE_MENU))
+    def _refresh_duplicate_palette(self):
+        color = misc.get_icon_color(self._metadata)
+        self._copy.get_icon_widget().props.xo_color = color
+        if self._metadata['mountpoint'] == '/':
+            self._duplicate.show()
+            icon = self._duplicate.get_icon_widget()
+            icon.props.xo_color = color
+            icon.show()
+        else:
+            self._duplicate.hide()
 
-            menu_item.connect('activate',
-                              self._copy_menu_item_activate_cb,
-                              mount.get_root().get_path())
-            palette.menu.append(menu_item)
-            menu_item.show()
+    def __volume_error_cb(self, menu_item, message, severity):
+        self.emit('volume-error', message, severity)
 
     def _refresh_resume_palette(self):
         if self._metadata.get('activity_id', ''):

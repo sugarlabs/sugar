@@ -14,26 +14,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
+import gtk
 
-from sugar.graphics.icon import CanvasIcon
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
-class ColorPicker(hippo.CanvasBox, hippo.CanvasItem):
-    def __init__(self, **kwargs):
-        hippo.CanvasBox.__init__(self, **kwargs)
-        self.props.orientation = hippo.ORIENTATION_HORIZONTAL
+
+class ColorPicker(gtk.EventBox):
+    def __init__(self):
+        gtk.EventBox.__init__(self)
         self._xo_color = None
 
-        self._xo = CanvasIcon(size=style.XLARGE_ICON_SIZE,
-                              icon_name='computer-xo')
+        self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,
+                        icon_name='computer-xo')
         self._set_random_colors()
-        self._xo.connect('activated', self._xo_activated_cb)
-        self.append(self._xo)
+        self.connect('button-press-event', self._button_press_cb)
+        self.add(self._xo)
 
-    def _xo_activated_cb(self, item):
-        self._set_random_colors()
+    def _button_press_cb(self, widget, event):
+        if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
+            self._set_random_colors()
 
     def get_color(self):
         return self._xo_color

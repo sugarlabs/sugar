@@ -27,8 +27,10 @@ from sugar.activity import activityfactory
 from sugar.activity.activityhandle import ActivityHandle
 from sugar.graphics.icon import get_icon_file_name
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.alert import ConfirmationAlert
 from sugar import mime
 from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.bundle import AlreadyInstalledException
 from sugar.bundle.contentbundle import ContentBundle
 from sugar import util
 
@@ -36,6 +38,8 @@ from jarabe.view import launcher
 from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
+from jarabe.journal import journalwindow
+
 
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
@@ -51,6 +55,7 @@ def _get_icon_for_mime(mime_type):
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
             return file_name
+
 
 def get_icon_name(metadata):
     file_name = None
@@ -81,35 +86,46 @@ def get_icon_name(metadata):
 
     return file_name
 
+
 def get_date(metadata):
     """ Convert from a string in iso format to a more human-like format. """
-    if metadata.has_key('timestamp'):
-        timestamp = float(metadata['timestamp'])
-        return util.timestamp_to_elapsed_string(timestamp)
-    elif metadata.has_key('mtime'):
-        ti = time.strptime(metadata['mtime'], "%Y-%m-%dT%H:%M:%S")
-        return util.timestamp_to_elapsed_string(time.mktime(ti))
-    else:
-        return _('No date')
+    if 'timestamp' in metadata:
+        try:
+            timestamp = float(metadata['timestamp'])
+        except (TypeError, ValueError):
+            logging.warning('Invalid timestamp: %r', metadata['timestamp'])
+        else:
+            return util.timestamp_to_elapsed_string(timestamp)
+
+    if 'mtime' in metadata:
+        try:
+            ti = time.strptime(metadata['mtime'], '%Y-%m-%dT%H:%M:%S')
+        except (TypeError, ValueError):
+            logging.warning('Invalid mtime: %r', metadata['mtime'])
+        else:
+            return util.timestamp_to_elapsed_string(time.mktime(ti))
+
+    return _('No date')
+
 
 def get_bundle(metadata):
     try:
         if is_activity_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return ActivityBundle(file_path)
 
         elif is_content_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
             return ContentBundle(file_path)
 
         elif is_journal_bundle(metadata):
-            file_path = util.TempFilePath(model.get_file(metadata['uid']))
+            file_path = model.get_file(metadata['uid'])
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
@@ -120,6 +136,7 @@ def get_bundle(metadata):
         logging.exception('Incorrect bundle')
         return None
 
+
 def _get_activities_for_mime(mime_type):
     registry = bundleregistry.get_registry()
     result = registry.get_activities_for_type(mime_type)
@@ -129,6 +146,7 @@ def _get_activities_for_mime(mime_type):
                 if activity not in result:
                     result.append(activity)
     return result
+
 
 def get_activities(metadata):
     activities = []
@@ -148,6 +166,7 @@ def get_activities(metadata):
 
     return activities
 
+
 def resume(metadata, bundle_id=None):
     registry = bundleregistry.get_registry()
 
@@ -159,19 +178,16 @@ def resume(metadata, bundle_id=None):
         bundle = ActivityBundle(file_path)
         if not registry.is_installed(bundle):
             logging.debug('Installing activity bundle')
-            registry.install(bundle)
+            try:
+                registry.install(bundle)
+            except AlreadyInstalledException:
+                _downgrade_option_alert(bundle)
+                return
         else:
             logging.debug('Upgrading activity bundle')
             registry.upgrade(bundle)
 
-        logging.debug('activityfactory.creating bundle with id %r',
-                        bundle.get_bundle_id())
-        installed_bundle = registry.get_bundle(bundle.get_bundle_id())
-        if installed_bundle:
-            launch(installed_bundle)
-        else:
-            logging.error('Bundle %r is not installed.',
-                          bundle.get_bundle_id())
+        _launch_bundle(bundle)
 
     elif is_content_bundle(metadata) and bundle_id is None:
 
@@ -206,7 +222,6 @@ def resume(metadata, bundle_id=None):
 
         bundle = registry.get_bundle(bundle_id)
 
-
         if metadata.get('mountpoint', '/') == '/':
             object_id = metadata['uid']
         else:
@@ -214,6 +229,19 @@ def resume(metadata, bundle_id=None):
 
         launch(bundle, activity_id=activity_id, object_id=object_id,
                 color=get_icon_color(metadata))
+
+
+def _launch_bundle(bundle):
+    registry = bundleregistry.get_registry()
+    logging.debug('activityfactory.creating bundle with id %r',
+                       bundle.get_bundle_id())
+    installed_bundle = registry.get_bundle(bundle.get_bundle_id())
+    if installed_bundle:
+        launch(installed_bundle)
+    else:
+        logging.error('Bundle %r is not installed.',
+                    bundle.get_bundle_id())
+
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False):
@@ -239,20 +267,45 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
             object_id=object_id, uri=uri, invited=invited)
     activityfactory.create(bundle, activity_handle)
 
+
+def _downgrade_option_alert(bundle):
+    alert = ConfirmationAlert()
+    alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
+    alert.props.msg = _('Do you want to downgrade to version %s') % \
+                        bundle.get_activity_version()
+    alert.connect('response', _downgrade_alert_response_cb, bundle)
+    journalwindow.get_journal_window().add_alert(alert)
+    alert.show()
+
+
+def _downgrade_alert_response_cb(alert, response_id, bundle):
+    if response_id is gtk.RESPONSE_OK:
+        journalwindow.get_journal_window().remove_alert(alert)
+        registry = bundleregistry.get_registry()
+        registry.install(bundle, force_downgrade=True)
+        _launch_bundle(bundle)
+    elif response_id is gtk.RESPONSE_CANCEL:
+        journalwindow.get_journal_window().remove_alert(alert)
+
+
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')
     return mime_type == ActivityBundle.MIME_TYPE or \
            mime_type == ActivityBundle.DEPRECATED_MIME_TYPE
 
+
 def is_content_bundle(metadata):
     return metadata.get('mime_type', '') == ContentBundle.MIME_TYPE
+
 
 def is_journal_bundle(metadata):
     return metadata.get('mime_type', '') == JournalEntryBundle.MIME_TYPE
 
+
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
             is_journal_bundle(metadata)
+
 
 def get_icon_color(metadata):
     if metadata is None or not 'icon-color' in metadata:

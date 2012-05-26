@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import os.path
 import logging
 from gettext import gettext as _
 import gconf
@@ -22,52 +23,58 @@ import pwd
 
 import gtk
 import gobject
-import hippo
 
 from sugar import env
+from sugar import profile
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
-from sugar.graphics.entry import CanvasEntry
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.intro import colorpicker
 
+
 _BACKGROUND_COLOR = style.COLOR_WHITE
 
-def create_profile(name, color=None, pixbuf=None):
-    if not pixbuf:
-        path = os.path.join(os.path.dirname(__file__), 'default-picture.png')
-        pixbuf = gtk.gdk.pixbuf_new_from_file(path)
 
+def create_profile(name, color=None):
     if not color:
         color = XoColor()
 
-    icon_path = os.path.join(env.get_profile_path(), "buddy-icon.jpg")
-    pixbuf.save(icon_path, "jpeg", {"quality":"85"})
-
     client = gconf.client_get_default()
-    client.set_string("/desktop/sugar/user/nick", name)
-    client.set_string("/desktop/sugar/user/color", color.to_string())
+    client.set_string('/desktop/sugar/user/nick', name)
+    client.set_string('/desktop/sugar/user/color', color.to_string())
+    client.suggest_sync()
+
+    if profile.get_pubkey() and profile.get_profile().privkey_hash:
+        logging.info('Valid key pair found, skipping generation.')
+        return
 
     # Generate keypair
     import commands
-    keypath = os.path.join(env.get_profile_path(), "owner.key")
-    if not os.path.isfile(keypath):
-        cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % keypath
-        (s, o) = commands.getstatusoutput(cmd)
-        if s != 0:
-            logging.error("Could not generate key pair: %d %s", s, o)
-    else:
-        logging.error("Keypair exists, skip generation.")
+    keypath = os.path.join(env.get_profile_path(), 'owner.key')
+    if os.path.exists(keypath):
+        os.rename(keypath, keypath + '.broken')
+        logging.warning('Existing private key %s moved to %s.broken',
+                        keypath, keypath)
 
-class _Page(hippo.CanvasBox):
+    if os.path.exists(keypath + '.pub'):
+        os.rename(keypath + '.pub', keypath + '.pub.broken')
+        logging.warning('Existing public key %s.pub moved to %s.pub.broken',
+                        keypath, keypath)
+
+    cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
+    (s, o) = commands.getstatusoutput(cmd)
+    if s != 0:
+        logging.error('Could not generate key pair: %d %s', s, o)
+
+
+class _Page(gtk.VBox):
     __gproperties__ = {
-        'valid'    : (bool, None, None, False,
-                      gobject.PARAM_READABLE)
+        'valid': (bool, None, None, False, gobject.PARAM_READABLE),
     }
 
-    def __init__(self, **kwargs):
-        hippo.CanvasBox.__init__(self, **kwargs)
+    def __init__(self):
+        gtk.VBox.__init__(self)
         self.valid = False
 
     def set_valid(self, valid):
@@ -81,29 +88,26 @@ class _Page(hippo.CanvasBox):
     def activate(self):
         pass
 
+
 class _NamePage(_Page):
     def __init__(self, intro):
-        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                       background_color=_BACKGROUND_COLOR.get_int(),
-                       spacing=style.DEFAULT_SPACING,
-                       orientation=hippo.ORIENTATION_HORIZONTAL,)
-
+        _Page.__init__(self)
         self._intro = intro
 
-        label = hippo.CanvasText(text=_("Name:"))
-        self.append(label)
+        alignment = gtk.Alignment(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True)
 
-        self._entry = CanvasEntry(box_width=style.zoom(300))
-        self._entry.set_background(_BACKGROUND_COLOR.get_html())
+        hbox = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        alignment.add(hbox)
+
+        label = gtk.Label(_('Name:'))
+        hbox.pack_start(label, expand=False)
+
+        self._entry = gtk.Entry()
         self._entry.connect('notify::text', self._text_changed_cb)
-
-        widget = self._entry.props.widget
-        widget.set_max_length(45)
-
-        self.append(self._entry)
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            self.reverse()
+        self._entry.set_size_request(style.zoom(300), -1)
+        self._entry.set_max_length(45)
+        hbox.pack_start(self._entry, expand=False)
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -116,21 +120,21 @@ class _NamePage(_Page):
         self._entry.props.text = new_name
 
     def activate(self):
-        self._entry.props.widget.grab_focus()
+        self._entry.grab_focus()
+
 
 class _ColorPage(_Page):
-    def __init__(self, **kwargs):
-        _Page.__init__(self, xalign=hippo.ALIGNMENT_CENTER,
-                       background_color=_BACKGROUND_COLOR.get_int(),
-                       spacing=style.DEFAULT_SPACING,
-                       yalign=hippo.ALIGNMENT_CENTER, **kwargs)
+    def __init__(self):
+        _Page.__init__(self)
 
-        self._label = hippo.CanvasText(text=_("Click to change color:"),
-                                       xalign=hippo.ALIGNMENT_CENTER)
-        self.append(self._label)
+        vbox = gtk.VBox(spacing=style.DEFAULT_SPACING)
+        self.pack_start(vbox, expand=True, fill=False)
 
-        self._cp = colorpicker.ColorPicker(xalign=hippo.ALIGNMENT_CENTER)
-        self.append(self._cp)
+        self._label = gtk.Label(_('Click to change color:'))
+        vbox.pack_start(self._label)
+
+        self._cp = colorpicker.ColorPicker()
+        vbox.pack_start(self._cp)
 
         self._color = self._cp.get_color()
         self.set_valid(True)
@@ -138,10 +142,11 @@ class _ColorPage(_Page):
     def get_color(self):
         return self._cp.get_color()
 
-class _IntroBox(hippo.CanvasBox):
+
+class _IntroBox(gtk.VBox):
     __gsignals__ = {
         'done': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT]))
+                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
     }
 
     PAGE_NAME = 0
@@ -151,8 +156,8 @@ class _IntroBox(hippo.CanvasBox):
     PAGE_LAST = PAGE_COLOR
 
     def __init__(self):
-        hippo.CanvasBox.__init__(self, padding=style.zoom(30),
-                                 background_color=_BACKGROUND_COLOR.get_int())
+        gtk.VBox.__init__(self)
+        self.set_border_width(style.zoom(30))
 
         self._page = self.PAGE_NAME
         self._name_page = _NamePage(self)
@@ -166,69 +171,64 @@ class _IntroBox(hippo.CanvasBox):
             self._page = self.PAGE_COLOR
             if default_nick == 'system':
                 pwd_entry = pwd.getpwuid(os.getuid())
-                if pwd_entry.pw_gecos:
-                    nick = pwd_entry.pw_gecos.split(',')[0]
-                    self._name_page.set_name(nick)
-                else:
-                    self._name_page.set_name(pwd_entry.pw_name)
-            else:
-                self._name_page.set_name(default_nick)
+                default_nick = (pwd_entry.pw_gecos.split(',')[0] or
+                                pwd_entry.pw_name)
+            self._name_page.set_name(default_nick)
 
         self._setup_page()
 
     def _setup_page(self):
-        self.remove_all()
+        for child in self.get_children():
+            self.remove(child)
 
         if self._page == self.PAGE_NAME:
             self._current_page = self._name_page
         elif self._page == self.PAGE_COLOR:
             self._current_page = self._color_page
 
-        self.append(self._current_page, hippo.PACK_EXPAND)
+        self.pack_start(self._current_page, expand=True)
 
-        button_box = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
+        button_box = gtk.HButtonBox()
 
-        if self._page != self.PAGE_FIRST:
-            back_button = hippo.CanvasButton(text=_('Back'))
+        if self._page == self.PAGE_FIRST:
+            button_box.set_layout(gtk.BUTTONBOX_END)
+        else:
+            button_box.set_layout(gtk.BUTTONBOX_EDGE)
+            back_button = gtk.Button(_('Back'))
             image = Icon(icon_name='go-left')
-            back_button.props.widget.set_image(image)
-            back_button.connect('activated', self._back_activated_cb)
-            button_box.append(back_button)
+            back_button.set_image(image)
+            back_button.connect('clicked', self._back_activated_cb)
+            button_box.pack_start(back_button)
 
-        spacer = hippo.CanvasBox()
-        button_box.append(spacer, hippo.PACK_EXPAND)
-
-        self._next_button = hippo.CanvasButton()
+        self._next_button = gtk.Button()
         image = Icon(icon_name='go-right')
-        self._next_button.props.widget.set_image(image)
+        self._next_button.set_image(image)
 
         if self._page == self.PAGE_LAST:
-            self._next_button.props.text = _('Done')
-            self._next_button.connect('activated', self._done_activated_cb)
+            self._next_button.set_label(_('Done'))
+            self._next_button.connect('clicked', self._done_activated_cb)
         else:
-            self._next_button.props.text = _('Next')
-            self._next_button.connect('activated', self._next_activated_cb)
+            self._next_button.set_label(_('Next'))
+            self._next_button.connect('clicked', self._next_activated_cb)
 
         self._current_page.activate()
 
         self._update_next_button()
-        button_box.append(self._next_button)
+        button_box.pack_start(self._next_button)
 
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
-        self.append(button_box)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            button_box.reverse()
+        self.pack_start(button_box, expand=False)
+        self.show_all()
 
     def _update_next_button(self):
-        widget = self._next_button.props.widget
-        widget.props.sensitive = self._current_page.props.valid
+        self._next_button.set_sensitive(self._current_page.props.valid)
 
     def _page_valid_changed_cb(self, page, pspec):
         self._update_next_button()
 
-    def _back_activated_cb(self, item):
+    def _back_activated_cb(self, widget):
         self.back()
 
     def back(self):
@@ -236,7 +236,7 @@ class _IntroBox(hippo.CanvasBox):
             self._page -= 1
             self._setup_page()
 
-    def _next_activated_cb(self, item):
+    def _next_activated_cb(self, widget):
         self.next()
 
     def next(self):
@@ -246,7 +246,7 @@ class _IntroBox(hippo.CanvasBox):
             self._page += 1
             self._setup_page()
 
-    def _done_activated_cb(self, item):
+    def _done_activated_cb(self, widget):
         self.done()
 
     def done(self):
@@ -255,20 +255,21 @@ class _IntroBox(hippo.CanvasBox):
 
         self.emit('done', name, color)
 
+
 class IntroWindow(gtk.Window):
+    __gtype_name__ = 'SugarIntroWindow'
+
     def __init__(self):
         gtk.Window.__init__(self)
 
         self.props.decorated = False
         self.maximize()
 
-        self._canvas = hippo.Canvas()
         self._intro_box = _IntroBox()
         self._intro_box.connect('done', self._done_cb)
-        self._canvas.set_root(self._intro_box)
 
-        self.add(self._canvas)
-        self._canvas.show()
+        self.add(self._intro_box)
+        self._intro_box.show()
         self.connect('key-press-event', self.__key_press_cb)
 
     def _done_cb(self, box, name, color):
@@ -282,16 +283,16 @@ class IntroWindow(gtk.Window):
         return False
 
     def __key_press_cb(self, widget, event):
-        if gtk.gdk.keyval_name(event.keyval) == "Return":
+        if gtk.gdk.keyval_name(event.keyval) == 'Return':
             self._intro_box.next()
             return True
-        elif gtk.gdk.keyval_name(event.keyval) == "Escape":
+        elif gtk.gdk.keyval_name(event.keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     w = IntroWindow()
     w.show()
     w.connect('destroy', gtk.main_quit)

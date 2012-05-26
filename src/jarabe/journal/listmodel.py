@@ -19,7 +19,6 @@ import logging
 import simplejson
 import gobject
 import gtk
-import time
 from gettext import gettext as _
 
 from sugar.graphics.xocolor import XoColor
@@ -29,20 +28,18 @@ from sugar import util
 from jarabe.journal import model
 from jarabe.journal import misc
 
+
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
+
 
 class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
 
     __gsignals__ = {
-        'ready':    (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([])),
-        'progress': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
-                     ([])),
+        'ready': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'progress': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     COLUMN_UID = 0
@@ -58,18 +55,20 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     COLUMN_BUDDY_2 = 10
     COLUMN_BUDDY_3 = 11
 
-    _COLUMN_TYPES = {COLUMN_UID:            str,
-                     COLUMN_FAVORITE:       bool,
-                     COLUMN_ICON:           str,
-                     COLUMN_ICON_COLOR:     object,
-                     COLUMN_TITLE:          str,
-                     COLUMN_TIMESTAMP:      str,
-                     COLUMN_CREATION_TIME:  str,
-                     COLUMN_FILESIZE:       str,
-                     COLUMN_PROGRESS:       int,
-                     COLUMN_BUDDY_1:        object,
-                     COLUMN_BUDDY_3:        object,
-                     COLUMN_BUDDY_2:        object}
+    _COLUMN_TYPES = {
+        COLUMN_UID: str,
+        COLUMN_FAVORITE: bool,
+        COLUMN_ICON: str,
+        COLUMN_ICON_COLOR: object,
+        COLUMN_TITLE: str,
+        COLUMN_TIMESTAMP: str,
+        COLUMN_CREATION_TIME: str,
+        COLUMN_FILESIZE: str,
+        COLUMN_PROGRESS: int,
+        COLUMN_BUDDY_1: object,
+        COLUMN_BUDDY_3: object,
+        COLUMN_BUDDY_2: object,
+    }
 
     _PAGE_SIZE = 10
 
@@ -141,11 +140,17 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             xo_color = misc.get_icon_color(metadata)
         self._cached_row.append(xo_color)
 
-        title = gobject.markup_escape_text(metadata.get('title', None))
-        self._cached_row.append('<b>%s</b>' % title)
+        title = gobject.markup_escape_text(metadata.get('title',
+                                           _('Untitled')))
+        self._cached_row.append('<b>%s</b>' % (title, ))
 
-        timestamp = int(metadata.get('timestamp', 0))
-        self._cached_row.append(util.timestamp_to_elapsed_string(timestamp))
+        try:
+            timestamp = float(metadata.get('timestamp', 0))
+        except (TypeError, ValueError):
+            timestamp_content = _('Unknown')
+        else:
+            timestamp_content = util.timestamp_to_elapsed_string(timestamp)
+        self._cached_row.append(timestamp_content)
 
         try:
             creation_time = float(metadata.get('creation_time'))
@@ -158,23 +163,40 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         try:
             size = int(metadata.get('filesize'))
         except (TypeError, ValueError):
-            self._cached_row.append(_('Unknown'))
-        else:
-            self._cached_row.append(util.format_size(size))
+            size = None
+        self._cached_row.append(util.format_size(size))
 
-        self._cached_row.append(int(metadata.get('progress', 100)))
+        try:
+            progress = int(float(metadata.get('progress', 100)))
+        except (TypeError, ValueError):
+            progress = 100
+        self._cached_row.append(progress)
 
-        if metadata.get('buddies', ''):
-            buddies = simplejson.loads(metadata['buddies']).values()
-        else:
+        buddies = []
+        if metadata.get('buddies'):
+            try:
+                buddies = simplejson.loads(metadata['buddies']).values()
+            except simplejson.decoder.JSONDecodeError, exception:
+                logging.warning('Cannot decode buddies for %r: %s',
+                                metadata['uid'], exception)
+
+        if not isinstance(buddies, list):
+            logging.warning('Content of buddies for %r is not a list: %r',
+                            metadata['uid'], buddies)
             buddies = []
 
         for n_ in xrange(0, 3):
             if buddies:
-                nick, color = buddies.pop(0)
-                self._cached_row.append((nick, XoColor(color)))
-            else:
-                self._cached_row.append(None)
+                try:
+                    nick, color = buddies.pop(0)
+                except (AttributeError, ValueError), exception:
+                    logging.warning('Malformed buddies for %r: %s',
+                                    metadata['uid'], exception)
+                else:
+                    self._cached_row.append((nick, XoColor(color)))
+                    continue
+
+            self._cached_row.append(None)
 
         return self._cached_row[column]
 
@@ -219,4 +241,3 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             return True
 
         return False
-

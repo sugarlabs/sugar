@@ -19,4 +19,3 @@ from gettext import gettext as _
 CLASS = 'Language'
 ICON = 'module-language'
 TITLE = _('Language')
-

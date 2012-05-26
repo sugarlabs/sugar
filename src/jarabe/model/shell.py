@@ -29,11 +29,12 @@ from sugar import dispatch
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.model.bundleregistry import get_registry
-from jarabe.model import neighborhood
 
-_SERVICE_NAME = "org.laptop.Activity"
-_SERVICE_PATH = "/org/laptop/Activity"
-_SERVICE_INTERFACE = "org.laptop.Activity"
+_SERVICE_NAME = 'org.laptop.Activity'
+_SERVICE_PATH = '/org/laptop/Activity'
+_SERVICE_INTERFACE = 'org.laptop.Activity'
+
+_model = None
 
 
 class Activity(gobject.GObject):
@@ -51,7 +52,7 @@ class Activity(gobject.GObject):
     LAUNCH_FAILED = 1
     LAUNCHED = 2
 
-    def __init__(self, activity_info, activity_id, window=None):
+    def __init__(self, activity_info, activity_id, color, window=None):
         """Initialise the HomeActivity
 
         activity_info -- sugar.activity.registry.ActivityInfo instance,
@@ -60,19 +61,27 @@ class Activity(gobject.GObject):
             the "type" of activity being created.
         activity_id -- unique identifier for this instance
             of the activity type
-        window -- Main WnckWindow of the activity
+        _windows -- WnckWindows registered for the activity. The lowest
+                    one in the stack is the main window.
         """
         gobject.GObject.__init__(self)
 
-        self._window = None
+        self._windows = []
         self._service = None
         self._activity_id = activity_id
         self._activity_info = activity_info
         self._launch_time = time.time()
         self._launch_status = Activity.LAUNCHING
 
+        if color is not None:
+            self._color = color
+        else:
+            client = gconf.client_get_default()
+            color = client.get_string('/desktop/sugar/user/color')
+            self._color = XoColor(color)
+
         if window is not None:
-            self.set_window(window)
+            self.add_window(window)
 
         self._retrieve_service()
 
@@ -81,8 +90,8 @@ class Activity(gobject.GObject):
             bus = dbus.SessionBus()
             self._name_owner_changed_handler = bus.add_signal_receiver(
                     self._name_owner_changed_cb,
-                    signal_name="NameOwnerChanged",
-                    dbus_interface="org.freedesktop.DBus")
+                    signal_name='NameOwnerChanged',
+                    dbus_interface='org.freedesktop.DBus')
 
         self._launch_completed_hid = get_model().connect('launch-completed',
                 self.__launch_completed_cb)
@@ -94,15 +103,19 @@ class Activity(gobject.GObject):
 
     launch_status = gobject.property(getter=get_launch_status)
 
-    def set_window(self, window):
-        """Set the window for the activity
-
-        We allow resetting the window for an activity so that we
-        can replace the launcher once we get its real window.
-        """
+    def add_window(self, window):
+        """Add a window to the windows stack."""
         if not window:
-            raise ValueError("window must be valid")
-        self._window = window
+            raise ValueError('window must be valid')
+        self._windows.append(window)
+
+    def remove_window_by_xid(self, xid):
+        """Remove a window from the windows stack."""
+        for wnd in self._windows:
+            if wnd.get_xid() == xid:
+                self._windows.remove(wnd)
+                return True
+        return False
 
     def get_service(self):
         """Get the activity service
@@ -116,8 +129,8 @@ class Activity(gobject.GObject):
 
     def get_title(self):
         """Retrieve the application's root window's suggested title"""
-        if self._window:
-            return self._window.get_name()
+        if self._windows:
+            return self._windows[0].get_name()
         else:
             return ''
 
@@ -145,19 +158,7 @@ class Activity(gobject.GObject):
         have an entry (implying that this is not a Sugar-shared application)
         uses the local user's profile colour for the icon.
         """
-        # HACK to suppress warning in logs when activity isn't found
-        # (if it's locally launched and not shared yet)
-        activity = None
-        for act in neighborhood.get_model().get_activities():
-            if self._activity_id == act.activity_id:
-                activity = act
-                break
-
-        if activity != None:
-            return activity.props.color
-        else:
-            client = gconf.client_get_default()
-            return XoColor(client.get_string("/desktop/sugar/user/color"))
+        return self._color
 
     def get_activity_id(self):
         """Retrieve the "activity_id" passed in to our constructor
@@ -169,31 +170,44 @@ class Activity(gobject.GObject):
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
-        if self._window is not None:
-            return self._window.get_xid()
+        if self._windows:
+            return self._windows[0].get_xid()
         else:
             return None
+
+    def has_xid(self, xid):
+        """Check if an X-window with the given xid is in the windows stack"""
+        if self._windows:
+            for wnd in self._windows:
+                if wnd.get_xid() == xid:
+                    return True
+        return False
 
     def get_window(self):
         """Retrieve the X-windows root window of this application
 
-        This was stored by the set_window method, which was
+        This was stored by the add_window method, which was
         called by HomeModel._add_activity, which was called
         via a callback that looks for all 'window-opened'
         events.
+
+        We keep a stack of the windows. The lowest window in the
+        stack that is still valid we consider the main one.
 
         HomeModel currently uses a dbus service query on the
         activity to determine to which HomeActivity the newly
         launched window belongs.
         """
-        return self._window
+        if self._windows:
+            return self._windows[0]
+        return None
 
     def get_type(self):
         """Retrieve the activity bundle id for future reference"""
-        if self._window is None:
+        if not self._windows:
             return None
         else:
-            return wm.get_bundle_id(self._window)
+            return wm.get_bundle_id(self._windows[0])
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""
@@ -209,7 +223,9 @@ class Activity(gobject.GObject):
 
     def get_pid(self):
         """Returns the activity's PID"""
-        return self._window.get_pid()
+        if not self._windows:
+            return None
+        return self._windows[0].get_pid()
 
     def get_bundle_path(self):
         """Returns the activity's bundle directory"""
@@ -228,8 +244,8 @@ class Activity(gobject.GObject):
     def equals(self, activity):
         if self._activity_id and activity.get_activity_id():
             return self._activity_id == activity.get_activity_id()
-        if self._window.get_xid() and activity.get_xid():
-            return self._window.get_xid() == activity.get_xid()
+        if self._windows[0].get_xid() and activity.get_xid():
+            return self._windows[0].get_xid() == activity.get_xid()
         return False
 
     def _get_service_name(self):
@@ -245,7 +261,7 @@ class Activity(gobject.GObject):
         try:
             bus = dbus.SessionBus()
             proxy = bus.get_object(self._get_service_name(),
-                                   _SERVICE_PATH + "/" + self._activity_id)
+                                   _SERVICE_PATH + '/' + self._activity_id)
             self._service = dbus.Interface(proxy, _SERVICE_INTERFACE)
         except dbus.DBusException:
             self._service = None
@@ -275,7 +291,7 @@ class Activity(gobject.GObject):
         pass
 
     def _set_active_error(self, err):
-        logging.error("set_active() failed: %s", err)
+        logging.error('set_active() failed: %s', err)
 
     def _set_launch_status(self, value):
         get_model().disconnect(self._launch_completed_hid)
@@ -310,27 +326,22 @@ class ShellModel(gobject.GObject):
     """
 
     __gsignals__ = {
-        'activity-added':          (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'activity-removed':        (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
+        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT])),
         'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
                                     gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
+                                    ([gobject.TYPE_PYOBJECT])),
         'tabbing-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-started':          (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-completed':        (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT])),
-        'launch-failed':           (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                   ([gobject.TYPE_PYOBJECT]))
+                                     gobject.TYPE_NONE,
+                                     ([gobject.TYPE_PYOBJECT])),
+        'launch-started': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([gobject.TYPE_PYOBJECT])),
+        'launch-completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                             ([gobject.TYPE_PYOBJECT])),
+        'launch-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([gobject.TYPE_PYOBJECT])),
     }
 
     ZOOM_MESH = 0
@@ -353,6 +364,7 @@ class ShellModel(gobject.GObject):
         self._zoom_level = self.ZOOM_HOME
         self._current_activity = None
         self._activities = []
+        self._shared_activities = {}
         self._active_activity = None
         self._tabbing_activity = None
         self._launchers = {}
@@ -453,6 +465,12 @@ class ShellModel(gobject.GObject):
         """Returns the activity that the user is currently working in"""
         return self._active_activity
 
+    def add_shared_activity(self, activity_id, color):
+        self._shared_activities[activity_id] = color
+
+    def remove_shared_activity(self, activity_id):
+        del self._shared_activities[activity_id]
+
     def get_tabbing_activity(self):
         """Returns the activity that is currently highlighted during tabbing"""
         return self._tabbing_activity
@@ -460,7 +478,7 @@ class ShellModel(gobject.GObject):
     def set_tabbing_activity(self, activity):
         """Sets the activity that is currently highlighted during tabbing"""
         self._tabbing_activity = activity
-        self.emit("tabbing-activity-changed", self._tabbing_activity)
+        self.emit('tabbing-activity-changed', self._tabbing_activity)
 
     def _set_active_activity(self, home_activity):
         if self._active_activity == home_activity:
@@ -488,6 +506,21 @@ class ShellModel(gobject.GObject):
         return self._activities.index(obj)
 
     def _window_opened_cb(self, screen, window):
+        """Handle the callback for the 'window opened' event.
+
+           Most activities will register 2 windows during
+           their lifetime: the launcher window, and the 'main'
+           app window.
+
+           When the main window appears, we send a signal to
+           the launcher window to close.
+
+           Some activities (notably non-native apps) open several
+           windows during their lifetime, switching from one to
+           the next as the 'main' window. We use a stack to track
+           them.
+
+         """
         if window.get_window_type() == wnck.WINDOW_NORMAL:
             home_activity = None
 
@@ -510,29 +543,39 @@ class ShellModel(gobject.GObject):
                 window.maximize()
 
             if not home_activity:
-                home_activity = Activity(activity_info, activity_id, window)
+                logging.debug('first window registered for %s', activity_id)
+                color = self._shared_activities.get(activity_id, None)
+                home_activity = Activity(activity_info, activity_id,
+                                         color, window)
                 self._add_activity(home_activity)
             else:
-                home_activity.set_window(window)
+                logging.debug('window registered for %s', activity_id)
+                home_activity.add_window(window)
 
-            if wm.get_sugar_window_type(window) != 'launcher':
+            if wm.get_sugar_window_type(window) != 'launcher' \
+                    and home_activity.get_launch_status() == Activity.LAUNCHING:
                 self.emit('launch-completed', home_activity)
-
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
-                    home_activity.get_type(), startup_time)
+                              activity_id, startup_time)
 
             if self._active_activity is None:
                 self._set_active_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == wnck.WINDOW_NORMAL:
-            if self._get_activity_by_xid(window.get_xid()) is not None:
-                self._remove_activity_by_xid(window.get_xid())
+            xid = window.get_xid()
+            activity = self._get_activity_by_xid(xid)
+            if activity is not None:
+                activity.remove_window_by_xid(xid)
+                if activity.get_window() is None:
+                    logging.debug('last window gone - remove activity %s',
+                                  activity)
+                    self._remove_activity(activity)
 
     def _get_activity_by_xid(self, xid):
         for home_activity in self._activities:
-            if home_activity.get_xid() == xid:
+            if home_activity.has_xid(xid):
                 return home_activity
         return None
 
@@ -577,13 +620,6 @@ class ShellModel(gobject.GObject):
         self.emit('activity-removed', home_activity)
         self._activities.remove(home_activity)
 
-    def _remove_activity_by_xid(self, xid):
-        home_activity = self._get_activity_by_xid(xid)
-        if home_activity:
-            self._remove_activity(home_activity)
-        else:
-            logging.error('Model for window %d does not exist.', xid)
-
     def notify_launch(self, activity_id, service_name):
         registry = get_registry()
         activity_info = registry.get_bundle(service_name)
@@ -591,7 +627,8 @@ class ShellModel(gobject.GObject):
             raise ValueError("Activity service name '%s'" \
                              " was not found in the bundle registry."
                              % service_name)
-        home_activity = Activity(activity_info, activity_id)
+        color = self._shared_activities.get(activity_id, None)
+        home_activity = Activity(activity_info, activity_id, color)
         self._add_activity(home_activity)
 
         self._set_active_activity(home_activity)
@@ -606,7 +643,7 @@ class ShellModel(gobject.GObject):
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
-            logging.debug("Activity %s (%s) launch failed", activity_id,
+            logging.debug('Activity %s (%s) launch failed', activity_id,
                 home_activity.get_type())
             if self.get_launcher(activity_id) is not None:
                 self.emit('launch-failed', home_activity)
@@ -631,11 +668,8 @@ class ShellModel(gobject.GObject):
         return False
 
 
-_model = None
-
 def get_model():
     global _model
     if _model is None:
         _model = ShellModel()
     return _model
-

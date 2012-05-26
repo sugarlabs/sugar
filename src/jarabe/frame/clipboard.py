@@ -21,10 +21,15 @@ import urlparse
 import tempfile
 
 import gobject
+import gtk
 
 from sugar import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
+
+
+_instance = None
+
 
 class Clipboard(gobject.GObject):
 
@@ -32,9 +37,11 @@ class Clipboard(gobject.GObject):
         'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                         ([object])),
         'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([int])),
+                        ([long])),
+        'object-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                        ([long])),
         'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([object]))
+                        ([object])),
     }
 
     def __init__(self):
@@ -47,9 +54,28 @@ class Clipboard(gobject.GObject):
         self._next_id += 1
         return self._next_id
 
-    def add_object(self, name):
-        logging.debug('Clipboard.add_object')
-        object_id = self._get_next_object_id()
+    def add_object(self, name, data_hash=None):
+        """ Add a object to the clipboard
+
+        Keyword arguments:
+        name -- object name
+        data_hash -- hash to check if the object is already
+                     in the clipboard, generated with hash()
+                     over the data to be added
+
+        Return: object_id or None if the object is not added
+
+        """
+        logging.debug('Clipboard.add_object: hash %s', data_hash)
+        if data_hash is None:
+            object_id = self._get_next_object_id()
+        else:
+            object_id = data_hash
+        if object_id in self._objects:
+            logging.debug('Clipboard.add_object: object already in clipboard,'
+                          ' selecting previous entry instead')
+            self.emit('object-selected', object_id)
+            return None
         self._objects[object_id] = ClipboardObject(object_id, name)
         self.emit('object-added', self._objects[object_id])
         return object_id
@@ -69,22 +95,25 @@ class Clipboard(gobject.GObject):
                           + ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
-            logging.debug('Added in-memory format of type ' + format_type + '.')
+            logging.debug('Added in-memory format of type %s.', format_type)
 
         self.emit('object-state-changed', cb_object)
 
     def delete_object(self, object_id):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
+        if not self._objects:
+            gtk_clipboard = gtk.Clipboard()
+            gtk_clipboard.clear()
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)
 
     def set_object_percent(self, object_id, percent):
         cb_object = self._objects[object_id]
         if percent < 0 or percent > 100:
-            raise ValueError("invalid percentage")
+            raise ValueError('invalid percentage')
         if cb_object.get_percent() > percent:
-            raise ValueError("invalid percentage; less than current percent")
+            raise ValueError('invalid percentage; less than current percent')
         if cb_object.get_percent() == percent:
             # ignore setting same percentage
             return
@@ -126,21 +155,21 @@ class Clipboard(gobject.GObject):
 
     def _copy_file(self, original_uri):
         uri = urlparse.urlparse(original_uri)
-        path_, file_name = os.path.split(uri.path)
+        path = uri.path  # pylint: disable=E1101
+        directory_, file_name = os.path.split(path)
 
         root, ext = os.path.splitext(file_name)
         if not ext or ext == '.':
-            mime_type = mime.get_for_file(uri.path)
+            mime_type = mime.get_for_file(path)
             ext = '.' + mime.get_primary_extension(mime_type)
 
         f_, new_file_path = tempfile.mkstemp(ext, root)
         del f_
-        shutil.copyfile(uri.path, new_file_path)
+        shutil.copyfile(path, new_file_path)
         os.chmod(new_file_path, 0644)
 
         return 'file://' + new_file_path
 
-_instance = None
 
 def get_instance():
     global _instance

@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
-'''Sugar bundle updater: model.
+"""Sugar bundle updater: model.
 
 This module implements the non-GUI portions of the bundle updater, including
 list of installed bundls, whether updates are needed, and the URL at which to
 find the bundle updated.
-'''
+"""
 
 import os
 import logging
@@ -33,6 +33,7 @@ import gio
 from sugar import env
 from sugar.datastore import datastore
 from sugar.bundle.activitybundle import ActivityBundle
+from sugar.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model import bundleregistry
 
@@ -64,13 +65,15 @@ class UpdateModel(gobject.GObject):
 
     def check_updates(self):
         self.updates = []
-        self._bundles_to_check = \
-                [bundle for bundle in bundleregistry.get_registry()]
+        self._bundles_to_check = list(bundleregistry.get_registry())
         self._check_next_update()
 
     def _check_next_update(self):
         total = len(bundleregistry.get_registry())
         current = total - len(self._bundles_to_check)
+
+        if not self._bundles_to_check:
+            return False
 
         bundle = self._bundles_to_check.pop()
         self.emit('progress', UpdateModel.ACTION_CHECKING, bundle.get_name(),
@@ -83,7 +86,8 @@ class UpdateModel(gobject.GObject):
             logging.error('Error getting update information from server:\n'
                           '%s' % error_message)
 
-        if version is not None and version > bundle.get_activity_version():
+        if version is not None and \
+                version > NormalizedVersion(bundle.get_activity_version()):
             self.updates.append(BundleUpdate(bundle, version, link, size))
 
         if self._cancelling:
@@ -196,14 +200,17 @@ class UpdateModel(gobject.GObject):
         logging.debug('UpdateModel._cancel_checking')
         total = len(bundleregistry.get_registry())
         current = total - len(self._bundles_to_check)
-        self.emit('progress', UpdateModel.ACTION_CHECKING, '', current, current)
+        self.emit('progress', UpdateModel.ACTION_CHECKING, '', current,
+                  current)
         self._bundles_to_check = None
         self._cancelling = False
 
     def _cancel_updating(self):
         logging.debug('UpdateModel._cancel_updating')
-        current = self._total_bundles_to_update - len(self._bundles_to_update) - 1
-        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current, current)
+        current = (self._total_bundles_to_update -
+                   len(self._bundles_to_update) - 1)
+        self.emit('progress', UpdateModel.ACTION_UPDATING, '', current,
+                  current)
 
         if self._downloader is not None:
             self._downloader.cancel()
@@ -216,6 +223,7 @@ class UpdateModel(gobject.GObject):
         self._bundles_to_update = None
         self._cancelling = False
 
+
 class BundleUpdate(object):
 
     def __init__(self, bundle, version, link, size):
@@ -226,7 +234,7 @@ class BundleUpdate(object):
 
 
 class _Downloader(gobject.GObject):
-    _CHUNK_SIZE = 10240 # 10K
+    _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
         'progress': (gobject.SIGNAL_RUN_FIRST,
                      gobject.TYPE_NONE,
@@ -262,7 +270,7 @@ class _Downloader(gobject.GObject):
         except:
             self.emit('error', traceback.format_exc())
             return
-            
+
         temp_file_path = self._get_temp_file_path(self.bundle_update.link)
         self._output_file = gio.File(temp_file_path)
         self._output_stream = self._output_file.create()

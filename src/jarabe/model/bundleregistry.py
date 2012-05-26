@@ -17,7 +17,6 @@
 
 import os
 import logging
-import traceback
 
 import gconf
 import gobject
@@ -26,6 +25,7 @@ import simplejson
 
 from sugar.bundle.activitybundle import ActivityBundle
 from sugar.bundle.contentbundle import ContentBundle
+from sugar.bundle.bundleversion import NormalizedVersion
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from sugar.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
@@ -34,16 +34,20 @@ from sugar import env
 from jarabe import config
 from jarabe.model import mimeregistry
 
+
+_instance = None
+
+
 class BundleRegistry(gobject.GObject):
     """Tracks the available activity bundles"""
 
     __gsignals__ = {
-        'bundle-added':   (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
+        'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([gobject.TYPE_PYOBJECT])),
         'bundle-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([gobject.TYPE_PYOBJECT])),
         'bundle-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT]))
+                           ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self):
@@ -153,14 +157,16 @@ class BundleRegistry(gobject.GObject):
             return
 
         for bundle_id in default_activities:
-            max_version = -1
+            max_version = '0'
             for bundle in self._bundles:
                 if bundle.get_bundle_id() == bundle_id and \
-                        max_version < bundle.get_activity_version():
+                        NormalizedVersion(max_version) < \
+                        NormalizedVersion(bundle.get_activity_version()):
                     max_version = bundle.get_activity_version()
 
             key = self._get_favorite_key(bundle_id, max_version)
-            if max_version > -1 and key not in self._favorite_bundles:
+            if NormalizedVersion(max_version) > NormalizedVersion('0') and \
+                    key not in self._favorite_bundles:
                 self._favorite_bundles[key] = None
 
         logging.debug('After merging: %r', self._favorite_bundles)
@@ -168,20 +174,10 @@ class BundleRegistry(gobject.GObject):
         self._write_favorites_file()
 
     def get_bundle(self, bundle_id):
-        """Returns a bundle given service name or substring,
-        returns None if there is either no match, or more than one
-        match by substring."""
-        result = []
-        key = bundle_id.lower()
-
+        """Returns an bundle given his service name"""
         for bundle in self._bundles:
-            name = bundle.get_bundle_id()
-            if name == bundle_id:
+            if bundle.get_bundle_id() == bundle_id:
                 return bundle
-            if key in name.lower():
-                result.append(bundle)
-        if len(result) == 1:
-            return result[0]
         return None
 
     def __iter__(self):
@@ -204,19 +200,18 @@ class BundleRegistry(gobject.GObject):
                 if os.path.isdir(bundle_dir):
                     bundles[bundle_dir] = os.stat(bundle_dir).st_mtime
             except Exception:
-                logging.error('Error while processing installed activity ' \
-                              'bundle %s:\n%s' % \
-                                    (bundle_dir, traceback.format_exc()))
+                logging.exception('Error while processing installed activity'
+                                  ' bundle %s:', bundle_dir)
 
         bundle_dirs = bundles.keys()
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
         for folder in bundle_dirs:
             try:
                 self._add_bundle(folder)
-            except Exception, e:
-                logging.error('Error while processing installed activity ' \
-                              'bundle %s:\n%s' % \
-                                    (folder, traceback.format_exc()))
+            except:
+                # pylint: disable=W0702
+                logging.exception('Error while processing installed activity'
+                                  ' bundle %s:', folder)
 
     def add_bundle(self, bundle_path, install_mime_type=False):
         bundle = self._add_bundle(bundle_path, install_mime_type)
@@ -243,8 +238,8 @@ class BundleRegistry(gobject.GObject):
         installed = self.get_bundle(bundle_id)
 
         if installed is not None:
-            if installed.get_activity_version() >= \
-                    bundle.get_activity_version():
+            if NormalizedVersion(installed.get_activity_version()) >= \
+                    NormalizedVersion(bundle.get_activity_version()):
                 logging.debug('Skip old version for %s', bundle_id)
                 return None
             else:
@@ -270,8 +265,7 @@ class BundleRegistry(gobject.GObject):
         default_bundle = None
 
         for bundle in self._bundles:
-            if bundle.get_mime_types() and mime_type in bundle.get_mime_types():
-
+            if mime_type in (bundle.get_mime_types() or []):
                 if bundle.get_bundle_id() == default_bundle_id:
                     default_bundle = bundle
                 elif self.get_default_for_type(mime_type) == \
@@ -286,10 +280,7 @@ class BundleRegistry(gobject.GObject):
         return result
 
     def get_default_for_type(self, mime_type):
-        if self._mime_defaults.has_key(mime_type):
-            return self._mime_defaults[mime_type]
-        else:
-            return None
+        return self._mime_defaults.get(mime_type)
 
     def _find_bundle(self, bundle_id, version):
         for bundle in self._bundles:
@@ -327,7 +318,8 @@ class BundleRegistry(gobject.GObject):
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
         if key not in self._favorite_bundles:
-            raise ValueError('Bundle %s %s not favorite' % (bundle_id, version))
+            raise ValueError('Bundle %s %s not favorite' %
+                             (bundle_id, version))
 
         if self._favorite_bundles[key] is None:
             self._favorite_bundles[key] = {}
@@ -368,25 +360,30 @@ class BundleRegistry(gobject.GObject):
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() == \
-                        installed_bundle.get_activity_version():
+                    NormalizedVersion(bundle.get_activity_version()) == \
+                    NormalizedVersion(installed_bundle.get_activity_version()):
                 return True
         return False
 
-    def install(self, bundle, uid=None):
+    def install(self, bundle, uid=None, force_downgrade=False):
         activities_path = env.get_user_activities_path()
 
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    bundle.get_activity_version() <= \
-                        installed_bundle.get_activity_version():
-                raise AlreadyInstalledException
+                    NormalizedVersion(bundle.get_activity_version()) <= \
+                    NormalizedVersion(installed_bundle.get_activity_version()):
+                if not force_downgrade:
+                    raise AlreadyInstalledException
+                else:
+                    self.uninstall(installed_bundle, force=True)
             elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
                 self.uninstall(installed_bundle, force=True)
 
         install_dir = env.get_user_activities_path()
         if isinstance(bundle, JournalEntryBundle):
             install_path = bundle.install(uid)
+        elif isinstance(bundle, ContentBundle):
+            install_path = bundle.install()
         else:
             install_path = bundle.install(install_dir)
 
@@ -437,20 +434,17 @@ class BundleRegistry(gobject.GObject):
             try:
                 self.uninstall(bundle, force=True)
             except Exception:
-                logging.error('Uninstall failed, still trying to install ' \
-                    'newer bundle:\n' + \
-                    traceback.format_exc())
+                logging.exception('Uninstall failed, still trying to install'
+                                  ' newer bundle:')
         else:
-            logging.warning('Unable to uninstall system activity, ' \
+            logging.warning('Unable to uninstall system activity, '
                             'installing upgraded version in user activities')
 
         self.install(bundle)
 
-_instance = None
 
 def get_registry():
     global _instance
     if not _instance:
         _instance = BundleRegistry()
     return _instance
-

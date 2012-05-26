@@ -21,7 +21,6 @@
 from gettext import gettext as _
 import logging
 import os
-import time
 
 import dbus
 import dbus.service
@@ -34,21 +33,38 @@ from sugar import dispatch
 from sugar import env
 from sugar.util import unique_id
 
-DEVICE_TYPE_802_3_ETHERNET = 1
-DEVICE_TYPE_802_11_WIRELESS = 2
-DEVICE_TYPE_GSM_MODEM = 3
-DEVICE_TYPE_802_11_OLPC_MESH = 6
+NM_STATE_UNKNOWN = 0
+NM_STATE_ASLEEP = 10
+NM_STATE_DISCONNECTED = 20
+NM_STATE_DISCONNECTING = 30
+NM_STATE_CONNECTING = 40
+NM_STATE_CONNECTED_LOCAL = 50
+NM_STATE_CONNECTED_SITE = 60
+NM_STATE_CONNECTED_GLOBAL = 70
 
-DEVICE_STATE_UNKNOWN = 0
-DEVICE_STATE_UNMANAGED = 1
-DEVICE_STATE_UNAVAILABLE = 2
-DEVICE_STATE_DISCONNECTED = 3
-DEVICE_STATE_PREPARE = 4
-DEVICE_STATE_CONFIG = 5
-DEVICE_STATE_NEED_AUTH = 6
-DEVICE_STATE_IP_CONFIG = 7
-DEVICE_STATE_ACTIVATED = 8
-DEVICE_STATE_FAILED = 9
+NM_DEVICE_TYPE_UNKNOWN = 0
+NM_DEVICE_TYPE_ETHERNET = 1
+NM_DEVICE_TYPE_WIFI = 2
+NM_DEVICE_TYPE_UNUSED1 = 3
+NM_DEVICE_TYPE_UNUSED2 = 4
+NM_DEVICE_TYPE_BT = 5
+NM_DEVICE_TYPE_OLPC_MESH = 6
+NM_DEVICE_TYPE_WIMAX = 7
+NM_DEVICE_TYPE_MODEM = 8
+
+NM_DEVICE_STATE_UNKNOWN = 0
+NM_DEVICE_STATE_UNMANAGED = 10
+NM_DEVICE_STATE_UNAVAILABLE = 20
+NM_DEVICE_STATE_DISCONNECTED = 30
+NM_DEVICE_STATE_PREPARE = 40
+NM_DEVICE_STATE_CONFIG = 50
+NM_DEVICE_STATE_NEED_AUTH = 60
+NM_DEVICE_STATE_IP_CONFIG = 70
+NM_DEVICE_STATE_IP_CHECK = 80
+NM_DEVICE_STATE_SECONDARIES = 90
+NM_DEVICE_STATE_ACTIVATED = 100
+NM_DEVICE_STATE_DEACTIVATING = 110
+NM_DEVICE_STATE_FAILED = 120
 
 NM_CONNECTION_TYPE_802_11_WIRELESS = '802-11-wireless'
 NM_CONNECTION_TYPE_GSM = 'gsm'
@@ -56,15 +72,15 @@ NM_CONNECTION_TYPE_GSM = 'gsm'
 NM_ACTIVE_CONNECTION_STATE_UNKNOWN = 0
 NM_ACTIVE_CONNECTION_STATE_ACTIVATING = 1
 NM_ACTIVE_CONNECTION_STATE_ACTIVATED = 2
-
+NM_ACTIVE_CONNECTION_STATE_DEACTIVATING = 3
 
 NM_DEVICE_STATE_REASON_UNKNOWN = 0
 NM_DEVICE_STATE_REASON_NONE = 1
 NM_DEVICE_STATE_REASON_NOW_MANAGED = 2
 NM_DEVICE_STATE_REASON_NOW_UNMANAGED = 3
 NM_DEVICE_STATE_REASON_CONFIG_FAILED = 4
-NM_DEVICE_STATE_REASON_CONFIG_UNAVAILABLE = 5
-NM_DEVICE_STATE_REASON_CONFIG_EXPIRED = 6
+NM_DEVICE_STATE_REASON_IP_CONFIG_UNAVAILABLE = 5
+NM_DEVICE_STATE_REASON_IP_CONFIG_EXPIRED = 6
 NM_DEVICE_STATE_REASON_NO_SECRETS = 7
 NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT = 8
 NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED = 9
@@ -99,42 +115,74 @@ NM_DEVICE_STATE_REASON_SLEEPING = 37
 NM_DEVICE_STATE_REASON_CONNECTION_REMOVED = 38
 NM_DEVICE_STATE_REASON_USER_REQUESTED = 39
 NM_DEVICE_STATE_REASON_CARRIER = 40
+NM_DEVICE_STATE_REASON_CONNECTION_ASSUMED = 41
+NM_DEVICE_STATE_REASON_SUPPLICANT_AVAILABLE = 42
+NM_DEVICE_STATE_REASON_MODEM_NOT_FOUND = 43
+NM_DEVICE_STATE_REASON_BT_FAILED = 44
+NM_DEVICE_STATE_REASON_LAST = 0xFFFF
 
 NM_802_11_AP_FLAGS_NONE = 0x00000000
 NM_802_11_AP_FLAGS_PRIVACY = 0x00000001
 
-NM_802_11_AP_SEC_NONE = 0x00000000
-NM_802_11_AP_SEC_PAIR_WEP40 = 0x00000001
-NM_802_11_AP_SEC_PAIR_WEP104 = 0x00000002
-NM_802_11_AP_SEC_PAIR_TKIP = 0x00000004
-NM_802_11_AP_SEC_PAIR_CCMP = 0x00000008
-NM_802_11_AP_SEC_GROUP_WEP40 = 0x00000010
-NM_802_11_AP_SEC_GROUP_WEP104 = 0x00000020
-NM_802_11_AP_SEC_GROUP_TKIP = 0x00000040
-NM_802_11_AP_SEC_GROUP_CCMP = 0x00000080
-NM_802_11_AP_SEC_KEY_MGMT_PSK = 0x00000100
-NM_802_11_AP_SEC_KEY_MGMT_802_1X = 0x00000200
+NM_802_11_AP_SEC_NONE = 0x0
+NM_802_11_AP_SEC_PAIR_WEP40 = 0x1
+NM_802_11_AP_SEC_PAIR_WEP104 = 0x2
+NM_802_11_AP_SEC_PAIR_TKIP = 0x4
+NM_802_11_AP_SEC_PAIR_CCMP = 0x8
+NM_802_11_AP_SEC_GROUP_WEP40 = 0x10
+NM_802_11_AP_SEC_GROUP_WEP104 = 0x20
+NM_802_11_AP_SEC_GROUP_TKIP = 0x40
+NM_802_11_AP_SEC_GROUP_CCMP = 0x80
+NM_802_11_AP_SEC_KEY_MGMT_PSK = 0x100
+NM_802_11_AP_SEC_KEY_MGMT_802_1X = 0x200
 
 NM_802_11_MODE_UNKNOWN = 0
 NM_802_11_MODE_ADHOC = 1
 NM_802_11_MODE_INFRA = 2
 
-NM_802_11_DEVICE_CAP_NONE = 0x00000000
-NM_802_11_DEVICE_CAP_CIPHER_WEP40 = 0x00000001
-NM_802_11_DEVICE_CAP_CIPHER_WEP104 = 0x00000002
-NM_802_11_DEVICE_CAP_CIPHER_TKIP = 0x00000004
-NM_802_11_DEVICE_CAP_CIPHER_CCMP = 0x00000008
-NM_802_11_DEVICE_CAP_WPA = 0x00000010
-NM_802_11_DEVICE_CAP_RSN = 0x00000020
+NM_WIFI_DEVICE_CAP_NONE = 0x00000000
+NM_WIFI_DEVICE_CAP_CIPHER_WEP40 = 0x00000001
+NM_WIFI_DEVICE_CAP_CIPHER_WEP104 = 0x00000002
+NM_WIFI_DEVICE_CAP_CIPHER_TKIP = 0x00000004
+NM_WIFI_DEVICE_CAP_CIPHER_CCMP = 0x00000008
+NM_WIFI_DEVICE_CAP_WPA = 0x00000010
+NM_WIFI_DEVICE_CAP_RSN = 0x00000020
 
-SETTINGS_SERVICE = 'org.freedesktop.NetworkManagerUserSettings'
+NM_BT_CAPABILITY_NONE = 0x00000000
+NM_BT_CAPABILITY_DUN = 0x00000001
+NM_BT_CAPABILITY_NAP = 0x00000002
 
-NM_SETTINGS_PATH = '/org/freedesktop/NetworkManagerSettings'
-NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManagerSettings'
-NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection'
-NM_SECRETS_IFACE = 'org.freedesktop.NetworkManagerSettings.Connection.Secrets'
+NM_DEVICE_MODEM_CAPABILITY_NONE = 0x00000000
+NM_DEVICE_MODEM_CAPABILITY_POTS = 0x00000001
+NM_DEVICE_MODEM_CAPABILITY_CDMA_EVDO = 0x00000002
+NM_DEVICE_MODEM_CAPABILITY_GSM_UMTS = 0x00000004
+NM_DEVICE_MODEM_CAPABILITY_LTE = 0x00000008
+
+SETTINGS_SERVICE = 'org.freedesktop.NetworkManager'
+
+NM_SERVICE = 'org.freedesktop.NetworkManager'
+NM_IFACE = 'org.freedesktop.NetworkManager'
+NM_PATH = '/org/freedesktop/NetworkManager'
+NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
+NM_WIRED_IFACE = 'org.freedesktop.NetworkManager.Device.Wired'
+NM_WIRELESS_IFACE = 'org.freedesktop.NetworkManager.Device.Wireless'
+NM_MODEM_IFACE = 'org.freedesktop.NetworkManager.Device.Modem'
+NM_OLPC_MESH_IFACE = 'org.freedesktop.NetworkManager.Device.OlpcMesh'
+NM_SETTINGS_PATH = '/org/freedesktop/NetworkManager/Settings'
+NM_SETTINGS_IFACE = 'org.freedesktop.NetworkManager.Settings'
+NM_CONNECTION_IFACE = 'org.freedesktop.NetworkManager.Settings.Connection'
 NM_ACCESSPOINT_IFACE = 'org.freedesktop.NetworkManager.AccessPoint'
+NM_ACTIVE_CONN_IFACE = 'org.freedesktop.NetworkManager.Connection.Active'
 
+NM_SECRET_AGENT_IFACE = 'org.freedesktop.NetworkManager.SecretAgent'
+NM_SECRET_AGENT_PATH = '/org/freedesktop/NetworkManager/SecretAgent'
+NM_AGENT_MANAGER_IFACE = 'org.freedesktop.NetworkManager.AgentManager'
+NM_AGENT_MANAGER_PATH = '/org/freedesktop/NetworkManager/AgentManager'
+
+NM_AGENT_MANAGER_ERR_NO_SECRETS = 'org.freedesktop.NetworkManager.AgentManager.NoSecrets'
+
+GSM_CONNECTION_ID = 'Sugar Modem Connection'
+GSM_BAUD_RATE = 115200
 GSM_USERNAME_PATH = '/desktop/sugar/network/gsm/username'
 GSM_PASSWORD_PATH = '/desktop/sugar/network/gsm/password'
 GSM_NUMBER_PATH = '/desktop/sugar/network/gsm/number'
@@ -142,105 +190,122 @@ GSM_APN_PATH = '/desktop/sugar/network/gsm/apn'
 GSM_PIN_PATH = '/desktop/sugar/network/gsm/pin'
 GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
 
+ADHOC_CONNECTION_ID_PREFIX = 'Sugar Ad-hoc Network '
+MESH_CONNECTION_ID_PREFIX = 'OLPC Mesh Network '
+XS_MESH_CONNECTION_ID_PREFIX = 'OLPC XS Mesh Network '
+
+_network_manager = None
 _nm_settings = None
-_conn_counter = 0
+_secret_agent = None
+_connections = None
 
 _nm_device_state_reason_description = None
+
 
 def get_error_by_reason(reason):
     global _nm_device_state_reason_description
 
     if _nm_device_state_reason_description is None:
         _nm_device_state_reason_description = {
-            NM_DEVICE_STATE_REASON_UNKNOWN: \
-                _("The reason for the device state change \ is unknown."),
-            NM_DEVICE_STATE_REASON_NONE: \
-                _("The state change is normal."),
-            NM_DEVICE_STATE_REASON_NOW_MANAGED: \
-                _("The device is now managed."),
-            NM_DEVICE_STATE_REASON_NOW_UNMANAGED: \
-                _("The device is no longer managed."),
-            NM_DEVICE_STATE_REASON_CONFIG_FAILED: \
-                _("The device could not be readied for configuration."),
-            NM_DEVICE_STATE_REASON_CONFIG_UNAVAILABLE : \
-                _("IP configuration could not be reserved " \
-                      "(no available address, timeout, etc)."),
-            NM_DEVICE_STATE_REASON_CONFIG_EXPIRED : \
-                _("The IP configuration is no longer valid."),
-            NM_DEVICE_STATE_REASON_NO_SECRETS : \
-                _("Secrets were required, but not provided."),
-            NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT : \
-                _("The 802.1X supplicant disconnected from "\
-                      "the access point or authentication server."),
-            NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED : \
-                _("Configuration of the 802.1X supplicant failed."),
-            NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED : \
-                _("The 802.1X supplicant quit or failed unexpectedly."),
-            NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT : \
-                _("The 802.1X supplicant took too long to authenticate."),
-            NM_DEVICE_STATE_REASON_PPP_START_FAILED : \
-                _("The PPP service failed to start within the allowed time."),
-            NM_DEVICE_STATE_REASON_PPP_DISCONNECT : \
-                _("The PPP service disconnected unexpectedly."),
-            NM_DEVICE_STATE_REASON_PPP_FAILED : \
-                _("The PPP service quit or failed unexpectedly."),
-            NM_DEVICE_STATE_REASON_DHCP_START_FAILED : \
-                _("The DHCP service failed to start within the allowed time."),
-            NM_DEVICE_STATE_REASON_DHCP_ERROR : \
-                _("The DHCP service reported an unexpected error."),
-            NM_DEVICE_STATE_REASON_DHCP_FAILED : \
-                _("The DHCP service quit or failed unexpectedly."),
-            NM_DEVICE_STATE_REASON_SHARED_START_FAILED : \
-                _("The shared connection service failed to start."),
-            NM_DEVICE_STATE_REASON_SHARED_FAILED : \
-                _("The shared connection service quit or " \
-                      "failed unexpectedly."),
-            NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED : \
-                _("The AutoIP service failed to start."),
-            NM_DEVICE_STATE_REASON_AUTOIP_ERROR : \
-                _("The AutoIP service reported an unexpected error."),
-            NM_DEVICE_STATE_REASON_AUTOIP_FAILED : \
-                _("The AutoIP service quit or failed unexpectedly."),
-            NM_DEVICE_STATE_REASON_MODEM_BUSY : \
-                _("Dialing failed because the line was busy."),
-            NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE : \
-                _("Dialing failed because there was no dial tone."),
-            NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER : \
-                _("Dialing failed because there was no carrier."),
-            NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT : \
-                _("Dialing timed out."),
-            NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED : \
-                _("Dialing failed."),
-            NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED : \
-                _("Modem initialization failed."),
-            NM_DEVICE_STATE_REASON_GSM_APN_FAILED : \
-                _("Failed to select the specified GSM APN."),
-            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING : \
-                _("Not searching for networks."),
-            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED : \
-                _("Network registration was denied."),
-            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT : \
-                _("Network registration timed out."),
-            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED : \
-                _("Failed to register with the requested GSM network."),
-            NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED : \
-                _("PIN check failed."),
-            NM_DEVICE_STATE_REASON_FIRMWARE_MISSING : \
-                _("Necessary firmware for the device may be missing."),
-            NM_DEVICE_STATE_REASON_REMOVED : \
-                _("The device was removed."),
-            NM_DEVICE_STATE_REASON_SLEEPING : \
-                _("NetworkManager went to sleep."),
-            NM_DEVICE_STATE_REASON_CONNECTION_REMOVED : \
-                _("The device's active connection was removed " \
-                      "or disappeared."),
-            NM_DEVICE_STATE_REASON_USER_REQUESTED : \
-                _("A user or client requested the disconnection."),
-            NM_DEVICE_STATE_REASON_CARRIER : \
-                _("The device's carrier/link changed.")}
+            NM_DEVICE_STATE_REASON_UNKNOWN:
+                _('The reason for the device state change is unknown.'),
+            NM_DEVICE_STATE_REASON_NONE:
+                _('The state change is normal.'),
+            NM_DEVICE_STATE_REASON_NOW_MANAGED:
+                _('The device is now managed.'),
+            NM_DEVICE_STATE_REASON_NOW_UNMANAGED:
+                _('The device is no longer managed.'),
+            NM_DEVICE_STATE_REASON_CONFIG_FAILED:
+                _('The device could not be readied for configuration.'),
+            NM_DEVICE_STATE_REASON_IP_CONFIG_UNAVAILABLE:
+                _('IP configuration could not be reserved '
+                  '(no available address, timeout, etc).'),
+            NM_DEVICE_STATE_REASON_IP_CONFIG_EXPIRED:
+                _('The IP configuration is no longer valid.'),
+            NM_DEVICE_STATE_REASON_NO_SECRETS:
+                _('Secrets were required, but not provided.'),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
+                _('The 802.1X supplicant disconnected from '
+                  'the access point or authentication server.'),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED:
+                _('Configuration of the 802.1X supplicant failed.'),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED:
+                _('The 802.1X supplicant quit or failed unexpectedly.'),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT:
+                _('The 802.1X supplicant took too long to authenticate.'),
+            NM_DEVICE_STATE_REASON_PPP_START_FAILED:
+                _('The PPP service failed to start within the allowed time.'),
+            NM_DEVICE_STATE_REASON_PPP_DISCONNECT:
+                _('The PPP service disconnected unexpectedly.'),
+            NM_DEVICE_STATE_REASON_PPP_FAILED:
+                _('The PPP service quit or failed unexpectedly.'),
+            NM_DEVICE_STATE_REASON_DHCP_START_FAILED:
+                _('The DHCP service failed to start within the allowed time.'),
+            NM_DEVICE_STATE_REASON_DHCP_ERROR:
+                _('The DHCP service reported an unexpected error.'),
+            NM_DEVICE_STATE_REASON_DHCP_FAILED:
+                _('The DHCP service quit or failed unexpectedly.'),
+            NM_DEVICE_STATE_REASON_SHARED_START_FAILED:
+                _('The shared connection service failed to start.'),
+            NM_DEVICE_STATE_REASON_SHARED_FAILED:
+                _('The shared connection service quit or failed'
+                  ' unexpectedly.'),
+            NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED:
+                _('The AutoIP service failed to start.'),
+            NM_DEVICE_STATE_REASON_AUTOIP_ERROR:
+                _('The AutoIP service reported an unexpected error.'),
+            NM_DEVICE_STATE_REASON_AUTOIP_FAILED:
+                _('The AutoIP service quit or failed unexpectedly.'),
+            NM_DEVICE_STATE_REASON_MODEM_BUSY:
+                _('Dialing failed because the line was busy.'),
+            NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE:
+                _('Dialing failed because there was no dial tone.'),
+            NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER:
+                _('Dialing failed because there was no carrier.'),
+            NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT:
+                _('Dialing timed out.'),
+            NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED:
+                _('Dialing failed.'),
+            NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED:
+                _('Modem initialization failed.'),
+            NM_DEVICE_STATE_REASON_GSM_APN_FAILED:
+                _('Failed to select the specified GSM APN'),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING:
+                _('Not searching for networks.'),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED:
+                _('Network registration was denied.'),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT:
+                _('Network registration timed out.'),
+            NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED:
+                _('Failed to register with the requested GSM network.'),
+            NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED:
+                _('PIN check failed.'),
+            NM_DEVICE_STATE_REASON_FIRMWARE_MISSING:
+                _('Necessary firmware for the device may be missing.'),
+            NM_DEVICE_STATE_REASON_REMOVED:
+                _('The device was removed.'),
+            NM_DEVICE_STATE_REASON_SLEEPING:
+                _('NetworkManager went to sleep.'),
+            NM_DEVICE_STATE_REASON_CONNECTION_REMOVED:
+                _("The device's active connection was removed "
+                  "or disappeared."),
+            NM_DEVICE_STATE_REASON_USER_REQUESTED:
+                _('A user or client requested the disconnection.'),
+            NM_DEVICE_STATE_REASON_CARRIER:
+                _("The device's carrier/link changed."),
+            NM_DEVICE_STATE_REASON_CONNECTION_ASSUMED:
+                _("The device's existing connection was assumed."),
+            NM_DEVICE_STATE_REASON_SUPPLICANT_AVAILABLE:
+                _("The supplicant is now available."),
+            NM_DEVICE_STATE_REASON_MODEM_NOT_FOUND:
+                _("The modem could not be found."),
+            NM_DEVICE_STATE_REASON_BT_FAILED:
+                _("The Bluetooth connection failed or timed out."),
+            NM_DEVICE_STATE_REASON_LAST:
+                _("Unused."),
+        }
 
     return _nm_device_state_reason_description[reason]
-
 
 
 def frequency_to_channel(frequency):
@@ -258,10 +323,11 @@ def frequency_to_channel(frequency):
             2452: 9, 2457: 10, 2462: 11, 2467: 12,
             2472: 13}
     if frequency not in ftoc:
-        logging.warning("The frequency %s can not be mapped to a channel, " \
-                            "defaulting to channel 1.", frequency)
+        logging.warning('The frequency %s can not be mapped to a channel, '
+            'defaulting to channel 1.', frequency)
         return 1
     return ftoc[frequency]
+
 
 def is_sugar_adhoc_network(ssid):
     """Checks whether an access point is a sugar Ad-hoc network.
@@ -281,6 +347,9 @@ class WirelessSecurity(object):
         self.proto = None
         self.group = None
         self.pairwise = None
+        self.wep_key = None
+        self.psk = None
+        self.auth_alg = None
 
     def get_dict(self):
         wireless_security = {}
@@ -292,10 +361,17 @@ class WirelessSecurity(object):
             wireless_security['pairwise'] = self.pairwise
         if self.group is not None:
             wireless_security['group'] = self.group
+        if self.wep_key is not None:
+            wireless_security['wep-key0'] = self.wep_key
+        if self.psk is not None:
+            wireless_security['psk'] = self.psk
+        if self.auth_alg is not None:
+            wireless_security['auth-alg'] = self.auth_alg
         return wireless_security
 
+
 class Wireless(object):
-    nm_name = "802-11-wireless"
+    nm_name = '802-11-wireless'
 
     def __init__(self):
         self.ssid = None
@@ -318,7 +394,7 @@ class Wireless(object):
 
 
 class OlpcMesh(object):
-    nm_name = "802-11-olpc-mesh"
+    nm_name = '802-11-olpc-mesh'
 
     def __init__(self, channel, anycast_addr):
         self.channel = channel
@@ -326,16 +402,16 @@ class OlpcMesh(object):
 
     def get_dict(self):
         ret = {
-            "ssid": dbus.ByteArray("olpc-mesh"),
-            "channel": self.channel,
+            'ssid': dbus.ByteArray('olpc-mesh'),
+            'channel': self.channel,
         }
 
         if self.anycast_addr:
-            ret["dhcp-anycast-address"] = dbus.ByteArray(self.anycast_addr)
+            ret['dhcp-anycast-address'] = dbus.ByteArray(self.anycast_addr)
         return ret
 
 
-class Connection(object):
+class ConnectionSettings(object):
     def __init__(self):
         self.id = None
         self.uuid = None
@@ -352,6 +428,7 @@ class Connection(object):
             connection['timestamp'] = self.timestamp
         return connection
 
+
 class IP4Config(object):
     def __init__(self):
         self.method = None
@@ -361,6 +438,7 @@ class IP4Config(object):
         if self.method is not None:
             ip4_config['method'] = self.method
         return ip4_config
+
 
 class Serial(object):
     def __init__(self):
@@ -374,6 +452,7 @@ class Serial(object):
 
         return serial
 
+
 class Ppp(object):
     def __init__(self):
         pass
@@ -382,27 +461,35 @@ class Ppp(object):
         ppp = {}
         return ppp
 
+
 class Gsm(object):
     def __init__(self):
         self.apn = None
         self.number = None
         self.username = None
+        self.pin = None
+        self.password = None
 
     def get_dict(self):
         gsm = {}
 
-        if self.apn is not None:
+        if self.apn:
             gsm['apn'] = self.apn
-        if self.number is not None:
+        if self.number:
             gsm['number'] = self.number
-        if self.username is not None:
+        if self.username:
             gsm['username'] = self.username
+        if self.password:
+            gsm['password'] = self.password
+        if self.pin:
+            gsm['pin'] = self.pin
 
         return gsm
 
+
 class Settings(object):
     def __init__(self, wireless_cfg=None):
-        self.connection = Connection()
+        self.connection = ConnectionSettings()
         self.ip4_config = None
         self.wireless_security = None
 
@@ -422,34 +509,10 @@ class Settings(object):
             settings['ipv4'] = self.ip4_config.get_dict()
         return settings
 
-class Secrets(object):
-    def __init__(self, settings):
-        self.settings = settings
-        self.wep_key = None
-        self.psk = None
-        self.auth_alg = None
-
-    def get_dict(self):
-        # Although we could just return the keys here, we instead return all
-        # of the network settings so that we can apply any late decisions made
-        # by the user (e.g. if they selected shared key authentication). see
-        # http://bugs.sugarlabs.org/ticket/1602
-        settings = self.settings.get_dict()
-        if '802-11-wireless-security' not in settings:
-            settings['802-11-wireless-security'] = {}
-
-        if self.wep_key is not None:
-            settings['802-11-wireless-security']['wep-key0'] = self.wep_key
-        if self.psk is not None:
-            settings['802-11-wireless-security']['psk'] = self.psk
-        if self.auth_alg is not None:
-            settings['802-11-wireless-security']['auth-alg'] = self.auth_alg
-
-        return settings
 
 class SettingsGsm(object):
     def __init__(self):
-        self.connection = Connection()
+        self.connection = ConnectionSettings()
         self.ip4_config = IP4Config()
         self.serial = Serial()
         self.ppp = Ppp()
@@ -466,193 +529,76 @@ class SettingsGsm(object):
 
         return settings
 
-class SecretsGsm(object):
-    def __init__(self):
-        self.password = None
-        self.pin = None
-        self.puk = None
-        
-    def get_dict(self):
-        secrets = {}
-        if self.password is not None:
-            secrets['password'] = self.password
-        if self.pin is not None:
-            secrets['pin'] = self.pin
-        if self.puk is not None:    
-            secrets['puk'] = self.puk
-        return {'gsm': secrets}
-
-class NMSettings(dbus.service.Object):
-    def __init__(self):
-        bus = dbus.SystemBus()
-        bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, NM_SETTINGS_PATH)
-
-        self.connections = {}
-        self.secrets_request = dispatch.Signal()
-
-    @dbus.service.method(dbus_interface=NM_SETTINGS_IFACE,
-                         in_signature='', out_signature='ao')
-    def ListConnections(self):
-        return self.connections.values()
-
-    @dbus.service.signal(NM_SETTINGS_IFACE, signature='o')
-    def NewConnection(self, connection_path):
-        pass
-
-    def add_connection(self, uuid, conn):
-        self.connections[uuid] = conn
-        conn.secrets_request.connect(self.__secrets_request_cb)
-        self.NewConnection(conn.path)
-
-    def __secrets_request_cb(self, sender, **kwargs):
-        self.secrets_request.send(self, connection=sender,
-                                  response=kwargs['response'])
 
 class SecretsResponse(object):
-    ''' Intermediate object to report the secrets from the dialog
+    """Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
-    '''
-    def __init__(self, connection, reply_cb, error_cb):
-        self._connection = connection
+    """
+    def __init__(self, reply_cb, error_cb):
         self._reply_cb = reply_cb
         self._error_cb = error_cb
 
     def set_secrets(self, secrets):
-        self._connection.set_secrets(secrets)
-        self._reply_cb(secrets.get_dict())
+        self._reply_cb(secrets)
 
     def set_error(self, error):
         self._error_cb(error)
 
-class NMSettingsConnection(dbus.service.Object):
-    def __init__(self, path, settings, secrets):
-        bus = dbus.SystemBus()
-        bus_name = dbus.service.BusName(SETTINGS_SERVICE, bus=bus)
-        dbus.service.Object.__init__(self, bus_name, path)
 
-        self.path = path
+def set_connected():
+    try:
+        # try to flush resolver cache - SL#1940
+        # ctypes' syntactic sugar does not work
+        # so we must get the func ptr explicitly
+        libc = ctypes.CDLL('libc.so.6')
+        res_init = getattr(libc, '__res_init')
+        res_init(None)
+    except:
+        # pylint: disable=W0702
+        logging.exception('Error calling libc.__res_init')
+
+
+class SecretAgent(dbus.service.Object):
+    def __init__(self):
+        self._bus = dbus.SystemBus()
+        dbus.service.Object.__init__(self, self._bus, NM_SECRET_AGENT_PATH)
         self.secrets_request = dispatch.Signal()
+        proxy = self._bus.get_object(NM_IFACE, NM_AGENT_MANAGER_PATH)
+        proxy.Register("org.sugarlabs.sugar",
+                       dbus_interface=NM_AGENT_MANAGER_IFACE,
+                       reply_handler=self._register_reply_cb,
+                       error_handler=self._register_error_cb)
 
-        self._settings = settings
-        self._secrets = secrets
+    def _register_reply_cb(self):
+        logging.debug("SecretAgent registered")
 
-    def set_connected(self):
-        if self._settings.connection.type == NM_CONNECTION_TYPE_GSM:
-            self._settings.connection.timestamp = int(time.time())
-        else:
-            if not self._settings.connection.autoconnect:
-                self._settings.connection.autoconnect = True
-                self._settings.connection.timestamp = int(time.time())
-                if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-                    self.save()
+    def _register_error_cb(self, error):
+        logging.error("Failed to register SecretAgent: %s", error)
 
-        try:
-            # try to flush resolver cache - SL#1940
-            # ctypes' syntactic sugar does not work
-            # so we must get the func ptr explicitly
-            libc = ctypes.CDLL('libc.so.6')
-            res_init = getattr(libc, '__res_init')
-            res_init(None)
-        except:
-            logging.exception('Error calling libc.__res_init')
-
-    def set_secrets(self, secrets):
-        self._secrets = secrets
-        if self._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-            self.save()
-
-    def get_settings(self):
-        return self._settings
-
-    def save(self):
-        profile_path = env.get_profile_path()
-        config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
-
-        config = ConfigParser.ConfigParser()
-        try:
-            try:
-                if not config.read(config_path):
-                    logging.error('Error reading the nm config file')
-                    return
-            except ConfigParser.ParsingError:
-                logging.exception('Error reading the nm config file')
-                return
-            identifier = self._settings.connection.id
-
-            if identifier not in config.sections():
-                config.add_section(identifier)
-            config.set(identifier, 'type', self._settings.connection.type)
-            config.set(identifier, 'ssid', self._settings.wireless.ssid)
-            config.set(identifier, 'uuid', self._settings.connection.uuid)
-            config.set(identifier, 'autoconnect',
-                       self._settings.connection.autoconnect)
-            if self._settings.connection.timestamp is not None:
-                config.set(identifier, 'timestamp',
-                           self._settings.connection.timestamp)
-            if self._settings.wireless_security is not None:
-                if self._settings.wireless_security.key_mgmt is not None:
-                    config.set(identifier, 'key-mgmt',
-                               self._settings.wireless_security.key_mgmt)
-                if self._settings.wireless_security.proto is not None:
-                    config.set(identifier, 'proto',
-                               self._settings.wireless_security.proto)
-                if self._settings.wireless_security.pairwise is not None:
-                    config.set(identifier, 'pairwise',
-                               self._settings.wireless_security.pairwise)
-                if self._settings.wireless_security.group is not None:
-                    config.set(identifier, 'group',
-                               self._settings.wireless_security.group)
-                if self._settings.wireless.security is not None:
-                    config.set(identifier, 'security',
-                               self._settings.wireless.security)
-            if self._secrets is not None:
-                if self._settings.wireless_security.key_mgmt == 'none':
-                    config.set(identifier, 'key', self._secrets.wep_key)
-                    config.set(identifier, 'auth-alg', self._secrets.auth_alg)
-                elif self._settings.wireless_security.key_mgmt == 'wpa-psk':
-                    config.set(identifier, 'key', self._secrets.psk)
-        except ConfigParser.Error, e:
-            logging.exception('Error constructing %s', identifier)
-        else:
-            f = open(config_path, 'w')
-            try:
-                config.write(f)
-            except ConfigParser.Error:
-                logging.exception('Can not write %s', config_path)
-            f.close()
-
-    @dbus.service.method(dbus_interface=NM_CONNECTION_IFACE,
-                         in_signature='', out_signature='a{sa{sv}}')
-    def GetSettings(self):
-        return self._settings.get_dict()
-
-    @dbus.service.method(dbus_interface=NM_SECRETS_IFACE,
+    @dbus.service.method(NM_SECRET_AGENT_IFACE,
                          async_callbacks=('reply', 'error'),
-                         in_signature='sasb', out_signature='a{sa{sv}}')
-    def GetSecrets(self, setting_name, hints, request_new, reply, error):
-        logging.debug('Secrets requested for connection %s request_new=%s',
-                      self.path, request_new)
-        if self._settings.connection.type is not NM_CONNECTION_TYPE_GSM:
-            if request_new or self._secrets is None:
-                # request_new is for example the case when the pw on the AP changes
-                response = SecretsResponse(self, reply, error)
-                try:
-                    self.secrets_request.send(self, response=response)
-                except Exception:
-                    logging.exception('Error requesting the secrets via dialog')
-            else:
-                reply(self._secrets.get_dict())
-        else:
-            if not request_new:
-                reply(self._secrets.get_dict())
-            else:
-                raise Exception('The stored GSM secret has already been supplied ')
+                         in_signature='a{sa{sv}}osasb',
+                         out_signature='a{sa{sv}}',
+                         sender_keyword='sender',
+                         byte_arrays=True)
+    def GetSecrets(self, settings, connection_path, setting_name, hints,
+                   request_new, reply, error, sender=None):
+        if setting_name != '802-11-wireless-security':
+            raise ValueError("Unsupported setting type %s" % (setting_name,))
+        if not sender:
+            raise Exception("Internal error: couldn't get sender")
+        uid = self._bus.get_unix_user(sender)
+        if uid != 0:
+            raise Exception("UID %d not authorized" % (uid,))
+
+        response = SecretsResponse(reply, error)
+        self.secrets_request.send(self, settings=settings, response=response)
+
 
 class AccessPoint(gobject.GObject):
     __gsignals__ = {
         'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT]))
+                          ([gobject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, device, model):
@@ -663,7 +609,7 @@ class AccessPoint(gobject.GObject):
         self._initialized = False
         self._bus = dbus.SystemBus()
 
-        self.name = ''
+        self.ssid = ''
         self.strength = 0
         self.flags = 0
         self.wpa_flags = 0
@@ -672,8 +618,7 @@ class AccessPoint(gobject.GObject):
         self.channel = 0
 
     def initialize(self):
-        model_props = dbus.Interface(self.model,
-            'org.freedesktop.DBus.Properties')
+        model_props = dbus.Interface(self.model, dbus.PROPERTIES_IFACE)
         model_props.GetAll(NM_ACCESSPOINT_IFACE, byte_arrays=True,
                            reply_handler=self._ap_properties_changed_cb,
                            error_handler=self._get_all_props_error_cb)
@@ -718,7 +663,7 @@ class AccessPoint(gobject.GObject):
         else:
             fl |= 1 << 6
 
-        hashstr = str(fl) + "@" + self.name
+        hashstr = str(fl) + '@' + self.ssid
         return hash(hashstr)
 
     def _update_properties(self, properties):
@@ -728,7 +673,7 @@ class AccessPoint(gobject.GObject):
             old_hash = None
 
         if 'Ssid' in properties:
-            self.name = properties['Ssid']
+            self.ssid = properties['Ssid']
         if 'Strength' in properties:
             self.strength = properties['Strength']
         if 'Flags' in properties:
@@ -757,50 +702,230 @@ class AccessPoint(gobject.GObject):
                                          path=self.model.object_path,
                                          dbus_interface=NM_ACCESSPOINT_IFACE)
 
-def get_settings():
+
+def get_manager():
+    global _network_manager
+    if _network_manager is None:
+        obj = dbus.SystemBus().get_object(NM_SERVICE, NM_PATH)
+        _network_manager = dbus.Interface(obj, NM_IFACE)
+    return _network_manager
+
+
+def _get_settings():
     global _nm_settings
     if _nm_settings is None:
-        try:
-            _nm_settings = NMSettings()
-        except dbus.DBusException:
-            logging.exception('Cannot create the UserSettings service.')
-        load_connections()
+        obj = dbus.SystemBus().get_object(NM_SERVICE, NM_SETTINGS_PATH)
+        _nm_settings = dbus.Interface(obj, NM_SETTINGS_IFACE)
+        _migrate_old_wifi_connections()
+        _migrate_old_gsm_connection()
     return _nm_settings
 
+
+def get_secret_agent():
+    global _secret_agent
+    if _secret_agent is None:
+        _secret_agent = SecretAgent()
+    return _secret_agent
+
+
+def _activate_reply_cb(connection_path):
+    logging.debug('Activated connection: %s', connection_path)
+
+
+def _activate_error_cb(err):
+    logging.error('Failed to activate connection: %s', err)
+
+
+def _add_and_activate_reply_cb(settings_path, connection_path):
+    logging.debug('Added and activated connection: %s', connection_path)
+
+
+def _add_and_activate_error_cb(err):
+    logging.error('Failed to add and activate connection: %s', err)
+
+
+class Connection(gobject.GObject):
+    __gsignals__ = {
+        'removed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+    }
+
+    def __init__(self, bus, path):
+        gobject.GObject.__init__(self)
+        obj = bus.get_object(NM_SERVICE, path)
+        self._connection = dbus.Interface(obj, NM_CONNECTION_IFACE)
+        self._removed_handle = self._connection.connect_to_signal(
+            'Removed', self._removed_cb)
+        self._updated_handle = self._connection.connect_to_signal(
+            'Updated', self._updated_cb)
+        self._settings = self._connection.GetSettings(byte_arrays=True)
+
+    def _updated_cb(self):
+        self._settings = self._connection.GetSettings(byte_arrays=True)
+
+    def _removed_cb(self):
+        self._updated_handle.remove()
+        self._removed_handle.remove()
+        self.emit('removed')
+
+    def get_settings(self, stype=None):
+        if not stype:
+            return self._settings
+        elif stype in self._settings:
+            return self._settings[stype]
+        else:
+            return None
+
+    def get_secrets(self, stype, reply_handler, error_handler):
+        return self._connection.GetSecrets(stype, byte_arrays=True,
+                                           reply_handler=reply_handler,
+                                           error_handler=error_handler)
+
+    def update_settings(self, settings):
+        self._connection.Update(settings)
+
+    def activate(self, device_o, reply_handler=_activate_reply_cb,
+                 error_handler=_activate_error_cb):
+        activate_connection_by_path(self.get_path(), device_o,
+                                    reply_handler=reply_handler,
+                                    error_handler=error_handler)
+
+    def delete(self):
+        self._connection.Delete()
+
+    def get_ssid(self):
+        wifi_settings = self.get_settings('802-11-wireless')
+        if wifi_settings and 'ssid' in wifi_settings:
+            return wifi_settings['ssid']
+        else:
+            return None
+
+    def get_id(self):
+        return self.get_settings('connection')['id']
+
+    def get_path(self):
+        return self._connection.object_path
+
+    def is_sugar_internal_connection(self):
+        """Returns True if this connection is a 'special' Sugar connection,
+        i.e. one that has been created by Sugar internals and should not be
+        visible to the user or deleted by connection-clearing code."""
+        connection_id = self.get_id()
+        return connection_id == GSM_CONNECTION_ID \
+            or connection_id.startswith(ADHOC_CONNECTION_ID_PREFIX) \
+            or connection_id.startswith(MESH_CONNECTION_ID_PREFIX) \
+            or connection_id.startswith(XS_MESH_CONNECTION_ID_PREFIX)
+
+
+class Connections(object):
+    def __init__(self):
+        self._bus = dbus.SystemBus()
+        self._connections = []
+
+        settings = _get_settings()
+        settings.connect_to_signal('NewConnection', self._new_connection_cb)
+
+        for connection_o in settings.ListConnections():
+            self._monitor_connection(connection_o)
+
+    def get_list(self):
+        return self._connections
+
+    def _monitor_connection(self, connection_o):
+        connection = Connection(self._bus, connection_o)
+        connection.connect('removed', self._connection_removed_cb)
+        self._connections.append(connection)
+
+    def _new_connection_cb(self, connection_o):
+        self._monitor_connection(connection_o)
+
+    def _connection_removed_cb(self, connection):
+        connection.disconnect_by_func(self._connection_removed_cb)
+        self._connections.remove(connection)
+
+    def clear(self):
+        """Remove all connections except Sugar-internal ones."""
+
+        # copy the list, to avoid problems with removing elements of a list
+        # while looping over it
+        connections = list(self._connections)
+        for connection in connections:
+            if connection.is_sugar_internal_connection():
+                continue
+            try:
+                connection.delete()
+            except dbus.DBusException:
+                logging.debug("Could not remove connection %s",
+                              connection.get_id())
+
+
+def get_connections():
+    global _connections
+    if _connections is None:
+        _connections = Connections()
+    return _connections
+
+
 def find_connection_by_ssid(ssid):
-    connections = get_settings().connections
-
-    for conn_index in connections:
-        connection = connections[conn_index]
-        if connection._settings.connection.type == NM_CONNECTION_TYPE_802_11_WIRELESS:
-            if connection._settings.wireless.ssid == ssid:
-                return connection
-
+    # FIXME: this check should be more extensive.
+    # it should look at mode (infra/adhoc), band, security, and really
+    # anything that is stored in the settings.
+    for connection in get_connections().get_list():
+        if connection.get_ssid() == ssid:
+            return connection
     return None
 
-def add_connection(uuid, settings, secrets=None):
-    global _conn_counter
 
-    path = NM_SETTINGS_PATH + '/' + str(_conn_counter)
-    _conn_counter += 1
+def find_connection_by_id(connection_id):
+    for connection in get_connections().get_list():
+        if connection.get_id() == connection_id:
+            return connection
+    return None
 
-    conn = NMSettingsConnection(path, settings, secrets)
-    _nm_settings.add_connection(uuid, conn)
-    return conn
 
-def load_wifi_connections():
+def _add_connection_reply_cb(connection):
+    logging.debug('Added connection: %s', connection)
+
+
+def _add_connection_error_cb(err):
+    logging.error('Failed to add connection: %s', err)
+
+
+def add_connection(settings, reply_handler=_add_connection_reply_cb,
+                   error_handler=_add_connection_error_cb):
+    _get_settings().AddConnection(settings.get_dict(),
+                                  reply_handler=reply_handler,
+                                  error_handler=error_handler)
+
+
+def activate_connection_by_path(connection, device_o,
+                                reply_handler=_activate_reply_cb,
+                                error_handler=_activate_error_cb):
+    get_manager().ActivateConnection(connection,
+                                     device_o,
+                                     '/',
+                                     reply_handler=reply_handler,
+                                     error_handler=error_handler)
+
+
+def add_and_activate_connection(device_o, settings, specific_object):
+    manager = get_manager()
+    manager.AddAndActivateConnection(settings.get_dict(), device_o,
+                                     specific_object,
+                                     reply_handler=_add_and_activate_reply_cb,
+                                     error_handler=_add_and_activate_error_cb)
+
+
+def _migrate_old_wifi_connections():
+    """Migrate connections.cfg from Sugar-0.94 and previous to NetworkManager
+    system-wide connections
+    """
+
     profile_path = env.get_profile_path()
     config_path = os.path.join(profile_path, 'nm', 'connections.cfg')
+    if not os.path.exists(config_path):
+        return
 
     config = ConfigParser.ConfigParser()
-
-    if not os.path.exists(config_path):
-        if not os.path.exists(os.path.dirname(config_path)):
-            os.makedirs(os.path.dirname(config_path), 0755)
-        f = open(config_path, 'w')
-        config.write(f)
-        f.close()
-
     try:
         if not config.read(config_path):
             logging.error('Error reading the nm config file')
@@ -826,9 +951,7 @@ def load_wifi_connections():
                 timestamp = int(config.get(section, 'timestamp'))
                 settings.connection.timestamp = timestamp
 
-            secrets = None
             if config.has_option(section, 'key-mgmt'):
-                secrets = Secrets(settings)
                 settings.wireless_security = WirelessSecurity()
                 mgmt = config.get(section, 'key-mgmt')
                 settings.wireless_security.key_mgmt = mgmt
@@ -836,11 +959,11 @@ def load_wifi_connections():
                 settings.wireless.security = security
                 key = config.get(section, 'key')
                 if mgmt == 'none':
-                    secrets.wep_key = key
+                    settings.wireless_security.wep_key = key
                     auth_alg = config.get(section, 'auth-alg')
-                    secrets.auth_alg = auth_alg
+                    settings.wireless_security.auth_alg = auth_alg
                 elif mgmt == 'wpa-psk':
-                    secrets.psk = key
+                    settings.wireless_security.psk = key
                     if config.has_option(section, 'proto'):
                         value = config.get(section, 'proto')
                         settings.wireless_security.proto = value
@@ -853,11 +976,33 @@ def load_wifi_connections():
         except ConfigParser.Error:
             logging.exception('Error reading section')
         else:
-            add_connection(uuid, settings, secrets)
+            add_connection(settings)
+
+    os.unlink(config_path)
 
 
-def load_gsm_connection():
-    _BAUD_RATE = 115200
+def create_gsm_connection(username, password, number, apn, pin):
+    settings = SettingsGsm()
+    settings.gsm.username = username
+    settings.gsm.number = number
+    settings.gsm.apn = apn
+    settings.gsm.pin = pin
+    settings.gsm.password = password
+
+    settings.connection.id = GSM_CONNECTION_ID
+    settings.connection.type = NM_CONNECTION_TYPE_GSM
+    settings.connection.uuid = unique_id()
+    settings.connection.autoconnect = False
+    settings.ip4_config.method = 'auto'
+    settings.serial.baud = GSM_BAUD_RATE
+
+    add_connection(settings)
+
+
+def _migrate_old_gsm_connection():
+    if find_gsm_connection():
+        # don't attempt migration if a NM-level connection already exists
+        return
 
     client = gconf.client_get_default()
 
@@ -866,43 +1011,86 @@ def load_gsm_connection():
     number = client.get_string(GSM_NUMBER_PATH) or ''
     apn = client.get_string(GSM_APN_PATH) or ''
     pin = client.get_string(GSM_PIN_PATH) or ''
-    puk = client.get_string(GSM_PUK_PATH) or ''
 
-    if username and number and apn:
-        settings = SettingsGsm()
-        settings.gsm.username = username 
-        settings.gsm.number = number
-        settings.gsm.apn = apn
-        
-        secrets = SecretsGsm()
-        secrets.pin = pin
-        secrets.puk = puk
-        secrets.password = password
-
-        settings.connection.id = 'gsm'
-        settings.connection.type = NM_CONNECTION_TYPE_GSM
-        uuid = settings.connection.uuid = unique_id()
-        settings.connection.autoconnect = False
-        settings.ip4_config.method = 'auto'
-        settings.serial.baud = _BAUD_RATE
-
+    if apn or number:
+        logging.info("Migrating old GSM connection details")
         try:
-            add_connection(uuid, settings, secrets)
+            create_gsm_connection(username, password, number, apn, pin)
+            # remove old connection
+            for setting in (GSM_USERNAME_PATH, GSM_PASSWORD_PATH,
+                            GSM_NUMBER_PATH, GSM_APN_PATH, GSM_PIN_PATH,
+                            GSM_PUK_PATH):
+                client.set_string(setting, '')
         except Exception:
             logging.exception('Error adding gsm connection to NMSettings.')
-    else:
-        logging.exception("No gsm connection was set in GConf.")
 
-def load_connections():
-    load_wifi_connections()
-    load_gsm_connection()
 
 def find_gsm_connection():
-    connections = get_settings().connections
+    return find_connection_by_id(GSM_CONNECTION_ID)
 
-    for connection in connections.values():
-        if connection.get_settings().connection.type == NM_CONNECTION_TYPE_GSM:
-            return connection
 
-    logging.debug('There is no gsm connection in the NMSettings.')
-    return None
+def disconnect_access_points(ap_paths):
+    """
+    Disconnect all devices connected to any of the given access points.
+    """
+    bus = dbus.SystemBus()
+    netmgr_obj = bus.get_object(NM_SERVICE, NM_PATH)
+    netmgr = dbus.Interface(netmgr_obj, NM_IFACE)
+    netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
+    active_connection_paths = netmgr_props.Get(NM_IFACE, 'ActiveConnections')
+
+    for conn_path in active_connection_paths:
+        conn_obj = bus.get_object(NM_IFACE, conn_path)
+        conn_props = dbus.Interface(conn_obj, dbus.PROPERTIES_IFACE)
+        ap_path = conn_props.Get(NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+        if ap_path == '/' or ap_path not in ap_paths:
+            continue
+
+        dev_paths = conn_props.Get(NM_ACTIVE_CONN_IFACE, 'Devices')
+        for dev_path in dev_paths:
+            dev_obj = bus.get_object(NM_SERVICE, dev_path)
+            dev = dbus.Interface(dev_obj, NM_DEVICE_IFACE)
+            dev.Disconnect()
+
+
+def _is_non_printable(char):
+    """
+    Return True if char is a non-printable unicode character, False otherwise
+    """
+    return (char < u' ') or (u'~' < char < u'\xA0') or (char == u'\xAD')
+
+
+def ssid_to_display_name(ssid):
+    """Convert an SSID into a unicode string for recognising Access Points
+
+    Return a unicode string that's useful for recognising and
+    distinguishing between Access Points (APs).
+
+    IEEE 802.11 defines SSIDs as arbitrary byte sequences. As random
+    bytes are not very user-friendly, most APs use some human-readable
+    character string as SSID. However, because there's no standard
+    specifying what encoding to use, AP vendors chose various
+    different encodings. Since there's also no indication of what
+    encoding was used for a particular SSID, the best we can do for
+    turning an SSID into a displayable string is to try a couple of
+    encodings based on some heuristic.
+
+    We're currently using the following heuristic:
+
+    1. If the SSID is a valid character string consisting only of
+       printable characters in one of the following encodings (tried in
+       the given order), decode it accordingly:
+       UTF-8, ISO-8859-1, Windows-1251.
+    2. Return a hex dump of the SSID.
+    """
+    for encoding in ['utf-8', 'iso-8859-1', 'windows-1251']:
+        try:
+            display_name = unicode(ssid, encoding)
+        except UnicodeDecodeError:
+            continue
+
+        if not [True for char in display_name if _is_non_printable(char)]:
+            # Only printable characters
+            return display_name
+
+    return ':'.join(['%02x' % (ord(byte), ) for byte in ssid])

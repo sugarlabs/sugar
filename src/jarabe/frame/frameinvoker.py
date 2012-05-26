@@ -19,6 +19,7 @@ import gtk
 from sugar.graphics import style
 from sugar.graphics.palette import WidgetInvoker
 
+
 def _get_screen_area():
     frame_thickness = style.GRID_CELL_SIZE
 
@@ -27,6 +28,7 @@ def _get_screen_area():
     height = gtk.gdk.screen_height() - frame_thickness
 
     return gtk.gdk.Rectangle(x, y, width, height)
+
 
 class FrameWidgetInvoker(WidgetInvoker):
     def __init__(self, widget):

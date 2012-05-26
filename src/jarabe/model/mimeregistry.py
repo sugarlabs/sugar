@@ -21,6 +21,7 @@ import gconf
 
 _DEFAULTS_KEY = '/desktop/sugar/journal/defaults'
 _GCONF_INVALID_CHARS = re.compile('[^a-zA-Z0-9-_/.]')
+
 _instance = None
 
 

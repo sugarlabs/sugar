@@ -24,7 +24,13 @@ import logging
 from sugar import session
 from sugar import env
 
+
 _session_manager = None
+
+
+def have_systemd():
+    return os.access("/sys/fs/cgroup/systemd", 0) >= 0
+
 
 class SessionManager(session.SessionManager):
     MODE_LOGOUT = 0
@@ -51,21 +57,38 @@ class SessionManager(session.SessionManager):
         if env.is_emulator():
             self._close_emulator()
         elif self._logout_mode != self.MODE_LOGOUT:
-            try:
-                bus = dbus.SystemBus()
-                proxy = bus.get_object('org.freedesktop.Hal',
-                                       '/org/freedesktop/Hal/devices/computer')
-                pm = dbus.Interface(proxy,
-                                    'org.freedesktop.Hal.Device.SystemPowerManagement')
+            bus = dbus.SystemBus()
+            if have_systemd():
+                try:
+                    proxy = bus.get_object('org.freedesktop.login1',
+                                           '/org/freedesktop/login1')
+                    pm = dbus.Interface(proxy,
+                                        'org.freedesktop.login1.Manager')
 
-                if self._logout_mode == self.MODE_SHUTDOWN:
-                    pm.Shutdown()
-                elif self._logout_mode == self.MODE_REBOOT:
-                    pm.Reboot()
-            except:
-                logging.exception('Can not stop sugar')
-                self.session.cancel_shutdown()
-                return
+                    if self._logout_mode == self.MODE_SHUTDOWN:
+                        pm.PowerOff(False)
+                    elif self._logout_mode == self.MODE_REBOOT:
+                        pm.Reboot(True)
+                except:
+                    logging.exception('Can not stop sugar')
+                    self.session.cancel_shutdown()
+                    return
+            else:
+                CONSOLEKIT_DBUS_PATH = '/org/freedesktop/ConsoleKit/Manager'
+                try:
+                    proxy = bus.get_object('org.freedesktop.ConsoleKit',
+                                           CONSOLEKIT_DBUS_PATH)
+                    pm = dbus.Interface(proxy,
+                                        'org.freedesktop.ConsoleKit.Manager')
+
+                    if self._logout_mode == self.MODE_SHUTDOWN:
+                        pm.Stop()
+                    elif self._logout_mode == self.MODE_REBOOT:
+                        pm.Restart()
+                except:
+                    logging.exception('Can not stop sugar')
+                    self.session.cancel_shutdown()
+                    return
 
         session.SessionManager.shutdown_completed(self)
         gtk.main_quit()
@@ -73,13 +96,14 @@ class SessionManager(session.SessionManager):
     def _close_emulator(self):
         gtk.main_quit()
 
-        if os.environ.has_key('SUGAR_EMULATOR_PID'):
+        if 'SUGAR_EMULATOR_PID' in os.environ:
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
             os.kill(pid, signal.SIGTERM)
 
-        # Need to call this ASAP so the atexit handlers get called before we get
-        # killed by the X (dis)connection
+        # Need to call this ASAP so the atexit handlers get called before we
+        # get killed by the X (dis)connection
         sys.exit()
+
 
 def get_session_manager():
     global _session_manager

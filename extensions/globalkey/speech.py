@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2006-2008, Red Hat, Inc.
+# Copyright (C) 2011 One Laptop Per Child
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +14,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.activity import main
+from jarabe.model import speech
 
-main.main()
+BOUND_KEYS = ['<alt><shift>s']
+
+
+def handle_key_press(key):
+    manager = speech.get_speech_manager()
+    if manager.is_paused:
+        manager.restart()
+    elif not manager.is_playing:
+        manager.say_selected_text()
+    else:
+        manager.pause()

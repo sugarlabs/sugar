@@ -24,6 +24,7 @@ import os
 import gobject
 import gconf
 import gio
+import glib
 import gtk
 
 from sugar.graphics import style
@@ -32,7 +33,7 @@ from sugar.graphics.xocolor import XoColor
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.icon import Icon, get_icon_file_name
-from sugar.graphics.palette import Palette, WidgetInvoker
+from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.datastore import datastore
 from sugar import mime
@@ -54,6 +55,7 @@ class ActivityButton(RadioToolButton):
         RadioToolButton.__init__(self, group=group)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.cache_palette = False
 
         self._home_activity = home_activity
         self._notify_launch_hid = None
@@ -98,9 +100,13 @@ class ActivityButton(RadioToolButton):
             self._icon.props.pulsing = False
 
 
-
 class InviteButton(ToolButton):
     """Invite to shared activity"""
+
+    __gsignals__ = {
+        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
+
     def __init__(self, invite):
         ToolButton.__init__(self)
 
@@ -124,6 +130,7 @@ class InviteButton(ToolButton):
         palette = InvitePalette(invite)
         palette.props.invoker = FrameWidgetInvoker(self)
         palette.set_group_id('frame')
+        palette.connect('remove-invite', self.__remove_invite_cb)
         self.set_palette(palette)
 
         self._notif_icon = NotificationIcon()
@@ -136,35 +143,36 @@ class InviteButton(ToolButton):
         else:
             self._notif_icon.props.icon_name = 'image-missing'
 
-        palette = InvitePalette(invite)
-        palette.props.invoker = WidgetInvoker(self._notif_icon)
-        palette.set_group_id('frame')
-        self._notif_icon.palette = palette
-
         frame = jarabe.frame.get_view()
         frame.add_notification(self._notif_icon, gtk.CORNER_TOP_LEFT)
 
     def __button_release_event_cb(self, icon, event):
-        self.emit('clicked')
-
-    def __clicked_cb(self, button):
         if self._notif_icon is not None:
             frame = jarabe.frame.get_view()
             frame.remove_notification(self._notif_icon)
             self._notif_icon = None
-            self._launch()
+            self._invite.join()
+            self.emit('remove-invite')
+
+    def __clicked_cb(self, button):
+        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+    def __remove_invite_cb(self, palette):
+        self.emit('remove-invite')
 
     def __destroy_cb(self, button):
-        frame = jarabe.frame.get_view()
-        frame.remove_notification(self._notif_icon)
-
-    def _launch(self):
-        """Join the activity in the invite."""
-        self._invite.join()
+        if self._notif_icon is not None:
+            frame = jarabe.frame.get_view()
+            frame.remove_notification(self._notif_icon)
+            self._notif_icon = None
 
 
 class InvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
+
+    __gsignals__ = {
+        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+    }
 
     def __init__(self, invite):
         Palette.__init__(self, '')
@@ -186,17 +194,18 @@ class InvitePalette(Palette):
         registry = bundleregistry.get_registry()
         self._bundle = registry.get_bundle(bundle_id)
         if self._bundle:
-            self.set_primary_text(self._bundle.get_name())
+            name = self._bundle.get_name()
         else:
-            self.set_primary_text(bundle_id)
+            name = bundle_id
+
+        self.set_primary_text(glib.markup_escape_text(name))
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
+        self.emit('remove-invite')
 
     def __decline_activate_cb(self, menu_item):
-        invites_model = invites.get_instance()
-        activity_id = self._activity_model.get_id()
-        invites_model.remove_activity(activity_id)
+        self.emit('remove-invite')
 
 
 class ActivitiesTray(HTray):
@@ -209,7 +218,8 @@ class ActivitiesTray(HTray):
 
         self._home_model = shell.get_model()
         self._home_model.connect('activity-added', self.__activity_added_cb)
-        self._home_model.connect('activity-removed', self.__activity_removed_cb)
+        self._home_model.connect('activity-removed',
+                                 self.__activity_removed_cb)
         self._home_model.connect('active-activity-changed',
                                  self.__activity_changed_cb)
         self._home_model.connect('tabbing-activity-changed',
@@ -278,7 +288,7 @@ class ActivitiesTray(HTray):
             if window:
                 window.activate(gtk.get_current_event_time())
 
-    def __invite_clicked_cb(self, icon, invite):
+    def __remove_invite_cb(self, icon, invite):
         self._invites.remove_invite(invite)
 
     def __invite_added_cb(self, invites_model, invite):
@@ -290,10 +300,9 @@ class ActivitiesTray(HTray):
     def _add_invite(self, invite):
         """Add an invite"""
         item = InviteButton(invite)
-        item.connect('clicked', self.__invite_clicked_cb, invite)
+        item.connect('remove-invite', self.__remove_invite_cb, invite)
         self.add_item(item)
         item.show()
-
         self._invite_to_item[invite] = item
 
     def _remove_invite(self, invite):
@@ -313,6 +322,7 @@ class ActivitiesTray(HTray):
         self.add_item(button)
         button.show()
 
+
 class BaseTransferButton(ToolButton):
     """Button with a notification attached
     """
@@ -330,11 +340,16 @@ class BaseTransferButton(ToolButton):
         self.notif_icon.connect('button-release-event',
                                  self.__button_release_event_cb)
 
+        self.connect('clicked', self.__button_clicked_cb)
+
     def __button_release_event_cb(self, icon, event):
         if self.notif_icon is not None:
             frame = jarabe.frame.get_view()
             frame.remove_notification(self.notif_icon)
             self.notif_icon = None
+
+    def __button_clicked_cb(self, button):
+        self.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def remove(self):
         frame = jarabe.frame.get_view()
@@ -348,6 +363,7 @@ class BaseTransferButton(ToolButton):
             if file_transfer.reason_last_change == \
                filetransfer.FT_REASON_LOCAL_STOPPED:
                 self.remove()
+
 
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
@@ -429,6 +445,7 @@ class IncomingTransferButton(BaseTransferButton):
     def __dismiss_clicked_cb(self, palette):
         self.remove()
 
+
 class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
@@ -446,7 +463,7 @@ class OutgoingTransferButton(BaseTransferButton):
                 break
 
         client = gconf.client_get_default()
-        icon_color = XoColor(client.get_string("/desktop/sugar/user/color"))
+        icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
@@ -464,18 +481,18 @@ class OutgoingTransferButton(BaseTransferButton):
     def __dismiss_clicked_cb(self, palette):
         self.remove()
 
+
 class BaseTransferPalette(Palette):
     """Base palette class for frame or notification icon for file transfers
     """
-    __gtype_name__ = "SugarBaseTransferPalette"
+    __gtype_name__ = 'SugarBaseTransferPalette'
 
     __gsignals__ = {
-        'dismiss-clicked':          (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([])),
+        'dismiss-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self, file_transfer):
-        Palette.__init__(self, file_transfer.title)
+        Palette.__init__(self, glib.markup_escape_text(file_transfer.title))
 
         self.file_transfer = file_transfer
 
@@ -524,19 +541,23 @@ class BaseTransferPalette(Palette):
         transferred = self._format_size(
                 self.file_transfer.props.transferred_bytes)
         total = self._format_size(self.file_transfer.file_size)
+        # TRANS: file transfer, bytes transferred, e.g. 128 of 1024
         self.progress_label.props.label = _('%s of %s') % (transferred, total)
+
 
 class IncomingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for incoming file transfers
     """
-    __gtype_name__ = "SugarIncomingTransferPalette"
+    __gtype_name__ = 'SugarIncomingTransferPalette'
+
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
 
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
-        nick = self.file_transfer.buddy.props.nick
-        self.props.secondary_text = _('Transfer from %r') % nick
+        nick = str(self.file_transfer.buddy.props.nick)
+        label = glib.markup_escape_text(_('Transfer from %s') % (nick,))
+        self.props.secondary_text = label
 
         self._update()
 
@@ -569,7 +590,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label(_('%s (%s)') % (size, type_description))
+            label = gtk.Label('%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 
@@ -614,12 +635,16 @@ class IncomingTransferPalette(BaseTransferPalette):
             for item in self.menu.get_children():
                 self.menu.remove(item)
 
-            menu_item = MenuItem(_('Resume'), icon_name='dialog-cancel')
-            menu_item.connect('activate', self.__resume_activate_cb)
-            self.menu.append(menu_item)
-            menu_item.show()
-
-            self.update_progress()
+            if self.file_transfer.reason_last_change == \
+                    filetransfer.FT_REASON_REMOTE_STOPPED:
+                menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+                menu_item.connect('activate', self.__dismiss_activate_cb)
+                self.menu.append(menu_item)
+                menu_item.show()
+                text = _('The other participant canceled the file transfer')
+                label = gtk.Label(text)
+                self.set_content(label)
+                label.show()
 
     def __accept_activate_cb(self, menu_item):
         #TODO: figure out the best place to get rid of that temp file
@@ -646,16 +671,14 @@ class IncomingTransferPalette(BaseTransferPalette):
     def __cancel_activate_cb(self, menu_item):
         self.file_transfer.cancel()
 
-    def __resume_activate_cb(self, menu_item):
-        self.file_transfer.resume()
-
     def __dismiss_activate_cb(self, menu_item):
         self.emit('dismiss-clicked')
+
 
 class OutgoingTransferPalette(BaseTransferPalette):
     """Palette for frame or notification icon for outgoing file transfers
     """
-    __gtype_name__ = "SugarOutgoingTransferPalette"
+    __gtype_name__ = 'SugarOutgoingTransferPalette'
 
     def __init__(self, file_transfer):
         BaseTransferPalette.__init__(self, file_transfer)
@@ -665,8 +688,9 @@ class OutgoingTransferPalette(BaseTransferPalette):
 
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
-        nick = file_transfer.buddy.props.nick
-        self.props.secondary_text = _('Transfer to %r') % nick
+        nick = str(file_transfer.buddy.props.nick)
+        label = glib.markup_escape_text(_('Transfer to %s') % (nick,))
+        self.props.secondary_text = label
 
         self._update()
 
@@ -696,7 +720,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label(_('%s (%s)') % (size, type_description))
+            label = gtk.Label('%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 

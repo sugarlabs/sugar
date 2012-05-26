@@ -145,7 +145,7 @@ class ActivityUpdater(SectionView):
             top_message = gobject.markup_escape_text(top_message)
 
         self._top_label.set_markup('<big>%s</big>' % top_message)
-        
+
         if not available_updates:
             self._clear_center()
         else:
@@ -161,7 +161,8 @@ class ActivityUpdater(SectionView):
         self._model.check_updates()
 
     def __install_button_clicked_cb(self, button):
-        self._top_label.set_markup('<big>%s</big>' % _('Installing updates...'))
+        text = '<big>%s</big>' % _('Installing updates...')
+        self._top_label.set_markup(text)
         self._model.update(self._update_box.get_bundles_to_update())
 
     def __cancel_button_clicked_cb(self, button):
@@ -176,12 +177,13 @@ class ActivityUpdater(SectionView):
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._clear_center()
 
-    def undo(self):        
+    def undo(self):
         self._model.cancel()
 
+
 class ProgressPane(gtk.VBox):
-    '''Container which replaces the `ActivityPane` during refresh or
-    install.'''
+    """Container which replaces the `ActivityPane` during refresh or
+    install."""
 
     def __init__(self):
         gtk.VBox.__init__(self)
@@ -359,7 +361,7 @@ class UpdateListModel(gtk.ListStore):
             row[self.SELECTED] = True
             row[self.ICON_FILE_NAME] = bundle_update.bundle.get_icon()
 
-            details = _('From version %(current)d to %(new)s (Size: %(size)s)')
+            details = _('From version %(current)s to %(new)s (Size: %(size)s)')
             details = details % \
                     {'current': bundle_update.bundle.get_activity_version(),
                      'new': bundle_update.version,
@@ -374,9 +376,7 @@ class UpdateListModel(gtk.ListStore):
 
 
 def _format_size(size):
-    '''
-    Convert a given size in bytes to a nicer better readable unit
-    '''
+    """Convert a given size in bytes to a nicer better readable unit"""
     if size == 0:
         # TRANS: download size is 0
         return _('None')
@@ -385,7 +385,7 @@ def _format_size(size):
         return _('1 KB')
     elif size < 1024 * 1024:
         # TRANS: download size of small updates, e.g. '250 KB'
-        return locale.format(_('%.0f KB'), size / 1024.0)
+        return locale.format_string(_('%.0f KB'), size / 1024.0)
     else:
         # TRANS: download size of updates, e.g. '2.3 MB'
-        return locale.format(_('%.1f MB'), size / 1024.0 / 1024)
+        return locale.format_string(_('%.1f MB'), size / 1024.0 / 1024)

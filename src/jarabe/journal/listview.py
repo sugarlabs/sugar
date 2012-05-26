@@ -34,10 +34,9 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
 
+
 UPDATE_INTERVAL = 300
 
-MESSAGE_EMPTY_JOURNAL = 0
-MESSAGE_NO_MATCH = 1
 
 class TreeView(gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
@@ -45,10 +44,11 @@ class TreeView(gtk.TreeView):
     def __init__(self):
         gtk.TreeView.__init__(self)
         self.set_headers_visible(False)
+        self.set_enable_search(False)
 
     def do_size_request(self, requisition):
-        # HACK: We tell the model that the view is just resizing so it can avoid
-        # hitting both D-Bus and disk.
+        # HACK: We tell the model that the view is just resizing so it can
+        # avoid hitting both D-Bus and disk.
         tree_model = self.get_model()
         if tree_model is not None:
             tree_model.view_is_resizing = True
@@ -58,13 +58,12 @@ class TreeView(gtk.TreeView):
             if tree_model is not None:
                 tree_model.view_is_resizing = False
 
+
 class BaseListView(gtk.Bin):
     __gtype_name__ = 'JournalBaseListView'
 
     __gsignals__ = {
-        'clear-clicked': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([]))
+        'clear-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
     }
 
     def __init__(self):
@@ -81,7 +80,8 @@ class BaseListView(gtk.Bin):
         self.connect('destroy', self.__destroy_cb)
 
         self._scrolled_window = gtk.ScrolledWindow()
-        self._scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self._scrolled_window.set_policy(gtk.POLICY_NEVER,
+                                         gtk.POLICY_AUTOMATIC)
         self.add(self._scrolled_window)
         self._scrolled_window.show()
 
@@ -115,14 +115,24 @@ class BaseListView(gtk.Bin):
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
 
-    def __model_created_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_created_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
 
-    def __model_updated_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_updated_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
 
-    def __model_deleted_cb(self, sender, **kwargs):
-        self._set_dirty()
+    def __model_deleted_cb(self, sender, signal, object_id):
+        if self._is_new_item_visible(object_id):
+            self._set_dirty()
+
+    def _is_new_item_visible(self, object_id):
+        """Check if the created item is part of the currently selected view"""
+        if self._query['mountpoints'] == ['/']:
+            return not object_id.startswith('/')
+        else:
+            return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
         cell_favorite = CellRendererFavorite(self.tree_view)
@@ -141,7 +151,8 @@ class BaseListView(gtk.Bin):
         column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         column.props.fixed_width = self.cell_icon.props.width
         column.pack_start(self.cell_icon)
-        column.add_attribute(self.cell_icon, 'file-name', ListModel.COLUMN_ICON)
+        column.add_attribute(self.cell_icon, 'file-name',
+                             ListModel.COLUMN_ICON)
         column.add_attribute(self.cell_icon, 'xo-color',
                              ListModel.COLUMN_ICON_COLOR)
         self.tree_view.append_column(column)
@@ -163,7 +174,8 @@ class BaseListView(gtk.Bin):
         buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
         self.tree_view.append_column(buddies_column)
 
-        for column_index in [ListModel.COLUMN_BUDDY_1, ListModel.COLUMN_BUDDY_2,
+        for column_index in [ListModel.COLUMN_BUDDY_1,
+                             ListModel.COLUMN_BUDDY_2,
                              ListModel.COLUMN_BUDDY_3]:
             cell_icon = CellRendererBuddy(self.tree_view,
                                           column_index=column_index)
@@ -197,7 +209,8 @@ class BaseListView(gtk.Bin):
         self.sort_column.props.resizable = True
         self.sort_column.props.clickable = True
         self.sort_column.pack_start(cell_text)
-        self.sort_column.add_attribute(cell_text, 'text', ListModel.COLUMN_TIMESTAMP)
+        self.sort_column.add_attribute(cell_text, 'text',
+                                       ListModel.COLUMN_TIMESTAMP)
         self.tree_view.append_column(self.sort_column)
 
     def _get_width_for_string(self, text):
@@ -300,9 +313,16 @@ class BaseListView(gtk.Bin):
 
         if len(tree_model) == 0:
             if self._is_query_empty():
-                self._show_message(MESSAGE_EMPTY_JOURNAL)
+                if self._query['mountpoints'] == ['/']:
+                    self._show_message(_('Your Journal is empty'))
+                elif self._query['mountpoints'] == \
+                        [model.get_documents_path()]:
+                    self._show_message(_('Your documents folder is empty'))
+                else:
+                    self._show_message(_('The device is empty'))
             else:
-                self._show_message(MESSAGE_NO_MATCH)
+                self._show_message(_('No matching entries'),
+                                   show_clear_query=True)
         else:
             self._clear_message()
 
@@ -315,18 +335,12 @@ class BaseListView(gtk.Bin):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
         logging.debug('ListView.__map_cb %r', self._scroll_position)
 
-        is_editable = self._query.get('mountpoints', '') == '/'
-        self.cell_title.props.editable = is_editable
-
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
         # a new search term is added.
-        if self._query.get('query', '') or self._query.get('mime_type', '') or \
-                self._query.get('keep', '') or self._query.get('mtime', '') or \
-                self._query.get('activity', ''):
-            return False
-        else:
-            return True
+        return not (self._query.get('query') or self._query.get('mime_type') or
+                    self._query.get('keep') or self._query.get('mtime') or
+                    self._query.get('activity'))
 
     def __model_progress_cb(self, tree_model):
         if self._progress_bar is None:
@@ -355,7 +369,7 @@ class BaseListView(gtk.Bin):
         self.add(self._scrolled_window)
         self._progress_bar = None
 
-    def _show_message(self, message):
+    def _show_message(self, message, show_clear_query=False):
         canvas = hippo.Canvas()
         self.remove(self.child)
         self.add(canvas)
@@ -370,24 +384,17 @@ class BaseListView(gtk.Bin):
 
         icon = CanvasIcon(size=style.LARGE_ICON_SIZE,
                           icon_name='activity-journal',
-                          stroke_color = style.COLOR_BUTTON_GREY.get_svg(),
-                          fill_color = style.COLOR_TRANSPARENT.get_svg())
+                          stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                          fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.append(icon)
 
-        if message == MESSAGE_EMPTY_JOURNAL:
-            text = _('Your Journal is empty')
-        elif message == MESSAGE_NO_MATCH:
-            text = _('No matching entries')
-        else:
-            raise ValueError('Invalid message')
-
-        text = hippo.CanvasText(text=text,
+        text = hippo.CanvasText(text=message,
                 xalign=hippo.ALIGNMENT_CENTER,
                 font_desc=style.FONT_BOLD.get_pango_desc(),
-                color = style.COLOR_BUTTON_GREY.get_int())
+                color=style.COLOR_BUTTON_GREY.get_int())
         box.append(text)
 
-        if message == MESSAGE_NO_MATCH:
+        if show_clear_query:
             button = gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
@@ -420,7 +427,7 @@ class BaseListView(gtk.Bin):
 
         while True:
             x, y, width, height = self.tree_view.get_cell_area(path,
-                                                               self.sort_column)
+                self.sort_column)
             x, y = self.tree_view.convert_tree_to_widget_coords(x, y)
             self.tree_view.queue_draw_area(x, y, width, height)
             if path == end_path:
@@ -460,13 +467,15 @@ class BaseListView(gtk.Bin):
         self.update_dates()
         return True
 
+
 class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
-                           ([object]))
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([object])),
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([str, str])),
     }
 
     def __init__(self):
@@ -482,6 +491,7 @@ class ListView(BaseListView):
 
         self.cell_icon.connect('clicked', self.__icon_clicked_cb)
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
+        self.cell_icon.connect('volume-error', self.__volume_error_cb)
 
         cell_detail = CellRendererDetail(self.tree_view)
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
@@ -523,6 +533,9 @@ class ListView(BaseListView):
     def __detail_clicked_cb(self, cell, uid):
         self.emit('detail-clicked', uid)
 
+    def __volume_error_cb(self, cell, message, severity):
+        self.emit('volume-error', message, severity)
+
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
@@ -538,6 +551,7 @@ class ListView(BaseListView):
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False
 
+
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
 
@@ -549,8 +563,11 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
-        self.props.prelit_stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-        self.props.prelit_fill_color = style.COLOR_BUTTON_GREY.get_svg()
+        client = gconf.client_get_default()
+        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
+        self.props.prelit_fill_color = prelit_color.get_fill_color()
+
 
 class CellRendererDetail(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererDetail'
@@ -568,13 +585,15 @@ class CellRendererDetail(CellRendererIcon):
         self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.prelit_fill_color = style.COLOR_BLACK.get_svg()
 
+
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererActivityIcon'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
+        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                            ([str])),
+        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                           ([str, str])),
     }
 
     def __init__(self, tree_view):
@@ -599,16 +618,22 @@ class CellRendererActivityIcon(CellRendererIcon):
         palette = ObjectPalette(metadata, detail=True)
         palette.connect('detail-clicked',
                         self.__detail_clicked_cb)
+        palette.connect('volume-error',
+                        self.__volume_error_cb)
         return palette
 
     def __detail_clicked_cb(self, palette, uid):
         self.emit('detail-clicked', uid)
+
+    def __volume_error_cb(self, palette, message, severity):
+        self.emit('volume-error', message, severity)
 
     def set_show_palette(self, show_palette):
         self._show_palette = show_palette
 
     show_palette = gobject.property(type=bool, default=True,
                                     setter=set_show_palette)
+
 
 class CellRendererBuddy(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererBuddy'
@@ -643,4 +668,3 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.xo_color = xo_color
 
     buddy = gobject.property(type=object, setter=set_buddy)
-

@@ -30,37 +30,37 @@ from sugar import env
 
 ERROR_NO_DISPLAY = 30
 ERROR_NO_SERVER = 31
-
-
 default_dimensions = (800, 600)
+
+
 def _run_xephyr(display, dpi, dimensions, fullscreen):
-    cmd = [ 'Xephyr' ]
+    cmd = ['Xephyr']
     cmd.append(':%d' % display)
-    cmd.append('-ac') 
+    cmd.append('-ac')
     cmd += ['-title', _('Sugar in a window')]
 
     screen_size = (gtk.gdk.screen_width(), gtk.gdk.screen_height())
 
     if (not dimensions) and (fullscreen is None) and \
-       (screen_size < default_dimensions) :
+       (screen_size <= default_dimensions):
         # no forced settings, screen too small => fit screen
         fullscreen = True
-    elif (not dimensions) :
+    elif not dimensions:
         # screen is big enough or user has en/disabled fullscreen manually
         # => use default size (will get ignored for fullscreen)
         dimensions = '%dx%d' % default_dimensions
 
-    if not dpi :
+    if not dpi:
         dpi = gtk.settings_get_default().get_property('gtk-xft-dpi') / 1024
 
-    if fullscreen :
+    if fullscreen:
         cmd.append('-fullscreen')
 
-    if dimensions :
+    if dimensions:
         cmd.append('-screen')
         cmd.append(dimensions)
 
-    if dpi :
+    if dpi:
         cmd.append('-dpi')
         cmd.append('%d' % dpi)
 
@@ -78,8 +78,8 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
 
 def _check_server(display):
     result = subprocess.call(['xdpyinfo', '-display', ':%d' % display],
-                             stdout=open(os.devnull, "w"),
-                             stderr=open(os.devnull, "w"))
+                             stdout=open(os.devnull, 'w'),
+                             stderr=open(os.devnull, 'w'))
     return result == 0
 
 
@@ -118,6 +118,7 @@ def _start_window_manager():
 
     gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
 
+
 def _setup_env(display, scaling, emulator_pid):
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
@@ -128,7 +129,7 @@ def _setup_env(display, scaling, emulator_pid):
             env.get_profile_path(), 'logs', 'mission-control.log')
     os.environ['STREAM_ENGINE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-stream-engine.log')
-    os.environ['DISPLAY'] = ":%d" % (display)
+    os.environ['DISPLAY'] = ':%d' % (display)
     os.environ['SUGAR_EMULATOR_PID'] = emulator_pid
     os.environ['MC_ACCOUNT_DIR'] = os.path.join(
             env.get_profile_path(), 'accounts')
@@ -136,11 +137,12 @@ def _setup_env(display, scaling, emulator_pid):
     if scaling:
         os.environ['SUGAR_SCALING'] = scaling
 
+
 def main():
     """Script-level operations"""
 
     parser = OptionParser()
-    parser.add_option('-d', '--dpi', dest='dpi', type="int",
+    parser.add_option('-d', '--dpi', dest='dpi', type='int',
                       help='Emulator dpi')
     parser.add_option('-s', '--scaling', dest='scaling',
                       help='Sugar scaling in %')

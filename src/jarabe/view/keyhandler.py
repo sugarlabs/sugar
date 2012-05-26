@@ -17,7 +17,6 @@
 
 import os
 import logging
-import traceback
 
 import dbus
 import gtk
@@ -32,40 +31,41 @@ from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
 
+
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = gtk.gdk.MOD1_MASK
 
+
 _actions_table = {
-    'F1'                   : 'zoom_mesh',
-    'F2'                   : 'zoom_group',
-    'F3'                   : 'zoom_home',
-    'F4'                   : 'zoom_activity',
-    'F5'                   : 'open_search',
-    'F6'                   : 'frame',
-    'XF86AudioMute'        : 'volume_mute',
-    'F11'                  : 'volume_down',
-    'XF86AudioLowerVolume' : 'volume_down',
-    'F12'                  : 'volume_up',
-    'XF86AudioRaiseVolume' : 'volume_up',
-    '<alt>F11'             : 'volume_min',
-    '<alt>F12'             : 'volume_max',
-    '0x93'                 : 'frame',
-    '<alt>Tab'             : 'next_window',
-    '<alt><shift>Tab'      : 'previous_window',
-    '<alt>Escape'          : 'close_window',
-    '0xDC'                 : 'open_search',
+    'F1': 'zoom_mesh',
+    'F2': 'zoom_group',
+    'F3': 'zoom_home',
+    'F4': 'zoom_activity',
+    'F5': 'open_search',
+    'F6': 'frame',
+    'XF86AudioMute': 'volume_mute',
+    'F11': 'volume_down',
+    'XF86AudioLowerVolume': 'volume_down',
+    'F12': 'volume_up',
+    'XF86AudioRaiseVolume': 'volume_up',
+    '<alt>F11': 'volume_min',
+    '<alt>F12': 'volume_max',
+    'XF86MenuKB': 'frame',
+    '<alt>Tab': 'next_window',
+    '<alt><shift>Tab': 'previous_window',
+    '<alt>Escape': 'close_window',
+    'XF86WebCam': 'open_search',
 # the following are intended for emulator users
-    '<alt><shift>f'        : 'frame',
-    '<alt><shift>q'        : 'quit_emulator',
-    'XF86Search'           : 'open_search',
-    '<alt><shift>o'        : 'open_search',
-    '<alt><shift>s'        : 'say_text',
+    '<alt><shift>f': 'frame',
+    '<alt><shift>q': 'quit_emulator',
+    'XF86Search': 'open_search',
+    '<alt><shift>o': 'open_search'
 }
 
-SPEECH_DBUS_SERVICE = 'org.laptop.Speech'
-SPEECH_DBUS_PATH = '/org/laptop/Speech'
-SPEECH_DBUS_INTERFACE = 'org.laptop.Speech'
+
+_instance = None
+
 
 class KeyHandler(object):
     def __init__(self, frame):
@@ -73,7 +73,6 @@ class KeyHandler(object):
         self._key_pressed = None
         self._keycode_pressed = 0
         self._keystate_pressed = 0
-        self._speech_proxy = None
 
         self._key_grabber = KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -95,8 +94,7 @@ class KeyHandler(object):
                             raise ValueError('Key %r is already bound' % key)
                         _actions_table[key] = module
                 except Exception:
-                    logging.error('Exception while loading extension:\n' + \
-                                  traceback.format_exc())
+                    logging.exception('Exception while loading extension:')
 
         self._key_grabber.grab_keys(_actions_table.keys())
 
@@ -110,28 +108,6 @@ class KeyHandler(object):
 
         sound.set_volume(volume)
         sound.set_muted(volume == 0)
-
-    def _get_speech_proxy(self):
-        if self._speech_proxy is None:
-            bus = dbus.SessionBus()
-            speech_obj = bus.get_object(SPEECH_DBUS_SERVICE, SPEECH_DBUS_PATH,
-                                        follow_name_owner_changes=True)
-            self._speech_proxy = dbus.Interface(speech_obj,
-                                                SPEECH_DBUS_INTERFACE)
-        return self._speech_proxy
-
-    def _on_speech_err(self, ex):
-        logging.error('An error occurred with the ESpeak service: %r', ex)
-
-    def _primary_selection_cb(self, clipboard, text, user_data):
-        logging.debug('KeyHandler._primary_selection_cb: %r', text)
-        if text:
-            self._get_speech_proxy().SayText(text, reply_handler=lambda: None, \
-                error_handler=self._on_speech_err)
-
-    def handle_say_text(self, event_time):
-        clipboard = gtk.clipboard_get(selection="PRIMARY")
-        clipboard.request_text(self._primary_selection_cb)
 
     def handle_previous_window(self, event_time):
         self._tabbing_handler.previous_activity(event_time)
@@ -197,7 +173,7 @@ class KeyHandler(object):
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
-                if not action in ["next_window", "previous_window"]:
+                if not action in ['next_window', 'previous_window']:
                     self._tabbing_handler.stop(event_time)
                     return True
 
@@ -220,7 +196,7 @@ class KeyHandler(object):
         return False
 
     def _key_released_cb(self, grabber, keycode, state, event_time):
-        logging.debug('_key_released_cb: %i %i' % (keycode, state))
+        logging.debug('_key_released_cb: %i %i', keycode, state)
         if self._tabbing_handler.is_tabbing():
             # We stop tabbing and switch to the new window as soon as the
             # modifier key is raised again.
@@ -230,7 +206,6 @@ class KeyHandler(object):
             return True
         return False
 
-_instance = None
 
 def setup(frame):
     global _instance
@@ -239,4 +214,3 @@ def setup(frame):
         del _instance
 
     _instance = KeyHandler(frame)
-
