@@ -1,3 +1,18 @@
+sugar-0.96 (0.90.3-2) UNRELEASED; urgency=low
+
+  * Remove debian/source/local-options: abort-on-upstream-changes and
+    unapply-patches are default in dpkg-source since 1.16.1.
+  * Bump debhelper compatibility level to 7.
+  * Use Python helper python2 (not python-support).
+  * Bump standards-version to 3.9.3.
+  * Use anonscm.debian.org for Vcs-Browser field.
+  * Update copyright file:
+    + Rewrite using format 1.0.
+    + Extend copyright coverage of some files to include recent years.
+  * Switch packaging to upstream branch 0.96.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 27 May 2012 01:33:57 +0200
+
 sugar-0.90 (0.90.3-1) unstable; urgency=low
 
   * New upstream stable release.

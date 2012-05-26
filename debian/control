@@ -1,14 +1,13 @@
-Source: sugar-0.90
+Source: sugar-0.96
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>
 DM-Upload-Allowed: yes
-Build-Depends: devscripts (>= 2.10.7~),
- python-central,
- cdbs (>= 0.4.75~),
- python,
- debhelper (>= 6),
+Build-Depends: devscripts,
+ python (>= 2.6.5),
+ cdbs (>= 0.4.97~),
+ debhelper,
  dh-buildinfo,
  libglib2.0-dev,
  python-gtk2-dev,
@@ -17,13 +16,12 @@ Build-Depends: devscripts (>= 2.10.7~),
  intltool,
  shared-mime-info,
  python-empy
-Standards-Version: 3.9.1
+Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
-Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
-XS-Python-Version: all
 
-Package: sucrose-0.90
+Package: sucrose-0.96
 Architecture: all
 Depends: ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -31,17 +29,17 @@ Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - Sucrose 0.90
+Description: Sugar graphical shell - Sucrose 0.96
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
 
-Package: sugar-session-0.90
+Package: sugar-session-0.96
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -50,17 +48,16 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - window manager
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-emulator-0.90
+Package: sugar-emulator-0.96
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -69,18 +66,17 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - emulator
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
  This package contains a wrapper script to run Sugar in a Xephyr window,
  making it possible to run it from inside another Desktop environment.
 
-Package: sugar-tools-0.90
+Package: sugar-tools-0.96
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -89,11 +85,10 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - window manager
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
@@ -104,7 +99,7 @@ Description: Sugar graphical shell - window manager
   - sugar-launch
   - sugar-ui-check
 
-Package: python-jarabe-0.90
+Package: python-jarabe-0.96
 Section: python
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
@@ -114,11 +109,10 @@ Provides: ${python:Provides}, ${cdbs:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-XB-Python-Version: ${python:Versions}
 Description: Sugar graphical shell - library
  Sugar is a graphical user interface aimed at children.
  .
- Originating as intregral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
  Sugar has since grown into a more widely usable low-ressource desktop
  environment for kids.
  .
