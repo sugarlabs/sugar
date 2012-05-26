@@ -5,7 +5,7 @@ Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>
 DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
-Standards-Version: 3.9.1
+Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://git.debian.org/?p=collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
