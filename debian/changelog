@@ -1,3 +1,16 @@
+sugar-0.96 (0.96.1-2) unstable; urgency=low
+
+  * Fix stop depending on sugar-presence-service-*: Solely used by
+    sugar-etoys-activity, according to git commit message in
+    sugar-presence-service.
+  * Drop obsolete l10n patches.
+  * Update package relations:
+    + Relax to suggest (not recommend) sucrose for sugar-session, and
+      sugar-session for python-jarabe and sugar-tools: Eases installing
+      utilities without pulling in everything.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 27 May 2012 18:03:07 +0200
+
 sugar-0.96 (0.96.1-1) unstable; urgency=low
 
   * New upstream stable release.
