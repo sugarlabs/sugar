@@ -75,9 +75,9 @@ Files: AUTHORS
  intltool-extract.in
  intltool-merge.in
  intltool-update.in
+ po/Makevars
  po/POTFILES.in
  po/POTFILES.skip
- po/pl.po
  src/Makefile.am
  src/jarabe/Makefile.am
  src/jarabe/controlpanel/Makefile.am
@@ -85,7 +85,6 @@ Files: AUTHORS
  src/jarabe/frame/Makefile.am
  src/jarabe/intro/Makefile.am
  src/jarabe/intro/__init__.py
- src/jarabe/intro/default-picture.png
  src/jarabe/journal/Makefile.am
  src/jarabe/model/Makefile.am
  src/jarabe/util/Makefile.am
@@ -97,50 +96,60 @@ License: UNKNOWN
 
 Files: po/af.po
  po/am.po
- po/ay.po
+ po/aym.po
  po/bg.po
+ po/bi.po
  po/bn.po
  po/bn_IN.po
  po/da.po
  po/dz.po
  po/el.po
  po/en.po
+ po/fa.po
  po/ff.po
+ po/fil.po
  po/gu.po
  po/ha.po
  po/hi.po
- po/ht.po
+ po/hu.po
+ po/id.po
  po/is.po
+ po/ja.po
  po/km.po
  po/ko.po
  po/kos.po
  po/mg.po
+ po/mi.po
  po/mk.po
  po/ml.po
  po/mn.po
  po/mr.po
+ po/ms.po
  po/mvo.po
  po/nb.po
+ po/ne.po
  po/pa.po
- po/pap.po
- po/pis.po
+ po/pl.po
  po/ps.po
- po/pt_BR.po
- po/qu.po
+ po/quz.po
  po/ro.po
  po/ru.po
  po/rw.po
  po/sd.po
+ po/si.po
+ po/sl.po
  po/sq.po
  po/sw.po
  po/te.po
  po/th.po
- po/tpi.po
+ po/tr.po
  po/tvl.po
  po/tzo.po
- po/ur.po
+ po/ug.po
+ po/wa.po
  po/yo.po
  po/zh_CN.po
+ po/zh_TW.po
 Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
@@ -152,7 +161,9 @@ Files: extensions/cpsection/aboutcomputer/model.py
  extensions/cpsection/language/model.py
  extensions/cpsection/network/model.py
  extensions/cpsection/power/model.py
+ extensions/deviceicon/speech.py
  extensions/deviceicon/volume.py
+ extensions/globalkey/speech.py
  src/jarabe/controlpanel/cmd.py
  src/jarabe/controlpanel/gui.py
  src/jarabe/controlpanel/toolbar.py
@@ -170,23 +181,24 @@ Files: extensions/cpsection/aboutcomputer/model.py
  src/jarabe/journal/journalentrybundle.py
  src/jarabe/journal/misc.py
  src/jarabe/journal/modalalert.py
- src/jarabe/journal/model.py
  src/jarabe/journal/objectchooser.py
  src/jarabe/journal/palettes.py
  src/jarabe/journal/volumestoolbar.py
  src/jarabe/model/notifications.py
+ src/jarabe/model/speech.py
  src/jarabe/util/__init__.py
  src/jarabe/util/telepathy/__init__.py
  src/jarabe/view/palettes.py
  src/jarabe/view/pulsingicon.py
-Copyright: 2007, One Laptop Per Child
+Copyright: 2007, 2011, One Laptop Per Child
+  2007, One Laptop Per Child
   2007-2008, One Laptop Per Child
   2008, One Laptop Per Child
+  2011, One Laptop Per Child
 License: GPL-2+
  FIXME
 
-Files: bin/sugar-activity
- bin/sugar-control-panel
+Files: bin/sugar-control-panel
  bin/sugar-launch
  bin/sugar-ui-check
  extensions/cpsection/network/__init__.py
@@ -281,24 +293,6 @@ Copyright: 2008, OLPC
 License: GPL-2+
  FIXME
 
-Files: po/bi.po
- po/cpp.po
- po/cs.po
- po/fil.po
- po/he.po
- po/hu.po
- po/id.po
- po/mi.po
- po/ms.po
- po/ne.po
- po/sk.po
- po/ug.po
- po/wa.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
 Files: src/jarabe/desktop/friendview.py
  src/jarabe/model/buddy.py
  src/jarabe/model/invites.py
@@ -318,6 +312,15 @@ Copyright: 2006, Red Hat, Inc
   2007, One Laptop Per Child
   2007, Red Hat, Inc
   2008, One Laptop Per Child
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/journal/model.py
+ src/jarabe/model/adhoc.py
+ src/jarabe/model/olpcmesh.py
+Copyright: 2007-2011, One Laptop per Child
+  2009-2010, One Laptop per Child
+  2010, One Laptop per Child
 License: GPL-2+
  FIXME
 
@@ -365,20 +368,6 @@ Copyright: 2008, One Laptop Per Child
 License: GPL-2+
  FIXME
 
-Files: extensions/globalkey/viewsource.py
- src/jarabe/view/viewsource.py
-Copyright: 2008, One Laptop Per Child
-  2009, Tomeu Vizoso, Simon Schampijer
-License: GPL-2+
- FIXME
-
-Files: src/jarabe/model/adhoc.py
- src/jarabe/model/olpcmesh.py
-Copyright: 2009-2010, One Laptop per Child
-  2010, One Laptop per Child
-License: GPL-2+
- FIXME
-
 Files: src/jarabe/frame/zoomtoolbar.py
  src/jarabe/view/keyhandler.py
 Copyright: 2006-2007, Red Hat, Inc
@@ -423,11 +412,12 @@ License: GPL-2+
  FIXME
 
 Files: extensions/cpsection/aboutcomputer/view.py
-Copyright: 2008, OLPC
+Copyright: 2006-2012, One Laptop per Child Association Inc,' \
+  2008, OLPC
   2009, Simon Schampijer
   = gtk.HSeparator()
-  = gtk.Label(" 2006-2010, One Laptop per Child "
   = gtk.Label(_(' and License'))
+  = gtk.Label(_text)
   = gtk.VBox()
 License: GPL-2+
  FIXME
@@ -479,7 +469,7 @@ License: GPL-2+
  FIXME
 
 Files: debian/rules
-Copyright: 2007-2010, Jonas Smedegaard <dr@jones.dk>
+Copyright: 2007-2010, 2012 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
  FIXME
 
@@ -517,6 +507,19 @@ License: GPL-2+
 Files: src/jarabe/desktop/favoriteslayout.py
 Copyright: 2008, One Laptop Per Child
   2010, Sugar Labs
+License: GPL-2+
+ FIXME
+
+Files: extensions/globalkey/viewsource.py
+Copyright: 2008, One Laptop Per Child
+  2009, Tomeu Vizoso, Simon Schampijer
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/view/viewsource.py
+Copyright: 2008, One Laptop Per Child
+  2009, Tomeu Vizoso, Simon Schampijer
+  2011, Walter Bender
 License: GPL-2+
  FIXME
 
@@ -560,9 +563,19 @@ Copyright: 2006-2007, Owen Williams
 License: GPL-2+
  FIXME
 
+Files: src/jarabe/journal/journalwindow.py
+Copyright: 2010, Software for Education, Entertainment and Training
+License: GPL-2+
+ FIXME
+
 Files: extensions/cpsection/updater/model.py
 Copyright: 2009, Sugar Labs
   2009, Tomeu Vizoso
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/view/customizebundle.py
+Copyright: 2011, Walter Bender
 License: GPL-2+
  FIXME
 
@@ -585,20 +598,46 @@ Files: configure
 Copyright: (ISLOWER ? 'A' + ( - 'a') : )
   (ISLOWER ? ( | 0x40) : )
   1992-1996, 1998-2001,
-  2009, Free Software Foundation, Inc
+  2010, Free Software Foundation, Inc
 License: UNKNOWN
  FIXME
 
 Files: po/ar.po
-Copyright: %(current)d إلى %(new)s (الحجم %(size)s)"
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, لجمعي� حاسوب محمول لكل طفل؛ ردهات؛ والمساهمين."
+Copyright: %(current)s إلى %(new)s (الحجم %(size)s)"
   YEAR THE PACKAGE'S HOLDER
+  الاتصال (APN)"
+  الاتصال (APN):"
   المحدد، استخدم on/off."
   بتخطيطات لوح� المفاتيح، كل على الشكل ‪layout(variant)‬"
   تحكم سكر: key=%s ليس متاحا كخيار"
-  شبك� XO"
   عند البدء، أو \"system\" (النظام) "
+License: UNKNOWN
+ FIXME
+
+Files: po/ur.po
+Copyright: (3G) اور موبائل براڈبینڈ �ن�شن قائم �رنے �ے لئے آپ �و مندجہ "
+  (3G) اور موبائل براڈبینڈ �ن�شن قائم �رنے �ے لئے آپ �و مندجہ زیل معلومات فرہم �رنا ہونگی۔
+  APN
+  APN"
+  APNGSM نیٹ ور� APN"
+  PIN
+  PIN"
+  PUK"
+  PUN
+  PUN"
+  YEAR THE PACKAGE'S HOLDER
+  اپ URL
+  اپ URL"
+  ٹاپ بھر میں استعمال �یا جاتا ہے. سٹرنگ سٹرو� رنگ اور بھرنے �ے رنگ پر مشتمل ہے، فارمیٹ ہے RGB رنگوں �ا .مثال �ے طور پر : # AC32FF، 9A5200 #
+  پوچھنے �و "غیر فعال �ر دیا گیا"، UNIX "نظام" ا�اؤنٹ �ے تہت طویل نام �و دوبارہ استعمال �رنے �ے لئے
+  پوچھنے �و \"غیر فعال �ر دیا گیا\"، UNIX \"نظام\" ا�اؤنٹ �ے تہت طویل "
+License: UNKNOWN
+ FIXME
+
+Files: po/cs.po
+Copyright: Jm�no"
+  YEAR THE PACKAGE'S HOLDER
+  povolení:"
 License: UNKNOWN
  FIXME
 
@@ -608,142 +647,31 @@ Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
 License: UNKNOWN
  FIXME
 
-Files: po/it.po
-Copyright: 2008, One Laptop per Child Assocation "
-  2008, One Laptop per Child Association "
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; e Contributori."
-  YEAR THE PACKAGE'S HOLDER
-  e Licenza"
-License: UNKNOWN
- FIXME
-
 Files: po/fr.po
 Copyright: 2007, the Package Owner
-  2008, One Laptop per Child Assocation "
-  2008, One Laptop per Child Association Inc ; Red Hat Inc ; et "
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
+  Personnel (PIN) :"
   [ args ...
   afficher les informations sur cette cl� \n"
-  au portail de r�seau maill� de XO"
-  au portail du r�seau maill� d'�cole"
-  d'�cole..."
-  de XO..."
+  de d�verrouillage personnelle (PUK) du r�seau GSM "
+  depuis %s"
   d�finir la valeur actuelle de cette cl� \n"
   et apportent de nouvelles fonctionnalit�s."
   et licence"
-  inconnu"
   incorrect. Utiliser 0/1."
   je ne parle pas '%s'."
+  la d�connexion."
+  le transfert du fichier"
   obtenir la valeur actuelle associ�e à cette cl� \n"
   pour d�marrer l'entr�e"
   pour reprendre l'entr�e"
+  retir�."
   sans fil :"
+  supprim�e ou a disparu."
   sur le serveur de l'�cole."
+  tactile"
   trouv�es : %s module: %r"
+  une erreur inattendue."
   à le modifier et/ou à en distribuer des copies "
-  à un r�seau maill� simple"
-License: UNKNOWN
- FIXME
-
-Files: po/pt.po
-Copyright: 2008, One Laptop per Child Assocation "
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; e Contribuidores."
-  2008, One Laptop per Child Association"
-  YEAR THE PACKAGE'S HOLDER
-  a interface gráfica de utilizador que estás a utilizar. O Sugar � "
-  a interface gráfica que estás a utilizar."
-  desconhecido."
-  e Licença"
-  guardada"
-  o das cores "
-  o equivalente a em que qual quarto estás tu; pessoas no mesmo "
-  uma opção disponível"
-  utilizada em todo o ambiente gráfico. O texto � "
-  utilizado em todo o ambiente gráfico."
-License: UNKNOWN
- FIXME
-
-Files: po/sl.po
-Copyright: 2008, One Laptop per Child Association Inc, Red Hat Inc in sodelavci."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: po/ja.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and "
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: po/nl.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; en anderen die "
-  YEAR THE PACKAGE'S HOLDER
-  en licentie"
-License: UNKNOWN
- FIXME
-
-Files: po/sv.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; och andra "
-  YEAR THE PACKAGE'S HOLDER
-  och Licens"
-License: UNKNOWN
- FIXME
-
-Files: po/tr.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; ve Destekçiler"
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: po/es.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; y Contribuyentes."
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: po/si.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, One Laptop per Child Association Inc; Red Hat Inc; හා සහදායකයින්."
-  YEAR THE PACKAGE'S HOLDER
-License: UNKNOWN
- FIXME
-
-Files: po/vi.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  YEAR THE PACKAGE'S HOLDER
-  ai"
-  tự đã thích. Nếu không có bản dịch thì dùng ngôn "
-  để giải phóng thêm s�c ch�a cho mục nhập "
-License: UNKNOWN
- FIXME
-
-Files: po/ta.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008இல் ஒரு பிள்ளைக்கு ஒரு மடிமேல்கணி�ி கொடுக்க இணக்கம்Inc; Red Hat Inc; "
-  YEAR THE PACKAGE'S HOLDER
-  pm விவாதம் தவறு . உபயோகி on/off."
-License: UNKNOWN
- FIXME
-
-Files: po/de.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  YEAR THE PACKAGE'S HOLDER
-  und Lizenz"
-License: UNKNOWN
- FIXME
-
-Files: po/zh_TW.po
-Copyright: 2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
-  2008, 每童一� 公司; 紅帽 公司; 以及其他的貢獻者"
-  YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
@@ -753,23 +681,122 @@ Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
 License: UNKNOWN
  FIXME
 
-Files: po/ca.po
+Files: po/pt.po
 Copyright: YEAR THE PACKAGE'S HOLDER
-  com a codi code=%s no es pot determinar."
-  l'error"
-  l'error: tots els canvis es perdran"
+  a interface gráfica de utilizador que estás a utilizar. O Sugar � "
+  agora controlado."
+  desconhecida."
+  desconhecido."
+  e Licença"
+  gravada."
+  mais controlado."
+  normal."
+  o das cores "
+  o equivalente ao quarto em que tu estás; pessoas no mesmo "
+  uma opção disponível"
+  usado no ambiente gráfico."
+  utilizada em todo o ambiente gráfico. O texto � "
+  utilizado no ambiente gráfico."
 License: UNKNOWN
  FIXME
 
-Files: po/fa.po
+Files: po/vi.po
 Copyright: YEAR THE PACKAGE'S HOLDER
-  مدخل تنیده XO"
+  ai"
+  tự đã thích. Nếu không có bản dịch thì dùng ngôn "
+  để giải phóng thêm s�c ch�a cho mục nhập "
+License: UNKNOWN
+ FIXME
+
+Files: po/ht.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  avek lisans"
+License: UNKNOWN
+ FIXME
+
+Files: po/ca.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  com a codi code=%s no es pot determinar."
+License: UNKNOWN
+ FIXME
+
+Files: po/es.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  desconectado del punto de acceso o del server de "
+  quitado."
+  rechazada."
+License: UNKNOWN
+ FIXME
+
+Files: po/it.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  e Licenza"
+  la linea era occupata."
+  non c'era il segnale di linea."
+  non c'era la linea."
+License: UNKNOWN
+ FIXME
+
+Files: po/nl.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  en licentie"
+License: UNKNOWN
+ FIXME
+
+Files: po/pap.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  i/o distribuí kopia di dje bou di sierto "
+  karakterístika nobo."
+License: UNKNOWN
+ FIXME
+
+Files: po/pt_BR.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  o equivalente a uma sala na qual você está. Pessoas no mesmo "
+  salvo."
+  software livre, coberto pela Licença Geral Pública GNU, e você está "
+  um interface gráfico para usuário que você estava procurando. Sugar "
+  uma opção válida"
+  usado na área de trabalho. A string � composta "
+  usado por toda área de trabalho."
+  utilizada por toda área de trabalho."
+License: UNKNOWN
+ FIXME
+
+Files: po/sv.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  och Licens"
+License: UNKNOWN
+ FIXME
+
+Files: po/ta.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  pm விவாதம் தவறு . உபயோகி on/off."
+License: UNKNOWN
+ FIXME
+
+Files: po/de.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  und Lizenz"
+License: UNKNOWN
+ FIXME
+
+Files: po/sk.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  záznamy z denníka, aby sa uvoľnilo miesto pre nov�."
+  žiadne vyhovujúce záznamy"
+License: UNKNOWN
+ FIXME
+
+Files: po/he.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  ב on/off."
 License: UNKNOWN
  FIXME
 
 Files: po/fa_AF.po
 Copyright: YEAR THE PACKAGE'S HOLDER
-  مدخل تنیده XO..."
+  انتخاب موجود نیست یا دردسترس نیستsugar-control-panel:=%s "
 License: UNKNOWN
  FIXME
 
