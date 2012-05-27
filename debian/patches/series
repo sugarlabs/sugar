@@ -1,6 +1,4 @@
-#danish_l10n.patch
 empy_from_system.patch
 #fix_tz_config_path.patch
-#danish_l10n_autotools.patch
 empy_from_system_autotools.patch
 fix_shell_posix_and_quoting.patch
