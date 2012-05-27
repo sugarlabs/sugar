@@ -1,4 +1,3 @@
-debian/tmp/usr/bin/sugar-activity	usr/bin/
 debian/tmp/usr/bin/sugar-control-panel	usr/bin/
 debian/tmp/usr/bin/sugar-install-bundle	usr/bin/
 debian/tmp/usr/bin/sugar-launch		usr/bin/
