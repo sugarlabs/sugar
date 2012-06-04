@@ -58,6 +58,7 @@ src/jarabe/journal/journaltoolbox.py
 src/jarabe/journal/listmodel.py
 src/jarabe/journal/listview.py
 src/jarabe/journal/misc.py
+src/jarabe/journal/model.py
 src/jarabe/journal/modalalert.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
