@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-03-22 21:15+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
@@ -302,25 +302,13 @@ msgstr "Energia"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Erro no argumento automático pm, use ligado / desligado."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Erro no argumento pm extremo, usar ligar/desligar."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Gerenciamento de energia"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Gerenciamento de energia automático (aumenta a duração da bateria)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Gerenciamento de energia extremo (desliga o wireless, aumentando a duração "
-"da bateria)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -616,11 +604,11 @@ msgstr "Mudo"
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -714,6 +702,14 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Atraso da Borda"
+
+#: ../data/sugar.schemas.in.h:15
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Gerenciamento de energia extremo (desliga o wireless, aumentando a duração "
+"da bateria)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1832,3 +1828,6 @@ msgstr "Ver fonte: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Erro no argumento pm extremo, usar ligar/desligar."

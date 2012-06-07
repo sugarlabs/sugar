@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-23 09:18+0200\n"
 "Last-Translator: Yannis <kiolalis@gmail.com>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
@@ -305,26 +305,13 @@ msgstr "Ενέργεια"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Σφάλμα στην παράμετρο αυτόματης Δ.Ε., χρησιμοποιήστε ανοικτό/κλειστό."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-"Σφάλμα στην παράμετρο ακραίας διαχείρισης ενέργειας, χρησιμοποιήστε ανοιχτό "
-"ή κλειστό."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Διαχείριση Ενέργειας"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Αυτόματη διαχείριση ενέργειας (αυξάνει τη διάρκεια της μπαταρίας)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Μέγιστη διαχείριση ενέργειας (απενεργοποιεί την ασύρματη εκπομπή, αυξάνει τη "
-"διάρκεια της μπαταρίας)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -615,11 +602,11 @@ msgstr "Σίγαση"
 msgid "finger"
 msgstr "δάχτυλο"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "στυλό"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Η πινακίδα αφής μου"
 
@@ -713,6 +700,13 @@ msgstr "Κατάλογος για αναζήτηση μεταφράσεων"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Καθυστέρηση ακμής"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Μέγιστη διαχείριση ενέργειας (απενεργοποιεί την ασύρματη εκπομπή, αυξάνει τη "
+"διάρκεια της μπαταρίας)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1834,3 +1828,8 @@ msgstr "Προβολή πηγής: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Το Sugar σε παράθυρο"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr ""
+#~ "Σφάλμα στην παράμετρο ακραίας διαχείρισης ενέργειας, χρησιμοποιήστε ανοιχτό "
+#~ "ή κλειστό."

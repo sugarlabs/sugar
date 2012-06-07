@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-05-04 14:21+0200\n"
-"Last-Translator: anushnur <anush.mkrtchyan@ca1492.com>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-04 20:01+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -301,25 +301,14 @@ msgstr "Սնուցում"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Ձախողում սնուցման ավտոմատ կառավարման տիրույթում՝ օգտագործել on/off:"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Ձախողում սնուցման արտակարգ կառավարման տիրույթում՝ օգտագործել on/off:"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Սնուցման կառավարում"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr ""
 "Սնուցման Ավտոմատ Կառավարում (Երկարացնում է մարտկոցի կյանքի տևողությունը)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Սնուցման արտակարգ կառավարում (անջատում է անլար անտենան, երկարացնում է "
-"մարտկոցի կյանքի տևողությունը)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -612,12 +601,12 @@ msgstr "Անջատել Ձայնը"
 msgid "finger"
 msgstr "մատ"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "Գրափայտ"
 
 # touchpad-հպակ
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Իմ հպակը"
 
@@ -713,6 +702,13 @@ msgstr "Թարգմանություն որոնելու ֆայլերի գրացո�
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Եզրի ուշացում"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Սնուցման արտակարգ կառավարում (անջատում է անլար անտենան, երկարացնում է "
+"մարտկոցի կյանքի տևողությունը)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1142,7 +1138,7 @@ msgid ""
 " the wireless network '%s'."
 msgstr ""
 "Պահանջվում է կոդավորման բանալի\n"
-"անլար ցանցի համար'%s'"
+"անլար ցանցի համար '%s':"
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1839,3 +1835,6 @@ msgstr "Դիտել աղբյուրը. %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar-ը պատուհանում"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Ձախողում սնուցման արտակարգ կառավարման տիրույթում՝ օգտագործել on/off:"

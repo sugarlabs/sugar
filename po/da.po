@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-11 11:07+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -297,22 +297,13 @@ msgstr "Strøm"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Fejl i automatisk pm-argument, brug on/off."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Fejl i ekstremt pm-argument, brug on/off."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Strømstyring"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Automatisk strømstyring (øger batterilevetiden)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "Ekstrem strømstyring (slukker trådløs radio, øger batterilevetid)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -602,11 +593,11 @@ msgstr "Sluk for lyden"
 msgid "finger"
 msgstr "finger"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "pen"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Mit pegefelt"
 
@@ -699,6 +690,11 @@ msgstr "Katalog hvori der søges efter oversættelser"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Kant-forsinkelse"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "Ekstrem strømstyring (slukker trådløs radio, øger batterilevetid)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1814,3 +1810,6 @@ msgstr "Vis kilde: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar i et vindue"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Fejl i ekstremt pm-argument, brug on/off."

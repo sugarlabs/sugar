@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-02-16 07:59+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -298,24 +298,13 @@ msgstr "Струја"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Грешка у аутоматском пм аргументу, користите укључивање / искључивање."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Грешка у екстремном пм аргументу, користите укључивање / искључивање."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Напајање"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Аутоматско управљање напајањем (повећава век трајања батерије)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Екстримно управљање напајањем (онемогућава бежични радио, повећава век "
-"трајања батерије)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -607,11 +596,11 @@ msgstr "Заглуви"
 msgid "finger"
 msgstr "прст"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "грамафонска игла"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Мој тачпед"
 
@@ -701,6 +690,13 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr ""
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Екстримно управљање напајањем (онемогућава бежични радио, повећава век "
+"трајања батерије)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1790,3 +1786,6 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Грешка у екстремном пм аргументу, користите укључивање / искључивање."

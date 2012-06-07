@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2011-12-05 07:36+0200\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-24 08:51+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: kn\n"
@@ -18,8 +18,9 @@ msgstr ""
 "X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
+#, fuzzy
 msgid "About Me"
-msgstr ""
+msgstr "ನನ್ನ ಬಗ್ಗೆ"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -62,20 +63,23 @@ msgid "About my Computer"
 msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
+#, fuzzy
 msgid "Not available"
-msgstr ""
+msgstr "ಲಭ್ಯವಿರುವುದಿಲ್ಲ"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
+#, fuzzy
 msgid "Identity"
-msgstr ""
+msgstr "ಗುರುತು"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
 msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
+#, fuzzy
 msgid "Software"
-msgstr ""
+msgstr "ತಂತ್ರಾಂಶ"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
@@ -132,17 +136,18 @@ msgid "Value must be an integer."
 msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:27
+#, fuzzy
 msgid "never"
-msgstr ""
+msgstr "ಎಂದಿಗೂ ಬೇಡ"
 
 #: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
 msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:29
-#, python-format
+#, python-format, fuzzy
 msgid "%s seconds"
-msgstr ""
+msgstr "%s ಸೆಕೆಂಡು"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
@@ -153,8 +158,9 @@ msgid "Corner"
 msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:113
+#, fuzzy
 msgid "Edge"
-msgstr ""
+msgstr "ಅಂಚು"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
@@ -162,8 +168,9 @@ msgid "Keyboard"
 msgstr "ಕೀಲುಮನೆ"
 
 #: ../extensions/cpsection/keyboard/view.py:190
+#, fuzzy
 msgid "Keyboard Model"
-msgstr ""
+msgstr "ಕೀಲಮಣೆ ಮಾದರಿ"
 
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
@@ -281,33 +288,26 @@ msgid "Server:"
 msgstr "ಪೂರೈಕೆದಾರ:"
 
 #: ../extensions/cpsection/power/__init__.py:21
+#, fuzzy
 msgid "Power"
-msgstr ""
+msgstr "ವಿದ್ಯುಚ್ಛಕ್ತಿ"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr ""
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr ""
 
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-
 #: ../extensions/cpsection/updater/__init__.py:21
+#, fuzzy
 msgid "Software update"
-msgstr ""
+msgstr "ತಂತ್ರಾಂಶ ಅಪ್‌ಡೇಟ್‌"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -342,8 +342,9 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:159
+#, fuzzy
 msgid "Checking for updates..."
-msgstr ""
+msgstr "ಅಪ್‌ಡೇಟ್‌ಗಳಿಗಾಗಿ ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ..."
 
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
@@ -372,8 +373,9 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "ಯಾವುದೂ ಇಲ್ಲ"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
@@ -397,8 +399,9 @@ msgid "My Battery"
 msgstr ""
 
 #: ../extensions/deviceicon/battery.py:147
+#, fuzzy
 msgid "Removed"
-msgstr ""
+msgstr "ತೆಗೆದು ಹಾಕಲಾಗಿದೆ"
 
 #: ../extensions/deviceicon/battery.py:150
 msgid "Charging"
@@ -416,18 +419,20 @@ msgid "%(hour)d:%(min).2d remaining"
 msgstr ""
 
 #: ../extensions/deviceicon/battery.py:163
+#, fuzzy
 msgid "Charged"
-msgstr ""
+msgstr "ಚಾರ್ಜ್ ಆಗಿದೆ"
 
 #: ../extensions/deviceicon/network.py:49
-#, python-format
+#, python-format, fuzzy
 msgid "IP address: %s"
-msgstr ""
+msgstr "IP ವಿಳಾಸ: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:129
 #: ../src/jarabe/desktop/networkviews.py:492
+#, fuzzy
 msgid "Disconnect"
 msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
 
@@ -452,16 +457,19 @@ msgid "No wireless connection"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:133
+#, fuzzy
 msgid "Channel"
 msgstr "ವಾಹಿನಿ"
 
 #: ../extensions/deviceicon/network.py:148
+#, fuzzy
 msgid "Wired Network"
-msgstr ""
+msgstr "ತಂತಿಯುಕ್ತ ಜಾಲಬಂಧ"
 
 #: ../extensions/deviceicon/network.py:177
+#, fuzzy
 msgid "Speed"
-msgstr ""
+msgstr "ವೇಗ"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
@@ -489,6 +497,7 @@ msgstr "ಸಂಪರ್ಕ ಕಡಿತಗೊಳಿಸು"
 #: ../src/jarabe/frame/activitiestray.py:603
 #: ../src/jarabe/frame/activitiestray.py:705
 #: ../src/jarabe/frame/activitiestray.py:733
+#, fuzzy
 msgid "Cancel"
 msgstr "ವಜಾ"
 
@@ -569,8 +578,9 @@ msgid "Pitch"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "ದರ"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -592,36 +602,41 @@ msgstr ""
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:59
+#, fuzzy
 msgid "Mesh"
-msgstr ""
+msgstr "ಜಾಲರಿ"
 
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
+#, fuzzy
 msgid "Group"
 msgstr "ಗುಂಪು"
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
+#, fuzzy
 msgid "Home"
 msgstr "ಮನೆ"
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
+#, fuzzy
 msgid "Activity"
-msgstr ""
+msgstr "ಚಟುವಟಿಕೆ"
 
 #: ../extensions/globalkey/screenshot.py:72
+#, fuzzy
 msgid "Screenshot"
-msgstr ""
+msgstr "ತೆರೆಚಿತ್ರ"
 
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
@@ -683,6 +698,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
@@ -780,12 +800,14 @@ msgid "Keyboard layouts"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:38
+#, fuzzy
 msgid "Keyboard model"
-msgstr ""
+msgstr "ಕೀಲಮಣೆ ಮಾದರಿ"
 
 #: ../data/sugar.schemas.in.h:39
+#, fuzzy
 msgid "Keyboard options"
-msgstr ""
+msgstr "ಕೀಲಮಣೆ ಆಯ್ಕೆಗಳು"
 
 #: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
@@ -869,8 +891,9 @@ msgid "User Color"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:61
+#, fuzzy
 msgid "User Name"
-msgstr ""
+msgstr "ಬಳಕೆದಾರ ಹೆಸರು"
 
 #: ../data/sugar.schemas.in.h:62
 msgid "User name that is used throughout the desktop."
@@ -956,8 +979,9 @@ msgid "Restart now"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#, fuzzy
 msgid "Done"
-msgstr ""
+msgstr "ಆಯಿತು"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
@@ -1046,8 +1070,9 @@ msgid "Register again"
 msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:66
+#, fuzzy
 msgid "Software Update"
-msgstr ""
+msgstr "ತಂತ್ರಾಂಶ ಅಪ್‌ಡೇಟ್‌"
 
 #: ../src/jarabe/desktop/homebox.py:67
 msgid "Update your activities to ensure compatibility with your new software"
@@ -1089,8 +1114,9 @@ msgid "Authentication Type:"
 msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:223
+#, fuzzy
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA & WPA2 ವೈಯಕ್ತಿಕ"
 
 #: ../src/jarabe/desktop/keydialog.py:232
 msgid "Wireless Security:"
@@ -1148,9 +1174,9 @@ msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:545
-#, python-format
+#, python-format, fuzzy
 msgid "%s of %s"
-msgstr ""
+msgstr "%s, %s ನಲ್ಲಿ"
 
 #: ../src/jarabe/frame/activitiestray.py:559
 #, python-format
@@ -1177,9 +1203,10 @@ msgid "Transfer to %s"
 msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
+#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr ""
+msgstr "ತೆಗೆದು ಹಾಕು"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
@@ -1216,16 +1243,18 @@ msgid "F4"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:103
+#, fuzzy
 msgid "Name:"
-msgstr ""
+msgstr "ಹೆಸರು:"
 
 #: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#, fuzzy
 msgid "Back"
-msgstr ""
+msgstr "ಹಿಂದಕ್ಕೆ"
 
 #: ../src/jarabe/intro/window.py:211
 msgid "Next"
@@ -1238,8 +1267,9 @@ msgid "Untitled"
 msgstr "ಹೆಸರಿಲ್ಲದ"
 
 #: ../src/jarabe/journal/expandedentry.py:245
+#, fuzzy
 msgid "No preview"
-msgstr ""
+msgstr "ಮುನ್ನೋಟವಿಲ್ಲ"
 
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
@@ -1249,31 +1279,34 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "ಗೊತ್ತಿಲ್ಲದ"
 
 #: ../src/jarabe/journal/expandedentry.py:265
-#, python-format
+#, python-format, fuzzy
 msgid "Date: %s"
-msgstr ""
+msgstr "ದಿನಾಂಕ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:266
-#, python-format
+#, python-format, fuzzy
 msgid "Size: %s"
-msgstr ""
+msgstr "ಗಾತ್ರ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:294
 #: ../src/jarabe/journal/misc.py:108
+#, fuzzy
 msgid "No date"
-msgstr ""
+msgstr "ದಿನಾಂಕವಿಲ್ಲ"
 
 #: ../src/jarabe/journal/expandedentry.py:301
 msgid "Participants:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:323
+#, fuzzy
 msgid "Description:"
-msgstr ""
+msgstr "ವಿವರಣೆ:"
 
 #: ../src/jarabe/journal/expandedentry.py:348
 msgid "Tags:"
@@ -1283,16 +1316,19 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
+#, fuzzy
 msgid "Journal"
-msgstr ""
+msgstr "ಜರ್ನಲ್"
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
+#, fuzzy
 msgid "Search"
 msgstr "ಹುಡುಕು"
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
+#, fuzzy
 msgid "Anytime"
-msgstr ""
+msgstr "ಯಾವಾಗ ಬೇಕಿದ್ದರೂ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
@@ -1318,8 +1354,9 @@ msgid "Past year"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:156
+#, fuzzy
 msgid "Anyone"
-msgstr ""
+msgstr "ಯಾರಾದರೂ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
@@ -1330,8 +1367,9 @@ msgid "My class"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:301
+#, fuzzy
 msgid "Anything"
-msgstr ""
+msgstr "ಯಾವುದಾದರೂ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
@@ -1395,8 +1433,9 @@ msgid "No matching entries"
 msgstr ""
 
 #: ../src/jarabe/journal/listview.py:398
+#, fuzzy
 msgid "Clear search"
-msgstr ""
+msgstr "ಹುಡುಕನ್ನು ಅಳಿಸು"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
@@ -1475,8 +1514,9 @@ msgid "No activity to resume entry"
 msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "ದಸ್ತಾವೇಜುಗಳು"
 
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
@@ -1719,8 +1759,9 @@ msgid "View Source"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:102
+#, fuzzy
 msgid "Stop"
-msgstr ""
+msgstr "ನಿಲ್ಲಿಸು"
 
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
@@ -1731,9 +1772,10 @@ msgid "Show contents"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:229
+#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr ""
+msgstr "ತೆಗೆದು ಹಾಕು"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"

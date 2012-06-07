@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-03-22 21:13+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,23 +293,13 @@ msgstr "برېښنا"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "تیروتنه په خپلکاری pm ارزښتوړی کې، روښانول/بندول وکاروئ."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "تیروتنه د پای pm ارزښتوړي کې، روښانول/بندول وکاروئ."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "د بریښنا سمبالښت"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "د برېښنا خپلکاری سمبالښت (د بټرۍ ژوند زیاتوي)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "د بریښنا زیات سمبالښت (بیسیم رادیو بندوي، د بټرۍ ژوند زیاتوي)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 #, fuzzy
@@ -610,11 +600,11 @@ msgstr "بېغږه"
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -706,6 +696,12 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "د څنډې ځنډ"
+
+#: ../data/sugar.schemas.in.h:15
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "د بریښنا زیات سمبالښت (بیسیم رادیو بندوي، د بټرۍ ژوند زیاتوي)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1822,3 +1818,6 @@ msgstr "سرچینه کتل: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "تیروتنه د پای pm ارزښتوړي کې، روښانول/بندول وکاروئ."

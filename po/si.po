@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-23 08:50+0200\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-04-24 08:00+0200\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
@@ -296,24 +296,13 @@ msgstr "ශක්තිය"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "ස්වයංක්‍රීය pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "බල කළමණාකරණය"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "ස්වයංක්‍රීය බල කළමණාකරණය (බැටරි ආයු කාලය වැඩි කරයි)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"උපරිම බල කළමණාකරණය ( රැහැන් රහිත රේඩියෝව අක්‍රිය කරයි, බැටරි ආයු කාලය වැඩි "
-"කරයි)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -610,11 +599,11 @@ msgstr "නිශ්ශබ්ද කරන්න"
 msgid "finger"
 msgstr "ඇගිල්ල"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "පන්හිඳ"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "මගේ ස්පර්ශ පුවරුව"
 
@@ -707,6 +696,13 @@ msgstr "පරිවර්ථන සඳහා සෙවීමට නාමාව
 msgid "Edge Delay"
 msgstr "දාර ප්‍රමාදය"
 
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"උපරිම බල කළමණාකරණය ( රැහැන් රහිත රේඩියෝව අක්‍රිය කරයි, බැටරි ආයු කාලය වැඩි "
+"කරයි)"
+
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
 msgstr "ප්‍රියතම වින්‍යාසය"
@@ -758,11 +754,11 @@ msgstr "GSM ජාල පුද්ගලික හැඳිනුම් අං�
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල පුද්ගලික යතුර සැකසීම (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "GSM ජාල දුරකතන අංකය සැකසීම (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -831,11 +827,11 @@ msgstr "යතුරු පුවරු විකල්ප ලැයිස්ත
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාවේ තාරතා අඟය"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාවේ භාවිත කළ තාරතා අඟය"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Power Automatic"
@@ -851,11 +847,11 @@ msgstr "ගැජට්ටුවේ පළකරන්න"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාව සඳහා අනුපාත අඟය"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "ශුගර් තුළ කියවුම් සේවාව සඳහා භාවිත කළ අනුපාත අඟය"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Setting for muting the sound device."
@@ -1134,6 +1130,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"රැහැන් රහිත '%s' ජාලය සඳහා අවශ්‍ය වන \n"
+"සංඛේතාංකන යතුර."
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1226,7 +1224,7 @@ msgstr "නිෂ්ප්‍රභ කරනවා"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "අනෙක් පාර්ශවය විසින් ගොනු හුවමාරුව අවංගු කරන ලදි"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1235,7 +1233,6 @@ msgid "Transfer to %s"
 msgstr "%s ට හුවමාරු කරන්න"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
@@ -1448,11 +1445,11 @@ msgstr "ඔබගේ ජර්නලය හිස්ය"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "ඔබේ ලේඛන බහලුව හිස්ව ඇත"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "මෙවලම හිස්ව ඇත"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1719,19 +1716,19 @@ msgstr "මෙවලමේ වාහකයා/සබැඳිය වෙනස්
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "මෙවලමට සබතාවයක් ඇතැයි අනුමාන කර ඇත."
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "ඉල්ලීම්කරු දැන් සිටී"
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "මොඩමය සොයාගත නොහැක."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "Bluetooth සබඳතාවය අසමත් විය හෝ කල් ඉක්මවා ඇත."
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
@@ -1831,3 +1828,6 @@ msgstr "මූලය පෙන්වන්න: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar කවුළුවක"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-09 19:10+0200\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-19 22:44+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ur\n"
@@ -300,8 +300,9 @@ msgid "Turn off the wireless radio to save battery life"
 msgstr "وائرلیس ریڈیو کو بند کر دیں، بیٹری کی زندگی بچانے کے لئے۔"
 
 #: ../extensions/cpsection/network/view.py:82
+#, fuzzy
 msgid "Radio"
-msgstr ""
+msgstr "ریڈیو"
 
 # نیٹ ورک کی تاریخ کو ضائع کر دیا جائے، اگر آپ کو نیٹ ورک کے ساتھ منسلک کرنےمیں پریشانی یے۔
 #: ../extensions/cpsection/network/view.py:98
@@ -342,25 +343,13 @@ msgstr "پاور"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "خودکار pm برہان میں نقص، آن/آف استعمال کریں۔"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "ایکسٹریم pm برہان میں نقص، آن/آف استعمال کریں۔"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "پاور کنٹرول"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "آٹو ميٹک پاور کنٹرول(بیٹری کا دورانيہ ذيادہ کرنے کے ليے)"
-
-# انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی کو بڑھاتا ہے)
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی "
-"کو بڑھاتا ہے)"
 
 # سافٹ ویئر اپ ڈیٹ
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -400,11 +389,11 @@ msgid "Your software is up-to-date"
 msgstr "آپ کا سافٹ ویئر اپ ڈیٹ ہے"
 
 #: ../extensions/cpsection/updater/view.py:141
-#, python-format
+#, python-format, fuzzy
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
+msgstr[1] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
 
 # اپ ڈیٹس کے لئے جانچ کی جا رہی...
 #: ../extensions/cpsection/updater/view.py:159
@@ -647,8 +636,9 @@ msgid "Create a connection in the control panel."
 msgstr "کنٹرول پینل میں ایک کنکشن بنائیں."
 
 #: ../extensions/deviceicon/speech.py:52
+#, fuzzy
 msgid "Speech"
-msgstr ""
+msgstr "گفتگو"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
@@ -666,8 +656,9 @@ msgid "Pitch"
 msgstr "سطح"
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "شرح"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -691,12 +682,12 @@ msgid "finger"
 msgstr "انگلی کریں"
 
 # اسٹاہلس
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "اسٹاہلس"
 
 # میرا ٹچ پیڈ
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "میرا ٹچ پیڈ"
 
@@ -803,6 +794,14 @@ msgstr "ترجمہ کی تلاش کے لئے ڈائرکٹری"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "ایج تاخیر"
+
+# انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی کو بڑھاتا ہے)
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی "
+"کو بڑھاتا ہے)"
 
 # پسنديدہ خاکہ
 #: ../data/sugar.schemas.in.h:16
@@ -1112,9 +1111,9 @@ msgid "Ok"
 msgstr "ٹھیک ہے"
 
 #: ../src/jarabe/desktop/activitieslist.py:231
-#, python-format
+#, python-format, fuzzy
 msgid "Version %s"
-msgstr ""
+msgstr "ورژن %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
@@ -1164,8 +1163,9 @@ msgstr "پليٹ"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:402
+#, fuzzy
 msgid "Spiral"
-msgstr ""
+msgstr "سپائرل"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
@@ -1244,12 +1244,14 @@ msgid "Authentication Type:"
 msgstr "اجاذت دينے کی قسم:"
 
 #: ../src/jarabe/desktop/keydialog.py:223
+#, fuzzy
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA & WPA2 ذاتی"
 
 #: ../src/jarabe/desktop/keydialog.py:232
+#, fuzzy
 msgid "Wireless Security:"
-msgstr ""
+msgstr "وائیرلیس سیکورٹی"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
@@ -1287,21 +1289,18 @@ msgstr ""
 msgid "Decline"
 msgstr "منظور نہیں ہوا"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 #, python-format, fuzzy
 msgid "%dB"
 msgstr "%dB"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 #, python-format, fuzzy
 msgid "%dKB"
 msgstr "%dKB"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 #, fuzzy
@@ -1326,8 +1325,9 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:627
 #: ../src/jarabe/frame/activitiestray.py:640
 #: ../src/jarabe/frame/activitiestray.py:758
+#, fuzzy
 msgid "Dismiss"
-msgstr ""
+msgstr "برخاست کریں"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
@@ -1413,13 +1413,14 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "نامعلوم"
 
 #: ../src/jarabe/journal/expandedentry.py:265
-#, python-format
+#, python-format, fuzzy
 msgid "Date: %s"
-msgstr ""
+msgstr "تاریخ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
@@ -1436,31 +1437,36 @@ msgid "Participants:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:323
+#, fuzzy
 msgid "Description:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:348
+#, fuzzy
 msgid "Tags:"
-msgstr ""
+msgstr "ٹیگ:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
+#, fuzzy
 msgid "Journal"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
+#, fuzzy
 msgid "Search"
-msgstr ""
+msgstr "تلاش کریں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "آج"
 
 #: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
@@ -1494,16 +1500,19 @@ msgid "My class"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:301
+#, fuzzy
 msgid "Anything"
-msgstr ""
+msgstr "کوئی شے"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
+#, fuzzy
 msgid "Copy to"
-msgstr ""
+msgstr "نقل کریں بطرف"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#, fuzzy
 msgid "Duplicate"
 msgstr ""
 
@@ -1517,6 +1526,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
+#, fuzzy
 msgid "Error"
 msgstr ""
 
@@ -1590,6 +1600,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
+#, fuzzy
 msgid "Close"
 msgstr ""
 
@@ -1610,8 +1621,9 @@ msgid "Send to"
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:121
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "تفاصیل نظارہ"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
@@ -1623,6 +1635,7 @@ msgid "Entries without a file cannot be copied."
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:267
+#, fuzzy
 msgid "Clipboard"
 msgstr ""
 
@@ -1639,8 +1652,9 @@ msgid "No activity to resume entry"
 msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "دستاویزات"
 
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
@@ -1852,8 +1866,9 @@ msgid "Restart"
 msgstr "دوبارہ چلائيں"
 
 #: ../src/jarabe/view/buddymenu.py:101
+#, fuzzy
 msgid "Logout"
-msgstr ""
+msgstr "لاگ آوٹ کریں"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
@@ -1879,8 +1894,9 @@ msgstr ""
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
+#, fuzzy
 msgid "View Source"
-msgstr ""
+msgstr "نظارہ ماخذ"
 
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
@@ -1906,6 +1922,7 @@ msgid "Instance Source"
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:312
+#, fuzzy
 msgid "Source"
 msgstr ""
 
@@ -1918,18 +1935,21 @@ msgid "Sugar Toolkit Source"
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:400
-#, python-format
+#, python-format, fuzzy
 msgid "View source: %s"
-msgstr ""
+msgstr "نظارہ ماخذ: %s"
 
 #: ../src/jarabe/view/viewsource.py:401
-#, python-format
+#, python-format, fuzzy
 msgid "View source: %r"
-msgstr ""
+msgstr "نظارہ ماخذ: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "ایکسٹریم pm برہان میں نقص، آن/آف استعمال کریں۔"
 
 # GSM نیٹ ورک صارف کا نام کی ترتیب
 #~ msgid "GSM network username configuration"

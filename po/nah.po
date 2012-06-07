@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-04-28 06:27+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: nah\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -286,21 +287,12 @@ msgstr ""
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr ""
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -370,8 +362,9 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "Tokayotl"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
@@ -486,8 +479,9 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:603
 #: ../src/jarabe/frame/activitiestray.py:705
 #: ../src/jarabe/frame/activitiestray.py:733
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "Tlamilti"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
@@ -562,8 +556,9 @@ msgid "Stop playback"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Chikotemoli"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
@@ -589,11 +584,11 @@ msgstr ""
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -613,8 +608,9 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
+#, fuzzy
 msgid "Activity"
-msgstr ""
+msgstr "Tekitlachiualistli"
 
 #: ../extensions/globalkey/screenshot.py:72
 msgid "Screenshot"
@@ -680,6 +676,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
@@ -953,8 +954,9 @@ msgid "Restart now"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#, fuzzy
 msgid "Done"
-msgstr ""
+msgstr "Tokayotl"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
@@ -978,8 +980,9 @@ msgstr ""
 #: ../src/jarabe/desktop/activitieslist.py:363
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:280
+#, fuzzy
 msgid "Keep"
-msgstr ""
+msgstr "Ajukuis"
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
@@ -1034,8 +1037,9 @@ msgid "You are now registered with your school server."
 msgstr ""
 
 #: ../src/jarabe/desktop/favoritesview.py:644
+#, fuzzy
 msgid "Register"
-msgstr ""
+msgstr "Tlajkuiloli"
 
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
@@ -1180,8 +1184,9 @@ msgstr ""
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
+#, fuzzy
 msgid "Open"
-msgstr ""
+msgstr "Tlapolli"
 
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
@@ -1221,8 +1226,9 @@ msgid "Click to change color:"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#, fuzzy
 msgid "Back"
-msgstr ""
+msgstr "Tlakuepilis"
 
 #: ../src/jarabe/intro/window.py:211
 msgid "Next"
@@ -1280,8 +1286,9 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
+#, fuzzy
 msgid "Journal"
-msgstr ""
+msgstr "Powalistli"
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
@@ -1350,8 +1357,9 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
 #: ../src/jarabe/journal/volumestoolbar.py:316
+#, fuzzy
 msgid "Error"
-msgstr ""
+msgstr "Kuapopolistli"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:512
@@ -1423,8 +1431,9 @@ msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Tsakua"
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
@@ -1716,8 +1725,9 @@ msgid "View Source"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:102
+#, fuzzy
 msgid "Stop"
-msgstr ""
+msgstr "Moketsas"
 
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"

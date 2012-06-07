@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-11 12:29+0200\n"
 "Last-Translator: Markus <m.slg@gmx.de>\n"
 "Language-Team: German <fedora-trans-de@redhat.com>\n"
@@ -310,25 +310,13 @@ msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 "Fehler im automatischen Energieverwaltungsparameter -- on/off verwenden."
 
-# (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Fehler im extremen Energieverwaltungsparameter -- on/off verwenden."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Energieverwaltung"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Automatische Energieverwaltung (erhöht die Lebensdauer der Batterie)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Extreme Energieverwaltung (deaktiviert das Funknetz, erhöht die Lebensdauer "
-"der Batterie)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -625,11 +613,11 @@ msgstr "Stumm schalten"
 msgid "finger"
 msgstr "Finger"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "Stift"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Mein Touchpad"
 
@@ -725,6 +713,13 @@ msgstr "Verzeichnis zur Suche nach Übersetzungen"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Randverzögerung"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Extreme Energieverwaltung (deaktiviert das Funknetz, erhöht die Lebensdauer "
+"der Batterie)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1865,3 +1860,7 @@ msgstr "Quelltext anzeigen: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar in einem Fenster"
+
+# (Markus S.) vgl. http://lists.laptop.org/pipermail/localization/2008-July/001232.html
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Fehler im extremen Energieverwaltungsparameter -- on/off verwenden."

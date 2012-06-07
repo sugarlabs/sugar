@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-03 04:56+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -299,24 +299,13 @@ msgstr "पावर"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "स्वचालित पीएम तर्क में त्रुटि है, चालू/बन्द प्रयोग करें."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "एक्सट्रीम पीएम तर्क में त्रुटि है, चालू/बन्द प्रयोग करें."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "बिज़ली प्रबंधन"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "स्वचालित बिजली प्रबंधन (बैटरी का जीवन बढ़ाता है)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"एक्सट्रीम ऊर्जा प्रबंधन (वायरलेस रेडियो को बन्द करता है, बैटरी का जीवन "
-"बढ़ाने के लिए)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -613,11 +602,11 @@ msgstr "मौन"
 msgid "finger"
 msgstr "उंगली"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "लेखनी"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "मेरा touchpad"
 
@@ -710,6 +699,13 @@ msgstr "अनुवाद के लिए खोज करने के लि
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "किनारा देरी"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"एक्सट्रीम ऊर्जा प्रबंधन (वायरलेस रेडियो को बन्द करता है, बैटरी का जीवन "
+"बढ़ाने के लिए)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1831,3 +1827,6 @@ msgstr "स्रोत देखें: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar खिड़की मे"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "एक्सट्रीम पीएम तर्क में त्रुटि है, चालू/बन्द प्रयोग करें."

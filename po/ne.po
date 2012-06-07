@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-27 07:21+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -296,24 +296,13 @@ msgstr "पावर"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "स्वचालित pm निर्देशनमा त्रुटि छ, बन्द/खुला प्रयोग गर।"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "चरम रुपको pm निर्देशनमा त्रुटि छ, बन्द/खुला प्रयोग गर।"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "पावर ब्यवस्थापन"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "स्वचालित (अटोम्याटिक) पावर व्यास्थापन"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"चरम पावर व्यास्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याटरीको जीवन वृद्धि "
-"गर्छ)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -611,11 +600,11 @@ msgstr "आवाज बन्द गर"
 msgid "finger"
 msgstr "औँला"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "स्टाइलस"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "मेरो टचप्याड"
 
@@ -707,6 +696,13 @@ msgstr "अनुबादको लागि खोजि गर्न सं�
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "किनार ढिलाइ"
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"चरम पावर व्यास्थापन (यसले वायरलेस रेडियो बन्द गर्छ, ब्याटरीको जीवन वृद्धि "
+"गर्छ)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1826,3 +1822,6 @@ msgstr "स्रोत दृश्य : %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "सञ्झ्यालमा सुगर"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "चरम रुपको pm निर्देशनमा त्रुटि छ, बन्द/खुला प्रयोग गर।"

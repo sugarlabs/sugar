@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-06-05 05:23+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: aym\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #  "Acerca de mí"
 #: ../extensions/cpsection/aboutme/__init__.py:24
@@ -329,22 +330,13 @@ msgstr "Ch'ama"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Pantjata automatic pm amuyt'awipa janiwa/jisa."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Pantjata extreme pm amuyt'awipa janiwa/jisa."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "ch'amana apnaqawipa"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "kipqaki ch'ama apnaqawipa (batteria jaya jaqañataqi)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr "Wali ch'ama apnaqawipa (radio apaqaña, batteria jaya jaqaña)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -368,10 +360,12 @@ msgstr "Yant'aski %s..."
 msgid "Downloading %s..."
 msgstr "q'ipiraski %s..."
 
+#  "Actualizando %s..."
 #: ../extensions/cpsection/updater/view.py:129
 #, python-format
+#, python-format,
 msgid "Updating %s..."
-msgstr ""
+msgstr "Machaqachaski %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
@@ -561,9 +555,8 @@ msgstr ""
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:350
-msgid "Check your PIN/PUK configuration."
-msgstr ""
+#~ msgid "Check your PIN/PUK configuration."
+#~ msgstr ""
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
@@ -594,31 +587,23 @@ msgstr ""
 msgid "Create a connection in the control panel."
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:52
-msgid "Speech"
-msgstr ""
+#~ msgid "Speech"
+#~ msgstr ""
 
-#: ../extensions/deviceicon/speech.py:77
-#: ../extensions/deviceicon/speech.py:138
-#: ../extensions/deviceicon/speech.py:143
-msgid "Say selected text"
-msgstr ""
+#~ msgid "Say selected text"
+#~ msgstr ""
 
-#: ../extensions/deviceicon/speech.py:83
-msgid "Stop playback"
-msgstr ""
+#~ msgid "Stop playback"
+#~ msgstr ""
 
-#: ../extensions/deviceicon/speech.py:97
-msgid "Pitch"
-msgstr ""
+#~ msgid "Pitch"
+#~ msgstr ""
 
-#: ../extensions/deviceicon/speech.py:106
-msgid "Rate"
-msgstr ""
+#~ msgid "Rate"
+#~ msgstr ""
 
-#: ../extensions/deviceicon/speech.py:133
-msgid "Pause playback"
-msgstr ""
+#~ msgid "Pause playback"
+#~ msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -636,11 +621,11 @@ msgstr "Amukt'ayaña"
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -683,271 +668,358 @@ msgid "Additional directories which can contain updated translations."
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
-msgstr ""
+msgstr "Apaqata imata thaqaña URL "
 
+# Paquete de identificadores de las actividades protegidas
 #: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Imata wakich*awinakampi luräwinaka thaqaña yänaka"
 
+# Color para el icono de XO que se utiliza en todo el escritorio. La cadena se compone de la color de trazo y color de relleno, el formato es el de los colores RGB. Ejemplo: # AC32FF, # 9A5200
 #: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"Wakichatanaka uñaña XO mantañaru qillqaña sami. Qillqataxa rixi samimpi "
+"phuqachata samimpitawa, uka saminakaxa RGB uñtatawa. Akhama: # AC32FF, # "
+"9A5200"
 
+# Rincón de retardo
 #: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
-msgstr ""
+msgstr "Qhipt'ata k'uchu"
 
+# Tipo de letra por defecto
 #: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
-msgstr ""
+msgstr "Kunaymana qillqanaka uñstäwi"
 
+# Por defecto el tamaño de fuente
 #: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
-msgstr ""
+msgstr "Qillqa chani uñstäwi"
 
+# Predeterminado nick
 #: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
-msgstr ""
+msgstr "Wakichata nick"
 
+# Retraso de la activación del marco usando las esquinas
 #: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "K'uchunakampi taqi irnaqaña qhantayaña qhipt'äwi"
 
+# Retraso de la activación del marco usando los bordes
 #: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Qawayanakampi taqi irnaqaña qhantayaña qhipt'äwi"
 
+# Directorio de la búsqueda de traducciones
 #: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:12
 msgid "Directory to search for translations"
-msgstr ""
+msgstr "Aru jaqukipatanaka thaqaña wakichata"
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Qawaya Qhipt'awi"
 
-#: ../data/sugar.schemas.in.h:16
-msgid "Favorites Layout"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:17
-msgid "Favorites resume mode"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:18
-msgid "Font face that is used throughout the desktop."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:19
-msgid "Font size that is used throughout the desktop."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:20
-msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:21
-msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:22
-msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:23
-msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:24
-msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:25
-msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:26
-msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:15
 msgid ""
-"GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr "Wali ch'ama apnaqawipa (radio apaqaña, batteria jaya jaqaña)"
 
-#: ../data/sugar.schemas.in.h:28
-msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
+# Favoritos Diseño
+#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:14
+msgid "Favorites Layout"
+msgstr "Wakisirinaka wakichata"
 
-#: ../data/sugar.schemas.in.h:29
-msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+# Favoritos reanudar el modo de
+#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
+msgid "Favorites resume mode"
+msgstr "Ukhama luraña mayampi qalltaña wakisirinaka"
 
-#: ../data/sugar.schemas.in.h:30
-msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+# Fuente cara que se utiliza en todo el escritorio
+#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
+msgid "Font face that is used throughout the desktop."
+msgstr "Taqi kuna qillqañaru wakisiri qillqa uñanaqapa"
 
-#: ../data/sugar.schemas.in.h:31
-msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+# Tamaño de la fuente que se utiliza en todo el escritorio
+#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
+msgid "Font size that is used throughout the desktop."
+msgstr "Taqi kuna qillqañana qillqaña qillqa tañapa"
 
+#~ msgid "GSM network APN (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network PIN (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network PUK (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network number (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network password (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network username (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+#~ msgid "GSM network username configuration (DEPRECATED/UNUSED)"
+#~ msgstr ""
+
+# Si es TRUE, el azúcar nos hará consultada para los demás usuarios del servidor Jabber
 #: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Wakichata TRUE ukampisti, azúcar wakichäwiwa taqinitaki utjani Jabber "
+"wakichata jaqinakapataki"
 
+# Si es TRUE, Azúcar mostrará un "Log out"
 #: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr ""
+"Wakichata TRUE ukampisti, Azúcar wakichäwiwa \"Log out\" wakichäwi qhanstayani"
 
+# Si es TRUE, Azúcar mostrará un "reinicio" opción
 #: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr ""
+"Wakichata TRUE ukampisti, Azúcar wakichäwixa maya \"mayampi qalltaña\" apsuni"
 
+# Si es TRUE, el azúcar se mostrará por defecto redes ad-hoc para el canal de 1,6 y 11. Si el azúcar no ve "conocido" de la red cuando se inicia, lo hace conexión automática a una red Ad-hoc
 #: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"WakichataTRUE ukampisti, azúcar wakichäwimpi pantajata wakichäwiwa wakichata "
+"ad-hoc ukawa uñasini 1,6 y 11 wakichata layanakataki. Wakichata azúcar uka "
+"jani uñjirjama \"uñt'añataki\" wakichata mayampi qalltani, ukatakixa "
+"ukhamataki wakichata Ad-hoc apanaqani"
 
+# Jabber servidor
 #: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
-msgstr ""
+msgstr "Jabber katuqiri"
 
+#  "Distribuciones del teclado"
 #: ../data/sugar.schemas.in.h:37
-#, fuzzy
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
-msgstr "Qillqaña yänaka"
+msgstr "Qillqaña yänaka jaljata"
 
 # "Modelo de teclado"
+#  "Modelo del teclado"
+#  "Modelo de teclado"
 #: ../data/sugar.schemas.in.h:38
-#, fuzzy
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
-msgstr "Kasta qillqaña"
+msgstr "Qillqaña wakichata kasta "
 
+# opciones de teclado
 #: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
-msgstr ""
+msgstr "Qillqaña wakichata utjirinaka"
 
+# Diseño de la vista de favoritos
 #: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Wakichata uñanaqani wakisirinaka"
 
+# Lista de las distribuciones de teclado. Cada entrada debe estar en el diseño del formulario (variante)
 #: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
+"Qillqaña yänaka jaljata siqichata. Sapa qallta arunakaxa wakichatarjama "
+"qillqatañapawa (maynïri)"
 
+# Lista de las opciones del teclado
 #: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
-msgstr ""
+msgstr "Qillqaña wakichata utjirinaka siqichata"
 
-#: ../data/sugar.schemas.in.h:43
-msgid "Pitch value for the speech sugar service"
-msgstr ""
+#~ msgid "Pitch value for the speech sugar service"
+#~ msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
-msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+#~ msgid "Pitch value used by the speech service in Sugar"
+#~ msgstr ""
 
 #: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:41
 msgid "Power Automatic"
-msgstr ""
+msgstr "Power sata qhantayiri"
 
 #: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Extreme"
-msgstr ""
+msgstr "Power sata anqäxa qhantayiri"
 
+# Publicar en Gadget
 #: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Wakichata Gadget taypita apsuña"
 
-#: ../data/sugar.schemas.in.h:48
-msgid "Rate value for the speech sugar service"
-msgstr ""
+#~ msgid "Rate value for the speech sugar service"
+#~ msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
-msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+#~ msgid "Rate value used by the speech service in Sugar"
+#~ msgstr ""
 
+# Ajuste para silenciar el dispositivo de sonido.
 #: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:46
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "Sijiqiri wakichata ÿäru askichaña"
 
+# Mostrar Salir
 #: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:47
 msgid "Show Log out"
-msgstr ""
+msgstr "Mistuñataki jiwayaña limt'aña"
 
+# Mostrar Reiniciar
 #: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:48
 msgid "Show Restart"
-msgstr ""
+msgstr "Mayampi qalltañataki limt'aña"
 
+# Mostrar azúcar redes ad-hoc
 #: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Azúcar wakichata ad-hoc taypita uñachayaña"
 
+# No hay sonido
 #: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:50
 msgid "Sound Muted"
-msgstr ""
+msgstr "Sijiqiri janiwa ist'asiti"
 
+# El modelo de teclado para ser utilizado
 #: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:51
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "Uñaqata qillqaña apanaqañataki ajllita "
 
+# Zona horaria ajuste para el sistema.
 #: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:53
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "Pacha chimpu wakichata yäqañataki askichaña"
 
-#: ../data/sugar.schemas.in.h:58
-msgid "URL of the jabber server to use."
-msgstr ""
+#~ msgid "URL of the jabber server to use."
+#~ msgstr ""
 
-#: ../data/sugar.schemas.in.h:59
-msgid "URL where the backup is saved to."
-msgstr ""
+#~ msgid "URL where the backup is saved to."
+#~ msgstr ""
 
+# color del usuario
 #: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:56
 msgid "User Color"
-msgstr ""
+msgstr "Apnaqirina chimpu samipa"
 
+# Nombre de usuario
 #: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:57
 msgid "User Name"
-msgstr ""
+msgstr "Apnaqirina chimpu sutipa"
 
+# Nombre de usuario que se utiliza en todo el escritorio.
 #: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:58
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "Apnaqirina chimpu sutipa taqi kuna qillqañana apnaqata"
 
+# Los usuarios no podrán borrar estas actividades a través de la vista de lista.
 #: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:59
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Apnaqirinakaxa wakichata luratanaka janiwa chhaqtayañapataki uka "
+"wakichäwinaka siqichata uñasiyasa. "
 
+# Nivel de volumen
 #: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:60
 msgid "Volume Level"
-msgstr ""
+msgstr "Ch'axwiri khuskhachäwi"
 
+# Nivel de volumen para el dispositivo de sonido.
 #: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:61
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "Ch'axwiri khuskhachäwi uka sijiqiri arkañataki wakichata"
 
+# En el modo de curriculum vitae, hacer clic en un icono favorito hará que la última entrada para que la actividad se reanuda.
 #: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:62
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"Uka wakichata curriculum vitae taypita, clic limt'aña wali uñt'ata "
+"limt'asina qallta siqita arunaka taypita lurañanaka mayampi qalltasi."
 
+# de azúcar del panel de control: ADVERTENCIA, que se encuentra más de una opción con el mismo nombre: el módulo% s:% r
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
 msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"Azúcar wakichataru wakisiri wakichata thaqañanaka taypita: ADVERTENCIA, "
+"wakisiwa kunaymana wakisirinakawa pachpa sutini utji: ukasti módulo% s: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
@@ -975,9 +1047,8 @@ msgid ""
 "    "
 msgstr ""
 
-#: ../src/jarabe/controlpanel/cmd.py:52
-msgid "To apply your changes you have to restart Sugar.\n"
-msgstr ""
+#~ msgid "To apply your changes you have to restart Sugar.\n"
+#~ msgstr ""
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -1704,25 +1775,20 @@ msgstr ""
 msgid "The device's carrier/link changed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:297
-msgid "The device's existing connection was assumed."
-msgstr ""
+#~ msgid "The device's existing connection was assumed."
+#~ msgstr ""
 
-#: ../src/jarabe/model/network.py:299
-msgid "The supplicant is now available."
-msgstr ""
+#~ msgid "The supplicant is now available."
+#~ msgstr ""
 
-#: ../src/jarabe/model/network.py:301
-msgid "The modem could not be found."
-msgstr ""
+#~ msgid "The modem could not be found."
+#~ msgstr ""
 
-#: ../src/jarabe/model/network.py:303
-msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+#~ msgid "The Bluetooth connection failed or timed out."
+#~ msgstr ""
 
-#: ../src/jarabe/model/network.py:305
-msgid "Unused."
-msgstr ""
+#~ msgid "Unused."
+#~ msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1804,10 +1870,9 @@ msgstr ""
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:400
 #, python-format
-msgid "View source: %s"
-msgstr ""
+#~ msgid "View source: %s"
+#~ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:401
 #, python-format
@@ -1817,6 +1882,9 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Mis'ki wakichawi"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Pantjata extreme pm amuyt'awipa janiwa/jisa."
 
 #~ msgid "Personal Unblocking Key (PUK):"
 #~ msgstr "Qhantayaña sayt'ayata jist'araña (PUK):"
@@ -1833,3 +1901,118 @@ msgstr "Mis'ki wakichawi"
 #, python-format
 #~ msgid "%s (%s)"
 #~ msgstr "%s (%s)"
+
+# Nombre de usuario de configuración de la red GSM
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network username configuration"
+msgstr "Wakichata GSM wakichäwina jaqipana sutipa"
+
+#  "Clave personal de desbloqueo (PUK):"
+#: ../extensions/cpsection/modemconfiguration/view.py:154
+msgid "Personal Unblocking Key (PUK):"
+msgstr "Qhantayaña sayt'ayata jist'araña (PUK):"
+
+# Url donde se guarda la copia de seguridad.
+#: ../data/sugar.schemas.in.h:55
+msgid "Url where the backup is saved to."
+msgstr "Wakichata Url katuqata apaqata imiri."
+
+# La red GSM configuración de la contraseña
+#: ../data/sugar.schemas.in.h:24
+msgid "GSM network password configuration"
+msgstr "Wakichata GSM wakichäwi qhantayaña jist'arañapa"
+
+#: ../data/sugar.schemas.in.h:42
+msgid "Power Automatic."
+msgstr "Poser sata qhantayiri."
+
+# Número de la red GSM
+#: ../data/sugar.schemas.in.h:22
+msgid "GSM network number"
+msgstr "Wakichata GSM jakhu chimpu"
+
+# GSM de la red telefónica número de configuración
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network telephone number configuration"
+msgstr "GSM telefónica mayachäwina wakichata wakichäwi jakhu chimpu"
+
+# La red GSM de configuración personal clave de desbloqueo
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network personal unlock key configuration"
+msgstr "Wakichata GSM sapa jaqitaki wakichäwi qhantayaña jist'arañapa"
+
+#: ../src/jarabe/controlpanel/cmd.py:52
+msgid "To apply your changes you have to restart sugar.\n"
+msgstr ""
+
+# La red GSM contraseña
+#: ../data/sugar.schemas.in.h:23
+msgid "GSM network password"
+msgstr "Wakichata GSM qhantayaña jist'arañapa"
+
+#  "%(interface)s: %(version)s"
+#: ../extensions/cpsection/aboutcomputer/model.py:183
+#, python-format
+msgid "%(interface)s: %(version)s"
+msgstr "%(interface)s: %(version)s mayjt'äwinaka"
+
+# La red GSM PIN
+#: ../data/sugar.schemas.in.h:19
+msgid "GSM network PIN"
+msgstr "Wakichata GSM PIN"
+
+# La red GSM de identificación personal configuración del número de
+#: ../data/sugar.schemas.in.h:25
+msgid "GSM network personal identification number configuration"
+msgstr "Wakichata GSM sapa jaqiru chimpuña wakichäwi jakhu chimpupampi"
+
+# La red GSM APN
+#: ../data/sugar.schemas.in.h:18
+msgid "GSM network APN"
+msgstr "Wakichatanaka GSM APN"
+
+#: ../extensions/deviceicon/network.py:361
+msgid "Check your Pin/Puk configuration."
+msgstr ""
+
+# La red GSM PUK
+#: ../data/sugar.schemas.in.h:20
+msgid "GSM network PUK"
+msgstr "Wakichata GSM PUK"
+
+#: ../data/sugar.schemas.in.h:44
+msgid "Power Extreme."
+msgstr "Power sata anqäxa qhantayiri."
+
+# URL del servidor de Jabber para su uso.
+#: ../data/sugar.schemas.in.h:54
+msgid "Url of the jabber server to use."
+msgstr "Wakichata URL katuqiri Jabber qhantayiri apnaqañataki."
+
+#  "%s"
+#: ../src/jarabe/desktop/favoritesview.py:339
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+# Nombre de usuario de la red GSM
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network username"
+msgstr "Wakichata GSM jaqipana sutipa"
+
+#  "%s (%s)"
+#: ../src/jarabe/frame/activitiestray.py:592
+#: ../src/jarabe/frame/activitiestray.py:722
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
+
+#  "Error en argumento extremo de manejo de energía, use on/off."
+#: ../extensions/cpsection/power/model.py:120
+msgid "Error in extreme pm argument, use on/off."
+msgstr "Qhanayiri ch'amanchiri sinti ch'amanchäwi pantajata, on/off limt'ma"
+
+# Acceso a la red GSM punto de nombre de la configuración
+#: ../data/sugar.schemas.in.h:21
+msgid "GSM network access point name configuration"
+msgstr "Wakichata GSM sutini wakichatana chiqapa taypiru mantäwi"

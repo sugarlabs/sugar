@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-02-11 06:53+0200\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-05-31 22:04+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -224,11 +224,11 @@ msgstr "Дугаар:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "Хандалтын цэгт өгсөн нэр (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Хувийн нэвтрэх тоо (PIN):"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
@@ -262,10 +262,12 @@ msgstr "Радио"
 #: ../extensions/cpsection/network/view.py:98
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
+"Хэрэв та сүлжээнд холбогдохгүй байгаа бол сүлжээний ажиллагааны тухай "
+"хэсгийг устга"
 
 #: ../extensions/cpsection/network/view.py:107
 msgid "Discard network history"
-msgstr ""
+msgstr "Сүлжээний ажиллагааны тухай хэсгийг устга"
 
 #: ../extensions/cpsection/network/view.py:122
 msgid "Collaboration"
@@ -290,24 +292,13 @@ msgstr "Хүчдэл"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Автомат үүсгүүр зохицуулалтын төлөвд алдаа гарлаа."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Хэт үүсгүүр зохицуулалтын төлөвд алдаа гарлаа."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Хүчдэл зохицуулагч"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Хүчдэлийг автоматаар зохицуулагч (батерейг хэмнэх)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Хүчдэлийг дээд зэргээр хэмнэх (радио долгионыг хааснаар батерейг хэмнэх)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -336,14 +327,15 @@ msgid "Updating %s..."
 msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:139
+#, fuzzy
 msgid "Your software is up-to-date"
-msgstr ""
+msgstr "Таны програм хангамж шинэчлэгдлээ"
 
 #: ../extensions/cpsection/updater/view.py:141
-#, python-format
+#, python-format, fuzzy
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
+msgstr[0] "Шинэчлэл %s суулгах боломжтой"
 msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:159
@@ -367,9 +359,9 @@ msgid "Install selected"
 msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:276
-#, python-format
+#, python-format, fuzzy
 msgid "Download size: %s"
-msgstr ""
+msgstr "Татаж авалтын хэмжээ: %s"
 
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
@@ -383,20 +375,21 @@ msgstr "Огт үгүй"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:385
+#, fuzzy
 msgid "1 KB"
-msgstr ""
+msgstr "1 КБайт"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:388
-#, python-format
+#, python-format, fuzzy
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f КБайт"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:391
-#, python-format
+#, python-format, fuzzy
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f МБайт"
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
@@ -503,8 +496,9 @@ msgid "Cancel"
 msgstr "Болих"
 
 #: ../extensions/deviceicon/network.py:322
+#, fuzzy
 msgid "Try connection again"
-msgstr ""
+msgstr "Дахиад шалгаж үзэх"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
@@ -573,20 +567,24 @@ msgid "Say selected text"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:83
+#, fuzzy
 msgid "Stop playback"
-msgstr ""
+msgstr "Буцааж тоглуулахыг зогсоох"
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Өндөр"
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "Хувь"
 
 #: ../extensions/deviceicon/speech.py:133
+#, fuzzy
 msgid "Pause playback"
-msgstr ""
+msgstr "Муцаж тоглохыг түр зогсоох"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -601,14 +599,15 @@ msgid "Mute"
 msgstr "Дуугүй болгох"
 
 #: ../extensions/deviceicon/touchpad.py:38
+#, fuzzy
 msgid "finger"
-msgstr ""
+msgstr "хуруу"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -636,9 +635,9 @@ msgid "Screenshot"
 msgstr "Дэлгэцний зураг"
 
 #: ../extensions/globalkey/screenshot.py:74
-#, python-format
+#, python-format, fuzzy
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "\"%s\"-н дэлгэцний зураг"
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
@@ -651,8 +650,9 @@ msgid "Additional directories which can contain updated translations."
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:4
+#, fuzzy
 msgid "Backup URL"
-msgstr ""
+msgstr "URL аа нөөцлөх"
 
 #: ../data/sugar.schemas.in.h:5
 msgid "Bundle IDs of protected activities"
@@ -670,12 +670,14 @@ msgid "Corner Delay"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:8
+#, fuzzy
 msgid "Default font face"
-msgstr ""
+msgstr "Үндсэн үсгийн харагдац"
 
 #: ../data/sugar.schemas.in.h:9
+#, fuzzy
 msgid "Default font size"
-msgstr ""
+msgstr "Үндсэн үсгийн хэмжээ"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Default nick"
@@ -696,6 +698,12 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr ""
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Хүчдэлийг хэмнэх тохиргоо (радио долгионыг хаавал батерейг удаан хэрэглэнэ)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -790,15 +798,16 @@ msgstr "Жаббер Сервер"
 #: ../data/sugar.schemas.in.h:37
 #, fuzzy
 msgid "Keyboard layouts"
-msgstr "Гарын бичилтийн байрлал"
+msgstr "Гарын байрлалууд"
 
 #: ../data/sugar.schemas.in.h:38
 msgid "Keyboard model"
 msgstr "Гарын загвар"
 
 #: ../data/sugar.schemas.in.h:39
+#, fuzzy
 msgid "Keyboard options"
-msgstr ""
+msgstr "Гарын сонголтууд"
 
 #: ../data/sugar.schemas.in.h:40
 msgid "Layout of the favorites view."
@@ -1076,8 +1085,9 @@ msgstr "Бүртгүүлэх"
 
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
+#, fuzzy
 msgid "Register again"
-msgstr ""
+msgstr "Дахиад бүртгүүлэх"
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
@@ -1202,7 +1212,7 @@ msgstr "Зөвшөөрөх"
 #: ../src/jarabe/frame/activitiestray.py:758
 #, fuzzy
 msgid "Dismiss"
-msgstr "Алгас"
+msgstr "орхих"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
@@ -1288,8 +1298,9 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "Танигдаагүй"
 
 #: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
@@ -1505,8 +1516,9 @@ msgid "Entries without a file cannot be copied."
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:267
+#, fuzzy
 msgid "Clipboard"
-msgstr ""
+msgstr "Самбар"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
@@ -1812,3 +1824,6 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Хэт үүсгүүр зохицуулалтын төлөвд алдаа гарлаа."

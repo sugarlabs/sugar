@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 21:15+0200\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-06-06 20:12+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -122,7 +122,7 @@ msgstr "Tanggal & Waktu"
 msgid "Error timezone does not exist."
 msgstr "Ada kesalahan: Zona waktu tidak tersedia."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "Zona waktu"
 
@@ -206,13 +206,15 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr ""
+msgstr "Konfigurasi Modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:67
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Anda perlu menyediakan informasi berikut untuk menyiapkan koneksi pita lebar "
+"bergerak ke jaringan seluler (3G)."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
@@ -223,18 +225,16 @@ msgid "Password:"
 msgstr "Kata Sandi:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:89
-#, fuzzy
 msgid "Number:"
-msgstr "Angka:"
+msgstr "Nomor:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
-#, fuzzy
 msgid "Access Point Name (APN):"
-msgstr "Nama Akses Point (APN):"
+msgstr "Access Point Name (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Personal Identity Number (PIN):"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
@@ -301,25 +301,13 @@ msgstr "Daya"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Kesalahan ditemui ketika mengotomatisasi argumen md. gunakan on/off."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Kesalahan ditemui dalam argumen md ekstrim. gunakan on/off."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Manajemen daya"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "Manajemen daya otomatis (meningkatkan ketahanan baterai)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Manajemen daya ektrim (mematikan radio nirkabel, meningkatkan ketahanan "
-"baterai)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -464,9 +452,8 @@ msgid "Connected"
 msgstr "Terhubung"
 
 #: ../extensions/deviceicon/network.py:119
-#, fuzzy
 msgid "No wireless connection"
-msgstr "Tidak koneksi nirkabel"
+msgstr "Tak ada koneksi nirkabel"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
@@ -481,7 +468,6 @@ msgid "Speed"
 msgstr "Kecepatan"
 
 #: ../extensions/deviceicon/network.py:202
-#, fuzzy
 msgid "Wireless modem"
 msgstr "Modem nirkabel"
 
@@ -497,9 +483,8 @@ msgid "Connect"
 msgstr "Koneksikan"
 
 #: ../extensions/deviceicon/network.py:276
-#, fuzzy
 msgid "Disconnected"
-msgstr "Putuskan"
+msgstr "Terputus"
 
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
@@ -512,7 +497,7 @@ msgstr "Batal"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
-msgstr ""
+msgstr "Cobalah menyambung lagi"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
@@ -527,7 +512,7 @@ msgstr "Saran: %s"
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Terhubung selama %s"
 
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
@@ -537,36 +522,36 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Periksa konfigurasi PIN/PUK Anda."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Periksa konfigurasi Access Point Name (APN) Anda."
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Periksa konfigurasi Nomor."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr ""
+msgstr "Periksa konfigurasi Anda."
 
 #: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
-msgstr ""
+msgstr "Jaringan Mesh"
 
 #: ../extensions/deviceicon/network.py:641
 #, python-format
 msgid "Mesh Network %s"
-msgstr ""
+msgstr "Jaringan Mesh %s"
 
 #: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Koneksi GSM tak tersedia."
 
 #: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Buatlah koneksi dalam panel kendali."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
@@ -609,15 +594,15 @@ msgstr "Bisu"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "jari"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "stylus"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "Touchpadku"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
@@ -652,20 +637,18 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
+"\"disabled\" untuk menanyakan nick saat inisialisasi; \"system\" untuk memakai "
+"ulang nama panjang akun UNIX."
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "URL Cadangan"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "ID bundel dari aktivitas yang terlindungi"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -675,106 +658,107 @@ msgstr ""
 "merupakan komposisi dari warna garis dan isi, menggunakan format warna rgb. "
 "Contohnya: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "Waktu Tunda Pojok"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
-msgstr ""
+msgstr "Muka fonta bawaan"
+
+#: ../data/sugar.schemas.in.h:8
+msgid "Default font size"
+msgstr "Ukuran fonta bawaan"
 
 #: ../data/sugar.schemas.in.h:9
-msgid "Default font size"
-msgstr ""
+msgid "Default nick"
+msgstr "Nick bawaan"
 
 #: ../data/sugar.schemas.in.h:10
-msgid "Default nick"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Waktu tunda untuk aktivasi bingkai yang menggunakan pojok."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Waktu tunda untuk aktivasi frame menggunakan sisi-sisinya."
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "Waktu Tunda Sisi"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Manajemen daya ekstrim (matikan radio nirkabel, meningkatkan masa pakai "
+"baterai)"
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "Tatanan Kesukaan"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "Modus kembali kesukaan"
 
-#: ../data/sugar.schemas.in.h:18
-#, fuzzy
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
-msgstr "Nama huruf yang akan digunakan melalui destop."
+msgstr "Muka fonta yang dipakai pada seluruh desktop."
 
-#: ../data/sugar.schemas.in.h:19
-#, fuzzy
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
-msgstr "Ukuran huruf yang akan digunakan melalui destop."
+msgstr "Ukuran fonta yang dipakai pada seluruh desktop."
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -782,145 +766,147 @@ msgstr ""
 "Jika BENAR, Sugar akan membuat kita dapat ditemukan oleh pengguna lain di "
 "server Jabber."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "Jika BENAR, Sugar akan menampilkan pilihan \"Keluar\"."
 
-#: ../data/sugar.schemas.in.h:34
-#, fuzzy
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Jika BENAR, Sugar akan menampilkan pilihan \"Keluar\"."
+msgstr "Jika berisi TRUE, Sugar akan menampilkan pilihan \"Start ulang\"."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Jika berisi TRUE, Sugar akan menampilkan jaringan Ad-hoc bagi kanal 1, 6, "
+"dan 11. Bila Sugar tak melihat jaringan yang \"dikenal\" saat mulai, ia akan "
+"otomatis menyambung ke jaringan Ad-hoc."
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Server Jabber"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "Tatanan papan ketikan"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "Model papan ketikan"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "Pilihan untuk papan ketikan"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "Tatanan untuk penampilan kesukaan."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Daftar dari beberapa tatanan papan ketik. tiap masukan harus dalam susunan "
 "tantanan (varian)"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "Daftar pilihan dari papan ketikan."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Daya Otomatis"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "Daya Ekstrim"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "Publikasikan ke Gadget"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "Setelan untuk membisukan perangkat suara."
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "Perlihatkan \"Keluar\""
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
-msgstr ""
+msgstr "Tampilkan Start ulang"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Tampilkan jaringan Ad-hoc Sugar"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "Suara dibisukan"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "Model papan ketik yang akan digunakan"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "Setelan zona waktu untuk sistem."
 
-#: ../data/sugar.schemas.in.h:58
-#, fuzzy
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
-msgstr "Url dari server jabber yang akan digunakan."
+msgstr "URL dari server jabber yang akan digunakan."
 
-#: ../data/sugar.schemas.in.h:59
-#, fuzzy
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
-msgstr "Url dimana cadangan akan disimpankan."
+msgstr "URL dimana cadangan akan disimpankan."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "Warna Pengguna"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "Nama Pengguna"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "Nama pengguna yang akan digunakan melalui destop."
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Pengguna tak akan diijinkan menghapus aktivitas-aktivitas ini melalui "
+"tilikan daftar."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "Tingkat Volume"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "Tingkat volume dari perangkat suara."
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1090,9 +1076,8 @@ msgstr "Daftarkan"
 
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
-#, fuzzy
 msgid "Register again"
-msgstr "Daftarkan lagi"
+msgstr "Mendaftar lagi"
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
@@ -1130,6 +1115,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"Kunci enkripsi nirkabel diperlukan bagi\n"
+"jaringan nirkabel '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1162,12 +1149,12 @@ msgstr "Bergabung"
 #: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Jaringan Ad-hoc %d"
 
 #: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
 msgid "Mesh Network %d"
-msgstr ""
+msgstr "Jaringan Mesh %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
@@ -1221,7 +1208,7 @@ msgstr "Bubar"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "Partisipan lain membatalkan transfer berkas"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1230,10 +1217,9 @@ msgid "Transfer to %s"
 msgstr "Transfer ke %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Hapuskan"
+msgstr "Hapus"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
@@ -1274,7 +1260,6 @@ msgid "Name:"
 msgstr "Nama:"
 
 #: ../src/jarabe/intro/window.py:133
-#, fuzzy
 msgid "Click to change color:"
 msgstr "Klik untuk mengubah warna:"
 
@@ -1287,7 +1272,8 @@ msgid "Next"
 msgstr "Selanjutnya"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "Tak bernama"
@@ -1395,16 +1381,15 @@ msgstr "Salin ke"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
-#, fuzzy
 msgid "Duplicate"
-msgstr "Duplikatkan"
+msgstr "Duplikat"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Galat saat menyalin entri. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
@@ -1420,19 +1405,19 @@ msgstr "Mulai"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Urutkan menurut tanggal diubah"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
-msgstr ""
+msgstr "Urutkan menurut tanggal dibuat"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr ""
+msgstr "Urutkan menurut ukuran"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
-msgstr ""
+msgstr "Urutkan tilikan"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
@@ -1440,11 +1425,11 @@ msgstr "Jurnal anda kosong"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Folder dokumen Anda kosong"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "Perangkat kosong"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1457,12 +1442,12 @@ msgstr "Bersihkan pencarian"
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Aktivitas Versi %s yang Lebih Lama"
 
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Apakah Anda ingin menuruntingkatkan ke versi %s"
 
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
@@ -1509,15 +1494,14 @@ msgstr "Selengkapnya"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "Entri tanpa suatu berkas tak dapat dikirim."
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "Entri tanpa suatu berkas tak dapat disalin."
 
 #: ../src/jarabe/journal/palettes.py:267
-#, fuzzy
 msgid "Clipboard"
 msgstr "Papan Klip"
 
@@ -1534,7 +1518,6 @@ msgid "No activity to resume entry"
 msgstr "Tidak ada aktivitas untuk mengembalikan masukan"
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
-#, fuzzy
 msgid "Documents"
 msgstr "Dokumen"
 
@@ -1546,170 +1529,171 @@ msgstr "%(free_space)d MB Tersedia"
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Alasan perubahan keadaan perangkat tak diketahui."
 
 #: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
-msgstr ""
+msgstr "Perubahan keadaan adalah normal."
 
 #: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
-msgstr ""
+msgstr "Perangkat kini dikelola."
 
 #: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Perangkat tak dikelola lagi."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "Perangkat tak dapat dibuat siap untuk konfigurasi."
 
 #: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"Konfigurasi IP tak dapat dipesan (alamat tak tersedia, waktu habis, dsb)."
 
 #: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "Konfigurasi IP tak berlaku lagi."
 
 #: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Rahasia diperlukan, tapi tak diberikan."
 
 #: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
-msgstr ""
+msgstr "802.1X supplicant terputus dari access point atau server otentikasi."
 
 #: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "Konfigurasi dari 802.1X supplicant gagal."
 
 #: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "802.1X supplicant keluar atau gagal tak disangka-sangka."
 
 #: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "802.1X supplicant makan waktu terlalu lama untuk mengotentikasi."
 
 #: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Layanan PPP gagal mulai dalam waktu yang disediakan."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "Layanan PPP terputus tak diduga."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Layanan PPP keluar atau gagal tak terduga."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Layanan DHCP gagal mulai dalam waktu yang disediakan."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "Layanan DHCP melaporkan galat yang tak diharapkan."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Layanan DHCP keluar atau gagal tak terduga."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Layanan koneksi bersama gagal mulai."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Layanan koneksi bersama keluar atau gagal tak terduga."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Layanan AutoIP gagal mulai."
 
 #: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "Layanan AutoIP melaporkan galat yang tak diharapkan."
 
 #: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Layanan AutoIP keluar atau gagal tak terduga."
 
 #: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Pemanggilan telepon gagal karena jalur sibuk."
 
 #: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Pemanggilan telepon gagal karena tidak ada nada sambung."
 
 #: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Pemanggilan telepon gagal karena tidak ada carrier."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Pemanggilan telepon kehabisan waktu."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
-msgstr ""
+msgstr "Pemanggilan telepon gagal."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Inisialisasi modem gagal."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Gagal memilih APN GSM yang dinyatakan"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Tak sedang mencari jaringan."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Registrasi jaringan ditolak."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Registrasi jaringan kehabisan waktu."
 
 #: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Gagal mendaftar ke jaringan GSM yang diminta."
 
 #: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
-msgstr ""
+msgstr "Pemeriksaan PIN gagal."
 
 #: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Firmware yang diperlukan bagi perangkat mungkin hilang."
 
 #: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
-msgstr ""
+msgstr "Perangkat dilepas."
 
 #: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "NetworkManager pergi tidur."
 
 #: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "Koneksi aktif perangkat dihapus atau menghilang."
 
 #: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Suatu pengguna atau klien meminta pemutusan."
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Carrier/link perangkat berubah."
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
@@ -1744,9 +1728,8 @@ msgid "Shutdown"
 msgstr "Matikan"
 
 #: ../src/jarabe/view/buddymenu.py:95
-#, fuzzy
 msgid "Restart"
-msgstr "Jalankan Ulang"
+msgstr "Start ulang"
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
@@ -1763,18 +1746,17 @@ msgstr "Undang ke %s"
 
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 msgid "<b>%s</b> failed to start."
-msgstr "<b>%s</b> gagal menjalankan."
+msgstr "<b>%s</b> gagal mulai."
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
 msgstr "Memulai..."
 
 #: ../src/jarabe/view/palettes.py:58
-#, fuzzy
 msgid "Activity failed to start"
-msgstr "Kegiatan gagal menjalankan"
+msgstr "Aktivitas gagal mulai"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
@@ -1794,10 +1776,9 @@ msgid "Show contents"
 msgstr "Lihat isinya"
 
 #: ../src/jarabe/view/palettes.py:229
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr "Hapuskan"
+msgstr "Hapus"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
@@ -1813,7 +1794,7 @@ msgstr "Sumber Paket Aktivitas"
 
 #: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Sumber Toolkit Sugar"
 
 #: ../src/jarabe/view/viewsource.py:400
 #, python-format
@@ -1828,4 +1809,82 @@ msgstr "Lihat sumber: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
-msgstr ""
+msgstr "Sugar dalam suatu jendela"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "Direktori tambahan yang dapat memuat terjemahan yang dimutakhirkan."
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "Direktori tempat mencari terjemahan"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Kesalahan ditemui dalam argumen md ekstrim. gunakan on/off."
+
+#~ msgid "GSM network username configuration"
+#~ msgstr "Konfigurasi nama pengguna jaringan GSM"
+
+#~ msgid "Personal Unblocking Key (PUK):"
+#~ msgstr "Personal Unblocking Key (PUK):"
+
+#~ msgid "Url where the backup is saved to."
+#~ msgstr "Url dimana cadangan akan disimpankan."
+
+#~ msgid "GSM network password configuration"
+#~ msgstr "Konfigurasi kata sandi jaringan GSM"
+
+#~ msgid "Power Automatic."
+#~ msgstr "Daya Otomatis."
+
+#~ msgid "GSM network number"
+#~ msgstr "Nomor jaringan GSM"
+
+#~ msgid "GSM network telephone number configuration"
+#~ msgstr "Konfigurasi nomor telepon jaringan GSM"
+
+#~ msgid "GSM network personal unlock key configuration"
+#~ msgstr "Konfigurasi personal unlock key jaringan GSM"
+
+#~ msgid "To apply your changes you have to restart sugar.\n"
+#~ msgstr "Untuk mendapatkan perubahan yang ada anda diharuskan memulai ulang sugar.\n"
+
+#~ msgid "GSM network password"
+#~ msgstr "Kata sandi jaringan GSM"
+
+#, python-format
+#~ msgid "%(interface)s: %(version)s"
+#~ msgstr "%(interface)s: %(version)s"
+
+#~ msgid "GSM network PIN"
+#~ msgstr "PIN jaringan GSM"
+
+#~ msgid "GSM network personal identification number configuration"
+#~ msgstr "Konfigurasi personal identification number jaringan GSM"
+
+#~ msgid "GSM network APN"
+#~ msgstr "APN jaringan GSM"
+
+#~ msgid "GSM network PUK"
+#~ msgstr "PUK jaringan GSM"
+
+#~ msgid "Power Extreme."
+#~ msgstr "Daya Ekstrim."
+
+#~ msgid "Url of the jabber server to use."
+#~ msgstr "Url dari server jabber yang akan digunakan."
+
+#, python-format
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#~ msgid "GSM network username"
+#~ msgstr "Nama pengguna jaringan GSM"
+
+#, python-format
+#~ msgid "%s (%s)"
+#~ msgstr "%s (%s)"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Kesalahan ditemui dalam argumen md ekstrim. gunakan on/off."
+
+#~ msgid "GSM network access point name configuration"
+#~ msgstr "Konfigurasi access point name jaringan GSM"

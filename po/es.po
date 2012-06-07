@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
 "PO-Revision-Date: 2012-04-12 10:31+0200\n"
 "Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
@@ -302,25 +302,13 @@ msgstr "Energía"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Error en argumento automático de manejo de energía, use on/off."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Error en argumento extremo de manejo de energía, use on/off."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Manejo de energía"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
 msgstr "Manejo automático de energía (incrementa la vida de la batería)"
-
-# best translationfor now
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Manejo extremo de energía (deshabilita el radio wireless, incrementa la vida "
-"de la batería)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -612,11 +600,11 @@ msgstr "Silenciar"
 msgid "finger"
 msgstr "dedo"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "estilo"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "Mi superficie táctil"
 
@@ -711,6 +699,14 @@ msgstr "Directorio a buscar para traducciones"
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
 msgstr "Retraso del Borde"
+
+# best translationfor now
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Manejo extremo de energía (deshabilita el radio wireless, incrementa la vida "
+"de la batería)"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Favorites Layout"
@@ -1858,3 +1854,6 @@ msgstr "Ver código fuente: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar en una ventana"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Error en argumento extremo de manejo de energía, use on/off."

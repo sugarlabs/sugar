@@ -2,19 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"PO-Revision-Date: 2012-04-30 07:57+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ff\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.0.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -73,8 +74,9 @@ msgid "Serial Number:"
 msgstr ""
 
 #: ../extensions/cpsection/aboutcomputer/view.py:90
+#, fuzzy
 msgid "Software"
-msgstr ""
+msgstr "Topre"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:99
 msgid "Build:"
@@ -117,8 +119,9 @@ msgid "Error timezone does not exist."
 msgstr ""
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#, fuzzy
 msgid "Timezone"
-msgstr ""
+msgstr "Diiwaan Waktu"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -156,8 +159,9 @@ msgstr ""
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
+#, fuzzy
 msgid "Keyboard"
-msgstr ""
+msgstr "Tappirde"
 
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
@@ -173,8 +177,9 @@ msgstr ""
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
+#, fuzzy
 msgid "Language"
-msgstr ""
+msgstr "Ɗemngal"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
@@ -207,16 +212,18 @@ msgid ""
 msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
+#, fuzzy
 msgid "Username:"
-msgstr ""
+msgstr "Innde kuutoro:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:83
 msgid "Password:"
 msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:89
+#, fuzzy
 msgid "Number:"
-msgstr ""
+msgstr "Limoore:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
@@ -286,21 +293,12 @@ msgstr ""
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr ""
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
 msgid "Automatic power management (increases battery life)"
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -419,8 +417,9 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:49
 #, python-format
+#, python-format, fuzzy
 msgid "IP address: %s"
-msgstr ""
+msgstr "Ƴiiɓirde IP: %s"
 
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
@@ -442,8 +441,9 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:245
 #: ../src/jarabe/desktop/networkviews.py:535
 #: ../src/jarabe/desktop/networkviews.py:669
+#, fuzzy
 msgid "Connected"
-msgstr ""
+msgstr "Jokkaade"
 
 #: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
@@ -458,8 +458,9 @@ msgid "Wired Network"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:177
+#, fuzzy
 msgid "Speed"
-msgstr ""
+msgstr "Yaawre"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
@@ -473,8 +474,9 @@ msgstr ""
 #: ../src/jarabe/desktop/networkviews.py:125
 #: ../src/jarabe/desktop/networkviews.py:488
 #: ../src/jarabe/desktop/networkviews.py:619
+#, fuzzy
 msgid "Connect"
-msgstr ""
+msgstr "Jokkaade"
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Disconnected"
@@ -495,8 +497,9 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
+#, python-format, fuzzy
 msgid "Error: %s"
-msgstr ""
+msgstr "Juumre: %s"
 
 #: ../extensions/deviceicon/network.py:329
 #, python-format
@@ -558,12 +561,14 @@ msgid "Say selected text"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:83
+#, fuzzy
 msgid "Stop playback"
-msgstr ""
+msgstr "Dartin Tartol"
 
 #: ../extensions/deviceicon/speech.py:97
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Ceeɓeeki"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
@@ -578,22 +583,24 @@ msgid "My Speakers"
 msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:138
+#, fuzzy
 msgid "Unmute"
-msgstr ""
+msgstr "Ittu muumɗinal"
 
 #: ../extensions/deviceicon/speaker.py:141
+#, fuzzy
 msgid "Mute"
-msgstr ""
+msgstr "Muumɗin"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
 
@@ -608,8 +615,9 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
+#, fuzzy
 msgid "Home"
-msgstr ""
+msgstr "Damal"
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -680,6 +688,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Edge Delay"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:15
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
@@ -1013,13 +1026,15 @@ msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
+#, fuzzy
 msgid "Box"
-msgstr ""
+msgstr "Wakannde"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
+#, fuzzy
 msgid "Triangle"
-msgstr ""
+msgstr "Tatiwal"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
