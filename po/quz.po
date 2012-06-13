@@ -1983,17 +1983,3 @@ msgstr "Qhaway chimputa: %r"
 msgid "Sugar in a window"
 msgstr "Juk qhawanapi Azucar"
 
-#  "%(interface)s: %(version)s"
-#, python-format
-#~ msgid "%(interface)s: %(version)s"
-#~ msgstr "%(interface)s: %(version)s"
-
-#  "%s"
-#, python-format
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#  "%s (%s)"
-#, python-format
-#~ msgid "%s (%s)"
-#~ msgstr "%s (%s)"
