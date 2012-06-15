@@ -1811,37 +1811,3 @@ msgstr "មើល​ប្រភព%r"
 msgid "Sugar in a window"
 msgstr ""
 
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr ""
-#~ "កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ឆ្លាស់ pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
-
-#~ msgid "Personal Unblocking Key (PUK):"
-#~ msgstr "លេកកូដសំងាត់ផ្តាល់ខ្លួនសម្រាប់បើកចំហ (PUK) ៖"
-
-#~ msgid "Url where the backup is saved to."
-#~ msgstr "អភ័យដ្ឋាន​ដែល​ជា​ទីកន្លែង​រក្សា​ឯកសារ​ទុក"
-
-#~ msgid "Power Automatic."
-#~ msgstr "ថាមពល​ស្វ័យប្រវត្ត"
-
-#~ msgid "To apply your changes you have to restart sugar.\n"
-#~ msgstr "ដើម្បី​ទទួល​បាន​សំណើ​សុំ​អោយ​ប្តូរ​ត្រូវ​ចាប់​ផ្តើម​ស៊ូហ្គឺ​ឡើង​វិញ\n"
-
-#, python-format
-#~ msgid "%(interface)s: %(version)s"
-#~ msgstr "%(interface)s: %(version)s"
-
-#~ msgid "Power Extreme."
-#~ msgstr "ថាមពល​ឆ្លាស់"
-
-#, python-format
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#, python-format
-#~ msgid "%s (%s)"
-#~ msgstr "%s (%s)"
-
-#~ msgid "Error in extreme pm argument, use on/off."
-#~ msgstr ""
-#~ "កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ឆ្លាស់ pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
