@@ -181,6 +181,10 @@ def setup_window_manager():
             shell=True):
         logging.warning('Can not disable metacity keybindings')
 
+    if subprocess.call('metacity-message disable-mouse-button-modifiers',
+            shell=True):
+        logging.warning('Can not disable metacity mouse button modifiers')
+
 def bootstrap():
     setup_window_manager()
 
