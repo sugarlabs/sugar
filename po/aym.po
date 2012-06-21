@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2012-06-20 06:34+0200\n"
+"PO-Revision-Date: 2012-06-21 04:24+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: aym\n"
@@ -1030,8 +1030,8 @@ msgstr ""
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
 msgstr ""
-"Azúcar wakichatana taqi kuna qillqañana thaqaña:  jist'araña qillqawa chaqi "
-"%s = wakisiri utjiri katuña"
+"Azúcar wakichatana taqi kuna qillqañana thaqaña: jist'araña qillqawa chaqi %"
+"s = wakisiri utjiri katuña"
 
 # de azúcar del panel de control:% s
 #: ../src/jarabe/controlpanel/cmd.py:31
