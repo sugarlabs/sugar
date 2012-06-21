@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2012-05-31 20:09+0200\n"
+"PO-Revision-Date: 2012-06-20 17:12+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: km\n"
@@ -251,7 +251,7 @@ msgstr "មាន​បញ្ហានៅ​ក្នុង​វិទ្យុ
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr ""
-"​មាន​​បញ្ហា​នៅ​​ក្នុង​ការ​កំណត់​​នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
+"មាន​​បញ្ហា​នៅ​​ក្នុង​ការ​កំណត់​​នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
@@ -1369,7 +1369,7 @@ msgstr "អ្វី​ទាំង​អស់"
 #: ../src/jarabe/journal/palettes.py:93
 #, fuzzy
 msgid "Copy to"
-msgstr "​ចម្លង​ទៅ"
+msgstr "ចម្លង​ទៅ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274

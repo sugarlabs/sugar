@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
 "PO-Revision-Date: 2012-03-22 21:01+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,7 +119,7 @@ msgstr "日付・時刻"
 msgid "Error timezone does not exist."
 msgstr "エラー：そのタイムゾーンは存在しません。"
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "タイムゾーン"
 
@@ -293,7 +293,7 @@ msgstr "automatic_pm 引数指定でエラー、 on/offを指定してくださ�
 msgid "Power management"
 msgstr "電源の管理"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "自動的な電源管理（電池が長持ちします）"
 
@@ -629,19 +629,15 @@ msgid ""
 "long name."
 msgstr "初期化の際ニックネームを確認する場合は \"disabled\"を、UNIXアカウントの長い名前を再利用するには\"system\"を指定してください"
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr "更新された翻訳データを置く追加ディレクトリ"
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "バックアップURL"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "保護されたアクティビティのバンドルID"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -649,135 +645,131 @@ msgid ""
 msgstr ""
 "デスクトップで使われるXOアイコンの色。文字列は線と塗りつぶしの色で構成されます。フォーマットは赤青緑の形式です。例： #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "四隅の遅延"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "デフォルトのフォント種類"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "デフォルトのフォントサイズ"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "デフォルトのニックネーム"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "画面四隅でフレームを起動する際の遅延"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "画面四辺でフレームを起動する際の遅延"
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "翻訳データを検索するディレクトリ"
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "四辺の遅延"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:13
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "最大の電源管理（無線の電波を停めて、電池を長持ちさせます）"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "お気に入りのレイアウト"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "お気に入り復元モード"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "デスクトップで使われるフォント種類"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "デスクトップで使われるフォントサイズ"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 #, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのAPN  未使用"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 #, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのPIN  未使用"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 #, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのPUK  未使用"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 #, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのアクセスポイント名の設定  未使用"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 #, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "GSMネットワーク番号  未使用"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 #, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのパスワード  未使用"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 #, fuzzy
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのパスワード設定  未使用"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 #, fuzzy
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのPINコード設定  未使用"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 #, fuzzy
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのPUKコード設定  未使用"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 #, fuzzy
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークの電話番号設定  未使用"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 #, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのユーザ名  未使用"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 #, fuzzy
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "GSMネットワークのユーザ名設定  未使用"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr "ONの場合、SugarはJabberサーバーの他のユーザが私たちを検索できるようにします"
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "もしONなら、Sugarはログアウト オプションを表示します。"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "もしONなら、Sugarは再起動 オプションを表示します。"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -786,127 +778,127 @@ msgstr ""
 "もしONなら、Sugarはチャンネル1,6,11のデフォルトのアドホックネットワークを表示します。もしSugar起動時に名前つきネットワークが見つからな"
 "いと、自動的にアドホックネットワークに接続します。"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Jabberサーバー"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "キーボードの配列"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "キーボードのモデル"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "キーボードのオプション"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "お気に入り表示のレイアウト"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "キーボード配列のリスト。"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "キーボードオプションのリスト"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "電源設定-自動"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "電源設定-最大"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "ガジェットに送信"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "サウンド装置の音を消す"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "ログアウト を表示"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr "再起動 を表示"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr "アドホックネットワークを表示"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "消音されました"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "使用するキーボードのモデル"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "システムのタイムゾーン設定"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 #, fuzzy
 msgid "URL of the jabber server to use."
 msgstr "使用するJabberサーバーのURL"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 #, fuzzy
 msgid "URL where the backup is saved to."
 msgstr "バックアップが保存されるURL"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "ユーザの色"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "ユーザの名前"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "デスクトップで使われるユーザ名"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr "リスト表示で、これらのアクティビティを削除することはできません。"
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "音量レベル"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "サウンド装置の音量レベル"
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1275,7 +1267,8 @@ msgid "Next"
 msgstr "進む"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "タイトル無し"
@@ -1815,6 +1808,12 @@ msgstr "ソースを表示: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "更新された翻訳データを置く追加ディレクトリ"
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "翻訳データを検索するディレクトリ"
 
 #~ msgid "Error in extreme pm argument, use on/off."
 #~ msgstr "extreme_pm 引数指定のエラー、 on/offを指定してください。"

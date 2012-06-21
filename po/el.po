@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-01 00:34-0400\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
 "PO-Revision-Date: 2012-04-23 09:18+0200\n"
 "Last-Translator: Yannis <kiolalis@gmail.com>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
@@ -122,7 +122,7 @@ msgstr "Ημερομηνία & ώρα"
 msgid "Error timezone does not exist."
 msgstr "Λάθος η ζώνη ώρας δεν υπάρχει."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "Ζώνη ώρας"
 
@@ -309,7 +309,7 @@ msgstr "Σφάλμα στην παράμετρο αυτόματης Δ.Ε., χρ
 msgid "Power management"
 msgstr "Διαχείριση Ενέργειας"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "Αυτόματη διαχείριση ενέργειας (αυξάνει τη διάρκεια της μπαταρίας)"
 
@@ -646,20 +646,15 @@ msgstr ""
 "«απενεργοποιημένο» για ερώτηση παρωνυμίου κατά την αρχικοποίηση, «σύστημα» "
 "για την επαναχρησιμοποίηση του ονόματος λογαριασμού σύνδεσης του UNIX."
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr ""
-"Πρόσθετοι κατάλογοι οι οποίοι μπορεί να περιέχουν ενημερωμένες μεταφράσεις."
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "Αντιγράφο του URL"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "Ομαδοποιημένες ΤΔ προστατευμένων Δραστηριοτήτων"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -669,111 +664,107 @@ msgstr ""
 "συνδυασμός του χρώματος γραμμής και του χρώματος γεμίσματος σε μορφή RGB. "
 "Παράδειγμα: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "Καθυστέρηση γωνίας"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "Προκαθορισμένη όψη γραμματοσειράς"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "Προκαθορισμένο μέγεθος γραμματοσειράς"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "Προκαθορισμένο παρωνύμιο"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Καθυστέρηση ενεργοποίησης του πλαισίου που χρησιμοποιεί τις γωνίες."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Καθυστέρηση ενεργοποίησης του πλαισίου που χρησιμοποιεί τις ακμές."
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "Κατάλογος για αναζήτηση μεταφράσεων"
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "Καθυστέρηση ακμής"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:13
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 "Μέγιστη διαχείριση ενέργειας (απενεργοποιεί την ασύρματη εκπομπή, αυξάνει τη "
 "διάρκεια της μπαταρίας)"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "Διάταξη αγαπημένων"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "Λειτουργία επαναφοράς αγαπημένων"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "Όψη γραμματοσειράς που χρησιμοποιείται στην επιφάνεια εργασίας."
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "Μέγεθος γραμματοσειράς που χρησιμοποιείται στην επιφάνεια εργασίας."
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -781,15 +772,15 @@ msgstr ""
 "Εάν είναι ΑΛΗΘΕΣ, θα μπορούν οι άλλοι χρήστες να μας αναζητούν στον "
 "εξυπηρετητή Jabber."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίσει την επιλογή \"Αποσύνδεση\"."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "Εάν είναι ΑΛΗΘΕΣ, το Sugar θα εμφανίσει την επιλογή \"Επανεκκίνηση\"."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -799,129 +790,129 @@ msgstr ""
 "κανάλια 1,6 και 11. Αν το Sugar δε βλέπει κανένα \"γνωστό\" δίκτυο όταν "
 "ξεκινάει, τότε συνδέεται αυτόματα σε ένα δίκτυο Ad-hoc."
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Εξυπηρετητής Jabber"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "Διατάξεις πληκτρολογίου"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "Μοντέλο πληκτρολογίου"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "Επιλογές πληκτρολογίου"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "Διάταξη προβολής αγαπημένων."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Κατάλογος διατάξεων πληκτρολογίου. Κάθε καταχώρηση πρέπει να είναι σε μορφή "
 "διάταξης (εναλλακτική μορφή)"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "Κατάλογος επιλογών πληκτρολογίου."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Διαχείριση Αυτόματη"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "Διαχείριση Ακραία"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "Δημοσίευση στις Επινοήσεις"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "Ρύθμιση για τη σίγαση της συσκευής ήχου."
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "Εμφάνιση Αποσύνδεσης"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr "Εμφάνιση Επανεκκίνησης"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Δείξε τα δίκτυα Ad-hoc του Sugar"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "Ήχος σε σίγαση"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "Το μοντέλο πληκτρολογίου που θα χρησιμοποιηθεί"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "Ρύθμιση ζώνης ώρας συστήματος."
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr "URL του εξυπηρετητή jabber που θα χρησιμοποιηθεί."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "URL όπου αποθηκεύτηκε το αντίγραφο ασφάλειας."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "Χρώμα χρήστη"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "Όνομα χρήστη"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "Το όνομα χρήστη που θα χρησιμοποιηθεί για την επιφάνεια εργασίας."
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Οι χρήστες δε θα μπορούν να αφαιρέσουν αυτές τις δραστηριότητες από την "
 "προβολή λίστας."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "Επίπεδο έντασης"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "Επίπεδο έντασης της συσκευής ήχου."
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1288,7 +1279,8 @@ msgid "Next"
 msgstr "Επόμενο"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "Χωρίς τίτλο"
@@ -1828,6 +1820,13 @@ msgstr "Προβολή πηγής: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Το Sugar σε παράθυρο"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr ""
+#~ "Πρόσθετοι κατάλογοι οι οποίοι μπορεί να περιέχουν ενημερωμένες μεταφράσεις."
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "Κατάλογος για αναζήτηση μεταφράσεων"
 
 #~ msgid "Error in extreme pm argument, use on/off."
 #~ msgstr ""
