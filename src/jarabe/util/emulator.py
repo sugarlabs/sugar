@@ -120,6 +120,14 @@ def _start_window_manager():
 
 
 def _setup_env(display, scaling, emulator_pid):
+    # We need to remove the environment related to gnome-keyring-daemon,
+    # so a new instance of gnome-keyring-daemon can be started and
+    # registered properly.
+    for variable in ['GPG_AGENT_INFO', 'SSH_AUTH_SOCK',
+                     'GNOME_KEYRING_CONTROL', 'GNOME_KEYRING_PID']:
+        if variable in os.environ:
+            del os.environ[variable]
+
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-gabble.log')

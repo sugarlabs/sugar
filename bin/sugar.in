@@ -62,12 +62,6 @@ export LANGUAGE="${LANGUAGE:-${LANG}}"
 # Set Sugar's telepathy accounts directory
 export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
 
-# Workaround until gnome-keyring-daemon lets dbus activate it
-# https://bugzilla.gnome.org/show_bug.cgi?id=628302
-if test "$SUGAR_EMULATOR" = "yes" -a "$(type gnome-keyring-daemon)"; then
-    gnome-keyring-daemon --components=secrets &
-fi
-
 # Source language settings and debug definitions
 if [ -f ~/.i18n ]; then
         . ~/.i18n
