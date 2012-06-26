@@ -26,7 +26,6 @@ gtk.Button
 
 sugar.Icon
 
-* Used in canvas-like views so probably an Hippo item.
 * Svg Only.
 * It should support xo colors easily.
 * Rollovers with a focus mark.
@@ -180,7 +179,7 @@ Palettes in ToolIconButton, IconButton
 * After a bigger delay, show the popup secondary state.
 * Could be animated.
 * Menu Items would go on the top and then the free-form rollover content.
-* The popup would be a gtk.Window that contains a Label, a MenuShell, an hippo.Canvas (or whatever) and finally a button bar (OK/Cancel).
+* The popup would be a gtk.Window that contains a Label, a MenuShell and finally a button bar (OK/Cancel).
 * The popup will have a setPrimaryState(label, accelerator) method. For action buttons would be a MenuItem, for the others would only be a Label.
 * The primary state should already have the same width as the secondary state and the expandable areas.
 * Primary states appear and disappear automatically (with a short delay). A click outside makes it disappear instantly.
