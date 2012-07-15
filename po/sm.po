@@ -7,18 +7,19 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2011-03-28 23:53+0200\n"
+"PO-Revision-Date: 2012-07-09 09:28+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sm\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Pootle 2.0.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
+#, fuzzy
 msgid "About Me"
-msgstr ""
+msgstr "O fa'amatalaga e uiga ia te a'u"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -53,8 +54,9 @@ msgid "Error in specified colors."
 msgstr ""
 
 #: ../extensions/cpsection/aboutme/view.py:235
+#, fuzzy
 msgid "Click to change your color:"
-msgstr ""
+msgstr "kiliki e sui ai lau lanu:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -109,20 +111,23 @@ msgid "Full license:"
 msgstr ""
 
 #: ../extensions/cpsection/datetime/__init__.py:21
+#, fuzzy
 msgid "Date & Time"
-msgstr ""
+msgstr "Aso ma le taimi"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
 msgstr ""
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
+#, fuzzy
 msgid "Timezone"
-msgstr ""
+msgstr "Avanoa mo le taimi"
 
 #: ../extensions/cpsection/frame/__init__.py:21
+#, fuzzy
 msgid "Frame"
-msgstr ""
+msgstr "Fa'ava'a fa'atulagaina"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
@@ -147,12 +152,14 @@ msgid "Activation Delay"
 msgstr ""
 
 #: ../extensions/cpsection/frame/view.py:78
+#, fuzzy
 msgid "Corner"
-msgstr ""
+msgstr "Tulimanu"
 
 #: ../extensions/cpsection/frame/view.py:113
+#, fuzzy
 msgid "Edge"
-msgstr ""
+msgstr "Autafa"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
@@ -228,8 +235,9 @@ msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
+#, fuzzy
 msgid "Network"
-msgstr ""
+msgstr "Upega o feso'ota'iga"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
@@ -279,24 +287,27 @@ msgid "Server:"
 msgstr ""
 
 #: ../extensions/cpsection/power/__init__.py:21
+#, fuzzy
 msgid "Power"
-msgstr ""
+msgstr "Paoa"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 
 #: ../extensions/cpsection/power/view.py:45
+#, fuzzy
 msgid "Power management"
-msgstr ""
+msgstr "Paoa po'o le eletise"
 
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
+#, fuzzy
 msgid "Software update"
-msgstr ""
+msgstr "mea faigaluega fou"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -599,8 +610,9 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/frame/zoomtoolbar.py:47
+#, fuzzy
 msgid "Home"
-msgstr ""
+msgstr "Nofoaga"
 
 #: ../extensions/globalkey/screenshot.py:69
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -981,8 +993,9 @@ msgid "Remove favorite"
 msgstr ""
 
 #: ../src/jarabe/desktop/activitieslist.py:440
+#, fuzzy
 msgid "Make favorite"
-msgstr ""
+msgstr "fa'aopoopo lau polokalame pele"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:127
@@ -1043,16 +1056,18 @@ msgid "Check now"
 msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:197
+#, fuzzy
 msgid "List view"
-msgstr ""
+msgstr "lisi o va'aiga uma"
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
 msgstr ""
 
 #: ../src/jarabe/desktop/homebox.py:253
+#, fuzzy
 msgid "Favorites view"
-msgstr ""
+msgstr "lau polokalame pele va'aiga"
 
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
@@ -1090,8 +1105,9 @@ msgstr ""
 
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
+#, fuzzy
 msgid "Join"
-msgstr ""
+msgstr "fa'apoopo"
 
 #: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
@@ -1201,16 +1217,18 @@ msgid "F4"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:103
+#, fuzzy
 msgid "Name:"
-msgstr ""
+msgstr "igoa:"
 
 #: ../src/jarabe/intro/window.py:133
 msgid "Click to change color:"
 msgstr ""
 
 #: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#, fuzzy
 msgid "Back"
-msgstr ""
+msgstr "toe fo'i i tua"
 
 #: ../src/jarabe/intro/window.py:211
 msgid "Next"
@@ -1254,54 +1272,62 @@ msgid "No date"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:301
+#, fuzzy
 msgid "Participants:"
-msgstr ""
+msgstr "Uo fa'apa'aga fa'atasi:"
 
 #: ../src/jarabe/journal/expandedentry.py:323
 msgid "Description:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:348
+#, fuzzy
 msgid "Tags:"
-msgstr ""
+msgstr "fa'ailoga"
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
 #: ../src/jarabe/journal/palettes.py:198
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
-msgstr ""
+msgstr "Faamaumauga"
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
 msgid "Search"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
+#, fuzzy
 msgid "Anytime"
-msgstr ""
+msgstr "So'o se taimi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "o le aso nei"
 
 #: ../src/jarabe/journal/journaltoolbox.py:143
+#, fuzzy
 msgid "Since yesterday"
-msgstr ""
+msgstr "talu mai ananafi"
 
 #. TRANS: Filter entries modified during the last 7 days.
 #: ../src/jarabe/journal/journaltoolbox.py:145
+#, fuzzy
 msgid "Past week"
-msgstr ""
+msgstr "le vaiaso na te'a atu nei"
 
 #. TRANS: Filter entries modified during the last 30 days.
 #: ../src/jarabe/journal/journaltoolbox.py:147
+#, fuzzy
 msgid "Past month"
-msgstr ""
+msgstr "le masina na te'a atu nei"
 
 #. TRANS: Filter entries modified during the last 356 days.
 #: ../src/jarabe/journal/journaltoolbox.py:149
+#, fuzzy
 msgid "Past year"
-msgstr ""
+msgstr "le tausaga na te'a atu nei"
 
 #: ../src/jarabe/journal/journaltoolbox.py:156
 msgid "Anyone"
@@ -1316,8 +1342,9 @@ msgid "My class"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:301
+#, fuzzy
 msgid "Anything"
-msgstr ""
+msgstr "so'o se mea"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
@@ -1345,8 +1372,9 @@ msgstr ""
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:512
 #: ../src/jarabe/journal/palettes.py:74
+#, fuzzy
 msgid "Start"
-msgstr ""
+msgstr "Amata"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
@@ -1403,8 +1431,9 @@ msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:80
+#, fuzzy
 msgid "Show Journal"
-msgstr ""
+msgstr "Fa'ali Faamaumauga"
 
 #: ../src/jarabe/journal/objectchooser.py:146
 msgid "Choose an object"
@@ -1412,8 +1441,9 @@ msgstr ""
 
 #: ../src/jarabe/journal/objectchooser.py:151
 #: ../src/jarabe/view/viewsource.py:410
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Tapuni"
 
 #: ../src/jarabe/journal/palettes.py:72
 msgid "Resume with"
@@ -1666,12 +1696,14 @@ msgid "Make friend"
 msgstr ""
 
 #: ../src/jarabe/view/buddymenu.py:87
+#, fuzzy
 msgid "Shutdown"
-msgstr ""
+msgstr "Tapuni"
 
 #: ../src/jarabe/view/buddymenu.py:95
+#, fuzzy
 msgid "Restart"
-msgstr ""
+msgstr "toe amata"
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
@@ -1713,8 +1745,9 @@ msgid "Start new"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:180
+#, fuzzy
 msgid "Show contents"
-msgstr ""
+msgstr "fa'aali mai a'u tusitusiga po'o a'u galuega"
 
 #: ../src/jarabe/view/palettes.py:229
 msgctxt "Volume"
