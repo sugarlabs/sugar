@@ -21,26 +21,29 @@ from gettext import gettext as _
 import logging
 
 import dbus
-import hippo
 import glib
 import gobject
 import gtk
 import gconf
 
-from sugar.graphics.icon import CanvasIcon, Icon
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics import palette
 from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.xocolor import XoColor
 
+from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.desktop.snowflakelayout import SnowflakeLayout
-from jarabe.desktop.spreadlayout import SpreadLayout
+from jarabe.view.buddymenu import BuddyMenu
+from jarabe.view.eventicon import EventIcon
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
+from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.desktop.favoriteslayout import SpreadLayout
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -55,14 +58,13 @@ _AUTOSEARCH_TIMEOUT = 1000
 _FILTERED_ALPHA = 0.33
 
 
-class _ActivityIcon(CanvasIcon):
+class _ActivityIcon(EventIcon):
     def __init__(self, model, file_name, xo_color,
                  size=style.STANDARD_ICON_SIZE):
-        CanvasIcon.__init__(self, file_name=file_name,
-                            xo_color=xo_color,
-                            size=size)
+        EventIcon.__init__(self, file_name=file_name,
+                           xo_color=xo_color, pixel_size=size)
         self._model = model
-        self.connect('activated', self._clicked_cb)
+        self.connect('button-release-event', self._button_release_cb)
 
     def create_palette(self):
         primary_text = glib.markup_escape_text(self._model.bundle.get_name())
@@ -91,15 +93,18 @@ class _ActivityIcon(CanvasIcon):
 
         return p
 
+    def _button_release_cb(self, widget, event):
+        return self._clicked_cb(item=None)
+
     def _clicked_cb(self, item):
         bundle = self._model.get_bundle()
         misc.launch(bundle, activity_id=self._model.activity_id,
                     color=self._model.get_color())
 
 
-class ActivityView(hippo.CanvasBox):
+class ActivityView(SnowflakeLayout):
     def __init__(self, model):
-        hippo.CanvasBox.__init__(self)
+        SnowflakeLayout.__init__(self)
 
         self._model = model
         self._model.connect('current-buddy-added', self.__buddy_added_cb)
@@ -107,11 +112,9 @@ class ActivityView(hippo.CanvasBox):
 
         self._icons = {}
 
-        self._layout = SnowflakeLayout()
-        self.set_layout(self._layout)
-
         self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
+        self._icon.show()
+        self.add_icon(self._icon, center=True)
 
         self._icon.palette_invoker.cache_palette = False
 
@@ -134,11 +137,13 @@ class ActivityView(hippo.CanvasBox):
     def _add_buddy(self, buddy):
         icon = BuddyIcon(buddy, style.STANDARD_ICON_SIZE)
         self._icons[buddy.props.key] = icon
-        self._layout.add(icon)
+        self.add_icon(icon)
+        icon.show()
 
     def __buddy_removed_cb(self, activity, buddy):
         icon = self._icons[buddy.props.key]
         del self._icons[buddy.props.key]
+        self.remove(icon)
         icon.destroy()
 
     def set_filter(self, query):
@@ -401,13 +406,32 @@ class NetworkManagerObserver(object):
                         self._box.add_adhoc_networks(device)
 
 
+class MeshContainer(ViewContainer):
+    __gtype_name__ = 'SugarMeshContainer'
+
+    def __init__(self):
+
+        layout = SpreadLayout()
+
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        owner_icon = EventIcon(icon_name='computer-xo', cache=True,
+                               xo_color=color)
+        # Round off icon size to an even number to ensure that the icon
+        # is placed evenly in the grid
+        owner_icon.props.pixel_size = style.STANDARD_ICON_SIZE & ~1
+        owner_icon.set_palette(BuddyMenu(get_owner_instance()))
+
+        ViewContainer.__init__(self, layout, owner_icon)
+
+
 class MeshBox(gtk.VBox):
     __gtype_name__ = 'SugarMeshBox'
 
     def __init__(self):
         logging.debug('STARTUP: Loading the mesh view')
 
-        gobject.GObject.__init__(self)
+        gtk.VBox.__init__(self)
 
         self.wireless_networks = {}
         self._adhoc_manager = None
@@ -420,23 +444,15 @@ class MeshBox(gtk.VBox):
         self._buddy_to_activity = {}
         self._suspended = True
         self._query = ''
-        self._owner_icon = None
 
         self._toolbar = MeshToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
 
-        canvas = hippo.Canvas()
-        self.add(canvas)
-        canvas.show()
-
-        self._layout_box = hippo.CanvasBox( \
-                background_color=style.COLOR_WHITE.get_int())
-        canvas.set_root(self._layout_box)
-
-        self._layout = SpreadLayout()
-        self._layout_box.set_layout(self._layout)
+        self._mesh_container = MeshContainer()
+        self.add(self._mesh_container)
+        self._mesh_container.show()
 
         for buddy_model in self._model.get_buddies():
             self._add_buddy(buddy_model)
@@ -452,18 +468,6 @@ class MeshBox(gtk.VBox):
 
         netmgr_observer = NetworkManagerObserver(self)
         netmgr_observer.listen()
-
-    def do_size_allocate(self, allocation):
-        width = allocation.width
-        height = allocation.height
-
-        min_w_, icon_width = self._owner_icon.get_width_request()
-        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
-        x = (width - icon_width) / 2
-        y = (height - icon_height) / 2 - style.GRID_CELL_SIZE
-        self._layout.move(self._owner_icon, x, y)
-
-        gtk.VBox.do_size_allocate(self, allocation)
 
     def _buddy_added_cb(self, model, buddy_model):
         self._add_buddy(buddy_model)
@@ -482,10 +486,11 @@ class MeshBox(gtk.VBox):
                             self.__buddy_notify_current_activity_cb)
         if buddy_model.props.current_activity is not None:
             return
-        icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
-            self._owner_icon = icon
-        self._layout.add(icon)
+            return
+        icon = BuddyIcon(buddy_model)
+        self._mesh_container.add(icon)
+        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -495,9 +500,8 @@ class MeshBox(gtk.VBox):
     def _remove_buddy(self, buddy_model):
         logging.debug('MeshBox._remove_buddy')
         icon = self._buddies[buddy_model.props.key]
-        self._layout.remove(icon)
+        self._mesh_container.remove(icon)
         del self._buddies[buddy_model.props.key]
-        icon.destroy()
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
@@ -510,7 +514,8 @@ class MeshBox(gtk.VBox):
 
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)
-        self._layout.add(icon)
+        self._mesh_container.add(icon)
+        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -519,9 +524,8 @@ class MeshBox(gtk.VBox):
 
     def _remove_activity(self, activity_model):
         icon = self._activities[activity_model.activity_id]
-        self._layout.remove(icon)
+        self._mesh_container.remove(icon)
         del self._activities[activity_model.activity_id]
-        icon.destroy()
 
     # add AP to its corresponding network icon on the desktop,
     # creating one if it doesn't already exist
@@ -533,7 +537,8 @@ class MeshBox(gtk.VBox):
             # this is a new network
             icon = WirelessNetworkView(ap)
             self.wireless_networks[hash_value] = icon
-            self._layout.add(icon)
+            self._mesh_container.add(icon)
+            icon.show()
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
@@ -541,7 +546,7 @@ class MeshBox(gtk.VBox):
         # remove a network if it has no APs left
         if net.num_aps() == 0:
             net.disconnect()
-            self._layout.remove(net)
+            self._mesh_container.remove(net)
             del self.wireless_networks[hash_value]
 
     def _ap_props_changed_cb(self, ap, old_hash_value):
@@ -619,18 +624,20 @@ class MeshBox(gtk.VBox):
 
     def remove_adhoc_networks(self):
         for icon in self._adhoc_networks:
-            self._layout.remove(icon)
+            self._mesh_container.remove(icon)
         self._adhoc_networks = []
         self._adhoc_manager.stop_listening()
 
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
-        self._layout.add(icon)
+        self._mesh_container.add(icon)
+        icon.show()
         self._adhoc_networks.append(icon)
 
     def _add_olpc_mesh_icon(self, mesh_mgr, channel):
         icon = OlpcMeshView(mesh_mgr, channel)
-        self._layout.add(icon)
+        self._mesh_container.add(icon)
+        icon.show()
         self._mesh.append(icon)
 
     def enable_olpc_mesh(self, mesh_device):
@@ -648,13 +655,13 @@ class MeshBox(gtk.VBox):
             logging.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
-            self._layout.remove(net)
+            self._mesh_container.remove(net)
             del self.wireless_networks[hash_value]
 
     def disable_olpc_mesh(self, mesh_device):
         for icon in self._mesh:
             icon.disconnect()
-            self._layout.remove(icon)
+            self._mesh_container.remove(icon)
         self._mesh = []
 
     def suspend(self):
@@ -671,7 +678,7 @@ class MeshBox(gtk.VBox):
 
     def _toolbar_query_changed_cb(self, toolbar, query):
         self._query = query.lower()
-        for icon in self._layout_box.get_children():
+        for icon in self._mesh_container.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 

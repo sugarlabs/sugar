@@ -18,8 +18,11 @@ import math
 
 import gobject
 
-from sugar.graphics.icon import Icon, CanvasIcon
+from sugar.graphics.icon import Icon
 from sugar.graphics import style
+
+from jarabe.view.eventicon import EventIcon
+
 
 _INTERVAL = 100
 _STEP = math.pi / 10  # must be a fraction of pi, for clean caching
@@ -169,8 +172,8 @@ class PulsingIcon(Icon):
             self._palette.destroy()
 
 
-class CanvasPulsingIcon(CanvasIcon):
-    __gtype_name__ = 'SugarCanvasPulsingIcon'
+class EventPulsingIcon(EventIcon):
+    __gtype_name__ = 'SugarEventPulsingIcon'
 
     def __init__(self, **kwargs):
         self._pulser = Pulser(self)
@@ -179,7 +182,7 @@ class CanvasPulsingIcon(CanvasIcon):
         self._paused = False
         self._pulsing = False
 
-        CanvasIcon.__init__(self, **kwargs)
+        EventIcon.__init__(self, **kwargs)
 
         self.connect('destroy', self.__destroy_cb)
 

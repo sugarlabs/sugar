@@ -14,5 +14,5 @@ sugar_PYTHON =			\
 	networkviews.py		\
         schoolserver.py		\
 	snowflakelayout.py	\
-	spreadlayout.py		\
-	transitionbox.py
+	transitionbox.py	\
+	viewcontainer.py

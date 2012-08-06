@@ -14,7 +14,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
 import gobject
 
 from sugar.graphics import style
@@ -34,37 +33,10 @@ class _Animation(animator.Animation):
 
     def next_frame(self, current):
         d = (self.end_size - self.start_size) * current
-        self._icon.props.size = int(self.start_size + d)
+        self._icon.props.pixel_size = int(self.start_size + d)
 
 
-class _Layout(gobject.GObject, hippo.CanvasLayout):
-    __gtype_name__ = 'SugarTransitionBoxLayout'
-
-    def __init__(self):
-        gobject.GObject.__init__(self)
-        self._box = None
-
-    def do_set_box(self, box):
-        self._box = box
-
-    def do_get_height_request(self, for_width):
-        return 0, 0
-
-    def do_get_width_request(self):
-        return 0, 0
-
-    def do_allocate(self, x, y, width, height,
-                    req_width, req_height, origin_changed):
-        for child in self._box.get_layout_children():
-            min_width, child_width = child.get_width_request()
-            min_height, child_height = child.get_height_request(child_width)
-
-            child.allocate(x + (width - child_width) / 2,
-                           y + (height - child_height) / 2,
-                           child_width, child_height, origin_changed)
-
-
-class TransitionBox(hippo.Canvas):
+class TransitionBox(BuddyIcon):
     __gtype_name__ = 'SugarTransitionBox'
 
     __gsignals__ = {
@@ -72,18 +44,8 @@ class TransitionBox(hippo.Canvas):
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
-
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_WHITE.get_int()
-        self.set_root(self._box)
-
-        self._layout = _Layout()
-        self._box.set_layout(self._layout)
-
-        self._my_icon = BuddyIcon(buddy=get_owner_instance(),
-                                  size=style.XLARGE_ICON_SIZE)
-        self._box.append(self._my_icon)
+        BuddyIcon.__init__(self, buddy=get_owner_instance(),
+                           pixel_size=style.XLARGE_ICON_SIZE)
 
         self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)
@@ -92,8 +54,6 @@ class TransitionBox(hippo.Canvas):
         self.emit('completed')
 
     def start_transition(self, start_size, end_size):
-        self._my_icon.props.size = start_size
-
         self._animator.remove_all()
-        self._animator.add(_Animation(self._my_icon, start_size, end_size))
+        self._animator.add(_Animation(self, start_size, end_size))
         self._animator.start()

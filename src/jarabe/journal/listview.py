@@ -18,14 +18,14 @@ import logging
 from gettext import gettext as _
 import time
 
+import glib
 import gobject
 import gtk
-import hippo
 import gconf
 import pango
 
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon, Icon, CellRendererIcon
+from sugar.graphics.icon import Icon, CellRendererIcon
 from sugar.graphics.xocolor import XoColor
 from sugar import util
 
@@ -33,6 +33,7 @@ from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
+from jarabe.view.eventicon import EventIcon
 
 
 UPDATE_INTERVAL = 300
@@ -370,38 +371,33 @@ class BaseListView(gtk.Bin):
         self._progress_bar = None
 
     def _show_message(self, message, show_clear_query=False):
-        canvas = hippo.Canvas()
+        box = gtk.VBox()
         self.remove(self.child)
-        self.add(canvas)
-        canvas.show()
 
-        box = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL,
-                              background_color=style.COLOR_WHITE.get_int(),
-                              yalign=hippo.ALIGNMENT_CENTER,
-                              spacing=style.DEFAULT_SPACING,
-                              padding_bottom=style.GRID_CELL_SIZE)
-        canvas.set_root(box)
+        alignment = gtk.Alignment(0.5, 0.5, 0.1, 0.1)
+        self.add(alignment)
 
-        icon = CanvasIcon(size=style.LARGE_ICON_SIZE,
-                          icon_name='activity-journal',
-                          stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                          fill_color=style.COLOR_TRANSPARENT.get_svg())
-        box.append(icon)
+        icon = EventIcon(pixel_size=style.LARGE_ICON_SIZE,
+                         icon_name='activity-journal',
+                         stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                         fill_color=style.COLOR_TRANSPARENT.get_svg())
+        box.pack_start(icon, expand=True, fill=False)
 
-        text = hippo.CanvasText(text=message,
-                xalign=hippo.ALIGNMENT_CENTER,
-                font_desc=style.FONT_BOLD.get_pango_desc(),
-                color=style.COLOR_BUTTON_GREY.get_int())
-        box.append(text)
+        label = gtk.Label()
+        color = style.COLOR_BUTTON_GREY.get_html()
+        label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
+                color, glib.markup_escape_text(message)))
+        box.pack_start(label, expand=True, fill=False)
 
         if show_clear_query:
             button = gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
                                       icon_size=gtk.ICON_SIZE_BUTTON)
-            canvas_button = hippo.CanvasWidget(widget=button,
-                                               xalign=hippo.ALIGNMENT_CENTER)
-            box.append(canvas_button)
+            box.pack_start(button, expand=True, fill=False)
+
+        alignment.add(box)
+        alignment.show_all()
 
     def __clear_button_clicked_cb(self, button):
         self.emit('clear-clicked')

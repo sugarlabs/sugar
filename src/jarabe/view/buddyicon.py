@@ -14,17 +14,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.icon import CanvasIcon
 from sugar.graphics import style
 
 from jarabe.view.buddymenu import BuddyMenu
+from jarabe.view.eventicon import EventIcon
+
 
 _FILTERED_ALPHA = 0.33
 
 
-class BuddyIcon(CanvasIcon):
-    def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):
-        CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
+class BuddyIcon(EventIcon):
+    def __init__(self, buddy, pixel_size=style.STANDARD_ICON_SIZE):
+        EventIcon.__init__(self, icon_name='computer-xo',
+                           pixel_size=pixel_size)
 
         self._filtered = False
         self._buddy = buddy

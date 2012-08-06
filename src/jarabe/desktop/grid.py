@@ -75,6 +75,9 @@ class Grid(_sugarext.Grid):
         if weight > 0:
             self._detect_collisions(child)
 
+    def is_in_grid(self, child):
+        return child in self._children
+
     def remove(self, child):
         self._children.remove(child)
         self.remove_weight(self._child_rects[child])

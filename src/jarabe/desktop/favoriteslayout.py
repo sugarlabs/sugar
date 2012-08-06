@@ -20,9 +20,7 @@ import math
 import hashlib
 from gettext import gettext as _
 
-import gobject
 import gtk
-import hippo
 
 from sugar.graphics import style
 
@@ -42,77 +40,134 @@ _ICON_SIZES = [style.MEDIUM_ICON_SIZE, style.STANDARD_ICON_SIZE,
                style.SMALL_ICON_SIZE]
 
 
-class FavoritesLayout(gobject.GObject, hippo.CanvasLayout):
-    """Base class of the different layout types."""
-
-    __gtype_name__ = 'FavoritesLayout'
-
+class Layout(object):
     def __init__(self):
-        gobject.GObject.__init__(self)
-        self.box = None
-        self.fixed_positions = {}
+        pass
 
-    def do_set_box(self, box):
-        self.box = box
+    def remove(self, child):
+        pass
 
-    def do_get_height_request(self, for_width):
-        return 0, gtk.gdk.screen_height() - style.GRID_CELL_SIZE
+    def allocate_children(self, allocation, children):
+        pass
 
-    def do_get_width_request(self):
-        return 0, gtk.gdk.screen_width()
 
-    def compare_activities(self, icon_a, icon_b):
-        return 0
+class ViewLayout(Layout):
+    def __init__(self):
+        self._grid = None
 
-    def append(self, icon, locked=False):
-        if not hasattr(type(icon), 'fixed_position'):
-            logging.debug('Icon without fixed_position: %r', icon)
+    def setup(self, allocation, owner_icon, activity_icon=None):
+        if self._grid is not None:
+            return
+        self._grid = Grid(int(allocation.width / _CELL_SIZE),
+                          int(allocation.height / _CELL_SIZE))
+        self._grid.connect('child-changed', self.__grid_child_changed_cb)
+        self._allocate_owner_icon(allocation, owner_icon, activity_icon)
+
+    def _allocate_owner_icon(self, allocation, owner_icon, activity_icon):
+        # add owner icon to the grid, precisely centered on the screen
+        # if not None, add an activity icon directly below the owner icon
+        owner_width, owner_height = owner_icon.size_request()
+        height = allocation.height + allocation.y
+        width = allocation.width
+
+        # Find vertical center point of screen
+        y = height / 2
+
+        # This container may be offset from the top by a certain amount
+        # (e.g. for a toolbar at the top of the screen). Adjust the
+        # center-point for that
+        y -= allocation.y
+
+        # Now subtract half of the owner height. This gives us the y
+        # coordinate for the top of the owner icon.
+        y -= owner_height / 2
+
+        # calculate x coordinate and create allocation
+        x = (width - owner_width) / 2
+        owner_icon_allocation = gtk.gdk.Rectangle(x, allocation.y + y,
+                                                  owner_width, owner_height)
+        owner_icon.size_allocate(owner_icon_allocation)
+
+        # Determine grid coordinates and add to grid
+        owner_grid_width, owner_grid_height = \
+            self._get_child_grid_size(owner_icon)
+        x = int(x / float(_CELL_SIZE))
+        y = int(y / float(_CELL_SIZE))
+        self._grid.add(owner_icon, owner_grid_width, owner_grid_height,
+                       x, y, locked=True)
+
+        if activity_icon is None:
             return
 
-        icon.props.size = max(icon.props.size, style.STANDARD_ICON_SIZE)
+        # Position the current activity below the XO icon
+        # FIXME must ensure we cross into next grid cell here..
+        activity_width, activity_height = activity_icon.size_request()
+        x = (width - activity_width) / 2
+        y = owner_icon_allocation.y + owner_height
+        activity_icon_allocation = gtk.gdk.Rectangle(x, y, activity_width,
+                                                     activity_height)
+        activity_icon.size_allocate(activity_icon_allocation)
 
-        relative_x, relative_y = icon.fixed_position
-        if relative_x < 0 or relative_y < 0:
-            logging.debug('Icon out of bounds: %r', icon)
-            return
+        # Determine grid coordinates and add to grid
+        activity_grid_width, activity_grid_height = \
+            self._get_child_grid_size(activity_icon)
+        x = int(x / float(_CELL_SIZE))
+        y = int(y / float(_CELL_SIZE))
+        self._grid.add(activity_icon, activity_grid_width,
+                       activity_grid_height, x, y, locked=True)
 
-        min_width_, width = self.box.get_width_request()
-        min_height_, height = self.box.get_height_request(width)
-        self.fixed_positions[icon] = \
-                (int(relative_x * _BASE_SCALE / float(width)),
-                    int(relative_y * _BASE_SCALE / float(height)))
+    def allocate_children(self, allocation, children):
+        pass
 
-    def remove(self, icon):
-        if icon in self.fixed_positions:
-            del self.fixed_positions[icon]
+    def move(self, child, x, y, allocation=None):
+        self._grid.move(child, x / _CELL_SIZE, y / _CELL_SIZE, locked=True)
+        width, height = child.size_request()
+        rect = self._grid.get_child_rect(child)
+        child_allocation = gtk.gdk.Rectangle(int(round(rect.x * _CELL_SIZE)),
+                                             int(round(rect.y * _CELL_SIZE)),
+                                             width,
+                                             height)
+        child.size_allocate(child_allocation)
 
-    def move_icon(self, icon, x, y, locked=False):
-        if icon not in self.box.get_children():
-            raise ValueError('Child not in box.')
+    def _get_child_grid_size(self, child):
+        width, height = child.size_request()
+        width = math.ceil(width / _CELL_SIZE)
+        height = math.ceil(height / _CELL_SIZE)
+        return int(width), int(height)
 
-        if not (hasattr(icon, 'get_bundle_id') and
-                hasattr(icon, 'get_version')):
-            logging.debug('Not an activity icon %r', icon)
-            return
-
-        min_width_, width = self.box.get_width_request()
-        min_height_, height = self.box.get_height_request(width)
-        registry = bundleregistry.get_registry()
-        registry.set_bundle_position(
-                icon.get_bundle_id(), icon.get_version(),
-                x * width / float(_BASE_SCALE),
-                y * height / float(_BASE_SCALE))
-        self.fixed_positions[icon] = (x, y)
-
-    def do_allocate(self, x, y, width, height, req_width, req_height,
-                    origin_changed):
-        raise NotImplementedError()
-
-    def allow_dnd(self):
-        return False
+    def __grid_child_changed_cb(self, grid, child):
+        width, height = child.size_request()
+        rect = self._grid.get_child_rect(child)
+        child_allocation = gtk.gdk.Rectangle(int(round(rect.x * _CELL_SIZE)),
+                                             int(round(rect.y * _CELL_SIZE)),
+                                             width,
+                                             height)
+        child.size_allocate(child_allocation)
 
 
-class RandomLayout(FavoritesLayout):
+class SpreadLayout(ViewLayout):
+    def __init__(self):
+        ViewLayout.__init__(self)
+
+    def remove(self, child):
+        if self._grid.is_in_grid(child):
+            self._grid.remove(child)
+
+    def allocate_children(self, allocation, children):
+        for child in children:
+            if not self._grid.is_in_grid(child):
+                width, height = self._get_child_grid_size(child)
+                self._grid.add(child, width, height, None, None, locked=False)
+
+            width, height = child.size_request()
+            rect = self._grid.get_child_rect(child)
+            x = int(round(rect.x * _CELL_SIZE))
+            y = int(round(rect.y * _CELL_SIZE)) + allocation.y
+            child_allocation = gtk.gdk.Rectangle(x, y, width, height)
+            child.size_allocate(child_allocation)
+
+
+class RandomLayout(SpreadLayout):
     """Lay out icons randomly; try to nudge them around to resolve overlaps."""
 
     __gtype_name__ = 'RandomLayout'
@@ -128,69 +183,75 @@ class RandomLayout(FavoritesLayout):
     """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
-        FavoritesLayout.__init__(self)
+        SpreadLayout.__init__(self)
+        self.fixed_positions = {}
 
-        min_width_, width = self.do_get_width_request()
-        min_height_, height = self.do_get_height_request(width)
+    def _add_fixed_position(self, icon, allocation, locked=False):
+        if not hasattr(type(icon), 'fixed_position'):
+            logging.debug('Icon without fixed_position: %r', icon)
+            return
 
-        self._grid = Grid(width / _CELL_SIZE, height / _CELL_SIZE)
-        self._grid.connect('child-changed', self.__grid_child_changed_cb)
+        icon.props.pixel_size = max(icon.props.pixel_size,
+                                    style.STANDARD_ICON_SIZE)
 
-    def __grid_child_changed_cb(self, grid, child):
-        child.emit_request_changed()
+        relative_x, relative_y = icon.fixed_position
+        if relative_x < 0 or relative_y < 0:
+            logging.debug('Icon out of bounds: %r', icon)
+            return
 
-    def append(self, icon, locked=False):
-        FavoritesLayout.append(self, icon, locked)
+        self.fixed_positions[icon] = \
+                (int(relative_x * _BASE_SCALE / float(allocation.width)),
+                 int(relative_y * _BASE_SCALE / float(allocation.height)))
 
-        min_width_, child_width = icon.get_width_request()
-        min_height_, child_height = icon.get_height_request(child_width)
-        min_width_, width = self.box.get_width_request()
-        min_height_, height = self.box.get_height_request(width)
+    def allocate_children(self, allocation, children):
+        for child in children:
+            child_width, child_height = child.size_request()
+            if not self._grid.is_in_grid(child):
+                self._add_fixed_position(child, allocation)
 
-        if icon in self.fixed_positions:
-            x, y = self.fixed_positions[icon]
-            x = min(x, width - child_width)
-            y = min(y, height - child_height)
-        elif hasattr(icon, 'get_bundle_id'):
-            name_hash = hashlib.md5(icon.get_bundle_id())
-            x = int(name_hash.hexdigest()[:5], 16) % (width - child_width)
-            y = int(name_hash.hexdigest()[-5:], 16) % (height - child_height)
-        else:
-            x = None
-            y = None
+                if child in self.fixed_positions:
+                    x, y = self.fixed_positions[child]
+                    x = min(x, allocation.width - child_width)
+                    y = min(y, allocation.height - child_height)
+                elif hasattr(child, 'get_bundle_id'):
+                    name_hash = hashlib.md5(child.get_bundle_id())
+                    x = int(name_hash.hexdigest()[:5], 16) % \
+                        (allocation.width - child_width)
+                    y = int(name_hash.hexdigest()[-5:], 16) % \
+                        (allocation.height - child_height)
+                else:
+                    x = None
+                    y = None
 
-        if x is None or y is None:
-            self._grid.add(icon,
-                           child_width / _CELL_SIZE, child_height / _CELL_SIZE)
-        else:
-            self._grid.add(icon,
-                           child_width / _CELL_SIZE, child_height / _CELL_SIZE,
-                           x / _CELL_SIZE, y / _CELL_SIZE)
+                if x is None or y is None:
+                    self._grid.add(child, child_width / _CELL_SIZE,
+                                   child_height / _CELL_SIZE)
+                else:
+                    self._grid.add(child, child_width / _CELL_SIZE,
+                                   child_height / _CELL_SIZE,
+                                   x / _CELL_SIZE, y / _CELL_SIZE)
 
-    def remove(self, icon):
-        self._grid.remove(icon)
-        FavoritesLayout.remove(self, icon)
+            rect = self._grid.get_child_rect(child)
+            x = int(round(rect.x * _CELL_SIZE))
+            y = int(round(rect.y * _CELL_SIZE)) + allocation.y
+            child_allocation = gtk.gdk.Rectangle(x, y,
+                                                 child_width, child_height)
+            child.size_allocate(child_allocation)
 
-    def move_icon(self, icon, x, y, locked=False):
-        self._grid.move(icon, x / _CELL_SIZE, y / _CELL_SIZE, locked)
-        FavoritesLayout.move_icon(self, icon, x, y, locked)
+    def move_icon(self, child, x, y, allocation):
+        ViewLayout.move(self, child, x, y)
 
-    def do_allocate(self, x, y, width, height, req_width, req_height,
-                    origin_changed):
-        for child in self.box.get_layout_children():
-            # We need to always get requests to not confuse hippo
-            min_w_, child_width = child.get_width_request()
-            min_h_, child_height = child.get_height_request(child_width)
+        if not (hasattr(child, 'get_bundle_id') and
+                hasattr(child, 'get_version')):
+            logging.debug('Not an activity icon %r', child)
+            return
 
-            rect = self._grid.get_child_rect(child.item)
-            child.allocate(rect.x * _CELL_SIZE,
-                           rect.y * _CELL_SIZE,
-                           child_width,
-                           child_height,
-                           origin_changed)
-
-    def allow_dnd(self):
-        return True
+        registry = bundleregistry.get_registry()
+        registry.set_bundle_position(
+            child.get_bundle_id(), child.get_version(),
+                x * allocation.width / float(_BASE_SCALE),
+                y * allocation.height / float(_BASE_SCALE))
+        self.fixed_positions[child] = (x, y)
 
 
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
@@ -203,7 +264,7 @@ _MIMIMUM_RADIUS_ENCROACHMENT = 0.75
 _INITIAL_ANGLE = math.pi
 
 
-class RingLayout(FavoritesLayout):
+class RingLayout(ViewLayout):
     """Lay out icons in a ring or spiral around the XO man."""
 
     __gtype_name__ = 'RingLayout'
@@ -216,27 +277,8 @@ class RingLayout(FavoritesLayout):
     """String used to identify this layout in home view dropdown palette."""
 
     def __init__(self):
-        FavoritesLayout.__init__(self)
-        self._locked_children = {}
+        ViewLayout.__init__(self)
         self._spiral_mode = False
-
-    def append(self, icon, locked=False):
-        FavoritesLayout.append(self, icon, locked)
-        if locked:
-            child = self.box.find_box_child(icon)
-            self._locked_children[child] = (0, 0)
-
-    def remove(self, icon):
-        child = self.box.find_box_child(icon)
-        if child in self._locked_children:
-            del self._locked_children[child]
-        FavoritesLayout.remove(self, icon)
-
-    def move_icon(self, icon, x, y, locked=False):
-        FavoritesLayout.move_icon(self, icon, x, y, locked)
-        if locked:
-            child = self.box.find_box_child(icon)
-            self._locked_children[child] = (x, y)
 
     def _calculate_radius_and_icon_size(self, children_count):
         """ Adjust the ring or spiral radius and icon size as needed. """
@@ -270,12 +312,10 @@ class RingLayout(FavoritesLayout):
         return radius, icon_size
 
     def _calculate_position(self, radius, icon_size, icon_index,
-                            children_count, sin=math.sin, cos=math.cos):
+                            children_count, width, height,
+                            sin=math.sin, cos=math.cos):
         """ Calculate an icon position on a circle or a spiral. """
-        width, height = self.box.get_allocation()
         if self._spiral_mode:
-            min_width_, box_width = self.box.get_width_request()
-            min_height_, box_height = self.box.get_height_request(box_width)
             angle, radius = self._calculate_angle_and_radius(icon_index,
                                                              icon_size)
             x, y = self._convert_from_polar_to_cartesian(angle, radius,
@@ -286,7 +326,7 @@ class RingLayout(FavoritesLayout):
             x = radius * cos(angle) + (width - icon_size) / 2
             y = radius * sin(angle) + (height - icon_size - \
                                        (style.GRID_CELL_SIZE / 2)) / 2
-        return x, y
+        return int(x), int(y)
 
     def _convert_from_polar_to_cartesian(self, angle, radius, icon_size, width,
                                          height):
@@ -311,49 +351,27 @@ class RingLayout(FavoritesLayout):
             radius += (float(icon_spacing) * spiral_spacing / n)
         return angle, radius
 
-    def _get_children_in_ring(self):
-        children_in_ring = [child for child in self.box.get_layout_children() \
-                if child not in self._locked_children]
-        return children_in_ring
+    def allocate_children(self, allocation, children):
+        radius, icon_size = self._calculate_radius_and_icon_size(len(children))
 
-    def do_allocate(self, x, y, width, height, req_width, req_height,
-                    origin_changed):
-        children_in_ring = self._get_children_in_ring()
-        if children_in_ring:
-            radius, icon_size = \
-                    self._calculate_radius_and_icon_size(len(children_in_ring))
+        children.sort(self.compare_activities)
+        for n in range(len(children)):
+            child = children[n]
 
-            for n in range(len(children_in_ring)):
-                child = children_in_ring[n]
-
-                x, y = self._calculate_position(radius, icon_size, n,
-                                                len(children_in_ring))
-
-                # We need to always get requests to not confuse hippo
-                min_w_, child_width = child.get_width_request()
-                min_h_, child_height = child.get_height_request(child_width)
-
-                child.allocate(int(x), int(y), child_width, child_height,
-                               origin_changed)
-                child.item.props.size = icon_size
-
-        for child in self._locked_children.keys():
-            x, y = self._locked_children[child]
-
-            # We need to always get requests to not confuse hippo
-            min_w_, child_width = child.get_width_request()
-            min_h_, child_height = child.get_height_request(child_width)
-
-            if child_width <= 0 or child_height <= 0:
-                return
-
-            child.allocate(int(x), int(y), child_width, child_height,
-                            origin_changed)
+            x, y = self._calculate_position(radius, icon_size, n,
+                                            len(children), allocation.width,
+                                            allocation.height)
+            child.size_request()
+            child.set_size(icon_size)
+            child_allocation = gtk.gdk.Rectangle(allocation.x + x,
+                                                 allocation.y + y,
+                                                 icon_size, icon_size)
+            child.size_allocate(child_allocation)
 
     def compare_activities(self, icon_a, icon_b):
         if hasattr(icon_a, 'installation_time') and \
                 hasattr(icon_b, 'installation_time'):
-            return icon_b.installation_time - icon_a.installation_time
+            return int(icon_b.installation_time - icon_a.installation_time)
         else:
             return 0
 
@@ -420,12 +438,10 @@ class SunflowerLayout(RingLayout):
         return i
 
     def _calculate_position(self, radius, icon_size, oindex, children_count,
-                            sin=math.sin, cos=math.cos):
+                            width, height, sin=math.sin, cos=math.cos):
         """Calculate the position of sunflower floret number 'oindex'.
         If the result is outside the bounding box, use the next index which
         is inside the bounding box."""
-
-        width, height = self.box.get_allocation()
 
         while True:
 
@@ -454,7 +470,7 @@ class SunflowerLayout(RingLayout):
                     # try again
                     continue
 
-            return x, y
+            return int(x), int(y)
 
 
 class BoxLayout(RingLayout):
@@ -476,7 +492,7 @@ class BoxLayout(RingLayout):
         RingLayout.__init__(self)
 
     def _calculate_position(self, radius, icon_size, index, children_count,
-                            sin=None, cos=None):
+                            width, height, sin=None, cos=None):
 
         # use "orthogonal" versions of cos and sin in order to square the
         # circle and turn the 'ring view' into a 'box view'
@@ -496,8 +512,8 @@ class BoxLayout(RingLayout):
         sin = lambda r: cos_d(math.degrees(r) - 90)
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
-                                              children_count, sin=sin,
-                                              cos=cos)
+                                              children_count, width, height,
+                                              sin=sin, cos=cos)
 
 
 class TriangleLayout(RingLayout):
@@ -526,7 +542,7 @@ class TriangleLayout(RingLayout):
         return max(radius, _MINIMUM_RADIUS + style.MEDIUM_ICON_SIZE), icon_size
 
     def _calculate_position(self, radius, icon_size, index, children_count,
-                            sin=math.sin, cos=math.cos):
+                            width, height, sin=math.sin, cos=math.cos):
         # tweak cos and sin in order to make the 'ring' into an equilateral
         # triangle.
 
@@ -556,5 +572,5 @@ class TriangleLayout(RingLayout):
         sin = lambda r: sin_d(math.degrees(r))
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
-                                              children_count, sin=sin,
-                                              cos=cos)
+                                              children_count, width, height,
+                                              sin=sin, cos=cos)

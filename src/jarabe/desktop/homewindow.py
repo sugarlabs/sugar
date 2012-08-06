@@ -57,6 +57,8 @@ class HomeWindow(gtk.Window):
 
         self.realize()
         self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
+        self.modify_bg(gtk.STATE_NORMAL,
+                       style.COLOR_WHITE.get_gdk_color())
 
         self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',

@@ -16,47 +16,40 @@
 
 import logging
 
-import gobject
-import hippo
 import gconf
 
 from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
 from sugar.graphics.xocolor import XoColor
 
 from jarabe.view.buddymenu import BuddyMenu
+from jarabe.view.eventicon import EventIcon
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
-from jarabe.desktop.spreadlayout import SpreadLayout
+from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.desktop.favoriteslayout import SpreadLayout
 
 
-class GroupBox(hippo.Canvas):
+class GroupBox(ViewContainer):
     __gtype_name__ = 'SugarGroupBox'
 
     def __init__(self):
         logging.debug('STARTUP: Loading the group view')
 
-        gobject.GObject.__init__(self)
-
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_WHITE.get_int()
-        self.set_root(self._box)
-
-        self._friends = {}
-
-        self._layout = SpreadLayout()
-        self._box.set_layout(self._layout)
+        layout = SpreadLayout()
 
         client = gconf.client_get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        owner_icon = EventIcon(icon_name='computer-xo', cache=True,
+                               xo_color=color)
+        # Round off icon size to an even number to ensure that the icon
+        # is placed evenly in the grid
+        owner_icon.props.pixel_size = style.LARGE_ICON_SIZE & ~1
+        owner_icon.set_palette(BuddyMenu(get_owner_instance()))
 
-        self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
-                                      xo_color=color)
-        self._owner_icon.props.size = style.LARGE_ICON_SIZE
+        ViewContainer.__init__(self, layout, owner_icon)
 
-        self._owner_icon.set_palette(BuddyMenu(get_owner_instance()))
-        self._layout.add(self._owner_icon)
+        self._friends = {}
 
         friends_model = friends.get_model()
 
@@ -68,27 +61,15 @@ class GroupBox(hippo.Canvas):
 
     def add_friend(self, buddy_info):
         icon = FriendView(buddy_info)
-        self._layout.add(icon)
-
+        self.add(icon)
         self._friends[buddy_info.get_key()] = icon
+        icon.show()
 
     def _friend_added_cb(self, data_model, buddy_info):
         self.add_friend(buddy_info)
 
     def _friend_removed_cb(self, data_model, key):
         icon = self._friends[key]
-        self._layout.remove(icon)
+        self.remove(icon)
         del self._friends[key]
         icon.destroy()
-
-    def do_size_allocate(self, allocation):
-        width = allocation.width
-        height = allocation.height
-
-        min_w_, icon_width = self._owner_icon.get_width_request()
-        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
-        x = (width - icon_width) / 2
-        y = (height - icon_height) / 2
-        self._layout.move(self._owner_icon, x, y)
-
-        hippo.Canvas.do_size_allocate(self, allocation)

@@ -45,7 +45,7 @@ class HomeBox(gtk.VBox):
 
         gobject.GObject.__init__(self)
 
-        self._favorites_view = favoritesview.FavoritesView()
+        self._favorites_box = favoritesview.FavoritesBox()
         self._list_view = ActivitiesList()
 
         self._toolbar = HomeToolbar()
@@ -78,14 +78,14 @@ class HomeBox(gtk.VBox):
         if self._list_view in self.get_children():
             self._list_view.add_alert(alert)
         else:
-            self._favorites_view.add_alert(alert)
+            self._favorites_box.add_alert(alert)
         alert.connect('response', self.__software_update_response_cb)
 
     def __software_update_response_cb(self, alert, response_id):
         if self._list_view in self.get_children():
             self._list_view.remove_alert()
         else:
-            self._favorites_view.remove_alert()
+            self._favorites_box.remove_alert()
 
         if response_id != gtk.RESPONSE_REJECT:
             update_trigger_file = os.path.expanduser('~/.sugar-update')
@@ -106,7 +106,7 @@ class HomeBox(gtk.VBox):
     def __toolbar_query_changed_cb(self, toolbar, query):
         self._query = query.lower()
         self._list_view.set_filter(self._query)
-        self._favorites_view.set_filter(self._query)
+        self._favorites_box.set_filter(self._query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -116,12 +116,12 @@ class HomeBox(gtk.VBox):
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
 
-            if self._favorites_view not in self.get_children():
-                self.add(self._favorites_view)
-                self._favorites_view.show()
+            if self._favorites_box not in self.get_children():
+                self.add(self._favorites_box)
+                self._favorites_box.show()
         elif view == _LIST_VIEW:
-            if self._favorites_view in self.get_children():
-                self.remove(self._favorites_view)
+            if self._favorites_box in self.get_children():
+                self.remove(self._favorites_box)
 
             if self._list_view not in self.get_children():
                 self.add(self._list_view)
@@ -146,10 +146,10 @@ class HomeBox(gtk.VBox):
         self._toolbar.search_entry.grab_focus()
 
     def set_resume_mode(self, resume_mode):
-        self._favorites_view.set_resume_mode(resume_mode)
+        self._favorites_box.set_resume_mode(resume_mode)
         if resume_mode and self._query != '':
             self._list_view.set_filter(self._query)
-            self._favorites_view.set_filter(self._query)
+            self._favorites_box.set_filter(self._query)
 
 
 class HomeToolbar(gtk.Toolbar):

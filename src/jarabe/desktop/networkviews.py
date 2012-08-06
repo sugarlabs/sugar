@@ -33,7 +33,7 @@ from sugar.graphics.menuitem import MenuItem
 from sugar.util import unique_id
 from sugar import profile
 
-from jarabe.view.pulsingicon import CanvasPulsingIcon
+from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog
 from jarabe.model import network
 from jarabe.model.network import Settings
@@ -48,10 +48,10 @@ _OLPC_MESH_ICON_NAME = 'network-mesh'
 _FILTERED_ALPHA = 0.33
 
 
-class WirelessNetworkView(CanvasPulsingIcon):
+class WirelessNetworkView(EventPulsingIcon):
     def __init__(self, initial_ap):
-        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
-                                   cache=True)
+        EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._access_points = {initial_ap.model.object_path: initial_ap}
         self._active_ap = None
@@ -255,9 +255,9 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self.props.base_color = self._color
         if self._filtered:
             self.props.pulsing = False
-            self.alpha = _FILTERED_ALPHA
+            self.props.alpha = _FILTERED_ALPHA
         else:
-            self.alpha = 1.0
+            self.props.alpha = 1.0
 
     def _disconnect_activate_cb(self, item):
         ap_paths = self._access_points.keys()
@@ -436,7 +436,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                          dbus_interface=network.NM_WIRELESS_IFACE)
 
 
-class SugarAdhocView(CanvasPulsingIcon):
+class SugarAdhocView(EventPulsingIcon):
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
     three channels 1, 6, 11. This is the class for an icon
@@ -448,9 +448,10 @@ class SugarAdhocView(CanvasPulsingIcon):
     _NAME = 'Ad-hoc Network '
 
     def __init__(self, channel):
-        CanvasPulsingIcon.__init__(self,
-                                   icon_name=self._ICON_NAME + str(channel),
-                                   size=style.STANDARD_ICON_SIZE, cache=True)
+        EventPulsingIcon.__init__(self,
+                                  icon_name=self._ICON_NAME + str(channel),
+                                  pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._channel = channel
         self._disconnect_item = None
@@ -572,10 +573,11 @@ class SugarAdhocView(CanvasPulsingIcon):
         self._update_color()
 
 
-class OlpcMeshView(CanvasPulsingIcon):
+class OlpcMeshView(EventPulsingIcon):
     def __init__(self, mesh_mgr, channel):
-        CanvasPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
-                                   size=style.STANDARD_ICON_SIZE, cache=True)
+        EventPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
+                                  pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._channel = channel
         self._mesh_mgr = mesh_mgr
