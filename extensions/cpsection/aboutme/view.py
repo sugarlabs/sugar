@@ -19,12 +19,12 @@ import gtk
 import gobject
 from gettext import gettext as _
 
-from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor, colors
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
+from jarabe.view.eventicon import EventIcon
 
 _STROKE_COLOR = 0
 _FILL_COLOR = 1
@@ -111,22 +111,6 @@ _NEXT_STROKE_COLOR = 3
 _PREVIOUS_STROKE_COLOR = 4
 
 
-class EventIcon(gtk.EventBox):
-    __gtype_name__ = 'SugarEventIcon'
-
-    def __init__(self, **kwargs):
-        gtk.EventBox.__init__(self)
-
-        self.icon = Icon(pixel_size=style.XLARGE_ICON_SIZE, **kwargs)
-
-        self.set_visible_window(False)
-        self.set_app_paintable(True)
-        self.set_events(gtk.gdk.BUTTON_PRESS_MASK)
-
-        self.add(self.icon)
-        self.icon.show()
-
-
 class ColorPicker(EventIcon):
     __gsignals__ = {
         'color-changed': (gobject.SIGNAL_RUN_FIRST,
@@ -135,13 +119,10 @@ class ColorPicker(EventIcon):
         }
 
     def __init__(self, picker):
-        EventIcon.__init__(self)
-
-        self.icon.props.icon_name = 'computer-xo'
+        EventIcon.__init__(self, icon_name='computer-xo',
+                           pixel_size=style.XLARGE_ICON_SIZE)
         self._picker = picker
         self._color = None
-
-        self.icon.props.pixel_size = style.XLARGE_ICON_SIZE
 
         self.connect('button_press_event', self.__pressed_cb, picker)
 
@@ -156,7 +137,7 @@ class ColorPicker(EventIcon):
             self._color = XoColor(_get_next_stroke_color(color))
         else:
             self._color = color
-        self.icon.props.xo_color = self._color
+        self.props.xo_color = self._color
 
     def __pressed_cb(self, button, event, picker):
         if picker != _CURRENT_COLOR:
