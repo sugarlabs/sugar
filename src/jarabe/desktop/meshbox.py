@@ -64,7 +64,8 @@ class _ActivityIcon(EventIcon):
         EventIcon.__init__(self, file_name=file_name,
                            xo_color=xo_color, pixel_size=size)
         self._model = model
-        self.connect('button-release-event', self._button_release_cb)
+        self.connect('button-release-event',
+                     self.__button_release_event_cb)
 
     def create_palette(self):
         primary_text = glib.markup_escape_text(self._model.bundle.get_name())
@@ -82,21 +83,22 @@ class _ActivityIcon(EventIcon):
 
         if joined:
             item = MenuItem(_('Resume'), 'activity-start')
-            item.connect('activate', self._clicked_cb)
+            item.connect('activate', self.__palette_item_clicked_cb)
             item.show()
             p.menu.append(item)
         elif not private:
             item = MenuItem(_('Join'), 'activity-start')
-            item.connect('activate', self._clicked_cb)
+            item.connect('activate', self.__palette_item_clicked_cb)
             item.show()
             p.menu.append(item)
 
         return p
 
-    def _button_release_cb(self, widget, event):
-        return self._clicked_cb(item=None)
+    def __button_release_event_cb(self, widget, event):
+        self.props.palette.popup(immediate=True,
+                                 state=palette.Palette.SECONDARY)
 
-    def _clicked_cb(self, item):
+    def __palette_item_clicked_cb(self, item):
         bundle = self._model.get_bundle()
         misc.launch(bundle, activity_id=self._model.activity_id,
                     color=self._model.get_color())

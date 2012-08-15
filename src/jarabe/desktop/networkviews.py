@@ -330,7 +330,8 @@ class WirelessNetworkView(EventPulsingIcon):
         self._connect()
 
     def __button_release_event_cb(self, icon, event):
-        self._connect()
+        self._palette.popup(immediate=True,
+                            state=palette.Palette.SECONDARY)
 
     def _connect(self):
         # Activate existing connection, if there is one
@@ -489,6 +490,7 @@ class SugarAdhocView(EventPulsingIcon):
         self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
         self._connect_item.connect('activate', self.__connect_activate_cb)
         palette_.menu.append(self._connect_item)
+        self._connect_item.show()
 
         self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
         self._disconnect_item.connect('activate',
@@ -498,7 +500,8 @@ class SugarAdhocView(EventPulsingIcon):
         return palette_
 
     def __button_release_event_cb(self, icon, event):
-        get_adhoc_manager_instance().activate_channel(self._channel)
+        self._palette.popup(immediate=True,
+                            state=palette.Palette.SECONDARY)
 
     def __connect_activate_cb(self, icon):
         get_adhoc_manager_instance().activate_channel(self._channel)
@@ -688,7 +691,8 @@ class OlpcMeshView(EventPulsingIcon):
         self._connect()
 
     def __button_release_event_cb(self, icon, event):
-        self._connect()
+        self._palette.popup(immediate=True,
+                            state=palette.Palette.SECONDARY)
 
     def _connect(self):
         self._mesh_mgr.user_activate_channel(self._channel)
