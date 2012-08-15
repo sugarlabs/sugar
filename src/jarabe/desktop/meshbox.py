@@ -410,18 +410,11 @@ class MeshContainer(ViewContainer):
     __gtype_name__ = 'SugarMeshContainer'
 
     def __init__(self):
-
         layout = SpreadLayout()
 
-        client = gconf.client_get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        owner_icon = EventIcon(icon_name='computer-xo', cache=True,
-                               xo_color=color)
         # Round off icon size to an even number to ensure that the icon
-        # is placed evenly in the grid
-        owner_icon.props.pixel_size = style.STANDARD_ICON_SIZE & ~1
-        owner_icon.set_palette(BuddyMenu(get_owner_instance()))
-
+        owner_icon = BuddyIcon(get_owner_instance(),
+                               style.STANDARD_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
 
 

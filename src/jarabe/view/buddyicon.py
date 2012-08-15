@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar.graphics import style
+from sugar.graphics.palette import Palette
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view.eventicon import EventIcon
@@ -33,12 +34,17 @@ class BuddyIcon(EventIcon):
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
+        self.connect('button-release-event', self.__button_release_event_cb)
+
         self.palette_invoker.cache_palette = False
 
         self._update_color()
 
     def create_palette(self):
         return BuddyMenu(self._buddy)
+
+    def __button_release_event_cb(self, icon, event):
+        self.props.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def __buddy_notify_present_cb(self, buddy, pspec):
         # Update the icon's color when the buddy comes and goes

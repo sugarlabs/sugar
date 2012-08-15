@@ -21,6 +21,7 @@ import gconf
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
+from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view.eventicon import EventIcon
 from jarabe.model.buddy import get_owner_instance
@@ -38,15 +39,9 @@ class GroupBox(ViewContainer):
 
         layout = SpreadLayout()
 
-        client = gconf.client_get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        owner_icon = EventIcon(icon_name='computer-xo', cache=True,
-                               xo_color=color)
         # Round off icon size to an even number to ensure that the icon
-        # is placed evenly in the grid
-        owner_icon.props.pixel_size = style.LARGE_ICON_SIZE & ~1
-        owner_icon.set_palette(BuddyMenu(get_owner_instance()))
-
+        owner_icon = BuddyIcon(get_owner_instance(),
+                               style.LARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
 
         self._friends = {}
