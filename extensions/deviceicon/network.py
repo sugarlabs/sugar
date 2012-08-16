@@ -400,6 +400,7 @@ class WirelessDeviceView(ToolButton):
                               self.__deactivate_connection_cb)
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
+        self.connect('clicked', self.__toolbutton_clicked_cb)
 
         self._device_props = dbus.Interface(self._device,
                                             dbus.PROPERTIES_IFACE)
@@ -569,6 +570,10 @@ class WirelessDeviceView(ToolButton):
     def __activate_error_cb(self, err):
         logging.debug('Failed to create network: %s', err)
 
+    def __toolbutton_clicked_cb(self, button):
+        self.palette_invoker.notify_right_click()
+        return True
+
 
 class OlpcMeshDeviceView(ToolButton):
     _ICON_NAME = 'network-mesh'
@@ -600,6 +605,7 @@ class OlpcMeshDeviceView(ToolButton):
                               self.__deactivate_connection)
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
+        self.connect('clicked', self.__toolbutton_clicked_cb)
 
         self.update_state(state)
 
@@ -684,6 +690,10 @@ class OlpcMeshDeviceView(ToolButton):
             except dbus.exceptions.DBusException:
                 pass
 
+    def __toolbutton_clicked_cb(self, button):
+        self.palette_invoker.notify_right_click()
+        return True
+
 
 class WiredDeviceView(TrayIcon):
 
@@ -701,6 +711,11 @@ class WiredDeviceView(TrayIcon):
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
         self._palette.set_connected(speed, address)
+        self.connect('button-release-event', self.__button_release_event_cb)
+
+    def __button_release_event_cb(self, widget, event):
+        self.palette_invoker.notify_right_click()
+        return True
 
 
 class GsmDeviceView(TrayIcon):
@@ -721,6 +736,7 @@ class GsmDeviceView(TrayIcon):
         self._device = device
         self._palette = None
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.connect('button-release-event', self.__button_release_event_cb)
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
@@ -746,6 +762,10 @@ class GsmDeviceView(TrayIcon):
                      error_handler=self.__current_state_check_error_cb)
 
         return palette
+
+    def __button_release_event_cb(self, widget, event):
+        self.palette_invoker.notify_right_click()
+        return True
 
     def __gsm_connect_cb(self, palette, data=None):
         connection = network.find_gsm_connection()

@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from gettext import gettext as _
 
 import gobject
 import gio
@@ -23,6 +24,8 @@ import gconf
 
 from sugar.graphics.tray import TrayIcon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.menuitem import MenuItem
+from sugar.graphics.icon import Icon
 
 from jarabe.journal import journalactivity
 from jarabe.view.palettes import VolumePalette
@@ -40,16 +43,17 @@ class DeviceView(TrayIcon):
 
         self._mount = mount
 
-        icon_name = None
+        self._icon_name = None
         icon_theme = gtk.icon_theme_get_default()
         for icon_name in self._mount.get_icon().props.names:
             icon_info = icon_theme.lookup_icon(icon_name,
                                                gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
             if icon_info is not None:
+                self._icon_name = icon_name
                 break
 
-        if icon_name is None:
-            icon_name = 'drive'
+        if self._icon_name is None:
+            self._icon_name = 'drive'
 
         # TODO: retrieve the colors from the owner of the device
         client = gconf.client_get_default()
@@ -64,13 +68,29 @@ class DeviceView(TrayIcon):
     def create_palette(self):
         palette = VolumePalette(self._mount)
         palette.set_group_id('frame')
+
+        menu_item = MenuItem(_('Show contents'))
+        client = gconf.client_get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon = Icon(icon_name=self._icon_name, icon_size=gtk.ICON_SIZE_MENU,
+                    xo_color=color)
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__show_contents_cb)
+        palette.menu.insert(menu_item, 0)
+        menu_item.show()
+
         return palette
 
     def __button_release_event_cb(self, widget, event):
+        self.palette_invoker.notify_right_click()
+        return True
+
+    def __show_contents_cb(self, menu_item):
         journal = journalactivity.get_journal()
         journal.set_active_volume(self._mount)
         journal.reveal()
-        return True
 
 
 def setup(tray):
