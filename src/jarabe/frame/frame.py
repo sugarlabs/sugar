@@ -57,29 +57,12 @@ class _Animation(animator.Animation):
 class _MouseListener(object):
     def __init__(self, frame):
         self._frame = frame
-        self._hide_sid = 0
 
     def mouse_enter(self):
-        self._show_frame()
-
-    def mouse_leave(self):
-        if self._frame.mode == Frame.MODE_MOUSE:
-            self._hide_frame()
-
-    def _show_frame(self):
-        if self._hide_sid != 0:
-            gobject.source_remove(self._hide_sid)
-        self._frame.show(Frame.MODE_MOUSE)
-
-    def _hide_frame_timeout_cb(self):
-        self._frame.hide()
-        return False
-
-    def _hide_frame(self):
-        if self._hide_sid != 0:
-            gobject.source_remove(self._hide_sid)
-        self._hide_sid = gobject.timeout_add(
-                  _FRAME_HIDING_DELAY, self._hide_frame_timeout_cb)
+        if self._frame.visible:
+            self._frame.hide()
+        else:
+            self._frame.show()
 
 
 class _KeyListener(object):
@@ -88,23 +71,16 @@ class _KeyListener(object):
 
     def key_press(self):
         if self._frame.visible:
-            if self._frame.mode == Frame.MODE_KEYBOARD:
-                self._frame.hide()
+            self._frame.hide()
         else:
-            self._frame.show(Frame.MODE_KEYBOARD)
+            self._frame.show()
 
 
 class Frame(object):
-    MODE_MOUSE = 0
-    MODE_KEYBOARD = 1
-    MODE_NON_INTERACTIVE = 2
-
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
-        self.mode = None
 
         self._palette_group = palettegroup.get_group('frame')
-        self._palette_group.connect('popdown', self._palette_group_popdown_cb)
 
         self._left_panel = None
         self._right_panel = None
@@ -143,6 +119,9 @@ class Frame(object):
     visible = property(is_visible, None)
 
     def hide(self):
+        if not self.visible:
+            return
+
         if self._animator:
             self._animator.stop()
 
@@ -150,15 +129,11 @@ class Frame(object):
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
-        self.mode = None
-
-    def show(self, mode):
+    def show(self):
         if self.visible:
             return
         if self._animator:
             self._animator.stop()
-
-        self.mode = mode
 
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 1.0))
@@ -180,6 +155,7 @@ class Frame(object):
         zoom_toolbar = ZoomToolbar()
         panel.append(zoom_toolbar, expand=False)
         zoom_toolbar.show()
+        zoom_toolbar.connect('level-clicked', self._level_clicked_cb)
 
         activities_tray = ActivitiesTray()
         panel.append(activities_tray)
@@ -208,7 +184,6 @@ class Frame(object):
     def _create_left_panel(self):
         panel = ClipboardPanelWindow(self, gtk.POS_LEFT)
 
-        self._connect_to_panel(panel)
         panel.connect('drag-motion', self._drag_motion_cb)
         panel.connect('drag-leave', self._drag_leave_cb)
 
@@ -216,7 +191,6 @@ class Frame(object):
 
     def _create_panel(self, orientation):
         panel = FrameWindow(orientation)
-        self._connect_to_panel(panel)
 
         return panel
 
@@ -230,9 +204,8 @@ class Frame(object):
         if not panel.props.visible:
             panel.show()
 
-    def _connect_to_panel(self, panel):
-        panel.connect('enter-notify-event', self._enter_notify_cb)
-        panel.connect('leave-notify-event', self._leave_notify_cb)
+    def _level_clicked_cb(self, zoom_toolbar):
+        self.hide()
 
     def _update_position(self):
         screen_h = gtk.gdk.screen_height()

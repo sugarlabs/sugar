@@ -20,6 +20,7 @@ import logging
 
 import glib
 import gtk
+import gobject
 
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
@@ -30,6 +31,10 @@ from jarabe.model import shell
 
 
 class ZoomToolbar(gtk.Toolbar):
+    __gsignals__ = {
+        'level-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                          ([]))
+        }
     def __init__(self):
         gtk.Toolbar.__init__(self)
 
@@ -76,6 +81,7 @@ class ZoomToolbar(gtk.Toolbar):
             return
 
         shell.get_model().set_zoom_level(level)
+        self.emit('level-clicked')
 
     def __zoom_level_changed_cb(self, **kwargs):
         self._set_zoom_level(kwargs['new_level'])

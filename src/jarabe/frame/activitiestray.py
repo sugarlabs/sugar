@@ -287,6 +287,8 @@ class ActivitiesTray(HTray):
             window = home_activity.get_window()
             if window:
                 window.activate(gtk.get_current_event_time())
+                frame = jarabe.frame.get_view()
+                frame.hide()
 
     def __remove_invite_cb(self, icon, invite):
         self._invites.remove_invite(invite)

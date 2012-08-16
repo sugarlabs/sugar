@@ -58,7 +58,7 @@ class TabbingHandler(object):
 
                 self._tabbing = False
             else:
-                self._frame.show(self._frame.MODE_NON_INTERACTIVE)
+                self._frame.show()
 
     def __timeout_cb(self, event_time):
         self._activate_current(event_time)
