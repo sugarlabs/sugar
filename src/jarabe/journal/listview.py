@@ -371,11 +371,18 @@ class BaseListView(gtk.Bin):
         self._progress_bar = None
 
     def _show_message(self, message, show_clear_query=False):
-        box = gtk.VBox()
         self.remove(self.child)
 
+        background_box = gtk.EventBox()
+        background_box.modify_bg(gtk.STATE_NORMAL,
+                                 style.COLOR_WHITE.get_gdk_color())
+        self.add(background_box)
+
         alignment = gtk.Alignment(0.5, 0.5, 0.1, 0.1)
-        self.add(alignment)
+        background_box.add(alignment)
+
+        box = gtk.VBox()
+        alignment.add(box)
 
         icon = EventIcon(pixel_size=style.LARGE_ICON_SIZE,
                          icon_name='activity-journal',
@@ -396,8 +403,7 @@ class BaseListView(gtk.Bin):
                                       icon_size=gtk.ICON_SIZE_BUTTON)
             box.pack_start(button, expand=True, fill=False)
 
-        alignment.add(box)
-        alignment.show_all()
+        background_box.show_all()
 
     def __clear_button_clicked_cb(self, button):
         self.emit('clear-clicked')
