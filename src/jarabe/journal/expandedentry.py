@@ -194,10 +194,17 @@ class ExpandedEntry(gtk.EventBox):
         return date
 
     def _create_preview(self):
-        width = style.zoom(320)
-        height = style.zoom(240)
         box = gtk.EventBox()
         box.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+
+        box.connect('expose-event', self.__expose_event_cb)
+        box.connect_after('button-release-event',
+                          self._preview_box_button_release_event_cb)
+        return box
+
+    def __expose_event_cb(self, box, event):
+        width = style.zoom(320)
+        height = style.zoom(240)
 
         if len(self._metadata.get('preview', '')) > 4:
             if self._metadata['preview'][1:4] == 'PNG':
@@ -214,8 +221,11 @@ class ExpandedEntry(gtk.EventBox):
                 surface = cairo.ImageSurface.create_from_png(png_file)
                 png_width = surface.get_width()
                 png_height = surface.get_height()
-                pixmap = gtk.gdk.Pixmap(None, png_width, png_height, 24)
+                gdk_window = self.get_toplevel().window
+                pixmap = gtk.gdk.Pixmap(gdk_window, png_width, png_height, -1)
                 cr = pixmap.cairo_create()
+                cr.set_source_rgb(1, 1, 1)
+                cr.paint()
                 cr.set_source_surface(surface, 0, 0)
                 cr.scale(width / png_width, height / png_height)
                 cr.paint()
@@ -230,15 +240,13 @@ class ExpandedEntry(gtk.EventBox):
 
         if has_preview:
             box.add(im)
+            im.show()
         else:
             label = gtk.Label()
             label.set_text(_('No preview'))
             label.set_size_request(width, height)
             box.add(label)
-
-        box.connect_after('button-release-event',
-                          self._preview_box_button_release_event_cb)
-        return box
+            label.show()
 
     def _create_technical(self):
         vbox = gtk.VBox()
