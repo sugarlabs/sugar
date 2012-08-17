@@ -62,11 +62,14 @@ def create_profile(name, color=None):
         logging.warning('Existing public key %s.pub moved to %s.pub.broken',
                         keypath, keypath)
 
+    logging.debug("Generating user keypair")
+
     cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
     (s, o) = commands.getstatusoutput(cmd)
     if s != 0:
         logging.error('Could not generate key pair: %d %s', s, o)
 
+    logging.debug("User keypair generated")
 
 class _Page(gtk.VBox):
     __gproperties__ = {
