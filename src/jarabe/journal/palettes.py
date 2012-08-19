@@ -29,6 +29,7 @@ from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.alert import Alert
 from sugar import mime
 
 from jarabe.model import friends
@@ -36,6 +37,7 @@ from jarabe.model import filetransfer
 from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
+from jarabe.journal import journalwindow
 
 
 class ObjectPalette(Palette):
@@ -142,7 +144,25 @@ class ObjectPalette(Palette):
                       _('Error'))
 
     def __erase_activate_cb(self, menu_item):
-        model.delete(self._metadata['uid'])
+        alert = Alert()
+        erase_string = _('Erase')
+        alert.props.title = erase_string
+        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
+            % self._metadata['title']
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
+        icon.show()
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, erase_string, ok_icon)
+        ok_icon.show()
+        alert.connect('response', self.__erase_alert_response_cb)
+        journalwindow.get_journal_window().add_alert(alert)
+        alert.show()
+
+    def __erase_alert_response_cb(self, alert, response_id):
+        journalwindow.get_journal_window().remove_alert(alert)
+        if response_id is gtk.RESPONSE_OK:
+            model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
         self.emit('detail-clicked', self._metadata['uid'])

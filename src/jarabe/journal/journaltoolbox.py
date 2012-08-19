@@ -36,6 +36,7 @@ from sugar.graphics.combobox import ComboBox
 from sugar.graphics.menuitem import MenuItem
 from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
+from sugar.graphics.alert import Alert
 from sugar.graphics import iconentry
 from sugar.graphics import style
 from sugar import mime
@@ -45,6 +46,7 @@ from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal.palettes import ClipboardMenu
 from jarabe.journal.palettes import VolumeMenu
+from jarabe.journal import journalwindow
 
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -438,12 +440,29 @@ class EntryToolbar(gtk.Toolbar):
                       _('Error'))
 
     def _erase_button_clicked_cb(self, button):
-        registry = bundleregistry.get_registry()
+        alert = Alert()
+        erase_string = _('Erase')
+        alert.props.title = erase_string
+        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
+            % self._metadata['title']
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
+        icon.show()
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(gtk.RESPONSE_OK, erase_string, ok_icon)
+        ok_icon.show()
+        alert.connect('response', self.__erase_alert_response_cb)
+        journalwindow.get_journal_window().add_alert(alert)
+        alert.show()
 
-        bundle = misc.get_bundle(self._metadata)
-        if bundle is not None and registry.is_installed(bundle):
-            registry.uninstall(bundle)
-        model.delete(self._metadata['uid'])
+    def __erase_alert_response_cb(self, alert, response_id):
+        journalwindow.get_journal_window().remove_alert(alert)
+        if response_id is gtk.RESPONSE_OK:
+            registry = bundleregistry.get_registry()
+            bundle = misc.get_bundle(self._metadata)
+            if bundle is not None and registry.is_installed(bundle):
+                registry.uninstall(bundle)
+            model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)
