@@ -150,6 +150,11 @@ class SpreadLayout(ViewLayout):
         ViewLayout.__init__(self)
 
     def remove(self, child):
+        if self._grid is None:
+            # the Grid is created during allocation time, so it might not
+            # exist yet when this method is called, SL #3814
+            return
+
         if self._grid.is_in_grid(child):
             self._grid.remove(child)
 
