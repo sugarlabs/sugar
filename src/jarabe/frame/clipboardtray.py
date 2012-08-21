@@ -216,7 +216,10 @@ class ClipboardTray(tray.VTray):
                 context.drop_finish(True, gtk.get_current_event_time())
 
     def _internal_drag(self, context):
-        view_ancestor = context.get_source_widget().get_ancestor(gtk.Viewport)
+        source_widget = context.get_source_widget()
+        if source_widget is None:
+            return False
+        view_ancestor = source_widget.get_ancestor(gtk.Viewport)
         if view_ancestor is self._viewport:
             return True
         else:
