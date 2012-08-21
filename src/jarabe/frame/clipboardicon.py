@@ -121,6 +121,8 @@ class ClipboardIcon(RadioToolButton):
 
         if cb_object.get_icon():
             self._icon.props.icon_name = cb_object.get_icon()
+            if self._notif_icon:
+                self._notif_icon.props.icon_name = self._icon.props.icon_name
         else:
             self._icon.props.icon_name = 'application-octet-stream'
 
