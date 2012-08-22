@@ -54,17 +54,6 @@ class _Animation(animator.Animation):
         self._frame.move(current)
 
 
-class _MouseListener(object):
-    def __init__(self, frame):
-        self._frame = frame
-
-    def mouse_enter(self):
-        if self._frame.visible:
-            self._frame.hide()
-        else:
-            self._frame.show()
-
-
 class _KeyListener(object):
     def __init__(self, frame):
         self._frame = frame
@@ -103,7 +92,6 @@ class Frame(object):
         screen.connect('size-changed', self._size_changed_cb)
 
         self._key_listener = _KeyListener(self)
-        self._mouse_listener = _MouseListener(self)
 
         self._notif_by_icon = {}
 
@@ -143,12 +131,6 @@ class Frame(object):
         self.current_position = pos
         self._update_position()
 
-    def _is_hover(self):
-        return (self._top_panel.hover or \
-                self._bottom_panel.hover or \
-                self._left_panel.hover or \
-                self._right_panel.hover)
-
     def _create_top_panel(self):
         panel = self._create_panel(gtk.POS_TOP)
 
@@ -183,9 +165,6 @@ class Frame(object):
 
     def _create_left_panel(self):
         panel = ClipboardPanelWindow(self, gtk.POS_LEFT)
-
-        panel.connect('drag-motion', self._drag_motion_cb)
-        panel.connect('drag-leave', self._drag_leave_cb)
 
         return panel
 
@@ -226,29 +205,11 @@ class Frame(object):
     def _size_changed_cb(self, screen):
         self._update_position()
 
-    def _enter_notify_cb(self, window, event):
-        if event.detail != gtk.gdk.NOTIFY_INFERIOR:
-            self._mouse_listener.mouse_enter()
-
-    def _leave_notify_cb(self, window, event):
-        if event.detail == gtk.gdk.NOTIFY_INFERIOR:
-            return
-
-        if not self._is_hover() and not self._palette_group.is_up():
-            self._mouse_listener.mouse_leave()
-
-    def _palette_group_popdown_cb(self, group):
-        if not self._is_hover():
-            self._mouse_listener.mouse_leave()
-
-    def _drag_motion_cb(self, window, context, x, y, time):
-        self._mouse_listener.mouse_enter()
-
-    def _drag_leave_cb(self, window, drag_context, timestamp):
-        self._mouse_listener.mouse_leave()
-
     def _enter_corner_cb(self, event_area):
-        self._mouse_listener.mouse_enter()
+        if self.visible:
+            self.hide()
+        else:
+            self.show()
 
     def notify_key_press(self):
         self._key_listener.key_press()
