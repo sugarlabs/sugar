@@ -32,8 +32,7 @@ class LaunchWindow(gtk.Window):
     def __init__(self, activity_id, icon_path, icon_color):
         gobject.GObject.__init__(self)
 
-        self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_NORMAL
-        self.props.decorated = False
+        self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_SPLASHSCREEN
         self.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         canvas = gtk.VBox()
@@ -94,8 +93,6 @@ class LaunchWindow(gtk.Window):
 
     def __realize_cb(self, widget):
         wm.set_activity_id(widget.window, str(self._activity_id))
-        widget.window.property_change('_SUGAR_WINDOW_TYPE', 'STRING', 8,
-                                      gtk.gdk.PROP_MODE_REPLACE, 'launcher')
 
     def __size_changed_cb(self, screen):
         self._update_size()

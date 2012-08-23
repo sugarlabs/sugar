@@ -521,7 +521,8 @@ class ShellModel(gobject.GObject):
            them.
 
          """
-        if window.get_window_type() == wnck.WINDOW_NORMAL:
+        if window.get_window_type() == wnck.WINDOW_NORMAL or \
+                window.get_window_type() == wnck.WINDOW_SPLASHSCREEN:
             home_activity = None
 
             activity_id = wm.get_activity_id(window)
@@ -552,7 +553,7 @@ class ShellModel(gobject.GObject):
                 logging.debug('window registered for %s', activity_id)
                 home_activity.add_window(window)
 
-            if wm.get_sugar_window_type(window) != 'launcher' \
+            if window.get_window_type() != wnck.WINDOW_SPLASHSCREEN \
                     and home_activity.get_launch_status() == Activity.LAUNCHING:
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
@@ -563,7 +564,8 @@ class ShellModel(gobject.GObject):
                 self._set_active_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
-        if window.get_window_type() == wnck.WINDOW_NORMAL:
+        if window.get_window_type() == wnck.WINDOW_NORMAL or \
+                window.get_window_type() == wnck.WINDOW_SPLASHSCREEN:
             xid = window.get_xid()
             activity = self._get_activity_by_xid(xid)
             if activity is not None:
