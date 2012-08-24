@@ -14,13 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import logging
-import tempfile
 
 import gtk
 
-from sugar import util
 from sugar.graphics import tray
 from sugar.graphics import style
 
@@ -158,28 +155,9 @@ class ClipboardTray(tray.VTray):
 
         self._context_map.add_context(context, object_id, len(context.targets))
 
-        if 'XdndDirectSave0' in context.targets:
-            window = context.source_window
-            prop_type, format_, filename = \
-                window.property_get('XdndDirectSave0', 'text/plain')
-
-            # FIXME query the clipboard service for a filename?
-            base_dir = tempfile.gettempdir()
-            dest_filename = util.unique_id()
-
-            name_, dot, extension = filename.rpartition('.')
-            dest_filename += dot + extension
-
-            dest_uri = 'file://' + os.path.join(base_dir, dest_filename)
-
-            window.property_change('XdndDirectSave0', prop_type, format_,
-                                   gtk.gdk.PROP_MODE_REPLACE, dest_uri)
-
-            widget.drag_get_data(context, 'XdndDirectSave0', time)
-        else:
-            for target in context.targets:
-                if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
-                    widget.drag_get_data(context, target, time)
+        for target in context.targets:
+            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
+                widget.drag_get_data(context, target, time)
 
         cb_service.set_object_percent(object_id, percent=100)
 
@@ -195,17 +173,6 @@ class ClipboardTray(tray.VTray):
             if selection is None:
                 logging.warn('ClipboardTray: empty selection for target %s',
                     selection.target)
-            elif selection.target == 'XdndDirectSave0':
-                if selection.data == 'S':
-                    window = context.source_window
-
-                    prop_type, format_, dest = window.property_get(
-                        'XdndDirectSave0', 'text/plain')
-
-                    clipboardservice = clipboard.get_instance()
-                    clipboardservice.add_object_format(object_id,
-                                                       'XdndDirectSave0',
-                                                       dest, on_disk=True)
             else:
                 self._add_selection(object_id, selection)
 
