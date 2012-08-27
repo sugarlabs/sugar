@@ -182,6 +182,7 @@ class HomeWindow(gtk.Window):
         elif level == ShellModel.ZOOM_GROUP:
             self.add(self._group_box)
             self._group_box.show()
+            self._group_box.focus_search_entry()
         elif level == ShellModel.ZOOM_MESH:
             self.add(self._mesh_box)
             self._mesh_box.show()

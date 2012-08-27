@@ -29,21 +29,19 @@ import gconf
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics import palette
-from sugar.graphics import iconentry
 from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.xocolor import XoColor
 
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.view.buddymenu import BuddyMenu
 from jarabe.view.eventicon import EventIcon
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
+from jarabe.desktop.viewtoolbar import ViewToolbar
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -53,9 +51,6 @@ from jarabe.journal import misc
 
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
-
-_AUTOSEARCH_TIMEOUT = 1000
-_FILTERED_ALPHA = 0.33
 
 
 class _ActivityIcon(EventIcon):
@@ -159,74 +154,6 @@ class ActivityView(SnowflakeLayout):
         for icon in self._icons.itervalues():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
-
-
-class MeshToolbar(gtk.Toolbar):
-    __gtype_name__ = 'MeshToolbar'
-
-    __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([str])),
-    }
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
-
-        self._query = None
-        self._autosearch_timer = None
-
-        self._add_separator()
-
-        tool_item = gtk.ToolItem()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-        self.search_entry = iconentry.IconEntry()
-        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'system-search')
-        self.search_entry.add_clear_button()
-        self.search_entry.set_width_chars(25)
-        self.search_entry.connect('activate', self._entry_activated_cb)
-        self.search_entry.connect('changed', self._entry_changed_cb)
-        tool_item.add(self.search_entry)
-        self.search_entry.show()
-
-        self._add_separator(expand=True)
-
-    def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.GRID_CELL_SIZE,
-                                       style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
-
-    def _entry_activated_cb(self, entry):
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        new_query = entry.props.text
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
-
-    def _entry_changed_cb(self, entry):
-        if not entry.props.text:
-            entry.activate()
-            return
-
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self._autosearch_timer_cb)
-
-    def _autosearch_timer_cb(self):
-        logging.debug('_autosearch_timer_cb')
-        self._autosearch_timer = None
-        self.search_entry.activate()
-        return False
 
 
 class DeviceObserver(gobject.GObject):
@@ -440,7 +367,7 @@ class MeshBox(gtk.VBox):
         self._suspended = True
         self._query = ''
 
-        self._toolbar = MeshToolbar()
+        self._toolbar = ViewToolbar()
         self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
         self.pack_start(self._toolbar, expand=False)
         self._toolbar.show()
