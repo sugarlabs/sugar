@@ -22,19 +22,16 @@ import gobject
 import gtk
 
 from sugar.graphics import style
-from sugar.graphics import iconentry
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
-
+from jarabe.desktop.viewtoolbar import ViewToolbar
 
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
-
-_AUTOSEARCH_TIMEOUT = 1000
 
 
 class HomeBox(gtk.VBox):
@@ -152,39 +149,16 @@ class HomeBox(gtk.VBox):
             self._favorites_box.set_filter(self._query)
 
 
-class HomeToolbar(gtk.Toolbar):
+class HomeToolbar(ViewToolbar):
     __gtype_name__ = 'SugarHomeToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([str])),
         'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([object])),
     }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
-
-        self._query = None
-        self._autosearch_timer = None
-
-        self._add_separator()
-
-        tool_item = gtk.ToolItem()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-        self.search_entry = iconentry.IconEntry()
-        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                              'system-search')
-        self.search_entry.add_clear_button()
-        self.search_entry.set_width_chars(25)
-        self.search_entry.connect('activate', self.__entry_activated_cb)
-        self.search_entry.connect('changed', self.__entry_changed_cb)
-        tool_item.add(self.search_entry)
-        self.search_entry.show()
-
-        self._add_separator(expand=True)
+        ViewToolbar.__init__(self)
 
         favorites_button = FavoritesButton()
         favorites_button.connect('toggled', self.__view_button_toggled_cb,
@@ -218,30 +192,6 @@ class HomeToolbar(gtk.Toolbar):
                                        style.GRID_CELL_SIZE)
         self.insert(separator, -1)
         separator.show()
-
-    def __entry_activated_cb(self, entry):
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        new_query = entry.props.text
-        if self._query != new_query:
-            self._query = new_query
-
-            self.emit('query-changed', self._query)
-
-    def __entry_changed_cb(self, entry):
-        if not entry.props.text:
-            entry.activate()
-            return
-
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-            self.__autosearch_timer_cb)
-
-    def __autosearch_timer_cb(self):
-        self._autosearch_timer = None
-        self.search_entry.activate()
-        return False
 
 
 class FavoritesButton(RadioToolButton):
