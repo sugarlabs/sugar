@@ -16,8 +16,6 @@
 
 import logging
 
-import gtk
-
 from sugar.graphics import style
 
 from jarabe.view.buddyicon import BuddyIcon
@@ -26,13 +24,14 @@ from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
-from jarabe.desktop.viewtoolbar import ViewToolbar
 
 
-class GroupContainer(ViewContainer):
-    __gtype_name__ = 'SugarGroupContainer'
+class GroupBox(ViewContainer):
+    __gtype_name__ = 'SugarGroupBox'
 
-    def __init__(self):
+    def __init__(self, toolbar):
+        logging.debug('STARTUP: Loading the group view')
+
         layout = SpreadLayout()
 
         # Round off icon size to an even number to ensure that the icon
@@ -40,24 +39,8 @@ class GroupContainer(ViewContainer):
                                style.LARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
 
-
-class GroupBox(gtk.VBox):
-    __gtype_name__ = 'SugarGroupBox'
-
-    def __init__(self):
-        logging.debug('STARTUP: Loading the group view')
-
-        gtk.VBox.__init__(self)
-
         self._query = ''
-        self._toolbar = ViewToolbar()
-        self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.pack_start(self._toolbar, expand=False)
-        self._toolbar.show()
-
-        self._group_container = GroupContainer()
-        self.add(self._group_container)
-        self._group_container.show()
+        toolbar.connect('query-changed', self._toolbar_query_changed_cb)
 
         self._friends = {}
 
@@ -71,7 +54,7 @@ class GroupBox(gtk.VBox):
 
     def add_friend(self, buddy_info):
         icon = FriendView(buddy_info)
-        self._group_container.add(icon)
+        self.add(icon)
         self._friends[buddy_info.get_key()] = icon
         icon.show()
 
@@ -80,15 +63,12 @@ class GroupBox(gtk.VBox):
 
     def _friend_removed_cb(self, data_model, key):
         icon = self._friends[key]
-        self._group_container.remove(icon)
+        self.remove(icon)
         del self._friends[key]
         icon.destroy()
 
     def _toolbar_query_changed_cb(self, toolbar, query):
         self._query = query.lower()
-        for icon in self._group_container.get_children():
+        for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
-
-    def focus_search_entry(self):
-        self._toolbar.search_entry.grab_focus()

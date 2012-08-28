@@ -26,6 +26,7 @@ from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
 from jarabe.desktop.groupbox import GroupBox
 from jarabe.desktop.transitionbox import TransitionBox
+from jarabe.desktop.viewtoolbar import ViewToolbar
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
 
@@ -67,13 +68,23 @@ class HomeWindow(gtk.Window):
         self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('key-release-event', self.__key_release_event_cb)
 
-        self._home_box = HomeBox()
-        self._group_box = GroupBox()
-        self._mesh_box = MeshBox()
+        self._box = gtk.VBox()
+
+        self._toolbar = ViewToolbar()
+        self._box.pack_start(self._toolbar, expand=False)
+        self._toolbar.show()
+
+        self._home_box = HomeBox(self._toolbar)
+        self._box.pack_start(self._home_box)
+        self._home_box.show()
+        self._toolbar.show_view_buttons()
+
+        self._group_box = GroupBox(self._toolbar)
+        self._mesh_box = MeshBox(self._toolbar)
         self._transition_box = TransitionBox()
 
-        self.add(self._home_box)
-        self._home_box.show()
+        self.add(self._box)
+        self._box.show()
 
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
@@ -143,8 +154,10 @@ class HomeWindow(gtk.Window):
 
         if old_level != ShellModel.ZOOM_ACTIVITY and \
            new_level != ShellModel.ZOOM_ACTIVITY:
-            self.remove(self.get_child())
-            self.add(self._transition_box)
+            children = self._box.get_children()
+            if len(children) >= 2:
+                self._box.remove(children[1])
+            self._box.pack_start(self._transition_box)
             self._transition_box.show()
 
             if new_level == ShellModel.ZOOM_HOME:
@@ -172,21 +185,25 @@ class HomeWindow(gtk.Window):
         if level == ShellModel.ZOOM_ACTIVITY:
             return
 
-        current_child = self.get_child()
-        self.remove(current_child)
+        children = self._box.get_children()
+        if len(children) >= 2:
+            self._box.remove(children[1])
 
         if level == ShellModel.ZOOM_HOME:
-            self.add(self._home_box)
+            self._box.pack_start(self._home_box)
             self._home_box.show()
-            self._home_box.focus_search_entry()
+            self._toolbar.search_entry.grab_focus()
+            self._toolbar.show_view_buttons()
         elif level == ShellModel.ZOOM_GROUP:
-            self.add(self._group_box)
+            self._box.pack_start(self._group_box)
             self._group_box.show()
-            self._group_box.focus_search_entry()
+            self._toolbar.search_entry.grab_focus()
+            self._toolbar.hide_view_buttons()
         elif level == ShellModel.ZOOM_MESH:
-            self.add(self._mesh_box)
+            self._box.pack_start(self._mesh_box)
             self._mesh_box.show()
-            self._mesh_box.focus_search_entry()
+            self._toolbar.search_entry.grab_focus()
+            self._toolbar.hide_view_buttons()
 
     def get_home_box(self):
         return self._home_box

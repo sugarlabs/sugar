@@ -21,6 +21,8 @@ from sugar.graphics import animator
 
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
+from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.desktop.favoriteslayout import SpreadLayout
 
 
 class _Animation(animator.Animation):
@@ -36,7 +38,7 @@ class _Animation(animator.Animation):
         self._icon.props.pixel_size = int(self.start_size + d)
 
 
-class TransitionBox(BuddyIcon):
+class TransitionBox(ViewContainer):
     __gtype_name__ = 'SugarTransitionBox'
 
     __gsignals__ = {
@@ -44,8 +46,12 @@ class TransitionBox(BuddyIcon):
     }
 
     def __init__(self):
-        BuddyIcon.__init__(self, buddy=get_owner_instance(),
-                           pixel_size=style.XLARGE_ICON_SIZE)
+        layout = SpreadLayout()
+
+        # Round off icon size to an even number to ensure that the icon
+        self._owner_icon = BuddyIcon(buddy=get_owner_instance(),
+                                     pixel_size=style.XLARGE_ICON_SIZE & ~1)
+        ViewContainer.__init__(self, layout, self._owner_icon)
 
         self._animator = animator.Animator(0.3)
         self._animator.connect('completed', self._animation_completed_cb)
@@ -55,5 +61,5 @@ class TransitionBox(BuddyIcon):
 
     def start_transition(self, start_size, end_size):
         self._animator.remove_all()
-        self._animator.add(_Animation(self, start_size, end_size))
+        self._animator.add(_Animation(self._owner_icon, start_size, end_size))
         self._animator.start()
