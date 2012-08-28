@@ -45,6 +45,7 @@ src/jarabe/desktop/keydialog.py
 src/jarabe/desktop/meshbox.py
 src/jarabe/desktop/networkviews.py
 src/jarabe/desktop/schoolserver.py
+src/jarabe/desktop/viewtoolbar.py
 src/jarabe/frame/activitiestray.py
 src/jarabe/frame/clipboardmenu.py
 src/jarabe/frame/clipboardobject.py
