@@ -28,7 +28,7 @@ import glib
 import gtk
 
 from sugar.graphics.palette import Palette
-from sugar.graphics.toolbox import Toolbox
+from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.graphics.toolcombobox import ToolComboBox
 from sugar.graphics.toolbutton import ToolButton
 from sugar.graphics.toggletoolbutton import ToggleToolButton
@@ -38,7 +38,6 @@ from sugar.graphics.icon import Icon
 from sugar.graphics.xocolor import XoColor
 from sugar.graphics.alert import Alert
 from sugar.graphics import iconentry
-from sugar.graphics import style
 from sugar import mime
 
 from jarabe.model import bundleregistry
@@ -65,18 +64,7 @@ _ACTION_MY_FRIENDS = 1
 _ACTION_MY_CLASS = 2
 
 
-class MainToolbox(Toolbox):
-    def __init__(self):
-        Toolbox.__init__(self)
-
-        self.search_toolbar = SearchToolbar()
-        self.search_toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
-        self.add_toolbar(_('Search'), self.search_toolbar)
-        self.search_toolbar.show()
-
-
-class SearchToolbar(gtk.Toolbar):
-    __gtype_name__ = 'SearchToolbar'
+class MainToolbox(ToolbarBox):
 
     __gsignals__ = {
         'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
@@ -84,7 +72,7 @@ class SearchToolbar(gtk.Toolbar):
         }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        ToolbarBox.__init__(self)
 
         self._mount_point = None
 
@@ -100,25 +88,25 @@ class SearchToolbar(gtk.Toolbar):
         self._favorite_button = ToggleToolButton('emblem-favorite')
         self._favorite_button.connect('toggled',
                                       self.__favorite_button_toggled_cb)
-        self.insert(self._favorite_button, -1)
+        self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
                 'changed', self._combo_changed_cb)
         tool_item = ToolComboBox(self._what_search_combo)
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
         self._when_search_combo = self._get_when_search_combo()
         tool_item = ToolComboBox(self._when_search_combo)
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
         self._sorting_button = SortingButton()
         self._sorting_button.connect('clicked',
                                      self.__sorting_button_clicked_cb)
-        self.insert(self._sorting_button, -1)
+        self.toolbar.insert(self._sorting_button, -1)
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
         self._sorting_button.show()
@@ -175,7 +163,7 @@ class SearchToolbar(gtk.Toolbar):
         tool_item.add(widget)
         widget.show()
 
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
     def _build_query(self):
@@ -363,30 +351,21 @@ class SearchToolbar(gtk.Toolbar):
         self._favorite_button.props.active = False
 
 
-class DetailToolbox(Toolbox):
-    def __init__(self):
-        Toolbox.__init__(self)
-
-        self.entry_toolbar = EntryToolbar()
-        self.add_toolbar('', self.entry_toolbar)
-        self.entry_toolbar.show()
-
-
-class EntryToolbar(gtk.Toolbar):
+class DetailToolbox(ToolbarBox):
     __gsignals__ = {
         'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                          ([str, str])),
         }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        ToolbarBox.__init__(self)
 
         self._metadata = None
         self._temp_file_path = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
-        self.add(self._resume)
+        self.toolbar.insert(self._resume, -1)
         self._resume.show()
 
         client = gconf.client_get_default()
@@ -397,7 +376,7 @@ class EntryToolbar(gtk.Toolbar):
         icon.show()
         self._copy.set_tooltip(_('Copy to'))
         self._copy.connect('clicked', self._copy_clicked_cb)
-        self.add(self._copy)
+        self.toolbar.insert(self._copy, -1)
         self._copy.show()
 
         self._duplicate = ToolButton()
@@ -405,16 +384,16 @@ class EntryToolbar(gtk.Toolbar):
         self._duplicate.set_icon_widget(icon)
         self._duplicate.set_tooltip(_('Duplicate'))
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
-        self.add(self._duplicate)
+        self.toolbar.insert(self._duplicate, -1)
 
         separator = gtk.SeparatorToolItem()
-        self.add(separator)
+        self.toolbar.insert(separator, -1)
         separator.show()
 
         erase_button = ToolButton('list-remove')
         erase_button.set_tooltip(_('Erase'))
         erase_button.connect('clicked', self._erase_button_clicked_cb)
-        self.add(erase_button)
+        self.toolbar.insert(erase_button, -1)
         erase_button.show()
 
     def set_metadata(self, metadata):

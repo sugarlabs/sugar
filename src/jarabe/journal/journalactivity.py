@@ -181,16 +181,15 @@ class JournalActivity(JournalWindow):
         self._volumes_toolbar.connect('volume-error', self.__volume_error_cb)
         self._main_view.pack_start(self._volumes_toolbar, expand=False)
 
-        search_toolbar = self._main_toolbox.search_toolbar
-        search_toolbar.connect('query-changed', self._query_changed_cb)
-        search_toolbar.set_mount_point('/')
+        self._main_toolbox.connect('query-changed', self._query_changed_cb)
+        self._main_toolbox.set_mount_point('/')
 
     def _setup_secondary_view(self):
         self._secondary_view = gtk.VBox()
 
         self._detail_toolbox = DetailToolbox()
-        self._detail_toolbox.entry_toolbar.connect('volume-error',
-                                                   self.__volume_error_cb)
+        self._detail_toolbox.connect('volume-error',
+                                     self.__volume_error_cb)
 
         self._detail_view = DetailView()
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
@@ -206,7 +205,7 @@ class JournalActivity(JournalWindow):
         self._show_secondary_view(object_id)
 
     def __clear_clicked_cb(self, list_view):
-        self._main_toolbox.search_toolbar.clear_query()
+        self._main_toolbox.clear_query()
 
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
@@ -227,7 +226,7 @@ class JournalActivity(JournalWindow):
     def _show_secondary_view(self, object_id):
         metadata = model.get(object_id)
         try:
-            self._detail_toolbox.entry_toolbar.set_metadata(metadata)
+            self._detail_toolbox.set_metadata(metadata)
         except Exception:
             logging.exception('Exception while displaying entry:')
 
@@ -252,12 +251,12 @@ class JournalActivity(JournalWindow):
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
-        self._main_toolbox.search_toolbar.set_mount_point(mount_point)
+        self._main_toolbox.set_mount_point(mount_point)
         self._main_toolbox.set_current_toolbar(0)
 
     def __model_created_cb(self, sender, **kwargs):
         self._check_for_bundle(kwargs['object_id'])
-        self._main_toolbox.search_toolbar.refresh_filters()
+        self._main_toolbox.refresh_filters()
         self._check_available_space()
 
     def __model_updated_cb(self, sender, **kwargs):
@@ -315,8 +314,7 @@ class JournalActivity(JournalWindow):
         model.write(metadata)
 
     def search_grab_focus(self):
-        search_toolbar = self._main_toolbox.search_toolbar
-        search_toolbar.give_entry_focus()
+        self._main_toolbox.give_entry_focus()
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
