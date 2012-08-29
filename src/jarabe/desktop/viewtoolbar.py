@@ -17,6 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
 import logging
 
 import gtk
@@ -24,9 +25,13 @@ import gobject
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
+from sugar.graphics.radiotoolbutton import RadioToolButton
+
+from jarabe.desktop import favoritesview
 
 _AUTOSEARCH_TIMEOUT = 1000
-_FILTERED_ALPHA = 0.33
+_FAVORITES_VIEW = 0
+_LIST_VIEW = 1
 
 
 class ViewToolbar(gtk.Toolbar):
@@ -35,6 +40,8 @@ class ViewToolbar(gtk.Toolbar):
     __gsignals__ = {
         'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
                           ([str])),
+        'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+                         ([object])),
     }
 
     def __init__(self):
@@ -60,6 +67,30 @@ class ViewToolbar(gtk.Toolbar):
         self.search_entry.show()
 
         self._add_separator(expand=True)
+
+        self._favorites_button = FavoritesButton()
+        self._favorites_button.connect('toggled',
+                                       self.__view_button_toggled_cb,
+                                       _FAVORITES_VIEW)
+        self.insert(self._favorites_button, -1)
+
+        self._list_button = RadioToolButton(named_icon='view-list')
+        self._list_button.props.group = self._favorites_button
+        self._list_button.props.tooltip = _('List view')
+        self._list_button.props.accelerator = _('<Ctrl>2')
+        self._list_button.connect('toggled', self.__view_button_toggled_cb,
+                                      _LIST_VIEW)
+        self.insert(self._list_button, -1)
+
+        self._add_separator()
+
+    def show_view_buttons(self):
+        self._favorites_button.show()
+        self._list_button.show()
+
+    def hide_view_buttons(self):
+        self._favorites_button.hide()
+        self._list_button.hide()
 
     def _add_separator(self, expand=False):
         separator = gtk.SeparatorToolItem()
@@ -95,3 +126,59 @@ class ViewToolbar(gtk.Toolbar):
         self._autosearch_timer = None
         self.search_entry.activate()
         return False
+
+    def __view_button_toggled_cb(self, button, view):
+        if button.props.active:
+            self.search_entry.grab_focus()
+            self.emit('view-changed', view)
+
+
+class FavoritesButton(RadioToolButton):
+    __gtype_name__ = 'SugarFavoritesButton'
+
+    def __init__(self):
+        RadioToolButton.__init__(self)
+
+        self.props.tooltip = _('Favorites view')
+        self.props.accelerator = _('<Ctrl>1')
+        self.props.group = None
+
+        favorites_settings = favoritesview.get_settings()
+        self._layout = favorites_settings.layout
+        self._update_icon()
+
+        # someday, this will be a gtk.Table()
+        layouts_grid = gtk.HBox()
+        layout_item = None
+        for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
+            layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
+                                          group=layout_item, active=False)
+            if layoutid == self._layout:
+                layout_item.set_active(True)
+            layouts_grid.pack_start(layout_item, fill=False)
+            layout_item.connect('toggled', self.__layout_activate_cb,
+                                layoutid)
+        layouts_grid.show_all()
+        self.props.palette.set_content(layouts_grid)
+
+    def __layout_activate_cb(self, menu_item, layout):
+        if not menu_item.get_active():
+            return
+        if self._layout == layout and self.props.active:
+            return
+
+        if self._layout != layout:
+            self._layout = layout
+            self._update_icon()
+
+            favorites_settings = favoritesview.get_settings()
+            favorites_settings.layout = layout
+
+        if not self.props.active:
+            self.props.active = True
+        else:
+            self.emit('toggled')
+
+    def _update_icon(self):
+        self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
+                                .icon_name

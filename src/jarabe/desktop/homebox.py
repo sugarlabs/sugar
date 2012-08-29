@@ -22,25 +22,20 @@ import gobject
 import gtk
 
 from sugar.graphics import style
-from sugar.graphics import iconentry
-from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.alert import Alert
 from sugar.graphics.icon import Icon
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 
-
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
-
-_AUTOSEARCH_TIMEOUT = 1000
 
 
 class HomeBox(gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
-    def __init__(self):
+    def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the home view')
 
         gobject.GObject.__init__(self)
@@ -48,11 +43,8 @@ class HomeBox(gtk.VBox):
         self._favorites_box = favoritesview.FavoritesBox()
         self._list_view = ActivitiesList()
 
-        self._toolbar = HomeToolbar()
-        self._toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
-        self._toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
-        self.pack_start(self._toolbar, expand=False)
-        self._toolbar.show()
+        toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
+        toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
 
         self._set_view(_FAVORITES_VIEW)
         self._query = ''
@@ -142,154 +134,8 @@ class HomeBox(gtk.VBox):
         #return self._donut.has_activities()
         return False
 
-    def focus_search_entry(self):
-        self._toolbar.search_entry.grab_focus()
-
     def set_resume_mode(self, resume_mode):
         self._favorites_box.set_resume_mode(resume_mode)
         if resume_mode and self._query != '':
             self._list_view.set_filter(self._query)
             self._favorites_box.set_filter(self._query)
-
-
-class HomeToolbar(gtk.Toolbar):
-    __gtype_name__ = 'SugarHomeToolbar'
-
-    __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([str])),
-        'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([object])),
-    }
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
-
-        self._query = None
-        self._autosearch_timer = None
-
-        self._add_separator()
-
-        tool_item = gtk.ToolItem()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-        self.search_entry = iconentry.IconEntry()
-        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                              'system-search')
-        self.search_entry.add_clear_button()
-        self.search_entry.set_width_chars(25)
-        self.search_entry.connect('activate', self.__entry_activated_cb)
-        self.search_entry.connect('changed', self.__entry_changed_cb)
-        tool_item.add(self.search_entry)
-        self.search_entry.show()
-
-        self._add_separator(expand=True)
-
-        favorites_button = FavoritesButton()
-        favorites_button.connect('toggled', self.__view_button_toggled_cb,
-                                 _FAVORITES_VIEW)
-        self.insert(favorites_button, -1)
-        favorites_button.show()
-
-        self._list_button = RadioToolButton(named_icon='view-list')
-        self._list_button.props.group = favorites_button
-        self._list_button.props.tooltip = _('List view')
-        self._list_button.props.accelerator = _('<Ctrl>2')
-        self._list_button.connect('toggled', self.__view_button_toggled_cb,
-                            _LIST_VIEW)
-        self.insert(self._list_button, -1)
-        self._list_button.show()
-
-        self._add_separator()
-
-    def __view_button_toggled_cb(self, button, view):
-        if button.props.active:
-            self.search_entry.grab_focus()
-            self.emit('view-changed', view)
-
-    def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.GRID_CELL_SIZE,
-                                       style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
-
-    def __entry_activated_cb(self, entry):
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        new_query = entry.props.text
-        if self._query != new_query:
-            self._query = new_query
-
-            self.emit('query-changed', self._query)
-
-    def __entry_changed_cb(self, entry):
-        if not entry.props.text:
-            entry.activate()
-            return
-
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-            self.__autosearch_timer_cb)
-
-    def __autosearch_timer_cb(self):
-        self._autosearch_timer = None
-        self.search_entry.activate()
-        return False
-
-
-class FavoritesButton(RadioToolButton):
-    __gtype_name__ = 'SugarFavoritesButton'
-
-    def __init__(self):
-        RadioToolButton.__init__(self)
-
-        self.props.tooltip = _('Favorites view')
-        self.props.accelerator = _('<Ctrl>1')
-        self.props.group = None
-
-        favorites_settings = favoritesview.get_settings()
-        self._layout = favorites_settings.layout
-        self._update_icon()
-
-        # someday, this will be a gtk.Table()
-        layouts_grid = gtk.HBox()
-        layout_item = None
-        for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
-            layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
-                                          group=layout_item, active=False)
-            if layoutid == self._layout:
-                layout_item.set_active(True)
-            layouts_grid.pack_start(layout_item, fill=False)
-            layout_item.connect('toggled', self.__layout_activate_cb,
-                                layoutid)
-        layouts_grid.show_all()
-        self.props.palette.set_content(layouts_grid)
-
-    def __layout_activate_cb(self, menu_item, layout):
-        if not menu_item.get_active():
-            return
-        if self._layout == layout and self.props.active:
-            return
-
-        if self._layout != layout:
-            self._layout = layout
-            self._update_icon()
-
-            favorites_settings = favoritesview.get_settings()
-            favorites_settings.layout = layout
-
-        if not self.props.active:
-            self.props.active = True
-        else:
-            self.emit('toggled')
-
-    def _update_icon(self):
-        self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
-                                .icon_name

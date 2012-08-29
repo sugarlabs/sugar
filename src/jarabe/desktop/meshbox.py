@@ -41,7 +41,6 @@ from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
-from jarabe.desktop.viewtoolbar import ViewToolbar
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -51,6 +50,8 @@ from jarabe.journal import misc
 
 _AP_ICON_NAME = 'network-wireless'
 _OLPC_MESH_ICON_NAME = 'network-mesh'
+
+_FILTERED_ALPHA = 0.33
 
 
 class _ActivityIcon(EventIcon):
@@ -335,25 +336,18 @@ class NetworkManagerObserver(object):
                         self._box.add_adhoc_networks(device)
 
 
-class MeshContainer(ViewContainer):
-    __gtype_name__ = 'SugarMeshContainer'
+class MeshBox(ViewContainer):
+    __gtype_name__ = 'SugarMeshBox'
 
-    def __init__(self):
+    def __init__(self, toolbar):
+        logging.debug('STARTUP: Loading the mesh view')
+
         layout = SpreadLayout()
 
         # Round off icon size to an even number to ensure that the icon
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.STANDARD_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
-
-
-class MeshBox(gtk.VBox):
-    __gtype_name__ = 'SugarMeshBox'
-
-    def __init__(self):
-        logging.debug('STARTUP: Loading the mesh view')
-
-        gtk.VBox.__init__(self)
 
         self.wireless_networks = {}
         self._adhoc_manager = None
@@ -367,14 +361,7 @@ class MeshBox(gtk.VBox):
         self._suspended = True
         self._query = ''
 
-        self._toolbar = ViewToolbar()
-        self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.pack_start(self._toolbar, expand=False)
-        self._toolbar.show()
-
-        self._mesh_container = MeshContainer()
-        self.add(self._mesh_container)
-        self._mesh_container.show()
+        toolbar.connect('query-changed', self._toolbar_query_changed_cb)
 
         for buddy_model in self._model.get_buddies():
             self._add_buddy(buddy_model)
@@ -411,7 +398,7 @@ class MeshBox(gtk.VBox):
         if buddy_model.is_owner():
             return
         icon = BuddyIcon(buddy_model)
-        self._mesh_container.add(icon)
+        self.add(icon)
         icon.show()
 
         if hasattr(icon, 'set_filter'):
@@ -422,7 +409,7 @@ class MeshBox(gtk.VBox):
     def _remove_buddy(self, buddy_model):
         logging.debug('MeshBox._remove_buddy')
         icon = self._buddies[buddy_model.props.key]
-        self._mesh_container.remove(icon)
+        self.remove(icon)
         del self._buddies[buddy_model.props.key]
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
@@ -436,7 +423,7 @@ class MeshBox(gtk.VBox):
 
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)
-        self._mesh_container.add(icon)
+        self.add(icon)
         icon.show()
 
         if hasattr(icon, 'set_filter'):
@@ -446,7 +433,7 @@ class MeshBox(gtk.VBox):
 
     def _remove_activity(self, activity_model):
         icon = self._activities[activity_model.activity_id]
-        self._mesh_container.remove(icon)
+        self.remove(icon)
         del self._activities[activity_model.activity_id]
 
     # add AP to its corresponding network icon on the desktop,
@@ -459,7 +446,7 @@ class MeshBox(gtk.VBox):
             # this is a new network
             icon = WirelessNetworkView(ap)
             self.wireless_networks[hash_value] = icon
-            self._mesh_container.add(icon)
+            self.add(icon)
             icon.show()
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
@@ -468,7 +455,7 @@ class MeshBox(gtk.VBox):
         # remove a network if it has no APs left
         if net.num_aps() == 0:
             net.disconnect()
-            self._mesh_container.remove(net)
+            self.remove(net)
             del self.wireless_networks[hash_value]
 
     def _ap_props_changed_cb(self, ap, old_hash_value):
@@ -546,19 +533,19 @@ class MeshBox(gtk.VBox):
 
     def remove_adhoc_networks(self):
         for icon in self._adhoc_networks:
-            self._mesh_container.remove(icon)
+            self.remove(icon)
         self._adhoc_networks = []
         self._adhoc_manager.stop_listening()
 
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
-        self._mesh_container.add(icon)
+        self.add(icon)
         icon.show()
         self._adhoc_networks.append(icon)
 
     def _add_olpc_mesh_icon(self, mesh_mgr, channel):
         icon = OlpcMeshView(mesh_mgr, channel)
-        self._mesh_container.add(icon)
+        self.add(icon)
         icon.show()
         self._mesh.append(icon)
 
@@ -577,13 +564,13 @@ class MeshBox(gtk.VBox):
             logging.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
-            self._mesh_container.remove(net)
+            self.remove(net)
             del self.wireless_networks[hash_value]
 
     def disable_olpc_mesh(self, mesh_device):
         for icon in self._mesh:
             icon.disconnect()
-            self._mesh_container.remove(icon)
+            self.remove(icon)
         self._mesh = []
 
     def suspend(self):
@@ -600,9 +587,6 @@ class MeshBox(gtk.VBox):
 
     def _toolbar_query_changed_cb(self, toolbar, query):
         self._query = query.lower()
-        for icon in self._mesh_container.get_children():
+        for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
-
-    def focus_search_entry(self):
-        self._toolbar.search_entry.grab_focus()

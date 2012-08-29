@@ -26,7 +26,7 @@ from sugar.graphics.toolbutton import ToolButton
 
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
-from jarabe.journal.journaltoolbox import SearchToolbar
+from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.volumestoolbar import VolumesToolbar
 
 
@@ -77,7 +77,7 @@ class ObjectChooser(gtk.Window):
         vbox.pack_start(separator, expand=False)
         separator.show()
 
-        self._toolbar = SearchToolbar()
+        self._toolbar = MainToolbox()
         self._toolbar.connect('query-changed', self.__query_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         vbox.pack_start(self._toolbar, expand=False)
