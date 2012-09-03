@@ -19,6 +19,7 @@ import logging
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import Wnck
 
 from sugar3.graphics import style

@@ -17,6 +17,7 @@
 import logging
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.graphics import tray
 from sugar3.graphics import style

@@ -23,6 +23,7 @@ from gi.repository import GObject
 from gi.repository import Gio
 import glib
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GConf
 import cPickle
 import xapian

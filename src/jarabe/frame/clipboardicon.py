@@ -16,9 +16,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-from gi.repository import GConf
 
+from gi.repository import GConf
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon

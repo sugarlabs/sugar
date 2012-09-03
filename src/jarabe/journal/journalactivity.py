@@ -20,6 +20,7 @@ from gettext import gettext as _
 import uuid
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 import dbus
 import statvfs
 import os

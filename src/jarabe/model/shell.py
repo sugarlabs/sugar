@@ -22,6 +22,7 @@ from gi.repository import GConf
 from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gdk
 import dbus
 
 from sugar3 import wm

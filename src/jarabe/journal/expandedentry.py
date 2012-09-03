@@ -24,6 +24,7 @@ import cairo
 from gi.repository import GObject
 import glib
 from gi.repository import Gtk
+from gi.repository import Gdk
 import simplejson
 
 from sugar3.graphics import style

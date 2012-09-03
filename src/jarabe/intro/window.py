@@ -18,11 +18,12 @@ import os
 import os.path
 import logging
 from gettext import gettext as _
-from gi.repository import GConf
 import pwd
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GObject
+from gi.repository import GConf
 
 from sugar3 import env
 from sugar3 import profile

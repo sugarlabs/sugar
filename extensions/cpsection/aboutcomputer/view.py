@@ -19,6 +19,7 @@
 from gettext import gettext as _
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.graphics import style
 
