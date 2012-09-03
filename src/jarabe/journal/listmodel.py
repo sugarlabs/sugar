@@ -29,8 +29,8 @@ from jarabe.journal import model
 from jarabe.journal import misc
 
 
-DS_DBUS_SERVICE = 'org.laptop.sugar3.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar3.DataStore'
+DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
+DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 

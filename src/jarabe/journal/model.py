@@ -38,8 +38,8 @@ from sugar3 import mime
 from sugar3 import util
 
 
-DS_DBUS_SERVICE = 'org.laptop.sugar3.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar3.DataStore'
+DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
+DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.

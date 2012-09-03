@@ -112,18 +112,18 @@ class AboutComputer(SectionView):
 
         box_sugar = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_sugar = Gtk.Label(label=_('Sugar:'))
-        label_sugar3.set_alignment(1, 0)
-        label_sugar3.modify_fg(Gtk.StateType.NORMAL,
+        label_sugar.set_alignment(1, 0)
+        label_sugar.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_sugar3.pack_start(label_sugar, False, True, 0)
+        box_sugar.pack_start(label_sugar, False, True, 0)
         self._group.add_widget(label_sugar)
-        label_sugar3.show()
+        label_sugar.show()
         label_sugar_ver = Gtk.Label(label=config.version)
         label_sugar_ver.set_alignment(0, 0)
-        box_sugar3.pack_start(label_sugar_ver, False, True, 0)
+        box_sugar.pack_start(label_sugar_ver, False, True, 0)
         label_sugar_ver.show()
         box_software.pack_start(box_sugar, False, True, 0)
-        box_sugar3.show()
+        box_sugar.show()
 
         box_firmware = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_firmware = Gtk.Label(label=_('Firmware:'))
