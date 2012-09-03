@@ -15,11 +15,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
 import glib
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.icon import get_icon_state, Icon
@@ -39,7 +39,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
@@ -98,25 +98,25 @@ class SpeakerPalette(Palette):
 
         self._model = model
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
         vbox.show()
 
         vol_step = sound.VOLUME_STEP
-        self._adjustment = gtk.Adjustment(value=self._model.props.level,
+        self._adjustment = Gtk.Adjustment(value=self._model.props.level,
                                           lower=0,
                                           upper=100 + vol_step,
                                           step_incr=vol_step,
                                           page_incr=vol_step,
                                           page_size=vol_step)
-        self._hscale = gtk.HScale(self._adjustment)
+        self._hscale = Gtk.HScale(self._adjustment)
         self._hscale.set_digits(0)
         self._hscale.set_draw_value(False)
         vbox.add(self._hscale)
         self._hscale.show()
 
         self._mute_item = MenuItem('')
-        self._mute_icon = Icon(icon_size=gtk.ICON_SIZE_MENU)
+        self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
         self._mute_item.set_image(self._mute_icon)
         self.menu.append(self._mute_item)
         self._mute_item.show()
@@ -173,14 +173,14 @@ class SpeakerPalette(Palette):
         self._update_muted()
 
 
-class DeviceModel(gobject.GObject):
+class DeviceModel(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
-        'muted': (bool, None, None, False, gobject.PARAM_READWRITE),
+        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READWRITE),
+        'muted': (bool, None, None, False, GObject.PARAM_READWRITE),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         sound.muted_changed.connect(self.__muted_changed_cb)
         sound.volume_changed.connect(self.__volume_changed_cb)

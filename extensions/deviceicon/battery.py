@@ -17,10 +17,10 @@
 import logging
 from gettext import gettext as _
 
-import gconf
+from gi.repository import GConf
 import glib
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 import dbus
 
 from sugar.graphics import style
@@ -59,7 +59,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, battery):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
@@ -120,16 +120,16 @@ class BatteryPalette(Palette):
         self._level = 0
         self._time = 0
         self._status = _STATUS_NOT_PRESENT
-        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.set_size_request(
             style.zoom(style.GRID_CELL_SIZE * 4), -1)
         self._progress_bar.show()
-        self._status_label = gtk.Label()
+        self._status_label = Gtk.Label()
         self._status_label.show()
 
-        vbox = gtk.VBox()
-        vbox.pack_start(self._progress_bar)
-        vbox.pack_start(self._status_label)
+        vbox = Gtk.VBox()
+        vbox.pack_start(self._progress_bar, True, True, 0)
+        vbox.pack_start(self._status_label, True, True, 0)
         vbox.show()
 
         self._progress_widget = vbox
@@ -172,22 +172,22 @@ class BatteryPalette(Palette):
         self._status_label.set_text(status_text)
 
 
-class DeviceModel(gobject.GObject):
+class DeviceModel(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READABLE),
-        'time-remaining': (int, None, None, 0, gobject.constants.G_MAXINT32, 0,
-                           gobject.PARAM_READABLE),  # unit: seconds
-        'charging': (bool, None, None, False, gobject.PARAM_READABLE),
-        'discharging': (bool, None, None, False, gobject.PARAM_READABLE),
-        'present': (bool, None, None, False, gobject.PARAM_READABLE),
+        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READABLE),
+        'time-remaining': (int, None, None, 0, GObject.constants.G_MAXINT32, 0,
+                           GObject.PARAM_READABLE),  # unit: seconds
+        'charging': (bool, None, None, False, GObject.PARAM_READABLE),
+        'discharging': (bool, None, None, False, GObject.PARAM_READABLE),
+        'present': (bool, None, None, False, GObject.PARAM_READABLE),
     }
 
     __gsignals__ = {
-        'updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'updated': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, battery):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._battery = battery
         self._battery_props_iface = dbus.Interface(self._battery,
                                                    dbus.PROPERTIES_IFACE)

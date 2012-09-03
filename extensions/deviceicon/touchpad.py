@@ -18,8 +18,8 @@
 from gettext import gettext as _
 import os
 
-import gtk
-import gconf
+from gi.repository import Gtk
+from gi.repository import GConf
 import glib
 
 import logging
@@ -51,7 +51,7 @@ class DeviceView(TrayIcon):
         """ Create the icon that represents the touchpad. """
         icon_name = STATUS_ICON[_read_touchpad_mode()]
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
@@ -82,11 +82,11 @@ class ResourcePalette(Palette):
 
         self._icon = icon
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
 
-        self._status_text = gtk.Label()
-        vbox.pack_start(self._status_text, padding=style.DEFAULT_PADDING)
+        self._status_text = Gtk.Label()
+        vbox.pack_start(self._status_text, True, True, style.DEFAULT_PADDING)
         self._status_text.show()
 
         vbox.show()

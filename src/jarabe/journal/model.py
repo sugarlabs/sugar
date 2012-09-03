@@ -28,10 +28,10 @@ from operator import itemgetter
 import simplejson
 from gettext import gettext as _
 
-import gobject
+from gi.repository import GObject
 import dbus
-import gio
-import gconf
+from gi.repository import Gio
+from gi.repository import GConf
 
 from sugar import dispatch
 from sugar import mime
@@ -269,7 +269,7 @@ class InplaceResultSet(BaseResultSet):
         self._pending_directories = [self._mount_point]
         self._visited_directories = []
         self._pending_files = []
-        gobject.idle_add(self._scan)
+        GObject.idle_add(self._scan)
 
     def stop(self):
         self._stopped = True
@@ -394,7 +394,7 @@ class InplaceResultSet(BaseResultSet):
             return
 
         if self._mime_types:
-            mime_type = gio.content_type_guess(filename=full_path)
+            mime_type = Gio.content_type_guess(filename=full_path)
             if mime_type not in self._mime_types:
                 return
 
@@ -440,7 +440,7 @@ def _get_file_metadata(path, stat, fetch_preview=True):
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
             'filesize': stat.st_size,
-            'mime_type': gio.content_type_guess(filename=path),
+            'mime_type': Gio.content_type_guess(filename=path),
             'activity': '',
             'activity_id': '',
             'icon-color': '#000000,#ffffff',
@@ -619,7 +619,7 @@ def copy(metadata, mount_point):
     """
     metadata = get(metadata['uid'])
     if mount_point == '/' and metadata['icon-color'] == '#000000,#ffffff':
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         metadata['icon-color'] = client.get_string('/desktop/sugar/user/color')
     file_path = get_file(metadata['uid'])
     if file_path is None:

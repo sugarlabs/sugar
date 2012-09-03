@@ -14,8 +14,8 @@
 # License along with this library; if not, write to the
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.icon import _IconBuffer
@@ -60,7 +60,7 @@ class CursorInvoker(Invoker):
     def get_rect(self):
         window = self._item.get_window()
         allocation = self._item.get_allocation()
-        rect = Gdk.Rectangle()
+        rect = ()
         rect.x, rect.y = window.get_root_coords(allocation.x, allocation.y)
         rect.width = allocation.width
         rect.height = allocation.height
@@ -85,7 +85,7 @@ class CursorInvoker(Invoker):
         return self._item.get_toplevel()
 
 
-class EventIcon(gtk.EventBox):
+class EventIcon(Gtk.EventBox):
 
     __gtype_name__ = 'SugarEventIcon'
 
@@ -93,7 +93,7 @@ class EventIcon(gtk.EventBox):
         self._buffer = _IconBuffer()
         self._alpha = 1.0
 
-        gtk.EventBox.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_visible_window(False)
         for key, value in kwargs.iteritems():
             self.set_property(key, value)
@@ -142,7 +142,7 @@ class EventIcon(gtk.EventBox):
     def get_file_name(self):
         return self._buffer.file_name
 
-    file_name = gobject.property(
+    file_name = GObject.property(
         type=object, getter=get_file_name, setter=set_file_name)
 
     def set_icon_name(self, value):
@@ -153,7 +153,7 @@ class EventIcon(gtk.EventBox):
     def get_icon_name(self):
         return self._buffer.icon_name
 
-    icon_name = gobject.property(
+    icon_name = GObject.property(
         type=object, getter=get_icon_name, setter=set_icon_name)
 
     def set_xo_color(self, value):
@@ -161,7 +161,7 @@ class EventIcon(gtk.EventBox):
             self._buffer.xo_color = value
             self.queue_draw()
 
-    xo_color = gobject.property(
+    xo_color = GObject.property(
         type=object, getter=None, setter=set_xo_color)
 
     def set_fill_color(self, value):
@@ -172,7 +172,7 @@ class EventIcon(gtk.EventBox):
     def get_fill_color(self):
         return self._buffer.fill_color
 
-    fill_color = gobject.property(
+    fill_color = GObject.property(
         type=object, getter=get_fill_color, setter=set_fill_color)
 
     def set_stroke_color(self, value):
@@ -183,7 +183,7 @@ class EventIcon(gtk.EventBox):
     def get_stroke_color(self):
         return self._buffer.stroke_color
 
-    stroke_color = gobject.property(
+    stroke_color = GObject.property(
         type=object, getter=get_stroke_color, setter=set_stroke_color)
 
     def set_background_color(self, value):
@@ -194,7 +194,7 @@ class EventIcon(gtk.EventBox):
     def get_background_color(self):
         return self._buffer.background_color
 
-    background_color = gobject.property(
+    background_color = GObject.property(
         type=object, getter=get_background_color, setter=set_background_color)
 
     def set_size(self, value):
@@ -206,7 +206,7 @@ class EventIcon(gtk.EventBox):
     def get_size(self):
         return self._buffer.width
 
-    pixel_size = gobject.property(
+    pixel_size = GObject.property(
         type=object, getter=get_size, setter=set_size)
 
     def set_scale(self, value):
@@ -217,7 +217,7 @@ class EventIcon(gtk.EventBox):
     def get_scale(self):
         return self._buffer.scale
 
-    scale = gobject.property(
+    scale = GObject.property(
         type=float, getter=get_scale, setter=set_scale)
 
     def set_alpha(self, alpha):
@@ -225,7 +225,7 @@ class EventIcon(gtk.EventBox):
             self._alpha = alpha
             self.queue_draw()
 
-    alpha = gobject.property(
+    alpha = GObject.property(
         type=float, setter=set_alpha)
 
     def set_cache(self, value):
@@ -234,7 +234,7 @@ class EventIcon(gtk.EventBox):
     def get_cache(self):
         return self._buffer.cache
 
-    cache = gobject.property(
+    cache = GObject.property(
         type=bool, default=False, getter=get_cache, setter=set_cache)
 
     def set_badge_name(self, value):
@@ -245,7 +245,7 @@ class EventIcon(gtk.EventBox):
     def get_badge_name(self):
         return self._buffer.badge_name
 
-    badge_name = gobject.property(
+    badge_name = GObject.property(
         type=object, getter=get_badge_name, setter=set_badge_name)
 
     def create_palette(self):
@@ -257,7 +257,7 @@ class EventIcon(gtk.EventBox):
     def set_palette(self, palette):
         self._palette_invoker.palette = palette
 
-    palette = gobject.property(
+    palette = GObject.property(
         type=object, setter=set_palette, getter=get_palette)
 
     def get_palette_invoker(self):
@@ -267,7 +267,7 @@ class EventIcon(gtk.EventBox):
         self._palette_invoker.detach()
         self._palette_invoker = palette_invoker
 
-    palette_invoker = gobject.property(
+    palette_invoker = GObject.property(
         type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def set_tooltip(self, text):

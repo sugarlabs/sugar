@@ -16,7 +16,7 @@
 
 import logging
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import tray
 from sugar.graphics import style
@@ -57,7 +57,7 @@ class _ContextMap(object):
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
+    MAX_ITEMS = Gdk.Screen.height() / style.GRID_CELL_SIZE - 2
 
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
@@ -131,9 +131,9 @@ class ClipboardTray(tray.VTray):
         logging.debug('ClipboardTray._drag_motion_cb')
 
         if self._internal_drag(context):
-            context.drag_status(gtk.gdk.ACTION_MOVE, time)
+            context.drag_status(Gdk.DragAction.MOVE, time)
         else:
-            context.drag_status(gtk.gdk.ACTION_COPY, time)
+            context.drag_status(Gdk.DragAction.COPY, time)
             self.props.drag_active = True
 
         return True
@@ -147,7 +147,7 @@ class ClipboardTray(tray.VTray):
         if self._internal_drag(context):
             # TODO: We should move the object within the clipboard here
             if not self._context_map.has_context(context):
-                context.drop_finish(False, gtk.get_current_event_time())
+                context.drop_finish(False, Gtk.get_current_event_time())
             return False
 
         cb_service = clipboard.get_instance()
@@ -180,13 +180,13 @@ class ClipboardTray(tray.VTray):
             # If it's the last target to be processed, finish
             # the dnd transaction
             if not self._context_map.has_context(context):
-                context.drop_finish(True, gtk.get_current_event_time())
+                context.drop_finish(True, Gtk.get_current_event_time())
 
     def _internal_drag(self, context):
         source_widget = context.get_source_widget()
         if source_widget is None:
             return False
-        view_ancestor = source_widget.get_ancestor(gtk.Viewport)
+        view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
         if view_ancestor is self._viewport:
             return True
         else:

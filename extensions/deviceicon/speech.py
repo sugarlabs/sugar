@@ -17,9 +17,9 @@
 from gettext import gettext as _
 
 import glib
-import gtk
-import gconf
-import gobject
+from gi.repository import Gtk
+from gi.repository import GConf
+from gi.repository import GObject
 
 from sugar.graphics.icon import Icon
 from sugar.graphics.tray import TrayIcon
@@ -40,7 +40,7 @@ class SpeechDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 150
 
     def __init__(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
         self.set_palette_invoker(FrameWidgetInvoker(self))
@@ -69,7 +69,7 @@ class SpeechPalette(Palette):
         self._manager.connect('stop', self._set_menu_state, 'stop')
         self._manager.connect('pause', self._set_menu_state, 'pause')
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
 
         self._play_icon = Icon(icon_name='player_play')
@@ -88,23 +88,23 @@ class SpeechPalette(Palette):
         self.menu.append(self._play_pause_menu)
         self.menu.append(self._stop_menu)
 
-        self._adj_pitch = gtk.Adjustment(value=self._manager.get_pitch(),
+        self._adj_pitch = Gtk.Adjustment(value=self._manager.get_pitch(),
                                           lower=self._manager.MIN_PITCH,
                                           upper=self._manager.MAX_PITCH)
-        self._hscale_pitch = gtk.HScale(self._adj_pitch)
+        self._hscale_pitch = Gtk.HScale(self._adj_pitch)
         self._hscale_pitch.set_draw_value(False)
 
-        vbox.pack_start(gtk.Label(_('Pitch')), padding=style.DEFAULT_PADDING)
-        vbox.pack_start(self._hscale_pitch)
+        vbox.pack_start(Gtk.Label(_('Pitch', True, True, 0)), padding=style.DEFAULT_PADDING)
+        vbox.pack_start(self._hscale_pitch, True, True, 0)
 
-        self._adj_rate = gtk.Adjustment(value=self._manager.get_rate(),
+        self._adj_rate = Gtk.Adjustment(value=self._manager.get_rate(),
                                           lower=self._manager.MIN_RATE,
                                           upper=self._manager.MAX_RATE)
-        self._hscale_rate = gtk.HScale(self._adj_rate)
+        self._hscale_rate = Gtk.HScale(self._adj_rate)
         self._hscale_rate.set_draw_value(False)
 
-        vbox.pack_start(gtk.Label(_('Rate')), padding=style.DEFAULT_PADDING)
-        vbox.pack_start(self._hscale_rate)
+        vbox.pack_start(Gtk.Label(_('Rate', True, True, 0)), padding=style.DEFAULT_PADDING)
+        vbox.pack_start(self._hscale_rate, True, True, 0)
         vbox.show_all()
 
         self._adj_pitch.connect('value_changed', self.__adj_pitch_changed_cb)

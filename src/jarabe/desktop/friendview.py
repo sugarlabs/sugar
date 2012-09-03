@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 
@@ -24,9 +24,9 @@ from jarabe.view.eventicon import EventIcon
 from jarabe.model import bundleregistry
 
 
-class FriendView(gtk.VBox):
+class FriendView(Gtk.VBox):
     def __init__(self, buddy, **kwargs):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         # round icon sizes to an even number so that it can be accurately
         # centered in a larger bounding box also of even dimensions

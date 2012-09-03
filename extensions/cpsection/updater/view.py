@@ -20,8 +20,8 @@ from gettext import ngettext
 import locale
 import logging
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon, CellRendererIcon
@@ -44,25 +44,25 @@ class ActivityUpdater(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
-        self._top_label = gtk.Label()
+        self._top_label = Gtk.Label()
         self._top_label.set_line_wrap(True)
-        self._top_label.set_justify(gtk.JUSTIFY_LEFT)
+        self._top_label.set_justify(Gtk.Justification.LEFT)
         self._top_label.props.xalign = 0
-        self.pack_start(self._top_label, expand=False)
+        self.pack_start(self._top_label, False, True, 0)
         self._top_label.show()
 
-        separator = gtk.HSeparator()
-        self.pack_start(separator, expand=False)
+        separator = Gtk.HSeparator()
+        self.pack_start(separator, False, True, 0)
         separator.show()
 
-        bottom_label = gtk.Label()
+        bottom_label = Gtk.Label()
         bottom_label.set_line_wrap(True)
-        bottom_label.set_justify(gtk.JUSTIFY_LEFT)
+        bottom_label.set_justify(Gtk.Justification.LEFT)
         bottom_label.props.xalign = 0
         bottom_label.set_markup(
                 _('Software updates correct errors, eliminate security ' \
                   'vulnerabilities, and provide new features.'))
-        self.pack_start(bottom_label, expand=False)
+        self.pack_start(bottom_label, False, True, 0)
         bottom_label.show()
 
         self._update_box = None
@@ -142,7 +142,7 @@ class ActivityUpdater(SectionView):
                                    'You can install %s updates',
                                    available_updates)
             top_message = top_message % available_updates
-            top_message = gobject.markup_escape_text(top_message)
+            top_message = GObject.markup_escape_text(top_message)
 
         self._top_label.set_markup('<big>%s</big>' % top_message)
 
@@ -173,7 +173,7 @@ class ActivityUpdater(SectionView):
         top_message = ngettext('%s update was installed',
                                '%s updates were installed', installed_updates)
         top_message = top_message % installed_updates
-        top_message = gobject.markup_escape_text(top_message)
+        top_message = GObject.markup_escape_text(top_message)
         self._top_label.set_markup('<big>%s</big>' % top_message)
         self._clear_center()
 
@@ -181,32 +181,32 @@ class ActivityUpdater(SectionView):
         self._model.cancel()
 
 
-class ProgressPane(gtk.VBox):
+class ProgressPane(Gtk.VBox):
     """Container which replaces the `ActivityPane` during refresh or
     install."""
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_spacing(style.DEFAULT_PADDING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
-        self._progress = gtk.ProgressBar()
-        self.pack_start(self._progress)
+        self._progress = Gtk.ProgressBar()
+        self.pack_start(self._progress, True, True, 0)
         self._progress.show()
 
-        self._label = gtk.Label()
+        self._label = Gtk.Label()
         self._label.set_line_wrap(True)
         self._label.set_property('xalign', 0.5)
-        self._label.modify_fg(gtk.STATE_NORMAL,
+        self._label.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_BUTTON_GREY.get_gdk_color())
-        self.pack_start(self._label)
+        self.pack_start(self._label, True, True, 0)
         self._label.show()
 
-        alignment_box = gtk.Alignment(xalign=0.5, yalign=0.5)
-        self.pack_start(alignment_box)
+        alignment_box = Gtk.Alignment.new(xalign=0.5, yalign=0.5)
+        self.pack_start(alignment_box, True, True, 0)
         alignment_box.show()
 
-        self.cancel_button = gtk.Button(stock=gtk.STOCK_CANCEL)
+        self.cancel_button = Gtk.Button(stock=Gtk.STOCK_CANCEL)
         alignment_box.add(self.cancel_button)
         self.cancel_button.show()
 
@@ -217,18 +217,18 @@ class ProgressPane(gtk.VBox):
         self._progress.props.fraction = fraction
 
 
-class UpdateBox(gtk.VBox):
+class UpdateBox(Gtk.VBox):
 
     def __init__(self, model):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._model = model
 
         self.set_spacing(style.DEFAULT_PADDING)
 
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.pack_start(scrolled_window)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.pack_start(scrolled_window, True, True, 0)
         scrolled_window.show()
 
         self._update_list = UpdateList(model)
@@ -237,25 +237,25 @@ class UpdateBox(gtk.VBox):
         scrolled_window.add(self._update_list)
         self._update_list.show()
 
-        bottom_box = gtk.HBox()
+        bottom_box = Gtk.HBox()
         bottom_box.set_spacing(style.DEFAULT_SPACING)
-        self.pack_start(bottom_box, expand=False)
+        self.pack_start(bottom_box, False, True, 0)
         bottom_box.show()
 
-        self._size_label = gtk.Label()
+        self._size_label = Gtk.Label()
         self._size_label.props.xalign = 0
-        self._size_label.set_justify(gtk.JUSTIFY_LEFT)
-        bottom_box.pack_start(self._size_label, expand=True)
+        self._size_label.set_justify(Gtk.Justification.LEFT)
+        bottom_box.pack_start(self._size_label, True, True, 0)
         self._size_label.show()
 
-        self.refresh_button = gtk.Button(stock=gtk.STOCK_REFRESH)
-        bottom_box.pack_start(self.refresh_button, expand=False)
+        self.refresh_button = Gtk.Button(stock=Gtk.STOCK_REFRESH)
+        bottom_box.pack_start(self.refresh_button, False, True, 0)
         self.refresh_button.show()
 
-        self.install_button = gtk.Button(_('Install selected'))
+        self.install_button = Gtk.Button(_('Install selected'))
         self.install_button.props.image = Icon(icon_name='emblem-downloads',
-                                                icon_size=gtk.ICON_SIZE_BUTTON)
-        bottom_box.pack_start(self.install_button, expand=False)
+                                                icon_size=Gtk.IconSize.BUTTON)
+        bottom_box.pack_start(self.install_button, False, True, 0)
         self.install_button.show()
 
         self._update_total_size_label()
@@ -291,24 +291,24 @@ class UpdateBox(gtk.VBox):
         return bundles_to_update
 
 
-class UpdateList(gtk.TreeView):
+class UpdateList(Gtk.TreeView):
 
     def __init__(self, model):
         list_model = UpdateListModel(model)
-        gtk.TreeView.__init__(self, list_model)
+        GObject.GObject.__init__(self, list_model)
 
         self.set_reorderable(False)
         self.set_enable_search(False)
         self.set_headers_visible(False)
 
-        toggle_renderer = gtk.CellRendererToggle()
+        toggle_renderer = Gtk.CellRendererToggle()
         toggle_renderer.props.activatable = True
         toggle_renderer.props.xpad = style.DEFAULT_PADDING
         toggle_renderer.props.indicator_size = style.zoom(26)
         toggle_renderer.connect('toggled', self.__toggled_cb)
 
-        toggle_column = gtk.TreeViewColumn()
-        toggle_column.pack_start(toggle_renderer)
+        toggle_column = Gtk.TreeViewColumn()
+        toggle_column.pack_start(toggle_renderer, True)
         toggle_column.add_attribute(toggle_renderer, 'active',
                                     UpdateListModel.SELECTED)
         self.append_column(toggle_column)
@@ -322,16 +322,16 @@ class UpdateList(gtk.TreeView):
         icon_renderer.props.stroke_color = style.COLOR_TOOLBAR_GREY.get_svg()
         icon_renderer.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
-        icon_column = gtk.TreeViewColumn()
-        icon_column.pack_start(icon_renderer)
+        icon_column = Gtk.TreeViewColumn()
+        icon_column.pack_start(icon_renderer, True)
         icon_column.add_attribute(icon_renderer, 'file-name',
                                   UpdateListModel.ICON_FILE_NAME)
         self.append_column(icon_column)
 
-        text_renderer = gtk.CellRendererText()
+        text_renderer = Gtk.CellRendererText()
 
-        description_column = gtk.TreeViewColumn()
-        description_column.pack_start(text_renderer)
+        description_column = Gtk.TreeViewColumn()
+        description_column.pack_start(text_renderer, True)
         description_column.add_attribute(text_renderer, 'markup',
                                          UpdateListModel.DESCRIPTION)
         self.append_column(description_column)
@@ -344,7 +344,7 @@ class UpdateList(gtk.TreeView):
         pass
 
 
-class UpdateListModel(gtk.ListStore):
+class UpdateListModel(Gtk.ListStore):
 
     BUNDLE_ID = 0
     SELECTED = 1
@@ -353,7 +353,7 @@ class UpdateListModel(gtk.ListStore):
     SIZE = 4
 
     def __init__(self, model):
-        gtk.ListStore.__init__(self, str, bool, str, str, int)
+        GObject.GObject.__init__(self, str, bool, str, str, int)
 
         for bundle_update in model.updates:
             row = [None] * 5

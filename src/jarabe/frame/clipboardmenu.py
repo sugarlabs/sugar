@@ -19,10 +19,10 @@ import tempfile
 import urlparse
 import os
 import logging
-import gconf
+from gi.repository import GConf
 import glib
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.menuitem import MenuItem
@@ -65,9 +65,9 @@ class ClipboardMenu(Palette):
         self._open_item.show()
 
         self._journal_item = MenuItem(_('Keep'))
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
+        icon = Icon(icon_name='document-save', icon_size=Gtk.IconSize.MENU,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
@@ -90,7 +90,7 @@ class ClipboardMenu(Palette):
         child.set_text(_('Open with'))
         submenu = self._open_item.get_submenu()
         if submenu is None:
-            submenu = gtk.Menu()
+            submenu = Gtk.Menu()
             self._open_item.set_submenu(submenu)
             submenu.show()
         else:
@@ -104,7 +104,7 @@ class ClipboardMenu(Palette):
             if not activity_info:
                 logging.warning('Activity %s is unknown.', service_name)
 
-            item = gtk.MenuItem(activity_info.get_name())
+            item = Gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
                          service_name)
             submenu.append(item)
@@ -150,7 +150,7 @@ class ClipboardMenu(Palette):
                 self.set_content(None)
         else:
             if self._progress_bar is None:
-                self._progress_bar = gtk.ProgressBar()
+                self._progress_bar = Gtk.ProgressBar()
                 self._progress_bar.show()
                 self.set_content(self._progress_bar)
 
@@ -245,7 +245,7 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = client.get_string('/desktop/sugar/user/color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type

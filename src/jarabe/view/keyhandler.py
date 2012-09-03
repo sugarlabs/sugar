@@ -19,7 +19,7 @@ import os
 import logging
 
 import dbus
-import gtk
+from gi.repository import Gtk
 
 from sugar._sugarext import KeyGrabber
 
@@ -34,7 +34,7 @@ from jarabe.journal import journalactivity
 
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
-_TABBING_MODIFIER = gtk.gdk.MOD1_MASK
+_TABBING_MODIFIER = Gdk.ModifierType.MOD1_MASK
 
 
 _actions_table = {

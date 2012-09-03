@@ -17,14 +17,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 
 
-class ViewContainer(gtk.Container):
+class ViewContainer(Gtk.Container):
     __gtype_name__ = 'SugarViewContainer'
 
     def __init__(self, layout, owner_icon, activity_icon=None, **kwargs):
-        gtk.Container.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
         self.set_has_window(False)
 
         self._activity_icon = None
@@ -47,7 +47,7 @@ class ViewContainer(gtk.Container):
     def do_add(self, child):
         if child != self._owner_icon and child != self._activity_icon:
             self._children.append(child)
-        if child.flags() & gtk.REALIZED:
+        if child.get_realized():
             child.set_parent_window(self.get_parent_window())
         child.set_parent(self)
 

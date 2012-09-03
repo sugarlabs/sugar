@@ -14,16 +14,16 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
 
-class ColorPicker(gtk.EventBox):
+class ColorPicker(Gtk.EventBox):
     def __init__(self):
-        gtk.EventBox.__init__(self)
+        GObject.GObject.__init__(self)
         self._xo_color = None
 
         self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,
@@ -33,7 +33,7 @@ class ColorPicker(gtk.EventBox):
         self.add(self._xo)
 
     def _button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
             self._set_random_colors()
 
     def get_color(self):

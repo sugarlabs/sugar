@@ -18,10 +18,10 @@ from gettext import gettext as _
 import logging
 import os
 
-import gobject
-import gtk
-import gconf
-import gio
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import GConf
+from gi.repository import Gio
 import glib
 
 from sugar.graphics import style
@@ -45,9 +45,9 @@ class ObjectPalette(Palette):
     __gtype_name__ = 'ObjectPalette'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -55,13 +55,13 @@ class ObjectPalette(Palette):
 
         self._metadata = metadata
 
-        activity_icon = Icon(icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
         activity_icon.props.file = misc.get_icon_name(metadata)
         color = misc.get_icon_color(metadata)
         activity_icon.props.xo_color = color
 
         if 'title' in metadata:
-            title = gobject.markup_escape_text(metadata['title'])
+            title = GObject.markup_escape_text(metadata['title'])
         else:
             title = glib.markup_escape_text(_('Untitled'))
 
@@ -94,7 +94,7 @@ class ObjectPalette(Palette):
 
         menu_item = MenuItem(_('Copy to'))
         icon = Icon(icon_name='edit-copy', xo_color=color,
-                    icon_size=gtk.ICON_SIZE_MENU)
+                    icon_size=Gtk.IconSize.MENU)
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
@@ -105,7 +105,7 @@ class ObjectPalette(Palette):
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate', xo_color=color,
-                        icon_size=gtk.ICON_SIZE_MENU)
+                        icon_size=Gtk.IconSize.MENU)
             menu_item.set_image(icon)
             menu_item.connect('activate', self.__duplicate_activate_cb)
             self.menu.append(menu_item)
@@ -150,10 +150,10 @@ class ObjectPalette(Palette):
         alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
             % self._metadata['title']
         icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
         icon.show()
         ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, erase_string, ok_icon)
+        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
         ok_icon.show()
         alert.connect('response', self.__erase_alert_response_cb)
         journalwindow.get_journal_window().add_alert(alert)
@@ -161,7 +161,7 @@ class ObjectPalette(Palette):
 
     def __erase_alert_response_cb(self, alert, response_id):
         journalwindow.get_journal_window().remove_alert(alert)
-        if response_id is gtk.RESPONSE_OK:
+        if response_id is Gtk.ResponseType.OK:
             model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
@@ -192,39 +192,39 @@ class ObjectPalette(Palette):
                                     mime_type)
 
 
-class CopyMenu(gtk.Menu):
+class CopyMenu(Gtk.Menu):
     __gtype_name__ = 'JournalCopyMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
     def __init__(self, metadata):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._metadata = metadata
 
         clipboard_menu = ClipboardMenu(self._metadata)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=gtk.ICON_SIZE_MENU))
+                                      icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
         self.append(clipboard_menu)
         clipboard_menu.show()
 
         if self._metadata['mountpoint'] != '/':
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             self.append(journal_menu)
             journal_menu.show()
 
-        volume_monitor = gio.volume_monitor_get()
-        icon_theme = gtk.icon_theme_get_default()
+        volume_monitor = Gio.volume_monitor_get()
+        icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
@@ -233,7 +233,7 @@ class CopyMenu(gtk.Menu):
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=gtk.ICON_SIZE_MENU))
+                                               icon_size=Gtk.IconSize.MENU))
                     break
             volume_menu.connect('volume-error', self.__volume_error_cb)
             self.append(volume_menu)
@@ -247,7 +247,7 @@ class VolumeMenu(MenuItem):
     __gtype_name__ = 'JournalVolumeMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -279,7 +279,7 @@ class ClipboardMenu(MenuItem):
     __gtype_name__ = 'JournalClipboardMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -299,7 +299,7 @@ class ClipboardMenu(MenuItem):
                       _('Warning'))
             return
 
-        clipboard = gtk.Clipboard()
+        clipboard = Gtk.Clipboard()
         clipboard.set_with_data([('text/uri-list', 0, 0)],
                                 self.__clipboard_get_func_cb,
                                 self.__clipboard_clear_func_cb)
@@ -315,16 +315,16 @@ class ClipboardMenu(MenuItem):
         self._temp_file_path = None
 
 
-class FriendsMenu(gtk.Menu):
+class FriendsMenu(Gtk.Menu):
     __gtype_name__ = 'JournalFriendsMenu'
 
     __gsignals__ = {
-        'friend-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'friend-selected': (GObject.SignalFlags.RUN_FIRST, None,
                             ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         if filetransfer.file_transfer_available():
             friends_model = friends.get_model()
@@ -353,18 +353,18 @@ class FriendsMenu(gtk.Menu):
         self.emit('friend-selected', friend)
 
 
-class StartWithMenu(gtk.Menu):
+class StartWithMenu(Gtk.Menu):
     __gtype_name__ = 'JournalStartWithMenu'
 
     def __init__(self, metadata):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._metadata = metadata
 
         for activity_info in misc.get_activities(metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=gtk.ICON_SIZE_MENU))
+                                     icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self.__item_activate_cb,
                               activity_info.get_bundle_id())
             self.append(menu_item)

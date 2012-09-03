@@ -19,8 +19,8 @@ import os
 import tempfile
 from gettext import gettext as _
 
-import gtk
-import gconf
+from gi.repository import Gtk
+from gi.repository import GConf
 import dbus
 
 from sugar.datastore import datastore
@@ -36,18 +36,18 @@ def handle_key_press(key):
     fd, file_path = tempfile.mkstemp(dir=tmp_dir)
     os.close(fd)
 
-    window = gtk.gdk.get_default_root_window()
+    window = Gdk.get_default_root_window()
     width, height = window.get_size()
     x_orig, y_orig = window.get_origin()
 
-    screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
+    screenshot = GdkPixbuf.Pixbuf(GdkPixbuf.Colorspace.RGB, has_alpha=False,
                                     bits_per_sample=8, width=width,
                                     height=height)
     screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
                                     y_orig, 0, 0, width, height)
     screenshot.save(file_path, 'png')
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     color = client.get_string('/desktop/sugar/user/color')
 
     content_title = None
@@ -90,7 +90,7 @@ def handle_key_press(key):
 
 def _get_preview_data(screenshot):
     preview = screenshot.scale_simple(style.zoom(300), style.zoom(225),
-                                      gtk.gdk.INTERP_BILINEAR)
+                                      GdkPixbuf.InterpType.BILINEAR)
     preview_data = []
 
     def save_func(buf, data):

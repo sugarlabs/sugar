@@ -16,8 +16,8 @@
 
 import logging
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 from sugar.graphics import animator
 from sugar.graphics import style
@@ -87,7 +87,7 @@ class Frame(object):
         self._left_panel = self._create_left_panel()
         self._right_panel = self._create_right_panel()
 
-        screen = gtk.gdk.screen_get_default()
+        screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
         self._key_listener = _KeyListener(self)
@@ -131,7 +131,7 @@ class Frame(object):
         self._update_position()
 
     def _create_top_panel(self):
-        panel = self._create_panel(gtk.POS_TOP)
+        panel = self._create_panel(Gtk.PositionType.TOP)
 
         zoom_toolbar = ZoomToolbar()
         panel.append(zoom_toolbar, expand=False)
@@ -145,7 +145,7 @@ class Frame(object):
         return panel
 
     def _create_bottom_panel(self):
-        panel = self._create_panel(gtk.POS_BOTTOM)
+        panel = self._create_panel(Gtk.PositionType.BOTTOM)
 
         devices_tray = DevicesTray()
         panel.append(devices_tray)
@@ -154,7 +154,7 @@ class Frame(object):
         return panel
 
     def _create_right_panel(self):
-        panel = self._create_panel(gtk.POS_RIGHT)
+        panel = self._create_panel(Gtk.PositionType.RIGHT)
 
         tray = FriendsTray()
         panel.append(tray)
@@ -163,7 +163,7 @@ class Frame(object):
         return panel
 
     def _create_left_panel(self):
-        panel = ClipboardPanelWindow(self, gtk.POS_LEFT)
+        panel = ClipboardPanelWindow(self, Gtk.PositionType.LEFT)
 
         return panel
 
@@ -186,8 +186,8 @@ class Frame(object):
         self.hide()
 
     def _update_position(self):
-        screen_h = gtk.gdk.screen_height()
-        screen_w = gtk.gdk.screen_width()
+        screen_h = Gdk.Screen.height()
+        screen_w = Gdk.Screen.width()
 
         self._move_panel(self._top_panel, self.current_position,
                          0, - self._top_panel.size, 0, 0)
@@ -213,7 +213,7 @@ class Frame(object):
     def notify_key_press(self):
         self._key_listener.key_press()
 
-    def add_notification(self, icon, corner=gtk.CORNER_TOP_LEFT,
+    def add_notification(self, icon, corner=Gtk.CornerType.TOP_LEFT,
                          duration=_NOTIFICATION_DURATION):
 
         if not isinstance(icon, NotificationIcon):
@@ -221,14 +221,14 @@ class Frame(object):
 
         window = NotificationWindow()
 
-        screen = gtk.gdk.screen_get_default()
-        if corner == gtk.CORNER_TOP_LEFT:
+        screen = Gdk.Screen.get_default()
+        if corner == Gtk.CornerType.TOP_LEFT:
             window.move(0, 0)
-        elif corner == gtk.CORNER_TOP_RIGHT:
+        elif corner == Gtk.CornerType.TOP_RIGHT:
             window.move(screen.get_width() - style.GRID_CELL_SIZE, 0)
-        elif corner == gtk.CORNER_BOTTOM_LEFT:
+        elif corner == Gtk.CornerType.BOTTOM_LEFT:
             window.move(0, screen.get_height() - style.GRID_CELL_SIZE)
-        elif corner == gtk.CORNER_BOTTOM_RIGHT:
+        elif corner == Gtk.CornerType.BOTTOM_RIGHT:
             window.move(screen.get_width() - style.GRID_CELL_SIZE,
                         screen.get_height() - style.GRID_CELL_SIZE)
         else:
@@ -240,7 +240,7 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        gobject.timeout_add(duration,
+        GObject.timeout_add(duration,
                         lambda: self.remove_notification(icon))
 
     def remove_notification(self, icon):
@@ -273,7 +273,7 @@ class Frame(object):
         if duration == -1:
             duration = _NOTIFICATION_DURATION
 
-        self.add_notification(icon, gtk.CORNER_TOP_RIGHT, duration)
+        self.add_notification(icon, Gtk.CornerType.TOP_RIGHT, duration)
 
     def __notification_cancelled_cb(self, **kwargs):
         # Do nothing for now. Our notification UI is so simple, there's no

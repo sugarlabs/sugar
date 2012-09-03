@@ -17,7 +17,7 @@
 #
 
 import xklavier
-import gconf
+from gi.repository import GConf
 
 
 _GROUP_NAME = 'grp'  # The XKB name for group switch options
@@ -35,7 +35,7 @@ class KeyboardManager(object):
         self._configrec = xklavier.ConfigRec()
         self._configrec.get_from_server(self._engine)
 
-        self._gconf_client = gconf.client_get_default()
+        self._gconf_client = GConf.Client.get_default()
 
     def _populate_one(self, config_registry, item, store):
         store.append([item.get_description(), item.get_name()])
@@ -94,7 +94,7 @@ class KeyboardManager(object):
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
-        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, gconf.VALUE_STRING)
+        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, GConf.ValueType.STRING)
         if layouts:
             return layouts
 
@@ -116,7 +116,7 @@ class KeyboardManager(object):
 
     def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
-        options = self._gconf_client.get_list(_OPTIONS_KEY, gconf.VALUE_STRING)
+        options = self._gconf_client.get_list(_OPTIONS_KEY, GConf.ValueType.STRING)
 
         if not options:
             options = self._configrec.get_options()
@@ -149,7 +149,7 @@ class KeyboardManager(object):
             options = option_group
         else:
             options = [option_group]
-        self._gconf_client.set_list(_OPTIONS_KEY, gconf.VALUE_STRING, options)
+        self._gconf_client.set_list(_OPTIONS_KEY, GConf.ValueType.STRING, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
 
@@ -157,7 +157,7 @@ class KeyboardManager(object):
         """Sets the supplied keyboard layouts (with variants)"""
         if layouts is None or not layouts:
             return
-        self._gconf_client.set_list(_LAYOUTS_KEY, gconf.VALUE_STRING, layouts)
+        self._gconf_client.set_list(_LAYOUTS_KEY, GConf.ValueType.STRING, layouts)
         layouts_list = []
         variants_list = []
         for layout in layouts:

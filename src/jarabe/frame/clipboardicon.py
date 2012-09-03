@@ -16,9 +16,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import gconf
+from gi.repository import GConf
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.graphics.icon import Icon
@@ -48,7 +48,7 @@ class ClipboardIcon(RadioToolButton):
         self._current_percent = None
 
         self._icon = Icon()
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self._icon.props.xo_color = color
         self.set_icon_widget(self._icon)
@@ -94,7 +94,7 @@ class ClipboardIcon(RadioToolButton):
 
         targets = self._get_targets()
         if targets:
-            x_clipboard = gtk.Clipboard()
+            x_clipboard = Gtk.Clipboard()
             if not x_clipboard.set_with_data(targets,
                                            self._clipboard_data_get_cb,
                                            self._clipboard_clear_cb,
@@ -128,9 +128,9 @@ class ClipboardIcon(RadioToolButton):
 
         child = self.get_child()
         child.connect('drag-begin', self._drag_begin_cb)
-        child.drag_source_set(gtk.gdk.BUTTON1_MASK,
+        child.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                               self._get_targets(),
-                              gtk.gdk.ACTION_COPY)
+                              Gdk.DragAction.COPY)
 
         if cb_object.get_percent() == 100:
             self.props.sensitive = True
@@ -156,11 +156,11 @@ class ClipboardIcon(RadioToolButton):
                 XoColor('%s,%s' % (self._icon.props.stroke_color,
                                    self._icon.props.fill_color))
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, gtk.CORNER_BOTTOM_LEFT)
+        frame.add_notification(self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
-        icon_theme = gtk.icon_theme_get_default()
+        icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
         context.set_icon_pixbuf(pixbuf, hot_x=pixbuf.props.width / 2,

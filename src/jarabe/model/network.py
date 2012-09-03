@@ -24,9 +24,9 @@ import os
 
 import dbus
 import dbus.service
-import gobject
+from gi.repository import GObject
 import ConfigParser
-import gconf
+from gi.repository import GConf
 import ctypes
 
 from sugar import dispatch
@@ -595,10 +595,10 @@ class SecretAgent(dbus.service.Object):
         self.secrets_request.send(self, settings=settings, response=response)
 
 
-class AccessPoint(gobject.GObject):
+class AccessPoint(GObject.GObject):
     __gsignals__ = {
-        'props-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT])),
+        'props-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, device, model):
@@ -744,13 +744,13 @@ def _add_and_activate_error_cb(err):
     logging.error('Failed to add and activate connection: %s', err)
 
 
-class Connection(gobject.GObject):
+class Connection(GObject.GObject):
     __gsignals__ = {
-        'removed': (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ()),
+        'removed': (GObject.SignalFlags.RUN_LAST, None, ()),
     }
 
     def __init__(self, bus, path):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         obj = bus.get_object(NM_SERVICE, path)
         self._connection = dbus.Interface(obj, NM_CONNECTION_IFACE)
         self._removed_handle = self._connection.connect_to_signal(
@@ -1004,7 +1004,7 @@ def _migrate_old_gsm_connection():
         # don't attempt migration if a NM-level connection already exists
         return
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
 
     username = client.get_string(GSM_USERNAME_PATH) or ''
     password = client.get_string(GSM_PASSWORD_PATH) or ''

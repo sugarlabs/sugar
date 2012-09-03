@@ -16,8 +16,8 @@
 
 import logging
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from jarabe.model import shell
 
@@ -36,13 +36,13 @@ class TabbingHandler(object):
         if not self._tabbing:
             logging.debug('Grabing the input.')
 
-            screen = gtk.gdk.screen_get_default()
+            screen = Gdk.Screen.get_default()
             window = screen.get_root_window()
-            keyboard_grab_result = gtk.gdk.keyboard_grab(window)
-            pointer_grab_result = gtk.gdk.pointer_grab(window)
+            keyboard_grab_result = Gdk.keyboard_grab(window)
+            pointer_grab_result = Gdk.pointer_grab(window)
 
-            self._tabbing = (keyboard_grab_result == gtk.gdk.GRAB_SUCCESS and
-                             pointer_grab_result == gtk.gdk.GRAB_SUCCESS)
+            self._tabbing = (keyboard_grab_result == Gdk.GrabStatus.SUCCESS and
+                             pointer_grab_result == Gdk.GrabStatus.SUCCESS)
 
             # Now test that the modifier is still active to prevent race
             # conditions. We also test if one of the grabs failed.
@@ -51,10 +51,10 @@ class TabbingHandler(object):
                 logging.debug('Releasing grabs again.')
 
                 # ungrab keyboard/pointer if the grab was successfull.
-                if keyboard_grab_result == gtk.gdk.GRAB_SUCCESS:
-                    gtk.gdk.keyboard_ungrab()
-                if pointer_grab_result == gtk.gdk.GRAB_SUCCESS:
-                    gtk.gdk.pointer_ungrab()
+                if keyboard_grab_result == Gdk.GrabStatus.SUCCESS:
+                    Gdk.keyboard_ungrab()
+                if pointer_grab_result == Gdk.GrabStatus.SUCCESS:
+                    Gdk.pointer_ungrab()
 
                 self._tabbing = False
             else:
@@ -67,12 +67,12 @@ class TabbingHandler(object):
 
     def _start_timeout(self, event_time):
         self._cancel_timeout()
-        self._timeout = gobject.timeout_add(_RAISE_DELAY,
+        self._timeout = GObject.timeout_add(_RAISE_DELAY,
                 lambda: self.__timeout_cb(event_time))
 
     def _cancel_timeout(self):
         if self._timeout:
-            gobject.source_remove(self._timeout)
+            GObject.source_remove(self._timeout)
             self._timeout = None
 
     def _activate_current(self, event_time):
@@ -133,8 +133,8 @@ class TabbingHandler(object):
             next_activity.get_window().activate(event_time)
 
     def stop(self, event_time):
-        gtk.gdk.keyboard_ungrab()
-        gtk.gdk.pointer_ungrab()
+        Gdk.keyboard_ungrab()
+        Gdk.pointer_ungrab()
         self._tabbing = False
 
         self._frame.hide()

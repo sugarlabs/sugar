@@ -17,7 +17,7 @@
 import logging
 
 import dbus
-import gobject
+from gi.repository import GObject
 
 from jarabe.model import network
 from jarabe.model.network import Settings
@@ -35,7 +35,7 @@ def get_adhoc_manager_instance():
     return _adhoc_manager_instance
 
 
-class AdHocManager(gobject.GObject):
+class AdHocManager(GObject.GObject):
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
     three channels 1, 6, 11. If Sugar sees no "known" network when it
@@ -44,10 +44,10 @@ class AdHocManager(gobject.GObject):
     """
 
     __gsignals__ = {
-        'members-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                            ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
-        'state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'members-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                            ([GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT])),
+        'state-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT])),
     }
 
     _AUTOCONNECT_TIMEOUT = 60
@@ -56,7 +56,7 @@ class AdHocManager(gobject.GObject):
     _CHANNEL_11 = 11
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._bus = dbus.SystemBus()
         self._device = None
@@ -142,8 +142,8 @@ class AdHocManager(gobject.GObject):
         will complete quickly, and long before the timeout ticks.
         """
         if self._idle_source != 0:
-            gobject.source_remove(self._idle_source)
-        self._idle_source = gobject.timeout_add_seconds(
+            GObject.source_remove(self._idle_source)
+        self._idle_source = GObject.timeout_add_seconds(
             self._AUTOCONNECT_TIMEOUT, self.__idle_check_cb)
 
     def __idle_check_cb(self):

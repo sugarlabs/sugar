@@ -1,6 +1,6 @@
 import os
 
-import gtk
+from gi.repository import Gtk
 
 from sugar import env
 from sugar.profile import get_profile
@@ -23,4 +23,4 @@ def check_profile():
     if not profile.is_valid():
         win = IntroWindow()
         win.show_all()
-        gtk.main()
+        Gtk.main()

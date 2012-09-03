@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
+from gi.repository import GObject
 
 from sugar.graphics import style
 from sugar.graphics import animator
@@ -42,7 +42,7 @@ class TransitionBox(ViewContainer):
     __gtype_name__ = 'SugarTransitionBox'
 
     __gsignals__ = {
-        'completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'completed': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self):

@@ -21,9 +21,9 @@ import time
 import os
 
 import cairo
-import gobject
+from gi.repository import GObject
 import glib
-import gtk
+from gi.repository import Gtk
 import simplejson
 
 from sugar.graphics import style
@@ -37,80 +37,80 @@ from jarabe.journal import model
 from jarabe.view.eventicon import EventIcon
 
 
-class Separator(gtk.VBox):
+class Separator(Gtk.VBox):
     def __init__(self, orientation):
-        gtk.VBox.__init__(self,
+        GObject.GObject.__init__(self,
                 background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
-class BuddyList(gtk.Alignment):
+class BuddyList(Gtk.Alignment):
     def __init__(self, buddies):
-        gtk.Alignment.__init__(self, 0, 0, 0, 0)
+        GObject.GObject.__init__(self, 0, 0, 0, 0)
 
-        hbox = gtk.HBox()
+        hbox = Gtk.HBox()
         for buddy in buddies:
             nick_, color = buddy
             icon = EventIcon(icon_name='computer-xo',
                              xo_color=XoColor(color),
                              pixel_size=style.STANDARD_ICON_SIZE)
             icon.set_palette(BuddyPalette(buddy))
-            hbox.pack_start(icon)
+            hbox.pack_start(icon, True, True, 0)
         self.add(hbox)
 
 
-class ExpandedEntry(gtk.EventBox):
+class ExpandedEntry(Gtk.EventBox):
     def __init__(self):
-        gtk.EventBox.__init__(self)
-        self._vbox = gtk.VBox()
+        GObject.GObject.__init__(self)
+        self._vbox = Gtk.VBox()
         self.add(self._vbox)
 
         self._metadata = None
         self._update_title_sid = None
 
-        self.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         # Create a header
-        header = gtk.HBox()
+        header = Gtk.HBox()
         self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
 
         # Create a two-column body
-        body_box = gtk.EventBox()
+        body_box = Gtk.EventBox()
         body_box.set_border_width(style.DEFAULT_SPACING)
-        body_box.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(body_box)
-        body = gtk.HBox()
+        body_box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self._vbox.pack_start(body_box, True, True, 0)
+        body = Gtk.HBox()
         body_box.add(body)
 
-        first_column = gtk.VBox()
+        first_column = Gtk.VBox()
         body.pack_start(first_column, False, False, style.DEFAULT_SPACING)
 
-        second_column = gtk.VBox()
-        body.pack_start(second_column)
+        second_column = Gtk.VBox()
+        body.pack_start(second_column, True, True, 0)
 
         # Header
         self._keep_icon = self._create_keep_icon()
         header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
 
         self._icon = None
-        self._icon_box = gtk.HBox()
+        self._icon_box = Gtk.HBox()
         header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
 
         self._title = self._create_title()
-        header.pack_start(self._title)
+        header.pack_start(self._title, True, True, 0)
 
         # TODO: create a version list popup instead of a date label
         self._date = self._create_date()
         header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+        if Gtk.widget_get_default_direction() == Gtk.TextDirection.RTL:
             header.reverse()
 
         # First body column
-        self._preview_box = gtk.Frame()
-        first_column.pack_start(self._preview_box, expand=False)
+        self._preview_box = Gtk.Frame()
+        first_column.pack_start(self._preview_box, False, True, 0)
 
-        self._technical_box = gtk.VBox()
-        first_column.pack_start(self._technical_box)
+        self._technical_box = Gtk.VBox()
+        first_column.pack_start(self._technical_box, True)
 
         # Second body column
         description_box, self._description = self._create_description()
@@ -121,8 +121,8 @@ class ExpandedEntry(gtk.EventBox):
         second_column.pack_start(tags_box, True, True,
                                  style.DEFAULT_SPACING)
 
-        self._buddy_list = gtk.VBox()
-        second_column.pack_start(self._buddy_list)
+        self._buddy_list = Gtk.VBox()
+        second_column.pack_start(self._buddy_list, True)
 
         self.show_all()
 
@@ -146,11 +146,11 @@ class ExpandedEntry(gtk.EventBox):
         self._preview_box.add(self._create_preview())
 
         self._technical_box.foreach(self._technical_box.remove)
-        self._technical_box.pack_start(self._create_technical(),
+        self._technical_box.pack_start(self._create_technical(, True, True, 0),
                                        False, False, style.DEFAULT_SPACING)
 
         self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(), False, False,
+        self._buddy_list.pack_start(self._create_buddy_list(, True, True, 0), False, False,
                                     style.DEFAULT_SPACING)
 
         description = metadata.get('description', '')
@@ -180,22 +180,22 @@ class ExpandedEntry(gtk.EventBox):
         return icon
 
     def _create_title(self):
-        entry = gtk.Entry()
+        entry = Gtk.Entry()
         entry.connect('focus-out-event', self._title_focus_out_event_cb)
 
         bg_color = style.COLOR_WHITE.get_gdk_color()
-        entry.modify_bg(gtk.STATE_INSENSITIVE, bg_color)
-        entry.modify_base(gtk.STATE_INSENSITIVE, bg_color)
+        entry.modify_bg(Gtk.StateType.INSENSITIVE, bg_color)
+        entry.modify_base(Gtk.StateType.INSENSITIVE, bg_color)
 
         return entry
 
     def _create_date(self):
-        date = gtk.Label()
+        date = Gtk.Label()
         return date
 
     def _create_preview(self):
-        box = gtk.EventBox()
-        box.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        box = Gtk.EventBox()
+        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         box.connect('expose-event', self.__expose_event_cb)
         box.connect_after('button-release-event',
@@ -222,7 +222,7 @@ class ExpandedEntry(gtk.EventBox):
                 png_width = surface.get_width()
                 png_height = surface.get_height()
                 gdk_window = self.get_toplevel().window
-                pixmap = gtk.gdk.Pixmap(gdk_window, png_width, png_height, -1)
+                pixmap = Gdk.Pixmap(gdk_window, png_width, png_height, -1)
                 cr = pixmap.cairo_create()
                 cr.set_source_rgb(1, 1, 1)
                 cr.paint()
@@ -230,7 +230,7 @@ class ExpandedEntry(gtk.EventBox):
                 cr.scale(width / png_width, height / png_height)
                 cr.paint()
 
-                im = gtk.image_new_from_pixmap(pixmap, None)
+                im = Gtk.image_new_from_pixmap(pixmap, None)
                 has_preview = True
             except Exception:
                 logging.exception('Error while loading the preview')
@@ -242,14 +242,14 @@ class ExpandedEntry(gtk.EventBox):
             box.add(im)
             im.show()
         else:
-            label = gtk.Label()
+            label = Gtk.Label()
             label.set_text(_('No preview'))
             label.set_size_request(width, height)
             box.add(label)
             label.show()
 
     def _create_technical(self):
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
         label = \
@@ -260,10 +260,10 @@ class ExpandedEntry(gtk.EventBox):
                         'filesize',
                         model.get_file_size(self._metadata['uid'])))))
 
-        text = gtk.Label()
+        text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))
-        halign = gtk.Alignment(0, 0, 0, 0)
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
 
@@ -283,44 +283,44 @@ class ExpandedEntry(gtk.EventBox):
 
     def _create_buddy_list(self):
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
-        text = gtk.Label()
+        text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
-        halign = gtk.Alignment(0, 0, 0, 0)
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
 
         if self._metadata.get('buddies'):
             buddies = simplejson.loads(self._metadata['buddies']).values()
-            vbox.pack_start(BuddyList(buddies), False, False, 0)
+            vbox.pack_start(BuddyList(buddies, True, True, 0), False, False, 0)
             return vbox
         else:
             return vbox
 
     def _create_scrollable(self, label):
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
-        text = gtk.Label()
+        text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))
 
-        halign = gtk.Alignment(0, 0, 0, 0)
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
 
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_border_width(style.LINE_WIDTH)
-        text_buffer = gtk.TextBuffer()
-        text_view = gtk.TextView(text_buffer)
+        text_buffer = Gtk.TextBuffer()
+        text_view = Gtk.TextView(text_buffer)
         text_view.set_left_margin(style.DEFAULT_PADDING)
-        text_view.set_wrap_mode(gtk.WRAP_WORD_CHAR)
+        text_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         scrolled_window.add_with_viewport(text_view)
-        vbox.pack_start(scrolled_window)
+        vbox.pack_start(scrolled_window, True, True, 0)
 
         # text_view.text_view_widget.connect('focus-out-event',
         #                  self._description_focus_out_event_cb)
@@ -335,7 +335,7 @@ class ExpandedEntry(gtk.EventBox):
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
-            self._update_title_sid = gobject.timeout_add_seconds(1,
+            self._update_title_sid = GObject.timeout_add_seconds(1,
                                                          self._update_title_cb)
 
     def _title_focus_out_event_cb(self, entry, event):

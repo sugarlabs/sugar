@@ -14,15 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
-import gobject
-import pango
+from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import Pango
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
 
 
-class InlineAlert(gtk.HBox):
+class InlineAlert(Gtk.HBox):
     """UI interface for Inline alerts
 
     Inline alerts are different from the other alerts beause they are
@@ -37,8 +37,8 @@ class InlineAlert(gtk.HBox):
     __gtype_name__ = 'SugarInlineAlert'
 
     __gproperties__ = {
-        'msg': (str, None, None, None, gobject.PARAM_READWRITE),
-        'icon': (object, None, None, gobject.PARAM_WRITABLE),
+        'msg': (str, None, None, None, GObject.PARAM_READWRITE),
+        'icon': (object, None, None, GObject.PARAM_WRITABLE),
     }
 
     def __init__(self, **kwargs):
@@ -49,17 +49,17 @@ class InlineAlert(gtk.HBox):
                           fill_color=style.COLOR_SELECTION_GREY.get_svg(),
                           stroke_color=style.COLOR_WHITE.get_svg())
 
-        self._msg_label = gtk.Label()
+        self._msg_label = Gtk.Label()
         self._msg_label.set_max_width_chars(50)
-        self._msg_label.set_ellipsize(pango.ELLIPSIZE_MIDDLE)
+        self._msg_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
         self._msg_label.set_alignment(0, 0.5)
-        self._msg_label.modify_fg(gtk.STATE_NORMAL,
+        self._msg_label.modify_fg(Gtk.StateType.NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())
 
-        gobject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
-        self.modify_bg(gtk.STATE_NORMAL,
+        self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
         self.pack_start(self._icon, False)

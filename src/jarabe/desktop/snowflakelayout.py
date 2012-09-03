@@ -16,7 +16,7 @@
 
 import math
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 
@@ -25,18 +25,18 @@ _BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
 
-class SnowflakeLayout(gtk.Container):
+class SnowflakeLayout(Gtk.Container):
     __gtype_name__ = 'SugarSnowflakeLayout'
 
     def __init__(self):
-        gtk.Container.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_has_window(False)
         self._nflakes = 0
         self._children = {}
 
     def do_realize(self):
         # FIXME what is this for?
-        self.set_flags(gtk.REALIZED)
+        self.set_flags(Gtk.REALIZED)
         self.set_window(self.get_parent_window())
         self.style.attach(self.window)
         for child in self._children.keys():
@@ -44,7 +44,7 @@ class SnowflakeLayout(gtk.Container):
         self.queue_resize()
 
     def do_add(self, child):
-        if child.flags() & gtk.REALIZED:
+        if child.get_realized():
             child.set_parent_window(self.get_parent_window())
         child.set_parent(self)
 
@@ -83,7 +83,7 @@ class SnowflakeLayout(gtk.Container):
 
         for child, centered in self._children.items():
             child_width, child_height = child.size_request()
-            rect = gtk.gdk.Rectangle(0, 0, child_width, child_height)
+            rect = (0, 0, child_width, child_height)
 
             width = allocation.width - child_width
             height = allocation.height - child_height

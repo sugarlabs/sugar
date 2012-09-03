@@ -19,8 +19,8 @@ from gettext import gettext as _
 import logging
 
 import glib
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 from sugar.graphics import style
 from sugar.graphics.palette import Palette
@@ -30,16 +30,16 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
 
-class ZoomToolbar(gtk.Toolbar):
+class ZoomToolbar(Gtk.Toolbar):
     __gsignals__ = {
-        'level-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'level-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                           ([]))
         }
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        GObject.GObject.__init__(self)
 
         # we shouldn't be mirrored in RTL locales
-        self.set_direction(gtk.TEXT_DIR_LTR)
+        self.set_direction(Gtk.TextDirection.LTR)
 
         # ask not to be collapsed if possible
         self.set_size_request(4 * style.GRID_CELL_SIZE, -1)

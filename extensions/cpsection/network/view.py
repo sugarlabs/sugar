@@ -14,8 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 from gettext import gettext as _
 
 from sugar.graphics import style
@@ -46,133 +46,133 @@ class Network(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._radio_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._jabber_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._jabber_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
-        workspace = gtk.VBox()
+        workspace = Gtk.VBox()
         workspace.show()
 
-        separator_wireless = gtk.HSeparator()
-        workspace.pack_start(separator_wireless, expand=False)
+        separator_wireless = Gtk.HSeparator()
+        workspace.pack_start(separator_wireless, False, True, 0)
         separator_wireless.show()
 
-        label_wireless = gtk.Label(_('Wireless'))
+        label_wireless = Gtk.Label(label=_('Wireless'))
         label_wireless.set_alignment(0, 0)
-        workspace.pack_start(label_wireless, expand=False)
+        workspace.pack_start(label_wireless, False, True, 0)
         label_wireless.show()
-        box_wireless = gtk.VBox()
+        box_wireless = Gtk.VBox()
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = gtk.Label(_('Turn off the wireless radio to save battery'
+        radio_info = Gtk.Label(label=_('Turn off the wireless radio to save battery'
                                  ' life'))
         radio_info.set_alignment(0, 0)
         radio_info.set_line_wrap(True)
         radio_info.show()
-        box_wireless.pack_start(radio_info, expand=False)
+        box_wireless.pack_start(radio_info, False, True, 0)
 
-        box_radio = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._button = gtk.CheckButton()
+        box_radio = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._button = Gtk.CheckButton()
         self._button.set_alignment(0, 0)
-        box_radio.pack_start(self._button, expand=False)
+        box_radio.pack_start(self._button, False, True, 0)
         self._button.show()
 
-        label_radio = gtk.Label(_('Radio'))
+        label_radio = Gtk.Label(label=_('Radio'))
         label_radio.set_alignment(0, 0.5)
-        box_radio.pack_start(label_radio, expand=False)
+        box_radio.pack_start(label_radio, False, True, 0)
         label_radio.show()
 
-        box_wireless.pack_start(box_radio, expand=False)
+        box_wireless.pack_start(box_radio, False, True, 0)
         box_radio.show()
 
         self._radio_alert = InlineAlert()
-        self._radio_alert_box.pack_start(self._radio_alert, expand=False)
-        box_radio.pack_end(self._radio_alert_box, expand=False)
+        self._radio_alert_box.pack_start(self._radio_alert, False, True, 0)
+        box_radio.pack_end(self._radio_alert_box, False, True, 0)
         self._radio_alert_box.show()
         if 'radio' in self.restart_alerts:
             self._radio_alert.props.msg = self.restart_msg
             self._radio_alert.show()
 
-        history_info = gtk.Label(_('Discard network history if you have'
+        history_info = Gtk.Label(label=_('Discard network history if you have'
                                    ' trouble connecting to the network'))
         history_info.set_alignment(0, 0)
         history_info.set_line_wrap(True)
         history_info.show()
-        box_wireless.pack_start(history_info, expand=False)
+        box_wireless.pack_start(history_info, False, True, 0)
 
-        box_clear_history = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._clear_history_button = gtk.Button()
+        box_clear_history = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._clear_history_button = Gtk.Button()
         self._clear_history_button.set_label(_('Discard network history'))
-        box_clear_history.pack_start(self._clear_history_button, expand=False)
+        box_clear_history.pack_start(self._clear_history_button, False, True, 0)
         if not self._model.have_networks():
             self._clear_history_button.set_sensitive(False)
         self._clear_history_button.show()
-        box_wireless.pack_start(box_clear_history, expand=False)
+        box_wireless.pack_start(box_clear_history, False, True, 0)
         box_clear_history.show()
 
-        workspace.pack_start(box_wireless, expand=False)
+        workspace.pack_start(box_wireless, False, True, 0)
         box_wireless.show()
 
-        separator_mesh = gtk.HSeparator()
+        separator_mesh = Gtk.HSeparator()
         workspace.pack_start(separator_mesh, False)
         separator_mesh.show()
 
-        label_mesh = gtk.Label(_('Collaboration'))
+        label_mesh = Gtk.Label(label=_('Collaboration'))
         label_mesh.set_alignment(0, 0)
-        workspace.pack_start(label_mesh, expand=False)
+        workspace.pack_start(label_mesh, False, True, 0)
         label_mesh.show()
-        box_mesh = gtk.VBox()
+        box_mesh = Gtk.VBox()
         box_mesh.set_border_width(style.DEFAULT_SPACING * 2)
         box_mesh.set_spacing(style.DEFAULT_SPACING)
 
-        server_info = gtk.Label(_("The server is the equivalent of what"
+        server_info = Gtk.Label(_("The server is the equivalent of what"
                                   " room you are in; people on the same server"
                                   " will be able to see each other, even when"
                                   " they aren't on the same network."))
         server_info.set_alignment(0, 0)
         server_info.set_line_wrap(True)
-        box_mesh.pack_start(server_info, expand=False)
+        box_mesh.pack_start(server_info, False, True, 0)
         server_info.show()
 
-        box_server = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_server = gtk.Label(_('Server:'))
+        box_server = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_server = Gtk.Label(label=_('Server:'))
         label_server.set_alignment(1, 0.5)
-        label_server.modify_fg(gtk.STATE_NORMAL,
+        label_server.modify_fg(Gtk.StateType.NORMAL,
                                style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_server.pack_start(label_server, expand=False)
+        box_server.pack_start(label_server, False, True, 0)
         group.add_widget(label_server)
         label_server.show()
-        self._entry = gtk.Entry()
+        self._entry = Gtk.Entry()
         self._entry.set_alignment(0)
-        self._entry.modify_bg(gtk.STATE_INSENSITIVE,
+        self._entry.modify_bg(Gtk.StateType.INSENSITIVE,
                         style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(gtk.STATE_INSENSITIVE,
+        self._entry.modify_base(Gtk.StateType.INSENSITIVE,
                           style.COLOR_WHITE.get_gdk_color())
-        self._entry.set_size_request(int(gtk.gdk.screen_width() / 3), -1)
-        box_server.pack_start(self._entry, expand=False)
+        self._entry.set_size_request(int(Gdk.Screen.width() / 3), -1)
+        box_server.pack_start(self._entry, False, True, 0)
         self._entry.show()
-        box_mesh.pack_start(box_server, expand=False)
+        box_mesh.pack_start(box_server, False, True, 0)
         box_server.show()
 
         self._jabber_alert = InlineAlert()
-        label_jabber_error = gtk.Label()
+        label_jabber_error = Gtk.Label()
         group.add_widget(label_jabber_error)
-        self._jabber_alert_box.pack_start(label_jabber_error, expand=False)
+        self._jabber_alert_box.pack_start(label_jabber_error, False, True, 0)
         label_jabber_error.show()
-        self._jabber_alert_box.pack_start(self._jabber_alert, expand=False)
-        box_mesh.pack_end(self._jabber_alert_box, expand=False)
+        self._jabber_alert_box.pack_start(self._jabber_alert, False, True, 0)
+        box_mesh.pack_end(self._jabber_alert_box, False, True, 0)
         self._jabber_alert_box.show()
         if 'jabber' in self.restart_alerts:
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_alert.show()
 
-        workspace.pack_start(box_mesh, expand=False)
+        workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
 
-        scrolled = gtk.ScrolledWindow()
-        scrolled.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled.add_with_viewport(workspace)
         scrolled.show()
         self.add(scrolled)
@@ -230,8 +230,8 @@ class Network(SectionView):
 
     def __jabber_changed_cb(self, widget, data=None):
         if self._jabber_sid:
-            gobject.source_remove(self._jabber_sid)
-        self._jabber_sid = gobject.timeout_add(_APPLY_TIMEOUT,
+            GObject.source_remove(self._jabber_sid)
+        self._jabber_sid = GObject.timeout_add(_APPLY_TIMEOUT,
                                                self.__jabber_timeout_cb,
                                                widget)
 

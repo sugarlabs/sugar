@@ -14,26 +14,26 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 from gettext import gettext as _
 
 
-class SectionView(gtk.VBox):
+class SectionView(Gtk.VBox):
     __gtype_name__ = 'SugarSectionView'
 
     __gsignals__ = {
-        'request-close': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'request-close': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     __gproperties__ = {
-        'is_valid': (bool, None, None, True, gobject.PARAM_READWRITE),
+        'is_valid': (bool, None, None, True, GObject.PARAM_READWRITE),
     }
 
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
         self._is_valid = True
         self.auto_close = False
         self.needs_restart = False

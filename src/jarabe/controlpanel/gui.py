@@ -18,8 +18,8 @@ import os
 import logging
 from gettext import gettext as _
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
@@ -35,21 +35,21 @@ POWERD_FLAG_DIR = '/etc/powerd/flags'
 _logger = logging.getLogger('ControlPanel')
 
 
-class ControlPanel(gtk.Window):
+class ControlPanel(Gtk.Window):
     __gtype_name__ = 'SugarControlPanel'
 
     def __init__(self):
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
 
-        self._max_columns = int(0.285 * (float(gtk.gdk.screen_width()) /
+        self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
             style.GRID_CELL_SIZE - 3))
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
-        width = gtk.gdk.screen_width() - offset * 2
-        height = gtk.gdk.screen_height() - offset * 2
+        width = Gdk.Screen.width() - offset * 2
+        height = Gdk.Screen.height() - offset * 2
         self.set_size_request(width, height)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
@@ -63,14 +63,14 @@ class ControlPanel(gtk.Window):
         self._section_toolbar = None
         self._main_toolbar = None
 
-        self._vbox = gtk.VBox()
-        self._hbox = gtk.HBox()
-        self._vbox.pack_start(self._hbox)
+        self._vbox = Gtk.VBox()
+        self._hbox = Gtk.HBox()
+        self._vbox.pack_start(self._hbox, True, True, 0)
         self._hbox.show()
 
-        self._main_view = gtk.EventBox()
-        self._hbox.pack_start(self._main_view)
-        self._main_view.modify_bg(gtk.STATE_NORMAL,
+        self._main_view = Gtk.EventBox()
+        self._hbox.pack_start(self._main_view, True, True, 0)
+        self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._main_view.show()
 
@@ -86,7 +86,7 @@ class ControlPanel(gtk.Window):
         self._show_main_view()
 
     def __realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.window.set_accept_focus(True)
 
     def _set_canvas(self, canvas):
@@ -103,7 +103,7 @@ class ControlPanel(gtk.Window):
         self._vbox.reorder_child(toolbar, 0)
         self._toolbar = toolbar
         if not self._separator:
-            self._separator = gtk.HSeparator()
+            self._separator = Gtk.HSeparator()
             self._vbox.pack_start(self._separator, False)
             self._vbox.reorder_child(self._separator, 1)
             self._separator.show()
@@ -111,17 +111,17 @@ class ControlPanel(gtk.Window):
     def _setup_main(self):
         self._main_toolbar = MainToolbar()
 
-        self._table = gtk.Table()
+        self._table = Gtk.Table()
         self._table.set_col_spacings(style.GRID_CELL_SIZE)
         self._table.set_row_spacings(style.GRID_CELL_SIZE)
         self._table.set_border_width(style.GRID_CELL_SIZE)
 
-        self._scrolledwindow = gtk.ScrolledWindow()
-        self._scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC,
-                                        gtk.POLICY_AUTOMATIC)
+        self._scrolledwindow = Gtk.ScrolledWindow()
+        self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                        Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
         child = self._scrolledwindow.get_child()
-        child.modify_bg(gtk.STATE_NORMAL, style.COLOR_BLACK.get_gdk_color())
+        child.modify_bg(Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
 
         self._setup_options()
         self._main_toolbar.connect('stop-clicked',
@@ -180,7 +180,7 @@ class ControlPanel(gtk.Window):
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
         self._set_canvas(self._scrolledwindow)
-        self._main_view.modify_bg(gtk.STATE_NORMAL,
+        self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._table.show()
         self._scrolledwindow.show()
@@ -211,7 +211,7 @@ class ControlPanel(gtk.Window):
 
         icon = self._section_toolbar.get_icon()
         icon.set_from_icon_name(self._options[option]['icon'],
-                                gtk.ICON_SIZE_LARGE_TOOLBAR)
+                                Gtk.IconSize.LARGE_TOOLBAR)
         icon.props.xo_color = self._options[option]['color']
         title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])
@@ -228,7 +228,7 @@ class ControlPanel(gtk.Window):
         model = ModelWrapper(mod)
 
         try:
-            self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
+            self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
             self._section_view = view_class(model,
                                             self._options[option]['alerts'])
 
@@ -241,7 +241,7 @@ class ControlPanel(gtk.Window):
                                    self.__valid_section_cb)
         self._section_view.connect('request-close',
                                    self.__close_request_cb)
-        self._main_view.modify_bg(gtk.STATE_NORMAL,
+        self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_WHITE.get_gdk_color())
 
     def set_section_view_auto_close(self):
@@ -298,16 +298,16 @@ class ControlPanel(gtk.Window):
             alert.props.msg = _('Changes require restart')
 
             icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel changes'), icon)
+            alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel changes'), icon)
             icon.show()
 
             if self._current_option != 'aboutme':
                 icon = Icon(icon_name='dialog-ok')
-                alert.add_button(gtk.RESPONSE_ACCEPT, _('Later'), icon)
+                alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
                 icon.show()
 
             icon = Icon(icon_name='system-restart')
-            alert.add_button(gtk.RESPONSE_APPLY, _('Restart now'), icon)
+            alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
             icon.show()
 
             self._vbox.pack_start(alert, False)
@@ -321,15 +321,15 @@ class ControlPanel(gtk.Window):
         self._vbox.remove(alert)
         self._section_toolbar.accept_button.set_sensitive(True)
         self._section_toolbar.cancel_button.set_sensitive(True)
-        if response_id is gtk.RESPONSE_CANCEL:
+        if response_id is Gtk.ResponseType.CANCEL:
             self._section_view.undo()
             self._section_view.setup()
             self._options[self._current_option]['alerts'] = []
-        elif response_id is gtk.RESPONSE_ACCEPT:
+        elif response_id is Gtk.ResponseType.ACCEPT:
             self._options[self._current_option]['alerts'] = \
                 self._section_view.restart_alerts
             self._show_main_view()
-        elif response_id is gtk.RESPONSE_APPLY:
+        elif response_id is Gtk.ResponseType.APPLY:
             session_manager = get_session_manager()
             session_manager.logout()
 
@@ -378,14 +378,14 @@ class ModelWrapper(object):
                     _logger.debug('Error undo option: %s', detail)
 
 
-class _SectionIcon(gtk.EventBox):
+class _SectionIcon(Gtk.EventBox):
     __gtype_name__ = 'SugarSectionIcon'
 
     __gproperties__ = {
-        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
-        'pixel-size': (object, None, None, gobject.PARAM_READWRITE),
-        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
-        'title': (str, None, None, None, gobject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
+        'pixel-size': (object, None, None, GObject.PARAM_READWRITE),
+        'xo-color': (object, None, None, GObject.PARAM_READWRITE),
+        'title': (str, None, None, None, GObject.PARAM_READWRITE),
     }
 
     def __init__(self, **kwargs):
@@ -394,23 +394,23 @@ class _SectionIcon(gtk.EventBox):
         self._xo_color = None
         self._title = 'No Title'
 
-        gobject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
 
-        self._vbox = gtk.VBox()
+        self._vbox = Gtk.VBox()
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=self._xo_color)
         self._vbox.pack_start(self._icon, expand=False, fill=False)
 
-        self._label = gtk.Label(self._title)
-        self._label.modify_fg(gtk.STATE_NORMAL,
+        self._label = Gtk.Label(label=self._title)
+        self._label.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(self._label, expand=False, fill=False)
 
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self.set_visible_window(False)
         self.set_app_paintable(True)
-        self.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+        self.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
         self.add(self._vbox)
         self._vbox.show()

@@ -19,10 +19,10 @@ import logging
 from gettext import gettext as _
 import math
 
-import gobject
-import gconf
+from gi.repository import GObject
+from gi.repository import GConf
 import glib
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
@@ -52,7 +52,7 @@ from jarabe.desktop.viewcontainer import ViewContainer
 
 _logger = logging.getLogger('FavoritesView')
 
-_ICON_DND_TARGET = ('activity-icon', gtk.TARGET_SAME_WIDGET, 0)
+_ICON_DND_TARGET = ('activity-icon', Gtk.TargetFlags.SAME_WIDGET, 0)
 
 LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
         #favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
@@ -66,14 +66,14 @@ about the layout can be accessed with fields of the class."""
 _favorites_settings = None
 
 
-class FavoritesBox(gtk.VBox):
+class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._view = FavoritesView(self)
-        self.pack_start(self._view)
+        self.pack_start(self._view, True, True, 0)
         self._view.show()
 
         self._alert = None
@@ -116,8 +116,8 @@ class FavoritesView(ViewContainer):
                                owner_icon=owner_icon,
                                activity_icon=current_activity)
 
-        self.add_events(gtk.gdk.BUTTON_PRESS_MASK |
-                        gtk.gdk.POINTER_MOTION_HINT_MASK)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
+                        Gdk.EventMask.POINTER_MOTION_HINT_MASK)
         self.drag_dest_set(0, [], 0)
         self.connect('drag-motion', self.__drag_motion_cb)
         self.connect('drag-drop', self.__drag_drop_cb)
@@ -134,7 +134,7 @@ class FavoritesView(ViewContainer):
         self._alert = None
         self._resume_mode = True
 
-        gobject.idle_add(self.__connect_to_bundle_registry_cb)
+        GObject.idle_add(self.__connect_to_bundle_registry_cb)
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
@@ -168,7 +168,7 @@ class FavoritesView(ViewContainer):
             child.connect('button-release-event', self.__button_release_cb)
             child.connect('motion-notify-event', self.__motion_notify_event_cb)
             child.connect('drag-begin', self.__drag_begin_cb)
-        if child.flags() & gtk.REALIZED:
+        if child.get_realized():
             child.set_parent_window(self.get_parent_window())
         child.set_parent(self)
 
@@ -179,7 +179,7 @@ class FavoritesView(ViewContainer):
             return False
 
     def __button_press_cb(self, widget, event):
-        if event.button == 1 and event.type == gtk.gdk.BUTTON_PRESS:
+        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
             self._last_clicked_icon = widget
             self._pressed_button = event.button
             self._press_start_x = event.x
@@ -188,7 +188,7 @@ class FavoritesView(ViewContainer):
 
     def __motion_notify_event_cb(self, widget, event):
         # if the mouse button is not pressed, no drag should occurr
-        if not event.state & gtk.gdk.BUTTON1_MASK:
+        if not event.get_state() & Gdk.ModifierType.BUTTON1_MASK:
             self._pressed_button = None
             return False
 
@@ -204,13 +204,13 @@ class FavoritesView(ViewContainer):
                                        int(y)):
             self._dragging = True
             context_ = widget.drag_begin([_ICON_DND_TARGET],
-                                         gtk.gdk.ACTION_MOVE,
+                                         Gdk.DragAction.MOVE,
                                          1,
                                          event)
         return False
 
     def __drag_begin_cb(self, widget, context):
-        pixbuf = gtk.gdk.pixbuf_new_from_file(widget.props.file_name)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(widget.props.file_name)
 
         self._hot_x = pixbuf.props.width / 2
         self._hot_y = pixbuf.props.height / 2
@@ -323,7 +323,7 @@ class FavoritesView(ViewContainer):
             self._owner_icon.set_registered()
 
         ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, _('Ok'), ok_icon)
+        alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
 
         self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
@@ -512,8 +512,8 @@ class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
 
     __gsignals__ = {
-        'entry-activate': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE, ([object])),
+        'entry-activate': (GObject.SignalFlags.RUN_FIRST,
+                           None, ([object])),
     }
 
     def __init__(self, activity_info, journal_entries):
@@ -527,7 +527,7 @@ class FavoritePalette(ActivityPalette):
 
         self.props.icon = Icon(file=activity_info.get_icon(),
                                xo_color=xo_color,
-                               icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+                               icon_size=Gtk.IconSize.LARGE_TOOLBAR)
 
         if journal_entries:
             title = journal_entries[0]['title']
@@ -546,7 +546,7 @@ class FavoritePalette(ActivityPalette):
                 menu_item.show()
 
             if journal_entries:
-                separator = gtk.SeparatorMenuItem()
+                separator = Gtk.SeparatorMenuItem()
                 menu_items.append(separator)
                 separator.show()
 
@@ -576,7 +576,7 @@ class CurrentActivityIcon(EventIcon):
 
     def __button_release_event_cb(self, icon, event):
         window = self._home_model.get_active_activity().get_window()
-        window.activate(gtk.get_current_event_time())
+        window.activate(Gtk.get_current_event_time())
 
     def _update(self):
         self.props.file_name = self._home_activity.get_icon_path()
@@ -603,7 +603,7 @@ class OwnerIcon(BuddyIcon):
     __gtype_name__ = 'SugarFavoritesOwnerIcon'
 
     __gsignals__ = {
-        'register-activate': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'register-activate': (GObject.SignalFlags.RUN_FIRST, None,
                               ([])),
     }
 
@@ -622,7 +622,7 @@ class OwnerIcon(BuddyIcon):
 
         palette = BuddyMenu(get_owner_instance())
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         backup_url = client.get_string('/desktop/sugar/backup_url')
 
         if not backup_url:
@@ -653,7 +653,7 @@ class FavoritesSetting(object):
     _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 
     def __init__(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._layout = client.get_string(self._FAVORITES_KEY)
         logging.debug('FavoritesSetting layout %r', self._layout)
 
@@ -669,7 +669,7 @@ class FavoritesSetting(object):
         if layout != self._layout:
             self._layout = layout
 
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             client.set_string(self._FAVORITES_KEY, layout)
 
             self.changed.send(self)

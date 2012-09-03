@@ -17,9 +17,9 @@
 from gettext import gettext as _
 import logging
 
-import gobject
-import gtk
-import wnck
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Wnck
 
 from sugar.graphics import style
 from sugar.graphics.toolbutton import ToolButton
@@ -30,24 +30,24 @@ from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.volumestoolbar import VolumesToolbar
 
 
-class ObjectChooser(gtk.Window):
+class ObjectChooser(Gtk.Window):
 
     __gtype_name__ = 'ObjectChooser'
 
     __gsignals__ = {
-        'response': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([int])),
+        'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
     def __init__(self, parent=None, what_filter=''):
-        gtk.Window.__init__(self)
-        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        GObject.GObject.__init__(self)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_decorated(False)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)
 
         self._selected_object_id = None
 
-        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',
                      self.__visibility_notify_event_cb)
         self.connect('delete-event', self.__delete_event_cb)
@@ -58,10 +58,10 @@ class ObjectChooser(gtk.Window):
         else:
             self.connect('realize', self.__realize_cb, parent)
 
-            screen = wnck.screen_get_default()
+            screen = Wnck.Screen.get_default()
             screen.connect('window-closed', self.__window_closed_cb, parent)
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.add(vbox)
         vbox.show()
 
@@ -70,35 +70,35 @@ class ObjectChooser(gtk.Window):
         title_box.close_button.connect('clicked',
                                        self.__close_button_clicked_cb)
         title_box.set_size_request(-1, style.GRID_CELL_SIZE)
-        vbox.pack_start(title_box, expand=False)
+        vbox.pack_start(title_box, False, True, 0)
         title_box.show()
 
-        separator = gtk.HSeparator()
-        vbox.pack_start(separator, expand=False)
+        separator = Gtk.HSeparator()
+        vbox.pack_start(separator, False, True, 0)
         separator.show()
 
         self._toolbar = MainToolbox()
         self._toolbar.connect('query-changed', self.__query_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
-        vbox.pack_start(self._toolbar, expand=False)
+        vbox.pack_start(self._toolbar, False, True, 0)
         self._toolbar.show()
 
         self._list_view = ChooserListView()
         self._list_view.connect('entry-activated', self.__entry_activated_cb)
-        vbox.pack_start(self._list_view)
+        vbox.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
         self._toolbar.set_mount_point('/')
 
-        width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
+        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
+        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         if what_filter:
             self._toolbar.set_what_filter(what_filter)
 
     def __realize_cb(self, chooser, parent):
-        self.window.set_transient_for(parent)
+        self.set_transient_for(parent)
         # TODO: Should we disconnect the signal here?
 
     def __window_closed_cb(self, screen, window, parent):
@@ -107,18 +107,18 @@ class ObjectChooser(gtk.Window):
 
     def __entry_activated_cb(self, list_view, uid):
         self._selected_object_id = uid
-        self.emit('response', gtk.RESPONSE_ACCEPT)
+        self.emit('response', Gtk.ResponseType.ACCEPT)
 
     def __delete_event_cb(self, chooser, event):
-        self.emit('response', gtk.RESPONSE_DELETE_EVENT)
+        self.emit('response', Gtk.ResponseType.DELETE_EVENT)
 
     def __key_press_event_cb(self, widget, event):
-        keyname = gtk.gdk.keyval_name(event.keyval)
+        keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
-            self.emit('response', gtk.RESPONSE_DELETE_EVENT)
+            self.emit('response', Gtk.ResponseType.DELETE_EVENT)
 
     def __close_button_clicked_cb(self, button):
-        self.emit('response', gtk.RESPONSE_DELETE_EVENT)
+        self.emit('response', Gtk.ResponseType.DELETE_EVENT)
 
     def get_selected_object_id(self):
         return self._selected_object_id
@@ -132,7 +132,7 @@ class ObjectChooser(gtk.Window):
 
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
-        visible = event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED
+        visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
 
@@ -142,7 +142,7 @@ class TitleBox(VolumesToolbar):
     def __init__(self):
         VolumesToolbar.__init__(self)
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_markup('<b>%s</b>' % _('Choose an object'))
         label.set_alignment(0, 0.5)
         self._add_widget(label, expand=True)
@@ -153,7 +153,7 @@ class TitleBox(VolumesToolbar):
         self.close_button.show()
 
     def _add_widget(self, widget, expand=False):
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)
@@ -167,8 +167,8 @@ class ChooserListView(BaseListView):
     __gtype_name__ = 'ChooserListView'
 
     __gsignals__ = {
-        'entry-activated': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'entry-activated': (GObject.SignalFlags.RUN_FIRST,
+                            None,
                             ([str])),
     }
 

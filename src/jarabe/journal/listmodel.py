@@ -17,8 +17,8 @@
 import logging
 
 import simplejson
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 from gettext import gettext as _
 
 from sugar.graphics.xocolor import XoColor
@@ -34,12 +34,12 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 
-class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
+class ListModel(Gtk.GenericTreeModel, Gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
 
     __gsignals__ = {
-        'ready': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'progress': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'ready': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'progress': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     COLUMN_UID = 0
@@ -73,7 +73,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
     _PAGE_SIZE = 10
 
     def __init__(self, query):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._last_requested_index = None
         self._cached_row = None
@@ -140,7 +140,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
             xo_color = misc.get_icon_color(metadata)
         self._cached_row.append(xo_color)
 
-        title = gobject.markup_escape_text(metadata.get('title',
+        title = GObject.markup_escape_text(metadata.get('title',
                                            _('Untitled')))
         self._cached_row.append('<b>%s</b>' % (title, ))
 
@@ -217,7 +217,7 @@ class ListModel(gtk.GenericTreeModel, gtk.TreeDragSource):
         return None
 
     def on_get_flags(self):
-        return gtk.TREE_MODEL_ITERS_PERSIST | gtk.TREE_MODEL_LIST_ONLY
+        return Gtk.TREE_MODEL_ITERS_PERSIST | Gtk.TREE_MODEL_LIST_ONLY
 
     def on_iter_children(self, iterator):
         return None

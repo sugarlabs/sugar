@@ -18,8 +18,8 @@ from gettext import gettext as _
 import logging
 import os
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.alert import Alert
@@ -32,13 +32,13 @@ _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 
-class HomeBox(gtk.VBox):
+class HomeBox(Gtk.VBox):
     __gtype_name__ = 'SugarHomeBox'
 
     def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the home view')
 
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._favorites_box = favoritesview.FavoritesBox()
         self._list_view = ActivitiesList()
@@ -60,12 +60,12 @@ class HomeBox(gtk.VBox):
                             ' compatibility with your new software')
 
         cancel_icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), cancel_icon)
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), cancel_icon)
 
-        alert.add_button(gtk.RESPONSE_REJECT, _('Later'))
+        alert.add_button(Gtk.ResponseType.REJECT, _('Later'))
 
         erase_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, _('Check now'), erase_icon)
+        alert.add_button(Gtk.ResponseType.OK, _('Check now'), erase_icon)
 
         if self._list_view in self.get_children():
             self._list_view.add_alert(alert)
@@ -79,7 +79,7 @@ class HomeBox(gtk.VBox):
         else:
             self._favorites_box.remove_alert()
 
-        if response_id != gtk.RESPONSE_REJECT:
+        if response_id != Gtk.ResponseType.REJECT:
             update_trigger_file = os.path.expanduser('~/.sugar-update')
             try:
                 os.unlink(update_trigger_file)
@@ -87,7 +87,7 @@ class HomeBox(gtk.VBox):
                 logging.error('Software-update: Can not remove file %s',
                     update_trigger_file)
 
-        if response_id == gtk.RESPONSE_OK:
+        if response_id == Gtk.ResponseType.OK:
             from jarabe.controlpanel.gui import ControlPanel
             panel = ControlPanel()
             panel.set_transient_for(self.get_toplevel())

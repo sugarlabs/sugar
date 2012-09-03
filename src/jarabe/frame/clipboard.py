@@ -20,8 +20,8 @@ import shutil
 import urlparse
 import tempfile
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar import mime
 
@@ -31,21 +31,21 @@ from jarabe.frame.clipboardobject import ClipboardObject, Format
 _instance = None
 
 
-class Clipboard(gobject.GObject):
+class Clipboard(GObject.GObject):
 
     __gsignals__ = {
-        'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-added': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
-        'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
                         ([long])),
-        'object-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
                         ([long])),
-        'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._objects = {}
         self._next_id = 0
@@ -99,7 +99,7 @@ class Clipboard(gobject.GObject):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
         if not self._objects:
-            gtk_clipboard = gtk.Clipboard()
+            gtk_clipboard = Gtk.Clipboard()
             gtk_clipboard.clear()
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)

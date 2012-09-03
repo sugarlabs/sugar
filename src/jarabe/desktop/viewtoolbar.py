@@ -20,8 +20,8 @@
 from gettext import gettext as _
 import logging
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 from sugar.graphics import style
 from sugar.graphics import iconentry
@@ -34,25 +34,25 @@ _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
 
 
-class ViewToolbar(gtk.Toolbar):
+class ViewToolbar(Gtk.Toolbar):
     __gtype_name__ = 'SugarViewToolbar'
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([str])),
-        'view-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'view-changed': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
     }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._query = None
         self._autosearch_timer = None
 
         self._add_separator()
 
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
         tool_item.show()
 
@@ -93,7 +93,7 @@ class ViewToolbar(gtk.Toolbar):
         self._list_button.hide()
 
     def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         if expand:
             separator.set_expand(True)
@@ -105,7 +105,7 @@ class ViewToolbar(gtk.Toolbar):
 
     def _entry_activated_cb(self, entry):
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
+            GObject.source_remove(self._autosearch_timer)
         new_query = entry.props.text
         if self._query != new_query:
             self._query = new_query
@@ -117,8 +117,8 @@ class ViewToolbar(gtk.Toolbar):
             return
 
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
+            GObject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
                                                      self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
@@ -147,15 +147,15 @@ class FavoritesButton(RadioToolButton):
         self._layout = favorites_settings.layout
         self._update_icon()
 
-        # someday, this will be a gtk.Table()
-        layouts_grid = gtk.HBox()
+        # someday, this will be a Gtk.Table()
+        layouts_grid = Gtk.HBox()
         layout_item = None
         for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
             layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
                                           group=layout_item, active=False)
             if layoutid == self._layout:
                 layout_item.set_active(True)
-            layouts_grid.pack_start(layout_item, fill=False)
+            layouts_grid.pack_start(layout_item, True, False, 0)
             layout_item.connect('toggled', self.__layout_activate_cb,
                                 layoutid)
         layouts_grid.show_all()

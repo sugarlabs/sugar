@@ -18,10 +18,10 @@
 import logging
 import time
 
-import gconf
-import wnck
-import gobject
-import gtk
+from gi.repository import GConf
+from gi.repository import Wnck
+from gi.repository import GObject
+from gi.repository import Gtk
 import dbus
 
 from sugar import wm
@@ -37,7 +37,7 @@ _SERVICE_INTERFACE = 'org.laptop.Activity'
 _model = None
 
 
-class Activity(gobject.GObject):
+class Activity(GObject.GObject):
     """Activity which appears in the "Home View" of the Sugar shell
 
     This class stores the Sugar Shell's metadata regarding a
@@ -64,7 +64,7 @@ class Activity(gobject.GObject):
         _windows -- WnckWindows registered for the activity. The lowest
                     one in the stack is the main window.
         """
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._windows = []
         self._service = None
@@ -76,7 +76,7 @@ class Activity(gobject.GObject):
         if color is not None:
             self._color = color
         else:
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = client.get_string('/desktop/sugar/user/color')
             self._color = XoColor(color)
 
@@ -101,7 +101,7 @@ class Activity(gobject.GObject):
     def get_launch_status(self):
         return self._launch_status
 
-    launch_status = gobject.property(getter=get_launch_status)
+    launch_status = GObject.property(getter=get_launch_status)
 
     def add_window(self, window):
         """Add a window to the windows stack."""
@@ -137,9 +137,9 @@ class Activity(gobject.GObject):
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
         if self.is_journal():
-            icon_theme = gtk.icon_theme_get_default()
+            icon_theme = Gtk.IconTheme.get_default()
             info = icon_theme.lookup_icon('activity-journal',
-                                          gtk.ICON_SIZE_SMALL_TOOLBAR, 0)
+                                          Gtk.IconSize.SMALL_TOOLBAR, 0)
             if not info:
                 return None
             fname = info.get_filename()
@@ -310,7 +310,7 @@ class Activity(gobject.GObject):
             self._set_launch_status(Activity.LAUNCH_FAILED)
 
 
-class ShellModel(gobject.GObject):
+class ShellModel(GObject.GObject):
     """Model of the shell (activity management)
 
     The ShellModel is basically the point of registration
@@ -326,22 +326,22 @@ class ShellModel(gobject.GObject):
     """
 
     __gsignals__ = {
-        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
-        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT])),
-        'active-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                    gobject.TYPE_NONE,
-                                    ([gobject.TYPE_PYOBJECT])),
-        'tabbing-activity-changed': (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE,
-                                     ([gobject.TYPE_PYOBJECT])),
-        'launch-started': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
-        'launch-completed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                             ([gobject.TYPE_PYOBJECT])),
-        'launch-failed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT])),
+        'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([GObject.TYPE_PYOBJECT])),
+        'activity-removed': (GObject.SignalFlags.RUN_FIRST, None,
+                             ([GObject.TYPE_PYOBJECT])),
+        'active-activity-changed': (GObject.SignalFlags.RUN_FIRST,
+                                    None,
+                                    ([GObject.TYPE_PYOBJECT])),
+        'tabbing-activity-changed': (GObject.SignalFlags.RUN_FIRST,
+                                     None,
+                                     ([GObject.TYPE_PYOBJECT])),
+        'launch-started': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([GObject.TYPE_PYOBJECT])),
+        'launch-completed': (GObject.SignalFlags.RUN_FIRST, None,
+                             ([GObject.TYPE_PYOBJECT])),
+        'launch-failed': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([GObject.TYPE_PYOBJECT])),
     }
 
     ZOOM_MESH = 0
@@ -350,9 +350,9 @@ class ShellModel(gobject.GObject):
     ZOOM_ACTIVITY = 3
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
-        self._screen = wnck.screen_get_default()
+        self._screen = Wnck.Screen.get_default()
         self._screen.connect('window-opened', self._window_opened_cb)
         self._screen.connect('window-closed', self._window_closed_cb)
         self._screen.connect('active-window-changed',
@@ -382,9 +382,9 @@ class ShellModel(gobject.GObject):
             del self._launchers[activity_id]
 
     def _update_zoom_level(self, window):
-        if window.get_window_type() == wnck.WINDOW_DIALOG:
+        if window.get_window_type() == Wnck.WindowType.DIALOG:
             return
-        elif window.get_window_type() == wnck.WINDOW_NORMAL:
+        elif window.get_window_type() == Wnck.WindowType.NORMAL:
             new_level = self.ZOOM_ACTIVITY
         else:
             new_level = self._desktop_level
@@ -401,9 +401,9 @@ class ShellModel(gobject.GObject):
             return
 
         if old_level != self.ZOOM_ACTIVITY:
-            screen = gtk.gdk.screen_get_default()
+            screen = Gdk.Screen.get_default()
             active_window_type = screen.get_active_window().get_type_hint()
-            if active_window_type != gtk.gdk.WINDOW_TYPE_HINT_DESKTOP:
+            if active_window_type != Gdk.WindowTypeHint.DESKTOP:
                 return
 
         self._zoom_level = new_level
@@ -421,7 +421,7 @@ class ShellModel(gobject.GObject):
             # (e.g. during sugar launch, the Journal starts in this state)
             window = self._active_activity.get_window()
             if window:
-                window.activate(x_event_time or gtk.get_current_event_time())
+                window.activate(x_event_time or Gtk.get_current_event_time())
 
     def _get_zoom_level(self):
         return self._zoom_level
@@ -521,8 +521,8 @@ class ShellModel(gobject.GObject):
            them.
 
          """
-        if window.get_window_type() == wnck.WINDOW_NORMAL or \
-                window.get_window_type() == wnck.WINDOW_SPLASHSCREEN:
+        if window.get_window_type() == Wnck.WindowType.NORMAL or \
+                window.get_window_type() == Wnck.WindowType.SPLASHSCREEN:
             home_activity = None
 
             activity_id = wm.get_activity_id(window)
@@ -538,7 +538,7 @@ class ShellModel(gobject.GObject):
                 home_activity = self.get_activity_by_id(activity_id)
 
                 xid = window.get_xid()
-                gdk_window = gtk.gdk.window_foreign_new(xid)
+                gdk_window = Gdk.window_foreign_new(xid)
                 gdk_window.set_decorations(0)
 
                 window.maximize()
@@ -553,7 +553,7 @@ class ShellModel(gobject.GObject):
                 logging.debug('window registered for %s', activity_id)
                 home_activity.add_window(window)
 
-            if window.get_window_type() != wnck.WINDOW_SPLASHSCREEN \
+            if window.get_window_type() != Wnck.WindowType.SPLASHSCREEN \
                     and home_activity.get_launch_status() == Activity.LAUNCHING:
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
@@ -564,8 +564,8 @@ class ShellModel(gobject.GObject):
                 self._set_active_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
-        if window.get_window_type() == wnck.WINDOW_NORMAL or \
-                window.get_window_type() == wnck.WINDOW_SPLASHSCREEN:
+        if window.get_window_type() == Wnck.WindowType.NORMAL or \
+                window.get_window_type() == Wnck.WindowType.SPLASHSCREEN:
             xid = window.get_xid()
             activity = self._get_activity_by_xid(xid)
             if activity is not None:
@@ -592,7 +592,7 @@ class ShellModel(gobject.GObject):
         if window is None:
             return
 
-        if window.get_window_type() != wnck.WINDOW_DIALOG:
+        if window.get_window_type() != Wnck.WindowType.DIALOG:
             while window.get_transient() is not None:
                 window = window.get_transient()
 
@@ -608,7 +608,7 @@ class ShellModel(gobject.GObject):
 
     def _remove_activity(self, home_activity):
         if home_activity == self._active_activity:
-            windows = wnck.screen_get_default().get_windows_stacked()
+            windows = Wnck.Screen.get_default().get_windows_stacked()
             windows.reverse()
             for window in windows:
                 new_activity = self._get_activity_by_xid(window.get_xid())
@@ -639,7 +639,7 @@ class ShellModel(gobject.GObject):
 
         # FIXME: better learn about finishing processes by receiving a signal.
         # Now just check whether an activity has a window after ~90sec
-        gobject.timeout_add_seconds(90, self._check_activity_launched,
+        GObject.timeout_add_seconds(90, self._check_activity_launched,
                                     activity_id)
 
     def notify_launch_failed(self, activity_id):

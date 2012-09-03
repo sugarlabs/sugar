@@ -14,8 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
-import gconf
+from gi.repository import Gtk
+from gi.repository import GConf
 import logging
 
 from sugar.graphics.icon import Icon
@@ -23,10 +23,10 @@ from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
 
-class KeepIcon(gtk.ToggleButton):
+class KeepIcon(Gtk.ToggleButton):
     def __init__(self):
-        gtk.ToggleButton.__init__(self)
-        self.set_relief(gtk.RELIEF_NONE)
+        GObject.GObject.__init__(self)
+        self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
 
         self._icon = Icon(icon_name='emblem-favorite',
@@ -38,7 +38,7 @@ class KeepIcon(gtk.ToggleButton):
 
     def __toggled_cb(self, widget):
         if self.get_active():
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             self._icon.props.xo_color = color
             logging.debug('KEEPICON: setting xo_color')

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.palette import WidgetInvoker
@@ -24,15 +24,15 @@ def _get_screen_area():
     frame_thickness = style.GRID_CELL_SIZE
 
     x = y = frame_thickness
-    width = gtk.gdk.screen_width() - frame_thickness
-    height = gtk.gdk.screen_height() - frame_thickness
+    width = Gdk.Screen.width() - frame_thickness
+    height = Gdk.Screen.height() - frame_thickness
 
-    return gtk.gdk.Rectangle(x, y, width, height)
+    return (x, y, width, height)
 
 
 class FrameWidgetInvoker(WidgetInvoker):
     def __init__(self, widget):
-        WidgetInvoker.__init__(self, widget, widget.child)
+        WidgetInvoker.__init__(self, widget, widget.get_child())
 
         self._position_hint = self.ANCHORED
         self._screen_area = _get_screen_area()

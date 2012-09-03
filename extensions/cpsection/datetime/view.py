@@ -14,8 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 from gettext import gettext as _
 
 from sugar.graphics import style
@@ -43,45 +43,45 @@ class TimeZone(SectionView):
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                  'system-search')
         self._entry.add_clear_button()
-        self._entry.modify_bg(gtk.STATE_INSENSITIVE,
+        self._entry.modify_bg(Gtk.StateType.INSENSITIVE,
                         style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(gtk.STATE_INSENSITIVE,
+        self._entry.modify_base(Gtk.StateType.INSENSITIVE,
                           style.COLOR_WHITE.get_gdk_color())
         self.pack_start(self._entry, False)
         self._entry.show()
 
-        self._scrolled_window = gtk.ScrolledWindow()
-        self._scrolled_window.set_policy(gtk.POLICY_NEVER,
-                                         gtk.POLICY_AUTOMATIC)
-        self._scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                         Gtk.PolicyType.AUTOMATIC)
+        self._scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
 
-        self._store = gtk.ListStore(gobject.TYPE_STRING)
+        self._store = Gtk.ListStore(GObject.TYPE_STRING)
         zones = model.read_all_timezones()
         for zone in zones:
             self._store.append([zone])
 
-        self._treeview = gtk.TreeView(self._store)
+        self._treeview = Gtk.TreeView(self._store)
         self._treeview.set_search_entry(self._entry)
         self._treeview.set_search_equal_func(self._search)
         self._treeview.set_search_column(0)
         self._scrolled_window.add(self._treeview)
         self._treeview.show()
 
-        self._timezone_column = gtk.TreeViewColumn(_('Timezone'))
-        self._cell = gtk.CellRendererText()
+        self._timezone_column = Gtk.TreeViewColumn(_('Timezone'))
+        self._cell = Gtk.CellRendererText()
         self._timezone_column.pack_start(self._cell, True)
         self._timezone_column.add_attribute(self._cell, 'text', 0)
         self._timezone_column.set_sort_column_id(0)
         self._treeview.append_column(self._timezone_column)
 
-        self.pack_start(self._scrolled_window)
+        self.pack_start(self._scrolled_window, True, True, 0)
         self._scrolled_window.show()
 
-        self._zone_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._zone_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self.pack_start(self._zone_alert_box, False)
 
         self._zone_alert = InlineAlert()
-        self._zone_alert_box.pack_start(self._zone_alert)
+        self._zone_alert_box.pack_start(self._zone_alert, True, True, 0)
         if 'zone' in self.restart_alerts:
             self._zone_alert.props.msg = self.restart_msg
             self._zone_alert.show()
@@ -125,8 +125,8 @@ class TimeZone(SectionView):
             return False
 
         if self._zone_sid:
-            gobject.source_remove(self._zone_sid)
-        self._zone_sid = gobject.timeout_add(self._APPLY_TIMEOUT,
+            GObject.source_remove(self._zone_sid)
+        self._zone_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
                                              self.__zone_timeout_cb, row)
         return True
 

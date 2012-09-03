@@ -16,8 +16,8 @@
 
 import logging
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics import palettegroup
@@ -39,12 +39,12 @@ _TRANSITION_PAGE = 3
 _instance = None
 
 
-class HomeWindow(gtk.Window):
+class HomeWindow(Gtk.Window):
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
 
-        accel_group = gtk.AccelGroup()
+        accel_group = Gtk.AccelGroup()
         self.set_data('sugar-accel-group', accel_group)
         self.add_accel_group(accel_group)
 
@@ -57,25 +57,25 @@ class HomeWindow(gtk.Window):
                               screen.get_height())
 
         self.realize()
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DESKTOP)
-        self.modify_bg(gtk.STATE_NORMAL,
+        self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
+        self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
-        self.add_events(gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
         self.connect('map-event', self.__map_event_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('key-release-event', self.__key_release_event_cb)
 
-        self._box = gtk.VBox()
+        self._box = Gtk.VBox()
 
         self._toolbar = ViewToolbar()
-        self._box.pack_start(self._toolbar, expand=False)
+        self._box.pack_start(self._toolbar, False, True, 0)
         self._toolbar.show()
 
         self._home_box = HomeBox(self._toolbar)
-        self._box.pack_start(self._home_box)
+        self._box.pack_start(self._home_box, True, True, 0)
         self._home_box.show()
         self._toolbar.show_view_buttons()
 
@@ -110,7 +110,7 @@ class HomeWindow(gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-        fully_obscured = (event.state == gtk.gdk.VISIBILITY_FULLY_OBSCURED)
+        fully_obscured = (event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
         if self._fully_obscured == fully_obscured:
             return
         self._fully_obscured = fully_obscured
@@ -118,9 +118,9 @@ class HomeWindow(gtk.Window):
         if fully_obscured:
             self._deactivate_view(shell.get_model().zoom_level)
         else:
-            display = gtk.gdk.display_get_default()
-            screen_, x_, y_, modmask = display.get_pointer()
-            if modmask & gtk.gdk.MOD1_MASK:
+            display = Gdk.Display.get_default()
+            x_, y_, modmask = display.get_pointer(None)
+            if modmask & Gdk.ModifierType.MOD1_MASK:
                 self._home_box.set_resume_mode(False)
             else:
                 self._home_box.set_resume_mode(True)
@@ -128,12 +128,12 @@ class HomeWindow(gtk.Window):
             self._activate_view(shell.get_model().zoom_level)
 
     def __key_press_event_cb(self, window, event):
-        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
             self._home_box.set_resume_mode(False)
         return False
 
     def __key_release_event_cb(self, window, event):
-        if event.keyval in [gtk.keysyms.Alt_L, gtk.keysyms.Alt_R]:
+        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
             self._home_box.set_resume_mode(True)
         return False
 
@@ -142,7 +142,7 @@ class HomeWindow(gtk.Window):
         # since metacity doesn't make it on startup
         timestamp = event.get_time()
         if not timestamp:
-            timestamp = gtk.gdk.x11_get_server_time(self.window)
+            timestamp = GdkX11.x11_get_server_time(self.window)
         self.window.focus(timestamp)
 
     def __zoom_level_changed_cb(self, **kwargs):
@@ -157,7 +157,7 @@ class HomeWindow(gtk.Window):
             children = self._box.get_children()
             if len(children) >= 2:
                 self._box.remove(children[1])
-            self._box.pack_start(self._transition_box)
+            self._box.pack_start(self._transition_box, True, True, 0)
             self._transition_box.show()
 
             if new_level == ShellModel.ZOOM_HOME:
@@ -190,17 +190,17 @@ class HomeWindow(gtk.Window):
             self._box.remove(children[1])
 
         if level == ShellModel.ZOOM_HOME:
-            self._box.pack_start(self._home_box)
+            self._box.pack_start(self._home_box, True, True, 0)
             self._home_box.show()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.show_view_buttons()
         elif level == ShellModel.ZOOM_GROUP:
-            self._box.pack_start(self._group_box)
+            self._box.pack_start(self._group_box, True, True, 0)
             self._group_box.show()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.hide_view_buttons()
         elif level == ShellModel.ZOOM_MESH:
-            self._box.pack_start(self._mesh_box)
+            self._box.pack_start(self._mesh_box, True, True, 0)
             self._mesh_box.show()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.hide_view_buttons()
@@ -218,8 +218,8 @@ class HomeWindow(gtk.Window):
                 self.get_window().set_cursor(old_cursor)
 
         old_cursor = self.get_window().get_cursor()
-        self.get_window().set_cursor(gtk.gdk.Cursor(gtk.gdk.WATCH))
-        gobject.idle_add(action_wrapper, old_cursor)
+        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        GObject.idle_add(action_wrapper, old_cursor)
 
 
 def get_instance():

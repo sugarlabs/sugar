@@ -18,7 +18,7 @@ import logging
 from urlparse import urlparse
 import hashlib
 
-import gtk
+from gi.repository import Gtk
 
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardtray import ClipboardTray
@@ -33,9 +33,9 @@ class ClipboardPanelWindow(FrameWindow):
         self._frame = frame
 
         # Listening for new clipboard objects
-        # NOTE: we need to keep a reference to gtk.Clipboard in order to keep
+        # NOTE: we need to keep a reference to Gtk.Clipboard in order to keep
         # listening to it.
-        self._clipboard = gtk.Clipboard()
+        self._clipboard = Gtk.Clipboard()
         self._clipboard.connect('owner-change', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()

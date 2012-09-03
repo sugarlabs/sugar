@@ -14,8 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 from gettext import gettext as _
 
 from sugar.graphics import style
@@ -45,18 +45,18 @@ class Frame(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        separator = gtk.HSeparator()
-        self.pack_start(separator, expand=False)
+        separator = Gtk.HSeparator()
+        self.pack_start(separator, False, True, 0)
         separator.show()
 
-        label_activation = gtk.Label(_('Activation Delay'))
+        label_activation = Gtk.Label(label=_('Activation Delay'))
         label_activation.set_alignment(0, 0)
-        self.pack_start(label_activation, expand=False)
+        self.pack_start(label_activation, False, True, 0)
         label_activation.show()
 
-        self._box_sliders = gtk.VBox()
+        self._box_sliders = Gtk.VBox()
         self._box_sliders.set_border_width(style.DEFAULT_SPACING * 2)
         self._box_sliders.set_spacing(style.DEFAULT_SPACING)
 
@@ -68,76 +68,76 @@ class Frame(SectionView):
         self._edge_delay_alert = None
         self._setup_edge()
 
-        self.pack_start(self._box_sliders, expand=False)
+        self.pack_start(self._box_sliders, False, True, 0)
         self._box_sliders.show()
 
         self.setup()
 
     def _setup_corner(self):
-        box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_delay = gtk.Label(_('Corner'))
+        box_delay = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_delay = Gtk.Label(label=_('Corner'))
         label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(gtk.STATE_NORMAL,
+        label_delay.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_delay.pack_start(label_delay, expand=False)
+        box_delay.pack_start(label_delay, False, True, 0)
         self._group.add_widget(label_delay)
         label_delay.show()
 
-        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
+        adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
-        self._corner_delay_slider = gtk.HScale(adj)
+        self._corner_delay_slider = Gtk.HScale(adj)
         self._corner_delay_slider.set_digits(0)
         self._corner_delay_slider.connect('format-value',
                                           self.__corner_delay_format_cb)
-        box_delay.pack_start(self._corner_delay_slider)
+        box_delay.pack_start(self._corner_delay_slider, True, True, 0)
         self._corner_delay_slider.show()
-        self._box_sliders.pack_start(box_delay, expand=False)
+        self._box_sliders.pack_start(box_delay, False, True, 0)
         box_delay.show()
 
         self._corner_delay_alert = InlineAlert()
-        label_delay_error = gtk.Label()
+        label_delay_error = Gtk.Label()
         self._group.add_widget(label_delay_error)
 
-        delay_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        delay_alert_box.pack_start(label_delay_error, expand=False)
+        delay_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        delay_alert_box.pack_start(label_delay_error, False, True, 0)
         label_delay_error.show()
-        delay_alert_box.pack_start(self._corner_delay_alert, expand=False)
-        self._box_sliders.pack_start(delay_alert_box, expand=False)
+        delay_alert_box.pack_start(self._corner_delay_alert, False, True, 0)
+        self._box_sliders.pack_start(delay_alert_box, False, True, 0)
         delay_alert_box.show()
         if 'corner_delay' in self.restart_alerts:
             self._corner_delay_alert.props.msg = self.restart_msg
             self._corner_delay_alert.show()
 
     def _setup_edge(self):
-        box_delay = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_delay = gtk.Label(_('Edge'))
+        box_delay = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_delay = Gtk.Label(label=_('Edge'))
         label_delay.set_alignment(1, 0.75)
-        label_delay.modify_fg(gtk.STATE_NORMAL,
+        label_delay.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_delay.pack_start(label_delay, expand=False)
+        box_delay.pack_start(label_delay, False, True, 0)
         self._group.add_widget(label_delay)
         label_delay.show()
 
-        adj = gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
+        adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
-        self._edge_delay_slider = gtk.HScale(adj)
+        self._edge_delay_slider = Gtk.HScale(adj)
         self._edge_delay_slider.set_digits(0)
         self._edge_delay_slider.connect('format-value',
                                         self.__edge_delay_format_cb)
-        box_delay.pack_start(self._edge_delay_slider)
+        box_delay.pack_start(self._edge_delay_slider, True, True, 0)
         self._edge_delay_slider.show()
-        self._box_sliders.pack_start(box_delay, expand=False)
+        self._box_sliders.pack_start(box_delay, False, True, 0)
         box_delay.show()
 
         self._edge_delay_alert = InlineAlert()
-        label_delay_error = gtk.Label()
+        label_delay_error = Gtk.Label()
         self._group.add_widget(label_delay_error)
 
-        delay_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        delay_alert_box.pack_start(label_delay_error, expand=False)
+        delay_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        delay_alert_box.pack_start(label_delay_error, False, True, 0)
         label_delay_error.show()
-        delay_alert_box.pack_start(self._edge_delay_alert, expand=False)
-        self._box_sliders.pack_start(delay_alert_box, expand=False)
+        delay_alert_box.pack_start(self._edge_delay_alert, False, True, 0)
+        self._box_sliders.pack_start(delay_alert_box, False, True, 0)
         delay_alert_box.show()
         if 'edge_delay' in self.restart_alerts:
             self._edge_delay_alert.props.msg = self.restart_msg
@@ -169,8 +169,8 @@ class Frame(SectionView):
 
     def __corner_delay_changed_cb(self, scale, data=None):
         if self._corner_delay_sid:
-            gobject.source_remove(self._corner_delay_sid)
-        self._corner_delay_sid = gobject.timeout_add( \
+            GObject.source_remove(self._corner_delay_sid)
+        self._corner_delay_sid = GObject.timeout_add( \
                 self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
 
     def __corner_delay_timeout_cb(self, scale):
@@ -202,8 +202,8 @@ class Frame(SectionView):
 
     def __edge_delay_changed_cb(self, scale, data=None):
         if self._edge_delay_sid:
-            gobject.source_remove(self._edge_delay_sid)
-        self._edge_delay_sid = gobject.timeout_add( \
+            GObject.source_remove(self._edge_delay_sid)
+        self._edge_delay_sid = GObject.timeout_add( \
                 self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
 
     def __edge_delay_timeout_cb(self, scale):

@@ -19,13 +19,13 @@ from gettext import gettext as _
 import logging
 from datetime import datetime, timedelta
 import os
-import gconf
+from gi.repository import GConf
 import time
 
-import gobject
-import gio
+from gi.repository import GObject
+from gi.repository import Gio
 import glib
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics.palette import Palette
 from sugar.graphics.toolbarbox import ToolbarBox
@@ -67,7 +67,7 @@ _ACTION_MY_CLASS = 2
 class MainToolbox(ToolbarBox):
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
         }
 
@@ -157,7 +157,7 @@ class MainToolbox(ToolbarBox):
         return with_search
 
     def _add_widget(self, widget, expand=False):
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)
@@ -195,7 +195,7 @@ class MainToolbox(ToolbarBox):
 
         property_, order = self._sorting_button.get_current_sort()
 
-        if order == gtk.SORT_ASCENDING:
+        if order == Gtk.SortType.ASCENDING:
             sign = '+'
         else:
             sign = '-'
@@ -237,7 +237,7 @@ class MainToolbox(ToolbarBox):
 
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
+            GObject.source_remove(self._autosearch_timer)
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -249,8 +249,8 @@ class MainToolbox(ToolbarBox):
             return
 
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
+            GObject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
                                                      self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
@@ -323,7 +323,7 @@ class MainToolbox(ToolbarBox):
                         self._what_search_combo.append_item(service_name,
                                 activity_info.get_name(),
                                 file_name=activity_info.get_icon())
-                    except glib.GError, exception:
+                    except GObject.GError, exception:
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
                                         ' invalid icon: %s',
@@ -353,7 +353,7 @@ class MainToolbox(ToolbarBox):
 
 class DetailToolbox(ToolbarBox):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
         }
 
@@ -368,7 +368,7 @@ class DetailToolbox(ToolbarBox):
         self.toolbar.insert(self._resume, -1)
         self._resume.show()
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
@@ -386,7 +386,7 @@ class DetailToolbox(ToolbarBox):
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
         self.toolbar.insert(self._duplicate, -1)
 
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         self.toolbar.insert(separator, -1)
         separator.show()
 
@@ -425,10 +425,10 @@ class DetailToolbox(ToolbarBox):
         alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
             % self._metadata['title']
         icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(gtk.RESPONSE_CANCEL, _('Cancel'), icon)
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
         icon.show()
         ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(gtk.RESPONSE_OK, erase_string, ok_icon)
+        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
         ok_icon.show()
         alert.connect('response', self.__erase_alert_response_cb)
         journalwindow.get_journal_window().add_alert(alert)
@@ -436,7 +436,7 @@ class DetailToolbox(ToolbarBox):
 
     def __erase_alert_response_cb(self, alert, response_id):
         journalwindow.get_journal_window().remove_alert(alert)
-        if response_id is gtk.RESPONSE_OK:
+        if response_id is Gtk.ResponseType.OK:
             registry = bundleregistry.get_registry()
             bundle = misc.get_bundle(self._metadata)
             if bundle is not None and registry.is_installed(bundle):
@@ -455,24 +455,24 @@ class DetailToolbox(ToolbarBox):
 
         clipboard_menu = ClipboardMenu(self._metadata)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=gtk.ICON_SIZE_MENU))
+                                      icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
         palette.menu.append(clipboard_menu)
         clipboard_menu.show()
 
         if self._metadata['mountpoint'] != '/':
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             palette.menu.append(journal_menu)
             journal_menu.show()
 
-        volume_monitor = gio.volume_monitor_get()
-        icon_theme = gtk.icon_theme_get_default()
+        volume_monitor = Gio.volume_monitor_get()
+        icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
@@ -481,7 +481,7 @@ class DetailToolbox(ToolbarBox):
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=gtk.ICON_SIZE_MENU))
+                                               icon_size=Gtk.IconSize.MENU))
                     break
             volume_menu.connect('volume-error', self.__volume_error_cb)
             palette.menu.append(volume_menu)
@@ -518,7 +518,7 @@ class DetailToolbox(ToolbarBox):
         for activity_info in misc.get_activities(self._metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                                 activity_info.get_bundle_id())
             palette.menu.append(menu_item)
@@ -529,8 +529,8 @@ class SortingButton(ToolButton):
     __gtype_name__ = 'JournalSortingButton'
 
     __gsignals__ = {
-        'sort-property-changed': (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE,
+        'sort-property-changed': (GObject.SignalFlags.RUN_FIRST,
+                                  None,
                                   ([])),
     }
 
@@ -544,7 +544,7 @@ class SortingButton(ToolButton):
         ToolButton.__init__(self)
 
         self._property = 'timestamp'
-        self._order = gtk.SORT_ASCENDING
+        self._order = Gtk.SortType.ASCENDING
 
         self.props.tooltip = _('Sort view')
         self.props.icon_name = 'view-lastedit'
@@ -561,7 +561,7 @@ class SortingButton(ToolButton):
     def __sort_type_changed_cb(self, widget, property_, icon_name):
         self._property = property_
         #FIXME: Implement sorting order
-        self._order = gtk.SORT_ASCENDING
+        self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
         self.props.icon_name = icon_name

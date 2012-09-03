@@ -19,9 +19,9 @@ import statvfs
 from gettext import gettext as _
 import logging
 
-import gconf
+from gi.repository import GConf
 import glib
-import gtk
+from gi.repository import Gtk
 
 from sugar import env
 from sugar.graphics.palette import Palette
@@ -95,7 +95,7 @@ class CurrentActivityPalette(BasePalette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        separator = gtk.SeparatorMenuItem()
+        separator = Gtk.SeparatorMenuItem()
         self.menu.append(separator)
         separator.show()
 
@@ -105,14 +105,14 @@ class CurrentActivityPalette(BasePalette):
         menu_item.show()
 
     def __resume_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(gtk.get_current_event_time())
+        self._home_activity.get_window().activate(Gtk.get_current_event_time())
 
     def __view_source__cb(self, menu_item):
         setup_view_source(self._home_activity)
         shell_model = shell.get_model()
         if self._home_activity is not shell_model.get_active_activity():
             self._home_activity.get_window().activate( \
-                gtk.get_current_event_time())
+                Gtk.get_current_event_time())
 
     def __stop_activate_cb(self, menu_item):
         self._home_activity.get_window().close(1)
@@ -124,11 +124,11 @@ class ActivityPalette(Palette):
     def __init__(self, activity_info):
         self._activity_info = activity_info
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=color,
-                             icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+                             icon_size=Gtk.IconSize.LARGE_TOOLBAR)
 
         name = activity_info.get_name()
         Palette.__init__(self, primary_text=glib.markup_escape_text(name),
@@ -162,15 +162,15 @@ class JournalPalette(BasePalette):
         title = self._home_activity.get_title()
         self.set_primary_text(glib.markup_escape_text(title))
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
         vbox.show()
 
-        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar = Gtk.ProgressBar()
         vbox.add(self._progress_bar)
         self._progress_bar.show()
 
-        self._free_space_label = gtk.Label()
+        self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
         vbox.add(self._free_space_label)
         self._free_space_label.show()
@@ -180,7 +180,7 @@ class JournalPalette(BasePalette):
         menu_item = MenuItem(_('Show contents'))
 
         icon = Icon(file=self._home_activity.get_icon_path(),
-                icon_size=gtk.ICON_SIZE_MENU,
+                icon_size=Gtk.IconSize.MENU,
                 xo_color=self._home_activity.get_icon_color())
         menu_item.set_image(icon)
         icon.show()
@@ -190,7 +190,7 @@ class JournalPalette(BasePalette):
         menu_item.show()
 
     def __open_activate_cb(self, menu_item):
-        self._home_activity.get_window().activate(gtk.get_current_event_time())
+        self._home_activity.get_window().activate(Gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
         stat = os.statvfs(env.get_profile_path())
@@ -211,15 +211,15 @@ class VolumePalette(Palette):
         path = mount.get_root().get_path()
         self.props.secondary_text = glib.markup_escape_text(path)
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
         vbox.show()
 
-        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar = Gtk.ProgressBar()
         vbox.add(self._progress_bar)
         self._progress_bar.show()
 
-        self._free_space_label = gtk.Label()
+        self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
         vbox.add(self._free_space_label)
         self._free_space_label.show()
@@ -228,7 +228,7 @@ class VolumePalette(Palette):
 
         menu_item = MenuItem(pgettext('Volume', 'Remove'))
 
-        icon = Icon(icon_name='media-eject', icon_size=gtk.ICON_SIZE_MENU)
+        icon = Icon(icon_name='media-eject', icon_size=Gtk.IconSize.MENU)
         menu_item.set_image(icon)
         icon.show()
 

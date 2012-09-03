@@ -20,7 +20,7 @@ import math
 import hashlib
 from gettext import gettext as _
 
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 
@@ -84,7 +84,7 @@ class ViewLayout(Layout):
 
         # calculate x coordinate and create allocation
         x = (width - owner_width) / 2
-        owner_icon_allocation = gtk.gdk.Rectangle(x, allocation.y + y,
+        owner_icon_allocation = (x, allocation.y + y,
                                                   owner_width, owner_height)
         owner_icon.size_allocate(owner_icon_allocation)
 
@@ -104,7 +104,7 @@ class ViewLayout(Layout):
         activity_width, activity_height = activity_icon.size_request()
         x = (width - activity_width) / 2
         y = owner_icon_allocation.y + owner_height
-        activity_icon_allocation = gtk.gdk.Rectangle(x, y, activity_width,
+        activity_icon_allocation = (x, y, activity_width,
                                                      activity_height)
         activity_icon.size_allocate(activity_icon_allocation)
 
@@ -123,7 +123,7 @@ class ViewLayout(Layout):
         self._grid.move(child, x / _CELL_SIZE, y / _CELL_SIZE, locked=True)
         width, height = child.size_request()
         rect = self._grid.get_child_rect(child)
-        child_allocation = gtk.gdk.Rectangle(int(round(rect.x * _CELL_SIZE)),
+        child_allocation = (int(round(rect.x * _CELL_SIZE)),
                                              int(round(rect.y * _CELL_SIZE)),
                                              width,
                                              height)
@@ -138,7 +138,7 @@ class ViewLayout(Layout):
     def __grid_child_changed_cb(self, grid, child):
         width, height = child.size_request()
         rect = self._grid.get_child_rect(child)
-        child_allocation = gtk.gdk.Rectangle(int(round(rect.x * _CELL_SIZE)),
+        child_allocation = (int(round(rect.x * _CELL_SIZE)),
                                              int(round(rect.y * _CELL_SIZE)),
                                              width,
                                              height)
@@ -168,7 +168,7 @@ class SpreadLayout(ViewLayout):
             rect = self._grid.get_child_rect(child)
             x = int(round(rect.x * _CELL_SIZE))
             y = int(round(rect.y * _CELL_SIZE)) + allocation.y
-            child_allocation = gtk.gdk.Rectangle(x, y, width, height)
+            child_allocation = (x, y, width, height)
             child.size_allocate(child_allocation)
 
 
@@ -239,7 +239,7 @@ class RandomLayout(SpreadLayout):
             rect = self._grid.get_child_rect(child)
             x = int(round(rect.x * _CELL_SIZE))
             y = int(round(rect.y * _CELL_SIZE)) + allocation.y
-            child_allocation = gtk.gdk.Rectangle(x, y,
+            child_allocation = (x, y,
                                                  child_width, child_height)
             child.size_allocate(child_allocation)
 
@@ -261,7 +261,7 @@ class RandomLayout(SpreadLayout):
 
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
         style.STANDARD_ICON_SIZE * 2
-_MAXIMUM_RADIUS = (gtk.gdk.screen_height() - style.GRID_CELL_SIZE) / 2 - \
+_MAXIMUM_RADIUS = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
         style.STANDARD_ICON_SIZE - style.DEFAULT_SPACING
 _ICON_SPACING_FACTORS = [1.5, 1.4, 1.3, 1.2, 1.1, 1.0]
 _SPIRAL_SPACING_FACTORS = [1.5, 1.5, 1.5, 1.4, 1.3, 1.2]
@@ -368,7 +368,7 @@ class RingLayout(ViewLayout):
                                             allocation.height)
             child.size_request()
             child.set_size(icon_size)
-            child_allocation = gtk.gdk.Rectangle(allocation.x + x,
+            child_allocation = (allocation.x + x,
                                                  allocation.y + y,
                                                  icon_size, icon_size)
             child.size_allocate(child_allocation)

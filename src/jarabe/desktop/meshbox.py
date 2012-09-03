@@ -22,9 +22,9 @@ import logging
 
 import dbus
 import glib
-import gobject
-import gtk
-import gconf
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import GConf
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
@@ -68,7 +68,7 @@ class _ActivityIcon(EventIcon):
         secondary_text = glib.markup_escape_text(self._model.get_name())
         p_icon = Icon(file=self._model.bundle.get_icon(),
                       xo_color=self._model.get_color())
-        p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
+        p_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
         p = palette.Palette(None,
                             primary_text=primary_text,
                             secondary_text=secondary_text,
@@ -157,16 +157,16 @@ class ActivityView(SnowflakeLayout):
                 icon.set_filter(query)
 
 
-class DeviceObserver(gobject.GObject):
+class DeviceObserver(GObject.GObject):
     __gsignals__ = {
-        'access-point-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT])),
-        'access-point-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                 ([gobject.TYPE_PYOBJECT])),
+        'access-point-added': (GObject.SignalFlags.RUN_FIRST, None,
+                               ([GObject.TYPE_PYOBJECT])),
+        'access-point-removed': (GObject.SignalFlags.RUN_FIRST, None,
+                                 ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, device):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._bus = dbus.SystemBus()
         self.device = device
 
@@ -221,7 +221,7 @@ class NetworkManagerObserver(object):
         self._netmgr = None
         self._olpc_mesh_device_o = None
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._have_adhoc_networks = client.get_bool(self._SHOW_ADHOC_GCONF_KEY)
 
     def listen(self):

@@ -17,8 +17,8 @@
 import logging
 from gettext import gettext as _
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon
@@ -27,24 +27,24 @@ from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
 
-class DetailView(gtk.VBox):
+class DetailView(Gtk.VBox):
     __gtype_name__ = 'DetailView'
 
     __gsignals__ = {
-        'go-back-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, **kwargs):
         self._metadata = None
         self._expanded_entry = None
 
-        gobject.GObject.__init__(self, **kwargs)
-        gtk.VBox.__init__(self)
+        GObject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self)
 
         back_bar = BackBar()
         back_bar.connect('button-release-event',
                          self.__back_bar_release_event_cb)
-        self.pack_start(back_bar, expand=False)
+        self.pack_start(back_bar, False, True, 0)
 
         self.show_all()
 
@@ -60,7 +60,7 @@ class DetailView(gtk.VBox):
     def _update_view(self):
         if self._expanded_entry is None:
             self._expanded_entry = ExpandedEntry()
-            self.pack_start(self._expanded_entry)
+            self.pack_start(self._expanded_entry, True, True, 0)
         self._expanded_entry.set_metadata(self._metadata)
         self.show_all()
 
@@ -76,41 +76,41 @@ class DetailView(gtk.VBox):
         self._metadata = metadata
         self._update_view()
 
-    metadata = gobject.property(
+    metadata = GObject.property(
             type=object, getter=get_metadata, setter=set_metadata)
 
 
-class BackBar(gtk.EventBox):
+class BackBar(Gtk.EventBox):
     def __init__(self):
-        gtk.EventBox.__init__(self)
-        self.modify_bg(gtk.STATE_NORMAL,
+        GObject.GObject.__init__(self)
+        self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_PANEL_GREY.get_gdk_color())
-        hbox = gtk.HBox(spacing=style.DEFAULT_PADDING)
+        hbox = Gtk.HBox(spacing=style.DEFAULT_PADDING)
         hbox.set_border_width(style.DEFAULT_PADDING)
-        icon = Icon(icon_name='go-previous', icon_size=gtk.ICON_SIZE_MENU,
+        icon = Icon(icon_name='go-previous', icon_size=Gtk.IconSize.MENU,
                     fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
         hbox.pack_start(icon, False, False)
 
-        label = gtk.Label()
+        label = Gtk.Label()
         label.set_text(_('Back'))
-        halign = gtk.Alignment(0, 0.5, 0, 1)
+        halign = Gtk.Alignment.new(0, 0.5, 0, 1)
         halign.add(label)
         hbox.pack_start(halign, True, True)
         hbox.show()
         self.add(hbox)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
+        if Gtk.widget_get_default_direction() == Gtk.TextDirection.RTL:
             hbox.reverse()
 
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
         self.connect('leave-notify-event', self.__leave_notify_event_cb)
 
     def __enter_notify_event_cb(self, box, event):
-        box.modify_bg(gtk.STATE_NORMAL,
+        box.modify_bg(Gtk.StateType.NORMAL,
                       style.COLOR_SELECTION_GREY.get_gdk_color())
         return False
 
     def __leave_notify_event_cb(self, box, event):
-        box.modify_bg(gtk.STATE_NORMAL,
+        box.modify_bg(Gtk.StateType.NORMAL,
                       style.COLOR_PANEL_GREY.get_gdk_color())
         return False

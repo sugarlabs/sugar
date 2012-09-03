@@ -18,7 +18,7 @@ import os
 import glob
 import hashlib
 
-import gtk
+from gi.repository import Gtk
 
 from sugar import profile
 from sugar.activity import bundlebuilder
@@ -152,7 +152,7 @@ def _create_custom_icon(new_basename, icon_name):
     """
     user_activities_path = get_user_activities_path()
     badge_path = None
-    for path in gtk.icon_theme_get_default().get_search_path():
+    for path in Gtk.IconTheme.get_default().get_search_path():
         if os.path.exists(os.path.join(path, 'sugar', 'scalable',
                                        BADGE_SUBPATH)):
             badge_path = path

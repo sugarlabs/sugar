@@ -17,10 +17,10 @@
 import os
 import logging
 
-import gconf
+from gi.repository import GConf
 import gst
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 
 DEFAULT_PITCH = 0
@@ -31,14 +31,14 @@ DEFAULT_RATE = 0
 _speech_manager = None
 
 
-class SpeechManager(gobject.GObject):
+class SpeechManager(GObject.GObject):
 
     __gtype_name__ = 'SpeechManager'
 
     __gsignals__ = {
-        'play': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'pause': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'stop': (gobject.SIGNAL_RUN_FIRST, None, [])
+        'play': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'stop': (GObject.SignalFlags.RUN_FIRST, None, [])
     }
 
     MIN_PITCH = -100
@@ -48,7 +48,7 @@ class SpeechManager(gobject.GObject):
     MAX_RATE = 100
 
     def __init__(self, **kwargs):
-        gobject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
         self._player = _GstSpeechPlayer()
         self._player.connect('play', self._update_state, 'play')
         self._player.connect('stop', self._update_state, 'stop')
@@ -68,13 +68,13 @@ class SpeechManager(gobject.GObject):
     def get_is_playing(self):
         return self._is_playing
 
-    is_playing = gobject.property(type=bool, getter=get_is_playing,
+    is_playing = GObject.property(type=bool, getter=get_is_playing,
             setter=None, default=False)
 
     def get_is_paused(self):
         return self._is_paused
 
-    is_paused = gobject.property(type=bool, getter=get_is_paused,
+    is_paused = GObject.property(type=bool, getter=get_is_paused,
             setter=None, default=False)
 
     def get_pitch(self):
@@ -96,7 +96,7 @@ class SpeechManager(gobject.GObject):
             self._player.speak(self._pitch, self._rate, self._voice_name, text)
 
     def say_selected_text(self):
-        clipboard = gtk.clipboard_get(selection='PRIMARY')
+        clipboard = Gtk.clipboard_get(selection='PRIMARY')
         clipboard.request_text(self.__primary_selection_cb)
 
     def pause(self):
@@ -112,30 +112,30 @@ class SpeechManager(gobject.GObject):
         self.say_text(text)
 
     def save(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         client.set_int('/desktop/sugar/speech/pitch', self._pitch)
         client.set_int('/desktop/sugar/speech/rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
                 self._pitch, self._rate)
 
     def restore(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._pitch = client.get_int('/desktop/sugar/speech/pitch')
         self._rate = client.get_int('/desktop/sugar/speech/rate')
         logging.debug('loading speech configuration pitch %s rate %s',
                 self._pitch, self._rate)
 
 
-class _GstSpeechPlayer(gobject.GObject):
+class _GstSpeechPlayer(GObject.GObject):
 
     __gsignals__ = {
-        'play': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'pause': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'stop': (gobject.SIGNAL_RUN_FIRST, None, [])
+        'play': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'stop': (GObject.SignalFlags.RUN_FIRST, None, [])
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._pipeline = None
 
     def restart_sound_device(self):

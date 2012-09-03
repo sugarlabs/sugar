@@ -21,11 +21,11 @@ from gettext import gettext as _
 import tempfile
 import os
 
-import gobject
-import gconf
-import gio
+from gi.repository import GObject
+from gi.repository import GConf
+from gi.repository import Gio
 import glib
-import gtk
+from gi.repository import Gtk
 
 from sugar.graphics import style
 from sugar.graphics.tray import HTray
@@ -104,7 +104,7 @@ class InviteButton(ToolButton):
     """Invite to shared activity"""
 
     __gsignals__ = {
-        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'remove-invite': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, invite):
@@ -144,7 +144,7 @@ class InviteButton(ToolButton):
             self._notif_icon.props.icon_name = 'image-missing'
 
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, gtk.CORNER_TOP_LEFT)
+        frame.add_notification(self._notif_icon, Gtk.CornerType.TOP_LEFT)
 
     def __button_release_event_cb(self, icon, event):
         if self._notif_icon is not None:
@@ -171,7 +171,7 @@ class InvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
 
     __gsignals__ = {
-        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'remove-invite': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, invite):
@@ -286,7 +286,7 @@ class ActivitiesTray(HTray):
             logging.debug('ActivitiesTray.__activity_clicked_cb')
             window = home_activity.get_window()
             if window:
-                window.activate(gtk.get_current_event_time())
+                window.activate(Gtk.get_current_event_time())
                 frame = jarabe.frame.get_view()
                 frame.hide()
 
@@ -379,7 +379,7 @@ class IncomingTransferButton(BaseTransferButton):
         file_transfer.connect('notify::transferred-bytes',
                               self.__notify_transferred_bytes_cb)
 
-        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons = Gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
         for icon_name in icons:
             icon_name = 'transfer-from-%s' % icon_name
@@ -395,7 +395,7 @@ class IncomingTransferButton(BaseTransferButton):
 
         frame = jarabe.frame.get_view()
         frame.add_notification(self.notif_icon,
-                               gtk.CORNER_TOP_LEFT)
+                               Gtk.CornerType.TOP_LEFT)
 
     def create_palette(self):
         palette = IncomingTransferPalette(self.file_transfer)
@@ -454,7 +454,7 @@ class OutgoingTransferButton(BaseTransferButton):
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
-        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons = Gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
         for icon_name in icons:
             icon_name = 'transfer-to-%s' % icon_name
@@ -464,14 +464,14 @@ class OutgoingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
         frame = jarabe.frame.get_view()
         frame.add_notification(self.notif_icon,
-                               gtk.CORNER_TOP_LEFT)
+                               Gtk.CornerType.TOP_LEFT)
 
     def create_palette(self):
         palette = OutgoingTransferPalette(self.file_transfer)
@@ -490,7 +490,7 @@ class BaseTransferPalette(Palette):
     __gtype_name__ = 'SugarBaseTransferPalette'
 
     __gsignals__ = {
-        'dismiss-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'dismiss-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, file_transfer):
@@ -579,12 +579,12 @@ class IncomingTransferPalette(BaseTransferPalette):
             self.menu.append(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
+            vbox = Gtk.VBox()
             self.set_content(vbox)
             vbox.show()
 
             if self.file_transfer.description:
-                label = gtk.Label(self.file_transfer.description)
+                label = Gtk.Label(label=self.file_transfer.description)
                 vbox.add(label)
                 label.show()
 
@@ -592,7 +592,7 @@ class IncomingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label('%s (%s)' % (size, type_description))
+            label = Gtk.Label(label='%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 
@@ -607,15 +607,15 @@ class IncomingTransferPalette(BaseTransferPalette):
             self.menu.append(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
+            vbox = Gtk.VBox()
             self.set_content(vbox)
             vbox.show()
 
-            self.progress_bar = gtk.ProgressBar()
+            self.progress_bar = Gtk.ProgressBar()
             vbox.add(self.progress_bar)
             self.progress_bar.show()
 
-            self.progress_label = gtk.Label('')
+            self.progress_label = Gtk.Label(label='')
             vbox.add(self.progress_label)
             self.progress_label.show()
 
@@ -644,7 +644,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 self.menu.append(menu_item)
                 menu_item.show()
                 text = _('The other participant canceled the file transfer')
-                label = gtk.Label(text)
+                label = Gtk.Label(label=text)
                 self.set_content(label)
                 label.show()
 
@@ -709,12 +709,12 @@ class OutgoingTransferPalette(BaseTransferPalette):
             self.menu.append(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
+            vbox = Gtk.VBox()
             self.set_content(vbox)
             vbox.show()
 
             if self.file_transfer.description:
-                label = gtk.Label(self.file_transfer.description)
+                label = Gtk.Label(label=self.file_transfer.description)
                 vbox.add(label)
                 label.show()
 
@@ -722,7 +722,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label('%s (%s)' % (size, type_description))
+            label = Gtk.Label(label='%s (%s)' % (size, type_description))
             vbox.add(label)
             label.show()
 
@@ -737,15 +737,15 @@ class OutgoingTransferPalette(BaseTransferPalette):
             self.menu.append(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
+            vbox = Gtk.VBox()
             self.set_content(vbox)
             vbox.show()
 
-            self.progress_bar = gtk.ProgressBar()
+            self.progress_bar = Gtk.ProgressBar()
             vbox.add(self.progress_bar)
             self.progress_bar.show()
 
-            self.progress_label = gtk.Label('')
+            self.progress_label = Gtk.Label(label='')
             vbox.add(self.progress_label)
             self.progress_label.show()
 

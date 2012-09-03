@@ -27,8 +27,8 @@ import tempfile
 from urlparse import urlparse
 import traceback
 
-import gobject
-import gio
+from gi.repository import GObject
+from gi.repository import Gio
 
 from sugar import env
 from sugar.datastore import datastore
@@ -40,12 +40,12 @@ from jarabe.model import bundleregistry
 from backends import aslo
 
 
-class UpdateModel(gobject.GObject):
+class UpdateModel(GObject.GObject):
     __gtype_name__ = 'SugarUpdateModel'
 
     __gsignals__ = {
-        'progress': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
+        'progress': (GObject.SignalFlags.RUN_FIRST,
+                     None,
                      ([int, str, float, int])),
     }
 
@@ -54,7 +54,7 @@ class UpdateModel(gobject.GObject):
     ACTION_DOWNLOADING = 2
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.updates = None
         self._bundles_to_check = None
@@ -93,7 +93,7 @@ class UpdateModel(gobject.GObject):
         if self._cancelling:
             self._cancel_checking()
         elif self._bundles_to_check:
-            gobject.idle_add(self._check_next_update)
+            GObject.idle_add(self._check_next_update)
         else:
             total = len(bundleregistry.get_registry())
             if bundle is None:
@@ -161,7 +161,7 @@ class UpdateModel(gobject.GObject):
 
         if self._bundles_to_update:
             # do it in idle so the UI has a chance to refresh
-            gobject.idle_add(self._download_next_update)
+            GObject.idle_add(self._download_next_update)
 
     def _install_update(self, bundle_update, local_file_path):
 
@@ -191,7 +191,7 @@ class UpdateModel(gobject.GObject):
 
         if self._bundles_to_update:
             # do it in idle so the UI has a chance to refresh
-            gobject.idle_add(self._download_next_update)
+            GObject.idle_add(self._download_next_update)
 
     def cancel(self):
         self._cancelling = True
@@ -233,25 +233,25 @@ class BundleUpdate(object):
         self.size = size
 
 
-class _Downloader(gobject.GObject):
+class _Downloader(GObject.GObject):
     _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
-        'progress': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
+        'progress': (GObject.SignalFlags.RUN_FIRST,
+                     None,
                      ([float])),
-        'error': (gobject.SIGNAL_RUN_FIRST,
-                  gobject.TYPE_NONE,
+        'error': (GObject.SignalFlags.RUN_FIRST,
+                  None,
                   ([str])),
     }
 
     def __init__(self, bundle_update):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.bundle_update = bundle_update
         self._input_stream = None
         self._output_stream = None
         self._pending_buffers = []
-        self._input_file = gio.File(bundle_update.link)
+        self._input_file = Gio.File(bundle_update.link)
         self._output_file = None
         self._downloaded_size = 0
         self._cancelling = False
@@ -272,11 +272,11 @@ class _Downloader(gobject.GObject):
             return
 
         temp_file_path = self._get_temp_file_path(self.bundle_update.link)
-        self._output_file = gio.File(temp_file_path)
+        self._output_file = Gio.File(temp_file_path)
         self._output_stream = self._output_file.create()
 
         self._input_stream.read_async(self._CHUNK_SIZE, self.__read_async_cb,
-                                      gobject.PRIORITY_LOW)
+                                      GObject.PRIORITY_LOW)
 
     def __read_async_cb(self, input_stream, result):
         if self._cancelling:
@@ -295,7 +295,7 @@ class _Downloader(gobject.GObject):
             self._pending_buffers.append(data)
             self._input_stream.read_async(self._CHUNK_SIZE,
                                           self.__read_async_cb,
-                                          gobject.PRIORITY_LOW)
+                                          GObject.PRIORITY_LOW)
 
         self._write_next_buffer()
 
@@ -320,7 +320,7 @@ class _Downloader(gobject.GObject):
             # TODO: we pass the buffer as user_data because of
             # http://bugzilla.gnome.org/show_bug.cgi?id=564102
             self._output_stream.write_async(data, self.__write_async_cb,
-                                            gobject.PRIORITY_LOW,
+                                            GObject.PRIORITY_LOW,
                                             user_data=data)
 
     def _get_temp_file_path(self, uri):

@@ -18,8 +18,8 @@
 import logging
 from gettext import gettext as _
 
-import gtk
-import gconf
+from gi.repository import Gtk
+from gi.repository import GConf
 import glib
 import dbus
 
@@ -40,7 +40,7 @@ class BuddyMenu(Palette):
 
         buddy_icon = Icon(icon_name='computer-xo',
                           xo_color=buddy.get_color(),
-                          icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+                          icon_size=Gtk.IconSize.LARGE_TOOLBAR)
         nick = buddy.get_nick()
         Palette.__init__(self, None,
                          primary_text=glib.markup_escape_text(nick),
@@ -89,7 +89,7 @@ class BuddyMenu(Palette):
         self.menu.append(item)
         item.show()
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
 
         if client.get_bool('/desktop/sugar/show_restart'):
             item = MenuItem(_('Restart'), 'system-restart')

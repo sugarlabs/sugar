@@ -19,9 +19,9 @@ import logging
 from functools import partial
 import simplejson
 
-import gobject
+from gi.repository import GObject
 import dbus
-import gconf
+from gi.repository import GConf
 from telepathy.interfaces import CHANNEL, \
                                  CHANNEL_DISPATCHER, \
                                  CHANNEL_DISPATCH_OPERATION, \
@@ -123,7 +123,7 @@ class PrivateInvite(BaseInvite):
         self._private_channel = private_channel
 
     def get_color(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         return XoColor(client.get_string('/desktop/sugar/user/color'))
 
     def join(self):
@@ -141,16 +141,16 @@ class PrivateInvite(BaseInvite):
                     uri=self._private_channel)
 
 
-class Invites(gobject.GObject):
+class Invites(GObject.GObject):
     __gsignals__ = {
-        'invite-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'invite-added': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
-        'invite-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'invite-removed': (GObject.SignalFlags.RUN_FIRST, None,
                            ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._dispatch_operations = {}
 

@@ -17,8 +17,8 @@
 import logging
 from gettext import gettext as _
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
 from sugar import wm
 from sugar.graphics import style
@@ -27,24 +27,24 @@ from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon
 
 
-class LaunchWindow(gtk.Window):
+class LaunchWindow(Gtk.Window):
 
     def __init__(self, activity_id, icon_path, icon_color):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
-        self.props.type_hint = gtk.gdk.WINDOW_TYPE_HINT_SPLASHSCREEN
-        self.modify_bg(gtk.STATE_NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self.props.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN
+        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        canvas = gtk.VBox()
+        canvas = Gtk.VBox()
         canvas.show()
         self.add(canvas)
 
-        bar_size = gtk.gdk.screen_height() / 5 * 2
+        bar_size = Gdk.Screen.height() / 5 * 2
 
-        header = gtk.VBox()
+        header = Gtk.VBox()
         header.set_size_request(-1, bar_size)
         header.show()
-        canvas.pack_start(header, expand=False)
+        canvas.pack_start(header, False, True, 0)
 
         self._activity_id = activity_id
 
@@ -55,26 +55,26 @@ class LaunchWindow(gtk.Window):
                                         style.XLARGE_ICON_SIZE, 10)
         self._activity_icon.set_pulsing(True)
         self._activity_icon.show()
-        canvas.pack_start(self._activity_icon)
+        canvas.pack_start(self._activity_icon, True, True, 0)
 
-        footer = gtk.VBox(spacing=style.DEFAULT_SPACING)
+        footer = Gtk.VBox(spacing=style.DEFAULT_SPACING)
         footer.set_size_request(-1, bar_size)
         footer.show()
-        canvas.pack_end(footer, expand=False)
+        canvas.pack_end(footer, False, True, 0)
 
-        self.error_text = gtk.Label()
+        self.error_text = Gtk.Label()
         self.error_text.props.use_markup = True
-        footer.pack_start(self.error_text, expand=False)
+        footer.pack_start(self.error_text, False, True, 0)
 
-        button_box = gtk.Alignment(xalign=0.5)
+        button_box = Gtk.Alignment.new(xalign=0.5)
         button_box.show()
-        footer.pack_start(button_box, expand=False)
-        self.cancel_button = gtk.Button(stock=gtk.STOCK_STOP)
+        footer.pack_start(button_box, False, True, 0)
+        self.cancel_button = Gtk.Button(stock=Gtk.STOCK_STOP)
         button_box.add(self.cancel_button)
 
         self.connect('realize', self.__realize_cb)
 
-        screen = gtk.gdk.screen_get_default()
+        screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self.__size_changed_cb)
 
         self._home = shell.get_model()
@@ -89,7 +89,7 @@ class LaunchWindow(gtk.Window):
         self.present()
 
     def _update_size(self):
-        self.resize(gtk.gdk.screen_width(), gtk.gdk.screen_height())
+        self.resize(Gdk.Screen.width(), Gdk.Screen.height())
 
     def __realize_cb(self, widget):
         wm.set_activity_id(widget.window, str(self._activity_id))

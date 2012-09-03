@@ -14,42 +14,42 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
 from sugar.graphics.icon import Icon
 from sugar.graphics import style
 from sugar.graphics.xocolor import XoColor
 
 
-class ModalAlert(gtk.Window):
+class ModalAlert(Gtk.Window):
 
     __gtype_name__ = 'SugarModalAlert'
 
     def __init__(self):
-        gtk.Window.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE
-        width = gtk.gdk.screen_width() - offset * 2
-        height = gtk.gdk.screen_height() - offset * 2
+        width = Gdk.Screen.width() - offset * 2
+        height = Gdk.Screen.height() - offset * 2
         self.set_size_request(width, height)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
         self.set_modal(True)
 
-        self._main_view = gtk.EventBox()
-        self._vbox = gtk.VBox()
+        self._main_view = Gtk.EventBox()
+        self._vbox = Gtk.VBox()
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self._vbox.set_border_width(style.GRID_CELL_SIZE * 2)
-        self._main_view.modify_bg(gtk.STATE_NORMAL,
+        self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
         self._main_view.add(self._vbox)
         self._vbox.show()
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         icon = Icon(icon_name='activity-journal',
@@ -58,25 +58,25 @@ class ModalAlert(gtk.Window):
         self._vbox.pack_start(icon, False)
         icon.show()
 
-        self._title = gtk.Label()
-        self._title.modify_fg(gtk.STATE_NORMAL,
+        self._title = Gtk.Label()
+        self._title.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
         self._title.set_markup('<b>%s</b>' % _('Your Journal is full'))
         self._vbox.pack_start(self._title, False)
         self._title.show()
 
-        self._message = gtk.Label(_('Please delete some old Journal'
+        self._message = Gtk.Label(label=_('Please delete some old Journal'
                                     ' entries to make space for new ones.'))
-        self._message.modify_fg(gtk.STATE_NORMAL,
+        self._message.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(self._message, False)
         self._message.show()
 
-        alignment = gtk.Alignment(xalign=0.5, yalign=0.5)
-        self._vbox.pack_start(alignment, expand=False)
+        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5)
+        self._vbox.pack_start(alignment, False, True, 0)
         alignment.show()
 
-        self._show_journal = gtk.Button()
+        self._show_journal = Gtk.Button()
         self._show_journal.set_label(_('Show Journal'))
         alignment.add(self._show_journal)
         self._show_journal.show()
@@ -88,7 +88,7 @@ class ModalAlert(gtk.Window):
         self.connect('realize', self.__realize_cb)
 
     def __realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.window.set_accept_focus(True)
 
     def __show_journal_cb(self, button):

@@ -19,10 +19,10 @@ from gettext import gettext as _
 import time
 
 import glib
-import gobject
-import gtk
-import gconf
-import pango
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import GConf
+from gi.repository import Pango
 
 from sugar.graphics import style
 from sugar.graphics.icon import Icon, CellRendererIcon
@@ -39,11 +39,11 @@ from jarabe.view.eventicon import EventIcon
 UPDATE_INTERVAL = 300
 
 
-class TreeView(gtk.TreeView):
+class TreeView(Gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
 
     def __init__(self):
-        gtk.TreeView.__init__(self)
+        GObject.GObject.__init__(self)
         self.set_headers_visible(False)
         self.set_enable_search(False)
 
@@ -54,17 +54,17 @@ class TreeView(gtk.TreeView):
         if tree_model is not None:
             tree_model.view_is_resizing = True
         try:
-            gtk.TreeView.do_size_request(self, requisition)
+            Gtk.TreeView.do_size_request(self, requisition)
         finally:
             if tree_model is not None:
                 tree_model.view_is_resizing = False
 
 
-class BaseListView(gtk.Bin):
+class BaseListView(Gtk.Bin):
     __gtype_name__ = 'JournalBaseListView'
 
     __gsignals__ = {
-        'clear-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self):
@@ -74,23 +74,23 @@ class BaseListView(gtk.Bin):
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
 
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.connect('map', self.__map_cb)
         self.connect('unrealize', self.__unrealize_cb)
         self.connect('destroy', self.__destroy_cb)
 
-        self._scrolled_window = gtk.ScrolledWindow()
-        self._scrolled_window.set_policy(gtk.POLICY_NEVER,
-                                         gtk.POLICY_AUTOMATIC)
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                         Gtk.PolicyType.AUTOMATIC)
         self.add(self._scrolled_window)
         self._scrolled_window.show()
 
         self.tree_view = TreeView()
         selection = self.tree_view.get_selection()
-        selection.set_mode(gtk.SELECTION_NONE)
+        selection.set_mode(Gtk.SelectionMode.NONE)
         self.tree_view.props.fixed_height_mode = True
-        self.tree_view.modify_base(gtk.STATE_NORMAL,
+        self.tree_view.modify_base(Gtk.StateType.NORMAL,
                                    style.COLOR_WHITE.get_gdk_color())
         self._scrolled_window.add(self.tree_view)
         self.tree_view.show()
@@ -101,10 +101,10 @@ class BaseListView(gtk.Bin):
         self.sort_column = None
         self._add_columns()
 
-        self.tree_view.enable_model_drag_source(gtk.gdk.BUTTON1_MASK,
+        self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                                 [('text/uri-list', 0, 0),
                                                  ('journal-object-id', 0, 0)],
-                                                gtk.gdk.ACTION_COPY)
+                                                Gdk.DragAction.COPY)
 
         # Auto-update stuff
         self._fully_obscured = True
@@ -139,40 +139,40 @@ class BaseListView(gtk.Bin):
         cell_favorite = CellRendererFavorite(self.tree_view)
         cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
-        column = gtk.TreeViewColumn()
-        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column = Gtk.TreeViewColumn()
+        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.props.fixed_width = cell_favorite.props.width
-        column.pack_start(cell_favorite)
+        column.pack_start(cell_favorite, True)
         column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.tree_view.append_column(column)
 
         self.cell_icon = CellRendererActivityIcon(self.tree_view)
 
-        column = gtk.TreeViewColumn()
-        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column = Gtk.TreeViewColumn()
+        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.props.fixed_width = self.cell_icon.props.width
-        column.pack_start(self.cell_icon)
+        column.pack_start(self.cell_icon, True)
         column.add_attribute(self.cell_icon, 'file-name',
                              ListModel.COLUMN_ICON)
         column.add_attribute(self.cell_icon, 'xo-color',
                              ListModel.COLUMN_ICON_COLOR)
         self.tree_view.append_column(column)
 
-        self.cell_title = gtk.CellRendererText()
-        self.cell_title.props.ellipsize = pango.ELLIPSIZE_MIDDLE
+        self.cell_title = Gtk.CellRendererText()
+        self.cell_title.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         self.cell_title.props.ellipsize_set = True
 
-        self._title_column = gtk.TreeViewColumn()
-        self._title_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self._title_column = Gtk.TreeViewColumn()
+        self._title_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         self._title_column.props.expand = True
         self._title_column.props.clickable = True
-        self._title_column.pack_start(self.cell_title)
+        self._title_column.pack_start(self.cell_title, True)
         self._title_column.add_attribute(self.cell_title, 'markup',
                                          ListModel.COLUMN_TITLE)
         self.tree_view.append_column(self._title_column)
 
-        buddies_column = gtk.TreeViewColumn()
-        buddies_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        buddies_column = Gtk.TreeViewColumn()
+        buddies_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         self.tree_view.append_column(buddies_column)
 
         for column_index in [ListModel.COLUMN_BUDDY_1,
@@ -180,21 +180,21 @@ class BaseListView(gtk.Bin):
                              ListModel.COLUMN_BUDDY_3]:
             cell_icon = CellRendererBuddy(self.tree_view,
                                           column_index=column_index)
-            buddies_column.pack_start(cell_icon)
+            buddies_column.pack_start(cell_icon, True)
             buddies_column.props.fixed_width += cell_icon.props.width
             buddies_column.add_attribute(cell_icon, 'buddy', column_index)
-            buddies_column.set_cell_data_func(cell_icon,
+            return;buddies_column.set_cell_data_func(cell_icon,
                     self.__buddies_set_data_cb)
 
-        cell_progress = gtk.CellRendererProgress()
+        cell_progress = Gtk.CellRendererProgress()
         cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
-        buddies_column.pack_start(cell_progress)
+        buddies_column.pack_start(cell_progress, True)
         buddies_column.add_attribute(cell_progress, 'value',
                 ListModel.COLUMN_PROGRESS)
-        buddies_column.set_cell_data_func(cell_progress,
+        return;buddies_column.set_cell_data_func(cell_progress,
                 self.__progress_data_cb)
 
-        cell_text = gtk.CellRendererText()
+        cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
         # Measure the required width for a date in the form of "10 hours, 10
@@ -203,13 +203,13 @@ class BaseListView(gtk.Bin):
         date = util.timestamp_to_elapsed_string(timestamp)
         date_width = self._get_width_for_string(date)
 
-        self.sort_column = gtk.TreeViewColumn()
-        self.sort_column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        self.sort_column = Gtk.TreeViewColumn()
+        self.sort_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         self.sort_column.props.fixed_width = date_width
         self.sort_column.set_alignment(1)
         self.sort_column.props.resizable = True
         self.sort_column.props.clickable = True
-        self.sort_column.pack_start(cell_text)
+        self.sort_column.pack_start(cell_text, True)
         self.sort_column.add_attribute(cell_text, 'text',
                                        ListModel.COLUMN_TIMESTAMP)
         self.tree_view.append_column(self.sort_column)
@@ -218,19 +218,19 @@ class BaseListView(gtk.Bin):
         # Add some extra margin
         text = text + 'aaaaa'
 
-        widget = gtk.Label('')
+        widget = Gtk.Label(label='')
         context = widget.get_pango_context()
-        layout = pango.Layout(context)
+        layout = Pango.Layout(context)
         layout.set_text(text)
         width, height_ = layout.get_size()
-        return pango.PIXELS(width)
+        return Pango.PIXELS(width)
 
     def do_size_allocate(self, allocation):
         self.allocation = allocation
-        self.child.size_allocate(allocation)
+        self.get_child().size_allocate(allocation)
 
     def do_size_request(self, requisition):
-        requisition.width, requisition.height = self.child.size_request()
+        requisition.width, requisition.height = self.get_child().size_request()
 
     def __destroy_cb(self, widget):
         if self._model is not None:
@@ -247,7 +247,7 @@ class BaseListView(gtk.Bin):
     def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             cell.props.xo_color = color
         else:
@@ -352,12 +352,12 @@ class BaseListView(gtk.Bin):
             self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
-        alignment = gtk.Alignment(xalign=0.5, yalign=0.5, xscale=0.5)
-        self.remove(self.child)
+        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=0.5)
+        self.remove(self.get_child())
         self.add(alignment)
         alignment.show()
 
-        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.props.pulse_step = 0.01
         self._last_progress_bar_pulse = time.time()
         alignment.add(self._progress_bar)
@@ -366,22 +366,22 @@ class BaseListView(gtk.Bin):
     def _stop_progress_bar(self):
         if self._progress_bar is None:
             return
-        self.remove(self.child)
+        self.remove(self.get_child())
         self.add(self._scrolled_window)
         self._progress_bar = None
 
     def _show_message(self, message, show_clear_query=False):
-        self.remove(self.child)
+        self.remove(self.get_child())
 
-        background_box = gtk.EventBox()
-        background_box.modify_bg(gtk.STATE_NORMAL,
+        background_box = Gtk.EventBox()
+        background_box.modify_bg(Gtk.StateType.NORMAL,
                                  style.COLOR_WHITE.get_gdk_color())
         self.add(background_box)
 
-        alignment = gtk.Alignment(0.5, 0.5, 0.1, 0.1)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
         background_box.add(alignment)
 
-        box = gtk.VBox()
+        box = Gtk.VBox()
         alignment.add(box)
 
         icon = EventIcon(pixel_size=style.LARGE_ICON_SIZE,
@@ -390,17 +390,17 @@ class BaseListView(gtk.Bin):
                          fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.pack_start(icon, expand=True, fill=False)
 
-        label = gtk.Label()
+        label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
                 color, glib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False)
 
         if show_clear_query:
-            button = gtk.Button(label=_('Clear search'))
+            button = Gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
-                                      icon_size=gtk.ICON_SIZE_BUTTON)
+                                      icon_size=Gtk.IconSize.BUTTON)
             box.pack_start(button, expand=True, fill=False)
 
         background_box.show_all()
@@ -409,14 +409,14 @@ class BaseListView(gtk.Bin):
         self.emit('clear-clicked')
 
     def _clear_message(self):
-        if self.child == self._scrolled_window:
+        if self.get_child() == self._scrolled_window:
             return
-        self.remove(self.child)
+        self.remove(self.get_child())
         self.add(self._scrolled_window)
         self._scrolled_window.show()
 
     def update_dates(self):
-        if not self.tree_view.flags() & gtk.REALIZED:
+        if not self.tree_view.get_realized():
             return
         visible_range = self.tree_view.get_visible_range()
         if visible_range is None:
@@ -456,13 +456,13 @@ class BaseListView(gtk.Bin):
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
-                        gobject.timeout_add_seconds(UPDATE_INTERVAL,
+                        GObject.timeout_add_seconds(UPDATE_INTERVAL,
                                             self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True
             if self._update_dates_timer is not None:
                 logging.debug('Remove date updating timer')
-                gobject.source_remove(self._update_dates_timer)
+                GObject.source_remove(self._update_dates_timer)
                 self._update_dates_timer = None
 
     def __update_dates_timer_cb(self):
@@ -474,9 +474,9 @@ class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([object])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -498,10 +498,10 @@ class ListView(BaseListView):
         cell_detail = CellRendererDetail(self.tree_view)
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
 
-        column = gtk.TreeViewColumn()
-        column.props.sizing = gtk.TREE_VIEW_COLUMN_FIXED
+        column = Gtk.TreeViewColumn()
+        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.props.fixed_width = cell_detail.props.width
-        column.pack_start(cell_detail)
+        column.pack_start(cell_detail, True)
         self.tree_view.append_column(column)
 
     def __drag_begin_cb(self, widget, drag_context):
@@ -564,8 +564,8 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
-        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
-        client = gconf.client_get_default()
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
+        client = GConf.Client.get_default()
         prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
@@ -581,7 +581,7 @@ class CellRendererDetail(CellRendererIcon):
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'go-right'
-        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
         self.props.stroke_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
         self.props.prelit_stroke_color = style.COLOR_TRANSPARENT.get_svg()
@@ -592,9 +592,9 @@ class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererActivityIcon'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str, str])),
     }
 
@@ -606,7 +606,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
-        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
         self.tree_view = tree_view
 
@@ -633,7 +633,7 @@ class CellRendererActivityIcon(CellRendererIcon):
     def set_show_palette(self, show_palette):
         self._show_palette = show_palette
 
-    show_palette = gobject.property(type=bool, default=True,
+    show_palette = GObject.property(type=bool, default=True,
                                     setter=set_show_palette)
 
 
@@ -646,7 +646,7 @@ class CellRendererBuddy(CellRendererIcon):
         self.props.width = style.STANDARD_ICON_SIZE
         self.props.height = style.STANDARD_ICON_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
-        self.props.mode = gtk.CELL_RENDERER_MODE_ACTIVATABLE
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
         self.tree_view = tree_view
         self._model_column_index = column_index
@@ -669,4 +669,4 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.icon_name = 'computer-xo'
             self.props.xo_color = xo_color
 
-    buddy = gobject.property(type=object, setter=set_buddy)
+    buddy = GObject.property(type=object, setter=set_buddy)

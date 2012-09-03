@@ -52,7 +52,7 @@ import logging
 from xml.etree.ElementTree import XML
 import traceback
 
-import gio
+from gi.repository import Gio
 
 from sugar.bundle.bundleversion import NormalizedVersion
 from sugar.bundle.bundleversion import InvalidVersionError
@@ -85,7 +85,7 @@ class _UpdateFetcher(object):
         logging.debug('Fetch %s', url)
 
         self._completion_cb = completion_cb
-        self._file = gio.File(url)
+        self._file = Gio.File(url)
         self._stream = None
         self._xml_data = ''
         self._bundle = bundle

@@ -29,18 +29,18 @@ if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
 import gettext
 import logging
 
-import gconf
-import gtk
-import gobject
+from gi.repository import GConf
+from gi.repository import Gtk
+from gi.repository import GObject
 import dbus.glib
-import wnck
+from gi.repository import Wnck
 
 try:
     import xklavier
 except ImportError:
     logging.debug('Could not load xklavier for keyboard configuration')
 
-gtk.gdk.threads_init()
+Gdk.threads_init()
 dbus.glib.threads_init()
 
 def cleanup_logs(logs_dir):
@@ -126,11 +126,11 @@ def setup_file_transfer_cb():
 def setup_keyboard_cb():
     logging.debug('STARTUP: setup_keyboard_cb')
 
-    gconf_client = gconf.client_get_default()
+    gconf_client = GConf.Client.get_default()
     have_config = False
 
     try:
-        display = gtk.gdk.display_get_default()
+        display = Gdk.Display.get_default()
         if display is not None:
             engine = xklavier.Engine(display)
         else:
@@ -141,7 +141,7 @@ def setup_keyboard_cb():
         configrec.get_from_server(engine)
 
         layouts = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/layouts', gconf.VALUE_STRING)
+            '/desktop/sugar/peripherals/keyboard/layouts', GConf.ValueType.STRING)
         layouts_list = []
         variants_list = []
         for layout in layouts:
@@ -160,7 +160,7 @@ def setup_keyboard_cb():
             configrec.set_model(model)
 
         options = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
+            '/desktop/sugar/peripherals/keyboard/options', GConf.ValueType.STRING)
         if options:
             have_config = True
             configrec.set_options(options)
@@ -191,21 +191,21 @@ def bootstrap():
     from jarabe.view import launcher
     launcher.setup()
 
-    gobject.idle_add(setup_frame_cb)
-    gobject.idle_add(setup_keyhandler_cb)
-    gobject.idle_add(setup_journal_cb)
-    gobject.idle_add(setup_notification_service_cb)
-    gobject.idle_add(setup_file_transfer_cb)
-    gobject.idle_add(show_software_updates_cb)
+    GObject.idle_add(setup_frame_cb)
+    GObject.idle_add(setup_keyhandler_cb)
+    GObject.idle_add(setup_journal_cb)
+    GObject.idle_add(setup_notification_service_cb)
+    GObject.idle_add(setup_file_transfer_cb)
+    GObject.idle_add(show_software_updates_cb)
 
     if sys.modules.has_key('xklavier'):
-        gobject.idle_add(setup_keyboard_cb)
+        GObject.idle_add(setup_keyboard_cb)
 
 def set_fonts():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     face = client.get_string('/desktop/sugar/font/default_face')
     size = client.get_float('/desktop/sugar/font/default_size')
-    settings = gtk.settings_get_default()
+    settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 def main():
@@ -235,7 +235,7 @@ def main():
 
     logger.start('shell')
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/apps/metacity/general/mouse_button_modifier',
                       '<Super>')
 
@@ -247,7 +247,7 @@ def main():
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
-    gobject.idle_add(unfreeze_dcon_cb)
+    GObject.idle_add(unfreeze_dcon_cb)
 
     # make sure we have the correct cursor in the intro screen
     # TODO #3204
@@ -263,18 +263,18 @@ def main():
     sys.path.append(config.ext_path)
 
     icons_path = os.path.join(config.data_path, 'icons')
-    gtk.icon_theme_get_default().append_search_path(icons_path)
+    Gtk.IconTheme.get_default().append_search_path(icons_path)
 
     # open homewindow before window_manager to let desktop appear fast
     home_window = homewindow.get_instance()
     home_window.show()
 
-    screen = wnck.screen_get_default()
+    screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
     _check_for_window_manager(screen)
 
     try:
-        gtk.main()
+        Gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 

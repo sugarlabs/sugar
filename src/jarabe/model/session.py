@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 import dbus
 import os
 import signal
@@ -91,10 +91,10 @@ class SessionManager(session.SessionManager):
                     return
 
         session.SessionManager.shutdown_completed(self)
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def _close_emulator(self):
-        gtk.main_quit()
+        Gtk.main_quit()
 
         if 'SUGAR_EMULATOR_PID' in os.environ:
             pid = int(os.environ['SUGAR_EMULATOR_PID'])
