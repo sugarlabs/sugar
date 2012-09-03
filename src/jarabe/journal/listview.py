@@ -27,6 +27,7 @@ from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics.icon import EventIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3 import util
 
@@ -34,7 +35,6 @@ from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
-from jarabe.view.eventicon import EventIcon
 
 
 UPDATE_INTERVAL = 300

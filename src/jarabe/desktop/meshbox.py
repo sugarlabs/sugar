@@ -27,6 +27,7 @@ from gi.repository import Gtk
 from gi.repository import GConf
 
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import EventIcon
 from sugar3.graphics import style
 from sugar3.graphics import palette
 from sugar3.graphics.menuitem import MenuItem
@@ -35,7 +36,6 @@ from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.view.eventicon import EventIcon
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView

@@ -18,9 +18,9 @@
 from gi.repository import Gtk
 
 from sugar3.graphics import style
+from sugar3.graphics.icon import EventIcon
 
 from jarabe.view.buddyicon import BuddyIcon
-from jarabe.view.eventicon import EventIcon
 from jarabe.model import bundleregistry
 
 

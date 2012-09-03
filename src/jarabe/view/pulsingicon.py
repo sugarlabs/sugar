@@ -20,8 +20,7 @@ from gi.repository import GObject
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-
-from jarabe.view.eventicon import EventIcon
+from sugar3.graphics.icon import EventIcon
 
 
 _INTERVAL = 100

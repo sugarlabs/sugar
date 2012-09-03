@@ -29,13 +29,13 @@ import simplejson
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.icon import EventIcon
 from sugar3.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
-from jarabe.view.eventicon import EventIcon
 
 
 class Separator(Gtk.VBox):

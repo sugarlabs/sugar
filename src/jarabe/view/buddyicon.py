@@ -16,9 +16,9 @@
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.icon import EventIcon
 
 from jarabe.view.buddymenu import BuddyMenu
-from jarabe.view.eventicon import EventIcon
 
 
 _FILTERED_ALPHA = 0.33

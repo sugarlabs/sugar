@@ -27,6 +27,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import EventIcon
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
@@ -39,7 +40,6 @@ from jarabe.view.palettes import CurrentActivityPalette
 from jarabe.view.palettes import ActivityPalette
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.view.buddymenu import BuddyMenu
-from jarabe.view.eventicon import EventIcon
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry

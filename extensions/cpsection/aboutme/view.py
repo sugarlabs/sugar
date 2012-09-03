@@ -21,10 +21,10 @@ from gettext import gettext as _
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor, colors
+from sugar3.graphics.icon import EventIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
-from jarabe.view.eventicon import EventIcon
 
 _STROKE_COLOR = 0
 _FILL_COLOR = 1
