@@ -26,7 +26,7 @@ VOLUME_STEP = 10
 muted_changed = dispatch.Signal()
 volume_changed = dispatch.Signal()
 
-_volume = SugarExt.AcmeVolumeAlsa()
+_volume = SugarExt.VolumeAlsa()
 
 
 def get_muted():

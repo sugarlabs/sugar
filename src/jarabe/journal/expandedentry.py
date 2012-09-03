@@ -146,11 +146,11 @@ class ExpandedEntry(Gtk.EventBox):
         self._preview_box.add(self._create_preview())
 
         self._technical_box.foreach(self._technical_box.remove)
-        self._technical_box.pack_start(self._create_technical(, True, True, 0),
+        self._technical_box.pack_start(self._create_technical(),
                                        False, False, style.DEFAULT_SPACING)
 
         self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(, True, True, 0), False, False,
+        self._buddy_list.pack_start(self._create_buddy_list(), False, False,
                                     style.DEFAULT_SPACING)
 
         description = metadata.get('description', '')
