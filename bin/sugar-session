@@ -37,7 +37,7 @@ import dbus.glib
 from gi.repository import Wnck
 
 try:
-    import xklavier
+    from gi.repository import Xkl
 except ImportError:
     logging.debug('Could not load xklavier for keyboard configuration')
 
@@ -133,12 +133,12 @@ def setup_keyboard_cb():
     try:
         display = Gdk.Display.get_default()
         if display is not None:
-            engine = xklavier.Engine(display)
+            engine = Xkl.Engine(display)
         else:
             logging.debug('setup_keyboard_cb: Could not get default display.')
             return
 
-        configrec = xklavier.ConfigRec()
+        configrec = Xkl.ConfigRec()
         configrec.get_from_server(engine)
 
         layouts = gconf_client.get_list(\
