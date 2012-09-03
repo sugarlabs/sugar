@@ -68,13 +68,13 @@ class ViewContainer(Gtk.Container):
 
         self._layout.allocate_children(allocation, self._children)
 
-    def do_forall(self, include_internals, callback, callback_data):
+    def do_forall(self, include_internals, callback):
         for child in self._children:
-            callback(child, callback_data)
+            callback(child)
         if self._owner_icon:
-            callback(self._owner_icon, callback_data)
+            callback(self._owner_icon)
         if self._activity_icon:
-            callback(self._activity_icon, callback_data)
+            callback(self._activity_icon)
 
     def set_layout(self, layout):
         for child in self.get_children():

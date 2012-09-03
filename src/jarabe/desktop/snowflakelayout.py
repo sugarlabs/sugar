@@ -48,9 +48,9 @@ class SnowflakeLayout(Gtk.Container):
             child.set_parent_window(self.get_parent_window())
         child.set_parent(self)
 
-    def do_forall(self, include_internals, callback, data):
+    def do_forall(self, include_internals, callback):
         for child in self._children.keys():
-            callback(child, data)
+            callback(child)
 
     def do_remove(self, child):
         child.unparent()
