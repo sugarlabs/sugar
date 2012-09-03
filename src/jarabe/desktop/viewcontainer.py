@@ -24,7 +24,7 @@ class ViewContainer(Gtk.Container):
     __gtype_name__ = 'SugarViewContainer'
 
     def __init__(self, layout, owner_icon, activity_icon=None, **kwargs):
-        GObject.GObject.__init__(self, **kwargs)
+        Gtk.Container.__init__(self, **kwargs)
         self.set_has_window(False)
 
         self._activity_icon = None

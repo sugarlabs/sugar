@@ -26,7 +26,7 @@ from jarabe.model import bundleregistry
 
 class FriendView(Gtk.VBox):
     def __init__(self, buddy, **kwargs):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         # round icon sizes to an even number so that it can be accurately
         # centered in a larger bounding box also of even dimensions

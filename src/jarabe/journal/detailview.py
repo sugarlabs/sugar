@@ -38,8 +38,7 @@ class DetailView(Gtk.VBox):
         self._metadata = None
         self._expanded_entry = None
 
-        GObject.GObject.__init__(self, **kwargs)
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         back_bar = BackBar()
         back_bar.connect('button-release-event',
@@ -82,7 +81,7 @@ class DetailView(Gtk.VBox):
 
 class BackBar(Gtk.EventBox):
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.EventBox.__init__(self)
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_PANEL_GREY.get_gdk_color())
         hbox = Gtk.HBox(spacing=style.DEFAULT_PADDING)

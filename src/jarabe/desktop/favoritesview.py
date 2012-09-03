@@ -71,7 +71,7 @@ class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         self._view = FavoritesView(self)
         self.pack_start(self._view, True, True, 0)

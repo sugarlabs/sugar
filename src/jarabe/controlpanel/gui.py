@@ -40,7 +40,7 @@ class ControlPanel(Gtk.Window):
     __gtype_name__ = 'SugarControlPanel'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
             style.GRID_CELL_SIZE - 3))
@@ -395,7 +395,7 @@ class _SectionIcon(Gtk.EventBox):
         self._xo_color = None
         self._title = 'No Title'
 
-        GObject.GObject.__init__(self, **kwargs)
+        Gtk.EventBox.__init__(self, **kwargs)
 
         self._vbox = Gtk.VBox()
         self._icon = Icon(icon_name=self._icon_name,

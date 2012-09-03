@@ -38,7 +38,7 @@ class HomeBox(Gtk.VBox):
     def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the home view')
 
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         self._favorites_box = favoritesview.FavoritesBox()
         self._list_view = ActivitiesList()

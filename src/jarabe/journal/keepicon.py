@@ -25,7 +25,7 @@ from sugar3.graphics.xocolor import XoColor
 
 class KeepIcon(Gtk.ToggleButton):
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.ToggleButton.__init__(self)
         self.set_relief(Gtk.ReliefStyle.NONE)
         self.set_focus_on_click(False)
 

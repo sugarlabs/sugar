@@ -24,7 +24,7 @@ from sugar3.graphics.xocolor import XoColor
 
 class ColorPicker(Gtk.EventBox):
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.EventBox.__init__(self)
         self._xo_color = None
 
         self._xo = Icon(pixel_size=style.XLARGE_ICON_SIZE,

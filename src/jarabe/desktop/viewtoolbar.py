@@ -45,7 +45,7 @@ class ViewToolbar(Gtk.Toolbar):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         self._query = None
         self._autosearch_timer = None

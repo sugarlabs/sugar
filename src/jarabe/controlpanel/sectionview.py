@@ -33,7 +33,7 @@ class SectionView(Gtk.VBox):
     _APPLY_TIMEOUT = 1000
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
         self._is_valid = True
         self.auto_close = False
         self.needs_restart = False

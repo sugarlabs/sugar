@@ -36,7 +36,7 @@ class ZoomToolbar(Gtk.Toolbar):
                           ([]))
         }
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         # we shouldn't be mirrored in RTL locales
         self.set_direction(Gtk.TextDirection.LTR)

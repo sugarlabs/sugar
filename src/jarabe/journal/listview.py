@@ -44,7 +44,7 @@ class TreeView(Gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.TreeView.__init__(self)
         self.set_headers_visible(False)
         self.set_enable_search(False)
 
@@ -75,7 +75,7 @@ class BaseListView(Gtk.Bin):
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
 
-        GObject.GObject.__init__(self)
+        Gtk.Bin.__init__(self)
 
         self.connect('map', self.__map_cb)
         self.connect('unrealize', self.__unrealize_cb)

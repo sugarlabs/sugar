@@ -32,7 +32,7 @@ class EntryWithLabel(Gtk.HBox):
     __gtype_name__ = 'SugarEntryWithLabel'
 
     def __init__(self, label_text):
-        GObject.GObject.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
 
         self.label = Gtk.Label(label=label_text)
         self.label.modify_fg(Gtk.StateType.NORMAL,

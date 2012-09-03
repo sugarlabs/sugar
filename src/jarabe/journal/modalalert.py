@@ -29,7 +29,7 @@ class ModalAlert(Gtk.Window):
     __gtype_name__ = 'SugarModalAlert'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         self.set_border_width(style.LINE_WIDTH)
         offset = style.GRID_CELL_SIZE

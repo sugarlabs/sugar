@@ -40,7 +40,7 @@ class ObjectChooser(Gtk.Window):
     }
 
     def __init__(self, parent=None, what_filter=''):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)

@@ -56,7 +56,7 @@ class InlineAlert(Gtk.HBox):
         self._msg_label.modify_fg(Gtk.StateType.NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())
 
-        GObject.GObject.__init__(self, **kwargs)
+        Gtk.HBox.__init__(self, **kwargs)
 
         self.set_spacing(style.DEFAULT_SPACING)
         self.modify_bg(Gtk.StateType.NORMAL,

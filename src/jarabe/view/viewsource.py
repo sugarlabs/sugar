@@ -113,7 +113,7 @@ class ViewSource(Gtk.Window):
 
     def __init__(self, window_xid, bundle_path, document_path,
                  sugar_toolkit_path, title):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         _logger.debug('ViewSource paths: %r %r %r', bundle_path,
                       document_path, sugar_toolkit_path)
@@ -342,7 +342,7 @@ class Toolbar(Gtk.Toolbar):
     }
 
     def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         document_button = None
         self.bundle_path = bundle_path
@@ -455,7 +455,7 @@ class FileViewer(Gtk.ScrolledWindow):
     }
 
     def __init__(self, path, initial_filename):
-        GObject.GObject.__init__(self)
+        Gtk.ScrolledWindow.__init__(self)
 
         self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
@@ -519,7 +519,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.ScrolledWindow.__init__(self)
 
         self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC

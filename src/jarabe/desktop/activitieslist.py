@@ -46,7 +46,7 @@ class ActivitiesTreeView(Gtk.TreeView):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.TreeView.__init__(self)
 
         self._query = ''
 
@@ -170,7 +170,7 @@ class ListModel(Gtk.TreeModelSort):
     def __init__(self):
         self._model = Gtk.ListStore(str, bool, str, str, str, str, int, str)
         self._model_filter = self._model.filter_new()
-        GObject.GObject.__init__(self, self._model_filter)
+        Gtk.TreeModelSort.__init__(self, self._model_filter)
 
         GObject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -302,7 +302,7 @@ class ActivitiesList(Gtk.VBox):
     def __init__(self):
         logging.debug('STARTUP: Loading the activities list')
 
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)

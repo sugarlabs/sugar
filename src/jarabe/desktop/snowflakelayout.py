@@ -29,7 +29,7 @@ class SnowflakeLayout(Gtk.Container):
     __gtype_name__ = 'SugarSnowflakeLayout'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Container.__init__(self)
         self.set_has_window(False)
         self._nflakes = 0
         self._children = {}

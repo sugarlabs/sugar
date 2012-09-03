@@ -186,7 +186,7 @@ class ProgressPane(Gtk.VBox):
     install."""
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
         self.set_spacing(style.DEFAULT_PADDING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
 
@@ -220,7 +220,7 @@ class ProgressPane(Gtk.VBox):
 class UpdateBox(Gtk.VBox):
 
     def __init__(self, model):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
 
         self._model = model
 
@@ -295,7 +295,7 @@ class UpdateList(Gtk.TreeView):
 
     def __init__(self, model):
         list_model = UpdateListModel(model)
-        GObject.GObject.__init__(self, list_model)
+        Gtk.TreeView.__init__(self, list_model)
 
         self.set_reorderable(False)
         self.set_enable_search(False)
@@ -353,7 +353,7 @@ class UpdateListModel(Gtk.ListStore):
     SIZE = 4
 
     def __init__(self, model):
-        GObject.GObject.__init__(self, str, bool, str, str, int)
+        Gtk.ListStore.__init__(self, str, bool, str, str, int)
 
         for bundle_update in model.updates:
             row = [None] * 5

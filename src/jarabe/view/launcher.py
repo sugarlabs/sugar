@@ -31,7 +31,7 @@ from jarabe.view.pulsingicon import PulsingIcon
 class LaunchWindow(Gtk.Window):
 
     def __init__(self, activity_id, icon_path, icon_color):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         self.props.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())

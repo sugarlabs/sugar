@@ -74,7 +74,7 @@ class CanceledKeyRequestError(dbus.DBusException):
 
 class KeyDialog(Gtk.Dialog):
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
-        GObject.GObject.__init__(self, flags=Gtk.DialogFlags.MODAL)
+        Gtk.Dialog.__init__(self, flags=Gtk.DialogFlags.MODAL)
         self.set_title('Wireless Key Required')
 
         self._response = response

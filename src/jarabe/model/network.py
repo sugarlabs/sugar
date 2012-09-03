@@ -602,7 +602,7 @@ class AccessPoint(GObject.GObject):
     }
 
     def __init__(self, device, model):
-        self.__gobject_init__()
+        GObject.GObject.__init__(self)
         self.device = device
         self.model = model
 

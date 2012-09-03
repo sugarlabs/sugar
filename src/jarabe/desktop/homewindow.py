@@ -43,7 +43,7 @@ _instance = None
 class HomeWindow(Gtk.Window):
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         accel_group = Gtk.AccelGroup()
         self.set_data('sugar-accel-group', accel_group)

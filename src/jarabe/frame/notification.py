@@ -37,7 +37,7 @@ class NotificationIcon(Gtk.EventBox):
 
     def __init__(self, **kwargs):
         self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
-        GObject.GObject.__init__(self, **kwargs)
+        Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
 
         self._icon.props.pulse_color = \
@@ -89,7 +89,7 @@ class NotificationWindow(Gtk.Window):
 
     def __init__(self, **kwargs):
 
-        GObject.GObject.__init__(self, **kwargs)
+        Gtk.Window.__init__(self, **kwargs)
 
         self.set_decorated(False)
         self.set_resizable(False)

@@ -16,7 +16,6 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
 
 from sugar3.graphics import style
 
@@ -30,7 +29,7 @@ class FrameContainer(Gtk.Bin):
     __gtype_name__ = 'SugarFrameContainer'
 
     def __init__(self, position):
-        GObject.GObject.__init__(self)
+        Gtk.Bin.__init__(self)
         self._position = position
 
         if self.is_vertical():
@@ -105,7 +104,7 @@ class FrameWindow(Gtk.Window):
     __gtype_name__ = 'SugarFrameWindow'
 
     def __init__(self, position):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
         self.hover = False
         self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
 

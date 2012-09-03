@@ -41,7 +41,7 @@ class MainToolbar(Gtk.Toolbar):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         self._add_separator()
 
@@ -101,7 +101,7 @@ class SectionToolbar(Gtk.Toolbar):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         self._add_separator()
 

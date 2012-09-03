@@ -40,13 +40,13 @@ from jarabe.journal import model
 
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
-        GObject.GObject.__init__(self,
+        Gtk.VBox.__init__(self,
                 background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
     def __init__(self, buddies):
-        GObject.GObject.__init__(self, 0, 0, 0, 0)
+        Gtk.Alignment.__init__(self, 0, 0, 0, 0)
 
         hbox = Gtk.HBox()
         for buddy in buddies:
@@ -61,7 +61,7 @@ class BuddyList(Gtk.Alignment):
 
 class ExpandedEntry(Gtk.EventBox):
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.EventBox.__init__(self)
         self._vbox = Gtk.VBox()
         self.add(self._vbox)
 

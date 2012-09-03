@@ -201,7 +201,7 @@ class CopyMenu(Gtk.Menu):
     }
 
     def __init__(self, metadata):
-        GObject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         self._metadata = metadata
 
@@ -324,7 +324,7 @@ class FriendsMenu(Gtk.Menu):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         if filetransfer.file_transfer_available():
             friends_model = friends.get_model()
@@ -357,7 +357,7 @@ class StartWithMenu(Gtk.Menu):
     __gtype_name__ = 'JournalStartWithMenu'
 
     def __init__(self, metadata):
-        GObject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         self._metadata = metadata
 

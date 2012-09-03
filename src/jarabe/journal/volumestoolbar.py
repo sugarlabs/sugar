@@ -171,7 +171,7 @@ class VolumesToolbar(Gtk.Toolbar):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Toolbar.__init__(self)
         self._mount_added_hid = None
         self._mount_removed_hid = None
 

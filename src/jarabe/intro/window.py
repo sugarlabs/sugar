@@ -78,7 +78,7 @@ class _Page(Gtk.VBox):
     }
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
         self.valid = False
 
     def set_valid(self, valid):
@@ -160,7 +160,7 @@ class _IntroBox(Gtk.VBox):
     PAGE_LAST = PAGE_COLOR
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.VBox.__init__(self)
         self.set_border_width(style.zoom(30))
 
         self._page = self.PAGE_NAME
@@ -264,7 +264,7 @@ class IntroWindow(Gtk.Window):
     __gtype_name__ = 'SugarIntroWindow'
 
     def __init__(self):
-        GObject.GObject.__init__(self)
+        Gtk.Window.__init__(self)
 
         self.props.decorated = False
         self.maximize()
