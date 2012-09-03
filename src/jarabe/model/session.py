@@ -21,8 +21,8 @@ import signal
 import sys
 import logging
 
-from sugar import session
-from sugar import env
+from sugar3 import session
+from sugar3 import env
 
 
 _session_manager = None

@@ -24,14 +24,14 @@ import glib
 
 from gi.repository import Gtk
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.datastore import datastore
-from sugar import mime
-from sugar import env
-from sugar.activity.i18n import pgettext
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.datastore import datastore
+from sugar3 import mime
+from sugar3 import env
+from sugar3.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc

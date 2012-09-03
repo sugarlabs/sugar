@@ -26,9 +26,9 @@ import glib
 from gi.repository import Gtk
 import simplejson
 
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
-from sugar.util import format_size
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
+from sugar3.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette

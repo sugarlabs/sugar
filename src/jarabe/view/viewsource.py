@@ -29,16 +29,16 @@ from gi.repository import GtkSource
 import dbus
 from gi.repository import GConf
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.datastore import datastore
-from sugar.env import get_user_activities_path
-from sugar import mime
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.datastore import datastore
+from sugar3.env import get_user_activities_path
+from sugar3 import mime
 
 from jarabe.view import customizebundle
 

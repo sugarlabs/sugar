@@ -30,10 +30,10 @@ import simplejson
 import tempfile
 import shutil
 
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
-from sugar import env
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.xocolor import XoColor
+from sugar3 import env
 
 from jarabe.journal import model
 from jarabe.view.palettes import VolumePalette

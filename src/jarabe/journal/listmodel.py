@@ -21,16 +21,16 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gettext import gettext as _
 
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import style
-from sugar import util
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3 import util
 
 from jarabe.journal import model
 from jarabe.journal import misc
 
 
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
+DS_DBUS_SERVICE = 'org.laptop.sugar3.DataStore'
+DS_DBUS_INTERFACE = 'org.laptop.sugar3.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 

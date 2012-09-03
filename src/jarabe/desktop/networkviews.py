@@ -23,15 +23,15 @@ import hashlib
 import dbus
 import glib
 
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import xocolor
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state
-from sugar.graphics import palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.util import unique_id
-from sugar import profile
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import xocolor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state
+from sugar3.graphics import palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.util import unique_id
+from sugar3 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog

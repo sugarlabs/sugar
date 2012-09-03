@@ -23,13 +23,13 @@ from gi.repository import GObject
 from gi.repository import Gio
 import simplejson
 
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.contentbundle import ContentBundle
-from sugar.bundle.bundleversion import NormalizedVersion
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.contentbundle import ContentBundle
+from sugar3.bundle.bundleversion import NormalizedVersion
 from jarabe.journal.journalentrybundle import JournalEntryBundle
-from sugar.bundle.bundle import MalformedBundleException, \
+from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
-from sugar import env
+from sugar3 import env
 
 from jarabe import config
 from jarabe.model import mimeregistry

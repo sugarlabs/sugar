@@ -23,8 +23,8 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon, CellRendererIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 

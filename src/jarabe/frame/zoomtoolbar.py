@@ -22,9 +22,9 @@ import glib
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell

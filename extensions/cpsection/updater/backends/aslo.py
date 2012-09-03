@@ -54,8 +54,8 @@ import traceback
 
 from gi.repository import Gio
 
-from sugar.bundle.bundleversion import NormalizedVersion
-from sugar.bundle.bundleversion import InvalidVersionError
+from sugar3.bundle.bundleversion import NormalizedVersion
+from sugar3.bundle.bundleversion import InvalidVersionError
 
 from jarabe import config
 

@@ -42,8 +42,8 @@ from telepathy.constants import HANDLE_TYPE_CONTACT, \
                                 CONNECTION_STATUS_DISCONNECTED
 from telepathy.client import Connection, Channel
 
-from sugar.graphics.xocolor import XoColor
-from sugar.profile import get_profile
+from sugar3.graphics.xocolor import XoColor
+from sugar3.profile import get_profile
 
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry

@@ -17,10 +17,10 @@
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import _IconBuffer
-from sugar.graphics.palette import Palette
-from sugar.graphics.palettewindow import Invoker
+from sugar3.graphics import style
+from sugar3.graphics.icon import _IconBuffer
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettewindow import Invoker
 
 
 class CursorInvoker(Invoker):

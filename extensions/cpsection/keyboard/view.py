@@ -21,8 +21,8 @@ from gi.repository import Pango
 import logging
 from gettext import gettext as _
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
 

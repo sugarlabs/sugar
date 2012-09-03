@@ -21,8 +21,8 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Wnck
 
-from sugar.graphics import style
-from sugar.graphics.toolbutton import ToolButton
+from sugar3.graphics import style
+from sugar3.graphics.toolbutton import ToolButton
 
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel

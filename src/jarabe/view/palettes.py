@@ -23,13 +23,13 @@ from gi.repository import GConf
 import glib
 from gi.repository import Gtk
 
-from sugar import env
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
-from sugar.activity.i18n import pgettext
+from sugar3 import env
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
+from sugar3.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source

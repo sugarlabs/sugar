@@ -18,8 +18,8 @@ import math
 
 from gi.repository import GObject
 
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 
 from jarabe.view.eventicon import EventIcon
 

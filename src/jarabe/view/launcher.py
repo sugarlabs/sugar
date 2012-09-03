@@ -20,8 +20,8 @@ from gettext import gettext as _
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar import wm
-from sugar.graphics import style
+from sugar3 import wm
+from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon

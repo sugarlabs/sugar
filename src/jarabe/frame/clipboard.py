@@ -23,7 +23,7 @@ import tempfile
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar import mime
+from sugar3 import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
 

@@ -16,9 +16,9 @@
 
 from gi.repository import GConf
 
-from sugar import env
+from sugar3 import env
 from gi.repository import SugarExt
-from sugar import dispatch
+from sugar3 import dispatch
 
 
 VOLUME_STEP = 10

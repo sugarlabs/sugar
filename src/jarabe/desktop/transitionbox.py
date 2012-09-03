@@ -16,8 +16,8 @@
 
 from gi.repository import GObject
 
-from sugar.graphics import style
-from sugar.graphics import animator
+from sugar3.graphics import style
+from sugar3.graphics import animator
 
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon

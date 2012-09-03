@@ -18,9 +18,9 @@ from gi.repository import Gtk
 from gettext import gettext as _
 from gi.repository import GConf
 
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
 
 
 class ModalAlert(Gtk.Window):

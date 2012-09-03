@@ -27,17 +27,17 @@ from gi.repository import Gio
 import glib
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.tray import HTray
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.icon import Icon, get_icon_file_name
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.datastore import datastore
-from sugar import mime
-from sugar import env
+from sugar3.graphics import style
+from sugar3.graphics.tray import HTray
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.icon import Icon, get_icon_file_name
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.datastore import datastore
+from sugar3 import mime
+from sugar3 import env
 
 from jarabe.model import shell
 from jarabe.model import invites

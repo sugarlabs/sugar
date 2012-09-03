@@ -21,8 +21,8 @@ from gi.repository import Gio
 from gi.repository import Gtk
 
 from gettext import gettext as _
-from sugar import mime
-from sugar.bundle.activitybundle import ActivityBundle
+from sugar3 import mime
+from sugar3.bundle.activitybundle import ActivityBundle
 
 
 class ClipboardObject(object):

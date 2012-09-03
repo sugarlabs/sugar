@@ -24,12 +24,12 @@ from gi.repository import Pango
 from gi.repository import GConf
 from gi.repository import Gtk
 
-from sugar import util
-from sugar.graphics import style
-from sugar.graphics.icon import Icon, CellRendererIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.alert import Alert
+from sugar3 import util
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.alert import Alert
 
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette

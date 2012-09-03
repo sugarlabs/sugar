@@ -17,7 +17,7 @@
 import os
 import logging
 
-from sugar.graphics import tray
+from sugar3.graphics import tray
 
 from jarabe import config
 

@@ -18,7 +18,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 
 class FrameContainer(Gtk.Bin):

@@ -23,8 +23,8 @@ import dbus
 from telepathy.client import Connection
 from telepathy.interfaces import CONNECTION
 
-from sugar.graphics.xocolor import XoColor
-from sugar.profile import get_profile
+from sugar3.graphics.xocolor import XoColor
+from sugar3.profile import get_profile
 
 from jarabe.util.telepathy import connection_watcher
 

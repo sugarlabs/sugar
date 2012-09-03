@@ -21,12 +21,12 @@ import glib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state, Icon
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state, Icon
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import sound

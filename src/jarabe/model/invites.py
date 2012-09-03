@@ -30,7 +30,7 @@ from telepathy.interfaces import CHANNEL, \
                                  CLIENT
 from telepathy.constants import HANDLE_TYPE_ROOM
 
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry

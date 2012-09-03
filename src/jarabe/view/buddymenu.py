@@ -23,9 +23,9 @@ from gi.repository import GConf
 import glib
 import dbus
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
 
 from jarabe.model import shell
 from jarabe.model import friends

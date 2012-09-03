@@ -29,9 +29,9 @@ import ConfigParser
 from gi.repository import GConf
 import ctypes
 
-from sugar import dispatch
-from sugar import env
-from sugar.util import unique_id
+from sugar3 import dispatch
+from sugar3 import env
+from sugar3.util import unique_id
 
 NM_STATE_UNKNOWN = 0
 NM_STATE_ASLEEP = 10

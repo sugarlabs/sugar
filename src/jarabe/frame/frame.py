@@ -19,10 +19,10 @@ import logging
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar.graphics import animator
-from sugar.graphics import style
-from sugar.graphics import palettegroup
-from sugar import profile
+from sugar3.graphics import animator
+from sugar3.graphics import style
+from sugar3.graphics import palettegroup
+from sugar3 import profile
 
 from jarabe.frame.eventarea import EventArea
 from jarabe.frame.activitiestray import ActivitiesTray

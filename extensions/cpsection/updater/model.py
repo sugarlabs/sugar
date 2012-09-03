@@ -30,10 +30,10 @@ import traceback
 from gi.repository import GObject
 from gi.repository import Gio
 
-from sugar import env
-from sugar.datastore import datastore
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.bundleversion import NormalizedVersion
+from sugar3 import env
+from sugar3.datastore import datastore
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model import bundleregistry
 

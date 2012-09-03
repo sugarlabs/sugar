@@ -24,11 +24,11 @@ import pwd
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar import env
-from sugar import profile
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
+from sugar3 import env
+from sugar3 import profile
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.intro import colorpicker
 

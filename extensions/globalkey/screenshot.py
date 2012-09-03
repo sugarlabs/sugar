@@ -23,9 +23,9 @@ from gi.repository import Gtk
 from gi.repository import GConf
 import dbus
 
-from sugar.datastore import datastore
-from sugar.graphics import style
-from sugar import env
+from sugar3.datastore import datastore
+from sugar3.graphics import style
+from sugar3 import env
 from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']

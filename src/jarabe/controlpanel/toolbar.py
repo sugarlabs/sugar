@@ -20,10 +20,10 @@ from gi.repository import GObject
 
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
-from sugar.graphics.icon import Icon
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics import iconentry
-from sugar.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics import iconentry
+from sugar3.graphics import style
 
 
 class MainToolbar(Gtk.Toolbar):

@@ -17,7 +17,7 @@
 from gettext import gettext as _
 from gi.repository import GConf
 
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import XoColor
 
 CLASS = 'AboutMe'
 ICON = 'module-about_me'

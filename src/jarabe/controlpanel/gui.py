@@ -21,9 +21,9 @@ from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from sugar.graphics.alert import Alert
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics.alert import Alert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar

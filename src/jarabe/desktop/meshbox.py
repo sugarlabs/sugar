@@ -26,10 +26,10 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GConf
 
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from sugar.graphics import palette
-from sugar.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics import palette
+from sugar3.graphics.menuitem import MenuItem
 
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.model import neighborhood

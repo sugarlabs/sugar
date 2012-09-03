@@ -20,10 +20,10 @@ from gi.repository import GConf
 
 from gi.repository import Gtk
 
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import style
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu

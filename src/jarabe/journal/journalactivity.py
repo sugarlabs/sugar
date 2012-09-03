@@ -24,13 +24,13 @@ import dbus
 import statvfs
 import os
 
-from sugar.graphics.window import Window
-from sugar.graphics.alert import ErrorAlert
+from sugar3.graphics.window import Window
+from sugar3.graphics.alert import ErrorAlert
 
-from sugar.bundle.bundle import ZipExtractException, RegistrationException
-from sugar import env
-from sugar.activity import activityfactory
-from sugar import wm
+from sugar3.bundle.bundle import ZipExtractException, RegistrationException
+from sugar3 import env
+from sugar3.activity import activityfactory
+from sugar3 import wm
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox

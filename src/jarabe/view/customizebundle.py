@@ -20,10 +20,10 @@ import hashlib
 
 from gi.repository import Gtk
 
-from sugar import profile
-from sugar.activity import bundlebuilder
-from sugar.datastore import datastore
-from sugar.env import get_user_activities_path
+from sugar3 import profile
+from sugar3.activity import bundlebuilder
+from sugar3.datastore import datastore
+from sugar3.env import get_user_activities_path
 
 import logging
 _logger = logging.getLogger('ViewSource')

@@ -24,10 +24,10 @@ from gi.repository import Gtk
 from gi.repository import GConf
 from gi.repository import Pango
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon, CellRendererIcon
-from sugar.graphics.xocolor import XoColor
-from sugar import util
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3 import util
 
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette

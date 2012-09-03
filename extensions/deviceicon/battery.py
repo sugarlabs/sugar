@@ -23,11 +23,11 @@ from gi.repository import GObject
 from gi.repository import Gtk
 import dbus
 
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 

@@ -23,16 +23,16 @@ from gi.repository import Gio
 from gi.repository import GConf
 from gi.repository import Gtk
 
-from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
-from sugar.graphics.icon import get_icon_file_name
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.alert import ConfirmationAlert
-from sugar import mime
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.bundle import AlreadyInstalledException
-from sugar.bundle.contentbundle import ContentBundle
-from sugar import util
+from sugar3.activity import activityfactory
+from sugar3.activity.activityhandle import ActivityHandle
+from sugar3.graphics.icon import get_icon_file_name
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import ConfirmationAlert
+from sugar3 import mime
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.bundle import AlreadyInstalledException
+from sugar3.bundle.contentbundle import ContentBundle
+from sugar3 import util
 
 from jarabe.view import launcher
 from jarabe.model import bundleregistry, shell

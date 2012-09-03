@@ -18,7 +18,7 @@ from gi.repository import Gtk
 from gi.repository import GObject
 from gettext import gettext as _
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert

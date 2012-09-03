@@ -24,14 +24,14 @@ from gi.repository import GConf
 import glib
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.alert import Alert
-from sugar.graphics.xocolor import XoColor
-from sugar.activity import activityfactory
-from sugar import dispatch
-from sugar.datastore import datastore
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.alert import Alert
+from sugar3.graphics.xocolor import XoColor
+from sugar3.activity import activityfactory
+from sugar3 import dispatch
+from sugar3.datastore import datastore
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette

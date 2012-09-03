@@ -22,10 +22,10 @@ from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import GConf
 
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
 
 from jarabe.journal import journalactivity
 from jarabe.view.palettes import VolumePalette

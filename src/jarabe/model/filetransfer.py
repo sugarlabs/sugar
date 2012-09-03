@@ -27,8 +27,8 @@ from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
                                 SOCKET_ACCESS_CONTROL_LOCALHOST
 from telepathy.client import Connection, Channel
 
-from sugar.presence import presenceservice
-from sugar import dispatch
+from sugar3.presence import presenceservice
+from sugar3 import dispatch
 
 from jarabe.util.telepathy import connection_watcher
 from jarabe.model import neighborhood

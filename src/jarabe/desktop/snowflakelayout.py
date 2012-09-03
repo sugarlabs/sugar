@@ -18,7 +18,7 @@ import math
 
 from gi.repository import Gtk
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 
 _BASE_DISTANCE = style.zoom(25)

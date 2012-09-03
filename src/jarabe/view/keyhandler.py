@@ -21,7 +21,7 @@ import logging
 import dbus
 from gi.repository import Gtk
 
-from sugar._sugarext import KeyGrabber
+from sugar3._sugarext import KeyGrabber
 
 from jarabe.model import sound
 from jarabe.model import shell

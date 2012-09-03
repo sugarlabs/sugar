@@ -2,8 +2,8 @@ import os
 
 from gi.repository import Gtk
 
-from sugar import env
-from sugar.profile import get_profile
+from sugar3 import env
+from sugar3.profile import get_profile
 
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile

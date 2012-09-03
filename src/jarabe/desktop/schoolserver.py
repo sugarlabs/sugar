@@ -28,8 +28,8 @@ import sys
 
 from gi.repository import GConf
 
-from sugar import env
-from sugar.profile import get_profile
+from sugar3 import env
+from sugar3.profile import get_profile
 
 _REGISTER_URL = 'http://schoolserver:8080/'
 _REGISTER_TIMEOUT = 8

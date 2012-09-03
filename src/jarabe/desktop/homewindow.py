@@ -19,8 +19,8 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics import palettegroup
+from sugar3.graphics import style
+from sugar3.graphics import palettegroup
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox

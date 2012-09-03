@@ -21,7 +21,7 @@ from gi.repository import GObject
 
 from jarabe.model import network
 from jarabe.model.network import Settings
-from sugar.util import unique_id
+from sugar3.util import unique_id
 from jarabe.model.network import IP4Config
 
 

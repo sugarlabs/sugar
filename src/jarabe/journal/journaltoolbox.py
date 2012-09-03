@@ -27,18 +27,18 @@ from gi.repository import Gio
 import glib
 from gi.repository import Gtk
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.graphics.toolcombobox import ToolComboBox
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toggletoolbutton import ToggleToolButton
-from sugar.graphics.combobox import ComboBox
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.alert import Alert
-from sugar.graphics import iconentry
-from sugar import mime
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolcombobox import ToolComboBox
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toggletoolbutton import ToggleToolButton
+from sugar3.graphics.combobox import ComboBox
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import Alert
+from sugar3.graphics import iconentry
+from sugar3 import mime
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc

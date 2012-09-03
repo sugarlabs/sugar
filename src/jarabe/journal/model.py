@@ -33,13 +33,13 @@ import dbus
 from gi.repository import Gio
 from gi.repository import GConf
 
-from sugar import dispatch
-from sugar import mime
-from sugar import util
+from sugar3 import dispatch
+from sugar3 import mime
+from sugar3 import util
 
 
-DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
-DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
+DS_DBUS_SERVICE = 'org.laptop.sugar3.DataStore'
+DS_DBUS_INTERFACE = 'org.laptop.sugar3.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 # Properties the journal cares about.

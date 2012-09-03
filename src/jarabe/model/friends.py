@@ -21,8 +21,8 @@ from ConfigParser import ConfigParser
 from gi.repository import GObject
 import dbus
 
-from sugar import env
-from sugar.graphics.xocolor import XoColor
+from sugar3 import env
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import neighborhood

@@ -25,7 +25,7 @@ from gettext import gettext as _
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar import env
+from sugar3 import env
 
 
 ERROR_NO_DISPLAY = 30

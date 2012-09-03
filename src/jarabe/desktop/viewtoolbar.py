@@ -23,9 +23,9 @@ import logging
 from gi.repository import Gtk
 from gi.repository import GObject
 
-from sugar.graphics import style
-from sugar.graphics import iconentry
-from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics import style
+from sugar3.graphics import iconentry
+from sugar3.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.desktop import favoritesview
 

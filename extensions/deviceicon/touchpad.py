@@ -24,10 +24,10 @@ import glib
 
 import logging
 
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.palette import Palette
-from sugar.graphics import style
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.palette import Palette
+from sugar3.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 

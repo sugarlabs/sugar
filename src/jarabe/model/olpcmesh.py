@@ -22,7 +22,7 @@ from gi.repository import GObject
 from jarabe.model import network
 from jarabe.model.network import Settings
 from jarabe.model.network import OlpcMesh as OlpcMeshSettings
-from sugar.util import unique_id
+from sugar3.util import unique_id
 
 _XS_ANYCAST = '\xc0\x27\xc0\x27\xc0\x00'
 
