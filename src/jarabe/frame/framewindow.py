@@ -109,6 +109,7 @@ class FrameWindow(Gtk.Window):
 
     def __init__(self, position):
         Gtk.Window.__init__(self)
+        self.set_has_resize_grip(False)
         self.hover = False
         self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
 

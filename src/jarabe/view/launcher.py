@@ -32,6 +32,7 @@ class LaunchWindow(Gtk.Window):
 
     def __init__(self, activity_id, icon_path, icon_color):
         Gtk.Window.__init__(self)
+        self.set_has_resize_grip(False)
 
         self.props.type_hint = Gdk.WindowTypeHint.SPLASHSCREEN
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
