@@ -42,9 +42,8 @@ class FrameContainer(Gtk.Bin):
     def is_vertical(self):
         return self._position in (Gtk.PositionType.LEFT, Gtk.PositionType.RIGHT)
 
-    def do_expose_event(self, event):
+    def do_draw(self, cr):
         # Draw the inner border as a rectangle
-        cr = self.get_parent_window().cairo_create()
         r, g, b, a = style.COLOR_BUTTON_GREY.get_rgba()
         cr.set_source_rgba (r, g, b, a)
 
@@ -62,7 +61,7 @@ class FrameContainer(Gtk.Bin):
         cr.rectangle(x, y, width, height)
         cr.fill()
 
-        Gtk.Bin.do_expose_event(self, event)
+        Gtk.Bin.do_draw(self, cr)
         return False
 
     def do_size_request(self, req):
