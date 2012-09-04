@@ -22,7 +22,7 @@ import dbus
 from gi.repository import Gtk
 from gi.repository import Gdk
 
-from sugar3._sugarext import KeyGrabber
+from gi.repository import SugarExt
 
 from jarabe.model import sound
 from jarabe.model import shell
@@ -75,7 +75,7 @@ class KeyHandler(object):
         self._keycode_pressed = 0
         self._keystate_pressed = 0
 
-        self._key_grabber = KeyGrabber()
+        self._key_grabber = SugarExt.KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
         self._key_grabber.connect('key-released',
