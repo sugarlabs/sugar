@@ -73,9 +73,14 @@ class BundleRegistry(GObject.GObject):
         self._favorite_bundles = {}
 
         client = GConf.Client.get_default()
-        self._protected_activities = client.get_list(
-                                    '/desktop/sugar/protected_activities',
-                                     GConf.ValueType.STRING)
+        self._protected_activities = []
+
+        # FIXME, gconf_client_get_list not introspectable #681433
+        protected_activities = client.get(
+            '/desktop/sugar/protected_activities')
+        for gval in protected_activities.get_list():
+            activity_id = gval.get_string()
+            self._protected_activities.append(activity_id)
 
         if self._protected_activities is None:
             self._protected_activities = []
