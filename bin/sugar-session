@@ -141,18 +141,21 @@ def setup_keyboard_cb():
         configrec = Xkl.ConfigRec()
         configrec.get_from_server(engine)
 
-        layouts = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/layouts', GConf.ValueType.STRING)
+        # FIXME, gconf_client_get_list not introspectable #681433
+        layouts_from_gconf = gconf_client.get(
+            '/desktop/sugar/peripherals/keyboard/layouts')
         layouts_list = []
         variants_list = []
-        for layout in layouts:
-            layouts_list.append(layout.split('(')[0])
-            variants_list.append(layout.split('(')[1][:-1])
+        if layouts_from_gconf:
+            for gval in layouts_from_gconf.get_list():
+                layout = gval.get_string()
+                layouts_list.append(layout.split('(')[0])
+                variants_list.append(layout.split('(')[1][:-1])
 
-        if layouts_list and variants_list:
-            have_config = True
-            configrec.set_layouts(layouts_list)
-            configrec.set_variants(variants_list)
+            if layouts_list and variants_list:
+                have_config = True
+                configrec.set_layouts(layouts_list)
+                configrec.set_variants(variants_list)
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
@@ -160,11 +163,17 @@ def setup_keyboard_cb():
             have_config = True
             configrec.set_model(model)
 
-        options = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/options', GConf.ValueType.STRING)
-        if options:
-            have_config = True
-            configrec.set_options(options)
+        options = []
+        # FIXME, gconf_client_get_list not introspectable #681433
+        options_from_gconf = gconf_client.get(\
+            '/desktop/sugar/peripherals/keyboard/options')
+        if options_from_gconf:
+            for gval in options_from_gconf.get_list():
+                option = gval.get_string()
+                options.append(option)
+            if options:
+                have_config = True
+                configrec.set_options(options)
 
         if have_config:
             configrec.activate(engine)

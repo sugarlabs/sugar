@@ -94,9 +94,16 @@ class KeyboardManager(object):
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
-        layouts = self._gconf_client.get_list(_LAYOUTS_KEY, GConf.ValueType.STRING)
-        if layouts:
-            return layouts
+        # FIXME, gconf_client_get_list not introspectable #681433
+        layouts_from_gconf = self._gconf_client.get(
+            '/desktop/sugar/peripherals/keyboard/layouts')
+        layouts = []
+        if layouts_from_gconf:
+            for gval in layouts_from_gconf.get_list():
+                layout = gval.get_string()
+                layouts.append(layout)
+            if layouts:
+                return layouts
 
         layouts = self._configrec.get_layouts()
         variants = self._configrec.get_variants()
@@ -116,7 +123,14 @@ class KeyboardManager(object):
 
     def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
-        options = self._gconf_client.get_list(_OPTIONS_KEY, GConf.ValueType.STRING)
+        options = []
+        # FIXME, gconf_client_get_list not introspectable #681433
+        options_from_gconf = gconf_client.get(\
+            '/desktop/sugar/peripherals/keyboard/options')
+        if options_from_gconf:
+            for gval in options_from_gconf.get_list():
+                option = gval.get_string()
+                options.append(option)
 
         if not options:
             options = self._configrec.get_options()
