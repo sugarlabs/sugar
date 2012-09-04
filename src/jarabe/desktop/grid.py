@@ -19,6 +19,7 @@ import random
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import cairo
 
 from gi.repository import SugarExt
 
@@ -38,28 +39,31 @@ class Grid(SugarExt.Grid):
     def __init__(self, width, height):
         GObject.GObject.__init__(self)
 
-        self.width = width
-        self.height = height
         self._children = []
         self._child_rects = {}
         self._locked_children = set()
         self._collisions = []
         self._collisions_sid = 0
 
-        self.setup(self.width, self.height)
+        self.setup(width, height)
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
-            rect = (x, y, width, height)
+            rect = cairo.RectangleInt()
+            rect.x = x
+            rect.y = y
+            rect.width = width
+            rect.height = height
             weight = self.compute_weight(rect)
         else:
             trials = _PLACE_TRIALS
             weight = _MAX_WEIGHT
             while trials > 0 and weight:
-                x = int(random.random() * (self.width - width))
-                y = int(random.random() * (self.height - height))
-
-                rect = (x, y, width, height)
+                rect = cairo.RectangleInt()
+                rect.x = int(random.random() * (self.width - width))
+                rect.y = int(random.random() * (self.height - height))
+                rect.width = width
+                rect.height = height
                 new_weight = self.compute_weight(rect)
                 if weight > new_weight:
                     weight = new_weight
