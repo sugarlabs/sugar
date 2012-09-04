@@ -16,7 +16,6 @@
 
 import logging
 from gettext import gettext as _
-import sys
 
 import gconf
 import glib
@@ -176,7 +175,7 @@ class BatteryPalette(Palette):
 class DeviceModel(gobject.GObject):
     __gproperties__ = {
         'level': (int, None, None, 0, 100, 0, gobject.PARAM_READABLE),
-        'time-remaining': (int, None, None, 0, sys.maxint, 0,
+        'time-remaining': (int, None, None, 0, gobject.constants.G_MAXINT32, 0,
                            gobject.PARAM_READABLE),  # unit: seconds
         'charging': (bool, None, None, False, gobject.PARAM_READABLE),
         'discharging': (bool, None, None, False, gobject.PARAM_READABLE),
