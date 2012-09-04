@@ -50,7 +50,7 @@ class DeviceView(TrayIcon):
         self._model.connect('notify::level', self.__speaker_status_changed_cb)
         self._model.connect('notify::muted', self.__speaker_status_changed_cb)
 
-        self.connect('expose-event', self.__expose_event_cb)
+        self.connect('draw', self.__draw_cb)
 
         self._icon_widget.connect('button-release-event',
                                   self.__button_release_event_cb)
@@ -84,7 +84,7 @@ class DeviceView(TrayIcon):
         self.palette_invoker.notify_right_click()
         return True
 
-    def __expose_event_cb(self, *args):
+    def __draw_cb(self, *args):
         self._update_info()
 
     def __speaker_status_changed_cb(self, pspec_, param_):
@@ -109,7 +109,8 @@ class SpeakerPalette(Palette):
                                           step_incr=vol_step,
                                           page_incr=vol_step,
                                           page_size=vol_step)
-        self._hscale = Gtk.HScale(self._adjustment)
+        self._hscale = Gtk.HScale()
+        self._hscale.set_adjustment(self._adjustment)
         self._hscale.set_digits(0)
         self._hscale.set_draw_value(False)
         vbox.add(self._hscale)
