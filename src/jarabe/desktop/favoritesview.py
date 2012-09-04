@@ -433,8 +433,8 @@ class ActivityIcon(EventIcon):
         self._hovering = False
         self.queue_draw()
 
-    def do_expose_event(self, event):
-        EventIcon.do_expose_event(self, event)
+    def do_draw(self, cr):
+        EventIcon.do_draw(self, cr)
 
         if not self._hovering:
             return
@@ -449,7 +449,6 @@ class ActivityIcon(EventIcon):
         height -= ActivityIcon._BORDER_WIDTH
         radius = width / 10.0
 
-        cr = self.window.cairo_create()
         cr.move_to(x + radius, y)
         cr.arc(x + width - radius, y + radius, radius, math.pi * 1.5,
                math.pi * 2.0)
@@ -458,7 +457,7 @@ class ActivityIcon(EventIcon):
         cr.arc(x + radius, y + height - radius, radius, math.pi * 0.5, math.pi)
         cr.arc(x + radius, y + radius, radius, math.pi, math.pi * 1.5)
 
-        cr.set_source_color(style.COLOR_SELECTION_GREY.get_gdk_color())
+        cr.set_source_rgba(*style.COLOR_SELECTION_GREY.get_rgba())
         cr.set_line_width(ActivityIcon._BORDER_WIDTH)
         cr.stroke()
 
