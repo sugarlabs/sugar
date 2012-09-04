@@ -98,7 +98,7 @@ def setup(tray):
 
 
 def _setup_volumes(tray):
-    volume_monitor = Gio.volume_monitor_get()
+    volume_monitor = Gio.VolumeMonitor.get()
 
     for volume in volume_monitor.get_volumes():
         _mount(volume, tray)
