@@ -19,6 +19,7 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkX11
 
 from sugar3.graphics import style
 from sugar3.graphics import palettegroup
@@ -120,7 +121,7 @@ class HomeWindow(Gtk.Window):
             self._deactivate_view(shell.get_model().zoom_level)
         else:
             display = Gdk.Display.get_default()
-            x_, y_, modmask = display.get_pointer(None)
+            screen_, x_, y_, modmask = display.get_pointer()
             if modmask & Gdk.ModifierType.MOD1_MASK:
                 self._home_box.set_resume_mode(False)
             else:
@@ -142,9 +143,10 @@ class HomeWindow(Gtk.Window):
         # have to make the desktop window active
         # since metacity doesn't make it on startup
         timestamp = event.get_time()
+        x11_window = self.get_window()
         if not timestamp:
-            timestamp = GdkX11.x11_get_server_time(self.window)
-        self.window.focus(timestamp)
+            timestamp = GdkX11.x11_get_server_time(x11_window)
+        x11_window.focus(timestamp)
 
     def __zoom_level_changed_cb(self, **kwargs):
         old_level = kwargs['old_level']
