@@ -227,7 +227,7 @@ class BaseListView(Gtk.Bin):
         return Pango.PIXELS(width)
 
     def do_size_allocate(self, allocation):
-        self.allocation = allocation
+        self.set_allocation(allocation)
         self.get_child().size_allocate(allocation)
 
     def do_size_request(self, requisition):
