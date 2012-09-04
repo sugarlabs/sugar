@@ -63,8 +63,9 @@ class BundleRegistry(GObject.GObject):
         user_path = env.get_user_activities_path()
         for activity_dir in [user_path, config.activities_path]:
             self._scan_directory(activity_dir)
-            directory = Gio.File(activity_dir)
-            monitor = directory.monitor_directory()
+            directory = Gio.File.new_for_path(activity_dir)
+            monitor = directory.monitor_directory( \
+                flags=Gio.FileMonitorFlags.NONE, cancellable=None)
             monitor.connect('changed', self.__file_monitor_changed_cb)
             self._gio_monitors.append(monitor)
 
