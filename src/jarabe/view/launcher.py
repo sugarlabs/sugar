@@ -67,7 +67,7 @@ class LaunchWindow(Gtk.Window):
         self.error_text.props.use_markup = True
         footer.pack_start(self.error_text, False, True, 0)
 
-        button_box = Gtk.Alignment.new(xalign=0.5)
+        button_box = Gtk.Alignment.new(0.5, 0, 0, 0)
         button_box.show()
         footer.pack_start(button_box, False, True, 0)
         self.cancel_button = Gtk.Button(stock=Gtk.STOCK_STOP)
