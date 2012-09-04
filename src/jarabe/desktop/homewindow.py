@@ -47,7 +47,7 @@ class HomeWindow(Gtk.Window):
         Gtk.Window.__init__(self)
 
         accel_group = Gtk.AccelGroup()
-        self.set_data('sugar-accel-group', accel_group)
+        self.sugar_accel_group = accel_group
         self.add_accel_group(accel_group)
 
         self._active = False

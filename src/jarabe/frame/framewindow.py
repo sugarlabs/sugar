@@ -108,7 +108,7 @@ class FrameWindow(Gtk.Window):
         self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
 
         accel_group = Gtk.AccelGroup()
-        self.set_data('sugar-accel-group', accel_group)
+        self.sugar_accel_group = accel_group
         self.add_accel_group(accel_group)
 
         self._position = position
