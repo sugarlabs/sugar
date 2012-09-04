@@ -122,7 +122,7 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
 
-    def __favorite_set_data_cb(self, column, cell, model, tree_iter):
+    def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
             client = GConf.Client.get_default()
@@ -150,7 +150,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._query = query.lower()
         self.get_model().refilter()
 
-    def __model_visible_cb(self, model, tree_iter):
+    def __model_visible_cb(self, model, tree_iter, data):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
         return title is not None and title.lower().find(self._query) > -1
 
@@ -170,7 +170,7 @@ class ListModel(Gtk.TreeModelSort):
     def __init__(self):
         self._model = Gtk.ListStore(str, bool, str, str, str, str, int, str)
         self._model_filter = self._model.filter_new()
-        Gtk.TreeModelSort.__init__(self, self._model_filter)
+        Gtk.TreeModelSort.__init__(self, model=self._model_filter)
 
         GObject.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -234,7 +234,7 @@ class ListModel(Gtk.TreeModelSort):
                             util.timestamp_to_elapsed_string(timestamp)])
 
     def set_visible_func(self, func):
-        return;self._model_filter.set_visible_func(func)
+        self._model_filter.set_visible_func(func)
 
     def refilter(self):
         self._model_filter.refilter()
