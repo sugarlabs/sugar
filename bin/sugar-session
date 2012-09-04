@@ -32,12 +32,15 @@ import logging
 from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkX11
 from gi.repository import GObject
 import dbus.glib
 from gi.repository import Wnck
 
+_USE_XKL = False
 try:
     from gi.repository import Xkl
+    _USE_XKL = True
 except ImportError:
     logging.debug('Could not load xklavier for keyboard configuration')
 
@@ -131,9 +134,9 @@ def setup_keyboard_cb():
     have_config = False
 
     try:
-        display = Gdk.Display.get_default()
+        display = GdkX11.x11_get_default_xdisplay()
         if display is not None:
-            engine = Xkl.Engine(display)
+            engine = Xkl.Engine.get_instance(display)
         else:
             logging.debug('setup_keyboard_cb: Could not get default display.')
             return
@@ -208,7 +211,7 @@ def bootstrap():
     GObject.idle_add(setup_file_transfer_cb)
     GObject.idle_add(show_software_updates_cb)
 
-    if sys.modules.has_key('xklavier'):
+    if _USE_XKL:
         GObject.idle_add(setup_keyboard_cb)
 
 def set_fonts():
