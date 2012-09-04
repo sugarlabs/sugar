@@ -99,7 +99,7 @@ class _NamePage(_Page):
         self._intro = intro
 
         alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True)
+        self.pack_start(alignment, expand=True, fill=True, padding=0)
 
         hbox = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         alignment.add(hbox)
@@ -132,7 +132,7 @@ class _ColorPage(_Page):
         _Page.__init__(self)
 
         vbox = Gtk.VBox(spacing=style.DEFAULT_SPACING)
-        self.pack_start(vbox, expand=True, fill=False)
+        self.pack_start(vbox, expand=True, fill=False, padding=0)
 
         self._label = Gtk.Label(label=_('Click to change color:'))
         vbox.pack_start(self._label, True, True, 0)
