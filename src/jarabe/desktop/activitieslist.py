@@ -230,7 +230,7 @@ class ListModel(Gtk.TreeModelSort):
                             title,
                             version,
                             _('Version %s') % version,
-                            timestamp,
+                            int(timestamp),
                             util.timestamp_to_elapsed_string(timestamp)])
 
     def set_visible_func(self, func):
