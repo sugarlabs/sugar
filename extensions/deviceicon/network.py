@@ -86,8 +86,8 @@ class WirelessPalette(Palette):
             padder.add(child)
             return padder
 
-        self._info.pack_start(_padded(self._channel_label, True, True, 0))
-        self._info.pack_start(_padded(self._ip_address_label, True, True, 0))
+        self._info.pack_start(_padded(self._channel_label), True, True, 0)
+        self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
         self._info.show_all()
 
         self._disconnect_item = MenuItem(_('Disconnect'))
@@ -166,8 +166,8 @@ class WiredPalette(Palette):
             padder.add(child)
             return padder
 
-        self._info.pack_start(_padded(self._speed_label, True, True, 0))
-        self._info.pack_start(_padded(self._ip_address_label, True, True, 0))
+        self._info.pack_start(_padded(self._speed_label), True, True, 0)
+        self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
         self._info.show_all()
 
         self.set_content(self._info)
