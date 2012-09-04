@@ -31,7 +31,8 @@ from sugar3.graphics.alert import ErrorAlert
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException
 from sugar3 import env
 from sugar3.activity import activityfactory
-from sugar3 import wm
+from gi.repository import SugarExt
+
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
@@ -156,9 +157,10 @@ class JournalActivity(JournalWindow):
         self.remove_alert(alert)
 
     def __realize_cb(self, window):
-        wm.set_bundle_id(window.window, _BUNDLE_ID)
+        xid = window.window.get_xid()
+        SugarExt.wm_set_bundle_id(xid, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
-        wm.set_activity_id(window.window, str(activity_id))
+        SugarExt.wm_set_activity_id(xid, str(activity_id))
         self.disconnect(self._realized_sid)
         self._realized_sid = None
 

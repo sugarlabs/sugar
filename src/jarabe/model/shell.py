@@ -25,9 +25,9 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 import dbus
 
-from sugar3 import wm
 from sugar3 import dispatch
 from sugar3.graphics.xocolor import XoColor
+from gi.repository import SugarExt
 
 from jarabe.model.bundleregistry import get_registry
 
@@ -208,7 +208,7 @@ class Activity(GObject.GObject):
         if not self._windows:
             return None
         else:
-            return wm.get_bundle_id(self._windows[0])
+            return SugarExt.wm_get_bundle_id(self._windows[0].get_xid())
 
     def is_journal(self):
         """Returns boolean if the activity is of type JournalActivity"""
@@ -525,10 +525,11 @@ class ShellModel(GObject.GObject):
         if window.get_window_type() == Wnck.WindowType.NORMAL or \
                 window.get_window_type() == Wnck.WindowType.SPLASHSCREEN:
             home_activity = None
+            xid = window.get_xid()
 
-            activity_id = wm.get_activity_id(window)
+            activity_id = SugarExt.wm_get_activity_id(xid)
 
-            service_name = wm.get_bundle_id(window)
+            service_name = SugarExt.wm_get_bundle_id(xid)
             if service_name:
                 registry = get_registry()
                 activity_info = registry.get_bundle(service_name)
@@ -538,7 +539,6 @@ class ShellModel(GObject.GObject):
             if activity_id:
                 home_activity = self.get_activity_by_id(activity_id)
 
-                xid = window.get_xid()
                 gdk_window = Gdk.window_foreign_new(xid)
                 gdk_window.set_decorations(0)
 
