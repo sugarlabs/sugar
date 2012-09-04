@@ -697,9 +697,9 @@ class Neighborhood(GObject.GObject):
         client.add_dir('/desktop/sugar/collaboration',
                        GConf.ClientPreloadType.PRELOAD_NONE)
         client.notify_add('/desktop/sugar/collaboration/jabber_server',
-                          self.__jabber_server_changed_cb)
+                          self.__jabber_server_changed_cb, None)
         client.add_dir('/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb)
+        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb, None)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
