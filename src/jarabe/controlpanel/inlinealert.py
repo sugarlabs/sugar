@@ -62,8 +62,8 @@ class InlineAlert(Gtk.HBox):
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
-        self.pack_start(self._icon, False)
-        self.pack_start(self._msg_label, False)
+        self.pack_start(self._icon, False, False, 0)
+        self.pack_start(self._msg_label, False, False, 0)
         self._msg_label.show()
         self._icon.show()
 

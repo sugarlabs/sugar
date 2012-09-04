@@ -195,7 +195,7 @@ class AboutComputer(SectionView):
         label_info.show()
         vbox_copyright.pack_start(label_info, False, True, 0)
 
-        expander = Gtk.Expander(_('Full license:'))
+        expander = Gtk.Expander(label=_('Full license:'))
         expander.connect('notify::expanded', self.license_expander_cb)
         expander.show()
         vbox_copyright.pack_start(expander, True, True, 0)

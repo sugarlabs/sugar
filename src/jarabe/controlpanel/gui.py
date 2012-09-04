@@ -88,7 +88,7 @@ class ControlPanel(Gtk.Window):
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.window.set_accept_focus(True)
+        self.get_window().set_accept_focus(True)
 
     def _set_canvas(self, canvas):
         if self._canvas:
@@ -100,12 +100,12 @@ class ControlPanel(Gtk.Window):
     def _set_toolbar(self, toolbar):
         if self._toolbar:
             self._vbox.remove(self._toolbar)
-        self._vbox.pack_start(toolbar, False)
+        self._vbox.pack_start(toolbar, False, False, 0)
         self._vbox.reorder_child(toolbar, 0)
         self._toolbar = toolbar
         if not self._separator:
             self._separator = Gtk.HSeparator()
-            self._vbox.pack_start(self._separator, False)
+            self._vbox.pack_start(self._separator, False, False, 0)
             self._vbox.reorder_child(self._separator, 1)
             self._separator.show()
 
@@ -135,7 +135,7 @@ class ControlPanel(Gtk.Window):
             del self._options['power']
 
         try:
-            import xklavier
+            from gi.repository import Xkl
         except ImportError:
             del self._options['keyboard']
 
@@ -311,7 +311,7 @@ class ControlPanel(Gtk.Window):
             alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
             icon.show()
 
-            self._vbox.pack_start(alert, False)
+            self._vbox.pack_start(alert, False, False, 0)
             self._vbox.reorder_child(alert, 2)
             alert.connect('response', self.__response_cb)
             alert.show()
@@ -401,12 +401,12 @@ class _SectionIcon(Gtk.EventBox):
         self._icon = Icon(icon_name=self._icon_name,
                           pixel_size=self._pixel_size,
                           xo_color=self._xo_color)
-        self._vbox.pack_start(self._icon, expand=False, fill=False)
+        self._vbox.pack_start(self._icon, expand=False, fill=False, padding=0)
 
         self._label = Gtk.Label(label=self._title)
         self._label.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(self._label, expand=False, fill=False)
+        self._vbox.pack_start(self._label, expand=False, fill=False, padding=0)
 
         self._vbox.set_spacing(style.DEFAULT_SPACING)
         self.set_visible_window(False)

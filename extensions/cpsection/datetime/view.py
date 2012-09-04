@@ -47,7 +47,7 @@ class TimeZone(SectionView):
                         style.COLOR_WHITE.get_gdk_color())
         self._entry.modify_base(Gtk.StateType.INSENSITIVE,
                           style.COLOR_WHITE.get_gdk_color())
-        self.pack_start(self._entry, False)
+        self.pack_start(self._entry, False, False, 0)
         self._entry.show()
 
         self._scrolled_window = Gtk.ScrolledWindow()
@@ -62,7 +62,7 @@ class TimeZone(SectionView):
 
         self._treeview = Gtk.TreeView(self._store)
         self._treeview.set_search_entry(self._entry)
-        self._treeview.set_search_equal_func(self._search)
+        self._treeview.set_search_equal_func(self._search, None)
         self._treeview.set_search_column(0)
         self._scrolled_window.add(self._treeview)
         self._treeview.show()
@@ -78,7 +78,7 @@ class TimeZone(SectionView):
         self._scrolled_window.show()
 
         self._zone_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self.pack_start(self._zone_alert_box, False)
+        self.pack_start(self._zone_alert_box, False, False, 0)
 
         self._zone_alert = InlineAlert()
         self._zone_alert_box.pack_start(self._zone_alert, True, True, 0)

@@ -204,10 +204,10 @@ class AboutMe(SectionView):
             self._nick_alert.props.msg = self.restart_msg
             self._nick_alert.show()
 
-        self._center_in_panel = Gtk.Alignment.new(0.5)
+        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._nick_box)
-        self.pack_start(self._center_in_panel, False)
-        self.pack_start(self._nick_alert_box, False)
+        self.pack_start(self._center_in_panel, False, False, 0)
+        self.pack_start(self._nick_alert_box, False, False, 0)
         self._nick_box.show()
         self._nick_alert_box.show()
         self._center_in_panel.show()
@@ -246,11 +246,11 @@ class AboutMe(SectionView):
             self._color_alert.props.msg = self.restart_msg
             self._color_alert.show()
 
-        self._center_in_panel = Gtk.Alignment.new(0.5)
+        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._color_box)
-        self.pack_start(self._color_label, False)
-        self.pack_start(self._center_in_panel, False)
-        self.pack_start(self._color_alert_box, False)
+        self.pack_start(self._color_label, False, False, 0)
+        self.pack_start(self._center_in_panel, False, False, 0)
+        self.pack_start(self._color_alert_box, False, False, 0)
         self._color_label.show()
         self._color_box.show()
         self._color_alert_box.show()

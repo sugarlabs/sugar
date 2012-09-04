@@ -85,7 +85,8 @@ class Frame(SectionView):
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
-        self._corner_delay_slider = Gtk.HScale(adj)
+        self._corner_delay_slider = Gtk.HScale()
+        self._corner_delay_slider.set_adjustment(adj)
         self._corner_delay_slider.set_digits(0)
         self._corner_delay_slider.connect('format-value',
                                           self.__corner_delay_format_cb)
@@ -120,7 +121,8 @@ class Frame(SectionView):
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
-        self._edge_delay_slider = Gtk.HScale(adj)
+        self._edge_delay_slider = Gtk.HScale()
+        self._edge_delay_slider.set_adjustment(adj)
         self._edge_delay_slider.set_digits(0)
         self._edge_delay_slider.connect('format-value',
                                         self.__edge_delay_format_cb)

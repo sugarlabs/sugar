@@ -85,7 +85,7 @@ class _UpdateFetcher(object):
         logging.debug('Fetch %s', url)
 
         self._completion_cb = completion_cb
-        self._file = Gio.File(url)
+        self._file = Gio.File.new_for_uri(url)
         self._stream = None
         self._xml_data = ''
         self._bundle = bundle

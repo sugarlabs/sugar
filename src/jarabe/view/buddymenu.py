@@ -123,7 +123,7 @@ class BuddyMenu(Palette):
 
     def __controlpanel_activate_cb(self, menu_item):
         panel = ControlPanel()
-        panel.set_transient_for(self.get_toplevel())
+        panel.set_transient_for(self._widget.get_toplevel())
         panel.show()
 
     def _update_invite_menu(self, activity):

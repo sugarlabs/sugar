@@ -117,7 +117,7 @@ class Network(SectionView):
         box_wireless.show()
 
         separator_mesh = Gtk.HSeparator()
-        workspace.pack_start(separator_mesh, False)
+        workspace.pack_start(separator_mesh, False, False, 0)
         separator_mesh.show()
 
         label_mesh = Gtk.Label(label=_('Collaboration'))

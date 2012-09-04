@@ -61,7 +61,7 @@ class Language(SectionView):
         self._text.set_width_chars(100)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
-        self.pack_start(self._text, False)
+        self.pack_start(self._text, False, False, 0)
         self._text.show()
 
         scrolled = Gtk.ScrolledWindow()
@@ -75,7 +75,7 @@ class Language(SectionView):
         scrolled.add_with_viewport(self._table)
 
         self._lang_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self.pack_start(self._lang_alert_box, False)
+        self.pack_start(self._lang_alert_box, False, True, 0)
 
         self._lang_alert = InlineAlert()
         self._lang_alert_box.pack_start(self._lang_alert, True, True, 0)
@@ -93,7 +93,7 @@ class Language(SectionView):
 
         self._table.resize(self._selected_lang_count, 3)
 
-        label = Gtk.Label(label=str=str(self._selected_lang_count))
+        label = Gtk.Label(label=str(self._selected_lang_count))
         label.modify_fg(Gtk.StateType.NORMAL,
             style.COLOR_SELECTION_GREY.get_gdk_color())
         self._labels.append(label)
@@ -108,7 +108,7 @@ class Language(SectionView):
 
         combobox = Gtk.ComboBox(model=store)
         cell = Gtk.CellRendererText()
-        combobox.pack_start(cell, True, True, 0)
+        combobox.pack_start(cell, True)
         combobox.add_attribute(cell, 'text', 1)
 
         if locale_code:

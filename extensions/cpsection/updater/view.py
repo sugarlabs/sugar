@@ -85,7 +85,7 @@ class ActivityUpdater(SectionView):
             self._update_box.install_button.connect('clicked',
                     self.__install_button_clicked_cb)
 
-        self.pack_start(self._update_box, expand=True, fill=True)
+        self.pack_start(self._update_box, expand=True, fill=True, padding=0)
         self._update_box.show()
 
     def _switch_to_progress_pane(self):
@@ -101,7 +101,7 @@ class ActivityUpdater(SectionView):
             self._progress_pane.cancel_button.connect('clicked',
                     self.__cancel_button_clicked_cb)
 
-        self.pack_start(self._progress_pane, expand=True, fill=False)
+        self.pack_start(self._progress_pane, expand=True, fill=False, padding=0)
         self._progress_pane.show()
 
     def _clear_center(self):
@@ -202,7 +202,8 @@ class ProgressPane(Gtk.VBox):
         self.pack_start(self._label, True, True, 0)
         self._label.show()
 
-        alignment_box = Gtk.Alignment.new(xalign=0.5, yalign=0.5)
+        alignment_box = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
+                                          xscale=0, yscale=0)
         self.pack_start(alignment_box, True, True, 0)
         alignment_box.show()
 

@@ -41,7 +41,8 @@ class EntryWithLabel(Gtk.HBox):
         self.pack_start(self.label, False, True, 0)
         self.label.show()
 
-        self._entry = Gtk.Entry(25)
+        self._entry = Gtk.Entry()
+        self._entry.set_max_length(25)
         self._entry.set_width_chars(25)
         self.pack_start(self._entry, False, True, 0)
         self._entry.show()
@@ -71,7 +72,7 @@ class ModemConfiguration(SectionView):
         self._text.set_width_chars(100)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
-        self.pack_start(self._text, False)
+        self.pack_start(self._text, False, False, 0)
         self._text.show()
 
         self._username_entry = EntryWithLabel(_('Username:'))
