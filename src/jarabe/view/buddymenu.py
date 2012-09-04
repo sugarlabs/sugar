@@ -47,7 +47,7 @@ class BuddyMenu(Palette):
                          icon=buddy_icon)
         self._invite_menu = None
         self._active_activity_changed_hid = None
-        self.connect('destroy', self.__destroy_cb)
+        self.get_menu().connect('destroy', self.__destroy_cb)
 
         self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
 
