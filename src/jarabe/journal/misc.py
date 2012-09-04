@@ -290,8 +290,7 @@ def _downgrade_alert_response_cb(alert, response_id, bundle):
 
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')
-    return mime_type == ActivityBundle.MIME_TYPE or \
-           mime_type == ActivityBundle.DEPRECATED_MIME_TYPE
+    return mime_type == ActivityBundle.MIME_TYPE
 
 
 def is_content_bundle(metadata):
