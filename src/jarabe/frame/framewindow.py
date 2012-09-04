@@ -16,11 +16,12 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import cairo
 
 from sugar3.graphics import style
 
 
-class FrameContainer(Gtk.Bin):
+class FrameContainer(Gtk.EventBox):
     """A container class for frame panel rendering. Hosts a child 'box' where
     frame elements can be added. Excludes grid-sized squares at each end
     of the frame panel, and a space alongside the inside of the screen where
@@ -29,8 +30,11 @@ class FrameContainer(Gtk.Bin):
     __gtype_name__ = 'SugarFrameContainer'
 
     def __init__(self, position):
-        Gtk.Bin.__init__(self)
+        Gtk.EventBox.__init__(self)
         self._position = position
+
+        self.modify_bg(Gtk.StateType.NORMAL,
+                       style.COLOR_BLACK.get_gdk_color())
 
         if self.is_vertical():
             box = Gtk.VBox()
@@ -47,16 +51,17 @@ class FrameContainer(Gtk.Bin):
         r, g, b, a = style.COLOR_BUTTON_GREY.get_rgba()
         cr.set_source_rgba (r, g, b, a)
 
+        allocation = self.get_allocation()
         if self.is_vertical():
             x = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.LEFT else 0
             y = style.GRID_CELL_SIZE
             width = style.LINE_WIDTH
-            height = self.allocation.height - (style.GRID_CELL_SIZE * 2)
+            height = allocation.height - (style.GRID_CELL_SIZE * 2)
         else:
             x = style.GRID_CELL_SIZE
             y = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.TOP else 0
             height = style.LINE_WIDTH
-            width = self.allocation.width - (style.GRID_CELL_SIZE * 2)
+            width = allocation.width - (style.GRID_CELL_SIZE * 2)
 
         cr.rectangle(x, y, width, height)
         cr.fill()
@@ -75,26 +80,26 @@ class FrameContainer(Gtk.Bin):
         self.get_child().size_request()
 
     def do_size_allocate(self, allocation):
-        self.allocation = allocation
+        self.set_allocation(allocation)
 
         # exclude grid squares at two ends of the frame
         # allocate remaining space to child box, minus the space needed for
         # drawing the border
-        allocation = ()
+        allocation = cairo.RectangleInt()
         if self.is_vertical():
             allocation.x = 0 if self._position == Gtk.PositionType.LEFT \
                 else style.LINE_WIDTH
             allocation.y = style.GRID_CELL_SIZE
-            allocation.width = self.allocation.width - style.LINE_WIDTH
-            allocation.height = self.allocation.height \
+            allocation.width = self.get_allocation().width - style.LINE_WIDTH
+            allocation.height = self.get_allocation().height \
                 - (style.GRID_CELL_SIZE * 2)
         else:
             allocation.x = style.GRID_CELL_SIZE
             allocation.y = 0 if self._position == Gtk.PositionType.TOP \
                 else style.LINE_WIDTH
-            allocation.width = self.allocation.width \
+            allocation.width = self.get_allocation().width \
                 - (style.GRID_CELL_SIZE * 2)
-            allocation.height = self.allocation.height - style.LINE_WIDTH
+            allocation.height = self.get_allocation().height - style.LINE_WIDTH
 
         self.get_child().size_allocate(allocation)
 
@@ -127,7 +132,8 @@ class FrameWindow(Gtk.Window):
         screen.connect('size-changed', self._size_changed_cb)
 
     def append(self, child, expand=True, fill=True):
-        self._container.get_child().pack_start(child, expand=expand, fill=fill)
+        self._container.get_child().pack_start(child, expand=expand, fill=fill,
+                                               padding=0)
 
     def _update_size(self):
         if self._position == Gtk.PositionType.TOP or self._position == Gtk.PositionType.BOTTOM:
@@ -137,7 +143,7 @@ class FrameWindow(Gtk.Window):
 
     def _realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DOCK)
-        self.window.set_accept_focus(False)
+        self.get_window().set_accept_focus(False)
 
     def _enter_notify_cb(self, window, event):
         if event.detail != Gdk.NotifyType.INFERIOR:

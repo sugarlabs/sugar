@@ -261,8 +261,9 @@ class ActivitiesTray(HTray):
         self.scroll_to_item(button)
         # Redraw immediately.
         # The widget may not be realized yet, and then there is no window.
-        if self.window:
-            self.window.process_updates(True)
+        x11_window = self.get_window()
+        if x11_window:
+            x11_window.process_updates(True)
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)

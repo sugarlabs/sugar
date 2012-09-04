@@ -97,10 +97,11 @@ class EventArea(GObject.GObject):
 
         invisible.realize()
         # pylint: disable=E1101
-        invisible.window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
-                                    Gdk.EventMask.ENTER_NOTIFY_MASK |
-                                    Gdk.EventMask.LEAVE_NOTIFY_MASK)
-        invisible.window.move_resize(x, y, width, height)
+        x11_window = invisible.get_window()
+        x11_window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
+                              Gdk.EventMask.ENTER_NOTIFY_MASK |
+                              Gdk.EventMask.LEAVE_NOTIFY_MASK)
+        x11_window.move_resize(x, y, width, height)
 
         return invisible
 
@@ -151,4 +152,4 @@ class EventArea(GObject.GObject):
 
     def _window_stacking_changed_cb(self, screen):
         for window in self._windows:
-            window.window.raise_()
+            window.get_window().raise_()
