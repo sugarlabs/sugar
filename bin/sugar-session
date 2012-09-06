@@ -28,12 +28,14 @@ if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
 
 import gettext
 import logging
+import sys
 
 from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GObject
+from gi.repository import Gst
 import dbus.glib
 from gi.repository import Wnck
 
@@ -46,6 +48,8 @@ except ImportError:
 
 Gdk.threads_init()
 dbus.glib.threads_init()
+
+Gst.init(sys.argv)
 
 def cleanup_logs(logs_dir):
     """Clean up the log directory, moving old logs into a numbered backup

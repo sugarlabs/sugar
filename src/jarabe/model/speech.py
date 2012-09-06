@@ -18,7 +18,7 @@ import os
 import logging
 
 from gi.repository import GConf
-import gst
+from gi.repository import Gst
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -143,21 +143,21 @@ class _GstSpeechPlayer(GObject.GObject):
             logging.debug('Trying to restart not initialized sound device')
             return
 
-        self._pipeline.set_state(gst.STATE_PLAYING)
+        self._pipeline.set_state(Gst.State.PLAYING)
         self.emit('play')
 
     def pause_sound_device(self):
         if self._pipeline is None:
             return
 
-        self._pipeline.set_state(gst.STATE_PAUSED)
+        self._pipeline.set_state(Gst.State.PAUSED)
         self.emit('pause')
 
     def stop_sound_device(self):
         if self._pipeline is None:
             return
 
-        self._pipeline.set_state(gst.STATE_NULL)
+        self._pipeline.set_state(Gst.State.NULL)
         self.emit('stop')
 
     def make_pipeline(self, command):
@@ -165,18 +165,18 @@ class _GstSpeechPlayer(GObject.GObject):
             self.stop_sound_device()
             del self._pipeline
 
-        self._pipeline = gst.parse_launch(command)
+        self._pipeline = Gst.parse_launch(command)
 
         bus = self._pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message', self.__pipe_message_cb)
 
     def __pipe_message_cb(self, bus, message):
-        if message.type == gst.MESSAGE_EOS:
-            self._pipeline.set_state(gst.STATE_NULL)
+        if message.type == Gst.MessageType.EOS:
+            self._pipeline.set_state(Gst.State.NULL)
             self.emit('stop')
-        elif message.type == gst.MESSAGE_ERROR:
-            self._pipeline.set_state(gst.STATE_NULL)
+        elif message.type == Gst.MessageType.ERROR:
+            self._pipeline.set_state(Gst.State.NULL)
             self.emit('stop')
 
     def speak(self, pitch, rate, voice_name, text):
@@ -197,7 +197,7 @@ class _GstSpeechPlayer(GObject.GObject):
 
     def get_all_voices(self):
         all_voices = {}
-        for voice in gst.element_factory_make('espeak').props.voices:
+        for voice in Gst.ElementFactory.make('espeak', None).props.voices:
             name, language, dialect = voice
             if dialect != 'none':
                 all_voices[language + '_' + dialect] = name
