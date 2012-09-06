@@ -258,7 +258,6 @@ class JournalActivity(JournalWindow):
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
         self._main_toolbox.set_mount_point(mount_point)
-        self._main_toolbox.set_current_toolbar(0)
 
     def __model_created_cb(self, sender, **kwargs):
         self._check_for_bundle(kwargs['object_id'])
