@@ -135,7 +135,9 @@ class ExpandedEntry(Gtk.EventBox):
         self._keep_icon.set_active(int(metadata.get('keep', 0)) == 1)
 
         self._icon = self._create_icon()
-        self._icon_box.foreach(self._icon_box.remove)
+        for child in self._icon_box.get_children():
+            self._icon_box.remove(child)
+            #FIXME: self._icon_box.foreach(self._icon_box.remove)
         self._icon_box.pack_start(self._icon, False, False, 0)
 
         self._date.set_text(misc.get_date(metadata))
@@ -146,11 +148,15 @@ class ExpandedEntry(Gtk.EventBox):
             self._preview_box.remove(self._preview_box.get_child())
         self._preview_box.add(self._create_preview())
 
-        self._technical_box.foreach(self._technical_box.remove)
+        for child in self._technical_box.get_children():
+            self._technical_box.remove(child)
+            #FIXME: self._technical_box.foreach(self._technical_box.remove)
         self._technical_box.pack_start(self._create_technical(),
                                        False, False, style.DEFAULT_SPACING)
 
-        self._buddy_list.foreach(self._buddy_list.remove)
+        for child in self._buddy_list.get_children():
+            self._buddy_list.remove(child)
+            #FIXME: self._buddy_list.foreach(self._buddy_list.remove)
         self._buddy_list.pack_start(self._create_buddy_list(), False, False,
                                     style.DEFAULT_SPACING)
 
