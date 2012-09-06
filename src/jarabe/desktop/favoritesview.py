@@ -511,6 +511,8 @@ class ActivityIcon(EventIcon):
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
 
+    _PALETTE_LABEL_OFFSET = 1
+
     __gsignals__ = {
         'entry-activate': (GObject.SignalFlags.RUN_FIRST,
                            None, ([object])),
@@ -551,7 +553,8 @@ class FavoritePalette(ActivityPalette):
                 separator.show()
 
             for i in range(0, len(menu_items)):
-                self.menu.insert(menu_items[i], i)
+                # the first menu_item is the label so we need the offset
+                self.menu.insert(menu_items[i], i + self._PALETTE_LABEL_OFFSET)
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
