@@ -201,17 +201,11 @@ class ExpandedEntry(Gtk.EventBox):
         return date
 
     def _create_preview(self):
-        box = Gtk.EventBox()
-        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-
-        box.connect('expose-event', self.__expose_event_cb)
-        box.connect_after('button-release-event',
-                          self._preview_box_button_release_event_cb)
-        return box
-
-    def __expose_event_cb(self, box, event):
         width = style.zoom(320)
         height = style.zoom(240)
+
+        box = Gtk.EventBox()
+        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         if len(self._metadata.get('preview', '')) > 4:
             if self._metadata['preview'][1:4] == 'PNG':
@@ -225,19 +219,31 @@ class ExpandedEntry(Gtk.EventBox):
             png_file = StringIO.StringIO(preview_data)
             try:
                 # Load image and scale to dimensions
+                im = Gtk.Image()
                 surface = cairo.ImageSurface.create_from_png(png_file)
                 png_width = surface.get_width()
                 png_height = surface.get_height()
-                gdk_window = self.get_toplevel().window
-                pixmap = Gdk.Pixmap(gdk_window, png_width, png_height, -1)
-                cr = pixmap.cairo_create()
-                cr.set_source_rgb(1, 1, 1)
+
+                preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                                     width, height)
+                cr = cairo.Context(preview_surface)
+
+                scale_w = width * 1.0 / png_width
+                scale_h = height * 1.0 / png_height
+                scale = min(scale_w, scale_h)
+
+                cr.scale(scale, scale)
+
+                cr.set_source_rgba(1, 1, 1, 0)
+                cr.set_operator(cairo.OPERATOR_SOURCE)
                 cr.paint()
-                cr.set_source_surface(surface, 0, 0)
-                cr.scale(width / png_width, height / png_height)
+                cr.set_source_surface(surface)
                 cr.paint()
 
-                im = Gtk.image_new_from_pixmap(pixmap, None)
+                pixbuf_bg = Gdk.pixbuf_get_from_surface(preview_surface, 0, 0,
+                                                        width, height)
+                im.set_from_pixbuf(pixbuf_bg)
+
                 has_preview = True
             except Exception:
                 logging.exception('Error while loading the preview')
@@ -254,6 +260,10 @@ class ExpandedEntry(Gtk.EventBox):
             label.set_size_request(width, height)
             box.add(label)
             label.show()
+
+        box.connect_after('button-release-event',
+                          self._preview_box_button_release_event_cb)
+        return box
 
     def _create_technical(self):
         vbox = Gtk.VBox()
