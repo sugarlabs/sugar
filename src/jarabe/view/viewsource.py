@@ -26,6 +26,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkX11
 from gi.repository import GtkSource
 import dbus
 from gi.repository import GConf
@@ -201,7 +202,9 @@ class ViewSource(Gtk.Window):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.window.set_accept_focus(True)
 
-        parent = Gdk.window_foreign_new(self._parent_window_xid)
+        display = Gdk.Display.get_default()
+        parent = GdkX11.X11Window.foreign_new_for_display( \
+            display, self._parent_window_xid)
         self.set_transient_for(parent)
 
     def __stop_clicked_cb(self, widget):

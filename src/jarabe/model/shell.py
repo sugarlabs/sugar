@@ -23,6 +23,7 @@ from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkX11
 import dbus
 
 from sugar3 import dispatch
@@ -539,7 +540,9 @@ class ShellModel(GObject.GObject):
             if activity_id:
                 home_activity = self.get_activity_by_id(activity_id)
 
-                gdk_window = Gdk.window_foreign_new(xid)
+                display = Gdk.Display.get_default()
+                gdk_window = GdkX11.X11Window.foreign_new_for_display(display,
+                                                                      xid)
                 gdk_window.set_decorations(0)
 
                 window.maximize()

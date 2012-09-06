@@ -21,6 +21,7 @@ import uuid
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkX11
 import dbus
 import statvfs
 import os
@@ -91,7 +92,9 @@ class JournalActivityDBusService(dbus.service.Object):
     def ChooseObject(self, parent_xid, what_filter=''):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
-            parent = Gdk.window_foreign_new(parent_xid)
+            display = Gdk.Display.get_default()
+            parent = GdkX11.X11Window.foreign_new_for_display( \
+                display, parent_xid)
         else:
             parent = None
         chooser = ObjectChooser(parent, what_filter)
