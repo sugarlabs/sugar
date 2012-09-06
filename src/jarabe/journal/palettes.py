@@ -223,7 +223,7 @@ class CopyMenu(Gtk.Menu):
             self.append(journal_menu)
             journal_menu.show()
 
-        volume_monitor = Gio.volume_monitor_get()
+        volume_monitor = Gio.VolumeMonitor.get()
         icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():

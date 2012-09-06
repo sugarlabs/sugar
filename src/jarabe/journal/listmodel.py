@@ -34,7 +34,7 @@ DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
 DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 
 
-class ListModel(Gtk.GenericTreeModel, Gtk.TreeDragSource):
+class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     __gtype_name__ = 'JournalListModel'
 
     __gsignals__ = {
@@ -102,22 +102,23 @@ class ListModel(Gtk.GenericTreeModel, Gtk.TreeDragSource):
     def get_metadata(self, path):
         return model.get(self[path][ListModel.COLUMN_UID])
 
-    def on_get_n_columns(self):
+    def do_get_n_columns(self):
         return len(ListModel._COLUMN_TYPES)
 
-    def on_get_column_type(self, index):
+    def do_get_column_type(self, index):
         return ListModel._COLUMN_TYPES[index]
 
-    def on_iter_n_children(self, iterator):
+    def do_iter_n_children(self, iterator):
         if iterator == None:
             return self._result_set.length
         else:
             return 0
 
-    def on_get_value(self, index, column):
+    def do_get_value(self, iterator, column):
         if self.view_is_resizing:
             return None
 
+        index = iterator.user_data
         if index == self._last_requested_index:
             return self._cached_row[column]
 
@@ -200,33 +201,39 @@ class ListModel(Gtk.GenericTreeModel, Gtk.TreeDragSource):
 
         return self._cached_row[column]
 
-    def on_iter_nth_child(self, iterator, n):
-        return n
+    def do_iter_nth_child(self, parent_iter, n):
+        return (False, None)
 
-    def on_get_path(self, iterator):
-        return (iterator)
+    def do_get_path(self, iterator):
+        treepath = Gtk.TreePath((iterator.user_data,))
+        return treepath
 
-    def on_get_iter(self, path):
-        return path[0]
+    def do_get_iter(self, path):
+        idx = path.get_indices()[0]
+        iterator = Gtk.TreeIter()
+        iterator.user_data = idx
+        return (True, iterator)
 
-    def on_iter_next(self, iterator):
-        if iterator != None:
-            if iterator >= self._result_set.length - 1:
-                return None
-            return iterator + 1
-        return None
+    def do_iter_next(self, iterator):
+        idx = iterator.user_data + 1
+        if idx >= self._result_set.length:
+            iterator.stamp = -1
+            return (False, iterator)
+        else:
+            iterator.user_data = idx
+            return (True, iterator)
 
-    def on_get_flags(self):
-        return Gtk.TREE_MODEL_ITERS_PERSIST | Gtk.TREE_MODEL_LIST_ONLY
+    def do_get_flags(self):
+        return Gtk.TreeModelFlags.ITERS_PERSIST | Gtk.TreeModelFlags.LIST_ONLY
 
-    def on_iter_children(self, iterator):
-        return None
+    def do_iter_children(self, iterator):
+        return (False, iterator)
 
-    def on_iter_has_child(self, iterator):
+    def do_iter_has_child(self, iterator):
         return False
 
-    def on_iter_parent(self, iterator):
-        return None
+    def do_iter_parent(self, iterator):
+        return (False, Gtk.TreeIter())
 
     def do_drag_data_get(self, path, selection):
         uid = self[path][ListModel.COLUMN_UID]

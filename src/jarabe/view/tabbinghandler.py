@@ -39,7 +39,7 @@ class TabbingHandler(object):
 
             screen = Gdk.Screen.get_default()
             window = screen.get_root_window()
-            keyboard_grab_result = Gdk.keyboard_grab(window)
+            keyboard_grab_result = Gdk.keyboard_grab(window, False)
             pointer_grab_result = Gdk.pointer_grab(window)
 
             self._tabbing = (keyboard_grab_result == Gdk.GrabStatus.SUCCESS and

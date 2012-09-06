@@ -32,10 +32,10 @@ class MimeRegistry(object):
         self._gconf = GConf.Client.get_default()
 
     def get_default_activity(self, mime_type):
-        return self._GConf.get_string(_key_name(mime_type))
+        return self._gconf.get_string(_key_name(mime_type))
 
     def set_default_activity(self, mime_type, bundle_id):
-        self._GConf.set_string(_key_name(mime_type), bundle_id)
+        self._gconf.set_string(_key_name(mime_type), bundle_id)
 
 
 def get_registry():

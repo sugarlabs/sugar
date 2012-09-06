@@ -186,14 +186,14 @@ class VolumesToolbar(Gtk.Toolbar):
         GObject.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
-        volume_monitor = Gio.volume_monitor_get()
+        volume_monitor = Gio.VolumeMonitor.get()
         volume_monitor.disconnect(self._mount_added_hid)
         volume_monitor.disconnect(self._mount_removed_hid)
 
     def _set_up_volumes(self):
         self._set_up_documents_button()
 
-        volume_monitor = Gio.volume_monitor_get()
+        volume_monitor = Gio.VolumeMonitor.get()
         self._mount_added_hid = volume_monitor.connect('mount-added',
                                                        self.__mount_added_cb)
         self._mount_removed_hid = volume_monitor.connect('mount-removed',
@@ -292,7 +292,7 @@ class BaseButton(RadioToolButton):
         self.mount_point = mount_point
 
         self.drag_dest_set(Gtk.DestDefaults.ALL,
-                           [('journal-object-id', 0, 0)],
+                           [Gtk.TargetEntry.new('journal-object-id', 0, 0)],
                            Gdk.DragAction.COPY)
         self.connect('drag-data-received', self._drag_data_received_cb)
 

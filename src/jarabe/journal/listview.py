@@ -184,16 +184,16 @@ class BaseListView(Gtk.Bin):
             buddies_column.pack_start(cell_icon, True)
             buddies_column.props.fixed_width += cell_icon.props.width
             buddies_column.add_attribute(cell_icon, 'buddy', column_index)
-            return;buddies_column.set_cell_data_func(cell_icon,
-                    self.__buddies_set_data_cb)
+            buddies_column.set_cell_data_func(cell_icon,
+                                              self.__buddies_set_data_cb)
 
         cell_progress = Gtk.CellRendererProgress()
         cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
         buddies_column.pack_start(cell_progress, True)
         buddies_column.add_attribute(cell_progress, 'value',
                 ListModel.COLUMN_PROGRESS)
-        return;buddies_column.set_cell_data_func(cell_progress,
-                self.__progress_data_cb)
+        buddies_column.set_cell_data_func(cell_progress,
+                                          self.__progress_data_cb)
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
@@ -222,9 +222,9 @@ class BaseListView(Gtk.Bin):
         widget = Gtk.Label(label='')
         context = widget.get_pango_context()
         layout = Pango.Layout(context)
-        layout.set_text(text)
-        width, height_ = layout.get_size()
-        return Pango.PIXELS(width)
+        layout.set_text(text, len(text))
+        width, height_ = layout.get_pixel_size()
+        return width
 
     def do_size_allocate(self, allocation):
         self.set_allocation(allocation)
@@ -237,15 +237,18 @@ class BaseListView(Gtk.Bin):
         if self._model is not None:
             self._model.stop()
 
-    def __buddies_set_data_cb(self, column, cell, tree_model, tree_iter):
+    def __buddies_set_data_cb(self, column, cell, tree_model,
+                              tree_iter, data):
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress >= 100
 
-    def __progress_data_cb(self, column, cell, tree_model, tree_iter):
+    def __progress_data_cb(self, column, cell, tree_model,
+                           tree_iter, data):
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress < 100
 
-    def __favorite_set_data_cb(self, column, cell, tree_model, tree_iter):
+    def __favorite_set_data_cb(self, column, cell, tree_model,
+                               tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
             client = GConf.Client.get_default()
@@ -271,7 +274,7 @@ class BaseListView(Gtk.Bin):
             query_dict['order_by'] = ['+timestamp']
         if query_dict['order_by'] != self._query.get('order_by'):
             property_ = query_dict['order_by'][0][1:]
-            cell_text = self.sort_column.get_cell_renderers()[0]
+            cell_text = self.sort_column.get_cells()[0]
             self.sort_column.set_attributes(cell_text,
                 text=getattr(ListModel, 'COLUMN_' + property_.upper(),
                              ListModel.COLUMN_TIMESTAMP))
@@ -298,7 +301,9 @@ class BaseListView(Gtk.Bin):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
         logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
 
-        if self.tree_view.window is not None:
+        x11_window = self.tree_view.get_window()
+
+        if x11_window is not None:
             # prevent glitches while later vadjustment setting, see #1235
             self.tree_view.get_bin_window().hide()
 
@@ -309,7 +314,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
 
-        if self.tree_view.window is not None:
+        if x11_window is not None:
             # prevent glitches while later vadjustment setting, see #1235
             self.tree_view.get_bin_window().show()
 
@@ -353,7 +358,8 @@ class BaseListView(Gtk.Bin):
             self._last_progress_bar_pulse = time.time()
 
     def _start_progress_bar(self):
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5, xscale=0.5)
+        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
+                                      xscale=0.5, yscale=0)
         self.remove(self.get_child())
         self.add(alignment)
         alignment.show()
@@ -389,20 +395,20 @@ class BaseListView(Gtk.Bin):
                          icon_name='activity-journal',
                          stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
                          fill_color=style.COLOR_TRANSPARENT.get_svg())
-        box.pack_start(icon, expand=True, fill=False)
+        box.pack_start(icon, expand=True, fill=False, padding=0)
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
                 color, glib.markup_escape_text(message)))
-        box.pack_start(label, expand=True, fill=False)
+        box.pack_start(label, expand=True, fill=False, padding=0)
 
         if show_clear_query:
             button = Gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
                                       icon_size=Gtk.IconSize.BUTTON)
-            box.pack_start(button, expand=True, fill=False)
+            box.pack_start(button, expand=True, fill=False, padding=0)
 
         background_box.show_all()
 
@@ -429,10 +435,12 @@ class BaseListView(Gtk.Bin):
         tree_model = self.tree_view.get_model()
 
         while True:
-            x, y, width, height = self.tree_view.get_cell_area(path,
-                self.sort_column)
-            x, y = self.tree_view.convert_tree_to_widget_coords(x, y)
-            self.tree_view.queue_draw_area(x, y, width, height)
+            cel_rect = self.tree_view.get_cell_area(path,
+                                                    self.sort_column)
+            x, y = self.tree_view.convert_tree_to_widget_coords(cel_rect.x,
+                                                                cel_rect.y)
+            self.tree_view.queue_draw_area(x, y, cel_rect.width,
+                                           cel_rect.height)
             if path == end_path:
                 break
             else:

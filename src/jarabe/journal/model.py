@@ -394,7 +394,7 @@ class InplaceResultSet(BaseResultSet):
             return
 
         if self._mime_types:
-            mime_type = Gio.content_type_guess(filename=full_path)
+            mime_type = Gio.content_type_guess(filename=full_path, data=None)
             if mime_type not in self._mime_types:
                 return
 
@@ -440,7 +440,7 @@ def _get_file_metadata(path, stat, fetch_preview=True):
             'title': os.path.basename(path),
             'timestamp': stat.st_mtime,
             'filesize': stat.st_size,
-            'mime_type': Gio.content_type_guess(filename=path),
+            'mime_type': Gio.content_type_guess(filename=path, data=None),
             'activity': '',
             'activity_id': '',
             'icon-color': '#000000,#ffffff',

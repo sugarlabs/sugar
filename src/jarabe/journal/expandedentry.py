@@ -103,7 +103,7 @@ class ExpandedEntry(Gtk.EventBox):
         self._date = self._create_date()
         header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
 
-        if Gtk.widget_get_default_direction() == Gtk.TextDirection.RTL:
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
             header.reverse()
 
         # First body column
@@ -111,7 +111,7 @@ class ExpandedEntry(Gtk.EventBox):
         first_column.pack_start(self._preview_box, False, True, 0)
 
         self._technical_box = Gtk.VBox()
-        first_column.pack_start(self._technical_box, True)
+        first_column.pack_start(self._technical_box, True, False, 0)
 
         # Second body column
         description_box, self._description = self._create_description()
@@ -123,7 +123,7 @@ class ExpandedEntry(Gtk.EventBox):
                                  style.DEFAULT_SPACING)
 
         self._buddy_list = Gtk.VBox()
-        second_column.pack_start(self._buddy_list, True)
+        second_column.pack_start(self._buddy_list, True, False, 0)
 
         self.show_all()
 
@@ -136,7 +136,7 @@ class ExpandedEntry(Gtk.EventBox):
 
         self._icon = self._create_icon()
         self._icon_box.foreach(self._icon_box.remove)
-        self._icon_box.pack_start(self._icon, False, False)
+        self._icon_box.pack_start(self._icon, False, False, 0)
 
         self._date.set_text(misc.get_date(metadata))
 
@@ -296,7 +296,7 @@ class ExpandedEntry(Gtk.EventBox):
 
         if self._metadata.get('buddies'):
             buddies = simplejson.loads(self._metadata['buddies']).values()
-            vbox.pack_start(BuddyList(buddies, True, True, 0), False, False, 0)
+            vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
         else:
             return vbox
@@ -317,7 +317,8 @@ class ExpandedEntry(Gtk.EventBox):
         scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_border_width(style.LINE_WIDTH)
         text_buffer = Gtk.TextBuffer()
-        text_view = Gtk.TextView(text_buffer)
+        text_view = Gtk.TextView()
+        text_view.set_buffer(text_buffer)
         text_view.set_left_margin(style.DEFAULT_PADDING)
         text_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
         scrolled_window.add_with_viewport(text_view)

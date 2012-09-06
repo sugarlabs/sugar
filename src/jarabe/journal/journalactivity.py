@@ -157,7 +157,7 @@ class JournalActivity(JournalWindow):
         self.remove_alert(alert)
 
     def __realize_cb(self, window):
-        xid = window.window.get_xid()
+        xid = window.get_window().get_xid()
         SugarExt.wm_set_bundle_id(xid, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
         SugarExt.wm_set_activity_id(xid, str(activity_id))

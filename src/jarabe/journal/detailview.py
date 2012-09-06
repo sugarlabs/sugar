@@ -88,17 +88,17 @@ class BackBar(Gtk.EventBox):
         hbox.set_border_width(style.DEFAULT_PADDING)
         icon = Icon(icon_name='go-previous', icon_size=Gtk.IconSize.MENU,
                     fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
-        hbox.pack_start(icon, False, False)
+        hbox.pack_start(icon, False, False, 0)
 
         label = Gtk.Label()
         label.set_text(_('Back'))
         halign = Gtk.Alignment.new(0, 0.5, 0, 1)
         halign.add(label)
-        hbox.pack_start(halign, True, True)
+        hbox.pack_start(halign, True, True, 0)
         hbox.show()
         self.add(hbox)
 
-        if Gtk.widget_get_default_direction() == Gtk.TextDirection.RTL:
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
             hbox.reverse()
 
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
