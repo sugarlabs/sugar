@@ -21,7 +21,7 @@ from gi.repository import cairo
 from sugar3.graphics import style
 
 
-class FrameContainer(Gtk.EventBox):
+class FrameContainer(Gtk.Bin):
     """A container class for frame panel rendering. Hosts a child 'box' where
     frame elements can be added. Excludes grid-sized squares at each end
     of the frame panel, and a space alongside the inside of the screen where
@@ -30,11 +30,8 @@ class FrameContainer(Gtk.EventBox):
     __gtype_name__ = 'SugarFrameContainer'
 
     def __init__(self, position):
-        Gtk.EventBox.__init__(self)
+        Gtk.Bin.__init__(self)
         self._position = position
-
-        self.modify_bg(Gtk.StateType.NORMAL,
-                       style.COLOR_BLACK.get_gdk_color())
 
         if self.is_vertical():
             box = Gtk.VBox()
