@@ -86,6 +86,7 @@ class ObjectChooser(Gtk.Window):
 
         self._list_view = ChooserListView()
         self._list_view.connect('entry-activated', self.__entry_activated_cb)
+        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
         vbox.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
@@ -135,6 +136,9 @@ class ObjectChooser(Gtk.Window):
         logging.debug('visibility_notify_event_cb %r', self)
         visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
+
+    def __clear_clicked_cb(self, list_view):
+        self._toolbar.clear_query()
 
 
 class TitleBox(VolumesToolbar):
