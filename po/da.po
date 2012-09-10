@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-23 00:33-0400\n"
+"POT-Creation-Date: 2012-08-29 00:34-0400\n"
 "PO-Revision-Date: 2012-08-27 06:47+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -486,11 +486,11 @@ msgstr "Forbindelse afsluttet"
 
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:71
+#: ../src/jarabe/desktop/homebox.py:63
 #: ../src/jarabe/frame/activitiestray.py:605
 #: ../src/jarabe/frame/activitiestray.py:707
 #: ../src/jarabe/frame/activitiestray.py:735
-#: ../src/jarabe/journal/journaltoolbox.py:449
+#: ../src/jarabe/journal/journaltoolbox.py:428
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "Fortryd"
@@ -982,7 +982,7 @@ msgstr "Ændringer kræver genstart"
 msgid "Cancel changes"
 msgstr "Fortryd ændringer"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:65
 msgid "Later"
 msgstr "Senere"
 
@@ -1021,8 +1021,8 @@ msgstr "Behold"
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:415
-#: ../src/jarabe/journal/journaltoolbox.py:444
+#: ../src/jarabe/journal/journaltoolbox.py:394
+#: ../src/jarabe/journal/journaltoolbox.py:423
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Slet"
@@ -1081,34 +1081,18 @@ msgstr "Registrér"
 msgid "Register again"
 msgstr "Registrér igen"
 
-#: ../src/jarabe/desktop/homebox.py:66
+#: ../src/jarabe/desktop/homebox.py:58
 msgid "Software Update"
 msgstr "Software-opdatering"
 
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/desktop/homebox.py:59
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Opdatér dine aktiviteter for at sikre kompatibilitet med din nye software"
 
-#: ../src/jarabe/desktop/homebox.py:76
+#: ../src/jarabe/desktop/homebox.py:68
 msgid "Check now"
 msgstr "Undersøg nu"
-
-#: ../src/jarabe/desktop/homebox.py:197
-msgid "List view"
-msgstr "Listevisning"
-
-#: ../src/jarabe/desktop/homebox.py:198
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/homebox.py:253
-msgid "Favorites view"
-msgstr "Favoritvisning"
-
-#: ../src/jarabe/desktop/homebox.py:254
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
 
 #: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
@@ -1136,13 +1120,13 @@ msgid "Wireless Security:"
 msgstr "Trådløs sikkerhed:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:85
-#: ../src/jarabe/journal/journaltoolbox.py:528
+#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:507
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "Genoptag"
 
-#: ../src/jarabe/desktop/meshbox.py:90
+#: ../src/jarabe/desktop/meshbox.py:86
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Tilslut"
@@ -1164,6 +1148,22 @@ msgstr "Kan ikke forbinde til serveren."
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
 msgstr "Serveren kunne ikke gennemføre forespørgslen."
+
+#: ../src/jarabe/desktop/viewtoolbar.py:79
+msgid "List view"
+msgstr "Listevisning"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:80
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:142
+msgid "Favorites view"
+msgstr "Favoritvisning"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:143
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
 
 #: ../src/jarabe/frame/activitiestray.py:187
 #: ../src/jarabe/frame/activitiestray.py:577
@@ -1322,107 +1322,103 @@ msgid "Tags:"
 msgstr "Mærkater:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:487
+#: ../src/jarabe/journal/journaltoolbox.py:466
 #: ../src/jarabe/journal/palettes.py:218
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "Logbog"
 
-#: ../src/jarabe/journal/journaltoolbox.py:74
-msgid "Search"
-msgstr "Søg"
-
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:129
 msgid "Anytime"
 msgstr "Når som helst"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:131
 msgid "Today"
 msgstr "I dag"
 
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Since yesterday"
 msgstr "Siden i går"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Past week"
 msgstr "Seneste uge"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Past month"
 msgstr "Seneste måned"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:151
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past year"
 msgstr "Seneste år"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Anyone"
 msgstr "Enhver"
 
-#: ../src/jarabe/journal/journaltoolbox.py:160
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My friends"
 msgstr "Mine venner"
 
-#: ../src/jarabe/journal/journaltoolbox.py:161
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "My class"
 msgstr "Min klasse"
 
-#: ../src/jarabe/journal/journaltoolbox.py:303
+#: ../src/jarabe/journal/journaltoolbox.py:291
 msgid "Anything"
 msgstr "Hvadsomhelst"
 
-#: ../src/jarabe/journal/journaltoolbox.py:398
+#: ../src/jarabe/journal/journaltoolbox.py:377
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Kopier til"
 
-#: ../src/jarabe/journal/journaltoolbox.py:406
+#: ../src/jarabe/journal/journaltoolbox.py:385
 #: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr "Duplikér"
 
-#: ../src/jarabe/journal/journaltoolbox.py:439
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Fejl under kopiering af posten. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:440
+#: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
 msgstr "Fejl"
 
-#: ../src/jarabe/journal/journaltoolbox.py:446
+#: ../src/jarabe/journal/journaltoolbox.py:425
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Vil du foretage permanent sletning af \"%s\"?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:531
+#: ../src/jarabe/journal/journaltoolbox.py:510
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Start"
 
-#: ../src/jarabe/journal/journaltoolbox.py:559
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date modified"
 msgstr "Sortér efter ændringsdato"
 
-#: ../src/jarabe/journal/journaltoolbox.py:560
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by date created"
 msgstr "Sortér efter oprettelsesdato"
 
-#: ../src/jarabe/journal/journaltoolbox.py:561
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by size"
 msgstr "Sortér efter størrelse"
 
-#: ../src/jarabe/journal/journaltoolbox.py:570
+#: ../src/jarabe/journal/journaltoolbox.py:549
 msgid "Sort view"
 msgstr "Sorteringsvisning"
 
@@ -1751,7 +1747,7 @@ msgstr "Mine indstillinger"
 msgid "Invite to %s"
 msgstr "Invitér til %s"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:142
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> mislykkede med at starte."
@@ -1812,6 +1808,9 @@ msgstr "Vis kilde: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar i et vindue"
+
+#~ msgid "Search"
+#~ msgstr "Søg"
 
 #~ msgid "Additional directories which can contain updated translations."
 #~ msgstr "Yderligere kataloger som kan indeholde opdaterede oversættelser."
