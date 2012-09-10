@@ -183,6 +183,7 @@ class AboutComputer(SectionView):
         label_copyright.show()
         vbox_copyright.pack_start(label_copyright, False, True, 0)
 
+        # TRANS: The word "Sugar" should not be translated.
         info_text = _('Sugar is the graphical user interface that you are'
                       ' looking at. Sugar is free software, covered by the'
                       ' GNU General Public License, and you are welcome to'
