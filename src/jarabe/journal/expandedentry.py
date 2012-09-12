@@ -331,7 +331,7 @@ class ExpandedEntry(Gtk.EventBox):
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_border_width(style.LINE_WIDTH)
+        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         text_buffer = Gtk.TextBuffer()
         text_view = Gtk.TextView()
         text_view.set_buffer(text_buffer)
