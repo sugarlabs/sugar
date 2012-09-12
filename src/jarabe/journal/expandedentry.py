@@ -337,7 +337,7 @@ class ExpandedEntry(Gtk.EventBox):
         text_view.set_buffer(text_buffer)
         text_view.set_left_margin(style.DEFAULT_PADDING)
         text_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        scrolled_window.add_with_viewport(text_view)
+        scrolled_window.add(text_view)
         vbox.pack_start(scrolled_window, True, True, 0)
 
         # text_view.text_view_widget.connect('focus-out-event',
