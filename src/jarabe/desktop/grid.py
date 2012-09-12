@@ -19,7 +19,7 @@ import random
 
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import cairo
+from gi.repository import Gdk
 
 from gi.repository import SugarExt
 
@@ -49,7 +49,7 @@ class Grid(SugarExt.Grid):
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
-            rect = cairo.RectangleInt()
+            rect = Gdk.Rectangle()
             rect.x = x
             rect.y = y
             rect.width = width
@@ -59,7 +59,7 @@ class Grid(SugarExt.Grid):
             trials = _PLACE_TRIALS
             weight = _MAX_WEIGHT
             while trials > 0 and weight:
-                rect = cairo.RectangleInt()
+                rect = Gdk.Rectangle()
                 rect.x = int(random.random() * (self.width - width))
                 rect.y = int(random.random() * (self.height - height))
                 rect.width = width

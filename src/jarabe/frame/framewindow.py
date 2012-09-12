@@ -16,7 +16,6 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import cairo
 
 from sugar3.graphics import style
 
@@ -82,7 +81,7 @@ class FrameContainer(Gtk.Bin):
         # exclude grid squares at two ends of the frame
         # allocate remaining space to child box, minus the space needed for
         # drawing the border
-        allocation = cairo.RectangleInt()
+        allocation = Gdk.Rectangle()
         if self.is_vertical():
             allocation.x = 0 if self._position == Gtk.PositionType.LEFT \
                 else style.LINE_WIDTH

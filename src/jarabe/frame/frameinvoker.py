@@ -16,7 +16,6 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import cairo
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import WidgetInvoker
@@ -25,7 +24,7 @@ from sugar3.graphics.palette import WidgetInvoker
 def _get_screen_area():
     frame_thickness = style.GRID_CELL_SIZE
 
-    screen_area = cairo.RectangleInt()
+    screen_area = Gdk.Rectangle()
     screen_area.x = screen_area.y = frame_thickness
     screen_area.width = Gdk.Screen.width() - frame_thickness
     screen_area.height = Gdk.Screen.height() - frame_thickness

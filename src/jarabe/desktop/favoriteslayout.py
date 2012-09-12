@@ -22,7 +22,6 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import cairo
 
 from sugar3.graphics import style
 
@@ -86,7 +85,7 @@ class ViewLayout(Layout):
         y -= owner_height / 2
 
         # calculate x coordinate and create allocation
-        owner_icon_allocation = cairo.RectangleInt()
+        owner_icon_allocation = Gdk.Rectangle()
         owner_icon_allocation.x = (width - owner_width) / 2
         owner_icon_allocation.y = allocation.y + y
         owner_icon_allocation.width = owner_width
@@ -107,7 +106,7 @@ class ViewLayout(Layout):
         # Position the current activity below the XO icon
         # FIXME must ensure we cross into next grid cell here..
         activity_request = activity_icon.size_request()
-        activity_icon_allocation = cairo.RectangleInt()
+        activity_icon_allocation = Gdk.Rectangle()
         activity_icon_allocation.x = (width - activity_request.width) / 2
         activity_icon_allocation.y = owner_icon_allocation.y + owner_height
         activity_icon_allocation.width = activity_request.width
@@ -130,7 +129,7 @@ class ViewLayout(Layout):
         child_request = child.size_request()
         rect = self._grid.get_child_rect(child)
 
-        child_allocation = cairo.RectangleInt()
+        child_allocation = Gdk.Rectangle()
         child_allocation.x = int(round(rect.x * _CELL_SIZE))
         child_allocation.y = int(round(rect.y * _CELL_SIZE))
         child_allocation.width = child_request.width
@@ -146,7 +145,7 @@ class ViewLayout(Layout):
     def __grid_child_changed_cb(self, grid, child):
         request = child.size_request()
         rect = self._grid.get_child_rect(child)
-        child_allocation = cairo.RectangleInt()
+        child_allocation = Gdk.Rectangle()
         child_allocation.x = int(round(rect.x * _CELL_SIZE))
         child_allocation.y = int(round(rect.y * _CELL_SIZE))
         child_allocation.width = request.width
@@ -175,7 +174,7 @@ class SpreadLayout(ViewLayout):
 
             requisition = child.size_request()
             rect = self._grid.get_child_rect(child)
-            child_allocation = cairo.RectangleInt()
+            child_allocation = Gdk.Rectangle()
             child_allocation.x = int(round(rect.x * _CELL_SIZE))
             child_allocation.y = int(round(rect.y * _CELL_SIZE)) + allocation.y
             child_allocation.width = requisition.width
@@ -248,7 +247,7 @@ class RandomLayout(SpreadLayout):
                                    x / _CELL_SIZE, y / _CELL_SIZE)
 
             rect = self._grid.get_child_rect(child)
-            child_allocation = cairo.RectangleInt()
+            child_allocation = Gdk.Rectangle()
             child_allocation.x = int(round(rect.x * _CELL_SIZE))
             child_allocation.y = int(round(rect.y * _CELL_SIZE)) + allocation.y
             child_allocation.width = child_requisition.width
@@ -380,7 +379,7 @@ class RingLayout(ViewLayout):
                                             allocation.height)
             child.size_request()
             child.set_size(icon_size)
-            child_allocation = cairo.RectangleInt()
+            child_allocation = Gdk.Rectangle()
             child_allocation.x = allocation.x + x
             child_allocation.y = allocation.y + y
             child_allocation.width = icon_size
