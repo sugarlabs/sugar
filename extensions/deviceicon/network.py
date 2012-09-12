@@ -34,6 +34,8 @@ import dbus
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.menuitem import MenuItem
@@ -76,6 +78,16 @@ class WirelessPalette(Palette):
 
         self._info = Gtk.VBox()
 
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        self._disconnect_item.set_image(icon)
+        self._disconnect_item.connect('activate',
+                                      self.__disconnect_activate_cb)
+        self._info.add(self._disconnect_item)
+
+        separator = PaletteMenuItemSeparator()
+        self._info.pack_start(separator, True, True, 0)
+
         def _padded(child, xalign=0, yalign=0.5):
             padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
                                    xscale=1, yscale=0.33)
@@ -89,13 +101,6 @@ class WirelessPalette(Palette):
         self._info.pack_start(_padded(self._channel_label), True, True, 0)
         self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
         self._info.show_all()
-
-        self._disconnect_item = MenuItem(_('Disconnect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
-        self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate',
-                                      self.__disconnect_activate_cb)
-        self.menu.append(self._disconnect_item)
 
     def set_connecting(self):
         label = glib.markup_escape_text(_('Connecting...'))

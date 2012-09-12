@@ -25,6 +25,8 @@ from gi.repository import Gtk
 
 from sugar3 import env
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -166,6 +168,21 @@ class JournalPalette(BasePalette):
         self.set_content(vbox)
         vbox.show()
 
+        menu_item = PaletteMenuItem(_('Show contents'))
+        icon = Icon(file=self._home_activity.get_icon_path(),
+                    icon_size=Gtk.IconSize.MENU,
+                    xo_color=self._home_activity.get_icon_color())
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__open_activate_cb)
+        vbox.add(menu_item)
+        menu_item.show()
+
+        separator = PaletteMenuItemSeparator()
+        vbox.pack_start(separator, True, True, 0)
+        separator.show()
+
         self._progress_bar = Gtk.ProgressBar()
         vbox.add(self._progress_bar)
         self._progress_bar.show()
@@ -176,18 +193,6 @@ class JournalPalette(BasePalette):
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)
-
-        menu_item = MenuItem(_('Show contents'))
-
-        icon = Icon(file=self._home_activity.get_icon_path(),
-                icon_size=Gtk.IconSize.MENU,
-                xo_color=self._home_activity.get_icon_color())
-        menu_item.set_image(icon)
-        icon.show()
-
-        menu_item.connect('activate', self.__open_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
 
     def __open_activate_cb(self, menu_item):
         self._home_activity.get_window().activate(Gtk.get_current_event_time())

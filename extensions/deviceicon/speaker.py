@@ -26,6 +26,8 @@ from sugar3.graphics.icon import get_icon_state, Icon
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -102,6 +104,17 @@ class SpeakerPalette(Palette):
         self.set_content(vbox)
         vbox.show()
 
+        self._mute_item = PaletteMenuItem('')
+        self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
+        self._mute_item.set_image(self._mute_icon)
+        vbox.add(self._mute_item)
+        self._mute_item.show()
+        self._mute_item.connect('activate', self.__mute_activate_cb)
+
+        separator = PaletteMenuItemSeparator()
+        vbox.pack_start(separator, True, True, 0)
+        separator.show()
+
         vol_step = sound.VOLUME_STEP
         self._adjustment = Gtk.Adjustment(value=self._model.props.level,
                                           lower=0,
@@ -112,15 +125,8 @@ class SpeakerPalette(Palette):
         self._hscale = Gtk.HScale()
         self._hscale.set_adjustment(self._adjustment)
         self._hscale.set_digits(0)
-        self._hscale.set_draw_value(False)
         vbox.add(self._hscale)
         self._hscale.show()
-
-        self._mute_item = MenuItem('')
-        self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
-        self._mute_item.set_image(self._mute_icon)
-        self.menu.append(self._mute_item)
-        self._mute_item.show()
 
         self._adjustment_handler_id = \
             self._adjustment.connect('value_changed',
@@ -129,8 +135,6 @@ class SpeakerPalette(Palette):
         self._model_notify_level_handler_id = \
             self._model.connect('notify::level', self.__level_changed_cb)
         self._model.connect('notify::muted', self.__muted_changed_cb)
-
-        self._mute_item.connect('activate', self.__mute_activate_cb)
 
         self.connect('popup', self.__popup_cb)
 
@@ -141,24 +145,25 @@ class SpeakerPalette(Palette):
         else:
             mute_item_text = _('Mute')
             mute_item_icon_name = 'dialog-cancel'
-        self._mute_item.get_child().set_text(mute_item_text)
+        self._mute_item.set_label(mute_item_text)
         self._mute_icon.props.icon_name = mute_item_icon_name
+        self._mute_icon.show()
 
     def _update_level(self):
-        if self._adjustment.value != self._model.props.level:
+        if self._adjustment.props.value != self._model.props.level:
             self._adjustment.handler_block(self._adjustment_handler_id)
             try:
-                self._adjustment.value = self._model.props.level
+                self._adjustment.props.value = self._model.props.level
             finally:
                 self._adjustment.handler_unblock(self._adjustment_handler_id)
 
     def __adjustment_changed_cb(self, adj_):
         self._model.handler_block(self._model_notify_level_handler_id)
         try:
-            self._model.props.level = self._adjustment.value
+            self._model.props.level = self._adjustment.props.value
         finally:
             self._model.handler_unblock(self._model_notify_level_handler_id)
-        self._model.props.muted = self._adjustment.value == 0
+        self._model.props.muted = self._adjustment.props.value == 0
 
     def __level_changed_cb(self, pspec_, param_):
         self._update_level()
