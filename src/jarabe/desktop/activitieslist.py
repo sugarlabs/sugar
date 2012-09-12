@@ -283,8 +283,6 @@ class CellRendererActivityIcon(CellRendererIcon):
         self._tree_view = tree_view
 
     def create_palette(self):
-        pass
-        '''
         model = self._tree_view.get_model()
         row = model[self.props.palette_invoker.path]
         bundle_id = row[ListModel.COLUMN_BUNDLE_ID]
@@ -293,7 +291,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         palette = ActivityListPalette(registry.get_bundle(bundle_id))
         palette.connect('erase-activated', self.__erase_activated_cb)
         return palette
-        '''
+
     def __erase_activated_cb(self, palette, bundle_id):
         self.emit('erase-activated', bundle_id)
 
@@ -417,7 +415,7 @@ class ActivityListPalette(ActivityPalette):
                 self.__activity_changed_cb)
         self._update_favorite_item()
 
-        #self.connect('destroy', self.__destroy_cb)
+        self.menu.connect('destroy', self.__destroy_cb)
 
     def _add_erase_option(self, registry, activity_info):
         menu_item = MenuItem(_('Erase'), 'list-remove')
