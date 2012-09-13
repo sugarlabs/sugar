@@ -85,8 +85,6 @@ class KeyDialog(Gtk.Dialog):
         self._rsn_flags = rsn_flags
         self._dev_caps = dev_caps
 
-        self.set_has_separator(False)
-
         display_name = network.ssid_to_display_name(ssid)
         label = Gtk.Label(label=_("A wireless encryption key is required for\n"
                             " the wireless network '%s'.") % (display_name, ))
@@ -95,7 +93,6 @@ class KeyDialog(Gtk.Dialog):
         self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
                          Gtk.STOCK_OK, Gtk.ResponseType.OK)
         self.set_default_response(Gtk.ResponseType.OK)
-        self.set_has_separator(True)
 
     def add_key_entry(self):
         self._entry = Gtk.Entry()
@@ -129,7 +126,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_store.append(['Hex (40/128-bit)', WEP_HEX])
         self.key_store.append(['ASCII (40/128-bit)', WEP_ASCII])
 
-        self.key_combo = Gtk.ComboBox(self.key_store)
+        self.key_combo = Gtk.ComboBox(model=self.key_store)
         cell = Gtk.CellRendererText()
         self.key_combo.pack_start(cell, True)
         self.key_combo.add_attribute(cell, 'text', 0)
@@ -150,7 +147,7 @@ class WEPKeyDialog(KeyDialog):
         self.auth_store.append(['Open System', IW_AUTH_ALG_OPEN_SYSTEM])
         self.auth_store.append(['Shared Key', IW_AUTH_ALG_SHARED_KEY])
 
-        self.auth_combo = Gtk.ComboBox(self.auth_store)
+        self.auth_combo = Gtk.ComboBox(model=self.auth_store)
         cell = Gtk.CellRendererText()
         self.auth_combo.pack_start(cell, True)
         self.auth_combo.add_attribute(cell, 'text', 0)
@@ -222,14 +219,14 @@ class WPAKeyDialog(KeyDialog):
         self.store = Gtk.ListStore(str)
         self.store.append([_('WPA & WPA2 Personal')])
 
-        self.combo = Gtk.ComboBox(self.store)
+        self.combo = Gtk.ComboBox(model=self.store)
         cell = Gtk.CellRendererText()
         self.combo.pack_start(cell, True)
         self.combo.add_attribute(cell, 'text', 0)
         self.combo.set_active(0)
 
         self.hbox = Gtk.HBox()
-        self.hbox.pack_start(Gtk.Label(_('Wireless Security:', True, True, 0)))
+        self.hbox.pack_start(Gtk.Label(_('Wireless Security:')), True, True, 0)
         self.hbox.pack_start(self.combo, True, True, 0)
         self.hbox.show_all()
 
