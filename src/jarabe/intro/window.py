@@ -34,9 +34,6 @@ from sugar3.graphics.xocolor import XoColor
 from jarabe.intro import colorpicker
 
 
-_BACKGROUND_COLOR = style.COLOR_WHITE
-
-
 def create_profile(name, color=None):
     if not color:
         color = XoColor()
@@ -71,6 +68,7 @@ def create_profile(name, color=None):
         logging.error('Could not generate key pair: %d %s', s, o)
 
     logging.debug("User keypair generated")
+
 
 class _Page(Gtk.VBox):
     __gproperties__ = {
