@@ -530,7 +530,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._buffer = GtkSource.Buffer()
         self._buffer.set_highlight_syntax(True)
 
-        self._source_view = GtkSource.View(self._buffer)
+        self._source_view = GtkSource.View(buffer=self._buffer)
         self._source_view.set_editable(False)
         self._source_view.set_cursor_visible(True)
         self._source_view.set_show_line_numbers(True)
