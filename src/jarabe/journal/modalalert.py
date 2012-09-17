@@ -56,25 +56,27 @@ class ModalAlert(Gtk.Window):
         icon = Icon(icon_name='activity-journal',
                     pixel_size=style.XLARGE_ICON_SIZE,
                     xo_color=color)
-        self._vbox.pack_start(icon, False)
+        self._vbox.pack_start(icon, expand=False, fill=False, padding=0)
         icon.show()
 
         self._title = Gtk.Label()
         self._title.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
         self._title.set_markup('<b>%s</b>' % _('Your Journal is full'))
-        self._vbox.pack_start(self._title, False)
+        self._vbox.pack_start(self._title, expand=False, fill=False, padding=0)
         self._title.show()
 
         self._message = Gtk.Label(label=_('Please delete some old Journal'
                                     ' entries to make space for new ones.'))
         self._message.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(self._message, False)
+        self._vbox.pack_start(self._message, expand=False,
+                              fill=False, padding=0)
         self._message.show()
 
-        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5)
-        self._vbox.pack_start(alignment, False, True, 0)
+        alignment = Gtk.Alignment.new(xalign=0.5, yalign=0.5,
+                                      xscale=0.0, yscale=0.0)
+        self._vbox.pack_start(alignment, expand=False, fill=True, padding=0)
         alignment.show()
 
         self._show_journal = Gtk.Button()
@@ -90,7 +92,7 @@ class ModalAlert(Gtk.Window):
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.window.set_accept_focus(True)
+        self.get_window().set_accept_focus(True)
 
     def __show_journal_cb(self, button):
         """The opener will listen on the destroy signal"""
