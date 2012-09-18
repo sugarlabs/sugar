@@ -19,6 +19,7 @@ import os
 import logging
 from gettext import gettext as _
 
+import glib
 from gi.repository import GObject
 from gi.repository import Pango
 from gi.repository import GConf
@@ -50,7 +51,8 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self._query = ''
 
-        self.modify_base(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        self.modify_base(Gtk.StateType.NORMAL,
+                         style.COLOR_WHITE.get_gdk_color())
         self.set_headers_visible(False)
         selection = self.get_selection()
         selection.set_mode(Gtk.SelectionMode.NONE)
@@ -147,8 +149,14 @@ class ActivitiesTreeView(Gtk.TreeView):
         misc.launch(bundle)
 
     def set_filter(self, query):
+        """Set a new query and refilter the model, return the number
+        of matching activities.
+
+        """
         self._query = query.lower()
         self.get_model().refilter()
+        matches = self.get_model().iter_n_children(None)
+        return matches
 
     def __model_visible_cb(self, model, tree_iter, data):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
@@ -296,30 +304,78 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.emit('erase-activated', bundle_id)
 
 
+class ClearMessageBox(Gtk.EventBox):
+    def __init__(self, message, button_callback):
+        Gtk.EventBox.__init__(self)
+
+        self.modify_bg(Gtk.StateType.NORMAL,
+                       style.COLOR_WHITE.get_gdk_color())
+
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0.1, 0.1)
+        self.add(alignment)
+        alignment.show()
+
+        box = Gtk.VBox()
+        alignment.add(box)
+        box.show()
+
+        icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
+                    icon_name='system-search',
+                    stroke_color=style.COLOR_TRANSPARENT.get_svg(),
+                    fill_color=style.COLOR_BUTTON_GREY.get_svg())
+        box.pack_start(icon, expand=True, fill=False, padding=0)
+        icon.show()
+
+        label = Gtk.Label()
+        color = style.COLOR_BUTTON_GREY.get_html()
+        label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
+                color, glib.markup_escape_text(message)))
+        box.pack_start(label, expand=True, fill=False, padding=0)
+        label.show()
+
+        button = Gtk.Button(label=_('Clear search'))
+        button.connect('clicked', button_callback)
+        button.props.image = Icon(icon_name='dialog-cancel',
+                                  icon_size=Gtk.IconSize.BUTTON)
+        box.pack_start(button, expand=True, fill=False, padding=0)
+        button.show()
+
+
 class ActivitiesList(Gtk.VBox):
     __gtype_name__ = 'SugarActivitiesList'
+
+    __gsignals__ = {
+        'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
 
     def __init__(self):
         logging.debug('STARTUP: Loading the activities list')
 
         Gtk.VBox.__init__(self)
 
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.NONE)
-        scrolled_window.connect('key-press-event', self.__key_press_event_cb)
-        self.pack_start(scrolled_window, True, True, 0)
-        scrolled_window.show()
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                         Gtk.PolicyType.AUTOMATIC)
+        self._scrolled_window.set_shadow_type(Gtk.ShadowType.NONE)
+        self._scrolled_window.connect('key-press-event',
+                                      self.__key_press_event_cb)
+        self.pack_start(self._scrolled_window, True, True, 0)
+        self._scrolled_window.show()
 
         self._tree_view = ActivitiesTreeView()
         self._tree_view.connect('erase-activated', self.__erase_activated_cb)
-        scrolled_window.add(self._tree_view)
+        self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
 
         self._alert = None
+        self._clear_message_box = None
 
     def set_filter(self, query):
-        self._tree_view.set_filter(query)
+        matches = self._tree_view.set_filter(query)
+        if matches == 0:
+            self._show_clear_message()
+        else:
+            self._hide_clear_message()
 
     def __key_press_event_cb(self, scrolled_window, event):
         keyname = Gdk.keyval_name(event.keyval)
@@ -338,6 +394,33 @@ class ActivitiesList(Gtk.VBox):
             return False
 
         return True
+
+    def _show_clear_message(self):
+        if self._clear_message_box in self.get_children():
+            return
+        if self._scrolled_window in self.get_children():
+            self.remove(self._scrolled_window)
+
+        self._clear_message_box = ClearMessageBox(
+            message=_('No matching activities'),
+            button_callback=self.__clear_button_clicked_cb)
+
+        self.pack_end(self._clear_message_box, True, True, 0)
+        self._clear_message_box.show()
+
+    def __clear_button_clicked_cb(self, button):
+        self.emit('clear-clicked')
+
+    def _hide_clear_message(self):
+        if self._scrolled_window in self.get_children():
+            return
+        if self._clear_message_box in self.get_children():
+            self.remove(self._clear_message_box)
+
+        self._clear_message_box = None
+
+        self.pack_end(self._scrolled_window, True, True, 0)
+        self._scrolled_window.show()
 
     def add_alert(self, alert):
         if self._alert is not None:

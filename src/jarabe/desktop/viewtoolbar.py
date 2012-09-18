@@ -92,6 +92,9 @@ class ViewToolbar(Gtk.Toolbar):
         self._favorites_button.hide()
         self._list_button.hide()
 
+    def clear_query(self):
+        self.search_entry.props.text = ''
+
     def _add_separator(self, expand=False):
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False

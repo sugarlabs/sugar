@@ -45,6 +45,8 @@ class HomeBox(Gtk.VBox):
 
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
+        self._list_view.connect('clear-clicked',
+                                self.__activitylist_clear_clicked_cb, toolbar)
 
         self._set_view(_FAVORITES_VIEW)
         self._query = ''
@@ -102,6 +104,9 @@ class HomeBox(Gtk.VBox):
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
+
+    def __activitylist_clear_clicked_cb(self, widget, toolbar):
+        toolbar.clear_query()
 
     def _set_view(self, view):
         if view == _FAVORITES_VIEW:
