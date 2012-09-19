@@ -68,10 +68,12 @@ class Power(SectionView):
         label_automatic_pm_error = Gtk.Label()
         group.add_widget(label_automatic_pm_error)
         self._automatic_pm_alert_box.pack_start(label_automatic_pm_error,
-                                                expand=False)
+                                                expand=False, fill=True,
+                                                padding=0)
         label_automatic_pm_error.show()
         self._automatic_pm_alert_box.pack_start(self._automatic_pm_alert,
-                                                expand=False)
+                                                expand=False, fill=True,
+                                                padding=0)
         box_pm.pack_end(self._automatic_pm_alert_box, False, True, 0)
         self._automatic_pm_alert_box.show()
         if 'automatic_pm' in self.restart_alerts:
