@@ -426,7 +426,7 @@ class ActivitiesList(Gtk.VBox):
         if self._alert is not None:
             self.remove_alert()
         self._alert = alert
-        self.pack_start(alert, False)
+        self.pack_start(alert, False, True, 0)
         self.reorder_child(alert, 0)
 
     def remove_alert(self):
