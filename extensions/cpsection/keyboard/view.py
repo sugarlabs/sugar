@@ -77,9 +77,9 @@ class LayoutCombo(Gtk.HBox):
         cell = Gtk.CellRendererText()
         cell.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         cell.props.ellipsize_set = True
-        self._klang_combo.pack_start(cell, True, True, 0)
+        self._klang_combo.pack_start(cell, True)
         self._klang_combo.add_attribute(cell, 'text', 1)
-        self.pack_start(self._klang_combo, expand=True, fill=True)
+        self.pack_start(self._klang_combo, expand=True, fill=True, padding=0)
 
         self._kvariant_store = None
         self._kvariant_combo = Gtk.ComboBox(model=None)
@@ -89,9 +89,9 @@ class LayoutCombo(Gtk.HBox):
         cell = Gtk.CellRendererText()
         cell.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         cell.props.ellipsize_set = True
-        self._kvariant_combo.pack_start(cell, True, True, 0)
+        self._kvariant_combo.pack_start(cell, True)
         self._kvariant_combo.add_attribute(cell, 'text', 1)
-        self.pack_start(self._kvariant_combo, expand=True, fill=True)
+        self.pack_start(self._kvariant_combo, expand=True, fill=True, padding=0)
 
         self._klang_combo.set_active(self._index)
 
@@ -205,7 +205,7 @@ class Keyboard(SectionView):
         cell = Gtk.CellRendererText()
         cell.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         cell.props.ellipsize_set = True
-        kmodel_combo.pack_start(cell, True, True, 0)
+        kmodel_combo.pack_start(cell, True)
         kmodel_combo.add_attribute(cell, 'text', 1)
 
         self._kmodel = self._keyboard_manager.get_current_model()
@@ -265,7 +265,7 @@ class Keyboard(SectionView):
         cell = Gtk.CellRendererText()
         cell.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         cell.props.ellipsize_set = True
-        group_option_combo.pack_start(cell, True, True, 0)
+        group_option_combo.pack_start(cell, True)
         group_option_combo.add_attribute(cell, 'text', 1)
 
         self._group_switch_option = \
