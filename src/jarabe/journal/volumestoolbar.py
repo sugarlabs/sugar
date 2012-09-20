@@ -334,7 +334,7 @@ class VolumeButton(BaseButton):
         if icon_name is None:
             icon_name = 'drive'
 
-        self.props.named_icon = icon_name
+        self.props.icon_name = icon_name
 
         # TODO: retrieve the colors from the owner of the device
         client = GConf.Client.get_default()
@@ -352,7 +352,7 @@ class JournalButton(BaseButton):
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
 
-        self.props.named_icon = 'activity-journal'
+        self.props.icon_name = 'activity-journal'
 
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -398,7 +398,7 @@ class DocumentsButton(BaseButton):
     def __init__(self, documents_path):
         BaseButton.__init__(self, mount_point=documents_path)
 
-        self.props.named_icon = 'user-documents'
+        self.props.icon_name = 'user-documents'
 
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
