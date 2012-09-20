@@ -20,6 +20,7 @@ import logging
 from gi.repository import GConf
 from gi.repository import Gst
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GObject
 
 
@@ -96,8 +97,8 @@ class SpeechManager(GObject.GObject):
             self._player.speak(self._pitch, self._rate, self._voice_name, text)
 
     def say_selected_text(self):
-        clipboard = Gtk.clipboard_get(selection='PRIMARY')
-        clipboard.request_text(self.__primary_selection_cb)
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_PRIMARY)
+        clipboard.request_text(self.__primary_selection_cb, None)
 
     def pause(self):
         self._player.pause_sound_device()
