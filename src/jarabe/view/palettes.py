@@ -216,30 +216,34 @@ class VolumePalette(Palette):
         path = mount.get_root().get_path()
         self.props.secondary_text = glib.markup_escape_text(path)
 
-        vbox = Gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+        self.content_box = Gtk.VBox()
+        self.set_content(self.content_box)
+        self.content_box.show()
 
-        self._progress_bar = Gtk.ProgressBar()
-        vbox.add(self._progress_bar)
-        self._progress_bar.show()
-
-        self._free_space_label = Gtk.Label()
-        self._free_space_label.set_alignment(0.5, 0.5)
-        vbox.add(self._free_space_label)
-        self._free_space_label.show()
-
-        self.connect('popup', self.__popup_cb)
-
-        menu_item = MenuItem(pgettext('Volume', 'Remove'))
+        menu_item = PaletteMenuItem(pgettext('Volume', 'Remove'))
 
         icon = Icon(icon_name='media-eject', icon_size=Gtk.IconSize.MENU)
         menu_item.set_image(icon)
         icon.show()
 
         menu_item.connect('activate', self.__unmount_activate_cb)
-        self.menu.append(menu_item)
+        self.content_box.pack_start(menu_item, True, True, 0)
         menu_item.show()
+
+        separator = PaletteMenuItemSeparator()
+        self.content_box.pack_start(separator, True, True, 0)
+        separator.show()
+
+        self._progress_bar = Gtk.ProgressBar()
+        self.content_box.pack_start(self._progress_bar, True, True, 0)
+        self._progress_bar.show()
+
+        self._free_space_label = Gtk.Label()
+        self._free_space_label.set_alignment(0.5, 0.5)
+        self.content_box.pack_start(self._free_space_label, True, True, 0)
+        self._free_space_label.show()
+
+        self.connect('popup', self.__popup_cb)
 
     def __unmount_activate_cb(self, menu_item):
         self._mount.unmount(self.__unmount_cb)

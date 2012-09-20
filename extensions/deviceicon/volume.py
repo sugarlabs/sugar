@@ -24,7 +24,8 @@ from gi.repository import GConf
 
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.icon import Icon
 
 from jarabe.journal import journalactivity
@@ -69,7 +70,7 @@ class DeviceView(TrayIcon):
         palette = VolumePalette(self._mount)
         palette.set_group_id('frame')
 
-        menu_item = MenuItem(_('Show contents'))
+        menu_item = PaletteMenuItem(_('Show contents'))
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         icon = Icon(icon_name=self._icon_name, icon_size=Gtk.IconSize.MENU,
@@ -78,7 +79,8 @@ class DeviceView(TrayIcon):
         icon.show()
 
         menu_item.connect('activate', self.__show_contents_cb)
-        palette.menu.insert(menu_item, 0)
+        palette.content_box.pack_start(menu_item, True, True, 0)
+        palette.content_box.reorder_child(menu_item, 0)
         menu_item.show()
 
         return palette
