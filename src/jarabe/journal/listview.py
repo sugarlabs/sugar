@@ -27,7 +27,6 @@ from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.icon import EventIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3 import util
 
@@ -391,10 +390,10 @@ class BaseListView(Gtk.Bin):
         box = Gtk.VBox()
         alignment.add(box)
 
-        icon = EventIcon(pixel_size=style.LARGE_ICON_SIZE,
-                         icon_name='activity-journal',
-                         stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
-                         fill_color=style.COLOR_TRANSPARENT.get_svg())
+        icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
+                    icon_name='activity-journal',
+                    stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                    fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.pack_start(icon, expand=True, fill=False, padding=0)
 
         label = Gtk.Label()

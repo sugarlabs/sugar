@@ -196,16 +196,19 @@ class HomeWindow(Gtk.Window):
         if level == ShellModel.ZOOM_HOME:
             self._box.pack_start(self._home_box, True, True, 0)
             self._home_box.show()
+            self._toolbar.clear_query()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.show_view_buttons()
         elif level == ShellModel.ZOOM_GROUP:
             self._box.pack_start(self._group_box, True, True, 0)
             self._group_box.show()
+            self._toolbar.clear_query()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.hide_view_buttons()
         elif level == ShellModel.ZOOM_MESH:
             self._box.pack_start(self._mesh_box, True, True, 0)
             self._mesh_box.show()
+            self._toolbar.clear_query()
             self._toolbar.search_entry.grab_focus()
             self._toolbar.hide_view_buttons()
 
