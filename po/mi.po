@@ -6,630 +6,658 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2010-01-02 03:00-0400\n"
-"Last-Translator: Chris Leonard <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-09-19 00:34-0400\n"
+"PO-Revision-Date: 2012-09-21 09:37+0200\n"
+"Last-Translator: hariru <hariruroa@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Pootle 1.2.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr ""
+msgstr "Mōku Ake"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr ""
+msgstr "Me tāuru ingoa."
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgstr "miringa:   tae= %s hākano= %s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "miringa:  %s"
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "whakakī:     tae= %s hākano= %s"
 
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
+#, python-format,
 msgid "fill:     %s"
-msgstr ""
+msgstr "whakakī:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr ""
+msgstr "He hapa kei ngā pātohu tae kua tohua."
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr ""
+msgstr "He hapa kei ngā tae kua tohua."
 
-#: ../extensions/cpsection/aboutme/view.py:235
+#: ../extensions/cpsection/aboutme/view.py:216
 msgid "Click to change your color:"
-msgstr ""
+msgstr "Pāwhiri kia huri i tō tae:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr ""
+msgstr "Mō taku Rorohiko"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr ""
+msgstr "Koretaea"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
-msgstr ""
+msgstr "Tuakiri"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
-msgstr ""
+msgstr "Tau Rangatū:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
-msgstr ""
+msgstr "Pūmanawa"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
-msgstr ""
+msgstr "Hanga:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
-msgstr ""
+msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:129
+#: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
-msgstr ""
+msgstr "Pūmanawa Mārō:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:144
+#: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr ""
+msgstr "Pūmanawa Mārō Ahokore:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:167
+#: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
-msgstr ""
+msgstr "Manatārua me te Raihana"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:185
+#. TRANS: The word "Sugar" should not be translated.
+#: ../extensions/cpsection/aboutcomputer/view.py:187
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
+"Ko Sugar te atanga kaiwhakamahi whakairoiro e tiro nei koe. He pūmanawa utu "
+"kore a Sugar, kei raro i te Raihana Tūmatanui Ahuwhānui GNU, ā, e taea ana e "
+"koe te huri, te toha i ngā tārua i runga tonu i ngā ture kua whakatakotoria "
+"ki roto."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:197
+#: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
-msgstr ""
+msgstr "Raihana whānui:"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr ""
+msgstr "Rā me te Wā"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr ""
+msgstr "Hapa kāore kau he rohewā."
 
 #: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
-msgstr ""
+msgstr "Rohewā"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "Tāpare"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr ""
+msgstr "Me whai tau tōpū te uara."
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
-msgstr ""
+msgstr "kaua rawa"
 
 #: ../extensions/cpsection/frame/view.py:28
 msgid "instantaneous"
-msgstr ""
+msgstr "īnāianei"
 
 #: ../extensions/cpsection/frame/view.py:29
 #, python-format
+#, python-format,
 msgid "%s seconds"
-msgstr ""
+msgstr "%s ngā hēkona"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr ""
+msgstr "Whakahohenga Takaware"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
-msgstr ""
+msgstr "Koko"
 
-#: ../extensions/cpsection/frame/view.py:113
+#: ../extensions/cpsection/frame/view.py:114
 msgid "Edge"
-msgstr ""
+msgstr "Tapa"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:32
 msgid "Keyboard"
-msgstr ""
+msgstr "Papapātuhi"
 
 #: ../extensions/cpsection/keyboard/view.py:190
 msgid "Keyboard Model"
-msgstr ""
+msgstr "Tauira Papapātuhi"
 
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "Pātuhi hei huri i te tahora"
 
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "Tahora Papapātuhi"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
 msgid "Language"
-msgstr ""
+msgstr "Reo"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr ""
+msgstr "Kāore i āhei ~/.i18n. Waihanga tautuhinga paerewa."
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr ""
+msgstr "Reo mō te waehere=%s kāore e taea te whakarite."
 
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr ""
+msgstr "Taku hē, kāore au i te kōrero i te '%s'."
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"Tāpiri reo e ai ki te raupapa e hiahiatia ana. Ki te kore e taea te "
+"whakawhiti reo, ka whakamahia te reo panuku kei te rārangi."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr ""
+msgstr "Whirihoranga Pouwhanga"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:67
+#: ../extensions/cpsection/modemconfiguration/view.py:68
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Me tuku ngā mōhiohio e whai ake hei tautuhi i tētahi hononga aunui pūkoro ki "
+"te whatunga pūtautanga (3G)."
 
-#: ../extensions/cpsection/modemconfiguration/view.py:77
+#: ../extensions/cpsection/modemconfiguration/view.py:78
 msgid "Username:"
-msgstr ""
+msgstr "Ingoakaiwhakamahi:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:83
+#: ../extensions/cpsection/modemconfiguration/view.py:84
 msgid "Password:"
-msgstr ""
+msgstr "Kupuhipa:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:89
+#: ../extensions/cpsection/modemconfiguration/view.py:90
 msgid "Number:"
-msgstr ""
+msgstr "Tau:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:95
+#: ../extensions/cpsection/modemconfiguration/view.py:96
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "Ingoa Pito Uru (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:102
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Tau Tuakiri Whaiaronga (PIN):"
 
 #: ../extensions/cpsection/network/__init__.py:21
-#: ../extensions/cpsection/network/view.py:29
+#: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr ""
+msgstr "Whatunga"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
-msgstr ""
+msgstr "Tūnga kāore i te mōhiotia."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr ""
+msgstr "Hapa ki te whakamahi tohenga irirangi, kā/weto."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr ""
+msgstr "Hapa ki te whakamahi tohenga, 0/1."
 
-#: ../extensions/cpsection/network/view.py:61
+#: ../extensions/cpsection/network/view.py:62
 msgid "Wireless"
-msgstr ""
+msgstr "Ahokore"
 
-#: ../extensions/cpsection/network/view.py:69
+#: ../extensions/cpsection/network/view.py:70
 msgid "Turn off the wireless radio to save battery life"
-msgstr ""
+msgstr "Whakawetongia te irirangi ahokore kia tiakina te ora pūhiko"
 
-#: ../extensions/cpsection/network/view.py:82
+#: ../extensions/cpsection/network/view.py:83
 msgid "Radio"
-msgstr ""
+msgstr "Irirangi"
 
-#: ../extensions/cpsection/network/view.py:98
+#: ../extensions/cpsection/network/view.py:99
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr ""
+msgstr "Turakina te hītori whatunga mēnā ka raru ki te hono ki te whatunga"
 
-#: ../extensions/cpsection/network/view.py:107
+#: ../extensions/cpsection/network/view.py:108
 msgid "Discard network history"
-msgstr ""
+msgstr "Turakina te hītori whatunga"
 
-#: ../extensions/cpsection/network/view.py:122
+#: ../extensions/cpsection/network/view.py:123
 msgid "Collaboration"
-msgstr ""
+msgstr "Ngātahitanga"
 
-#: ../extensions/cpsection/network/view.py:130
+#: ../extensions/cpsection/network/view.py:131
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"He pērā te tūmau ki te rūma e noho nei koe; ka taea e ngā tāngata o te tūmau "
+"kotahi te kite i a rātou anō, ka pērā tonu mēnā kei ngā tūmau rerekē."
 
-#: ../extensions/cpsection/network/view.py:140
+#: ../extensions/cpsection/network/view.py:141
 msgid "Server:"
-msgstr ""
+msgstr "Tūmau:"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr ""
+msgstr "Hiko"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr ""
+msgstr "He hapa ki te tohenga pm aunoa, whakamahia te kā/weto."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr ""
+msgstr "Whakahaerenga hiko"
 
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "Whakahaerenga hiko aunoa (ka whakapiki i te ora pūhiko)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-msgid "Software update"
-msgstr ""
+#: ../src/jarabe/desktop/homebox.py:60
+msgid "Software Update"
+msgstr "Whakahōu Pūmanawa"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"Ka whakatika ngā whakahōunga pūmanawa i ngā hapa, ka whakamōtī i ngā "
+"pānekeneke haumaru, ka tuku āhuatanga hōu hoki."
 
 #: ../extensions/cpsection/updater/view.py:125
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "Takitaki ana i ngā %s..."
 
 #: ../extensions/cpsection/updater/view.py:127
 #, python-format
+#, python-format,
 msgid "Downloading %s..."
-msgstr ""
+msgstr "Tikiake ana i ngā %s..."
 
 #: ../extensions/cpsection/updater/view.py:129
 #, python-format
+#, python-format,
 msgid "Updating %s..."
-msgstr ""
+msgstr "Whakahōu ana i ngā %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Your software is up-to-date"
-msgstr ""
+msgstr "Kua whakahōungia tō pūmanawa"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Ka taea e koe te tāuta i te whakahōunga %s"
+msgstr[1] "Ka taea e koe te tāuta i ngā whakahōunga %s"
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Takitaki ana mō ngā whakahōunga..."
 
 #: ../extensions/cpsection/updater/view.py:164
 msgid "Installing updates..."
-msgstr ""
+msgstr "Tāuta ana i ngā whakahōu..."
 
 #: ../extensions/cpsection/updater/view.py:173
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "i tāutangia te whakahōunga %s"
+msgstr[1] "i tāutangia ngā whakahōunga %s"
 
-#: ../extensions/cpsection/updater/view.py:255
+#: ../extensions/cpsection/updater/view.py:256
 msgid "Install selected"
-msgstr ""
+msgstr "Tāuta i ngā mea kua tohua"
 
-#: ../extensions/cpsection/updater/view.py:276
+#: ../extensions/cpsection/updater/view.py:277
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "Rahinga tikiake: %s"
 
-#: ../extensions/cpsection/updater/view.py:364
+#: ../extensions/cpsection/updater/view.py:365
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr ""
+msgstr "Mai i te putanga %(current)s ki %(new)s (Size: %(size)s)"
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:383
 msgid "None"
-msgstr ""
+msgstr "Kore"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:385
+#: ../extensions/cpsection/updater/view.py:386
 msgid "1 KB"
-msgstr ""
+msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:389
 #, python-format
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:392
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:71
+#: ../extensions/deviceicon/battery.py:70
 msgid "My Battery"
-msgstr ""
+msgstr "Taku Pūhiko"
 
-#: ../extensions/deviceicon/battery.py:147
+#: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
-msgstr ""
+msgstr "Kua Tangohia"
 
-#: ../extensions/deviceicon/battery.py:150
+#: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
-msgstr ""
+msgstr "Whakahiko Ana"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
-msgstr ""
+msgstr "Kua tata pau te pūhiko"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:160
+#: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d kei te toe"
 
-#: ../extensions/deviceicon/battery.py:163
+#: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
-msgstr ""
+msgstr "Kua Whakakaha"
 
-#: ../extensions/deviceicon/network.py:49
+#: ../extensions/deviceicon/network.py:51
 #, python-format
 msgid "IP address: %s"
-msgstr ""
+msgstr "Wāhitau IP: %s"
 
-#: ../extensions/deviceicon/network.py:93
-#: ../extensions/deviceicon/network.py:292
+#: ../extensions/deviceicon/network.py:81
+#: ../extensions/deviceicon/network.py:297
 #: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:492
+#: ../src/jarabe/desktop/networkviews.py:495
 msgid "Disconnect"
-msgstr ""
-
-#: ../extensions/deviceicon/network.py:101
-#: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:529
-#: ../src/jarabe/desktop/networkviews.py:663
-msgid "Connecting..."
-msgstr ""
+msgstr "Momotuhia"
 
 #: ../extensions/deviceicon/network.py:106
-#: ../extensions/deviceicon/network.py:174
+#: ../extensions/deviceicon/network.py:289
+#: ../src/jarabe/desktop/networkviews.py:238
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
+msgid "Connecting..."
+msgstr "E Tūhono Ana..."
+
+#: ../extensions/deviceicon/network.py:111
+#: ../extensions/deviceicon/network.py:179
 #: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:535
-#: ../src/jarabe/desktop/networkviews.py:669
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connected"
-msgstr ""
+msgstr "Kua Tūhono"
 
-#: ../extensions/deviceicon/network.py:119
+#: ../extensions/deviceicon/network.py:124
 msgid "No wireless connection"
-msgstr ""
+msgstr "Kāore he hononga ahokore"
 
-#: ../extensions/deviceicon/network.py:133
+#: ../extensions/deviceicon/network.py:138
 msgid "Channel"
-msgstr ""
+msgstr "Hongere"
 
-#: ../extensions/deviceicon/network.py:148
+#: ../extensions/deviceicon/network.py:153
 msgid "Wired Network"
-msgstr ""
+msgstr "Whatunga Whaiaho"
 
-#: ../extensions/deviceicon/network.py:177
+#: ../extensions/deviceicon/network.py:182
 msgid "Speed"
-msgstr ""
+msgstr "Tere"
 
-#: ../extensions/deviceicon/network.py:202
+#: ../extensions/deviceicon/network.py:207
 msgid "Wireless modem"
-msgstr ""
-
-#: ../extensions/deviceicon/network.py:270
-msgid "Please wait..."
-msgstr ""
+msgstr "Pouwhanga ahokore"
 
 #: ../extensions/deviceicon/network.py:275
+msgid "Please wait..."
+msgstr "Taihoa koa..."
+
+#: ../extensions/deviceicon/network.py:280
 #: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:488
-#: ../src/jarabe/desktop/networkviews.py:619
+#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:624
 msgid "Connect"
-msgstr ""
+msgstr "Tūhono"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:281
 msgid "Disconnected"
-msgstr ""
+msgstr "Kua Momotu"
 
-#: ../extensions/deviceicon/network.py:283
+#: ../extensions/deviceicon/network.py:288
 #: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:603
-#: ../src/jarabe/frame/activitiestray.py:705
-#: ../src/jarabe/frame/activitiestray.py:733
+#: ../src/jarabe/desktop/homebox.py:65
+#: ../src/jarabe/frame/activitiestray.py:606
+#: ../src/jarabe/frame/activitiestray.py:708
+#: ../src/jarabe/frame/activitiestray.py:736
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
-msgstr ""
+msgstr "Whakakore"
 
-#: ../extensions/deviceicon/network.py:322
+#: ../extensions/deviceicon/network.py:327
 msgid "Try connection again"
-msgstr ""
+msgstr "Ngana ki te tūhono anō"
 
-#: ../extensions/deviceicon/network.py:325
+#: ../extensions/deviceicon/network.py:330
 #, python-format
+#, python-format,
 msgid "Error: %s"
-msgstr ""
+msgstr "Hapa: %s"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:334
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Huatau: %s"
 
-#: ../extensions/deviceicon/network.py:338
+#: ../extensions/deviceicon/network.py:343
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Kua tūhono mō %s"
 
-#: ../extensions/deviceicon/network.py:344
-#: ../extensions/deviceicon/network.py:345
-#, python-format
-msgid "%d KB"
-msgstr ""
-
+#: ../extensions/deviceicon/network.py:349
 #: ../extensions/deviceicon/network.py:350
+#, python-format
+#, python-format,
+msgid "%d KB"
+msgstr "%d KB"
+
+#: ../extensions/deviceicon/network.py:355
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Takina tō whirihoranga PIN/PUK."
 
-#: ../extensions/deviceicon/network.py:353
+#: ../extensions/deviceicon/network.py:358
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Takina tō whirihoranga Ingoa Pito Uru (APN)"
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:362
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Takina te whirihoranga Tau."
 
-#: ../extensions/deviceicon/network.py:359
+#: ../extensions/deviceicon/network.py:364
 msgid "Check your configuration."
-msgstr ""
+msgstr "Takina tō whirihoranga."
 
-#: ../extensions/deviceicon/network.py:597
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
-msgstr ""
+msgstr "Whatunga Tākekenga"
 
-#: ../extensions/deviceicon/network.py:641
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 msgid "Mesh Network %s"
-msgstr ""
+msgstr "Whatunga Tākekenga %s"
 
-#: ../extensions/deviceicon/network.py:757
+#: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Kāore i āhei te hononga GSM."
 
-#: ../extensions/deviceicon/network.py:758
+#: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Waihangatia tētahi hononga ki te paepae mana."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Whaikōrero"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "Whakahua kupu kua tīpakohia"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Whakatū pūrei anō"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "Tīkākā"
 
 #: ../extensions/deviceicon/speech.py:106
 msgid "Rate"
-msgstr ""
+msgstr "Mokatere"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "Tāria te pūrei anō"
 
-#: ../extensions/deviceicon/speaker.py:61
+#: ../extensions/deviceicon/speaker.py:63
 msgid "My Speakers"
-msgstr ""
+msgstr "Aku Tukuoro"
 
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:143
 msgid "Unmute"
-msgstr ""
+msgstr "Whakakore whakangū"
 
-#: ../extensions/deviceicon/speaker.py:141
+#: ../extensions/deviceicon/speaker.py:146
 msgid "Mute"
-msgstr ""
+msgstr "Whakangū"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "matimati"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "pene pā"
 
 #: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "Taku papapā"
 
-#: ../extensions/globalkey/screenshot.py:59
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:171
+msgid "Show contents"
+msgstr "Whakaatu ihirangi"
+
+#: ../extensions/globalkey/screenshot.py:62
 msgid "Mesh"
-msgstr ""
+msgstr "Tākekenga"
 
-#: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../extensions/globalkey/screenshot.py:64
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "Group"
-msgstr ""
+msgstr "Rōpū"
 
-#: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "Home"
-msgstr ""
-
-#: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:49
-msgid "Activity"
-msgstr ""
+msgstr "Kāinga"
 
 #: ../extensions/globalkey/screenshot.py:72
-msgid "Screenshot"
-msgstr ""
+#: ../src/jarabe/frame/zoomtoolbar.py:54
+msgid "Activity"
+msgstr "Hohenga"
 
-#: ../extensions/globalkey/screenshot.py:74
+#: ../extensions/globalkey/screenshot.py:75
+msgid "Screenshot"
+msgstr "Whakaahuamata"
+
+#: ../extensions/globalkey/screenshot.py:77
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "Whakaahuamata o \"%s\""
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
+"\"mono\" kia pātai ki a nick mō te arawhitinga; \"pūnaha\" kia whakamahi anō i "
+"te ingoa roa pūkete UNIX."
 
 #: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
-msgstr ""
+msgstr "Tārua URL"
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Pūkai IDs o ngā hohe pare"
 
 #: ../data/sugar.schemas.in.h:5
 msgid ""
@@ -637,118 +665,130 @@ msgid ""
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
+"Te tae mō te ata XO ka whakamahia puta noa i te papamahi. Kei te rārangi te "
+"tae miringa me te tae whakakī, ko te hōputu ko tērā o ngā tae rgb. Tauira: "
+"#AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
-msgstr ""
+msgstr "Takaware Koko"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
-msgstr ""
+msgstr "Mata momotuhi taunoa"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
-msgstr ""
+msgstr "Rahinga momotuhi taunoa"
 
 #: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
-msgstr ""
+msgstr "Nick taunoa"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgstr "Takaware mō te hohenga o te tāpare e whakamahi ana i ngā koko."
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgstr "Takaware mō te whakahohenga o te tāpare e whakamahi ana i ngā tapa."
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
-msgstr ""
+msgstr "Takaware Tapa"
 
 #: ../data/sugar.schemas.in.h:13
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
+"Whakahaerenga hiko taikaha (ka monokia te irirangi ahokore, ka whakapiki i "
+"te ora pūhiko)"
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
-msgstr ""
+msgstr "Tahoranga Makau"
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
-msgstr ""
+msgstr "Aratau haere anō o ngā Makau"
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
-msgstr ""
+msgstr "Mata momotuhi ka whakamahia puta noa i te papamahi."
 
 #: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
-msgstr ""
+msgstr "Rahinga momotuhi ka whakamahia puta noa i te papamahi."
 
 #: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whatunga GSM APN (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whatunga GSM PIN (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whatunga GSM PUK (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whirihoranga, ingoa pito uru whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Tau whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Kupuhipa whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whirihoranga, kupuhipa whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Whirihoranga, tau tāututanga whaiaro whatunga GSM "
+"(TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Whirihoranga, kī whakatūwhera whaiaro whatunga GSM "
+"(TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Whirihoranga, tau waea whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Ingoakaiwhakamahi whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Whirihoranga, ingoakaiwhakamahi whatunga GSM (TĒWHAKAAETIA/TĒWHAKAMAHIA)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Ki te TIKA, ka whakarite a Sugar kia taea e ērā atu kaiwhakamahi o te tūmau "
+"Jabber te rapu i a mātou."
 
 #: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr ""
+msgstr "Ki te TIKA, ka whakaaturia e Sugar te kōwhiringa \"Takiputa\"."
 
 #: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
+msgstr "Ki te TIKA, ka whakaaturia e Sugar te kōwhiringa \"Tīmata Anō\"."
 
 #: ../data/sugar.schemas.in.h:33
 msgid ""
@@ -756,130 +796,137 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Ki te TIKA, ka whakaaturia e Sugar ngā whatunga Hanga noa taunoa mō ngā "
+"hongere 1,6 me te 11. Ki te kore e kitea e Sugar te whatunga \"e mōhiotia "
+"ana\" i tāna tīmatatanga, ka kore e honoaunoa ki te whatunga Hanga noa."
 
 #: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
-msgstr ""
+msgstr "Tūmau Jabber"
 
 #: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
-msgstr ""
+msgstr "Ngā tahora papapātuhi"
 
 #: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
-msgstr ""
+msgstr "Tauira papapātuhi"
 
 #: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
-msgstr ""
+msgstr "Ngā kōwhiringa papapātuhi"
 
 #: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Tahora o te tiro makau."
 
 #: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
+"Rārangi o ngā tahora papapātuhi. Me pēnei ia tāurunga tahora puka(variant)"
 
 #: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
-msgstr ""
+msgstr "Rārangi o ngā kōwhiringa papapātuhi."
 
 #: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Uara tīkākā mō te ratonga sugar kōrero"
 
 #: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Uara tīkākā e whakamahia ana e te ratonga kōrero ki roto o Sugar"
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
-msgstr ""
+msgstr "Aunoa Hiko"
 
 #: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
-msgstr ""
+msgstr "Taikaha Hiko"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Whakaputa ki Taputapu"
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Uara mokatere mō te ratonga sugar kōrero"
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Uara mokatere e whakamahia ana e te ratonga kōrero ki roto o Sugar"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "Tautuhinga hei whakangū i te pūrere oro."
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
-msgstr ""
+msgstr "Whakaatu Takiputa"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
-msgstr ""
+msgstr "Whakaatu Tīmata Anō"
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Whakaatu i ngā whatunga Hanga noa a Sugar"
 
 #: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
-msgstr ""
+msgstr "Kua Whakangū Oro"
 
 #: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "Te tauira papapātuhi hei whakamahi"
 
 #: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "Tautuhinga rohewā mō te pūnaha."
 
 #: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
-msgstr ""
+msgstr "URL o te tūmau jabber hei whakamahi."
 
 #: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
-msgstr ""
+msgstr "URL ki reira kua tiakina te tārua."
 
 #: ../data/sugar.schemas.in.h:58
 msgid "User Color"
-msgstr ""
+msgstr "Tae Kaiwhakamahi"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "User Name"
-msgstr ""
+msgstr "Ingoa Kaiwhakamahi"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "Ingoa kaiwhakamahi kua whakamahia puta noa i te papamahi."
 
 #: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Kāore e taea e ngā kaiwhakamahi te muku i ngā hohe mā te tirohanga rārangi."
 
 #: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
-msgstr ""
+msgstr "Taumata Rōrahi"
 
 #: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "Taumata rōrahi mō te pūrere oro."
 
 #: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"I te wā kei te aratau haere anō, ki te pāwhiri i tētahi ata makau, ka haere "
+"tonu te tāurunga whakamutunga nō tērā hohe."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -887,16 +934,18 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"paewhiri-mana-sugar: WHAKATŪPATO, i kitea nui ake i te kōwhiringa kotahi me "
+"te ingoa ōrite: %s kōwae: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "paewhiri-mana-sugar: kāore e taea te kōwhiringa kī=%s"
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "paewhiri-mana-sugar: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -913,841 +962,863 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"Whakamahinga: paewhiri-mana-sugar [ kōwhiringa ] kī [ args ... ] \n"
+"    Mana mō te taiao sugar. \n"
+"    Ngā Kōwhiringa: \n"
+"    -h           whakaaturia tēnei karere āwhina ka puta atu \n"
+"    -l           whakarārangitia ngā kōwhiringa āhei katoa \n"
+"    kī -h       whakaaturia mōhiohio mō tēnei kī \n"
+"    kī - g tīkina te uara o nāianei o te kī \n"
+"    kī -s tautuhia te uara o nāianei mō te kī \n"
+"    kī - c ūkuia te uara o nāianei mō te kī \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr ""
+msgstr "Hei hoatu i ō huringa me tīmata anō i a Sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
-#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
-#: ../src/jarabe/journal/volumestoolbar.py:307
+#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
+#: ../src/jarabe/journal/volumestoolbar.py:308
 msgid "Warning"
-msgstr ""
+msgstr "Whakatūpato"
 
-#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/gui.py:299
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr ""
+msgstr "Me tīmata anō mō ngā huringa"
 
-#: ../src/jarabe/controlpanel/gui.py:301
+#: ../src/jarabe/controlpanel/gui.py:302
 msgid "Cancel changes"
-msgstr ""
+msgstr "Whakakorengia ngā huringa"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:67
 msgid "Later"
-msgstr ""
+msgstr "Ā kō ake nei"
 
-#: ../src/jarabe/controlpanel/gui.py:310
+#: ../src/jarabe/controlpanel/gui.py:311
 msgid "Restart now"
-msgstr ""
+msgstr "Tīmata anō ināianei"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:212
 msgid "Done"
-msgstr ""
+msgstr "Kua Mutu"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:347
+#: ../src/jarabe/desktop/favoritesview.py:327
 msgid "Ok"
-msgstr ""
+msgstr "Āe"
 
-#: ../src/jarabe/desktop/activitieslist.py:231
+#: ../src/jarabe/desktop/activitieslist.py:240
 #, python-format
+#, python-format,
 msgid "Version %s"
-msgstr ""
+msgstr "Putanga %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:336
+#: ../src/jarabe/journal/listview.py:407
+msgid "Clear search"
+msgstr "Whakawātea i te rapu"
+
+#: ../src/jarabe/desktop/activitieslist.py:405
+msgid "No matching activities"
+msgstr "Kāore he hohe ōrite"
+
+#: ../src/jarabe/desktop/activitieslist.py:441
 msgid "Confirm erase"
-msgstr ""
+msgstr "Whakaū muku"
 
-#: ../src/jarabe/desktop/activitieslist.py:359
+#: ../src/jarabe/desktop/activitieslist.py:443
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr ""
+msgstr "Whakaū muku: E hiahia ana kia muku i te %s mō ake tonu atu?"
 
-#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/desktop/activitieslist.py:447
 #: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:280
+#: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
-msgstr ""
+msgstr "Pupuri"
 
-#: ../src/jarabe/desktop/activitieslist.py:366
-#: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:413
-#: ../src/jarabe/journal/palettes.py:126
+#: ../src/jarabe/desktop/activitieslist.py:450
+#: ../src/jarabe/desktop/activitieslist.py:504
+#: ../src/jarabe/journal/journaltoolbox.py:394
+#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
-msgstr ""
+msgstr "Muku"
 
-#: ../src/jarabe/desktop/activitieslist.py:436
+#: ../src/jarabe/desktop/activitieslist.py:520
 msgid "Remove favorite"
-msgstr ""
+msgstr "Tango makau"
 
-#: ../src/jarabe/desktop/activitieslist.py:440
+#: ../src/jarabe/desktop/activitieslist.py:524
 msgid "Make favorite"
-msgstr ""
+msgstr "Waihanga makau"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:127
+#: ../src/jarabe/desktop/favoriteslayout.py:197
 msgid "Freeform"
-msgstr ""
+msgstr "Tuhitene"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:215
+#: ../src/jarabe/desktop/favoriteslayout.py:292
 msgid "Ring"
-msgstr ""
+msgstr "Porohita"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:402
+#: ../src/jarabe/desktop/favoriteslayout.py:438
 msgid "Spiral"
-msgstr ""
+msgstr "Koru"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:472
+#: ../src/jarabe/desktop/favoriteslayout.py:506
 msgid "Box"
-msgstr ""
+msgstr "Pouaka"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:515
+#: ../src/jarabe/desktop/favoriteslayout.py:549
 msgid "Triangle"
-msgstr ""
+msgstr "Tapatoru"
 
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:318
 msgid "Registration Failed"
-msgstr ""
+msgstr "I Rahua te Rēhitatanga"
 
-#: ../src/jarabe/desktop/favoritesview.py:341
+#: ../src/jarabe/desktop/favoritesview.py:321
 msgid "Registration Successful"
-msgstr ""
+msgstr "I Tika te Rēhitatanga"
 
-#: ../src/jarabe/desktop/favoritesview.py:342
+#: ../src/jarabe/desktop/favoritesview.py:322
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Kua rēhitatia koe ki te tūmau o tō kura."
 
-#: ../src/jarabe/desktop/favoritesview.py:644
+#: ../src/jarabe/desktop/favoritesview.py:633
 msgid "Register"
-msgstr ""
+msgstr "Rēhita"
 
-#: ../src/jarabe/desktop/favoritesview.py:646
-#: ../src/jarabe/desktop/favoritesview.py:663
+#: ../src/jarabe/desktop/favoritesview.py:635
+#: ../src/jarabe/desktop/favoritesview.py:649
 msgid "Register again"
-msgstr ""
+msgstr "Rēhita anō"
 
-#: ../src/jarabe/desktop/homebox.py:66
-msgid "Software Update"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/desktop/homebox.py:61
 msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
+msgstr "Whakahōungia ō hohe kia hototahi me tō pūmanawa hōu"
 
-#: ../src/jarabe/desktop/homebox.py:76
+#: ../src/jarabe/desktop/homebox.py:70
 msgid "Check now"
-msgstr ""
+msgstr "Takina ināianei"
 
-#: ../src/jarabe/desktop/homebox.py:197
-msgid "List view"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:198
-msgid "<Ctrl>2"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:253
-msgid "Favorites view"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:254
-msgid "<Ctrl>1"
-msgstr ""
-
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:89
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"Me whai kī whakamunatanga ahokore mō\n"
+"te whatunga ahokore '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:140
+#: ../src/jarabe/desktop/keydialog.py:137
 msgid "Key Type:"
-msgstr ""
+msgstr "Momo Kī:"
 
-#: ../src/jarabe/desktop/keydialog.py:160
+#: ../src/jarabe/desktop/keydialog.py:157
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Momo Motuhēhēnga:"
 
-#: ../src/jarabe/desktop/keydialog.py:223
+#: ../src/jarabe/desktop/keydialog.py:220
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA & WPA2 Whaiaro"
 
-#: ../src/jarabe/desktop/keydialog.py:232
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "Wireless Security:"
-msgstr ""
+msgstr "Haumarutanga Ahokore:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
-msgstr ""
+msgstr "Haere Anō"
 
-#: ../src/jarabe/desktop/meshbox.py:87
+#: ../src/jarabe/desktop/meshbox.py:86
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
-msgstr ""
+msgstr "Hono"
 
-#: ../src/jarabe/desktop/networkviews.py:484
+#: ../src/jarabe/desktop/networkviews.py:486
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Whatunga Hanga Noa %d"
 
-#: ../src/jarabe/desktop/networkviews.py:616
+#: ../src/jarabe/desktop/networkviews.py:621
 #, python-format
 msgid "Mesh Network %d"
-msgstr ""
+msgstr "Whatunga Tākekenga %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "Kāore e taea te tūhono ki te tūmau."
 
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "Kāore i taea e te tūmau te whakoti i te īnoi."
+
+#: ../src/jarabe/desktop/viewtoolbar.py:79
+msgid "List view"
+msgstr "Tiro rārangi"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:80
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:145
+msgid "Favorites view"
+msgstr "Tiro makau"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:146
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
 
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:575
+#: ../src/jarabe/frame/activitiestray.py:578
 msgid "Decline"
-msgstr ""
+msgstr "Whakapeka"
 
-#: ../src/jarabe/frame/activitiestray.py:523
+#: ../src/jarabe/frame/activitiestray.py:526
 #, python-format
+#, python-format,
 msgid "%dB"
-msgstr ""
+msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:525
+#: ../src/jarabe/frame/activitiestray.py:528
 #, python-format
+#, python-format,
 msgid "%dKB"
-msgstr ""
+msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:527
+#: ../src/jarabe/frame/activitiestray.py:530
 #, python-format
+#, python-format,
 msgid "%dMB"
-msgstr ""
+msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:545
+#: ../src/jarabe/frame/activitiestray.py:548
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s o %s"
 
-#: ../src/jarabe/frame/activitiestray.py:559
+#: ../src/jarabe/frame/activitiestray.py:562
 #, python-format
 msgid "Transfer from %s"
-msgstr ""
+msgstr "Whakawhiti mai %s"
 
-#: ../src/jarabe/frame/activitiestray.py:570
+#: ../src/jarabe/frame/activitiestray.py:573
 msgid "Accept"
-msgstr ""
+msgstr "Whakaae"
 
-#: ../src/jarabe/frame/activitiestray.py:627
-#: ../src/jarabe/frame/activitiestray.py:640
-#: ../src/jarabe/frame/activitiestray.py:758
+#: ../src/jarabe/frame/activitiestray.py:630
+#: ../src/jarabe/frame/activitiestray.py:643
+#: ../src/jarabe/frame/activitiestray.py:761
 msgid "Dismiss"
-msgstr ""
+msgstr "Ākiri"
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:647
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "I whakakore tērā atu kaiwhakamahi i te whakawhitinga kōnae"
 
-#: ../src/jarabe/frame/activitiestray.py:692
+#: ../src/jarabe/frame/activitiestray.py:695
 #, python-format
 msgid "Transfer to %s"
-msgstr ""
+msgstr "Whakawhiti ki %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr ""
+msgstr "Tango"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
 msgid "Open"
-msgstr ""
+msgstr "Whakatūwhera"
 
 #: ../src/jarabe/frame/clipboardmenu.py:90
 msgid "Open with"
-msgstr ""
+msgstr "Whakatūwhera ki"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr ""
+msgstr "%s topetopenga"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "Neighborhood"
-msgstr ""
+msgstr "Takiwā"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:103
+#: ../src/jarabe/intro/window.py:107
 msgid "Name:"
-msgstr ""
+msgstr "Ingoa:"
 
-#: ../src/jarabe/intro/window.py:133
+#: ../src/jarabe/intro/window.py:137
 msgid "Click to change color:"
-msgstr ""
+msgstr "Pāwhiri kia huri i te tae:"
 
-#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:201 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
-msgstr ""
+msgstr "Hoki"
 
-#: ../src/jarabe/intro/window.py:211
+#: ../src/jarabe/intro/window.py:215
 msgid "Next"
-msgstr ""
+msgstr "Panuku"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
-#: ../src/jarabe/journal/palettes.py:64
-#: ../src/jarabe/journal/volumestoolbar.py:130
+#: ../src/jarabe/journal/expandedentry.py:145
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
-msgstr ""
+msgstr "Kore Ingoa"
 
-#: ../src/jarabe/journal/expandedentry.py:245
+#: ../src/jarabe/journal/expandedentry.py:259
 msgid "No preview"
-msgstr ""
+msgstr "Arokite kore"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:273
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "Tūmomo: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:264
-#: ../src/jarabe/journal/listmodel.py:150
-#: ../src/jarabe/journal/listmodel.py:158
+#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/listmodel.py:151
+#: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
-msgstr ""
+msgstr "Tē Mōhiotia"
 
-#: ../src/jarabe/journal/expandedentry.py:265
+#: ../src/jarabe/journal/expandedentry.py:275
 #, python-format
+#, python-format,
 msgid "Date: %s"
-msgstr ""
+msgstr "Rā: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:266
+#: ../src/jarabe/journal/expandedentry.py:276
 #, python-format
+#, python-format,
 msgid "Size: %s"
-msgstr ""
+msgstr "Rahi: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/expandedentry.py:299
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
-msgstr ""
+msgstr "Kāore he rā"
 
-#: ../src/jarabe/journal/expandedentry.py:301
+#: ../src/jarabe/journal/expandedentry.py:308
 msgid "Participants:"
-msgstr ""
+msgstr "Ngā Kaiwhakauru:"
 
-#: ../src/jarabe/journal/expandedentry.py:323
+#: ../src/jarabe/journal/expandedentry.py:349
 msgid "Description:"
 msgstr "Whakaaturanga:"
 
-#: ../src/jarabe/journal/expandedentry.py:348
+#: ../src/jarabe/journal/expandedentry.py:352
 msgid "Tags:"
-msgstr ""
+msgstr "Ngā Tūtohu:"
 
-#: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:468
-#: ../src/jarabe/journal/palettes.py:198
-#: ../src/jarabe/journal/volumestoolbar.py:368
+#: ../src/jarabe/journal/journalactivity.py:120
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:218
+#: ../src/jarabe/journal/volumestoolbar.py:369
 msgid "Journal"
-msgstr ""
+msgstr "Tuhitaka"
 
-#: ../src/jarabe/journal/journaltoolbox.py:72
-msgid "Search"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:129
 msgid "Anytime"
-msgstr ""
+msgstr "Ahakoa te wā"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:131
 msgid "Today"
-msgstr ""
+msgstr "Ākuanei"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Since yesterday"
-msgstr ""
+msgstr "Nō nanahi"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Past week"
-msgstr ""
+msgstr "Wiki kua hipa"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Past month"
-msgstr ""
+msgstr "Marama kua hipa"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past year"
-msgstr ""
+msgstr "Tau kua hipa"
 
-#: ../src/jarabe/journal/journaltoolbox.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Anyone"
-msgstr ""
+msgstr "A wai noa"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My friends"
-msgstr ""
+msgstr "Aku hoa"
 
-#: ../src/jarabe/journal/journaltoolbox.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "My class"
-msgstr ""
+msgstr "Taku akomanga"
 
-#: ../src/jarabe/journal/journaltoolbox.py:301
+#: ../src/jarabe/journal/journaltoolbox.py:291
 msgid "Anything"
-msgstr ""
+msgstr "Aha noa"
 
-#: ../src/jarabe/journal/journaltoolbox.py:396
-#: ../src/jarabe/journal/palettes.py:93
+#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
-msgstr ""
+msgstr "Tārua ki"
 
-#: ../src/jarabe/journal/journaltoolbox.py:404
-#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
-msgstr ""
+msgstr "Tārite"
 
-#: ../src/jarabe/journal/journaltoolbox.py:437
-#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:315
+#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
+#: ../src/jarabe/journal/volumestoolbar.py:316
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Hapa i te tāruatanga o te tāurunga. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
-#: ../src/jarabe/journal/volumestoolbar.py:316
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
+#: ../src/jarabe/journal/volumestoolbar.py:317
 msgid "Error"
-msgstr ""
+msgstr "Hapa"
+
+#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/palettes.py:150
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr "E hiahia ana koe kia muku i \"%s\" mō ake tonu atu?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:512
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
-msgstr ""
+msgstr "Tīmata"
+
+#: ../src/jarabe/journal/journaltoolbox.py:538
+msgid "Sort by date modified"
+msgstr "Kōmaka ā-rā whakakē"
+
+#: ../src/jarabe/journal/journaltoolbox.py:539
+msgid "Sort by date created"
+msgstr "Kōmaka ā-rā hanga"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
-msgid "Sort by date modified"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:541
-msgid "Sort by date created"
-msgstr ""
-
-#: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr ""
+msgstr "Kōmaka ā-rahinga"
 
-#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/journaltoolbox.py:549
 msgid "Sort view"
-msgstr ""
-
-#: ../src/jarabe/journal/listview.py:317
-msgid "Your Journal is empty"
-msgstr ""
-
-#: ../src/jarabe/journal/listview.py:320
-msgid "Your documents folder is empty"
-msgstr ""
-
-#: ../src/jarabe/journal/listview.py:322
-msgid "The device is empty"
-msgstr ""
+msgstr "Tirohanga kōmaka"
 
 #: ../src/jarabe/journal/listview.py:324
-msgid "No matching entries"
-msgstr ""
+msgid "Your Journal is empty"
+msgstr "Kei te putu tō Tuhitaka"
 
-#: ../src/jarabe/journal/listview.py:398
-msgid "Clear search"
-msgstr ""
+#: ../src/jarabe/journal/listview.py:327
+msgid "Your documents folder is empty"
+msgstr "Kei te putu tō kōpaki tuhinga"
+
+#: ../src/jarabe/journal/listview.py:329
+msgid "The device is empty"
+msgstr "Kei te putu te pūrere"
+
+#: ../src/jarabe/journal/listview.py:331
+msgid "No matching entries"
+msgstr "Kāore he tāurunga ōrite"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Putanga Tawhito O Te Hohe %s"
 
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "E hiahia ana koe kia whakaheke ki te putanga %s"
 
-#: ../src/jarabe/journal/modalalert.py:64
+#: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
-msgstr ""
+msgstr "Kua kī tō Tuhitaka"
 
-#: ../src/jarabe/journal/modalalert.py:68
+#: ../src/jarabe/journal/modalalert.py:69
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr ""
+msgstr "Mukua ētahi tāuru Tuhitaka tawhito kia whai wāhi ngā mea hōu."
 
-#: ../src/jarabe/journal/modalalert.py:80
+#: ../src/jarabe/journal/modalalert.py:83
 msgid "Show Journal"
-msgstr ""
-
-#: ../src/jarabe/journal/objectchooser.py:146
-msgid "Choose an object"
-msgstr ""
+msgstr "Whakaatu Tuhitaka"
 
 #: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:410
+msgid "Choose an object"
+msgstr "Kōwhiria tētahi ahanoa"
+
+#: ../src/jarabe/journal/objectchooser.py:156
+#: ../src/jarabe/view/viewsource.py:414
 msgid "Close"
-msgstr ""
+msgstr "Kati"
 
-#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Resume with"
-msgstr ""
+msgstr "Haere anō me"
 
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:77
 msgid "Start with"
-msgstr ""
+msgstr "Tīmata ki"
 
-#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
 msgid "No activity to start entry"
-msgstr ""
+msgstr "Kāore he hohe kia tīmata i te tāurunga"
 
-#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/journal/palettes.py:114
 msgid "Send to"
-msgstr ""
+msgstr "Tuku ki"
 
-#: ../src/jarabe/journal/palettes.py:121
+#: ../src/jarabe/journal/palettes.py:123
 msgid "View Details"
-msgstr ""
+msgstr "Tirohia Ngā Taipitopito"
 
-#: ../src/jarabe/journal/palettes.py:160
+#: ../src/jarabe/journal/palettes.py:180
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "Kāore e taea te tuku tāurunga kore kōnae."
 
-#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:306
+#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
+#: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "Kāore e taea te tārua tāurunga kore kōnae."
 
-#: ../src/jarabe/journal/palettes.py:267
+#: ../src/jarabe/journal/palettes.py:287
 msgid "Clipboard"
-msgstr ""
+msgstr "Papatopenga"
 
-#: ../src/jarabe/journal/palettes.py:322
+#: ../src/jarabe/journal/palettes.py:342
 msgid "No friends present"
-msgstr ""
+msgstr "Kāore he hoa i konei"
 
-#: ../src/jarabe/journal/palettes.py:327
+#: ../src/jarabe/journal/palettes.py:347
 msgid "No valid connection found"
-msgstr ""
+msgstr "Kāore he hononga whaimana"
 
-#: ../src/jarabe/journal/palettes.py:355
+#: ../src/jarabe/journal/palettes.py:375
 msgid "No activity to resume entry"
-msgstr ""
+msgstr "Kāore he hohe kia haere anō te tāurunga"
 
-#: ../src/jarabe/journal/volumestoolbar.py:209
+#: ../src/jarabe/journal/volumestoolbar.py:210
 msgid "Documents"
-msgstr ""
+msgstr "Ngā Tuhinga"
 
-#: ../src/jarabe/journal/volumestoolbar.py:391
-#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:392
+#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:259
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d MB Wātea"
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Kāore e mōhiotia ana te take mō te huringa tūnga o te pūrere."
 
 #: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
-msgstr ""
+msgstr "He pūnoa te huringa tūnga."
 
 #: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
-msgstr ""
+msgstr "Īnāianei kua whakahaeretia te pūrere."
 
 #: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Īnāianei kāore te pūrere i te whakahaeretia."
 
 #: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "Kāore i taea te whakarite pūrere hei whirihoranga."
 
 #: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"Kāore i taea te rāhui i te whirihoranga IP (kāore he wāhitau wātea, wāhiki, "
+"etc)."
 
 #: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "Kua muhu te whirihoranga IP."
 
 #: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "I te hiahiatia ngā kōrero muna, engari kāore i tukuna."
 
 #: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
-msgstr ""
+msgstr "I momotu te pūtono 802.1X i te pito uru, te tūmau whakamotuhēhē rānei."
 
 #: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "I rahu te whirihoranga o te pūtono 802.1X."
 
 #: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "I waiho, i rahu noa rānei te pūtono 802.1X."
 
 #: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "I roa rawa te whakamotuhēhētanga o te pūtono 802.1X."
 
 #: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Kāore te ratonga PPP i tīmata i te wā tuku."
 
 #: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "I momotu noa te ratonga PPP."
 
 #: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "I waiho, i rahu noa rānei te ratonga PPP."
 
 #: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Kāore te ratonga DHCP i tīmata i te wā tuku."
 
 #: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "I paorotia e te ratonga DHCP tētahi hapa noa."
 
 #: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "I waiho, i rahu noa rānei te ratonga DHCP."
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Kāore te ratonga hononga tiri i tīmata."
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "I waiho, i rahu noa rānei te ratonga hononga tiri."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Kāore te IPAunoa i tīmata."
 
 #: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "I rīpoatatia e te ratonga IPAunoa tētahi hapa noa."
 
 #: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "I waiho, i rahu noa rānei te ratonga IPAunoa."
 
 #: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "I rahu te waea nā te korewātea."
 
 #: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "I rahu te waea nā te kore oro waea."
 
 #: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "I rahu te waea nā te kore kawenga."
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
-msgstr ""
+msgstr "I wāhiki te waea."
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
-msgstr ""
+msgstr "I rahu te waea."
 
 #: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "I rahu te arawhiti pouwhanga."
 
 #: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "I rahu te tīpako GSM APN i tohua"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Kāore i te rapu whatunga."
 
 #: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
-msgstr ""
+msgstr "I whakakorengia te rēhita whatunga."
 
 #: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
-msgstr ""
+msgstr "I wāhiki te rēhita whatunga."
 
 #: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "I rahu te rēhita me te whatunga GSM e hiahiatia ana."
 
 #: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
-msgstr ""
+msgstr "I rahu te takinga PIN."
 
 #: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Kei te ngaro pea te pūmanawa mārō e hiahiatia ana mō te pūrere."
 
 #: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
-msgstr ""
+msgstr "I tangohia te pūrere."
 
 #: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "I moe te KaiwhakahaereWhatunga."
 
 #: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "I tango, i ngaro rānei te hononga hohe o te pūrere."
 
 #: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "I hiahiatia te momotutanga e te kaiwhakamahi, kiritaki rānei."
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "I huri te kawenga/hono o te pūrere."
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "I pēnei te hononga tīariari o te pūrere."
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Kei te wātea te pūtono īnāianei."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "Kāore i kitea te pouwhanga."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "I rahu, i wāhiki rānei te hononga ahokore Bluetooth."
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "Kāhore i whakamahia."
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
-msgstr ""
+msgstr "Tango hoa"
 
 #: ../src/jarabe/view/buddymenu.py:70
 msgid "Make friend"
-msgstr ""
+msgstr "Whai hoa"
 
 #: ../src/jarabe/view/buddymenu.py:87
 msgid "Shutdown"
-msgstr ""
+msgstr "Whakaweto"
 
 #: ../src/jarabe/view/buddymenu.py:95
 msgid "Restart"
-msgstr ""
+msgstr "Tīmata Anō"
 
 #: ../src/jarabe/view/buddymenu.py:101
 msgid "Logout"
-msgstr ""
+msgstr "Takiputa"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
-msgstr ""
+msgstr "Aku Tautuhinga"
 
 #: ../src/jarabe/view/buddymenu.py:142
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "Pōwhiri ki ngā %s"
 
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b> kāore i tīmata."
 
-#: ../src/jarabe/view/palettes.py:48
+#: ../src/jarabe/view/palettes.py:50
 msgid "Starting..."
-msgstr ""
+msgstr "Tīmata Ana..."
 
-#: ../src/jarabe/view/palettes.py:58
+#: ../src/jarabe/view/palettes.py:60
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Kāore te hohe i tīmata"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:91
+#: ../src/jarabe/view/palettes.py:93
 msgid "View Source"
-msgstr ""
+msgstr "Tiro Pūtake"
 
-#: ../src/jarabe/view/palettes.py:102
+#: ../src/jarabe/view/palettes.py:104
 msgid "Stop"
-msgstr ""
+msgstr "Tū"
 
-#: ../src/jarabe/view/palettes.py:139
+#: ../src/jarabe/view/palettes.py:141
 msgid "Start new"
-msgstr ""
+msgstr "Tīmata mea hōu"
 
-#: ../src/jarabe/view/palettes.py:180
-msgid "Show contents"
-msgstr ""
-
-#: ../src/jarabe/view/palettes.py:229
+#: ../src/jarabe/view/palettes.py:234
 msgctxt "Volume"
 msgid "Remove"
-msgstr ""
+msgstr "Tango"
 
-#: ../src/jarabe/view/viewsource.py:263
+#: ../src/jarabe/view/viewsource.py:267
 msgid "Instance Source"
-msgstr ""
+msgstr "Pūtake Tauira"
 
-#: ../src/jarabe/view/viewsource.py:312
+#: ../src/jarabe/view/viewsource.py:316
 msgid "Source"
-msgstr ""
+msgstr "Pūtake"
 
-#: ../src/jarabe/view/viewsource.py:374
+#: ../src/jarabe/view/viewsource.py:378
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "Pūtake Pūkai Hohe"
 
-#: ../src/jarabe/view/viewsource.py:393
+#: ../src/jarabe/view/viewsource.py:397
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Pūtake o Sugar Toolkit"
 
-#: ../src/jarabe/view/viewsource.py:400
+#: ../src/jarabe/view/viewsource.py:404
 #, python-format
+#, python-format,
 msgid "View source: %s"
-msgstr ""
+msgstr "Tiro pūtake: %s"
 
-#: ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:405
 #, python-format
+#, python-format,
 msgid "View source: %r"
-msgstr ""
+msgstr "Tiro pūtake: %r"
 
-#: ../src/jarabe/util/emulator.py:40
+#: ../src/jarabe/util/emulator.py:41
 msgid "Sugar in a window"
-msgstr ""
+msgstr "Sugar ki rō matapihi"
