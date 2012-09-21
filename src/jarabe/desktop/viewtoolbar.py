@@ -74,7 +74,7 @@ class ViewToolbar(Gtk.Toolbar):
                                        _FAVORITES_VIEW)
         self.insert(self._favorites_button, -1)
 
-        self._list_button = RadioToolButton(named_icon='view-list')
+        self._list_button = RadioToolButton(icon_name='view-list')
         self._list_button.props.group = self._favorites_button
         self._list_button.props.tooltip = _('List view')
         self._list_button.props.accelerator = _('<Ctrl>2')
@@ -183,5 +183,4 @@ class FavoritesButton(RadioToolButton):
             self.emit('toggled')
 
     def _update_icon(self):
-        self.props.named_icon = favoritesview.LAYOUT_MAP[self._layout]\
-                                .icon_name
+        self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
