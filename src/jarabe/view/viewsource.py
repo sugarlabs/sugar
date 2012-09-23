@@ -200,7 +200,7 @@ class ViewSource(Gtk.Window):
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.window.set_accept_focus(True)
+        self.get_window().set_accept_focus(True)
 
         display = Gdk.Display.get_default()
         parent = GdkX11.X11Window.foreign_new_for_display( \

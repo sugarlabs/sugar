@@ -380,7 +380,8 @@ class ExpandedEntry(Gtk.EventBox):
 
         bounds = self._tags.get_buffer().get_bounds()
         old_tags = self._metadata.get('tags', None)
-        new_tags = self._tags.get_buffer().get_text(bounds[0], bounds[1])
+        new_tags = self._tags.get_buffer().get_text(bounds[0], bounds[1],
+                                                    include_hidden_chars=False)
 
         if old_tags != new_tags:
             self._metadata['tags'] = new_tags
@@ -389,7 +390,7 @@ class ExpandedEntry(Gtk.EventBox):
         bounds = self._description.get_buffer().get_bounds()
         old_description = self._metadata.get('description', None)
         new_description = self._description.get_buffer().get_text(
-            bounds[0], bounds[1])
+            bounds[0], bounds[1], include_hidden_chars=False)
         if old_description != new_description:
             self._metadata['description'] = new_description
             needs_update = True
