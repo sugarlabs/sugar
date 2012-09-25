@@ -52,7 +52,13 @@ class Network(SectionView):
         self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._jabber_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
+        scrolled = Gtk.ScrolledWindow()
+        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.add(scrolled)
+        scrolled.show()
+
         workspace = Gtk.VBox()
+        scrolled.add_with_viewport(workspace)
         workspace.show()
 
         separator_wireless = Gtk.HSeparator()
@@ -171,12 +177,6 @@ class Network(SectionView):
 
         workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
-
-        scrolled = Gtk.ScrolledWindow()
-        scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scrolled.add_with_viewport(workspace)
-        scrolled.show()
-        self.add(scrolled)
 
         self.setup()
 
