@@ -34,6 +34,7 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
 _icons = {}
+volume_monitor = None
 
 
 class DeviceView(TrayIcon):
@@ -100,6 +101,7 @@ def setup(tray):
 
 
 def _setup_volumes(tray):
+    global volume_monitor
     volume_monitor = Gio.VolumeMonitor.get()
 
     for volume in volume_monitor.get_volumes():
@@ -121,17 +123,20 @@ def _mount(volume, tray):
     # Follow Nautilus behaviour here
     # since it has the same issue with removable device
     # and it would be good to not invent our own workflow
-    if hasattr(volume, 'should_automount') and not volume.should_automount():
+    if not volume.should_automount():
         return
 
     #TODO: should be done by some other process, like gvfs-hal-volume-monitor
-    #TODO: use volume.should_automount() when it gets into pygtk
     if volume.get_mount() is None and volume.can_mount():
         #TODO: pass None as mount_operation, or better, SugarMountOperation
-        volume.mount(Gtk.MountOperation(tray.get_toplevel()), _mount_cb)
+        flags = 0
+        mount_operation = Gtk.MountOperation(parent=tray.get_toplevel())
+        cancellable = None
+        user_data = None
+        volume.mount(flags, mount_operation, cancellable, _mount_cb, user_data)
 
 
-def _mount_cb(volume, result):
+def _mount_cb(volume, result, user_data):
     logging.debug('_mount_cb %r %r', volume, result)
     volume.mount_finish(result)
 

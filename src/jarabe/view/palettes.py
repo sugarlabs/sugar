@@ -246,11 +246,17 @@ class VolumePalette(Palette):
         self.connect('popup', self.__popup_cb)
 
     def __unmount_activate_cb(self, menu_item):
-        self._mount.unmount(self.__unmount_cb)
+        flags = 0
+        mount_operation = Gtk.MountOperation( \
+            parent=self.content_box.get_toplevel())
+        cancellable = None
+        user_data = None
+        self._mount.unmount_with_operation(flags, mount_operation, cancellable,
+                                           self.__unmount_cb, user_data)
 
-    def __unmount_cb(self, mount, result):
+    def __unmount_cb(self, mount, result, user_data):
         logging.debug('__unmount_cb %r %r', mount, result)
-        mount.unmount_finish(result)
+        mount.unmount_with_operation_finish(result)
 
     def __popup_cb(self, palette):
         mount_point = self._mount.get_root().get_path()

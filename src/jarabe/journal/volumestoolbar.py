@@ -251,13 +251,6 @@ class VolumesToolbar(Gtk.Toolbar):
         if button.props.active:
             self.emit('volume-changed', button.mount_point)
 
-    def _unmount_activated_cb(self, menu_item, mount):
-        logging.debug('VolumesToolbar._unmount_activated_cb: %r', mount)
-        mount.unmount(self.__unmount_cb)
-
-    def __unmount_cb(self, source, result):
-        logging.debug('__unmount_cb %r %r', source, result)
-
     def _get_button_for_mount(self, mount):
         mount_point = mount.get_root().get_path()
         for button in self.get_children():
