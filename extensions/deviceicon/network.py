@@ -210,12 +210,12 @@ class GsmPalette(Palette):
         self._current_state = None
         self._failed_connection = False
 
-        self._toggle_state_item = MenuItem('')
-        self._toggle_state_item.connect('activate', self.__toggle_state_cb)
-        self.menu.append(self._toggle_state_item)
-        self._toggle_state_item.show()
-
         self.info_box = Gtk.VBox()
+
+        self._toggle_state_item = PaletteMenuItem('')
+        self._toggle_state_item.connect('activate', self.__toggle_state_cb)
+        self.info_box.pack_start(self._toggle_state_item, True, True, 0)
+        self._toggle_state_item.show()
 
         self.error_title_label = Gtk.Label(label="")
         self.error_title_label.set_alignment(0, 0.5)
@@ -253,7 +253,7 @@ class GsmPalette(Palette):
         self.info_box.show()
         self.set_content(self.info_box)
 
-        self.set_state(_GSM_STATE_NOT_READY)
+        self.update_state(_GSM_STATE_NOT_READY)
 
     def _add_widget_with_padding(self, child, xalign=0, yalign=0.5):
         alignment = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
@@ -271,13 +271,13 @@ class GsmPalette(Palette):
 
     def _update_label_and_text(self, reason=0):
         if self._current_state == _GSM_STATE_NOT_READY:
-            self._toggle_state_item.get_child().set_label('...')
+            self._toggle_state_item.set_label('...')
             label = glib.markup_escape_text(_('Please wait...'))
             self.props.secondary_text = label
 
         elif self._current_state == _GSM_STATE_DISCONNECTED:
             if not self._failed_connection:
-                self._toggle_state_item.get_child().set_label(_('Connect'))
+                self._toggle_state_item.set_label(_('Connect'))
             label = glib.markup_escape_text(_('Disconnected'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok', \
@@ -285,7 +285,7 @@ class GsmPalette(Palette):
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
-            self._toggle_state_item.get_child().set_label(_('Cancel'))
+            self._toggle_state_item.set_label(_('Cancel'))
             label = glib.markup_escape_text(_('Connecting...'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel', \
@@ -294,7 +294,7 @@ class GsmPalette(Palette):
 
         elif self._current_state == _GSM_STATE_CONNECTED:
             self._failed_connection = False
-            self._toggle_state_item.get_child().set_label(_('Disconnect'))
+            self._toggle_state_item.set_label(_('Disconnect'))
             self.update_connection_time()
             icon = Icon(icon_name='media-eject', \
                             icon_size=Gtk.IconSize.MENU)
@@ -325,7 +325,7 @@ class GsmPalette(Palette):
     def add_alert(self, error, suggestion):
         self._failed_connection = True
         action = _('Try connection again')
-        self._toggle_state_item.get_child().set_label(action)
+        self._toggle_state_item.set_label(action)
 
         title = _('Error: %s') % error
         self.error_title_label.set_markup('<b>%s</b>' % title)
@@ -730,6 +730,7 @@ class GsmDeviceView(TrayIcon):
 
     def __init__(self, device):
         self._connection_time_handler = None
+
         self._connection_timestamp = 0
 
         client = GConf.Client.get_default()
