@@ -58,7 +58,6 @@ class Language(SectionView):
                                       ' If a translation is not available,'
                                       ' the next in the list will be used.')
         self._text = Gtk.Label(label=explanation)
-        self._text.set_width_chars(100)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
         self.pack_start(self._text, False, False, 0)
@@ -135,7 +134,7 @@ class Language(SectionView):
 
         if self._selected_lang_count > 1:
             previous_add_removes = self._add_remove_boxes[-2]
-            previous_add_removes.hide_all()
+            previous_add_removes.hide()
 
         self._determine_add_remove_visibility()
 
