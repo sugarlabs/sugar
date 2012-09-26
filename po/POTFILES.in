@@ -41,6 +41,7 @@ src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
+src/jarabe/desktop/homewindow.py
 src/jarabe/desktop/keydialog.py
 src/jarabe/desktop/meshbox.py
 src/jarabe/desktop/networkviews.py
