@@ -45,6 +45,8 @@ class HomeBox(Gtk.VBox):
 
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
+        toolbar.search_entry.connect('icon-press',
+                                     self.__clear_icon_pressed_cb)
         self._list_view.connect('clear-clicked',
                                 self.__activitylist_clear_clicked_cb, toolbar)
 
@@ -108,6 +110,17 @@ class HomeBox(Gtk.VBox):
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()
 
+    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+        self.grab_focus()
+
+    def grab_focus(self):
+        # overwrite grab focus to be able to grab focus on the
+        # views which are packed inside a box
+        if self._list_view in self.get_children():
+            self._list_view.grab_focus()
+        else:
+            self._favorites_box.grab_focus()
+
     def _set_view(self, view):
         if view == _FAVORITES_VIEW:
             if self._list_view in self.get_children():
@@ -116,6 +129,7 @@ class HomeBox(Gtk.VBox):
             if self._favorites_box not in self.get_children():
                 self.add(self._favorites_box)
                 self._favorites_box.show()
+                self._favorites_box.grab_focus()
         elif view == _LIST_VIEW:
             if self._favorites_box in self.get_children():
                 self.remove(self._favorites_box)
@@ -123,6 +137,7 @@ class HomeBox(Gtk.VBox):
             if self._list_view not in self.get_children():
                 self.add(self._list_view)
                 self._list_view.show()
+                self._list_view.grab_focus()
         else:
             raise ValueError('Invalid view: %r' % view)
 

@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
 import logging
 
 from gi.repository import GObject
@@ -64,12 +65,14 @@ class HomeWindow(Gtk.Window):
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK|
+                        Gdk.EventMask.BUTTON_PRESS_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
         self.connect('map-event', self.__map_event_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('key-release-event', self.__key_release_event_cb)
+        self.connect('button-press-event', self.__button_pressed_cb)
 
         self._box = Gtk.VBox()
 
@@ -80,6 +83,7 @@ class HomeWindow(Gtk.Window):
         self._home_box = HomeBox(self._toolbar)
         self._box.pack_start(self._home_box, True, True, 0)
         self._home_box.show()
+        self._home_box.grab_focus()
         self._toolbar.show_view_buttons()
 
         self._group_box = GroupBox(self._toolbar)
@@ -131,6 +135,9 @@ class HomeWindow(Gtk.Window):
             self._activate_view(shell.get_model().zoom_level)
 
     def __key_press_event_cb(self, window, event):
+        if not self._toolbar.search_entry.has_focus():
+            self._toolbar.search_entry.grab_focus()
+
         if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
             self._home_box.set_resume_mode(False)
         return False
@@ -138,6 +145,11 @@ class HomeWindow(Gtk.Window):
     def __key_release_event_cb(self, window, event):
         if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
             self._home_box.set_resume_mode(True)
+        return False
+
+    def __button_pressed_cb(self, widget, event):
+        current_box = self._box.get_children()[1]
+        current_box.grab_focus()
         return False
 
     def __map_event_cb(self, window, event):
@@ -197,19 +209,22 @@ class HomeWindow(Gtk.Window):
             self._box.pack_start(self._home_box, True, True, 0)
             self._home_box.show()
             self._toolbar.clear_query()
-            self._toolbar.search_entry.grab_focus()
+            self._toolbar.set_placeholder_text_for_view(_('Home'))
+            self._home_box.grab_focus()
             self._toolbar.show_view_buttons()
         elif level == ShellModel.ZOOM_GROUP:
             self._box.pack_start(self._group_box, True, True, 0)
             self._group_box.show()
             self._toolbar.clear_query()
-            self._toolbar.search_entry.grab_focus()
+            self._toolbar.set_placeholder_text_for_view(_('Group'))
+            self._group_box.grab_focus()
             self._toolbar.hide_view_buttons()
         elif level == ShellModel.ZOOM_MESH:
             self._box.pack_start(self._mesh_box, True, True, 0)
             self._mesh_box.show()
             self._toolbar.clear_query()
-            self._toolbar.search_entry.grab_focus()
+            self._toolbar.set_placeholder_text_for_view(_('Neighborhood'))
+            self._mesh_box.grab_focus()
             self._toolbar.hide_view_buttons()
 
     def get_home_box(self):

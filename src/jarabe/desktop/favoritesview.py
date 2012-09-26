@@ -85,6 +85,10 @@ class FavoritesBox(Gtk.VBox):
     def set_resume_mode(self, resume_mode):
         self._view.set_resume_mode(resume_mode)
 
+    def grab_focus(self):
+        # overwrite grab focus in order to grab focus from the parent
+        self._view.grab_focus()
+
     def add_alert(self, alert):
         if self._alert is not None:
             self.remove_alert()
