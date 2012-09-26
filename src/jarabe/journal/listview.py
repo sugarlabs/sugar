@@ -491,6 +491,10 @@ class ListView(BaseListView):
                            ([object])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'title-edit-started': (GObject.SignalFlags.RUN_FIRST, None,
+                               ([])),
+        'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
+                                ([])),
     }
 
     def __init__(self):
@@ -538,6 +542,8 @@ class ListView(BaseListView):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         self.cell_title.props.editable = model.is_editable(metadata)
+        if self.cell_title.props.editable:
+            self.emit('title-edit-started')
 
         tree_view.set_cursor_on_cell(path, column, self.cell_title,
                                      start_editing=True)
@@ -563,9 +569,11 @@ class ListView(BaseListView):
         metadata['title'] = new_text
         model.write(metadata, update_mtime=False)
         self.cell_title.props.editable = False
+        self.emit('title-edit-finished')
 
     def __editing_canceled_cb(self, cell):
         self.cell_title.props.editable = False
+        self.emit('title-edit-finished')
 
 
 class CellRendererFavorite(CellRendererIcon):

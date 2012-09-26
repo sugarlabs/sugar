@@ -76,14 +76,16 @@ class MainToolbox(ToolbarBox):
 
         self._mount_point = None
 
-        self._search_entry = iconentry.IconEntry()
-        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                              'system-search')
-        self._search_entry.connect('activate', self._search_entry_activated_cb)
-        self._search_entry.connect('changed', self._search_entry_changed_cb)
-        self._search_entry.add_clear_button()
+        self.search_entry = iconentry.IconEntry()
+        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                             'system-search')
+        text = _('Search in %s') % _('Journal')
+        self.search_entry.set_placeholder_text(text)
+        self.search_entry.connect('activate', self._search_entry_activated_cb)
+        self.search_entry.connect('changed', self._search_entry_changed_cb)
+        self.search_entry.add_clear_button()
         self._autosearch_timer = None
-        self._add_widget(self._search_entry, expand=True)
+        self._add_widget(self.search_entry, expand=True)
 
         self._favorite_button = ToggleToolButton('emblem-favorite')
         self._favorite_button.connect('toggled',
@@ -120,9 +122,6 @@ class MainToolbox(ToolbarBox):
         self._query = self._build_query()
 
         self.refresh_filters()
-
-    def give_entry_focus(self):
-        self._search_entry.grab_focus()
 
     def _get_when_search_combo(self):
         when_search = ComboBox()
@@ -188,8 +187,8 @@ class MainToolbox(ToolbarBox):
             date_from, date_to = self._get_date_range()
             query['timestamp'] = {'start': date_from, 'end': date_to}
 
-        if self._search_entry.props.text:
-            text = self._search_entry.props.text.strip()
+        if self.search_entry.props.text:
+            text = self.search_entry.props.text.strip()
             if text:
                 query['query'] = text
 
@@ -256,7 +255,7 @@ class MainToolbox(ToolbarBox):
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
-        self._search_entry.activate()
+        self.search_entry.activate()
         return False
 
     def set_mount_point(self, mount_point):
@@ -345,7 +344,7 @@ class MainToolbox(ToolbarBox):
         self._update_if_needed()
 
     def clear_query(self):
-        self._search_entry.props.text = ''
+        self.search_entry.props.text = ''
         self._what_search_combo.set_active(0)
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False

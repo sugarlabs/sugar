@@ -173,11 +173,16 @@ class JournalActivity(JournalWindow):
     def _setup_main_view(self):
         self._main_toolbox = MainToolbox()
         self._main_view = Gtk.VBox()
+        self._main_view.set_can_focus(True)
 
         self._list_view = ListView()
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
         self._list_view.connect('volume-error', self.__volume_error_cb)
+        self._list_view.connect('title-edit-started',
+                                self.__title_edit_started_cb)
+        self._list_view.connect('title-edit-finished',
+                                self.__title_edit_finished_cb)
         self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
@@ -188,6 +193,8 @@ class JournalActivity(JournalWindow):
         self._main_view.pack_start(self._volumes_toolbar, False, True, 0)
 
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
+        self._main_toolbox.search_entry.connect('icon-press',
+                                                self.__search_icon_pressed_cb)
         self._main_toolbox.set_mount_point('/')
 
     def _setup_secondary_view(self):
@@ -203,6 +210,9 @@ class JournalActivity(JournalWindow):
         self._detail_view.show()
 
     def _key_press_event_cb(self, widget, event):
+        if not self._main_toolbox.search_entry.has_focus():
+            self._main_toolbox.search_entry.grab_focus()
+
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
             self.show_main_view()
@@ -219,6 +229,15 @@ class JournalActivity(JournalWindow):
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
         self.show_main_view()
+
+    def __search_icon_pressed_cb(self, entry, icon_pos, event):
+        self._main_view.grab_focus()
+
+    def __title_edit_started_cb(self, list_view):
+        self.disconnect_by_func(self._key_press_event_cb)
+
+    def __title_edit_finished_cb(self, list_view):
+        self.connect('key-press-event', self._key_press_event_cb)
 
     def show_main_view(self):
         if self.toolbar_box != self._main_toolbox:
@@ -279,7 +298,6 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
-        self.search_grab_focus()
         self._list_view.update_dates()
 
     def _check_for_bundle(self, object_id):
@@ -319,7 +337,7 @@ class JournalActivity(JournalWindow):
         model.write(metadata)
 
     def search_grab_focus(self):
-        self._main_toolbox.give_entry_focus()
+        self._main_toolbox.search_entry.grab_focus()
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
