@@ -69,7 +69,6 @@ class ModemConfiguration(SectionView):
                         ' to set up a mobile broadband connection to a'
                         ' cellular (3G) network.')
         self._text = Gtk.Label(label=explanation)
-        self._text.set_width_chars(100)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
         self.pack_start(self._text, False, False, 0)

@@ -333,11 +333,16 @@ class ClearMessageBox(Gtk.EventBox):
         box.pack_start(label, expand=True, fill=False, padding=0)
         label.show()
 
+        button_box = Gtk.HButtonBox()
+        button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
+        box.pack_start(button_box, False, True, 0)
+        button_box.show()
+
         button = Gtk.Button(label=_('Clear search'))
         button.connect('clicked', button_callback)
         button.props.image = Icon(icon_name='dialog-cancel',
                                   icon_size=Gtk.IconSize.BUTTON)
-        box.pack_start(button, expand=True, fill=False, padding=0)
+        button_box.pack_start(button, expand=True, fill=False, padding=0)
         button.show()
 
 
