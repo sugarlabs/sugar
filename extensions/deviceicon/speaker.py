@@ -23,7 +23,6 @@ from gi.repository import Gtk
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state, Icon
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenuitem import PaletteMenuItem
