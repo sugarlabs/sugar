@@ -38,7 +38,6 @@ from sugar3.graphics.palettemenuitem import PaletteMenuItem
 from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import xocolor
 from sugar3 import profile

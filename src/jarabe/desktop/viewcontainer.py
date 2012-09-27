@@ -26,6 +26,7 @@ class ViewContainer(Gtk.Container):
     def __init__(self, layout, owner_icon, activity_icon=None, **kwargs):
         Gtk.Container.__init__(self, **kwargs)
         self.set_has_window(False)
+        self.set_can_focus(True)
 
         self._activity_icon = None
         self._owner_icon = None

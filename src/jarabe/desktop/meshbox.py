@@ -362,6 +362,8 @@ class MeshBox(ViewContainer):
         self._query = ''
 
         toolbar.connect('query-changed', self._toolbar_query_changed_cb)
+        toolbar.search_entry.connect('icon-press',
+                                     self.__clear_icon_pressed_cb)
 
         for buddy_model in self._model.get_buddies():
             self._add_buddy(buddy_model)
@@ -590,3 +592,6 @@ class MeshBox(ViewContainer):
         for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
+
+    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+        self.grab_focus()

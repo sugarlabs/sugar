@@ -59,6 +59,7 @@ class ViewToolbar(Gtk.Toolbar):
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'system-search')
+        self.set_placeholder_text_for_view(_('Home'))
         self.search_entry.add_clear_button()
         self.search_entry.set_width_chars(25)
         self.search_entry.connect('activate', self._entry_activated_cb)
@@ -94,6 +95,10 @@ class ViewToolbar(Gtk.Toolbar):
 
     def clear_query(self):
         self.search_entry.props.text = ''
+
+    def set_placeholder_text_for_view(self, view_name):
+        text = _('Search in %s') % view_name
+        self.search_entry.set_placeholder_text(text)
 
     def _add_separator(self, expand=False):
         separator = Gtk.SeparatorToolItem()
@@ -132,7 +137,6 @@ class ViewToolbar(Gtk.Toolbar):
 
     def __view_button_toggled_cb(self, button, view):
         if button.props.active:
-            self.search_entry.grab_focus()
             self.emit('view-changed', view)
 
 

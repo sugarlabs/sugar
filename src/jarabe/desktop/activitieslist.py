@@ -375,6 +375,10 @@ class ActivitiesList(Gtk.VBox):
         self._alert = None
         self._clear_message_box = None
 
+    def grab_focus(self):
+        # overwrite grab focus in order to grab focus from the parent
+        self._tree_view.grab_focus()
+
     def set_filter(self, query):
         matches = self._tree_view.set_filter(query)
         if matches == 0:
