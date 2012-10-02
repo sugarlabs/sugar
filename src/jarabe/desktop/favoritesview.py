@@ -355,7 +355,6 @@ class ActivityIcon(EventIcon):
 
         self._activity_info = activity_info
         self._journal_entries = []
-        self._hovering = False
         self._resume_mode = True
 
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
@@ -430,40 +429,19 @@ class ActivityIcon(EventIcon):
         self._resume(metadata)
 
     def __enter_notify_event_cb(self, icon, event):
-        self._hovering = True
-        self.queue_draw()
+        self.set_state(Gtk.StateFlags.PRELIGHT)
 
     def __leave_notify_event_cb(self, icon, event):
-        self._hovering = False
-        self.queue_draw()
+        self.set_state(Gtk.StateFlags.NORMAL)
 
     def do_draw(self, cr):
         EventIcon.do_draw(self, cr)
 
-        if not self._hovering:
-            return
-
         allocation = self.get_allocation()
-        width = allocation.width
-        height = allocation.height
-
-        x = allocation.x + ActivityIcon._BORDER_WIDTH / 2.0
-        y = allocation.y + ActivityIcon._BORDER_WIDTH / 2.0
-        width -= ActivityIcon._BORDER_WIDTH
-        height -= ActivityIcon._BORDER_WIDTH
-        radius = width / 10.0
-
-        cr.move_to(x + radius, y)
-        cr.arc(x + width - radius, y + radius, radius, math.pi * 1.5,
-               math.pi * 2.0)
-        cr.arc(x + width - radius, y + height - radius, radius, 0,
-               math.pi * 0.5)
-        cr.arc(x + radius, y + height - radius, radius, math.pi * 0.5, math.pi)
-        cr.arc(x + radius, y + radius, radius, math.pi, math.pi * 1.5)
-
-        cr.set_source_rgba(*style.COLOR_SELECTION_GREY.get_rgba())
-        cr.set_line_width(ActivityIcon._BORDER_WIDTH)
-        cr.stroke()
+        context = self.get_style_context()
+        Gtk.render_frame(context, cr, 0, 0,
+                         allocation.width,
+                         allocation.height)
 
     def do_size_request(self, req):
         EventIcon.do_size_request(self, req)
