@@ -380,13 +380,14 @@ class RingLayout(ViewLayout):
             x, y = self._calculate_position(radius, icon_size, n,
                                             len(children), allocation.width,
                                             allocation.height)
-            child.size_request()
             child.set_size(icon_size)
+            new_width = child.get_preferred_width()[0]
+            new_height = child.get_preferred_height()[0]
             child_allocation = Gdk.Rectangle()
             child_allocation.x = allocation.x + x
             child_allocation.y = allocation.y + y
-            child_allocation.width = icon_size
-            child_allocation.height = icon_size
+            child_allocation.width = new_width
+            child_allocation.height = new_height
             child.size_allocate(child_allocation)
 
     def compare_activities(self, icon_a, icon_b):

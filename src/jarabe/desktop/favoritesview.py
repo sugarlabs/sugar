@@ -447,10 +447,15 @@ class ActivityIcon(EventIcon):
                          allocation.width,
                          allocation.height)
 
-    def do_size_request(self, req):
-        EventIcon.do_size_request(self, req)
-        req.height += ActivityIcon._BORDER_WIDTH * 2
-        req.width += ActivityIcon._BORDER_WIDTH * 2
+    def do_get_preferred_width(self):
+        width = EventIcon.do_get_preferred_width(self)[0]
+        width += ActivityIcon._BORDER_WIDTH * 2
+        return (width, width)
+
+    def do_get_preferred_height(self):
+        height = EventIcon.do_get_preferred_height(self)[0]
+        height += ActivityIcon._BORDER_WIDTH * 2
+        return (height, height)
 
     def __button_release_event_cb(self, icon, event):
         self._activate()
