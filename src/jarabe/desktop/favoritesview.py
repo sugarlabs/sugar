@@ -361,8 +361,14 @@ class ActivityIcon(EventIcon):
         self._journal_entries = []
         self._resume_mode = True
 
+        self._prelight_state = False
+        self._active_state = False
+
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
         self.connect('leave-notify-event', self.__leave_notify_event_cb)
+        self.connect('button-press-event', self.__button_press_event_cb)
+        self.palette_invoker.connect('right-click',
+                                     self.__invoker_right_click_cb)
         self.connect_after('button-release-event',
                            self.__button_release_event_cb)
 
@@ -424,6 +430,8 @@ class ActivityIcon(EventIcon):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('activate', self.__palette_activate_cb)
         palette.connect('entry-activate', self.__palette_entry_activate_cb)
+        palette.connect('popup', self.__palette_popup_cb)
+        palette.connect('popdown', self.__palette_popdown_cb)
         return palette
 
     def __palette_activate_cb(self, palette):
@@ -432,20 +440,46 @@ class ActivityIcon(EventIcon):
     def __palette_entry_activate_cb(self, palette, metadata):
         self._resume(metadata)
 
+    def __palette_popup_cb(self, palette):
+        self._prelight_state = Gtk.StateFlags.PRELIGHT
+        self._active_state = False
+        self._update_states()
+
+    def __palette_popdown_cb(self, palette):
+        self._prelight_state = False
+        self._active_state = False
+        self._update_states()
+
     def __enter_notify_event_cb(self, icon, event):
-        self.set_state(Gtk.StateFlags.PRELIGHT)
+        self._prelight_state = Gtk.StateFlags.PRELIGHT
+        self._update_states()
 
     def __leave_notify_event_cb(self, icon, event):
-        self.set_state(Gtk.StateFlags.NORMAL)
+        if self.palette.is_up():
+            return
+        self._prelight_state = False
+        self._update_states()
+
+    def __button_press_event_cb(self, icon, event):
+        self._active_state = Gtk.StateFlags.ACTIVE
+        self._update_states()
+
+    def _update_states(self):
+        state = self._active_state if self._active_state \
+            else self._prelight_state
+        self.set_state(state)
 
     def do_draw(self, cr):
-        EventIcon.do_draw(self, cr)
-
         allocation = self.get_allocation()
         context = self.get_style_context()
+        Gtk.render_background(context, cr, 0, 0,
+                              allocation.width,
+                              allocation.height)
         Gtk.render_frame(context, cr, 0, 0,
                          allocation.width,
                          allocation.height)
+
+        EventIcon.do_draw(self, cr)
 
     def do_get_preferred_width(self):
         width = EventIcon.do_get_preferred_width(self)[0]
@@ -457,7 +491,13 @@ class ActivityIcon(EventIcon):
         height += ActivityIcon._BORDER_WIDTH * 2
         return (height, height)
 
+    def __invoker_right_click_cb(self, invoker):
+        self._active_state = False
+        self._update_states()
+
     def __button_release_event_cb(self, icon, event):
+        self._active_state = False
+        self._update_states()
         self._activate()
 
     def _resume(self, journal_entry):
