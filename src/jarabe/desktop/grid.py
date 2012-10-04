@@ -114,39 +114,45 @@ class Grid(SugarExt.Grid):
 
         new_rects = []
 
+        def _create_rectangle(x, y, width, height):
+            rect = Gdk.Rectangle()
+            rect.x, rect.y = x, y
+            rect.width, rect.height = width, height
+            return rect
+
         # Get rects right, left, bottom and top
         if (rect.x + rect.width < self.width - 1):
-            new_rects.append((rect.x + 1, rect.y,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y,
                                                rect.width, rect.height))
 
         if (rect.x - 1 > 0):
-            new_rects.append((rect.x - 1, rect.y,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y,
                                                rect.width, rect.height))
 
         if (rect.y + rect.height < self.height - 1):
-            new_rects.append((rect.x, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x, rect.y + 1,
                                                rect.width, rect.height))
 
         if (rect.y - 1 > 0):
-            new_rects.append((rect.x, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x, rect.y - 1,
                                                rect.width, rect.height))
 
         # Get diagonal rects
         if rect.x + rect.width < self.width - 1 and \
                 rect.y + rect.height < self.height - 1:
-            new_rects.append((rect.x + 1, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y + 1,
                                                rect.width, rect.height))
 
         if rect.x - 1 > 0 and rect.y + rect.height < self.height - 1:
-            new_rects.append((rect.x - 1, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y + 1,
                                                rect.width, rect.height))
 
         if rect.x + rect.width < self.width - 1 and rect.y - 1 > 0:
-            new_rects.append((rect.x + 1, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y - 1,
                                                rect.width, rect.height))
 
         if rect.x - 1 > 0 and rect.y - 1 > 0:
-            new_rects.append((rect.x - 1, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y - 1,
                                                rect.width, rect.height))
 
         random.shuffle(new_rects)
@@ -192,7 +198,8 @@ class Grid(SugarExt.Grid):
         collision_found = False
         child_rect = self._child_rects[child]
         for c in self._children:
-            intersects_, intersection = child_rect.intersect(self._child_rects[c])
+            intersects_, intersection = Gdk.rectangle_intersect(
+                child_rect, self._child_rects[c])
             if c != child and intersection.width > 0:
                 if (c not in self._locked_children and
                     c not in self._collisions):

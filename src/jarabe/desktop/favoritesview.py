@@ -24,6 +24,7 @@ from gi.repository import GConf
 import glib
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
@@ -208,7 +209,9 @@ class FavoritesView(ViewContainer):
                                        int(x),
                                        int(y)):
             self._dragging = True
-            context_ = widget.drag_begin([_ICON_DND_TARGET],
+            target_entry = Gtk.TargetEntry.new(*_ICON_DND_TARGET)
+            target_list = Gtk.TargetList.new([target_entry])
+            context_ = widget.drag_begin(target_list,
                                          Gdk.DragAction.MOVE,
                                          1,
                                          event)
@@ -219,18 +222,19 @@ class FavoritesView(ViewContainer):
 
         self._hot_x = pixbuf.props.width / 2
         self._hot_y = pixbuf.props.height / 2
-        context.set_icon_pixbuf(pixbuf, self._hot_x, self._hot_y)
+        Gtk.drag_set_icon_pixbuf(context, pixbuf, self._hot_x, self._hot_y)
 
     def __drag_motion_cb(self, widget, context, x, y, time):
         if self._last_clicked_icon is not None:
-            context.drag_status(context.suggested_action, time)
+            Gdk.drag_status(context, context.get_suggested_action(), time)
             return True
         else:
             return False
 
     def __drag_drop_cb(self, widget, context, x, y, time):
         if self._last_clicked_icon is not None:
-            self.drag_get_data(context, _ICON_DND_TARGET[0])
+            target = Gdk.Atom.intern_static_string(_ICON_DND_TARGET[0])
+            self.drag_get_data(context, target, time)
             self._layout.move_icon(self._last_clicked_icon,
                                    x - self._hot_x, y - self._hot_y,
                                    self.get_allocation())
@@ -249,7 +253,7 @@ class FavoritesView(ViewContainer):
 
     def __drag_data_received_cb(self, widget, context, x, y, selection_data,
                                 info, time):
-        context.drop_finish(success=True, time=time)
+        Gdk.drop_finish(context, success=True, time_=time)
 
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()

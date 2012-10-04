@@ -124,6 +124,9 @@ class ViewLayout(Layout):
     def allocate_children(self, allocation, children):
         pass
 
+    def move_icon(self, child, x, y, allocation):
+        pass
+
     def move(self, child, x, y, allocation=None):
         self._grid.move(child, x / _CELL_SIZE, y / _CELL_SIZE, locked=True)
         child_request = child.size_request()
