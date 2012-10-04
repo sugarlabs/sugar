@@ -387,11 +387,7 @@ class RingLayout(ViewLayout):
             child.size_allocate(child_allocation)
 
     def compare_activities(self, icon_a, icon_b):
-        if hasattr(icon_a, 'installation_time') and \
-                hasattr(icon_b, 'installation_time'):
-            return int(icon_b.installation_time - icon_a.installation_time)
-        else:
-            return 0
+        return cmp(icon_a.get_activity_name(), icon_b.get_activity_name())
 
 
 _SUNFLOWER_CONSTANT = style.STANDARD_ICON_SIZE * .75

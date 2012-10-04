@@ -179,6 +179,7 @@ class ListModel(Gtk.TreeModelSort):
         self._model = Gtk.ListStore(str, bool, str, str, str, str, int, str)
         self._model_filter = self._model.filter_new()
         Gtk.TreeModelSort.__init__(self, model=self._model_filter)
+        self.set_sort_column_id(ListModel.COLUMN_TITLE, Gtk.SortType.ASCENDING)
 
         GObject.idle_add(self.__connect_to_bundle_registry_cb)
 
