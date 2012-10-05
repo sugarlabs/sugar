@@ -350,7 +350,7 @@ class FavoritesView(ViewContainer):
 class ActivityIcon(EventIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
-    _BORDER_WIDTH = style.zoom(3)
+    _BORDER_WIDTH = style.zoom(9)
     _MAX_RESUME_ENTRIES = 5
 
     def __init__(self, activity_info):
