@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-27 00:33-0400\n"
-"PO-Revision-Date: 2012-09-28 03:17+0200\n"
+"POT-Creation-Date: 2012-10-05 00:34-0400\n"
+"PO-Revision-Date: 2012-10-07 23:40+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_GB\n"
@@ -424,6 +424,10 @@ msgstr "%(hour)d:%(min).2d remaining"
 msgid "Charged"
 msgstr "Charged"
 
+#: ../extensions/deviceicon/frame.py:57
+msgid "Show my keyboard"
+msgstr "Show my keyboard"
+
 #: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
@@ -493,7 +497,7 @@ msgstr "Disconnected"
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "Cancel"
@@ -998,98 +1002,98 @@ msgid "Done"
 msgstr "Done"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/desktop/favoritesview.py:335
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:240
+#: ../src/jarabe/desktop/activitieslist.py:241
 #, python-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:341
+#: ../src/jarabe/desktop/activitieslist.py:342
 #: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "Clear search"
 
-#: ../src/jarabe/desktop/activitieslist.py:414
+#: ../src/jarabe/desktop/activitieslist.py:415
 msgid "No matching activities"
 msgstr "No matching activities"
 
-#: ../src/jarabe/desktop/activitieslist.py:450
+#: ../src/jarabe/desktop/activitieslist.py:451
 msgid "Confirm erase"
 msgstr "Confirm erase"
 
-#: ../src/jarabe/desktop/activitieslist.py:452
+#: ../src/jarabe/desktop/activitieslist.py:453
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Confirm erase: Do you want to permanently erase %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:456
+#: ../src/jarabe/desktop/activitieslist.py:457
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Keep"
 
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/desktop/activitieslist.py:513
-#: ../src/jarabe/journal/journaltoolbox.py:394
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/desktop/activitieslist.py:460
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/journal/journaltoolbox.py:393
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Erase"
 
-#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/desktop/activitieslist.py:530
 msgid "Remove favorite"
 msgstr "Remove favourite"
 
-#: ../src/jarabe/desktop/activitieslist.py:533
+#: ../src/jarabe/desktop/activitieslist.py:534
 msgid "Make favorite"
 msgstr "Make favourite"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:197
+#: ../src/jarabe/desktop/favoriteslayout.py:200
 msgid "Freeform"
 msgstr "Freeform"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:292
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "Ring"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:438
+#: ../src/jarabe/desktop/favoriteslayout.py:437
 msgid "Spiral"
 msgstr "Spiral"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:506
+#: ../src/jarabe/desktop/favoriteslayout.py:505
 msgid "Box"
 msgstr "Box"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:549
+#: ../src/jarabe/desktop/favoriteslayout.py:548
 msgid "Triangle"
 msgstr "Triangle"
 
-#: ../src/jarabe/desktop/favoritesview.py:322
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Registration Failed"
 msgstr "Registration Failed"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:329
 msgid "Registration Successful"
 msgstr "Registration Successful"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:330
 msgid "You are now registered with your school server."
 msgstr "You are now registered with your school server."
 
-#: ../src/jarabe/desktop/favoritesview.py:637
+#: ../src/jarabe/desktop/favoritesview.py:619
 msgid "Register"
 msgstr "Register"
 
-#: ../src/jarabe/desktop/favoritesview.py:639
-#: ../src/jarabe/desktop/favoritesview.py:653
+#: ../src/jarabe/desktop/favoritesview.py:621
+#: ../src/jarabe/desktop/favoritesview.py:635
 msgid "Register again"
 msgstr "Register again"
 
@@ -1133,7 +1137,7 @@ msgstr "Wireless Security:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:81
-#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Resume"
@@ -1170,6 +1174,7 @@ msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
 #, python-format
 msgid "Search in %s"
 msgstr "Search in %s"
@@ -1335,103 +1340,104 @@ msgid "Tags:"
 msgstr "Tags:"
 
 #: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:218
 #: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "Journal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Anytime"
 msgstr "Anytime"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Today"
 msgstr "Today"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Since yesterday"
 msgstr "Since yesterday"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past week"
 msgstr "Past week"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past month"
 msgstr "Past month"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Past year"
 msgstr "Past year"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Anyone"
 msgstr "Anyone"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "My friends"
 msgstr "My friends"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My class"
 msgstr "My class"
 
-#: ../src/jarabe/journal/journaltoolbox.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:290
 msgid "Anything"
 msgstr "Anything"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:376
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Copy to"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/journaltoolbox.py:384
 #: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "Duplicate"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/journaltoolbox.py:417
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
 #: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Error while copying the entry. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
 #: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "Error"
 
-#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Do you want to permanently erase \"%s\"?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Start"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:537
 msgid "Sort by date modified"
 msgstr "Sort by date modified"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date created"
 msgstr "Sort by date created"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by size"
 msgstr "Sort by size"
 
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort view"
 msgstr "Sort view"
 
