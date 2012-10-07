@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-19 00:34-0400\n"
-"PO-Revision-Date: 2012-09-22 12:52+0200\n"
+"POT-Creation-Date: 2012-10-05 00:34-0400\n"
+"PO-Revision-Date: 2012-10-08 01:07+0200\n"
 "Last-Translator: Aputsiaq Niels <aj@isit.gl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
@@ -215,23 +215,23 @@ msgstr ""
 "Du vil skulle give følgende information for at opsætte en mobil "
 "bredbåndsforbindelse til et mobilt (3G) netværk."
 
-#: ../extensions/cpsection/modemconfiguration/view.py:78
+#: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
 msgstr "Brugernavn:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:84
+#: ../extensions/cpsection/modemconfiguration/view.py:83
 msgid "Password:"
 msgstr "Adgangskode:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:90
+#: ../extensions/cpsection/modemconfiguration/view.py:89
 msgid "Number:"
 msgstr "Nummer:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:96
+#: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
 msgstr "Navn på adgangspunkt (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:102
+#: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
 msgstr "Personligt identitetsnummer (PIN):"
 
@@ -252,32 +252,32 @@ msgstr "Fejl i angivne radioargument brug on/off."
 msgid "Error in specified argument use 0/1."
 msgstr "Fejl i angivne argument brug 0/1."
 
-#: ../extensions/cpsection/network/view.py:62
+#: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
 msgstr "Trådløs"
 
-#: ../extensions/cpsection/network/view.py:70
+#: ../extensions/cpsection/network/view.py:76
 msgid "Turn off the wireless radio to save battery life"
 msgstr "Sluk for den trådløse radio for at spare på batteriet"
 
-#: ../extensions/cpsection/network/view.py:83
+#: ../extensions/cpsection/network/view.py:89
 msgid "Radio"
 msgstr "Radio"
 
-#: ../extensions/cpsection/network/view.py:99
+#: ../extensions/cpsection/network/view.py:105
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Drop netværkshistorik hvis du har problemer med at forbinde til netværket"
 
-#: ../extensions/cpsection/network/view.py:108
+#: ../extensions/cpsection/network/view.py:114
 msgid "Discard network history"
 msgstr "Drop netværkshistorik"
 
-#: ../extensions/cpsection/network/view.py:123
+#: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
 msgstr "Samarbejde"
 
-#: ../extensions/cpsection/network/view.py:131
+#: ../extensions/cpsection/network/view.py:137
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -286,7 +286,7 @@ msgstr ""
 "Serveren modsvarer det rum du befinder dig i; personer på samme server vil "
 "være i stand til at se hinanden, også selv om de ikke er på samme netværk."
 
-#: ../extensions/cpsection/network/view.py:141
+#: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
 msgstr "Server:"
 
@@ -307,7 +307,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "Automatisk strømstyring (øger batterilevetiden)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:60
+#: ../src/jarabe/desktop/homebox.py:62
 msgid "Software Update"
 msgstr "Software-opdatering"
 
@@ -423,126 +423,130 @@ msgstr "%(hour)d:%(min).2d endnu"
 msgid "Charged"
 msgstr "Opladet"
 
-#: ../extensions/deviceicon/network.py:51
+#: ../extensions/deviceicon/frame.py:57
+msgid "Show my keyboard"
+msgstr "Vis mit tastatur"
+
+#: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
 msgstr "IP-adresse: %s"
 
-#: ../extensions/deviceicon/network.py:81
-#: ../extensions/deviceicon/network.py:297
+#: ../extensions/deviceicon/network.py:80
+#: ../extensions/deviceicon/network.py:296
 #: ../src/jarabe/desktop/networkviews.py:129
 #: ../src/jarabe/desktop/networkviews.py:495
 msgid "Disconnect"
 msgstr "Afbryd"
 
-#: ../extensions/deviceicon/network.py:106
-#: ../extensions/deviceicon/network.py:289
+#: ../extensions/deviceicon/network.py:105
+#: ../extensions/deviceicon/network.py:288
 #: ../src/jarabe/desktop/networkviews.py:238
 #: ../src/jarabe/desktop/networkviews.py:533
 #: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connecting..."
 msgstr "Forbinder..."
 
-#: ../extensions/deviceicon/network.py:111
-#: ../extensions/deviceicon/network.py:179
+#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:178
 #: ../src/jarabe/desktop/networkviews.py:245
 #: ../src/jarabe/desktop/networkviews.py:539
 #: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connected"
 msgstr "Tilsluttet"
 
-#: ../extensions/deviceicon/network.py:124
+#: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
 msgstr "Ingen trådløs forbindelse"
 
-#: ../extensions/deviceicon/network.py:138
+#: ../extensions/deviceicon/network.py:137
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../extensions/deviceicon/network.py:153
+#: ../extensions/deviceicon/network.py:152
 msgid "Wired Network"
 msgstr "Kablet netværk"
 
-#: ../extensions/deviceicon/network.py:182
+#: ../extensions/deviceicon/network.py:181
 msgid "Speed"
 msgstr "Hastighed"
 
-#: ../extensions/deviceicon/network.py:207
+#: ../extensions/deviceicon/network.py:206
 msgid "Wireless modem"
 msgstr "Trådløst modem"
 
-#: ../extensions/deviceicon/network.py:275
+#: ../extensions/deviceicon/network.py:274
 msgid "Please wait..."
 msgstr "Vent venligst..."
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:279
 #: ../src/jarabe/desktop/networkviews.py:125
 #: ../src/jarabe/desktop/networkviews.py:490
 #: ../src/jarabe/desktop/networkviews.py:624
 msgid "Connect"
 msgstr "Forbind"
 
-#: ../extensions/deviceicon/network.py:281
+#: ../extensions/deviceicon/network.py:280
 msgid "Disconnected"
 msgstr "Forbindelse afsluttet"
 
-#: ../extensions/deviceicon/network.py:288
+#: ../extensions/deviceicon/network.py:287
 #: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:65
+#: ../src/jarabe/desktop/homebox.py:67
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "Fortryd"
 
-#: ../extensions/deviceicon/network.py:327
+#: ../extensions/deviceicon/network.py:326
 msgid "Try connection again"
 msgstr "Forsøg at tilslutte igen"
 
-#: ../extensions/deviceicon/network.py:330
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Error: %s"
 msgstr "Fejl: %s"
 
-#: ../extensions/deviceicon/network.py:334
+#: ../extensions/deviceicon/network.py:333
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Forslag: %s"
 
-#: ../extensions/deviceicon/network.py:343
+#: ../extensions/deviceicon/network.py:342
 #, python-format
 msgid "Connected for %s"
 msgstr "Tilsluttet i %s"
 
+#: ../extensions/deviceicon/network.py:348
 #: ../extensions/deviceicon/network.py:349
-#: ../extensions/deviceicon/network.py:350
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:355
+#: ../extensions/deviceicon/network.py:354
 msgid "Check your PIN/PUK configuration."
 msgstr "Tjek din PIN/PUK-konfiguration."
 
-#: ../extensions/deviceicon/network.py:358
+#: ../extensions/deviceicon/network.py:357
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "Tjek konfigurationen på dit adgangspunktnavn (APN)"
 
-#: ../extensions/deviceicon/network.py:362
+#: ../extensions/deviceicon/network.py:361
 msgid "Check the Number configuration."
 msgstr "Tjek konfiguration af nummeret."
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:363
 msgid "Check your configuration."
 msgstr "Tjek din konfiguration."
 
-#: ../extensions/deviceicon/network.py:607
+#: ../extensions/deviceicon/network.py:606
 msgid "Mesh Network"
 msgstr "Maskenetværk"
 
-#: ../extensions/deviceicon/network.py:652
+#: ../extensions/deviceicon/network.py:651
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Maskenetværk %s"
@@ -555,41 +559,41 @@ msgstr "Ingen tilgængelig GSM-forbindelse."
 msgid "Create a connection in the control panel."
 msgstr "Opret en forbindelse i kontrolpanelet."
 
-#: ../extensions/deviceicon/speech.py:52
+#: ../extensions/deviceicon/speech.py:53
 msgid "Speech"
 msgstr "Tale"
 
-#: ../extensions/deviceicon/speech.py:77
-#: ../extensions/deviceicon/speech.py:138
-#: ../extensions/deviceicon/speech.py:143
+#: ../extensions/deviceicon/speech.py:81
+#: ../extensions/deviceicon/speech.py:155
+#: ../extensions/deviceicon/speech.py:160
 msgid "Say selected text"
 msgstr "Oplæs valgte tekst"
 
-#: ../extensions/deviceicon/speech.py:83
+#: ../extensions/deviceicon/speech.py:88
 msgid "Stop playback"
 msgstr "Stop afspilning"
 
-#: ../extensions/deviceicon/speech.py:97
+#: ../extensions/deviceicon/speech.py:98
 msgid "Pitch"
 msgstr "Toneleje"
 
-#: ../extensions/deviceicon/speech.py:106
+#: ../extensions/deviceicon/speech.py:112
 msgid "Rate"
 msgstr "Hastighed"
 
-#: ../extensions/deviceicon/speech.py:133
+#: ../extensions/deviceicon/speech.py:150
 msgid "Pause playback"
 msgstr "Sæt afspilning på pause"
 
-#: ../extensions/deviceicon/speaker.py:63
+#: ../extensions/deviceicon/speaker.py:62
 msgid "My Speakers"
 msgstr "Mine højttalere"
 
-#: ../extensions/deviceicon/speaker.py:143
+#: ../extensions/deviceicon/speaker.py:142
 msgid "Unmute"
 msgstr "Tænd for lyden"
 
-#: ../extensions/deviceicon/speaker.py:146
+#: ../extensions/deviceicon/speaker.py:145
 msgid "Mute"
 msgstr "Sluk for lyden"
 
@@ -605,7 +609,7 @@ msgstr "pen"
 msgid "My touchpad"
 msgstr "Mit pegefelt"
 
-#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:171
+#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
 msgid "Show contents"
 msgstr "Vis indhold"
 
@@ -614,11 +618,14 @@ msgid "Mesh"
 msgstr "Maske"
 
 #: ../extensions/globalkey/screenshot.py:64
+#: ../src/jarabe/desktop/homewindow.py:219
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "Group"
 msgstr "Gruppe"
 
 #: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/desktop/homewindow.py:212
+#: ../src/jarabe/desktop/viewtoolbar.py:62
 #: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "Home"
 msgstr "Hjem"
@@ -971,7 +978,7 @@ msgstr "For at dine ændringer træder i kraft skal du genstarte Sukker.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
 #: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
-#: ../src/jarabe/journal/volumestoolbar.py:308
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Warning"
 msgstr "Advarsel"
 
@@ -984,7 +991,7 @@ msgstr "Ændringer kræver genstart"
 msgid "Cancel changes"
 msgstr "Fortryd ændringer"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
 msgid "Later"
 msgstr "Senere"
 
@@ -992,114 +999,119 @@ msgstr "Senere"
 msgid "Restart now"
 msgstr "Genstart nu"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:212
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "Færdig"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:327
+#: ../src/jarabe/desktop/favoritesview.py:335
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:240
+#: ../src/jarabe/desktop/activitieslist.py:241
 #, python-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:336
-#: ../src/jarabe/journal/listview.py:407
+#: ../src/jarabe/desktop/activitieslist.py:342
+#: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "Ryd søgning"
 
-#: ../src/jarabe/desktop/activitieslist.py:405
+#: ../src/jarabe/desktop/activitieslist.py:415
 msgid "No matching activities"
 msgstr "Ingen matchende aktiviteter"
 
-#: ../src/jarabe/desktop/activitieslist.py:441
+#: ../src/jarabe/desktop/activitieslist.py:451
 msgid "Confirm erase"
 msgstr "Bekræft sletning"
 
-#: ../src/jarabe/desktop/activitieslist.py:443
+#: ../src/jarabe/desktop/activitieslist.py:453
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Bekræft sletning: Vil du virkeligt permanent slette %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:447
+#: ../src/jarabe/desktop/activitieslist.py:457
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Behold"
 
-#: ../src/jarabe/desktop/activitieslist.py:450
-#: ../src/jarabe/desktop/activitieslist.py:504
-#: ../src/jarabe/journal/journaltoolbox.py:394
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/desktop/activitieslist.py:460
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/journal/journaltoolbox.py:393
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Slet"
 
-#: ../src/jarabe/desktop/activitieslist.py:520
+#: ../src/jarabe/desktop/activitieslist.py:530
 msgid "Remove favorite"
 msgstr "Fjern favorit"
 
-#: ../src/jarabe/desktop/activitieslist.py:524
+#: ../src/jarabe/desktop/activitieslist.py:534
 msgid "Make favorite"
 msgstr "Opret favorit"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:197
+#: ../src/jarabe/desktop/favoriteslayout.py:200
 msgid "Freeform"
 msgstr "Fri form"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:292
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "Ring"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:438
+#: ../src/jarabe/desktop/favoriteslayout.py:437
 msgid "Spiral"
 msgstr "Spiral"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:506
+#: ../src/jarabe/desktop/favoriteslayout.py:505
 msgid "Box"
 msgstr "Boks"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:549
+#: ../src/jarabe/desktop/favoriteslayout.py:548
 msgid "Triangle"
 msgstr "Trekant"
 
-#: ../src/jarabe/desktop/favoritesview.py:318
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Registration Failed"
 msgstr "Registrering mislykkedes"
 
-#: ../src/jarabe/desktop/favoritesview.py:321
+#: ../src/jarabe/desktop/favoritesview.py:329
 msgid "Registration Successful"
 msgstr "Registrering lykkedes"
 
-#: ../src/jarabe/desktop/favoritesview.py:322
+#: ../src/jarabe/desktop/favoritesview.py:330
 msgid "You are now registered with your school server."
 msgstr "Du er nu registreret ved din skoleserver."
 
-#: ../src/jarabe/desktop/favoritesview.py:633
+#: ../src/jarabe/desktop/favoritesview.py:619
 msgid "Register"
 msgstr "Registrér"
 
+#: ../src/jarabe/desktop/favoritesview.py:621
 #: ../src/jarabe/desktop/favoritesview.py:635
-#: ../src/jarabe/desktop/favoritesview.py:649
 msgid "Register again"
 msgstr "Registrér igen"
 
-#: ../src/jarabe/desktop/homebox.py:61
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Opdatér dine aktiviteter for at sikre kompatibilitet med din nye software"
 
-#: ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/desktop/homebox.py:72
 msgid "Check now"
 msgstr "Undersøg nu"
+
+#: ../src/jarabe/desktop/homewindow.py:226
+#: ../src/jarabe/frame/zoomtoolbar.py:48
+msgid "Neighborhood"
+msgstr "Nabolag"
 
 #: ../src/jarabe/desktop/keydialog.py:89
 #, python-format
@@ -1128,7 +1140,7 @@ msgstr "Trådløs sikkerhed:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:81
-#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Genoptag"
@@ -1156,19 +1168,25 @@ msgstr "Kan ikke forbinde til serveren."
 msgid "The server could not complete the request."
 msgstr "Serveren kunne ikke gennemføre forespørgslen."
 
-#: ../src/jarabe/desktop/viewtoolbar.py:79
+#: ../src/jarabe/desktop/viewtoolbar.py:80
 msgid "List view"
 msgstr "Listevisning"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:80
+#: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:145
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr "Søg i %s"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
 msgstr "Favoritvisning"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:146
+#: ../src/jarabe/desktop/viewtoolbar.py:150
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
@@ -1244,10 +1262,6 @@ msgid "%s clipping"
 msgstr "%s klipning"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:48
-msgid "Neighborhood"
-msgstr "Nabolag"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "F1"
 msgstr "F1"
 
@@ -1263,24 +1277,24 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:107
+#: ../src/jarabe/intro/window.py:105
 msgid "Name:"
 msgstr "Navn:"
 
-#: ../src/jarabe/intro/window.py:137
+#: ../src/jarabe/intro/window.py:135
 msgid "Click to change color:"
 msgstr "Klik for at ændre farve:"
 
-#: ../src/jarabe/intro/window.py:201 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
 msgstr "Tilbage"
 
-#: ../src/jarabe/intro/window.py:215
+#: ../src/jarabe/intro/window.py:213
 msgid "Next"
 msgstr "Næste"
 
 #: ../src/jarabe/journal/expandedentry.py:145
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
 #: ../src/jarabe/journal/palettes.py:66
 #: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
@@ -1329,119 +1343,120 @@ msgid "Tags:"
 msgstr "Mærkater:"
 
 #: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:218
-#: ../src/jarabe/journal/volumestoolbar.py:369
+#: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "Logbog"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Anytime"
 msgstr "Når som helst"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Today"
 msgstr "I dag"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Since yesterday"
 msgstr "Siden i går"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past week"
 msgstr "Seneste uge"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past month"
 msgstr "Seneste måned"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Past year"
 msgstr "Seneste år"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Anyone"
 msgstr "Enhver"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "My friends"
 msgstr "Mine venner"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My class"
 msgstr "Min klasse"
 
-#: ../src/jarabe/journal/journaltoolbox.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:290
 msgid "Anything"
 msgstr "Hvadsomhelst"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:376
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Kopier til"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/journaltoolbox.py:384
 #: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "Duplikér"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/journaltoolbox.py:417
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
-#: ../src/jarabe/journal/volumestoolbar.py:316
+#: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Fejl under kopiering af posten. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
-#: ../src/jarabe/journal/volumestoolbar.py:317
+#: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "Fejl"
 
-#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Vil du foretage permanent sletning af \"%s\"?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Start"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:537
 msgid "Sort by date modified"
 msgstr "Sortér efter ændringsdato"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date created"
 msgstr "Sortér efter oprettelsesdato"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by size"
 msgstr "Sortér efter størrelse"
 
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort view"
 msgstr "Sorteringsvisning"
 
-#: ../src/jarabe/journal/listview.py:324
+#: ../src/jarabe/journal/listview.py:323
 msgid "Your Journal is empty"
 msgstr "Din logbog er tom"
 
-#: ../src/jarabe/journal/listview.py:327
+#: ../src/jarabe/journal/listview.py:326
 msgid "Your documents folder is empty"
 msgstr "Din dokumentmappe er tom"
 
-#: ../src/jarabe/journal/listview.py:329
+#: ../src/jarabe/journal/listview.py:328
 msgid "The device is empty"
 msgstr "Enheden er tom"
 
-#: ../src/jarabe/journal/listview.py:331
+#: ../src/jarabe/journal/listview.py:330
 msgid "No matching entries"
 msgstr "Ingen modsvarende emner"
 
@@ -1501,7 +1516,7 @@ msgid "Entries without a file cannot be sent."
 msgstr "Poster uden en fil kan ikke sendes."
 
 #: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
-#: ../src/jarabe/journal/volumestoolbar.py:307
+#: ../src/jarabe/journal/volumestoolbar.py:300
 msgid "Entries without a file cannot be copied."
 msgstr "Poster uden en fil kan ikke kopieres."
 
@@ -1525,8 +1540,8 @@ msgstr "Ingen aktivitet for genoptagelsespost"
 msgid "Documents"
 msgstr "Dokumenter"
 
-#: ../src/jarabe/journal/volumestoolbar.py:392
-#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:259
+#: ../src/jarabe/journal/volumestoolbar.py:385
+#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ledig"
@@ -1776,7 +1791,7 @@ msgstr "Stop"
 msgid "Start new"
 msgstr "Start ny"
 
-#: ../src/jarabe/view/palettes.py:234
+#: ../src/jarabe/view/palettes.py:223
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Fjern"
