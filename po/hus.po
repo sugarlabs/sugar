@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 20:56+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-09-27 00:33-0400\n"
+"PO-Revision-Date: 2012-09-28 19:27+0200\n"
+"Last-Translator: magalhy2012 <Magaly1827@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hus\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Uk'pintaláb ti jalk'uxchik k'al an takudh mukuxtaláb."
 msgid "Error in specified colors."
 msgstr "Uk'pintaláb ti mukuxtaláb takudh."
 
-#: ../extensions/cpsection/aboutme/view.py:235
+#: ../extensions/cpsection/aboutme/view.py:216
 msgid "Click to change your color:"
 msgstr "Klik abal ki jalk'uy an mukuxtaláb:"
 
@@ -65,39 +65,40 @@ msgstr "Tin kwentaj u ábatnom pat'al"
 msgid "Not available"
 msgstr "Yab jolat"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Ibil"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "In áy an ajixtaláb pat'ál:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Inkixtaláb:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:129
+#: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:144
+#: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
 msgstr "Firmware k'al an yab tsájlidh polts'oxtaláb:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:167
+#: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
 msgstr "K'ij ani in alwa'taláb an tsejk'om"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:185
+#. TRANS: The word "Sugar" should not be translated.
+#: ../extensions/cpsection/aboutcomputer/view.py:187
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -109,7 +110,7 @@ msgstr ""
 "Pública General, ani kw'ajat it kanidh abal ka jalk'uy ani ka buk'uw i "
 "k'ot'bidh dhuchlab k'al junchik i jólat xi dhuchadh tin ebal jajá'."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:197
+#: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
 msgstr "Putat jólataláb:"
 
@@ -156,7 +157,7 @@ msgstr "Jilk'ontaláb k'al an edhomtaláb"
 msgid "Corner"
 msgstr "Xúts"
 
-#: ../extensions/cpsection/frame/view.py:113
+#: ../extensions/cpsection/frame/view.py:114
 msgid "Edge"
 msgstr "Walte'líl"
 
@@ -211,7 +212,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "T'ojojóxtaláb k'al an pat'ál polts'oxtaláb"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:67
+#: ../extensions/cpsection/modemconfiguration/view.py:68
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -240,7 +241,7 @@ msgid "Personal Identity Number (PIN):"
 msgstr "Ajixtaláb exlomtaláb k'al an atikláb (PIN):"
 
 #: ../extensions/cpsection/network/__init__.py:21
-#: ../extensions/cpsection/network/view.py:29
+#: ../extensions/cpsection/network/view.py:30
 msgid "Network"
 msgstr "Polts'oxtaláb"
 
@@ -258,35 +259,35 @@ msgstr ""
 msgid "Error in specified argument use 0/1."
 msgstr "Uk'pintaláb tin ebal an ódhaxtaláb xi exbadh ka ayendha' 0/1."
 
-#: ../extensions/cpsection/network/view.py:61
+#: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
 msgstr "Yab ts'ájlidh"
 
-#: ../extensions/cpsection/network/view.py:69
+#: ../extensions/cpsection/network/view.py:76
 msgid "Turn off the wireless radio to save battery life"
 msgstr ""
 "Ka tepdha' an yab ts'ájlidh p'atal wat'bom káw ani yab ka odhna'chikiy in "
 "éjatal an mulkux tsapláb"
 
-#: ../extensions/cpsection/network/view.py:82
+#: ../extensions/cpsection/network/view.py:89
 msgid "Radio"
 msgstr "P'atal wat'bom káw"
 
-#: ../extensions/cpsection/network/view.py:98
+#: ../extensions/cpsection/network/view.py:105
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Ka t'ixk'a' an t'ilab tin ebal an polts'oxtaláb max wa'ats i káw k'al an "
 "ts'ot'k'oxtaláb"
 
-#: ../extensions/cpsection/network/view.py:107
+#: ../extensions/cpsection/network/view.py:114
 msgid "Discard network history"
 msgstr "Ka t'ixk'a' an t'ilab tin ebal an polts'oxtaláb"
 
-#: ../extensions/cpsection/network/view.py:122
+#: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
 msgstr "Dhéyetnaxtaláb"
 
-#: ../extensions/cpsection/network/view.py:130
+#: ../extensions/cpsection/network/view.py:137
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -296,7 +297,7 @@ msgstr ""
 "ti bá' an tólmix buk'ul in ejtowalchik ka tsu'uxinchik, abal ani' yab "
 "jayetsej an polts'oxtaláb."
 
-#: ../extensions/cpsection/network/view.py:140
+#: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
 msgstr "Tólmix buk'ul:"
 
@@ -319,8 +320,9 @@ msgid "Automatic power management (increases battery life)"
 msgstr "Kwetem tsapík abatnomtaláb (in punk'unchál in ejatál an mulkux tsapláb)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-msgid "Software update"
-msgstr "Itmedha' an software"
+#: ../src/jarabe/desktop/homebox.py:62
+msgid "Software Update"
+msgstr "Itmedhomtaláb k'al an software"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -371,237 +373,239 @@ msgid_plural "%s updates were installed"
 msgstr[0] "%s i itmedhomtaláb puk'uyat"
 msgstr[1] "%s i itmedhomtalab puk'uyat"
 
-#: ../extensions/cpsection/updater/view.py:255
+#: ../extensions/cpsection/updater/view.py:256
 msgid "Install selected"
 msgstr "Takudh punk'uxtaláb"
 
-#: ../extensions/cpsection/updater/view.py:276
+#: ../extensions/cpsection/updater/view.py:277
 #, python-format
 msgid "Download size: %s"
 msgstr "In puweltal an pa'banelom: %s"
 
-#: ../extensions/cpsection/updater/view.py:364
+#: ../extensions/cpsection/updater/view.py:365
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "Ti áyláb %(current)s ma ti %(new)s (Size: %(size)s)"
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:383
 msgid "None"
 msgstr "Mani jún"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:385
+#: ../extensions/cpsection/updater/view.py:386
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:389
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:392
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:71
+#: ../extensions/deviceicon/battery.py:70
 msgid "My Battery"
 msgstr "U mulkux tsaplab"
 
-#: ../extensions/deviceicon/battery.py:147
+#: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
 msgstr "Pakudh"
 
-#: ../extensions/deviceicon/battery.py:150
+#: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
 msgstr "T'uchél"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
 msgstr "Jilk'onal lej we'káts in tsapík an mulkux tsaplab"
 
 # Do not translate these variable names - cjl
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:160
+#: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "Jilk'onal %(hour)d:%(min).2d"
 
-#: ../extensions/deviceicon/battery.py:163
+#: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
 msgstr "T'uchat"
 
-#: ../extensions/deviceicon/network.py:49
+#: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
 msgstr "IP belil: %s"
 
-#: ../extensions/deviceicon/network.py:93
-#: ../extensions/deviceicon/network.py:292
+#: ../extensions/deviceicon/network.py:80
+#: ../extensions/deviceicon/network.py:296
 #: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:492
+#: ../src/jarabe/desktop/networkviews.py:495
 msgid "Disconnect"
 msgstr "Ka t'ixk'a ti ts'ot'k'oxtaláb"
 
-#: ../extensions/deviceicon/network.py:101
-#: ../extensions/deviceicon/network.py:284
+#: ../extensions/deviceicon/network.py:105
+#: ../extensions/deviceicon/network.py:288
 #: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:529
-#: ../src/jarabe/desktop/networkviews.py:663
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connecting..."
 msgstr "In t'sot'k'oyal..."
 
-#: ../extensions/deviceicon/network.py:106
-#: ../extensions/deviceicon/network.py:174
+#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:178
 #: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:535
-#: ../src/jarabe/desktop/networkviews.py:669
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connected"
 msgstr "T'sot'k'odh"
 
-#: ../extensions/deviceicon/network.py:119
+#: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
 msgstr "Yab wa'ats i yab ts'ajlidh ts'ot'k'ontaláb"
 
-#: ../extensions/deviceicon/network.py:133
+#: ../extensions/deviceicon/network.py:137
 msgid "Channel"
 msgstr "In belíl"
 
-#: ../extensions/deviceicon/network.py:148
+#: ../extensions/deviceicon/network.py:152
 msgid "Wired Network"
 msgstr "Tsájlidh polts'oxtaláb"
 
-#: ../extensions/deviceicon/network.py:177
+#: ../extensions/deviceicon/network.py:181
 msgid "Speed"
 msgstr "Adhiktaláb"
 
-#: ../extensions/deviceicon/network.py:202
+#: ../extensions/deviceicon/network.py:206
 msgid "Wireless modem"
 msgstr "Yab tsájlidh patál polts'oxtaláb"
 
-#: ../extensions/deviceicon/network.py:270
+#: ../extensions/deviceicon/network.py:274
 msgid "Please wait..."
 msgstr "Pakwlanchij aychij jún we'..."
 
-#: ../extensions/deviceicon/network.py:275
+#: ../extensions/deviceicon/network.py:279
 #: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:488
-#: ../src/jarabe/desktop/networkviews.py:619
+#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:624
 msgid "Connect"
 msgstr "Ka ts'ot'k'oy"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:280
 msgid "Disconnected"
 msgstr "Yab ts'ot'k'odh"
 
-#: ../extensions/deviceicon/network.py:283
+#: ../extensions/deviceicon/network.py:287
 #: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:603
-#: ../src/jarabe/frame/activitiestray.py:705
-#: ../src/jarabe/frame/activitiestray.py:733
+#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/frame/activitiestray.py:606
+#: ../src/jarabe/frame/activitiestray.py:708
+#: ../src/jarabe/frame/activitiestray.py:736
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "T'apiy"
 
-#: ../extensions/deviceicon/network.py:322
+#: ../extensions/deviceicon/network.py:326
 msgid "Try connection again"
 msgstr "Ka exa' an ts'ot'k'ox junilik'íj"
 
-#: ../extensions/deviceicon/network.py:325
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Error: %s"
 msgstr "K'ibts'ontaláb: %s"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:333
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Tsalpaxtaláb: %s"
 
-#: ../extensions/deviceicon/network.py:338
+#: ../extensions/deviceicon/network.py:342
 #, python-format
 msgid "Connected for %s"
 msgstr "Ts'ot'k'odh ti %s"
 
-#: ../extensions/deviceicon/network.py:344
-#: ../extensions/deviceicon/network.py:345
+#: ../extensions/deviceicon/network.py:348
+#: ../extensions/deviceicon/network.py:349
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:354
 msgid "Check your PIN/PUK configuration."
 msgstr "Ka tsab met'a' an t'ojojóxtaláb k'al a PIN/PUK."
 
-#: ../extensions/deviceicon/network.py:353
+#: ../extensions/deviceicon/network.py:357
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "Ka tsab met'a' an t'ojojóxtaláb k'al in bij an tuk abal an otsits (APN)"
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:361
 msgid "Check the Number configuration."
 msgstr "Ka tsab met'a' an ajixtaláb k'al an t'ojojóxtaláb."
 
-#: ../extensions/deviceicon/network.py:359
+#: ../extensions/deviceicon/network.py:363
 msgid "Check your configuration."
 msgstr "Ka tsab met'a' an t'ojojóxtaláb."
 
-#: ../extensions/deviceicon/network.py:597
+#: ../extensions/deviceicon/network.py:606
 msgid "Mesh Network"
 msgstr "Dhikab polts'oxtaláb"
 
-#: ../extensions/deviceicon/network.py:641
+#: ../extensions/deviceicon/network.py:651
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Dhikab polts'oxtaláb %s"
 
-#: ../extensions/deviceicon/network.py:757
+#: ../extensions/deviceicon/network.py:782
 msgid "No GSM connection available."
 msgstr "Yab wa'ats i ts'ot'k'oxtaláb GSM."
 
-#: ../extensions/deviceicon/network.py:758
+#: ../extensions/deviceicon/network.py:783
 msgid "Create a connection in the control panel."
 msgstr "Inkiy jun i ts'ot'k'oxtaláb ti ok'nom mét'nib."
 
-#: ../extensions/deviceicon/speech.py:52
+#: ../extensions/deviceicon/speech.py:53
 msgid "Speech"
 msgstr "Káw"
 
-#: ../extensions/deviceicon/speech.py:77
-#: ../extensions/deviceicon/speech.py:138
-#: ../extensions/deviceicon/speech.py:143
+#: ../extensions/deviceicon/speech.py:81
+#: ../extensions/deviceicon/speech.py:155
+#: ../extensions/deviceicon/speech.py:160
 msgid "Say selected text"
 msgstr "ka uluw an kàw xi kwajat tàkudh"
 
-#: ../extensions/deviceicon/speech.py:83
+#: ../extensions/deviceicon/speech.py:88
 msgid "Stop playback"
 msgstr "ka kuba' xi kwajat ts'at'at"
 
-#: ../extensions/deviceicon/speech.py:97
+#: ../extensions/deviceicon/speech.py:98
 msgid "Pitch"
 msgstr "Janidhtaláb"
 
-#: ../extensions/deviceicon/speech.py:106
+#: ../extensions/deviceicon/speech.py:112
 msgid "Rate"
 msgstr "adhik"
 
-#: ../extensions/deviceicon/speech.py:133
+#: ../extensions/deviceicon/speech.py:150
 msgid "Pause playback"
 msgstr "ka kuba' xi ts'at'adh"
 
-#: ../extensions/deviceicon/speaker.py:61
+#: ../extensions/deviceicon/speaker.py:62
 msgid "My Speakers"
 msgstr "U kawidh ayendhanelil"
 
 # Kawindha'   dar voz
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:142
 msgid "Unmute"
 msgstr "Kawindha'"
 
 # Silenciar Ts'ibatmedha'
-#: ../extensions/deviceicon/speaker.py:141
+#: ../extensions/deviceicon/speaker.py:145
 msgid "Mute"
 msgstr "Ts'ibatmedha'"
 
@@ -620,35 +624,42 @@ msgstr "in alwá'"
 msgid "My touchpad"
 msgstr "U jolát takaxtaláb"
 
+#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
+msgid "Show contents"
+msgstr "Tejwa'medha' in alwa'"
+
 # Dhikab Malla
-#: ../extensions/globalkey/screenshot.py:59
+#: ../extensions/globalkey/screenshot.py:62
 msgid "Mesh"
 msgstr "Dhikab"
 
 # Mudhél   Grupo
-#: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../extensions/globalkey/screenshot.py:64
+#: ../src/jarabe/desktop/homewindow.py:219
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "Group"
 msgstr "Mudhél"
 
 # Tujtal Hogar
-#: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/desktop/homewindow.py:212
+#: ../src/jarabe/desktop/viewtoolbar.py:62
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "Home"
 msgstr "Tujtal"
 
 # T'ojláb Actividad
-#: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../extensions/globalkey/screenshot.py:72
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "Activity"
 msgstr "T'ojláb"
 
 # k'ot'bidh walek=Captura de pantalla
-#: ../extensions/globalkey/screenshot.py:72
+#: ../extensions/globalkey/screenshot.py:75
 msgid "Screenshot"
 msgstr "K'ot'bidh walek"
 
-#: ../extensions/globalkey/screenshot.py:74
+#: ../extensions/globalkey/screenshot.py:77
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "K'otbidh walek a \"%s\""
@@ -1027,149 +1038,144 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Abal ka dhaya' axi a jalk'uy in yejenchal ka tsab tujchij Sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
-#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
-#: ../src/jarabe/journal/volumestoolbar.py:307
+#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Warning"
 msgstr "Ok'xidh ólchixtaláb"
 
-#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/gui.py:299
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "An jalk'untaláb in yejenchal ka tsab tujchij"
 
-#: ../src/jarabe/controlpanel/gui.py:301
+#: ../src/jarabe/controlpanel/gui.py:302
 msgid "Cancel changes"
 msgstr "T'apiy axi a jalk'uy"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
 msgid "Later"
 msgstr "Talbel"
 
-#: ../src/jarabe/controlpanel/gui.py:310
+#: ../src/jarabe/controlpanel/gui.py:311
 msgid "Restart now"
 msgstr "Ka tsab tujchij xowé'"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "T'ajadh"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:347
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Ok"
 msgstr "Aníts"
 
-#: ../src/jarabe/desktop/activitieslist.py:231
+#: ../src/jarabe/desktop/activitieslist.py:240
 #, python-format
 msgid "Version %s"
 msgstr "Áyláb %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:341
+#: ../src/jarabe/journal/listview.py:411
+msgid "Clear search"
+msgstr "T'oka' an alimtaláb"
+
+#: ../src/jarabe/desktop/activitieslist.py:414
+msgid "No matching activities"
+msgstr "yab wa'at an t'olabchik jawa jumbidh"
+
+#: ../src/jarabe/desktop/activitieslist.py:450
 msgid "Confirm erase"
 msgstr "Tsabtoktsiy ani ka pakuw"
 
-#: ../src/jarabe/desktop/activitieslist.py:359
+#: ../src/jarabe/desktop/activitieslist.py:452
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Tsabtoktsiy ani ka pakuw: ¿A le' ka pakuw %s abal eytsey?"
 
-#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/desktop/activitieslist.py:456
 #: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:280
+#: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Dhaya'"
 
-#: ../src/jarabe/desktop/activitieslist.py:366
-#: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:413
-#: ../src/jarabe/journal/palettes.py:126
+#: ../src/jarabe/desktop/activitieslist.py:459
+#: ../src/jarabe/desktop/activitieslist.py:513
+#: ../src/jarabe/journal/journaltoolbox.py:394
+#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Pakuw"
 
-#: ../src/jarabe/desktop/activitieslist.py:436
+#: ../src/jarabe/desktop/activitieslist.py:529
 msgid "Remove favorite"
 msgstr "Pakuw xa kulbetnal"
 
-#: ../src/jarabe/desktop/activitieslist.py:440
+#: ../src/jarabe/desktop/activitieslist.py:533
 msgid "Make favorite"
 msgstr "Ka taja' xa kulbetnal"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:127
+#: ../src/jarabe/desktop/favoriteslayout.py:197
 msgid "Freeform"
 msgstr "Jólat t'ipoxtaláb"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:215
+#: ../src/jarabe/desktop/favoriteslayout.py:292
 msgid "Ring"
 msgstr "Kwechodhtaláb"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:402
+#: ../src/jarabe/desktop/favoriteslayout.py:438
 msgid "Spiral"
 msgstr "Yunk'íx"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:472
+#: ../src/jarabe/desktop/favoriteslayout.py:506
 msgid "Box"
 msgstr "Balixtaláb"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:515
+#: ../src/jarabe/desktop/favoriteslayout.py:549
 msgid "Triangle"
 msgstr "Óx in ts'uptal"
 
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:322
 msgid "Registration Failed"
 msgstr "K'ibts'ontaláb ti dhuchláts"
 
-#: ../src/jarabe/desktop/favoritesview.py:341
+#: ../src/jarabe/desktop/favoritesview.py:325
 msgid "Registration Successful"
 msgstr "Alwa' an dhuchláts"
 
-#: ../src/jarabe/desktop/favoritesview.py:342
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "You are now registered with your school server."
 msgstr "Xowe' kw'ajat it dhuchadh ti tólmix buk'ul xi ti atáj exobintaláb."
 
-#: ../src/jarabe/desktop/favoritesview.py:644
+#: ../src/jarabe/desktop/favoritesview.py:637
 msgid "Register"
 msgstr "Dhuchantaláb"
 
-#: ../src/jarabe/desktop/favoritesview.py:646
-#: ../src/jarabe/desktop/favoritesview.py:663
+#: ../src/jarabe/desktop/favoritesview.py:639
+#: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register again"
 msgstr "Kit tsab dhuchan"
 
-#: ../src/jarabe/desktop/homebox.py:66
-msgid "Software Update"
-msgstr "Itmedhomtaláb k'al an software"
-
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Ka itmejdha' an t'ojlábchik abal ka tsu'uw max jununúl k'al an ít software"
 
-#: ../src/jarabe/desktop/homebox.py:76
+#: ../src/jarabe/desktop/homebox.py:72
 msgid "Check now"
 msgstr "Ka taka' xok'ij"
 
-#: ../src/jarabe/desktop/homebox.py:197
-msgid "List view"
-msgstr "Tsu'uw ti k'elab"
+#: ../src/jarabe/desktop/homewindow.py:226
+#: ../src/jarabe/frame/zoomtoolbar.py:48
+msgid "Neighborhood"
+msgstr "Át k'imádh"
 
-#: ../src/jarabe/desktop/homebox.py:198
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/homebox.py:253
-msgid "Favorites view"
-msgstr "Tsu'uw xa kulbetnal"
-
-#: ../src/jarabe/desktop/homebox.py:254
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
-
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:89
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
@@ -1178,40 +1184,40 @@ msgstr ""
 "Jun i tsinat exbadh dhuche’ yejentál abal\n"
 " an yab ts’ájlidh tsolóm '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:140
+#: ../src/jarabe/desktop/keydialog.py:137
 msgid "Key Type:"
 msgstr "Alwá' an tsinatbijiláb:"
 
-#: ../src/jarabe/desktop/keydialog.py:160
+#: ../src/jarabe/desktop/keydialog.py:157
 msgid "Authentication Type:"
 msgstr "Ki exla' in chubax éy k'al an dhuche':"
 
-#: ../src/jarabe/desktop/keydialog.py:223
+#: ../src/jarabe/desktop/keydialog.py:220
 msgid "WPA & WPA2 Personal"
 msgstr "WPA ani WPA2 kwetemtal"
 
-#: ../src/jarabe/desktop/keydialog.py:232
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "Wireless Security:"
 msgstr "Yab tsajlidh beletnaxtalab:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Áynanchij"
 
-#: ../src/jarabe/desktop/meshbox.py:87
+#: ../src/jarabe/desktop/meshbox.py:86
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Kit junkun"
 
-#: ../src/jarabe/desktop/networkviews.py:484
+#: ../src/jarabe/desktop/networkviews.py:486
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Polts'oxtaláb Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:616
+#: ../src/jarabe/desktop/networkviews.py:621
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Polts'oxtaláb dhikadh %d"
@@ -1224,52 +1230,73 @@ msgstr "Ibáj ka ejtow ka ts'ot'k'oy k'al an tólmix buk'ul."
 msgid "The server could not complete the request."
 msgstr "An tólmix buk'ul ibáj in ejtow kin putundha' an konoxtaláb."
 
+#: ../src/jarabe/desktop/viewtoolbar.py:80
+msgid "List view"
+msgstr "Tsu'uw ti k'elab"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:81
+msgid "<Ctrl>2"
+msgstr "<Ctrl>2"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#, python-format
+msgid "Search in %s"
+msgstr "aliy ti %s"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:149
+msgid "Favorites view"
+msgstr "Tsu'uw xa kulbetnal"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:150
+msgid "<Ctrl>1"
+msgstr "<Ctrl>1"
+
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:575
+#: ../src/jarabe/frame/activitiestray.py:578
 msgid "Decline"
 msgstr "Yab ka bats'uw"
 
-#: ../src/jarabe/frame/activitiestray.py:523
+#: ../src/jarabe/frame/activitiestray.py:526
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:525
+#: ../src/jarabe/frame/activitiestray.py:528
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:527
+#: ../src/jarabe/frame/activitiestray.py:530
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:545
+#: ../src/jarabe/frame/activitiestray.py:548
 #, python-format
 msgid "%s of %s"
 msgstr "%s k'al %s"
 
-#: ../src/jarabe/frame/activitiestray.py:559
+#: ../src/jarabe/frame/activitiestray.py:562
 #, python-format
 msgid "Transfer from %s"
 msgstr "Wat'ba' ma ti %s"
 
-#: ../src/jarabe/frame/activitiestray.py:570
+#: ../src/jarabe/frame/activitiestray.py:573
 msgid "Accept"
 msgstr "Anits"
 
-#: ../src/jarabe/frame/activitiestray.py:627
-#: ../src/jarabe/frame/activitiestray.py:640
-#: ../src/jarabe/frame/activitiestray.py:758
+#: ../src/jarabe/frame/activitiestray.py:630
+#: ../src/jarabe/frame/activitiestray.py:643
+#: ../src/jarabe/frame/activitiestray.py:761
 msgid "Dismiss"
 msgstr "Ka t'ixk'a'"
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:647
 msgid "The other participant canceled the file transfer"
 msgstr "Xi jún an t’ojnal in t’apiy an dhuchlab xi k’wajatak in abnál"
 
-#: ../src/jarabe/frame/activitiestray.py:692
+#: ../src/jarabe/frame/activitiestray.py:695
 #, python-format
 msgid "Transfer to %s"
 msgstr "Wat'ba' ti pil %s"
@@ -1293,209 +1320,203 @@ msgstr "Ka japiy k'ál"
 msgid "%s clipping"
 msgstr "kotodh ti %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
-msgid "Neighborhood"
-msgstr "Át k'imádh"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:103
+#: ../src/jarabe/intro/window.py:105
 msgid "Name:"
 msgstr "Bijlab:"
 
-#: ../src/jarabe/intro/window.py:133
+#: ../src/jarabe/intro/window.py:135
 msgid "Click to change color:"
 msgstr "Klik abal ka jalk'uy an mukuxtaláb:"
 
-#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
 msgstr "Kuxláb"
 
-#: ../src/jarabe/intro/window.py:211
+#: ../src/jarabe/intro/window.py:213
 msgid "Next"
 msgstr "Okóx"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
-#: ../src/jarabe/journal/palettes.py:64
-#: ../src/jarabe/journal/volumestoolbar.py:130
+#: ../src/jarabe/journal/expandedentry.py:145
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
+#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "Yab bijidh"
 
-#: ../src/jarabe/journal/expandedentry.py:245
+#: ../src/jarabe/journal/expandedentry.py:259
 msgid "No preview"
 msgstr "Yab ók'xidh tejwa'mejdhach"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:273
 #, python-format
 msgid "Kind: %s"
 msgstr "Alwá': %s"
 
-#: ../src/jarabe/journal/expandedentry.py:264
-#: ../src/jarabe/journal/listmodel.py:150
-#: ../src/jarabe/journal/listmodel.py:158
+#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/listmodel.py:151
+#: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr "Yab éxladh"
 
-#: ../src/jarabe/journal/expandedentry.py:265
+#: ../src/jarabe/journal/expandedentry.py:275
 #, python-format
 msgid "Date: %s"
 msgstr "Ajumtal íts': %s"
 
-#: ../src/jarabe/journal/expandedentry.py:266
+#: ../src/jarabe/journal/expandedentry.py:276
 #, python-format
 msgid "Size: %s"
 msgstr "Puwél: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/expandedentry.py:299
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "Yab ajidh tin ajumtal íts'"
 
-#: ../src/jarabe/journal/expandedentry.py:301
+#: ../src/jarabe/journal/expandedentry.py:308
 msgid "Participants:"
 msgstr "Tolmixchik t'ojláb:"
 
-#: ../src/jarabe/journal/expandedentry.py:323
+#: ../src/jarabe/journal/expandedentry.py:349
 msgid "Description:"
 msgstr "Tejwa'mejdhomtaláb:"
 
-#: ../src/jarabe/journal/expandedentry.py:348
+#: ../src/jarabe/journal/expandedentry.py:352
 msgid "Tags:"
 msgstr "Dhuchadh ts'at'at' úw:"
 
-#: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:468
-#: ../src/jarabe/journal/palettes.py:198
-#: ../src/jarabe/journal/volumestoolbar.py:368
+#: ../src/jarabe/journal/journalactivity.py:120
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:218
+#: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "Chudhél dhuchlab"
 
-#: ../src/jarabe/journal/journaltoolbox.py:72
-msgid "Search"
-msgstr "Aliy"
-
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:129
 msgid "Anytime"
 msgstr "Jawa'kits tam k'ij"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:131
 msgid "Today"
 msgstr "Xowe'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Since yesterday"
 msgstr "Ma ti we'el"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Past week"
 msgstr "Ti wat'ey búk a k'icháj"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Past month"
 msgstr "Ti wa'tey a its'"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past year"
 msgstr "Ti wa'tey a tamub"
 
-#: ../src/jarabe/journal/journaltoolbox.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Anyone"
 msgstr "Jawa'kits"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My friends"
 msgstr "U ja'ubchik"
 
-#: ../src/jarabe/journal/journaltoolbox.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "My class"
 msgstr "U exobintalábil"
 
-#: ../src/jarabe/journal/journaltoolbox.py:301
+#: ../src/jarabe/journal/journaltoolbox.py:291
 msgid "Anything"
 msgstr "Jawa'kits"
 
-#: ../src/jarabe/journal/journaltoolbox.py:396
-#: ../src/jarabe/journal/palettes.py:93
+#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Ka k'ot'biy ti"
 
-#: ../src/jarabe/journal/journaltoolbox.py:404
-#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "Tsábedha'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:437
-#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:315
+#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
+#: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "K'ibts'ontaláb tam ti k'ot'biy an otseltaláb. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
-#: ../src/jarabe/journal/volumestoolbar.py:316
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
+#: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "K'ibts'ontaláb"
 
+#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/palettes.py:150
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr "¿A le' ka pákuw abal etsey \"%s\"?"
+
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:512
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Tujtal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date modified"
 msgstr "Ka k'elbay tin ajumtal íts' tam ti jalk'uyat"
 
-#: ../src/jarabe/journal/journaltoolbox.py:541
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by date created"
 msgstr "Ka k'elbay tin ajumtal íts' tam ti ts'ejka'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:542
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by size"
 msgstr "Ka k'elbay k'al in puwél"
 
-#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/journaltoolbox.py:549
 msgid "Sort view"
 msgstr "K'elbadh ti ka tsu'uw"
 
-#: ../src/jarabe/journal/listview.py:317
+#: ../src/jarabe/journal/listview.py:323
 msgid "Your Journal is empty"
 msgstr "A chudhél dhuchlab kwa'ajat jolat"
 
-#: ../src/jarabe/journal/listview.py:320
+#: ../src/jarabe/journal/listview.py:326
 msgid "Your documents folder is empty"
 msgstr "A dhayáb-úwil yab jant’oj in kwa’al"
 
-#: ../src/jarabe/journal/listview.py:322
+#: ../src/jarabe/journal/listview.py:328
 msgid "The device is empty"
 msgstr "An punk’udh eyendhanél k’wajat naptal"
 
-#: ../src/jarabe/journal/listview.py:324
+#: ../src/jarabe/journal/listview.py:330
 msgid "No matching entries"
 msgstr "Yab wa'ats i otseltaláb xi junkudh"
-
-#: ../src/jarabe/journal/listview.py:398
-msgid "Clear search"
-msgstr "T'oka' an alimtaláb"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
@@ -1507,80 +1528,80 @@ msgstr "Áyláb lej biyalits k'al an t'ojláb %s"
 msgid "Do you want to downgrade to version %s"
 msgstr "¿A le' ka punuw an áyláb %s, xi lej biyalits?"
 
-#: ../src/jarabe/journal/modalalert.py:64
+#: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
 msgstr "A chudhél dhuchlab kwa'ajat t'uchat"
 
-#: ../src/jarabe/journal/modalalert.py:68
+#: ../src/jarabe/journal/modalalert.py:69
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 "T'ajchij an alwa'taláb ka pakuw junchik i biyal otseltalab ti chudhél "
 "dhuchlab abal ki jolk'a' abal xi an it otseltaláb."
 
-#: ../src/jarabe/journal/modalalert.py:80
+#: ../src/jarabe/journal/modalalert.py:83
 msgid "Show Journal"
 msgstr "Tejwa'medha' an Chudhél dhuchlab"
 
-#: ../src/jarabe/journal/objectchooser.py:146
+#: ../src/jarabe/journal/objectchooser.py:151
 msgid "Choose an object"
 msgstr "Ka takuy juni eyextaláb"
 
-#: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:410
+#: ../src/jarabe/journal/objectchooser.py:156
+#: ../src/jarabe/view/viewsource.py:414
 msgid "Close"
 msgstr "Mápuy"
 
-#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Resume with"
 msgstr "Tsab tujchij k'al"
 
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:77
 msgid "Start with"
 msgstr "Tujchij k'al"
 
-#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
 msgid "No activity to start entry"
 msgstr "Yab elan juni t'ojláb abal ki tujchij an otseltaláb"
 
-#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/journal/palettes.py:114
 msgid "Send to"
 msgstr "Abna' abal"
 
-#: ../src/jarabe/journal/palettes.py:121
+#: ../src/jarabe/journal/palettes.py:123
 msgid "View Details"
 msgstr "Ka tsu'uchij in alwa'tal"
 
-#: ../src/jarabe/journal/palettes.py:160
+#: ../src/jarabe/journal/palettes.py:180
 msgid "Entries without a file cannot be sent."
 msgstr "An otseltaláb max yab in kwa'al jun i dhuchlab ibáj ki ejtow ka abna'."
 
-#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:306
+#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
+#: ../src/jarabe/journal/volumestoolbar.py:300
 msgid "Entries without a file cannot be copied."
 msgstr "Otseltal max yab k'al jun i dhuchlab ibáj ka ejtow ka k'ot'biy."
 
-#: ../src/jarabe/journal/palettes.py:267
+#: ../src/jarabe/journal/palettes.py:287
 msgid "Clipboard"
 msgstr "Kitnom-úw"
 
-#: ../src/jarabe/journal/palettes.py:322
+#: ../src/jarabe/journal/palettes.py:342
 msgid "No friends present"
 msgstr "Tejé' inbáj wa'ats i ja'ubláb"
 
-#: ../src/jarabe/journal/palettes.py:327
+#: ../src/jarabe/journal/palettes.py:347
 msgid "No valid connection found"
 msgstr "Inbáj elan i uchbidh ts'ot'k'oxtaláb"
 
-#: ../src/jarabe/journal/palettes.py:355
+#: ../src/jarabe/journal/palettes.py:375
 msgid "No activity to resume entry"
 msgstr "Inbáj elan juni i t'ojláb abal ki wichenchij an otseltaláb"
 
-#: ../src/jarabe/journal/volumestoolbar.py:209
+#: ../src/jarabe/journal/volumestoolbar.py:210
 msgid "Documents"
 msgstr "Dhuchlab"
 
-#: ../src/jarabe/journal/volumestoolbar.py:391
-#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:385
+#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB jolat"
@@ -1820,66 +1841,68 @@ msgstr "Ka kaniy a %s"
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> k'ibts'on tin tujtal."
 
-#: ../src/jarabe/view/palettes.py:48
+#: ../src/jarabe/view/palettes.py:50
 msgid "Starting..."
 msgstr "Tujchal..."
 
-#: ../src/jarabe/view/palettes.py:58
+#: ../src/jarabe/view/palettes.py:60
 msgid "Activity failed to start"
 msgstr "Kibts'on an t'ojláb tin tujtal"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:91
+#: ../src/jarabe/view/palettes.py:93
 msgid "View Source"
 msgstr "Ki tsu'uw in inkintal"
 
-#: ../src/jarabe/view/palettes.py:102
+#: ../src/jarabe/view/palettes.py:104
 msgid "Stop"
 msgstr "Kuba'"
 
-#: ../src/jarabe/view/palettes.py:139
+#: ../src/jarabe/view/palettes.py:141
 msgid "Start new"
 msgstr "Tujuw it"
 
-#: ../src/jarabe/view/palettes.py:180
-msgid "Show contents"
-msgstr "Tejwa'medha' in alwa'"
-
-#: ../src/jarabe/view/palettes.py:229
+#: ../src/jarabe/view/palettes.py:223
 msgctxt "Volume"
 msgid "Remove"
 msgstr "pakuw"
 
-#: ../src/jarabe/view/viewsource.py:263
+#: ../src/jarabe/view/viewsource.py:267
 msgid "Instance Source"
 msgstr "Ok'oxbedha' an inkintal"
 
-#: ../src/jarabe/view/viewsource.py:312
+#: ../src/jarabe/view/viewsource.py:316
 msgid "Source"
 msgstr "Inkintal"
 
-#: ../src/jarabe/view/viewsource.py:374
+#: ../src/jarabe/view/viewsource.py:378
 msgid "Activity Bundle Source"
 msgstr "In inkintal an t'i'e' t'ojláb"
 
-#: ../src/jarabe/view/viewsource.py:393
+#: ../src/jarabe/view/viewsource.py:397
 msgid "Sugar Toolkit Source"
 msgstr "Inkintal a Sugar Toolkit"
 
-#: ../src/jarabe/view/viewsource.py:400
+#: ../src/jarabe/view/viewsource.py:404
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "Tsu'uw an dhuche' inkintal: %s"
 
-#: ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:405
 #, python-format
 msgid "View source: %r"
 msgstr "Tsu'uw an dhuche' inkintal: %r"
 
-#: ../src/jarabe/util/emulator.py:40
+#: ../src/jarabe/util/emulator.py:41
 msgid "Sugar in a window"
 msgstr "Sugar ti jun i met'nib"
+
+#~ msgid "Software update"
+#~ msgstr "Itmedha' an software"
+
+#~ msgid "Search"
+#~ msgstr "Aliy"
 
 # wenk'oxtaláb káw  traducciones
 # directorio=carpeta
