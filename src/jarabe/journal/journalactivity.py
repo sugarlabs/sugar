@@ -336,9 +336,6 @@ class JournalActivity(JournalWindow):
         metadata['bundle_id'] = bundle.get_bundle_id()
         model.write(metadata)
 
-    def search_grab_focus(self):
-        self._main_toolbox.search_entry.grab_focus()
-
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
         if event.changed_mask & Gdk.WindowState.ICONIFIED:
@@ -376,12 +373,10 @@ class JournalActivity(JournalWindow):
     def set_active_volume(self, mount):
         self._volumes_toolbar.set_active_volume(mount)
 
-    def focus_search(self):
-        """Become visible and give focus to the search entry
-        """
+    def show_journal(self):
+        """Become visible and show main view"""
         self.reveal()
         self.show_main_view()
-        self.search_grab_focus()
 
 
 def get_journal():

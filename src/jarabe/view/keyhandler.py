@@ -160,7 +160,7 @@ class KeyHandler(object):
         session.get_session_manager().shutdown()
 
     def handle_open_search(self, event_time):
-        journalactivity.get_journal().focus_search()
+        journalactivity.get_journal().show_journal()
 
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
