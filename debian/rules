@@ -120,7 +120,7 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-suga
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch), x11-xserver-utils
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
