@@ -41,6 +41,19 @@ class GestureHandler(object):
         self._frame = frame
 
         self._gesture_grabber = SugarExt.GestureGrabber()
+        self._controller = []
+
+        screen = Gdk.Screen.get_default()
+        screen.connect('size-changed', self.__size_changed_cb)
+
+        self._add_controller()
+
+    def __size_changed_cb(self, screen):
+        self._add_controller()
+
+    def _add_controller(self):
+        for controller in self._controller:
+            self._gesture_grabber.remove(controller)
 
         rectangle = self._create_rectangle(0, 0, Gdk.Screen.width(),
                                            style.GRID_CELL_SIZE)
