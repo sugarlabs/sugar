@@ -19,6 +19,7 @@
 from gettext import gettext as _
 import logging
 import hashlib
+import uuid
 
 import dbus
 import glib
@@ -30,7 +31,6 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics import palette
 from sugar3.graphics.menuitem import MenuItem
-from sugar3.util import unique_id
 from sugar3 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon
@@ -347,7 +347,7 @@ class WirelessNetworkView(EventPulsingIcon):
         logging.debug('Creating new connection for SSID %r', self._ssid)
         settings = Settings()
         settings.connection.id = self._display_name
-        settings.connection.uuid = unique_id()
+        settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-wireless'
         settings.wireless.ssid = self._ssid
 

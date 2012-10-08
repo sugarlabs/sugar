@@ -21,6 +21,7 @@
 from gettext import gettext as _
 import logging
 import os
+import uuid
 
 import dbus
 import dbus.service
@@ -31,7 +32,6 @@ import ctypes
 
 from sugar3 import dispatch
 from sugar3 import env
-from sugar3.util import unique_id
 
 NM_STATE_UNKNOWN = 0
 NM_STATE_ASLEEP = 10
@@ -991,7 +991,7 @@ def create_gsm_connection(username, password, number, apn, pin):
 
     settings.connection.id = GSM_CONNECTION_ID
     settings.connection.type = NM_CONNECTION_TYPE_GSM
-    settings.connection.uuid = unique_id()
+    settings.connection.uuid = str(uuid.uuid4())
     settings.connection.autoconnect = False
     settings.ip4_config.method = 'auto'
     settings.serial.baud = GSM_BAUD_RATE

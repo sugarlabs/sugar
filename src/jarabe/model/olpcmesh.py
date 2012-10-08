@@ -17,12 +17,12 @@
 import logging
 
 import dbus
+import uuid
 from gi.repository import GObject
 
 from jarabe.model import network
 from jarabe.model.network import Settings
 from jarabe.model.network import OlpcMesh as OlpcMeshSettings
-from sugar3.util import unique_id
 
 _XS_ANYCAST = '\xc0\x27\xc0\x27\xc0\x00'
 
@@ -177,7 +177,7 @@ class OlpcMeshManager(object):
             settings.ip4_config.method = 'link-local'
         settings.connection.id = self._get_connection_id(channel, xs_hosted)
         settings.connection.autoconnect = False
-        settings.connection.uuid = unique_id()
+        settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-olpc-mesh'
         network.add_connection(settings,
                                reply_handler=self._add_connection_reply_cb,

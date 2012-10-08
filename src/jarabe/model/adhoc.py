@@ -17,11 +17,11 @@
 import logging
 
 import dbus
+import uuid
 from gi.repository import GObject
 
 from jarabe.model import network
 from jarabe.model.network import Settings
-from sugar3.util import unique_id
 from jarabe.model.network import IP4Config
 
 
@@ -187,7 +187,7 @@ class AdHocManager(GObject.GObject):
         ssid = 'Ad-hoc Network %d' % (channel,)
         settings = Settings()
         settings.connection.id = self._get_connection_id(channel)
-        settings.connection.uuid = unique_id()
+        settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-wireless'
         settings.connection.autoconnect = False
         settings.wireless.ssid = dbus.ByteArray(ssid)
