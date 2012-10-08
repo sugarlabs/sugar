@@ -120,7 +120,7 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-suga
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gobject (>= 2.15.0), python-gtk2, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
@@ -128,7 +128,7 @@ CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar-$(pkgbranch), python-suga
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-hippocanvas, python-gobject (>= 2.15.0), python-gtk2, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, python-gtksourceview2, python-xapian, python-gst0.10
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-gconf | python-gnome2 (<= 2.22.3-2)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , python-xklavier
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec)
