@@ -55,10 +55,16 @@ class Layout(object):
 class ViewLayout(Layout):
     def __init__(self):
         self._grid = None
+        self._width = 0
+        self._height = 0
 
     def setup(self, allocation, owner_icon, activity_icon=None):
         if self._grid is not None:
-            return
+            if self._width == allocation.width and \
+                    self._height == allocation.height:
+                return
+        self._width = allocation.width
+        self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
         self._grid.connect('child-changed', self.__grid_child_changed_cb)

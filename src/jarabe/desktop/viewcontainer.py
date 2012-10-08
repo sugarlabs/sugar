@@ -17,6 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+
 from gi.repository import Gtk
 
 
@@ -62,6 +64,7 @@ class ViewContainer(Gtk.Container):
                 self.queue_resize()
 
     def do_size_allocate(self, allocation):
+        logging.debug('==> Viewcontainer: w=%s h=%s', allocation.width, allocation.height)
         self.set_allocation(allocation)
         if self._owner_icon:
             self._layout.setup(allocation, self._owner_icon,
