@@ -28,14 +28,11 @@ class GestureHandler(object):
     '''Handling gestures to show/hide the frame
 
     We use SugarExt.GestureGrabber to listen for
-    gestures on the root window. Swiping from
-    the frame area towards the center does reveal
-    the Frame. Swiping towards one of the edges
-    does hide the Frame.
+    gestures on the root window. We use a toggle
+    gesture to either hide or show the frame: Swiping
+    from the frame area at the top towards the center
+    does reveal the Frame or hide it.
     '''
-
-    _HIDE = 0
-    _SHOW = 1
 
     def __init__(self, frame):
         self._frame = frame
@@ -55,97 +52,26 @@ class GestureHandler(object):
         for controller in self._controller:
             self._gesture_grabber.remove(controller)
 
-        rectangle = self._create_rectangle(0, 0, Gdk.Screen.width(),
-                                           style.GRID_CELL_SIZE)
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.DOWN)
-        swipe.connect('swipe-ended', self.__top_show_cb)
+        self._track_gesture_for_area(SugarGestures.SwipeDirectionFlags.DOWN,
+                                     0, 0, Gdk.Screen.width(),
+                                     style.GRID_CELL_SIZE)
+
+    def _track_gesture_for_area(self, directions, x, y, width, height):
+        rectangle = Gdk.Rectangle()
+        rectangle.x = x
+        rectangle.y = y
+        rectangle.width = width
+        rectangle.height = height
+        swipe = SugarGestures.SwipeController(directions=directions)
+        swipe.connect('swipe-ended', self.__swipe_ended_cb)
         self._gesture_grabber.add(swipe, rectangle)
+        self._controller.append(swipe)
 
-        rectangle = self._create_rectangle(0, 0, Gdk.Screen.width(),
-                                           style.GRID_CELL_SIZE * 2)
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.UP)
-        swipe.connect('swipe-ended', self.__top_hide_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-            0, Gdk.Screen.height() - style.GRID_CELL_SIZE,
-            Gdk.Screen.width(), style.GRID_CELL_SIZE)
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.UP)
-        swipe.connect('swipe-ended', self.__bottom_show_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-            0, Gdk.Screen.height() - style.GRID_CELL_SIZE * 2,
-            Gdk.Screen.width(), style.GRID_CELL_SIZE * 2)
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.DOWN)
-        swipe.connect('swipe-ended', self.__bottom_hide_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-                0, 0, style.GRID_CELL_SIZE, Gdk.Screen.height())
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.RIGHT)
-        swipe.connect('swipe-ended', self.__left_show_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-                0, 0, style.GRID_CELL_SIZE * 2, Gdk.Screen.height())
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.LEFT)
-        swipe.connect('swipe-ended', self.__left_hide_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-                Gdk.Screen.width() - style.GRID_CELL_SIZE, 0,
-                style.GRID_CELL_SIZE, Gdk.Screen.height())
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.LEFT)
-        swipe.connect('swipe-ended', self.__right_show_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-        rectangle = self._create_rectangle( \
-                Gdk.Screen.width() - style.GRID_CELL_SIZE * 2, 0,
-                style.GRID_CELL_SIZE * 2, Gdk.Screen.height())
-        swipe = SugarGestures.SwipeController( \
-            directions=SugarGestures.SwipeDirectionFlags.RIGHT)
-        swipe.connect('swipe-ended', self.__right_hide_cb)
-        self._gesture_grabber.add(swipe, rectangle)
-
-    def _create_rectangle(self, x, y, width, height):
-        rect = Gdk.Rectangle()
-        rect.x = x
-        rect.y = y
-        rect.width = width
-        rect.height = height
-        return rect
-
-    def __top_show_cb(self, controller, event_direction):
-        self._frame.show()
-
-    def __top_hide_cb(self, controller, event_direction):
-        self._frame.hide()
-
-    def __bottom_show_cb(self, controller, event_direction):
-        self._frame.show()
-
-    def __bottom_hide_cb(self, controller, event_direction):
-        self._frame.hide()
-
-    def __left_show_cb(self, controller, event_direction):
-        self._frame.show()
-
-    def __left_hide_cb(self, controller, event_direction):
-        self._frame.hide()
-
-    def __right_show_cb(self, controller, event_direction):
-        self._frame.show()
-
-    def __right_hide_cb(self, controller, event_direction):
-        self._frame.hide()
+    def __swipe_ended_cb(self, controller, event_direction):
+        if self._frame.is_visible():
+            self._frame.hide()
+        else:
+            self._frame.show()
 
 
 def setup(frame):
