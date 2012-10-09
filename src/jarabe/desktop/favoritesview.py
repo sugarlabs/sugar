@@ -50,6 +50,7 @@ from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
 from jarabe.desktop import favoriteslayout
 from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.util.normalize import normalize_string
 
 
 _logger = logging.getLogger('FavoritesView')
@@ -312,8 +313,9 @@ class FavoritesView(ViewContainer):
         query = query.strip()
         for icon in self.get_children():
             if icon not in [self._owner_icon, self._activity_icon]:
-                activity_name = icon.get_activity_name().lower()
-                if activity_name.find(query) > -1:
+                activity_name = icon.get_activity_name().decode('utf-8')
+                normalized_name = normalize_string(activity_name)
+                if normalized_name.find(query) > -1:
                     icon.alpha = 1.0
                 else:
                     icon.alpha = 0.33

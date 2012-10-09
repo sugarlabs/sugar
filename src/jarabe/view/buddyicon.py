@@ -19,6 +19,7 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.icon import EventIcon
 
 from jarabe.view.buddymenu import BuddyMenu
+from jarabe.util.normalize import normalize_string
 
 
 _FILTERED_ALPHA = 0.33
@@ -68,6 +69,8 @@ class BuddyIcon(EventIcon):
                 palette.props.icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
-        self._filtered = (self._buddy.get_nick().lower().find(query) == -1) \
+        normalized_name = normalize_string(
+            self._buddy.get_nick().decode('utf-8'))
+        self._filtered = (normalized_name.find(query) == -1) \
                 and not self._buddy.is_owner()
         self._update_color()

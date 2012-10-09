@@ -32,15 +32,16 @@ from sugar3.graphics import style
 from sugar3.graphics import palette
 from sugar3.graphics.menuitem import MenuItem
 
-from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
+from jarabe.desktop.snowflakelayout import SnowflakeLayout
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
+from jarabe.util.normalize import normalize_string
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -588,7 +589,7 @@ class MeshBox(ViewContainer):
                 net.props.paused = False
 
     def _toolbar_query_changed_cb(self, toolbar, query):
-        self._query = query.lower()
+        self._query = normalize_string(query.decode('utf-8'))
         for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)

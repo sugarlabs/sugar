@@ -35,6 +35,7 @@ from sugar3 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog
+from jarabe.util.normalize import normalize_string
 from jarabe.model import network
 from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
@@ -369,7 +370,8 @@ class WirelessNetworkView(EventPulsingIcon):
                                             self.get_first_ap().model)
 
     def set_filter(self, query):
-        self._filtered = self._display_name.lower().find(query) == -1
+        normalized_name = normalize_string(self._display_name.decode('utf-8'))
+        self._filtered = normalized_name.find(query) == -1
         self._update_icon()
         self._update_color()
 

@@ -36,6 +36,7 @@ from sugar3.graphics.alert import Alert
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
 from jarabe.journal import misc
+from jarabe.util.normalize import normalize_string
 
 
 class ActivitiesTreeView(Gtk.TreeView):
@@ -153,14 +154,15 @@ class ActivitiesTreeView(Gtk.TreeView):
         of matching activities.
 
         """
-        self._query = query.lower()
+        self._query = normalize_string(query.decode('utf-8'))
         self.get_model().refilter()
         matches = self.get_model().iter_n_children(None)
         return matches
 
     def __model_visible_cb(self, model, tree_iter, data):
         title = model[tree_iter][ListModel.COLUMN_TITLE]
-        return title is not None and title.lower().find(self._query) > -1
+        title = normalize_string(title.decode('utf-8'))
+        return title is not None and title.find(self._query) > -1
 
 
 class ListModel(Gtk.TreeModelSort):

@@ -27,6 +27,7 @@ from sugar3.graphics.icon import Icon
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
+from jarabe.util.normalize import normalize_string
 
 _FAVORITES_VIEW = 0
 _LIST_VIEW = 1
@@ -100,7 +101,7 @@ class HomeBox(Gtk.VBox):
             panel.set_section_view_auto_close()
 
     def __toolbar_query_changed_cb(self, toolbar, query):
-        self._query = query.lower()
+        self._query = normalize_string(query.decode('utf-8'))
         self._list_view.set_filter(self._query)
         self._favorites_box.set_filter(self._query)
 
