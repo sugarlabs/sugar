@@ -64,7 +64,6 @@ class ViewContainer(Gtk.Container):
                 self.queue_resize()
 
     def do_size_allocate(self, allocation):
-        logging.debug('==> Viewcontainer: w=%s h=%s', allocation.width, allocation.height)
         self.set_allocation(allocation)
         if self._owner_icon:
             self._layout.setup(allocation, self._owner_icon,
