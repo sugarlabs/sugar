@@ -29,6 +29,7 @@ from gi.repository import GdkPixbuf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
@@ -349,28 +350,20 @@ class FavoritesView(ViewContainer):
                 icon.set_resume_mode(self._resume_mode)
 
 
-class ActivityIcon(EventIcon):
+class ActivityIcon(CanvasIcon):
     __gtype_name__ = 'SugarFavoriteActivityIcon'
 
     _BORDER_WIDTH = style.zoom(9)
     _MAX_RESUME_ENTRIES = 5
 
     def __init__(self, activity_info):
-        EventIcon.__init__(self, cache=True,
-                           file_name=activity_info.get_icon())
+        CanvasIcon.__init__(self, cache=True,
+                            file_name=activity_info.get_icon())
 
         self._activity_info = activity_info
         self._journal_entries = []
         self._resume_mode = True
 
-        self._prelight_state = False
-        self._active_state = False
-
-        self.connect('enter-notify-event', self.__enter_notify_event_cb)
-        self.connect('leave-notify-event', self.__leave_notify_event_cb)
-        self.connect('button-press-event', self.__button_press_event_cb)
-        self.palette_invoker.connect('right-click',
-                                     self.__invoker_right_click_cb)
         self.connect_after('button-release-event',
                            self.__button_release_event_cb)
 
@@ -432,8 +425,7 @@ class ActivityIcon(EventIcon):
         palette = FavoritePalette(self._activity_info, self._journal_entries)
         palette.connect('activate', self.__palette_activate_cb)
         palette.connect('entry-activate', self.__palette_entry_activate_cb)
-        palette.connect('popup', self.__palette_popup_cb)
-        palette.connect('popdown', self.__palette_popdown_cb)
+        self.connect_to_palette_pop_events(palette)
         return palette
 
     def __palette_activate_cb(self, palette):
@@ -442,64 +434,17 @@ class ActivityIcon(EventIcon):
     def __palette_entry_activate_cb(self, palette, metadata):
         self._resume(metadata)
 
-    def __palette_popup_cb(self, palette):
-        self._prelight_state = Gtk.StateFlags.PRELIGHT
-        self._active_state = False
-        self._update_states()
-
-    def __palette_popdown_cb(self, palette):
-        self._prelight_state = False
-        self._active_state = False
-        self._update_states()
-
-    def __enter_notify_event_cb(self, icon, event):
-        self._prelight_state = Gtk.StateFlags.PRELIGHT
-        self._update_states()
-
-    def __leave_notify_event_cb(self, icon, event):
-        if self.palette.is_up():
-            return
-        self._prelight_state = False
-        self._update_states()
-
-    def __button_press_event_cb(self, icon, event):
-        self._active_state = Gtk.StateFlags.ACTIVE
-        self._update_states()
-
-    def _update_states(self):
-        state = self._active_state if self._active_state \
-            else self._prelight_state
-        self.set_state(state)
-
-    def do_draw(self, cr):
-        allocation = self.get_allocation()
-        context = self.get_style_context()
-        Gtk.render_background(context, cr, 0, 0,
-                              allocation.width,
-                              allocation.height)
-        Gtk.render_frame(context, cr, 0, 0,
-                         allocation.width,
-                         allocation.height)
-
-        EventIcon.do_draw(self, cr)
-
     def do_get_preferred_width(self):
-        width = EventIcon.do_get_preferred_width(self)[0]
+        width = CanvasIcon.do_get_preferred_width(self)[0]
         width += ActivityIcon._BORDER_WIDTH * 2
         return (width, width)
 
     def do_get_preferred_height(self):
-        height = EventIcon.do_get_preferred_height(self)[0]
+        height = CanvasIcon.do_get_preferred_height(self)[0]
         height += ActivityIcon._BORDER_WIDTH * 2
         return (height, height)
 
-    def __invoker_right_click_cb(self, invoker):
-        self._active_state = False
-        self._update_states()
-
     def __button_release_event_cb(self, icon, event):
-        self._active_state = False
-        self._update_states()
         self._activate()
 
     def _resume(self, journal_entry):
