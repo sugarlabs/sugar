@@ -29,7 +29,7 @@ import simplejson
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 from sugar3.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
@@ -51,9 +51,9 @@ class BuddyList(Gtk.Alignment):
         hbox = Gtk.HBox()
         for buddy in buddies:
             nick_, color = buddy
-            icon = EventIcon(icon_name='computer-xo',
-                             xo_color=XoColor(color),
-                             pixel_size=style.STANDARD_ICON_SIZE)
+            icon = CanvasIcon(icon_name='computer-xo',
+                              xo_color=XoColor(color),
+                              pixel_size=style.STANDARD_ICON_SIZE)
             icon.set_palette(BuddyPalette(buddy))
             hbox.pack_start(icon, True, True, 0)
         self.add(hbox)
@@ -171,7 +171,7 @@ class ExpandedEntry(Gtk.EventBox):
         return keep_icon
 
     def _create_icon(self):
-        icon = EventIcon(file_name=misc.get_icon_name(self._metadata))
+        icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
         icon.connect_after('button-release-event',
                            self._icon_button_release_event_cb)
 

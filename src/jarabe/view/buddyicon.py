@@ -16,7 +16,7 @@
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
@@ -25,10 +25,10 @@ from jarabe.util.normalize import normalize_string
 _FILTERED_ALPHA = 0.33
 
 
-class BuddyIcon(EventIcon):
+class BuddyIcon(CanvasIcon):
     def __init__(self, buddy, pixel_size=style.STANDARD_ICON_SIZE):
-        EventIcon.__init__(self, icon_name='computer-xo',
-                           pixel_size=pixel_size)
+        CanvasIcon.__init__(self, icon_name='computer-xo',
+                            pixel_size=pixel_size)
 
         self._filtered = False
         self._buddy = buddy
@@ -42,7 +42,9 @@ class BuddyIcon(EventIcon):
         self._update_color()
 
     def create_palette(self):
-        return BuddyMenu(self._buddy)
+        palette = BuddyMenu(self._buddy)
+        self.connect_to_palette_pop_events(palette)
+        return palette
 
     def __button_release_event_cb(self, icon, event):
         self.props.palette.popup(immediate=True, state=Palette.SECONDARY)

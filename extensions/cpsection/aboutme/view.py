@@ -21,7 +21,7 @@ from gettext import gettext as _
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor, colors
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
@@ -111,7 +111,7 @@ _NEXT_STROKE_COLOR = 3
 _PREVIOUS_STROKE_COLOR = 4
 
 
-class ColorPicker(EventIcon):
+class ColorPicker(CanvasIcon):
     __gsignals__ = {
         'color-changed': (GObject.SignalFlags.RUN_FIRST,
                           None,
@@ -119,8 +119,8 @@ class ColorPicker(EventIcon):
         }
 
     def __init__(self, picker):
-        EventIcon.__init__(self, icon_name='computer-xo',
-                           pixel_size=style.XLARGE_ICON_SIZE)
+        CanvasIcon.__init__(self, icon_name='computer-xo',
+                            pixel_size=style.XLARGE_ICON_SIZE)
         self._picker = picker
         self._color = None
 

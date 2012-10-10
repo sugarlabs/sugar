@@ -18,7 +18,7 @@
 from gi.repository import Gtk
 
 from sugar3.graphics import style
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry
@@ -38,7 +38,7 @@ class FriendView(Gtk.VBox):
         self.add(self._buddy_icon)
         self._buddy_icon.show()
 
-        self._activity_icon = EventIcon(pixel_size=size)
+        self._activity_icon = CanvasIcon(pixel_size=size)
         self._update_activity()
 
         self._buddy.connect('notify::current-activity',

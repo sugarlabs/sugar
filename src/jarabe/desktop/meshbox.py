@@ -27,7 +27,7 @@ from gi.repository import Gtk
 from gi.repository import GConf
 
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics import style
 from sugar3.graphics import palette
 from sugar3.graphics.menuitem import MenuItem
@@ -55,11 +55,11 @@ _OLPC_MESH_ICON_NAME = 'network-mesh'
 _FILTERED_ALPHA = 0.33
 
 
-class _ActivityIcon(EventIcon):
+class _ActivityIcon(CanvasIcon):
     def __init__(self, model, file_name, xo_color,
                  size=style.STANDARD_ICON_SIZE):
-        EventIcon.__init__(self, file_name=file_name,
-                           xo_color=xo_color, pixel_size=size)
+        CanvasIcon.__init__(self, file_name=file_name,
+                            xo_color=xo_color, pixel_size=size)
         self._model = model
         self.connect('button-release-event',
                      self.__button_release_event_cb)
@@ -89,6 +89,7 @@ class _ActivityIcon(EventIcon):
             item.show()
             p.menu.append(item)
 
+        self.connect_to_palette_pop_events(p)
         return p
 
     def __button_release_event_cb(self, widget, event):
