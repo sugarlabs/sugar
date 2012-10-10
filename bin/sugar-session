@@ -22,6 +22,11 @@ import time
 import subprocess
 import shutil
 
+# Change the default encoding to avoid UnicodeDecodeError
+# http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
     print '%r STARTUP: Starting the shell' % time.time()
     sys.stdout.flush()
