@@ -33,12 +33,6 @@ _logger = logging.getLogger('FavoritesLayout')
 
 _CELL_SIZE = 4
 _BASE_SCALE = 1000
-_INTERMEDIATE_B = (style.STANDARD_ICON_SIZE + style.SMALL_ICON_SIZE) / 2
-_INTERMEDIATE_A = (style.STANDARD_ICON_SIZE + _INTERMEDIATE_B) / 2
-_INTERMEDIATE_C = (_INTERMEDIATE_B + style.SMALL_ICON_SIZE) / 2
-_ICON_SIZES = [style.MEDIUM_ICON_SIZE, style.STANDARD_ICON_SIZE,
-               _INTERMEDIATE_A, _INTERMEDIATE_B, _INTERMEDIATE_C,
-               style.SMALL_ICON_SIZE]
 
 
 class Layout(object):
@@ -279,13 +273,14 @@ class RandomLayout(SpreadLayout):
         self.fixed_positions[child] = (x, y)
 
 
-_MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING + \
-        style.STANDARD_ICON_SIZE * 2
+_MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING
 _MAXIMUM_RADIUS = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
-        style.STANDARD_ICON_SIZE - style.DEFAULT_SPACING
-_ICON_SPACING_FACTORS = [1.5, 1.4, 1.3, 1.2, 1.1, 1.0]
-_SPIRAL_SPACING_FACTORS = [1.5, 1.5, 1.5, 1.4, 1.3, 1.2]
-_MIMIMUM_RADIUS_ENCROACHMENT = 0.75
+        style.DEFAULT_SPACING
+_RING_SPACING_FACTOR = 0.95
+_SPIRAL_SPACING_FACTOR = 0.75
+_RADIUS_GROWTH_FACTOR = 1.25
+_MIMIMUM_RADIUS_PADDING_FACTOR = 0.85
+_MAXIMUM_RADIUS_PADDING_FACTOR = 1.25
 _INITIAL_ANGLE = math.pi
 
 
@@ -308,32 +303,31 @@ class RingLayout(ViewLayout):
     def _calculate_radius_and_icon_size(self, children_count):
         """ Adjust the ring or spiral radius and icon size as needed. """
         self._spiral_mode = False
-        distance = style.MEDIUM_ICON_SIZE + style.DEFAULT_SPACING * \
-            _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.MEDIUM_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi),
-                     _MINIMUM_RADIUS)
-        if radius < _MAXIMUM_RADIUS:
-            return radius, style.MEDIUM_ICON_SIZE
 
-        distance = style.STANDARD_ICON_SIZE + style.DEFAULT_SPACING * \
-            _ICON_SPACING_FACTORS[_ICON_SIZES.index(style.STANDARD_ICON_SIZE)]
-        radius = max(children_count * distance / (2 * math.pi),
-                     _MINIMUM_RADIUS)
-        if radius < _MAXIMUM_RADIUS:
-            return radius, style.STANDARD_ICON_SIZE
-
-        self._spiral_mode = True
-        icon_size = style.STANDARD_ICON_SIZE
+        icon_size = style.MEDIUM_ICON_SIZE
         angle_, radius = self._calculate_angle_and_radius(children_count,
                                                           icon_size)
-        while radius > _MAXIMUM_RADIUS:
-            i = _ICON_SIZES.index(icon_size)
-            if i < len(_ICON_SIZES) - 1:
-                icon_size = _ICON_SIZES[i + 1]
+        if radius <= self._calculate_maximum_radius(icon_size):
+            return radius, icon_size
+        while radius > self._calculate_maximum_radius(icon_size):
+            icon_size -= 1
+            if icon_size <= style.STANDARD_ICON_SIZE:
+                break
+            else:
                 angle_, radius = self._calculate_angle_and_radius(
                     children_count, icon_size)
-            else:
+        if radius <= self._calculate_maximum_radius(icon_size):
+            return radius, icon_size
+
+        self._spiral_mode = True
+        icon_size = style.MEDIUM_ICON_SIZE
+        while radius > self._calculate_maximum_radius(icon_size):
+            if icon_size < style.SMALL_ICON_SIZE:
                 break
+            else:
+                angle_, radius = self._calculate_angle_and_radius(
+                    children_count, icon_size)
+            icon_size -= 1
         return radius, icon_size
 
     def _calculate_position(self, radius, icon_size, icon_index,
@@ -362,18 +356,30 @@ class RingLayout(ViewLayout):
         y = y + (height - icon_size - (style.GRID_CELL_SIZE / 2)) / 2
         return x, y
 
+    def _calculate_maximum_radius(self, icon_size):
+        """ Return the maximum radius including encroachment. """
+        return _MAXIMUM_RADIUS - (icon_size * _MAXIMUM_RADIUS_PADDING_FACTOR)
+
     def _calculate_angle_and_radius(self, icon_count, icon_size):
         """ Based on icon_count and icon_size, calculate radius and angle. """
-        spiral_spacing = _SPIRAL_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
-        icon_spacing = icon_size + style.DEFAULT_SPACING * \
-            _ICON_SPACING_FACTORS[_ICON_SIZES.index(icon_size)]
+        if self._spiral_mode:
+            _icon_spacing_factor = _SPIRAL_SPACING_FACTOR
+        else:
+            _icon_spacing_factor = _RING_SPACING_FACTOR
+
+        # The diagonal width of an icon is used to help stabilise the
+        # spacing of icons across a wide range of circle and spiral
+        # layout sizes:
+        icon_spacing = math.sqrt(icon_size ** 2 * 2) * _icon_spacing_factor + \
+            style.DEFAULT_SPACING
         angle = _INITIAL_ANGLE
-        radius = _MINIMUM_RADIUS - (icon_size * _MIMIMUM_RADIUS_ENCROACHMENT)
+        radius = _MINIMUM_RADIUS + (icon_spacing *
+                                    _MIMIMUM_RADIUS_PADDING_FACTOR)
         for i_ in range(icon_count):
             circumference = radius * 2 * math.pi
             n = circumference / icon_spacing
             angle += (2 * math.pi / n)
-            radius += (float(icon_spacing) * spiral_spacing / n)
+            radius += (float(icon_spacing) * _RADIUS_GROWTH_FACTOR / n)
         return angle, radius
 
     def allocate_children(self, allocation, children):
