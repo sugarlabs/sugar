@@ -35,6 +35,7 @@ import gettext
 import logging
 import sys
 
+from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -51,6 +52,7 @@ try:
 except ImportError:
     logging.debug('Could not load xklavier for keyboard configuration')
 
+GLib.threads_init()
 Gdk.threads_init()
 dbus.glib.threads_init()
 
