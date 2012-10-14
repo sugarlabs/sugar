@@ -457,7 +457,8 @@ class WirelessDeviceView(ToolButton):
             self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                           signal_name='PropertiesChanged',
                                           path=self._active_ap_op,
-                                          dbus_interface=network.NM_ACCESSPOINT_IFACE)
+                                          dbus_interface=network.NM_ACCESSPOINT_IFACE,
+                                          byte_arrays=True)
 
     def __get_active_ap_error_cb(self, err):
         logging.error('Error getting the active access point: %s', err)
