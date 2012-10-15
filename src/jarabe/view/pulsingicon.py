@@ -20,7 +20,7 @@ from gi.repository import GObject
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-from sugar3.graphics.icon import EventIcon
+from sugar3.graphics.icon import CanvasIcon
 
 
 _INTERVAL = 100
@@ -171,7 +171,7 @@ class PulsingIcon(Icon):
             self._palette.destroy()
 
 
-class EventPulsingIcon(EventIcon):
+class EventPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarEventPulsingIcon'
 
     def __init__(self, **kwargs):
@@ -181,7 +181,7 @@ class EventPulsingIcon(EventIcon):
         self._paused = False
         self._pulsing = False
 
-        EventIcon.__init__(self, **kwargs)
+        CanvasIcon.__init__(self, **kwargs)
 
         self.connect('destroy', self.__destroy_cb)
 
