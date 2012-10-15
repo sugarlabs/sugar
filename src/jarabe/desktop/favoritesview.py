@@ -617,6 +617,8 @@ class OwnerIcon(BuddyIcon):
         palette.menu.append(self._register_menu)
         self._register_menu.show()
 
+        self.connect_to_palette_pop_events(palette)
+
         return palette
 
     def __register_activate_cb(self, menuitem):
