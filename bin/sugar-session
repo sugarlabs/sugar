@@ -122,6 +122,11 @@ def setup_gesturehandler_cb():
     from jarabe import frame
     gesturehandler.setup(frame.get_view())
 
+def setup_cursortracker_cb():
+    logging.debug('STARTUP: setup_cursortracker_cb')
+    from jarabe.view import cursortracker
+    cursortracker.setup()
+
 def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     from jarabe.journal import journalactivity
@@ -222,6 +227,7 @@ def bootstrap():
     GObject.idle_add(setup_frame_cb)
     GObject.idle_add(setup_keyhandler_cb)
     GObject.idle_add(setup_gesturehandler_cb)
+    GObject.idle_add(setup_cursortracker_cb)
     GObject.idle_add(setup_journal_cb)
     GObject.idle_add(setup_notification_service_cb)
     GObject.idle_add(setup_file_transfer_cb)
