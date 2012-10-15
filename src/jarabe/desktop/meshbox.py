@@ -49,9 +49,6 @@ from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
 
-_AP_ICON_NAME = 'network-wireless'
-_OLPC_MESH_ICON_NAME = 'network-mesh'
-
 _FILTERED_ALPHA = 0.33
 
 
