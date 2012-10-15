@@ -132,6 +132,8 @@ class WirelessNetworkView(EventPulsingIcon):
                                         self._disconnect_activate_cb)
         p.menu.append(self._disconnect_item)
 
+        self.connect_to_palette_pop_events(p)
+
         return p
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
@@ -498,6 +500,8 @@ class SugarAdhocView(EventPulsingIcon):
         self._disconnect_item.connect('activate',
                                       self.__disconnect_activate_cb)
         palette_.menu.append(self._disconnect_item)
+
+        self.connect_to_palette_pop_events(palette)
 
         return palette_
 
