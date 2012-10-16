@@ -59,6 +59,7 @@ class DeviceView(TrayIcon):
         return palette
 
     def __button_release_event_cb(self, widget, event):
+        self.props.palette.popdown(immediate=True)
         self._input_method.show()
         frame = jarabe.frame.get_view()
         frame.hide()
