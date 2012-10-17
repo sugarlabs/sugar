@@ -36,7 +36,7 @@ class SnowflakeLayout(Gtk.Container):
 
     def do_realize(self):
         # FIXME what is this for?
-        self.set_flags(Gtk.REALIZED)
+        self.set_realized(True)
         self.set_window(self.get_parent_window())
         self.style.attach(self.window)
         for child in self._children.keys():
