@@ -17,6 +17,7 @@
 import math
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.graphics import style
 
@@ -35,10 +36,8 @@ class SnowflakeLayout(Gtk.Container):
         self._children = {}
 
     def do_realize(self):
-        # FIXME what is this for?
         self.set_realized(True)
         self.set_window(self.get_parent_window())
-        self.style.attach(self.window)
         for child in self._children.keys():
             child.set_parent_window(self.get_parent_window())
         self.queue_resize()
@@ -78,12 +77,20 @@ class SnowflakeLayout(Gtk.Container):
         requisition.height = size
 
     def do_size_allocate(self, allocation):
+        self.set_allocation(allocation)
+
         r = self._get_radius()
         index = 0
 
         for child, centered in self._children.items():
-            child_width, child_height = child.size_request()
-            rect = (0, 0, child_width, child_height)
+            child_request = child.size_request()
+            child_width, child_height = \
+                child_request.width, child_request.height
+            rect = Gdk.Rectangle()
+            rect.x = 0
+            rect.y = 0
+            rect.width = child_width
+            rect.height = child_height
 
             width = allocation.width - child_width
             height = allocation.height - child_height
@@ -110,15 +117,19 @@ class SnowflakeLayout(Gtk.Container):
         radius = int(_BASE_DISTANCE + _CHILDREN_FACTOR * self._nflakes)
         for child, centered in self._children.items():
             if centered:
-                child_w, child_h = child.size_request()
-                radius += max(child_w, child_h) / 2
+                child_request = child.size_request()
+                child_width, child_height = \
+                    child_request.width, child_request.height
+                radius += max(child_width, child_height) / 2
 
         return radius
 
     def _calculate_size(self):
         thickness = 0
         for child in self._children.keys():
-            width, height = child.size_request()
-            thickness = max(thickness, max(width, height))
+            child_request = child.size_request()
+            child_width, child_height = \
+                child_request.width, child_request.height
+            thickness = max(thickness, max(child_width, child_height))
 
         return self._get_radius() * 2 + thickness
