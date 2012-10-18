@@ -135,11 +135,11 @@ class HomeWindow(Gtk.Window):
             self._activate_view(shell.get_model().zoom_level)
 
     def __key_press_event_cb(self, window, event):
-        if not self._toolbar.search_entry.has_focus():
-            self._toolbar.search_entry.grab_focus()
-
         if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
             self._home_box.set_resume_mode(False)
+        else:
+            if not self._toolbar.search_entry.has_focus():
+                self._toolbar.search_entry.grab_focus()
         return False
 
     def __key_release_event_cb(self, window, event):
