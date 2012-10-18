@@ -53,6 +53,8 @@ class MainToolbar(Gtk.Toolbar):
                                               'system-search')
         self._search_entry.add_clear_button()
         self._search_entry.set_width_chars(25)
+        text = _('Search in %s') % _('Settings')
+        self._search_entry.set_placeholder_text(text)
         self._search_entry.connect('changed', self.__search_entry_changed_cb)
         tool_item.add(self._search_entry)
         self._search_entry.show()
