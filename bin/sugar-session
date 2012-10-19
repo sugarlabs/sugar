@@ -229,7 +229,6 @@ def bootstrap():
     GObject.idle_add(setup_frame_cb)
     GObject.idle_add(setup_keyhandler_cb)
     GObject.idle_add(setup_gesturehandler_cb)
-    GObject.idle_add(setup_cursortracker_cb)
     GObject.idle_add(setup_journal_cb)
     GObject.idle_add(setup_notification_service_cb)
     GObject.idle_add(setup_file_transfer_cb)
@@ -297,6 +296,7 @@ def main():
     # even when we initially get blocked on the intro screen
     GObject.idle_add(unfreeze_dcon_cb)
 
+    GObject.idle_add(setup_cursortracker_cb)
     # make sure we have the correct cursor in the intro screen
     # TODO #3204
     if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
