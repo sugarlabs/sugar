@@ -33,17 +33,13 @@ class FriendIcon(TrayIcon):
         self._buddy = buddy
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.cache_palette = False
-        self.connect('button-release-event', self.__button_release_event_cb)
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         palette = BuddyMenu(self._buddy)
         palette.props.icon_visible = False
         palette.set_group_id('frame')
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        self.palette_invoker.notify_right_click()
-        return True
 
 
 class FriendsTray(VTray):

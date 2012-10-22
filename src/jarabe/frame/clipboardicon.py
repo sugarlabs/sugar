@@ -40,6 +40,7 @@ class ClipboardIcon(RadioToolButton):
         RadioToolButton.__init__(self, group=group)
 
         self.props.palette_invoker = FrameWidgetInvoker(self)
+        self.palette_invoker.props.toggle_palette = True
 
         self._cb_object = cb_object
         self.owns_clipboard = False
@@ -62,19 +63,12 @@ class ClipboardIcon(RadioToolButton):
 
         child = self.get_child()
         child.connect('drag_data_get', self._drag_data_get_cb)
-        child.connect('button-release-event', self.__button_release_event_cb)
         self.connect('notify::active', self._notify_active_cb)
 
     def create_palette(self):
         palette = ClipboardMenu(self._cb_object)
         palette.set_group_id('frame')
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        if event.button != 1:
-            return False
-        self.props.palette_invoker.notify_right_click()
-        return False
 
     def get_object_id(self):
         return self._cb_object.get_id()
