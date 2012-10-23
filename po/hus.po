@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-27 00:33-0400\n"
-"PO-Revision-Date: 2012-09-28 19:27+0200\n"
-"Last-Translator: magalhy2012 <Magaly1827@hotmail.com>\n"
+"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"PO-Revision-Date: 2012-10-23 08:28+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hus\n"
 "MIME-Version: 1.0\n"
@@ -320,7 +320,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "Kwetem tsapík abatnomtaláb (in punk'unchál in ejatál an mulkux tsapláb)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "Itmedhomtaláb k'al an software"
 
@@ -437,6 +437,10 @@ msgstr "Jilk'onal %(hour)d:%(min).2d"
 msgid "Charged"
 msgstr "T'uchat"
 
+#: ../extensions/deviceicon/frame.py:57
+msgid "Show my keyboard"
+msgstr "Tejwa'médha' an ni'k'adh dhuche'"
+
 #: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
@@ -444,24 +448,24 @@ msgstr "IP belil: %s"
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:495
+#: ../src/jarabe/desktop/networkviews.py:130
+#: ../src/jarabe/desktop/networkviews.py:499
 msgid "Disconnect"
 msgstr "Ka t'ixk'a ti ts'ot'k'oxtaláb"
 
 #: ../extensions/deviceicon/network.py:105
 #: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connecting..."
 msgstr "In t'sot'k'oyal..."
 
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../src/jarabe/desktop/networkviews.py:248
+#: ../src/jarabe/desktop/networkviews.py:545
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connected"
 msgstr "T'sot'k'odh"
 
@@ -490,9 +494,9 @@ msgid "Please wait..."
 msgstr "Pakwlanchij aychij jún we'..."
 
 #: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:490
-#: ../src/jarabe/desktop/networkviews.py:624
+#: ../src/jarabe/desktop/networkviews.py:126
+#: ../src/jarabe/desktop/networkviews.py:494
+#: ../src/jarabe/desktop/networkviews.py:630
 msgid "Connect"
 msgstr "Ka ts'ot'k'oy"
 
@@ -501,12 +505,12 @@ msgid "Disconnected"
 msgstr "Yab ts'ot'k'odh"
 
 #: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "T'apiy"
@@ -552,20 +556,20 @@ msgstr "Ka tsab met'a' an ajixtaláb k'al an t'ojojóxtaláb."
 msgid "Check your configuration."
 msgstr "Ka tsab met'a' an t'ojojóxtaláb."
 
-#: ../extensions/deviceicon/network.py:606
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
 msgstr "Dhikab polts'oxtaláb"
 
-#: ../extensions/deviceicon/network.py:651
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Dhikab polts'oxtaláb %s"
 
-#: ../extensions/deviceicon/network.py:782
+#: ../extensions/deviceicon/network.py:783
 msgid "No GSM connection available."
 msgstr "Yab wa'ats i ts'ot'k'oxtaláb GSM."
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:784
 msgid "Create a connection in the control panel."
 msgstr "Inkiy jun i ts'ot'k'oxtaláb ti ok'nom mét'nib."
 
@@ -1053,7 +1057,7 @@ msgstr "An jalk'untaláb in yejenchal ka tsab tujchij"
 msgid "Cancel changes"
 msgstr "T'apiy axi a jalk'uy"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Talbel"
 
@@ -1061,112 +1065,124 @@ msgstr "Talbel"
 msgid "Restart now"
 msgstr "Ka tsab tujchij xowé'"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr "aliy ti %s"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "T'ojojoxtalábchik"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "T'ajadh"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/keydialog.py:101
 msgid "Ok"
 msgstr "Aníts"
 
-#: ../src/jarabe/desktop/activitieslist.py:240
+#: ../src/jarabe/desktop/activitieslist.py:243
 #, python-format
 msgid "Version %s"
 msgstr "Áyláb %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:341
+#: ../src/jarabe/desktop/activitieslist.py:344
 #: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "T'oka' an alimtaláb"
 
-#: ../src/jarabe/desktop/activitieslist.py:414
+#: ../src/jarabe/desktop/activitieslist.py:417
 msgid "No matching activities"
 msgstr "yab wa'at an t'olabchik jawa jumbidh"
 
-#: ../src/jarabe/desktop/activitieslist.py:450
+#: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
 msgstr "Tsabtoktsiy ani ka pakuw"
 
-#: ../src/jarabe/desktop/activitieslist.py:452
+#: ../src/jarabe/desktop/activitieslist.py:455
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Tsabtoktsiy ani ka pakuw: ¿A le' ka pakuw %s abal eytsey?"
 
-#: ../src/jarabe/desktop/activitieslist.py:456
+#: ../src/jarabe/desktop/activitieslist.py:459
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Dhaya'"
 
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/desktop/activitieslist.py:513
-#: ../src/jarabe/journal/journaltoolbox.py:394
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:516
+#: ../src/jarabe/journal/journaltoolbox.py:393
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Pakuw"
 
-#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/desktop/activitieslist.py:532
 msgid "Remove favorite"
 msgstr "Pakuw xa kulbetnal"
 
-#: ../src/jarabe/desktop/activitieslist.py:533
+#: ../src/jarabe/desktop/activitieslist.py:536
 msgid "Make favorite"
 msgstr "Ka taja' xa kulbetnal"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:197
+#: ../src/jarabe/desktop/favoriteslayout.py:200
 msgid "Freeform"
 msgstr "Jólat t'ipoxtaláb"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:292
+#: ../src/jarabe/desktop/favoriteslayout.py:296
 msgid "Ring"
 msgstr "Kwechodhtaláb"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:438
+#: ../src/jarabe/desktop/favoriteslayout.py:450
 msgid "Spiral"
 msgstr "Yunk'íx"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:506
+#: ../src/jarabe/desktop/favoriteslayout.py:518
 msgid "Box"
 msgstr "Balixtaláb"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:549
+#: ../src/jarabe/desktop/favoriteslayout.py:561
 msgid "Triangle"
 msgstr "Óx in ts'uptal"
 
-#: ../src/jarabe/desktop/favoritesview.py:322
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Failed"
 msgstr "K'ibts'ontaláb ti dhuchláts"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Registration Successful"
 msgstr "Alwa' an dhuchláts"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "You are now registered with your school server."
 msgstr "Xowe' kw'ajat it dhuchadh ti tólmix buk'ul xi ti atáj exobintaláb."
 
-#: ../src/jarabe/desktop/favoritesview.py:637
+#: ../src/jarabe/desktop/favoritesview.py:611
 msgid "Register"
 msgstr "Dhuchantaláb"
 
-#: ../src/jarabe/desktop/favoritesview.py:639
-#: ../src/jarabe/desktop/favoritesview.py:653
+#: ../src/jarabe/desktop/favoritesview.py:613
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register again"
 msgstr "Kit tsab dhuchan"
 
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Ka itmejdha' an t'ojlábchik abal ka tsu'uw max jununúl k'al an ít software"
 
-#: ../src/jarabe/desktop/homebox.py:72
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "Ka taka' xok'ij"
 
@@ -1175,7 +1191,7 @@ msgstr "Ka taka' xok'ij"
 msgid "Neighborhood"
 msgstr "Át k'imádh"
 
-#: ../src/jarabe/desktop/keydialog.py:89
+#: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
@@ -1184,40 +1200,40 @@ msgstr ""
 "Jun i tsinat exbadh dhuche’ yejentál abal\n"
 " an yab ts’ájlidh tsolóm '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:137
+#: ../src/jarabe/desktop/keydialog.py:146
 msgid "Key Type:"
 msgstr "Alwá' an tsinatbijiláb:"
 
-#: ../src/jarabe/desktop/keydialog.py:157
+#: ../src/jarabe/desktop/keydialog.py:166
 msgid "Authentication Type:"
 msgstr "Ki exla' in chubax éy k'al an dhuche':"
 
-#: ../src/jarabe/desktop/keydialog.py:220
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA ani WPA2 kwetemtal"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "Yab tsajlidh beletnaxtalab:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:81
-#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/desktop/meshbox.py:79
+#: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Áynanchij"
 
-#: ../src/jarabe/desktop/meshbox.py:86
+#: ../src/jarabe/desktop/meshbox.py:84
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Kit junkun"
 
-#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:490
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Polts'oxtaláb Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:621
+#: ../src/jarabe/desktop/networkviews.py:627
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Polts'oxtaláb dhikadh %d"
@@ -1237,11 +1253,6 @@ msgstr "Tsu'uw ti k'elab"
 #: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#, python-format
-msgid "Search in %s"
-msgstr "aliy ti %s"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
@@ -1402,103 +1413,104 @@ msgid "Tags:"
 msgstr "Dhuchadh ts'at'at' úw:"
 
 #: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:218
 #: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "Chudhél dhuchlab"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Anytime"
 msgstr "Jawa'kits tam k'ij"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Today"
 msgstr "Xowe'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Since yesterday"
 msgstr "Ma ti we'el"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past week"
 msgstr "Ti wat'ey búk a k'icháj"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past month"
 msgstr "Ti wa'tey a its'"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Past year"
 msgstr "Ti wa'tey a tamub"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Anyone"
 msgstr "Jawa'kits"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "My friends"
 msgstr "U ja'ubchik"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My class"
 msgstr "U exobintalábil"
 
-#: ../src/jarabe/journal/journaltoolbox.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:290
 msgid "Anything"
 msgstr "Jawa'kits"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:376
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Ka k'ot'biy ti"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/journaltoolbox.py:384
 #: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "Tsábedha'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/journaltoolbox.py:417
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
 #: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "K'ibts'ontaláb tam ti k'ot'biy an otseltaláb. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
 #: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "K'ibts'ontaláb"
 
-#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "¿A le' ka pákuw abal etsey \"%s\"?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Tujtal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:537
 msgid "Sort by date modified"
 msgstr "Ka k'elbay tin ajumtal íts' tam ti jalk'uyat"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date created"
 msgstr "Ka k'elbay tin ajumtal íts' tam ti ts'ejka'"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by size"
 msgstr "Ka k'elbay k'al in puwél"
 
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort view"
 msgstr "K'elbadh ti ka tsu'uw"
 
