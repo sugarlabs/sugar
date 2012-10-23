@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-05 00:34-0400\n"
-"PO-Revision-Date: 2012-10-07 23:22+0200\n"
+"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"PO-Revision-Date: 2012-10-23 08:08+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
@@ -308,7 +308,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "Automatic power management (increases battery life)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "Software Update"
 
@@ -435,24 +435,24 @@ msgstr "IP address: %s"
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:495
+#: ../src/jarabe/desktop/networkviews.py:130
+#: ../src/jarabe/desktop/networkviews.py:499
 msgid "Disconnect"
 msgstr "Disconnect"
 
 #: ../extensions/deviceicon/network.py:105
 #: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connecting..."
 msgstr "Connecting..."
 
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../src/jarabe/desktop/networkviews.py:248
+#: ../src/jarabe/desktop/networkviews.py:545
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connected"
 msgstr "Connected"
 
@@ -481,9 +481,9 @@ msgid "Please wait..."
 msgstr "Please wait..."
 
 #: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:490
-#: ../src/jarabe/desktop/networkviews.py:624
+#: ../src/jarabe/desktop/networkviews.py:126
+#: ../src/jarabe/desktop/networkviews.py:494
+#: ../src/jarabe/desktop/networkviews.py:630
 msgid "Connect"
 msgstr "Connect"
 
@@ -492,8 +492,8 @@ msgid "Disconnected"
 msgstr "Disconnected"
 
 #: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
@@ -543,20 +543,20 @@ msgstr "Check the Number configuration."
 msgid "Check your configuration."
 msgstr "Check your configuration."
 
-#: ../extensions/deviceicon/network.py:606
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
 msgstr "Mesh Network"
 
-#: ../extensions/deviceicon/network.py:651
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Mesh Network %s"
 
-#: ../extensions/deviceicon/network.py:782
+#: ../extensions/deviceicon/network.py:783
 msgid "No GSM connection available."
 msgstr "No GSM connection available."
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:784
 msgid "Create a connection in the control panel."
 msgstr "Create a connection in the control panel."
 
@@ -989,7 +989,7 @@ msgstr "Changes require restart"
 msgid "Cancel changes"
 msgstr "Cancel changes"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Later"
 
@@ -997,57 +997,69 @@ msgstr "Later"
 msgid "Restart now"
 msgstr "Restart now"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr "Search in %s"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "Settings"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "Done"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:335
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/keydialog.py:101
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:241
+#: ../src/jarabe/desktop/activitieslist.py:243
 #, python-format
 msgid "Version %s"
 msgstr "Version %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:342
+#: ../src/jarabe/desktop/activitieslist.py:344
 #: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "Clear search"
 
-#: ../src/jarabe/desktop/activitieslist.py:415
+#: ../src/jarabe/desktop/activitieslist.py:417
 msgid "No matching activities"
 msgstr "No matching activities"
 
-#: ../src/jarabe/desktop/activitieslist.py:451
+#: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
 msgstr "Confirm erase"
 
-#: ../src/jarabe/desktop/activitieslist.py:453
+#: ../src/jarabe/desktop/activitieslist.py:455
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Confirm erase: Do you want to permanently erase %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:457
+#: ../src/jarabe/desktop/activitieslist.py:459
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Keep"
 
-#: ../src/jarabe/desktop/activitieslist.py:460
-#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:516
 #: ../src/jarabe/journal/journaltoolbox.py:393
 #: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Erase"
 
-#: ../src/jarabe/desktop/activitieslist.py:530
+#: ../src/jarabe/desktop/activitieslist.py:532
 msgid "Remove favorite"
 msgstr "Remove favorite"
 
-#: ../src/jarabe/desktop/activitieslist.py:534
+#: ../src/jarabe/desktop/activitieslist.py:536
 msgid "Make favorite"
 msgstr "Make favorite"
 
@@ -1057,51 +1069,51 @@ msgid "Freeform"
 msgstr "Freeform"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:295
+#: ../src/jarabe/desktop/favoriteslayout.py:296
 msgid "Ring"
 msgstr "Ring"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:437
+#: ../src/jarabe/desktop/favoriteslayout.py:450
 msgid "Spiral"
 msgstr "Spiral"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:505
+#: ../src/jarabe/desktop/favoriteslayout.py:518
 msgid "Box"
 msgstr "Box"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:548
+#: ../src/jarabe/desktop/favoriteslayout.py:561
 msgid "Triangle"
 msgstr "Triangle"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Failed"
 msgstr "Registration Failed"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Registration Successful"
 msgstr "Registration Successful"
 
-#: ../src/jarabe/desktop/favoritesview.py:330
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "You are now registered with your school server."
 msgstr "You are now registered with your school server."
 
-#: ../src/jarabe/desktop/favoritesview.py:619
+#: ../src/jarabe/desktop/favoritesview.py:611
 msgid "Register"
 msgstr "Register"
 
-#: ../src/jarabe/desktop/favoritesview.py:621
-#: ../src/jarabe/desktop/favoritesview.py:635
+#: ../src/jarabe/desktop/favoritesview.py:613
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register again"
 msgstr "Register again"
 
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "Update your activities to ensure compatibility with your new software"
 
-#: ../src/jarabe/desktop/homebox.py:72
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "Check now"
 
@@ -1110,7 +1122,7 @@ msgstr "Check now"
 msgid "Neighborhood"
 msgstr "Neighborhood"
 
-#: ../src/jarabe/desktop/keydialog.py:89
+#: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
@@ -1119,40 +1131,40 @@ msgstr ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:137
+#: ../src/jarabe/desktop/keydialog.py:146
 msgid "Key Type:"
 msgstr "Key Type:"
 
-#: ../src/jarabe/desktop/keydialog.py:157
+#: ../src/jarabe/desktop/keydialog.py:166
 msgid "Authentication Type:"
 msgstr "Authentication Type:"
 
-#: ../src/jarabe/desktop/keydialog.py:220
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Personal"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "Wireless Security:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/desktop/meshbox.py:79
 #: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Resume"
 
-#: ../src/jarabe/desktop/meshbox.py:86
+#: ../src/jarabe/desktop/meshbox.py:84
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Join"
 
-#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:490
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc Network %d"
 
-#: ../src/jarabe/desktop/networkviews.py:621
+#: ../src/jarabe/desktop/networkviews.py:627
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Mesh Network %d"
@@ -1172,12 +1184,6 @@ msgstr "List view"
 #: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:82
-#, python-format
-msgid "Search in %s"
-msgstr "Search in %s"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
