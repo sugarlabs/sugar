@@ -77,7 +77,8 @@ class ExpandedEntry(Gtk.EventBox):
         # Create a two-column body
         body_box = Gtk.EventBox()
         body_box.set_border_width(style.DEFAULT_SPACING)
-        body_box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        body_box.modify_bg(Gtk.StateType.NORMAL,
+                           style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(body_box, True, True, 0)
         body = Gtk.HBox()
         body_box.add(body)
@@ -325,7 +326,8 @@ class ExpandedEntry(Gtk.EventBox):
         vbox.pack_start(halign, False, False, 0)
 
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                   Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         text_buffer = Gtk.TextBuffer()
         text_view = Gtk.TextView()
