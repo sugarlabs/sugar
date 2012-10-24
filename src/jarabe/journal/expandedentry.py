@@ -340,8 +340,8 @@ class ExpandedEntry(Gtk.EventBox):
         scrolled_window.add(text_view)
         vbox.pack_start(scrolled_window, True, True, 0)
 
-        # text_view.text_view_widget.connect('focus-out-event',
-        #                  self._description_focus_out_event_cb)
+        text_view.connect('focus-out-event',
+                          self._description_tags_focus_out_event_cb)
 
         return vbox, text_view
 
@@ -359,10 +359,7 @@ class ExpandedEntry(Gtk.EventBox):
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
 
-    def _description_focus_out_event_cb(self, text_view, event):
-        self._update_entry()
-
-    def _tags_focus_out_event_cb(self, text_view, event):
+    def _description_tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
 
     def _update_entry(self, needs_update=False):
