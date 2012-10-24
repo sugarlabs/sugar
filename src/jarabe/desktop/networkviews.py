@@ -86,12 +86,11 @@ class WirelessNetworkView(EventPulsingIcon):
                                           (xocolor.colors[index][0],
                                            xocolor.colors[index][1]))
 
-        self.connect('button-release-event', self.__button_release_event_cb)
-
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
 
+        self.props.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
@@ -331,10 +330,6 @@ class WirelessNetworkView(EventPulsingIcon):
 
     def __connect_activate_cb(self, icon):
         self._connect()
-
-    def __button_release_event_cb(self, icon, event):
-        self._palette.popup(immediate=True,
-                            state=palette.Palette.SECONDARY)
 
     def _connect(self):
         # Activate existing connection, if there is one

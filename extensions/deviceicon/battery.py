@@ -69,14 +69,10 @@ class DeviceView(TrayIcon):
         self._model = DeviceModel(battery)
         self.palette = BatteryPalette(glib.markup_escape_text(_('My Battery')))
         self.palette.set_group_id('frame')
-        self.connect('button-release-event', self.__button_release_event_cb)
+        self.palette_invoker.props.toggle_palette = True
         self._model.connect('updated',
                             self.__battery_status_changed_cb)
         self._update_info()
-
-    def __button_release_event_cb(self, widget, event):
-        self.palette_invoker.notify_right_click()
-        return True
 
     def _update_info(self):
         name = _ICON_NAME

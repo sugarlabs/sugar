@@ -64,8 +64,7 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-
-        self.connect('button-release-event', self.__button_release_event_cb)
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
@@ -85,10 +84,6 @@ class DeviceView(TrayIcon):
         menu_item.show()
 
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        self.palette_invoker.notify_right_click()
-        return True
 
     def __show_contents_cb(self, menu_item):
         journal = journalactivity.get_journal()

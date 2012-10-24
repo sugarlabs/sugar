@@ -46,15 +46,13 @@ class DeviceView(TrayIcon):
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.props.toggle_palette = True
 
         self._model = DeviceModel()
         self._model.connect('notify::level', self.__speaker_status_changed_cb)
         self._model.connect('notify::muted', self.__speaker_status_changed_cb)
 
         self.connect('draw', self.__draw_cb)
-
-        self._icon_widget.connect('button-release-event',
-                                  self.__button_release_event_cb)
 
         self._update_info()
 
@@ -77,13 +75,6 @@ class DeviceView(TrayIcon):
         self.icon.props.icon_name = get_icon_state(name, current_level,
                                                    step=-1)
         self.icon.props.xo_color = xo_color
-
-    def __button_release_event_cb(self, widget, event):
-        if event.button != 1:
-            return False
-
-        self.palette_invoker.notify_right_click()
-        return True
 
     def __draw_cb(self, *args):
         self._update_info()

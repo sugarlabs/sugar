@@ -55,6 +55,9 @@ class ControlPanel(Gtk.Window):
         self.set_resizable(False)
         self.set_modal(True)
 
+        self.set_can_focus(True)
+        self.connect('key-press-event', self.__key_press_event_cb)
+
         self._toolbar = None
         self._canvas = None
         self._table = None
@@ -89,6 +92,10 @@ class ControlPanel(Gtk.Window):
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
+
+    def grab_focus(self):
+        # overwrite grab focus in order to grab focus on the view
+        self._main_view.get_child().grab_focus()
 
     def _set_canvas(self, canvas):
         if self._canvas:
@@ -186,8 +193,18 @@ class ControlPanel(Gtk.Window):
         self._table.show()
         self._scrolledwindow.show()
         entry = self._main_toolbar.get_entry()
-        entry.grab_focus()
         entry.set_text('')
+        entry.connect('icon-press', self.__clear_icon_pressed_cb)
+        self.grab_focus()
+
+    def __key_press_event_cb(self, window, event):
+        entry = self._main_toolbar.get_entry()
+        if not entry.has_focus():
+            entry.grab_focus()
+        return False
+
+    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+        self.grab_focus()
 
     def _update(self, query):
         for option in self._options:

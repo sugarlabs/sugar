@@ -45,19 +45,15 @@ class SpeechDeviceView(TrayIcon):
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.props.toggle_palette = True
+
         self._manager = speech.get_speech_manager()
-        self._icon_widget.connect('button-release-event',
-                                  self.__button_release_event_cb)
 
     def create_palette(self):
         label = glib.markup_escape_text(_('Speech'))
         palette = SpeechPalette(label, manager=self._manager)
         palette.set_group_id('frame')
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        self.palette_invoker.notify_right_click()
-        return True
 
 
 class SpeechPalette(Palette):
