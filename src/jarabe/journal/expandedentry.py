@@ -189,11 +189,6 @@ class ExpandedEntry(Gtk.EventBox):
     def _create_title(self):
         entry = Gtk.Entry()
         entry.connect('focus-out-event', self._title_focus_out_event_cb)
-
-        bg_color = style.COLOR_WHITE.get_gdk_color()
-        entry.modify_bg(Gtk.StateType.INSENSITIVE, bg_color)
-        entry.modify_base(Gtk.StateType.INSENSITIVE, bg_color)
-
         return entry
 
     def _create_date(self):
