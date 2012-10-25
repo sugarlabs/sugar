@@ -185,10 +185,6 @@ class AboutMe(SectionView):
 
     def _setup_nick(self):
         self._nick_entry = Gtk.Entry()
-        self._nick_entry.modify_bg(Gtk.StateType.INSENSITIVE,
-                                   style.COLOR_WHITE.get_gdk_color())
-        self._nick_entry.modify_base(Gtk.StateType.INSENSITIVE,
-                                     style.COLOR_WHITE.get_gdk_color())
         self._nick_entry.set_width_chars(25)
         self._nick_box.pack_start(self._nick_entry, False, True, 0)
         self._nick_entry.show()

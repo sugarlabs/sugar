@@ -52,8 +52,6 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self._query = ''
 
-        self.modify_base(Gtk.StateType.NORMAL,
-                         style.COLOR_WHITE.get_gdk_color())
         self.set_headers_visible(False)
         selection = self.get_selection()
         selection.set_mode(Gtk.SelectionMode.NONE)

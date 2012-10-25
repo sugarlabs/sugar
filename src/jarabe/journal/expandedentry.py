@@ -77,7 +77,8 @@ class ExpandedEntry(Gtk.EventBox):
         # Create a two-column body
         body_box = Gtk.EventBox()
         body_box.set_border_width(style.DEFAULT_SPACING)
-        body_box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
+        body_box.modify_bg(Gtk.StateType.NORMAL,
+                           style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(body_box, True, True, 0)
         body = Gtk.HBox()
         body_box.add(body)
@@ -189,11 +190,6 @@ class ExpandedEntry(Gtk.EventBox):
     def _create_title(self):
         entry = Gtk.Entry()
         entry.connect('focus-out-event', self._title_focus_out_event_cb)
-
-        bg_color = style.COLOR_WHITE.get_gdk_color()
-        entry.modify_bg(Gtk.StateType.INSENSITIVE, bg_color)
-        entry.modify_base(Gtk.StateType.INSENSITIVE, bg_color)
-
         return entry
 
     def _create_date(self):
@@ -330,7 +326,8 @@ class ExpandedEntry(Gtk.EventBox):
         vbox.pack_start(halign, False, False, 0)
 
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                   Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         text_buffer = Gtk.TextBuffer()
         text_view = Gtk.TextView()
@@ -340,8 +337,8 @@ class ExpandedEntry(Gtk.EventBox):
         scrolled_window.add(text_view)
         vbox.pack_start(scrolled_window, True, True, 0)
 
-        # text_view.text_view_widget.connect('focus-out-event',
-        #                  self._description_focus_out_event_cb)
+        text_view.connect('focus-out-event',
+                          self._description_tags_focus_out_event_cb)
 
         return vbox, text_view
 
@@ -359,10 +356,7 @@ class ExpandedEntry(Gtk.EventBox):
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
 
-    def _description_focus_out_event_cb(self, text_view, event):
-        self._update_entry()
-
-    def _tags_focus_out_event_cb(self, text_view, event):
+    def _description_tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
 
     def _update_entry(self, needs_update=False):
