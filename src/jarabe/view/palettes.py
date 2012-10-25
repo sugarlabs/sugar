@@ -83,33 +83,35 @@ class CurrentActivityPalette(BasePalette):
         if title and title != activity_name:
             self.props.secondary_text = glib.markup_escape_text(title)
 
-        menu_item = MenuItem(_('Resume'), 'activity-start')
+        self.menu_box = Gtk.VBox()
+
+        menu_item = PaletteMenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        self.menu_box.pack_start(menu_item, True, True, 0)
 
         # TODO: share-with, keep
 
-        menu_item = MenuItem(_('View Source'), 'view-source')
-        # TODO Make this accelerator translatable
-        menu_item.props.accelerator = '<Alt><Shift>v'
+        menu_item = PaletteMenuItem(_('View Source'), 'view-source')
         menu_item.connect('activate', self.__view_source__cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        self.menu_box.pack_start(menu_item, True, True, 0)
 
-        separator = Gtk.SeparatorMenuItem()
-        self.menu.append(separator)
+        separator = PaletteMenuItemSeparator()
+        self.menu_box.pack_start(menu_item, True, True, 0)
         separator.show()
 
-        menu_item = MenuItem(_('Stop'), 'activity-stop')
+        menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
         menu_item.connect('activate', self.__stop_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        self.menu_box.pack_start(menu_item, True, True, 0)
+
+        self.set_content(self.menu_box)
+        self.menu_box.show_all()
 
     def __resume_activate_cb(self, menu_item):
+        self.popdown(immediate=True)
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
 
     def __view_source__cb(self, menu_item):
+        self.popdown(immediate=True)
         setup_view_source(self._home_activity)
         shell_model = shell.get_model()
         if self._home_activity is not shell_model.get_active_activity():
@@ -117,6 +119,7 @@ class CurrentActivityPalette(BasePalette):
                 Gtk.get_current_event_time())
 
     def __stop_activate_cb(self, menu_item):
+        self.popdown(immediate=True)
         self._home_activity.get_window().close(1)
 
 
