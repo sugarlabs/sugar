@@ -200,6 +200,7 @@ class JournalPalette(BasePalette):
         self.connect('popup', self.__popup_cb)
 
     def __open_activate_cb(self, menu_item):
+        self.popdown(immediate=True)
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
