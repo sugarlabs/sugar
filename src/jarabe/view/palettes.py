@@ -252,6 +252,7 @@ class VolumePalette(Palette):
         self.connect('popup', self.__popup_cb)
 
     def __unmount_activate_cb(self, menu_item):
+        self.popdown(immediate=True)
         flags = 0
         mount_operation = Gtk.MountOperation( \
             parent=self.content_box.get_toplevel())
