@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-27 00:33-0400\n"
-"PO-Revision-Date: 2012-10-07 21:39+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"PO-Revision-Date: 2012-10-24 03:29+0200\n"
+"Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -297,7 +297,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "自动省电管理(延长电池寿命)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "软件更新"
 
@@ -409,6 +409,10 @@ msgstr "剩余电量 %(hour)d:%(min).2d"
 msgid "Charged"
 msgstr "充电完毕"
 
+#: ../extensions/deviceicon/frame.py:57
+msgid "Show my keyboard"
+msgstr "显示我的键盘"
+
 #: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
@@ -416,8 +420,8 @@ msgstr "IP 位址：%s"
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:495
+#: ../src/jarabe/desktop/networkviews.py:130
+#: ../src/jarabe/desktop/networkviews.py:499
 msgid "Disconnect"
 msgstr "断开连接"
 
@@ -427,18 +431,18 @@ msgstr "断开连接"
 # have a good mapping
 #: ../extensions/deviceicon/network.py:105
 #: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connecting..."
 msgstr "正在连线…"
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../src/jarabe/desktop/networkviews.py:248
+#: ../src/jarabe/desktop/networkviews.py:545
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connected"
 msgstr "已连接"
 
@@ -467,9 +471,9 @@ msgid "Please wait..."
 msgstr "请稍候…"
 
 #: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:490
-#: ../src/jarabe/desktop/networkviews.py:624
+#: ../src/jarabe/desktop/networkviews.py:126
+#: ../src/jarabe/desktop/networkviews.py:494
+#: ../src/jarabe/desktop/networkviews.py:630
 msgid "Connect"
 msgstr "连接"
 
@@ -478,12 +482,12 @@ msgid "Disconnected"
 msgstr "已切断"
 
 #: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "取消"
@@ -529,21 +533,21 @@ msgstr "请检查号码配置。"
 msgid "Check your configuration."
 msgstr "请检查你的配置。"
 
-#: ../extensions/deviceicon/network.py:606
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
 msgstr "无线网格网络"
 
-#: ../extensions/deviceicon/network.py:651
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 #, python-format,
 msgid "Mesh Network %s"
 msgstr "无线网格网络 %s"
 
-#: ../extensions/deviceicon/network.py:782
+#: ../extensions/deviceicon/network.py:783
 msgid "No GSM connection available."
 msgstr "没有可用的GSM连接。"
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:784
 msgid "Create a connection in the control panel."
 msgstr "在控制面板中创建新的连接。"
 
@@ -964,7 +968,7 @@ msgstr "更改需重启系统"
 msgid "Cancel changes"
 msgstr "取消更改"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "稍后"
 
@@ -972,34 +976,46 @@ msgstr "稍后"
 msgid "Restart now"
 msgstr "立即重启"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr "在 %s 中搜索"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "设置"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "完成"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/keydialog.py:101
 msgid "Ok"
 msgstr "确定"
 
-#: ../src/jarabe/desktop/activitieslist.py:240
+#: ../src/jarabe/desktop/activitieslist.py:243
 #, python-format
 msgid "Version %s"
 msgstr "版本%s"
 
-#: ../src/jarabe/desktop/activitieslist.py:341
+#: ../src/jarabe/desktop/activitieslist.py:344
 #: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "清除搜索"
 
-#: ../src/jarabe/desktop/activitieslist.py:414
+#: ../src/jarabe/desktop/activitieslist.py:417
 msgid "No matching activities"
 msgstr "没有匹配的活动"
 
-#: ../src/jarabe/desktop/activitieslist.py:450
+#: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
 msgstr "确认删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:452
+#: ../src/jarabe/desktop/activitieslist.py:455
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "确认删除：是否永久删除 %s ？"
@@ -1008,31 +1024,31 @@ msgstr "确认删除：是否永久删除 %s ？"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:456
+#: ../src/jarabe/desktop/activitieslist.py:459
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "保存"
 
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/desktop/activitieslist.py:513
-#: ../src/jarabe/journal/journaltoolbox.py:394
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:516
+#: ../src/jarabe/journal/journaltoolbox.py:393
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/desktop/activitieslist.py:532
 msgid "Remove favorite"
 msgstr "移除偏好"
 
-#: ../src/jarabe/desktop/activitieslist.py:533
+#: ../src/jarabe/desktop/activitieslist.py:536
 msgid "Make favorite"
 msgstr "指定偏好"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:197
+#: ../src/jarabe/desktop/favoriteslayout.py:200
 msgid "Freeform"
 msgstr "自由形式"
 
@@ -1040,54 +1056,54 @@ msgstr "自由形式"
 # if it means the content of the layout, maybe "铃声"
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:292
+#: ../src/jarabe/desktop/favoriteslayout.py:296
 msgid "Ring"
 msgstr "环形"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:438
+#: ../src/jarabe/desktop/favoriteslayout.py:450
 msgid "Spiral"
 msgstr "螺旋形"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:506
+#: ../src/jarabe/desktop/favoriteslayout.py:518
 msgid "Box"
 msgstr "方形"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:549
+#: ../src/jarabe/desktop/favoriteslayout.py:561
 msgid "Triangle"
 msgstr "三角形"
 
-#: ../src/jarabe/desktop/favoritesview.py:322
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Failed"
 msgstr "注册失败"
 
-#: ../src/jarabe/desktop/favoritesview.py:325
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Registration Successful"
 msgstr "注册成功"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "You are now registered with your school server."
 msgstr "您已成功注册到校园服务器。"
 
-#: ../src/jarabe/desktop/favoritesview.py:637
+#: ../src/jarabe/desktop/favoritesview.py:611
 msgid "Register"
 msgstr "注册"
 
-#: ../src/jarabe/desktop/favoritesview.py:639
-#: ../src/jarabe/desktop/favoritesview.py:653
+#: ../src/jarabe/desktop/favoritesview.py:613
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register again"
 msgstr "重新注册"
 
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "更新活动使其与新版软件兼容"
 
-#: ../src/jarabe/desktop/homebox.py:72
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "立即检查"
 
@@ -1096,7 +1112,7 @@ msgstr "立即检查"
 msgid "Neighborhood"
 msgstr "邻居"
 
-#: ../src/jarabe/desktop/keydialog.py:89
+#: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
@@ -1105,41 +1121,41 @@ msgstr ""
 "无线网络“%s”\n"
 "需要一个无限密钥。"
 
-#: ../src/jarabe/desktop/keydialog.py:137
+#: ../src/jarabe/desktop/keydialog.py:146
 msgid "Key Type:"
 msgstr "密钥类型:"
 
-#: ../src/jarabe/desktop/keydialog.py:157
+#: ../src/jarabe/desktop/keydialog.py:166
 msgid "Authentication Type:"
 msgstr "验证类型:"
 
-#: ../src/jarabe/desktop/keydialog.py:220
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA＆WPA2个人"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "无线安全："
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:81
-#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/desktop/meshbox.py:79
+#: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "恢复"
 
-#: ../src/jarabe/desktop/meshbox.py:86
+#: ../src/jarabe/desktop/meshbox.py:84
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "加入"
 
-#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:490
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc网络%d"
 
-#: ../src/jarabe/desktop/networkviews.py:621
+#: ../src/jarabe/desktop/networkviews.py:627
 #, python-format
 #, python-format,
 msgid "Mesh Network %d"
@@ -1160,11 +1176,6 @@ msgstr "列表模式"
 #: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#, python-format
-msgid "Search in %s"
-msgstr "在 %s 中搜索"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
@@ -1326,83 +1337,84 @@ msgid "Tags:"
 msgstr "标签:"
 
 #: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:218
 #: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "日志"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Anytime"
 msgstr "任何时间"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Today"
 msgstr "今天"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Since yesterday"
 msgstr "一天内"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past week"
 msgstr "上一周"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past month"
 msgstr "上个月"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Past year"
 msgstr "上一年"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Anyone"
 msgstr "任何人"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "My friends"
 msgstr "我的好友"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My class"
 msgstr "我的类别"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:290
 msgid "Anything"
 msgstr "所有类型"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:376
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "复制到"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/journaltoolbox.py:384
 #: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "复制"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/journaltoolbox.py:417
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
 #: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "复制条目出错。%s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
 #: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "错误"
 
-#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
@@ -1410,24 +1422,24 @@ msgstr "你想永久删除“%s”？"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "启动"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:537
 msgid "Sort by date modified"
 msgstr "按修改日期排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date created"
 msgstr "按新建日期排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by size"
 msgstr "按大小排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort view"
 msgstr "排序方式"
 
