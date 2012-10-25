@@ -138,12 +138,14 @@ class ActivityPalette(Palette):
 
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_TRANSPARENT.get_svg()))
-        menu_item = MenuItem(text_label=_('Start new'),
-                             file_name=activity_info.get_icon(),
-                             xo_color=xo_color)
+        self.menu_box = Gtk.VBox()
+        menu_item = PaletteMenuItem(text_label=_('Start new'),
+                                    file_name=activity_info.get_icon(),
+                                    xo_color=xo_color)
         menu_item.connect('activate', self.__start_activate_cb)
-        self.menu.append(menu_item)
-        menu_item.show()
+        self.menu_box.pack_end(menu_item, True, True, 0)
+        self.set_content(self.menu_box)
+        self.menu_box.show_all()
 
         # TODO: start-with
 
