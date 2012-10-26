@@ -109,6 +109,8 @@ class ExpandedEntry(Gtk.EventBox):
 
         # First body column
         self._preview_box = Gtk.Frame()
+        style_context = self._preview_box.get_style_context()
+        style_context.add_class('journal-preview-box')
         first_column.pack_start(self._preview_box, False, True, 0)
 
         self._technical_box = Gtk.VBox()
