@@ -19,9 +19,12 @@ import hashlib
 from gettext import gettext as _
 
 from gi.repository import Gtk
+from gi.repository import Gdk
+
 import dbus
 
 from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 
 from jarabe.model import network
 
@@ -301,6 +304,9 @@ def create(ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
 
     key_dialog.connect('response', _key_dialog_response_cb)
     key_dialog.show_all()
+    width, height = key_dialog.get_size()
+    key_dialog.move(Gdk.Screen.width() / 2 - width / 2,
+                    style.GRID_CELL_SIZE * 2)
 
 
 def _key_dialog_response_cb(key_dialog, response_id):
