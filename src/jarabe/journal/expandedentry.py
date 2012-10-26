@@ -112,7 +112,7 @@ class ExpandedEntry(Gtk.EventBox):
         first_column.pack_start(self._preview_box, False, True, 0)
 
         self._technical_box = Gtk.VBox()
-        first_column.pack_start(self._technical_box, True, False, 0)
+        first_column.pack_start(self._technical_box, False, False, 0)
 
         # Second body column
         description_box, self._description = self._create_description()
@@ -265,20 +265,22 @@ class ExpandedEntry(Gtk.EventBox):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
-        label = \
-            _('Kind: %s') % (self._metadata.get('mime_type') or \
-                                 _('Unknown'),) + '\n' + \
-            _('Date: %s') % (self._format_date(),) + '\n' + \
+        lines = [
+            _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
+            _('Date: %s') % (self._format_date(),),
             _('Size: %s') % (format_size(int(self._metadata.get(
                         'filesize',
                         model.get_file_size(self._metadata['uid'])))))
+            ]
 
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), label))
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
+        for line in lines:
+            linebox = Gtk.HBox()
+            vbox.pack_start(linebox, False, False, 0)
+
+            text = Gtk.Label()
+            text.set_markup('<span foreground="%s">%s</span>' % (
+                    style.COLOR_BUTTON_GREY.get_html(), line))
+            linebox.pack_start(text, False, False, 0)
 
         return vbox
 
