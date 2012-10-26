@@ -29,7 +29,8 @@ from gi.repository import GdkPixbuf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory
@@ -488,8 +489,6 @@ class ActivityIcon(CanvasIcon):
 class FavoritePalette(ActivityPalette):
     __gtype_name__ = 'SugarFavoritePalette'
 
-    _PALETTE_LABEL_OFFSET = 2
-
     __gsignals__ = {
         'entry-activate': (GObject.SignalFlags.RUN_FIRST,
                            None, ([object])),
@@ -517,22 +516,20 @@ class FavoritePalette(ActivityPalette):
                 icon_file_name = misc.get_icon_name(entry)
                 color = misc.get_icon_color(entry)
 
-                menu_item = MenuItem(text_label=entry['title'],
-                                     file_name=icon_file_name,
-                                     xo_color=color)
+                menu_item = PaletteMenuItem(text_label=entry['title'],
+                                            file_name=icon_file_name,
+                                            xo_color=color)
                 menu_item.connect('activate', self.__resume_entry_cb, entry)
                 menu_items.append(menu_item)
                 menu_item.show()
 
             if journal_entries:
-                separator = Gtk.SeparatorMenuItem()
+                separator = PaletteMenuItemSeparator()
                 menu_items.append(separator)
                 separator.show()
 
             for i in range(0, len(menu_items)):
-                # the first menu_item is the label and the second is a
-                # separator so we need the offset
-                self.menu.insert(menu_items[i], i + self._PALETTE_LABEL_OFFSET)
+                self.menu_box.pack_start(menu_items[i], True, True, 0)
 
     def __resume_entry_cb(self, menu_item, entry):
         if entry is not None:
@@ -608,13 +605,14 @@ class OwnerIcon(BuddyIcon):
         backup_url = client.get_string('/desktop/sugar/backup_url')
 
         if not backup_url:
-            self._register_menu = MenuItem(_('Register'), 'media-record')
+            self._register_menu = PaletteMenuItem(_('Register'),
+                                                  'media-record')
         else:
-            self._register_menu = MenuItem(_('Register again'),
-                                           'media-record')
+            self._register_menu = PaletteMenuItem(_('Register again'),
+                                                  'media-record')
 
         self._register_menu.connect('activate', self.__register_activate_cb)
-        palette.menu.append(self._register_menu)
+        palette.menu_box.pack_end(self._register_menu, True, True, 0)
         self._register_menu.show()
 
         self.connect_to_palette_pop_events(palette)
@@ -625,10 +623,11 @@ class OwnerIcon(BuddyIcon):
         self.emit('register-activate')
 
     def set_registered(self):
-        self.palette.menu.remove(self._register_menu)
-        self._register_menu = MenuItem(_('Register again'), 'media-record')
+        self.palette.menu_box.remove(self._register_menu)
+        self._register_menu = PaletteMenuItem(_('Register again'),
+                                              'media-record')
         self._register_menu.connect('activate', self.__register_activate_cb)
-        self.palette.menu.append(self._register_menu)
+        self.palette.menu_box.pack_end(self._register_menu, True, True, 0)
         self._register_menu.show()
 
 

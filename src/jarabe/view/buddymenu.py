@@ -24,7 +24,7 @@ import glib
 import dbus
 
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenuitem import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 
 from jarabe.model import shell
@@ -45,9 +45,13 @@ class BuddyMenu(Palette):
         Palette.__init__(self, None,
                          primary_text=glib.markup_escape_text(nick),
                          icon=buddy_icon)
+        self.menu_box = Gtk.VBox()
+        self.set_content(self.menu_box)
+        self.menu_box.show_all()
         self._invite_menu = None
         self._active_activity_changed_hid = None
-        self.get_menu().connect('destroy', self.__destroy_cb)
+        # Fixme: we need to make the widget accessible through the Palette API
+        self._widget.connect('destroy', self.__destroy_cb)
 
         self._buddy.connect('notify::nick', self.__buddy_notify_nick_cb)
 
@@ -64,18 +68,17 @@ class BuddyMenu(Palette):
 
     def _add_buddy_items(self):
         if friends.get_model().has_buddy(self._buddy):
-            menu_item = MenuItem(_('Remove friend'), 'list-remove')
+            menu_item = PaletteMenuItem(_('Remove friend'), 'list-remove')
             menu_item.connect('activate', self._remove_friend_cb)
         else:
-            menu_item = MenuItem(_('Make friend'), 'list-add')
+            menu_item = PaletteMenuItem(_('Make friend'), 'list-add')
             menu_item.connect('activate', self._make_friend_cb)
 
-        self.menu.append(menu_item)
-        menu_item.show()
+        self.menu_box.pack_start(menu_box, True, True, 0)
 
-        self._invite_menu = MenuItem('')
+        self._invite_menu = PaletteMenuItem('')
         self._invite_menu.connect('activate', self._invite_friend_cb)
-        self.menu.append(self._invite_menu)
+        self.menu_box.pack_start(self._invite_menu, True, True, 0)
 
         home_model = shell.get_model()
         self._active_activity_changed_hid = home_model.connect(
@@ -84,28 +87,27 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
 
     def _add_my_items(self):
-        item = MenuItem(_('Shutdown'), 'system-shutdown')
+        item = PaletteMenuItem(_('Shutdown'), 'system-shutdown')
         item.connect('activate', self.__shutdown_activate_cb)
-        self.menu.append(item)
-        item.show()
+        self.menu_box.pack_start(item, True, True, 0)
 
         client = GConf.Client.get_default()
 
         if client.get_bool('/desktop/sugar/show_restart'):
-            item = MenuItem(_('Restart'), 'system-restart')
+            item = PaletteMenuItem(_('Restart'), 'system-restart')
             item.connect('activate', self.__reboot_activate_cb)
-            self.menu.append(item)
+            self.menu_box.pack_start(item, True, True, 0)
             item.show()
 
         if client.get_bool('/desktop/sugar/show_logout'):
-            item = MenuItem(_('Logout'), 'system-logout')
+            item = PaletteMenuItem(_('Logout'), 'system-logout')
             item.connect('activate', self.__logout_activate_cb)
-            self.menu.append(item)
+            self.menu_box.pack_start(item, True, True, 0)
             item.show()
 
-        item = MenuItem(_('My Settings'), 'preferences-system')
+        item = PaletteMenuItem(_('My Settings'), 'preferences-system')
         item.connect('activate', self.__controlpanel_activate_cb)
-        self.menu.append(item)
+        self.menu_box.pack_start(item, True, True, 0)
         item.show()
 
     def _quit(self, action):
@@ -138,8 +140,7 @@ class BuddyMenu(Palette):
             self._invite_menu.hide()
         else:
             title = activity.get_title()
-            label = self._invite_menu.get_children()[0]
-            label.set_text(_('Invite to %s') % title)
+            self._invite_menu.set_label(_('Invite to %s') % title)
 
             icon = Icon(file=activity.get_icon_path())
             icon.props.xo_color = activity.get_icon_color()

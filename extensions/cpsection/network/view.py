@@ -153,10 +153,6 @@ class Network(SectionView):
         label_server.show()
         self._entry = Gtk.Entry()
         self._entry.set_alignment(0)
-        self._entry.modify_bg(Gtk.StateType.INSENSITIVE,
-                        style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(Gtk.StateType.INSENSITIVE,
-                          style.COLOR_WHITE.get_gdk_color())
         self._entry.set_size_request(int(Gdk.Screen.width() / 3), -1)
         box_server.pack_start(self._entry, False, True, 0)
         self._entry.show()

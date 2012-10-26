@@ -35,8 +35,7 @@ class BuddyIcon(CanvasIcon):
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
-        self.connect('button-release-event', self.__button_release_event_cb)
-
+        self.palette_invoker.props.toggle_palette = True
         self.palette_invoker.cache_palette = False
 
         self._update_color()
@@ -45,9 +44,6 @@ class BuddyIcon(CanvasIcon):
         palette = BuddyMenu(self._buddy)
         self.connect_to_palette_pop_events(palette)
         return palette
-
-    def __button_release_event_cb(self, icon, event):
-        self.props.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def __buddy_notify_present_cb(self, buddy, pspec):
         # Update the icon's color when the buddy comes and goes

@@ -43,10 +43,6 @@ class TimeZone(SectionView):
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                  'system-search')
         self._entry.add_clear_button()
-        self._entry.modify_bg(Gtk.StateType.INSENSITIVE,
-                        style.COLOR_WHITE.get_gdk_color())
-        self._entry.modify_base(Gtk.StateType.INSENSITIVE,
-                          style.COLOR_WHITE.get_gdk_color())
         self.pack_start(self._entry, False, False, 0)
         self._entry.show()
 
