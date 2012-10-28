@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-05 00:34-0400\n"
-"PO-Revision-Date: 2012-10-08 12:14+0200\n"
-"Last-Translator: Prabhat <prabhat.bhattarai@olenepal.org>\n"
+"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"PO-Revision-Date: 2012-10-28 11:14+0200\n"
+"Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -306,7 +306,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "स्वचालित (अटोम्याटिक) पावर व्यास्थापन"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "सॉफ्टवेयर अद्यावधिक"
 
@@ -436,8 +436,8 @@ msgstr "IP अड्रेस: %s"
 
 #: ../extensions/deviceicon/network.py:80
 #: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:495
+#: ../src/jarabe/desktop/networkviews.py:130
+#: ../src/jarabe/desktop/networkviews.py:499
 msgid "Disconnect"
 msgstr "विच्छेद भयो"
 
@@ -447,18 +447,18 @@ msgstr "विच्छेद भयो"
 # have a good mapping
 #: ../extensions/deviceicon/network.py:105
 #: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connecting..."
 msgstr "जडान हुदैछ..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:110
 #: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../src/jarabe/desktop/networkviews.py:248
+#: ../src/jarabe/desktop/networkviews.py:545
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connected"
 msgstr "जडान भयो"
 
@@ -487,9 +487,9 @@ msgid "Please wait..."
 msgstr "कृपया पर्खनुहोस्..."
 
 #: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:490
-#: ../src/jarabe/desktop/networkviews.py:624
+#: ../src/jarabe/desktop/networkviews.py:126
+#: ../src/jarabe/desktop/networkviews.py:494
+#: ../src/jarabe/desktop/networkviews.py:630
 msgid "Connect"
 msgstr "जोड"
 
@@ -498,8 +498,8 @@ msgid "Disconnected"
 msgstr "विच्छेद भयो"
 
 #: ../extensions/deviceicon/network.py:287
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
 #: ../src/jarabe/frame/activitiestray.py:606
 #: ../src/jarabe/frame/activitiestray.py:708
 #: ../src/jarabe/frame/activitiestray.py:736
@@ -549,20 +549,20 @@ msgstr "संख्या विन्यासको जाँच गर।"
 msgid "Check your configuration."
 msgstr "तिम्रो विन्यासको जाँच गर।"
 
-#: ../extensions/deviceicon/network.py:606
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
 msgstr "मेश सञ्जाल"
 
-#: ../extensions/deviceicon/network.py:651
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 msgid "Mesh Network %s"
 msgstr "मेश सञ्जाल %s"
 
-#: ../extensions/deviceicon/network.py:782
+#: ../extensions/deviceicon/network.py:783
 msgid "No GSM connection available."
 msgstr "कुनै पनि GSM कनेक्सन उपलब्ध छैन।"
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:784
 msgid "Create a connection in the control panel."
 msgstr "कन्ट्रोल पानेल मा नयाँ कनेक्सन बनाऊ ।"
 
@@ -994,7 +994,7 @@ msgstr "परिवर्तनका लागि पुण: सुरु ग�
 msgid "Cancel changes"
 msgstr "परिवर्तनहरु रद्द गर"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "पछि"
 
@@ -1002,34 +1002,46 @@ msgstr "पछि"
 msgid "Restart now"
 msgstr "पुन: सुरु गर"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr "%s मा खोज"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "सेटिंगहरु"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "भयो"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:335
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/keydialog.py:101
 msgid "Ok"
 msgstr "हुन्छ"
 
-#: ../src/jarabe/desktop/activitieslist.py:241
+#: ../src/jarabe/desktop/activitieslist.py:243
 #, python-format
 msgid "Version %s"
 msgstr "संस्करण %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:342
+#: ../src/jarabe/desktop/activitieslist.py:344
 #: ../src/jarabe/journal/listview.py:411
 msgid "Clear search"
 msgstr "खोजलाई सफा गर"
 
-#: ../src/jarabe/desktop/activitieslist.py:415
+#: ../src/jarabe/desktop/activitieslist.py:417
 msgid "No matching activities"
 msgstr "मिल्ने क्रियाकलाप छैन"
 
-#: ../src/jarabe/desktop/activitieslist.py:451
+#: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
 msgstr "साँच्चै मेट्ने"
 
-#: ../src/jarabe/desktop/activitieslist.py:453
+#: ../src/jarabe/desktop/activitieslist.py:455
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "मेट्ने पुष्टि : %s लाई सधैँको लागी मेट्न चहान्छौ?"
@@ -1038,25 +1050,25 @@ msgstr "मेट्ने पुष्टि : %s लाई सधैँको 
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:457
+#: ../src/jarabe/desktop/activitieslist.py:459
 #: ../src/jarabe/frame/clipboardmenu.py:67
 #: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "राख"
 
-#: ../src/jarabe/desktop/activitieslist.py:460
-#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:516
 #: ../src/jarabe/journal/journaltoolbox.py:393
 #: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "मेट"
 
-#: ../src/jarabe/desktop/activitieslist.py:530
+#: ../src/jarabe/desktop/activitieslist.py:532
 msgid "Remove favorite"
 msgstr "मनपर्ने हटाउ"
 
-#: ../src/jarabe/desktop/activitieslist.py:534
+#: ../src/jarabe/desktop/activitieslist.py:536
 msgid "Make favorite"
 msgstr "प्रिय बनाउ"
 
@@ -1068,54 +1080,54 @@ msgstr "स्वतन्त्र आकारको"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:295
+#: ../src/jarabe/desktop/favoriteslayout.py:296
 msgid "Ring"
 msgstr "औँठी"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:437
+#: ../src/jarabe/desktop/favoriteslayout.py:450
 msgid "Spiral"
 msgstr "पेंचदार"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:505
+#: ../src/jarabe/desktop/favoriteslayout.py:518
 msgid "Box"
 msgstr "बाकस"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:548
+#: ../src/jarabe/desktop/favoriteslayout.py:561
 msgid "Triangle"
 msgstr "त्रिकोण"
 
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Failed"
 msgstr "दर्ता असफल भयो"
 
-#: ../src/jarabe/desktop/favoritesview.py:329
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Registration Successful"
 msgstr "दर्ता सफल भयो"
 
-#: ../src/jarabe/desktop/favoritesview.py:330
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "You are now registered with your school server."
 msgstr "अब तपाईँको नाम बिद्यालयको सर्भरमा दर्ता भइसक्यो।"
 
-#: ../src/jarabe/desktop/favoritesview.py:619
+#: ../src/jarabe/desktop/favoritesview.py:611
 msgid "Register"
 msgstr "दर्ता"
 
-#: ../src/jarabe/desktop/favoritesview.py:621
-#: ../src/jarabe/desktop/favoritesview.py:635
+#: ../src/jarabe/desktop/favoritesview.py:613
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register again"
 msgstr "दर्ता फेरी गर"
 
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "नयाँ सफ्टवेर चलाउनका निम्ति तिम्रो क्रियाकलापहरु अप्डेट गर"
 
-#: ../src/jarabe/desktop/homebox.py:72
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "अहिले जाँच गर"
 
@@ -1124,48 +1136,48 @@ msgstr "अहिले जाँच गर"
 msgid "Neighborhood"
 msgstr "छिमेक"
 
-#: ../src/jarabe/desktop/keydialog.py:89
+#: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr "तारबिना सञ्जाल '%s' को लागि तारबिना कुञ्जीको जरुरी छ"
 
-#: ../src/jarabe/desktop/keydialog.py:137
+#: ../src/jarabe/desktop/keydialog.py:146
 msgid "Key Type:"
 msgstr "कुञ्जी प्रकार:"
 
-#: ../src/jarabe/desktop/keydialog.py:157
+#: ../src/jarabe/desktop/keydialog.py:166
 msgid "Authentication Type:"
 msgstr "प्रमाणीकरण प्रकार:"
 
-#: ../src/jarabe/desktop/keydialog.py:220
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA र WPA2 निजी"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "तारबिनाको लागि सुरक्षा"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/desktop/meshbox.py:79
 #: ../src/jarabe/journal/journaltoolbox.py:506
 #: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "पुनरारम्भ"
 
-#: ../src/jarabe/desktop/meshbox.py:86
+#: ../src/jarabe/desktop/meshbox.py:84
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "सहभागी होऊ"
 
-#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:490
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc सञ्जाल %d"
 
-#: ../src/jarabe/desktop/networkviews.py:621
+#: ../src/jarabe/desktop/networkviews.py:627
 #, python-format
 msgid "Mesh Network %d"
 msgstr "मेश सञ्जाल %d"
@@ -1185,12 +1197,6 @@ msgstr "सुची दृश्य"
 #: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>२"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:82
-#, python-format
-msgid "Search in %s"
-msgstr "%s मा खोज"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
