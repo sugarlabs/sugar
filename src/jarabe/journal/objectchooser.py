@@ -104,7 +104,7 @@ class ObjectChooser(Gtk.Window):
         # TODO: Should we disconnect the signal here?
 
     def __window_closed_cb(self, screen, window, parent):
-        if window.get_xid() == parent.xid:
+        if window.get_xid() == parent.get_xid():
             self.destroy()
 
     def __entry_activated_cb(self, list_view, uid):
