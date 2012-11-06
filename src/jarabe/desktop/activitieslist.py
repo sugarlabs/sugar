@@ -53,6 +53,9 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._query = ''
 
         self.set_headers_visible(False)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
+                        Gdk.EventMask.TOUCH_MASK |
+                        Gdk.EventMask.BUTTON_RELEASE_MASK)
         selection = self.get_selection()
         selection.set_mode(Gtk.SelectionMode.NONE)
 

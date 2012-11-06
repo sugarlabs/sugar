@@ -46,6 +46,9 @@ class TreeView(Gtk.TreeView):
         Gtk.TreeView.__init__(self)
         self.set_headers_visible(False)
         self.set_enable_search(False)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
+                        Gdk.EventMask.TOUCH_MASK |
+                        Gdk.EventMask.BUTTON_RELEASE_MASK)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can
