@@ -66,5 +66,10 @@ class DeviceView(TrayIcon):
 
 
 def setup(tray):
+    return
+    # Disable the option for now, as manual invocation
+    # of the OSK has many unresolved corner cases, see
+    # http://dev.laptop.org/ticket/12281
+
     if _HAS_MALIIT:
         tray.add_device(DeviceView())
