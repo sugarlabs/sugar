@@ -25,8 +25,9 @@ from gi.repository import Gtk
 
 from sugar3 import env
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenuitem import PaletteMenuItem
-from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -83,25 +84,25 @@ class CurrentActivityPalette(BasePalette):
         if title and title != activity_name:
             self.props.secondary_text = glib.markup_escape_text(title)
 
-        self.menu_box = Gtk.VBox()
+        self.menu_box = PaletteMenuBox()
 
         menu_item = PaletteMenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
-        self.menu_box.pack_start(menu_item, True, True, 0)
+        self.menu_box.append_item(menu_item)
 
         # TODO: share-with, keep
 
         menu_item = PaletteMenuItem(_('View Source'), 'view-source')
         menu_item.connect('activate', self.__view_source__cb)
-        self.menu_box.pack_start(menu_item, True, True, 0)
+        self.menu_box.append_item(menu_item)
 
         separator = PaletteMenuItemSeparator()
-        self.menu_box.pack_start(menu_item, True, True, 0)
+        self.menu_box.append_item(menu_item)
         separator.show()
 
         menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
         menu_item.connect('activate', self.__stop_activate_cb)
-        self.menu_box.pack_start(menu_item, True, True, 0)
+        self.menu_box.append_item(menu_item)
 
         self.set_content(self.menu_box)
         self.menu_box.show_all()
@@ -141,12 +142,13 @@ class ActivityPalette(Palette):
 
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_TRANSPARENT.get_svg()))
-        self.menu_box = Gtk.VBox()
+        self.menu_box = PaletteMenuBox()
         menu_item = PaletteMenuItem(text_label=_('Start new'),
                                     file_name=activity_info.get_icon(),
                                     xo_color=xo_color)
         menu_item.connect('activate', self.__start_activate_cb)
         self.menu_box.pack_end(menu_item, True, True, 0)
+        menu_item.show()
         self.set_content(self.menu_box)
         self.menu_box.show_all()
 
@@ -169,9 +171,9 @@ class JournalPalette(BasePalette):
         title = self._home_activity.get_title()
         self.set_primary_text(glib.markup_escape_text(title))
 
-        vbox = Gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
 
         menu_item = PaletteMenuItem(_('Show contents'))
         icon = Icon(file=self._home_activity.get_icon_path(),
@@ -181,20 +183,24 @@ class JournalPalette(BasePalette):
         icon.show()
 
         menu_item.connect('activate', self.__open_activate_cb)
-        vbox.add(menu_item)
+        box.append_item(menu_item)
         menu_item.show()
 
         separator = PaletteMenuItemSeparator()
-        vbox.pack_start(separator, True, True, 0)
+        box.append_item(separator)
         separator.show()
 
+        inner_box = Gtk.VBox()
+        box.append_item(inner_box)
+        inner_box.show()
+
         self._progress_bar = Gtk.ProgressBar()
-        vbox.add(self._progress_bar)
+        inner_box.add(self._progress_bar)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        vbox.add(self._free_space_label)
+        inner_box.add(self._free_space_label)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)
@@ -222,7 +228,7 @@ class VolumePalette(Palette):
         path = mount.get_root().get_path()
         self.props.secondary_text = glib.markup_escape_text(path)
 
-        self.content_box = Gtk.VBox()
+        self.content_box = PaletteMenuBox()
         self.set_content(self.content_box)
         self.content_box.show()
 
@@ -233,20 +239,20 @@ class VolumePalette(Palette):
         icon.show()
 
         menu_item.connect('activate', self.__unmount_activate_cb)
-        self.content_box.pack_start(menu_item, True, True, 0)
+        self.content_box.append_item(menu_item)
         menu_item.show()
 
         separator = PaletteMenuItemSeparator()
-        self.content_box.pack_start(separator, True, True, 0)
+        self.content_box.append_item(separator)
         separator.show()
 
         self._progress_bar = Gtk.ProgressBar()
-        self.content_box.pack_start(self._progress_bar, True, True, 0)
+        self.content_box.append_item(self._progress_bar)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        self.content_box.pack_start(self._free_space_label, True, True, 0)
+        self.content_box.append_item(self._free_space_label)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)

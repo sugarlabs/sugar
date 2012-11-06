@@ -24,8 +24,9 @@ from gi.repository import GObject
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenuitem import PaletteMenuItem
-from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import style
 
@@ -66,9 +67,9 @@ class SpeechPalette(Palette):
         self._manager.connect('stop', self._set_menu_state, 'stop')
         self._manager.connect('pause', self._set_menu_state, 'pause')
 
-        vbox = Gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
 
         self._play_icon = Icon(icon_name='player_play')
         self._pause_icon = Icon(icon_name='player_pause')
@@ -77,48 +78,48 @@ class SpeechPalette(Palette):
             text_label=_('Say selected text'))
         self._play_pause_menu.set_image(self._play_icon)
         self._play_pause_menu.connect('activate', self.__play_activated_cb)
-        vbox.pack_start(self._play_pause_menu, True, True, 0)
+        box.append_item(self._play_pause_menu)
         self._play_pause_menu.show()
 
         self._stop_menu = PaletteMenuItem(icon_name='player_stop',
                                           text_label=_('Stop playback'))
         self._stop_menu.connect('activate', self.__stop_activated_cb)
         self._stop_menu.set_sensitive(False)
-        vbox.pack_start(self._stop_menu, True, True, 0)
-        self._stop_menu.show()
+        box.append_item(self._stop_menu)
 
         separator = PaletteMenuItemSeparator()
-        vbox.pack_start(separator, True, True, 0)
+        box.append_item(separator)
         separator.show()
 
         pitch_label = Gtk.Label(_('Pitch'))
-        vbox.pack_start(pitch_label, True, True, padding=style.DEFAULT_PADDING)
+        box.append_item(pitch_label, vertical_padding=0)
         pitch_label.show()
 
         self._adj_pitch = Gtk.Adjustment(value=self._manager.get_pitch(),
                                          lower=self._manager.MIN_PITCH,
                                          upper=self._manager.MAX_PITCH)
-        self._hscale_pitch = Gtk.HScale()
-        self._hscale_pitch.set_adjustment(self._adj_pitch)
-        self._hscale_pitch.set_draw_value(False)
 
-        vbox.pack_start(self._hscale_pitch, True, True, 0)
-        self._hscale_pitch.show()
+        hscale_pitch = Gtk.HScale()
+        hscale_pitch.set_adjustment(self._adj_pitch)
+        hscale_pitch.set_draw_value(False)
+
+        box.append_item(hscale_pitch, vertical_padding=0)
+        hscale_pitch.show()
 
         rate_label = Gtk.Label(_('Rate'))
-        vbox.pack_start(rate_label, True, True,
-                        padding=style.DEFAULT_PADDING)
+        box.append_item(rate_label, vertical_padding=0)
         rate_label.show()
 
         self._adj_rate = Gtk.Adjustment(value=self._manager.get_rate(),
                                         lower=self._manager.MIN_RATE,
                                         upper=self._manager.MAX_RATE)
-        self._hscale_rate = Gtk.HScale()
-        self._hscale_rate.set_adjustment(self._adj_rate)
-        self._hscale_rate.set_draw_value(False)
 
-        vbox.pack_start(self._hscale_rate, True, True, 0)
-        self._hscale_rate.show()
+        hscale_rate = Gtk.HScale()
+        hscale_rate.set_adjustment(self._adj_rate)
+        hscale_rate.set_draw_value(False)
+
+        box.append_item(hscale_rate, vertical_padding=0)
+        hscale_rate.show()
 
         self._adj_pitch.connect('value_changed', self.__adj_pitch_changed_cb)
         self._adj_rate.connect('value_changed', self.__adj_rate_changed_cb)

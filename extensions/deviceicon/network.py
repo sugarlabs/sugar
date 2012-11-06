@@ -34,8 +34,9 @@ import dbus
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenuitem import PaletteMenuItem
-from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.icon import Icon
@@ -74,6 +75,8 @@ class WirelessPalette(Palette):
         self._channel_label.show()
 
         self._ip_address_label = Gtk.Label()
+        self._ip_address_label.props.xalign = 0.0
+        self._ip_address_label.show()
 
         self._info = Gtk.VBox()
 

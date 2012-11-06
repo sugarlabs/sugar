@@ -25,8 +25,9 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state, Icon
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenuitem import PaletteMenuItem
-from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -90,19 +91,19 @@ class SpeakerPalette(Palette):
 
         self._model = model
 
-        vbox = Gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
 
         self._mute_item = PaletteMenuItem('')
         self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
         self._mute_item.set_image(self._mute_icon)
-        vbox.add(self._mute_item)
+        box.append_item(self._mute_item)
         self._mute_item.show()
         self._mute_item.connect('activate', self.__mute_activate_cb)
 
         separator = PaletteMenuItemSeparator()
-        vbox.pack_start(separator, True, True, 0)
+        box.append_item(separator)
         separator.show()
 
         vol_step = sound.VOLUME_STEP
@@ -112,11 +113,13 @@ class SpeakerPalette(Palette):
                                           step_incr=vol_step,
                                           page_incr=vol_step,
                                           page_size=vol_step)
-        self._hscale = Gtk.HScale()
-        self._hscale.set_adjustment(self._adjustment)
-        self._hscale.set_digits(0)
-        vbox.add(self._hscale)
-        self._hscale.show()
+
+        hscale = Gtk.HScale()
+        hscale.props.draw_value = False
+        hscale.set_adjustment(self._adjustment)
+        hscale.set_digits(0)
+        box.append_item(hscale)
+        hscale.show()
 
         self._adjustment_handler_id = \
             self._adjustment.connect('value_changed',

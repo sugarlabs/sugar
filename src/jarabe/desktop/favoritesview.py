@@ -29,8 +29,9 @@ from gi.repository import GdkPixbuf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.palettemenuitem import PaletteMenuItem
-from sugar3.graphics.palettemenuitem import PaletteMenuItemSeparator
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory

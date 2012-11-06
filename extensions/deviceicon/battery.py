@@ -27,6 +27,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -116,20 +117,24 @@ class BatteryPalette(Palette):
         self._level = 0
         self._time = 0
         self._status = _STATUS_NOT_PRESENT
+
+        self._progress_widget = PaletteMenuBox()
+        self.set_content(self._progress_widget)
+        self._progress_widget.show()
+
+        inner_box = Gtk.VBox()
+        self._progress_widget.append_item(inner_box)
+        inner_box.show()
+
         self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.set_size_request(
             style.zoom(style.GRID_CELL_SIZE * 4), -1)
+        inner_box.pack_start(self._progress_bar, True, True, 0)
         self._progress_bar.show()
+
         self._status_label = Gtk.Label()
+        inner_box.pack_start(self._status_label, True, True, 0)
         self._status_label.show()
-
-        vbox = Gtk.VBox()
-        vbox.pack_start(self._progress_bar, True, True, 0)
-        vbox.pack_start(self._status_label, True, True, 0)
-        vbox.show()
-
-        self._progress_widget = vbox
-        self.set_content(self._progress_widget)
 
     def set_info(self, percentage, seconds, status):
         self._level = percentage
