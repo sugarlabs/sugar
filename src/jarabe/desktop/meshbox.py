@@ -29,7 +29,7 @@ from gi.repository import GConf
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics import style
-from sugar3.graphics import palette
+from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 
 from jarabe.model import neighborhood
@@ -64,13 +64,13 @@ class _ActivityIcon(CanvasIcon):
     def create_palette(self):
         primary_text = glib.markup_escape_text(self._model.bundle.get_name())
         secondary_text = glib.markup_escape_text(self._model.get_name())
-        p_icon = Icon(file=self._model.bundle.get_icon(),
-                      xo_color=self._model.get_color())
-        p_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
-        p = palette.Palette(None,
-                            primary_text=primary_text,
-                            secondary_text=secondary_text,
-                            icon=p_icon)
+        palette_icon = Icon(file=self._model.bundle.get_icon(),
+                            xo_color=self._model.get_color())
+        palette_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
+        palette = Palette(None,
+                          primary_text=primary_text,
+                          secondary_text=secondary_text,
+                          icon=palette_icon)
 
         private = self._model.props.private
         joined = get_owner_instance() in self._model.props.buddies
@@ -79,19 +79,18 @@ class _ActivityIcon(CanvasIcon):
             item = MenuItem(_('Resume'), 'activity-start')
             item.connect('activate', self.__palette_item_clicked_cb)
             item.show()
-            p.menu.append(item)
+            palette.menu.append(item)
         elif not private:
             item = MenuItem(_('Join'), 'activity-start')
             item.connect('activate', self.__palette_item_clicked_cb)
             item.show()
-            p.menu.append(item)
+            palette.menu.append(item)
 
-        self.connect_to_palette_pop_events(p)
-        return p
+        self.connect_to_palette_pop_events(palette)
+        return palette
 
     def __button_release_event_cb(self, widget, event):
-        self.props.palette.popup(immediate=True,
-                                 state=palette.Palette.SECONDARY)
+        self.props.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def __palette_item_clicked_cb(self, item):
         bundle = self._model.get_bundle()
@@ -199,14 +198,16 @@ class DeviceObserver(GObject.GObject):
         self.emit('access-point-removed', access_point_o)
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__access_point_added_cb,
-                                         signal_name='AccessPointAdded',
-                                         path=self.device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
-        self._bus.remove_signal_receiver(self.__access_point_removed_cb,
-                                         signal_name='AccessPointRemoved',
-                                         path=self.device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__access_point_added_cb,
+            signal_name='AccessPointAdded',
+            path=self.device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__access_point_removed_cb,
+            signal_name='AccessPointRemoved',
+            path=self.device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
 
 
 class NetworkManagerObserver(object):
@@ -253,14 +254,16 @@ class NetworkManagerObserver(object):
         # of a good way to. NM could really use some love here.
 
         netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
-        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
+        active_connections_o = netmgr_props.Get(network.NM_IFACE,
+                                                'ActiveConnections')
 
         for conn_o in active_connections_o:
             obj = self._bus.get_object(network.NM_IFACE, conn_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             state = props.Get(network.NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
-                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE,
+                                 'SpecificObject')
                 found = False
                 if ap_o != '/':
                     for net in self._box.wireless_networks.values():
@@ -268,8 +271,9 @@ class NetworkManagerObserver(object):
                             found = True
                             net.create_keydialog(kwargs['response'])
                 if not found:
-                    raise Exception('Could not determine AP for specific object'
-                                    ' %s' % conn_o)
+                    raise Exception(
+                        'Could not determine AP for specific object'
+                        ' %s' % conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
