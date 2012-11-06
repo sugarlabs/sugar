@@ -261,6 +261,10 @@ class _IntroBox(Gtk.VBox):
 class IntroWindow(Gtk.Window):
     __gtype_name__ = 'SugarIntroWindow'
 
+    __gsignals__ = {
+        'done': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
     def __init__(self):
         Gtk.Window.__init__(self)
 
@@ -280,7 +284,7 @@ class IntroWindow(Gtk.Window):
 
     def _create_profile_cb(self, name, color):
         create_profile(name, color)
-        Gtk.main_quit()
+        self.emit("done")
 
         return False
 
