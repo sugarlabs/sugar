@@ -278,6 +278,7 @@ def main():
     from jarabe.desktop import homewindow
     from jarabe.model import sound
     from jarabe import intro
+    from jarabe.intro.window import IntroWindow
 
     logger.start('shell')
 
@@ -301,7 +302,11 @@ def main():
     # TODO #3204
     if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
         logging.warning('Can not reset cursor')
-    intro.check_profile()
+
+    if not intro.check_profile():
+        win = IntroWindow()
+        win.show_all()
+        Gtk.main()
 
     start_ui_service()
     start_session_manager()
