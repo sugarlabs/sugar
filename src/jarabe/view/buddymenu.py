@@ -67,6 +67,7 @@ class BuddyMenu(Palette):
         self._buddy.disconnect_by_func(self.__buddy_notify_nick_cb)
 
     def _add_buddy_items(self):
+        menu_item = None
         if friends.get_model().has_buddy(self._buddy):
             menu_item = PaletteMenuItem(_('Remove friend'), 'list-remove')
             menu_item.connect('activate', self._remove_friend_cb)
@@ -74,7 +75,7 @@ class BuddyMenu(Palette):
             menu_item = PaletteMenuItem(_('Make friend'), 'list-add')
             menu_item.connect('activate', self._make_friend_cb)
 
-        self.menu_box.pack_start(menu_box, True, True, 0)
+        self.menu_box.pack_start(menu_item, True, True, 0)
 
         self._invite_menu = PaletteMenuItem('')
         self._invite_menu.connect('activate', self._invite_friend_cb)

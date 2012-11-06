@@ -97,7 +97,7 @@ class NotificationWindow(Gtk.Window):
 
     def _realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.window.set_accept_focus(False)
+        self.get_window().set_accept_focus(False)
 
         color = Gdk.color_parse(style.COLOR_TOOLBAR_GREY.get_html())
         self.modify_bg(Gtk.StateType.NORMAL, color)
