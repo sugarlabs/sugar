@@ -924,7 +924,7 @@ class Neighborhood(GObject.GObject):
         is_new = buddy.props.key is None and 'key' in properties
 
         if 'color' in properties:
-            buddy.props.color = XoColor(properties['color'])
+            buddy.props.color = XoColor(str(properties['color']))
 
         if 'key' in properties:
             buddy.props.key = properties['key']
