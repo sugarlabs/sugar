@@ -118,7 +118,7 @@ class SpeakerPalette(Palette):
         hscale.props.draw_value = False
         hscale.set_adjustment(self._adjustment)
         hscale.set_digits(0)
-        box.append_item(hscale)
+        box.append_item(hscale, vertical_padding=0)
         hscale.show()
 
         self._adjustment_handler_id = \

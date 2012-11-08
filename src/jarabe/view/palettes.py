@@ -191,7 +191,8 @@ class JournalPalette(BasePalette):
         separator.show()
 
         inner_box = Gtk.VBox()
-        box.append_item(inner_box)
+        inner_box.set_spacing(style.DEFAULT_PADDING)
+        box.append_item(inner_box, vertical_padding=0)
         inner_box.show()
 
         self._progress_bar = Gtk.ProgressBar()
@@ -246,13 +247,18 @@ class VolumePalette(Palette):
         self.content_box.append_item(separator)
         separator.show()
 
+        free_space_box = Gtk.VBox()
+        free_space_box.set_spacing(style.DEFAULT_PADDING)
+        self.content_box.append_item(free_space_box, vertical_padding=0)
+        free_space_box.show()
+
         self._progress_bar = Gtk.ProgressBar()
-        self.content_box.append_item(self._progress_bar)
+        free_space_box.pack_start(self._progress_bar, True, True, 0)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        self.content_box.append_item(self._free_space_label)
+        free_space_box.pack_start(self._free_space_label, True, True, 0)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)

@@ -26,7 +26,6 @@ from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.icon import Icon
 
 from jarabe.journal import journalactivity
