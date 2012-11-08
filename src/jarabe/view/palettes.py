@@ -97,7 +97,7 @@ class CurrentActivityPalette(BasePalette):
         self.menu_box.append_item(menu_item)
 
         separator = PaletteMenuItemSeparator()
-        self.menu_box.append_item(menu_item)
+        self.menu_box.append_item(separator)
         separator.show()
 
         menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
