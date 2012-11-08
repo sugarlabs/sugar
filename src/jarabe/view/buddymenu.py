@@ -144,7 +144,8 @@ class BuddyMenu(Palette):
             title = activity.get_title()
             self._invite_menu.set_label(_('Invite to %s') % title)
 
-            icon = Icon(file=activity.get_icon_path())
+            icon = Icon(file=activity.get_icon_path(),
+                        icon_size=Gtk.IconSize.SMALL_TOOLBAR)
             icon.props.xo_color = activity.get_icon_color()
             self._invite_menu.set_image(icon)
             icon.show()
