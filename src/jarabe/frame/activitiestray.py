@@ -84,8 +84,13 @@ class ActivityButton(RadioToolButton):
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)
+        palette.connect('popdown', self.__palette_popped_down_cb)
         palette.set_group_id('frame')
         self.set_palette(palette)
+
+    def __palette_popped_down_cb(self, widget):
+        frame = jarabe.frame.get_view()
+        frame.hide()
 
     def _on_failed_launch(self):
         # TODO http://bugs.sugarlabs.org/ticket/2007
