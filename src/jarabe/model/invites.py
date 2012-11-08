@@ -91,6 +91,9 @@ class ActivityInvite(BaseInvite):
 
     def get_color(self):
         color = self._activity_properties.get('color', None)
+        # arrives unicode but we connect with byte_arrays=True - SL #4157
+        if color is not None:
+            color = str(color)
         return XoColor(color)
 
     def join(self):

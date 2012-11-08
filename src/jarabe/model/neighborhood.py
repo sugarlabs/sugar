@@ -924,6 +924,7 @@ class Neighborhood(GObject.GObject):
         is_new = buddy.props.key is None and 'key' in properties
 
         if 'color' in properties:
+            # arrives unicode but we connect with byte_arrays=True - SL #4157
             buddy.props.color = XoColor(str(properties['color']))
 
         if 'key' in properties:
@@ -975,7 +976,8 @@ class Neighborhood(GObject.GObject):
 
         is_new = activity.props.bundle is None
 
-        activity.props.color = XoColor(properties['color'])
+        # arrives unicode but we connect with byte_arrays=True - SL #4157
+        activity.props.color = XoColor(str(properties['color']))
         activity.props.bundle = bundle
         activity.props.name = properties['name']
         activity.props.private = properties['private']
