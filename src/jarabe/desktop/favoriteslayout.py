@@ -175,7 +175,7 @@ class SpreadLayout(ViewLayout):
                 width, height = self._get_child_grid_size(child)
                 self._grid.add(child, width, height, None, None, locked=False)
 
-            requisition = child.size_request()
+            requisition = child.get_preferred_size()[0]
             rect = self._grid.get_child_rect(child)
             child_allocation = Gdk.Rectangle()
             child_allocation.x = int(round(rect.x * _CELL_SIZE))

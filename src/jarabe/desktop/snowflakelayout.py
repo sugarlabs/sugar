@@ -71,10 +71,20 @@ class SnowflakeLayout(Gtk.Container):
         del self._children[child]
         self.remove(child)
 
-    def do_size_request(self, requisition):
+    def do_get_preferred_size(self):
         size = self._calculate_size()
+        requisition = Gtk.Requisition()
         requisition.width = size
         requisition.height = size
+        return (requisition, requisition)
+
+    def do_get_preferred_width(self):
+        size = self._calculate_size()
+        return (size, size)
+
+    def do_get_preferred_height(self):
+        size = self._calculate_size()
+        return (size, size)
 
     def do_size_allocate(self, allocation):
         self.set_allocation(allocation)
