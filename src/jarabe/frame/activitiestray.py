@@ -84,11 +84,11 @@ class ActivityButton(RadioToolButton):
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)
-        palette.connect('popdown', self.__palette_popped_down_cb)
+            palette.connect('done', self.__palette_item_selected_cb)
         palette.set_group_id('frame')
         self.set_palette(palette)
 
-    def __palette_popped_down_cb(self, widget):
+    def __palette_item_selected_cb(self, widget):
         frame = jarabe.frame.get_view()
         frame.hide()
 

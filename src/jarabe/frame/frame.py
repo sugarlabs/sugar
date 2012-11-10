@@ -113,6 +113,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
+        palettegroup.popdown_all()
         self._animator = animator.Animator(0.5)
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()

@@ -22,6 +22,7 @@ import logging
 from gi.repository import GConf
 import glib
 from gi.repository import Gtk
+from gi.repository import GObject
 
 from sugar3 import env
 from sugar3.graphics.palette import Palette
@@ -71,6 +72,13 @@ class BasePalette(Palette):
 
 
 class CurrentActivityPalette(BasePalette):
+
+    __gsignals__ = {
+        'done': (GObject.SignalFlags.RUN_FIRST,
+                 None,
+                 ([])),
+    }
+
     def __init__(self, home_activity):
         self._home_activity = home_activity
         BasePalette.__init__(self, home_activity)
@@ -108,20 +116,20 @@ class CurrentActivityPalette(BasePalette):
         self.menu_box.show_all()
 
     def __resume_activate_cb(self, menu_item):
-        self.popdown(immediate=True)
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
+        self.emit('done')
 
     def __view_source__cb(self, menu_item):
-        self.popdown(immediate=True)
         setup_view_source(self._home_activity)
         shell_model = shell.get_model()
         if self._home_activity is not shell_model.get_active_activity():
             self._home_activity.get_window().activate( \
                 Gtk.get_current_event_time())
+        self.emit('done')
 
     def __stop_activate_cb(self, menu_item):
-        self.popdown(immediate=True)
         self._home_activity.get_window().close(1)
+        self.emit('done')
 
 
 class ActivityPalette(Palette):
@@ -207,7 +215,6 @@ class JournalPalette(BasePalette):
         self.connect('popup', self.__popup_cb)
 
     def __open_activate_cb(self, menu_item):
-        self.popdown(immediate=True)
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
 
     def __popup_cb(self, palette):
