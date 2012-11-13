@@ -272,7 +272,7 @@ def intro_window_done_cb(window):
 
 def main():
     try:
-        from sugar import env
+        from sugar3 import env
         # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
@@ -283,7 +283,7 @@ def main():
         # starting if (for example) the disk is full or read-only.
         print 'logs cleanup failed: %s' % e
 
-    from sugar import logger
+    from sugar3 import logger
     # NOTE: This needs to happen so early because some modules register translatable
     # strings in the module scope.
     from jarabe import config
