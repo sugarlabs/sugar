@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-19 00:34-0400\n"
-"PO-Revision-Date: 2012-10-23 08:31+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2012-11-12 18:48+0200\n"
+"Last-Translator: FRKS <frks@frks.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -438,7 +438,7 @@ msgstr "Naładowana"
 
 #: ../extensions/deviceicon/frame.py:57
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Pokaż moją klawiaturę"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
