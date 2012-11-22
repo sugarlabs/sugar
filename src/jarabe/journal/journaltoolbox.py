@@ -24,7 +24,6 @@ import time
 
 from gi.repository import GObject
 from gi.repository import Gio
-import glib
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette

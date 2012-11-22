@@ -22,7 +22,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GConf
 from gi.repository import Gio
-import glib
+from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -63,7 +63,7 @@ class ObjectPalette(Palette):
         if 'title' in metadata:
             title = GObject.markup_escape_text(metadata['title'])
         else:
-            title = glib.markup_escape_text(_('Untitled'))
+            title = GLib.markup_escape_text(_('Untitled'))
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
@@ -397,7 +397,7 @@ class BuddyPalette(Palette):
                           icon_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
-        Palette.__init__(self, primary_text=glib.markup_escape_text(nick),
+        Palette.__init__(self, primary_text=GLib.markup_escape_text(nick),
                          icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.

@@ -20,7 +20,7 @@ import os
 
 from gi.repository import Gtk
 from gi.repository import GConf
-import glib
+from gi.repository import GLib
 
 import logging
 
@@ -61,7 +61,7 @@ class DeviceView(TrayIcon):
     def create_palette(self):
         """ Create a palette for this icon; called by the Sugar framework
         when a palette needs to be displayed. """
-        label = glib.markup_escape_text(_('My touchpad'))
+        label = GLib.markup_escape_text(_('My touchpad'))
         self.palette = ResourcePalette(label, self.icon)
         self.palette.set_group_id('frame')
         return self.palette

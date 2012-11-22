@@ -18,7 +18,7 @@
 from gettext import gettext as _
 import logging
 
-import glib
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -69,7 +69,7 @@ class ZoomToolbar(Gtk.Toolbar):
         self.add(button)
         button.show()
 
-        palette = Palette(glib.markup_escape_text(label))
+        palette = Palette(GLib.markup_escape_text(label))
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)

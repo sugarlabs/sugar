@@ -18,7 +18,7 @@ import logging
 from gettext import gettext as _
 import time
 
-import glib
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -400,7 +400,7 @@ class BaseListView(Gtk.Bin):
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
-                color, glib.markup_escape_text(message)))
+                color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
 
         if show_clear_query:
