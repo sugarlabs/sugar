@@ -386,12 +386,22 @@ class RingLayout(ViewLayout):
         radius, icon_size = self._calculate_radius_and_icon_size(len(children))
 
         children.sort(self.compare_activities)
+        height = allocation.height + allocation.y
         for n in range(len(children)):
             child = children[n]
 
             x, y = self._calculate_position(radius, icon_size, n,
                                             len(children), allocation.width,
-                                            allocation.height)
+                                            height)
+
+            # This container may be offset from the top by a certain amount
+            # (e.g. for an alert). Adjust the center-point for that
+            y -= allocation.y
+
+            # Now add half of the icon height. This gives us the y
+            # coordinate for the top of the icon.
+            y += icon_size / 2
+
             child.set_size(icon_size)
             new_width = child.get_preferred_width()[0]
             new_height = child.get_preferred_height()[0]
