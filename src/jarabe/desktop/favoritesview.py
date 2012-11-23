@@ -112,10 +112,6 @@ class FavoritesView(ViewContainer):
         self._box = box
         self._layout = None
 
-        favorites_settings = get_settings()
-        favorites_settings.changed.connect(self.__settings_changed_cb)
-        self._set_layout(favorites_settings.layout)
-
         owner_icon = OwnerIcon(style.XLARGE_ICON_SIZE)
         owner_icon.connect('register-activate', self.__register_activate_cb)
 
@@ -128,9 +124,14 @@ class FavoritesView(ViewContainer):
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                         Gdk.EventMask.POINTER_MOTION_HINT_MASK)
         self.drag_dest_set(0, [], 0)
-        self.connect('drag-motion', self.__drag_motion_cb)
-        self.connect('drag-drop', self.__drag_drop_cb)
-        self.connect('drag-data-received', self.__drag_data_received_cb)
+
+        # Drag and drop is set only for the Random layout.  This is
+        # the flag that enables or disables it.
+        self._dragging_mode = False
+
+        self._drag_motion_hid = None
+        self._drag_drop_hid = None
+        self._drag_data_received_hid = None
 
         self._dragging = False
         self._pressed_button = None
@@ -144,6 +145,10 @@ class FavoritesView(ViewContainer):
         self._resume_mode = True
 
         GObject.idle_add(self.__connect_to_bundle_registry_cb)
+
+        favorites_settings = get_settings()
+        favorites_settings.changed.connect(self.__settings_changed_cb)
+        self._set_layout(favorites_settings.layout)
 
     def __settings_changed_cb(self, **kwargs):
         favorites_settings = get_settings()
@@ -164,6 +169,22 @@ class FavoritesView(ViewContainer):
 
         if type(self._layout) == LAYOUT_MAP[layout]:
             return False
+
+        if self._layout is not None and self._dragging_mode:
+            self.disconnect(self._drag_motion_hid)
+            self.disconnect(self._drag_drop_hid)
+            self.disconnect(self._drag_data_received_hid)
+
+        if layout == favoriteslayout.RandomLayout.key:
+            self._dragging_mode = True
+            self._drag_motion_hid = self.connect(
+                'drag-motion', self.__drag_motion_cb)
+            self._drag_drop_hid = self.connect(
+                'drag-drop', self.__drag_drop_cb)
+            self._drag_data_received_hid = self.connect(
+                'drag-data-received', self.__drag_data_received_cb)
+        else:
+            self._dragging_mode = False
 
         self._layout = LAYOUT_MAP[layout]()
         return True
@@ -196,6 +217,9 @@ class FavoritesView(ViewContainer):
         return False
 
     def __motion_notify_event_cb(self, widget, event):
+        if not self._dragging_mode:
+            return False
+
         # if the mouse button is not pressed, no drag should occurr
         if not event.get_state() & Gdk.ModifierType.BUTTON1_MASK:
             self._pressed_button = None
@@ -221,6 +245,9 @@ class FavoritesView(ViewContainer):
         return False
 
     def __drag_begin_cb(self, widget, context):
+        if not self._dragging_mode:
+            return False
+
         pixbuf = GdkPixbuf.Pixbuf.new_from_file(widget.props.file_name)
 
         self._hot_x = pixbuf.props.width / 2
