@@ -89,7 +89,7 @@ class ClipboardIcon(RadioToolButton):
 
         targets = self._get_targets()
         if targets:
-            x_clipboard = Gtk.Clipboard()
+            x_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
             if not x_clipboard.set_with_data(targets,
                                            self._clipboard_data_get_cb,
                                            self._clipboard_clear_cb,
@@ -170,5 +170,6 @@ class ClipboardIcon(RadioToolButton):
     def _get_targets(self):
         targets = []
         for format_type in self._cb_object.get_formats().keys():
-            targets.append((format_type, 0, 0))
+            targets.append(Gtk.TargetEntry.new(format_type,
+                    Gtk.TargetFlags.SAME_APP, 0))
         return targets

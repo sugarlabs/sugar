@@ -83,8 +83,7 @@ class ClipboardObject(object):
         if not self._formats:
             return False
         else:
-            return self._formats.keys()[0] in [ActivityBundle.MIME_TYPE,
-                    ActivityBundle.DEPRECATED_MIME_TYPE]
+            return self._formats.keys()[0] == ActivityBundle.MIME_TYPE
 
     def get_percent(self):
         return self._percent

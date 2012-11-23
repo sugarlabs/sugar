@@ -19,6 +19,7 @@ from urlparse import urlparse
 import hashlib
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardtray import ClipboardTray
@@ -35,7 +36,7 @@ class ClipboardPanelWindow(FrameWindow):
         # Listening for new clipboard objects
         # NOTE: we need to keep a reference to Gtk.Clipboard in order to keep
         # listening to it.
-        self._clipboard = Gtk.Clipboard()
+        self._clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
         self._clipboard.connect('owner-change', self._owner_change_cb)
 
         self._clipboard_tray = ClipboardTray()
@@ -58,9 +59,9 @@ class ClipboardPanelWindow(FrameWindow):
 
         cb_service = clipboard.get_instance()
 
-        targets = x_clipboard.wait_for_targets()
+        result, targets = x_clipboard.wait_for_targets()
         cb_selections = []
-        if targets is None:
+        if not result:
             return
 
         target_is_uri = False
@@ -78,12 +79,12 @@ class ClipboardPanelWindow(FrameWindow):
                 cb_selections.append(selection)
 
         if target_is_uri:
-            uri = selection.data
+            uri = selection.get_data()
             filename = uri[len('file://'):].strip()
             md5 = self._md5_for_file(filename)
             data_hash = hash(md5)
         else:
-            data_hash = hash(selection.data)
+            data_hash = hash(selection.get_data())
 
         if len(cb_selections) > 0:
             key = cb_service.add_object(name="", data_hash=data_hash)
@@ -111,14 +112,16 @@ class ClipboardPanelWindow(FrameWindow):
         return md5.digest()
 
     def _add_selection(self, key, selection):
-        if not selection.data:
-            logging.warning('no data for selection target %s.', selection.type)
+        if not selection.get_data():
+            logging.warning('no data for selection target %s.',
+                    selection.get_data_type())
             return
 
-        logging.debug('adding type ' + selection.type + '.')
+        selection_type = str(selection.get_data_type())
+        logging.debug('adding type ' + selection_type + '.')
 
         cb_service = clipboard.get_instance()
-        if selection.type == 'text/uri-list':
+        if selection_type == 'text/uri-list':
             uris = selection.get_uris()
 
             if len(uris) > 1:
@@ -130,11 +133,11 @@ class ClipboardPanelWindow(FrameWindow):
             on_disk = (scheme == 'file')
 
             cb_service.add_object_format(key,
-                                         selection.type,
+                                         selection_type,
                                          uri,
                                          on_disk)
         else:
             cb_service.add_object_format(key,
-                                         selection.type,
-                                         selection.data,
+                                         selection_type,
+                                         selection.get_data(),
                                          on_disk=False)
