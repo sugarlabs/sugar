@@ -22,7 +22,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GConf
 from gi.repository import Gio
-import glib
+from gi.repository import GLib
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -63,7 +63,7 @@ class ObjectPalette(Palette):
         if 'title' in metadata:
             title = GObject.markup_escape_text(metadata['title'])
         else:
-            title = glib.markup_escape_text(_('Untitled'))
+            title = GLib.markup_escape_text(_('Untitled'))
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
@@ -222,6 +222,16 @@ class CopyMenu(Gtk.Menu):
             journal_menu.connect('volume-error', self.__volume_error_cb)
             self.append(journal_menu)
             journal_menu.show()
+
+        documents_path = model.get_documents_path()
+        if not self._metadata['uid'].startswith(documents_path):
+            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+                                        documents_path)
+            documents_menu.set_image(Icon(icon_name='user-documents',
+                                          icon_size=Gtk.IconSize.MENU))
+            documents_menu.connect('volume-error', self.__volume_error_cb)
+            self.append(documents_menu)
+            documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
         icon_theme = Gtk.IconTheme.get_default()
@@ -397,7 +407,7 @@ class BuddyPalette(Palette):
                           icon_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
-        Palette.__init__(self, primary_text=glib.markup_escape_text(nick),
+        Palette.__init__(self, primary_text=GLib.markup_escape_text(nick),
                          icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.

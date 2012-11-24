@@ -21,7 +21,7 @@ import math
 
 from gi.repository import GObject
 from gi.repository import GConf
-import glib
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
@@ -537,7 +537,7 @@ class FavoritePalette(ActivityPalette):
 
         if journal_entries:
             title = journal_entries[0]['title']
-            self.props.secondary_text = glib.markup_escape_text(title)
+            self.props.secondary_text = GLib.markup_escape_text(title)
 
             menu_items = []
             for entry in journal_entries:

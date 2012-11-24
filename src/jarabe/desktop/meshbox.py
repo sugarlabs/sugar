@@ -21,7 +21,7 @@ from gettext import gettext as _
 import logging
 
 import dbus
-import glib
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GConf
@@ -62,8 +62,8 @@ class _ActivityIcon(CanvasIcon):
                      self.__button_release_event_cb)
 
     def create_palette(self):
-        primary_text = glib.markup_escape_text(self._model.bundle.get_name())
-        secondary_text = glib.markup_escape_text(self._model.get_name())
+        primary_text = GLib.markup_escape_text(self._model.bundle.get_name())
+        secondary_text = GLib.markup_escape_text(self._model.get_name())
         palette_icon = Icon(file=self._model.bundle.get_icon(),
                             xo_color=self._model.get_color())
         palette_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR

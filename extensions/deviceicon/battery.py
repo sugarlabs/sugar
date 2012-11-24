@@ -18,7 +18,7 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import GConf
-import glib
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 import dbus
@@ -68,7 +68,7 @@ class DeviceView(TrayIcon):
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
         self._model = DeviceModel(battery)
-        self.palette = BatteryPalette(glib.markup_escape_text(_('My Battery')))
+        self.palette = BatteryPalette(GLib.markup_escape_text(_('My Battery')))
         self.palette.set_group_id('frame')
         self.palette_invoker.props.toggle_palette = True
         self._model.connect('updated',
@@ -170,7 +170,7 @@ class BatteryPalette(Palette):
 
         self.set_content(progress_widget)
 
-        self.props.secondary_text = glib.markup_escape_text(secondary_text)
+        self.props.secondary_text = GLib.markup_escape_text(secondary_text)
         self._status_label.set_text(status_text)
 
 

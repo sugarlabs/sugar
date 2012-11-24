@@ -17,7 +17,7 @@
 from gettext import gettext as _
 from gi.repository import GConf
 
-import glib
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -58,7 +58,7 @@ class DeviceView(TrayIcon):
         self._update_info()
 
     def create_palette(self):
-        label = glib.markup_escape_text(_('My Speakers'))
+        label = GLib.markup_escape_text(_('My Speakers'))
         palette = SpeakerPalette(label, model=self._model)
         palette.set_group_id('frame')
         return palette

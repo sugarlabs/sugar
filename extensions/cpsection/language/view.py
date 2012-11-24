@@ -136,8 +136,6 @@ class Language(SectionView):
             previous_add_removes = self._add_remove_boxes[-2]
             previous_add_removes.hide()
 
-        self._determine_add_remove_visibility()
-
         combobox.show()
 
     def _attach_to_table(self, widget, row, column, padding=20, \
@@ -216,8 +214,6 @@ class Language(SectionView):
         selected_langs = self._get_selected_langs()
         last_lang = selected_langs[-1]
 
-        self._determine_add_remove_visibility(last_lang=last_lang)
-
         self._changed = (selected_langs != self._selected_locales)
 
         if self._changed == False:
@@ -246,29 +242,6 @@ class Language(SectionView):
             new_codes.append(lang_code)
 
         return new_codes
-
-    def _determine_add_remove_visibility(self, last_lang=None):
-        # We should not let users add fallback languages for English (USA)
-        # This is because the software is not usually _translated_ into English
-        # which means that the fallback gets selected automatically
-
-        if last_lang is None:
-            selected_langs = self._get_selected_langs()
-            last_lang = selected_langs[-1]
-
-        add_remove_box = self._add_remove_boxes[-1]
-        buttons = add_remove_box.get_children()
-        add_button, remove_button = buttons
-
-        if last_lang.startswith('en_US'):
-            add_button.props.visible = False
-        else:
-            add_button.props.visible = True
-
-        if self._selected_lang_count == 1:
-            remove_button.props.visible = False
-        else:
-            remove_button.props.visible = True
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0

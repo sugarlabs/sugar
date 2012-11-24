@@ -16,7 +16,7 @@
 
 from gettext import gettext as _
 
-import glib
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GConf
 from gi.repository import GObject
@@ -51,7 +51,7 @@ class SpeechDeviceView(TrayIcon):
         self._manager = speech.get_speech_manager()
 
     def create_palette(self):
-        label = glib.markup_escape_text(_('Speech'))
+        label = GLib.markup_escape_text(_('Speech'))
         palette = SpeechPalette(label, manager=self._manager)
         palette.set_group_id('frame')
         return palette

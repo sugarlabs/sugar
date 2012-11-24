@@ -24,7 +24,6 @@ import time
 
 from gi.repository import GObject
 from gi.repository import Gio
-import glib
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette
@@ -469,6 +468,16 @@ class DetailToolbox(ToolbarBox):
             journal_menu.connect('volume-error', self.__volume_error_cb)
             palette.menu.append(journal_menu)
             journal_menu.show()
+
+        documents_path = model.get_documents_path()
+        if not self._metadata['uid'].startswith(documents_path):
+            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+                                        documents_path)
+            documents_menu.set_image(Icon(icon_name='user-documents',
+                                          icon_size=Gtk.IconSize.MENU))
+            documents_menu.connect('volume-error', self.__volume_error_cb)
+            palette.menu.append(documents_menu)
+            documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
         icon_theme = Gtk.IconTheme.get_default()

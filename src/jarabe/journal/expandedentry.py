@@ -22,7 +22,7 @@ import os
 
 import cairo
 from gi.repository import GObject
-import glib
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 import simplejson
@@ -370,7 +370,7 @@ class ExpandedEntry(Gtk.EventBox):
         old_title = self._metadata.get('title', None)
         new_title = self._title.get_text()
         if old_title != new_title:
-            label = glib.markup_escape_text(new_title)
+            label = GLib.markup_escape_text(new_title)
             self._icon.palette.props.primary_text = label
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'

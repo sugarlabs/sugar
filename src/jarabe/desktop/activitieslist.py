@@ -19,7 +19,7 @@ import os
 import logging
 from gettext import gettext as _
 
-import glib
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Pango
 from gi.repository import GConf
@@ -333,7 +333,7 @@ class ClearMessageBox(Gtk.EventBox):
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
         label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
-                color, glib.markup_escape_text(message)))
+                color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
         label.show()
 
