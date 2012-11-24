@@ -239,6 +239,11 @@ class BaseListView(Gtk.Bin):
 
     def __buddies_set_data_cb(self, column, cell, tree_model,
                               tree_iter, data):
+        buddy = tree_model.do_get_value(tree_iter, cell._model_column_index)
+        if buddy is None:
+            cell.props.visible = False
+            return
+
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress >= 100
 
