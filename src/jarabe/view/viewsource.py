@@ -469,6 +469,7 @@ class FileViewer(Gtk.ScrolledWindow):
         self._initial_filename = initial_filename
 
         self._tree_view = Gtk.TreeView()
+        self._tree_view.connect('cursor-changed', self.__cursor_changed_cb)
         self.add(self._tree_view)
         self._tree_view.show()
 
@@ -517,6 +518,19 @@ class FileViewer(Gtk.ScrolledWindow):
         else:
             file_path = model.get_value(tree_iter, 1)
         self.emit('file-selected', file_path)
+
+    def __cursor_changed_cb(self, treeview):
+        selection = treeview.get_selection()
+        store, iter_ = selection.get_selected()
+        if iter_ is None:
+            # Nothing selected. This happens at startup
+            return
+        if store.iter_has_child(iter_):
+            path = store.get_path(iter_)
+            if treeview.row_expanded(path):
+                treeview.collapse_row(path)
+            else:
+                treeview.expand_row(path, False)
 
 
 class SourceDisplay(Gtk.ScrolledWindow):
