@@ -622,6 +622,15 @@ class OwnerIcon(BuddyIcon):
         self._palette_enabled = False
         self._register_menu = None
 
+        # This is a workaround to skip the callback for
+        # enter-notify-event in the parent class the first time.
+        def __enter_notify_event_cb(icon, event):
+            self.unset_state_flags(Gtk.StateFlags.PRELIGHT)
+            self.disconnect(self._enter_notify_hid)
+
+        self._enter_notify_hid = self.connect('enter-notify-event',
+                                              __enter_notify_event_cb)
+
     def create_palette(self):
         if not self._palette_enabled:
             self._palette_enabled = True
