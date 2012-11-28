@@ -84,7 +84,7 @@ class ClipboardMenu(Palette):
         if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
-                self._open_item.remove_submenu()
+                self._open_item.set_submenu(None)
             return
 
         child.set_text(_('Open with'))
