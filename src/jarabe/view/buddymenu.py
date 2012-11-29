@@ -126,6 +126,12 @@ class BuddyMenu(Palette):
         self._quit(get_session_manager().shutdown)
 
     def __controlpanel_activate_cb(self, menu_item):
+        # hide the frame when control panel is shown
+        import jarabe.frame
+        frame = jarabe.frame.get_view()
+        frame.hide()
+
+        # show the control panel
         panel = ControlPanel()
         panel.set_transient_for(self._widget.get_toplevel())
         panel.show()
