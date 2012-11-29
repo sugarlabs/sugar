@@ -2,6 +2,7 @@
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2012 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
+# Copyright (C) 2012 Daniel Francis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +32,8 @@ from jarabe.desktop import favoritesview
 
 _AUTOSEARCH_TIMEOUT = 1000
 _FAVORITES_VIEW = 0
-_LIST_VIEW = 1
+_SCHOOL_VIEW = 1
+_LIST_VIEW = 2
 
 
 class ViewToolbar(Gtk.Toolbar):
@@ -75,6 +77,13 @@ class ViewToolbar(Gtk.Toolbar):
                                        _FAVORITES_VIEW)
         self.insert(self._favorites_button, -1)
 
+        self._school_button = SchoolButton()
+        self._school_button.props.group = self._favorites_button
+        self._school_button.connect('toggled',
+                                    self.__view_button_toggled_cb,
+                                    _SCHOOL_VIEW)
+        self.insert(self._school_button, -1)
+
         self._list_button = RadioToolButton(icon_name='view-list')
         self._list_button.props.group = self._favorites_button
         self._list_button.props.tooltip = _('List view')
@@ -87,10 +96,12 @@ class ViewToolbar(Gtk.Toolbar):
 
     def show_view_buttons(self):
         self._favorites_button.show()
+        self._school_button.show()
         self._list_button.show()
 
     def hide_view_buttons(self):
         self._favorites_button.hide()
+        self._school_button.hide()
         self._list_button.hide()
 
     def clear_query(self):
@@ -149,6 +160,7 @@ class FavoritesButton(RadioToolButton):
         self.props.tooltip = _('Favorites view')
         self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
+        self.props.icon_name = 'gtk-home'
 
         favorites_settings = favoritesview.get_settings()
         self._layout = favorites_settings.layout
@@ -187,4 +199,56 @@ class FavoritesButton(RadioToolButton):
             self.emit('toggled')
 
     def _update_icon(self):
-        self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
+        pass
+        # self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
+
+
+class SchoolButton(RadioToolButton):
+    __gtype_name__ = 'SugarSchoolButton'
+
+    def __init__(self):
+        RadioToolButton.__init__(self)
+        self.props.icon_name = 'school-server'
+        self.props.tooltip = _('School favorites')
+        self.props.accelerator = _('<Ctrl>I')
+        self.props.group = None
+
+        favorites_settings = favoritesview.get_settings()
+        self._layout = favorites_settings.layout
+        self._update_icon()
+
+        # someday, this will be a Gtk.Table()
+        layouts_grid = Gtk.HBox()
+        layout_item = None
+        for layoutid, layoutclass in sorted(favoritesview.LAYOUT_MAP.items()):
+            layout_item = RadioToolButton(icon_name=layoutclass.icon_name,
+                                          group=layout_item, active=False)
+            if layoutid == self._layout:
+                layout_item.set_active(True)
+            layouts_grid.pack_start(layout_item, True, False, 0)
+            layout_item.connect('toggled', self.__layout_activate_cb,
+                                layoutid)
+        layouts_grid.show_all()
+        self.props.palette.set_content(layouts_grid)
+
+    def __layout_activate_cb(self, menu_item, layout):
+        if not menu_item.get_active():
+            return
+        if self._layout == layout and self.props.active:
+            return
+
+        if self._layout != layout:
+            self._layout = layout
+            self._update_icon()
+
+            favorites_settings = favoritesview.get_settings()
+            favorites_settings.layout = layout
+
+        if not self.props.active:
+            self.props.active = True
+        else:
+            self.emit('toggled')
+
+    def _update_icon(self):
+        pass
+        #self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name

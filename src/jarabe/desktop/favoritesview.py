@@ -74,8 +74,13 @@ _favorites_settings = None
 class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
-    def __init__(self):
+    def __init__(self, favorites):
+	"""
+	If the argument is True, it will load the activities marked as favorites.
+	Else, it will load the activities marked for school.
+	"""
         Gtk.VBox.__init__(self)
+	self.load_favorites = favorites
 
         self._view = FavoritesView(self)
         self.pack_start(self._view, True, True, 0)
@@ -157,9 +162,14 @@ class FavoritesView(ViewContainer):
             self.set_layout(self._layout)
             registry = bundleregistry.get_registry()
             for info in registry:
-                if registry.is_bundle_favorite(info.get_bundle_id(),
-                                               info.get_activity_version()):
-                    self._add_activity(info)
+                if self._box.load_favorites:
+                    if registry.is_bundle_favorite(info.get_bundle_id(),
+                                                   info.get_activity_version()):
+                        self._add_activity(info)
+                else:
+                    if registry.is_bundle_for_school(info.get_bundle_id(),
+                                                     info.get_activity_version()):
+                        self._add_activity(info)
 
     def _set_layout(self, layout):
         if layout not in LAYOUT_MAP:
@@ -288,11 +298,16 @@ class FavoritesView(ViewContainer):
     def __connect_to_bundle_registry_cb(self):
         registry = bundleregistry.get_registry()
 
-        for info in registry:
-            if registry.is_bundle_favorite(info.get_bundle_id(),
-                                           info.get_activity_version()):
-                self._add_activity(info)
-
+        if self._box.load_favorites:
+            for info in registry:
+                if registry.is_bundle_favorite(info.get_bundle_id(),
+                                               info.get_activity_version()):
+                    self._add_activity(info)
+        else:
+            for info in registry:
+                if registry.is_bundle_for_school(info.get_bundle_id(),
+                                               info.get_activity_version()):
+                    self._add_activity(info)
         registry.connect('bundle-added', self.__activity_added_cb)
         registry.connect('bundle-removed', self.__activity_removed_cb)
         registry.connect('bundle-changed', self.__activity_changed_cb)
@@ -308,9 +323,14 @@ class FavoritesView(ViewContainer):
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
-        if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                activity_info.get_activity_version()):
-            self._add_activity(activity_info)
+        if self._box.load_favorites:
+            if registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                    activity_info.get_activity_version()):
+                self._add_activity(activity_info)
+        else:
+            if registry.is_bundle_for_school(activity_info.get_bundle_id(),
+                    activity_info.get_activity_version()):
+                self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
         icon = self._find_activity_icon(activity_info.get_bundle_id(),
@@ -334,9 +354,14 @@ class FavoritesView(ViewContainer):
             self.remove(icon)
 
         registry = bundleregistry.get_registry()
-        if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                       activity_info.get_activity_version()):
-            self._add_activity(activity_info)
+        if self._box.load_favorites:
+            if registry.is_bundle_favorite(activity_info.get_bundle_id(),
+                                           activity_info.get_activity_version()):
+                self._add_activity(activity_info)
+        else:
+            if registry.is_bundle_for_school(activity_info.get_bundle_id(),
+                                             activity_info.get_activity_version()):
+                self._add_activity(activity_info)
 
     def set_filter(self, query):
         query = query.strip()

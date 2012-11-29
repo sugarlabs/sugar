@@ -1,5 +1,6 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Aleksey Lim
+# Copyright (C) 2012 Daniel Francis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -70,7 +71,9 @@ class BundleRegistry(GObject.GObject):
             self._gio_monitors.append(monitor)
 
         self._last_defaults_mtime = -1
+        self._last_school_defaults_mtime = -1
         self._favorite_bundles = {}
+        self._school_bundles = {}
 
         client = GConf.Client.get_default()
         self._protected_activities = []
@@ -145,6 +148,27 @@ class BundleRegistry(GObject.GObject):
             self._last_defaults_mtime = float(favorites_data['defaults-mtime'])
             self._favorite_bundles = favorite_bundles
 
+        school_path = env.get_profile_path('school_activities')
+        if os.path.exists(school_path):
+            school_data = simplejson.load(open(school_path))
+
+            school_bundles = school_data['school']
+            if not isinstance(school_bundles, dict):
+                raise ValueError('Invalid format in %s.' % school_path)
+            if school_bundles:
+                first_key = school_bundles.keys()[0]
+                if not isinstance(first_key, basestring):
+                    raise ValueError('Invalid format in %s.' % school_path)
+
+                first_value = school_bundles.values()[0]
+                if first_value is not None and \
+                   not isinstance(first_value, dict):
+                    raise ValueError('Invalid format in %s.' % school_path)
+
+            self._last_school_defaults_mtime = float(school_data['defaults-mtime'])
+            self._school_bundles = school_bundles
+
+
     def _merge_default_favorites(self):
         default_activities = []
         defaults_path = os.path.join(config.data_path, 'activities.defaults')
@@ -178,6 +202,40 @@ class BundleRegistry(GObject.GObject):
         logging.debug('After merging: %r', self._favorite_bundles)
 
         self._write_favorites_file()
+
+        default_school_activities = []
+        defaults_school_path = os.path.join(config.data_path, 'schoolactivities.defaults')
+        if os.path.exists(defaults_school_path):
+            file_mtime = os.stat(defaults_school_path).st_mtime
+            if file_mtime > self._last_school_defaults_mtime:
+                f = open(defaults_school_path, 'r')
+                for line in f.readlines():
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        default_school_activities.append(line)
+                f.close()
+                self._last_school_defaults_mtime = file_mtime
+
+        if not default_school_activities:
+            return
+
+        for bundle_id in default_school_activities:
+            max_version = '0'
+            for bundle in self._bundles:
+                if bundle.get_bundle_id() == bundle_id and \
+                        NormalizedVersion(max_version) < \
+                        NormalizedVersion(bundle.get_activity_version()):
+                    max_version = bundle.get_activity_version()
+
+            key = self._get_favorite_key(bundle_id, max_version)
+            if NormalizedVersion(max_version) > NormalizedVersion('0') and \
+                    key not in self._favorite_bundles:
+                self._school_bundles[key] = None
+
+        logging.debug('After merging: %r', self._favorite_bundles)
+
+        self._write_school_file()
+
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
@@ -314,9 +372,31 @@ class BundleRegistry(GObject.GObject):
         self._write_favorites_file()
         return True
 
+    def set_bundle_for_school(self, bundle_id, version, favorite):
+        changed = self._set_bundle_for_school(bundle_id, version, favorite)
+        if changed:
+            bundle = self._find_bundle(bundle_id, version)
+            self.emit('bundle-changed', bundle)
+
+    def _set_bundle_for_school(self, bundle_id, version, favorite):
+        key = self._get_favorite_key(bundle_id, version)
+        if favorite and not key in self._school_bundles:
+            self._school_bundles[key] = None
+        elif not favorite and key in self._school_bundles:
+            del self._school_bundles[key]
+        else:
+            return False
+
+        self._write_school_file()
+        return True
+
     def is_bundle_favorite(self, bundle_id, version):
         key = self._get_favorite_key(bundle_id, version)
         return key in self._favorite_bundles
+
+    def is_bundle_for_school(self, bundle_id, version):
+        key = self._get_favorite_key(bundle_id, version)
+        return key in self._school_bundles
 
     def is_activity_protected(self, bundle_id):
         return bundle_id in self._protected_activities
@@ -356,6 +436,12 @@ class BundleRegistry(GObject.GObject):
         favorites_data = {'defaults-mtime': self._last_defaults_mtime,
                           'favorites': self._favorite_bundles}
         simplejson.dump(favorites_data, open(path, 'w'), indent=1)
+
+    def _write_school_file(self):
+        path = env.get_profile_path('school_activities')
+        school_data = {'defaults-mtime': self._last_school_defaults_mtime,
+                          'school': self._favorite_bundles}
+        simplejson.dump(school_data, open(path, 'w'), indent=1)
 
     def is_installed(self, bundle):
         # TODO treat ContentBundle in special way

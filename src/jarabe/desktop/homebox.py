@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2012 Daniel Francis
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +31,8 @@ from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.util.normalize import normalize_string
 
 _FAVORITES_VIEW = 0
-_LIST_VIEW = 1
+_SCHOOL_VIEW = 1
+_LIST_VIEW = 2
 
 
 class HomeBox(Gtk.VBox):
@@ -41,7 +43,8 @@ class HomeBox(Gtk.VBox):
 
         Gtk.VBox.__init__(self)
 
-        self._favorites_box = favoritesview.FavoritesBox()
+        self._favorites_box = favoritesview.FavoritesBox(True)
+        self._school_box = favoritesview.FavoritesBox(False)
         self._list_view = ActivitiesList()
 
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
@@ -81,8 +84,10 @@ class HomeBox(Gtk.VBox):
     def __software_update_response_cb(self, alert, response_id):
         if self._list_view in self.get_children():
             self._list_view.remove_alert()
-        else:
+        elif self._favorites_box in self.get_children():
             self._favorites_box.remove_alert()
+        else:
+            self._school_box.remove_alert()
 
         if response_id != Gtk.ResponseType.REJECT:
             update_trigger_file = os.path.expanduser('~/.sugar-update')
@@ -104,6 +109,7 @@ class HomeBox(Gtk.VBox):
         self._query = normalize_string(query.decode('utf-8'))
         self._list_view.set_filter(self._query)
         self._favorites_box.set_filter(self._query)
+        self._school_box.set_filter(self._query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -126,14 +132,30 @@ class HomeBox(Gtk.VBox):
         if view == _FAVORITES_VIEW:
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
+            elif self._school_box in self.get_children():
+                self.remove(self._school_box)
 
             if self._favorites_box not in self.get_children():
                 self.add(self._favorites_box)
                 self._favorites_box.show()
                 self._favorites_box.grab_focus()
+ 
+        elif view == _SCHOOL_VIEW:
+            if self._list_view in self.get_children():
+                self.remove(self._list_view)
+            elif self._favorites_box in self.get_children():
+                self.remove(self._favorites_box)
+
+            if self._school_box not in self.get_children():
+                self.add(self._school_box)
+                self._school_box.show()
+                self._school_box.grab_focus()
+ 
         elif view == _LIST_VIEW:
             if self._favorites_box in self.get_children():
                 self.remove(self._favorites_box)
+            elif self._school_box in self.get_children():
+                self.remove(self._school_box)
 
             if self._list_view not in self.get_children():
                 self.add(self._list_view)
@@ -160,3 +182,4 @@ class HomeBox(Gtk.VBox):
         if resume_mode and self._query != '':
             self._list_view.set_filter(self._query)
             self._favorites_box.set_filter(self._query)
+            self._school_box.set_filter(self._query)
