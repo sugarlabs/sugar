@@ -9,11 +9,12 @@ sugar-100.gtkrc: gtkrc.em
 		$(top_builddir)/data/sugar-100.gtkrc
 
 sugardir = $(pkgdatadir)/data
-sugar_DATA =			\
-	activities.defaults	\
-	kbdconfig		\
-	mime.defaults		\
-	GPLv2			\
+sugar_DATA =			  \
+	activities.defaults	  \
+	schoolactivities.defaults \
+	kbdconfig		  \
+	mime.defaults		  \
+	GPLv2			  \
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
