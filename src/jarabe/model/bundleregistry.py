@@ -403,19 +403,29 @@ class BundleRegistry(GObject.GObject):
 
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
-        if key not in self._favorite_bundles:
-            raise ValueError('Bundle %s %s not favorite' %
-                             (bundle_id, version))
+        if key not in self._favorite_bundles and key not in self._school_activities:
+            raise ValueError('Bundle %s %s not favorite' % (bundle_id, version))
 
-        if self._favorite_bundles[key] is None:
-            self._favorite_bundles[key] = {}
-        if 'position' not in self._favorite_bundles[key] or \
+        if key in self._favorite_bundles:
+            if self._favorite_bundles[key] is None:
+                self._favorite_bundles[key] = {}
+            if 'position' not in self._favorite_bundles[key] or \
                 [x, y] != self._favorite_bundles[key]['position']:
-            self._favorite_bundles[key]['position'] = [x, y]
-        else:
-            return
+                self._favorite_bundles[key]['position'] = [x, y]
+            else:
+                return
+            self._write_favorites_file()
 
-        self._write_favorites_file()
+        if key in self._school_bundles:
+            if self._school_bundles[key] is None:
+                self._school_bundles[key] = {}
+            if 'position' not in self._school_bundles[key] or \
+                [x, y] != self._school_bundles[key]['position']:
+                self._school_bundles[key]['position'] = [x, y]
+            else:
+                return
+            self._write_school_file()
+
         bundle = self._find_bundle(bundle_id, version)
         self.emit('bundle-changed', bundle)
 
@@ -424,12 +434,18 @@ class BundleRegistry(GObject.GObject):
         bundle to be displayed. Coordinates are relative to a 1000x1000 area.
         """
         key = self._get_favorite_key(bundle_id, version)
-        if key not in self._favorite_bundles or \
-                self._favorite_bundles[key] is None or \
+        if key in self._favorite_bundles:
+            if self._favorite_bundles[key] is None or \
                 'position' not in self._favorite_bundles[key]:
-            return (-1, -1)
-        else:
-            return tuple(self._favorite_bundles[key]['position'])
+                return (-1, -1)
+            else:
+                return tuple(self._favorite_bundles[key]['position'])
+        elif key in self._school_bundles:
+            if self._school_bundles[key] is None or \
+                'position' not in self._school_bundles[key]:
+                return (-1, -1)
+            else:
+                return tuple(self._school_bundles[key]['position'])
 
     def _write_favorites_file(self):
         path = env.get_profile_path('favorite_activities')
