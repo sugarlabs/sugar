@@ -209,13 +209,18 @@ class BundleRegistry(GObject.GObject):
         self._write_favorites_file()
 
     def _merge_default_school(self):
+        print "Merging default school activities"
         default_school_activities = []
+        print "Defaults", default_school_activities
         defaults_school_path = os.path.join(config.data_path, 'schoolactivities.defaults')
+        print defaults_school_path
         if os.path.exists(defaults_school_path):
+            print "It exists"
             file_mtime = os.stat(defaults_school_path).st_mtime
             if file_mtime > self._last_school_defaults_mtime:
                 f = open(defaults_school_path, 'r')
                 for line in f.readlines():
+                    print line
                     line = line.strip()
                     if line and not line.startswith('#'):
                         default_school_activities.append(line)
@@ -223,9 +228,12 @@ class BundleRegistry(GObject.GObject):
                 self._last_school_defaults_mtime = file_mtime
 
         if not default_school_activities:
+            print "Not default school activities"
             return
 
+        print default_school_activities
         for bundle_id in default_school_activities:
+            print True
             max_version = '0'
             for bundle in self._bundles:
                 if bundle.get_bundle_id() == bundle_id and \
@@ -235,7 +243,7 @@ class BundleRegistry(GObject.GObject):
 
             key = self._get_favorite_key(bundle_id, max_version)
             if NormalizedVersion(max_version) > NormalizedVersion('0') and \
-                    key not in self._favorite_bundles:
+                    key not in self._school_bundles:
                 self._school_bundles[key] = None
 
         logging.debug('After merging: %r', self._favorite_bundles)
