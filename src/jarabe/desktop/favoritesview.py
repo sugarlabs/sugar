@@ -69,6 +69,7 @@ LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
 about the layout can be accessed with fields of the class."""
 
 _favorites_settings = None
+_school_settings = None
 
 
 class FavoritesBox(Gtk.VBox):
@@ -151,12 +152,18 @@ class FavoritesView(ViewContainer):
 
         GObject.idle_add(self.__connect_to_bundle_registry_cb)
 
-        favorites_settings = get_settings()
+        if self._box.load_favorites:
+            favorites_settings = get_favorite_settings()
+        else:
+            favorites_settings = get_school_settings()
         favorites_settings.changed.connect(self.__settings_changed_cb)
         self._set_layout(favorites_settings.layout)
 
     def __settings_changed_cb(self, **kwargs):
-        favorites_settings = get_settings()
+        if self._box.load_favorites:
+            favorites_settings = get_favorite_settings()
+        else:
+            favorites_settings = get_school_settings()
         layout_set = self._set_layout(favorites_settings.layout)
         if layout_set:
             self.set_layout(self._layout)
@@ -693,9 +700,9 @@ class OwnerIcon(BuddyIcon):
         self._register_menu.show()
 
 
-class FavoritesSetting(object):
+class Setting(object):
 
-    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
+    _FAVORITES_KEY = None
 
     def __init__(self):
         client = GConf.Client.get_default()
@@ -722,8 +729,23 @@ class FavoritesSetting(object):
     layout = property(get_layout, set_layout)
 
 
-def get_settings():
+class FavoritesSetting(Setting):
+    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
+
+
+class SchoolSetting(Setting):
+    _FAVORITES_KEY = '/desktop/sugar/desktop/school_layout'
+
+
+def get_favorite_settings():
     global _favorites_settings
     if _favorites_settings is None:
         _favorites_settings = FavoritesSetting()
     return _favorites_settings
+
+
+def get_school_settings():
+    global _school_settings
+    if _school_settings is None:
+        _school_settings = SchoolSetting()
+    return _school_settings

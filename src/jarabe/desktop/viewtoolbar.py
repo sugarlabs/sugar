@@ -162,7 +162,7 @@ class FavoritesButton(RadioToolButton):
         self.props.group = None
         self.props.icon_name = 'gtk-home'
 
-        favorites_settings = favoritesview.get_settings()
+        favorites_settings = favoritesview.get_favorite_settings()
         self._layout = favorites_settings.layout
         self._update_icon()
 
@@ -190,7 +190,7 @@ class FavoritesButton(RadioToolButton):
             self._layout = layout
             self._update_icon()
 
-            favorites_settings = favoritesview.get_settings()
+            favorites_settings = favoritesview.get_favorite_settings()
             favorites_settings.layout = layout
 
         if not self.props.active:
@@ -213,8 +213,8 @@ class SchoolButton(RadioToolButton):
         self.props.accelerator = _('<Ctrl>I')
         self.props.group = None
 
-        favorites_settings = favoritesview.get_settings()
-        self._layout = favorites_settings.layout
+        school_settings = favoritesview.get_school_settings()
+        self._layout = school_settings.layout
         self._update_icon()
 
         # someday, this will be a Gtk.Table()
@@ -241,7 +241,7 @@ class SchoolButton(RadioToolButton):
             self._layout = layout
             self._update_icon()
 
-            favorites_settings = favoritesview.get_settings()
+            favorites_settings = favoritesview.get_school_settings()
             favorites_settings.layout = layout
 
         if not self.props.active:
