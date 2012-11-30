@@ -92,8 +92,13 @@ class BundleRegistry(GObject.GObject):
             self._load_favorites()
         except Exception:
             logging.exception('Error while loading favorite_activities.')
+        try:
+            self._load_school()
+        except Exception:
+            logging.exception('Error while loading school_activities.')
 
         self._merge_default_favorites()
+        self._merge_default_school()
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
@@ -148,6 +153,7 @@ class BundleRegistry(GObject.GObject):
             self._last_defaults_mtime = float(favorites_data['defaults-mtime'])
             self._favorite_bundles = favorite_bundles
 
+    def _load_school(self):
         school_path = env.get_profile_path('school_activities')
         if os.path.exists(school_path):
             school_data = simplejson.load(open(school_path))
@@ -167,7 +173,6 @@ class BundleRegistry(GObject.GObject):
 
             self._last_school_defaults_mtime = float(school_data['defaults-mtime'])
             self._school_bundles = school_bundles
-
 
     def _merge_default_favorites(self):
         default_activities = []
@@ -203,6 +208,7 @@ class BundleRegistry(GObject.GObject):
 
         self._write_favorites_file()
 
+    def _merge_default_school(self):
         default_school_activities = []
         defaults_school_path = os.path.join(config.data_path, 'schoolactivities.defaults')
         if os.path.exists(defaults_school_path):
@@ -456,7 +462,7 @@ class BundleRegistry(GObject.GObject):
     def _write_school_file(self):
         path = env.get_profile_path('school_activities')
         school_data = {'defaults-mtime': self._last_school_defaults_mtime,
-                          'school': self._favorite_bundles}
+                          'school': self._school_bundles}
         simplejson.dump(school_data, open(path, 'w'), indent=1)
 
     def is_installed(self, bundle):

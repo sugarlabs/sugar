@@ -544,18 +544,18 @@ class ActivityListPalette(ActivityPalette):
         self._favorite_item.set_image(self._favorite_icon)
         self._favorite_item.connect('activate',
                                     self.__change_favorite_activate_cb)
-#        self.menu.append(self._favorite_item)
+        self.menu.append(self._favorite_item)
         self._favorite_item.show()
 
         if activity_info.is_user_activity():
-            pass  # self._add_erase_option(registry, activity_info)
+            self._add_erase_option(registry, activity_info)
 
         registry = bundleregistry.get_registry()
         self._activity_changed_sid = registry.connect('bundle_changed',
                 self.__activity_changed_cb)
         self._update_favorite_item()
 
-        #self.menu.connect('destroy', self.__destroy_cb)
+        self.menu.connect('destroy', self.__destroy_cb)
 
     def _add_erase_option(self, registry, activity_info):
         menu_item = MenuItem(_('Erase'), 'list-remove')
