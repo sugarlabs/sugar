@@ -157,7 +157,7 @@ class FavoritesButton(RadioToolButton):
     def __init__(self):
         RadioToolButton.__init__(self)
 
-        self.props.tooltip = _('Favorites view')
+        self.props.tooltip = _('Favorite activities')
         self.props.accelerator = _('<Ctrl>1')
         self.props.group = None
         self.props.icon_name = 'gtk-home'
@@ -200,7 +200,7 @@ class FavoritesButton(RadioToolButton):
 
     def _update_icon(self):
         pass
-        # self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
+    # self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
 
 
 class SchoolButton(RadioToolButton):
@@ -209,7 +209,7 @@ class SchoolButton(RadioToolButton):
     def __init__(self):
         RadioToolButton.__init__(self)
         self.props.icon_name = 'school-server'
-        self.props.tooltip = _('School favorites')
+        self.props.tooltip = _('Activities for school')
         self.props.accelerator = _('<Ctrl>I')
         self.props.group = None
 
@@ -251,4 +251,4 @@ class SchoolButton(RadioToolButton):
 
     def _update_icon(self):
         pass
-        #self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
+    #self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name

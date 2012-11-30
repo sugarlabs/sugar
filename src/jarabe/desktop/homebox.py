@@ -139,7 +139,7 @@ class HomeBox(Gtk.VBox):
                 self.add(self._favorites_box)
                 self._favorites_box.show()
                 self._favorites_box.grab_focus()
- 
+
         elif view == _SCHOOL_VIEW:
             if self._list_view in self.get_children():
                 self.remove(self._list_view)
@@ -150,7 +150,7 @@ class HomeBox(Gtk.VBox):
                 self.add(self._school_box)
                 self._school_box.show()
                 self._school_box.grab_focus()
- 
+
         elif view == _LIST_VIEW:
             if self._favorites_box in self.get_children():
                 self.remove(self._favorites_box)

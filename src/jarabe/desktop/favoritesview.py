@@ -76,12 +76,12 @@ class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
     def __init__(self, favorites):
-	"""
-	If the argument is True, it will load the activities marked as favorites.
-	Else, it will load the activities marked for school.
-	"""
+        """
+      If the argument is True, it will load the activities marked as favorites.
+        Else, it will load the activities marked for school.
+        """
         Gtk.VBox.__init__(self)
-	self.load_favorites = favorites
+        self.load_favorites = favorites
 
         self._view = FavoritesView(self)
         self.pack_start(self._view, True, True, 0)
@@ -171,11 +171,11 @@ class FavoritesView(ViewContainer):
             for info in registry:
                 if self._box.load_favorites:
                     if registry.is_bundle_favorite(info.get_bundle_id(),
-                                                   info.get_activity_version()):
+                                               info.get_activity_version()):
                         self._add_activity(info)
                 else:
                     if registry.is_bundle_for_school(info.get_bundle_id(),
-                                                     info.get_activity_version()):
+                                                 info.get_activity_version()):
                         self._add_activity(info)
 
     def _set_layout(self, layout):
@@ -363,11 +363,11 @@ class FavoritesView(ViewContainer):
         registry = bundleregistry.get_registry()
         if self._box.load_favorites:
             if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                           activity_info.get_activity_version()):
+                                       activity_info.get_activity_version()):
                 self._add_activity(activity_info)
         else:
             if registry.is_bundle_for_school(activity_info.get_bundle_id(),
-                                             activity_info.get_activity_version()):
+                                         activity_info.get_activity_version()):
                 self._add_activity(activity_info)
 
     def set_filter(self, query):

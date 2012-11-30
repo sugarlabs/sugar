@@ -202,7 +202,8 @@ class ListModel(Gtk.TreeModelSort):
     COLUMN_DATE_TEXT = 8
 
     def __init__(self):
-        self._model = Gtk.ListStore(str, bool, bool, str, str, str, str, int, str)
+        self._model = Gtk.ListStore(str, bool, bool, str,
+                                    str, str, str, int, str)
         self._model_filter = self._model.filter_new()
         Gtk.TreeModelSort.__init__(self, model=self._model_filter)
         self.set_sort_column_id(ListModel.COLUMN_TITLE, Gtk.SortType.ASCENDING)
@@ -600,4 +601,3 @@ class ActivityListPalette(ActivityPalette):
 
     def __erase_activate_cb(self, menu_item):
         self.emit('erase-activated', self._bundle_id)
-

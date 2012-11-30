@@ -171,7 +171,8 @@ class BundleRegistry(GObject.GObject):
                    not isinstance(first_value, dict):
                     raise ValueError('Invalid format in %s.' % school_path)
 
-            self._last_school_defaults_mtime = float(school_data['defaults-mtime'])
+            self._last_school_defaults_mtime = float(school_data[
+                    'defaults-mtime'])
             self._school_bundles = school_bundles
 
     def _merge_default_favorites(self):
@@ -209,18 +210,14 @@ class BundleRegistry(GObject.GObject):
         self._write_favorites_file()
 
     def _merge_default_school(self):
-        print "Merging default school activities"
         default_school_activities = []
-        print "Defaults", default_school_activities
-        defaults_school_path = os.path.join(config.data_path, 'schoolactivities.defaults')
-        print defaults_school_path
+        defaults_school_path = os.path.join(config.data_path,
+                                            'schoolactivities.defaults')
         if os.path.exists(defaults_school_path):
-            print "It exists"
             file_mtime = os.stat(defaults_school_path).st_mtime
             if file_mtime > self._last_school_defaults_mtime:
                 f = open(defaults_school_path, 'r')
                 for line in f.readlines():
-                    print line
                     line = line.strip()
                     if line and not line.startswith('#'):
                         default_school_activities.append(line)
@@ -228,7 +225,6 @@ class BundleRegistry(GObject.GObject):
                 self._last_school_defaults_mtime = file_mtime
 
         if not default_school_activities:
-            print "Not default school activities"
             return
 
         print default_school_activities
@@ -249,7 +245,6 @@ class BundleRegistry(GObject.GObject):
         logging.debug('After merging: %r', self._favorite_bundles)
 
         self._write_school_file()
-
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
@@ -417,8 +412,10 @@ class BundleRegistry(GObject.GObject):
 
     def set_bundle_position(self, bundle_id, version, x, y):
         key = self._get_favorite_key(bundle_id, version)
-        if key not in self._favorite_bundles and key not in self._school_activities:
-            raise ValueError('Bundle %s %s not favorite' % (bundle_id, version))
+        if key not in self._favorite_bundles and\
+                key not in self._school_activities:
+            raise ValueError('Bundle %s %s not favorite' % (bundle_id,
+                                                            version))
 
         if key in self._favorite_bundles:
             if self._favorite_bundles[key] is None:
