@@ -42,11 +42,11 @@ def handle_key_press(key):
     window = Gdk.get_default_root_window()
     width, height = window.get_width(), window.get_height()
 
-    window_cr = Gdk.cairo_create(window)
-    window_surface = window_cr.get_target()
-    screenshot_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+    screenshot_surface = Gdk.Window.create_similar_surface(
+        window, cairo.CONTENT_COLOR, width, height)
+
     cr = cairo.Context(screenshot_surface)
-    cr.set_source_surface(window_surface)
+    Gdk.cairo_set_source_window(cr, window, 0, 0)
     cr.paint()
     screenshot_surface.write_to_png(file_path)
 
