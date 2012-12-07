@@ -14,10 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import sys
 import os
 import unittest
-
-from jarabe.desktop.activitieslist import ActivityListPalette
+import subprocess
 
 tests_dir = os.path.dirname(__file__)
 base_dir = os.path.dirname(tests_dir)
@@ -50,6 +50,32 @@ class MockActivityInfo:
     def is_user_activity(self):
         return True
 
+def _create_activities_palette():
+    from gi.repository import Gtk
+    from jarabe.desktop.activitieslist import ActivityListPalette
+
+    palette = ActivityListPalette(MockActivityInfo())
+    palette.popup()
+
+    Gtk.main()
+
 class TestActivitiesList(unittest.TestCase):
+    def _check_activities_palette(self):
+        from sugar3.test import uitree
+
+        root = uitree.get_root()
+
+        for name in ["Make favorite", "Erase", "Start new"]:
+            node = root.find_child(name=name, role_name="label")
+            self.assertIsNotNone(node)
+
     def test_activity_list_palette(self):
-        palette = ActivityListPalette(MockActivityInfo())
+        process = subprocess.Popen(["python", __file__,
+                                    "_create_activities_palette"])
+        try:
+            self._check_activities_palette()
+        finally:
+            process.terminate()
+
+if __name__ == '__main__':
+    globals()[sys.argv[1]]()
