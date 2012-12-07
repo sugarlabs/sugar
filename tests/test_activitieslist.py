@@ -20,7 +20,13 @@ import unittest
 from jarabe.desktop.activitieslist import ActivityListPalette
 
 tests_dir = os.path.dirname(__file__)
+base_dir = os.path.dirname(tests_dir)
 data_dir = os.path.join(tests_dir, "data")
+
+os.environ["SUGAR_ACTIVITIES_DEFAULTS"] = \
+    os.path.join(base_dir, "data", "activities.defaults")
+os.environ["SUGAR_MIME_DEFAULTS"] = \
+    os.path.join(base_dir, "data", "mime.defaults")
 
 class MockActivityInfo:
     def get_bundle_id(self):

@@ -1,4 +1,5 @@
 TESTS_TMPDIR=$(abs_builddir)/tests-tmp
+TESTS_PYTHONPATH=$(abs_srcdir)/src:$(PYTHONPATH)
 
 SUBDIRS = bin data po src extensions
 
@@ -18,5 +19,6 @@ DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 test:
 	cd $(top_srcdir)/tests && \
     mkdir -p $(TESTS_TMPDIR) && \
-    TMPDIR=$(TESTS_TMPDIR) python -m unittest discover && \
+    TMPDIR=$(TESTS_TMPDIR) PYTHONPATH=$(TESTS_PYTHONPATH) \
+    python -m unittest discover && \
     rm -rf $(TESTS_TMPDIR)
