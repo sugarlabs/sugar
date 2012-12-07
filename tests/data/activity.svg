@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#010101">
+	<!ENTITY fill_color "#FFFFFF">
+]>
+<svg enable-background="new 0 0 55 55" height="55px" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+  <g display="block" id="activity-helloworld">
+    <path d="M9.263,48.396c0.682,1.152,6.027,0.059,8.246-1.463   c2.102-1.432,3.207-2.596,4.336-2.596c1.133,0,12.54,0.92,20.935-5.715c7.225-5.707,9.773-13.788,4.52-21.437   c-5.252-7.644-13.832-9.08-20.878-8.56C16.806,9.342,4.224,16.91,4.677,28.313c0.264,6.711,3.357,9.143,4.922,10.703   c1.562,1.566,4.545,1.566,2.992,5.588C11.981,46.183,8.753,47.522,9.263,48.396z" display="inline" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5"/>
+  </g>
+  <circle cx="27.375" cy="27.5" r="19.903"
+     transform="matrix(0.6,0,0,0.6,10.95,11)"
+     id="circle4" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" display="inline" />
+  <g transform="matrix(0.6,0,0,0.6,10.95,11)" id="g6" style="display:inline">
+    <path d="m 27.376,7.598 c 0,0 -11.205,8.394 -11.205,19.976 0,11.583 11.205,19.829 11.205,19.829"
+       id="path8" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+    <path d="m 27.376,7.598 c 0,0 11.066,9.141 11.066,19.976 0,10.839 -11.066,19.829 -11.066,19.829"
+       id="path10" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+    <line x1="27.375999" x2="27.375999" y1="7.598" y2="47.402"
+       id="line12" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+    <line x1="27.375999" x2="27.375999" y1="7.598" y2="47.402"
+       id="line14" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+    <line x1="27.375999" x2="27.375999" y1="7.598" y2="47.402"
+       id="line16" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+    <line x1="7.4720001" x2="47.278" y1="27.5" y2="27.5"
+       id="line18" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" />
+  </g>
+</svg>

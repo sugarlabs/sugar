@@ -1,3 +1,5 @@
+TESTS_TMPDIR=$(abs_builddir)/tests-tmp
+
 SUBDIRS = bin data po src extensions
 
 DISTCLEANFILES =		\
@@ -12,3 +14,9 @@ EXTRA_DIST =                    \
 	intltool-extract.in
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
+
+test:
+	cd $(top_srcdir)/tests && \
+    mkdir -p $(TESTS_TMPDIR) && \
+    TMPDIR=$(TESTS_TMPDIR) python -m unittest discover && \
+    rm -rf $(TESTS_TMPDIR)
