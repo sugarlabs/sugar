@@ -20,6 +20,7 @@ import logging
 
 from gi.repository import GConf
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gio
 import simplejson
 
@@ -60,8 +61,12 @@ class BundleRegistry(GObject.GObject):
         # hold a reference to the monitors so they don't get disposed
         self._gio_monitors = []
 
-        user_path = env.get_user_activities_path()
-        for activity_dir in [user_path, config.activities_path]:
+        dirs = [env.get_user_activities_path()]
+
+        for data_dir in GLib.get_system_data_dirs():
+            dirs.append(os.path.join(data_dir, "sugar", "activities"))
+
+        for activity_dir in dirs:
             self._scan_directory(activity_dir)
             directory = Gio.File.new_for_path(activity_dir)
             monitor = directory.monitor_directory( \
