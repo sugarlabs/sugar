@@ -32,7 +32,6 @@ from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar3 import env
 
-from jarabe import config
 from jarabe.model import mimeregistry
 
 
@@ -109,7 +108,7 @@ class BundleRegistry(GObject.GObject):
     def _load_mime_defaults(self):
         defaults = {}
 
-        f = open(os.path.join(config.data_path, 'mime.defaults'), 'r')
+        f = open(os.environ["SUGAR_MIME_DEFAULTS"], 'r')
         for line in f.readlines():
             line = line.strip()
             if line and not line.startswith('#'):
@@ -152,7 +151,7 @@ class BundleRegistry(GObject.GObject):
 
     def _merge_default_favorites(self):
         default_activities = []
-        defaults_path = os.path.join(config.data_path, 'activities.defaults')
+        defaults_path = os.environ["SUGAR_ACTIVITIES_DEFAULTS"]
         if os.path.exists(defaults_path):
             file_mtime = os.stat(defaults_path).st_mtime
             if file_mtime > self._last_defaults_mtime:
