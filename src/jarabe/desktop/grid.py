@@ -201,9 +201,9 @@ class Grid(SugarExt.Grid):
             intersects_, intersection = Gdk.rectangle_intersect(
                 child_rect, self._child_rects[c])
             if c != child and intersection.width > 0:
+                collision_found = True
                 if (c not in self._locked_children and
                     c not in self._collisions):
-                    collision_found = True
                     self._collisions.append(c)
 
         if collision_found:
