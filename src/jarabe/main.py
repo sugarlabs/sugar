@@ -43,63 +43,69 @@ from gi.repository import Gst
 import dbus.glib
 from gi.repository import Wnck
 
-def start_ui_service():
-    from jarabe.view.service import UIService
+from sugar3 import env
+from sugar3 import logger
 
+from jarabe.model.session import get_session_manager
+from jarabe.model import screen
+from jarabe.view import keyhandler
+from jarabe.view import gesturehandler
+from jarabe.view import cursortracker
+from jarabe.journal import journalactivity
+from jarabe.desktop import homewindow
+from jarabe.model import notifications
+from jarabe.model import filetransfer
+from jarabe.view import launcher
+from jarabe.model import keyboard
+from jarabe.desktop import homewindow
+from jarabe import config
+from jarabe.model import sound
+from jarabe import intro
+from jarabe.intro.window import IntroWindow
+from jarabe import frame
+from jarabe.view.service import UIService
+
+def start_ui_service():
     ui_service = UIService()
 
 def start_session_manager():
-    from jarabe.model.session import get_session_manager
-
     session_manager = get_session_manager()
     session_manager.start()
 
 def unfreeze_dcon_cb():
     logging.debug('STARTUP: unfreeze_dcon_cb')
-    from jarabe.model import screen
-
     screen.set_dcon_freeze(0)
 
 def setup_frame_cb():
     logging.debug('STARTUP: setup_frame_cb')
-    from jarabe import frame
     frame.get_view()
 
 def setup_keyhandler_cb():
     logging.debug('STARTUP: setup_keyhandler_cb')
-    from jarabe.view import keyhandler
-    from jarabe import frame
     keyhandler.setup(frame.get_view())
 
 def setup_gesturehandler_cb():
     logging.debug('STARTUP: setup_gesturehandler_cb')
-    from jarabe.view import gesturehandler
-    from jarabe import frame
     gesturehandler.setup(frame.get_view())
 
 def setup_cursortracker_cb():
     logging.debug('STARTUP: setup_cursortracker_cb')
-    from jarabe.view import cursortracker
     cursortracker.setup()
 
 def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
-    from jarabe.journal import journalactivity
     journalactivity.start()
 
 def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
     if os.path.isfile(os.path.expanduser('~/.sugar-update')):
-        from jarabe.desktop import homewindow
         home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
 def setup_notification_service_cb():
-    from jarabe.model import notifications
     notifications.init()
 
 def setup_file_transfer_cb():
-    from jarabe.model import filetransfer
     filetransfer.init()
 
 def setup_window_manager():
@@ -121,7 +127,6 @@ def setup_window_manager():
 def bootstrap():
     setup_window_manager()
 
-    from jarabe.view import launcher
     launcher.setup()
 
     GObject.idle_add(setup_frame_cb)
@@ -132,7 +137,6 @@ def bootstrap():
     GObject.idle_add(setup_file_transfer_cb)
     GObject.idle_add(show_software_updates_cb)
 
-    from jarabe.model import keyboard
     keyboard.setup()
 
 def set_fonts():
@@ -152,8 +156,6 @@ def set_theme():
     settings.set_property('gtk-icon-theme-name', 'sugar')
 
 def start_home():
-    from jarabe.desktop import homewindow
-
     start_ui_service()
     start_session_manager()
 
@@ -170,7 +172,6 @@ def intro_window_done_cb(window):
 
 def cleanup_temporary_files():
     try:
-        from sugar3 import env
         # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
@@ -188,17 +189,11 @@ def main():
 
     cleanup_temporary_files()
 
-    from sugar3 import logger
     # NOTE: This needs to happen so early because some modules register
     # translatable strings in the module scope.
-    from jarabe import config
     gettext.bindtextdomain('sugar', config.locale_path)
     gettext.bindtextdomain('sugar-toolkit', config.locale_path)
     gettext.textdomain('sugar')
-
-    from jarabe.model import sound
-    from jarabe import intro
-    from jarabe.intro.window import IntroWindow
 
     logger.cleanup()
     logger.start('shell')
