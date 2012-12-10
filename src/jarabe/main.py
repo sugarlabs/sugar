@@ -57,38 +57,6 @@ dbus.glib.threads_init()
 
 Gst.init(sys.argv)
 
-def cleanup_logs(logs_dir):
-    """Clean up the log directory, moving old logs into a numbered backup
-    directory.  We only keep `_MAX_BACKUP_DIRS` of these backup directories
-    around; the rest are removed."""
-    if not os.path.isdir(logs_dir):
-        os.makedirs(logs_dir)
-
-    backup_logs = []
-    backup_dirs = []
-    for f in os.listdir(logs_dir):
-        path = os.path.join(logs_dir, f)
-        if os.path.isfile(path):
-            backup_logs.append(f)
-        elif os.path.isdir(path):
-            backup_dirs.append(path)
-
-    if len(backup_dirs) > 3:
-        backup_dirs.sort()
-        root = backup_dirs[0]
-        for f in os.listdir(root):
-            os.remove(os.path.join(root, f))
-        os.rmdir(root)
-
-    if len(backup_logs) > 0:
-        name = str(int(time.time()))
-        backup_dir = os.path.join(logs_dir, name)
-        os.mkdir(backup_dir)
-        for log in backup_logs:
-            source_path = os.path.join(logs_dir, log)
-            dest_path = os.path.join(backup_dir, log)
-            os.rename(source_path, dest_path)
-
 def start_ui_service():
     from jarabe.view.service import UIService
 
@@ -276,11 +244,10 @@ def main():
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
         os.makedirs(data_dir)
-        cleanup_logs(env.get_logs_path())
     except OSError, e:
-        # logs cleanup is not critical; it should not prevent sugar from
-        # starting if (for example) the disk is full or read-only.
-        print 'logs cleanup failed: %s' % e
+        # temporary files cleanup is not critical; it should not prevent
+        # sugar from starting if (for example) the disk is full or read-only.
+        print 'temporary files cleanup failed: %s' % e
 
     from sugar3 import logger
     # NOTE: This needs to happen so early because some modules register translatable
@@ -294,6 +261,7 @@ def main():
     from jarabe import intro
     from jarabe.intro.window import IntroWindow
 
+    logger.cleanup()
     logger.start('shell')
 
     client = GConf.Client.get_default()
