@@ -65,13 +65,6 @@ from jarabe.intro.window import IntroWindow
 from jarabe import frame
 from jarabe.view.service import UIService
 
-def start_ui_service():
-    ui_service = UIService()
-
-def start_session_manager():
-    session_manager = get_session_manager()
-    session_manager.start()
-
 def unfreeze_dcon_cb():
     logging.debug('STARTUP: unfreeze_dcon_cb')
     screen.set_dcon_freeze(0)
@@ -156,8 +149,10 @@ def set_theme():
     settings.set_property('gtk-icon-theme-name', 'sugar')
 
 def start_home():
-    start_ui_service()
-    start_session_manager()
+    ui_service = UIService()
+
+    session_manager = get_session_manager()
+    session_manager.start()
 
     # open homewindow before window_manager to let desktop appear fast
     home_window = homewindow.get_instance()
