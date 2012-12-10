@@ -148,6 +148,9 @@ def set_theme():
     settings.set_property('gtk-theme-name', sugar_theme)
     settings.set_property('gtk-icon-theme-name', 'sugar')
 
+    icons_path = os.path.join(config.data_path, 'icons')
+    Gtk.IconTheme.get_default().append_search_path(icons_path)
+
 def start_home():
     ui_service = UIService()
 
@@ -222,9 +225,6 @@ def main():
     sound.restore()
 
     sys.path.append(config.ext_path)
-
-    icons_path = os.path.join(config.data_path, 'icons')
-    Gtk.IconTheme.get_default().append_search_path(icons_path)
 
     if not intro.check_profile():
         win = IntroWindow()
