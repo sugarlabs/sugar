@@ -57,9 +57,6 @@ fi
 
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
 
-# Needed for executing wpa_passphrase
-export PATH="$PATH":/sbin:/usr/sbin
-
 if ! test -f "$GTK2_RC_FILES"; then
     echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available in path $GTK2_RC_FILES"
     exit 1
