@@ -83,4 +83,4 @@ fi
 echo Xcursor.theme: sugar | xrdb -merge
 metacity --no-force-fullscreen -d $DISPLAY &
 
-exec sugar-session
+exec python -m jarabe.main

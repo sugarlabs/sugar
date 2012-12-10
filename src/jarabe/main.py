@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2009, One Laptop Per Child Association Inc
 #
