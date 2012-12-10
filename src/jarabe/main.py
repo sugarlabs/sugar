@@ -15,24 +15,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from sugar3 import logger
+
+logger.cleanup()
+logger.start('shell')
+
+import logging
+
+logging.debug('%r STARTUP: Starting the shell')
+
 import os
 import sys
-import time
 import subprocess
 import shutil
+import time
 
 # Change the default encoding to avoid UnicodeDecodeError
 # http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
-    print '%r STARTUP: Starting the shell' % time.time()
-    sys.stdout.flush()
-
 import gettext
-import logging
-import sys
 
 from gi.repository import GLib
 from gi.repository import GConf
@@ -44,7 +47,6 @@ import dbus.glib
 from gi.repository import Wnck
 
 from sugar3 import env
-from sugar3 import logger
 
 from jarabe.model.session import get_session_manager
 from jarabe.model import screen
@@ -198,9 +200,6 @@ def main():
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
-
-    logger.cleanup()
-    logger.start('shell')
 
     setup_locale()
 
