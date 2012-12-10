@@ -7,37 +7,6 @@ if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
 	exit 3
 fi
 
-usage() {
-    cat <<EOF
-Usage: sugar [OPTION]..
-
-Start Sugar window manager.
-
-Optional arguments.
-  -d, --display DISPLAY     Display to start sugar
-  -s, --scaling SCALING     Scale Sugar theme
-                            Supported values: 72, 100
-EOF
-    exit 0
-}
-
-while [ $# -ne 0 ] ; do
-    case "$1" in
-      	-d | --display)
-            shift
-            export DISPLAY="$1"
-            ;;
-      	-s | --scaling)
-            shift
-            export SUGAR_SCALING="$1"
-            ;;
-      	-h | --help)
-            usage
-            ;;
-    esac
-    shift
-done
-
 # Set default profile dir
 if test -z "$SUGAR_PROFILE"; then
     export SUGAR_PROFILE=default
