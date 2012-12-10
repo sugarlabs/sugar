@@ -176,6 +176,18 @@ def cleanup_temporary_files():
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e
 
+def setup_locale():
+    # NOTE: This needs to happen early because some modules register
+    # translatable strings in the module scope.
+    gettext.bindtextdomain('sugar', config.locale_path)
+    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+    gettext.textdomain('sugar')
+
+    client = GConf.Client.get_default()
+    timezone = client.get_string('/desktop/sugar/date/timezone')
+    if timezone is not None and timezone:
+        os.environ['TZ'] = timezone
+
 def main():
     GLib.threads_init()
     Gdk.threads_init()
@@ -184,22 +196,14 @@ def main():
 
     cleanup_temporary_files()
 
-    # NOTE: This needs to happen so early because some modules register
-    # translatable strings in the module scope.
-    gettext.bindtextdomain('sugar', config.locale_path)
-    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
-    gettext.textdomain('sugar')
-
     logger.cleanup()
     logger.start('shell')
+
+    setup_locale()
 
     client = GConf.Client.get_default()
     client.set_string('/apps/metacity/general/mouse_button_modifier',
                       '<Super>')
-
-    timezone = client.get_string('/desktop/sugar/date/timezone')
-    if timezone is not None and timezone:
-        os.environ['TZ'] = timezone
 
     set_fonts()
     set_theme()
