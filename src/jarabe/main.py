@@ -173,7 +173,7 @@ def start_home():
 def intro_window_done_cb(window):
     start_home()
 
-def main():
+def cleanup_temporary_files():
     try:
         from sugar3 import env
         # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
@@ -184,6 +184,9 @@ def main():
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e
+
+def main():
+    cleanup_temporary_files()
 
     from sugar3 import logger
     # NOTE: This needs to happen so early because some modules register translatable
