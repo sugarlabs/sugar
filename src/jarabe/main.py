@@ -112,15 +112,16 @@ def setup_window_manager():
     logging.debug('STARTUP: window_manager')
 
     # have to reset cursor(metacity sets it on startup)
-    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
+    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr',
+                       shell=True):
         logging.warning('Can not reset cursor')
 
     if subprocess.call('metacity-message disable-keybindings',
-            shell=True):
+                       shell=True):
         logging.warning('Can not disable metacity keybindings')
 
     if subprocess.call('metacity-message disable-mouse-button-modifiers',
-            shell=True):
+                       shell=True):
         logging.warning('Can not disable metacity mouse button modifiers')
 
 def bootstrap():
@@ -189,8 +190,8 @@ def main():
     cleanup_temporary_files()
 
     from sugar3 import logger
-    # NOTE: This needs to happen so early because some modules register translatable
-    # strings in the module scope.
+    # NOTE: This needs to happen so early because some modules register
+    # translatable strings in the module scope.
     from jarabe import config
     gettext.bindtextdomain('sugar', config.locale_path)
     gettext.bindtextdomain('sugar-toolkit', config.locale_path)
@@ -221,7 +222,8 @@ def main():
     GObject.idle_add(setup_cursortracker_cb)
     # make sure we have the correct cursor in the intro screen
     # TODO #3204
-    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
+    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr',
+                       shell=True):
         logging.warning('Can not reset cursor')
 
     sound.restore()
