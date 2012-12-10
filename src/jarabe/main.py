@@ -43,12 +43,6 @@ from gi.repository import Gst
 import dbus.glib
 from gi.repository import Wnck
 
-GLib.threads_init()
-Gdk.threads_init()
-dbus.glib.threads_init()
-
-Gst.init(sys.argv)
-
 def start_ui_service():
     from jarabe.view.service import UIService
 
@@ -187,6 +181,11 @@ def cleanup_temporary_files():
         print 'temporary files cleanup failed: %s' % e
 
 def main():
+    GLib.threads_init()
+    Gdk.threads_init()
+    dbus.glib.threads_init()
+    Gst.init(sys.argv)
+
     cleanup_temporary_files()
 
     from sugar3 import logger
