@@ -38,18 +38,10 @@ from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import GObject
 from gi.repository import Gst
 import dbus.glib
 from gi.repository import Wnck
-
-_USE_XKL = False
-try:
-    from gi.repository import Xkl
-    _USE_XKL = True
-except ImportError:
-    logging.debug('Could not load xklavier for keyboard configuration')
 
 GLib.threads_init()
 Gdk.threads_init()
@@ -116,62 +108,6 @@ def setup_file_transfer_cb():
     from jarabe.model import filetransfer
     filetransfer.init()
 
-def setup_keyboard_cb():
-    logging.debug('STARTUP: setup_keyboard_cb')
-
-    gconf_client = GConf.Client.get_default()
-    have_config = False
-
-    try:
-        display = GdkX11.x11_get_default_xdisplay()
-        if display is not None:
-            engine = Xkl.Engine.get_instance(display)
-        else:
-            logging.debug('setup_keyboard_cb: Could not get default display.')
-            return
-
-        configrec = Xkl.ConfigRec()
-        configrec.get_from_server(engine)
-
-        # FIXME, gconf_client_get_list not introspectable #681433
-        layouts_from_gconf = gconf_client.get(
-            '/desktop/sugar/peripherals/keyboard/layouts')
-        layouts_list = []
-        variants_list = []
-        if layouts_from_gconf:
-            for gval in layouts_from_gconf.get_list():
-                layout = gval.get_string()
-                layouts_list.append(layout.split('(')[0])
-                variants_list.append(layout.split('(')[1][:-1])
-
-            if layouts_list and variants_list:
-                have_config = True
-                configrec.set_layouts(layouts_list)
-                configrec.set_variants(variants_list)
-
-        model = gconf_client.get_string(\
-            '/desktop/sugar/peripherals/keyboard/model')
-        if model:
-            have_config = True
-            configrec.set_model(model)
-
-        options = []
-        # FIXME, gconf_client_get_list not introspectable #681433
-        options_from_gconf = gconf_client.get(\
-            '/desktop/sugar/peripherals/keyboard/options')
-        if options_from_gconf:
-            for gval in options_from_gconf.get_list():
-                option = gval.get_string()
-                options.append(option)
-            if options:
-                have_config = True
-                configrec.set_options(options)
-
-        if have_config:
-            configrec.activate(engine)
-    except Exception:
-        logging.exception('Error during keyboard configuration')
-
 def setup_window_manager():
     logging.debug('STARTUP: window_manager')
 
@@ -201,8 +137,8 @@ def bootstrap():
     GObject.idle_add(setup_file_transfer_cb)
     GObject.idle_add(show_software_updates_cb)
 
-    if _USE_XKL:
-        GObject.idle_add(setup_keyboard_cb)
+    from jarabe.model import keyboard
+    keyboard.setup()
 
 def set_fonts():
     client = GConf.Client.get_default()

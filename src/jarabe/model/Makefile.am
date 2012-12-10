@@ -7,6 +7,7 @@ sugar_PYTHON =			\
 	filetransfer.py		\
 	friends.py		\
 	invites.py		\
+	keyboard.py		\
 	olpcmesh.py		\
 	mimeregistry.py		\
 	neighborhood.py		\
