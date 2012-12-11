@@ -470,6 +470,7 @@ class WirelessDeviceView(ToolButton):
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
+        self._update_color()
         self._update_state()
         self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
@@ -552,8 +553,10 @@ class WirelessDeviceView(ToolButton):
                 self._icon.props.icon_name = 'network-adhoc-%s' % channel
             self._icon.props.base_color = profile.get_color()
 
-        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
-           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
+        if state == network.NM_DEVICE_STATE_PREPARE or \
+           state == network.NM_DEVICE_STATE_CONFIG or \
+           state == network.NM_DEVICE_STATE_NEED_AUTH or \
+           state == network.NM_DEVICE_STATE_IP_CONFIG:
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
