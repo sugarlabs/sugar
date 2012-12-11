@@ -30,7 +30,8 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
@@ -57,9 +58,9 @@ class _ActivityIcon(CanvasIcon):
                  size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, file_name=file_name,
                             xo_color=xo_color, pixel_size=size)
+
         self._model = model
-        self.connect('button-release-event',
-                     self.__button_release_event_cb)
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         primary_text = GLib.markup_escape_text(self._model.bundle.get_name())
@@ -75,22 +76,26 @@ class _ActivityIcon(CanvasIcon):
         private = self._model.props.private
         joined = get_owner_instance() in self._model.props.buddies
 
+        menu_box = PaletteMenuBox()
+
         if joined:
-            item = MenuItem(_('Resume'), 'activity-start')
+            item = PaletteMenuItem(_('Resume'))
+            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
-            item.show()
-            palette.menu.append(item)
+            menu_box.append_item(item)
         elif not private:
-            item = MenuItem(_('Join'), 'activity-start')
+            item = PaletteMenuItem(_('Join'))
+            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
-            item.show()
-            palette.menu.append(item)
+            menu_box.append_item(item)
+
+        palette.set_content(menu_box)
+        menu_box.show_all()
 
         self.connect_to_palette_pop_events(palette)
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        self.props.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def __palette_item_clicked_cb(self, item):
         bundle = self._model.get_bundle()
