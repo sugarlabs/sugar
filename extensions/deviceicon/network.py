@@ -846,7 +846,7 @@ class GsmDeviceView(TrayIcon):
             gsm_state = _GSM_STATE_NOT_READY
 
         elif (state >= network.NM_DEVICE_STATE_PREPARE) and \
-             (state <= network.NM_DEVICE_STATE_IP_CONFIG):
+             (state < network.NM_DEVICE_STATE_ACTIVATED):
             gsm_state = _GSM_STATE_CONNECTING
 
         elif state == network.NM_DEVICE_STATE_FAILED:
