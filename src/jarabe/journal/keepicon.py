@@ -16,7 +16,6 @@
 
 from gi.repository import Gtk
 from gi.repository import GConf
-import logging
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -24,6 +23,8 @@ from sugar3.graphics.xocolor import XoColor
 
 
 class KeepIcon(Gtk.ToggleButton):
+    __gtype_name__ = 'SugarKeepIcon'
+
     def __init__(self):
         Gtk.ToggleButton.__init__(self)
         self.set_relief(Gtk.ReliefStyle.NONE)
@@ -35,21 +36,42 @@ class KeepIcon(Gtk.ToggleButton):
         self.connect('toggled', self.__toggled_cb)
         self.connect('leave-notify-event', self.__leave_notify_event_cb)
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
+        self.connect('button-press-event', self.__button_press_event_cb)
+        self.connect('button-release-event', self.__button_release_event_cb)
+
+        client = GConf.Client.get_default()
+        self._xo_color = XoColor(client.get_string(
+                '/desktop/sugar/user/color'))
+
+    def do_get_preferred_width(self):
+        return 0, style.GRID_CELL_SIZE
+
+    def do_get_preferred_height(self):
+        return 0, style.GRID_CELL_SIZE
+
+    def __button_press_event_cb(self, widget, event):
+        # We need to use a custom CSS class because in togglebuttons
+        # the 'active' class doesn't only match the button press, they
+        # can be left in the active state.
+        style_context = self.get_style_context()
+        style_context.add_class('toggle-press')
+
+    def __button_release_event_cb(self, widget, event):
+        style_context = self.get_style_context()
+        style_context.remove_class('toggle-press')
 
     def __toggled_cb(self, widget):
         if self.get_active():
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            self._icon.props.xo_color = color
-            logging.debug('KEEPICON: setting xo_color')
+            self._icon.props.xo_color = self._xo_color
         else:
             self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
     def __enter_notify_event_cb(self, icon, event):
         if not self.get_active():
-            self._icon.props.fill_color = style.COLOR_BUTTON_GREY.get_svg()
+            self._icon.props.xo_color = self._xo_color
 
     def __leave_notify_event_cb(self, icon, event):
         if not self.get_active():
+            self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
