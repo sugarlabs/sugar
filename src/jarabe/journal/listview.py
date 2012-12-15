@@ -243,6 +243,12 @@ class BaseListView(Gtk.Bin):
         if buddy is None:
             cell.props.visible = False
             return
+        # FIXME workaround for pygobject bug, see
+        # https://bugzilla.gnome.org/show_bug.cgi?id=689277
+        #
+        # add_attribute with 'buddy' attribute in the cell should take
+        # care of setting it.
+        cell.props.buddy = buddy
 
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress >= 100
