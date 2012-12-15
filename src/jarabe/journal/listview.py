@@ -172,13 +172,15 @@ class BaseListView(Gtk.Bin):
                                          ListModel.COLUMN_TITLE)
         self.tree_view.append_column(self._title_column)
 
-        buddies_column = Gtk.TreeViewColumn()
-        buddies_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
-        self.tree_view.append_column(buddies_column)
 
         for column_index in [ListModel.COLUMN_BUDDY_1,
                              ListModel.COLUMN_BUDDY_2,
                              ListModel.COLUMN_BUDDY_3]:
+
+            buddies_column = Gtk.TreeViewColumn()
+            buddies_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+            self.tree_view.append_column(buddies_column)
+
             cell_icon = CellRendererBuddy(self.tree_view,
                                           column_index=column_index)
             buddies_column.pack_start(cell_icon, True)
