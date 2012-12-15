@@ -47,6 +47,7 @@ class Separator(Gtk.VBox):
 class BuddyList(Gtk.Alignment):
     def __init__(self, buddies):
         Gtk.Alignment.__init__(self)
+        self.set(0, 0, 0, 0)
 
         hbox = Gtk.HBox()
         for buddy in buddies:
