@@ -99,7 +99,9 @@ class BackBar(Gtk.EventBox):
         self.add(hbox)
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            hbox.reverse()
+            # Reverse hbox children.
+            for child in hbox.get_children():
+                hbox.reorder_child(child, 0)
 
         self.connect('enter-notify-event', self.__enter_notify_event_cb)
         self.connect('leave-notify-event', self.__leave_notify_event_cb)
