@@ -99,12 +99,15 @@ class ClipboardIcon(RadioToolButton):
                 self.owns_clipboard = True
 
     def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
-        if not selection.target in [target[0] for target in targets]:
+        selection_target = selection.get_target()
+        entries_targets = [entry.target for entry in targets]
+        if not str(selection_target) in entries_targets:
             logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
-                            ' but only have %r.', selection.target, targets)
+                            ' but only have %r.', selection_target,
+                            entries_targets)
             return
-        data = self._cb_object.get_formats()[selection.target].get_data()
-        selection.set(selection.target, 8, data)
+        data = self._cb_object.get_formats()[str(selection_target)].get_data()
+        selection.set(selection_target, 8, data)
 
     def _clipboard_clear_cb(self, x_clipboard, targets):
         logging.debug('ClipboardIcon._clipboard_clear_cb')
