@@ -33,6 +33,8 @@ from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toggletoolbutton import ToggleToolButton
 from sugar3.graphics.combobox import ComboBox
 from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
@@ -557,14 +559,21 @@ class SortingButton(ToolButton):
         self.props.tooltip = _('Sort view')
         self.props.icon_name = 'view-lastedit'
 
+        menu_box = PaletteMenuBox()
+        self.props.palette.set_content(menu_box)
+        menu_box.show()
+
         for property_, icon, label in self._SORT_OPTIONS:
-            button = MenuItem(icon_name=icon, text_label=label)
+            button = PaletteMenuItem(label)
+            button_icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name=icon)
+            button.set_image(button_icon)
+            button_icon.show()
             button.connect('activate',
                            self.__sort_type_changed_cb,
                            property_,
                            icon)
             button.show()
-            self.props.palette.menu.insert(button, -1)
+            menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
         self._property = property_
