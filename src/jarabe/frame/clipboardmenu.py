@@ -51,8 +51,6 @@ class ClipboardMenu(Palette):
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
 
-        self._progress_bar = None
-
         self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
                                      'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
@@ -128,8 +126,6 @@ class ClipboardMenu(Palette):
             self._open_item.props.sensitive = False
             self._journal_item.props.sensitive = False
 
-        self._update_progress_bar()
-
     def _get_activities(self):
         mime_type = self._cb_object.get_mime_type()
         if not mime_type:
@@ -142,21 +138,6 @@ class ClipboardMenu(Palette):
         else:
             return ''
 
-    def _update_progress_bar(self):
-        percent = self._cb_object.get_percent()
-        if percent == 100.0:
-            if self._progress_bar:
-                self._progress_bar = None
-                self.set_content(None)
-        else:
-            if self._progress_bar is None:
-                self._progress_bar = Gtk.ProgressBar()
-                self._progress_bar.show()
-                self.set_content(self._progress_bar)
-
-            self._progress_bar.props.fraction = percent / 100.0
-            self._progress_bar.props.text = '%.2f %%' % percent
-
     def _object_state_changed_cb(self, cb_service, cb_object):
         if cb_object != self._cb_object:
             return
@@ -168,7 +149,6 @@ class ClipboardMenu(Palette):
         preview = self._cb_object.get_preview()
         if preview:
             self.props.secondary_text = GLib.markup_escape_text(preview)
-        self._update_progress_bar()
         self._update_items_visibility()
         self._update_open_submenu()
 
