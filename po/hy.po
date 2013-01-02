@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-29 00:34-0400\n"
-"PO-Revision-Date: 2012-09-05 21:07+0200\n"
-"Last-Translator: anush.mkrtchyan <anush.mkrtchyan@ca1492.com>\n"
+"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"PO-Revision-Date: 2013-01-02 05:11+0200\n"
+"Last-Translator: Jasmine <udea_jasmine@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "իմ մասին"
+msgstr "Իմ մասին"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -51,7 +51,7 @@ msgstr "Ձախողում գույնի ընտրված ցուցիչներում:"
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "Error in specified colors."
+msgstr "Ընտրված գույներում վրիպակ է հայտնաբերվել"
 
 #: ../extensions/cpsection/aboutme/view.py:216
 msgid "Click to change your color:"
@@ -65,39 +65,40 @@ msgstr "Իմ Համակարգչի մասին"
 msgid "Not available"
 msgstr "Գոյություն չունի"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Ինքնություն"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Ապրանքախմբի համարը."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Ծրագրային մատակարարում"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Կառուցել."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:129
+#: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
 msgstr "Ծրագրաշար."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:144
+#: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
 msgstr "Անլար Ծրագրաշար."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:167
+#: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
 msgstr "Հեղինակային իրավունք և Արտոնագիր"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:185
+#. TRANS: The word "Sugar" should not be translated.
+#: ../extensions/cpsection/aboutcomputer/view.py:187
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -108,7 +109,7 @@ msgstr ""
 "անվճար ծրագիր է և կարգավորվում է GNU General Public արտոնագրով: Դուք կարող "
 "եք օգտագործել և տարածել այն ստորև բերված պայմաններով."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:197
+#: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
 msgstr "Ամբողջական Արտոնագիր."
 
@@ -155,7 +156,7 @@ msgid "Corner"
 msgstr "Անկյուն"
 
 # եզր
-#: ../extensions/cpsection/frame/view.py:113
+#: ../extensions/cpsection/frame/view.py:114
 msgid "Edge"
 msgstr "Եզր"
 
@@ -208,7 +209,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Մոդեմի կազմաձևումը"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:67
+#: ../extensions/cpsection/modemconfiguration/view.py:68
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -237,7 +238,7 @@ msgid "Personal Identity Number (PIN):"
 msgstr "Անձնական Համարը (PIN)."
 
 #: ../extensions/cpsection/network/__init__.py:21
-#: ../extensions/cpsection/network/view.py:29
+#: ../extensions/cpsection/network/view.py:30
 msgid "Network"
 msgstr "Համացանց"
 
@@ -253,32 +254,32 @@ msgstr "Ձախողում ընտրված ալեհավաքի տիրույթում`
 msgid "Error in specified argument use 0/1."
 msgstr "Ձախողում ընտրված տիրույթում`օգտագործել 0/1:"
 
-#: ../extensions/cpsection/network/view.py:61
+#: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
 msgstr "Անլար"
 
-#: ../extensions/cpsection/network/view.py:69
+#: ../extensions/cpsection/network/view.py:76
 msgid "Turn off the wireless radio to save battery life"
 msgstr "Անջատել անլար ալեհավաքը`մարտկոցի հզորությունը տնտեսելու համար"
 
 # Ռադիոանտենա
-#: ../extensions/cpsection/network/view.py:82
+#: ../extensions/cpsection/network/view.py:89
 msgid "Radio"
 msgstr "Ալեհավաք"
 
-#: ../extensions/cpsection/network/view.py:98
+#: ../extensions/cpsection/network/view.py:105
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr "Միացման խնդիրների ծագման դեպքում` ջնջել ցանցին միացման պատմությունը"
 
-#: ../extensions/cpsection/network/view.py:107
+#: ../extensions/cpsection/network/view.py:114
 msgid "Discard network history"
 msgstr "Ջնջել ցանցին միացման պատմությունը"
 
-#: ../extensions/cpsection/network/view.py:122
+#: ../extensions/cpsection/network/view.py:129
 msgid "Collaboration"
 msgstr "Համագործակցություն"
 
-#: ../extensions/cpsection/network/view.py:130
+#: ../extensions/cpsection/network/view.py:137
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -288,7 +289,7 @@ msgstr ""
 "վայրից: Օգտվողները կարող են տեսնել միմյանց, անգամ եթե նրանք նույն ցանցում "
 "չեն:"
 
-#: ../extensions/cpsection/network/view.py:140
+#: ../extensions/cpsection/network/view.py:147
 msgid "Server:"
 msgstr "Սերվեր."
 
@@ -311,8 +312,9 @@ msgstr ""
 "Սնուցման Ավտոմատ Կառավարում (Երկարացնում է մարտկոցի կյանքի տևողությունը)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-msgid "Software update"
-msgstr "Ծրագրային արդիականացում"
+#: ../src/jarabe/desktop/homebox.py:63
+msgid "Software Update"
+msgstr "﻿ Ծրագրի Արդիականացում"
 
 #: ../extensions/cpsection/updater/view.py:63
 msgid ""
@@ -365,237 +367,241 @@ msgid_plural "%s updates were installed"
 msgstr[0] "%s արդիականացումը տեղադրվեց"
 msgstr[1] "%s արդիականացումը տեղադրվեց"
 
-#: ../extensions/cpsection/updater/view.py:255
+#: ../extensions/cpsection/updater/view.py:256
 msgid "Install selected"
 msgstr "Տեղադրումն ըտրված է"
 
-#: ../extensions/cpsection/updater/view.py:276
+#: ../extensions/cpsection/updater/view.py:277
 #, python-format
 msgid "Download size: %s"
 msgstr "Ներբեռնման չափը. %s"
 
-#: ../extensions/cpsection/updater/view.py:364
+#: ../extensions/cpsection/updater/view.py:365
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "Ընթացիկ տարբերակից %(current)s դեպի նորը %(new)s (Չափս. %(size)s)"
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:383
 msgid "None"
 msgstr "Ոչ մեկը"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:385
+#: ../extensions/cpsection/updater/view.py:386
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:389
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:392
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:71
+#: ../extensions/deviceicon/battery.py:70
 msgid "My Battery"
 msgstr "իմ Մարտկոցը"
 
-#: ../extensions/deviceicon/battery.py:152
+#: ../extensions/deviceicon/battery.py:151
 msgid "Removed"
 msgstr "Հեռացված"
 
-#: ../extensions/deviceicon/battery.py:155
+#: ../extensions/deviceicon/battery.py:154
 msgid "Charging"
 msgstr "Լիցքավորում"
 
-#: ../extensions/deviceicon/battery.py:158
+#: ../extensions/deviceicon/battery.py:157
 msgid "Very little power remaining"
 msgstr "Մնացել է չափազանց փոքր հզորություն"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:165
+#: ../extensions/deviceicon/battery.py:164
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "մնացել է. %(hour)d:%(min).2d"
 
-#: ../extensions/deviceicon/battery.py:168
+#: ../extensions/deviceicon/battery.py:167
 msgid "Charged"
 msgstr "Լիցքվորված է"
 
-#: ../extensions/deviceicon/network.py:49
+#: ../extensions/deviceicon/frame.py:57
+msgid "Show my keyboard"
+msgstr ""
+
+#: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
 msgstr "IP հասցեն է` %s"
 
-#: ../extensions/deviceicon/network.py:93
-#: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:495
+#: ../extensions/deviceicon/network.py:80
+#: ../extensions/deviceicon/network.py:296
+#: ../src/jarabe/desktop/networkviews.py:130
+#: ../src/jarabe/desktop/networkviews.py:499
 msgid "Disconnect"
 msgstr "Անջատում"
 
-#: ../extensions/deviceicon/network.py:101
-#: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:533
-#: ../src/jarabe/desktop/networkviews.py:668
+#: ../extensions/deviceicon/network.py:105
+#: ../extensions/deviceicon/network.py:288
+#: ../src/jarabe/desktop/networkviews.py:241
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connecting..."
 msgstr "Միացվում է..."
 
-#: ../extensions/deviceicon/network.py:106
-#: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../extensions/deviceicon/network.py:110
+#: ../extensions/deviceicon/network.py:178
+#: ../src/jarabe/desktop/networkviews.py:248
+#: ../src/jarabe/desktop/networkviews.py:545
+#: ../src/jarabe/desktop/networkviews.py:680
 msgid "Connected"
 msgstr "Միացված է"
 
-#: ../extensions/deviceicon/network.py:119
+#: ../extensions/deviceicon/network.py:123
 msgid "No wireless connection"
 msgstr "Անլար կապ չկա"
 
-#: ../extensions/deviceicon/network.py:133
+#: ../extensions/deviceicon/network.py:137
 msgid "Channel"
 msgstr "Կապուղի"
 
-#: ../extensions/deviceicon/network.py:148
+#: ../extensions/deviceicon/network.py:152
 msgid "Wired Network"
 msgstr "Լարային ցանց"
 
-#: ../extensions/deviceicon/network.py:177
+#: ../extensions/deviceicon/network.py:181
 msgid "Speed"
 msgstr "Արագություն"
 
-#: ../extensions/deviceicon/network.py:202
+#: ../extensions/deviceicon/network.py:206
 msgid "Wireless modem"
 msgstr "Անլար մոդեմ"
 
-#: ../extensions/deviceicon/network.py:270
+#: ../extensions/deviceicon/network.py:274
 msgid "Please wait..."
 msgstr "Խնդրում ենք սպասել..."
 
-#: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:490
-#: ../src/jarabe/desktop/networkviews.py:624
+#: ../extensions/deviceicon/network.py:279
+#: ../src/jarabe/desktop/networkviews.py:126
+#: ../src/jarabe/desktop/networkviews.py:494
+#: ../src/jarabe/desktop/networkviews.py:630
 msgid "Connect"
 msgstr "Միացում"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:280
 msgid "Disconnected"
 msgstr "Անջատված է"
 
-#: ../extensions/deviceicon/network.py:283
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:63
-#: ../src/jarabe/frame/activitiestray.py:605
-#: ../src/jarabe/frame/activitiestray.py:707
-#: ../src/jarabe/frame/activitiestray.py:735
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../extensions/deviceicon/network.py:287
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
+#: ../src/jarabe/frame/activitiestray.py:606
+#: ../src/jarabe/frame/activitiestray.py:708
+#: ../src/jarabe/frame/activitiestray.py:736
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "Չեղարկել"
 
-#: ../extensions/deviceicon/network.py:322
+#: ../extensions/deviceicon/network.py:326
 msgid "Try connection again"
 msgstr "Կրկին փորձեք միանալ"
 
-#: ../extensions/deviceicon/network.py:325
+#: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Error: %s"
 msgstr "Ձախողում. %s"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:333
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Առաջարկություն` %s"
 
-#: ../extensions/deviceicon/network.py:338
+#: ../extensions/deviceicon/network.py:342
 #, python-format
 msgid "Connected for %s"
 msgstr "Միացած է %s"
 
-#: ../extensions/deviceicon/network.py:344
-#: ../extensions/deviceicon/network.py:345
+#: ../extensions/deviceicon/network.py:348
+#: ../extensions/deviceicon/network.py:349
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:354
 msgid "Check your PIN/PUK configuration."
 msgstr "Ստուգեք ձեր PIN/PUK կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:353
+#: ../extensions/deviceicon/network.py:357
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "Ստուգեք ձեր Միացման Կետի Անվանման (APN) կազմաձևումը"
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:361
 msgid "Check the Number configuration."
 msgstr "Ստուգեք ձեր Համարի կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:359
+#: ../extensions/deviceicon/network.py:363
 msgid "Check your configuration."
 msgstr "Ստուգեք ձեր կազմաձևումը:"
 
-#: ../extensions/deviceicon/network.py:602
+#: ../extensions/deviceicon/network.py:607
 msgid "Mesh Network"
 msgstr "Բջջային Ցանց"
 
-#: ../extensions/deviceicon/network.py:647
+#: ../extensions/deviceicon/network.py:652
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Լիակատար միացված ցանց %s"
 
 # GSM-Global System for Mobile /communications/
-#: ../extensions/deviceicon/network.py:777
+#: ../extensions/deviceicon/network.py:783
 msgid "No GSM connection available."
 msgstr "GSM միացումներ չկան:"
 
-#: ../extensions/deviceicon/network.py:778
+#: ../extensions/deviceicon/network.py:784
 msgid "Create a connection in the control panel."
 msgstr "Ստեղծել միացում կառավարման վահանակի վրա:"
 
-#: ../extensions/deviceicon/speech.py:52
+#: ../extensions/deviceicon/speech.py:53
 msgid "Speech"
 msgstr "Խոսք"
 
-#: ../extensions/deviceicon/speech.py:77
-#: ../extensions/deviceicon/speech.py:138
-#: ../extensions/deviceicon/speech.py:143
+#: ../extensions/deviceicon/speech.py:81
+#: ../extensions/deviceicon/speech.py:155
+#: ../extensions/deviceicon/speech.py:160
 msgid "Say selected text"
 msgstr "Արտասանել ընտրված տեքստը"
 
-#: ../extensions/deviceicon/speech.py:83
+#: ../extensions/deviceicon/speech.py:88
 msgid "Stop playback"
 msgstr "Կանգնեցնել վերարտադրումը"
 
-#: ../extensions/deviceicon/speech.py:97
+#: ../extensions/deviceicon/speech.py:98
 msgid "Pitch"
 msgstr "Տոնայնություն"
 
-#: ../extensions/deviceicon/speech.py:106
+#: ../extensions/deviceicon/speech.py:112
 msgid "Rate"
 msgstr "Գործակից"
 
-#: ../extensions/deviceicon/speech.py:133
+#: ../extensions/deviceicon/speech.py:150
 msgid "Pause playback"
 msgstr "Դադարեցնել վերարտադրումը"
 
-#: ../extensions/deviceicon/speaker.py:61
+#: ../extensions/deviceicon/speaker.py:62
 msgid "My Speakers"
 msgstr "Իմ Բարձրախոսները"
 
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:142
 msgid "Unmute"
 msgstr "Միացնել Ձայնը"
 
-#: ../extensions/deviceicon/speaker.py:141
+#: ../extensions/deviceicon/speaker.py:145
 msgid "Mute"
 msgstr "Անջատել Ձայնը"
 
@@ -612,34 +618,37 @@ msgstr "Գրափայտ"
 msgid "My touchpad"
 msgstr "Իմ հպակը"
 
-#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:180
+#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
 msgid "Show contents"
 msgstr "Ցույց տալ բովանդակությունը"
 
-#: ../extensions/globalkey/screenshot.py:59
+#: ../extensions/globalkey/screenshot.py:62
 msgid "Mesh"
 msgstr "Բջիջ"
 
-#: ../extensions/globalkey/screenshot.py:61
+#: ../extensions/globalkey/screenshot.py:64
+#: ../src/jarabe/desktop/homewindow.py:219
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "Group"
 msgstr "Խումբ"
 
-#: ../extensions/globalkey/screenshot.py:63
+#: ../extensions/globalkey/screenshot.py:66
+#: ../src/jarabe/desktop/homewindow.py:212
+#: ../src/jarabe/desktop/viewtoolbar.py:62
 #: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "Home"
 msgstr "Տուն"
 
-#: ../extensions/globalkey/screenshot.py:69
+#: ../extensions/globalkey/screenshot.py:72
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "Activity"
 msgstr "Գործունեություն"
 
-#: ../extensions/globalkey/screenshot.py:72
+#: ../extensions/globalkey/screenshot.py:75
 msgid "Screenshot"
 msgstr "Էկրանի հանույթ"
 
-#: ../extensions/globalkey/screenshot.py:74
+#: ../extensions/globalkey/screenshot.py:77
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "\"%s\" Էկրանի հանույթ"
@@ -984,133 +993,155 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Ձեր փոփոխությունները կիրառելու համար դուք պետք է վերամեկնարկեք Sugar-ը:\n"
 
-#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
 #: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
-#: ../src/jarabe/journal/volumestoolbar.py:307
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Warning"
 msgstr "Զգուշացում"
 
-#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/gui.py:299
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "Փոփոխությունները պահանջում են վերամեկնարկ"
 
-#: ../src/jarabe/controlpanel/gui.py:301
+#: ../src/jarabe/controlpanel/gui.py:302
 msgid "Cancel changes"
 msgstr "Չեղարկել փոփոխությունները"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:65
+#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Հետո"
 
-#: ../src/jarabe/controlpanel/gui.py:310
+#: ../src/jarabe/controlpanel/gui.py:311
 msgid "Restart now"
 msgstr "Վերամեկնարկել հիմա"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:211
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#, python-format
+msgid "Search in %s"
+msgstr ""
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr ""
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
 msgstr "Պատրաստ է"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:326
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:337
+#: ../src/jarabe/desktop/keydialog.py:101
 msgid "Ok"
 msgstr "OK"
 
-#: ../src/jarabe/desktop/activitieslist.py:231
+#: ../src/jarabe/desktop/activitieslist.py:243
 #, python-format
 msgid "Version %s"
 msgstr "Տարբերակ %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:344
+#: ../src/jarabe/journal/listview.py:411
+msgid "Clear search"
+msgstr "Ջնջել որոնումը"
+
+#: ../src/jarabe/desktop/activitieslist.py:417
+msgid "No matching activities"
+msgstr ""
+
+#: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
 msgstr "Հաստատեք ջնջելը"
 
-#: ../src/jarabe/desktop/activitieslist.py:359
+#: ../src/jarabe/desktop/activitieslist.py:455
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Հաստատեք ջնջելը. Արդյո՞ք ցանկանում եք ընդմիշտ ջնջել %s:"
 
-#: ../src/jarabe/desktop/activitieslist.py:363
+#: ../src/jarabe/desktop/activitieslist.py:459
 #: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:280
+#: ../src/jarabe/view/viewsource.py:284
 msgid "Keep"
 msgstr "Պահել"
 
-#: ../src/jarabe/desktop/activitieslist.py:366
-#: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:394
-#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:516
+#: ../src/jarabe/journal/journaltoolbox.py:393
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Ջնջել"
 
-#: ../src/jarabe/desktop/activitieslist.py:436
+#: ../src/jarabe/desktop/activitieslist.py:532
 msgid "Remove favorite"
 msgstr "Հանել ընտրյալների շարքից"
 
-#: ../src/jarabe/desktop/activitieslist.py:440
+#: ../src/jarabe/desktop/activitieslist.py:536
 msgid "Make favorite"
 msgstr "Նշել որպես ընտրյալ"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:187
+#: ../src/jarabe/desktop/favoriteslayout.py:200
 msgid "Freeform"
 msgstr "Ազատ ձև"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:281
+#: ../src/jarabe/desktop/favoriteslayout.py:296
 msgid "Ring"
 msgstr "Օղակ"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:425
+#: ../src/jarabe/desktop/favoriteslayout.py:450
 msgid "Spiral"
 msgstr "Գալարաձև"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:493
+#: ../src/jarabe/desktop/favoriteslayout.py:518
 msgid "Box"
 msgstr "Տուփ"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:536
+#: ../src/jarabe/desktop/favoriteslayout.py:561
 msgid "Triangle"
 msgstr "Եռանկյուն"
 
-#: ../src/jarabe/desktop/favoritesview.py:317
+#: ../src/jarabe/desktop/favoritesview.py:328
 msgid "Registration Failed"
 msgstr "Գրանցումը ձախողվեց"
 
-#: ../src/jarabe/desktop/favoritesview.py:320
+#: ../src/jarabe/desktop/favoritesview.py:331
 msgid "Registration Successful"
 msgstr "Գրանցումը Հաջողվեց"
 
-#: ../src/jarabe/desktop/favoritesview.py:321
+#: ../src/jarabe/desktop/favoritesview.py:332
 msgid "You are now registered with your school server."
 msgstr "Դուք այժմ գրանցված եք ձեր դպրոցի սերվերում:"
 
-#: ../src/jarabe/desktop/favoritesview.py:629
+#: ../src/jarabe/desktop/favoritesview.py:611
 msgid "Register"
 msgstr "Գրանցվել"
 
-#: ../src/jarabe/desktop/favoritesview.py:631
-#: ../src/jarabe/desktop/favoritesview.py:645
+#: ../src/jarabe/desktop/favoritesview.py:613
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register again"
 msgstr "Գրանցել կրկին"
 
-#: ../src/jarabe/desktop/homebox.py:58
-msgid "Software Update"
-msgstr "﻿ Ծրագրի Արդիականացում"
-
-#: ../src/jarabe/desktop/homebox.py:59
+#: ../src/jarabe/desktop/homebox.py:64
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 "Արդիականացրեք Ձեր գործունեությունները Ձեր նոր ծրագրակազմի հետ "
 "համատեղելիությունն ապահովելու նպատակով"
 
-#: ../src/jarabe/desktop/homebox.py:68
+#: ../src/jarabe/desktop/homebox.py:73
 msgid "Check now"
 msgstr "Ստուգել հիմա"
+
+#: ../src/jarabe/desktop/homewindow.py:226
+#: ../src/jarabe/frame/zoomtoolbar.py:48
+msgid "Neighborhood"
+msgstr "Հարևաններ"
 
 #: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
@@ -1121,41 +1152,41 @@ msgstr ""
 "Պահանջվում է կոդավորման բանալի\n"
 "անլար ցանցի համար '%s':"
 
-#: ../src/jarabe/desktop/keydialog.py:140
+#: ../src/jarabe/desktop/keydialog.py:146
 msgid "Key Type:"
 msgstr "Ստեղնատեսակը."
 
-#: ../src/jarabe/desktop/keydialog.py:160
+#: ../src/jarabe/desktop/keydialog.py:166
 msgid "Authentication Type:"
 msgstr "Նույնականացման Տեսակը."
 
 # WPA.Wi-Fi Protected Access
-#: ../src/jarabe/desktop/keydialog.py:223
+#: ../src/jarabe/desktop/keydialog.py:229
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Անհատական"
 
-#: ../src/jarabe/desktop/keydialog.py:232
+#: ../src/jarabe/desktop/keydialog.py:238
 msgid "Wireless Security:"
 msgstr "Անլար կապի անվտանգության."
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:81
-#: ../src/jarabe/journal/journaltoolbox.py:507
-#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:84
+#: ../src/jarabe/desktop/meshbox.py:79
+#: ../src/jarabe/journal/journaltoolbox.py:506
+#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
 msgid "Resume"
 msgstr "Վերադառնալ"
 
-#: ../src/jarabe/desktop/meshbox.py:86
+#: ../src/jarabe/desktop/meshbox.py:84
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Միանալ"
 
-#: ../src/jarabe/desktop/networkviews.py:486
+#: ../src/jarabe/desktop/networkviews.py:490
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc /ներքին/ Ցանց %d"
 
-#: ../src/jarabe/desktop/networkviews.py:621
+#: ../src/jarabe/desktop/networkviews.py:627
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Բջջային Ցանց %d"
@@ -1168,69 +1199,69 @@ msgstr "Հնարավոր չէ միանալ սերվերին:"
 msgid "The server could not complete the request."
 msgstr "Սերվերը չի կարող ավարտել պահանջի կատարումը:"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:79
+#: ../src/jarabe/desktop/viewtoolbar.py:80
 msgid "List view"
 msgstr "Ցուցակի տեսքով"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:80
+#: ../src/jarabe/desktop/viewtoolbar.py:81
 msgid "<Ctrl>2"
 msgstr "<Ctrl>2"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:142
+#: ../src/jarabe/desktop/viewtoolbar.py:149
 msgid "Favorites view"
 msgstr "Ընտրյալների տեսքը"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:143
+#: ../src/jarabe/desktop/viewtoolbar.py:150
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:577
+#: ../src/jarabe/frame/activitiestray.py:578
 msgid "Decline"
 msgstr "Մերժում"
 
-#: ../src/jarabe/frame/activitiestray.py:525
+#: ../src/jarabe/frame/activitiestray.py:526
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:527
+#: ../src/jarabe/frame/activitiestray.py:528
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:529
+#: ../src/jarabe/frame/activitiestray.py:530
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:547
+#: ../src/jarabe/frame/activitiestray.py:548
 #, python-format
 msgid "%s of %s"
 msgstr "%s %s-ից"
 
-#: ../src/jarabe/frame/activitiestray.py:561
+#: ../src/jarabe/frame/activitiestray.py:562
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "Տեղափոխում %s -ից"
 
-#: ../src/jarabe/frame/activitiestray.py:572
+#: ../src/jarabe/frame/activitiestray.py:573
 msgid "Accept"
 msgstr "Ընդունել"
 
-#: ../src/jarabe/frame/activitiestray.py:629
-#: ../src/jarabe/frame/activitiestray.py:642
-#: ../src/jarabe/frame/activitiestray.py:760
+#: ../src/jarabe/frame/activitiestray.py:630
+#: ../src/jarabe/frame/activitiestray.py:643
+#: ../src/jarabe/frame/activitiestray.py:761
 msgid "Dismiss"
 msgstr "Արգելել"
 
-#: ../src/jarabe/frame/activitiestray.py:646
+#: ../src/jarabe/frame/activitiestray.py:647
 msgid "The other participant canceled the file transfer"
 msgstr "Մյուս մասնակիցը չեղարկեց ֆայլի փոխանցման գործողությունը"
 
-#: ../src/jarabe/frame/activitiestray.py:694
+#: ../src/jarabe/frame/activitiestray.py:695
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
@@ -1256,10 +1287,6 @@ msgid "%s clipping"
 msgstr "%s ամրացում"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:48
-msgid "Neighborhood"
-msgstr "Հարևաններ"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "F1"
 msgstr "F1"
 
@@ -1275,192 +1302,189 @@ msgstr "F3"
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:106
+#: ../src/jarabe/intro/window.py:105
 msgid "Name:"
 msgstr "Անուն."
 
-#: ../src/jarabe/intro/window.py:136
+#: ../src/jarabe/intro/window.py:135
 msgid "Click to change color:"
 msgstr "Քլիք`գույնը փոփոխելու համար."
 
-#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
+#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
 msgstr "Հետ"
 
-#: ../src/jarabe/intro/window.py:214
+#: ../src/jarabe/intro/window.py:213
 msgid "Next"
 msgstr "Հաջորդ"
 
-#: ../src/jarabe/journal/expandedentry.py:142
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/expandedentry.py:145
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
 #: ../src/jarabe/journal/palettes.py:66
-#: ../src/jarabe/journal/volumestoolbar.py:130
+#: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "Անվերնագիր"
 
-#: ../src/jarabe/journal/expandedentry.py:246
+#: ../src/jarabe/journal/expandedentry.py:259
 msgid "No preview"
 msgstr "Առանց նախադիտում"
 
-#: ../src/jarabe/journal/expandedentry.py:256
+#: ../src/jarabe/journal/expandedentry.py:273
 #, python-format
 msgid "Kind: %s"
 msgstr "Տեսակ. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:257
-#: ../src/jarabe/journal/listmodel.py:150
-#: ../src/jarabe/journal/listmodel.py:158
+#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/listmodel.py:151
+#: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr "Անծանոթ"
 
-#: ../src/jarabe/journal/expandedentry.py:258
+#: ../src/jarabe/journal/expandedentry.py:275
 #, python-format
 msgid "Date: %s"
 msgstr "Ամսաթիվ. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:259
+#: ../src/jarabe/journal/expandedentry.py:276
 #, python-format
 msgid "Size: %s"
 msgstr "Չափս. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:282
+#: ../src/jarabe/journal/expandedentry.py:299
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "Ամսաթիվ չկա"
 
-#: ../src/jarabe/journal/expandedentry.py:291
+#: ../src/jarabe/journal/expandedentry.py:308
 msgid "Participants:"
 msgstr "Մասնակիցներ."
 
-#: ../src/jarabe/journal/expandedentry.py:331
+#: ../src/jarabe/journal/expandedentry.py:349
 msgid "Description:"
 msgstr "Նկարագրություն."
 
-#: ../src/jarabe/journal/expandedentry.py:334
+#: ../src/jarabe/journal/expandedentry.py:352
 msgid "Tags:"
 msgstr "Պիտակներ."
 
-#: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journalactivity.py:120
+#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:218
-#: ../src/jarabe/journal/volumestoolbar.py:368
+#: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "Մատյան"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:128
 msgid "Anytime"
 msgstr "երբևէ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:130
 msgid "Today"
 msgstr "Այսօր"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:132
 msgid "Since yesterday"
 msgstr "Երեկվանից"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Past week"
 msgstr "Վերջին շաբաթվա ընթացքում"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Past month"
 msgstr "Վերջին ամսվա ընթացքում"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Past year"
 msgstr "Վերջին տարվա ընթացքում"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:145
 msgid "Anyone"
 msgstr "Բոլորը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:147
 msgid "My friends"
 msgstr "Իմ ընկերները"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My class"
 msgstr "Իմ դասարանը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:290
 msgid "Anything"
 msgstr "Ամենը"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:376
 #: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr "Պատճենել"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
-#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:384
+#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
 msgid "Duplicate"
 msgstr "Կրկնօրինակել"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/journaltoolbox.py:417
 #: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
-#: ../src/jarabe/journal/volumestoolbar.py:315
+#: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Գրառման պատճենահանման ձախողում: %s"
 
 # Խափանում, վրիպում, սխալ
-#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/journaltoolbox.py:418
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
-#: ../src/jarabe/journal/volumestoolbar.py:316
+#: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "Ձախողում"
 
-#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:150
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Ցանկանում ես ընդմիշտ ջնջել  \"%s\"?"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Մեկնարկ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:537
 msgid "Sort by date modified"
 msgstr "Դասավորել ըստ փոփոխման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date created"
 msgstr "Դասավորել ըստ ստեղծման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by size"
 msgstr "Դասավորել ըստ չափսի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort view"
 msgstr "Դասավորված տեսք"
 
-#: ../src/jarabe/journal/listview.py:318
+#: ../src/jarabe/journal/listview.py:323
 msgid "Your Journal is empty"
 msgstr "Ձեր Մատյանը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:321
+#: ../src/jarabe/journal/listview.py:326
 msgid "Your documents folder is empty"
 msgstr "Ձեր թղթապանակը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:328
 msgid "The device is empty"
 msgstr "Սարքը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:325
+#: ../src/jarabe/journal/listview.py:330
 msgid "No matching entries"
 msgstr "Համընկնող գրառումներ չկան"
-
-#: ../src/jarabe/journal/listview.py:400
-msgid "Clear search"
-msgstr "Ջնջել որոնումը"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
@@ -1472,26 +1496,26 @@ msgstr "%s գործունեության ավելի հին տարբերակ"
 msgid "Do you want to downgrade to version %s"
 msgstr "Ցանկանում եք ապաարդիականացնել դեպի տարբերակ %s"
 
-#: ../src/jarabe/journal/modalalert.py:64
+#: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
 msgstr "Ձեր Մատյանը լիքն է"
 
-#: ../src/jarabe/journal/modalalert.py:68
+#: ../src/jarabe/journal/modalalert.py:69
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 "Խնդրում ենք ջնջել Մատյանի որոշ հին գրառումները, որպեսզի տեղ ազատեք նորի "
 "համար:"
 
-#: ../src/jarabe/journal/modalalert.py:80
+#: ../src/jarabe/journal/modalalert.py:83
 msgid "Show Journal"
 msgstr "Ցուցադրել Մատյանը"
 
-#: ../src/jarabe/journal/objectchooser.py:146
+#: ../src/jarabe/journal/objectchooser.py:151
 msgid "Choose an object"
 msgstr "Ընտրել որևէ օբյեկտ"
 
-#: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:410
+#: ../src/jarabe/journal/objectchooser.py:156
+#: ../src/jarabe/view/viewsource.py:414
 msgid "Close"
 msgstr "Փակել"
 
@@ -1520,7 +1544,7 @@ msgid "Entries without a file cannot be sent."
 msgstr "Առանց ֆայլի գրառումները չեն կարող ուղարկվել:"
 
 #: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
-#: ../src/jarabe/journal/volumestoolbar.py:306
+#: ../src/jarabe/journal/volumestoolbar.py:300
 msgid "Entries without a file cannot be copied."
 msgstr "Առանց ֆայլի գրառումները չեն կարող պատճենահանվել:"
 
@@ -1540,12 +1564,12 @@ msgstr "Ոչ մի վավեր կապ չի գտնվել"
 msgid "No activity to resume entry"
 msgstr "Գրառումը շարունակելու համար չկա ոչ մի գործունեություն"
 
-#: ../src/jarabe/journal/volumestoolbar.py:209
+#: ../src/jarabe/journal/volumestoolbar.py:210
 msgid "Documents"
 msgstr "Փաստաթղթեր"
 
-#: ../src/jarabe/journal/volumestoolbar.py:391
-#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
+#: ../src/jarabe/journal/volumestoolbar.py:385
+#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d ՄԲ ազատ"
@@ -1770,67 +1794,70 @@ msgstr "Իմ կարգավորումները"
 msgid "Invite to %s"
 msgstr "Հրավիրել %s"
 
-#: ../src/jarabe/view/launcher.py:142
+#: ../src/jarabe/view/launcher.py:145
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b>-ի գործարկումը ձախողվեց:"
 
-#: ../src/jarabe/view/palettes.py:48
+#: ../src/jarabe/view/palettes.py:50
 msgid "Starting..."
 msgstr "Մեկնարկում է..."
 
-#: ../src/jarabe/view/palettes.py:58
+#: ../src/jarabe/view/palettes.py:60
 msgid "Activity failed to start"
 msgstr "Գործունեության մեկնարկը ձախողվեց:"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:91
+#: ../src/jarabe/view/palettes.py:93
 msgid "View Source"
 msgstr "Դիտել աղբյուրը"
 
-#: ../src/jarabe/view/palettes.py:102
+#: ../src/jarabe/view/palettes.py:104
 msgid "Stop"
 msgstr "Կանգ"
 
-#: ../src/jarabe/view/palettes.py:139
+#: ../src/jarabe/view/palettes.py:141
 msgid "Start new"
 msgstr "Սկսել նորը"
 
-#: ../src/jarabe/view/palettes.py:229
+#: ../src/jarabe/view/palettes.py:223
 msgctxt "Volume"
 msgid "Remove"
 msgstr "վերացնել"
 
-#: ../src/jarabe/view/viewsource.py:263
+#: ../src/jarabe/view/viewsource.py:267
 msgid "Instance Source"
 msgstr "Օրինակի Աղբյուրը"
 
-#: ../src/jarabe/view/viewsource.py:312
+#: ../src/jarabe/view/viewsource.py:316
 msgid "Source"
 msgstr "Աղբյուր"
 
-#: ../src/jarabe/view/viewsource.py:374
+#: ../src/jarabe/view/viewsource.py:378
 msgid "Activity Bundle Source"
 msgstr "Գործունեությունների փաթեթի աղբյուր"
 
-#: ../src/jarabe/view/viewsource.py:393
+#: ../src/jarabe/view/viewsource.py:397
 msgid "Sugar Toolkit Source"
 msgstr "«Sugar»Ծրագրային Գործիքի աղբյուր"
 
-#: ../src/jarabe/view/viewsource.py:400
+#: ../src/jarabe/view/viewsource.py:404
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "Դիտել աղբյուրը. %s"
 
-#: ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:405
 #, python-format
 msgid "View source: %r"
 msgstr "Դիտել աղբյուրը. %r"
 
-#: ../src/jarabe/util/emulator.py:40
+#: ../src/jarabe/util/emulator.py:41
 msgid "Sugar in a window"
 msgstr "Sugar-ը պատուհանում"
+
+#~ msgid "Software update"
+#~ msgstr "Ծրագրային արդիականացում"
 
 #~ msgid "Search"
 #~ msgstr "Որոնում"
