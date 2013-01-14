@@ -58,7 +58,7 @@ class ViewToolbar(Gtk.Toolbar):
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'system-search')
+                                             'entry-search')
         self.set_placeholder_text_for_view(_('Home'))
         self.search_entry.add_clear_button()
         self.search_entry.set_width_chars(25)

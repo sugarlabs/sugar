@@ -50,7 +50,7 @@ class MainToolbar(Gtk.Toolbar):
         tool_item.show()
         self._search_entry = iconentry.IconEntry()
         self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                              'system-search')
+                                              'entry-search')
         self._search_entry.add_clear_button()
         self._search_entry.set_width_chars(25)
         text = _('Search in %s') % _('Settings')

@@ -333,8 +333,8 @@ class ClearMessageBox(Gtk.EventBox):
 
         icon = Icon(pixel_size=style.LARGE_ICON_SIZE,
                     icon_name='system-search',
-                    stroke_color=style.COLOR_TRANSPARENT.get_svg(),
-                    fill_color=style.COLOR_BUTTON_GREY.get_svg())
+                    stroke_color=style.COLOR_BUTTON_GREY.get_svg(),
+                    fill_color=style.COLOR_TRANSPARENT.get_svg())
         box.pack_start(icon, expand=True, fill=False, padding=0)
         icon.show()
 
