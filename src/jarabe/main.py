@@ -22,7 +22,7 @@ logger.start('shell')
 
 import logging
 
-logging.debug('%r STARTUP: Starting the shell')
+logging.debug('STARTUP: Starting the shell')
 
 import os
 import sys
