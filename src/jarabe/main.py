@@ -230,6 +230,11 @@ def setup_theme():
     icons_path = os.path.join(config.data_path, 'icons')
     Gtk.IconTheme.get_default().append_search_path(icons_path)
 
+def _start_intro():
+    window = IntroWindow()
+    window.connect('done', __intro_window_done_cb)
+    window.show_all()
+
 
 def main():
     GLib.threads_init()
@@ -256,9 +261,7 @@ def main():
     sys.path.append(config.ext_path)
 
     if not intro.check_profile():
-        win = IntroWindow()
-        win.connect("done", __intro_window_done_cb)
-        win.show_all()
+        _start_intro()
     else:
         _begin_desktop_startup()
 
