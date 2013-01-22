@@ -162,8 +162,17 @@ def start_home():
     screen.connect('window-manager-changed', __window_manager_changed_cb)
     _check_for_window_manager(screen)
 
-def intro_window_done_cb(window):
+def __intro_window_done_cb(window):
     start_home()
+
+def __window_manager_changed_cb(screen):
+    _check_for_window_manager(screen)
+
+def _check_for_window_manager(screen):
+    wm_name = screen.get_window_manager_name()
+    if wm_name is not None:
+        screen.disconnect_by_func(__window_manager_changed_cb)
+        bootstrap()
 
 def cleanup_temporary_files():
     try:
@@ -221,7 +230,7 @@ def main():
 
     if not intro.check_profile():
         win = IntroWindow()
-        win.connect("done", intro_window_done_cb)
+        win.connect("done", __intro_window_done_cb)
         win.show_all()
     else:
         start_home()
@@ -230,17 +239,5 @@ def main():
         Gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
-
-
-def __window_manager_changed_cb(screen):
-    _check_for_window_manager(screen)
-
-
-def _check_for_window_manager(screen):
-    wm_name = screen.get_window_manager_name()
-    if wm_name is not None:
-        screen.disconnect_by_func(__window_manager_changed_cb)
-        bootstrap()
-
 
 main()
