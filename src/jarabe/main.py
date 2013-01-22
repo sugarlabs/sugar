@@ -106,11 +106,6 @@ def setup_file_transfer_cb():
 def setup_window_manager():
     logging.debug('STARTUP: window_manager')
 
-    # have to reset cursor(metacity sets it on startup)
-    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr',
-                       shell=True):
-        logging.warning('Can not reset cursor')
-
     if subprocess.call('metacity-message disable-keybindings',
                        shell=True):
         logging.warning('Can not disable metacity keybindings')
@@ -217,8 +212,7 @@ def main():
     GObject.idle_add(setup_cursortracker_cb)
     # make sure we have the correct cursor in the intro screen
     # TODO #3204
-    if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr',
-                       shell=True):
+    if subprocess.call(["xsetroot", "-cursor_name", "left_ptr"]):
         logging.warning('Can not reset cursor')
 
     sound.restore()
