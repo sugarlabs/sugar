@@ -37,6 +37,7 @@ sys.setdefaultencoding('utf-8')
 
 import gettext
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
@@ -153,6 +154,9 @@ def _check_for_window_manager(screen):
 def _start_window_manager():
     global _metacity_process
 
+    settings = Gio.Settings.new('org.gnome.desktop.interface')
+    settings.set_string('cursor-theme', 'sugar')
+
     _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
 
     screen = Wnck.Screen.get_default()
@@ -238,11 +242,6 @@ def main():
     _start_window_manager()
 
     setup_locale()
-
-    client = GConf.Client.get_default()
-    client.set_string('/apps/metacity/general/mouse_button_modifier',
-                      '<Super>')
-
     setup_fonts()
     setup_theme()
 
@@ -251,11 +250,6 @@ def main():
     GObject.idle_add(unfreeze_dcon_cb)
 
     GObject.idle_add(setup_cursortracker_cb)
-    # make sure we have the correct cursor in the intro screen
-    # TODO #3204
-    if subprocess.call(["xsetroot", "-cursor_name", "left_ptr"]):
-        logging.warning('Can not reset cursor')
-
     sound.restore()
     keyboard.setup()
 

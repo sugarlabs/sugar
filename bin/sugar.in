@@ -46,6 +46,4 @@ if [ -f ~/.sugar/debug ]; then
         . ~/.sugar/debug
 fi
 
-echo Xcursor.theme: sugar | xrdb -merge
-
 exec python -m jarabe.main
