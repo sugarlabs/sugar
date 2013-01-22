@@ -67,6 +67,12 @@ from jarabe.intro.window import IntroWindow
 from jarabe import frame
 from jarabe.view.service import UIService
 
+
+_metacity_process = None
+_window_manager_started = False
+_starting_desktop = False
+
+
 def unfreeze_dcon_cb():
     logging.debug('STARTUP: unfreeze_dcon_cb')
     screen.set_dcon_freeze(0)
@@ -114,9 +120,10 @@ def setup_window_manager():
                        shell=True):
         logging.warning('Can not disable metacity mouse button modifiers')
 
-def bootstrap():
-    setup_window_manager()
+def __window_manager_changed_cb(screen):
+    _check_for_window_manager(screen)
 
+def _complete_desktop_startup():
     launcher.setup()
 
     GObject.idle_add(setup_frame_cb)
@@ -127,28 +134,40 @@ def bootstrap():
     GObject.idle_add(setup_file_transfer_cb)
     GObject.idle_add(show_software_updates_cb)
 
-    keyboard.setup()
+def _check_for_window_manager(screen):
+    wm_name = screen.get_window_manager_name()
+    if wm_name is None:
+        return
 
-def setup_fonts():
-    client = GConf.Client.get_default()
-    face = client.get_string('/desktop/sugar/font/default_face')
-    size = client.get_float('/desktop/sugar/font/default_size')
-    settings = Gtk.Settings.get_default()
-    settings.set_property("gtk-font-name", "%s %f" % (face, size))
+    screen.disconnect_by_func(__window_manager_changed_cb)
 
-def setup_theme():
-    settings = Gtk.Settings.get_default()
-    sugar_theme = 'sugar-72'
-    if 'SUGAR_SCALING' in os.environ:
-        if os.environ['SUGAR_SCALING'] == '100':
-            sugar_theme = 'sugar-100'
-    settings.set_property('gtk-theme-name', sugar_theme)
-    settings.set_property('gtk-icon-theme-name', 'sugar')
+    setup_window_manager()
 
-    icons_path = os.path.join(config.data_path, 'icons')
-    Gtk.IconTheme.get_default().append_search_path(icons_path)
+    global window_manager_started
+    window_manager_started = True
 
-def start_home():
+    global _starting_desktop
+    if _starting_desktop:
+        _complete_desktop_startup()
+
+def _start_window_manager():
+    global _metacity_process
+
+    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
+
+    screen = Wnck.Screen.get_default()
+    screen.connect('window-manager-changed', __window_manager_changed_cb)
+
+    _check_for_window_manager(screen)
+
+def _stop_window_manager():
+    global _metacity_process
+    _metacity_process.terminate()
+
+def _begin_desktop_startup():
+    global _starting_desktop
+    _starting_desktop = True
+
     ui_service = UIService()
 
     session_manager = get_session_manager()
@@ -158,21 +177,12 @@ def start_home():
     home_window = homewindow.get_instance()
     home_window.show()
 
-    screen = Wnck.Screen.get_default()
-    screen.connect('window-manager-changed', __window_manager_changed_cb)
-    _check_for_window_manager(screen)
-
 def __intro_window_done_cb(window):
-    start_home()
+    _begin_desktop_startup()
 
-def __window_manager_changed_cb(screen):
-    _check_for_window_manager(screen)
-
-def _check_for_window_manager(screen):
-    wm_name = screen.get_window_manager_name()
-    if wm_name is not None:
-        screen.disconnect_by_func(__window_manager_changed_cb)
-        bootstrap()
+    global window_manager_started
+    if window_manager_started:
+        _complete_desktop_startup()
 
 def cleanup_temporary_files():
     try:
@@ -197,6 +207,26 @@ def setup_locale():
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
+def setup_fonts():
+    client = GConf.Client.get_default()
+    face = client.get_string('/desktop/sugar/font/default_face')
+    size = client.get_float('/desktop/sugar/font/default_size')
+    settings = Gtk.Settings.get_default()
+    settings.set_property("gtk-font-name", "%s %f" % (face, size))
+
+def setup_theme():
+    settings = Gtk.Settings.get_default()
+    sugar_theme = 'sugar-72'
+    if 'SUGAR_SCALING' in os.environ:
+        if os.environ['SUGAR_SCALING'] == '100':
+            sugar_theme = 'sugar-100'
+    settings.set_property('gtk-theme-name', sugar_theme)
+    settings.set_property('gtk-icon-theme-name', 'sugar')
+
+    icons_path = os.path.join(config.data_path, 'icons')
+    Gtk.IconTheme.get_default().append_search_path(icons_path)
+
+
 def main():
     GLib.threads_init()
     Gdk.threads_init()
@@ -204,6 +234,8 @@ def main():
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
+
+    _start_window_manager()
 
     setup_locale()
 
@@ -225,6 +257,7 @@ def main():
         logging.warning('Can not reset cursor')
 
     sound.restore()
+    keyboard.setup()
 
     sys.path.append(config.ext_path)
 
@@ -233,11 +266,13 @@ def main():
         win.connect("done", __intro_window_done_cb)
         win.show_all()
     else:
-        start_home()
+        _begin_desktop_startup()
 
     try:
         Gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
+
+    _stop_window_manager()
 
 main()

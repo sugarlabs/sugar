@@ -47,6 +47,5 @@ if [ -f ~/.sugar/debug ]; then
 fi
 
 echo Xcursor.theme: sugar | xrdb -merge
-metacity --no-force-fullscreen -d $DISPLAY &
 
 exec python -m jarabe.main
