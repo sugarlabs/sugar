@@ -129,14 +129,14 @@ def bootstrap():
 
     keyboard.setup()
 
-def set_fonts():
+def setup_fonts():
     client = GConf.Client.get_default()
     face = client.get_string('/desktop/sugar/font/default_face')
     size = client.get_float('/desktop/sugar/font/default_size')
     settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
-def set_theme():
+def setup_theme():
     settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
     if 'SUGAR_SCALING' in os.environ:
@@ -202,8 +202,8 @@ def main():
     client.set_string('/apps/metacity/general/mouse_button_modifier',
                       '<Super>')
 
-    set_fonts()
-    set_theme()
+    setup_fonts()
+    setup_theme()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
