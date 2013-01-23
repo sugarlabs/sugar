@@ -45,6 +45,7 @@ class ObjectChooser(Gtk.Window):
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)
+        self.set_has_resize_grip(False)
 
         self._selected_object_id = None
 
