@@ -122,6 +122,7 @@ class ViewSource(Gtk.Window):
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)
+        self.set_has_resize_grip(False)
 
         width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
