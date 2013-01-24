@@ -136,6 +136,12 @@ class Language(SectionView):
             previous_add_removes = self._add_remove_boxes[-2]
             previous_add_removes.hide()
 
+        # Hide the Remove button if the new added row is the only
+        # language.
+        elif self._selected_lang_count == 1:
+            add_button_, remove_button = add_remove_box.get_children()
+            remove_button.props.visible = False
+
         combobox.show()
 
     def _attach_to_table(self, widget, row, column, padding=20, \
@@ -159,6 +165,15 @@ class Language(SectionView):
         self._table.resize(self._selected_lang_count, 3)
 
         self._add_remove_boxes[-1].show_all()
+
+        # Hide or show the Remove button in the new last row,
+        # depending if it is the only language.
+        add_remove_box = self._add_remove_boxes[-1]
+        add_button_, remove_button = add_remove_box.get_children()
+        if self._selected_lang_count == 1:
+            remove_button.props.visible = False
+        else:
+            remove_button.props.visible = True
 
     def _get_last_row(self):
         label = self._labels.pop()
