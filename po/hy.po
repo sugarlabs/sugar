@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-10-19 00:34-0400\n"
-"PO-Revision-Date: 2013-01-02 05:11+0200\n"
+"PO-Revision-Date: 2013-02-01 10:32+0200\n"
 "Last-Translator: Jasmine <udea_jasmine@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
@@ -432,7 +432,7 @@ msgstr "Լիցքվորված է"
 
 #: ../extensions/deviceicon/frame.py:57
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Ցույց տալ իմ ստեղնաշարը"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -1021,11 +1021,12 @@ msgstr "Վերամեկնարկել հիմա"
 #: ../src/jarabe/journal/journaltoolbox.py:82
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Որոնել n %s"
 
+# Settings
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Կազմաձևումները"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
 msgid "Done"
@@ -1049,7 +1050,7 @@ msgstr "Ջնջել որոնումը"
 
 #: ../src/jarabe/desktop/activitieslist.py:417
 msgid "No matching activities"
-msgstr ""
+msgstr "Համընկնող գործունեություններ չկան"
 
 #: ../src/jarabe/desktop/activitieslist.py:453
 msgid "Confirm erase"
