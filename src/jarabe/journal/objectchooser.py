@@ -101,7 +101,7 @@ class ObjectChooser(Gtk.Window):
             self._toolbar.set_what_filter(what_filter)
 
     def __realize_cb(self, chooser, parent):
-        self.set_transient_for(parent)
+        self.get_window().set_transient_for(parent)
         # TODO: Should we disconnect the signal here?
 
     def __window_closed_cb(self, screen, window, parent):
