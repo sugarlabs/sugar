@@ -107,8 +107,6 @@ class MainToolbox(ToolbarBox):
         tool_item.show()
 
         self._sorting_button = SortingButton()
-        self._sorting_button.connect('clicked',
-                                     self.__sorting_button_clicked_cb)
         self.toolbar.insert(self._sorting_button, -1)
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
@@ -225,9 +223,6 @@ class MainToolbox(ToolbarBox):
 
     def __sort_changed_cb(self, button):
         self._update_if_needed()
-
-    def __sorting_button_clicked_cb(self, button):
-        self._sorting_button.palette.popup(immediate=True, state=1)
 
     def _update_if_needed(self):
         new_query = self._build_query()
@@ -558,6 +553,9 @@ class SortingButton(ToolButton):
 
         self.props.tooltip = _('Sort view')
         self.props.icon_name = 'view-lastedit'
+
+        self.props.hide_tooltip_on_click = False
+        self.palette_invoker.props.toggle_palette = True
 
         menu_box = PaletteMenuBox()
         self.props.palette.set_content(menu_box)
