@@ -556,7 +556,9 @@ class WirelessDeviceView(ToolButton):
         if state == network.NM_DEVICE_STATE_PREPARE or \
            state == network.NM_DEVICE_STATE_CONFIG or \
            state == network.NM_DEVICE_STATE_NEED_AUTH or \
-           state == network.NM_DEVICE_STATE_IP_CONFIG:
+           state == network.NM_DEVICE_STATE_IP_CONFIG or \
+           state == network.NM_DEVICE_STATE_IP_CHECK or \
+           state == network.NM_DEVICE_STATE_SECONDARIES:
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
