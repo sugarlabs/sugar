@@ -89,6 +89,7 @@ class MainToolbox(ToolbarBox):
         self._add_widget(self.search_entry, expand=True)
 
         self._favorite_button = ToggleToolButton('emblem-favorite')
+        self._favorite_button.set_tooltip(_('Favorite entries'))
         self._favorite_button.connect('toggled',
                                       self.__favorite_button_toggled_cb)
         self.toolbar.insert(self._favorite_button, -1)
