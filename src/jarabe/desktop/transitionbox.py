@@ -18,9 +18,9 @@ from gi.repository import GObject
 
 from sugar3.graphics import style
 from sugar3.graphics import animator
+from sugar3.graphics.icon import Icon
 
 from jarabe.model.buddy import get_owner_instance
-from jarabe.view.buddyicon import BuddyIcon
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.desktop.favoriteslayout import SpreadLayout
 
@@ -49,8 +49,10 @@ class TransitionBox(ViewContainer):
         layout = SpreadLayout()
 
         # Round off icon size to an even number to ensure that the icon
-        self._owner_icon = BuddyIcon(buddy=get_owner_instance(),
-                                     pixel_size=style.XLARGE_ICON_SIZE & ~1)
+        owner = get_owner_instance()
+        self._owner_icon = Icon(icon_name='computer-xo',
+                                xo_color=owner.get_color(),
+                                pixel_size=style.XLARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, self._owner_icon)
 
         self._animator = animator.Animator(0.3)
