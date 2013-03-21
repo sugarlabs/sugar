@@ -332,11 +332,12 @@ class BaseListView(Gtk.Bin):
             self.tree_view.get_bin_window().show()
 
         if len(tree_model) == 0:
+            documents_path = model.get_documents_path()
             if self._is_query_empty():
                 if self._query['mountpoints'] == ['/']:
                     self._show_message(_('Your Journal is empty'))
-                elif self._query['mountpoints'] == \
-                        [model.get_documents_path()]:
+                elif documents_path and self._query['mountpoints'] == \
+                        [documents_path]:
                     self._show_message(_('Your documents folder is empty'))
                 else:
                     self._show_message(_('The device is empty'))
