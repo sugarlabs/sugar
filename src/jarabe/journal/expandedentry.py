@@ -60,6 +60,15 @@ class BuddyList(Gtk.Alignment):
         self.add(hbox)
 
 
+class TextView(Gtk.TextView):
+    def __init__(self):
+        Gtk.TextView.__init__(self)
+        text_buffer = Gtk.TextBuffer()
+        self.set_buffer(text_buffer)
+        self.set_left_margin(style.DEFAULT_PADDING)
+        self.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+
+
 class ExpandedEntry(Gtk.EventBox):
     def __init__(self):
         Gtk.EventBox.__init__(self)
@@ -320,40 +329,39 @@ class ExpandedEntry(Gtk.EventBox):
         else:
             return vbox
 
-    def _create_scrollable(self, label):
+    def _create_scrollable(self, widget, label=None):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), label))
+        if label is not None:
+            text = Gtk.Label()
+            text.set_markup('<span foreground="%s">%s</span>' % (
+                    style.COLOR_BUTTON_GREY.get_html(), label))
 
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
+            halign = Gtk.Alignment.new(0, 0, 0, 0)
+            halign.add(text)
+            vbox.pack_start(halign, False, False, 0)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                    Gtk.PolicyType.AUTOMATIC)
         scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        text_buffer = Gtk.TextBuffer()
-        text_view = Gtk.TextView()
-        text_view.set_buffer(text_buffer)
-        text_view.set_left_margin(style.DEFAULT_PADDING)
-        text_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-        scrolled_window.add(text_view)
+        scrolled_window.add(widget)
         vbox.pack_start(scrolled_window, True, True, 0)
 
-        text_view.connect('focus-out-event',
-                          self._description_tags_focus_out_event_cb)
-
-        return vbox, text_view
+        return vbox
 
     def _create_description(self):
-        return self._create_scrollable(_('Description:'))
+        widget = TextView()
+        widget.connect('focus-out-event',
+                       self._description_tags_focus_out_event_cb)
+        return self._create_scrollable(widget, label=_('Description:')), widget
 
     def _create_tags(self):
-        return self._create_scrollable(_('Tags:'))
+        widget = TextView()
+        widget.connect('focus-out-event',
+                       self._description_tags_focus_out_event_cb)
+        return self._create_scrollable(widget, label=_('Tags:')), widget
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
