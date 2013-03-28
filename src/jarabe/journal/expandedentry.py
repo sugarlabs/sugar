@@ -405,16 +405,19 @@ class ExpandedEntry(Gtk.EventBox):
             needs_update = True
 
         if needs_update:
-            if self._metadata.get('mountpoint', '/') == '/':
-                model.write(self._metadata, update_mtime=False)
-            else:
-                old_file_path = os.path.join(self._metadata['mountpoint'],
-                        model.get_file_name(old_title,
-                        self._metadata['mime_type']))
-                model.write(self._metadata, file_path=old_file_path,
-                        update_mtime=False)
+            self._write_entry()
 
         self._update_title_sid = None
+
+    def _write_entry(self):
+        if self._metadata.get('mountpoint', '/') == '/':
+            model.write(self._metadata, update_mtime=False)
+        else:
+            old_file_path = os.path.join(
+                self._metadata['mountpoint'],
+                model.get_file_name(old_title, self._metadata['mime_type']))
+            model.write(self._metadata, file_path=old_file_path,
+                        update_mtime=False)
 
     def _keep_icon_toggled_cb(self, keep_icon):
         if keep_icon.get_active():
