@@ -29,13 +29,16 @@ import simplejson
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.icon import CanvasIcon
+from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
+from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics.alert import Alert
 from sugar3.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
+from jarabe.journal import journalwindow
 
 
 class Separator(Gtk.VBox):
@@ -67,6 +70,131 @@ class TextView(Gtk.TextView):
         self.set_buffer(text_buffer)
         self.set_left_margin(style.DEFAULT_PADDING)
         self.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+
+
+class CommentsView(Gtk.TreeView):
+    __gsignals__ = {
+        'comments-changed': (GObject.SignalFlags.RUN_FIRST, None, ([str])),
+        'clicked': (GObject.SignalFlags.RUN_FIRST, None, [object]),
+    }
+
+    FROM = 'from'
+    MESSAGE = 'message'
+    ICON = 'icon'
+    ICON_COLOR = 'icon-color'
+    COMMENT_ICON = 0
+    COMMENT_ICON_COLOR = 1
+    COMMENT_FROM = 2
+    COMMENT_MESSAGE = 3
+    COMMENT_ERASE_ICON = 4
+    COMMENT_ERASE_ICON_COLOR = 5
+
+    def __init__(self):
+        Gtk.TreeView.__init__(self)
+        self._store = Gtk.ListStore(str, object, str, str, str, object)
+        self._comments = []
+        self._init_model()
+
+    def update_comments(self, comments):
+        self._store.clear()
+
+        if comments:
+            self._comments = simplejson.loads(comments)
+            for comment in self._comments:
+                self._add_row(comment.get(self.FROM, ''),
+                              comment.get(self.MESSAGE, ''),
+                              comment.get(self.ICON, 'computer-xo'),
+                              comment.get(self.ICON_COLOR, '#FFFFFF,#000000'))
+
+    def _get_selected_row(self):
+        selection = self.get_selection()
+        return selection.get_selected()
+
+    def _add_row(self, sender, message, icon_name, icon_color):
+        self._store.append((get_icon_file_name(icon_name),
+                            XoColor(icon_color),
+                            sender,
+                            message,
+                            get_icon_file_name('list-remove'),
+                            XoColor('#FFFFFF,#000000')))
+
+    def _init_model(self):
+        self.set_model(self._store)
+        col = Gtk.TreeViewColumn(_('Comments:'))
+
+        who_icon = CellRendererCommentIcon(self)
+        col.pack_start(who_icon, False)
+        col.add_attribute(who_icon, 'file-name', self.COMMENT_ICON)
+        col.add_attribute(who_icon, 'xo-color', self.COMMENT_ICON_COLOR)
+
+        who_text = Gtk.CellRendererText()
+        col.pack_start(who_text, True)
+        col.add_attribute(who_text, 'text', self.COMMENT_FROM)
+
+        comment_text = Gtk.CellRendererText()
+        col.pack_start(comment_text, True)
+        col.add_attribute(comment_text, 'text', self.COMMENT_MESSAGE)
+
+        erase_icon = CellRendererCommentIcon(self)
+        erase_icon.connect('clicked', self._erase_comment_cb)
+        col.pack_start(erase_icon, False)
+        col.add_attribute(erase_icon, 'file-name', self.COMMENT_ERASE_ICON)
+        col.add_attribute(erase_icon, 'xo-color', self.COMMENT_ERASE_ICON_COLOR)
+
+        self.append_column(col)
+
+    def _erase_comment_cb(self, widget, event):
+        alert = Alert()
+
+        entry = self.get_selection().get_selected()[1]
+        erase_string = _('Erase')
+        alert.props.title = erase_string
+        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
+            % self._store[entry][self.COMMENT_MESSAGE]
+
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
+        icon.show()
+
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
+        ok_icon.show()
+
+        alert.connect('response', self._erase_alert_response_cb, entry)
+
+        journalwindow.get_journal_window().add_alert(alert)
+        alert.show()
+
+    def _erase_alert_response_cb(self, alert, response_id, entry):
+        journalwindow.get_journal_window().remove_alert(alert)
+
+        if response_id is Gtk.ResponseType.OK:
+            self._store.remove(entry)
+
+            # Regenerate comments from current contents of store
+            self._comments = []
+            for entry in self._store:
+                self._comments.append({
+                        self.FROM: entry[self.COMMENT_FROM],
+                        self.MESSAGE: entry[self.COMMENT_MESSAGE],
+                        self.ICON: entry[self.COMMENT_ICON],
+                        self.ICON_COLOR: '[%s]' % (
+                            entry[self.COMMENT_ICON_COLOR].to_string()),
+                        })
+
+            self.emit('comments-changed', simplejson.dumps(self._comments))
+
+
+class CellRendererCommentIcon(CellRendererIcon):
+    def __init__(self, tree_view):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.SMALL_ICON_SIZE
+        self.props.height = style.SMALL_ICON_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+        self.props.fill_color = style.COLOR_BLACK.get_svg()
+        self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
 
 class ExpandedEntry(Gtk.EventBox):
