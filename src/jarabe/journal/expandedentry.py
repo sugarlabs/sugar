@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2008-2013, Sugar Labs
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -265,6 +266,10 @@ class ExpandedEntry(Gtk.EventBox):
         second_column.pack_start(tags_box, True, True,
                                  style.DEFAULT_SPACING)
 
+        comments_box, self._comments = self._create_comments()
+        second_column.pack_start(comments_box, True, True,
+                                 style.DEFAULT_SPACING)
+
         self._buddy_list = Gtk.VBox()
         second_column.pack_start(self._buddy_list, True, False, 0)
 
@@ -307,6 +312,8 @@ class ExpandedEntry(Gtk.EventBox):
         self._description.get_buffer().set_text(description)
         tags = metadata.get('tags', '')
         self._tags.get_buffer().set_text(tags)
+        comments = metadata.get('comments', '')
+        self._comments.update_comments(comments)
 
     def _create_keep_icon(self):
         keep_icon = KeepIcon()
@@ -491,6 +498,11 @@ class ExpandedEntry(Gtk.EventBox):
                        self._description_tags_focus_out_event_cb)
         return self._create_scrollable(widget, label=_('Tags:')), widget
 
+    def _create_comments(self):
+        widget = CommentsView()
+        widget.connect('comments-changed', self._comments_changed_cb)
+        return self._create_scrollable(widget), widget
+
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
             self._update_title_sid = GObject.timeout_add_seconds(1,
@@ -501,6 +513,10 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _description_tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
+
+    def _comments_changed_cb(self, event, comments):
+        self._metadata['comments'] = comments
+        self._write_entry()
 
     def _update_entry(self, needs_update=False):
         if not model.is_editable(self._metadata):
