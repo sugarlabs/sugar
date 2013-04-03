@@ -103,8 +103,8 @@ class ClipboardObject(object):
 
         format_ = mime.choose_most_significant(self._formats.keys())
         if format_ == 'text/uri-list':
-            data = self._formats['text/uri-list'].get_data()
-            uri = urlparse.urlparse(mime.split_uri_list(data)[0], 'file')
+            uris = self._formats[format_].get_uris()
+            uri = urlparse.urlparse(uris[0], 'file')
             scheme = uri.scheme  # pylint: disable=E1101
             if scheme == 'file':
                 path = uri.path  # pylint: disable=E1101
