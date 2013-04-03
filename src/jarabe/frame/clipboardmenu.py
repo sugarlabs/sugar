@@ -195,7 +195,7 @@ class ClipboardMenu(Palette):
 
         transfer_ownership = False
         if most_significant_mime_type == 'text/uri-list':
-            uris = mime.split_uri_list(format_.get_data())
+            uris = format_.get_uris()
             if len(uris) == 1 and uris[0].startswith('file://'):
                 parsed_url = urlparse.urlparse(uris[0])
                 file_path = parsed_url.path  # pylint: disable=E1101
@@ -207,7 +207,7 @@ class ClipboardMenu(Palette):
                 mime_type = 'text/uri-list'
         else:
             if format_.is_on_disk():
-                parsed_url = urlparse.urlparse(format_.get_data())
+                parsed_url = urlparse.urlparse(format_.get_uris()[0])
                 file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)

@@ -76,26 +76,31 @@ class ClipboardTray(tray.VTray):
         return False
 
     def _add_selection(self, object_id, selection):
-        if not selection.data:
+        if not selection.get_data():
             return
 
-        logging.debug('ClipboardTray: adding type %r', selection.type)
+        selection_data = selection.get_data()
+
+        selection_type_atom = selection.get_data_type()
+        selection_type = selection_type_atom.name()
+
+        logging.debug('ClipboardTray: adding type %r', selection_type)
 
         cb_service = clipboard.get_instance()
-        if selection.type == 'text/uri-list':
-            uris = selection.data.split('\n')
+        if selection_type == 'text/uri-list':
+            uris = selection.get_uris()
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list' \
                                           ' still not supported.')
 
             cb_service.add_object_format(object_id,
-                                         selection.type,
+                                         selection_type,
                                          uris[0],
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id,
-                                         selection.type,
-                                         selection.data,
+                                         selection_type,
+                                         selection_data,
                                          on_disk=False)
 
     def _object_added_cb(self, cb_service, cb_object):
@@ -132,9 +137,9 @@ class ClipboardTray(tray.VTray):
         logging.debug('ClipboardTray._drag_motion_cb')
 
         if self._internal_drag(context):
-            context.drag_status(Gdk.DragAction.MOVE, time)
+            Gdk.drag_status(context, Gdk.DragAction.MOVE, time)
         else:
-            context.drag_status(Gdk.DragAction.COPY, time)
+            Gdk.drag_status(context, Gdk.DragAction.COPY, time)
             self.props.drag_active = True
 
         return True
@@ -148,15 +153,16 @@ class ClipboardTray(tray.VTray):
         if self._internal_drag(context):
             # TODO: We should move the object within the clipboard here
             if not self._context_map.has_context(context):
-                context.drop_finish(False, Gtk.get_current_event_time())
+                Gdk.drop_finish(context, False, Gtk.get_current_event_time())
             return False
 
         cb_service = clipboard.get_instance()
         object_id = cb_service.add_object(name="")
 
-        self._context_map.add_context(context, object_id, len(context.targets))
+        context_targets = context.list_targets()
+        self._context_map.add_context(context, object_id, len(context_targets))
 
-        for target in context.targets:
+        for target in context_targets:
             if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
                 widget.drag_get_data(context, target, time)
 
@@ -167,13 +173,13 @@ class ClipboardTray(tray.VTray):
     def drag_data_received_cb(self, widget, context, x, y, selection,
                               targetType, time):
         logging.debug('ClipboardTray: got data for target %r',
-            selection.target)
+            selection.get_target())
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
                 logging.warn('ClipboardTray: empty selection for target %s',
-                    selection.target)
+                    selection.get_target())
             else:
                 self._add_selection(object_id, selection)
 
@@ -181,10 +187,10 @@ class ClipboardTray(tray.VTray):
             # If it's the last target to be processed, finish
             # the dnd transaction
             if not self._context_map.has_context(context):
-                context.drop_finish(True, Gtk.get_current_event_time())
+                Gdk.drop_finish(context, True, Gtk.get_current_event_time())
 
     def _internal_drag(self, context):
-        source_widget = context.get_source_widget()
+        source_widget = Gtk.drag_get_source_widget(context)
         if source_widget is None:
             return False
         view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
