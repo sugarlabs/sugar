@@ -17,7 +17,6 @@
 
 import os
 import logging
-import re
 import subprocess
 from gettext import gettext as _
 import errno

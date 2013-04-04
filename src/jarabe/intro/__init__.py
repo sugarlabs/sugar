@@ -3,8 +3,6 @@ import os
 from sugar3 import env
 from sugar3.profile import get_profile
 
-from jarabe.intro.window import create_profile
-
 
 def check_profile():
     profile = get_profile()

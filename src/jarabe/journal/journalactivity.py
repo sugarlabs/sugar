@@ -26,7 +26,6 @@ import dbus
 import statvfs
 import os
 
-from sugar3.graphics.window import Window
 from sugar3.graphics.alert import ErrorAlert
 
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException

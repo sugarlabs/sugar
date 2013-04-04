@@ -17,7 +17,6 @@
 
 import logging
 from gettext import gettext as _
-import math
 
 from gi.repository import GObject
 from gi.repository import GConf
@@ -29,7 +28,6 @@ from gi.repository import GdkPixbuf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.alert import Alert

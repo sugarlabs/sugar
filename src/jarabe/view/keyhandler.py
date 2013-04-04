@@ -18,8 +18,6 @@
 import os
 import logging
 
-import dbus
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 from gi.repository import SugarExt

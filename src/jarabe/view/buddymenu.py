@@ -24,7 +24,6 @@ from gi.repository import GLib
 import dbus
 
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 

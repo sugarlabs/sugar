@@ -17,7 +17,6 @@
 import logging
 
 from gi.repository import GObject
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 from jarabe.model import shell
