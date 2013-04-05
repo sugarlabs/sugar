@@ -16,6 +16,8 @@ EXTRA_DIST =                    \
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
+check: test
+
 test:
 	cd $(top_srcdir)/tests && \
     mkdir -p $(TESTS_TMPDIR) && \
