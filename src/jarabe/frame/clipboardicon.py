@@ -75,10 +75,11 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
-        logging.debug('_drag_data_get_cb: requested target %s',
-                      selection.target)
-        data = self._cb_object.get_formats()[selection.target].get_data()
-        selection.set(selection.target, 8, data)
+        target_atom = selection.get_target()
+        target_name = target_atom.name()
+        logging.debug('_drag_data_get_cb: requested target %s', target_name)
+        data = self._cb_object.get_formats()[target_name].get_data()
+        selection.set(target_atom, 8, data)
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
@@ -161,8 +162,8 @@ class ClipboardIcon(RadioToolButton):
         icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
-        context.set_icon_pixbuf(pixbuf, hot_x=pixbuf.props.width / 2,
-                                hot_y=pixbuf.props.height / 2)
+        Gtk.drag_set_icon_pixbuf(context, pixbuf, hot_x=pixbuf.props.width / 2,
+                                 hot_y=pixbuf.props.height / 2)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
