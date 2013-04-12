@@ -32,9 +32,7 @@ from sugar3.graphics import xocolor
 from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics import palette
-from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
-from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3 import profile
 
 from jarabe.view.pulsingicon import EventPulsingIcon

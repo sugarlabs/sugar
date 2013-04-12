@@ -291,7 +291,7 @@ class BaseButton(RadioToolButton):
 
     def _drag_data_received_cb(self, widget, drag_context, x, y,
                                selection_data, info, timestamp):
-        object_id = selection_data.data
+        object_id = selection_data.get_data()
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):

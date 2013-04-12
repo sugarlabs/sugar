@@ -92,6 +92,7 @@ class CommentsView(Gtk.TreeView):
 
     def __init__(self):
         Gtk.TreeView.__init__(self)
+        self.set_headers_visible(False)
         self._store = Gtk.ListStore(str, object, str, str, str, object)
         self._comments = []
         self._init_model()
@@ -121,7 +122,7 @@ class CommentsView(Gtk.TreeView):
 
     def _init_model(self):
         self.set_model(self._store)
-        col = Gtk.TreeViewColumn(_('Comments:'))
+        col = Gtk.TreeViewColumn()
 
         who_icon = CellRendererCommentIcon(self)
         col.pack_start(who_icon, False)
@@ -501,7 +502,7 @@ class ExpandedEntry(Gtk.EventBox):
     def _create_comments(self):
         widget = CommentsView()
         widget.connect('comments-changed', self._comments_changed_cb)
-        return self._create_scrollable(widget), widget
+        return self._create_scrollable(widget, label=_('Comments:')), widget
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:

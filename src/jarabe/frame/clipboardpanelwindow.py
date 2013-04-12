@@ -79,7 +79,7 @@ class ClipboardPanelWindow(FrameWindow):
                 cb_selections.append(selection)
 
         if target_is_uri:
-            uri = selection.get_data()
+            uri = selection.get_uris()[0]
             filename = uri[len('file://'):].strip()
             md5 = self._md5_for_file(filename)
             data_hash = hash(md5)

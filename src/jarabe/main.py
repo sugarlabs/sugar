@@ -28,7 +28,6 @@ import os
 import sys
 import subprocess
 import shutil
-import time
 
 # Change the default encoding to avoid UnicodeDecodeError
 # http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
@@ -55,7 +54,6 @@ from jarabe.view import keyhandler
 from jarabe.view import gesturehandler
 from jarabe.view import cursortracker
 from jarabe.journal import journalactivity
-from jarabe.desktop import homewindow
 from jarabe.model import notifications
 from jarabe.model import filetransfer
 from jarabe.view import launcher

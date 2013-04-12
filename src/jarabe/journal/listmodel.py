@@ -237,14 +237,17 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def do_drag_data_get(self, path, selection):
         uid = self[path][ListModel.COLUMN_UID]
-        if selection.target == 'text/uri-list':
+        target_atom = selection.get_target()
+        target_name = target_atom.name()
+        if target_name == 'text/uri-list':
             # Get hold of a reference so the temp file doesn't get deleted
             self._temp_drag_file_path = model.get_file(uid)
             logging.debug('putting %r in selection', self._temp_drag_file_path)
-            selection.set(selection.target, 8, self._temp_drag_file_path)
+            selection.set(target_atom, 8, self._temp_drag_file_path)
             return True
-        elif selection.target == 'journal-object-id':
-            selection.set(selection.target, 8, uid)
+        elif target_name == 'journal-object-id':
+            # uid is unicode but Gtk.SelectionData.set() needs str
+            selection.set(target_atom, 8, str(uid))
             return True
 
         return False

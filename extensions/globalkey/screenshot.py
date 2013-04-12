@@ -21,7 +21,6 @@ from gettext import gettext as _
 import StringIO
 import cairo
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GConf
 import dbus

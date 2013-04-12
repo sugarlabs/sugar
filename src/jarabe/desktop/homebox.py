@@ -18,7 +18,6 @@ from gettext import gettext as _
 import logging
 import os
 
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from sugar3.graphics import style
