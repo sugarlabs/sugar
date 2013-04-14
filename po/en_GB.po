@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-20 00:36-0500\n"
-"PO-Revision-Date: 2013-03-22 19:30+0200\n"
+"POT-Creation-Date: 2013-03-31 00:32-0400\n"
+"PO-Revision-Date: 2013-04-14 03:17+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en_GB\n"
@@ -494,9 +494,10 @@ msgstr "Disconnected"
 #: ../extensions/deviceicon/network.py:290
 #: ../src/jarabe/controlpanel/toolbar.py:121
 #: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:100
-#: ../src/jarabe/frame/activitiestray.py:611
-#: ../src/jarabe/frame/activitiestray.py:713
-#: ../src/jarabe/frame/activitiestray.py:741
+#: ../src/jarabe/frame/activitiestray.py:625
+#: ../src/jarabe/frame/activitiestray.py:744
+#: ../src/jarabe/frame/activitiestray.py:776
+#: ../src/jarabe/journal/expandedentry.py:157
 #: ../src/jarabe/journal/journaltoolbox.py:424
 #: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
@@ -974,26 +975,26 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "To apply your changes you have to restart Sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:315 ../src/jarabe/journal/palettes.py:182
-#: ../src/jarabe/journal/palettes.py:277 ../src/jarabe/journal/palettes.py:310
+#: ../src/jarabe/controlpanel/gui.py:325 ../src/jarabe/journal/palettes.py:182
+#: ../src/jarabe/journal/palettes.py:278 ../src/jarabe/journal/palettes.py:311
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Warning"
 msgstr "Warning"
 
-#: ../src/jarabe/controlpanel/gui.py:316
+#: ../src/jarabe/controlpanel/gui.py:326
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "Changes require restart"
 
-#: ../src/jarabe/controlpanel/gui.py:319
+#: ../src/jarabe/controlpanel/gui.py:329
 msgid "Cancel changes"
 msgstr "Cancel changes"
 
-#: ../src/jarabe/controlpanel/gui.py:324 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:334 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "Later"
 
-#: ../src/jarabe/controlpanel/gui.py:328
+#: ../src/jarabe/controlpanel/gui.py:338
 msgid "Restart now"
 msgstr "Restart now"
 
@@ -1024,7 +1025,7 @@ msgid "Version %s"
 msgstr "Version %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:353
-#: ../src/jarabe/journal/listview.py:425
+#: ../src/jarabe/journal/listview.py:426
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -1049,6 +1050,7 @@ msgstr "Keep"
 
 #: ../src/jarabe/desktop/activitieslist.py:471
 #: ../src/jarabe/desktop/activitieslist.py:526
+#: ../src/jarabe/journal/expandedentry.py:151
 #: ../src/jarabe/journal/journaltoolbox.py:390
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:129 ../src/jarabe/journal/palettes.py:149
@@ -1149,13 +1151,13 @@ msgstr "Wireless Security:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:513
+#: ../src/jarabe/journal/journaltoolbox.py:514
 #: ../src/jarabe/journal/palettes.py:74 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Resume"
 
 #: ../src/jarabe/desktop/meshbox.py:88
-#: ../src/jarabe/frame/activitiestray.py:187
+#: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
 msgstr "Join"
 
@@ -1193,53 +1195,53 @@ msgstr "Favourites view"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>1"
 
-#: ../src/jarabe/frame/activitiestray.py:192
-#: ../src/jarabe/frame/activitiestray.py:583
+#: ../src/jarabe/frame/activitiestray.py:195
+#: ../src/jarabe/frame/activitiestray.py:593
 msgid "Decline"
 msgstr "Decline"
 
-#: ../src/jarabe/frame/activitiestray.py:531
+#: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:533
+#: ../src/jarabe/frame/activitiestray.py:536
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:535
+#: ../src/jarabe/frame/activitiestray.py:538
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:553
+#: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
 msgid "%s of %s"
 msgstr "%s of %s"
 
-#: ../src/jarabe/frame/activitiestray.py:567
+#: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "Transfer from %s"
 
-#: ../src/jarabe/frame/activitiestray.py:578
+#: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
 msgstr "Accept"
 
-#: ../src/jarabe/frame/activitiestray.py:635
-#: ../src/jarabe/frame/activitiestray.py:648
-#: ../src/jarabe/frame/activitiestray.py:766
+#: ../src/jarabe/frame/activitiestray.py:653
+#: ../src/jarabe/frame/activitiestray.py:666
+#: ../src/jarabe/frame/activitiestray.py:805
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: ../src/jarabe/frame/activitiestray.py:652
+#: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
 msgstr "The other participant canceled the file transfer"
 
-#: ../src/jarabe/frame/activitiestray.py:700
+#: ../src/jarabe/frame/activitiestray.py:728
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
@@ -1296,52 +1298,63 @@ msgstr "Back"
 msgid "Next"
 msgstr "Next"
 
-#: ../src/jarabe/journal/expandedentry.py:151
+#: ../src/jarabe/journal/expandedentry.py:124
+msgid "Comments:"
+msgstr "Comments:"
+
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:421
+#: ../src/jarabe/journal/palettes.py:151
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr "Do you want to permanently erase \"%s\"?"
+
+#: ../src/jarabe/journal/expandedentry.py:293
 #: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
 #: ../src/jarabe/journal/palettes.py:67
 #: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "Untitled"
 
-#: ../src/jarabe/journal/expandedentry.py:260
+#: ../src/jarabe/journal/expandedentry.py:404
 msgid "No preview"
 msgstr "No preview"
 
-#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/expandedentry.py:418
 #, python-format
 msgid "Kind: %s"
 msgstr "Kind: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/expandedentry.py:418
 #: ../src/jarabe/journal/listmodel.py:151
 #: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr "Unknown"
 
-#: ../src/jarabe/journal/expandedentry.py:275
+#: ../src/jarabe/journal/expandedentry.py:419
 #, python-format
 msgid "Date: %s"
 msgstr "Date: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:276
+#: ../src/jarabe/journal/expandedentry.py:420
 #, python-format
 msgid "Size: %s"
 msgstr "Size: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:302
+#: ../src/jarabe/journal/expandedentry.py:446
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "No date"
 
-#: ../src/jarabe/journal/expandedentry.py:311
+#: ../src/jarabe/journal/expandedentry.py:455
 msgid "Participants:"
 msgstr "Participants:"
 
-#: ../src/jarabe/journal/expandedentry.py:353
+#: ../src/jarabe/journal/expandedentry.py:493
 msgid "Description:"
 msgstr "Description:"
 
-#: ../src/jarabe/journal/expandedentry.py:356
+#: ../src/jarabe/journal/expandedentry.py:499
 msgid "Tags:"
 msgstr "Tags:"
 
@@ -1411,65 +1424,59 @@ msgid "Duplicate"
 msgstr "Duplicate"
 
 #: ../src/jarabe/journal/journaltoolbox.py:414
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:285
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:286
 #: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Error while copying the entry. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:415
-#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:286
+#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:287
 #: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "Error"
 
-#: ../src/jarabe/journal/journaltoolbox.py:421
-#: ../src/jarabe/journal/palettes.py:151
-#, python-format
-msgid "Do you want to permanently erase \"%s\"?"
-msgstr "Do you want to permanently erase \"%s\"?"
-
-#: ../src/jarabe/journal/journaltoolbox.py:472
-#: ../src/jarabe/journal/palettes.py:229
+#: ../src/jarabe/journal/journaltoolbox.py:473
+#: ../src/jarabe/journal/palettes.py:230
 #: ../src/jarabe/journal/volumestoolbar.py:210
 msgid "Documents"
 msgstr "Documents"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:516
+#: ../src/jarabe/journal/journaltoolbox.py:517
 #: ../src/jarabe/journal/palettes.py:77
 msgid "Start"
 msgstr "Start"
 
-#: ../src/jarabe/journal/journaltoolbox.py:544
+#: ../src/jarabe/journal/journaltoolbox.py:545
 msgid "Sort by date modified"
 msgstr "Sort by date modified"
 
-#: ../src/jarabe/journal/journaltoolbox.py:545
+#: ../src/jarabe/journal/journaltoolbox.py:546
 msgid "Sort by date created"
 msgstr "Sort by date created"
 
-#: ../src/jarabe/journal/journaltoolbox.py:546
+#: ../src/jarabe/journal/journaltoolbox.py:547
 msgid "Sort by size"
 msgstr "Sort by size"
 
-#: ../src/jarabe/journal/journaltoolbox.py:555
+#: ../src/jarabe/journal/journaltoolbox.py:556
 msgid "Sort view"
 msgstr "Sort view"
 
-#: ../src/jarabe/journal/listview.py:337
+#: ../src/jarabe/journal/listview.py:338
 msgid "Your Journal is empty"
 msgstr "Your Journal is empty"
 
-#: ../src/jarabe/journal/listview.py:340
+#: ../src/jarabe/journal/listview.py:341
 msgid "Your documents folder is empty"
 msgstr "Your documents folder is empty"
 
-#: ../src/jarabe/journal/listview.py:342
+#: ../src/jarabe/journal/listview.py:343
 msgid "The device is empty"
 msgstr "The device is empty"
 
-#: ../src/jarabe/journal/listview.py:344
+#: ../src/jarabe/journal/listview.py:345
 msgid "No matching entries"
 msgstr "No matching entries"
 
@@ -1512,7 +1519,7 @@ msgstr "Resume with"
 msgid "Start with"
 msgstr "Start with"
 
-#: ../src/jarabe/journal/palettes.py:91 ../src/jarabe/journal/palettes.py:388
+#: ../src/jarabe/journal/palettes.py:91 ../src/jarabe/journal/palettes.py:389
 msgid "No activity to start entry"
 msgstr "No activity to start entry"
 
@@ -1528,24 +1535,24 @@ msgstr "View Details"
 msgid "Entries without a file cannot be sent."
 msgstr "Entries without a file cannot be sent."
 
-#: ../src/jarabe/journal/palettes.py:276 ../src/jarabe/journal/palettes.py:309
+#: ../src/jarabe/journal/palettes.py:277 ../src/jarabe/journal/palettes.py:310
 #: ../src/jarabe/journal/volumestoolbar.py:300
 msgid "Entries without a file cannot be copied."
 msgstr "Entries without a file cannot be copied."
 
-#: ../src/jarabe/journal/palettes.py:298
+#: ../src/jarabe/journal/palettes.py:299
 msgid "Clipboard"
 msgstr "Clipboard"
 
-#: ../src/jarabe/journal/palettes.py:353
+#: ../src/jarabe/journal/palettes.py:354
 msgid "No friends present"
 msgstr "No friends present"
 
-#: ../src/jarabe/journal/palettes.py:358
+#: ../src/jarabe/journal/palettes.py:359
 msgid "No valid connection found"
 msgstr "No valid connection found"
 
-#: ../src/jarabe/journal/palettes.py:386
+#: ../src/jarabe/journal/palettes.py:387
 msgid "No activity to resume entry"
 msgstr "No activity to resume entry"
 
