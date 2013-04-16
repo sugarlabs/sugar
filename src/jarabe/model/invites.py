@@ -17,7 +17,7 @@
 
 import logging
 from functools import partial
-import simplejson
+import json
 
 from gi.repository import GObject
 import dbus
@@ -270,8 +270,8 @@ class Invites(GObject.GObject):
         connection_path = properties[CHANNEL_DISPATCH_OPERATION +
                                      '.Connection']
         connection_name = connection_path.replace('/', '.')[1:]
-        private_channel = simplejson.dumps([connection_name,
-                                            connection_path, channel_path])
+        private_channel = json.dumps([connection_name,
+                                      connection_path, channel_path])
         invite = PrivateInvite(dispatch_operation_path, handle, handler,
                                private_channel)
         self._dispatch_operations[dispatch_operation_path] = invite

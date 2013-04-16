@@ -16,7 +16,7 @@
 
 import logging
 
-import simplejson
+import json
 from gi.repository import GObject
 from gi.repository import Gtk
 from gettext import gettext as _
@@ -176,8 +176,8 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         buddies = []
         if metadata.get('buddies'):
             try:
-                buddies = simplejson.loads(metadata['buddies']).values()
-            except simplejson.decoder.JSONDecodeError, exception:
+                buddies = json.loads(metadata['buddies']).values()
+            except json.decoder.JSONDecodeError, exception:
                 logging.warning('Cannot decode buddies for %r: %s',
                                 metadata['uid'], exception)
 

@@ -26,7 +26,7 @@ from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
-import simplejson
+import json
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
@@ -101,7 +101,7 @@ class CommentsView(Gtk.TreeView):
         self._store.clear()
 
         if comments:
-            self._comments = simplejson.loads(comments)
+            self._comments = json.loads(comments)
             for comment in self._comments:
                 self._add_row(comment.get(self.FROM, ''),
                               comment.get(self.MESSAGE, ''),
@@ -184,7 +184,7 @@ class CommentsView(Gtk.TreeView):
                             entry[self.COMMENT_ICON_COLOR].to_string()),
                         })
 
-            self.emit('comments-changed', simplejson.dumps(self._comments))
+            self.emit('comments-changed', json.dumps(self._comments))
 
 
 class CellRendererCommentIcon(CellRendererIcon):
@@ -459,7 +459,7 @@ class ExpandedEntry(Gtk.EventBox):
         vbox.pack_start(halign, False, False, 0)
 
         if self._metadata.get('buddies'):
-            buddies = simplejson.loads(self._metadata['buddies']).values()
+            buddies = json.loads(self._metadata['buddies']).values()
             vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
         else:

@@ -25,7 +25,7 @@ import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
 from operator import itemgetter
-import simplejson
+import json
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -467,7 +467,7 @@ def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
         return None
 
     try:
-        metadata = simplejson.load(open(metadata_path))
+        metadata = json.load(open(metadata_path))
     except (ValueError, EnvironmentError):
         os.unlink(metadata_path)
         if os.path.exists(preview_path):
@@ -727,7 +727,7 @@ def _write_entry_on_external_device(metadata, file_path):
         metadata_copy.pop('preview', None)
 
     try:
-        metadata_json = simplejson.dumps(metadata_copy)
+        metadata_json = json.dumps(metadata_copy)
     except (UnicodeDecodeError, EnvironmentError):
         logging.error('Could not convert metadata to json.')
     else:

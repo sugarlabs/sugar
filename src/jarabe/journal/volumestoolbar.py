@@ -27,7 +27,7 @@ from gi.repository import Gdk
 from gi.repository import GConf
 import cPickle
 import xapian
-import simplejson
+import json
 import tempfile
 import shutil
 
@@ -151,7 +151,7 @@ def _convert_entry(root, document):
                                  metadata_fname)
     if not os.path.exists(metadata_path):
         (fh, fn) = tempfile.mkstemp(dir=root)
-        os.write(fh, simplejson.dumps(metadata))
+        os.write(fh, json.dumps(metadata))
         os.close(fh)
         os.rename(fn, metadata_path)
 
