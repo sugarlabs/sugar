@@ -1,44 +1,4 @@
 Building
 ========
 
-For details see: http://wiki.sugarlabs.org/go/Development_Team/Jhbuild
-
-Sugar-jhbuild will automatically download the latest of Sugar's 
-dependencies as well as Sugar itself directly from their source 
-repositories, rather than relying on source packages that may have 
-become stale. These are generic instructions on how to use jhbuild 
-to get up and running with Sugar.
-
-  $ cd sugar-jhbuild
-  $ ./sugar-jhbuild update
-  $ ./sugar-jhbuild depscheck
-  $ ./sugar-jhbuild buildgit 
-
-Running multiple instances on the same machine
-==============================================
-
-You can use the SUGAR_PROFILE command line options.
-For example:
-
-SUGAR_PROFILE=profile-1 sugar
-SUGAR_PROFILE=profile-2 sugar
-...
-
-
-Emulator key bindings
-=====================
-
-F1     Mesh zoom level
-F2     Friends zoom level
-F3     Home zoom level
-F4     Activity zoom level
-
-Alt+f  Show the frame
-Alt+r  Rotate the screen
-Alt+o  Toggle overlay visibility
-Alt+=  Open the developer console
-Alt+0  Open the developer console
-Alt+q  Quit the emulator
-
-Ctrl+s Activate sketch mode in chat
-
+For details see: http://sugarlabs.org/~buildbot/docs/build.html
