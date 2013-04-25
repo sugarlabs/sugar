@@ -177,7 +177,7 @@ class BatteryPalette(Palette):
 class DeviceModel(GObject.GObject):
     __gproperties__ = {
         'level': (int, None, None, 0, 100, 0, GObject.PARAM_READABLE),
-        'time-remaining': (int, None, None, 0, GObject.constants.G_MAXINT32, 0,
+        'time-remaining': (int, None, None, 0, GLib.MAXINT32, 0,
                            GObject.PARAM_READABLE),  # unit: seconds
         'charging': (bool, None, None, False, GObject.PARAM_READABLE),
         'discharging': (bool, None, None, False, GObject.PARAM_READABLE),
