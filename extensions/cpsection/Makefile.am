@@ -1,4 +1,4 @@
-SUBDIRS = aboutme aboutcomputer datetime frame keyboard language \
+SUBDIRS = aboutme aboutcomputer background datetime frame keyboard language \
     modemconfiguration network power updater
 
 sugardir = $(pkgdatadir)/extensions/cpsection

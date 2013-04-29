@@ -27,6 +27,7 @@ from sugar3.graphics import palettegroup
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
+from jarabe.desktop.homebackgroundbox import HomeBackgroundBox
 from jarabe.desktop.groupbox import GroupBox
 from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.desktop.viewtoolbar import ViewToolbar
@@ -74,7 +75,7 @@ class HomeWindow(Gtk.Window):
         self.connect('key-release-event', self.__key_release_event_cb)
         self.connect('button-press-event', self.__button_pressed_cb)
 
-        self._box = Gtk.VBox()
+        self._box = HomeBackgroundBox()
 
         self._toolbar = ViewToolbar()
         self._box.pack_start(self._toolbar, False, True, 0)
