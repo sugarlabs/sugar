@@ -1,0 +1,34 @@
+From d513315fcac11dc228f04fbff69696beaf72fbd3 Mon Sep 17 00:00:00 2001
+From: Martin Pitt <martinpitt@gnome.org>
+Date: Thu, 21 Mar 2013 14:56:24 +0100
+Subject: [PATCH] Session: Properly check for logind
+Origin: https://git.sugarlabs.org/sugar/mainline/commit/d513315f
+
+session.py talks to logind, so it needs to specifically check if logind is
+running. /sys/fs/cgroup/systemd will be present also when systemd was built
+without logind (--disable-logind).
+
+For details, see:
+<https://mail.gnome.org/archives/desktop-devel-list/2013-March/msg00092.html
+
+Acked-by: Simon Schampijer <simon@laptop.org>
+---
+ src/jarabe/model/session.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/jarabe/model/session.py b/src/jarabe/model/session.py
+index a5cd4a4..7394ef0 100644
+--- a/src/jarabe/model/session.py
++++ b/src/jarabe/model/session.py
+@@ -29,7 +29,7 @@ _session_manager = None
+ 
+ 
+ def have_systemd():
+-    return os.access("/sys/fs/cgroup/systemd", 0) >= 0
++    return os.access("/run/systemd/seats", 0) >= 0
+ 
+ 
+ class SessionManager(session.SessionManager):
+-- 
+1.7.9.5
+
