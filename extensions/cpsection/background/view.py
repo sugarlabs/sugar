@@ -20,6 +20,7 @@ from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.radiotoolbutton import RadioToolButton
 from jarabe.controlpanel.sectionview import SectionView
 
 from gettext import gettext as _
@@ -50,8 +51,6 @@ class Background(SectionView):
         clear_button.show()
         self.pack_end(clear_button, False, True, 0)
 
-        # TODO: add GUI to set alpha levels
-
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
@@ -70,10 +69,38 @@ class Background(SectionView):
         scrolled_window.add(icon_view)
         icon_view.show()
 
+        alpha = self._model.get_background_alpha_level()
+
+        alpha_box = Gtk.HBox()
+        alpha_buttons = []
+        for i in ['000', '020', '040', '060', '080']:
+            if len(alpha_buttons) > 0:
+                alpha_buttons.append(RadioToolButton(group=alpha_buttons[0]))
+            else:
+                alpha_buttons.append(RadioToolButton(group=None))
+            alpha_buttons[-1].set_icon_name('network-wireless-' + i)
+            button_alpha_level = 1.0 - float(i) / 100.
+            alpha_buttons[-1].connect('clicked', self._set_alpha_cb,
+                                      button_alpha_level)
+            alpha_box.pack_start(alpha_buttons[-1], False, True, 0)
+            alpha_buttons[-1].show()
+            if alpha < button_alpha_level + 0.1:
+                alpha_buttons[-1].set_active(True)
+
+        alpha_alignment = Gtk.Alignment()
+        alpha_alignment.set(0.5, 0, 0, 0)
+        alpha_alignment.add(alpha_box)
+        alpha_box.show()
+        self.pack_start(alpha_alignment, False, False, 0)
+        alpha_alignment.show()
+
         paths_list = self._model.fill_background_list(store)
         self._select_background(icon_view, paths_list)
 
         self.setup()
+
+    def _set_alpha_cb(self, widget, value):
+        self._model.set_background_alpha_level(value)
 
     def _get_selected_path(self, widget, store):
         try:

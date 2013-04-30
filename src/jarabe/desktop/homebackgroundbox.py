@@ -26,7 +26,7 @@ from gi.repository import GConf
 BACKGROUND_STRING = '/desktop/sugar/user/background'
 BACKGROUND_IMAGE_PATH_STRING = BACKGROUND_STRING + '/image-path'
 BACKGROUND_ALPHA_LEVEL_STRING = BACKGROUND_STRING + '/alpha-level'
-DEFAULT_BACKGROUND_ALPHA_LEVEL = 0.25
+DEFAULT_BACKGROUND_ALPHA_LEVEL = 0.20
 
 
 def get_background_image_path():
