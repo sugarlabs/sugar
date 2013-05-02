@@ -1,6 +1,15 @@
 Sugar
 =====
 
+Sugar is the core component of a worldwide effort to provide every
+child with equal opportunity for a quality education. Available in
+more than twenty-five languages, Sugar’s Activities are used every
+school day by nearly three million children in more than forty
+countries.
+
+Originally developed for the One Laptop per Child XO-1 netbook, Sugar
+runs on most computers. Sugar is free/libre and open-source software.
+
 Hacking
 -------
 
