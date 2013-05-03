@@ -1,3 +1,4 @@
+# Copyright (C) 2013 Sugar Labs
 # Copyright (C) 2009 OLPC
 # Author: Sayamindu Dasgupta <sayamindu@laptop.org>
 #
@@ -16,9 +17,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import xklavier
+from gi.repository import Xkl
 from gi.repository import GConf
+from gi.repository import SugarExt
 
+import logging
 
 _GROUP_NAME = 'grp'  # The XKB name for group switch options
 
@@ -27,29 +30,35 @@ _OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
 _MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
 
+def _item_str(s):
+    '''Convert a zero-terminated byte array to a proper str'''
+
+    i = s.find(b'\x00')
+    return s[:i].decode("utf-8")
+
+
 class KeyboardManager(object):
     def __init__(self, display):
-        self._engine = xklavier.Engine(display)
-        self._configregistry = xklavier.ConfigRegistry(self._engine)
+        self._engine = Xkl.Engine.get_instance(display)
+        self._configregistry = Xkl.ConfigRegistry.get_instance(self._engine)
         self._configregistry.load(False)
-        self._configrec = xklavier.ConfigRec()
+        self._configrec = Xkl.ConfigRec()
         self._configrec.get_from_server(self._engine)
 
         self._gconf_client = GConf.Client.get_default()
 
     def _populate_one(self, config_registry, item, store):
-        store.append([item.get_description(), item.get_name()])
+        store.append([_item_str(item.description), _item_str(item.name)])
 
     def _populate_two(self, config_registry, item, subitem, store):
-        layout = item.get_name()
+        layout = _item_str(item.name)
         if subitem:
-            description = '%s, %s' % (subitem.get_description(), \
-                                            item.get_description())
-            variant = subitem.get_name()
+            description = '%s, %s' % (_item_str(subitem.description),
+                                      _item_str(item.description))
+            variant = _item_str(subitem.name)
         else:
-            description = 'Default layout, %s' % item.get_description()
+            description = 'Default layout, %s' % _item_str(item.description)
             variant = ''
-
         store.append([description, ('%s(%s)' % (layout, variant))])
 
     def get_models(self):
@@ -69,8 +78,9 @@ class KeyboardManager(object):
     def get_layouts_for_language(self, language):
         """Return list of supported keyboard layouts for a given language"""
         layouts = []
-        self._configregistry.foreach_language_variant(language, \
-                                                self._populate_two, layouts)
+        self._configregistry.foreach_language_variant(language,
+                                                      self._populate_two,
+                                                      layouts)
         layouts.sort()
         return layouts
 
@@ -85,18 +95,15 @@ class KeyboardManager(object):
     def get_current_model(self):
         """Return the enabled keyboard model"""
         model = self._gconf_client.get_string(_MODEL_KEY)
-        if model:
-            return model
-        else:
-            model = self._configrec.get_model()
+        if not model:
+            model = self._configrec.model
             self.set_model(model)
-            return model
+        return model
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
         # FIXME, gconf_client_get_list not introspectable #681433
-        layouts_from_gconf = self._gconf_client.get(
-            '/desktop/sugar/peripherals/keyboard/layouts')
+        layouts_from_gconf = self._gconf_client.get(_LAYOUTS_KEY)
         layouts = []
         if layouts_from_gconf:
             for gval in layouts_from_gconf.get_list():
@@ -105,8 +112,8 @@ class KeyboardManager(object):
             if layouts:
                 return layouts
 
-        layouts = self._configrec.get_layouts()
-        variants = self._configrec.get_variants()
+        layouts = self._configrec.layouts
+        variants = self._configrec.variants
 
         layout_list = []
         i = 0
@@ -118,22 +125,20 @@ class KeyboardManager(object):
             i += 1
 
         self.set_layouts(layout_list)
-
         return layout_list
 
     def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
         options = []
         # FIXME, gconf_client_get_list not introspectable #681433
-        options_from_gconf = gconf_client.get(\
-            '/desktop/sugar/peripherals/keyboard/options')
+        options_from_gconf = self._gconf_client.get(_OPTIONS_KEY)
         if options_from_gconf:
             for gval in options_from_gconf.get_list():
                 option = gval.get_string()
                 options.append(option)
 
         if not options:
-            options = self._configrec.get_options()
+            options = self._configrec.options
             self.set_option_group(options)
 
         for option in options:
@@ -163,7 +168,11 @@ class KeyboardManager(object):
             options = option_group
         else:
             options = [option_group]
-        self._gconf_client.set_list(_OPTIONS_KEY, GConf.ValueType.STRING, options)
+        # FIXME, gconf_client_set_list not introspectable #681433
+        # self._gconf_client.set_list(_OPTIONS_KEY, GConf.ValueType.STRING,
+        #                             options)
+        SugarExt.gconf_client_set_string_list(self._gconf_client,
+                                              _OPTIONS_KEY, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
 
@@ -171,13 +180,16 @@ class KeyboardManager(object):
         """Sets the supplied keyboard layouts (with variants)"""
         if layouts is None or not layouts:
             return
-        self._gconf_client.set_list(_LAYOUTS_KEY, GConf.ValueType.STRING, layouts)
+        # FIXME, gconf_client_set_list not introspectable #681433
+        # self._gconf_client.set_list(_LAYOUTS_KEY, GConf.ValueType.STRING,
+        #                             layouts)
+        SugarExt.gconf_client_set_string_list(self._gconf_client,
+                                              _LAYOUTS_KEY, layouts)
         layouts_list = []
         variants_list = []
         for layout in layouts:
             layouts_list.append(layout.split('(')[0])
             variants_list.append(layout.split('(')[1][:-1])
-
         self._configrec.set_layouts(layouts_list)
         self._configrec.set_variants(variants_list)
         self._configrec.activate(self._engine)

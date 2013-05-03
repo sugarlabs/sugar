@@ -1,3 +1,4 @@
+# Copyright (C) 2013, Sugar Labs
 # Copyright (C) 2009, OLPC
 # Author: Sayamindu Dasgupta <sayamindu@laptop.org>
 #
@@ -15,9 +16,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+import os
+import locale
+
 from gi.repository import Gtk
+from gi.repository import GdkX11
 from gi.repository import GObject
 from gi.repository import Pango
+
 import logging
 from gettext import gettext as _
 
@@ -25,7 +31,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
-
+from jarabe.config import data_path 
 
 CLASS = 'Language'
 ICON = 'module-keyboard'
@@ -33,14 +39,35 @@ TITLE = _('Keyboard')
 
 _APPLY_TIMEOUT = 500
 
+_iso_639_1_to_2 = {}
+
 #TODO: This cpsection adds checks for xklavier in bin/sugar-session and
 #      src/jarabe/controlpanel/gui.py. We should get rid of these checks
 #      once python-xklavier has been packaged for all major distributions
 #      For more information, see: http://dev.sugarlabs.org/ticket/407
 
 
-class LayoutCombo(Gtk.HBox):
+def _build_ISO_639_dictionary():
+    """ The keyboard section of the control panel requires a conversion
+    between ISO 639 two-character codes and three-character code. This
+    method uses the table available at:
+    http://www.loc.gov/standards/iso639-2/ISO-639-2_utf-8.txt
+    """
 
+    ISO_DATA_FILE = 'ISO-639-2_utf-8.txt'
+
+    path = os.path.join(data_path, ISO_DATA_FILE)
+    if os.path.exists(path):
+        f = open(path, 'r')
+        for line in f:
+            codes = line.split('|')
+            if codes[2] != '':
+                _iso_639_1_to_2[codes[2]] = codes[0]
+    else:
+        logging.error('%s not found' % (ISO_DATA_FILE))
+
+
+class LayoutCombo(Gtk.HBox):
     """
     Custom GTK widget with two comboboxes side by side, one for layout, and
     the other for variants for the selected layout.
@@ -62,12 +89,12 @@ class LayoutCombo(Gtk.HBox):
         label = Gtk.Label(label=' <b>%s</b> ' % str(n + 1))
         label.set_use_markup(True)
         label.modify_fg(Gtk.StateType.NORMAL,
-                    style.COLOR_SELECTION_GREY.get_gdk_color())
+                        style.COLOR_SELECTION_GREY.get_gdk_color())
         label.set_alignment(0.5, 0.5)
         self.pack_start(label, False, True, 0)
 
-        self._klang_store = Gtk.ListStore(GObject.TYPE_STRING, \
-                                                    GObject.TYPE_STRING)
+        self._klang_store = Gtk.ListStore(GObject.TYPE_STRING,
+                                          GObject.TYPE_STRING)
         for description, name in self._keyboard_manager.get_languages():
             self._klang_store.append([name, description])
 
@@ -84,31 +111,50 @@ class LayoutCombo(Gtk.HBox):
         self._kvariant_store = None
         self._kvariant_combo = Gtk.ComboBox(model=None)
         self._kvariant_combo_changed_id = \
-            self._kvariant_combo.connect('changed', \
-                                self._kvariant_combo_changed_cb)
+            self._kvariant_combo.connect('changed',
+                                         self._kvariant_combo_changed_cb)
         cell = Gtk.CellRendererText()
         cell.props.ellipsize = Pango.EllipsizeMode.MIDDLE
         cell.props.ellipsize_set = True
         self._kvariant_combo.pack_start(cell, True)
         self._kvariant_combo.add_attribute(cell, 'text', 1)
-        self.pack_start(self._kvariant_combo, expand=True, fill=True, padding=0)
+        self.pack_start(self._kvariant_combo, expand=True, fill=True,
+                        padding=0)
 
         self._klang_combo.set_active(self._index)
 
     def select_layout(self, layout):
         """Select a given keyboard layout and show appropriate variants"""
+
         self._kvariant_combo.handler_block(self._kvariant_combo_changed_id)
-        for i in range(0, len(self._klang_store)):
-            self._klang_combo.set_active(i)
-            for j in range(0, len(self._kvariant_store)):
-                if self._kvariant_store[j][0] == layout:
-                    self._kvariant_combo.set_active(j)
-                    self._kvariant_combo.handler_unblock(\
-                                self._kvariant_combo_changed_id)
+
+        # Look for $LANG first
+        for lang in os.environ.get('LANG',
+                                   locale.getdefaultlocale()[0]).split(':'):
+            if lang[0:2] in _iso_639_1_to_2:
+                if self._look_for_lang_and_layout(_iso_639_1_to_2[lang[0:2]],
+                                                  layout):
                     return True
 
+        # Then look for any language
+        if self._look_for_lang_and_layout(None, layout):
+            return True
+
+        # Finally, select a default
         self._kvariant_combo.handler_unblock(self._kvariant_combo_changed_id)
         self._klang_combo.set_active(0)
+        return False
+
+    def _look_for_lang_and_layout(self, lang, layout):
+        for i in range(0, len(self._klang_store)):
+            if lang == self._klang_store[i][0] or lang is None:
+                self._klang_combo.set_active(i)
+                for j in range(0, len(self._kvariant_store)):
+                    if self._kvariant_store[j][0] == layout:
+                        self._kvariant_combo.set_active(j)
+                        self._kvariant_combo.handler_unblock(
+                            self._kvariant_combo_changed_id)
+                        return True
         return False
 
     def get_layout(self):
@@ -118,8 +164,8 @@ class LayoutCombo(Gtk.HBox):
         return model.get(it, 0)[0]
 
     def _set_kvariant_store(self, lang):
-        self._kvariant_store = Gtk.ListStore(GObject.TYPE_STRING, \
-                                                    GObject.TYPE_STRING)
+        self._kvariant_store = Gtk.ListStore(GObject.TYPE_STRING,
+                                             GObject.TYPE_STRING)
         layouts = self._keyboard_manager.get_layouts_for_language(lang)
         for description, name in layouts:
             self._kvariant_store.append([name, description])
@@ -159,7 +205,11 @@ class Keyboard(SectionView):
 
         self._layout_table = Gtk.Table(rows=4, columns=2, homogeneous=False)
 
-        self._keyboard_manager = model.KeyboardManager(self.get_display())
+        _build_ISO_639_dictionary()
+
+        self._keyboard_manager = model.KeyboardManager(
+            GdkX11.x11_get_default_xdisplay())
+
         self._layout_combo_list = []
         self._layout_addremovebox_list = []
 
@@ -196,8 +246,8 @@ class Keyboard(SectionView):
         box_kmodel.set_border_width(style.DEFAULT_SPACING * 2)
         box_kmodel.set_spacing(style.DEFAULT_SPACING)
 
-        kmodel_store = Gtk.ListStore(GObject.TYPE_STRING, \
-                                                GObject.TYPE_STRING)
+        kmodel_store = Gtk.ListStore(GObject.TYPE_STRING,
+                                     GObject.TYPE_STRING)
         for description, name in self._keyboard_manager.get_models():
             kmodel_store.append([name, description])
 
@@ -225,7 +275,8 @@ class Keyboard(SectionView):
         if self.__kmodel_sid is not None:
             GObject.source_remove(self.__kmodel_sid)
         self.__kmodel_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-            self.__kmodel_timeout_cb, combobox)
+                                                self.__kmodel_timeout_cb,
+                                                combobox)
 
     def __kmodel_timeout_cb(self, combobox):
         it = combobox.get_active_iter()
@@ -256,8 +307,8 @@ class Keyboard(SectionView):
         box_group_option.set_border_width(style.DEFAULT_SPACING * 2)
         box_group_option.set_spacing(style.DEFAULT_SPACING)
 
-        group_option_store = Gtk.ListStore(GObject.TYPE_STRING, \
-                                                    GObject.TYPE_STRING)
+        group_option_store = Gtk.ListStore(GObject.TYPE_STRING,
+                                           GObject.TYPE_STRING)
         for description, name in self._keyboard_manager.get_options_group():
             group_option_store.append([name, description])
 
@@ -269,7 +320,7 @@ class Keyboard(SectionView):
         group_option_combo.add_attribute(cell, 'text', 1)
 
         self._group_switch_option = \
-                self._keyboard_manager.get_current_option_group()
+            self._keyboard_manager.get_current_option_group()
         if not self._group_switch_option:
             group_option_combo.set_active(0)
         else:
@@ -286,14 +337,13 @@ class Keyboard(SectionView):
         self._vbox.pack_start(box_group_option, False, True, 0)
         box_group_option.show_all()
 
-        group_option_combo.connect('changed', \
-                            self.__group_switch_changed_cb)
+        group_option_combo.connect('changed', self.__group_switch_changed_cb)
 
     def __group_switch_changed_cb(self, combobox):
         if self.__group_switch_sid is not None:
             GObject.source_remove(self.__group_switch_sid)
-        self.__group_switch_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-            self.__group_switch_timeout_cb, combobox)
+        self.__group_switch_sid = GObject.timeout_add(
+            _APPLY_TIMEOUT, self.__group_switch_timeout_cb, combobox)
 
     def __group_switch_timeout_cb(self, combobox):
         it = combobox.get_active_iter()
@@ -303,7 +353,7 @@ class Keyboard(SectionView):
                 self._keyboard_manager.get_current_option_group():
             return
         try:
-            self._keyboard_manager.set_option_group(\
+            self._keyboard_manager.set_option_group(
                 self._selected_group_switch_option)
         except Exception:
             logging.exception('Could not set new keyboard group switch option')
@@ -328,8 +378,8 @@ class Keyboard(SectionView):
             self._layout_table.attach(add_remove_box, 1, 2, i, i + 1)
 
             layout_combo = LayoutCombo(self._keyboard_manager, i)
-            layout_combo.connect('selection-changed', \
-                self.__layout_combo_selection_changed_cb)
+            layout_combo.connect('selection-changed',
+                                 self.__layout_combo_selection_changed_cb)
             self._layout_combo_list.append(layout_combo)
             self._layout_table.attach(layout_combo, 0, 1, i, i + 1)
 
@@ -338,7 +388,8 @@ class Keyboard(SectionView):
                 layout_combo.select_layout(self._klayouts[i])
 
         self._vbox.pack_start(self._layout_table, False, True, 0)
-        self._layout_table.set_size_request(self._vbox.size_request()[0], -1)
+        self._layout_table.set_size_request(
+            self._vbox.get_size_request()[0], -1)
         self._layout_table.show()
         self._update_klayouts()
 
@@ -366,13 +417,13 @@ class Keyboard(SectionView):
         add_button = Gtk.Button()
         add_button.set_image(add_icon)
         add_button.connect('clicked',
-                            self.__add_button_clicked_cb)
+                           self.__add_button_clicked_cb)
 
         remove_icon = Icon(icon_name='list-remove')
         remove_button = Gtk.Button()
         remove_button.set_image(remove_icon)
         remove_button.connect('clicked',
-                            self.__remove_button_clicked_cb)
+                              self.__remove_button_clicked_cb)
 
         add_remove_box = Gtk.HButtonBox()
         add_remove_box.set_layout(Gtk.ButtonBoxStyle.START)
@@ -405,7 +456,7 @@ class Keyboard(SectionView):
         if self.__layout_sid is not None:
             GObject.source_remove(self.__layout_sid)
         self.__layout_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-            self.__layout_timeout_cb)
+                                                self.__layout_timeout_cb)
 
     def __layout_timeout_cb(self):
         if self._selected_klayouts == \
