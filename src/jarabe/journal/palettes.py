@@ -135,7 +135,6 @@ class ObjectPalette(Palette):
         misc.resume(self._metadata)
 
     def __duplicate_activate_cb(self, menu_item):
-        file_path = model.get_file(self._metadata['uid'])
         try:
             model.copy(self._metadata, '/')
         except IOError, e:

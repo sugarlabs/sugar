@@ -405,7 +405,6 @@ class DetailToolbox(ToolbarBox):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def _duplicate_clicked_cb(self, button):
-        file_path = model.get_file(self._metadata['uid'])
         try:
             model.copy(self._metadata, '/')
         except IOError, e:

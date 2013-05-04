@@ -170,7 +170,7 @@ def _begin_desktop_startup():
     global _starting_desktop
     _starting_desktop = True
 
-    ui_service = UIService()
+    UIService()
 
     session_manager = get_session_manager()
     session_manager.start()

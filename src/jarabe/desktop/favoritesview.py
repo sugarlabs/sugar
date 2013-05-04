@@ -236,10 +236,10 @@ class FavoritesView(ViewContainer):
             self._dragging = True
             target_entry = Gtk.TargetEntry.new(*_ICON_DND_TARGET)
             target_list = Gtk.TargetList.new([target_entry])
-            context_ = widget.drag_begin(target_list,
-                                         Gdk.DragAction.MOVE,
-                                         1,
-                                         event)
+            widget.drag_begin(target_list,
+                              Gdk.DragAction.MOVE,
+                              1,
+                              event)
         return False
 
     def __drag_begin_cb(self, widget, context):

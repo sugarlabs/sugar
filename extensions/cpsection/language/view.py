@@ -227,7 +227,6 @@ class Language(SectionView):
 
     def _check_change(self):
         selected_langs = self._get_selected_langs()
-        last_lang = selected_langs[-1]
 
         self._changed = (selected_langs != self._selected_locales)
 

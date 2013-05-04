@@ -376,8 +376,6 @@ class BundleRegistry(GObject.GObject):
         return False
 
     def install(self, bundle, uid=None, force_downgrade=False):
-        activities_path = env.get_user_activities_path()
-
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
                     NormalizedVersion(bundle.get_activity_version()) <= \

@@ -38,7 +38,6 @@ def get_volume():
 
 
 def set_volume(new_volume):
-    old_volume = _volume.get_volume()
     _volume.set_volume(new_volume)
 
     volume_changed.send(None)
@@ -46,7 +45,6 @@ def set_volume(new_volume):
 
 
 def set_muted(new_state):
-    old_state = _volume.get_mute()
     _volume.set_mute(new_state)
 
     muted_changed.send(None)

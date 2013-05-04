@@ -19,13 +19,10 @@ from gi.repository import Gtk
 from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from jarabe.controlpanel.sectionview import SectionView
 
 from gettext import gettext as _
-
-import logging
 
 
 class Background(SectionView):

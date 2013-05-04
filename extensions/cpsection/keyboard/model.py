@@ -21,8 +21,6 @@ from gi.repository import Xkl
 from gi.repository import GConf
 from gi.repository import SugarExt
 
-import logging
-
 _GROUP_NAME = 'grp'  # The XKB name for group switch options
 
 _LAYOUTS_KEY = '/desktop/sugar/peripherals/keyboard/layouts'

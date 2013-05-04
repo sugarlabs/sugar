@@ -1072,4 +1072,4 @@ class NetworkManagerObserver(object):
 
 
 def setup(tray):
-    device_observer = NetworkManagerObserver(tray)
+    NetworkManagerObserver(tray)
