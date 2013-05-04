@@ -331,11 +331,6 @@ class Subsystem:
     def initialize(self, inputEncoding=None, outputEncoding=None, \
                    inputErrors=None, outputErrors=None):
         self.useUnicode = True
-        try:
-            unicode
-            import codecs
-        except (NameError, ImportError):
-            raise SubsystemError, "Unicode subsystem unavailable"
         defaultEncoding = sys.getdefaultencoding()
         if inputEncoding is None:
             inputEncoding = defaultEncoding
@@ -723,7 +718,7 @@ class UncloseableFile:
         self.delegate.write(data)
 
     def writelines(self, lines):
-        self.delegate.writelines(data)
+        self.delegate.writelines(lines)
 
     def flush(self):
         self.delegate.flush()
@@ -1498,7 +1493,7 @@ class ControlToken(ExpansionToken):
         represent the list of the only secondary markup types which
         are allowed."""
         if allowed is None:
-            allowed = SECONDARY_TYPES
+            allowed = self.SECONDARY_TYPES
         result = []
         latest = []
         result.append((self, latest))
@@ -2532,7 +2527,7 @@ class Interpreter:
     def defined(self, name, locals=None):
         """Return a Boolean indicating whether or not the name is
         defined either in the locals or the globals."""
-        self.invoke('beforeDefined', name=name, local=local)
+        self.invoke('beforeDefined', name=name, locals=locals)
         if locals is not None:
             if locals.has_key(name):
                 result = True
