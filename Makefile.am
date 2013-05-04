@@ -17,6 +17,7 @@ EXTRA_DIST =                    \
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
 check: test
+	pyflakes $(top_srcdir)
 
 test:
 	cd $(top_srcdir)/tests && \
