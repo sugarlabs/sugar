@@ -560,7 +560,8 @@ class ExpandedEntry(Gtk.EventBox):
         else:
             old_file_path = os.path.join(
                 self._metadata['mountpoint'],
-                model.get_file_name(old_title, self._metadata['mime_type']))
+                model.get_file_name(self._metadata['title'],
+                                    self._metadata['mime_type']))
             model.write(self._metadata, file_path=old_file_path,
                         update_mtime=False)
 
