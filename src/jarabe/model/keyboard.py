@@ -19,18 +19,9 @@ import logging
 
 from gi.repository import GConf
 from gi.repository import GdkX11
-
-_USE_XKL = False
-try:
-    from gi.repository import Xkl
-    _USE_XKL = True
-except ImportError:
-    logging.debug('Could not load xklavier for keyboard configuration')
+from gi.repository import Xkl
 
 def setup():
-    if not _USE_XKL:
-        return
-
     gconf_client = GConf.Client.get_default()
     have_config = False
 

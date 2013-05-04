@@ -150,10 +150,6 @@ class ControlPanel(Gtk.Window):
     def _setup_options(self):
         if not os.access(POWERD_FLAG_DIR, os.W_OK):
             del self._options['power']
-
-        try:
-            from gi.repository import Xkl
-        except ImportError:
             del self._options['keyboard']
 
         # If the screen width only supports two columns, start
