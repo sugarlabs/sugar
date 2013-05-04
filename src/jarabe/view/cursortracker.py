@@ -36,9 +36,6 @@ def setup():
     '''
     global _instance
 
-    if _instance:
-        del _instance
-
     display = Gdk.Display.get_default()
     device_manager = display.get_device_manager()
     devices = device_manager.list_devices(Gdk.DeviceType.SLAVE)
