@@ -182,8 +182,8 @@ def _begin_desktop_startup():
 def __intro_window_done_cb(window):
     _begin_desktop_startup()
 
-    global window_manager_started
-    if window_manager_started:
+    global _window_manager_started
+    if _window_manager_started:
         _complete_desktop_startup()
 
 def cleanup_temporary_files():
