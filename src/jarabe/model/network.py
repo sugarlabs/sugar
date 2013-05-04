@@ -940,8 +940,8 @@ def _migrate_old_wifi_connections():
             settings.connection.id = section
             ssid = config.get(section, 'ssid')
             settings.wireless.ssid = dbus.ByteArray(ssid)
-            uuid = config.get(section, 'uuid')
-            settings.connection.uuid = uuid
+            config_uuid = config.get(section, 'uuid')
+            settings.connection.uuid = config_uuid
             nmtype = config.get(section, 'type')
             settings.connection.type = nmtype
             autoconnect = bool(config.get(section, 'autoconnect'))
