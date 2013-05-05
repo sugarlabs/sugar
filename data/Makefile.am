@@ -24,9 +24,6 @@ GTKRC_FILES =		\
 xsessionsdir = $(datadir)/xsessions
 xsessions_DATA = sugar.desktop
 
-applicationsdir = $(datadir)/applications
-applications_DATA = sugar-emulator.desktop
-
 mime_xml_in_files = sugar.xml.in
 mime_xml_files = $(mime_xml_in_files:.xml.in=.xml)
 @INTLTOOL_XML_RULE@

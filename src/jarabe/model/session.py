@@ -17,12 +17,9 @@
 from gi.repository import Gtk
 import dbus
 import os
-import signal
-import sys
 import logging
 
 from sugar3 import session
-from sugar3 import env
 
 
 _session_manager = None
@@ -54,9 +51,7 @@ class SessionManager(session.SessionManager):
         self.initiate_shutdown()
 
     def shutdown_completed(self):
-        if env.is_emulator():
-            self._close_emulator()
-        elif self._logout_mode != self.MODE_LOGOUT:
+        if self._logout_mode != self.MODE_LOGOUT:
             bus = dbus.SystemBus()
             if have_systemd():
                 try:
@@ -92,17 +87,6 @@ class SessionManager(session.SessionManager):
 
         session.SessionManager.shutdown_completed(self)
         Gtk.main_quit()
-
-    def _close_emulator(self):
-        Gtk.main_quit()
-
-        if 'SUGAR_EMULATOR_PID' in os.environ:
-            pid = int(os.environ['SUGAR_EMULATOR_PID'])
-            os.kill(pid, signal.SIGTERM)
-
-        # Need to call this ASAP so the atexit handlers get called before we
-        # get killed by the X (dis)connection
-        sys.exit()
 
 
 def get_session_manager():

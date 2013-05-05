@@ -24,7 +24,6 @@ from gi.repository import SugarExt
 
 from jarabe.model import sound
 from jarabe.model import shell
-from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
@@ -55,9 +54,7 @@ _actions_table = {
     '<alt><shift>Tab': 'previous_window',
     '<alt>Escape': 'close_window',
     'XF86WebCam': 'open_search',
-# the following are intended for emulator users
     '<alt><shift>f': 'frame',
-    '<alt><shift>q': 'quit_emulator',
     'XF86Search': 'open_search',
     '<alt><shift>o': 'open_search'
 }
@@ -153,9 +150,6 @@ class KeyHandler(object):
 
     def handle_frame(self, event_time):
         self._frame.notify_key_press()
-
-    def handle_quit_emulator(self, event_time):
-        session.get_session_manager().shutdown()
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()

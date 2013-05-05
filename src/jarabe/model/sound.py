@@ -16,7 +16,6 @@
 
 from gi.repository import GConf
 
-from sugar3 import env
 from gi.repository import SugarExt
 from sugar3 import dispatch
 
@@ -52,12 +51,10 @@ def set_muted(new_state):
 
 
 def save():
-    if env.is_emulator() is False:
-        client = GConf.Client.get_default()
-        client.set_int('/desktop/sugar/sound/volume', get_volume())
+    client = GConf.Client.get_default()
+    client.set_int('/desktop/sugar/sound/volume', get_volume())
 
 
 def restore():
-    if env.is_emulator() is False:
-        client = GConf.Client.get_default()
-        set_volume(client.get_int('/desktop/sugar/sound/volume'))
+    client = GConf.Client.get_default()
+    set_volume(client.get_int('/desktop/sugar/sound/volume'))

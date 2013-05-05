@@ -1,6 +1,5 @@
 python_scripts =		\
 	sugar-control-panel	\
-	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch
 

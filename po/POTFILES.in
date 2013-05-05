@@ -74,5 +74,3 @@ src/jarabe/view/keyhandler.py
 src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
 src/jarabe/view/viewsource.py
-src/jarabe/util/emulator.py
-

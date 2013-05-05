@@ -48,7 +48,6 @@ bin/Makefile
 bin/sugar
 data/icons/Makefile
 data/Makefile
-data/sugar-emulator.desktop
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
 extensions/cpsection/background/Makefile
