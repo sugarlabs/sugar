@@ -20,8 +20,10 @@ check: test
 	pyflakes $(top_srcdir)
 
 test:
-	cd $(top_srcdir)/tests && \
-    mkdir -p $(TESTS_TMPDIR) && \
-    TMPDIR=$(TESTS_TMPDIR) PYTHONPATH=$(TESTS_PYTHONPATH) \
-    python -m unittest discover && \
-    rm -rf $(TESTS_TMPDIR)
+	mkdir -p $(TESTS_TMPDIR)
+	cd $(top_srcdir)/tests; \
+	TMPDIR=$(TESTS_TMPDIR) PYTHONPATH=$(TESTS_PYTHONPATH) \
+	python -m unittest discover; \
+	status=$$?; \
+	rm -rf $(TESTS_TMPDIR); \
+	exit $$status
