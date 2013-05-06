@@ -32,6 +32,7 @@ from gi.repository import GObject
 import dbus
 from gi.repository import Gio
 from gi.repository import GConf
+from gi.repository import GLib
 
 from sugar3 import dispatch
 from sugar3 import mime
@@ -269,7 +270,7 @@ class InplaceResultSet(BaseResultSet):
         self._pending_directories = [self._mount_point]
         self._visited_directories = []
         self._pending_files = []
-        GObject.idle_add(self._scan)
+        GLib.idle_add(self._scan)
 
     def stop(self):
         self._stopped = True

@@ -183,7 +183,7 @@ class VolumesToolbar(Gtk.Toolbar):
 
         self.connect('destroy', self.__destroy_cb)
 
-        GObject.idle_add(self._set_up_volumes)
+        GLib.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
         volume_monitor = Gio.VolumeMonitor.get()
@@ -229,7 +229,7 @@ class VolumesToolbar(Gtk.Toolbar):
         if os.path.exists(os.path.join(mount.get_root().get_path(),
                                        _JOURNAL_0_METADATA_DIR)):
             logging.debug('Convert DS-0 Journal entries: starting conversion')
-            GObject.idle_add(_convert_entries, mount.get_root().get_path())
+            GLib.idle_add(_convert_entries, mount.get_root().get_path())
 
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]

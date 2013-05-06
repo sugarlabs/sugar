@@ -142,7 +142,7 @@ class FavoritesView(ViewContainer):
         self._alert = None
         self._resume_mode = True
 
-        GObject.idle_add(self.__connect_to_bundle_registry_cb)
+        GLib.idle_add(self.__connect_to_bundle_registry_cb)
 
         favorites_settings = get_settings()
         favorites_settings.changed.connect(self.__settings_changed_cb)

@@ -41,7 +41,6 @@ from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
 from gi.repository import Gst
 import dbus.glib
 from gi.repository import Wnck
@@ -125,13 +124,13 @@ def __window_manager_changed_cb(screen):
 def _complete_desktop_startup():
     launcher.setup()
 
-    GObject.idle_add(setup_frame_cb)
-    GObject.idle_add(setup_keyhandler_cb)
-    GObject.idle_add(setup_gesturehandler_cb)
-    GObject.idle_add(setup_journal_cb)
-    GObject.idle_add(setup_notification_service_cb)
-    GObject.idle_add(setup_file_transfer_cb)
-    GObject.idle_add(show_software_updates_cb)
+    GLib.idle_add(setup_frame_cb)
+    GLib.idle_add(setup_keyhandler_cb)
+    GLib.idle_add(setup_gesturehandler_cb)
+    GLib.idle_add(setup_journal_cb)
+    GLib.idle_add(setup_notification_service_cb)
+    GLib.idle_add(setup_file_transfer_cb)
+    GLib.idle_add(show_software_updates_cb)
 
 def _check_for_window_manager(screen):
     wm_name = screen.get_window_manager_name()
@@ -250,9 +249,9 @@ def main():
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
-    GObject.idle_add(unfreeze_dcon_cb)
+    GLib.idle_add(unfreeze_dcon_cb)
 
-    GObject.idle_add(setup_cursortracker_cb)
+    GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
     keyboard.setup()
 

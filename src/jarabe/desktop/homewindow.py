@@ -17,7 +17,7 @@
 from gettext import gettext as _
 import logging
 
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
@@ -242,7 +242,7 @@ class HomeWindow(Gtk.Window):
 
         old_cursor = self.get_window().get_cursor()
         self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        GObject.idle_add(action_wrapper, old_cursor)
+        GLib.idle_add(action_wrapper, old_cursor)
 
 
 def get_instance():
