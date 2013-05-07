@@ -24,6 +24,7 @@ from gi.repository import SugarExt
 
 from jarabe.model import sound
 from jarabe.model import shell
+from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
@@ -56,7 +57,8 @@ _actions_table = {
     'XF86WebCam': 'open_search',
     '<alt><shift>f': 'frame',
     'XF86Search': 'open_search',
-    '<alt><shift>o': 'open_search'
+    '<alt><shift>o': 'open_search',
+    '<alt><shift>q': 'logout'
 }
 
 
@@ -150,6 +152,10 @@ class KeyHandler(object):
 
     def handle_frame(self, event_time):
         self._frame.notify_key_press()
+
+    def handle_logout(self, event_time):
+        if "SUGAR_DEVELOPER" in os.environ:
+            session.get_session_manager().logout()
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
