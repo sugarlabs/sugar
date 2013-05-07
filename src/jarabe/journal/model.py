@@ -28,7 +28,6 @@ from operator import itemgetter
 import json
 from gettext import gettext as _
 
-from gi.repository import GObject
 import dbus
 from gi.repository import Gio
 from gi.repository import GConf
