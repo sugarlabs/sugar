@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2009, Sugar Labs
+# Copyright (C) 2009-2013 Sugar Labs
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ from xml.etree.ElementTree import XML
 import traceback
 
 from gi.repository import Gio
+from gi.repository import GLib
 
 from sugar3.bundle.bundleversion import NormalizedVersion
 from sugar3.bundle.bundleversion import InvalidVersionError
@@ -90,9 +91,10 @@ class _UpdateFetcher(object):
         self._xml_data = ''
         self._bundle = bundle
 
-        self._file.read_async(self.__file_read_async_cb)
+        self._file.read_async(GLib.PRIORITY_DEFAULT, None,
+                              self.__file_read_async_cb, None)
 
-    def __file_read_async_cb(self, gfile, result):
+    def __file_read_async_cb(self, gfile, result, user_data):
         try:
             self._stream = self._file.read_finish(result)
         except:
@@ -101,25 +103,34 @@ class _UpdateFetcher(object):
             self._completion_cb(None, None, None, None, traceback.format_exc())
             return
 
-        self._stream.read_async(self._CHUNK_SIZE, self.__stream_read_async_cb)
+        self._stream.read_bytes_async(self._CHUNK_SIZE, GLib.PRIORITY_DEFAULT,
+                                      None, self.__stream_read_async_cb, None)
 
-    def __stream_read_async_cb(self, stream, result):
-        xml_data = self._stream.read_finish(result)
-        if xml_data is None:
+    def __stream_read_async_cb(self, stream, result, user_data):
+        data = stream.read_bytes_finish(result)
+        if data is None:
             global _fetcher
             _fetcher = None
             self._completion_cb(self._bundle, None, None, None,
                     'Error reading update information for %s from '
                     'server.' % self._bundle.get_bundle_id())
             return
-        elif not xml_data:
+        elif data.get_size() == 0:
+            stream.close(None)
             self._process_result()
+            return
         else:
-            self._xml_data += xml_data
-            self._stream.read_async(self._CHUNK_SIZE,
-                                    self.__stream_read_async_cb)
+            xml_data = data.get_data()
+            self._xml_data += str(xml_data)
+
+        stream.read_bytes_async(self._CHUNK_SIZE, GLib.PRIORITY_DEFAULT, None,
+                                self.__stream_read_async_cb, None)
 
     def _process_result(self):
+        if self._xml_data is None:
+            logging.error('No XML update data returned from ASLO')
+            return
+
         document = XML(self._xml_data)
 
         if document.find(_FIND_DESCRIPTION) is None:
@@ -151,8 +162,8 @@ class _UpdateFetcher(object):
 def fetch_update_info(bundle, completion_cb):
     """Queries the server for a newer version of the ActivityBundle.
 
-       completion_cb receives bundle, version, link, size and possibly an error
-       message:
+       completion_cb receives bundle, version, link, size and possibly
+       an error message:
 
        def completion_cb(bundle, version, link, size, error_message):
     """
