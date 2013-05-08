@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-19 00:34-0400\n"
-"PO-Revision-Date: 2012-10-28 11:14+0200\n"
-"Last-Translator: aman0115 <aman.maharjan@olenepal.org>\n"
+"POT-Creation-Date: 2013-01-20 21:08-0500\n"
+"PO-Revision-Date: 2013-05-08 13:30+0200\n"
+"Last-Translator: kayomars.puri <kayo.mars@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "मेरो बारेमा"
+msgstr "मेरो बा"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -53,7 +53,7 @@ msgstr "तोकिएको रङ्ग परिमार्जकहरु�
 msgid "Error in specified colors."
 msgstr "तोकिएको रङ्गहरुमा त्रुटी छ।"
 
-#: ../extensions/cpsection/aboutme/view.py:216
+#: ../extensions/cpsection/aboutme/view.py:212
 msgid "Click to change your color:"
 msgstr "रङ्ग परिवर्तन गर्न क्लिक गरः"
 
@@ -121,7 +121,7 @@ msgstr "मिती & समय"
 msgid "Error timezone does not exist."
 msgstr "त्रुटि, समयक्षेत्र उपलब्ध छैन।"
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "समयक्षेत्र"
 
@@ -397,31 +397,31 @@ msgstr "%.0f KB"
 msgid "%.1f MB"
 msgstr "%.1f KB"
 
-#: ../extensions/deviceicon/battery.py:70
+#: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "मेरो ब्यााटरी"
 
-#: ../extensions/deviceicon/battery.py:151
+#: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
 msgstr "हटाइयो"
 
-#: ../extensions/deviceicon/battery.py:154
+#: ../extensions/deviceicon/battery.py:156
 msgid "Charging"
 msgstr "चार्ज हुँदैछ"
 
-#: ../extensions/deviceicon/battery.py:157
+#: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
 msgstr "एकदमै थोरै शक्‍ति बाँकी छ"
 
 # %(hour)d:%(min).2d are variables (separated by a :   )
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:164
+#: ../extensions/deviceicon/battery.py:166
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d बाँकी"
 
-#: ../extensions/deviceicon/battery.py:167
+#: ../extensions/deviceicon/battery.py:169
 msgid "Charged"
 msgstr "चार्ज भयो"
 
@@ -429,15 +429,15 @@ msgstr "चार्ज भयो"
 msgid "Show my keyboard"
 msgstr "किबोर्ड देखाउ"
 
-#: ../extensions/deviceicon/network.py:50
+#: ../extensions/deviceicon/network.py:51
 #, python-format
 msgid "IP address: %s"
 msgstr "IP अड्रेस: %s"
 
-#: ../extensions/deviceicon/network.py:80
-#: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:130
-#: ../src/jarabe/desktop/networkviews.py:499
+#: ../extensions/deviceicon/network.py:83
+#: ../extensions/deviceicon/network.py:299
+#: ../src/jarabe/desktop/networkviews.py:137
+#: ../src/jarabe/desktop/networkviews.py:509
 msgid "Disconnect"
 msgstr "विच्छेद भयो"
 
@@ -445,162 +445,162 @@ msgstr "विच्छेद भयो"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:105
-#: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:241
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../extensions/deviceicon/network.py:108
+#: ../extensions/deviceicon/network.py:291
+#: ../src/jarabe/desktop/networkviews.py:252
+#: ../src/jarabe/desktop/networkviews.py:550
+#: ../src/jarabe/desktop/networkviews.py:691
 msgid "Connecting..."
 msgstr "जडान हुदैछ..."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:110
-#: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:248
-#: ../src/jarabe/desktop/networkviews.py:545
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:113
+#: ../extensions/deviceicon/network.py:181
+#: ../src/jarabe/desktop/networkviews.py:259
+#: ../src/jarabe/desktop/networkviews.py:556
+#: ../src/jarabe/desktop/networkviews.py:697
 msgid "Connected"
 msgstr "जडान भयो"
 
-#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:126
 msgid "No wireless connection"
 msgstr "वायरलेस जडान छैन"
 
-#: ../extensions/deviceicon/network.py:137
+#: ../extensions/deviceicon/network.py:140
 msgid "Channel"
 msgstr "माध्यम"
 
-#: ../extensions/deviceicon/network.py:152
+#: ../extensions/deviceicon/network.py:155
 msgid "Wired Network"
 msgstr "तार युक्त सञ्जाल"
 
-#: ../extensions/deviceicon/network.py:181
+#: ../extensions/deviceicon/network.py:184
 msgid "Speed"
 msgstr "गति"
 
-#: ../extensions/deviceicon/network.py:206
+#: ../extensions/deviceicon/network.py:209
 msgid "Wireless modem"
 msgstr "वायरलेस मोडेम"
 
-#: ../extensions/deviceicon/network.py:274
+#: ../extensions/deviceicon/network.py:277
 msgid "Please wait..."
 msgstr "कृपया पर्खनुहोस्..."
 
-#: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:126
-#: ../src/jarabe/desktop/networkviews.py:494
-#: ../src/jarabe/desktop/networkviews.py:630
+#: ../extensions/deviceicon/network.py:282
+#: ../src/jarabe/desktop/networkviews.py:131
+#: ../src/jarabe/desktop/networkviews.py:503
+#: ../src/jarabe/desktop/networkviews.py:642
 msgid "Connect"
 msgstr "जोड"
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:283
 msgid "Disconnected"
 msgstr "विच्छेद भयो"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:290
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
-#: ../src/jarabe/frame/activitiestray.py:606
-#: ../src/jarabe/frame/activitiestray.py:708
-#: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:427
-#: ../src/jarabe/journal/palettes.py:153
+#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:100
+#: ../src/jarabe/frame/activitiestray.py:611
+#: ../src/jarabe/frame/activitiestray.py:713
+#: ../src/jarabe/frame/activitiestray.py:741
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
 msgstr "रद्द"
 
-#: ../extensions/deviceicon/network.py:326
+#: ../extensions/deviceicon/network.py:329
 msgid "Try connection again"
 msgstr "सम्बन्ध स्थापित गर्नको लागि पुन: प्रयास गर्नुहोस्"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:332
 #, python-format
 msgid "Error: %s"
 msgstr "त्रुटि: %s"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:336
 #, python-format
 msgid "Suggestion: %s"
 msgstr "सुझाव: %s"
 
-#: ../extensions/deviceicon/network.py:342
+#: ../extensions/deviceicon/network.py:345
 #, python-format
 msgid "Connected for %s"
 msgstr "%s सम्म जोडियो"
 
-#: ../extensions/deviceicon/network.py:348
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:351
+#: ../extensions/deviceicon/network.py:352
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:354
+#: ../extensions/deviceicon/network.py:357
 msgid "Check your PIN/PUK configuration."
 msgstr "तिम्रो PIN/PUK विन्यासको जाँच गर।"
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:360
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "तिम्रो एक्सेस पोइन्ट नेमको (APN) विन्यासको जाँच गर।"
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:364
 msgid "Check the Number configuration."
 msgstr "संख्या विन्यासको जाँच गर।"
 
-#: ../extensions/deviceicon/network.py:363
+#: ../extensions/deviceicon/network.py:366
 msgid "Check your configuration."
 msgstr "तिम्रो विन्यासको जाँच गर।"
 
-#: ../extensions/deviceicon/network.py:607
+#: ../extensions/deviceicon/network.py:611
 msgid "Mesh Network"
 msgstr "मेश सञ्जाल"
 
-#: ../extensions/deviceicon/network.py:652
+#: ../extensions/deviceicon/network.py:655
 #, python-format
 msgid "Mesh Network %s"
 msgstr "मेश सञ्जाल %s"
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:774
 msgid "No GSM connection available."
 msgstr "कुनै पनि GSM कनेक्सन उपलब्ध छैन।"
 
-#: ../extensions/deviceicon/network.py:784
+#: ../extensions/deviceicon/network.py:775
 msgid "Create a connection in the control panel."
 msgstr "कन्ट्रोल पानेल मा नयाँ कनेक्सन बनाऊ ।"
 
-#: ../extensions/deviceicon/speech.py:53
+#: ../extensions/deviceicon/speech.py:54
 msgid "Speech"
 msgstr "भाषण"
 
-#: ../extensions/deviceicon/speech.py:81
-#: ../extensions/deviceicon/speech.py:155
-#: ../extensions/deviceicon/speech.py:160
+#: ../extensions/deviceicon/speech.py:78
+#: ../extensions/deviceicon/speech.py:152
+#: ../extensions/deviceicon/speech.py:157
 msgid "Say selected text"
 msgstr "चुनिएका पाठ भन"
 
-#: ../extensions/deviceicon/speech.py:88
+#: ../extensions/deviceicon/speech.py:85
 msgid "Stop playback"
 msgstr "पाशर्व बन्द गर"
 
-#: ../extensions/deviceicon/speech.py:98
+#: ../extensions/deviceicon/speech.py:94
 msgid "Pitch"
 msgstr "पिच"
 
-#: ../extensions/deviceicon/speech.py:112
+#: ../extensions/deviceicon/speech.py:109
 msgid "Rate"
 msgstr "गति"
 
-#: ../extensions/deviceicon/speech.py:150
+#: ../extensions/deviceicon/speech.py:147
 msgid "Pause playback"
 msgstr "पाशर्व रोक"
 
-#: ../extensions/deviceicon/speaker.py:62
+#: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "मेरो स्पिकरहरु"
 
-#: ../extensions/deviceicon/speaker.py:142
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
 msgstr "आवाज खोल"
 
-#: ../extensions/deviceicon/speaker.py:145
+#: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
 msgstr "आवाज बन्द गर"
 
@@ -616,7 +616,7 @@ msgstr "स्टाइलस"
 msgid "My touchpad"
 msgstr "मेरो टचप्याड"
 
-#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
+#: ../extensions/deviceicon/volume.py:73 ../src/jarabe/view/palettes.py:185
 msgid "Show contents"
 msgstr "वस्तुहरु देखाउ"
 
@@ -979,32 +979,32 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "परिवर्तन लागू गर्न सुगर पुन:शुरु गर्नु पर्छ ।\n"
 
-#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
-#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
+#: ../src/jarabe/controlpanel/gui.py:315 ../src/jarabe/journal/palettes.py:182
+#: ../src/jarabe/journal/palettes.py:277 ../src/jarabe/journal/palettes.py:310
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Warning"
 msgstr "सावधान"
 
-#: ../src/jarabe/controlpanel/gui.py:299
+#: ../src/jarabe/controlpanel/gui.py:316
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "परिवर्तनका लागि पुण: सुरु गर्न आवश्यक छ"
 
-#: ../src/jarabe/controlpanel/gui.py:302
+#: ../src/jarabe/controlpanel/gui.py:319
 msgid "Cancel changes"
 msgstr "परिवर्तनहरु रद्द गर"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:324 ../src/jarabe/desktop/homebox.py:70
 msgid "Later"
 msgstr "पछि"
 
-#: ../src/jarabe/controlpanel/gui.py:311
+#: ../src/jarabe/controlpanel/gui.py:328
 msgid "Restart now"
 msgstr "पुन: सुरु गर"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:83
 #, python-format
 msgid "Search in %s"
 msgstr "%s मा खोज"
@@ -1018,30 +1018,30 @@ msgid "Done"
 msgstr "भयो"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:337
-#: ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/desktop/favoritesview.py:366
+#: ../src/jarabe/desktop/keydialog.py:104
 msgid "Ok"
 msgstr "हुन्छ"
 
-#: ../src/jarabe/desktop/activitieslist.py:243
+#: ../src/jarabe/desktop/activitieslist.py:244
 #, python-format
 msgid "Version %s"
 msgstr "संस्करण %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:344
-#: ../src/jarabe/journal/listview.py:411
+#: ../src/jarabe/desktop/activitieslist.py:345
+#: ../src/jarabe/journal/listview.py:425
 msgid "Clear search"
 msgstr "खोजलाई सफा गर"
 
-#: ../src/jarabe/desktop/activitieslist.py:417
+#: ../src/jarabe/desktop/activitieslist.py:418
 msgid "No matching activities"
 msgstr "मिल्ने क्रियाकलाप छैन"
 
-#: ../src/jarabe/desktop/activitieslist.py:453
+#: ../src/jarabe/desktop/activitieslist.py:454
 msgid "Confirm erase"
 msgstr "साँच्चै मेट्ने"
 
-#: ../src/jarabe/desktop/activitieslist.py:455
+#: ../src/jarabe/desktop/activitieslist.py:456
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "मेट्ने पुष्टि : %s लाई सधैँको लागी मेट्न चहान्छौ?"
@@ -1050,25 +1050,25 @@ msgstr "मेट्ने पुष्टि : %s लाई सधैँको 
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:284
+#: ../src/jarabe/desktop/activitieslist.py:460
+#: ../src/jarabe/frame/clipboardmenu.py:65
+#: ../src/jarabe/view/viewsource.py:285
 msgid "Keep"
 msgstr "राख"
 
-#: ../src/jarabe/desktop/activitieslist.py:462
-#: ../src/jarabe/desktop/activitieslist.py:516
-#: ../src/jarabe/journal/journaltoolbox.py:393
-#: ../src/jarabe/journal/journaltoolbox.py:422
-#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
+#: ../src/jarabe/desktop/activitieslist.py:463
+#: ../src/jarabe/desktop/activitieslist.py:517
+#: ../src/jarabe/journal/journaltoolbox.py:394
+#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/palettes.py:129 ../src/jarabe/journal/palettes.py:149
 msgid "Erase"
 msgstr "मेट"
 
-#: ../src/jarabe/desktop/activitieslist.py:532
+#: ../src/jarabe/desktop/activitieslist.py:533
 msgid "Remove favorite"
 msgstr "मनपर्ने हटाउ"
 
-#: ../src/jarabe/desktop/activitieslist.py:536
+#: ../src/jarabe/desktop/activitieslist.py:537
 msgid "Make favorite"
 msgstr "प्रिय बनाउ"
 
@@ -1102,24 +1102,24 @@ msgstr "बाकस"
 msgid "Triangle"
 msgstr "त्रिकोण"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:357
 msgid "Registration Failed"
 msgstr "दर्ता असफल भयो"
 
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/desktop/favoritesview.py:360
 msgid "Registration Successful"
 msgstr "दर्ता सफल भयो"
 
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:361
 msgid "You are now registered with your school server."
 msgstr "अब तपाईँको नाम बिद्यालयको सर्भरमा दर्ता भइसक्यो।"
 
-#: ../src/jarabe/desktop/favoritesview.py:611
+#: ../src/jarabe/desktop/favoritesview.py:645
 msgid "Register"
 msgstr "दर्ता"
 
-#: ../src/jarabe/desktop/favoritesview.py:613
-#: ../src/jarabe/desktop/favoritesview.py:629
+#: ../src/jarabe/desktop/favoritesview.py:648
+#: ../src/jarabe/desktop/favoritesview.py:664
 msgid "Register again"
 msgstr "दर्ता फेरी गर"
 
@@ -1136,48 +1136,48 @@ msgstr "अहिले जाँच गर"
 msgid "Neighborhood"
 msgstr "छिमेक"
 
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr "तारबिना सञ्जाल '%s' को लागि तारबिना कुञ्जीको जरुरी छ"
 
-#: ../src/jarabe/desktop/keydialog.py:146
+#: ../src/jarabe/desktop/keydialog.py:149
 msgid "Key Type:"
 msgstr "कुञ्जी प्रकार:"
 
-#: ../src/jarabe/desktop/keydialog.py:166
+#: ../src/jarabe/desktop/keydialog.py:169
 msgid "Authentication Type:"
 msgstr "प्रमाणीकरण प्रकार:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:232
 msgid "WPA & WPA2 Personal"
 msgstr "WPA र WPA2 निजी"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:241
 msgid "Wireless Security:"
 msgstr "तारबिनाको लागि सुरक्षा"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:79
-#: ../src/jarabe/journal/journaltoolbox.py:506
-#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:517
+#: ../src/jarabe/journal/palettes.py:74 ../src/jarabe/view/palettes.py:97
 msgid "Resume"
 msgstr "पुनरारम्भ"
 
-#: ../src/jarabe/desktop/meshbox.py:84
-#: ../src/jarabe/frame/activitiestray.py:182
+#: ../src/jarabe/desktop/meshbox.py:88
+#: ../src/jarabe/frame/activitiestray.py:187
 msgid "Join"
 msgstr "सहभागी होऊ"
 
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc सञ्जाल %d"
 
-#: ../src/jarabe/desktop/networkviews.py:627
+#: ../src/jarabe/desktop/networkviews.py:637
 #, python-format
 msgid "Mesh Network %d"
 msgstr "मेश सञ्जाल %d"
@@ -1206,69 +1206,69 @@ msgstr "मन्पर्दो दृश्य"
 msgid "<Ctrl>1"
 msgstr "<Ctrl>१"
 
-#: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:578
+#: ../src/jarabe/frame/activitiestray.py:192
+#: ../src/jarabe/frame/activitiestray.py:583
 msgid "Decline"
 msgstr "नाई"
 
-#: ../src/jarabe/frame/activitiestray.py:526
+#: ../src/jarabe/frame/activitiestray.py:531
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:528
+#: ../src/jarabe/frame/activitiestray.py:533
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:530
+#: ../src/jarabe/frame/activitiestray.py:535
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:548
+#: ../src/jarabe/frame/activitiestray.py:553
 #, python-format
 msgid "%s of %s"
 msgstr "%s को %s"
 
-#: ../src/jarabe/frame/activitiestray.py:562
+#: ../src/jarabe/frame/activitiestray.py:567
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "%s बाट सार्नुहोस"
 
-#: ../src/jarabe/frame/activitiestray.py:573
+#: ../src/jarabe/frame/activitiestray.py:578
 msgid "Accept"
 msgstr "स्विकार"
 
-#: ../src/jarabe/frame/activitiestray.py:630
-#: ../src/jarabe/frame/activitiestray.py:643
-#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/frame/activitiestray.py:635
+#: ../src/jarabe/frame/activitiestray.py:648
+#: ../src/jarabe/frame/activitiestray.py:766
 msgid "Dismiss"
 msgstr "खारेज गर्नुहोस्"
 
-#: ../src/jarabe/frame/activitiestray.py:647
+#: ../src/jarabe/frame/activitiestray.py:652
 msgid "The other participant canceled the file transfer"
 msgstr "अर्को सहभागीले फाइल सार्ने रद्द गर्यो"
 
-#: ../src/jarabe/frame/activitiestray.py:695
+#: ../src/jarabe/frame/activitiestray.py:700
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
 msgstr "%s मा सार्नुहोस"
 
-#: ../src/jarabe/frame/clipboardmenu.py:56
+#: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "हटाउनुहोस्"
 
-#: ../src/jarabe/frame/clipboardmenu.py:62
-#: ../src/jarabe/frame/clipboardmenu.py:85
+#: ../src/jarabe/frame/clipboardmenu.py:60
+#: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
 msgstr "खोल"
 
-#: ../src/jarabe/frame/clipboardmenu.py:90
+#: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
 msgstr "सगँ खोल"
 
@@ -1309,18 +1309,18 @@ msgstr "पछाडि"
 msgid "Next"
 msgstr "अर्को"
 
-#: ../src/jarabe/journal/expandedentry.py:145
+#: ../src/jarabe/journal/expandedentry.py:151
 #: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
-#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/palettes.py:67
 #: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "बिना शिर्षक"
 
-#: ../src/jarabe/journal/expandedentry.py:259
+#: ../src/jarabe/journal/expandedentry.py:260
 msgid "No preview"
 msgstr "पूर्वावलोकन छैन"
 
-#: ../src/jarabe/journal/expandedentry.py:273
+#: ../src/jarabe/journal/expandedentry.py:274
 #, python-format
 msgid "Kind: %s"
 msgstr "प्रकार: %s"
@@ -1341,143 +1341,149 @@ msgstr "मिति: %s"
 msgid "Size: %s"
 msgstr "साइज: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:299
+#: ../src/jarabe/journal/expandedentry.py:302
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "मिति छैन"
 
-#: ../src/jarabe/journal/expandedentry.py:308
+#: ../src/jarabe/journal/expandedentry.py:311
 msgid "Participants:"
 msgstr "प्रतिभागीहरु:"
 
-#: ../src/jarabe/journal/expandedentry.py:349
+#: ../src/jarabe/journal/expandedentry.py:353
 msgid "Description:"
 msgstr "वर्णनः"
 
-#: ../src/jarabe/journal/expandedentry.py:352
+#: ../src/jarabe/journal/expandedentry.py:356
 msgid "Tags:"
 msgstr "चिनोहरु:"
 
 #: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:465
-#: ../src/jarabe/journal/palettes.py:218
+#: ../src/jarabe/journal/journaltoolbox.py:83
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:219
 #: ../src/jarabe/journal/volumestoolbar.py:362
 msgid "Journal"
 msgstr "पंजिका"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:129
 msgid "Anytime"
 msgstr "कुनैबेला"
 
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:131
 msgid "Today"
 msgstr "आज"
 
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Since yesterday"
 msgstr "हिजो देखि"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Past week"
 msgstr "गत हप्ता"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Past month"
 msgstr "गत महिना"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past year"
 msgstr "गत वर्ष"
 
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Anyone"
 msgstr "जो सुकै"
 
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My friends"
 msgstr "मेरा साथीहरु"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "My class"
 msgstr "मेरो कक्षा"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:290
+#: ../src/jarabe/journal/journaltoolbox.py:291
 msgid "Anything"
 msgstr "कुनैपनि"
 
-#: ../src/jarabe/journal/journaltoolbox.py:376
-#: ../src/jarabe/journal/palettes.py:95
+#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/palettes.py:96
 msgid "Copy to"
 msgstr "मा प्रतिलिपी बनाउ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:384
-#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
+#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/palettes.py:107 ../src/jarabe/view/viewsource.py:279
 msgid "Duplicate"
 msgstr "नक्कल"
 
-#: ../src/jarabe/journal/journaltoolbox.py:417
-#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:285
 #: ../src/jarabe/journal/volumestoolbar.py:309
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "प्रविष्टि कपि गर्दा त्रुटि। %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:286
 #: ../src/jarabe/journal/volumestoolbar.py:310
 msgid "Error"
 msgstr "त्रुटि"
 
-#: ../src/jarabe/journal/journaltoolbox.py:424
-#: ../src/jarabe/journal/palettes.py:150
+#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/palettes.py:151
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "के तिमीलाई \"%s\" स्थायी रुपमा मेटाउन मन छ?"
 
+#: ../src/jarabe/journal/journaltoolbox.py:476
+#: ../src/jarabe/journal/palettes.py:229
+#: ../src/jarabe/journal/volumestoolbar.py:210
+msgid "Documents"
+msgstr "कागजातहरु"
+
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/journaltoolbox.py:520
+#: ../src/jarabe/journal/palettes.py:77
 msgid "Start"
 msgstr "सुरु गर"
 
-#: ../src/jarabe/journal/journaltoolbox.py:537
+#: ../src/jarabe/journal/journaltoolbox.py:548
 msgid "Sort by date modified"
 msgstr "परिमार्जित मिति क्रमबद्व रुपमा राखनुहोस्"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:549
 msgid "Sort by date created"
 msgstr "परिमार्जित मिति सृजित गरेको अनुसार क्रमबद्व रुपमा राखनुहोस्"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:550
 msgid "Sort by size"
 msgstr "साइज अनुसार क्रमबद्व रुपमा राखनुहोस्"
 
-#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/journaltoolbox.py:559
 msgid "Sort view"
 msgstr "क्रमबद्ध दृश्य"
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:337
 msgid "Your Journal is empty"
 msgstr "तिम्रो पंजिका खाली छ"
 
-#: ../src/jarabe/journal/listview.py:326
+#: ../src/jarabe/journal/listview.py:340
 msgid "Your documents folder is empty"
 msgstr "तिम्रो कागजात फोल्डर खाली छ"
 
-#: ../src/jarabe/journal/listview.py:328
+#: ../src/jarabe/journal/listview.py:342
 msgid "The device is empty"
 msgstr "यन्त्र खाली छ"
 
-#: ../src/jarabe/journal/listview.py:330
+#: ../src/jarabe/journal/listview.py:344
 msgid "No matching entries"
 msgstr "मिल्ने लेखा छैन"
 
@@ -1508,61 +1514,57 @@ msgid "Choose an object"
 msgstr "वस्तु छान"
 
 #: ../src/jarabe/journal/objectchooser.py:156
-#: ../src/jarabe/view/viewsource.py:414
+#: ../src/jarabe/view/viewsource.py:415
 msgid "Close"
 msgstr "बन्द"
 
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/palettes.py:75
 msgid "Resume with"
 msgstr "पुनरारम्भ सहित"
 
-#: ../src/jarabe/journal/palettes.py:77
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Start with"
 msgstr "शुरु सहित"
 
-#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
+#: ../src/jarabe/journal/palettes.py:91 ../src/jarabe/journal/palettes.py:388
 msgid "No activity to start entry"
 msgstr "सुरु गर्न कुनै क्रियाकलाप छैन"
 
-#: ../src/jarabe/journal/palettes.py:114
+#: ../src/jarabe/journal/palettes.py:115
 msgid "Send to"
 msgstr "पठाउनु"
 
-#: ../src/jarabe/journal/palettes.py:123
+#: ../src/jarabe/journal/palettes.py:124
 msgid "View Details"
 msgstr "वृत्तांत हेर"
 
-#: ../src/jarabe/journal/palettes.py:180
+#: ../src/jarabe/journal/palettes.py:181
 msgid "Entries without a file cannot be sent."
 msgstr "फाइल नभएको प्रविष्टिहरु पठाउन सकिदैन।"
 
-#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
+#: ../src/jarabe/journal/palettes.py:276 ../src/jarabe/journal/palettes.py:309
 #: ../src/jarabe/journal/volumestoolbar.py:300
 msgid "Entries without a file cannot be copied."
 msgstr "फाइल नभाको प्रविष्टिहरु कपि हुन सकेन।"
 
-#: ../src/jarabe/journal/palettes.py:287
+#: ../src/jarabe/journal/palettes.py:298
 msgid "Clipboard"
 msgstr "क्लिपबोर्ड"
 
-#: ../src/jarabe/journal/palettes.py:342
+#: ../src/jarabe/journal/palettes.py:353
 msgid "No friends present"
 msgstr "कुनै पनि साथीहरु हाजीर छैनन्"
 
-#: ../src/jarabe/journal/palettes.py:347
+#: ../src/jarabe/journal/palettes.py:358
 msgid "No valid connection found"
 msgstr "कुनै पनि सदर संयोग भेटिएन"
 
-#: ../src/jarabe/journal/palettes.py:375
+#: ../src/jarabe/journal/palettes.py:386
 msgid "No activity to resume entry"
 msgstr "पुनरारम्भ गर्न कुनै क्रियाकलाप छैन"
 
-#: ../src/jarabe/journal/volumestoolbar.py:210
-msgid "Documents"
-msgstr "कागजातहरु"
-
 #: ../src/jarabe/journal/volumestoolbar.py:385
-#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
+#: ../src/jarabe/view/palettes.py:226 ../src/jarabe/view/palettes.py:293
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB खालि"
@@ -1754,31 +1756,31 @@ msgstr "ब्लूटूथ संयोजन असफल भयो वा �
 msgid "Unused."
 msgstr "प्रयोग नभएको।"
 
-#: ../src/jarabe/view/buddymenu.py:67
+#: ../src/jarabe/view/buddymenu.py:73
 msgid "Remove friend"
 msgstr "साथी हटाऊ"
 
-#: ../src/jarabe/view/buddymenu.py:70
+#: ../src/jarabe/view/buddymenu.py:76
 msgid "Make friend"
 msgstr "साथी बनाऊ"
 
-#: ../src/jarabe/view/buddymenu.py:87
+#: ../src/jarabe/view/buddymenu.py:92
 msgid "Shutdown"
 msgstr "बन्द"
 
-#: ../src/jarabe/view/buddymenu.py:95
+#: ../src/jarabe/view/buddymenu.py:99
 msgid "Restart"
 msgstr "पून: सुरु"
 
-#: ../src/jarabe/view/buddymenu.py:101
+#: ../src/jarabe/view/buddymenu.py:105
 msgid "Logout"
 msgstr "लगआउट"
 
-#: ../src/jarabe/view/buddymenu.py:106
+#: ../src/jarabe/view/buddymenu.py:110
 msgid "My Settings"
 msgstr "मेरो सेटिंगहरु"
 
-#: ../src/jarabe/view/buddymenu.py:142
+#: ../src/jarabe/view/buddymenu.py:150
 #, python-format
 msgid "Invite to %s"
 msgstr "%s मा निम्ता देऊ"
@@ -1788,55 +1790,55 @@ msgstr "%s मा निम्ता देऊ"
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> सुरुहुन असफल।"
 
-#: ../src/jarabe/view/palettes.py:50
+#: ../src/jarabe/view/palettes.py:52
 msgid "Starting..."
 msgstr "शुरु हुदैछ..."
 
-#: ../src/jarabe/view/palettes.py:60
+#: ../src/jarabe/view/palettes.py:62
 msgid "Activity failed to start"
 msgstr "क्रियाकलाप सुरुहुन असफल"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:93
+#: ../src/jarabe/view/palettes.py:103
 msgid "View Source"
 msgstr "स्रोत दृश्य"
 
-#: ../src/jarabe/view/palettes.py:104
+#: ../src/jarabe/view/palettes.py:111
 msgid "Stop"
 msgstr "बन्द गर"
 
-#: ../src/jarabe/view/palettes.py:141
+#: ../src/jarabe/view/palettes.py:154
 msgid "Start new"
 msgstr "नयाँ सुरु गर।"
 
-#: ../src/jarabe/view/palettes.py:223
+#: ../src/jarabe/view/palettes.py:242
 msgctxt "Volume"
 msgid "Remove"
 msgstr "हटाउनुहोस्"
 
-#: ../src/jarabe/view/viewsource.py:267
+#: ../src/jarabe/view/viewsource.py:268
 msgid "Instance Source"
 msgstr "दृष्टांत स्रोत"
 
-#: ../src/jarabe/view/viewsource.py:316
+#: ../src/jarabe/view/viewsource.py:317
 msgid "Source"
 msgstr "स्रोत"
 
-#: ../src/jarabe/view/viewsource.py:378
+#: ../src/jarabe/view/viewsource.py:379
 msgid "Activity Bundle Source"
 msgstr "क्रियाकलाप बन्डलको स्रोत"
 
-#: ../src/jarabe/view/viewsource.py:397
+#: ../src/jarabe/view/viewsource.py:398
 msgid "Sugar Toolkit Source"
 msgstr "सुगर टूलकिटको स्रोत"
 
-#: ../src/jarabe/view/viewsource.py:404
+#: ../src/jarabe/view/viewsource.py:405
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "स्रोत दृश्य : %s"
 
-#: ../src/jarabe/view/viewsource.py:405
+#: ../src/jarabe/view/viewsource.py:406
 #, python-format
 msgid "View source: %r"
 msgstr "स्रोत दृश्य : %r"
