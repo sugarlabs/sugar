@@ -64,6 +64,7 @@ from jarabe import intro
 from jarabe.intro.window import IntroWindow
 from jarabe import frame
 from jarabe.view.service import UIService
+from jarabe import apisocket
 
 
 _metacity_process = None
@@ -131,6 +132,8 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_notification_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
     GLib.idle_add(show_software_updates_cb)
+
+    apisocket.start()
 
 def _check_for_window_manager(screen):
     wm_name = screen.get_window_manager_name()

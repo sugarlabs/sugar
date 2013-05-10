@@ -11,7 +11,8 @@ SUBDIRS = 		\
 sugardir = $(pythondir)/jarabe
 sugar_PYTHON =		\
 	__init__.py	\
-	main.py
+	main.py \
+	apisocket.py
 
 nodist_sugar_PYTHON = config.py
 
