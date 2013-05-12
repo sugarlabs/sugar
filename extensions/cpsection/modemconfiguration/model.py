@@ -17,7 +17,6 @@
 import logging
 
 import dbus
-from gi.repository import Gtk
 from gi.repository import GLib
 
 from jarabe.model import network
