@@ -18,6 +18,7 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import GLib
 
 from sugar3.graphics import style
 
@@ -117,20 +118,22 @@ class ModemConfiguration(SectionView):
         entry.handler_unblock_by_func(self.__entry_changed_cb)
 
     def setup(self):
-        settings = self._model.get_modem_settings()
+        self._model.get_modem_settings(self._got_modem_settings_cb)
+
+    def _got_modem_settings_cb(self, settings):
         self._populate_entry(self._username_entry,
-            settings.get('username', ''))
+                             settings.get('username', ''))
         self._populate_entry(self._number_entry, settings.get('number', ''))
         self._populate_entry(self._apn_entry, settings.get('apn', ''))
         self._populate_entry(self._password_entry,
-            settings.get('password', ''))
+                             settings.get('password', ''))
         self._populate_entry(self._pin_entry, settings.get('pin', ''))
 
     def __entry_changed_cb(self, widget, data=None):
         if self._timeout_sid:
-            GObject.source_remove(self._timeout_sid)
-        self._timeout_sid = GObject.timeout_add(APPLY_TIMEOUT,
-                                                self.__timeout_cb)
+            GLib.source_remove(self._timeout_sid)
+        self._timeout_sid = GLib.timeout_add(APPLY_TIMEOUT,
+                                             self.__timeout_cb)
 
     def __timeout_cb(self):
         self._timeout_sid = 0

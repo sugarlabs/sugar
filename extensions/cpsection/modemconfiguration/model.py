@@ -18,6 +18,7 @@ import logging
 
 import dbus
 from gi.repository import Gtk
+from gi.repository import GLib
 
 from jarabe.model import network
 
@@ -26,11 +27,12 @@ def get_connection():
     return network.find_gsm_connection()
 
 
-def get_modem_settings():
+def get_modem_settings(callback):
     modem_settings = {}
     connection = get_connection()
     if not connection:
-        return modem_settings
+        GLib.idle_add(callback, modem_settings)
+        return
 
     settings = connection.get_settings('gsm')
     for setting in ('username', 'number', 'apn'):
@@ -41,29 +43,24 @@ def get_modem_settings():
 
     def _secrets_cb(secrets):
         secrets_call_done[0] = True
-        if not secrets or not 'gsm' in secrets:
-            return
+        if secrets and 'gsm' in secrets:
+            gsm_secrets = secrets['gsm']
+            modem_settings['password'] = gsm_secrets.get('password', '')
+            modem_settings['pin'] = gsm_secrets.get('pin', '')
 
-        gsm_secrets = secrets['gsm']
-        modem_settings['password'] = gsm_secrets.get('password', '')
-        modem_settings['pin'] = gsm_secrets.get('pin', '')
+        callback(modem_settings)
 
     def _secrets_err_cb(err):
         secrets_call_done[0] = True
         if isinstance(err, dbus.exceptions.DBusException) and \
                 err.get_dbus_name() == network.NM_AGENT_MANAGER_ERR_NO_SECRETS:
-            logging.debug('No GSM secrets present')
+            logging.error('No GSM secrets present')
         else:
             logging.error('Error retrieving GSM secrets: %s', err)
 
-    # must be called asynchronously as this re-enters the GTK main loop
+        callback(modem_settings)
+
     connection.get_secrets('gsm', _secrets_cb, _secrets_err_cb)
-
-    # wait til asynchronous execution completes
-    while not secrets_call_done[0]:
-        Gtk.main_iteration()
-
-    return modem_settings
 
 
 def _set_or_clear(_dict, key, value):
