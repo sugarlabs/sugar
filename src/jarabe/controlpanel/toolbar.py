@@ -33,10 +33,10 @@ class MainToolbar(Gtk.Toolbar):
 
     __gsignals__ = {
         'stop-clicked': (GObject.SignalFlags.RUN_FIRST,
-                            None,
-                            ([])),
+                         None,
+                         ([])),
         'search-changed': (GObject.SignalFlags.RUN_FIRST,
-                          None,
+                           None,
                           ([str])),
     }
 
@@ -95,11 +95,11 @@ class SectionToolbar(Gtk.Toolbar):
 
     __gsignals__ = {
         'cancel-clicked': (GObject.SignalFlags.RUN_FIRST,
-                            None,
-                            ([])),
+                           None,
+                           ([])),
         'accept-clicked': (GObject.SignalFlags.RUN_FIRST,
-                            None,
-                            ([])),
+                           None,
+                           ([])),
     }
 
     def __init__(self):
