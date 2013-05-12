@@ -82,7 +82,8 @@ class ControlPanel(Gtk.Window):
         self._setup_main()
         self._setup_section()
         self._show_main_view()
-        Gdk.Screen.get_default().connect('size-changed', self.__size_changed_cb)
+        Gdk.Screen.get_default().connect(
+            'size-changed', self.__size_changed_cb)
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
@@ -97,7 +98,7 @@ class ControlPanel(Gtk.Window):
 
     def _calculate_max_columns(self):
         self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
-            style.GRID_CELL_SIZE - 3))
+                                         style.GRID_CELL_SIZE - 3))
         offset = style.GRID_CELL_SIZE
         width = Gdk.Screen.width() - offset * 2
         height = Gdk.Screen.height() - offset * 2
@@ -139,7 +140,8 @@ class ControlPanel(Gtk.Window):
                                         Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
         child = self._scrolledwindow.get_child()
-        child.modify_bg(Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
+        child.modify_bg(
+            Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
 
         self._setup_options()
         self._main_toolbar.connect('stop-clicked',
@@ -172,7 +174,7 @@ class ControlPanel(Gtk.Window):
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
             sectionicon.connect('button_press_event',
-                               self.__select_option_cb, option)
+                                self.__select_option_cb, option)
             sectionicon.show()
 
             if option == 'aboutme':
@@ -226,9 +228,9 @@ class ControlPanel(Gtk.Window):
     def _setup_section(self):
         self._section_toolbar = SectionToolbar()
         self._section_toolbar.connect('cancel-clicked',
-                                     self.__cancel_clicked_cb)
+                                      self.__cancel_clicked_cb)
         self._section_toolbar.connect('accept-clicked',
-                                     self.__accept_clicked_cb)
+                                      self.__accept_clicked_cb)
 
     def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
@@ -322,7 +324,8 @@ class ControlPanel(Gtk.Window):
             alert.props.msg = _('Changes require restart')
 
             icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel changes'), icon)
+            alert.add_button(Gtk.ResponseType.CANCEL,
+                             _('Cancel changes'), icon)
             icon.show()
 
             if self._current_option != 'aboutme':
