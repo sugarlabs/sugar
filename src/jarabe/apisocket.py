@@ -17,6 +17,7 @@
 
 import json
 import os
+import struct
 import time
 
 import dbus
@@ -78,6 +79,50 @@ class DatastoreAPI(API):
 
         return file_path, file_object
 
+    def load(self, request):
+        def reply_handler(file_name):
+            file_object = open(file_name)
+            info["file_object"] = file_object
+
+            if "requested_size" in info:
+                data = file_object.read(info["requested_size"])
+                self._client.send_binary(data)
+
+            if "stream_closed" in info:
+                complete()
+
+        def error_handler(error):
+            self._client.send_error(request, error)
+
+        def on_data(data):
+            size = struct.unpack("ii", data)[1]
+            if "file_object" in info:
+                self._client.send_binary(info["file_object"].read(size))
+            else:
+                info["requested_size"] = size
+
+        def on_close():
+            if "file_object" in info:
+                complete()
+            else:
+                info["stream_closed"] = True
+
+        def complete():
+            info["file_object"].close()
+            self._client.send_result(request, None)
+
+        info = {}
+
+        uid, stream_id = request["params"]
+
+        self._data_store.get_filename(uid,
+                                      reply_handler=reply_handler,
+                                      error_handler=error_handler)
+
+        stream_monitor = self._client.stream_monitors[stream_id]
+        stream_monitor.on_data = on_data
+        stream_monitor.on_close = on_close
+
     def update(self, request):
         def reply_handler():
             self._client.send_result(request, None)
@@ -86,7 +131,7 @@ class DatastoreAPI(API):
             self._client.send_error(request, error)
 
         def on_data(data):
-            file_object.write(data)
+            file_object.write(data[1:])
 
         def on_close():
             file_object.close()
@@ -148,6 +193,9 @@ class APIClient:
 
         self._session.send_message(json.dumps(response))
 
+    def send_binary(self, data):
+        self._session.send_message(data, binary=True)
+
 
 class APIServer:
     def __init__(self):
@@ -192,7 +240,7 @@ class APIServer:
         if message.message_type == Message.TYPE_BINARY:
             stream_id = ord(message.data[0])
             stream_monitor = client.stream_monitors[stream_id]
-            stream_monitor.on_data(message.data[1:])
+            stream_monitor.on_data(message.data)
             return
 
         request = json.loads(message.data)
