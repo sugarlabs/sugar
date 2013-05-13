@@ -66,7 +66,7 @@ class HomeWindow(Gtk.Window):
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK|
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK |
                         Gdk.EventMask.BUTTON_PRESS_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
@@ -98,7 +98,7 @@ class HomeWindow(Gtk.Window):
                                      self._transition_completed_cb)
 
         shell.get_model().zoom_level_changed.connect(
-                                     self.__zoom_level_changed_cb)
+            self.__zoom_level_changed_cb)
 
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')
@@ -118,7 +118,8 @@ class HomeWindow(Gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-        fully_obscured = (event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
+        fully_obscured = (
+            event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
         if self._fully_obscured == fully_obscured:
             return
         self._fully_obscured = fully_obscured
