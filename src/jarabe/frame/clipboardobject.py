@@ -64,8 +64,9 @@ class ClipboardObject(object):
         if icons is not None:
             icon_theme = Gtk.IconTheme.get_default()
             for icon_name in icons.props.names:
-                icon_info = icon_theme.lookup_icon(icon_name,
-                                                Gtk.IconSize.LARGE_TOOLBAR, 0)
+                icon_info = (
+                    icon_theme.lookup_icon(icon_name,
+                                           Gtk.IconSize.LARGE_TOOLBAR, 0))
                 if icon_info is not None:
                     icon_info.free()
                     return icon_name
