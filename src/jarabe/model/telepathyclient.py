@@ -19,11 +19,11 @@ import logging
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import CLIENT, \
-                                 CHANNEL, \
-                                 CHANNEL_TYPE_TEXT, \
-                                 CLIENT_APPROVER, \
-                                 CLIENT_HANDLER, \
-                                 CLIENT_INTERFACE_REQUESTS
+    CHANNEL, \
+    CHANNEL_TYPE_TEXT, \
+    CLIENT_APPROVER, \
+    CLIENT_HANDLER, \
+    CLIENT_INTERFACE_REQUESTS
 from telepathy.server import DBusProperties
 
 from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
@@ -52,13 +52,13 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
 
         self._implement_property_get(CLIENT, {
             'Interfaces': lambda: list(self._interfaces),
-          })
+        })
         self._implement_property_get(CLIENT_HANDLER, {
             'HandlerChannelFilter': self.__get_filters_handler_cb,
-          })
+        })
         self._implement_property_get(CLIENT_APPROVER, {
             'ApproverChannelFilter': self.__get_filters_approver_cb,
-          })
+        })
 
         self.got_channel = dispatch.Signal()
         self.got_dispatch_operation = dispatch.Signal()
@@ -71,14 +71,14 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         activity_invitation = {
             CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_ROOM,
-            }
+        }
         filter_dict = dbus.Dictionary(activity_invitation, signature='sv')
         filters = dbus.Array([filter_dict], signature='a{sv}')
 
         text_invitation = {
             CHANNEL + '.ChannelType': CHANNEL_TYPE_TEXT,
             CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
-            }
+        }
         filter_dict = dbus.Dictionary(text_invitation, signature='sv')
         filters.append(filter_dict)
 
@@ -89,7 +89,7 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
     @dbus.service.method(dbus_interface=CLIENT_HANDLER,
                          in_signature='ooa(oa{sv})aota{sv}', out_signature='')
     def HandleChannels(self, account, connection, channels, requests_satisfied,
-                        user_action_time, handler_info):
+                       user_action_time, handler_info):
         logging.debug('HandleChannels\n%r\n%r\n%r\n%r\n%r\n%r\n', account,
                       connection, channels, requests_satisfied,
                       user_action_time, handler_info)
@@ -112,9 +112,11 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
             logging.debug('AddDispatchOperation\n%r\n%r\n%r', channels,
                           dispatch_operation_path, properties)
 
-            self.got_dispatch_operation.send(self, channels=channels,
-                    dispatch_operation_path=dispatch_operation_path,
-                    properties=properties)
+            self.got_dispatch_operation.send(
+                self,
+                channels=channels,
+                dispatch_operation_path=dispatch_operation_path,
+                properties=properties)
         except Exception, e:
             logging.exception(e)
 
