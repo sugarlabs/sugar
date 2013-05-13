@@ -92,6 +92,6 @@ class SessionManager(session.SessionManager):
 def get_session_manager():
     global _session_manager
 
-    if _session_manager == None:
+    if _session_manager is None:
         _session_manager = SessionManager()
     return _session_manager
