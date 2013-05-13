@@ -174,6 +174,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         if column == self._icon_column:
             self._start_activity(path)
 
+
 class ListModel(Gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
 
@@ -242,7 +243,7 @@ class ListModel(Gtk.TreeModelSort):
             tags = ', '.join(tag_list)
             title = '<b>%s</b>\n' \
                     '<span style="italic" weight="light">%s</span>' % \
-                            (activity_info.get_name(), tags)
+                (activity_info.get_name(), tags)
 
         self._model.append([activity_info.get_bundle_id(),
                             favorite,
@@ -340,8 +341,8 @@ class ClearMessageBox(Gtk.EventBox):
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
-        label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
-                color, GLib.markup_escape_text(message)))
+        label.set_markup('<span weight="bold" color="%s">%s</span>' % (
+            color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
         label.show()
 
@@ -461,8 +462,8 @@ class ActivitiesList(Gtk.VBox):
         alert = Alert()
         alert.props.title = _('Confirm erase')
         alert.props.msg = \
-                _('Confirm erase: Do you want to permanently erase %s?') \
-                % activity_info.get_name()
+            _('Confirm erase: Do you want to permanently erase %s?') \
+            % activity_info.get_name()
 
         cancel_icon = Icon(icon_name='dialog-cancel')
         alert.add_button(Gtk.ResponseType.CANCEL, _('Keep'), cancel_icon)
@@ -471,7 +472,7 @@ class ActivitiesList(Gtk.VBox):
         alert.add_button(Gtk.ResponseType.OK, _('Erase'), erase_icon)
 
         alert.connect('response', self.__erase_confirmation_dialog_response_cb,
-                bundle_id)
+                      bundle_id)
 
         self.add_alert(alert)
 
@@ -504,7 +505,7 @@ class ActivityListPalette(ActivityPalette):
 
         self._favorite_item = PaletteMenuItem()
         self._favorite_icon = Icon(icon_name='emblem-favorite',
-                icon_size=Gtk.IconSize.MENU)
+                                   icon_size=Gtk.IconSize.MENU)
         self._favorite_item.set_image(self._favorite_icon)
         self._favorite_icon.show()
         self._favorite_item.connect('activate',
@@ -516,8 +517,10 @@ class ActivityListPalette(ActivityPalette):
             self._add_erase_option(registry, activity_info)
 
         registry = bundleregistry.get_registry()
-        self._activity_changed_sid = registry.connect('bundle_changed',
-                self.__activity_changed_cb)
+        self._activity_changed_sid = \
+            registry.connect('bundle_changed',
+                             self.__activity_changed_cb)
+
         self._update_favorite_item()
 
         self.menu_box.connect('destroy', self.__destroy_cb)
@@ -540,7 +543,7 @@ class ActivityListPalette(ActivityPalette):
         if self._favorite:
             self._favorite_item.set_label(_('Remove favorite'))
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                         style.COLOR_TRANSPARENT.get_svg()))
+                                          style.COLOR_TRANSPARENT.get_svg()))
         else:
             self._favorite_item.set_label(_('Make favorite'))
             client = GConf.Client.get_default()
@@ -556,7 +559,7 @@ class ActivityListPalette(ActivityPalette):
 
     def __activity_changed_cb(self, activity_registry, activity_info):
         if activity_info.get_bundle_id() == self._bundle_id and \
-               activity_info.get_activity_version() == self._version:
+                activity_info.get_activity_version() == self._version:
             registry = bundleregistry.get_registry()
             self._favorite = registry.is_bundle_favorite(self._bundle_id,
                                                          self._version)
