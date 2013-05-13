@@ -58,10 +58,12 @@ _logger = logging.getLogger('FavoritesView')
 _ICON_DND_TARGET = ('activity-icon', Gtk.TargetFlags.SAME_WIDGET, 0)
 
 LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
-        #favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
-        #favoriteslayout.TriangleLayout.key: favoriteslayout.TriangleLayout,
-        #favoriteslayout.SunflowerLayout.key: favoriteslayout.SunflowerLayout,
-        favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
+              # favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
+              # favoriteslayout.TriangleLayout.key:
+              # favoriteslayout.TriangleLayout,
+              # favoriteslayout.SunflowerLayout.key:
+              # favoriteslayout.SunflowerLayout,
+              favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
@@ -300,19 +302,19 @@ class FavoritesView(ViewContainer):
             return
         icon = ActivityIcon(activity_info)
         icon.props.pixel_size = style.STANDARD_ICON_SIZE
-        #icon.set_resume_mode(self._resume_mode)
+        # icon.set_resume_mode(self._resume_mode)
         self.add(icon)
         icon.show()
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                activity_info.get_activity_version()):
+                                       activity_info.get_activity_version()):
             self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
         icon = self._find_activity_icon(activity_info.get_bundle_id(),
-                activity_info.get_activity_version())
+                                        activity_info.get_activity_version())
         if icon is not None:
             self.remove(icon)
 
@@ -327,7 +329,7 @@ class FavoritesView(ViewContainer):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
         icon = self._find_activity_icon(activity_info.get_bundle_id(),
-                activity_info.get_activity_version())
+                                        activity_info.get_activity_version())
         if icon is not None:
             self.remove(icon)
 
@@ -356,7 +358,7 @@ class FavoritesView(ViewContainer):
             alert.props.msg = '%s' % e
         else:
             alert.props.title = _('Registration Successful')
-            alert.props.msg = _('You are now registered ' \
+            alert.props.msg = _('You are now registered '
                                 'with your school server.')
             self._owner_icon.set_registered()
 
