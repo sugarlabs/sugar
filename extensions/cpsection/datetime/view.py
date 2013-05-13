@@ -41,7 +41,7 @@ class TimeZone(SectionView):
 
         self._entry = iconentry.IconEntry()
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                 'entry-search')
+                                       'entry-search')
         self._entry.add_clear_button()
         self.pack_start(self._entry, False, False, 0)
         self._entry.show()
@@ -96,8 +96,8 @@ class TimeZone(SectionView):
                 break
 
         self.needs_restart = False
-        self._cursor_change_handler = self._treeview.connect( \
-                'cursor-changed', self.__zone_changed_cd)
+        self._cursor_change_handler = self._treeview.connect(
+            'cursor-changed', self.__zone_changed_cd)
 
     def undo(self):
         self._treeview.disconnect(self._cursor_change_handler)
