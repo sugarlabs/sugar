@@ -94,15 +94,15 @@ class Language(SectionView):
 
         label = Gtk.Label(label=str(self._selected_lang_count))
         label.modify_fg(Gtk.StateType.NORMAL,
-            style.COLOR_SELECTION_GREY.get_gdk_color())
+                        style.COLOR_SELECTION_GREY.get_gdk_color())
         self._labels.append(label)
         self._attach_to_table(label, 0, 1, padding=1)
         label.show()
 
         store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
         for language, country, code in self._available_locales:
-            description = '%s (%s)' % (_translate_language(language), \
-                _translate_country(country))
+            description = '%s (%s)' % (_translate_language(language),
+                                       _translate_country(country))
             store.append([code, description])
 
         combobox = Gtk.ComboBox(model=store)
@@ -124,7 +124,8 @@ class Language(SectionView):
 
         self._stores.append(store)
         self._comboboxes.append(combobox)
-        self._attach_to_table(combobox, 1, 2, yoptions=Gtk.AttachOptions.SHRINK)
+        self._attach_to_table(
+            combobox, 1, 2, yoptions=Gtk.AttachOptions.SHRINK)
 
         add_remove_box = self._create_add_remove_box()
         self._add_remove_boxes.append(add_remove_box)
@@ -144,12 +145,15 @@ class Language(SectionView):
 
         combobox.show()
 
-    def _attach_to_table(self, widget, row, column, padding=20, \
-            yoptions=Gtk.AttachOptions.FILL):
-        self._table.attach(widget, row, column, \
-            self._selected_lang_count - 1, self._selected_lang_count, \
-            xoptions=Gtk.AttachOptions.FILL, yoptions=yoptions, xpadding=padding, \
-                ypadding=padding)
+    def _attach_to_table(self, widget, row, column, padding=20,
+                         yoptions=Gtk.AttachOptions.FILL):
+        self._table.attach(widget, row, column,
+                           self._selected_lang_count -
+                           1, self._selected_lang_count,
+                           xoptions=Gtk.AttachOptions.FILL,
+                           yoptions=yoptions,
+                           xpadding=padding,
+                           ypadding=padding)
 
     def _delete_last_row(self):
         """Deletes the last row of the table"""
@@ -198,13 +202,13 @@ class Language(SectionView):
         add_button = Gtk.Button()
         add_button.set_image(add_icon)
         add_button.connect('clicked',
-                            self.__add_button_clicked_cb)
+                           self.__add_button_clicked_cb)
 
         remove_icon = Icon(icon_name='list-remove')
         remove_button = Gtk.Button()
         remove_button.set_image(remove_icon)
         remove_button.connect('clicked',
-                            self.__remove_button_clicked_cb)
+                              self.__remove_button_clicked_cb)
 
         add_remove_box = Gtk.HButtonBox()
         add_remove_box.set_layout(Gtk.ButtonBoxStyle.START)
@@ -230,7 +234,7 @@ class Language(SectionView):
 
         self._changed = (selected_langs != self._selected_locales)
 
-        if self._changed == False:
+        if self._changed is False:
             # The user reverted back to the original config
             self.needs_restart = False
             if 'lang' in self.restart_alerts:
@@ -244,8 +248,8 @@ class Language(SectionView):
         if self._lang_sid:
             GObject.source_remove(self._lang_sid)
         self._lang_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
-                                            self.__lang_timeout_cb,
-                                            selected_langs)
+                                             self.__lang_timeout_cb,
+                                             selected_langs)
 
     def _get_selected_langs(self):
         new_codes = []
