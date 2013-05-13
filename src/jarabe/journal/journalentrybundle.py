@@ -70,7 +70,7 @@ class JournalEntryBundle(Bundle):
         metadata_path = os.path.join(bundle_dir, '_metadata.json')
         if not os.path.exists(metadata_path):
             raise MalformedBundleException(
-                    'Bundle must contain the file "_metadata.json"')
+                'Bundle must contain the file "_metadata.json"')
         f = open(metadata_path, 'r')
         try:
             json_data = f.read()
