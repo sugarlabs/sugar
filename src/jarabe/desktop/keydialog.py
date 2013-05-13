@@ -92,7 +92,8 @@ class KeyDialog(Gtk.Dialog):
 
         display_name = network.ssid_to_display_name(ssid)
         label = Gtk.Label(label=_("A wireless encryption key is required for\n"
-                            " the wireless network '%s'.") % (display_name, ))
+                                  " the wireless network '%s'.")
+                          % (display_name, ))
         self.vbox.pack_start(label, True, True, 0)
 
         button = Gtk.Button()
