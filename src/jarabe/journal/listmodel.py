@@ -109,7 +109,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         return ListModel._COLUMN_TYPES[index]
 
     def do_iter_n_children(self, iterator):
-        if iterator == None:
+        if iterator is None:
             return self._result_set.length
         else:
             return 0
