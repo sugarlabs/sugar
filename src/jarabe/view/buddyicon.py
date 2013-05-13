@@ -69,5 +69,5 @@ class BuddyIcon(CanvasIcon):
         normalized_name = normalize_string(
             self._buddy.get_nick().decode('utf-8'))
         self._filtered = (normalized_name.find(query) == -1) \
-                and not self._buddy.is_owner()
+            and not self._buddy.is_owner()
         self._update_color()
