@@ -6,6 +6,7 @@ from sugar.bundle.activitybundle import ActivityBundle
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
+
 def cmd_help():
     print 'Usage: sugar-install-bundle [ bundlename ] \n\n\
     Install an activity bundle (.xo). \n'
