@@ -94,8 +94,9 @@ class _TimeoutHTTP(httplib.HTTP):
             port = None
         # FIXME: Depending on undocumented internals that can break between
         # Python releases. Please have a look at SL #2350
-        self._setup(self._connection_class(host,
-                 port, strict, timeout=_REGISTER_TIMEOUT))
+        self._setup(
+            self._connection_class(host,
+                                   port, strict, timeout=_REGISTER_TIMEOUT))
 
 
 class _TimeoutTransport(xmlrpclib.Transport):
