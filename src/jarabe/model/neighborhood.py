@@ -23,23 +23,23 @@ from gi.repository import GConf
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import ACCOUNT, \
-                                 ACCOUNT_MANAGER, \
-                                 CHANNEL, \
-                                 CHANNEL_INTERFACE_GROUP, \
-                                 CHANNEL_TYPE_CONTACT_LIST, \
-                                 CHANNEL_TYPE_FILE_TRANSFER, \
-                                 CLIENT, \
-                                 CONNECTION, \
-                                 CONNECTION_INTERFACE_ALIASING, \
-                                 CONNECTION_INTERFACE_CONTACTS, \
-                                 CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
-                                 CONNECTION_INTERFACE_REQUESTS, \
-                                 CONNECTION_INTERFACE_SIMPLE_PRESENCE
+    ACCOUNT_MANAGER, \
+    CHANNEL, \
+    CHANNEL_INTERFACE_GROUP, \
+    CHANNEL_TYPE_CONTACT_LIST, \
+    CHANNEL_TYPE_FILE_TRANSFER, \
+    CLIENT, \
+    CONNECTION, \
+    CONNECTION_INTERFACE_ALIASING, \
+    CONNECTION_INTERFACE_CONTACTS, \
+    CONNECTION_INTERFACE_CONTACT_CAPABILITIES, \
+    CONNECTION_INTERFACE_REQUESTS, \
+    CONNECTION_INTERFACE_SIMPLE_PRESENCE
 from telepathy.constants import HANDLE_TYPE_CONTACT, \
-                                HANDLE_TYPE_LIST, \
-                                CONNECTION_PRESENCE_TYPE_OFFLINE, \
-                                CONNECTION_STATUS_CONNECTED, \
-                                CONNECTION_STATUS_DISCONNECTED
+    HANDLE_TYPE_LIST, \
+    CONNECTION_PRESENCE_TYPE_OFFLINE, \
+    CONNECTION_STATUS_CONNECTED, \
+    CONNECTION_STATUS_DISCONNECTED
 from telepathy.client import Connection, Channel
 
 from sugar3.graphics.xocolor import XoColor
@@ -59,7 +59,7 @@ SUGAR_CLIENT_PATH = '/org/freedesktop/Telepathy/Client/Sugar'
 
 CONNECTION_INTERFACE_BUDDY_INFO = 'org.laptop.Telepathy.BuddyInfo'
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
-        'org.laptop.Telepathy.ActivityProperties'
+    'org.laptop.Telepathy.ActivityProperties'
 
 _QUERY_DBUS_TIMEOUT = 200
 """
@@ -266,10 +266,11 @@ class _Account(GObject.GObject):
                                      self.__status_changed_cb)
 
         connection[PROPERTIES_IFACE].Get(CONNECTION,
-                'Status',
-                reply_handler=self.__get_status_cb,
-                error_handler=partial(self.__error_handler_cb,
-                                      'Connection.GetStatus'))
+                                         'Status',
+                                         reply_handler=self.__get_status_cb,
+                                         error_handler=partial(
+                                             self.__error_handler_cb,
+                                             'Connection.GetStatus'))
 
     def __get_status_cb(self, status):
         logging.debug('_Account.__get_status_cb %r %r',
@@ -282,11 +283,15 @@ class _Account(GObject.GObject):
 
     def _update_status(self, status):
         if status == CONNECTION_STATUS_CONNECTED:
-            self._connection[PROPERTIES_IFACE].Get(CONNECTION,
-                    'SelfHandle',
-                    reply_handler=self.__get_self_handle_cb,
-                    error_handler=partial(self.__error_handler_cb,
-                                          'Connection.GetSelfHandle'))
+            self._connection[PROPERTIES_IFACE].Get(
+                CONNECTION,
+                'SelfHandle',
+                reply_handler=
+                self.__get_self_handle_cb,
+                error_handler=
+                partial(
+                    self.__error_handler_cb,
+                    'Connection.GetSelfHandle'))
             self.emit('connected')
         else:
             for contact_handle, contact_id in self._buddy_handles.items():
@@ -314,8 +319,8 @@ class _Account(GObject.GObject):
             connection = self._connection[interface]
             client_name = CLIENT + '.Sugar.FileTransfer'
             file_transfer_channel_class = {
-                    CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
-                    CHANNEL + '.TargetHandleType': HANDLE_TYPE_CONTACT}
+                CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
+                CHANNEL + '.TargetHandleType': HANDLE_TYPE_CONTACT}
             capabilities = []
             connection.UpdateCapabilities(
                 [(client_name, [file_transfer_channel_class], capabilities)],
@@ -351,33 +356,35 @@ class _Account(GObject.GObject):
 
         if CONNECTION_INTERFACE_ACTIVITY_PROPERTIES in self._connection:
             connection = self._connection[
-                    CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+                CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
             connection.connect_to_signal(
-                    'ActivityPropertiesChanged',
-                    self.__activity_properties_changed_cb)
+                'ActivityPropertiesChanged',
+                self.__activity_properties_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC activity '
                             'properties', self._connection.object_path)
 
         properties = {
-                CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
-                CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
-                CHANNEL + '.TargetID': 'subscribe',
-                }
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_CONTACT_LIST,
+            CHANNEL + '.TargetHandleType': HANDLE_TYPE_LIST,
+            CHANNEL + '.TargetID': 'subscribe',
+        }
         properties = dbus.Dictionary(properties, signature='sv')
         connection = self._connection[CONNECTION_INTERFACE_REQUESTS]
         is_ours, channel_path, properties = \
-                connection.EnsureChannel(properties)
+            connection.EnsureChannel(properties)
 
         channel = Channel(self._connection.service_name, channel_path)
         channel[CHANNEL_INTERFACE_GROUP].connect_to_signal(
-                  'MembersChanged', self.__members_changed_cb)
+            'MembersChanged', self.__members_changed_cb)
 
-        channel[PROPERTIES_IFACE].Get(CHANNEL_INTERFACE_GROUP,
-                'Members',
-                reply_handler=self.__get_members_ready_cb,
-                error_handler=partial(self.__error_handler_cb,
-                                      'Connection.GetMembers'))
+        channel[PROPERTIES_IFACE].Get(
+            CHANNEL_INTERFACE_GROUP,
+            'Members',
+            reply_handler=self.__get_members_ready_cb,
+            error_handler=partial(
+                self.__error_handler_cb,
+                'Connection.GetMembers'))
 
     def __active_activity_changed_cb(self, model, home_activity):
         room_handle = 0
@@ -478,12 +485,14 @@ class _Account(GObject.GObject):
                 self.emit('activity-added', room_handle, activity_id)
 
                 connection = self._connection[
-                        CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
+                    CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
                 connection.GetProperties(room_handle,
-                     reply_handler=partial(self.__get_properties_cb,
-                                           room_handle),
-                     error_handler=partial(self.__error_handler_cb,
-                                           'ActivityProperties.GetProperties'))
+                                         reply_handler=partial(
+                                         self.__get_properties_cb,
+                                         room_handle),
+                                         error_handler=partial(
+                                         self.__error_handler_cb,
+                                         'ActivityProperties.GetProperties'))
 
                 if buddy_handle != self._self_handle:
                     # Sometimes we'll get CurrentActivityChanged before we get
@@ -509,7 +518,7 @@ class _Account(GObject.GObject):
                               activity_id)
 
         current_activity_ids = \
-                [activity_id for activity_id, room_handle in activities]
+            [activity_id for activity_id, room_handle in activities]
         for activity_id in self._activities_per_buddy[buddy_handle].copy():
             if not activity_id in current_activity_ids:
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
@@ -580,10 +589,10 @@ class _Account(GObject.GObject):
         logging.debug('_Account._add_buddy_handles %r', handles)
         interfaces = [CONNECTION, CONNECTION_INTERFACE_ALIASING]
         self._connection[CONNECTION_INTERFACE_CONTACTS].GetContactAttributes(
-                handles, interfaces, False,
-                reply_handler=self.__get_contact_attributes_cb,
-                error_handler=partial(self.__error_handler_cb,
-                                      'Contacts.GetContactAttributes'))
+            handles, interfaces, False,
+            reply_handler=self.__get_contact_attributes_cb,
+            error_handler=partial(self.__error_handler_cb,
+                                  'Contacts.GetContactAttributes'))
 
     def __got_buddy_info_cb(self, handle, nick, properties):
         logging.debug('_Account.__got_buddy_info_cb %r', handle)
@@ -597,7 +606,7 @@ class _Account(GObject.GObject):
             nick = attributes[handle][CONNECTION_INTERFACE_ALIASING + '/alias']
 
             if handle == self._self_handle:
-                logging.debug('_Account.__get_contact_attributes_cb,' \
+                logging.debug('_Account.__get_contact_attributes_cb,'
                               ' do not add ourself %r', handle)
                 continue
 
@@ -616,7 +625,7 @@ class _Account(GObject.GObject):
 
                 if CONNECTION_INTERFACE_BUDDY_INFO in self._connection:
                     connection = \
-                            self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
+                        self._connection[CONNECTION_INTERFACE_BUDDY_INFO]
 
                     connection.GetProperties(
                         handle,
@@ -698,8 +707,10 @@ class Neighborhood(GObject.GObject):
                        GConf.ClientPreloadType.PRELOAD_NONE)
         client.notify_add('/desktop/sugar/collaboration/jabber_server',
                           self.__jabber_server_changed_cb, None)
-        client.add_dir('/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb, None)
+        client.add_dir(
+            '/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
+        client.notify_add(
+            '/desktop/sugar/user/nick', self.__nick_changed_cb, None)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -711,7 +722,7 @@ class Neighborhood(GObject.GObject):
 
     def __got_accounts_cb(self, account_paths):
         self._link_local_account = \
-                self._ensure_link_local_account(account_paths)
+            self._ensure_link_local_account(account_paths)
         self._connect_to_account(self._link_local_account)
 
         self._server_account = self._ensure_server_account(account_paths)
@@ -770,18 +781,18 @@ class Neighborhood(GObject.GObject):
         nick = client.get_string('/desktop/sugar/user/nick')
 
         params = {
-                'nickname': nick,
-                'first-name': '',
-                'last-name': '',
-                'jid': self._get_jabber_account_id(),
-                'published-name': self._get_published_name(),
-                }
+            'nickname': nick,
+            'first-name': '',
+            'last-name': '',
+            'jid': self._get_jabber_account_id(),
+            'published-name': self._get_published_name(),
+        }
 
         properties = {
-                ACCOUNT + '.Enabled': True,
-                ACCOUNT + '.Nickname': nick,
-                ACCOUNT + '.ConnectAutomatically': True,
-                }
+            ACCOUNT + '.Enabled': True,
+            ACCOUNT + '.Nickname': nick,
+            ACCOUNT + '.ConnectAutomatically': True,
+        }
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -808,22 +819,22 @@ class Neighborhood(GObject.GObject):
         key_hash = get_profile().privkey_hash
 
         params = {
-                'account': self._get_jabber_account_id(),
-                'password': key_hash,
-                'server': server,
-                'resource': 'sugar',
-                'require-encryption': True,
-                'ignore-ssl-errors': True,
-                'register': True,
-                'old-ssl': True,
-                'port': dbus.UInt32(5223),
-                }
+            'account': self._get_jabber_account_id(),
+            'password': key_hash,
+            'server': server,
+            'resource': 'sugar',
+            'require-encryption': True,
+            'ignore-ssl-errors': True,
+            'register': True,
+            'old-ssl': True,
+            'port': dbus.UInt32(5223),
+        }
 
         properties = {
-                ACCOUNT + '.Enabled': True,
-                ACCOUNT + '.Nickname': nick,
-                ACCOUNT + '.ConnectAutomatically': True,
-                }
+            ACCOUNT + '.Enabled': True,
+            ACCOUNT + '.Nickname': nick,
+            ACCOUNT + '.ConnectAutomatically': True,
+        }
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -902,10 +913,10 @@ class Neighborhood(GObject.GObject):
             return
 
         buddy = BuddyModel(
-                nick=nick,
-                account=account.object_path,
-                contact_id=contact_id,
-                handle=handle)
+            nick=nick,
+            account=account.object_path,
+            contact_id=contact_id,
+            handle=handle)
         self._buddies[contact_id] = buddy
 
     def __buddy_updated_cb(self, account, contact_id, properties):
