@@ -28,6 +28,7 @@ os.environ["SUGAR_ACTIVITIES_DEFAULTS"] = \
 os.environ["SUGAR_MIME_DEFAULTS"] = \
     os.path.join(base_dir, "data", "mime.defaults")
 
+
 class MockActivityInfo:
     def get_bundle_id(self):
         return "mock"
@@ -50,6 +51,7 @@ class MockActivityInfo:
     def is_user_activity(self):
         return True
 
+
 def _create_activities_palette():
     from gi.repository import Gtk
     from jarabe.desktop.activitieslist import ActivityListPalette
@@ -58,6 +60,7 @@ def _create_activities_palette():
     palette.popup()
 
     Gtk.main()
+
 
 class TestActivitiesList(unittest.TestCase):
     def _check_activities_palette(self):
