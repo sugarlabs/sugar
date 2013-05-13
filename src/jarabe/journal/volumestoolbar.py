@@ -74,7 +74,7 @@ def _convert_entries(root):
                                                 'index'))
     except xapian.DatabaseError:
         logging.exception('Convert DS-0 Journal entries: error reading db: %s',
-                      os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
+                          os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
         return
 
     metadata_dir_path = os.path.join(root, model.JOURNAL_METADATA_DIR)
@@ -196,7 +196,8 @@ class VolumesToolbar(Gtk.Toolbar):
         volume_monitor = Gio.VolumeMonitor.get()
         self._mount_added_hid = volume_monitor.connect('mount-added',
                                                        self.__mount_added_cb)
-        self._mount_removed_hid = volume_monitor.connect('mount-removed',
+        self._mount_removed_hid = volume_monitor.connect(
+            'mount-removed',
             self.__mount_removed_cb)
 
         for mount in volume_monitor.get_mounts():
@@ -336,8 +337,8 @@ class VolumeButton(BaseButton):
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
-        #palette.props.invoker = FrameWidgetInvoker(self)
-        #palette.set_group_id('frame')
+        # palette.props.invoker = FrameWidgetInvoker(self)
+        # palette.set_group_id('frame')
         return palette
 
 
@@ -383,7 +384,7 @@ class JournalButtonPalette(Palette):
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
-                {'free_space': free_space / (1024 * 1024)}
+            {'free_space': free_space / (1024 * 1024)}
 
 
 class DocumentsButton(BaseButton):
