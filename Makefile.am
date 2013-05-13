@@ -18,6 +18,7 @@ DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
 check: test
 	pyflakes $(top_srcdir)
+	pep8 $(top_srcdir)
 
 test:
 	mkdir -p $(TESTS_TMPDIR)
