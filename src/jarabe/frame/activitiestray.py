@@ -66,8 +66,8 @@ class ActivityButton(RadioToolButton):
         self._icon = PulsingIcon()
         self._icon.props.base_color = home_activity.get_icon_color()
         self._icon.props.pulse_color = \
-                XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                   style.COLOR_TOOLBAR_GREY.get_svg()))
+            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                               style.COLOR_TOOLBAR_GREY.get_svg()))
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
@@ -77,8 +77,8 @@ class ActivityButton(RadioToolButton):
 
         if home_activity.props.launch_status == shell.Activity.LAUNCHING:
             self._icon.props.pulsing = True
-            self._notify_launch_hid = home_activity.connect( \
-                    'notify::launch-status', self.__notify_launch_status_cb)
+            self._notify_launch_hid = home_activity.connect(
+                'notify::launch-status', self.__notify_launch_status_cb)
         elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
             self._on_failed_launch()
 
@@ -349,7 +349,7 @@ class BaseTransferButton(ToolButton):
 
         self.notif_icon = NotificationIcon()
         self.notif_icon.connect('button-release-event',
-                                 self.__button_release_event_cb)
+                                self.__button_release_event_cb)
 
         self.connect('clicked', self.__button_clicked_cb)
 
@@ -369,7 +369,7 @@ class BaseTransferButton(ToolButton):
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('_update state: %r %r', file_transfer.props.state,
-                file_transfer.reason_last_change)
+                      file_transfer.reason_last_change)
         if file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
             if file_transfer.reason_last_change == \
                filetransfer.FT_REASON_LOCAL_STOPPED:
@@ -423,7 +423,7 @@ class IncomingTransferButton(BaseTransferButton):
             self._ds_object.metadata['buddies'] = ''
             self._ds_object.metadata['preview'] = ''
             self._ds_object.metadata['icon-color'] = \
-                    file_transfer.buddy.props.color.to_string()
+                file_transfer.buddy.props.color.to_string()
             self._ds_object.metadata['mime_type'] = file_transfer.mime_type
         elif file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
             logging.debug('__notify_state_cb COMPLETED')
@@ -442,7 +442,7 @@ class IncomingTransferButton(BaseTransferButton):
 
     def __notify_transferred_bytes_cb(self, file_transfer, pspec):
         progress = file_transfer.props.transferred_bytes /      \
-                   file_transfer.file_size
+            file_transfer.file_size
         self._ds_object.metadata['progress'] = str(progress * 100)
         datastore.write(self._ds_object, update_mtime=False)
 
@@ -517,13 +517,13 @@ class BaseTransferPalette(Palette):
     def __popup_cb(self, palette):
         self.update_progress()
         self._notify_transferred_bytes_handler = \
-                self.file_transfer.connect('notify::transferred_bytes',
-                                            self.__notify_transferred_bytes_cb)
+            self.file_transfer.connect('notify::transferred_bytes',
+                                       self.__notify_transferred_bytes_cb)
 
     def __popdown_cb(self, palette):
         if self._notify_transferred_bytes_handler is not None:
             self.file_transfer.disconnect(
-                    self._notify_transferred_bytes_handler)
+                self._notify_transferred_bytes_handler)
             self._notify_transferred_bytes_handler = None
 
     def __notify_transferred_bytes_cb(self, file_transfer, pspec):
@@ -545,12 +545,12 @@ class BaseTransferPalette(Palette):
             return
 
         self.progress_bar.props.fraction = \
-                self.file_transfer.props.transferred_bytes / \
-                float(self.file_transfer.file_size)
+            self.file_transfer.props.transferred_bytes / \
+            float(self.file_transfer.file_size)
         logging.debug('update_progress: %r', self.progress_bar.props.fraction)
 
         transferred = self._format_size(
-                self.file_transfer.props.transferred_bytes)
+            self.file_transfer.props.transferred_bytes)
         total = self._format_size(self.file_transfer.file_size)
         # TRANS: file transfer, bytes transferred, e.g. 128 of 1024
         self.progress_label.props.label = _('%s of %s') % (transferred, total)
@@ -683,13 +683,15 @@ class IncomingTransferPalette(BaseTransferPalette):
                 label.show()
 
     def __accept_activate_cb(self, menu_item):
-        #TODO: figure out the best place to get rid of that temp file
+        # TODO: figure out the best place to get rid of that temp file
         extension = mime.get_primary_extension(self.file_transfer.mime_type)
         if extension is None:
             extension = '.bin'
         fd, file_path = tempfile.mkstemp(suffix=extension,
-                prefix=self._sanitize(self.file_transfer.title),
-                dir=os.path.join(env.get_profile_path(), 'data'))
+                                         prefix=self._sanitize(
+                                         self.file_transfer.title),
+                                         dir=os.path.join(
+                                         env.get_profile_path(), 'data'))
         os.close(fd)
         os.unlink(file_path)
 
