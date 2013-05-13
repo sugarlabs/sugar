@@ -45,7 +45,8 @@ from jarabe.journal import journalwindow
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
         Gtk.VBox.__init__(self,
-                background_color=style.COLOR_PANEL_GREY.get_gdk_color())
+                          background_color=
+                          style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
@@ -141,7 +142,8 @@ class CommentsView(Gtk.TreeView):
         erase_icon.connect('clicked', self._erase_comment_cb)
         col.pack_start(erase_icon, False)
         col.add_attribute(erase_icon, 'file-name', self.COMMENT_ERASE_ICON)
-        col.add_attribute(erase_icon, 'xo-color', self.COMMENT_ERASE_ICON_COLOR)
+        col.add_attribute(
+            erase_icon, 'xo-color', self.COMMENT_ERASE_ICON_COLOR)
 
         self.append_column(col)
 
@@ -177,12 +179,12 @@ class CommentsView(Gtk.TreeView):
             self._comments = []
             for entry in self._store:
                 self._comments.append({
-                        self.FROM: entry[self.COMMENT_FROM],
-                        self.MESSAGE: entry[self.COMMENT_MESSAGE],
-                        self.ICON: entry[self.COMMENT_ICON],
-                        self.ICON_COLOR: '[%s]' % (
-                            entry[self.COMMENT_ICON_COLOR].to_string()),
-                        })
+                    self.FROM: entry[self.COMMENT_FROM],
+                    self.MESSAGE: entry[self.COMMENT_MESSAGE],
+                    self.ICON: entry[self.COMMENT_ICON],
+                    self.ICON_COLOR: '[%s]' % (
+                        entry[self.COMMENT_ICON_COLOR].to_string()),
+                })
 
             self.emit('comments-changed', json.dumps(self._comments))
 
@@ -286,7 +288,7 @@ class ExpandedEntry(Gtk.EventBox):
         self._icon = self._create_icon()
         for child in self._icon_box.get_children():
             self._icon_box.remove(child)
-            #FIXME: self._icon_box.foreach(self._icon_box.remove)
+            # FIXME: self._icon_box.foreach(self._icon_box.remove)
         self._icon_box.pack_start(self._icon, False, False, 0)
 
         self._date.set_text(misc.get_date(metadata))
@@ -299,13 +301,13 @@ class ExpandedEntry(Gtk.EventBox):
 
         for child in self._technical_box.get_children():
             self._technical_box.remove(child)
-            #FIXME: self._technical_box.foreach(self._technical_box.remove)
+            # FIXME: self._technical_box.foreach(self._technical_box.remove)
         self._technical_box.pack_start(self._create_technical(),
                                        False, False, style.DEFAULT_SPACING)
 
         for child in self._buddy_list.get_children():
             self._buddy_list.remove(child)
-            #FIXME: self._buddy_list.foreach(self._buddy_list.remove)
+            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
         self._buddy_list.pack_start(self._create_buddy_list(), False, False,
                                     style.DEFAULT_SPACING)
 
@@ -360,7 +362,7 @@ class ExpandedEntry(Gtk.EventBox):
                 # TODO: We are close to be able to drop this.
                 import base64
                 preview_data = base64.b64decode(
-                        self._metadata['preview'])
+                    self._metadata['preview'])
 
             png_file = StringIO.StringIO(preview_data)
             try:
@@ -418,10 +420,11 @@ class ExpandedEntry(Gtk.EventBox):
         lines = [
             _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
             _('Date: %s') % (self._format_date(),),
-            _('Size: %s') % (format_size(int(self._metadata.get(
-                        'filesize',
-                        model.get_file_size(self._metadata['uid'])))))
-            ]
+            _('Size: %s') % (format_size(
+                             int(self._metadata.get(
+                                 'filesize',
+                                 model.get_file_size(self._metadata['uid'])))))
+        ]
 
         for line in lines:
             linebox = Gtk.HBox()
@@ -429,7 +432,7 @@ class ExpandedEntry(Gtk.EventBox):
 
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
-                    style.COLOR_BUTTON_GREY.get_html(), line))
+                style.COLOR_BUTTON_GREY.get_html(), line))
             linebox.pack_start(text, False, False, 0)
 
         return vbox
@@ -453,7 +456,7 @@ class ExpandedEntry(Gtk.EventBox):
 
         text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
+            style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
         halign = Gtk.Alignment.new(0, 0, 0, 0)
         halign.add(text)
         vbox.pack_start(halign, False, False, 0)
@@ -472,7 +475,7 @@ class ExpandedEntry(Gtk.EventBox):
         if label is not None:
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
-                    style.COLOR_BUTTON_GREY.get_html(), label))
+                style.COLOR_BUTTON_GREY.get_html(), label))
 
             halign = Gtk.Alignment.new(0, 0, 0, 0)
             halign.add(text)
@@ -506,8 +509,9 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
-            self._update_title_sid = GObject.timeout_add_seconds(1,
-                                                         self._update_title_cb)
+            self._update_title_sid = \
+                GObject.timeout_add_seconds(1,
+                                            self._update_title_cb)
 
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
