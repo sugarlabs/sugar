@@ -36,7 +36,7 @@ class EntryWithLabel(Gtk.HBox):
 
         self.label = Gtk.Label(label=label_text)
         self.label.modify_fg(Gtk.StateType.NORMAL,
-                        style.COLOR_SELECTION_GREY.get_gdk_color())
+                             style.COLOR_SELECTION_GREY.get_gdk_color())
         self.label.set_alignment(1, 0.5)
         self.pack_start(self.label, False, True, 0)
         self.label.show()
