@@ -135,7 +135,8 @@ class WirelessNetworkView(EventPulsingIcon):
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
         icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self._disconnect_item.connect(
+            'activate', self.__disconnect_activate_cb)
         self.menu_box.add(self._disconnect_item)
 
         p.set_content(self.menu_box)
@@ -436,14 +437,16 @@ class WirelessNetworkView(EventPulsingIcon):
         self.update_strength()
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__device_state_changed_cb,
-                                         signal_name='StateChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=network.NM_DEVICE_IFACE)
-        self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
-                                         signal_name='PropertiesChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__device_state_changed_cb,
+            signal_name='StateChanged',
+            path=self._device.object_path,
+            dbus_interface=network.NM_DEVICE_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__wireless_properties_changed_cb,
+            signal_name='PropertiesChanged',
+            path=self._device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
 
 
 class SugarAdhocView(EventPulsingIcon):
@@ -474,13 +477,12 @@ class SugarAdhocView(EventPulsingIcon):
         get_adhoc_manager_instance().connect('state-changed',
                                              self.__state_changed_cb)
 
-
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
-        self._state_color = XoColor('%s,%s' % \
-                                       (profile.get_color().get_stroke_color(),
-                                        style.COLOR_TRANSPARENT.get_svg()))
+        self._state_color = XoColor('%s,%s' %
+                                   (profile.get_color().get_stroke_color(),
+                                    style.COLOR_TRANSPARENT.get_svg()))
         self.props.base_color = self._state_color
         self.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
@@ -488,9 +490,9 @@ class SugarAdhocView(EventPulsingIcon):
         self._palette_icon.props.xo_color = self._state_color
 
     def _create_palette(self):
-        self._palette_icon = Icon( \
-                icon_name=self._ICON_NAME + str(self._channel),
-                icon_size=style.STANDARD_ICON_SIZE)
+        self._palette_icon = Icon(
+            icon_name=self._ICON_NAME + str(self._channel),
+            icon_size=style.STANDARD_ICON_SIZE)
 
         text = _('Ad-hoc Network %d') % (self._channel, )
         palette_ = palette.Palette(GLib.markup_escape_text(text),
@@ -507,7 +509,8 @@ class SugarAdhocView(EventPulsingIcon):
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
         icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self._disconnect_item.connect(
+            'activate', self.__disconnect_activate_cb)
         self.menu_box.add(self._disconnect_item)
 
         palette_.set_content(self.menu_box)
@@ -571,7 +574,7 @@ class SugarAdhocView(EventPulsingIcon):
 
     def __members_changed_cb(self, adhoc_manager, channel, has_members):
         if channel == self._channel:
-            if has_members == True:
+            if has_members is True:
                 self._state_color = profile.get_color()
             else:
                 color = '%s,%s' % (profile.get_color().get_stroke_color(),
@@ -618,10 +621,11 @@ class OlpcMeshView(EventPulsingIcon):
                                       signal_name='StateChanged',
                                       path=device.object_path,
                                       dbus_interface=network.NM_DEVICE_IFACE)
-        self._bus.add_signal_receiver(self.__wireless_properties_changed_cb,
-                                      signal_name='PropertiesChanged',
-                                      path=device.object_path,
-                                      dbus_interface=network.NM_OLPC_MESH_IFACE)
+        self._bus.add_signal_receiver(
+            self.__wireless_properties_changed_cb,
+            signal_name='PropertiesChanged',
+            path=device.object_path,
+            dbus_interface=network.NM_OLPC_MESH_IFACE)
 
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
@@ -721,11 +725,13 @@ class OlpcMeshView(EventPulsingIcon):
     def disconnect(self):
         device_object_path = self._mesh_mgr.mesh_device.object_path
 
-        self._bus.remove_signal_receiver(self.__device_state_changed_cb,
-                                         signal_name='StateChanged',
-                                         path=device_object_path,
-                                         dbus_interface=network.NM_DEVICE_IFACE)
-        self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
-                                         signal_name='PropertiesChanged',
-                                         path=device_object_path,
-                                         dbus_interface=network.NM_OLPC_MESH_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__device_state_changed_cb,
+            signal_name='StateChanged',
+            path=device_object_path,
+            dbus_interface=network.NM_DEVICE_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__wireless_properties_changed_cb,
+            signal_name='PropertiesChanged',
+            path=device_object_path,
+            dbus_interface=network.NM_OLPC_MESH_IFACE)
