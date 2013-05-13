@@ -91,14 +91,15 @@ class Activity(GObject.GObject):
         if not self._service:
             bus = dbus.SessionBus()
             self._name_owner_changed_handler = bus.add_signal_receiver(
-                    self._name_owner_changed_cb,
-                    signal_name='NameOwnerChanged',
-                    dbus_interface='org.freedesktop.DBus')
+                self._name_owner_changed_cb,
+                signal_name='NameOwnerChanged',
+                dbus_interface='org.freedesktop.DBus')
 
-        self._launch_completed_hid = get_model().connect('launch-completed',
-                self.__launch_completed_cb)
+        self._launch_completed_hid = \
+            get_model().connect('launch-completed',
+                                self.__launch_completed_cb)
         self._launch_failed_hid = get_model().connect('launch-failed',
-                self.__launch_failed_cb)
+                                                      self.__launch_failed_cb)
 
     def get_launch_status(self):
         return self._launch_status
@@ -271,14 +272,14 @@ class Activity(GObject.GObject):
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
             if old and not new:
-                logging.debug('Activity._name_owner_changed_cb: ' \
-                        'activity %s went away', name)
+                logging.debug('Activity._name_owner_changed_cb: '
+                              'activity %s went away', name)
                 self._name_owner_changed_handler.remove()
                 self._name_owner_changed_handler = None
                 self._service = None
             elif not old and new:
-                logging.debug('Activity._name_owner_changed_cb: ' \
-                        'activity %s started up', name)
+                logging.debug('Activity._name_owner_changed_cb: '
+                              'activity %s started up', name)
                 self._retrieve_service()
                 self.set_active(True)
 
@@ -558,7 +559,8 @@ class ShellModel(GObject.GObject):
                 home_activity.add_window(window)
 
             if window.get_window_type() != Wnck.WindowType.SPLASHSCREEN \
-                    and home_activity.get_launch_status() == Activity.LAUNCHING:
+                    and \
+                    home_activity.get_launch_status() == Activity.LAUNCHING:
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
@@ -630,7 +632,7 @@ class ShellModel(GObject.GObject):
         registry = get_registry()
         activity_info = registry.get_bundle(service_name)
         if not activity_info:
-            raise ValueError("Activity service name '%s'" \
+            raise ValueError("Activity service name '%s'"
                              " was not found in the bundle registry."
                              % service_name)
         color = self._shared_activities.get(activity_id, None)
@@ -650,7 +652,7 @@ class ShellModel(GObject.GObject):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
             logging.debug('Activity %s (%s) launch failed', activity_id,
-                home_activity.get_type())
+                          home_activity.get_type())
             if self.get_launcher(activity_id) is not None:
                 self.emit('launch-failed', home_activity)
             else:
@@ -658,7 +660,7 @@ class ShellModel(GObject.GObject):
                 self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.',
-                activity_id)
+                          activity_id)
 
     def _check_activity_launched(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
@@ -669,7 +671,7 @@ class ShellModel(GObject.GObject):
 
         if self.get_launcher(activity_id) is not None:
             logging.debug('Activity %s still launching, assuming it failed.',
-                activity_id)
+                          activity_id)
             self.notify_launch_failed(activity_id)
         return False
 
