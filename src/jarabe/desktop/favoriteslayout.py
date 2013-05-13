@@ -217,8 +217,8 @@ class RandomLayout(SpreadLayout):
             return
 
         self.fixed_positions[icon] = \
-                (int(relative_x * _BASE_SCALE / float(allocation.width)),
-                 int(relative_y * _BASE_SCALE / float(allocation.height)))
+            (int(relative_x * _BASE_SCALE / float(allocation.width)),
+             int(relative_y * _BASE_SCALE / float(allocation.height)))
 
     def allocate_children(self, allocation, children):
         for child in children:
@@ -267,14 +267,14 @@ class RandomLayout(SpreadLayout):
         registry = bundleregistry.get_registry()
         registry.set_bundle_position(
             child.get_bundle_id(), child.get_version(),
-                x * allocation.width / float(_BASE_SCALE),
-                y * allocation.height / float(_BASE_SCALE))
+            x * allocation.width / float(_BASE_SCALE),
+            y * allocation.height / float(_BASE_SCALE))
         self.fixed_positions[child] = (x, y)
 
 
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING
 _MAXIMUM_RADIUS = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
-        style.DEFAULT_SPACING
+    style.DEFAULT_SPACING
 _RING_SPACING_FACTOR = 0.95
 _SPIRAL_SPACING_FACTOR = 0.75
 _RADIUS_GROWTH_FACTOR = 1.25
@@ -342,7 +342,7 @@ class RingLayout(ViewLayout):
         else:
             angle = icon_index * (2 * math.pi / children_count) - math.pi / 2
             x = radius * cos(angle) + (width - icon_size) / 2
-            y = radius * sin(angle) + (height - icon_size - \
+            y = radius * sin(angle) + (height - icon_size -
                                        (style.GRID_CELL_SIZE / 2)) / 2
         return int(x), int(y)
 
@@ -497,14 +497,14 @@ class SunflowerLayout(RingLayout):
             # from width/height to compensate.  y has an extra GRID_CELL_SIZE/2
             # removed to make room for the "active activity" icon.
             x = r * cos(phi) + (width - icon_size) / 2
-            y = r * sin(phi) + (height - icon_size - \
+            y = r * sin(phi) + (height - icon_size -
                                 (style.GRID_CELL_SIZE / 2)) / 2
 
             # skip allocations outside the allocation box.
             # give up once we can't fit
             if r < math.hypot(width / 2, height / 2):
                 if y < 0 or y > (height - icon_size) or \
-                       x < 0 or x > (width - icon_size):
+                        x < 0 or x > (width - icon_size):
                     self.skipped_indices.append(index)
                     # try again
                     continue
