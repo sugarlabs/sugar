@@ -26,7 +26,7 @@ from gi.repository import GObject
 from telepathy.client import Connection
 from telepathy.interfaces import CONN_INTERFACE
 from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
-                                CONNECTION_STATUS_DISCONNECTED
+    CONNECTION_STATUS_DISCONNECTED
 
 
 _instance = None
@@ -35,9 +35,9 @@ _instance = None
 class ConnectionWatcher(GObject.GObject):
     __gsignals__ = {
         'connection-added': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([GObject.TYPE_PYOBJECT])),
+                             ([GObject.TYPE_PYOBJECT])),
         'connection-removed': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([GObject.TYPE_PYOBJECT])),
+                               ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, bus=None):
@@ -52,8 +52,9 @@ class ConnectionWatcher(GObject.GObject):
         self._connections = {}
 
         self.bus.add_signal_receiver(self._status_changed_cb,
-            dbus_interface=CONN_INTERFACE, signal_name='StatusChanged',
-            path_keyword='path')
+                                     dbus_interface=CONN_INTERFACE,
+                                     signal_name='StatusChanged',
+                                     path_keyword='path')
 
         for conn in Connection.get_connections(bus):
             conn.call_when_ready(self._conn_ready_cb)
