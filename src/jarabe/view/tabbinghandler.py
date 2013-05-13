@@ -50,21 +50,23 @@ class TabbingHandler(object):
             screen = Gdk.Screen.get_default()
             window = screen.get_root_window()
 
-            keyboard_grab_result = self._keyboard.grab(window,
-                                                       Gdk.GrabOwnership.WINDOW,
-                                                       False,
-                                                       Gdk.EventMask.KEY_PRESS_MASK |
-                                                       Gdk.EventMask.KEY_RELEASE_MASK,
-                                                       None,
-                                                       event_time)
+            keyboard_grab_result = self._keyboard.grab(
+                window,
+                Gdk.GrabOwnership.WINDOW,
+                False,
+                Gdk.EventMask.KEY_PRESS_MASK |
+                Gdk.EventMask.KEY_RELEASE_MASK,
+                None,
+                event_time)
 
-            mouse_grab_result = self._mouse.grab(window,
-                                                 Gdk.GrabOwnership.WINDOW,
-                                                 False,
-                                                 Gdk.EventMask.BUTTON_PRESS_MASK |
-                                                 Gdk.EventMask.BUTTON_RELEASE_MASK,
-                                                 None,
-                                                 event_time)
+            mouse_grab_result = self._mouse.grab(
+                window,
+                Gdk.GrabOwnership.WINDOW,
+                False,
+                Gdk.EventMask.BUTTON_PRESS_MASK |
+                Gdk.EventMask.BUTTON_RELEASE_MASK,
+                None,
+                event_time)
 
             self._tabbing = (keyboard_grab_result == Gdk.GrabStatus.SUCCESS and
                              mouse_grab_result == Gdk.GrabStatus.SUCCESS)
@@ -92,8 +94,9 @@ class TabbingHandler(object):
 
     def _start_timeout(self, event_time):
         self._cancel_timeout()
-        self._timeout = GObject.timeout_add(_RAISE_DELAY,
-                lambda: self.__timeout_cb(event_time))
+        self._timeout = GObject.timeout_add(
+            _RAISE_DELAY,
+            lambda: self.__timeout_cb(event_time))
 
     def _cancel_timeout(self):
         if self._timeout:
