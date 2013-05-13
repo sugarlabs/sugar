@@ -23,11 +23,11 @@ from gi.repository import GObject
 import dbus
 from gi.repository import GConf
 from telepathy.interfaces import CHANNEL, \
-                                 CHANNEL_DISPATCHER, \
-                                 CHANNEL_DISPATCH_OPERATION, \
-                                 CHANNEL_TYPE_CONTACT_LIST, \
-                                 CHANNEL_TYPE_TEXT, \
-                                 CLIENT
+    CHANNEL_DISPATCHER, \
+    CHANNEL_DISPATCH_OPERATION, \
+    CHANNEL_TYPE_CONTACT_LIST, \
+    CHANNEL_TYPE_TEXT, \
+    CLIENT
 from telepathy.constants import HANDLE_TYPE_ROOM
 
 from sugar3.graphics.xocolor import XoColor
@@ -39,7 +39,7 @@ from jarabe.journal import misc
 
 
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
-        'org.laptop.Telepathy.ActivityProperties'
+    'org.laptop.Telepathy.ActivityProperties'
 
 _instance = None
 
@@ -159,7 +159,7 @@ class Invites(GObject.GObject):
 
         client_handler = telepathyclient.get_instance()
         client_handler.got_dispatch_operation.connect(
-                self.__got_dispatch_operation_cb)
+            self.__got_dispatch_operation_cb)
 
     def __got_dispatch_operation_cb(self, **kwargs):
         logging.debug('__got_dispatch_operation_cb')
@@ -180,17 +180,17 @@ class Invites(GObject.GObject):
             bus = dbus.Bus()
             connection = bus.get_object(connection_name, connection_path)
             connection.GetProperties(
-                    channel_properties[CHANNEL + '.TargetHandle'],
-                    dbus_interface=CONNECTION_INTERFACE_ACTIVITY_PROPERTIES,
-                    reply_handler=partial(self.__get_properties_cb,
-                                          handle,
-                                          dispatch_operation_path),
-                    error_handler=partial(self.__error_handler_cb,
-                                          handle,
-                                          channel_properties,
-                                          dispatch_operation_path,
-                                          channel_path,
-                                          properties))
+                channel_properties[CHANNEL + '.TargetHandle'],
+                dbus_interface=CONNECTION_INTERFACE_ACTIVITY_PROPERTIES,
+                reply_handler=partial(self.__get_properties_cb,
+                                      handle,
+                                      dispatch_operation_path),
+                error_handler=partial(self.__error_handler_cb,
+                                      handle,
+                                      channel_properties,
+                                      dispatch_operation_path,
+                                      channel_path,
+                                      properties))
         else:
             self._dispatch_non_sugar_invitation(handle,
                                                 channel_properties,
@@ -242,8 +242,10 @@ class Invites(GObject.GObject):
         obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
         dispatch_operation.HandleWith(handler,
-            reply_handler=self.__handle_with_reply_cb,
-            error_handler=self.__handle_with_reply_cb)
+                                      reply_handler=
+                                      self.__handle_with_reply_cb,
+                                      error_handler=
+                                      self.__handle_with_reply_cb)
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:
