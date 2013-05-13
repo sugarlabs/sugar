@@ -60,8 +60,8 @@ class ActivityUpdater(SectionView):
         bottom_label.set_justify(Gtk.Justification.LEFT)
         bottom_label.props.xalign = 0
         bottom_label.set_markup(
-                _('Software updates correct errors, eliminate security ' \
-                  'vulnerabilities, and provide new features.'))
+            _('Software updates correct errors, eliminate security '
+              'vulnerabilities, and provide new features.'))
         self.pack_start(bottom_label, False, True, 0)
         bottom_label.show()
 
@@ -80,10 +80,12 @@ class ActivityUpdater(SectionView):
 
         if self._update_box is None:
             self._update_box = UpdateBox(self._model)
-            self._update_box.refresh_button.connect('clicked',
-                    self.__refresh_button_clicked_cb)
-            self._update_box.install_button.connect('clicked',
-                    self.__install_button_clicked_cb)
+            self._update_box.refresh_button.connect(
+                'clicked',
+                self.__refresh_button_clicked_cb)
+            self._update_box.install_button.connect(
+                'clicked',
+                self.__install_button_clicked_cb)
 
         self.pack_start(self._update_box, expand=True, fill=True, padding=0)
         self._update_box.show()
@@ -98,10 +100,12 @@ class ActivityUpdater(SectionView):
 
         if self._progress_pane is None:
             self._progress_pane = ProgressPane()
-            self._progress_pane.cancel_button.connect('clicked',
-                    self.__cancel_button_clicked_cb)
+            self._progress_pane.cancel_button.connect(
+                'clicked',
+                self.__cancel_button_clicked_cb)
 
-        self.pack_start(self._progress_pane, expand=True, fill=False, padding=0)
+        self.pack_start(
+            self._progress_pane, expand=True, fill=False, padding=0)
         self._progress_pane.show()
 
     def _clear_center(self):
@@ -228,7 +232,8 @@ class UpdateBox(Gtk.VBox):
         self.set_spacing(style.DEFAULT_PADDING)
 
         scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_policy(
+            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         self.pack_start(scrolled_window, True, True, 0)
         scrolled_window.show()
 
@@ -255,7 +260,7 @@ class UpdateBox(Gtk.VBox):
 
         self.install_button = Gtk.Button(_('Install selected'))
         self.install_button.props.image = Icon(icon_name='emblem-downloads',
-                                                icon_size=Gtk.IconSize.BUTTON)
+                                               icon_size=Gtk.IconSize.BUTTON)
         bottom_box.pack_start(self.install_button, False, True, 0)
         self.install_button.show()
 
@@ -364,12 +369,12 @@ class UpdateListModel(Gtk.ListStore):
 
             details = _('From version %(current)s to %(new)s (Size: %(size)s)')
             details = details % \
-                    {'current': bundle_update.bundle.get_activity_version(),
-                     'new': bundle_update.version,
-                     'size': _format_size(bundle_update.size)}
+                {'current': bundle_update.bundle.get_activity_version(),
+                 'new': bundle_update.version,
+                 'size': _format_size(bundle_update.size)}
 
             row[self.DESCRIPTION] = '<b>%s</b>\n%s' % \
-                    (bundle_update.bundle.get_name(), details)
+                (bundle_update.bundle.get_name(), details)
 
             row[self.SIZE] = bundle_update.size
 
