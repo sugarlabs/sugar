@@ -76,25 +76,31 @@ def unfreeze_dcon_cb():
     logging.debug('STARTUP: unfreeze_dcon_cb')
     screen.set_dcon_freeze(0)
 
+
 def setup_frame_cb():
     logging.debug('STARTUP: setup_frame_cb')
     frame.get_view()
+
 
 def setup_keyhandler_cb():
     logging.debug('STARTUP: setup_keyhandler_cb')
     keyhandler.setup(frame.get_view())
 
+
 def setup_gesturehandler_cb():
     logging.debug('STARTUP: setup_gesturehandler_cb')
     gesturehandler.setup(frame.get_view())
+
 
 def setup_cursortracker_cb():
     logging.debug('STARTUP: setup_cursortracker_cb')
     cursortracker.setup()
 
+
 def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     journalactivity.start()
+
 
 def show_software_updates_cb():
     logging.debug('STARTUP: show_software_updates_cb')
@@ -102,11 +108,14 @@ def show_software_updates_cb():
         home_window = homewindow.get_instance()
         home_window.get_home_box().show_software_updates_alert()
 
+
 def setup_notification_service_cb():
     notifications.init()
 
+
 def setup_file_transfer_cb():
     filetransfer.init()
+
 
 def setup_window_manager():
     logging.debug('STARTUP: window_manager')
@@ -119,8 +128,10 @@ def setup_window_manager():
                        shell=True):
         logging.warning('Can not disable metacity mouse button modifiers')
 
+
 def __window_manager_changed_cb(screen):
     _check_for_window_manager(screen)
+
 
 def _complete_desktop_startup():
     launcher.setup()
@@ -134,6 +145,7 @@ def _complete_desktop_startup():
     GLib.idle_add(show_software_updates_cb)
 
     apisocket.start()
+
 
 def _check_for_window_manager(screen):
     wm_name = screen.get_window_manager_name()
@@ -151,6 +163,7 @@ def _check_for_window_manager(screen):
     if _starting_desktop:
         _complete_desktop_startup()
 
+
 def _start_window_manager():
     global _metacity_process
 
@@ -164,9 +177,11 @@ def _start_window_manager():
 
     _check_for_window_manager(screen)
 
+
 def _stop_window_manager():
     global _metacity_process
     _metacity_process.terminate()
+
 
 def _begin_desktop_startup():
     global _starting_desktop
@@ -181,12 +196,14 @@ def _begin_desktop_startup():
     home_window = homewindow.get_instance()
     home_window.show()
 
+
 def __intro_window_done_cb(window):
     _begin_desktop_startup()
 
     global _window_manager_started
     if _window_manager_started:
         _complete_desktop_startup()
+
 
 def cleanup_temporary_files():
     try:
@@ -198,6 +215,7 @@ def cleanup_temporary_files():
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e
+
 
 def setup_locale():
     # NOTE: This needs to happen early because some modules register
@@ -211,12 +229,14 @@ def setup_locale():
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
+
 def setup_fonts():
     client = GConf.Client.get_default()
     face = client.get_string('/desktop/sugar/font/default_face')
     size = client.get_float('/desktop/sugar/font/default_size')
     settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
+
 
 def setup_theme():
     settings = Gtk.Settings.get_default()
@@ -229,6 +249,7 @@ def setup_theme():
 
     icons_path = os.path.join(config.data_path, 'icons')
     Gtk.IconTheme.get_default().append_search_path(icons_path)
+
 
 def _start_intro():
     window = IntroWindow()
