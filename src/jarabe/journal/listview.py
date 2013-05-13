@@ -172,7 +172,6 @@ class BaseListView(Gtk.Bin):
                                          ListModel.COLUMN_TITLE)
         self.tree_view.append_column(self._title_column)
 
-
         for column_index in [ListModel.COLUMN_BUDDY_1,
                              ListModel.COLUMN_BUDDY_2,
                              ListModel.COLUMN_BUDDY_3]:
@@ -193,7 +192,7 @@ class BaseListView(Gtk.Bin):
         cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
         buddies_column.pack_start(cell_progress, True)
         buddies_column.add_attribute(cell_progress, 'value',
-                ListModel.COLUMN_PROGRESS)
+                                     ListModel.COLUMN_PROGRESS)
         buddies_column.set_cell_data_func(cell_progress,
                                           self.__progress_data_cb)
 
@@ -289,8 +288,10 @@ class BaseListView(Gtk.Bin):
             property_ = query_dict['order_by'][0][1:]
             cell_text = self.sort_column.get_cells()[0]
             self.sort_column.set_attributes(cell_text,
-                text=getattr(ListModel, 'COLUMN_' + property_.upper(),
-                             ListModel.COLUMN_TIMESTAMP))
+                                            text=getattr(
+                                            ListModel, 'COLUMN_' +
+                                            property_.upper(),
+                                            ListModel.COLUMN_TIMESTAMP))
         self._query = query_dict
 
         self.refresh()
@@ -413,8 +414,8 @@ class BaseListView(Gtk.Bin):
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
-        label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
-                color, GLib.markup_escape_text(message)))
+        label.set_markup('<span weight="bold" color="%s">%s</span>' % (
+            color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
 
         if show_clear_query:
@@ -484,8 +485,8 @@ class BaseListView(Gtk.Bin):
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
-                        GObject.timeout_add_seconds(UPDATE_INTERVAL,
-                                            self.__update_dates_timer_cb)
+                    GObject.timeout_add_seconds(UPDATE_INTERVAL,
+                                                self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True
             if self._update_dates_timer is not None:
@@ -518,7 +519,7 @@ class ListView(BaseListView):
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
         self.tree_view.connect('button-release-event',
-                self.__button_release_event_cb)
+                               self.__button_release_event_cb)
 
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
@@ -632,7 +633,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([str, str])),
+                         ([str, str])),
     }
 
     def __init__(self, tree_view):
@@ -697,8 +698,10 @@ class CellRendererBuddy(CellRendererIcon):
 
         # if row[self._model_column_index] is not None:
         #     nick, xo_color = row[self._model_column_index]
-        if row.model.do_get_value(row.iter, self._model_column_index) is not None:
-            nick, xo_color = row.model.do_get_value(row.iter, self._model_column_index)
+        if row.model.do_get_value(row.iter, self._model_column_index) \
+                is not None:
+            nick, xo_color = row.model.do_get_value(
+                row.iter, self._model_column_index)
             return BuddyPalette((nick, xo_color.to_string()))
         else:
             return None
