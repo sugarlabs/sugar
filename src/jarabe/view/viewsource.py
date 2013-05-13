@@ -61,8 +61,9 @@ def setup_view_source(activity):
             service.HandleViewSource()
             return
         except dbus.DBusException, e:
-            expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
-                    'org.freedesktop.DBus.Python.NotImplementedError']
+            expected_exceptions = [
+                'org.freedesktop.DBus.Error.UnknownMethod',
+                'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occured in HandleViewSource():')
         except Exception:
@@ -77,7 +78,7 @@ def setup_view_source(activity):
 
     if window_xid in map_activity_to_window:
         _logger.debug('Viewsource window already open for %s %s', window_xid,
-            bundle_path)
+                      bundle_path)
         return
 
     document_path = None
@@ -85,8 +86,9 @@ def setup_view_source(activity):
         try:
             document_path = service.GetDocumentPath()
         except dbus.DBusException, e:
-            expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
-                    'org.freedesktop.DBus.Python.NotImplementedError']
+            expected_exceptions = [
+                'org.freedesktop.DBus.Error.UnknownMethod',
+                'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occured in GetDocumentPath():')
         except Exception:
@@ -205,7 +207,7 @@ class ViewSource(Gtk.Window):
         window.set_accept_focus(True)
 
         display = Gdk.Display.get_default()
-        parent = GdkX11.X11Window.foreign_new_for_display( \
+        parent = GdkX11.X11Window.foreign_new_for_display(
             display, self._parent_window_xid)
         window.set_transient_for(parent)
 
@@ -455,8 +457,8 @@ class FileViewer(Gtk.ScrolledWindow):
 
     __gsignals__ = {
         'file-selected': (GObject.SignalFlags.RUN_FIRST,
-                           None,
-                           ([str])),
+                          None,
+                          ([str])),
     }
 
     def __init__(self, path, initial_filename):
@@ -552,7 +554,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._source_view.set_show_line_numbers(True)
         self._source_view.set_show_right_margin(True)
         self._source_view.set_right_margin_position(80)
-        #self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
+        # self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
         self._source_view.modify_font(_SOURCE_FONT)
         self.add(self._source_view)
         self._source_view.show()
@@ -579,7 +581,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         if detected_language is not None:
             _logger.debug('Detected language: %r',
-                    detected_language.get_name())
+                          detected_language.get_name())
 
         self._buffer.set_language(detected_language)
         self._buffer.set_text(open(self._file_path, 'r').read())
