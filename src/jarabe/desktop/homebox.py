@@ -89,7 +89,7 @@ class HomeBox(Gtk.VBox):
                 os.unlink(update_trigger_file)
             except OSError:
                 logging.error('Software-update: Can not remove file %s',
-                    update_trigger_file)
+                              update_trigger_file)
 
         if response_id == Gtk.ResponseType.OK:
             from jarabe.controlpanel.gui import ControlPanel
@@ -151,7 +151,7 @@ class HomeBox(Gtk.VBox):
 
     def has_activities(self):
         # TODO: Do we need this?
-        #return self._donut.has_activities()
+        # return self._donut.has_activities()
         return False
 
     def set_resume_mode(self, resume_mode):
