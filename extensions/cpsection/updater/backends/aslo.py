@@ -61,7 +61,7 @@ from sugar3.bundle.bundleversion import InvalidVersionError
 from jarabe import config
 
 _FIND_DESCRIPTION = \
-        './/{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description'
+    './/{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description'
 _FIND_VERSION = './/{http://www.mozilla.org/2004/em-rdf#}version'
 _FIND_LINK = './/{http://www.mozilla.org/2004/em-rdf#}updateLink'
 _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
@@ -81,7 +81,7 @@ class _UpdateFetcher(object):
         sp_version = '%s.%s' % (major, int(minor) + int(minor) % 2)
 
         url = '%s?id=%s&appVersion=%s' % \
-                (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
+            (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
 
         logging.debug('Fetch %s', url)
 
@@ -112,8 +112,8 @@ class _UpdateFetcher(object):
             global _fetcher
             _fetcher = None
             self._completion_cb(self._bundle, None, None, None,
-                    'Error reading update information for %s from '
-                    'server.' % self._bundle.get_bundle_id())
+                                'Error reading update information for %s from '
+                                'server.' % self._bundle.get_bundle_id())
             return
         elif data.get_size() == 0:
             stream.close(None)
@@ -135,7 +135,9 @@ class _UpdateFetcher(object):
 
         if document.find(_FIND_DESCRIPTION) is None:
             logging.debug('Bundle %s not available in the server for the '
-                'version %s', self._bundle.get_bundle_id(), config.version)
+                          'version %s',
+                          self._bundle.get_bundle_id(),
+                          config.version)
             version = None
             link = None
             size = None
