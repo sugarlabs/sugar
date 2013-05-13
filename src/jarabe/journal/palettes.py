@@ -120,7 +120,7 @@ class ObjectPalette(Palette):
         friends_menu.connect('friend-selected', self.__friend_selected_cb)
         menu_item.set_submenu(friends_menu)
 
-        if detail == True:
+        if detail is True:
             menu_item = MenuItem(_('View Details'), 'go-right')
             menu_item.connect('activate', self.__detail_activate_cb)
             self.menu.append(menu_item)
@@ -240,7 +240,7 @@ class CopyMenu(Gtk.Menu):
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
             volume_menu = VolumeMenu(self._metadata, mount.get_name(),
-                                   mount.get_root().get_path())
+                                     mount.get_root().get_path())
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
