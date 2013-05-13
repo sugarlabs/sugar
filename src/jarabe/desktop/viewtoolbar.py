@@ -80,7 +80,7 @@ class ViewToolbar(Gtk.Toolbar):
         self._list_button.props.tooltip = _('List view')
         self._list_button.props.accelerator = _('<Ctrl>2')
         self._list_button.connect('toggled', self.__view_button_toggled_cb,
-                                      _LIST_VIEW)
+                                  _LIST_VIEW)
         self.insert(self._list_button, -1)
 
         self._add_separator()
