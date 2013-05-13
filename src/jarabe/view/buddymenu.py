@@ -83,7 +83,7 @@ class BuddyMenu(Palette):
 
         home_model = shell.get_model()
         self._active_activity_changed_hid = home_model.connect(
-                'active-activity-changed', self._cur_activity_changed_cb)
+            'active-activity-changed', self._cur_activity_changed_cb)
         activity = home_model.get_active_activity()
         self._update_invite_menu(activity)
 
@@ -177,8 +177,8 @@ class BuddyMenu(Palette):
                                       self._buddy.props.contact_id)
             except dbus.DBusException, e:
                 expected_exceptions = [
-                        'org.freedesktop.DBus.Error.UnknownMethod',
-                        'org.freedesktop.DBus.Python.NotImplementedError']
+                    'org.freedesktop.DBus.Error.UnknownMethod',
+                    'org.freedesktop.DBus.Python.NotImplementedError']
                 if e.get_dbus_name() in expected_exceptions:
                     logging.warning('Trying deprecated Activity.Invite')
                     service.Invite(self._buddy.props.key)
