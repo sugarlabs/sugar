@@ -37,8 +37,8 @@ def _get_next_stroke_color(color):
     if current_index == -1:
         return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
-    while(colors[next_index][_FILL_COLOR] != \
-              colors[current_index][_FILL_COLOR]):
+    while(colors[next_index][_FILL_COLOR] !=
+          colors[current_index][_FILL_COLOR]):
         next_index = _next_index(next_index)
     return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
@@ -51,8 +51,8 @@ def _get_previous_stroke_color(color):
     if current_index == -1:
         return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
-    while (colors[previous_index][_FILL_COLOR] != \
-               colors[current_index][_FILL_COLOR]):
+    while (colors[previous_index][_FILL_COLOR] !=
+           colors[current_index][_FILL_COLOR]):
         previous_index = _previous_index(previous_index)
     return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
@@ -65,8 +65,8 @@ def _get_next_fill_color(color):
     if current_index == -1:
         return '%s,%s' % (color.stroke, color.fill)
     next_index = _next_index(current_index)
-    while (colors[next_index][_STROKE_COLOR] != \
-               colors[current_index][_STROKE_COLOR]):
+    while (colors[next_index][_STROKE_COLOR] !=
+           colors[current_index][_STROKE_COLOR]):
         next_index = _next_index(next_index)
     return '%s,%s' % (colors[next_index][_STROKE_COLOR],
                       colors[next_index][_FILL_COLOR])
@@ -79,8 +79,8 @@ def _get_previous_fill_color(color):
     if current_index == -1:
         return '%s,%s' % (color.stroke, color.fill)
     previous_index = _previous_index(current_index)
-    while (colors[previous_index][_STROKE_COLOR] != \
-               colors[current_index][_STROKE_COLOR]):
+    while (colors[previous_index][_STROKE_COLOR] !=
+           colors[current_index][_STROKE_COLOR]):
         previous_index = _previous_index(previous_index)
     return '%s,%s' % (colors[previous_index][_STROKE_COLOR],
                       colors[previous_index][_FILL_COLOR])
@@ -116,7 +116,7 @@ class ColorPicker(CanvasIcon):
         'color-changed': (GObject.SignalFlags.RUN_FIRST,
                           None,
                           ([object])),
-        }
+    }
 
     def __init__(self, picker):
         CanvasIcon.__init__(self, icon_name='computer-xo',
