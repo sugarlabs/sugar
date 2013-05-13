@@ -44,6 +44,7 @@ if not path:
 activity = ActivityBundle(path)
 cmd_args = activityfactory.get_command(activity)
 
+
 def _which(exec_file):
     if 'PATH' in os.environ:
         envpath = os.environ['PATH']
@@ -56,6 +57,7 @@ def _which(exec_file):
             return fullname
 
     return None
+
 
 def _get_interpreter(exec_file):
     if os.path.exists(exec_file):
@@ -86,4 +88,3 @@ if options.debug:
 
 os.chdir(str(activity.get_path()))
 os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
-
