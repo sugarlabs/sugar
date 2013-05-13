@@ -179,7 +179,8 @@ NM_SECRET_AGENT_PATH = '/org/freedesktop/NetworkManager/SecretAgent'
 NM_AGENT_MANAGER_IFACE = 'org.freedesktop.NetworkManager.AgentManager'
 NM_AGENT_MANAGER_PATH = '/org/freedesktop/NetworkManager/AgentManager'
 
-NM_AGENT_MANAGER_ERR_NO_SECRETS = 'org.freedesktop.NetworkManager.AgentManager.NoSecrets'
+NM_AGENT_MANAGER_ERR_NO_SECRETS = \
+    'org.freedesktop.NetworkManager.AgentManager.NoSecrets'
 
 GSM_CONNECTION_ID = 'Sugar Modem Connection'
 GSM_BAUD_RATE = 115200
@@ -208,101 +209,101 @@ def get_error_by_reason(reason):
     if _nm_device_state_reason_description is None:
         _nm_device_state_reason_description = {
             NM_DEVICE_STATE_REASON_UNKNOWN:
-                _('The reason for the device state change is unknown.'),
+            _('The reason for the device state change is unknown.'),
             NM_DEVICE_STATE_REASON_NONE:
-                _('The state change is normal.'),
+            _('The state change is normal.'),
             NM_DEVICE_STATE_REASON_NOW_MANAGED:
-                _('The device is now managed.'),
+            _('The device is now managed.'),
             NM_DEVICE_STATE_REASON_NOW_UNMANAGED:
-                _('The device is no longer managed.'),
+            _('The device is no longer managed.'),
             NM_DEVICE_STATE_REASON_CONFIG_FAILED:
-                _('The device could not be readied for configuration.'),
+            _('The device could not be readied for configuration.'),
             NM_DEVICE_STATE_REASON_IP_CONFIG_UNAVAILABLE:
-                _('IP configuration could not be reserved '
-                  '(no available address, timeout, etc).'),
+            _('IP configuration could not be reserved '
+              '(no available address, timeout, etc).'),
             NM_DEVICE_STATE_REASON_IP_CONFIG_EXPIRED:
-                _('The IP configuration is no longer valid.'),
+            _('The IP configuration is no longer valid.'),
             NM_DEVICE_STATE_REASON_NO_SECRETS:
-                _('Secrets were required, but not provided.'),
+            _('Secrets were required, but not provided.'),
             NM_DEVICE_STATE_REASON_SUPPLICANT_DISCONNECT:
-                _('The 802.1X supplicant disconnected from '
-                  'the access point or authentication server.'),
+            _('The 802.1X supplicant disconnected from '
+              'the access point or authentication server.'),
             NM_DEVICE_STATE_REASON_SUPPLICANT_CONFIG_FAILED:
-                _('Configuration of the 802.1X supplicant failed.'),
+            _('Configuration of the 802.1X supplicant failed.'),
             NM_DEVICE_STATE_REASON_SUPPLICANT_FAILED:
-                _('The 802.1X supplicant quit or failed unexpectedly.'),
+            _('The 802.1X supplicant quit or failed unexpectedly.'),
             NM_DEVICE_STATE_REASON_SUPPLICANT_TIMEOUT:
-                _('The 802.1X supplicant took too long to authenticate.'),
+            _('The 802.1X supplicant took too long to authenticate.'),
             NM_DEVICE_STATE_REASON_PPP_START_FAILED:
-                _('The PPP service failed to start within the allowed time.'),
+            _('The PPP service failed to start within the allowed time.'),
             NM_DEVICE_STATE_REASON_PPP_DISCONNECT:
-                _('The PPP service disconnected unexpectedly.'),
+            _('The PPP service disconnected unexpectedly.'),
             NM_DEVICE_STATE_REASON_PPP_FAILED:
-                _('The PPP service quit or failed unexpectedly.'),
+            _('The PPP service quit or failed unexpectedly.'),
             NM_DEVICE_STATE_REASON_DHCP_START_FAILED:
-                _('The DHCP service failed to start within the allowed time.'),
+            _('The DHCP service failed to start within the allowed time.'),
             NM_DEVICE_STATE_REASON_DHCP_ERROR:
-                _('The DHCP service reported an unexpected error.'),
+            _('The DHCP service reported an unexpected error.'),
             NM_DEVICE_STATE_REASON_DHCP_FAILED:
-                _('The DHCP service quit or failed unexpectedly.'),
+            _('The DHCP service quit or failed unexpectedly.'),
             NM_DEVICE_STATE_REASON_SHARED_START_FAILED:
-                _('The shared connection service failed to start.'),
+            _('The shared connection service failed to start.'),
             NM_DEVICE_STATE_REASON_SHARED_FAILED:
-                _('The shared connection service quit or failed'
-                  ' unexpectedly.'),
+            _('The shared connection service quit or failed'
+              ' unexpectedly.'),
             NM_DEVICE_STATE_REASON_AUTOIP_START_FAILED:
-                _('The AutoIP service failed to start.'),
+            _('The AutoIP service failed to start.'),
             NM_DEVICE_STATE_REASON_AUTOIP_ERROR:
-                _('The AutoIP service reported an unexpected error.'),
+            _('The AutoIP service reported an unexpected error.'),
             NM_DEVICE_STATE_REASON_AUTOIP_FAILED:
-                _('The AutoIP service quit or failed unexpectedly.'),
+            _('The AutoIP service quit or failed unexpectedly.'),
             NM_DEVICE_STATE_REASON_MODEM_BUSY:
-                _('Dialing failed because the line was busy.'),
+            _('Dialing failed because the line was busy.'),
             NM_DEVICE_STATE_REASON_MODEM_NO_DIAL_TONE:
-                _('Dialing failed because there was no dial tone.'),
+            _('Dialing failed because there was no dial tone.'),
             NM_DEVICE_STATE_REASON_MODEM_NO_CARRIER:
-                _('Dialing failed because there was no carrier.'),
+            _('Dialing failed because there was no carrier.'),
             NM_DEVICE_STATE_REASON_MODEM_DIAL_TIMEOUT:
-                _('Dialing timed out.'),
+            _('Dialing timed out.'),
             NM_DEVICE_STATE_REASON_MODEM_DIAL_FAILED:
-                _('Dialing failed.'),
+            _('Dialing failed.'),
             NM_DEVICE_STATE_REASON_MODEM_INIT_FAILED:
-                _('Modem initialization failed.'),
+            _('Modem initialization failed.'),
             NM_DEVICE_STATE_REASON_GSM_APN_FAILED:
-                _('Failed to select the specified GSM APN'),
+            _('Failed to select the specified GSM APN'),
             NM_DEVICE_STATE_REASON_GSM_REGISTRATION_NOT_SEARCHING:
-                _('Not searching for networks.'),
+            _('Not searching for networks.'),
             NM_DEVICE_STATE_REASON_GSM_REGISTRATION_DENIED:
-                _('Network registration was denied.'),
+            _('Network registration was denied.'),
             NM_DEVICE_STATE_REASON_GSM_REGISTRATION_TIMEOUT:
-                _('Network registration timed out.'),
+            _('Network registration timed out.'),
             NM_DEVICE_STATE_REASON_GSM_REGISTRATION_FAILED:
-                _('Failed to register with the requested GSM network.'),
+            _('Failed to register with the requested GSM network.'),
             NM_DEVICE_STATE_REASON_GSM_PIN_CHECK_FAILED:
-                _('PIN check failed.'),
+            _('PIN check failed.'),
             NM_DEVICE_STATE_REASON_FIRMWARE_MISSING:
-                _('Necessary firmware for the device may be missing.'),
+            _('Necessary firmware for the device may be missing.'),
             NM_DEVICE_STATE_REASON_REMOVED:
-                _('The device was removed.'),
+            _('The device was removed.'),
             NM_DEVICE_STATE_REASON_SLEEPING:
-                _('NetworkManager went to sleep.'),
+            _('NetworkManager went to sleep.'),
             NM_DEVICE_STATE_REASON_CONNECTION_REMOVED:
-                _("The device's active connection was removed "
-                  "or disappeared."),
+            _("The device's active connection was removed "
+              "or disappeared."),
             NM_DEVICE_STATE_REASON_USER_REQUESTED:
-                _('A user or client requested the disconnection.'),
+            _('A user or client requested the disconnection.'),
             NM_DEVICE_STATE_REASON_CARRIER:
-                _("The device's carrier/link changed."),
+            _("The device's carrier/link changed."),
             NM_DEVICE_STATE_REASON_CONNECTION_ASSUMED:
-                _("The device's existing connection was assumed."),
+            _("The device's existing connection was assumed."),
             NM_DEVICE_STATE_REASON_SUPPLICANT_AVAILABLE:
-                _("The supplicant is now available."),
+            _("The supplicant is now available."),
             NM_DEVICE_STATE_REASON_MODEM_NOT_FOUND:
-                _("The modem could not be found."),
+            _("The modem could not be found."),
             NM_DEVICE_STATE_REASON_BT_FAILED:
-                _("The Bluetooth connection failed or timed out."),
+            _("The Bluetooth connection failed or timed out."),
             NM_DEVICE_STATE_REASON_LAST:
-                _("Unused."),
+            _("Unused."),
         }
 
     return _nm_device_state_reason_description[reason]
@@ -324,7 +325,7 @@ def frequency_to_channel(frequency):
             2472: 13}
     if frequency not in ftoc:
         logging.warning('The frequency %s can not be mapped to a channel, '
-            'defaulting to channel 1.', frequency)
+                        'defaulting to channel 1.', frequency)
         return 1
     return ftoc[frequency]
 
