@@ -41,7 +41,7 @@ class KeepIcon(Gtk.ToggleButton):
 
         client = GConf.Client.get_default()
         self._xo_color = XoColor(client.get_string(
-                '/desktop/sugar/user/color'))
+            '/desktop/sugar/user/color'))
 
     def do_get_preferred_width(self):
         return 0, style.GRID_CELL_SIZE
