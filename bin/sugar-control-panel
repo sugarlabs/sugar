@@ -24,5 +24,3 @@ sys.path.append(config.ext_path)
 from jarabe.controlpanel.cmd import main
 
 main()
-
-
