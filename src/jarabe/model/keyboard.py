@@ -21,6 +21,7 @@ from gi.repository import GConf
 from gi.repository import GdkX11
 from gi.repository import Xkl
 
+
 def setup():
     gconf_client = GConf.Client.get_default()
     have_config = False
@@ -52,7 +53,7 @@ def setup():
                 configrec.set_layouts(layouts_list)
                 configrec.set_variants(variants_list)
 
-        model = gconf_client.get_string(\
+        model = gconf_client.get_string(
             '/desktop/sugar/peripherals/keyboard/model')
         if model:
             have_config = True
@@ -60,7 +61,7 @@ def setup():
 
         options = []
         # FIXME, gconf_client_get_list not introspectable #681433
-        options_from_gconf = gconf_client.get(\
+        options_from_gconf = gconf_client.get(
             '/desktop/sugar/peripherals/keyboard/options')
         if options_from_gconf:
             for gval in options_from_gconf.get_list():
