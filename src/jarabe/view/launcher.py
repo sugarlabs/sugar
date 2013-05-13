@@ -131,7 +131,7 @@ def add_launcher(activity_id, icon_path, icon_color):
 
 def __launch_started_cb(home_model, home_activity):
     add_launcher(home_activity.get_activity_id(),
-            home_activity.get_icon_path(), home_activity.get_icon_color())
+                 home_activity.get_icon_path(), home_activity.get_icon_color())
 
 
 def __launch_failed_cb(home_model, home_activity):
@@ -142,11 +142,12 @@ def __launch_failed_cb(home_model, home_activity):
         logging.error('Launcher for %s is missing', activity_id)
     else:
         launcher.error_text.props.label = _('<b>%s</b> failed to start.') % \
-                home_activity.get_activity_name()
+            home_activity.get_activity_name()
         launcher.error_text.show()
 
         launcher.cancel_button.connect('clicked',
-                __cancel_button_clicked_cb, home_activity)
+                                       __cancel_button_clicked_cb,
+                                       home_activity)
         launcher.cancel_button.show()
 
 
