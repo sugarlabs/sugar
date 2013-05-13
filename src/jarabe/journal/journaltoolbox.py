@@ -70,7 +70,7 @@ class MainToolbox(ToolbarBox):
     __gsignals__ = {
         'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
-        }
+    }
 
     def __init__(self):
         ToolbarBox.__init__(self)
@@ -97,7 +97,7 @@ class MainToolbox(ToolbarBox):
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
-                'changed', self._combo_changed_cb)
+            'changed', self._combo_changed_cb)
         tool_item = ToolComboBox(self._what_search_combo)
         self.toolbar.insert(tool_item, -1)
         tool_item.show()
@@ -114,10 +114,10 @@ class MainToolbox(ToolbarBox):
         self._sorting_button.show()
 
         # TODO: enable it when the DS supports saving the buddies.
-        #self._with_search_combo = self._get_with_search_combo()
-        #tool_item = ToolComboBox(self._with_search_combo)
-        #self.insert(tool_item, -1)
-        #tool_item.show()
+        # self._with_search_combo = self._get_with_search_combo()
+        # tool_item = ToolComboBox(self._with_search_combo)
+        # self.insert(tool_item, -1)
+        # tool_item.show()
 
         self._query = self._build_query()
 
@@ -129,7 +129,7 @@ class MainToolbox(ToolbarBox):
         when_search.append_separator()
         when_search.append_item(_ACTION_TODAY, _('Today'))
         when_search.append_item(_ACTION_SINCE_YESTERDAY,
-                                      _('Since yesterday'))
+                                _('Since yesterday'))
         # TRANS: Filter entries modified during the last 7 days.
         when_search.append_item(_ACTION_PAST_WEEK, _('Past week'))
         # TRANS: Filter entries modified during the last 30 days.
@@ -298,7 +298,7 @@ class MainToolbox(ToolbarBox):
                     generic_type.type_id, generic_type.name, generic_type.icon)
                 if generic_type.type_id == current_value:
                     current_value_index = \
-                            len(self._what_search_combo.get_model()) - 1
+                        len(self._what_search_combo.get_model()) - 1
 
                 self._what_search_combo.set_active(current_value_index)
 
@@ -316,9 +316,10 @@ class MainToolbox(ToolbarBox):
                 # try activity-provided icon
                 if os.path.exists(activity_info.get_icon()):
                     try:
-                        self._what_search_combo.append_item(service_name,
-                                activity_info.get_name(),
-                                file_name=activity_info.get_icon())
+                        self._what_search_combo.append_item(
+                            service_name,
+                            activity_info.get_name(),
+                            file_name=activity_info.get_icon())
                     except GObject.GError, exception:
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -329,13 +330,14 @@ class MainToolbox(ToolbarBox):
                         continue
 
                 # fall back to generic icon
-                self._what_search_combo.append_item(service_name,
-                        activity_info.get_name(),
-                        icon_name='application-octet-stream')
+                self._what_search_combo.append_item(
+                    service_name,
+                    activity_info.get_name(),
+                    icon_name='application-octet-stream')
 
         finally:
             self._what_search_combo.handler_unblock(
-                    self._what_combo_changed_sid)
+                self._what_combo_changed_sid)
 
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
@@ -351,7 +353,7 @@ class DetailToolbox(ToolbarBox):
     __gsignals__ = {
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
-        }
+    }
 
     def __init__(self):
         ToolbarBox.__init__(self)
@@ -524,9 +526,9 @@ class DetailToolbox(ToolbarBox):
         for activity_info in misc.get_activities(self._metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                        icon_size=Gtk.IconSize.MENU))
+                                     icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
-                                activity_info.get_bundle_id())
+                              activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
 
@@ -576,7 +578,7 @@ class SortingButton(ToolButton):
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
         self._property = property_
-        #FIXME: Implement sorting order
+        # FIXME: Implement sorting order
         self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
