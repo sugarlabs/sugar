@@ -101,5 +101,5 @@ class HomeBackgroundBox(Gtk.VBox):
                     background_image_path)
             except Exception as e:
                 logging.exception('Failed to update background image %s: %s' %
-                              (background_image_path, str(e)))
+                                 (background_image_path, str(e)))
                 self._background_pixbuf = None
