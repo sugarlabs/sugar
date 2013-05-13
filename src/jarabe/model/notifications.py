@@ -59,10 +59,15 @@ class NotificationService(dbus.service.Object):
                 self._notification_counter += 1
             notification_id = self._notification_counter
 
-        self.notification_received.send(self, app_name=app_name,
-                replaces_id=replaces_id, app_icon=app_icon, summary=summary,
-                body=body, actions=actions, hints=hints,
-                expire_timeout=expire_timeout)
+        self.notification_received.send(self,
+                                        app_name=app_name,
+                                        replaces_id=replaces_id,
+                                        app_icon=app_icon,
+                                        summary=summary,
+                                        body=body,
+                                        actions=actions,
+                                        hints=hints,
+                                        expire_timeout=expire_timeout)
 
         return notification_id
 
