@@ -258,7 +258,7 @@ class _Downloader(GObject.GObject):
         self._cancelling = False
 
         self._input_file.read_async(GLib.PRIORITY_DEFAULT, None,
-                              self.__file_read_async_cb, None)
+                                    self.__file_read_async_cb, None)
 
     def cancel(self):
         self._cancelling = True
@@ -327,7 +327,7 @@ class _Downloader(GObject.GObject):
     def _get_temp_file_path(self, uri):
         # TODO: Should we use the HTTP headers for the file name?
         scheme_, netloc_, path, params_, query_, fragment_ = \
-                urlparse(uri)
+            urlparse(uri)
         path = os.path.basename(path)
 
         if not os.path.exists(env.get_user_activities_path()):
@@ -335,7 +335,7 @@ class _Downloader(GObject.GObject):
 
         base_name, extension_ = os.path.splitext(path)
         fd, file_path = tempfile.mkstemp(dir=env.get_user_activities_path(),
-                prefix=base_name, suffix='.xo')
+                                         prefix=base_name, suffix='.xo')
         os.close(fd)
         os.unlink(file_path)
 
