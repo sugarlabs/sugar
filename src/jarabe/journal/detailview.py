@@ -76,7 +76,7 @@ class DetailView(Gtk.VBox):
         self._update_view()
 
     metadata = GObject.property(
-            type=object, getter=get_metadata, setter=set_metadata)
+        type=object, getter=get_metadata, setter=set_metadata)
 
 
 class BackBar(Gtk.EventBox):
