@@ -216,7 +216,7 @@ def resume(metadata, bundle_id=None):
             activities = get_activities(metadata)
             if not activities:
                 logging.warning('No activity can open this object, %s.',
-                        metadata.get('mime_type', None))
+                                metadata.get('mime_type', None))
                 return
             bundle_id = activities[0].get_bundle_id()
 
@@ -228,19 +228,19 @@ def resume(metadata, bundle_id=None):
             object_id = model.copy(metadata, '/')
 
         launch(bundle, activity_id=activity_id, object_id=object_id,
-                color=get_icon_color(metadata))
+               color=get_icon_color(metadata))
 
 
 def _launch_bundle(bundle):
     registry = bundleregistry.get_registry()
     logging.debug('activityfactory.creating bundle with id %r',
-                       bundle.get_bundle_id())
+                  bundle.get_bundle_id())
     installed_bundle = registry.get_bundle(bundle.get_bundle_id())
     if installed_bundle:
         launch(installed_bundle)
     else:
         logging.error('Bundle %r is not installed.',
-                    bundle.get_bundle_id())
+                      bundle.get_bundle_id())
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
@@ -249,7 +249,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         activity_id = activityfactory.create_activity_id()
 
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
-            bundle.get_bundle_id(), activity_id, object_id, uri)
+                  bundle.get_bundle_id(), activity_id, object_id, uri)
 
     shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
@@ -264,7 +264,9 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
     activity_handle = ActivityHandle(activity_id=activity_id,
-            object_id=object_id, uri=uri, invited=invited)
+                                     object_id=object_id,
+                                     uri=uri,
+                                     invited=invited)
     activityfactory.create(bundle, activity_handle)
 
 
@@ -272,7 +274,7 @@ def _downgrade_option_alert(bundle):
     alert = ConfirmationAlert()
     alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
     alert.props.msg = _('Do you want to downgrade to version %s') % \
-                        bundle.get_activity_version()
+        bundle.get_activity_version()
     alert.connect('response', _downgrade_alert_response_cb, bundle)
     journalwindow.get_journal_window().add_alert(alert)
     alert.show()
@@ -303,7 +305,7 @@ def is_journal_bundle(metadata):
 
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
-            is_journal_bundle(metadata)
+        is_journal_bundle(metadata)
 
 
 def get_icon_color(metadata):
