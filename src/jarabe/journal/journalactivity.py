@@ -62,12 +62,14 @@ class JournalActivityDBusService(dbus.service.Object):
         self._parent = parent
         session_bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(J_DBUS_SERVICE,
-            bus=session_bus, replace_existing=False, allow_replacement=False)
+                                        bus=session_bus,
+                                        replace_existing=False,
+                                        allow_replacement=False)
         logging.debug('bus_name: %r', bus_name)
         dbus.service.Object.__init__(self, bus_name, J_DBUS_PATH)
 
     @dbus.service.method(J_DBUS_INTERFACE,
-        in_signature='s', out_signature='')
+                         in_signature='s', out_signature='')
     def ShowObject(self, object_id):
         """Pop-up journal and show object with object_id"""
 
@@ -92,7 +94,7 @@ class JournalActivityDBusService(dbus.service.Object):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
             display = Gdk.Display.get_default()
-            parent = GdkX11.X11Window.foreign_new_for_display( \
+            parent = GdkX11.X11Window.foreign_new_for_display(
                 display, parent_xid)
         else:
             parent = None
@@ -323,7 +325,7 @@ class JournalActivity(JournalWindow):
                 registry.install(bundle, metadata['uid'])
             except (ZipExtractException, RegistrationException):
                 logging.exception('Could not install bundle %s',
-                        bundle.get_path())
+                                  bundle.get_path())
             return
 
         try:
