@@ -68,7 +68,7 @@ class BundleRegistry(GObject.GObject):
         for activity_dir in dirs:
             self._scan_directory(activity_dir)
             directory = Gio.File.new_for_path(activity_dir)
-            monitor = directory.monitor_directory( \
+            monitor = directory.monitor_directory(
                 flags=Gio.FileMonitorFlags.NONE, cancellable=None)
             monitor.connect('changed', self.__file_monitor_changed_cb)
             self._gio_monitors.append(monitor)
@@ -297,8 +297,8 @@ class BundleRegistry(GObject.GObject):
             if bundle.get_bundle_id() == bundle_id and \
                     bundle.get_activity_version() == version:
                 return bundle
-        raise ValueError('No bundle %r with version %r exists.' % \
-                (bundle_id, version))
+        raise ValueError('No bundle %r with version %r exists.' %
+                        (bundle_id, version))
 
     def set_bundle_favorite(self, bundle_id, version, favorite):
         changed = self._set_bundle_favorite(bundle_id, version, favorite)
