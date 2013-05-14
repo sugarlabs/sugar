@@ -155,7 +155,7 @@ class DatastoreAPI(API):
             self._client.send_error(request, error)
 
         def on_data(data):
-           file_object.write(data)
+            file_object.write(data)
 
         def on_close():
             file_object.close()
