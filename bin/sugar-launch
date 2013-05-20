@@ -19,26 +19,23 @@
 import os
 import sys
 import dbus
-from optparse import OptionParser
+import argparse
 
 from sugar3.activity import activityfactory
 from sugar3.bundle.activitybundle import ActivityBundle
 
-usage = "usage: %prog [options] activity"
-parser = OptionParser(usage)
-parser.add_option("-d", "--debug", action="store_true", dest="debug",
-                  help="launch activity inside gdb")
-(options, args) = parser.parse_args()
-
-if len(args) == 0:
-    print 'You need to specify the activity bundle_id.'
-    sys.exit(1)
-
+parser = argparse.ArgumentParser("Launch a sugar activity")
+parser.add_argument("bundle_id",
+                    help="the bundle id of the activity")
+parser.add_argument("-d", "--debug", action="store_true",
+                    help="launch activity inside gdb")
+args = parser.parse_args()
+print args.bundle_id
 bus = dbus.SessionBus()
 proxy = bus.get_object('org.laptop.Shell', '/org/laptop/Shell')
-path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args[0])
+path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args.bundle_id)
 if not path:
-    print 'Cannot find %s bundle.' % args[0]
+    print 'Cannot find %s bundle.' % args.bundle_id
     sys.exit(1)
 
 activity = ActivityBundle(path)
@@ -80,7 +77,7 @@ def _get_interpreter(exec_file):
 
     return exec_file
 
-if options.debug:
+if args.debug:
     act_args = cmd_args
     cmd_args = ['gdb', '--args']
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
