@@ -29,6 +29,9 @@ parser.add_argument("bundle_id",
                     help="the bundle id of the activity")
 parser.add_argument("-d", "--debug", action="store_true",
                     help="launch activity inside gdb")
+parser.add_argument("-u", "--uri",
+                    help='URI to load')
+
 args = parser.parse_args()
 print args.bundle_id
 bus = dbus.SessionBus()
@@ -41,6 +44,8 @@ if not path:
 activity = ActivityBundle(path)
 cmd_args = activityfactory.get_command(activity)
 
+if args.uri:
+    cmd_args.extend(["--uri", args.uri])
 
 def _which(exec_file):
     if 'PATH' in os.environ:
