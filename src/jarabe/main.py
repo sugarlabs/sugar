@@ -62,6 +62,7 @@ from jarabe import config
 from jarabe.model import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
+from jarabe.intro.window import create_profile
 from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
@@ -257,6 +258,18 @@ def _start_intro():
     window.show_all()
 
 
+def _check_profile():
+    if intro.check_profile():
+        return True
+
+    profile_name = os.environ.get("SUGAR_PROFILE_NAME", None)
+    if profile_name is not None:
+        create_profile(profile_name)
+        return True
+
+    return False
+
+
 def main():
     GLib.threads_init()
     Gdk.threads_init()
@@ -281,7 +294,7 @@ def main():
 
     sys.path.append(config.ext_path)
 
-    if not intro.check_profile():
+    if not _check_profile():
         _start_intro()
     else:
         _begin_desktop_startup()
