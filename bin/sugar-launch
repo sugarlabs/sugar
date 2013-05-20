@@ -21,8 +21,8 @@ import sys
 import dbus
 from optparse import OptionParser
 
-from sugar.activity import activityfactory
-from sugar.bundle.activitybundle import ActivityBundle
+from sugar3.activity import activityfactory
+from sugar3.bundle.activitybundle import ActivityBundle
 
 usage = "usage: %prog [options] activity"
 parser = OptionParser(usage)
