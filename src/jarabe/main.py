@@ -66,6 +66,7 @@ from jarabe.intro.window import create_profile
 from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
+from jarabe import testrunner
 
 
 _metacity_process = None
@@ -146,6 +147,8 @@ def _complete_desktop_startup():
     GLib.idle_add(show_software_updates_cb)
 
     apisocket.start()
+
+    testrunner.check_environment()
 
 
 def _check_for_window_manager(screen):
