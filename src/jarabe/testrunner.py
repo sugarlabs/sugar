@@ -20,14 +20,24 @@ import subprocess
 
 from gi.repository import GLib
 
+from sugar3.logger import get_logs_dir
 
-def _test_child_watch_cb(pid, condition, user_data):
+
+def _test_child_watch_cb(pid, condition, log_file):
     if os.WIFEXITED(condition):
+        log_file.close()
         sys.exit(os.WEXITSTATUS(condition))
 
 
 def check_environment():
     run_test = os.environ.get("SUGAR_RUN_TEST", None)
     if run_test:
-        test_process = subprocess.Popen(run_test, shell=True)
-        GLib.child_watch_add(test_process.pid, _test_child_watch_cb, None)
+        log_path = os.path.join(get_logs_dir(), "test.log")
+        log_file = open(log_path, "w")
+
+        test_process = subprocess.Popen(run_test,
+                                        stdout=log_file,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+
+        GLib.child_watch_add(test_process.pid, _test_child_watch_cb, log_file)
