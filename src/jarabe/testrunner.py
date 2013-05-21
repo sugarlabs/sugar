@@ -32,8 +32,12 @@ def _test_child_watch_cb(pid, condition, log_file):
 def check_environment():
     run_test = os.environ.get("SUGAR_RUN_TEST", None)
     if run_test:
-        log_path = os.path.join(get_logs_dir(), "test.log")
-        log_file = open(log_path, "w")
+        log_path = os.environ.get("SUGAR_TEST_LOG", None)
+        if log_path is None:
+            log_path = os.path.join(get_logs_dir(), "test.log")
+            log_file = open(log_path, "w")
+        else:
+            log_file = open(log_path, "a")
 
         test_process = subprocess.Popen(run_test,
                                         stdout=log_file,
