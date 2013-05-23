@@ -17,7 +17,7 @@
 import logging
 from gettext import gettext as _
 
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import GConf
@@ -91,7 +91,7 @@ class DeviceView(TrayIcon):
 
 
 def setup(tray):
-    GObject.idle_add(_setup_volumes, tray)
+    GLib.idle_add(_setup_volumes, tray)
 
 
 def _setup_volumes(tray):
