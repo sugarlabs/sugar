@@ -79,12 +79,19 @@ class DatastoreAPI(API):
 
         return file_path, file_object
 
-    def load(self, request):
+    def get_metadata(self, request):
         def get_properties_reply_handler(properties):
-            info["properties"] = properties
-            if "stream_closed" in info:
-                complete()
+            self._client.send_result(request, [properties])
 
+        def error_handler(error):
+            self._client.send_error(request, error)
+
+        self._data_store.get_properties(
+            request["params"][0], byte_arrays=True,
+            reply_handler=get_properties_reply_handler,
+            error_handler=error_handler)
+
+    def load_data(self, request):
         def get_filename_reply_handler(file_name):
             file_object = open(file_name)
             info["file_object"] = file_object
@@ -114,21 +121,16 @@ class DatastoreAPI(API):
 
         def complete():
             info["file_object"].close()
-            self._client.send_result(request, info["properties"])
+            self._client.send_result(request, [])
 
         info = {}
 
         uid, stream_id = request["params"]
 
-        datastore = self._data_store
-
-        datastore.get_filename(uid,
-                               reply_handler=get_filename_reply_handler,
-                               error_handler=error_handler)
-
-        datastore.get_properties(uid, byte_arrays=True,
-                                 reply_handler=get_properties_reply_handler,
-                                 error_handler=error_handler)
+        self._data_store.get_filename(
+            uid,
+            reply_handler=get_filename_reply_handler,
+            error_handler=error_handler)
 
         stream_monitor = self._client.stream_monitors[stream_id]
         stream_monitor.on_data = on_data
