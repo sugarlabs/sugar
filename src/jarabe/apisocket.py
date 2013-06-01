@@ -52,12 +52,12 @@ class ActivityAPI(API):
         gconf_client = GConf.Client.get_default()
         color_string = gconf_client.get_string('/desktop/sugar/user/color')
 
-        self._client.send_result(request, color_string.split(","))
+        self._client.send_result(request, [color_string.split(",")])
 
     def close(self, request):
         self._activity.get_window().close(GLib.get_current_time())
 
-        self._client.send_result(request, None)
+        self._client.send_result(request, [])
 
 
 class DatastoreAPI(API):
@@ -138,7 +138,7 @@ class DatastoreAPI(API):
 
     def update(self, request):
         def reply_handler():
-            self._client.send_result(request, None)
+            self._client.send_result(request, [])
 
         def error_handler(error):
             self._client.send_error(request, error)
@@ -162,7 +162,7 @@ class DatastoreAPI(API):
 
     def create(self, request):
         def reply_handler(object_id):
-            self._client.send_result(request, object_id)
+            self._client.send_result(request, [object_id])
 
         def error_handler(error):
             self._client.send_error(request, error)
@@ -234,7 +234,7 @@ class APIServer:
                 client.stream_monitors[stream_id] = StreamMonitor()
                 break
 
-        client.send_result(request, stream_id)
+        client.send_result(request, [stream_id])
 
     def _close_stream(self, client, request):
         stream_id = request["params"][0]
@@ -244,7 +244,7 @@ class APIServer:
 
         del client.stream_monitors[stream_id]
 
-        client.send_result(request, None)
+        client.send_result(request, [])
 
     def _session_started_cb(self, server, session):
         session.connect("message-received",
