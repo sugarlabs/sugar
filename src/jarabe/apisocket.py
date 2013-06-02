@@ -100,6 +100,8 @@ class DatastoreAPI(API):
                 data = file_object.read(info["requested_size"])
                 self._client.send_binary(data)
 
+            self._client.send_result(request, [])
+
             if "stream_closed" in info:
                 complete()
 
@@ -113,15 +115,16 @@ class DatastoreAPI(API):
             else:
                 info["requested_size"] = size
 
-        def on_close():
+        def on_close(close_request):
             if "file_object" in info:
                 complete()
             else:
                 info["stream_closed"] = True
 
+            self._client.send_result(close_request, [])
+
         def complete():
             info["file_object"].close()
-            self._client.send_result(request, [])
 
         info = {}
 
@@ -138,19 +141,23 @@ class DatastoreAPI(API):
 
     def update(self, request):
         def reply_handler():
-            self._client.send_result(request, [])
+            self._client.send_result(info["close_request"], [])
 
         def error_handler(error):
-            self._client.send_error(request, error)
+            self._client.send_error(info["close_request"], error)
 
         def on_data(data):
             file_object.write(data[1:])
 
-        def on_close():
+        def on_close(close_request):
             file_object.close()
+
+            info["close_request"] = close_request
             self._data_store.update(uid, metadata, file_path, True,
                                     reply_handler=reply_handler,
                                     error_handler=error_handler)
+
+        info = {}
 
         uid, metadata, stream_id = request["params"]
 
@@ -160,22 +167,35 @@ class DatastoreAPI(API):
         stream_monitor.on_data = on_data
         stream_monitor.on_close = on_close
 
+        self._client.send_result(request, [])
+
     def create(self, request):
-        def reply_handler(object_id):
+        def create_reply_handler(object_id):
+            info["object_id"] = object_id
             self._client.send_result(request, [object_id])
 
-        def error_handler(error):
+        def create_error_handler(error):
             self._client.send_error(request, error)
+
+        def update_reply_handler():
+            self._client.send_result(info["close_request"], [])
+
+        def update_error_handler(error):
+            self._client.send_error(info["close_request"], error)
 
         def on_data(data):
             file_object.write(data)
 
-        def on_close():
+        def on_close(request):
             file_object.close()
-            self._data_store.create(dbus.Dictionary(metadata),
+
+            info["close_request"] = request
+            self._data_store.update(info["object_id"], metadata,
                                     file_path, True,
-                                    reply_handler=reply_handler,
-                                    error_handler=error_handler)
+                                    reply_handler=update_reply_handler,
+                                    error_handler=update_error_handler)
+
+        info = {}
 
         metadata, stream_id = request["params"]
 
@@ -184,6 +204,12 @@ class DatastoreAPI(API):
         stream_monitor = self._client.stream_monitors[stream_id]
         stream_monitor.on_data = on_data
         stream_monitor.on_close = on_close
+
+        # We create the object immediately without a file so that we
+        # can return the id. We will update it later with the file.
+        self._data_store.create(dbus.Dictionary(metadata), "", True,
+                                reply_handler=create_reply_handler,
+                                error_handler=create_error_handler)
 
 
 class APIClient:
@@ -240,11 +266,9 @@ class APIServer:
         stream_id = request["params"][0]
         stream_monitor = client.stream_monitors[stream_id]
         if stream_monitor.on_close:
-            stream_monitor.on_close()
+            stream_monitor.on_close(request)
 
         del client.stream_monitors[stream_id]
-
-        client.send_result(request, [])
 
     def _session_started_cb(self, server, session):
         session.connect("message-received",
