@@ -91,6 +91,19 @@ class DatastoreAPI(API):
             reply_handler=get_properties_reply_handler,
             error_handler=error_handler)
 
+    def set_metadata(self, request):
+        def reply_handler():
+            self._client.send_result(request, [])
+
+        def error_handler(error):
+            self._client.send_error(request, error)
+
+        uid, metadata = request["params"]
+
+        self._data_store.update(uid, metadata, "", True,
+                                reply_handler=reply_handler,
+                                error_handler=error_handler)
+
     def load_data(self, request):
         def get_filename_reply_handler(file_name):
             file_object = open(file_name)
