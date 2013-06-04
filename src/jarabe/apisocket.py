@@ -104,40 +104,40 @@ class DatastoreAPI(API):
                                 reply_handler=reply_handler,
                                 error_handler=error_handler)
 
-    def load_data(self, request):
+    def load(self, request):
         def get_filename_reply_handler(file_name):
             file_object = open(file_name)
             info["file_object"] = file_object
 
             if "requested_size" in info:
-                data = file_object.read(info["requested_size"])
-                self._client.send_binary(data)
-
-            self._client.send_result(request, [])
+                send_binary(file_object.read(info["requested_size"]))
 
             if "stream_closed" in info:
-                complete()
+                info["file_object"].close()
+
+        def get_properties_reply_handler(properties):
+            self._client.send_result(request, [properties])
 
         def error_handler(error):
             self._client.send_error(request, error)
 
+        def send_binary(data):
+            self._client.send_binary(chr(stream_id) + data)
+
         def on_data(data):
             size = struct.unpack("ii", data)[1]
             if "file_object" in info:
-                self._client.send_binary(info["file_object"].read(size))
+                send_binary(info["file_object"].read(size))
             else:
                 info["requested_size"] = size
 
         def on_close(close_request):
             if "file_object" in info:
-                complete()
+                info["file_object"].close()
             else:
                 info["stream_closed"] = True
 
             self._client.send_result(close_request, [])
-
-        def complete():
-            info["file_object"].close()
 
         info = {}
 
@@ -148,11 +148,16 @@ class DatastoreAPI(API):
             reply_handler=get_filename_reply_handler,
             error_handler=error_handler)
 
+        self._data_store.get_properties(
+            uid, byte_arrays=True,
+            reply_handler=get_properties_reply_handler,
+            error_handler=error_handler)
+
         stream_monitor = self._client.stream_monitors[stream_id]
         stream_monitor.on_data = on_data
         stream_monitor.on_close = on_close
 
-    def update(self, request):
+    def save(self, request):
         def reply_handler():
             self._client.send_result(info["close_request"], [])
 
@@ -183,46 +188,15 @@ class DatastoreAPI(API):
         self._client.send_result(request, [])
 
     def create(self, request):
-        def create_reply_handler(object_id):
-            info["object_id"] = object_id
+        def reply_handler(object_id):
             self._client.send_result(request, [object_id])
 
-        def create_error_handler(error):
+        def error_handler(error):
             self._client.send_error(request, error)
 
-        def update_reply_handler():
-            self._client.send_result(info["close_request"], [])
-
-        def update_error_handler(error):
-            self._client.send_error(info["close_request"], error)
-
-        def on_data(data):
-            file_object.write(data)
-
-        def on_close(request):
-            file_object.close()
-
-            info["close_request"] = request
-            self._data_store.update(info["object_id"], metadata,
-                                    file_path, True,
-                                    reply_handler=update_reply_handler,
-                                    error_handler=update_error_handler)
-
-        info = {}
-
-        metadata, stream_id = request["params"]
-
-        file_path, file_object = self._create_file()
-
-        stream_monitor = self._client.stream_monitors[stream_id]
-        stream_monitor.on_data = on_data
-        stream_monitor.on_close = on_close
-
-        # We create the object immediately without a file so that we
-        # can return the id. We will update it later with the file.
-        self._data_store.create(dbus.Dictionary(metadata), "", True,
-                                reply_handler=create_reply_handler,
-                                error_handler=create_error_handler)
+        self._data_store.create(request["params"][0], "", True,
+                                reply_handler=reply_handler,
+                                error_handler=error_handler)
 
 
 class APIClient:
