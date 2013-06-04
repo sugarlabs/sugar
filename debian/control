@@ -15,7 +15,8 @@ Build-Depends: devscripts,
  gettext,
  intltool,
  shared-mime-info,
- python-empy
+ python-empy,
+ libgtk-3-dev
 Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
