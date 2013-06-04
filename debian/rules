@@ -32,7 +32,7 @@ CDBS_BUILD_DEPENDS_class_python-autotools_python = python$(cdbs_python_nondefaul
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
-DEB_UPSTREAM_TARBALL_MD5 = bd569878b5b5d3c5230ae5bbdbf8ccbf
+DEB_UPSTREAM_TARBALL_MD5 = 07d2256597a32cd844567f6f1af6daa3
 
 DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
 
