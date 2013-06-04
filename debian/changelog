@@ -6,7 +6,6 @@ sugar-0.98 (0.98.8-1) UNRELEASED; urgency=low
 
   [ Santiago Ruano Rincón ]
   * Dummy changelog entry
-  * Removing fix_shell_posix_and_quoting.patch (NoT longer needed?)
 
  -- Santiago Ruano Rincón <santiago@nomada>  Tue, 04 Jun 2013 12:23:07 +0200
 

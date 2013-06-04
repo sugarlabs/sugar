@@ -1,5 +1,10 @@
 #logind_check.patch
 #empy_from_system.patch
 #fix_tz_config_path.patch
+<<<<<<< HEAD
 #empy_from_system_autotools.patch
 #fix_shell_posix_and_quoting.patch
+=======
+empy_from_system_autotools.patch
+fix_shell_posix_and_quoting.patch
+>>>>>>> parent of cfe3029... removing fix_shell_posix_and_quoting.patch
