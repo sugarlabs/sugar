@@ -1,5 +1,5 @@
-logind_check.patch
-empy_from_system.patch
+#logind_check.patch
+#empy_from_system.patch
 #fix_tz_config_path.patch
-empy_from_system_autotools.patch
+#empy_from_system_autotools.patch
 #fix_shell_posix_and_quoting.patch
