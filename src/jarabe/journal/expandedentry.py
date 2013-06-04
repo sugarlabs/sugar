@@ -20,18 +20,17 @@ import StringIO
 import time
 import os
 
-import hippo
 import cairo
-import gobject
-import glib
-import gtk
+from gi.repository import GObject
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import Gdk
 import simplejson
 
-from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.canvastextview import CanvasTextView
-from sugar.util import format_size
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.icon import CanvasIcon
+from sugar3.util import format_size
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -39,143 +38,142 @@ from jarabe.journal import misc
 from jarabe.journal import model
 
 
-class Separator(hippo.CanvasBox, hippo.CanvasItem):
+class Separator(Gtk.VBox):
     def __init__(self, orientation):
-        hippo.CanvasBox.__init__(self,
-                background_color=style.COLOR_PANEL_GREY.get_int())
-
-        if orientation == hippo.ORIENTATION_VERTICAL:
-            self.props.box_width = style.LINE_WIDTH
-        else:
-            self.props.box_height = style.LINE_WIDTH
+        Gtk.VBox.__init__(self,
+                background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
-class BuddyList(hippo.CanvasBox):
+class BuddyList(Gtk.Alignment):
     def __init__(self, buddies):
-        hippo.CanvasBox.__init__(self, xalign=hippo.ALIGNMENT_START,
-                                 orientation=hippo.ORIENTATION_HORIZONTAL)
+        Gtk.Alignment.__init__(self)
+        self.set(0, 0, 0, 0)
 
+        hbox = Gtk.HBox()
         for buddy in buddies:
             nick_, color = buddy
-            hbox = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL)
             icon = CanvasIcon(icon_name='computer-xo',
                               xo_color=XoColor(color),
-                              size=style.STANDARD_ICON_SIZE)
+                              pixel_size=style.STANDARD_ICON_SIZE)
             icon.set_palette(BuddyPalette(buddy))
-            hbox.append(icon)
-            self.append(hbox)
+            hbox.pack_start(icon, True, True, 0)
+        self.add(hbox)
 
 
-class ExpandedEntry(hippo.CanvasBox):
+class ExpandedEntry(Gtk.EventBox):
     def __init__(self):
-        hippo.CanvasBox.__init__(self)
-        self.props.orientation = hippo.ORIENTATION_VERTICAL
-        self.props.background_color = style.COLOR_WHITE.get_int()
-        self.props.padding_top = style.DEFAULT_SPACING * 3
+        Gtk.EventBox.__init__(self)
+        self._vbox = Gtk.VBox()
+        self.add(self._vbox)
 
         self._metadata = None
         self._update_title_sid = None
 
-        # Create header
-        header = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL,
-                                 padding=style.DEFAULT_PADDING,
-                                 padding_right=style.GRID_CELL_SIZE,
-                                 spacing=style.DEFAULT_SPACING)
-        self.append(header)
+        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        # Create two column body
+        # Create a header
+        header = Gtk.HBox()
+        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
 
-        body = hippo.CanvasBox(orientation=hippo.ORIENTATION_HORIZONTAL,
-                               spacing=style.DEFAULT_SPACING * 3,
-                               padding_left=style.GRID_CELL_SIZE,
-                               padding_right=style.GRID_CELL_SIZE,
-                               padding_top=style.DEFAULT_SPACING * 3)
+        # Create a two-column body
+        body_box = Gtk.EventBox()
+        body_box.set_border_width(style.DEFAULT_SPACING)
+        body_box.modify_bg(Gtk.StateType.NORMAL,
+                           style.COLOR_WHITE.get_gdk_color())
+        self._vbox.pack_start(body_box, True, True, 0)
+        body = Gtk.HBox()
+        body_box.add(body)
 
-        self.append(body, hippo.PACK_EXPAND)
+        first_column = Gtk.VBox()
+        body.pack_start(first_column, False, False, style.DEFAULT_SPACING)
 
-        first_column = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL,
-                                       spacing=style.DEFAULT_SPACING)
-        body.append(first_column)
-
-        second_column = hippo.CanvasBox(orientation=hippo.ORIENTATION_VERTICAL,
-                                       spacing=style.DEFAULT_SPACING)
-        body.append(second_column, hippo.PACK_EXPAND)
+        second_column = Gtk.VBox()
+        body.pack_start(second_column, True, True, 0)
 
         # Header
-
         self._keep_icon = self._create_keep_icon()
-        header.append(self._keep_icon)
+        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
 
         self._icon = None
-        self._icon_box = hippo.CanvasBox()
-        header.append(self._icon_box)
+        self._icon_box = Gtk.HBox()
+        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
 
         self._title = self._create_title()
-        header.append(self._title, hippo.PACK_EXPAND)
+        header.pack_start(self._title, True, True, 0)
 
         # TODO: create a version list popup instead of a date label
         self._date = self._create_date()
-        header.append(self._date)
+        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            header.reverse()
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
+            # Reverse header children.
+            for child in header.get_children():
+                header.reorder_child(child, 0)
 
-        # First column
+        # First body column
+        self._preview_box = Gtk.Frame()
+        style_context = self._preview_box.get_style_context()
+        style_context.add_class('journal-preview-box')
+        first_column.pack_start(self._preview_box, False, True, 0)
 
-        self._preview_box = hippo.CanvasBox()
-        first_column.append(self._preview_box)
+        self._technical_box = Gtk.VBox()
+        first_column.pack_start(self._technical_box, False, False, 0)
 
-        self._technical_box = hippo.CanvasBox()
-        first_column.append(self._technical_box)
-
-        # Second column
-
+        # Second body column
         description_box, self._description = self._create_description()
-        second_column.append(description_box)
+        second_column.pack_start(description_box, True, True,
+                                 style.DEFAULT_SPACING)
 
         tags_box, self._tags = self._create_tags()
-        second_column.append(tags_box)
+        second_column.pack_start(tags_box, True, True,
+                                 style.DEFAULT_SPACING)
 
-        self._buddy_list = hippo.CanvasBox()
-        second_column.append(self._buddy_list)
+        self._buddy_list = Gtk.VBox()
+        second_column.pack_start(self._buddy_list, True, False, 0)
+
+        self.show_all()
 
     def set_metadata(self, metadata):
         if self._metadata == metadata:
             return
         self._metadata = metadata
 
-        self._keep_icon.keep = (str(metadata.get('keep', 0)) == '1')
+        self._keep_icon.set_active(int(metadata.get('keep', 0)) == 1)
 
         self._icon = self._create_icon()
-        self._icon_box.clear()
-        self._icon_box.append(self._icon)
+        for child in self._icon_box.get_children():
+            self._icon_box.remove(child)
+            #FIXME: self._icon_box.foreach(self._icon_box.remove)
+        self._icon_box.pack_start(self._icon, False, False, 0)
 
-        self._date.props.text = misc.get_date(metadata)
+        self._date.set_text(misc.get_date(metadata))
 
-        title = self._title.props.widget
-        title.props.text = metadata.get('title', _('Untitled'))
-        title.props.editable = model.is_editable(metadata)
+        self._title.set_text(metadata.get('title', _('Untitled')))
 
-        self._preview_box.clear()
-        self._preview_box.append(self._create_preview())
+        if self._preview_box.get_child():
+            self._preview_box.remove(self._preview_box.get_child())
+        self._preview_box.add(self._create_preview())
 
-        self._technical_box.clear()
-        self._technical_box.append(self._create_technical())
+        for child in self._technical_box.get_children():
+            self._technical_box.remove(child)
+            #FIXME: self._technical_box.foreach(self._technical_box.remove)
+        self._technical_box.pack_start(self._create_technical(),
+                                       False, False, style.DEFAULT_SPACING)
 
-        self._buddy_list.clear()
-        self._buddy_list.append(self._create_buddy_list())
+        for child in self._buddy_list.get_children():
+            self._buddy_list.remove(child)
+            #FIXME: self._buddy_list.foreach(self._buddy_list.remove)
+        self._buddy_list.pack_start(self._create_buddy_list(), False, False,
+                                    style.DEFAULT_SPACING)
 
-        description = self._description.text_view_widget
-        description.props.buffer.props.text = metadata.get('description', '')
-        description.props.editable = model.is_editable(metadata)
-
-        tags = self._tags.text_view_widget
-        tags.props.buffer.props.text = metadata.get('tags', '')
-        tags.props.editable = model.is_editable(metadata)
+        description = metadata.get('description', '')
+        self._description.get_buffer().set_text(description)
+        tags = metadata.get('tags', '')
+        self._tags.get_buffer().set_text(tags)
 
     def _create_keep_icon(self):
-        keep_icon = KeepIcon(False)
-        keep_icon.connect('activated', self._keep_icon_activated_cb)
+        keep_icon = KeepIcon()
+        keep_icon.connect('toggled', self._keep_icon_toggled_cb)
         return keep_icon
 
     def _create_icon(self):
@@ -195,24 +193,20 @@ class ExpandedEntry(hippo.CanvasBox):
         return icon
 
     def _create_title(self):
-        entry = gtk.Entry()
+        entry = Gtk.Entry()
         entry.connect('focus-out-event', self._title_focus_out_event_cb)
-
-        bg_color = style.COLOR_WHITE.get_gdk_color()
-        entry.modify_bg(gtk.STATE_INSENSITIVE, bg_color)
-        entry.modify_base(gtk.STATE_INSENSITIVE, bg_color)
-
-        return hippo.CanvasWidget(widget=entry)
+        return entry
 
     def _create_date(self):
-        date = hippo.CanvasText(xalign=hippo.ALIGNMENT_START,
-                                font_desc=style.FONT_NORMAL.get_pango_desc())
+        date = Gtk.Label()
         return date
 
     def _create_preview(self):
         width = style.zoom(320)
         height = style.zoom(240)
-        box = hippo.CanvasBox()
+
+        box = Gtk.EventBox()
+        box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         if len(self._metadata.get('preview', '')) > 4:
             if self._metadata['preview'][1:4] == 'PNG':
@@ -225,7 +219,32 @@ class ExpandedEntry(hippo.CanvasBox):
 
             png_file = StringIO.StringIO(preview_data)
             try:
+                # Load image and scale to dimensions
+                im = Gtk.Image()
                 surface = cairo.ImageSurface.create_from_png(png_file)
+                png_width = surface.get_width()
+                png_height = surface.get_height()
+
+                preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                                     width, height)
+                cr = cairo.Context(preview_surface)
+
+                scale_w = width * 1.0 / png_width
+                scale_h = height * 1.0 / png_height
+                scale = min(scale_w, scale_h)
+
+                cr.scale(scale, scale)
+
+                cr.set_source_rgba(1, 1, 1, 0)
+                cr.set_operator(cairo.OPERATOR_SOURCE)
+                cr.paint()
+                cr.set_source_surface(surface)
+                cr.paint()
+
+                pixbuf_bg = Gdk.pixbuf_get_from_surface(preview_surface, 0, 0,
+                                                        width, height)
+                im.set_from_pixbuf(pixbuf_bg)
+
                 has_preview = True
             except Exception:
                 logging.exception('Error while loading the preview')
@@ -234,50 +253,39 @@ class ExpandedEntry(hippo.CanvasBox):
             has_preview = False
 
         if has_preview:
-            preview_box = hippo.CanvasImage(image=surface,
-                    border=style.LINE_WIDTH,
-                    border_color=style.COLOR_BUTTON_GREY.get_int(),
-                    xalign=hippo.ALIGNMENT_CENTER,
-                    yalign=hippo.ALIGNMENT_CENTER,
-                    scale_width=width,
-                    scale_height=height)
+            box.add(im)
+            im.show()
         else:
-            preview_box = hippo.CanvasText(text=_('No preview'),
-                    font_desc=style.FONT_NORMAL.get_pango_desc(),
-                    xalign=hippo.ALIGNMENT_CENTER,
-                    yalign=hippo.ALIGNMENT_CENTER,
-                    border=style.LINE_WIDTH,
-                    border_color=style.COLOR_BUTTON_GREY.get_int(),
-                    color=style.COLOR_BUTTON_GREY.get_int(),
-                    box_width=width,
-                    box_height=height)
-        preview_box.connect_after('button-release-event',
-                                  self._preview_box_button_release_event_cb)
-        box.append(preview_box)
+            label = Gtk.Label()
+            label.set_text(_('No preview'))
+            label.set_size_request(width, height)
+            box.add(label)
+            label.show()
+
+        box.connect_after('button-release-event',
+                          self._preview_box_button_release_event_cb)
         return box
 
     def _create_technical(self):
-        vbox = hippo.CanvasBox()
+        vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
         lines = [
             _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
             _('Date: %s') % (self._format_date(),),
-            _('Size: %s') % (format_size(int(self._metadata.get('filesize',
-                                model.get_file_size(self._metadata['uid']))))),
+            _('Size: %s') % (format_size(int(self._metadata.get(
+                        'filesize',
+                        model.get_file_size(self._metadata['uid'])))))
             ]
 
         for line in lines:
-            text = hippo.CanvasText(text=line,
-                font_desc=style.FONT_NORMAL.get_pango_desc())
-            text.props.color = style.COLOR_BUTTON_GREY.get_int()
+            linebox = Gtk.HBox()
+            vbox.pack_start(linebox, False, False, 0)
 
-            if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-                text.props.xalign = hippo.ALIGNMENT_END
-            else:
-                text.props.xalign = hippo.ALIGNMENT_START
-
-            vbox.append(text)
+            text = Gtk.Label()
+            text.set_markup('<span foreground="%s">%s</span>' % (
+                    style.COLOR_BUTTON_GREY.get_html(), line))
+            linebox.pack_start(text, False, False, 0)
 
         return vbox
 
@@ -295,89 +303,67 @@ class ExpandedEntry(hippo.CanvasBox):
 
     def _create_buddy_list(self):
 
-        vbox = hippo.CanvasBox()
+        vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
-        text = hippo.CanvasText(text=_('Participants:'),
-                                font_desc=style.FONT_NORMAL.get_pango_desc())
-        text.props.color = style.COLOR_BUTTON_GREY.get_int()
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            text.props.xalign = hippo.ALIGNMENT_END
-        else:
-            text.props.xalign = hippo.ALIGNMENT_START
-
-        vbox.append(text)
+        text = Gtk.Label()
+        text.set_markup('<span foreground="%s">%s</span>' % (
+                style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
+        halign.add(text)
+        vbox.pack_start(halign, False, False, 0)
 
         if self._metadata.get('buddies'):
             buddies = simplejson.loads(self._metadata['buddies']).values()
-            vbox.append(BuddyList(buddies))
+            vbox.pack_start(BuddyList(buddies), False, False, 0)
             return vbox
         else:
             return vbox
+
+    def _create_scrollable(self, label):
+        vbox = Gtk.VBox()
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        text = Gtk.Label()
+        text.set_markup('<span foreground="%s">%s</span>' % (
+                style.COLOR_BUTTON_GREY.get_html(), label))
+
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
+        halign.add(text)
+        vbox.pack_start(halign, False, False, 0)
+
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                   Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        text_buffer = Gtk.TextBuffer()
+        text_view = Gtk.TextView()
+        text_view.set_buffer(text_buffer)
+        text_view.set_left_margin(style.DEFAULT_PADDING)
+        text_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
+        scrolled_window.add(text_view)
+        vbox.pack_start(scrolled_window, True, True, 0)
+
+        text_view.connect('focus-out-event',
+                          self._description_tags_focus_out_event_cb)
+
+        return vbox, text_view
 
     def _create_description(self):
-        vbox = hippo.CanvasBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-
-        text = hippo.CanvasText(text=_('Description:'),
-                                font_desc=style.FONT_NORMAL.get_pango_desc())
-        text.props.color = style.COLOR_BUTTON_GREY.get_int()
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            text.props.xalign = hippo.ALIGNMENT_END
-        else:
-            text.props.xalign = hippo.ALIGNMENT_START
-
-        vbox.append(text)
-
-        text_view = CanvasTextView('',
-                box_height=style.GRID_CELL_SIZE * 2)
-        vbox.append(text_view, hippo.PACK_EXPAND)
-
-        text_view.text_view_widget.props.accepts_tab = False
-        text_view.text_view_widget.connect('focus-out-event',
-                self._description_focus_out_event_cb)
-
-        return vbox, text_view
+        return self._create_scrollable(_('Description:'))
 
     def _create_tags(self):
-        vbox = hippo.CanvasBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-
-        text = hippo.CanvasText(text=_('Tags:'),
-                                font_desc=style.FONT_NORMAL.get_pango_desc())
-        text.props.color = style.COLOR_BUTTON_GREY.get_int()
-
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            text.props.xalign = hippo.ALIGNMENT_END
-        else:
-            text.props.xalign = hippo.ALIGNMENT_START
-
-        vbox.append(text)
-
-        text_view = CanvasTextView('',
-                box_height=style.GRID_CELL_SIZE * 2)
-        vbox.append(text_view, hippo.PACK_EXPAND)
-
-        text_view.text_view_widget.props.accepts_tab = False
-        text_view.text_view_widget.connect('focus-out-event',
-                self._tags_focus_out_event_cb)
-
-        return vbox, text_view
+        return self._create_scrollable(_('Tags:'))
 
     def _title_notify_text_cb(self, entry, pspec):
         if not self._update_title_sid:
-            self._update_title_sid = gobject.timeout_add_seconds(1,
+            self._update_title_sid = GObject.timeout_add_seconds(1,
                                                          self._update_title_cb)
 
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
 
-    def _description_focus_out_event_cb(self, text_view, event):
-        self._update_entry()
-
-    def _tags_focus_out_event_cb(self, text_view, event):
+    def _description_tags_focus_out_event_cb(self, text_view, event):
         self._update_entry()
 
     def _update_entry(self, needs_update=False):
@@ -385,23 +371,27 @@ class ExpandedEntry(hippo.CanvasBox):
             return
 
         old_title = self._metadata.get('title', None)
-        new_title = self._title.props.widget.props.text
+        new_title = self._title.get_text()
         if old_title != new_title:
-            label = glib.markup_escape_text(new_title)
+            label = GLib.markup_escape_text(new_title)
             self._icon.palette.props.primary_text = label
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
             needs_update = True
 
+        bounds = self._tags.get_buffer().get_bounds()
         old_tags = self._metadata.get('tags', None)
-        new_tags = self._tags.text_view_widget.props.buffer.props.text
+        new_tags = self._tags.get_buffer().get_text(bounds[0], bounds[1],
+                                                    include_hidden_chars=False)
+
         if old_tags != new_tags:
             self._metadata['tags'] = new_tags
             needs_update = True
 
+        bounds = self._description.get_buffer().get_bounds()
         old_description = self._metadata.get('description', None)
-        new_description = \
-                self._description.text_view_widget.props.buffer.props.text
+        new_description = self._description.get_buffer().get_text(
+            bounds[0], bounds[1], include_hidden_chars=False)
         if old_description != new_description:
             self._metadata['description'] = new_description
             needs_update = True
@@ -418,16 +408,12 @@ class ExpandedEntry(hippo.CanvasBox):
 
         self._update_title_sid = None
 
-    def get_keep(self):
-        return (str(self._metadata.get('keep', 0)) == '1')
-
-    def _keep_icon_activated_cb(self, keep_icon):
-        if self.get_keep():
-            self._metadata['keep'] = 0
-        else:
+    def _keep_icon_toggled_cb(self, keep_icon):
+        if keep_icon.get_active():
             self._metadata['keep'] = 1
+        else:
+            self._metadata['keep'] = 0
         self._update_entry(needs_update=True)
-        keep_icon.props.keep = self.get_keep()
 
     def _icon_button_release_event_cb(self, button, event):
         logging.debug('_icon_button_release_event_cb')

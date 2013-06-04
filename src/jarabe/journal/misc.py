@@ -19,20 +19,20 @@ import time
 import os
 from gettext import gettext as _
 
-import gio
-import gconf
-import gtk
+from gi.repository import Gio
+from gi.repository import GConf
+from gi.repository import Gtk
 
-from sugar.activity import activityfactory
-from sugar.activity.activityhandle import ActivityHandle
-from sugar.graphics.icon import get_icon_file_name
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.alert import ConfirmationAlert
-from sugar import mime
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.bundle import AlreadyInstalledException
-from sugar.bundle.contentbundle import ContentBundle
-from sugar import util
+from sugar3.activity import activityfactory
+from sugar3.activity.activityhandle import ActivityHandle
+from sugar3.graphics.icon import get_icon_file_name
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import ConfirmationAlert
+from sugar3 import mime
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.bundle import AlreadyInstalledException
+from sugar3.bundle.contentbundle import ContentBundle
+from sugar3 import util
 
 from jarabe.view import launcher
 from jarabe.model import bundleregistry, shell
@@ -49,7 +49,7 @@ def _get_icon_for_mime(mime_type):
             if file_name is not None:
                 return file_name
 
-    icons = gio.content_type_get_icon(mime_type)
+    icons = Gio.content_type_get_icon(mime_type)
     logging.debug('icons for this file: %r', icons.props.names)
     for icon_name in icons.props.names:
         file_name = get_icon_file_name(icon_name)
@@ -255,11 +255,11 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
     activity = shell_model.get_activity_by_id(activity_id)
     if activity is not None:
         logging.debug('re-launch %r', activity.get_window())
-        activity.get_window().activate(gtk.get_current_event_time())
+        activity.get_window().activate(Gtk.get_current_event_time())
         return
 
     if color is None:
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
@@ -279,19 +279,18 @@ def _downgrade_option_alert(bundle):
 
 
 def _downgrade_alert_response_cb(alert, response_id, bundle):
-    if response_id is gtk.RESPONSE_OK:
+    if response_id is Gtk.ResponseType.OK:
         journalwindow.get_journal_window().remove_alert(alert)
         registry = bundleregistry.get_registry()
         registry.install(bundle, force_downgrade=True)
         _launch_bundle(bundle)
-    elif response_id is gtk.RESPONSE_CANCEL:
+    elif response_id is Gtk.ResponseType.CANCEL:
         journalwindow.get_journal_window().remove_alert(alert)
 
 
 def is_activity_bundle(metadata):
     mime_type = metadata.get('mime_type', '')
-    return mime_type == ActivityBundle.MIME_TYPE or \
-           mime_type == ActivityBundle.DEPRECATED_MIME_TYPE
+    return mime_type == ActivityBundle.MIME_TYPE
 
 
 def is_content_bundle(metadata):
@@ -309,7 +308,7 @@ def is_bundle(metadata):
 
 def get_icon_color(metadata):
     if metadata is None or not 'icon-color' in metadata:
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         return XoColor(client.get_string('/desktop/sugar/user/color'))
     else:
         return XoColor(metadata['icon-color'])

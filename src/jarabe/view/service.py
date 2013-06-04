@@ -18,7 +18,7 @@
 """D-bus service providing access to the shell's functionality"""
 
 import dbus
-import gtk
+from gi.repository import Gtk
 
 from jarabe.model import shell
 from jarabe.model import bundleregistry
@@ -74,7 +74,7 @@ class UIService(dbus.service.Object):
         activity = self._shell_model.get_activity_by_id(activity_id)
 
         if activity is not None and activity.get_window() is not None:
-            activity.get_window().activate(gtk.get_current_event_time())
+            activity.get_window().activate(Gtk.get_current_event_time())
             return self._shell_model.get_launcher(activity_id) is None
 
         return False

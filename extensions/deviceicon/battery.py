@@ -16,19 +16,19 @@
 
 import logging
 from gettext import gettext as _
-import sys
 
-import gconf
-import glib
-import gobject
-import gtk
+from gi.repository import GConf
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 import dbus
 
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -60,7 +60,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, battery):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
@@ -68,8 +68,9 @@ class DeviceView(TrayIcon):
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
         self._model = DeviceModel(battery)
-        self.palette = BatteryPalette(glib.markup_escape_text(_('My Battery')))
+        self.palette = BatteryPalette(GLib.markup_escape_text(_('My Battery')))
         self.palette.set_group_id('frame')
+        self.palette_invoker.props.toggle_palette = True
         self._model.connect('updated',
                             self.__battery_status_changed_cb)
         self._update_info()
@@ -116,20 +117,25 @@ class BatteryPalette(Palette):
         self._level = 0
         self._time = 0
         self._status = _STATUS_NOT_PRESENT
-        self._progress_bar = gtk.ProgressBar()
+
+        self._progress_widget = PaletteMenuBox()
+        self.set_content(self._progress_widget)
+        self._progress_widget.show()
+
+        inner_box = Gtk.VBox()
+        inner_box.set_spacing(style.DEFAULT_PADDING)
+        self._progress_widget.append_item(inner_box, vertical_padding=0)
+        inner_box.show()
+
+        self._progress_bar = Gtk.ProgressBar()
         self._progress_bar.set_size_request(
             style.zoom(style.GRID_CELL_SIZE * 4), -1)
+        inner_box.pack_start(self._progress_bar, True, True, 0)
         self._progress_bar.show()
-        self._status_label = gtk.Label()
+
+        self._status_label = Gtk.Label()
+        inner_box.pack_start(self._status_label, True, True, 0)
         self._status_label.show()
-
-        vbox = gtk.VBox()
-        vbox.pack_start(self._progress_bar)
-        vbox.pack_start(self._status_label)
-        vbox.show()
-
-        self._progress_widget = vbox
-        self.set_content(self._progress_widget)
 
     def set_info(self, percentage, seconds, status):
         self._level = percentage
@@ -164,26 +170,26 @@ class BatteryPalette(Palette):
 
         self.set_content(progress_widget)
 
-        self.props.secondary_text = glib.markup_escape_text(secondary_text)
+        self.props.secondary_text = GLib.markup_escape_text(secondary_text)
         self._status_label.set_text(status_text)
 
 
-class DeviceModel(gobject.GObject):
+class DeviceModel(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READABLE),
-        'time-remaining': (int, None, None, 0, sys.maxint, 0,
-                           gobject.PARAM_READABLE),  # unit: seconds
-        'charging': (bool, None, None, False, gobject.PARAM_READABLE),
-        'discharging': (bool, None, None, False, gobject.PARAM_READABLE),
-        'present': (bool, None, None, False, gobject.PARAM_READABLE),
+        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READABLE),
+        'time-remaining': (int, None, None, 0, GLib.MAXINT32, 0,
+                           GObject.PARAM_READABLE),  # unit: seconds
+        'charging': (bool, None, None, False, GObject.PARAM_READABLE),
+        'discharging': (bool, None, None, False, GObject.PARAM_READABLE),
+        'present': (bool, None, None, False, GObject.PARAM_READABLE),
     }
 
     __gsignals__ = {
-        'updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'updated': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, battery):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._battery = battery
         self._battery_props_iface = dbus.Interface(self._battery,
                                                    dbus.PROPERTIES_IFACE)

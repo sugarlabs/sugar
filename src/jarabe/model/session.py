@@ -14,22 +14,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 import dbus
 import os
 import signal
 import sys
 import logging
 
-from sugar import session
-from sugar import env
+from sugar3 import session
+from sugar3 import env
 
 
 _session_manager = None
 
 
 def have_systemd():
-    return os.access("/sys/fs/cgroup/systemd", 0) >= 0
+    return os.access("/run/systemd/seats", 0) >= 0
 
 
 class SessionManager(session.SessionManager):
@@ -91,10 +91,10 @@ class SessionManager(session.SessionManager):
                     return
 
         session.SessionManager.shutdown_completed(self)
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def _close_emulator(self):
-        gtk.main_quit()
+        Gtk.main_quit()
 
         if 'SUGAR_EMULATOR_PID' in os.environ:
             pid = int(os.environ['SUGAR_EMULATOR_PID'])

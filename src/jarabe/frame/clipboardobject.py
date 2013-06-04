@@ -17,12 +17,12 @@
 import os
 import logging
 import urlparse
-import gio
-import gtk
+from gi.repository import Gio
+from gi.repository import Gtk
 
 from gettext import gettext as _
-from sugar import mime
-from sugar.bundle.activitybundle import ActivityBundle
+from sugar3 import mime
+from sugar3.bundle.activitybundle import ActivityBundle
 
 
 class ClipboardObject(object):
@@ -59,13 +59,13 @@ class ClipboardObject(object):
             if mime_type in generic_type.mime_types:
                 return generic_type.icon
 
-        icons = gio.content_type_get_icon(mime_type)
+        icons = Gio.content_type_get_icon(mime_type)
         icon_name = None
         if icons is not None:
-            icon_theme = gtk.icon_theme_get_default()
+            icon_theme = Gtk.IconTheme.get_default()
             for icon_name in icons.props.names:
                 icon_info = icon_theme.lookup_icon(icon_name,
-                                                gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+                                                Gtk.IconSize.LARGE_TOOLBAR, 0)
                 if icon_info is not None:
                     icon_info.free()
                     return icon_name
@@ -83,8 +83,7 @@ class ClipboardObject(object):
         if not self._formats:
             return False
         else:
-            return self._formats.keys()[0] in [ActivityBundle.MIME_TYPE,
-                    ActivityBundle.DEPRECATED_MIME_TYPE]
+            return self._formats.keys()[0] == ActivityBundle.MIME_TYPE
 
     def get_percent(self):
         return self._percent
@@ -104,8 +103,8 @@ class ClipboardObject(object):
 
         format_ = mime.choose_most_significant(self._formats.keys())
         if format_ == 'text/uri-list':
-            data = self._formats['text/uri-list'].get_data()
-            uri = urlparse.urlparse(mime.split_uri_list(data)[0], 'file')
+            uri_data = self._formats[format_].get_data()
+            uri = urlparse.urlparse(uri_data, 'file')
             scheme = uri.scheme  # pylint: disable=E1101
             if scheme == 'file':
                 path = uri.path  # pylint: disable=E1101

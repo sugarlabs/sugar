@@ -26,6 +26,7 @@ extensions/cpsection/power/view.py
 extensions/cpsection/updater/__init__.py
 extensions/cpsection/updater/view.py
 extensions/deviceicon/battery.py
+extensions/deviceicon/frame.py
 extensions/deviceicon/network.py
 extensions/deviceicon/speech.py
 extensions/deviceicon/speaker.py
@@ -41,10 +42,12 @@ src/jarabe/desktop/activitieslist.py
 src/jarabe/desktop/favoriteslayout.py
 src/jarabe/desktop/favoritesview.py
 src/jarabe/desktop/homebox.py
+src/jarabe/desktop/homewindow.py
 src/jarabe/desktop/keydialog.py
 src/jarabe/desktop/meshbox.py
 src/jarabe/desktop/networkviews.py
 src/jarabe/desktop/schoolserver.py
+src/jarabe/desktop/viewtoolbar.py
 src/jarabe/frame/activitiestray.py
 src/jarabe/frame/clipboardmenu.py
 src/jarabe/frame/clipboardobject.py
@@ -58,6 +61,7 @@ src/jarabe/journal/journaltoolbox.py
 src/jarabe/journal/listmodel.py
 src/jarabe/journal/listview.py
 src/jarabe/journal/misc.py
+src/jarabe/journal/model.py
 src/jarabe/journal/modalalert.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py

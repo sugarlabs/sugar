@@ -19,9 +19,10 @@ import os
 import logging
 
 import dbus
-import gtk
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar._sugarext import KeyGrabber
+from gi.repository import SugarExt
 
 from jarabe.model import sound
 from jarabe.model import shell
@@ -34,7 +35,7 @@ from jarabe.journal import journalactivity
 
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
-_TABBING_MODIFIER = gtk.gdk.MOD1_MASK
+_TABBING_MODIFIER = Gdk.ModifierType.MOD1_MASK
 
 
 _actions_table = {
@@ -74,7 +75,7 @@ class KeyHandler(object):
         self._keycode_pressed = 0
         self._keystate_pressed = 0
 
-        self._key_grabber = KeyGrabber()
+        self._key_grabber = SugarExt.KeyGrabber()
         self._key_grabber.connect('key-pressed',
                                   self._key_pressed_cb)
         self._key_grabber.connect('key-released',
@@ -159,7 +160,7 @@ class KeyHandler(object):
         session.get_session_manager().shutdown()
 
     def handle_open_search(self, event_time):
-        journalactivity.get_journal().focus_search()
+        journalactivity.get_journal().show_journal()
 
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)

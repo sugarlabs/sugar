@@ -18,18 +18,18 @@
 import os
 import logging
 
-import gconf
-import gobject
-import gio
+from gi.repository import GConf
+from gi.repository import GObject
+from gi.repository import Gio
 import simplejson
 
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.bundle.contentbundle import ContentBundle
-from sugar.bundle.bundleversion import NormalizedVersion
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.contentbundle import ContentBundle
+from sugar3.bundle.bundleversion import NormalizedVersion
 from jarabe.journal.journalentrybundle import JournalEntryBundle
-from sugar.bundle.bundle import MalformedBundleException, \
+from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
-from sugar import env
+from sugar3 import env
 
 from jarabe import config
 from jarabe.model import mimeregistry
@@ -38,21 +38,21 @@ from jarabe.model import mimeregistry
 _instance = None
 
 
-class BundleRegistry(gobject.GObject):
+class BundleRegistry(GObject.GObject):
     """Tracks the available activity bundles"""
 
     __gsignals__ = {
-        'bundle-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                         ([gobject.TYPE_PYOBJECT])),
-        'bundle-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
-        'bundle-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                           ([gobject.TYPE_PYOBJECT])),
+        'bundle-added': (GObject.SignalFlags.RUN_FIRST, None,
+                         ([GObject.TYPE_PYOBJECT])),
+        'bundle-removed': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([GObject.TYPE_PYOBJECT])),
+        'bundle-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self):
         logging.debug('STARTUP: Loading the bundle registry')
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._mime_defaults = self._load_mime_defaults()
 
@@ -63,18 +63,24 @@ class BundleRegistry(gobject.GObject):
         user_path = env.get_user_activities_path()
         for activity_dir in [user_path, config.activities_path]:
             self._scan_directory(activity_dir)
-            directory = gio.File(activity_dir)
-            monitor = directory.monitor_directory()
+            directory = Gio.File.new_for_path(activity_dir)
+            monitor = directory.monitor_directory( \
+                flags=Gio.FileMonitorFlags.NONE, cancellable=None)
             monitor.connect('changed', self.__file_monitor_changed_cb)
             self._gio_monitors.append(monitor)
 
         self._last_defaults_mtime = -1
         self._favorite_bundles = {}
 
-        client = gconf.client_get_default()
-        self._protected_activities = client.get_list(
-                                    '/desktop/sugar/protected_activities',
-                                     gconf.VALUE_STRING)
+        client = GConf.Client.get_default()
+        self._protected_activities = []
+
+        # FIXME, gconf_client_get_list not introspectable #681433
+        protected_activities = client.get(
+            '/desktop/sugar/protected_activities')
+        for gval in protected_activities.get_list():
+            activity_id = gval.get_string()
+            self._protected_activities.append(activity_id)
 
         if self._protected_activities is None:
             self._protected_activities = []
@@ -90,9 +96,9 @@ class BundleRegistry(gobject.GObject):
                                   event_type):
         if not one_file.get_path().endswith('.activity'):
             return
-        if event_type == gio.FILE_MONITOR_EVENT_CREATED:
+        if event_type == Gio.FileMonitorEvent.CREATED:
             self.add_bundle(one_file.get_path(), install_mime_type=True)
-        elif event_type == gio.FILE_MONITOR_EVENT_DELETED:
+        elif event_type == Gio.FileMonitorEvent.DELETED:
             self.remove_bundle(one_file.get_path())
 
     def _load_mime_defaults(self):

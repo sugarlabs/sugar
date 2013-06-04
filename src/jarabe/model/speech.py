@@ -17,10 +17,11 @@
 import os
 import logging
 
-import gconf
-import gst
-import gtk
-import gobject
+from gi.repository import GConf
+from gi.repository import Gst
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
 
 DEFAULT_PITCH = 0
@@ -31,14 +32,14 @@ DEFAULT_RATE = 0
 _speech_manager = None
 
 
-class SpeechManager(gobject.GObject):
+class SpeechManager(GObject.GObject):
 
     __gtype_name__ = 'SpeechManager'
 
     __gsignals__ = {
-        'play': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'pause': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'stop': (gobject.SIGNAL_RUN_FIRST, None, [])
+        'play': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'stop': (GObject.SignalFlags.RUN_FIRST, None, [])
     }
 
     MIN_PITCH = -100
@@ -48,7 +49,7 @@ class SpeechManager(gobject.GObject):
     MAX_RATE = 100
 
     def __init__(self, **kwargs):
-        gobject.GObject.__init__(self, **kwargs)
+        GObject.GObject.__init__(self, **kwargs)
         self._player = _GstSpeechPlayer()
         self._player.connect('play', self._update_state, 'play')
         self._player.connect('stop', self._update_state, 'stop')
@@ -68,13 +69,13 @@ class SpeechManager(gobject.GObject):
     def get_is_playing(self):
         return self._is_playing
 
-    is_playing = gobject.property(type=bool, getter=get_is_playing,
+    is_playing = GObject.property(type=bool, getter=get_is_playing,
             setter=None, default=False)
 
     def get_is_paused(self):
         return self._is_paused
 
-    is_paused = gobject.property(type=bool, getter=get_is_paused,
+    is_paused = GObject.property(type=bool, getter=get_is_paused,
             setter=None, default=False)
 
     def get_pitch(self):
@@ -96,8 +97,8 @@ class SpeechManager(gobject.GObject):
             self._player.speak(self._pitch, self._rate, self._voice_name, text)
 
     def say_selected_text(self):
-        clipboard = gtk.clipboard_get(selection='PRIMARY')
-        clipboard.request_text(self.__primary_selection_cb)
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_PRIMARY)
+        clipboard.request_text(self.__primary_selection_cb, None)
 
     def pause(self):
         self._player.pause_sound_device()
@@ -112,30 +113,30 @@ class SpeechManager(gobject.GObject):
         self.say_text(text)
 
     def save(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         client.set_int('/desktop/sugar/speech/pitch', self._pitch)
         client.set_int('/desktop/sugar/speech/rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
                 self._pitch, self._rate)
 
     def restore(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._pitch = client.get_int('/desktop/sugar/speech/pitch')
         self._rate = client.get_int('/desktop/sugar/speech/rate')
         logging.debug('loading speech configuration pitch %s rate %s',
                 self._pitch, self._rate)
 
 
-class _GstSpeechPlayer(gobject.GObject):
+class _GstSpeechPlayer(GObject.GObject):
 
     __gsignals__ = {
-        'play': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'pause': (gobject.SIGNAL_RUN_FIRST, None, []),
-        'stop': (gobject.SIGNAL_RUN_FIRST, None, [])
+        'play': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, []),
+        'stop': (GObject.SignalFlags.RUN_FIRST, None, [])
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._pipeline = None
 
     def restart_sound_device(self):
@@ -143,21 +144,21 @@ class _GstSpeechPlayer(gobject.GObject):
             logging.debug('Trying to restart not initialized sound device')
             return
 
-        self._pipeline.set_state(gst.STATE_PLAYING)
+        self._pipeline.set_state(Gst.State.PLAYING)
         self.emit('play')
 
     def pause_sound_device(self):
         if self._pipeline is None:
             return
 
-        self._pipeline.set_state(gst.STATE_PAUSED)
+        self._pipeline.set_state(Gst.State.PAUSED)
         self.emit('pause')
 
     def stop_sound_device(self):
         if self._pipeline is None:
             return
 
-        self._pipeline.set_state(gst.STATE_NULL)
+        self._pipeline.set_state(Gst.State.NULL)
         self.emit('stop')
 
     def make_pipeline(self, command):
@@ -165,22 +166,24 @@ class _GstSpeechPlayer(gobject.GObject):
             self.stop_sound_device()
             del self._pipeline
 
-        self._pipeline = gst.parse_launch(command)
+        self._pipeline = Gst.parse_launch(command)
 
         bus = self._pipeline.get_bus()
         bus.add_signal_watch()
-        bus.connect('message::element', self.__pipe_message_cb)
+        bus.connect('message', self.__pipe_message_cb)
 
     def __pipe_message_cb(self, bus, message):
-        if message.structure.get_name() == 'espeak-mark' and \
-                message.structure['mark'] == 'end':
+        if message.type == Gst.MessageType.EOS:
+            self._pipeline.set_state(Gst.State.NULL)
+            self.emit('stop')
+        elif message.type == Gst.MessageType.ERROR:
+            self._pipeline.set_state(Gst.State.NULL)
             self.emit('stop')
 
     def speak(self, pitch, rate, voice_name, text):
         # TODO workaround for http://bugs.sugarlabs.org/ticket/1801
         if not [i for i in text if i.isalnum()]:
             return
-        text = text + '<mark name="end>"></mark>'
 
         self.make_pipeline('espeak name=espeak ! autoaudiosink')
         src = self._pipeline.get_by_name('espeak')
@@ -195,7 +198,7 @@ class _GstSpeechPlayer(gobject.GObject):
 
     def get_all_voices(self):
         all_voices = {}
-        for voice in gst.element_factory_make('espeak').props.voices:
+        for voice in Gst.ElementFactory.make('espeak', None).props.voices:
             name, language, dialect = voice
             if dialect != 'none':
                 all_voices[language + '_' + dialect] = name

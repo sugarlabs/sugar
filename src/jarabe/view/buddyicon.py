@@ -14,29 +14,36 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics import style
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.view.buddymenu import BuddyMenu
+from jarabe.util.normalize import normalize_string
+
 
 _FILTERED_ALPHA = 0.33
 
 
 class BuddyIcon(CanvasIcon):
-    def __init__(self, buddy, size=style.STANDARD_ICON_SIZE):
-        CanvasIcon.__init__(self, icon_name='computer-xo', size=size)
+    def __init__(self, buddy, pixel_size=style.STANDARD_ICON_SIZE):
+        CanvasIcon.__init__(self, icon_name='computer-xo',
+                            pixel_size=pixel_size)
 
         self._filtered = False
         self._buddy = buddy
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
 
+        self.palette_invoker.props.toggle_palette = True
         self.palette_invoker.cache_palette = False
 
         self._update_color()
 
     def create_palette(self):
-        return BuddyMenu(self._buddy)
+        palette = BuddyMenu(self._buddy)
+        self.connect_to_palette_pop_events(palette)
+        return palette
 
     def __buddy_notify_present_cb(self, buddy, pspec):
         # Update the icon's color when the buddy comes and goes
@@ -60,6 +67,8 @@ class BuddyIcon(CanvasIcon):
                 palette.props.icon.props.xo_color = self._buddy.get_color()
 
     def set_filter(self, query):
-        self._filtered = (self._buddy.get_nick().lower().find(query) == -1) \
+        normalized_name = normalize_string(
+            self._buddy.get_nick().decode('utf-8'))
+        self._filtered = (normalized_name.find(query) == -1) \
                 and not self._buddy.is_owner()
         self._update_color()

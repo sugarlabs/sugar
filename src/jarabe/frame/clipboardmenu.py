@@ -19,19 +19,19 @@ import tempfile
 import urlparse
 import os
 import logging
-import gconf
-import glib
+from gi.repository import GConf
+from gi.repository import GLib
 
-import gtk
+from gi.repository import Gtk
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.datastore import datastore
-from sugar import mime
-from sugar import env
-from sugar.activity.i18n import pgettext
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.datastore import datastore
+from sugar3 import mime
+from sugar3 import env
+from sugar3.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
@@ -51,8 +51,6 @@ class ClipboardMenu(Palette):
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
 
-        self._progress_bar = None
-
         self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
                                      'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
@@ -65,9 +63,9 @@ class ClipboardMenu(Palette):
         self._open_item.show()
 
         self._journal_item = MenuItem(_('Keep'))
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        icon = Icon(icon_name='document-save', icon_size=gtk.ICON_SIZE_MENU,
+        icon = Icon(icon_name='document-save', icon_size=Gtk.IconSize.MENU,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
@@ -84,13 +82,13 @@ class ClipboardMenu(Palette):
         if activities is None or len(activities) <= 1:
             child.set_text(_('Open'))
             if self._open_item.get_submenu() is not None:
-                self._open_item.remove_submenu()
+                self._open_item.set_submenu(None)
             return
 
         child.set_text(_('Open with'))
         submenu = self._open_item.get_submenu()
         if submenu is None:
-            submenu = gtk.Menu()
+            submenu = Gtk.Menu()
             self._open_item.set_submenu(submenu)
             submenu.show()
         else:
@@ -104,7 +102,7 @@ class ClipboardMenu(Palette):
             if not activity_info:
                 logging.warning('Activity %s is unknown.', service_name)
 
-            item = gtk.MenuItem(activity_info.get_name())
+            item = Gtk.MenuItem(activity_info.get_name())
             item.connect('activate', self._open_submenu_item_activate_cb,
                          service_name)
             submenu.append(item)
@@ -128,8 +126,6 @@ class ClipboardMenu(Palette):
             self._open_item.props.sensitive = False
             self._journal_item.props.sensitive = False
 
-        self._update_progress_bar()
-
     def _get_activities(self):
         mime_type = self._cb_object.get_mime_type()
         if not mime_type:
@@ -142,21 +138,6 @@ class ClipboardMenu(Palette):
         else:
             return ''
 
-    def _update_progress_bar(self):
-        percent = self._cb_object.get_percent()
-        if percent == 100.0:
-            if self._progress_bar:
-                self._progress_bar = None
-                self.set_content(None)
-        else:
-            if self._progress_bar is None:
-                self._progress_bar = gtk.ProgressBar()
-                self._progress_bar.show()
-                self.set_content(self._progress_bar)
-
-            self._progress_bar.props.fraction = percent / 100.0
-            self._progress_bar.props.text = '%.2f %%' % percent
-
     def _object_state_changed_cb(self, cb_service, cb_object):
         if cb_object != self._cb_object:
             return
@@ -164,11 +145,10 @@ class ClipboardMenu(Palette):
 
     def _update(self):
         name = self._cb_object.get_name()
-        self.props.primary_text = glib.markup_escape_text(name)
+        self.props.primary_text = GLib.markup_escape_text(name)
         preview = self._cb_object.get_preview()
         if preview:
-            self.props.secondary_text = glib.markup_escape_text(preview)
-        self._update_progress_bar()
+            self.props.secondary_text = GLib.markup_escape_text(preview)
         self._update_items_visibility()
         self._update_open_submenu()
 
@@ -215,9 +195,9 @@ class ClipboardMenu(Palette):
 
         transfer_ownership = False
         if most_significant_mime_type == 'text/uri-list':
-            uris = mime.split_uri_list(format_.get_data())
-            if len(uris) == 1 and uris[0].startswith('file://'):
-                parsed_url = urlparse.urlparse(uris[0])
+            uri = format_.get_data()
+            if uri.startswith('file://'):
+                parsed_url = urlparse.urlparse(uri)
                 file_path = parsed_url.path  # pylint: disable=E1101
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
@@ -245,7 +225,7 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = client.get_string('/desktop/sugar/user/color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type

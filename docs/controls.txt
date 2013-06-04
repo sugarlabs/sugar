@@ -1,0 +1,198 @@
+Colors
+
+Black - palettes, popups
+Toolbar Grey #262626 - toolbars, expanded palette
+Button Grey #808080 - buttons
+Selection Grey #A6A6A6 - selection, expanded panels
+Panel Grey #C0C0C0 - panel, desktop
+Text field Grey #E5E5E5 - text field background
+White - pressed states and multiline text areas
+
+States
+
+Default - gtk.STATE_NORMAL
+Focused - gtk.STATE_SELECTED
+Pressed - gtk.STATE_ACTIVE
+Hover - gtk.STATE_PRELIGHT
+Inactive - gtk.STATE_INSENSITIVE
+
+gtk.Button
+
+* The image should work the same of the image button
+* Need to write a theme to match the visual style
+* Cancel should never be default because you can always activate it with Esc
+* Radius should be 1/2 of the control height
+* Write a list of stock icons people should use and replace them in the theme to match our visual style
+
+sugar.Icon
+
+* Svg Only.
+* It should support xo colors easily.
+* Rollovers with a focus mark.
+
+sugar.IconButton
+
+* Support for SVG and png.
+* Icons should be grey scale. But might be coloured with the XO colors (svg only)
+* Size of the button is 75 pixels, size of the icon canvas is 55 and suggested icon size is around 45.
+* States, defaults:
+    Hover : Black
+    Pressed : Rounded rectangle 61 pixels, 10 pixels of radius, filled in selection grey
+    Focused : Rounded rectangle 61 pixels, 10 pixels of radius, stroked in white 2.25 points
+    Inactive. Fallbacks if no inactive icon is specified.
+        Svg: Remove the fill and render the stroke in button grey
+        Png: just do some effect on the pixbuf, which also work for grey icons
+* You can set an icon for each states which replace the default except for the Hover state of buttons which has rollover.
+* "palette" boolean property. If true show an arrow active immediately on click (but also on hover)
+
+sugar.ToolButton (support for rollovers)
+
+* Contains IconButton
+* There is no palette but a tooltip.
+* Normal: Button grey rounded filled rectangle
+* Inactive: Button grey rounded stroked rectangle
+
+sugar.ToggleIconButton
+
+* Toggled should be like Pressed
+* Inconsistent should be the same of Default (the action depend on the cases)
+* Pressed state and Toggled state is Selection grey
+
+sugar.ToolIconButton
+
+* Contains a ToggleIconButton
+
+gtk.CheckButton
+
+* Match the visual design, shoul be possible with just theme changes
+
+gtk.RadioButton
+
+* Exactly like CheckButton just a different indicator
+
+gtk.OptionMenu
+
+* Match the visual style. Hopefully only theme changes.
+* Add the scroll thing.
+* Groups. Either by a normal separator or a titled separator.
+* Optional support for showing just the icon from the menu (maybe, low priority)
+* Allow fixed sizing of the "button" and ellipsize the label
+
+sugar.Entry
+
+* Support for packing icons before and after the entry. Extend gtk.Entry.
+* Activate/Cancel functionality.
+    Two buttons at the end to the entry and key bindings (Esc and Enter). They are visible only when there are changes.
+    The icons appear only when the field is focused and the content is changed since it gained focus.
+    When hitting escape revert and select all the text.
+
+gtk.ComboxBox
+
+* We miss accept/cancel functionality. Probably patch gtk to allow to replace the entry in the combo box with sugar.Entry.
+
+sugar.SearchEntry
+
+* Use sugar.Entry
+* Search button on the left. Clicking should focus the entry.
+* Cancel button (Esc) on the right, always visible when there is text in the entry. Clicking it will clear the text and focus the textfield.
+* Activate button (Enter) on the right displayed when the content of the text field changed from the last focus or activation.
+* While activating:
+    the Activate button becomes a Spinner.
+    clicking the close button also cancel the search.
+* When activation is completed:
+    The spinner goes away.
+    We *don't* clear the entry but we select the text.
+* Search can either be incremental or on activation. For incremental there is no Accept button. start_spinning and stop_spinning to control the spin icon. start would only spin for an amount of time decided by the widget itself (and documented).
+* The suggestions list is provided by the application. Need to figure out which api to use, either model or signal based.
+* Default implementation of suggestions which automatically save the latest searches.
+
+sugar.DateSelector
+sugar.DateComboBox (lower priority)
+
+* Pluggable calendar implementation to support different kind of calendars (localization).
+* Might reuse gtk.Calendar. We should unify month/year selectors and accellerate the movement gradually.
+
+gtk.SpinButton
+
+* Make it match the visual design, hopefully just theme changes
+
+sugar.ToolItem
+
+* Optional label, either text or icon
+* Used for example to have a label near a SpinButton. Clicking on the label should focus the spin button.
+
+gtk.ProgressBar
+
+* Make it match the visual design, hopefully just theme changes.
+* For determinate progress bars should we always pulse to show that there is activity (power consumption? necessary feedback?)
+* Do not use text inside the progress bar
+
+sugar.Spinner
+
+* pulse() call to keep it running with a timeout
+* stop()
+
+gtk.Range (or sugar.Slider?)
+
+* Property to show the fill in white color, probably default on.
+* Draw the discrete steps.
+* For colored sliders, subclass gtk.Range and add a gradient.
+
+sugar.LevelIndicator
+
+* Set the number of blocks
+* Set the level as percentage
+* Property for discrete or not
+* We can probably use a GtkAdjustment for most of the above.Rollovers
+
+
+gtk.TextView
+
+gtk.ScrolledWindow
+
+* Theme it to match the visual.
+
+sugar.ScrolledWindow
+
+* Support for markers. Line as default and optional support for other shapes (star for bookmarks, circles for xos...). Generic way of add marks and keep them updated (observer?)
+
+gtk.Expander
+
+gtk.Separator
+
+sugar.GroupBox
+
+* just a container
+* set_title and set_title_widget (checkbox, radiobutton...)
+* different color and separator under title
+
+gtk.TreeView
+
+gtk.Notebook
+
+* Expand to fill the whole space by default but property to turn it off
+* Switching tabs with the little arrows should page
+
+Palettes in ToolIconButton, IconButton
+* Inmediately on rollover, show the black background.
+* After a very short delay, show the primary state (name of the action and key shortcut).
+* After a bigger delay, show the popup secondary state.
+* Could be animated.
+* Menu Items would go on the top and then the free-form rollover content.
+* The popup would be a gtk.Window that contains a Label, a MenuShell and finally a button bar (OK/Cancel).
+* The popup will have a setPrimaryState(label, accelerator) method. For action buttons would be a MenuItem, for the others would only be a Label.
+* The primary state should already have the same width as the secondary state and the expandable areas.
+* Primary states appear and disappear automatically (with a short delay). A click outside makes it disappear instantly.
+* Secondary states appear after a delay, or with a single click on the icon.
+* Secondary disappears with the esc key, clicking outside the popup or clicking on a button inside.
+
+Toolbox
+* When an activity opens, the activity tab should be opened and the focus on the activity title.
+* We must provide an activity tab in the toolbox and would be good to also provide an standard Edit tab.
+
+Grab key
+* We probably will need the grab mode.
+* Highlight the scrollbar in the view the pointer is (the view that will scroll when moving the pointer).
+
+Clipboard
+* Window manager to handle in an invisible window in every corner and forward the events when they are not in the corner, or use XEvIE (X Event Interception Extension).

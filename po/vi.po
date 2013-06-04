@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 21:19+0200\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-06-19 01:34+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: vi\n"
@@ -19,11 +19,11 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Giới thiệu mình"
+msgstr "Giới thiệu về bản thân mình"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "Bạn cần phải nhập một tên."
+msgstr "Bạn cần phải nhập 1 tên"
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
@@ -47,27 +47,27 @@ msgstr "tô màu :    %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr "Sai xác định sự sửa đổi màu."
+msgstr "Có lỗi trong việc sửa đổi 1 màu xác định"
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "Sai xác định màu."
+msgstr "lỗi trong màu sắc được chỉ định"
 
 #: ../extensions/cpsection/aboutme/view.py:235
 msgid "Click to change your color:"
-msgstr "Nhấn chuột để thay đổi màu :"
+msgstr "Nhấp chuột để thay đổi màu sắc :"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Giới thiệu máy tính này"
+msgstr "Giới thiệu về cái máy tính này"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:43
 msgid "Not available"
-msgstr "Không sẵn sàng"
+msgstr "Không sẵn sàng (không có sẵn) để sử dụng"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:59
 msgid "Identity"
-msgstr "Cá tính"
+msgstr "Cá tính , bản sắc"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:68
 msgid "Serial Number:"
@@ -91,7 +91,7 @@ msgstr "Phần vững:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:144
 msgid "Wireless Firmware:"
-msgstr "Phần vững không dây:"
+msgstr "Phần vững kết nối không dây:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:167
 msgid "Copyright and License"
@@ -104,8 +104,8 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Sugar là giao diện người dùng đồ họa thích hợp với bạn. Sugar là phần mềm tự "
-"do, được bao quát bởi Giấy Phép Công Cộng GNU (GPL), thì bạn có quyền sửa "
+"Sugar là giao diện người dùng đồ họa thích hợp với bạn. Sugar là phần mềm "
+"miễn phí, được bảo đảm bởi Giấy Phép Công Cộng GNU (GPL), bạn có quyền sửa "
 "đổi và/hay phân phối lại bản sao nó với các điều kiện GPL."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:197
@@ -120,7 +120,7 @@ msgstr "Ngày và Giờ"
 msgid "Error timezone does not exist."
 msgstr "Lỗi: múi giờ không tồn tại."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "Múi giờ"
 
@@ -131,7 +131,7 @@ msgstr "Khung"
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "Giá trị phải là một số nguyên."
+msgstr "Giá trị bắt buộc phải là một số nguyên."
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
@@ -148,7 +148,7 @@ msgstr "%s giây"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Khoảng đợi kích hoạt"
+msgstr "thời gian chờ kích hoạt"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -200,7 +200,7 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Thêm các ngôn ngữ theo thứ tự đã thích. Nếu không có bản dịch thì dùng ngôn "
+"Thêm vào các ngôn ngữ bạn thích. Nếu không có bản dịch thì máy sẽ dùng ngôn "
 "ngữ kế tiếp trong danh sách này."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
@@ -233,7 +233,7 @@ msgstr "Tên điểm truy nhập"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr "Số định danh cá nhân (PIN)"
+msgstr "Số định danh cá nhân (PIN) (số mật mã) :"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
@@ -298,25 +298,13 @@ msgstr "Năng lượng"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "Lỗi trong đối số tự động pm: dùng on/off."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "Lỗi trong đối số extreme pm: dùng on/off."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Quản lý năng lượng"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "Tự động quản lý năng lượng (tăng thời gian chạy bằng pin)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"Rất quản lý năng lượng (tắt máy thu thanh không dây, tăng thời gian chạy "
-"bằng pin)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -507,7 +495,7 @@ msgstr "Thôi"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
-msgstr ""
+msgstr "Thử kết nối lại"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
@@ -517,12 +505,12 @@ msgstr "Lỗi: %s"
 #: ../extensions/deviceicon/network.py:329
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Gợi ý: %s"
 
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Đã kết nối cho %s"
 
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
@@ -532,19 +520,19 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Kiểm tra cấu hình PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Kiểm tra cấu hình Tên điểm kết nối (APN)"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Kiểm tra cấu hình Số."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr ""
+msgstr "Kiểm tra cấu hình."
 
 #: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
@@ -557,46 +545,45 @@ msgstr "Mạng mắc lưới %s"
 
 #: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Không tồn tại kết nối GSM nào"
 
 #: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Tạo 1 kết nối trong bảng điều khiển"
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "phát biểu"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
 #: ../extensions/deviceicon/speech.py:143
 msgid "Say selected text"
-msgstr ""
+msgstr "đoạn văn bản được chọn"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "dừng phát lại"
 
 #: ../extensions/deviceicon/speech.py:97
 msgid "Pitch"
-msgstr ""
+msgstr "độ cao thấp"
 
 #: ../extensions/deviceicon/speech.py:106
-#, fuzzy
 msgid "Rate"
-msgstr "Ngày"
+msgstr "mật độ"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
-msgstr ""
+msgstr "tạm dừng phát lại"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "Loa của mình"
+msgstr "Loa âm thanh của tôi"
 
 #: ../extensions/deviceicon/speaker.py:138
 msgid "Unmute"
-msgstr "Bỏ câm"
+msgstr "bật tiếng"
 
 #: ../extensions/deviceicon/speaker.py:141
 msgid "Mute"
@@ -604,19 +591,19 @@ msgstr "Câm"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "ngón tay"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "bút cảm ứng"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "chuột laptop của tôi"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
-msgstr "Mesh"
+msgstr "lưới"
 
 #: ../extensions/globalkey/screenshot.py:61
 #: ../src/jarabe/frame/zoomtoolbar.py:45
@@ -647,277 +634,295 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"« bị tắt » để yêu cầu tên hiệu khi sơ khởi; « hệ thống » để dùng lại tên dài "
-"của tài khoản UNIX."
+"«bị khóa» để yêu cầu tên hiệu khi khởi tạo;«hệ thống» để sử dụng lại tên dài "
+"của tài khoản UNIX"
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "URL sao lưu"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Các gói xác nhận của những hoạt động bảo hộ"
 
-#: ../data/sugar.schemas.in.h:6
-#, fuzzy
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Màu của biểu tượng XO được dùng trong toàn môi trường. Chuỗi bao gồm màu nét "
-"và màu tô đầy, định dạng là RBG, v.d. #AC32FF,#9A5200"
+"Màu của biểu tượng XO được sử dụng xuyên suốt màn hình chính.Các chuỗi bao "
+"gồm màu viền và màu tô đầy, định dạng màu là RGB. Ví dụ: #AC32FF ,#9A5200"
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Corner Delay"
+msgstr "Góc ngăn"
 
 #: ../data/sugar.schemas.in.h:7
-msgid "Corner Delay"
-msgstr "Trễ góc"
+msgid "Default font face"
+msgstr "Kiểu chữ mặc định"
 
 #: ../data/sugar.schemas.in.h:8
-msgid "Default font face"
-msgstr "Mặt chữ mặc định"
+msgid "Default font size"
+msgstr "Cỡ chữ mặc định"
 
 #: ../data/sugar.schemas.in.h:9
-msgid "Default font size"
-msgstr "Cỡ phông mặc định"
-
-#: ../data/sugar.schemas.in.h:10
 msgid "Default nick"
 msgstr "Tên hiệu mặc định"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Khoảng đợi khi kích hoạt khung dùng góc."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Khoảng đợi khi kích hoạt khung dùng cạnh."
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "Trễ cạnh"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"Quản lý năng lượng tối đa (tắt máy thu thanh không dây, tăng thời gian chạy "
+"bằng pin)"
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "Bố trí Ưa thích"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "Chế độ tiếp tục lại mục ưa thích"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "Mặt phông chữ được sử dụng trên toàn bộ môi trường."
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "Kích cỡ phông chữ được sử dụng trên toàn bộ môi trường."
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
+"một giao thức máy tính cho phép của người dùng máy tính để truy cập vào mạng "
+"bằng cách sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
+"Mật khẩu của người dùng để truy cập vào mạng bằng cách sử dụng hệ thống "
+"truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
+"Mật khẩu của nhà điều hành mạng cung cấp để truy cập vào mạng bằng cách sử "
+"dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"tên cấu hình điểm truy cập mạng bằng cách sử sụng hệ thống truyền thông di "
+"động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
+"số truy cập mạng bằng cách sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
+"Mật khẩu của người dùng để truy cập vào mạng bằng cách sử dụng hệ thống "
+"truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"số cấu hình mạng điện thoại sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "số cấu hình mạng cá nhân sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"mạng lưới cá nhân mở khóa quan trọng cấu hình sử dụng hệ thống truyền thông "
+"di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"số cấu hình mạng điện thoại sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "tên người dùng mạng sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"tên người dùng cấu hình mạng sử dụng hệ thống truyền thông di động toàn cầu"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"TRUE (đúng) thì Sugar sẽ cấp các người khác trên máy phục vụ Jabber có quyền "
+"nếu Đúng thì Sugar sẽ cấp các người khác trên máy phục vụ Jabber có quyền "
 "tìm kiếm qua chúng ta."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "TRUE (đúng) thì Sugar hiển thị một tùy chọn « Đăng xuất »."
+msgstr "Nếu Đúng thì Sugar hiển thị một tùy chọn « Đăng xuất »."
 
-#: ../data/sugar.schemas.in.h:34
-#, fuzzy
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "TRUE (đúng) thì Sugar hiển thị một tùy chọn « Đăng xuất »."
+msgstr "Nếu Đúng, Sugar sẽ hiển thị một tùy chọn \"Khởi động lại\"."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Nếu Đúng, Sugar sẽ hiển thị mặc ​​định của mạng Ad-hoc cho kênh 1,6 và 11. "
+"Nếu đường thấy không có mạng \"nổi tiếng\" khi nó bắt đầu, nó tự động kết nối "
+"đến một mạng Ad-hoc.)"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Máy phục vụ Jabber"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "Bố trí bàn phím"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "Mô hình bàn phím"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "Tuỳ chọn bàn phím"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "Bố trí của ô xem các mục ưa thích."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "Danh sách các bố trí bàn phím. Mỗi mục nên có dạng « bố_trí(biến_đổi) »"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "Danh sách các tuỳ chọn về bàn phím."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Giá trị cao thấp cho dịch vụ phát âm sugar"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Giá trị cao thấp được sử dụng bởi dịch vụ phát âm trong Sugar"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "Tự động năng lượng"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "Năng lượng cực"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "Xuất tới Gadget"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Giá trị tỉ lệ cho dịch vụ phát âm Sugar"
+
+#: ../data/sugar.schemas.in.h:47
+msgid "Rate value used by the speech service in Sugar"
+msgstr "Giá trị tỉ lệ được sử dụng bởi dịch vụ phát âm trong Sugar"
+
+#: ../data/sugar.schemas.in.h:48
+msgid "Setting for muting the sound device."
+msgstr "Thiết lập im lặng thiết bị âm thanh."
 
 #: ../data/sugar.schemas.in.h:49
-msgid "Rate value used by the speech service in Sugar"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:50
-msgid "Setting for muting the sound device."
-msgstr "Thiết lập để câm thiết bị âm thanh."
-
-#: ../data/sugar.schemas.in.h:51
 msgid "Show Log out"
 msgstr "Hiện Đăng xuất"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
-msgstr ""
+msgstr "Hiện khởi động lại"
+
+#: ../data/sugar.schemas.in.h:51
+msgid "Show Sugar Ad-hoc networks"
+msgstr "Hiển thị mạng Ad-hoc Sugar"
+
+#: ../data/sugar.schemas.in.h:52
+msgid "Sound Muted"
+msgstr "Tắt tiếng"
 
 #: ../data/sugar.schemas.in.h:53
-msgid "Show Sugar Ad-hoc networks"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:54
-msgid "Sound Muted"
-msgstr "Âm câm"
-
-#: ../data/sugar.schemas.in.h:55
 msgid "The keyboard model to be used"
 msgstr "Mô hình bàn phím cần dùng"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "Thiết lập múi giờ cho hệ thống."
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr "Địa chỉ URL của máy phục vụ Jabber cần dùng."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "Địa chỉ URL vào đó lưu bản sao lưu."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "Màu người dùng"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "Tên người dùng"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "Tên người dùng được sử dụng trên toàn bộ môi trường."
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Người dùng sẽ không được phép xóa các hoạt động này thông qua việc xem danh "
+"sách"
+
+#: ../data/sugar.schemas.in.h:62
+msgid "Volume Level"
+msgstr "Mức âm lượng"
+
+#: ../data/sugar.schemas.in.h:63
+msgid "Volume level for the sound device."
+msgstr "Mức âm lượng cho thiết bị âm thanh"
 
 #: ../data/sugar.schemas.in.h:64
-msgid "Volume Level"
-msgstr "Cấp âm"
-
-#: ../data/sugar.schemas.in.h:65
-msgid "Volume level for the sound device."
-msgstr "Cấp âm lượng cho thiết bị âm thanh."
-
-#: ../data/sugar.schemas.in.h:66
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Khi trong chế độ tiếp tục lại, cú nhấn vào một biểu tượng ưa thích sẽ tiếp "
-"tục lại mục nhập cuối cùng cho hoạt động đó."
+"Khi ở chế độ tiếp tục lại, nhấn vào biểu tượng yêu thích thì sẽ tạo ra dữ "
+"liệu nhập cuối cùng cho hoạt động đó được nối lại"
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -967,7 +972,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Để áp dụng các thay đổi thì cần phải khởi chạy lại pn Sugar.\n"
+msgstr "Để áp dụng các thay đổi thì cần phải khởi chạy lại Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
 #: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
@@ -978,19 +983,19 @@ msgstr "Cảnh báo"
 #: ../src/jarabe/controlpanel/gui.py:298
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr "Có thay đổi thì cần phải khởi chạy lại"
+msgstr "Thay đổi yêu cầu khởi động lại"
 
 #: ../src/jarabe/controlpanel/gui.py:301
 msgid "Cancel changes"
-msgstr "Thôi thay đổi"
+msgstr "Hủy bỏ thay đổi"
 
 #: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
 msgid "Later"
-msgstr "Về sau"
+msgstr "Sau đó"
 
 #: ../src/jarabe/controlpanel/gui.py:310
 msgid "Restart now"
-msgstr "Khởi chạy lại ngay"
+msgstr "Khởi động lại ngay"
 
 #: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
 msgid "Done"
@@ -999,7 +1004,7 @@ msgstr "Hoàn tất"
 #: ../src/jarabe/controlpanel/toolbar.py:125
 #: ../src/jarabe/desktop/favoritesview.py:347
 msgid "Ok"
-msgstr "OK"
+msgstr "Đồng ý"
 
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
@@ -1064,11 +1069,11 @@ msgstr "Hộp"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:515
 msgid "Triangle"
-msgstr "Hình giác"
+msgstr "Hình tam giác"
 
 #: ../src/jarabe/desktop/favoritesview.py:338
 msgid "Registration Failed"
-msgstr "Lỗi đăng ký"
+msgstr "Đăng ký thất bại"
 
 #: ../src/jarabe/desktop/favoritesview.py:341
 msgid "Registration Successful"
@@ -1076,7 +1081,7 @@ msgstr "Đang ký thành công"
 
 #: ../src/jarabe/desktop/favoritesview.py:342
 msgid "You are now registered with your school server."
-msgstr "Bạn đã đăng ký với máy phục vụ trường học."
+msgstr "Bây giờ bạn đã đăng ký với máy chủ của trường bạn"
 
 #: ../src/jarabe/desktop/favoritesview.py:644
 msgid "Register"
@@ -1085,7 +1090,7 @@ msgstr "Đăng ký"
 #: ../src/jarabe/desktop/favoritesview.py:646
 #: ../src/jarabe/desktop/favoritesview.py:663
 msgid "Register again"
-msgstr ""
+msgstr "Đăng ký lại"
 
 #: ../src/jarabe/desktop/homebox.py:66
 msgid "Software Update"
@@ -1105,7 +1110,7 @@ msgstr "Xem danh sách"
 
 #: ../src/jarabe/desktop/homebox.py:198
 msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
+msgstr "Tổ hợp phím <Ctrl>2"
 
 #: ../src/jarabe/desktop/homebox.py:253
 msgid "Favorites view"
@@ -1113,7 +1118,7 @@ msgstr "Xem Ưa thích"
 
 #: ../src/jarabe/desktop/homebox.py:254
 msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
+msgstr "Tổ hợp phím <Ctrl>1"
 
 #: ../src/jarabe/desktop/keydialog.py:91
 #, python-format
@@ -1121,6 +1126,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"Một nhân tố mã hóa không dây được yêu cầu cho\n"
+" mạng không dây '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1144,17 +1151,17 @@ msgstr "Bảo mật Không dây:"
 #: ../src/jarabe/journal/journaltoolbox.py:509
 #: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
-msgstr "Tiếp tục"
+msgstr "Tiếp tục / Hồi phục lại"
 
 #: ../src/jarabe/desktop/meshbox.py:87
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
-msgstr "Vào"
+msgstr "Vào/tham gia"
 
 #: ../src/jarabe/desktop/networkviews.py:484
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Mạng không dự tính trước, không theo thể thức %d"
 
 #: ../src/jarabe/desktop/networkviews.py:616
 #, python-format
@@ -1163,11 +1170,11 @@ msgstr "Mạng mắc lưới %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:143
 msgid "Cannot connect to the server."
-msgstr "Không thể kết nối tới máy phục vụ."
+msgstr "Không thể kết nối tới máy chủ"
 
 #: ../src/jarabe/desktop/schoolserver.py:150
 msgid "The server could not complete the request."
-msgstr "Máy phục vụ không thể hoàn tất yêu cầu."
+msgstr "Máy chủ không thể hoàn tất yêu cầu."
 
 #: ../src/jarabe/frame/activitiestray.py:187
 #: ../src/jarabe/frame/activitiestray.py:575
@@ -1213,7 +1220,7 @@ msgstr "Hủy"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "Những người tham gia khác đã ngưng truyền tập tin"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1222,10 +1229,9 @@ msgid "Transfer to %s"
 msgstr "Truyền tới %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Bỏ"
+msgstr "bỏ"
 
 #: ../src/jarabe/frame/clipboardmenu.py:62
 #: ../src/jarabe/frame/clipboardmenu.py:85
@@ -1243,7 +1249,7 @@ msgstr "đoạn trích %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "Neighborhood"
-msgstr "Hàng xóm"
+msgstr "Mạng lân cận"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:43
 msgid "F1"
@@ -1271,17 +1277,18 @@ msgstr "Nhấn vào để thay đổi mảu:"
 
 #: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
 msgid "Back"
-msgstr "Lùi"
+msgstr "Trở lại"
 
 #: ../src/jarabe/intro/window.py:211
 msgid "Next"
-msgstr "Tiếp"
+msgstr "Tiếp theo"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
-msgstr "Không tên"
+msgstr "Không có tiêu đề"
 
 #: ../src/jarabe/journal/expandedentry.py:245
 msgid "No preview"
@@ -1290,7 +1297,7 @@ msgstr "Không xem thử"
 #: ../src/jarabe/journal/expandedentry.py:264
 #, python-format
 msgid "Kind: %s"
-msgstr "Kiểu : %s"
+msgstr "Loại : %s"
 
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
@@ -1338,7 +1345,7 @@ msgstr "Tìm kiếm"
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
-msgstr "Lúc nào"
+msgstr "Bất cứ lúc nào"
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Today"
@@ -1372,33 +1379,34 @@ msgstr "Bất cứ ai"
 
 #: ../src/jarabe/journal/journaltoolbox.py:158
 msgid "My friends"
-msgstr "Bạn bè"
+msgstr "Bạn bè của tôi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:159
 msgid "My class"
-msgstr "Cùng lớp"
+msgstr "Lớp học của tôi"
 
 # TRANS: Item in a combo box that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:301
 msgid "Anything"
-msgstr "Bất cứ gì"
+msgstr "bất cứ cái gì"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
 msgid "Copy to"
-msgstr ""
+msgstr "sao chép đến"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
-msgstr "Nhân đôi"
+msgstr "bản sao"
 
 #: ../src/jarabe/journal/journaltoolbox.py:437
 #: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
+#, python-format,
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "lỗi trong khi đang sao chép mục. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
@@ -1415,19 +1423,19 @@ msgstr "Khởi chạy"
 
 #: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Sắp xếp theo ngày sửa đổi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:541
 msgid "Sort by date created"
-msgstr ""
+msgstr "Sắp xếp theo ngày khởi tạo"
 
 #: ../src/jarabe/journal/journaltoolbox.py:542
 msgid "Sort by size"
-msgstr ""
+msgstr "Sắp xếp theo kích cỡ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:551
 msgid "Sort view"
-msgstr ""
+msgstr "sắp xếp hiển thị"
 
 #: ../src/jarabe/journal/listview.py:317
 msgid "Your Journal is empty"
@@ -1435,11 +1443,11 @@ msgstr "Nhật ký của bạn còn trống"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "danh mục tài liệu của bạn trống rỗng"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "không có thiết bị"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1451,17 +1459,19 @@ msgstr "Xoá trường tìm"
 
 #: ../src/jarabe/journal/misc.py:273
 #, python-format
+#, python-format,
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Phiên bản cũ hơn của %s hoạt động"
 
 #: ../src/jarabe/journal/misc.py:274
 #, python-format
+#, python-format,
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Bạn có muốn hạ cấp xuống phiên bản %s"
 
 #: ../src/jarabe/journal/modalalert.py:64
 msgid "Your Journal is full"
-msgstr "Nhật ký của bạn còn trống"
+msgstr "nhật ký của bạn đã đầy"
 
 #: ../src/jarabe/journal/modalalert.py:68
 msgid "Please delete some old Journal entries to make space for new ones."
@@ -1492,7 +1502,7 @@ msgstr "Bắt đầu với"
 
 #: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
 msgid "No activity to start entry"
-msgstr "Không có hoạt động cần lại để bắt đầu nhập vào"
+msgstr "ngừng hoạt động để bắt đầu việc đăng nhập"
 
 #: ../src/jarabe/journal/palettes.py:112
 msgid "Send to"
@@ -1504,20 +1514,20 @@ msgstr "Xem chi tiết"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "mục không có tập tin nào thì không thể gửi được"
 
 #: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "mục không có tập tin nào thì không thể sao chép được"
 
 #: ../src/jarabe/journal/palettes.py:267
 msgid "Clipboard"
-msgstr "Bảng nháp"
+msgstr "bảng ghi tạm"
 
 #: ../src/jarabe/journal/palettes.py:322
 msgid "No friends present"
-msgstr "Bạn bè không có mặt"
+msgstr "hiện tại không có bạn bè"
 
 #: ../src/jarabe/journal/palettes.py:327
 msgid "No valid connection found"
@@ -1525,205 +1535,205 @@ msgstr "Không tìm thấy kết nối hợp lệ"
 
 #: ../src/jarabe/journal/palettes.py:355
 msgid "No activity to resume entry"
-msgstr "Không có hoạt động để tiếp tục nhập vào"
+msgstr "ngừng hoạt động để phục hồi lại đăng nhập"
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
-#, fuzzy
 msgid "Documents"
-msgstr "Tài liệu"
+msgstr "tài liệu"
 
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr "%(free_space)d MB còn rảnh"
+msgstr "%(free_space)d MB còn trống"
 
 #: ../src/jarabe/model/network.py:211
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "lí do thay đổi trạng thái của thiết bị là không rõ"
 
 #: ../src/jarabe/model/network.py:213
 msgid "The state change is normal."
-msgstr ""
+msgstr "thay đổi trạng thái là bình thường"
 
 #: ../src/jarabe/model/network.py:215
 msgid "The device is now managed."
-msgstr ""
+msgstr "hiện tại thiết bị được quản lí"
 
 #: ../src/jarabe/model/network.py:217
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "thiết bị không được quản lí nữa"
 
 #: ../src/jarabe/model/network.py:219
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "thiết bị không thể sẵn sàng cho cấu hình"
 
 #: ../src/jarabe/model/network.py:221
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
-msgstr ""
+msgstr "cấu hình IP không thể bảo lưu (không có sẵn địa chỉ, thời gian chờ..)"
 
 #: ../src/jarabe/model/network.py:224
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "cấu hình IP không còn hợp lệ"
 
 #: ../src/jarabe/model/network.py:226
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "các bí mật được yêu cầu, nhưng không được cung cấp"
 
 #: ../src/jarabe/model/network.py:228
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"802.1X hổ trợ khi mất kết nối từ điểm truy cập hoặc thẩm định từ máy chủ"
 
 #: ../src/jarabe/model/network.py:231
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "cấu hình của 802.1X hổ trợ bị thất bại"
 
 #: ../src/jarabe/model/network.py:233
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "802.1 không hổ trợ hoặc bất ngờ thất bại"
 
 #: ../src/jarabe/model/network.py:235
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "802.1 đã hổ trợ quá dài để xác thực"
 
 #: ../src/jarabe/model/network.py:237
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Khởi chạy dịch vụ PPP trong thời gian cho phép thất bại"
 
 #: ../src/jarabe/model/network.py:239
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "Dịch vụ PPP mất kết nối đột ngột"
 
 #: ../src/jarabe/model/network.py:241
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Dịch vụ PPP bị thoát ra không mong muốn"
 
 #: ../src/jarabe/model/network.py:243
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Khởi chạy dịch vụ DHCP trong thời gian cho phép thất bại"
 
 #: ../src/jarabe/model/network.py:245
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "Dịch vụ DHCP ghi nhận lỗi không mong muốn"
 
 #: ../src/jarabe/model/network.py:247
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Dịch vụ DHCP bị thoát ra không mong muốn"
 
 #: ../src/jarabe/model/network.py:249
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Khởi chạy dịch vụ chia sẻ kết nối thất bại"
 
 #: ../src/jarabe/model/network.py:251
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Dịch vụ chia sẻ kết nối bị thoát ra không mong muốn"
 
 #: ../src/jarabe/model/network.py:254
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Dịch vụ AutoIP khởi chạy thất bại"
 
 #: ../src/jarabe/model/network.py:256
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "Dịch vụ AutoIP ghi nhận lỗi không mong muốn"
 
 #: ../src/jarabe/model/network.py:258
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Dịch vụ AutoIP bị thoát ra không mong muốn"
 
 #: ../src/jarabe/model/network.py:260
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Quay số thất bại vì đường dây đang bận"
 
 #: ../src/jarabe/model/network.py:262
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Quay số thất bại vì không có tín hiệu"
 
 #: ../src/jarabe/model/network.py:264
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Quay số thất bại vì không có nhà cung cấp dịch vụ"
 
 #: ../src/jarabe/model/network.py:266
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Quay số đã quá hạn"
 
 #: ../src/jarabe/model/network.py:268
 msgid "Dialing failed."
-msgstr ""
+msgstr "Quay số thất bại"
 
 #: ../src/jarabe/model/network.py:270
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Khởi tạo modem thất bại"
 
 #: ../src/jarabe/model/network.py:272
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Lựa chọn GSM APN được chỉ định thất bại"
 
 #: ../src/jarabe/model/network.py:274
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Không tìm kiếm mạng lưới"
 
 #: ../src/jarabe/model/network.py:276
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Đăng ki mạng lưới bị từ chối"
 
 #: ../src/jarabe/model/network.py:278
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Đăng kí mạng lưới đã quá hạn"
 
 #: ../src/jarabe/model/network.py:280
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Thất bại trong việc đăng ký vs bằng mạng lưới GSM đã yêu cầu"
 
 #: ../src/jarabe/model/network.py:282
 msgid "PIN check failed."
-msgstr ""
+msgstr "Kiểm tra mã PIN thất bại"
 
 #: ../src/jarabe/model/network.py:284
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Phần vữa cần thiết cho thiết bị có thể bị thiếu"
 
 #: ../src/jarabe/model/network.py:286
 msgid "The device was removed."
-msgstr ""
+msgstr "Thiết bị đã bị gỡ bỏ"
 
 #: ../src/jarabe/model/network.py:288
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "Trình quản lí mạng lưới đã chuyển qua chế độ ngủ"
 
 #: ../src/jarabe/model/network.py:290
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "Kết nối hiện thời của thiết bị đã bị loại bỏ hoặc mất kết nối"
 
 #: ../src/jarabe/model/network.py:293
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Người sử dụng hoặc máy khách yêu cầu ngắt kết nối"
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Nhà cung cấp dịch vụ/đường dẫn của thiết bị đã thay đổi"
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "kết nối đã tồn tại của thiết bị đã được giả định"
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Nguồn cung cấp bây giờ đã có."
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "modem k thể tìm thấy"
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "kết nối Bluetooth bị thất bại hoặc quá thời gian"
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
-msgstr ""
+msgstr "ko sử dụng"
 
 #: ../src/jarabe/view/buddymenu.py:67
 msgid "Remove friend"
@@ -1757,7 +1767,7 @@ msgstr "Mời vào %s"
 #: ../src/jarabe/view/launcher.py:145
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b> thất bại trong việc khởi chạy"
 
 #: ../src/jarabe/view/palettes.py:48
 msgid "Starting..."
@@ -1765,7 +1775,7 @@ msgstr "Đang khởi chạy..."
 
 #: ../src/jarabe/view/palettes.py:58
 msgid "Activity failed to start"
-msgstr ""
+msgstr "hoạt động thất bại trong việc khởi chạy"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
@@ -1785,14 +1795,13 @@ msgid "Show contents"
 msgstr "Hiện nội dung"
 
 #: ../src/jarabe/view/palettes.py:229
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Bỏ"
 
 #: ../src/jarabe/view/viewsource.py:263
 msgid "Instance Source"
-msgstr "Thể hiện nguồn"
+msgstr "Nguồn mẫu"
 
 #: ../src/jarabe/view/viewsource.py:312
 msgid "Source"
@@ -1800,11 +1809,11 @@ msgstr "Nguồn"
 
 #: ../src/jarabe/view/viewsource.py:374
 msgid "Activity Bundle Source"
-msgstr "Nguồn bó hoạt động"
+msgstr "Nguồn các gói hoạt động"
 
 #: ../src/jarabe/view/viewsource.py:393
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Nguồn bộ dụng cụ Sugar"
 
 #: ../src/jarabe/view/viewsource.py:400
 #, python-format
@@ -1819,4 +1828,13 @@ msgstr "Xem nguồn: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
-msgstr ""
+msgstr "Sugar trong 1 cửa sổ"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "những thư mục thêm vào có thể bao gồm các bản dịch đã được cập nhập"
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "Thư mục để tìm các bản dịch"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "Lỗi trong đối số extreme pm: dùng on/off."

@@ -14,38 +14,38 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 import gettext
-import gobject
+from gi.repository import GObject
 
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
-from sugar.graphics.icon import Icon
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics import iconentry
-from sugar.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics import iconentry
+from sugar3.graphics import style
 
 
-class MainToolbar(gtk.Toolbar):
+class MainToolbar(Gtk.Toolbar):
     """ Main toolbar of the control panel
     """
     __gtype_name__ = 'MainToolbar'
 
     __gsignals__ = {
-        'stop-clicked': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'stop-clicked': (GObject.SignalFlags.RUN_FIRST,
+                            None,
                             ([])),
-        'search-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
+        'search-changed': (GObject.SignalFlags.RUN_FIRST,
+                          None,
                           ([str])),
     }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         self._add_separator()
 
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
         tool_item.show()
         self._search_entry = iconentry.IconEntry()
@@ -53,6 +53,8 @@ class MainToolbar(gtk.Toolbar):
                                               'system-search')
         self._search_entry.add_clear_button()
         self._search_entry.set_width_chars(25)
+        text = _('Search in %s') % _('Settings')
+        self._search_entry.set_placeholder_text(text)
         self._search_entry.connect('changed', self.__search_entry_changed_cb)
         tool_item.add(self._search_entry)
         self._search_entry.show()
@@ -70,7 +72,7 @@ class MainToolbar(gtk.Toolbar):
         return self._search_entry
 
     def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         if expand:
             separator.set_expand(True)
@@ -86,22 +88,22 @@ class MainToolbar(gtk.Toolbar):
         self.emit('stop-clicked')
 
 
-class SectionToolbar(gtk.Toolbar):
+class SectionToolbar(Gtk.Toolbar):
     """ Toolbar of the sections of the control panel
     """
     __gtype_name__ = 'SectionToolbar'
 
     __gsignals__ = {
-        'cancel-clicked': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'cancel-clicked': (GObject.SignalFlags.RUN_FIRST,
+                            None,
                             ([])),
-        'accept-clicked': (gobject.SIGNAL_RUN_FIRST,
-                            gobject.TYPE_NONE,
+        'accept-clicked': (GObject.SignalFlags.RUN_FIRST,
+                            None,
                             ([])),
     }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         self._add_separator()
 
@@ -110,7 +112,7 @@ class SectionToolbar(gtk.Toolbar):
 
         self._add_separator()
 
-        self._title = gtk.Label()
+        self._title = Gtk.Label()
         self._add_widget(self._title)
 
         self._add_separator(True)
@@ -134,7 +136,7 @@ class SectionToolbar(gtk.Toolbar):
         return self._title
 
     def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         if expand:
             separator.set_expand(True)
@@ -144,7 +146,7 @@ class SectionToolbar(gtk.Toolbar):
         separator.show()
 
     def _add_widget(self, widget, expand=False):
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)

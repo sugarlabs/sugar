@@ -18,23 +18,28 @@
 from gettext import gettext as _
 import logging
 
-import glib
-import gtk
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import GObject
 
-from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
 
 
-class ZoomToolbar(gtk.Toolbar):
+class ZoomToolbar(Gtk.Toolbar):
+    __gsignals__ = {
+        'level-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([]))
+        }
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         # we shouldn't be mirrored in RTL locales
-        self.set_direction(gtk.TEXT_DIR_LTR)
+        self.set_direction(Gtk.TextDirection.LTR)
 
         # ask not to be collapsed if possible
         self.set_size_request(4 * style.GRID_CELL_SIZE, -1)
@@ -58,13 +63,13 @@ class ZoomToolbar(gtk.Toolbar):
         else:
             group = None
 
-        button = RadioToolButton(named_icon=icon_name, group=group,
+        button = RadioToolButton(icon_name=icon_name, group=group,
                                  accelerator=accelerator)
         button.connect('clicked', self.__level_clicked_cb, zoom_level)
         self.add(button)
         button.show()
 
-        palette = Palette(glib.markup_escape_text(label))
+        palette = Palette(GLib.markup_escape_text(label))
         palette.props.invoker = FrameWidgetInvoker(button)
         palette.set_group_id('frame')
         button.set_palette(palette)
@@ -76,6 +81,7 @@ class ZoomToolbar(gtk.Toolbar):
             return
 
         shell.get_model().set_zoom_level(level)
+        self.emit('level-clicked')
 
     def __zoom_level_changed_cb(self, **kwargs):
         self._set_zoom_level(kwargs['new_level'])
