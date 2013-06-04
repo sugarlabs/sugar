@@ -14,36 +14,37 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
-import gobject
-import wnck
-import gconf
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+from gi.repository import Wnck
+from gi.repository import GConf
 
 
 _MAX_DELAY = 1000
 
 
-class EventArea(gobject.GObject):
+class EventArea(GObject.GObject):
     __gsignals__ = {
-        'enter': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'leave': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'enter': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'leave': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._windows = []
         self._hover = False
         self._sids = {}
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
         self._corner_delay = client.get_int('/desktop/sugar/frame'
                                             '/corner_delay')
 
-        right = gtk.gdk.screen_width() - 1
-        bottom = gtk.gdk.screen_height() - 1
-        width = gtk.gdk.screen_width() - 2
-        height = gtk.gdk.screen_height() - 2
+        right = Gdk.Screen.width() - 1
+        bottom = Gdk.Screen.height() - 1
+        width = Gdk.Screen.width() - 2
+        height = Gdk.Screen.height() - 2
 
         if self._edge_delay != _MAX_DELAY:
             invisible = self._create_invisible(1, 0, width, 1,
@@ -79,12 +80,12 @@ class EventArea(gobject.GObject):
                                                self._corner_delay)
             self._windows.append(invisible)
 
-        screen = wnck.screen_get_default()
+        screen = Wnck.Screen.get_default()
         screen.connect('window-stacking-changed',
                        self._window_stacking_changed_cb)
 
     def _create_invisible(self, x, y, width, height, delay):
-        invisible = gtk.Invisible()
+        invisible = Gtk.Invisible()
         if delay >= 0:
             invisible.connect('enter-notify-event', self._enter_notify_cb,
                               delay)
@@ -96,10 +97,11 @@ class EventArea(gobject.GObject):
 
         invisible.realize()
         # pylint: disable=E1101
-        invisible.window.set_events(gtk.gdk.POINTER_MOTION_MASK |
-                                    gtk.gdk.ENTER_NOTIFY_MASK |
-                                    gtk.gdk.LEAVE_NOTIFY_MASK)
-        invisible.window.move_resize(x, y, width, height)
+        x11_window = invisible.get_window()
+        x11_window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
+                              Gdk.EventMask.ENTER_NOTIFY_MASK |
+                              Gdk.EventMask.LEAVE_NOTIFY_MASK)
+        x11_window.move_resize(x, y, width, height)
 
         return invisible
 
@@ -115,8 +117,8 @@ class EventArea(gobject.GObject):
 
     def _enter_notify_cb(self, widget, event, delay):
         if widget in self._sids:
-            gobject.source_remove(self._sids[widget])
-        self._sids[widget] = gobject.timeout_add(delay,
+            GObject.source_remove(self._sids[widget])
+        self._sids[widget] = GObject.timeout_add(delay,
                                                  self.__delay_cb,
                                                  widget)
 
@@ -127,7 +129,7 @@ class EventArea(gobject.GObject):
 
     def _leave_notify_cb(self, widget, event):
         if widget in self._sids:
-            gobject.source_remove(self._sids[widget])
+            GObject.source_remove(self._sids[widget])
             del self._sids[widget]
         self._notify_leave()
 
@@ -150,4 +152,4 @@ class EventArea(gobject.GObject):
 
     def _window_stacking_changed_cb(self, screen):
         for window in self._windows:
-            window.window.raise_()
+            window.get_window().raise_()

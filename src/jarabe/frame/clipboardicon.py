@@ -16,14 +16,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import gconf
 
-import gtk
+from gi.repository import GConf
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import style
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
@@ -39,6 +40,7 @@ class ClipboardIcon(RadioToolButton):
         RadioToolButton.__init__(self, group=group)
 
         self.props.palette_invoker = FrameWidgetInvoker(self)
+        self.palette_invoker.props.toggle_palette = True
 
         self._cb_object = cb_object
         self.owns_clipboard = False
@@ -48,7 +50,7 @@ class ClipboardIcon(RadioToolButton):
         self._current_percent = None
 
         self._icon = Icon()
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self._icon.props.xo_color = color
         self.set_icon_widget(self._icon)
@@ -73,10 +75,11 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
-        logging.debug('_drag_data_get_cb: requested target %s',
-                      selection.target)
-        data = self._cb_object.get_formats()[selection.target].get_data()
-        selection.set(selection.target, 8, data)
+        target_atom = selection.get_target()
+        target_name = target_atom.name()
+        logging.debug('_drag_data_get_cb: requested target %s', target_name)
+        data = self._cb_object.get_formats()[target_name].get_data()
+        selection.set(target_atom, 8, data)
 
     def _put_in_clipboard(self):
         logging.debug('ClipboardIcon._put_in_clipboard')
@@ -87,7 +90,7 @@ class ClipboardIcon(RadioToolButton):
 
         targets = self._get_targets()
         if targets:
-            x_clipboard = gtk.Clipboard()
+            x_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
             if not x_clipboard.set_with_data(targets,
                                            self._clipboard_data_get_cb,
                                            self._clipboard_clear_cb,
@@ -97,12 +100,15 @@ class ClipboardIcon(RadioToolButton):
                 self.owns_clipboard = True
 
     def _clipboard_data_get_cb(self, x_clipboard, selection, info, targets):
-        if not selection.target in [target[0] for target in targets]:
+        selection_target = selection.get_target()
+        entries_targets = [entry.target for entry in targets]
+        if not str(selection_target) in entries_targets:
             logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
-                            ' but only have %r.', selection.target, targets)
+                            ' but only have %r.', selection_target,
+                            entries_targets)
             return
-        data = self._cb_object.get_formats()[selection.target].get_data()
-        selection.set(selection.target, 8, data)
+        data = self._cb_object.get_formats()[str(selection_target)].get_data()
+        selection.set(selection_target, 8, data)
 
     def _clipboard_clear_cb(self, x_clipboard, targets):
         logging.debug('ClipboardIcon._clipboard_clear_cb')
@@ -114,14 +120,16 @@ class ClipboardIcon(RadioToolButton):
 
         if cb_object.get_icon():
             self._icon.props.icon_name = cb_object.get_icon()
+            if self._notif_icon:
+                self._notif_icon.props.icon_name = self._icon.props.icon_name
         else:
             self._icon.props.icon_name = 'application-octet-stream'
 
         child = self.get_child()
         child.connect('drag-begin', self._drag_begin_cb)
-        child.drag_source_set(gtk.gdk.BUTTON1_MASK,
+        child.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
                               self._get_targets(),
-                              gtk.gdk.ACTION_COPY)
+                              Gdk.DragAction.COPY)
 
         if cb_object.get_percent() == 100:
             self.props.sensitive = True
@@ -147,15 +155,15 @@ class ClipboardIcon(RadioToolButton):
                 XoColor('%s,%s' % (self._icon.props.stroke_color,
                                    self._icon.props.fill_color))
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, gtk.CORNER_BOTTOM_LEFT)
+        frame.add_notification(self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
-        icon_theme = gtk.icon_theme_get_default()
+        icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
-        context.set_icon_pixbuf(pixbuf, hot_x=pixbuf.props.width / 2,
-                                hot_y=pixbuf.props.height / 2)
+        Gtk.drag_set_icon_pixbuf(context, pixbuf, hot_x=pixbuf.props.width / 2,
+                                 hot_y=pixbuf.props.height / 2)
 
     def _notify_active_cb(self, widget, pspec):
         if self.props.active:
@@ -166,5 +174,6 @@ class ClipboardIcon(RadioToolButton):
     def _get_targets(self):
         targets = []
         for format_type in self._cb_object.get_formats().keys():
-            targets.append((format_type, 0, 0))
+            targets.append(Gtk.TargetEntry.new(format_type,
+                    Gtk.TargetFlags.SAME_APP, 0))
         return targets

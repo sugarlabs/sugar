@@ -16,7 +16,7 @@
 
 import re
 
-import gconf
+from gi.repository import GConf
 
 
 _DEFAULTS_KEY = '/desktop/sugar/journal/defaults'
@@ -29,7 +29,7 @@ class MimeRegistry(object):
 
     def __init__(self):
         # TODO move here all mime_type related code from jarabe modules
-        self._gconf = gconf.client_get_default()
+        self._gconf = GConf.Client.get_default()
 
     def get_default_activity(self, mime_type):
         return self._gconf.get_string(_key_name(mime_type))

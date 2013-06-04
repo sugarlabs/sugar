@@ -14,15 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import logging
-import tempfile
 
-import gtk
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar import util
-from sugar.graphics import tray
-from sugar.graphics import style
+from sugar3.graphics import tray
+from sugar3.graphics import style
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardicon import ClipboardIcon
@@ -60,7 +58,7 @@ class _ContextMap(object):
 
 class ClipboardTray(tray.VTray):
 
-    MAX_ITEMS = gtk.gdk.screen_height() / style.GRID_CELL_SIZE - 2
+    MAX_ITEMS = Gdk.Screen.height() / style.GRID_CELL_SIZE - 2
 
     def __init__(self):
         tray.VTray.__init__(self, align=tray.ALIGN_TO_END)
@@ -78,26 +76,31 @@ class ClipboardTray(tray.VTray):
         return False
 
     def _add_selection(self, object_id, selection):
-        if not selection.data:
+        if not selection.get_data():
             return
 
-        logging.debug('ClipboardTray: adding type %r', selection.type)
+        selection_data = selection.get_data()
+
+        selection_type_atom = selection.get_data_type()
+        selection_type = selection_type_atom.name()
+
+        logging.debug('ClipboardTray: adding type %r', selection_type)
 
         cb_service = clipboard.get_instance()
-        if selection.type == 'text/uri-list':
-            uris = selection.data.split('\n')
+        if selection_type == 'text/uri-list':
+            uris = selection.get_uris()
             if len(uris) > 1:
                 raise NotImplementedError('Multiple uris in text/uri-list' \
                                           ' still not supported.')
 
             cb_service.add_object_format(object_id,
-                                         selection.type,
+                                         selection_type,
                                          uris[0],
                                          on_disk=True)
         else:
             cb_service.add_object_format(object_id,
-                                         selection.type,
-                                         selection.data,
+                                         selection_type,
+                                         selection_data,
                                          on_disk=False)
 
     def _object_added_cb(self, cb_service, cb_object):
@@ -134,9 +137,9 @@ class ClipboardTray(tray.VTray):
         logging.debug('ClipboardTray._drag_motion_cb')
 
         if self._internal_drag(context):
-            context.drag_status(gtk.gdk.ACTION_MOVE, time)
+            Gdk.drag_status(context, Gdk.DragAction.MOVE, time)
         else:
-            context.drag_status(gtk.gdk.ACTION_COPY, time)
+            Gdk.drag_status(context, Gdk.DragAction.COPY, time)
             self.props.drag_active = True
 
         return True
@@ -150,36 +153,18 @@ class ClipboardTray(tray.VTray):
         if self._internal_drag(context):
             # TODO: We should move the object within the clipboard here
             if not self._context_map.has_context(context):
-                context.drop_finish(False, gtk.get_current_event_time())
+                Gdk.drop_finish(context, False, Gtk.get_current_event_time())
             return False
 
         cb_service = clipboard.get_instance()
         object_id = cb_service.add_object(name="")
 
-        self._context_map.add_context(context, object_id, len(context.targets))
+        context_targets = context.list_targets()
+        self._context_map.add_context(context, object_id, len(context_targets))
 
-        if 'XdndDirectSave0' in context.targets:
-            window = context.source_window
-            prop_type, format_, filename = \
-                window.property_get('XdndDirectSave0', 'text/plain')
-
-            # FIXME query the clipboard service for a filename?
-            base_dir = tempfile.gettempdir()
-            dest_filename = util.unique_id()
-
-            name_, dot, extension = filename.rpartition('.')
-            dest_filename += dot + extension
-
-            dest_uri = 'file://' + os.path.join(base_dir, dest_filename)
-
-            window.property_change('XdndDirectSave0', prop_type, format_,
-                                   gtk.gdk.PROP_MODE_REPLACE, dest_uri)
-
-            widget.drag_get_data(context, 'XdndDirectSave0', time)
-        else:
-            for target in context.targets:
-                if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
-                    widget.drag_get_data(context, target, time)
+        for target in context_targets:
+            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
+                widget.drag_get_data(context, target, time)
 
         cb_service.set_object_percent(object_id, percent=100)
 
@@ -188,24 +173,13 @@ class ClipboardTray(tray.VTray):
     def drag_data_received_cb(self, widget, context, x, y, selection,
                               targetType, time):
         logging.debug('ClipboardTray: got data for target %r',
-            selection.target)
+            selection.get_target())
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
                 logging.warn('ClipboardTray: empty selection for target %s',
-                    selection.target)
-            elif selection.target == 'XdndDirectSave0':
-                if selection.data == 'S':
-                    window = context.source_window
-
-                    prop_type, format_, dest = window.property_get(
-                        'XdndDirectSave0', 'text/plain')
-
-                    clipboardservice = clipboard.get_instance()
-                    clipboardservice.add_object_format(object_id,
-                                                       'XdndDirectSave0',
-                                                       dest, on_disk=True)
+                    selection.get_target())
             else:
                 self._add_selection(object_id, selection)
 
@@ -213,10 +187,13 @@ class ClipboardTray(tray.VTray):
             # If it's the last target to be processed, finish
             # the dnd transaction
             if not self._context_map.has_context(context):
-                context.drop_finish(True, gtk.get_current_event_time())
+                Gdk.drop_finish(context, True, Gtk.get_current_event_time())
 
     def _internal_drag(self, context):
-        view_ancestor = context.get_source_widget().get_ancestor(gtk.Viewport)
+        source_widget = Gtk.drag_get_source_widget(context)
+        if source_widget is None:
+            return False
+        view_ancestor = source_widget.get_ancestor(Gtk.Viewport)
         if view_ancestor is self._viewport:
             return True
         else:

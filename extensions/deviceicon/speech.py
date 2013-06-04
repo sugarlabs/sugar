@@ -16,17 +16,19 @@
 
 from gettext import gettext as _
 
-import glib
-import gtk
-import gconf
-import gobject
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import GConf
+from gi.repository import GObject
 
-from sugar.graphics.icon import Icon
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import speech
@@ -40,23 +42,19 @@ class SpeechDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 150
 
     def __init__(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.props.toggle_palette = True
+
         self._manager = speech.get_speech_manager()
-        self._icon_widget.connect('button-release-event',
-                                  self.__button_release_event_cb)
 
     def create_palette(self):
-        label = glib.markup_escape_text(_('Speech'))
+        label = GLib.markup_escape_text(_('Speech'))
         palette = SpeechPalette(label, manager=self._manager)
         palette.set_group_id('frame')
         return palette
-
-    def __button_release_event_cb(self, widget, event):
-        self.palette_invoker.notify_right_click()
-        return True
 
 
 class SpeechPalette(Palette):
@@ -69,52 +67,68 @@ class SpeechPalette(Palette):
         self._manager.connect('stop', self._set_menu_state, 'stop')
         self._manager.connect('pause', self._set_menu_state, 'pause')
 
-        vbox = gtk.VBox()
-        self.set_content(vbox)
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
 
         self._play_icon = Icon(icon_name='player_play')
         self._pause_icon = Icon(icon_name='player_pause')
-        self._play_pause_menu = MenuItem(text_label=_('Say selected text'))
+        self._play_pause_menu = PaletteMenuItem(
+            icon_name='player_play',
+            text_label=_('Say selected text'))
         self._play_pause_menu.set_image(self._play_icon)
         self._play_pause_menu.connect('activate', self.__play_activated_cb)
+        box.append_item(self._play_pause_menu)
         self._play_pause_menu.show()
 
-        self._stop_menu = MenuItem(icon_name='player_stop',
-                text_label=_('Stop playback'))
+        self._stop_menu = PaletteMenuItem(icon_name='player_stop',
+                                          text_label=_('Stop playback'))
         self._stop_menu.connect('activate', self.__stop_activated_cb)
         self._stop_menu.set_sensitive(False)
-        self._stop_menu.show()
+        box.append_item(self._stop_menu)
 
-        self.menu.append(self._play_pause_menu)
-        self.menu.append(self._stop_menu)
+        separator = PaletteMenuItemSeparator()
+        box.append_item(separator)
+        separator.show()
 
-        self._adj_pitch = gtk.Adjustment(value=self._manager.get_pitch(),
-                                          lower=self._manager.MIN_PITCH,
-                                          upper=self._manager.MAX_PITCH)
-        self._hscale_pitch = gtk.HScale(self._adj_pitch)
-        self._hscale_pitch.set_draw_value(False)
+        pitch_label = Gtk.Label(_('Pitch'))
+        box.append_item(pitch_label, vertical_padding=0)
+        pitch_label.show()
 
-        vbox.pack_start(gtk.Label(_('Pitch')), padding=style.DEFAULT_PADDING)
-        vbox.pack_start(self._hscale_pitch)
+        self._adj_pitch = Gtk.Adjustment(value=self._manager.get_pitch(),
+                                         lower=self._manager.MIN_PITCH,
+                                         upper=self._manager.MAX_PITCH)
 
-        self._adj_rate = gtk.Adjustment(value=self._manager.get_rate(),
-                                          lower=self._manager.MIN_RATE,
-                                          upper=self._manager.MAX_RATE)
-        self._hscale_rate = gtk.HScale(self._adj_rate)
-        self._hscale_rate.set_draw_value(False)
+        hscale_pitch = Gtk.HScale()
+        hscale_pitch.set_adjustment(self._adj_pitch)
+        hscale_pitch.set_draw_value(False)
 
-        vbox.pack_start(gtk.Label(_('Rate')), padding=style.DEFAULT_PADDING)
-        vbox.pack_start(self._hscale_rate)
-        vbox.show_all()
+        box.append_item(hscale_pitch, vertical_padding=0)
+        hscale_pitch.show()
+
+        rate_label = Gtk.Label(_('Rate'))
+        box.append_item(rate_label, vertical_padding=0)
+        rate_label.show()
+
+        self._adj_rate = Gtk.Adjustment(value=self._manager.get_rate(),
+                                        lower=self._manager.MIN_RATE,
+                                        upper=self._manager.MAX_RATE)
+
+        hscale_rate = Gtk.HScale()
+        hscale_rate.set_adjustment(self._adj_rate)
+        hscale_rate.set_draw_value(False)
+
+        box.append_item(hscale_rate, vertical_padding=0)
+        hscale_rate.show()
 
         self._adj_pitch.connect('value_changed', self.__adj_pitch_changed_cb)
         self._adj_rate.connect('value_changed', self.__adj_rate_changed_cb)
 
-    def __adj_pitch_changed_cb(self, adjustement):
-        self._manager.set_pitch(int(adjustement.value))
+    def __adj_pitch_changed_cb(self, adjustment):
+        self._manager.set_pitch(int(adjustment.get_value()))
 
-    def __adj_rate_changed_cb(self, adjustement):
-        self._manager.set_rate(int(adjustement.value))
+    def __adj_rate_changed_cb(self, adjustment):
+        self._manager.set_rate(int(adjustment.get_value()))
 
     def __play_activated_cb(self, widget):
         if self._manager.is_paused:

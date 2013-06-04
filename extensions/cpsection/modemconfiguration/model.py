@@ -17,7 +17,7 @@
 import logging
 
 import dbus
-import gtk
+from gi.repository import Gtk
 
 from jarabe.model import network
 
@@ -61,7 +61,7 @@ def get_modem_settings():
 
     # wait til asynchronous execution completes
     while not secrets_call_done[0]:
-        gtk.main_iteration()
+        Gtk.main_iteration()
 
     return modem_settings
 

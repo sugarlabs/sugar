@@ -18,29 +18,27 @@ import os
 import os.path
 import logging
 from gettext import gettext as _
-import gconf
 import pwd
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
+from gi.repository import GConf
 
-from sugar import env
-from sugar import profile
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
+from sugar3 import env
+from sugar3 import profile
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.intro import colorpicker
-
-
-_BACKGROUND_COLOR = style.COLOR_WHITE
 
 
 def create_profile(name, color=None):
     if not color:
         color = XoColor()
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/nick', name)
     client.set_string('/desktop/sugar/user/color', color.to_string())
     client.suggest_sync()
@@ -62,19 +60,23 @@ def create_profile(name, color=None):
         logging.warning('Existing public key %s.pub moved to %s.pub.broken',
                         keypath, keypath)
 
+    logging.debug("Generating user keypair")
+
     cmd = "ssh-keygen -q -t dsa -f %s -C '' -N ''" % (keypath, )
     (s, o) = commands.getstatusoutput(cmd)
     if s != 0:
         logging.error('Could not generate key pair: %d %s', s, o)
 
+    logging.debug("User keypair generated")
 
-class _Page(gtk.VBox):
+
+class _Page(Gtk.VBox):
     __gproperties__ = {
-        'valid': (bool, None, None, False, gobject.PARAM_READABLE),
+        'valid': (bool, None, None, False, GObject.PARAM_READABLE),
     }
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        Gtk.VBox.__init__(self)
         self.valid = False
 
     def set_valid(self, valid):
@@ -94,20 +96,20 @@ class _NamePage(_Page):
         _Page.__init__(self)
         self._intro = intro
 
-        alignment = gtk.Alignment(0.5, 0.5, 0, 0)
-        self.pack_start(alignment, expand=True, fill=True)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True, padding=0)
 
-        hbox = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        hbox = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         alignment.add(hbox)
 
-        label = gtk.Label(_('Name:'))
-        hbox.pack_start(label, expand=False)
+        label = Gtk.Label(label=_('Name:'))
+        hbox.pack_start(label, False, True, 0)
 
-        self._entry = gtk.Entry()
+        self._entry = Gtk.Entry()
         self._entry.connect('notify::text', self._text_changed_cb)
         self._entry.set_size_request(style.zoom(300), -1)
         self._entry.set_max_length(45)
-        hbox.pack_start(self._entry, expand=False)
+        hbox.pack_start(self._entry, False, True, 0)
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -127,14 +129,14 @@ class _ColorPage(_Page):
     def __init__(self):
         _Page.__init__(self)
 
-        vbox = gtk.VBox(spacing=style.DEFAULT_SPACING)
-        self.pack_start(vbox, expand=True, fill=False)
+        vbox = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        self.pack_start(vbox, expand=True, fill=False, padding=0)
 
-        self._label = gtk.Label(_('Click to change color:'))
-        vbox.pack_start(self._label)
+        self._label = Gtk.Label(label=_('Click to change color:'))
+        vbox.pack_start(self._label, True, True, 0)
 
         self._cp = colorpicker.ColorPicker()
-        vbox.pack_start(self._cp)
+        vbox.pack_start(self._cp, True, True, 0)
 
         self._color = self._cp.get_color()
         self.set_valid(True)
@@ -143,10 +145,10 @@ class _ColorPage(_Page):
         return self._cp.get_color()
 
 
-class _IntroBox(gtk.VBox):
+class _IntroBox(Gtk.VBox):
     __gsignals__ = {
-        'done': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                 ([gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT])),
+        'done': (GObject.SignalFlags.RUN_FIRST, None,
+                 ([GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT])),
     }
 
     PAGE_NAME = 0
@@ -156,7 +158,7 @@ class _IntroBox(gtk.VBox):
     PAGE_LAST = PAGE_COLOR
 
     def __init__(self):
-        gtk.VBox.__init__(self)
+        Gtk.VBox.__init__(self)
         self.set_border_width(style.zoom(30))
 
         self._page = self.PAGE_NAME
@@ -165,7 +167,7 @@ class _IntroBox(gtk.VBox):
         self._current_page = None
         self._next_button = None
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         default_nick = client.get_string('/desktop/sugar/user/default_nick')
         if default_nick != 'disabled':
             self._page = self.PAGE_COLOR
@@ -186,21 +188,21 @@ class _IntroBox(gtk.VBox):
         elif self._page == self.PAGE_COLOR:
             self._current_page = self._color_page
 
-        self.pack_start(self._current_page, expand=True)
+        self.pack_start(self._current_page, True, True, 0)
 
-        button_box = gtk.HButtonBox()
+        button_box = Gtk.HButtonBox()
 
         if self._page == self.PAGE_FIRST:
-            button_box.set_layout(gtk.BUTTONBOX_END)
+            button_box.set_layout(Gtk.ButtonBoxStyle.END)
         else:
-            button_box.set_layout(gtk.BUTTONBOX_EDGE)
-            back_button = gtk.Button(_('Back'))
+            button_box.set_layout(Gtk.ButtonBoxStyle.EDGE)
+            back_button = Gtk.Button(_('Back'))
             image = Icon(icon_name='go-left')
             back_button.set_image(image)
             back_button.connect('clicked', self._back_activated_cb)
-            button_box.pack_start(back_button)
+            button_box.pack_start(back_button, True, True, 0)
 
-        self._next_button = gtk.Button()
+        self._next_button = Gtk.Button()
         image = Icon(icon_name='go-right')
         self._next_button.set_image(image)
 
@@ -214,12 +216,12 @@ class _IntroBox(gtk.VBox):
         self._current_page.activate()
 
         self._update_next_button()
-        button_box.pack_start(self._next_button)
+        button_box.pack_start(self._next_button, True, True, 0)
 
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
 
-        self.pack_start(button_box, expand=False)
+        self.pack_start(button_box, False, True, 0)
         self.show_all()
 
     def _update_next_button(self):
@@ -256,11 +258,15 @@ class _IntroBox(gtk.VBox):
         self.emit('done', name, color)
 
 
-class IntroWindow(gtk.Window):
+class IntroWindow(Gtk.Window):
     __gtype_name__ = 'SugarIntroWindow'
 
+    __gsignals__ = {
+        'done': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
     def __init__(self):
-        gtk.Window.__init__(self)
+        Gtk.Window.__init__(self)
 
         self.props.decorated = False
         self.maximize()
@@ -274,19 +280,19 @@ class IntroWindow(gtk.Window):
 
     def _done_cb(self, box, name, color):
         self.hide()
-        gobject.idle_add(self._create_profile_cb, name, color)
+        GObject.idle_add(self._create_profile_cb, name, color)
 
     def _create_profile_cb(self, name, color):
         create_profile(name, color)
-        gtk.main_quit()
+        self.emit("done")
 
         return False
 
     def __key_press_cb(self, widget, event):
-        if gtk.gdk.keyval_name(event.keyval) == 'Return':
+        if Gdk.keyval_name(event.keyval) == 'Return':
             self._intro_box.next()
             return True
-        elif gtk.gdk.keyval_name(event.keyval) == 'Escape':
+        elif Gdk.keyval_name(event.keyval) == 'Escape':
             self._intro_box.back()
             return True
         return False
@@ -295,5 +301,5 @@ class IntroWindow(gtk.Window):
 if __name__ == '__main__':
     w = IntroWindow()
     w.show()
-    w.connect('destroy', gtk.main_quit)
-    gtk.main()
+    w.connect('destroy', Gtk.main_quit)
+    Gtk.main()

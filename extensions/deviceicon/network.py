@@ -25,21 +25,23 @@ import socket
 import struct
 import datetime
 import time
-import gtk
-import glib
-import gobject
-import gconf
+from gi.repository import Gtk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import GConf
 import dbus
 
-from sugar.graphics.icon import get_icon_state
-from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics import xocolor
-from sugar import profile
+from sugar3.graphics.icon import get_icon_state
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import xocolor
+from sugar3 import profile
 
 from jarabe.model import network
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -59,7 +61,7 @@ class WirelessPalette(Palette):
     __gtype_name__ = 'SugarWirelessPalette'
 
     __gsignals__ = {
-        'deactivate-connection': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'deactivate-connection': (GObject.SignalFlags.RUN_FIRST, None,
                                   ([])),
     }
 
@@ -68,16 +70,28 @@ class WirelessPalette(Palette):
 
         self._disconnect_item = None
 
-        self._channel_label = gtk.Label()
+        self._channel_label = Gtk.Label()
         self._channel_label.props.xalign = 0.0
         self._channel_label.show()
 
-        self._ip_address_label = gtk.Label()
+        self._ip_address_label = Gtk.Label()
+        self._ip_address_label.props.xalign = 0.0
+        self._ip_address_label.show()
 
-        self._info = gtk.VBox()
+        self._info = Gtk.VBox()
+
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        self._disconnect_item.set_image(icon)
+        self._disconnect_item.connect('activate',
+                                      self.__disconnect_activate_cb)
+        self._info.add(self._disconnect_item)
+
+        separator = PaletteMenuItemSeparator()
+        self._info.pack_start(separator, True, True, 0)
 
         def _padded(child, xalign=0, yalign=0.5):
-            padder = gtk.Alignment(xalign=xalign, yalign=yalign,
+            padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
                                    xscale=1, yscale=0.33)
             padder.set_padding(style.DEFAULT_SPACING,
                                style.DEFAULT_SPACING,
@@ -86,24 +100,17 @@ class WirelessPalette(Palette):
             padder.add(child)
             return padder
 
-        self._info.pack_start(_padded(self._channel_label))
-        self._info.pack_start(_padded(self._ip_address_label))
+        self._info.pack_start(_padded(self._channel_label), True, True, 0)
+        self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
         self._info.show_all()
 
-        self._disconnect_item = MenuItem(_('Disconnect'))
-        icon = Icon(icon_size=gtk.ICON_SIZE_MENU, icon_name='media-eject')
-        self._disconnect_item.set_image(icon)
-        self._disconnect_item.connect('activate',
-                                      self.__disconnect_activate_cb)
-        self.menu.append(self._disconnect_item)
-
     def set_connecting(self):
-        label = glib.markup_escape_text(_('Connecting...'))
+        label = GLib.markup_escape_text(_('Connecting...'))
         self.props.secondary_text = label
 
     def _set_connected(self, iaddress):
         self.set_content(self._info)
-        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
+        self.props.secondary_text = GLib.markup_escape_text(_('Connected'))
         self._set_ip_address(iaddress)
         self._disconnect_item.show()
 
@@ -116,7 +123,7 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def set_disconnected(self):
-        label = glib.markup_escape_text(_('No wireless connection'))
+        label = GLib.markup_escape_text(_('No wireless connection'))
         self.props.primary_text = label
         self.props.secondary_text = ''
         self._disconnect_item.hide()
@@ -145,19 +152,19 @@ class WiredPalette(Palette):
     __gtype_name__ = 'SugarWiredPalette'
 
     def __init__(self):
-        label = glib.markup_escape_text(_('Wired Network'))
+        label = GLib.markup_escape_text(_('Wired Network'))
         Palette.__init__(self, primary_text=label)
 
-        self._speed_label = gtk.Label()
+        self._speed_label = Gtk.Label()
         self._speed_label.props.xalign = 0.0
         self._speed_label.show()
 
-        self._ip_address_label = gtk.Label()
+        self._ip_address_label = Gtk.Label()
 
-        self._info = gtk.VBox()
+        self._info = Gtk.VBox()
 
         def _padded(child, xalign=0, yalign=0.5):
-            padder = gtk.Alignment(xalign=xalign, yalign=yalign,
+            padder = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
                                    xscale=1, yscale=0.33)
             padder.set_padding(style.DEFAULT_SPACING,
                                style.DEFAULT_SPACING,
@@ -166,12 +173,12 @@ class WiredPalette(Palette):
             padder.add(child)
             return padder
 
-        self._info.pack_start(_padded(self._speed_label))
-        self._info.pack_start(_padded(self._ip_address_label))
+        self._info.pack_start(_padded(self._speed_label), True, True, 0)
+        self._info.pack_start(_padded(self._ip_address_label), True, True, 0)
         self._info.show_all()
 
         self.set_content(self._info)
-        self.props.secondary_text = glib.markup_escape_text(_('Connected'))
+        self.props.secondary_text = GLib.markup_escape_text(_('Connected'))
 
     def set_connected(self, speed, iaddress):
         self._speed_label.set_text('%s: %d Mb/s' % (_('Speed'), speed))
@@ -194,64 +201,64 @@ class GsmPalette(Palette):
     __gtype_name__ = 'SugarGsmPalette'
 
     __gsignals__ = {
-        'gsm-connect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'gsm-disconnect': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'gsm-connect': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'gsm-disconnect': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self):
-        label = glib.markup_escape_text(_('Wireless modem'))
+        label = GLib.markup_escape_text(_('Wireless modem'))
         Palette.__init__(self, primary_text=label)
 
         self._current_state = None
         self._failed_connection = False
 
-        self._toggle_state_item = MenuItem('')
+        self.info_box = Gtk.VBox()
+
+        self._toggle_state_item = PaletteMenuItem('')
         self._toggle_state_item.connect('activate', self.__toggle_state_cb)
-        self.menu.append(self._toggle_state_item)
+        self.info_box.pack_start(self._toggle_state_item, True, True, 0)
         self._toggle_state_item.show()
 
-        self.info_box = gtk.VBox()
-
-        self.error_title_label = gtk.Label("")
+        self.error_title_label = Gtk.Label(label="")
         self.error_title_label.set_alignment(0, 0.5)
         self.error_title_label.set_line_wrap(True)
-        self.info_box.pack_start(self.error_title_label)
-        self.error_description_label = gtk.Label("")
+        self.info_box.pack_start(self.error_title_label, True, True, 0)
+        self.error_description_label = Gtk.Label(label="")
         self.error_description_label.set_alignment(0, 0.5)
         self.error_description_label.set_line_wrap(True)
-        self.info_box.pack_start(self.error_description_label)
+        self.info_box.pack_start(self.error_description_label, True, True, 0)
 
-        self.connection_info_box = gtk.HBox()
-        icon = Icon(icon_name='data-upload', icon_size=gtk.ICON_SIZE_MENU)
-        self.connection_info_box.pack_start(icon)
+        self.connection_info_box = Gtk.HBox()
+        icon = Icon(icon_name='data-upload', icon_size=Gtk.IconSize.MENU)
+        self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
 
-        self._data_label_up = gtk.Label()
+        self._data_label_up = Gtk.Label()
         self._data_label_up.props.xalign = 0.0
         label_alignment = self._add_widget_with_padding(self._data_label_up)
-        self.connection_info_box.pack_start(label_alignment)
+        self.connection_info_box.pack_start(label_alignment, True, True, 0)
         self._data_label_up.show()
         label_alignment.show()
 
-        icon = Icon(icon_name='data-download', icon_size=gtk.ICON_SIZE_MENU)
-        self.connection_info_box.pack_start(icon)
+        icon = Icon(icon_name='data-download', icon_size=Gtk.IconSize.MENU)
+        self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
-        self._data_label_down = gtk.Label()
+        self._data_label_down = Gtk.Label()
         self._data_label_down.props.xalign = 0.0
         label_alignment = self._add_widget_with_padding(self._data_label_down)
-        self.connection_info_box.pack_start(label_alignment)
+        self.connection_info_box.pack_start(label_alignment, True, True, 0)
         self._data_label_down.show()
         label_alignment.show()
 
-        self.info_box.pack_start(self.connection_info_box)
+        self.info_box.pack_start(self.connection_info_box, True, True, 0)
 
         self.info_box.show()
         self.set_content(self.info_box)
 
-        self.set_state(_GSM_STATE_NOT_READY)
+        self.update_state(_GSM_STATE_NOT_READY)
 
     def _add_widget_with_padding(self, child, xalign=0, yalign=0.5):
-        alignment = gtk.Alignment(xalign=xalign, yalign=yalign,
+        alignment = Gtk.Alignment.new(xalign=xalign, yalign=yalign,
                                   xscale=1, yscale=0.33)
         alignment.set_padding(style.DEFAULT_SPACING,
                               style.DEFAULT_SPACING,
@@ -266,33 +273,33 @@ class GsmPalette(Palette):
 
     def _update_label_and_text(self, reason=0):
         if self._current_state == _GSM_STATE_NOT_READY:
-            self._toggle_state_item.get_child().set_label('...')
-            label = glib.markup_escape_text(_('Please wait...'))
+            self._toggle_state_item.set_label('...')
+            label = GLib.markup_escape_text(_('Please wait...'))
             self.props.secondary_text = label
 
         elif self._current_state == _GSM_STATE_DISCONNECTED:
             if not self._failed_connection:
-                self._toggle_state_item.get_child().set_label(_('Connect'))
-            label = glib.markup_escape_text(_('Disconnected'))
+                self._toggle_state_item.set_label(_('Connect'))
+            label = GLib.markup_escape_text(_('Disconnected'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok', \
-                            icon_size=gtk.ICON_SIZE_MENU)
+                            icon_size=Gtk.IconSize.MENU)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
-            self._toggle_state_item.get_child().set_label(_('Cancel'))
-            label = glib.markup_escape_text(_('Connecting...'))
+            self._toggle_state_item.set_label(_('Cancel'))
+            label = GLib.markup_escape_text(_('Connecting...'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel', \
-                            icon_size=gtk.ICON_SIZE_MENU)
+                            icon_size=Gtk.IconSize.MENU)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTED:
             self._failed_connection = False
-            self._toggle_state_item.get_child().set_label(_('Disconnect'))
+            self._toggle_state_item.set_label(_('Disconnect'))
             self.update_connection_time()
             icon = Icon(icon_name='media-eject', \
-                            icon_size=gtk.ICON_SIZE_MENU)
+                            icon_size=Gtk.IconSize.MENU)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_FAILED:
@@ -320,7 +327,7 @@ class GsmPalette(Palette):
     def add_alert(self, error, suggestion):
         self._failed_connection = True
         action = _('Try connection again')
-        self._toggle_state_item.get_child().set_label(action)
+        self._toggle_state_item.set_label(action)
 
         title = _('Error: %s') % error
         self.error_title_label.set_markup('<b>%s</b>' % title)
@@ -336,7 +343,7 @@ class GsmPalette(Palette):
         else:
             formatted_time = '00:00:00'
         text = _('Connected for %s') % (formatted_time, )
-        self.props.secondary_text = glib.markup_escape_text(text)
+        self.props.secondary_text = GLib.markup_escape_text(text)
 
     def update_stats(self, in_bytes, out_bytes):
         in_KBytes = in_bytes / 1024
@@ -395,6 +402,9 @@ class WirelessDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.props.hide_tooltip_on_click = False
+        self.palette_invoker.props.toggle_palette = True
+
         self._palette = WirelessPalette(self._display_name)
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection_cb)
@@ -452,13 +462,15 @@ class WirelessDeviceView(ToolButton):
             self._bus.add_signal_receiver(self.__ap_properties_changed_cb,
                                           signal_name='PropertiesChanged',
                                           path=self._active_ap_op,
-                                          dbus_interface=network.NM_ACCESSPOINT_IFACE)
+                                          dbus_interface=network.NM_ACCESSPOINT_IFACE,
+                                          byte_arrays=True)
 
     def __get_active_ap_error_cb(self, err):
         logging.error('Error getting the active access point: %s', err)
 
     def __state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
+        self._update_color()
         self._update_state()
         self._device_props.Get(network.NM_WIRELESS_IFACE, 'ActiveAccessPoint',
                                reply_handler=self.__get_active_ap_reply_cb,
@@ -510,7 +522,7 @@ class WirelessDeviceView(ToolButton):
         else:
             self._icon.props.badge_name = None
 
-        label = glib.markup_escape_text(self._display_name)
+        label = GLib.markup_escape_text(self._display_name)
         self._palette.props.primary_text = label
 
         self._update_state()
@@ -541,8 +553,12 @@ class WirelessDeviceView(ToolButton):
                 self._icon.props.icon_name = 'network-adhoc-%s' % channel
             self._icon.props.base_color = profile.get_color()
 
-        if (state >= network.NM_DEVICE_STATE_PREPARE) and \
-           (state <= network.NM_DEVICE_STATE_IP_CONFIG):
+        if state == network.NM_DEVICE_STATE_PREPARE or \
+           state == network.NM_DEVICE_STATE_CONFIG or \
+           state == network.NM_DEVICE_STATE_NEED_AUTH or \
+           state == network.NM_DEVICE_STATE_IP_CONFIG or \
+           state == network.NM_DEVICE_STATE_IP_CHECK or \
+           state == network.NM_DEVICE_STATE_SECONDARIES:
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
@@ -594,8 +610,11 @@ class OlpcMeshDeviceView(ToolButton):
         self._icon.show()
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.props.hide_tooltip_on_click = False
+        self.palette_invoker.props.toggle_palette = True
+
         title = _('Mesh Network')
-        self._palette = WirelessPalette(glib.markup_escape_text(title))
+        self._palette = WirelessPalette(GLib.markup_escape_text(title))
         self._palette.connect('deactivate-connection',
                               self.__deactivate_connection)
         self.set_palette(self._palette)
@@ -638,7 +657,7 @@ class OlpcMeshDeviceView(ToolButton):
 
     def _update_text(self):
         channel = str(self._channel)
-        text = glib.markup_escape_text(_('Mesh Network %s') % (channel, ))
+        text = GLib.markup_escape_text(_('Mesh Network %s') % (channel, ))
         self._palette.props.primary_text = text
 
     def _update(self):
@@ -691,7 +710,7 @@ class WiredDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 301
 
     def __init__(self, speed, address):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
@@ -701,6 +720,7 @@ class WiredDeviceView(TrayIcon):
         self.set_palette(self._palette)
         self._palette.set_group_id('frame')
         self._palette.set_connected(speed, address)
+        self.palette_invoker.props.toggle_palette = True
 
 
 class GsmDeviceView(TrayIcon):
@@ -710,9 +730,10 @@ class GsmDeviceView(TrayIcon):
 
     def __init__(self, device):
         self._connection_time_handler = None
+
         self._connection_timestamp = 0
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
@@ -721,6 +742,7 @@ class GsmDeviceView(TrayIcon):
         self._device = device
         self._palette = None
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.props.toggle_palette = True
 
         self._bus.add_signal_receiver(self.__state_changed_cb,
                                       signal_name='StateChanged',
@@ -808,7 +830,7 @@ class GsmDeviceView(TrayIcon):
             if connection is not None:
                 self._connection_timestamp = time.time() - \
                         connection.get_settings('connection')['timestamp']
-                self._connection_time_handler = gobject.timeout_add_seconds( \
+                self._connection_time_handler = GObject.timeout_add_seconds( \
                         1, self.__connection_timecount_cb)
                 self._palette.update_connection_time()
                 self._palette.update_stats(0, 0)
@@ -819,7 +841,7 @@ class GsmDeviceView(TrayIcon):
             gsm_state = _GSM_STATE_DISCONNECTED
             self._connection_timestamp = 0
             if self._connection_time_handler is not None:
-                gobject.source_remove(self._connection_time_handler)
+                GObject.source_remove(self._connection_time_handler)
             if self._palette is not None:
                 self._palette.connection_info_box.hide()
 
@@ -829,7 +851,7 @@ class GsmDeviceView(TrayIcon):
             gsm_state = _GSM_STATE_NOT_READY
 
         elif (state >= network.NM_DEVICE_STATE_PREPARE) and \
-             (state <= network.NM_DEVICE_STATE_IP_CONFIG):
+             (state < network.NM_DEVICE_STATE_ACTIVATED):
             gsm_state = _GSM_STATE_CONNECTING
 
         elif state == network.NM_DEVICE_STATE_FAILED:

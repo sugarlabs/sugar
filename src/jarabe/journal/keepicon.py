@@ -14,51 +14,64 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
-import hippo
-import gconf
+from gi.repository import Gtk
+from gi.repository import GConf
 
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
 
 
-class KeepIcon(CanvasIcon):
-    def __init__(self, keep):
-        CanvasIcon.__init__(self, icon_name='emblem-favorite',
-                            box_width=style.GRID_CELL_SIZE * 3 / 5,
-                            size=style.SMALL_ICON_SIZE)
-        self.connect('motion-notify-event', self.__motion_notify_event_cb)
+class KeepIcon(Gtk.ToggleButton):
+    __gtype_name__ = 'SugarKeepIcon'
 
-        self._keep = None
-        self.set_keep(keep)
+    def __init__(self):
+        Gtk.ToggleButton.__init__(self)
+        self.set_relief(Gtk.ReliefStyle.NONE)
+        self.set_focus_on_click(False)
 
-    def set_keep(self, keep):
-        if keep == self._keep:
-            return
+        self._icon = Icon(icon_name='emblem-favorite',
+                          pixel_size=style.SMALL_ICON_SIZE)
+        self.set_image(self._icon)
+        self.connect('toggled', self.__toggled_cb)
+        self.connect('leave-notify-event', self.__leave_notify_event_cb)
+        self.connect('enter-notify-event', self.__enter_notify_event_cb)
+        self.connect('button-press-event', self.__button_press_event_cb)
+        self.connect('button-release-event', self.__button_release_event_cb)
 
-        self._keep = keep
-        if keep:
-            client = gconf.client_get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            self.props.xo_color = color
+        client = GConf.Client.get_default()
+        self._xo_color = XoColor(client.get_string(
+                '/desktop/sugar/user/color'))
+
+    def do_get_preferred_width(self):
+        return 0, style.GRID_CELL_SIZE
+
+    def do_get_preferred_height(self):
+        return 0, style.GRID_CELL_SIZE
+
+    def __button_press_event_cb(self, widget, event):
+        # We need to use a custom CSS class because in togglebuttons
+        # the 'active' class doesn't only match the button press, they
+        # can be left in the active state.
+        style_context = self.get_style_context()
+        style_context.add_class('toggle-press')
+
+    def __button_release_event_cb(self, widget, event):
+        style_context = self.get_style_context()
+        style_context.remove_class('toggle-press')
+
+    def __toggled_cb(self, widget):
+        if self.get_active():
+            self._icon.props.xo_color = self._xo_color
         else:
-            self.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+            self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
 
-    def get_keep(self):
-        return self._keep
+    def __enter_notify_event_cb(self, icon, event):
+        if not self.get_active():
+            self._icon.props.xo_color = self._xo_color
 
-    keep = gobject.property(type=int, default=0, getter=get_keep,
-                            setter=set_keep)
-
-    def __motion_notify_event_cb(self, icon, event):
-        if not self._keep:
-            if event.detail == hippo.MOTION_DETAIL_ENTER:
-                client = gconf.client_get_default()
-                prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
-                icon.props.stroke_color = prelit_color.get_stroke_color()
-                icon.props.fill_color = prelit_color.get_fill_color()
-            elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-                icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-                icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+    def __leave_notify_event_cb(self, icon, event):
+        if not self.get_active():
+            self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
+            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
