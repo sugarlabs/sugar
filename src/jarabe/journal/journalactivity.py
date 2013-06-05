@@ -28,19 +28,16 @@ import os
 
 from sugar3.graphics.alert import ErrorAlert
 
-from sugar3.bundle.bundle import ZipExtractException, RegistrationException
 from sugar3 import env
 from sugar3.activity import activityfactory
 from gi.repository import SugarExt
 
 
-from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
-from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
@@ -300,12 +297,12 @@ class JournalActivity(JournalWindow):
         self._main_toolbox.set_mount_point(mount_point)
 
     def __model_created_cb(self, sender, **kwargs):
-        self._check_for_bundle(kwargs['object_id'])
+        misc.handle_bundle_installation(model.get(kwargs['object_id']))
         self._main_toolbox.refresh_filters()
         self._check_available_space()
 
     def __model_updated_cb(self, sender, **kwargs):
-        self._check_for_bundle(kwargs['object_id'])
+        misc.handle_bundle_installation(model.get(kwargs['object_id']))
 
         if self.canvas == self._secondary_view and \
                 kwargs['object_id'] == self._detail_view.props.metadata['uid']:
@@ -320,42 +317,6 @@ class JournalActivity(JournalWindow):
 
     def _focus_in_event_cb(self, window, event):
         self._list_view.update_dates()
-
-    def _check_for_bundle(self, object_id):
-        registry = bundleregistry.get_registry()
-
-        metadata = model.get(object_id)
-        if metadata.get('progress', '').isdigit():
-            if int(metadata['progress']) < 100:
-                return
-
-        bundle = misc.get_bundle(metadata)
-        if bundle is None:
-            return
-
-        if registry.is_installed(bundle):
-            logging.debug('_check_for_bundle bundle already installed')
-            return
-
-        if metadata['mime_type'] == JournalEntryBundle.MIME_TYPE:
-            # JournalEntryBundle code takes over the datastore entry and
-            # transforms it into the journal entry from the bundle -- we have
-            # nothing more to do.
-            try:
-                registry.install(bundle, metadata['uid'])
-            except (ZipExtractException, RegistrationException):
-                logging.exception('Could not install bundle %s',
-                                  bundle.get_path())
-            return
-
-        try:
-            registry.install(bundle)
-        except (ZipExtractException, RegistrationException):
-            logging.exception('Could not install bundle %s', bundle.get_path())
-            return
-
-        metadata['bundle_id'] = bundle.get_bundle_id()
-        model.write(metadata)
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)

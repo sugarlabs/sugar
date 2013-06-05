@@ -34,6 +34,25 @@ from sugar3 import env
 
 from jarabe.model import mimeregistry
 
+"""
+The bundle registry is a database of sorts of the activity bundles available
+on the system. Currently, other types of bundles are not tracked in the
+registry.
+
+API is also provided for install/upgrade/erase of all bundle types. The
+reasoning for supporting these operations on all bundles (even ones that
+we don't track is):
+ 1. We want to provide generic APIs such as "install my bundle" without
+    having to worry what type of bundle it is.
+ 2. For bundles that are tracked in the registry, the "bundle upgrade"
+    operation requires access to the registry in order to uninstall the
+    old version which might be kept at a different location on disk.
+
+The bundle registry also monitors certain areas of the filesystem so that
+when new activities installed by external processes, they will be picked up
+immediately by the shell, including automatic installation of MIME type
+information.
+"""
 
 _instance = None
 
@@ -375,33 +394,63 @@ class BundleRegistry(GObject.GObject):
                 return True
         return False
 
-    def install(self, bundle, uid=None, force_downgrade=False):
-        for installed_bundle in self._bundles:
-            if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
-                    NormalizedVersion(bundle.get_activity_version()) <= \
-                    NormalizedVersion(installed_bundle.get_activity_version()):
-                if not force_downgrade:
-                    raise AlreadyInstalledException
-                else:
-                    self.uninstall(installed_bundle, force=True)
-            elif bundle.get_bundle_id() == installed_bundle.get_bundle_id():
-                self.uninstall(installed_bundle, force=True)
+    def install(self, bundle, force_downgrade=False):
+        """
+        Install a bundle, upgrading or optionally downgrading any existing
+        version.
 
-        install_dir = env.get_user_activities_path()
-        if isinstance(bundle, JournalEntryBundle):
-            install_path = bundle.install(uid)
-        elif isinstance(bundle, ContentBundle):
-            install_path = bundle.install()
-        else:
-            install_path = bundle.install(install_dir)
+        If the same version of the bundle is already installed, this function
+        returns False without doing anything. If the installation succeeded,
+        True is returned.
 
-        # TODO treat ContentBundle in special way
-        # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle) or \
-                isinstance(bundle, JournalEntryBundle):
-            pass
-        elif not self.add_bundle(install_path):
-            raise RegistrationException
+        By default, downgrades will be refused (AlreadyInstalledException will
+        be raised) but the force_downgrade flag can override that behaviour
+        and cause the downgrade to happen.
+
+        The bundle is installed in the user activity directory.
+        System-installed activities cannot be upgraded/downgraded; in such
+        case, the bundle will be installed as a duplicate in the user
+        activity directory.
+
+        RegistrationException is raised if the bundle cannot be registered
+        after it is installed.
+        """
+        # Special case to check if the content bundle is already installed
+        if isinstance(bundle, ContentBundle) and bundle.is_installed():
+            return False
+
+        act = self.get_bundle(bundle.get_bundle_id())
+        if act:
+            # Same version already installed?
+            if act.get_activity_version() == bundle.get_activity_version():
+                logging.debug('No upgrade needed, same version already '
+                              'installed.')
+                return False
+
+            # Would this new installation be a downgrade?
+            if NormalizedVersion(bundle.get_activity_version()) <= \
+                    NormalizedVersion(act.get_activity_version()) \
+                    and not force_downgrade:
+                raise AlreadyInstalledException
+
+            # Uninstall the previous version, if we can
+            if act.is_user_activity():
+                try:
+                    self.uninstall(act, force=True)
+                except Exception:
+                    logging.exception('Uninstall failed, still trying to '
+                                      'install newer bundle:')
+            else:
+                logging.warning('Unable to uninstall system activity, '
+                                'installing upgraded version in user '
+                                'activities')
+
+        install_path = bundle.install()
+        if isinstance(bundle, ActivityBundle):
+            # We only include activities in the registry at this time
+            if not self.add_bundle(install_path):
+                raise RegistrationException
+        return True
 
     def uninstall(self, bundle, force=False, delete_profile=False):
         # TODO treat ContentBundle in special way
@@ -430,25 +479,6 @@ class BundleRegistry(GObject.GObject):
 
         if not self.remove_bundle(install_path):
             raise RegistrationException
-
-    def upgrade(self, bundle):
-        act = self.get_bundle(bundle.get_bundle_id())
-        if act is None:
-            logging.warning('Activity not installed')
-        elif act.get_activity_version() == bundle.get_activity_version():
-            logging.debug('No upgrade needed, same version already installed.')
-            return
-        elif act.is_user_activity():
-            try:
-                self.uninstall(bundle, force=True)
-            except Exception:
-                logging.exception('Uninstall failed, still trying to install'
-                                  ' newer bundle:')
-        else:
-            logging.warning('Unable to uninstall system activity, '
-                            'installing upgraded version in user activities')
-
-        self.install(bundle)
 
 
 def get_registry():

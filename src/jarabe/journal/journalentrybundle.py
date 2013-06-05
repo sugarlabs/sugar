@@ -38,10 +38,16 @@ class JournalEntryBundle(Bundle):
     _unzipped_extension = None
     _infodir = None
 
-    def __init__(self, path):
+    def __init__(self, path, uid=None):
+        """
+        Instantiate a Journal Entry Bundle from the given path to a xoj file.
+        If provided, the specified uid will be used as the uid of the journal
+        entry if/when this bundle is later installed.
+        """
         Bundle.__init__(self, path)
+        self._uid = uid
 
-    def install(self, uid=''):
+    def install(self):
         if 'SUGAR_ACTIVITY_ROOT' in os.environ:
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
@@ -52,7 +58,7 @@ class JournalEntryBundle(Bundle):
         self._unzip(install_dir)
         try:
             metadata = self._read_metadata(bundle_dir)
-            metadata['uid'] = uid
+            metadata['uid'] = self._uid if self._uid else temp_uid
 
             preview = self._read_preview(temp_uid, bundle_dir)
             if preview is not None:
