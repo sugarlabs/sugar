@@ -160,8 +160,8 @@ def _check_for_window_manager(screen):
 
     setup_window_manager()
 
-    global window_manager_started
-    window_manager_started = True
+    global _window_manager_started
+    _window_manager_started = True
 
     global _starting_desktop
     if _starting_desktop:
