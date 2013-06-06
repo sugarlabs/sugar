@@ -50,8 +50,7 @@ we don't track is):
 
 The bundle registry also monitors certain areas of the filesystem so that
 when new activities installed by external processes, they will be picked up
-immediately by the shell, including automatic installation of MIME type
-information.
+immediately by the shell.
 """
 
 _instance = None
@@ -120,7 +119,7 @@ class BundleRegistry(GObject.GObject):
         if not one_file.get_path().endswith('.activity'):
             return
         if event_type == Gio.FileMonitorEvent.CREATED:
-            self.add_bundle(one_file.get_path(), install_mime_type=True)
+            self.add_bundle(one_file.get_path(), set_favorite=True)
         elif event_type == Gio.FileMonitorEvent.DELETED:
             self.remove_bundle(one_file.get_path())
 
@@ -236,53 +235,59 @@ class BundleRegistry(GObject.GObject):
         bundle_dirs.sort(lambda d1, d2: cmp(bundles[d1], bundles[d2]))
         for folder in bundle_dirs:
             try:
-                self._add_bundle(folder)
+                self.add_bundle(folder, emit_signals=False)
             except:
                 # pylint: disable=W0702
                 logging.exception('Error while processing installed activity'
                                   ' bundle %s:', folder)
 
-    def add_bundle(self, bundle_path, install_mime_type=False):
-        bundle = self._add_bundle(bundle_path, install_mime_type)
-        if bundle is not None:
-            self._set_bundle_favorite(bundle.get_bundle_id(),
-                                      bundle.get_activity_version(),
-                                      True)
-            self.emit('bundle-added', bundle)
-            return True
-        else:
-            return False
-
-    def _add_bundle(self, bundle_path, install_mime_type=False):
-        logging.debug('STARTUP: Adding bundle %r', bundle_path)
+    def add_bundle(self, bundle_path, set_favorite=False, emit_signals=True):
+        """
+        Add a bundle to the registry.
+        If the bundle is a duplicate with one already in the registry,
+        the existing one from the registry is returned.
+        Otherwise, the newly added bundle is returned on success, or None on
+        failure.
+        """
         try:
             bundle = ActivityBundle(bundle_path)
-            if install_mime_type:
-                bundle.install_mime_type(bundle_path)
         except MalformedBundleException:
             logging.exception('Error loading bundle %r', bundle_path)
             return None
 
         bundle_id = bundle.get_bundle_id()
+        logging.debug('STARTUP: Adding bundle %s', bundle_id)
         installed = self.get_bundle(bundle_id)
 
         if installed is not None:
+            if NormalizedVersion(installed.get_activity_version()) == \
+                    NormalizedVersion(bundle.get_activity_version()):
+                logging.debug("Bundle already known")
+                return installed
             if NormalizedVersion(installed.get_activity_version()) >= \
                     NormalizedVersion(bundle.get_activity_version()):
                 logging.debug('Skip old version for %s', bundle_id)
                 return None
             else:
                 logging.debug('Upgrade %s', bundle_id)
-                self.remove_bundle(installed.get_path())
+                self.remove_bundle(installed.get_path(), emit_signals)
+
+        if set_favorite:
+            self._set_bundle_favorite(bundle.get_bundle_id(),
+                                      bundle.get_activity_version(),
+                                      True)
 
         self._bundles.append(bundle)
+        if emit_signals:
+            self.emit('bundle-added', bundle)
         return bundle
 
-    def remove_bundle(self, bundle_path):
+    def remove_bundle(self, bundle_path, emit_signals=True):
         for bundle in self._bundles:
             if bundle.get_path() == bundle_path:
                 self._bundles.remove(bundle)
-                self.emit('bundle-removed', bundle)
+                if emit_signals:
+                    self.emit('bundle-removed', bundle)
                 return True
         return False
 
@@ -448,7 +453,7 @@ class BundleRegistry(GObject.GObject):
         install_path = bundle.install()
         if isinstance(bundle, ActivityBundle):
             # We only include activities in the registry at this time
-            if not self.add_bundle(install_path):
+            if self.add_bundle(install_path, set_favorite=True) is None:
                 raise RegistrationException
         return True
 
@@ -474,11 +479,8 @@ class BundleRegistry(GObject.GObject):
             return
 
         install_path = act.get_path()
-
         bundle.uninstall(install_path, force, delete_profile)
-
-        if not self.remove_bundle(install_path):
-            raise RegistrationException
+        self.remove_bundle(install_path)
 
 
 def get_registry():
