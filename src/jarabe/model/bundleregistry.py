@@ -24,10 +24,9 @@ from gi.repository import GLib
 from gi.repository import Gio
 import json
 
+from sugar3.bundle import bundle_from_dir
 from sugar3.bundle.activitybundle import ActivityBundle
-from sugar3.bundle.contentbundle import ContentBundle
 from sugar3.bundle.bundleversion import NormalizedVersion
-from jarabe.journal.journalentrybundle import JournalEntryBundle
 from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar3 import env
@@ -35,13 +34,14 @@ from sugar3 import env
 from jarabe.model import mimeregistry
 
 """
-The bundle registry is a database of sorts of the activity bundles available
-on the system. Currently, other types of bundles are not tracked in the
-registry.
+The bundle registry is a database of sorts of the trackable bundles available
+on the system. A trackable bundle is one with a fixed bundle ID and predictable
+install path. Activity and Content bundles are trackable, Journal Entry bundles
+are not.
 
-API is also provided for install/upgrade/erase of all bundle types. The
-reasoning for supporting these operations on all bundles (even ones that
-we don't track is):
+API is also provided for install/upgrade/erase of all bundle types, trackable
+or not. The reasoning for supporting these operations on all bundles (even
+ones that we don't track is):
  1. We want to provide generic APIs such as "install my bundle" without
     having to worry what type of bundle it is.
  2. For bundles that are tracked in the registry, the "bundle upgrade"
@@ -250,7 +250,7 @@ class BundleRegistry(GObject.GObject):
         failure.
         """
         try:
-            bundle = ActivityBundle(bundle_path)
+            bundle = bundle_from_dir(bundle_path)
         except MalformedBundleException:
             logging.exception('Error loading bundle %r', bundle_path)
             return None
@@ -299,6 +299,8 @@ class BundleRegistry(GObject.GObject):
         default_bundle = None
 
         for bundle in self._bundles:
+            if not isinstance(bundle, ActivityBundle):
+                continue
             if mime_type in (bundle.get_mime_types() or []):
                 if bundle.get_bundle_id() == default_bundle_id:
                     default_bundle = bundle
@@ -386,12 +388,6 @@ class BundleRegistry(GObject.GObject):
         json.dump(favorites_data, open(path, 'w'), indent=1)
 
     def is_installed(self, bundle):
-        # TODO treat ContentBundle in special way
-        # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle) or \
-                isinstance(bundle, JournalEntryBundle):
-            return bundle.is_installed()
-
         for installed_bundle in self._bundles:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
                     NormalizedVersion(bundle.get_activity_version()) == \
@@ -420,11 +416,8 @@ class BundleRegistry(GObject.GObject):
         RegistrationException is raised if the bundle cannot be registered
         after it is installed.
         """
-        # Special case to check if the content bundle is already installed
-        if isinstance(bundle, ContentBundle) and bundle.is_installed():
-            return False
-
-        act = self.get_bundle(bundle.get_bundle_id())
+        bundle_id = bundle.get_bundle_id()
+        act = self.get_bundle(bundle_id)
         if act:
             # Same version already installed?
             if act.get_activity_version() == bundle.get_activity_version():
@@ -451,24 +444,26 @@ class BundleRegistry(GObject.GObject):
                                 'activities')
 
         install_path = bundle.install()
-        if isinstance(bundle, ActivityBundle):
-            # We only include activities in the registry at this time
+        if bundle_id is not None:
             if self.add_bundle(install_path, set_favorite=True) is None:
                 raise RegistrationException
         return True
 
     def uninstall(self, bundle, force=False, delete_profile=False):
-        # TODO treat ContentBundle in special way
-        # needs rethinking while fixing ContentBundle support
-        if isinstance(bundle, ContentBundle) or \
-                isinstance(bundle, JournalEntryBundle):
-            if bundle.is_installed():
-                bundle.uninstall()
-            else:
-                logging.warning('Not uninstalling, bundle is not installed')
+        """
+        Uninstall a bundle.
+
+        If a different version of bundle is found in the activity registry,
+        this function does nothing unless force is True.
+
+        If the bundle is not found in the activity registry at all,
+        this function simply returns.
+        """
+        act = self.get_bundle(bundle.get_bundle_id())
+        if not act:
+            logging.debug("Bundle is not installed")
             return
 
-        act = self.get_bundle(bundle.get_bundle_id())
         if not force and \
                 act.get_activity_version() != bundle.get_activity_version():
             logging.warning('Not uninstalling, different bundle present')
@@ -479,7 +474,7 @@ class BundleRegistry(GObject.GObject):
             return
 
         install_path = act.get_path()
-        bundle.uninstall(install_path, force, delete_profile)
+        bundle.uninstall(force, delete_profile)
         self.remove_bundle(install_path)
 
 

@@ -32,6 +32,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.bundle.activitybundle import ActivityBundle
 
 from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
@@ -226,6 +227,8 @@ class ListModel(Gtk.TreeModelSort):
                 return
 
     def _add_activity(self, activity_info):
+        if not isinstance(activity_info, ActivityBundle):
+            return
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
 

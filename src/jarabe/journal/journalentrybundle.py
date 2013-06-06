@@ -94,7 +94,3 @@ class JournalEntryBundle(Bundle):
         finally:
             f.close()
         return preview_data
-
-    def is_installed(self):
-        # These bundles can be reinstalled as many times as desired.
-        return False
