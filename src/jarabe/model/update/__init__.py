@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# Copyright (C) 2009, Sugar Labs
+# Copyright (C) 2009-2013, Sugar Labs
+# Copyright (C) 2009, Tomeu Vizoso
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,4 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+
+class BundleUpdate(object):
+    def __init__(self, bundle, version, link, size):
+        self.bundle = bundle
+        self.version = version
+        self.link = link
+        self.size = size

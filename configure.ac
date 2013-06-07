@@ -59,7 +59,6 @@ extensions/cpsection/modemconfiguration/Makefile
 extensions/cpsection/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
-extensions/cpsection/updater/backends/Makefile
 extensions/cpsection/updater/Makefile
 extensions/cpsection/webaccount/services/Makefile
 extensions/cpsection/webaccount/Makefile
@@ -77,6 +76,7 @@ src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
 src/jarabe/Makefile
 src/jarabe/model/Makefile
+src/jarabe/model/update/Makefile
 src/jarabe/util/Makefile
 src/jarabe/util/telepathy/Makefile
 src/jarabe/view/Makefile

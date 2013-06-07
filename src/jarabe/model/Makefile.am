@@ -1,3 +1,4 @@
+SUBDIRS = update
 sugardir = $(pythondir)/jarabe/model
 sugar_PYTHON =			\
 	adhoc.py		\
