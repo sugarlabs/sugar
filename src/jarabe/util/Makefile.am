@@ -4,4 +4,5 @@ SUBDIRS = 		\
 sugardir = $(pythondir)/jarabe/util
 sugar_PYTHON =          \
 	__init__.py         \
+	downloader.py       \
 	normalize.py
