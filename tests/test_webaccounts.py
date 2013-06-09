@@ -21,23 +21,22 @@ import unittest
 from gi.repository import Gtk
 
 from jarabe import config
-
-from sugar3.web.account import Account
-from sugar3.web import accountsmanager
+from jarabe.web.account import Account
+from jarabe.web import accountsmanager
 
 ACCOUNT_NAME = 'mock'
 
 tests_dir = os.path.dirname(__file__)
-base_dir = os.path.dirname(tests_dir)
 extension_dir = os.path.join(tests_dir, 'extensions')
-web_extension_dir = os.path.join(extensions_dir, 'web')
+web_extension_dir = os.path.join(extension_dir, 'web')
 
 
 class TestWebAccounts(unittest.TestCase):
     def setUp(self):
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_NONE
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_NONE)
         self.save_ext_path = config.ext_path
         config.ext_path = extension_dir
+        sys.path.append(config.ext_path)
 
     def test_get_description(self):
         accounts = accountsmanager.get_all_accounts()
@@ -56,37 +55,38 @@ class TestWebAccounts(unittest.TestCase):
 
     def test_get_all_accounts(self):
         accounts = accountsmanager.get_all_accounts()
-        self.assertTrue(len(self.accounts) > 0)
+        self.assertTrue(len(accounts) > 0)
 
     def test_get_configured_accounts(self):
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_VALID
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_VALID)
         accounts = accountsmanager.get_configured_accounts()
         count = len(accounts)
         self.assertTrue(count > 0)
 
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_NONE
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_NONE)
         accounts = accountsmanager.get_configured_accounts()
-        self.assertTrue(len(self.accounts) == count - 1)
+        self.assertTrue(len(accounts) == count - 1)
 
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_EXPIRED
-        accounts = accountsmanager.get_active_accounts()
-        self.assertTrue(len(self.accounts) == count)
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_EXPIRED)
+        accounts = accountsmanager.get_configured_accounts()
+        self.assertTrue(len(accounts) == count)
 
     def test_get_active_accounts(self):
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_VALID
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_VALID)
         accounts = accountsmanager.get_active_accounts()
         count = len(accounts)
         self.assertTrue(count > 0)
 
-        os.environ["MOCK_ACCOUNT_STATE"] = Account.STATE_EXPIRED
+        os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_EXPIRED)
         accounts = accountsmanager.get_active_accounts()
-        self.assertTrue(len(self.accounts) == count - 1)
+        self.assertTrue(len(accounts) == count - 1)
 
     def test_share_menu(self):
         accounts = accountsmanager.get_all_accounts()
         for account in accounts:
             shared_journal_entry = account.get_shared_journal_entry()
-            share_menu = shared_journal_entry.get_shared_menu()
+            share_menu = shared_journal_entry.get_share_menu(
+                {'account': 'mock'})
             self.assertIsNotNone(share_menu)
 
     def test_refresh_menu(self):
@@ -97,4 +97,5 @@ class TestWebAccounts(unittest.TestCase):
             self.assertIsNotNone(refresh_menu)
 
     def tearDown(self):
+        sys.path.remove(config.ext_path)
         config.ext_path = self.save_ext_path

@@ -21,7 +21,7 @@ import logging
 from gi.repository import Gtk
 
 from jarabe import config
-from sugar3.web.account import Account
+from jarabe.web.account import Account
 
 _accounts = []
 

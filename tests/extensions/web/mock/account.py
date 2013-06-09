@@ -35,18 +35,18 @@ class MockAccount(account.Account):
     def get_description(self):
         return ACCOUNT_NAME
 
-    def get_shared_journal_entry():
+    def get_shared_journal_entry(self):
         return MockSharedJournalEntry()
 
     def get_token_state(self):
-        return os.environ["MOCK_ACCOUNT_STATE"]
+        return int(os.environ["MOCK_ACCOUNT_STATE"])
 
 
-class MockSharedJournalEnrty(account.SharedJournalEntry):
+class MockSharedJournalEntry(account.SharedJournalEntry):
     def __init__(self):
         return
 
-    def get_share_menu(self, journal_entry_metadata):
+    def get_share_menu(self, metadata):
         share_menu = MenuItem()
         return share_menu
 
