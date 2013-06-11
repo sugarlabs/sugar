@@ -39,6 +39,7 @@ from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
+from jarabe.webservice import accountsmanager
 
 
 class ObjectPalette(Palette):
@@ -249,6 +250,10 @@ class CopyMenu(Gtk.Menu):
             volume_menu.connect('volume-error', self.__volume_error_cb)
             self.append(volume_menu)
             volume_menu.show()
+
+        for account in accountsmanager.get_configured_accounts():
+            self.append(
+                account.get_shared_journal_entry().get_share_menu(metadata))
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
