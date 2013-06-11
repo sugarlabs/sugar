@@ -7,7 +7,7 @@ SUBDIRS = 		\
 	view		\
 	intro		\
 	util		\
-	web
+	webservice
 
 sugardir = $(pythondir)/jarabe
 sugar_PYTHON =		\

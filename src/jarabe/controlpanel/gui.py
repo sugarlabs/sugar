@@ -29,7 +29,7 @@ from sugar3.graphics.alert import Alert
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
-from jarabe import config
+from jarabe import extensions
 
 POWERD_FLAG_DIR = '/etc/powerd/flags'
 
@@ -151,8 +151,9 @@ class ControlPanel(Gtk.Window):
 
     def _setup_options(self):
         if not os.access(POWERD_FLAG_DIR, os.W_OK):
-            del self._options['power']
-            del self._options['keyboard']
+            logging.debug('skipping power and keyboard')
+            # del self._options['power']
+            # del self._options['keyboard']
 
         # If the screen width only supports two columns, start
         # placing from the second row.
@@ -245,13 +246,19 @@ class ControlPanel(Gtk.Window):
 
         self._current_option = option
 
-        mod = __import__('.'.join(('cpsection', option, 'view')),
-                         globals(), locals(), ['view'])
-        view_class = getattr(mod, self._options[option]['view'], None)
+        mod = extensions.load_module(
+            os.path.join(self._options[option]['path'], option), 'view')
+        if mod is not None:
+            view_class = getattr(mod, self._options[option]['view'], None)
+        else:
+            logging.debug('Could not import view.py')
 
-        mod = __import__('.'.join(('cpsection', option, 'model')),
-                         globals(), locals(), ['model'])
-        model = ModelWrapper(mod)
+        mod = extensions.load_module(
+            os.path.join(self._options[option]['path'], option), 'model')
+        if mod is not None:
+            model = ModelWrapper(mod)
+        else:
+            logging.debug('Could not import model.py')
 
         try:
             self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
@@ -280,34 +287,43 @@ class ControlPanel(Gtk.Window):
         """
         options = {}
 
-        path = os.path.join(config.ext_path, 'cpsection')
-        folder = os.listdir(path)
-
-        for item in folder:
-            if os.path.isdir(os.path.join(path, item)) and \
-                    os.path.exists(os.path.join(path, item, '__init__.py')):
-                try:
-                    mod = __import__('.'.join(('cpsection', item)),
-                                     globals(), locals(), [item])
-                    view_class = getattr(mod, 'CLASS', None)
-                    if view_class is not None:
-                        options[item] = {}
-                        options[item]['alerts'] = []
-                        options[item]['view'] = view_class
-                        options[item]['icon'] = getattr(mod, 'ICON', item)
-                        options[item]['title'] = getattr(mod, 'TITLE', item)
-                        options[item]['color'] = getattr(mod, 'COLOR', None)
-                        keywords = getattr(mod, 'KEYWORDS', [])
-                        keywords.append(options[item]['title'].lower())
-                        if item not in keywords:
-                            keywords.append(item)
-                        options[item]['keywords'] = keywords
-                    else:
-                        _logger.error('no CLASS attribute in %r', item)
-                except Exception:
-                    logging.exception('Exception while loading extension:')
+        paths = extensions.get_cpsection_paths()
+        folder = []
+        for path in paths:
+            for item in os.listdir(path):
+                option = self._build_option(path, item)
+                if option is not None:
+                    options[item] = option
 
         return options
+
+    def _build_option(self, path, item):
+        option = None
+        if os.path.isdir(os.path.join(path, item)) and \
+                os.path.exists(os.path.join(path, item, '__init__.py')):
+            try:
+                mod = extensions.load_module(path, item)
+                view_class = getattr(mod, 'CLASS', None)
+                if view_class is not None:
+                    option = {}
+                    option['alerts'] = []
+                    option['view'] = view_class
+                    option['icon'] = getattr(mod, 'ICON', item)
+                    option['title'] = getattr(mod, 'TITLE', item)
+                    option['color'] = getattr(mod, 'COLOR', None)
+                    option['path'] = path
+                    keywords = getattr(mod, 'KEYWORDS', [])
+                    keywords.append(option['title'].lower())
+                    if item not in keywords:
+                        keywords.append(item)
+                    option['keywords'] = keywords
+                else:
+                    _logger.error('no CLASS attribute in %r', item)
+            except Exception:
+                option = None
+                logging.exception('Exception while loading extension:')
+
+        return option
 
     def __cancel_clicked_cb(self, widget):
         self._section_view.undo()

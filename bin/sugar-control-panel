@@ -17,10 +17,14 @@
 
 import sys
 
-from jarabe import config
+from jarabe import extensions
 
-sys.path.append(config.ext_path)
+for path in extensions.get_paths():
+    if os.path.exists(path):
+        sys.path.append(path)
 
 from jarabe.controlpanel.cmd import main
 
 main()
+
+

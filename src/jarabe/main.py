@@ -59,6 +59,7 @@ from jarabe.view import launcher
 from jarabe.model import keyboard
 from jarabe.desktop import homewindow
 from jarabe import config
+from jarabe import extensions
 from jarabe.model import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
@@ -295,7 +296,9 @@ def main():
     sound.restore()
     keyboard.setup()
 
-    sys.path.append(config.ext_path)
+    for path in extensions.get_paths():
+        if os.path.exists(path):
+            sys.path.append(path)
 
     if not _check_profile():
         _start_intro()

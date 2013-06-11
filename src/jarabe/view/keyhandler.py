@@ -27,7 +27,7 @@ from jarabe.model import shell
 from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
-from jarabe import config
+from jarabe import extensions
 from jarabe.journal import journalactivity
 
 
@@ -80,21 +80,25 @@ class KeyHandler(object):
 
         self._tabbing_handler = TabbingHandler(self._frame, _TABBING_MODIFIER)
 
-        for f in os.listdir(os.path.join(config.ext_path, 'globalkey')):
-            if f.endswith('.py') and not f.startswith('__'):
-                module_name = f[:-3]
-                try:
-                    logging.debug('Loading module %r', module_name)
-                    module = __import__('globalkey.' + module_name, globals(),
-                                        locals(), [module_name])
-                    for key in module.BOUND_KEYS:
-                        if key in _actions_table:
-                            raise ValueError('Key %r is already bound' % key)
-                        _actions_table[key] = module
-                except Exception:
-                    logging.exception('Exception while loading extension:')
+        paths = extensions.get_globalkey_paths()
+        dirs = []
+        for path in paths:
+            for f in os.listdir(path):
+                self._load_mod(path, f)
 
         self._key_grabber.grab_keys(_actions_table.keys())
+
+    def _load_mod(self, path, f):
+        if f.endswith('.py') and not f.startswith('__'):
+            module_name = f[:-3]
+            try:
+                module = extensions.load_module(path, module_name)
+                for key in module.BOUND_KEYS:
+                    if key in _actions_table:
+                        raise ValueError('Key %r is already bound' % key)
+                    _actions_table[key] = module
+            except Exception:
+                logging.exception('Exception while loading extension:')
 
     def _change_volume(self, step=None, value=None):
         if step is not None:
