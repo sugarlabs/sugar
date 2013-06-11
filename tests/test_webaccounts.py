@@ -21,8 +21,8 @@ import unittest
 from gi.repository import Gtk
 
 from jarabe import config
-from jarabe.web.account import Account
-from jarabe.web import accountsmanager
+from jarabe.webservice.account import Account
+from jarabe.webservice import accountsmanager
 
 ACCOUNT_NAME = 'mock'
 
@@ -62,6 +62,8 @@ class TestWebAccounts(unittest.TestCase):
         accounts = accountsmanager.get_configured_accounts()
         count = len(accounts)
         self.assertTrue(count > 0)
+
+        self.assertTrue(accountsmanager.has_configured_accounts())
 
         os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_NONE)
         accounts = accountsmanager.get_configured_accounts()

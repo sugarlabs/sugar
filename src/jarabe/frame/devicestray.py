@@ -19,22 +19,27 @@ import logging
 
 from sugar3.graphics import tray
 
-from jarabe import config
+from jarabe import extensions
 
 
 class DevicesTray(tray.HTray):
     def __init__(self):
         tray.HTray.__init__(self, align=tray.ALIGN_TO_END)
 
-        for f in os.listdir(os.path.join(config.ext_path, 'deviceicon')):
-            if f.endswith('.py') and not f.startswith('__'):
-                module_name = f[:-3]
-                try:
-                    mod = __import__('deviceicon.' + module_name, globals(),
-                                     locals(), [module_name])
-                    mod.setup(self)
-                except Exception:
-                    logging.exception('Exception while loading extension:')
+        device_paths = extensions.get_deviceicon_paths()
+        for path in device_paths:
+            for f in os.listdir(path):
+                if f.endswith('.py') and not f.startswith('__'):
+                    module_name = f[:-3]
+                    try:
+                        mod = extensions.load_module(path, module_name)
+                        if mod is not None:
+                            mod.setup(self)
+                        else:
+                            logging.debug('Unable to load extension %s' %
+                                          module_name)
+                    except Exception:
+                        logging.exception('Exception while loading extension:')
 
     def add_device(self, view):
         index = 0

@@ -20,7 +20,7 @@ import os
 from gettext import gettext as _
 import logging
 
-from jarabe import config
+from jarabe import extensions
 
 
 _RESTART = 1
@@ -58,21 +58,26 @@ def load_modules():
     """
     modules = []
 
-    path = os.path.join(config.ext_path, 'cpsection')
-    folder = os.listdir(path)
-
-    for item in folder:
-        if os.path.isdir(os.path.join(path, item)) and \
-                os.path.exists(os.path.join(path, item, 'model.py')):
-            try:
-                module = __import__('.'.join(('cpsection', item, 'model')),
-                                    globals(), locals(), ['model'])
-            except Exception:
-                logging.exception('Exception while loading extension:')
-            else:
+    paths = extensions.get_cpsection_paths()
+    for path in paths:
+        for item in os.listdir(path):
+            module = _load_module(path, item)
+            if module is not None:
                 modules.append(module)
 
     return modules
+
+
+def _load_module(path, item):
+    module = None
+    if os.path.isdir(os.path.join(path, item)) and \
+            os.path.exists(os.path.join(path, item, 'model.py')):
+        try:
+            module = extensions.load_module(path, item)
+        except Exception:
+            logging.exception('Exception while loading extension:')
+
+    return module
 
 
 def main():
