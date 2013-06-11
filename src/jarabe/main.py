@@ -40,9 +40,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
-from gi.repository import Gdk
 from gi.repository import Gst
-import dbus.glib
 from gi.repository import Wnck
 
 from sugar3 import env
@@ -274,9 +272,10 @@ def _check_profile():
 
 
 def main():
+    # This can be removed once pygobject-3.10 is a requirement.
+    # https://bugzilla.gnome.org/show_bug.cgi?id=686914
     GLib.threads_init()
-    Gdk.threads_init()
-    dbus.glib.threads_init()
+
     Gst.init(sys.argv)
 
     cleanup_temporary_files()
