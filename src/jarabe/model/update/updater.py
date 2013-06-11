@@ -21,8 +21,7 @@ import logging
 from gi.repository import GObject
 from gi.repository import GLib
 
-from sugar3.datastore import datastore
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle import bundle_from_archive
 from sugar3.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model import bundleregistry
@@ -165,22 +164,21 @@ class Updater(GObject.GObject):
                   bundle_update.bundle.get_name(),
                   current, total)
 
-        # TODO: Should we first expand the zip async so we can provide progress
-        # and only then copy to the journal?
-        jobject = datastore.create()
-        try:
-            title = '%s-%s' % (bundle_update.bundle.get_name(),
-                               bundle_update.version)
-            jobject.metadata['title'] = title
-            jobject.metadata['mime_type'] = ActivityBundle.MIME_TYPE
-            jobject.file_path = local_file_path
-            datastore.write(jobject, transfer_ownership=True)
-        finally:
-            jobject.destroy()
+        current += 0.5
+        bundle = bundle_from_archive(local_file_path)
+        registry = bundleregistry.get_registry()
+        registry.install_async(bundle, self._bundle_installed_cb, current)
 
+    def _bundle_installed_cb(self, bundle, result, progress):
+        logging.debug("%s installed: %r", bundle.get_bundle_id(), result)
         self.emit('progress', Updater.ACTION_UPDATING,
-                  bundle_update.bundle.get_name(),
-                  current + 0.5, total)
+                  bundle.get_name(), progress, self._total_bundles_to_update)
+
+        # Remove downloaded bundle archive
+        try:
+            os.unlink(bundle.get_path())
+        except OSError:
+            pass
 
         if self._bundles_to_update:
             # do it in idle so the UI has a chance to refresh
