@@ -63,6 +63,8 @@ class TestWebAccounts(unittest.TestCase):
         count = len(accounts)
         self.assertTrue(count > 0)
 
+        self.assertTrue(accountsmanager.has_configured_accounts())
+
         os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_NONE)
         accounts = accountsmanager.get_configured_accounts()
         self.assertTrue(len(accounts) == count - 1)
