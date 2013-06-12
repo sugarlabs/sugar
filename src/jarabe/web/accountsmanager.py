@@ -99,3 +99,7 @@ def get_configured_accounts():
 def get_active_accounts():
     return [a for a in get_all_accounts()
             if a.get_token_state() == Account.STATE_VALID]
+
+
+def has_configured_accounts():
+    return len(get_configured_accounts()) > 0
