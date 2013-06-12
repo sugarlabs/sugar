@@ -47,6 +47,7 @@ from jarabe.journal import model
 from jarabe.journal.palettes import ClipboardMenu
 from jarabe.journal.palettes import VolumeMenu
 from jarabe.journal import journalwindow
+from jarabe.web import accountsmanager
 
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -360,6 +361,7 @@ class DetailToolbox(ToolbarBox):
 
         self._metadata = None
         self._temp_file_path = None
+        self._refresh = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
@@ -384,6 +386,13 @@ class DetailToolbox(ToolbarBox):
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
         self.toolbar.insert(self._duplicate, -1)
 
+        if accountsmanager.has_configured_accounts():
+            self._refresh = ToolButton('entry-refresh')
+            self._refresh.set_tooltip(_('Refresh'))
+            self._refresh.connect('clicked', self._refresh_clicked_cb)
+            self.toolbar.insert(self._refresh, -1)
+            self._refresh.show()
+
         separator = Gtk.SeparatorToolItem()
         self.toolbar.insert(separator, -1)
         separator.show()
@@ -398,12 +407,17 @@ class DetailToolbox(ToolbarBox):
         self._metadata = metadata
         self._refresh_copy_palette()
         self._refresh_duplicate_palette()
+        if self._refresh is not None:
+            self._refresh_refresh_palette()
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
         misc.resume(self._metadata)
 
     def _copy_clicked_cb(self, button):
+        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+    def _refresh_clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def _duplicate_clicked_cb(self, button):
@@ -495,6 +509,11 @@ class DetailToolbox(ToolbarBox):
             palette.menu.append(volume_menu)
             volume_menu.show()
 
+        for account in accountsmanager.get_configured_accounts():
+            palette.menu.append(
+                account.get_shared_journal_entry().get_share_menu(
+                    self._metadata))
+
     def _refresh_duplicate_palette(self):
         color = misc.get_icon_color(self._metadata)
         self._copy.get_icon_widget().props.xo_color = color
@@ -505,6 +524,18 @@ class DetailToolbox(ToolbarBox):
             icon.show()
         else:
             self._duplicate.hide()
+
+    def _refresh_refresh_palette(self):
+        color = misc.get_icon_color(self._metadata)
+        self._refresh.get_icon_widget().props.xo_color = color
+        palette = self._refresh.get_palette()
+        for menu_item in palette.menu.get_children():
+            palette.menu.remove(menu_item)
+
+        for account in accountsmanager.get_configured_accounts():
+            menu = account.get_shared_journal_entry().get_refresh_menu()
+            palette.menu.append(menu)
+            menu.set_metadata(self._metadata)
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
