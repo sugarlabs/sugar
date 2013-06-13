@@ -39,6 +39,8 @@ from sugar3 import dispatch
 from sugar3 import mime
 from sugar3 import util
 
+import jarabe.model.bundleregistry
+
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
 DS_DBUS_INTERFACE = 'org.laptop.sugar.DataStore'
@@ -263,6 +265,11 @@ class InplaceResultSet(BaseResultSet):
             self._date_end = None
 
         self._mime_types = query.get('mime_type', [])
+
+        if 'activity' in query:
+            registry = jarabe.model.bundleregistry.get_registry()
+            bundle = registry.get_bundle(query['activity'])
+            self._mime_types = bundle.get_mime_types()
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
 
