@@ -35,6 +35,7 @@ _logger = logging.getLogger('Updater')
 _instance = None
 _LAST_UPDATE_KEY = '/desktop/sugar/update/last_activity_update'
 _UPDATE_FREQUENCY_KEY = '/desktop/sugar/update/auto_update_frequency'
+_URGENT_TRIGGER_FILE = os.path.expanduser('~/.sugar-update')
 
 STATE_IDLE = 0
 STATE_CHECKING = 1
@@ -257,6 +258,10 @@ class Updater(GObject.GObject):
         if not cancelled and len(self._bundles_failed) == 0:
             client = GConf.Client.get_default()
             client.set_int(_LAST_UPDATE_KEY, time.time())
+            try:
+                os.unlink(_URGENT_TRIGGER_FILE)
+            except OSError:
+                pass
 
     def cancel(self):
         self._cancelling = True
@@ -280,7 +285,18 @@ def get_instance():
     return _instance
 
 
+def check_urgent_update():
+    if os.path.isfile(_URGENT_TRIGGER_FILE):
+        get_instance().trigger_automatic_update()
+        return True
+    else:
+        return False
+
+
 def _check_periodic_update():
+    if check_urgent_update():
+        return True
+
     client = GConf.Client.get_default()
     update_frequency = client.get_int(_UPDATE_FREQUENCY_KEY)
     if update_frequency == 0:

@@ -103,13 +103,6 @@ def setup_journal_cb():
     journalactivity.start()
 
 
-def show_software_updates_cb():
-    logging.debug('STARTUP: show_software_updates_cb')
-    if os.path.isfile(os.path.expanduser('~/.sugar-update')):
-        home_window = homewindow.get_instance()
-        home_window.get_home_box().show_software_updates_alert()
-
-
 def setup_notification_service_cb():
     notifications.init()
 
@@ -143,7 +136,6 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_journal_cb)
     GLib.idle_add(setup_notification_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
-    GLib.idle_add(show_software_updates_cb)
     GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
     apisocket.start()
