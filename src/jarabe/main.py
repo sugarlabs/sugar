@@ -46,6 +46,7 @@ from gi.repository import Wnck
 from sugar3 import env
 
 from jarabe.model.session import get_session_manager
+from jarabe.model.update import updater
 from jarabe.model import screen
 from jarabe.view import keyhandler
 from jarabe.view import gesturehandler
@@ -143,6 +144,7 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_notification_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
     GLib.idle_add(show_software_updates_cb)
+    GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
     apisocket.start()
 
