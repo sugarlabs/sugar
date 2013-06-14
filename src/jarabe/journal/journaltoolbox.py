@@ -47,7 +47,7 @@ from jarabe.journal import model
 from jarabe.journal.palettes import ClipboardMenu
 from jarabe.journal.palettes import VolumeMenu
 from jarabe.journal import journalwindow
-from jarabe.web import accountsmanager
+from jarabe.webservice import accountsmanager
 
 
 _AUTOSEARCH_TIMEOUT = 1000
