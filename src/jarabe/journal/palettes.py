@@ -39,7 +39,7 @@ from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
-from jarabe.web import accountsmanager
+from jarabe.webservice import accountsmanager
 
 
 class ObjectPalette(Palette):
