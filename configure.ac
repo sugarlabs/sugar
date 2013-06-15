@@ -61,8 +61,11 @@ extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
 extensions/cpsection/updater/backends/Makefile
 extensions/cpsection/updater/Makefile
+extensions/cpsection/webaccount/Makefile
+extensions/cpsection/webaccount/services/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
+extensions/webservice
 extensions/Makefile
 Makefile
 po/Makefile.in
