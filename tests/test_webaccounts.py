@@ -21,14 +21,14 @@ import unittest
 from gi.repository import Gtk
 
 from jarabe import config
-from jarabe.web.account import Account
-from jarabe.web import accountsmanager
+from jarabe.webservice.account import Account
+from jarabe.webservice import accountsmanager
 
 ACCOUNT_NAME = 'mock'
 
 tests_dir = os.path.dirname(__file__)
 extension_dir = os.path.join(tests_dir, 'extensions')
-web_extension_dir = os.path.join(extension_dir, 'web')
+web_extension_dir = os.path.join(extension_dir, 'webservice')
 
 
 class TestWebAccounts(unittest.TestCase):
