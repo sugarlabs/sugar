@@ -34,6 +34,7 @@ from gi.repository import GConf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xoicon import get_name as XoIcon
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
@@ -388,7 +389,7 @@ class Toolbar(Gtk.Toolbar):
 
         if sugar_toolkit_path is not None:
             sugar_button = RadioToolButton()
-            icon = Icon(icon_name='computer-xo',
+            icon = Icon(icon_name=XoIcon(),
                         icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())

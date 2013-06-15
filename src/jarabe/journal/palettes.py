@@ -30,6 +30,7 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xoicon import get_name as XoIcon
 from sugar3.graphics.alert import Alert
 from sugar3 import mime
 
@@ -347,7 +348,7 @@ class FriendsMenu(Gtk.Menu):
             for friend in friends_model:
                 if friend.is_present():
                     menu_item = MenuItem(text_label=friend.get_nick(),
-                                         icon_name='computer-xo',
+                                         icon_name=XoIcon(),
                                          xo_color=friend.get_color())
                     menu_item.connect('activate', self.__item_activate_cb,
                                       friend)
@@ -409,7 +410,7 @@ class BuddyPalette(Palette):
         self._buddy = buddy
 
         nick, colors = buddy
-        buddy_icon = Icon(icon_name='computer-xo',
+        buddy_icon = Icon(icon_name=XoIcon(),
                           icon_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
