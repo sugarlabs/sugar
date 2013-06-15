@@ -51,6 +51,7 @@ data/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
 extensions/cpsection/background/Makefile
+extensions/cpsection/customicon/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile
