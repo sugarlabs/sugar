@@ -21,7 +21,7 @@ import logging
 from gi.repository import Gtk
 
 from jarabe import config
-from jarabe.web.account import Account
+from jarabe.webservice.account import Account
 
 _accounts = []
 
@@ -32,7 +32,7 @@ def get_all_accounts():
     if len(_accounts) > 0:
         return _accounts
 
-    web_path = os.path.join(config.ext_path, 'web')
+    web_path = os.path.join(config.ext_path, 'webservice')
     try:
         web_path_dirs = os.listdir(web_path)
     except OSError, e:
@@ -57,8 +57,8 @@ def _load_module(dir_path):
                 module_name = f[:-3]
                 logging.debug('OnlineAccountsManager loading %s' %
                               (module_name))
-                module_path = 'web.%s.%s' % (os.path.basename(dir_path),
-                                             module_name)
+                module_path = 'webservice.%s.%s' % (os.path.basename(dir_path),
+                                                    module_name)
                 try:
                     mod = __import__(module_path, globals(), locals(),
                                      [module_name])
