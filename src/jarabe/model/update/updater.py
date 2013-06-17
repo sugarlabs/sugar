@@ -24,12 +24,11 @@ from gi.repository import GLib
 from gi.repository import GConf
 
 from sugar3.bundle import bundle_from_archive
-from sugar3.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model import bundleregistry
 from jarabe.util.downloader import Downloader
 
-from jarabe.model.update import BundleUpdate, aslo
+from jarabe.model.update.aslo import AsloUpdater
 
 _logger = logging.getLogger('Updater')
 _instance = None
@@ -65,10 +64,9 @@ class Updater(GObject.GObject):
 
     def __init__(self):
         GObject.GObject.__init__(self)
+        self._model = AsloUpdater()
 
         self._updates = None
-        self._bundles_to_check = None
-        self._total_bundles_to_check = 0
         self._bundles_to_update = None
         self._total_bundles_to_update = 0
         self._bundle_update = None
@@ -94,49 +92,29 @@ class Updater(GObject.GObject):
 
         self._auto = auto
         self._updates = []
-        self._bundles_to_check = list(bundleregistry.get_registry())
-        self._total_bundles_to_check = len(self._bundles_to_check)
         self._bundles_updated = []
         self._bundles_failed = []
         self._state = STATE_CHECKING
-        self._check_next_update()
+        bundles = list(bundleregistry.get_registry())
+        self._model.fetch_update_info(bundles,
+                                      self._backend_progress_cb,
+                                      self._backend_finished_cb)
 
-    def _check_next_update(self):
-        total = self._total_bundles_to_check
-        current = total - len(self._bundles_to_check)
-        progress = current / float(total)
+    def _backend_progress_cb(self, bundle_name, progress):
+        self.emit('progress', self._state, bundle_name, progress)
 
-        if not self._bundles_to_check:
-            self._finished_checking()
-            return False
+    def _backend_finished_cb(self, updates):
+        _logger.debug("_backend_finished_cb")
+        if self._cancelling:
+            self._finished(True)
+            return
 
-        bundle = self._bundles_to_check.pop()
-        _logger.debug("Checking %s", bundle.get_bundle_id())
-        self.emit('progress', self._state, bundle.get_name(), progress)
-
-        aslo.fetch_update_info(bundle, self.__check_completed_cb)
-
-    def _finished_checking(self):
-        _logger.debug("_finished_checking")
+        self._updates = updates
         self._state = STATE_CHECKED
         if self._auto:
             self.update(None)
         else:
             self.emit('updates-available', self._updates)
-
-    def __check_completed_cb(self, bundle, version, link, size, error_message):
-        if error_message is not None:
-            _logger.error('Error getting update information from server:\n'
-                          '%s' % error_message)
-
-        if version is not None and \
-                version > NormalizedVersion(bundle.get_activity_version()):
-            self._updates.append(BundleUpdate(bundle, version, link, size))
-
-        if self._cancelling:
-            self._finished(True)
-        else:
-            GLib.idle_add(self._check_next_update)
 
     def update(self, bundle_ids):
         if self._state != STATE_CHECKED:
@@ -264,6 +242,7 @@ class Updater(GObject.GObject):
                 pass
 
     def cancel(self):
+        self._model.cancel()
         self._cancelling = True
 
     def _cancel_updating(self):
