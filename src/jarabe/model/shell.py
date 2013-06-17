@@ -30,7 +30,7 @@ from sugar3 import dispatch
 from sugar3.graphics.xocolor import XoColor
 from gi.repository import SugarExt
 
-from jarabe.model.bundleregistry import get_registry
+from jarabe.model import bundleregistry
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'
@@ -533,7 +533,7 @@ class ShellModel(GObject.GObject):
 
             service_name = SugarExt.wm_get_bundle_id(xid)
             if service_name:
-                registry = get_registry()
+                registry = bundleregistry.get_registry()
                 activity_info = registry.get_bundle(service_name)
             else:
                 activity_info = None
@@ -629,7 +629,7 @@ class ShellModel(GObject.GObject):
         self._activities.remove(home_activity)
 
     def notify_launch(self, activity_id, service_name):
-        registry = get_registry()
+        registry = bundleregistry.get_registry()
         activity_info = registry.get_bundle(service_name)
         if not activity_info:
             raise ValueError("Activity service name '%s'"
