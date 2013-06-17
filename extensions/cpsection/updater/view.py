@@ -28,6 +28,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.model.update import updater
+from jarabe.model import bundleregistry
 
 _DEBUG_VIEW_ALL = True
 
@@ -355,21 +356,31 @@ class UpdateListModel(Gtk.ListStore):
 
     def __init__(self, updates):
         Gtk.ListStore.__init__(self, str, bool, str, str, int)
+        registry = bundleregistry.get_registry()
 
         for bundle_update in updates:
+            installed = registry.get_bundle(bundle_update.bundle_id)
             row = [None] * 5
-            row[self.BUNDLE_ID] = bundle_update.bundle.get_bundle_id()
+            row[self.BUNDLE_ID] = bundle_update.bundle_id
             row[self.SELECTED] = True
-            row[self.ICON_FILE_NAME] = bundle_update.bundle.get_icon()
+            if installed:
+                row[self.ICON_FILE_NAME] = installed.get_icon()
 
-            details = _('From version %(current)s to %(new)s (Size: %(size)s)')
-            details = details % \
-                {'current': bundle_update.bundle.get_activity_version(),
-                 'new': bundle_update.version,
-                 'size': _format_size(bundle_update.size)}
+            if installed:
+                details = _('From version %(current)s to %(new)s (Size: '
+                            '%(size)s)')
+                details = details % \
+                    {'current': installed.get_activity_version(),
+                     'new': bundle_update.version,
+                     'size': _format_size(bundle_update.size)}
+            else:
+                details = _('Version %(version)s (Size: %(size)s)')
+                details = details % \
+                    {'version': bundle_update.version,
+                     'size': _format_size(bundle_update.size)}
 
             row[self.DESCRIPTION] = '<b>%s</b>\n%s' % \
-                (bundle_update.bundle.get_name(), details)
+                (bundle_update.name, details)
 
             row[self.SIZE] = bundle_update.size
 

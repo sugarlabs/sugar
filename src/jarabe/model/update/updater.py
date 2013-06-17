@@ -125,7 +125,7 @@ class Updater(GObject.GObject):
         else:
             self._bundles_to_update = []
             for bundle_update in self._updates:
-                if bundle_update.bundle.get_bundle_id() in bundle_ids:
+                if bundle_update.bundle_id in bundle_ids:
                     self._bundles_to_update.append(bundle_update)
 
         self._total_bundles_to_update = len(self._bundles_to_update)
@@ -145,14 +145,12 @@ class Updater(GObject.GObject):
         self._state = STATE_DOWNLOADING
         self._bundle_update = self._bundles_to_update.pop()
         _logger.debug("Downloading update for %s",
-                      self._bundle_update.bundle.get_bundle_id())
+                      self._bundle_update.bundle_id)
 
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2
         progress = current / float(total)
-
-        self.emit('progress', self._state,
-                  self._bundle_update.bundle.get_name(), progress)
+        self.emit('progress', self._state, self._bundle_update.name, progress)
 
         self._downloader = Downloader(self._bundle_update.link)
         self._downloader.connect('progress', self.__downloader_progress_cb)
@@ -176,9 +174,7 @@ class Updater(GObject.GObject):
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2 + progress
         progress = current / float(total)
-
-        self.emit('progress', self._state,
-                  self._bundle_update.bundle.get_name(), progress)
+        self.emit('progress', self._state, self._bundle_update.name, progress)
 
     def __downloader_error_cb(self, downloader, error_message):
         _logger.error('Error downloading update:\n%s', error_message)
@@ -197,10 +193,8 @@ class Updater(GObject.GObject):
         current = total - len(self._bundles_to_update) - 0.5
         progress = current / float(total)
 
-        _logger.debug("Installing update for %s",
-                      bundle_update.bundle.get_bundle_id())
-        self.emit('progress', self._state, bundle_update.bundle.get_name(),
-                  progress)
+        _logger.debug("Installing update for %s", bundle_update.bundle_id)
+        self.emit('progress', self._state, bundle_update.name, progress)
 
         current += 0.5
         bundle = bundle_from_archive(local_file_path)

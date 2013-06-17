@@ -165,7 +165,8 @@ class _UpdateChecker(GObject.GObject):
             size = 0
 
         if version > NormalizedVersion(self._bundle.get_activity_version()):
-            result = BundleUpdate(self._bundle, version, link, size)
+            result = BundleUpdate(self._bundle.get_bundle_id(),
+                                  self._bundle.get_name(), version, link, size)
         else:
             result = None
 
