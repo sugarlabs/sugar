@@ -91,6 +91,9 @@ class JournalActivityDBusService(dbus.service.Object):
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='is',
                          out_signature='s')
     def ChooseObject(self, parent_xid, what_filter=''):
+        """
+        This method is keep for backwards compatibility
+        """
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
             display = Gdk.Display.get_default()
@@ -99,6 +102,23 @@ class JournalActivityDBusService(dbus.service.Object):
         else:
             parent = None
         chooser = ObjectChooser(parent, what_filter)
+        chooser.connect('response', self._chooser_response_cb, chooser_id)
+        chooser.show()
+
+        return chooser_id
+
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='iss',
+                         out_signature='s')
+    def ChooseObjectWithFilter(self, parent_xid, what_filter='',
+                               filter_type=None):
+        chooser_id = uuid.uuid4().hex
+        if parent_xid > 0:
+            display = Gdk.Display.get_default()
+            parent = GdkX11.X11Window.foreign_new_for_display(
+                display, parent_xid)
+        else:
+            parent = None
+        chooser = ObjectChooser(parent, what_filter, filter_type)
         chooser.connect('response', self._chooser_response_cb, chooser_id)
         chooser.show()
 
