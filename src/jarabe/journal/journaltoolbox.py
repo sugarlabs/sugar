@@ -40,6 +40,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics import iconentry
 from sugar3 import mime
+from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
@@ -77,6 +78,7 @@ class MainToolbox(ToolbarBox):
         ToolbarBox.__init__(self)
 
         self._mount_point = None
+        self._filter_type = None
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -177,12 +179,28 @@ class MainToolbox(ToolbarBox):
 
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
-            generic_type = mime.get_generic_type(value)
-            if generic_type:
-                mime_types = generic_type.mime_types
-                query['mime_type'] = mime_types
-            else:
-                query['activity'] = self._what_search_combo.props.value
+            if self._filter_type is None:
+                generic_type = mime.get_generic_type(value)
+                if generic_type:
+                    mime_types = generic_type.mime_types
+                    query['mime_type'] = mime_types
+                else:
+                    query['activity'] = self._what_search_combo.props.value
+            elif self._filter_type == FILTER_TYPE_MIME_BY_ACTIVITY:
+                registry = bundleregistry.get_registry()
+                bundle = \
+                    registry.get_bundle(value)
+                if bundle is not None:
+                    query['mime_type'] = bundle.get_mime_types()
+                else:
+                    if mime.get_generic_type(value):
+                        error = 'Trying to filter using activity mimetype ' \
+                                'but what_filter is a generic mime type ' \
+                                'instead of a bundle_id'
+                    else:
+                        error = 'Trying to filter using activity mimetype ' \
+                                'but bundle id is wrong %s' % value
+                    logging.error(error)
 
         if self._when_search_combo.props.value:
             date_from, date_to = self._get_date_range()
@@ -227,6 +245,10 @@ class MainToolbox(ToolbarBox):
         self._update_if_needed()
 
     def _update_if_needed(self):
+        # check if the what_search combo should be visible
+        self._what_search_combo.set_visible(
+            self._filter_type != FILTER_TYPE_MIME_BY_ACTIVITY)
+
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -270,9 +292,14 @@ class MainToolbox(ToolbarBox):
         else:
             self._what_search_combo.set_active(what_filter_index)
 
-    def update_filters(self, mount_point, what_filter):
+    def update_filters(self, mount_point, what_filter, filter_type=None):
         self._mount_point = mount_point
+        self._filter_type = filter_type
         self.set_what_filter(what_filter)
+        self._update_if_needed()
+
+    def set_filter_type(self, filter_type):
+        self._filter_type = filter_type
         self._update_if_needed()
 
     def refresh_filters(self):
