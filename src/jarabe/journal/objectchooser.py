@@ -29,6 +29,7 @@ from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.volumestoolbar import VolumesToolbar
+from jarabe.model import bundleregistry
 
 
 class ObjectChooser(Gtk.Window):
@@ -39,7 +40,7 @@ class ObjectChooser(Gtk.Window):
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
-    def __init__(self, parent=None, what_filter=''):
+    def __init__(self, parent=None, what_filter='', use_mime_types=False):
         Gtk.Window.__init__(self)
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_decorated(False)
@@ -67,7 +68,7 @@ class ObjectChooser(Gtk.Window):
         self.add(vbox)
         vbox.show()
 
-        title_box = TitleBox()
+        title_box = TitleBox(what_filter, use_mime_types)
         title_box.connect('volume-changed', self.__volume_changed_cb)
         title_box.close_button.connect('clicked',
                                        self.__close_button_clicked_cb)
@@ -95,7 +96,7 @@ class ObjectChooser(Gtk.Window):
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
-        self._toolbar.update_filters('/', what_filter)
+        self._toolbar.update_filters('/', what_filter, use_mime_types)
 
     def __realize_cb(self, chooser, parent):
         self.get_window().set_transient_for(parent)
@@ -142,11 +143,19 @@ class ObjectChooser(Gtk.Window):
 class TitleBox(VolumesToolbar):
     __gtype_name__ = 'TitleBox'
 
-    def __init__(self):
+    def __init__(self, what_filter='', use_mime_types=False):
         VolumesToolbar.__init__(self)
 
         label = Gtk.Label()
-        label.set_markup('<b>%s</b>' % _('Choose an object'))
+        title = _('Choose an object')
+        if use_mime_types:
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(what_filter)
+            if bundle is not None:
+                title = _('Choose an object to open with %s activity') % \
+                    bundle.get_name()
+
+        label.set_markup('<b>%s</b>' % title)
         label.set_alignment(0, 0.5)
         self._add_widget(label, expand=True)
 
