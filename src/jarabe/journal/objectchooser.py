@@ -91,14 +91,11 @@ class ObjectChooser(Gtk.Window):
         vbox.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
-        self._toolbar.set_mount_point('/')
-
         width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
-        if what_filter:
-            self._toolbar.set_what_filter(what_filter)
+        self._toolbar.update_filters('/', what_filter)
 
     def __realize_cb(self, chooser, parent):
         self.get_window().set_transient_for(parent)

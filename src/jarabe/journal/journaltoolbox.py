@@ -234,10 +234,7 @@ class MainToolbox(ToolbarBox):
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
             GObject.source_remove(self._autosearch_timer)
-        new_query = self._build_query()
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
+        self._update_if_needed()
 
     def _search_entry_changed_cb(self, search_entry):
         if not search_entry.props.text:
@@ -257,10 +254,7 @@ class MainToolbox(ToolbarBox):
 
     def set_mount_point(self, mount_point):
         self._mount_point = mount_point
-        new_query = self._build_query()
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
+        self._update_if_needed()
 
     def set_what_filter(self, what_filter):
         combo_model = self._what_search_combo.get_model()
@@ -274,6 +268,11 @@ class MainToolbox(ToolbarBox):
             logging.warning('what_filter %r not known', what_filter)
         else:
             self._what_search_combo.set_active(what_filter_index)
+
+    def update_filters(self, mount_point, what_filter):
+        self._mount_point = mount_point
+        self.set_what_filter(what_filter)
+        self._update_if_needed()
 
     def refresh_filters(self):
         current_value = self._what_search_combo.props.value
