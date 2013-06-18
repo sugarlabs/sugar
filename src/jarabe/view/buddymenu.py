@@ -27,6 +27,7 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 
+from jarabe.xoicon import get_name as XoIcon
 from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
@@ -38,7 +39,7 @@ class BuddyMenu(Palette):
     def __init__(self, buddy):
         self._buddy = buddy
 
-        buddy_icon = Icon(icon_name='computer-xo',
+        buddy_icon = Icon(icon_name=XoIcon(),
                           xo_color=buddy.get_color(),
                           icon_size=Gtk.IconSize.LARGE_TOOLBAR)
         nick = buddy.get_nick()
