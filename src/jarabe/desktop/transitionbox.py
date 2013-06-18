@@ -19,6 +19,7 @@ from gi.repository import GObject
 from sugar3.graphics import style
 from sugar3.graphics import animator
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.xoicon import get_name as XoIcon
 
 from jarabe.model.buddy import get_owner_instance
 from jarabe.desktop.viewcontainer import ViewContainer
@@ -50,7 +51,7 @@ class TransitionBox(ViewContainer):
 
         # Round off icon size to an even number to ensure that the icon
         owner = get_owner_instance()
-        self._owner_icon = Icon(icon_name='computer-xo',
+        self._owner_icon = Icon(icon_name=XoIcon(),
                                 xo_color=owner.get_color(),
                                 pixel_size=style.XLARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, self._owner_icon)

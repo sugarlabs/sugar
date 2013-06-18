@@ -16,6 +16,7 @@
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import CanvasIcon
+from sugar3.graphics.xoicon import get_name as XoIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
@@ -26,7 +27,7 @@ _FILTERED_ALPHA = 0.33
 
 class BuddyIcon(CanvasIcon):
     def __init__(self, buddy, pixel_size=style.STANDARD_ICON_SIZE):
-        CanvasIcon.__init__(self, icon_name='computer-xo',
+        CanvasIcon.__init__(self, icon_name=XoIcon(),
                             pixel_size=pixel_size)
 
         self._filtered = False

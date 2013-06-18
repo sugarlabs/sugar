@@ -30,6 +30,7 @@ import json
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xoicon import get_name as XoIcon
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.alert import Alert
@@ -57,7 +58,7 @@ class BuddyList(Gtk.Alignment):
         hbox = Gtk.HBox()
         for buddy in buddies:
             nick_, color = buddy
-            icon = CanvasIcon(icon_name='computer-xo',
+            icon = CanvasIcon(icon_name=XoIcon(),
                               xo_color=XoColor(color),
                               pixel_size=style.STANDARD_ICON_SIZE)
             icon.set_palette(BuddyPalette(buddy))
@@ -106,7 +107,7 @@ class CommentsView(Gtk.TreeView):
             for comment in self._comments:
                 self._add_row(comment.get(self.FROM, ''),
                               comment.get(self.MESSAGE, ''),
-                              comment.get(self.ICON, 'computer-xo'),
+                              comment.get(self.ICON, XoIcon()),
                               comment.get(self.ICON_COLOR, '#FFFFFF,#000000'))
 
     def _get_selected_row(self):
