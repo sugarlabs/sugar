@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "About Me "
+msgstr "About Me"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
