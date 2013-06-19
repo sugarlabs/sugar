@@ -47,12 +47,24 @@ class MockSharedJournalEntry(account.SharedJournalEntry):
         return
 
     def get_share_menu(self, metadata):
-        share_menu = MenuItem()
+        share_menu = ShareMenu(metadata)
         return share_menu
 
     def get_refresh_menu(self):
-        refresh_menu = MenuItem()
+        refresh_menu = RefreshMenu()
         return refresh_menu
+
+
+class ShareMenu(MenuItem):
+    def __init__(self, metadata):
+        MenuItem.__init__(self, text_label=ACCOUNT_NAME)
+        self.show()
+
+
+class RefreshMenu(MenuItem):
+    def __init__(self):
+        MenuItem.__init__(self, text_label=ACCOUNT_NAME)
+        self.show()
 
     def set_metadata(self, metadata):
         return
