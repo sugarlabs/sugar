@@ -14,7 +14,8 @@ sugar_PYTHON =		\
 	__init__.py	\
 	main.py \
 	apisocket.py \
-	testrunner.py
+	testrunner.py	\
+	xoicon.py
 
 nodist_sugar_PYTHON = config.py
 

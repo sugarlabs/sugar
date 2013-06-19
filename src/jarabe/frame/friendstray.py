@@ -18,6 +18,7 @@ import logging
 
 from sugar3.graphics.tray import VTray, TrayIcon
 
+from jarabe.xoicon import get_name as XoIcon
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import shell
@@ -27,7 +28,7 @@ from jarabe.model import neighborhood
 
 class FriendIcon(TrayIcon):
     def __init__(self, buddy):
-        TrayIcon.__init__(self, icon_name='computer-xo',
+        TrayIcon.__init__(self, icon_name=XoIcon(),
                           xo_color=buddy.get_color())
 
         self._buddy = buddy

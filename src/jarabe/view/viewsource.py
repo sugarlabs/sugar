@@ -42,6 +42,7 @@ from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 from sugar3 import mime
 
+from jarabe.xoicon import get_name as XoIcon
 from jarabe.view import customizebundle
 
 _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
@@ -388,7 +389,7 @@ class Toolbar(Gtk.Toolbar):
 
         if sugar_toolkit_path is not None:
             sugar_button = RadioToolButton()
-            icon = Icon(icon_name='computer-xo',
+            icon = Icon(icon_name=XoIcon(),
                         icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())

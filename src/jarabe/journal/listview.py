@@ -30,6 +30,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3 import util
 
+from jarabe.xoicon import get_name as XoIcon
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
@@ -711,7 +712,7 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.icon_name = None
         else:
             nick_, xo_color = buddy
-            self.props.icon_name = 'computer-xo'
+            self.props.icon_name = XoIcon()
             self.props.xo_color = xo_color
 
     buddy = GObject.property(type=object, setter=set_buddy)
