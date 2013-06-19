@@ -53,9 +53,21 @@ class TestWebAccounts(unittest.TestCase):
         icon_path = os.path.join(web_extension_dir, ACCOUNT_NAME, 'icons')
         self.assertTrue(icon_path in icon_search_path)
 
+    def test_get_webaccount_paths(self):
+        paths = accountsmanager.get_webaccount_paths()
+        self.assertTrue(len(paths) > 0)
+
     def test_get_all_accounts(self):
         accounts = accountsmanager.get_all_accounts()
         self.assertTrue(len(accounts) > 0)
+
+    def test_get_account(self):
+        account = accountsmanager.get_account('mock')
+        self.assertIsNotNone(account)
+
+    def test_get_service(self):
+        account = accountsmanager.get_service('mock')
+        self.assertIsNotNone(account)
 
     def test_get_configured_accounts(self):
         os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_VALID)
