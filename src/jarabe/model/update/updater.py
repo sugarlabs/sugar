@@ -18,6 +18,7 @@
 import os
 import logging
 import time
+import importlib
 
 from gi.repository import GObject
 from gi.repository import GLib
@@ -28,12 +29,11 @@ from sugar3.bundle import bundle_from_archive
 from jarabe.model import bundleregistry
 from jarabe.util.downloader import Downloader
 
-from jarabe.model.update.aslo import AsloUpdater
-
 _logger = logging.getLogger('Updater')
 _instance = None
 _LAST_UPDATE_KEY = '/desktop/sugar/update/last_activity_update'
 _UPDATE_FREQUENCY_KEY = '/desktop/sugar/update/auto_update_frequency'
+_UPDATE_BACKEND_KEY = '/desktop/sugar/update/backend'
 _URGENT_TRIGGER_FILE = os.path.expanduser('~/.sugar-update')
 
 STATE_IDLE = 0
@@ -64,7 +64,13 @@ class Updater(GObject.GObject):
 
     def __init__(self):
         GObject.GObject.__init__(self)
-        self._model = AsloUpdater()
+
+        client = GConf.Client.get_default()
+        backend = client.get_string(_UPDATE_BACKEND_KEY)
+        module_name, class_name = backend.rsplit('.', 1)
+        _logger.debug("Use backend %s.%s", module_name, class_name)
+        module = importlib.import_module("jarabe.model.update." + module_name)
+        self._model = getattr(module, class_name)()
 
         self._updates = None
         self._bundles_to_update = None

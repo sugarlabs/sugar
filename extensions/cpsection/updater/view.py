@@ -133,7 +133,10 @@ class ActivityUpdater(SectionView):
 
     def __progress_cb(self, model, state, bundle_name, progress):
         if state == updater.STATE_CHECKING:
-            message = _('Checking %s...') % bundle_name
+            if bundle_name:
+                message = _('Checking %s...') % bundle_name
+            else:
+                message = _('Looking for updates...')
         elif state == updater.STATE_DOWNLOADING:
             message = _('Downloading %s...') % bundle_name
         elif state == updater.STATE_UPDATING:

@@ -381,6 +381,30 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/update/backend</key>
+      <applyto>/desktop/sugar/update/backend</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>aslo.AsloUpdater</default>
+      <locale name="C">
+        <short>Activity update backend.</short>
+        <long>Activity update backend module, followed by a period, followed by the class name.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/update/microformat_update_url</key>
+      <applyto>/desktop/sugar/update/microformat_update_url</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Microformat update URL.</short>
+        <long>URL used by the microformat update backend for activity update information.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/update/auto_update_frequency</key>
       <applyto>/desktop/sugar/update/auto_update_frequency</applyto>
       <owner>sugar</owner>
