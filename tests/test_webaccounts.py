@@ -57,6 +57,14 @@ class TestWebAccounts(unittest.TestCase):
         accounts = accountsmanager.get_all_accounts()
         self.assertTrue(len(accounts) > 0)
 
+    def test_get_account(self):
+        account = accountsmanager.get_account('mock')
+        self.assertIsNotNone(account)
+
+    def test_get_service(self):
+        account = accountsmanager.get_service('mock')
+        self.assertIsNotNone(account)
+
     def test_get_configured_accounts(self):
         os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_VALID)
         accounts = accountsmanager.get_configured_accounts()
