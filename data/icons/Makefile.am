@@ -10,6 +10,7 @@ sugar_DATA =                        \
 	module-modemconfiguration.svg	\
 	module-network.svg              \
 	module-power.svg                \
-	module-updater.svg
+	module-updater.svg		\
+	module-webaccount.svg
 
 EXTRA_DIST = $(sugar_DATA)
