@@ -91,7 +91,7 @@ def _ensure_module_repository():
             except Exception, e:
                 logging.error('%s.get_account() failed: %s' %
                               (service_name, e))
-                traceback.format_exc() 
+                traceback.format_exc()
 
         if account_module is not None:
             _module_repository[service_name]['account'] = account_module
@@ -113,7 +113,7 @@ def get_all_accounts():
 def _get_service_name(service_path):
     ''' service path is of the form:
     /usr/share/sugar/extensions/webservice/my_service/my_service '''
-    return os.path.basename(os.path.basename(service_path))
+    return os.path.basename(service_path)
 
 
 def _get_webservice_module_paths():
