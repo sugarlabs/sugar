@@ -1,4 +1,3 @@
-# Copyright (C) 2012, Daniel Narvaez
 # Copyright (C) 2013, Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
@@ -13,20 +12,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-from sugar3.test import unittest
-from sugar3.test import uitree
+from gettext import gettext as _
+from pkgutil import extend_path
 
-ACCOUNT_NAME = 'mock'
+__path__ = extend_path(__path__, __name__)
 
-
-class TestWebAccount(unittest.UITestCase):
-
-    def test_webaccount(self):
-        with self.run_view("webaccount"):
-            root = uitree.get_root()
-
-            for name in [ACCOUNT_NAME]:
-                node = root.find_child(name=name, role_name='label')
-                self.assertIsNotNone(node)
+CLASS = 'WebServicesConfig'
+ICON = 'module-webaccount'
+TITLE = _('Configure your Web Services')
