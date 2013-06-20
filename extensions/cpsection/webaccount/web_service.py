@@ -1,5 +1,4 @@
-# Copyright (C) 2012, Daniel Narvaez
-# Copyright (C) 2013, Walter Bender
+# Copyright (C) 2013, Walter Bender - Raul Gutierrez Segales
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,20 +12,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-from sugar3.test import unittest
-from sugar3.test import uitree
-
-ACCOUNT_NAME = 'mock'
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 
-class TestWebAccount(unittest.UITestCase):
+class WebService():
+    def get_icon_name(self):
+        raise "Not implemented"
 
-    def test_webaccount(self):
-        with self.run_view("webaccount"):
-            root = uitree.get_root()
-
-            for name in [ACCOUNT_NAME]:
-                node = root.find_child(name=name, role_name='label')
-                self.assertIsNotNone(node)
+    def config_service_cb(self, widget, event, container):
+        raise "Not implemented"
