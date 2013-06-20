@@ -2,6 +2,9 @@
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2012 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
+# Copyright (C) 2008-2013 Sugar Labs
+# Copyright (C) 2013 Daniel Francis
+# Copyright (C) 2013 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,10 +31,14 @@ from sugar3.graphics import iconentry
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 
 from jarabe.desktop import favoritesview
+from jarabe.desktop.favorites import get_number_of_home_views
+from jarabe.desktop.favorites import FAVORITE_ICONS
 
 _AUTOSEARCH_TIMEOUT = 1000
-_FAVORITES_VIEW = 0
-_LIST_VIEW = 1
+_FAVORITES_VIEW = []
+for i in range(get_number_of_home_views()):
+    _FAVORITES_VIEW.append(i)
+_LIST_VIEW = _FAVORITES_VIEW[-1] + 1
 
 
 class ViewToolbar(Gtk.Toolbar):
@@ -69,14 +76,19 @@ class ViewToolbar(Gtk.Toolbar):
 
         self._add_separator(expand=True)
 
-        self._favorites_button = FavoritesButton()
-        self._favorites_button.connect('toggled',
-                                       self.__view_button_toggled_cb,
-                                       _FAVORITES_VIEW)
-        self.insert(self._favorites_button, -1)
+        self._favorites_buttons = []
+        for i in range(get_number_of_home_views()):
+            self._favorites_buttons.append(FavoritesButton(i))
+            self._favorites_buttons[i].connect('toggled',
+                                                self.__view_button_toggled_cb,
+                                                _FAVORITES_VIEW[i])
+            if i > 0:
+                self._favorites_buttons[i].props.group = \
+                    self._favorites_buttons[0]
+            self.insert(self._favorites_buttons[i], -1)
 
         self._list_button = RadioToolButton(icon_name='view-list')
-        self._list_button.props.group = self._favorites_button
+        self._list_button.props.group = self._favorites_buttons[0]
         self._list_button.props.tooltip = _('List view')
         self._list_button.props.accelerator = _('<Ctrl>2')
         self._list_button.connect('toggled', self.__view_button_toggled_cb,
@@ -86,11 +98,13 @@ class ViewToolbar(Gtk.Toolbar):
         self._add_separator()
 
     def show_view_buttons(self):
-        self._favorites_button.show()
+        for i in range(get_number_of_home_views()):
+            self._favorites_buttons[i].show()
         self._list_button.show()
 
     def hide_view_buttons(self):
-        self._favorites_button.hide()
+        for i in range(get_number_of_home_views()):
+            self._favorites_buttons[i].hide()
         self._list_button.hide()
 
     def clear_query(self):
@@ -143,16 +157,16 @@ class ViewToolbar(Gtk.Toolbar):
 class FavoritesButton(RadioToolButton):
     __gtype_name__ = 'SugarFavoritesButton'
 
-    def __init__(self):
+    def __init__(self, favorite_view):
         RadioToolButton.__init__(self)
 
-        self.props.tooltip = _('Favorites view')
-        self.props.accelerator = _('<Ctrl>1')
+        self.props.tooltip = _('Favorites view %d' % (favorite_view + 1))
+        self.props.accelerator = _('<Ctrl>%d' % (favorite_view + 1))
         self.props.group = None
+        self.props.icon_name = FAVORITE_ICONS[favorite_view]
 
-        favorites_settings = favoritesview.get_settings()
+        favorites_settings = favoritesview.get_settings(favorite_view)
         self._layout = favorites_settings.layout
-        self._update_icon()
 
         # someday, this will be a Gtk.Table()
         layouts_grid = Gtk.HBox()
@@ -164,11 +178,11 @@ class FavoritesButton(RadioToolButton):
                 layout_item.set_active(True)
             layouts_grid.pack_start(layout_item, True, False, 0)
             layout_item.connect('toggled', self.__layout_activate_cb,
-                                layoutid)
+                                layoutid, favorite_view)
         layouts_grid.show_all()
         self.props.palette.set_content(layouts_grid)
 
-    def __layout_activate_cb(self, menu_item, layout):
+    def __layout_activate_cb(self, menu_item, layout, favorite_view):
         if not menu_item.get_active():
             return
         if self._layout == layout and self.props.active:
@@ -176,15 +190,11 @@ class FavoritesButton(RadioToolButton):
 
         if self._layout != layout:
             self._layout = layout
-            self._update_icon()
 
-            favorites_settings = favoritesview.get_settings()
+            favorites_settings = favoritesview.get_settings(favorite_view)
             favorites_settings.layout = layout
 
         if not self.props.active:
             self.props.active = True
         else:
             self.emit('toggled')
-
-    def _update_icon(self):
-        self.props.icon_name = favoritesview.LAYOUT_MAP[self._layout].icon_name
