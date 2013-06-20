@@ -239,6 +239,13 @@ class MicroformatUpdater(object):
 
         self._bundle_update = self._bundles_to_check.pop()
         _logger.debug("Check %s", self._bundle_update.bundle_id)
+
+        # There is no need for a special name lookup for an automatic update.
+        # The name lookup is only for UI purposes, but we are running in the
+        # background.
+        if self._bundle_update.name is None and self._auto:
+            self._bundle_update.name = self._bundle_update.bundle_id
+
         if self._bundle_update.name is not None:
             # if we know the name, we just perform an asynchronous size check
             _logger.debug("Performing async size lookup")
@@ -286,13 +293,15 @@ class MicroformatUpdater(object):
         self._updates.append(self._bundle_update)
         self._check_next_update()
 
-    def fetch_update_info(self, installed_bundles, progress_cb, completion_cb):
+    def fetch_update_info(self, installed_bundles, auto, progress_cb,
+                          completion_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
         self._cancelling = False
         self._updates = []
         self._bundles_to_check = []
         self._total_bundles_to_check = 0
+        self._auto = auto
         self._query()
 
     def cancel(self):

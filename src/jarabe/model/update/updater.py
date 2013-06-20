@@ -102,7 +102,7 @@ class Updater(GObject.GObject):
         self._bundles_failed = []
         self._state = STATE_CHECKING
         bundles = list(bundleregistry.get_registry())
-        self._model.fetch_update_info(bundles,
+        self._model.fetch_update_info(bundles, auto,
                                       self._backend_progress_cb,
                                       self._backend_finished_cb)
 

@@ -211,7 +211,8 @@ class AsloUpdater(object):
         self._progress_cb(bundle.get_name(), progress)
         self._checker.check(bundle)
 
-    def fetch_update_info(self, installed_bundles, progress_cb, completion_cb):
+    def fetch_update_info(self, installed_bundles, auto, progress_cb,
+                          completion_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
         self._cancelling = False
