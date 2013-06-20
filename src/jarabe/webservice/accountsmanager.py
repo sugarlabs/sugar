@@ -16,78 +16,193 @@
 # Boston, MA 02111-1307, USA.
 
 import os
+import sys
 import logging
+import traceback
+from importlib import import_module
 
 from gi.repository import Gtk
+
+from sugar3 import env
 
 from jarabe import config
 from jarabe.webservice.account import Account
 
-_accounts = []
+_ACCOUNT_MODULE_NAME = 'account'
+_user_extensions_path = os.path.join(env.get_profile_path(), 'extensions')
+
+_module_repository = None
+
+
+def _extend_sys_path():
+    for path in [_user_extensions_path, config.ext_path]:
+        if path not in sys.path and os.path.exists(path):
+            sys.path.append(path)
+
+
+def _get_webservice_paths():
+    paths = []
+    for path in [os.path.join(_user_extensions_path, 'webservice'),
+                 os.path.join(config.ext_path, 'webservice')]:
+        if os.path.exists(path):
+            paths.append(path)
+    return paths
+
+
+def get_webaccount_paths():
+    paths = []
+    for path in [os.path.join(_user_extensions_path, 'cpsection',
+                              'webaccount'),
+                 os.path.join(config.ext_path, 'cpsection', 'webaccount')]:
+        if os.path.exists(path):
+            paths.append(path)
+    return paths
+
+
+def _ensure_module_repository():
+    ''' Ensure we have built a repository of the online account
+    managers and related service modules.'''
+    global _module_repository
+
+    if _module_repository is not None:
+        return
+
+    _module_repository = {}
+
+    _extend_sys_path()
+
+    for path in _get_webservice_module_paths():
+        service_name = _get_service_name(path)
+        if service_name in _module_repository:
+            continue
+
+        service_module = _load_service_module(path, service_name)
+        if service_module is None:
+            continue
+
+        _module_repository[service_name] = {'service': service_module}
+
+        account_module = None
+        module = _load_account_module(path)
+
+        if module is not None and hasattr(module, 'get_account'):
+            try:
+                account_module = module.get_account()
+            except Exception, e:
+                logging.error('%s.get_account() failed: %s' %
+                              (service_name, e))
+                traceback.format_exc()
+
+        if account_module is not None:
+            _module_repository[service_name]['account'] = account_module
+            _extend_icon_theme_search_path(path)
+        else:
+            del _module_repository[service_name]
 
 
 def get_all_accounts():
-    ''' Returns a list of all installed online account managers '''
-    global _accounts
-    if len(_accounts) > 0:
-        return _accounts
+    _ensure_module_repository()
 
-    web_path = os.path.join(config.ext_path, 'webservice')
+    accounts = []
+    for service, service_info in _module_repository.iteritems():
+        accounts.append(service_info['account'])
+
+    return accounts
+
+
+def _get_service_name(service_path):
+    ''' service path is of the form:
+    /usr/share/sugar/extensions/webservice/my_service/my_service '''
+    return os.path.basename(service_path)
+
+
+def _get_webservice_module_paths():
+    webservice_module_paths = []
+    for webservice_path in _get_webservice_paths():
+        for path in os.listdir(webservice_path):
+            service_path = os.path.join(webservice_path, path)
+            if os.path.isdir(service_path):
+                webservice_module_paths.append(service_path)
+    return webservice_module_paths
+
+
+def _load_module(path, module):
     try:
-        web_path_dirs = os.listdir(web_path)
-    except OSError, e:
-        web_path_dirs = []
-        logging.warning('listdir: %s: %s' % (web_path, e))
-
-    for d in web_path_dirs:
-        dir_path = os.path.join(web_path, d)
-        module = _load_module(dir_path)
-        if module is not None:
-            _accounts.append(module)
-            _extend_icon_theme_search_path(dir_path)
-
-    return _accounts
-
-
-def _load_module(dir_path):
-    module = None
-    if os.path.isdir(dir_path):
-        for f in os.listdir(dir_path):
-            if f == 'account.py':
-                module_name = f[:-3]
-                logging.debug('OnlineAccountsManager loading %s' %
-                              (module_name))
-                module_path = 'webservice.%s.%s' % (os.path.basename(dir_path),
-                                                    module_name)
-                try:
-                    mod = __import__(module_path, globals(), locals(),
-                                     [module_name])
-                    if hasattr(mod, 'get_account'):
-                        module = mod.get_account()
-
-                except Exception as e:
-                    logging.exception('Exception while loading %s: %s' %
-                                      (module_name, str(e)))
+        module = import_module(_convert_path_to_module_name(path, module),
+                               [module])
+    except ImportError, e:
+        module = None
+        logging.debug('ImportError: %s' % (e))
 
     return module
 
 
-def _extend_icon_theme_search_path(dir_path):
+def _convert_path_to_module_name(path, module):
+    if 'extensions' not in path:
+        return ''
+
+    parts = []
+    while 'extensions' not in parts:
+        path, base = os.path.split(path)
+        parts.append(base)
+
+    parts.reverse()
+
+    return '%s.%s' % ('.'.join(parts[1:]), module)
+
+
+def _load_account_module(path):
+    module = None
+    if os.path.isdir(path):
+        if '%s.py' % _ACCOUNT_MODULE_NAME in os.listdir(path):
+            module = _load_module(path, _ACCOUNT_MODULE_NAME)
+
+    return module
+
+
+def _load_service_module(path, service_name):
+    module = None
+    if os.path.isdir(path):
+        if service_name in os.listdir(path):
+            module = _load_module(os.path.join(path, service_name),
+                                  service_name)
+
+    return module
+
+
+def _extend_icon_theme_search_path(path):
     icon_theme = Gtk.IconTheme.get_default()
     icon_search_path = icon_theme.get_search_path()
-
     try:
-        icon_path_dirs = os.listdir(dir_path)
+        icon_path_dirs = os.listdir(path)
     except OSError, e:
         icon_path_dirs = []
-        logging.warning('listdir: %s: %s' % (dir_path, e))
+        logging.warning('listdir: %s: %s' % (path, e))
 
-    for f in icon_path_dirs:
-        if f == 'icons':
-            icon_path = os.path.join(dir_path, f)
+    for file in icon_path_dirs:
+        if file == 'icons':
+            icon_path = os.path.join(path, file)
             if os.path.isdir(icon_path) and \
                     icon_path not in icon_search_path:
                 icon_theme.append_search_path(icon_path)
+
+
+def get_account(service_name):
+    _ensure_module_repository()
+
+    if service_name in _module_repository:
+        return _module_repository[service_name]['account']
+    else:
+        return None
+
+
+def get_service(service_name):
+    _ensure_module_repository()
+
+    if service_name in _module_repository:
+        return _module_repository[service_name]['service']
+    else:
+        return None
 
 
 def get_configured_accounts():
