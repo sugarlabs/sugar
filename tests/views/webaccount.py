@@ -1,4 +1,3 @@
-# Copyright (C) 2012, Daniel Narvaez
 # Copyright (C) 2013, Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,18 +14,34 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar3.test import unittest
-from sugar3.test import uitree
+import os
+import sys
+
+from gi.repository import Gtk
+
+from jarabe import config
+from jarabe.webservice.account import Account
+from jarabe.webservice import accountsmanager
 
 ACCOUNT_NAME = 'mock'
 
+tests_dir = os.getcwd()
+extension_dir = os.path.join(tests_dir, 'extensions')
 
-class TestWebAccount(unittest.UITestCase):
+os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_VALID)
+config.ext_path = extension_dir
+sys.path.append(config.ext_path)
 
-    def test_webaccount(self):
-        with self.run_view("webaccount"):
-            root = uitree.get_root()
+window = Gtk.Window()
+box = Gtk.HBox()
+box.show()
+window.add(box)
 
-            for name in [ACCOUNT_NAME]:
-                node = root.find_child(name=name, role_name='label')
-                self.assertIsNotNone(node)
+services = accountsmanager.get_webaccount_services()
+for service in services:
+    if service.get_icon_name() == ACCOUNT_NAME:
+        service.config_service_cb(None, None, box)
+
+window.show()
+
+Gtk.main()

@@ -49,7 +49,7 @@ def _get_webservice_paths():
     return paths
 
 
-def get_webaccount_paths():
+def _get_webaccount_paths():
     paths = []
     for path in [os.path.join(_user_extensions_path, 'cpsection',
                               'webaccount'),
@@ -218,3 +218,32 @@ def get_active_accounts():
 
 def has_configured_accounts():
     return len(get_configured_accounts()) > 0
+
+
+def get_webaccount_services():
+    _ensure_module_repository()
+
+    service_paths = []
+    for path in _get_webaccount_paths():
+        service_paths.append(os.path.join(path, 'services'))
+
+    services = []
+    for service_path in service_paths:
+        if not os.path.exists(service_path):
+            continue
+
+        folders = os.listdir(service_path)
+        for folder in folders:
+            if not os.path.isdir(os.path.join(service_path, folder)):
+                continue
+
+            if not os.path.exists(os.path.join(
+                    service_path, folder, 'service.py')):
+                continue
+
+            module = _load_module(os.path.join(service_path, folder),
+                                  'service')
+            if hasattr(module, 'get_service'):
+                services.append(module.get_service())
+
+    return services
