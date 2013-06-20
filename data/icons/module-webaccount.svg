@@ -1,0 +1,15 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY stroke_color "#FFFFFF">
+	<!ENTITY fill_color "#010101">
+]><svg enable-background="new 0 0 55 55" height="55px" version="1.1" viewBox="0 0 55 55" width="55px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px"><g display="block" id="activity-browse">
+	<circle cx="27.375" cy="27.5" display="inline" fill="&fill_color;" r="19.903" stroke="&stroke_color;" stroke-width="3.5"/>
+	<g display="inline">
+		<path d="M27.376,7.598c0,0-11.205,8.394-11.205,19.976    c0,11.583,11.205,19.829,11.205,19.829" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5"/>
+		<path d="M27.376,7.598c0,0,11.066,9.141,11.066,19.976    c0,10.839-11.066,19.829-11.066,19.829" fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5"/>
+		<line fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" x1="27.376" x2="27.376" y1="7.598" y2="47.402"/>
+		<line fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" x1="27.376" x2="27.376" y1="7.598" y2="47.402"/>
+		<line fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" x1="27.376" x2="27.376" y1="7.598" y2="47.402"/>
+		<line fill="&fill_color;" stroke="&stroke_color;" stroke-width="3.5" x1="7.472" x2="47.278" y1="27.5" y2="27.5"/>
+	</g>
+</g></svg>
+
