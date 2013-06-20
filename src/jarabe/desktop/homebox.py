@@ -1,4 +1,7 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008-2013 Sugar Labs
+# Copyright (C) 2013 Daniel Francis
+# Copyright (C) 2013 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,9 +30,12 @@ from sugar3.graphics.icon import Icon
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.util.normalize import normalize_string
+from jarabe.desktop.favorites import FAVORITE_ICONS, get_number_of_home_views
 
-_FAVORITES_VIEW = 0
-_LIST_VIEW = 1
+_FAVORITES_VIEW = []
+for i in range(get_number_of_home_views()):
+    _FAVORITES_VIEW.append(i)
+_LIST_VIEW = _FAVORITES_VIEW[-1] + 1
 
 
 class HomeBox(Gtk.VBox):
@@ -40,7 +46,9 @@ class HomeBox(Gtk.VBox):
 
         Gtk.VBox.__init__(self)
 
-        self._favorites_box = favoritesview.FavoritesBox()
+        self._favorites_boxes = []
+        for i in range(get_number_of_home_views()):
+            self._favorites_boxes.append(favoritesview.FavoritesBox(i))
         self._list_view = ActivitiesList()
 
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
@@ -50,7 +58,7 @@ class HomeBox(Gtk.VBox):
         self._list_view.connect('clear-clicked',
                                 self.__activitylist_clear_clicked_cb, toolbar)
 
-        self._set_view(_FAVORITES_VIEW)
+        self._set_view(_FAVORITES_VIEW[0])
         self._query = ''
 
     def show_software_updates_alert(self):
@@ -71,17 +79,24 @@ class HomeBox(Gtk.VBox):
         erase_icon = Icon(icon_name='dialog-ok')
         alert.add_button(Gtk.ResponseType.OK, _('Check now'), erase_icon)
 
-        if self._list_view in self.get_children():
+        children = self.get_children()
+        if self._list_view in children:
             self._list_view.add_alert(alert)
         else:
-            self._favorites_box.add_alert(alert)
+            for i in range(get_number_of_home_views()):
+                if self._favorites_boxes[i] in children:
+                    self._favorites_boxes[i].add_alert(alert)
+                    break
         alert.connect('response', self.__software_update_response_cb)
 
     def __software_update_response_cb(self, alert, response_id):
-        if self._list_view in self.get_children():
+        children = self.get_children()
+        if self._list_view in children:
             self._list_view.remove_alert()
         else:
-            self._favorites_box.remove_alert()
+            for i in range(get_number_of_home_views()):
+                if self._favorites_boxes[i] in children:
+                    self._favorites_boxes[i].remove_alert()
 
         if response_id != Gtk.ResponseType.REJECT:
             update_trigger_file = os.path.expanduser('~/.sugar-update')
@@ -102,7 +117,8 @@ class HomeBox(Gtk.VBox):
     def __toolbar_query_changed_cb(self, toolbar, query):
         self._query = normalize_string(query.decode('utf-8'))
         self._list_view.set_filter(self._query)
-        self._favorites_box.set_filter(self._query)
+        for i in range(get_number_of_home_views()):
+            self._favorites_boxes[i].set_filter(self._query)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -116,25 +132,37 @@ class HomeBox(Gtk.VBox):
     def grab_focus(self):
         # overwrite grab focus to be able to grab focus on the
         # views which are packed inside a box
-        if self._list_view in self.get_children():
+        children = self.get_children()
+        if self._list_view in children:
             self._list_view.grab_focus()
         else:
-            self._favorites_box.grab_focus()
+            for i in range(get_number_of_home_views()):
+                if self._favorites_boxes[i] in children:
+                    self._favorites_boxes[i].grab_focus()
 
     def _set_view(self, view):
-        if view == _FAVORITES_VIEW:
-            if self._list_view in self.get_children():
+        if view in _FAVORITES_VIEW:
+            favorite = _FAVORITES_VIEW.index(view)
+
+            children = self.get_children()
+            if self._list_view in children:
                 self.remove(self._list_view)
+            else:
+                for i in range(get_number_of_home_views()):
+                    if i != favorite and self._favorites_boxes[i] in children:
+                        self.remove(self._favorites_boxes[i])
 
-            if self._favorites_box not in self.get_children():
-                self.add(self._favorites_box)
-                self._favorites_box.show()
-                self._favorites_box.grab_focus()
+            if self._favorites_boxes[favorite] not in children:
+                self.add(self._favorites_boxes[favorite])
+                self._favorites_boxes[favorite].show()
+                self._favorites_boxes[favorite].grab_focus()
         elif view == _LIST_VIEW:
-            if self._favorites_box in self.get_children():
-                self.remove(self._favorites_box)
+            children = self.get_children()
+            for i in range(get_number_of_home_views()):
+                if self._favorites_boxes[i] in children:
+                    self.remove(self._favorites_boxes[i])
 
-            if self._list_view not in self.get_children():
+            if self._list_view not in children:
                 self.add(self._list_view)
                 self._list_view.show()
                 self._list_view.grab_focus()
@@ -154,8 +182,9 @@ class HomeBox(Gtk.VBox):
         # return self._donut.has_activities()
         return False
 
-    def set_resume_mode(self, resume_mode):
-        self._favorites_box.set_resume_mode(resume_mode)
+    def set_resume_mode(self, resume_mode, favorite_view=0):
+        self._favorites_boxes[favorite_view].set_resume_mode(resume_mode)
         if resume_mode and self._query != '':
             self._list_view.set_filter(self._query)
-            self._favorites_box.set_filter(self._query)
+            for i in range(get_number_of_home_views()):
+                self._favorites_boxes[i].set_filter(self._query)

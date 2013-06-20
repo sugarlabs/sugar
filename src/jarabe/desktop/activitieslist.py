@@ -1,5 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso
+# Copyright (C) 2008-2013 Sugar Labs
+# Copyright (C) 2013 Daniel Francis
+# Copyright (C) 2013 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +40,7 @@ from jarabe.model import bundleregistry
 from jarabe.view.palettes import ActivityPalette
 from jarabe.journal import misc
 from jarabe.util.normalize import normalize_string
+from jarabe.desktop.favorites import FAVORITE_ICONS, get_number_of_home_views
 
 
 class ActivitiesTreeView(Gtk.TreeView):
@@ -63,12 +67,16 @@ class ActivitiesTreeView(Gtk.TreeView):
         model.set_visible_func(self.__model_visible_cb)
         self.set_model(model)
 
-        cell_favorite = CellRendererFavorite(self)
-        cell_favorite.connect('clicked', self.__favorite_clicked_cb)
-
         column = Gtk.TreeViewColumn()
-        column.pack_start(cell_favorite, True)
-        column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
+
+        cell_favorites = []
+        for i in range(get_number_of_home_views()):
+            cell_favorites.append(CellRendererFavorite(self, i))
+            cell_favorites[i].connect('clicked', self.__favorite_clicked_cb)
+            column.pack_start(cell_favorites[i], True)
+            column.set_cell_data_func(cell_favorites[i],
+                                      self.__favorite_set_data_cb)
+
         self.append_column(column)
 
         cell_icon = CellRendererActivityIcon(self)
@@ -129,7 +137,8 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.emit('erase-activated', bundle_id)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
-        favorite = model[tree_iter][ListModel.COLUMN_FAVORITE]
+        favorite = \
+            model[tree_iter][ListModel.COLUMN_FAVORITES[cell.favorite_view]]
         if favorite:
             client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -140,9 +149,11 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __favorite_clicked_cb(self, cell, path):
         row = self.get_model()[path]
         registry = bundleregistry.get_registry()
-        registry.set_bundle_favorite(row[ListModel.COLUMN_BUNDLE_ID],
-                                     row[ListModel.COLUMN_VERSION],
-                                     not row[ListModel.COLUMN_FAVORITE])
+        registry.set_bundle_favorite(
+            row[ListModel.COLUMN_BUNDLE_ID],
+            row[ListModel.COLUMN_VERSION],
+            not row[ListModel.COLUMN_FAVORITES[cell.favorite_view]],
+            cell.favorite_view)
 
     def __icon_clicked_cb(self, cell, path):
         self._start_activity(path)
@@ -179,16 +190,19 @@ class ListModel(Gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
 
     COLUMN_BUNDLE_ID = 0
-    COLUMN_FAVORITE = 1
-    COLUMN_ICON = 2
-    COLUMN_TITLE = 3
-    COLUMN_VERSION = 4
-    COLUMN_VERSION_TEXT = 5
-    COLUMN_DATE = 6
-    COLUMN_DATE_TEXT = 7
+    COLUMN_FAVORITES = []
+    for i in range(get_number_of_home_views()):
+        COLUMN_FAVORITES.append(i + 1)
+    COLUMN_ICON = COLUMN_FAVORITES[-1] + 1
+    COLUMN_TITLE = COLUMN_ICON + 1
+    COLUMN_VERSION = COLUMN_TITLE + 1
+    COLUMN_VERSION_TEXT = COLUMN_VERSION + 1
+    COLUMN_DATE = COLUMN_VERSION_TEXT + 1
+    COLUMN_DATE_TEXT = COLUMN_DATE + 1
 
     def __init__(self):
-        self._model = Gtk.ListStore(str, bool, str, str, str, str, int, str)
+        self._model = Gtk.ListStore(str, bool, bool, str, str, str, str, int,
+                                    str)
         self._model_filter = self._model.filter_new()
         Gtk.TreeModelSort.__init__(self, model=self._model_filter)
         self.set_sort_column_id(ListModel.COLUMN_TITLE, Gtk.SortType.ASCENDING)
@@ -209,11 +223,15 @@ class ListModel(Gtk.TreeModelSort):
     def __activity_changed_cb(self, activity_registry, activity_info):
         bundle_id = activity_info.get_bundle_id()
         version = activity_info.get_activity_version()
-        favorite = activity_registry.is_bundle_favorite(bundle_id, version)
+        favorites = []
+        for i in range(get_number_of_home_views()):
+            favorites.append(
+                activity_registry.is_bundle_favorite(bundle_id, version, i))
         for row in self._model:
             if row[ListModel.COLUMN_BUNDLE_ID] == bundle_id and \
                     row[ListModel.COLUMN_VERSION] == version:
-                row[ListModel.COLUMN_FAVORITE] = favorite
+                for i in range(get_number_of_home_views()):
+                    row[ListModel.COLUMN_FAVORITES[i]] = favorites[i]
                 return
 
     def __activity_removed_cb(self, activity_registry, activity_info):
@@ -233,8 +251,10 @@ class ListModel(Gtk.TreeModelSort):
         version = activity_info.get_activity_version()
 
         registry = bundleregistry.get_registry()
-        favorite = registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                               version)
+        favorites = []
+        for i in range(get_number_of_home_views()):
+            favorites.append(registry.is_bundle_favorite(
+                    activity_info.get_bundle_id(), version, i))
 
         tag_list = activity_info.get_tags()
         if tag_list is None or not tag_list:
@@ -245,14 +265,16 @@ class ListModel(Gtk.TreeModelSort):
                     '<span style="italic" weight="light">%s</span>' % \
                 (activity_info.get_name(), tags)
 
-        self._model.append([activity_info.get_bundle_id(),
-                            favorite,
-                            activity_info.get_icon(),
-                            title,
-                            version,
-                            _('Version %s') % version,
-                            int(timestamp),
-                            util.timestamp_to_elapsed_string(timestamp)])
+        model_list = [activity_info.get_bundle_id()]
+        for i in range(get_number_of_home_views()):
+            model_list.append(favorites[i])
+        model_list.append(activity_info.get_icon())
+        model_list.append(title)
+        model_list.append(version)
+        model_list.append(_('Version %s') % version)
+        model_list.append(int(timestamp))
+        model_list.append(util.timestamp_to_elapsed_string(timestamp))
+        self._model.append(model_list)
 
     def set_visible_func(self, func):
         self._model_filter.set_visible_func(func)
@@ -264,13 +286,14 @@ class ListModel(Gtk.TreeModelSort):
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
 
-    def __init__(self, tree_view):
+    def __init__(self, tree_view, favorite_view):
         CellRendererIcon.__init__(self, tree_view)
 
+        self.favorite_view = favorite_view
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.SMALL_ICON_SIZE
-        self.props.icon_name = 'emblem-favorite'
+        self.props.icon_name = FAVORITE_ICONS[favorite_view]        
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
         client = GConf.Client.get_default()
         prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -500,28 +523,34 @@ class ActivityListPalette(ActivityPalette):
         self._version = activity_info.get_activity_version()
 
         registry = bundleregistry.get_registry()
-        self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                     self._version)
-
-        self._favorite_item = PaletteMenuItem()
-        self._favorite_icon = Icon(icon_name='emblem-favorite',
-                                   icon_size=Gtk.IconSize.MENU)
-        self._favorite_item.set_image(self._favorite_icon)
-        self._favorite_icon.show()
-        self._favorite_item.connect('activate',
-                                    self.__change_favorite_activate_cb)
-        self.menu_box.append_item(self._favorite_item)
-        self._favorite_item.show()
+ 
+        self._favorites = []
+        self._favorite_items = []
+        self._favorite_icons = []
+ 
+        for i in range(get_number_of_home_views()):
+            self._favorites.append(
+                registry.is_bundle_favorite(self._bundle_id, self._version, i))
+            self._favorite_items.append(PaletteMenuItem())
+            self._favorite_icons.append(Icon(icon_name=FAVORITE_ICONS[i],
+                                             icon_size=Gtk.IconSize.MENU))
+            self._favorite_items[i].set_image(self._favorite_icons[i])
+            self._favorite_icons[i].show()
+            self._favorite_items[i].connect(
+                'activate', self.__change_favorite_activate_cb, i)
+            self.menu_box.append_item(self._favorite_items[i])
+            self._favorite_items[i].show()
 
         if activity_info.is_user_activity():
             self._add_erase_option(registry, activity_info)
 
         registry = bundleregistry.get_registry()
-        self._activity_changed_sid = \
-            registry.connect('bundle_changed',
-                             self.__activity_changed_cb)
-
-        self._update_favorite_item()
+        self._activity_changed_sid = []
+        for i in range(get_number_of_home_views()):
+            self._activity_changed_sid.append(
+                registry.connect('bundle_changed',
+                                 self.__activity_changed_cb, i))
+            self._update_favorite_item(i)
 
         self.menu_box.connect('destroy', self.__destroy_cb)
 
@@ -537,33 +566,36 @@ class ActivityListPalette(ActivityPalette):
 
     def __destroy_cb(self, palette):
         registry = bundleregistry.get_registry()
-        registry.disconnect(self._activity_changed_sid)
+        for i in range(get_number_of_home_views()):
+            registry.disconnect(self._activity_changed_sid[i])
 
-    def _update_favorite_item(self):
-        if self._favorite:
-            self._favorite_item.set_label(_('Remove favorite'))
+    def _update_favorite_item(self, favorite_view):
+        if self._favorites[favorite_view]:
+            self._favorite_items[favorite_view].set_label(_('Remove favorite'))
             xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                           style.COLOR_TRANSPARENT.get_svg()))
         else:
-            self._favorite_item.set_label(_('Make favorite'))
+            self._favorite_items[favorite_view].set_label(_('Make favorite'))
             client = GConf.Client.get_default()
             xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
-        self._favorite_icon.props.xo_color = xo_color
+        self._favorite_icons[favorite_view].props.xo_color = xo_color
 
-    def __change_favorite_activate_cb(self, menu_item):
+    def __change_favorite_activate_cb(self, menu_item, favorite_view):
         registry = bundleregistry.get_registry()
         registry.set_bundle_favorite(self._bundle_id,
                                      self._version,
-                                     not self._favorite)
+                                     not self._favorites[favorite_view],
+                                     favorite_view)
 
-    def __activity_changed_cb(self, activity_registry, activity_info):
+    def __activity_changed_cb(self, activity_registry, activity_info,
+                              favorite_view):
         if activity_info.get_bundle_id() == self._bundle_id and \
                 activity_info.get_activity_version() == self._version:
             registry = bundleregistry.get_registry()
-            self._favorite = registry.is_bundle_favorite(self._bundle_id,
-                                                         self._version)
-            self._update_favorite_item()
+            self._favorites[favorite_view] = registry.is_bundle_favorite(
+                self._bundle_id, self._version, favorite_view)
+            self._update_favorite_item(favorite_view)
 
     def __erase_activate_cb(self, menu_item):
         self.emit('erase-activated', self._bundle_id)
