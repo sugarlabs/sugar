@@ -1,5 +1,8 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008-2013 Sugar Labs
+# Copyright (C) 2013 Daniel Francis
+# Copyright (C) 2013 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,7 +54,7 @@ from jarabe.desktop.schoolserver import RegisterError
 from jarabe.desktop import favoriteslayout
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.util.normalize import normalize_string
-
+from jarabe.desktop.config import get_number_of_views
 
 _logger = logging.getLogger('FavoritesView')
 
@@ -74,9 +77,10 @@ _favorites_settings = None
 class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
-    def __init__(self):
+    def __init__(self, favorite_view):
         Gtk.VBox.__init__(self)
 
+        self.favorite_view = favorite_view
         self._view = FavoritesView(self)
         self.pack_start(self._view, True, True, 0)
         self._view.show()
@@ -146,19 +150,20 @@ class FavoritesView(ViewContainer):
 
         GLib.idle_add(self.__connect_to_bundle_registry_cb)
 
-        favorites_settings = get_settings()
+        favorites_settings = get_settings(self._box.favorite_view)
         favorites_settings.changed.connect(self.__settings_changed_cb)
         self._set_layout(favorites_settings.layout)
 
     def __settings_changed_cb(self, **kwargs):
-        favorites_settings = get_settings()
+        favorites_settings = get_settings(self._box.favorite_view)
         layout_set = self._set_layout(favorites_settings.layout)
         if layout_set:
             self.set_layout(self._layout)
             registry = bundleregistry.get_registry()
             for info in registry:
                 if registry.is_bundle_favorite(info.get_bundle_id(),
-                                               info.get_activity_version()):
+                                               info.get_activity_version(),
+                                               self._box.favorite_view):
                     self._add_activity(info)
 
     def _set_layout(self, layout):
@@ -290,7 +295,8 @@ class FavoritesView(ViewContainer):
 
         for info in registry:
             if registry.is_bundle_favorite(info.get_bundle_id(),
-                                           info.get_activity_version()):
+                                           info.get_activity_version(),
+                                           self._box.favorite_view):
                 self._add_activity(info)
 
         registry.connect('bundle-added', self.__activity_added_cb)
@@ -309,7 +315,8 @@ class FavoritesView(ViewContainer):
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                       activity_info.get_activity_version()):
+                                       activity_info.get_activity_version(),
+                                       self._box.favorite_view):
             self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
@@ -335,7 +342,8 @@ class FavoritesView(ViewContainer):
 
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                       activity_info.get_activity_version()):
+                                       activity_info.get_activity_version(),
+                                       self._box.favorite_view):
             self._add_activity(activity_info)
 
     def set_filter(self, query):
@@ -672,9 +680,18 @@ class FavoritesSetting(object):
 
     _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 
-    def __init__(self):
+    def __init__(self, favorite_view):
         client = GConf.Client.get_default()
-        self._layout = client.get_string(self._FAVORITES_KEY)
+        # Special-case 0 for backward compatibility
+        if favorite_view == 0:
+            self._client_string = self._FAVORITES_KEY
+        else:
+            self._client_string = '%s_%d' % (self._FAVORITES_KEY,
+                                             favorite_view)
+
+        self._layout = client.get_string(self._client_string)
+        if self._layout is None:
+            self._layout = favoriteslayout.RingLayout.key
         logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
@@ -690,15 +707,18 @@ class FavoritesSetting(object):
             self._layout = layout
 
             client = GConf.Client.get_default()
-            client.set_string(self._FAVORITES_KEY, layout)
+            client.set_string(self._client_string, layout)
 
             self.changed.send(self)
 
     layout = property(get_layout, set_layout)
 
 
-def get_settings():
+def get_settings(favorite_view=0):
     global _favorites_settings
+
     if _favorites_settings is None:
-        _favorites_settings = FavoritesSetting()
-    return _favorites_settings
+        _favorites_settings = []
+        for i in range(get_number_of_views()):
+            _favorites_settings.append(FavoritesSetting(i))
+    return _favorites_settings[favorite_view]

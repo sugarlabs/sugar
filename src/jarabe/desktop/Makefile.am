@@ -2,6 +2,7 @@ sugardir = $(pythondir)/jarabe/desktop
 sugar_PYTHON =			\
 	__init__.py		\
 	activitieslist.py	\
+	config.py		\
 	favoritesview.py	\
 	favoriteslayout.py	\
 	friendview.py		\
