@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-15 00:33-0400\n"
-"PO-Revision-Date: 2013-06-19 23:28+0200\n"
+"POT-Creation-Date: 2013-06-21 00:34-0400\n"
+"PO-Revision-Date: 2013-06-23 19:58+0200\n"
 "Last-Translator: samy boutayeb <s.boutayeb@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -411,6 +411,19 @@ msgstr "%.0f Ko"
 msgid "%.1f MB"
 msgstr "%.1f Mo"
 
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Configure your Web Services"
+msgstr "Configurez vos services Web"
+
+#: ../extensions/cpsection/webaccount/view.py:42
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+"Aucun service Web n'est installé.\n"
+"Allez sur %s pour plus d'informations."
+
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "Ma batterie"
@@ -513,7 +526,7 @@ msgstr "Déconnecté"
 #: ../src/jarabe/frame/activitiestray.py:746
 #: ../src/jarabe/frame/activitiestray.py:778
 #: ../src/jarabe/journal/expandedentry.py:160
-#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/journaltoolbox.py:475
 #: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
 msgstr "Annuler"
@@ -1025,7 +1038,7 @@ msgstr "Relancer maintenant"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:84
+#: ../src/jarabe/journal/journaltoolbox.py:88
 #, python-format
 msgid "Search in %s"
 msgstr "Rechercher dans %s"
@@ -1081,8 +1094,8 @@ msgstr "Conserver"
 #: ../src/jarabe/desktop/activitieslist.py:472
 #: ../src/jarabe/desktop/activitieslist.py:529
 #: ../src/jarabe/journal/expandedentry.py:154
-#: ../src/jarabe/journal/journaltoolbox.py:401
-#: ../src/jarabe/journal/journaltoolbox.py:433
+#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
 msgid "Erase"
 msgstr "Supprimer"
@@ -1187,7 +1200,7 @@ msgstr "Sécurité sans fil :"
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:549
+#: ../src/jarabe/journal/journaltoolbox.py:586
 #: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Reprendre"
@@ -1335,7 +1348,7 @@ msgid "Next"
 msgstr "Suivant"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/journaltoolbox.py:435
+#: ../src/jarabe/journal/journaltoolbox.py:472
 #: ../src/jarabe/journal/palettes.py:151
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
@@ -1394,93 +1407,93 @@ msgstr "Étiquettes :"
 msgid "Comments:"
 msgstr "Commentaires :"
 
-#: ../src/jarabe/journal/journalactivity.py:121
-#: ../src/jarabe/journal/journaltoolbox.py:84
-#: ../src/jarabe/journal/journaltoolbox.py:476
+#: ../src/jarabe/journal/journalactivity.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:88
+#: ../src/jarabe/journal/journaltoolbox.py:513
 #: ../src/jarabe/journal/palettes.py:219
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "Journal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:93
+#: ../src/jarabe/journal/journaltoolbox.py:97
 msgid "Favorite entries"
 msgstr "Entrées favorites"
 
-#: ../src/jarabe/journal/journaltoolbox.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Anytime"
 msgstr "N'importe quand"
 
-#: ../src/jarabe/journal/journaltoolbox.py:131
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Today"
 msgstr "Aujourd'hui"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Since yesterday"
 msgstr "Depuis hier"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past week"
 msgstr "Depuis une semaine"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Past month"
 msgstr "Depuis un mois"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Past year"
 msgstr "Depuis une année"
 
-#: ../src/jarabe/journal/journaltoolbox.py:146
+#: ../src/jarabe/journal/journaltoolbox.py:150
 msgid "Anyone"
 msgstr "Tout le monde"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:152
 msgid "My friends"
 msgstr "Mes amis"
 
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My class"
 msgstr "Ma classe"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:288
+#: ../src/jarabe/journal/journaltoolbox.py:325
 msgid "Anything"
 msgstr "Tout"
 
-#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/journaltoolbox.py:414
 #: ../src/jarabe/journal/palettes.py:97
 msgid "Copy to"
 msgstr "Copier vers"
 
-#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/journaltoolbox.py:422
 #: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr "Recopier"
 
-#: ../src/jarabe/journal/journaltoolbox.py:391
+#: ../src/jarabe/journal/journaltoolbox.py:428
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Erreur lors de la copie de l'entrée. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:429
+#: ../src/jarabe/journal/journaltoolbox.py:466
 #: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr "Erreur"
 
-#: ../src/jarabe/journal/journaltoolbox.py:487
+#: ../src/jarabe/journal/journaltoolbox.py:524
 #: ../src/jarabe/journal/palettes.py:230
 #: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
@@ -1488,24 +1501,24 @@ msgstr "Documents"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:552
+#: ../src/jarabe/journal/journaltoolbox.py:589
 #: ../src/jarabe/journal/palettes.py:78
 msgid "Start"
 msgstr "Lancer"
 
-#: ../src/jarabe/journal/journaltoolbox.py:580
+#: ../src/jarabe/journal/journaltoolbox.py:617
 msgid "Sort by date modified"
 msgstr "Trier sur la date de modification"
 
-#: ../src/jarabe/journal/journaltoolbox.py:581
+#: ../src/jarabe/journal/journaltoolbox.py:618
 msgid "Sort by date created"
 msgstr "Trier sur la date de création"
 
-#: ../src/jarabe/journal/journaltoolbox.py:582
+#: ../src/jarabe/journal/journaltoolbox.py:619
 msgid "Sort by size"
 msgstr "Trier sur la taille"
 
-#: ../src/jarabe/journal/journaltoolbox.py:591
+#: ../src/jarabe/journal/journaltoolbox.py:628
 msgid "Sort view"
 msgstr "Trier l'affichage"
 
@@ -1549,11 +1562,16 @@ msgstr ""
 msgid "Show Journal"
 msgstr "Montre le Journal"
 
-#: ../src/jarabe/journal/objectchooser.py:152
+#: ../src/jarabe/journal/objectchooser.py:151
 msgid "Choose an object"
 msgstr "Choisir un objet"
 
-#: ../src/jarabe/journal/objectchooser.py:157
+#: ../src/jarabe/journal/objectchooser.py:156
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr "Choisir un objet à ouvrir avec l'activité %s"
+
+#: ../src/jarabe/journal/objectchooser.py:164
 #: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "Fermer"
