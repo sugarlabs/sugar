@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-31 00:32-0400\n"
-"PO-Revision-Date: 2013-04-14 18:21+0200\n"
+"POT-Creation-Date: 2013-06-21 00:34-0400\n"
+"PO-Revision-Date: 2013-06-23 04:30+0200\n"
 "Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -61,7 +61,7 @@ msgstr "点击改变颜色:"
 msgid "About my Computer"
 msgstr "关于我的电脑"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:43
+#: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
 msgstr "不可用"
 
@@ -110,6 +110,18 @@ msgstr "Sugar 是您目前所看到的图像用户界面。Sugar 是一个免费
 msgid "Full license:"
 msgstr "完整许可:"
 
+#: ../extensions/cpsection/background/__init__.py:21
+msgid "Background"
+msgstr "背景"
+
+#: ../extensions/cpsection/background/view.py:39
+msgid "Select a background:"
+msgstr "选择一个背景"
+
+#: ../extensions/cpsection/background/view.py:46
+msgid "Clear background"
+msgstr "清除背景"
+
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
 msgstr "日期与时间"
@@ -157,19 +169,19 @@ msgid "Edge"
 msgstr "边缘"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
-#: ../extensions/cpsection/keyboard/view.py:32
+#: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
 msgstr "键盘"
 
-#: ../extensions/cpsection/keyboard/view.py:190
+#: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
 msgstr "键盘型号"
 
-#: ../extensions/cpsection/keyboard/view.py:250
+#: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
 msgstr "改变布局的快捷键"
 
-#: ../extensions/cpsection/keyboard/view.py:319
+#: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
 msgstr "键盘布局"
 
@@ -249,34 +261,34 @@ msgstr "指定的参数错误，请使用0/1。"
 msgid "Wireless"
 msgstr "无线"
 
-#: ../extensions/cpsection/network/view.py:76
+#: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
 msgstr "关闭无线网络信号以增加电池使用时间"
 
-#: ../extensions/cpsection/network/view.py:89
+#: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
 msgstr "无线信号"
 
-#: ../extensions/cpsection/network/view.py:105
+#: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr "如果你无法连接网络，请尝试清除网络历史资料"
 
-#: ../extensions/cpsection/network/view.py:114
+#: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
 msgstr "清除网络历史资料"
 
-#: ../extensions/cpsection/network/view.py:129
+#: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
 msgstr "协作"
 
-#: ../extensions/cpsection/network/view.py:137
+#: ../extensions/cpsection/network/view.py:139
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr "服务器相当于你所在的房间；在同一服务器上的人们将能够看到对方，即使他们不在同一网络上。"
 
-#: ../extensions/cpsection/network/view.py:147
+#: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
 msgstr "服务器："
 
@@ -297,7 +309,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "自动省电管理(延长电池寿命)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:62
 msgid "Software Update"
 msgstr "软件更新"
 
@@ -307,80 +319,93 @@ msgid ""
 "provide new features."
 msgstr "软件更新会修正错误，消除安全漏洞，以及提供新的功能。"
 
-#: ../extensions/cpsection/updater/view.py:125
+#: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Checking %s..."
 msgstr "正在检查 %s..."
 
-#: ../extensions/cpsection/updater/view.py:127
+#: ../extensions/cpsection/updater/view.py:131
 #, python-format
 msgid "Downloading %s..."
 msgstr "正在下载 %s..."
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:133
 #, python-format
 msgid "Updating %s..."
 msgstr "正在更新 %s..."
 
-#: ../extensions/cpsection/updater/view.py:139
+#: ../extensions/cpsection/updater/view.py:143
 msgid "Your software is up-to-date"
 msgstr "您的软件是最新的"
 
-#: ../extensions/cpsection/updater/view.py:141
+#: ../extensions/cpsection/updater/view.py:145
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "你可以安装 %s个更新"
 
-#: ../extensions/cpsection/updater/view.py:159
+#: ../extensions/cpsection/updater/view.py:163
 msgid "Checking for updates..."
 msgstr "正在检查更新…"
 
-#: ../extensions/cpsection/updater/view.py:164
+#: ../extensions/cpsection/updater/view.py:168
 msgid "Installing updates..."
 msgstr "正在安装更新…"
 
-#: ../extensions/cpsection/updater/view.py:173
+#: ../extensions/cpsection/updater/view.py:177
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "已安装 %s个更新"
 
-#: ../extensions/cpsection/updater/view.py:256
+#: ../extensions/cpsection/updater/view.py:261
 msgid "Install selected"
 msgstr "安装已选择的更新"
 
-#: ../extensions/cpsection/updater/view.py:277
+#: ../extensions/cpsection/updater/view.py:282
 #, python-format
 msgid "Download size: %s"
 msgstr "下载大小：%s"
 
-#: ../extensions/cpsection/updater/view.py:365
+#: ../extensions/cpsection/updater/view.py:370
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "從版本 %(current)s 更新到 %(new)s （大小：%(size)s）"
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:383
+#: ../extensions/cpsection/updater/view.py:388
 msgid "None"
 msgstr "无"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:386
+#: ../extensions/cpsection/updater/view.py:391
 msgid "1 KB"
 msgstr "1千字节"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:389
+#: ../extensions/cpsection/updater/view.py:394
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f 千字节"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:392
+#: ../extensions/cpsection/updater/view.py:397
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f 兆字节"
+
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Configure your Web Services"
+msgstr "配置你的Web服务"
+
+#: ../extensions/cpsection/webaccount/view.py:42
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+"没有安装Web服务。\n"
+"更多详细信息请访问 %s。"
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
@@ -409,18 +434,18 @@ msgstr "剩余电量 %(hour)d:%(min).2d"
 msgid "Charged"
 msgstr "充电完毕"
 
-#: ../extensions/deviceicon/frame.py:57
+#: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
 msgstr "显示我的键盘"
 
-#: ../extensions/deviceicon/network.py:51
+#: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
 msgstr "IP 位址：%s"
 
-#: ../extensions/deviceicon/network.py:83
-#: ../extensions/deviceicon/network.py:299
-#: ../src/jarabe/desktop/networkviews.py:137
+#: ../extensions/deviceicon/network.py:82
+#: ../extensions/deviceicon/network.py:298
+#: ../src/jarabe/desktop/networkviews.py:135
 #: ../src/jarabe/desktop/networkviews.py:509
 msgid "Disconnect"
 msgstr "断开连接"
@@ -429,152 +454,152 @@ msgstr "断开连接"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:108
-#: ../extensions/deviceicon/network.py:291
-#: ../src/jarabe/desktop/networkviews.py:252
-#: ../src/jarabe/desktop/networkviews.py:550
-#: ../src/jarabe/desktop/networkviews.py:691
+#: ../extensions/deviceicon/network.py:107
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:251
+#: ../src/jarabe/desktop/networkviews.py:551
+#: ../src/jarabe/desktop/networkviews.py:693
 msgid "Connecting..."
 msgstr "正在连线…"
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:113
-#: ../extensions/deviceicon/network.py:181
-#: ../src/jarabe/desktop/networkviews.py:259
-#: ../src/jarabe/desktop/networkviews.py:556
-#: ../src/jarabe/desktop/networkviews.py:697
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:180
+#: ../src/jarabe/desktop/networkviews.py:258
+#: ../src/jarabe/desktop/networkviews.py:557
+#: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
 msgstr "已连接"
 
-#: ../extensions/deviceicon/network.py:126
+#: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
 msgstr "没有无线网络"
 
-#: ../extensions/deviceicon/network.py:140
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "频道"
 
-#: ../extensions/deviceicon/network.py:155
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr "有线网络"
 
-#: ../extensions/deviceicon/network.py:184
+#: ../extensions/deviceicon/network.py:183
 msgid "Speed"
 msgstr "速度"
 
-#: ../extensions/deviceicon/network.py:209
+#: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
 msgstr "无线数据机"
 
-#: ../extensions/deviceicon/network.py:277
+#: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
 msgstr "请稍候…"
 
-#: ../extensions/deviceicon/network.py:282
-#: ../src/jarabe/desktop/networkviews.py:131
+#: ../extensions/deviceicon/network.py:281
+#: ../src/jarabe/desktop/networkviews.py:129
 #: ../src/jarabe/desktop/networkviews.py:503
-#: ../src/jarabe/desktop/networkviews.py:642
+#: ../src/jarabe/desktop/networkviews.py:644
 msgid "Connect"
 msgstr "连接"
 
-#: ../extensions/deviceicon/network.py:283
+#: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
 msgstr "已切断"
 
-#: ../extensions/deviceicon/network.py:290
+#: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:100
+#: ../src/jarabe/desktop/homebox.py:67 ../src/jarabe/desktop/keydialog.py:101
 #: ../src/jarabe/frame/activitiestray.py:625
-#: ../src/jarabe/frame/activitiestray.py:744
-#: ../src/jarabe/frame/activitiestray.py:776
-#: ../src/jarabe/journal/expandedentry.py:157
-#: ../src/jarabe/journal/journaltoolbox.py:424
+#: ../src/jarabe/frame/activitiestray.py:746
+#: ../src/jarabe/frame/activitiestray.py:778
+#: ../src/jarabe/journal/expandedentry.py:160
+#: ../src/jarabe/journal/journaltoolbox.py:475
 #: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
 msgstr "取消"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
 msgstr "请再尝试连线"
 
-#: ../extensions/deviceicon/network.py:332
+#: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
 msgstr "错误：%s"
 
-#: ../extensions/deviceicon/network.py:336
+#: ../extensions/deviceicon/network.py:335
 #, python-format
 msgid "Suggestion: %s"
 msgstr "建议：%s"
 
-#: ../extensions/deviceicon/network.py:345
+#: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
 msgstr "已连接到%s"
 
+#: ../extensions/deviceicon/network.py:350
 #: ../extensions/deviceicon/network.py:351
-#: ../extensions/deviceicon/network.py:352
 #, python-format
 msgid "%d KB"
 msgstr "%d 千字节"
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
 msgstr "请检查你的PIN/PUK配置。"
 
-#: ../extensions/deviceicon/network.py:360
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "请检查你的接入点名称（APN）配置。"
 
-#: ../extensions/deviceicon/network.py:364
+#: ../extensions/deviceicon/network.py:363
 msgid "Check the Number configuration."
 msgstr "请检查号码配置。"
 
-#: ../extensions/deviceicon/network.py:366
+#: ../extensions/deviceicon/network.py:365
 msgid "Check your configuration."
 msgstr "请检查你的配置。"
 
-#: ../extensions/deviceicon/network.py:616
+#: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
 msgstr "无线网格网络"
 
-#: ../extensions/deviceicon/network.py:660
+#: ../extensions/deviceicon/network.py:668
 #, python-format
 #, python-format,
 msgid "Mesh Network %s"
 msgstr "无线网格网络 %s"
 
-#: ../extensions/deviceicon/network.py:779
+#: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
 msgstr "没有可用的GSM连接。"
 
-#: ../extensions/deviceicon/network.py:780
+#: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
 msgstr "在控制面板中创建新的连接。"
 
-#: ../extensions/deviceicon/speech.py:54
+#: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
 msgstr "语音"
 
-#: ../extensions/deviceicon/speech.py:78
-#: ../extensions/deviceicon/speech.py:152
-#: ../extensions/deviceicon/speech.py:157
+#: ../extensions/deviceicon/speech.py:76
+#: ../extensions/deviceicon/speech.py:150
+#: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
 msgstr "朗读选中文字"
 
-#: ../extensions/deviceicon/speech.py:85
+#: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
 msgstr "停止播放"
 
-#: ../extensions/deviceicon/speech.py:94
+#: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
 msgstr "音高"
 
-#: ../extensions/deviceicon/speech.py:109
+#: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
 msgstr "速率"
 
-#: ../extensions/deviceicon/speech.py:147
+#: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
 msgstr "暂停播放"
 
@@ -602,37 +627,37 @@ msgstr "手写笔"
 msgid "My touchpad"
 msgstr "我的触控板"
 
-#: ../extensions/deviceicon/volume.py:73 ../src/jarabe/view/palettes.py:184
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
 msgstr "显示内容"
 
-#: ../extensions/globalkey/screenshot.py:62
+#: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
 msgstr "网状网络"
 
-#: ../extensions/globalkey/screenshot.py:64
-#: ../src/jarabe/desktop/homewindow.py:219
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/desktop/homewindow.py:221
+#: ../src/jarabe/frame/zoomtoolbar.py:53
 msgid "Group"
 msgstr "我的群组"
 
-#: ../extensions/globalkey/screenshot.py:66
-#: ../src/jarabe/desktop/homewindow.py:212
+#: ../extensions/globalkey/screenshot.py:65
+#: ../src/jarabe/desktop/homewindow.py:214
 #: ../src/jarabe/desktop/viewtoolbar.py:62
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "我的家"
 
-#: ../extensions/globalkey/screenshot.py:72
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../extensions/globalkey/screenshot.py:71
+#: ../src/jarabe/frame/zoomtoolbar.py:62
 msgid "Activity"
 msgstr "活动"
 
-#: ../extensions/globalkey/screenshot.py:75
+#: ../extensions/globalkey/screenshot.py:74
 msgid "Screenshot"
 msgstr "屏幕抓图"
 
-#: ../extensions/globalkey/screenshot.py:77
+#: ../extensions/globalkey/screenshot.py:76
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "\"%s\"的截屏"
@@ -954,32 +979,32 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "重启系统使改变生效.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:325 ../src/jarabe/journal/palettes.py:182
-#: ../src/jarabe/journal/palettes.py:278 ../src/jarabe/journal/palettes.py:311
-#: ../src/jarabe/journal/volumestoolbar.py:301
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:182
+#: ../src/jarabe/journal/palettes.py:282 ../src/jarabe/journal/palettes.py:315
+#: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "警告"
 
-#: ../src/jarabe/controlpanel/gui.py:326
+#: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "更改需重启系统"
 
-#: ../src/jarabe/controlpanel/gui.py:329
+#: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
 msgstr "取消更改"
 
-#: ../src/jarabe/controlpanel/gui.py:334 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:333 ../src/jarabe/desktop/homebox.py:69
 msgid "Later"
 msgstr "稍后"
 
-#: ../src/jarabe/controlpanel/gui.py:338
+#: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
 msgstr "立即重启"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:83
+#: ../src/jarabe/journal/journaltoolbox.py:88
 #, python-format
 msgid "Search in %s"
 msgstr "在 %s 中搜索"
@@ -988,35 +1013,35 @@ msgstr "在 %s 中搜索"
 msgid "Settings"
 msgstr "设置"
 
-#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
 msgstr "完成"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 #: ../src/jarabe/desktop/favoritesview.py:366
-#: ../src/jarabe/desktop/keydialog.py:104
+#: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "确定"
 
-#: ../src/jarabe/desktop/activitieslist.py:252
+#: ../src/jarabe/desktop/activitieslist.py:253
 #, python-format
 msgid "Version %s"
 msgstr "版本%s"
 
-#: ../src/jarabe/desktop/activitieslist.py:353
-#: ../src/jarabe/journal/listview.py:426
+#: ../src/jarabe/desktop/activitieslist.py:354
+#: ../src/jarabe/journal/listview.py:427
 msgid "Clear search"
 msgstr "清除搜索"
 
-#: ../src/jarabe/desktop/activitieslist.py:426
+#: ../src/jarabe/desktop/activitieslist.py:427
 msgid "No matching activities"
 msgstr "没有匹配的活动"
 
-#: ../src/jarabe/desktop/activitieslist.py:462
+#: ../src/jarabe/desktop/activitieslist.py:463
 msgid "Confirm erase"
 msgstr "确认删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:464
+#: ../src/jarabe/desktop/activitieslist.py:465
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "确认删除：是否永久删除 %s ？"
@@ -1025,32 +1050,32 @@ msgstr "确认删除：是否永久删除 %s ？"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:468
+#: ../src/jarabe/desktop/activitieslist.py:469
 #: ../src/jarabe/frame/clipboardmenu.py:65
-#: ../src/jarabe/view/viewsource.py:286
+#: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "保存"
 
-#: ../src/jarabe/desktop/activitieslist.py:471
-#: ../src/jarabe/desktop/activitieslist.py:526
-#: ../src/jarabe/journal/expandedentry.py:151
-#: ../src/jarabe/journal/journaltoolbox.py:390
-#: ../src/jarabe/journal/journaltoolbox.py:419
-#: ../src/jarabe/journal/palettes.py:129 ../src/jarabe/journal/palettes.py:149
+#: ../src/jarabe/desktop/activitieslist.py:472
+#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/journal/expandedentry.py:154
+#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
 msgid "Erase"
 msgstr "删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:541
+#: ../src/jarabe/desktop/activitieslist.py:544
 msgid "Remove favorite"
 msgstr "移除偏好"
 
-#: ../src/jarabe/desktop/activitieslist.py:545
+#: ../src/jarabe/desktop/activitieslist.py:548
 msgid "Make favorite"
 msgstr "指定偏好"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:200
+#: ../src/jarabe/desktop/favoriteslayout.py:199
 msgid "Freeform"
 msgstr "自由形式"
 
@@ -1058,25 +1083,25 @@ msgstr "自由形式"
 # if it means the content of the layout, maybe "铃声"
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:296
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "环形"
 
 # TRANS: label for the spiral layout in the favorites view
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:460
+#: ../src/jarabe/desktop/favoriteslayout.py:459
 msgid "Spiral"
 msgstr "螺旋形"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:528
+#: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
 msgstr "方形"
 
 # TRANS: label for the box layout in the favorites view
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:571
+#: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
 msgstr "三角形"
 
@@ -1101,16 +1126,16 @@ msgstr "注册"
 msgid "Register again"
 msgstr "重新注册"
 
-#: ../src/jarabe/desktop/homebox.py:64
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr "更新活动使其与新版软件兼容"
 
-#: ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/desktop/homebox.py:72
 msgid "Check now"
 msgstr "立即检查"
 
-#: ../src/jarabe/desktop/homewindow.py:226
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/desktop/homewindow.py:228
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
 msgstr "邻居"
 
@@ -1123,31 +1148,31 @@ msgstr ""
 "无线网络“%s”\n"
 "需要一个无限密钥。"
 
-#: ../src/jarabe/desktop/keydialog.py:149
+#: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
 msgstr "密钥类型:"
 
-#: ../src/jarabe/desktop/keydialog.py:169
+#: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "验证类型:"
 
-#: ../src/jarabe/desktop/keydialog.py:232
+#: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
 msgstr "WPA＆WPA2个人"
 
-#: ../src/jarabe/desktop/keydialog.py:241
+#: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
 msgstr "无线安全："
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:514
-#: ../src/jarabe/journal/palettes.py:74 ../src/jarabe/view/palettes.py:96
+#: ../src/jarabe/journal/journaltoolbox.py:586
+#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "恢复"
 
-#: ../src/jarabe/desktop/meshbox.py:88
+#: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
 msgstr "加入"
@@ -1157,17 +1182,17 @@ msgstr "加入"
 msgid "Ad-hoc Network %d"
 msgstr "Ad-hoc网络%d"
 
-#: ../src/jarabe/desktop/networkviews.py:637
+#: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
 #, python-format,
 msgid "Mesh Network %d"
 msgstr "网状网络%d"
 
-#: ../src/jarabe/desktop/schoolserver.py:143
+#: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
 msgstr "无法连接到服务器。"
 
-#: ../src/jarabe/desktop/schoolserver.py:150
+#: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
 msgstr "服务器无法处理请求。"
 
@@ -1225,7 +1250,7 @@ msgstr "接受"
 
 #: ../src/jarabe/frame/activitiestray.py:653
 #: ../src/jarabe/frame/activitiestray.py:666
-#: ../src/jarabe/frame/activitiestray.py:805
+#: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
 msgstr "关闭"
 
@@ -1233,7 +1258,7 @@ msgstr "关闭"
 msgid "The other participant canceled the file transfer"
 msgstr "对方已取消档案传输"
 
-#: ../src/jarabe/frame/activitiestray.py:728
+#: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 msgid "Transfer to %s"
 msgstr "传送到 %s"
@@ -1257,231 +1282,235 @@ msgstr "打开方式"
 msgid "%s clipping"
 msgstr "%s 裁剪"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:105
+#: ../src/jarabe/intro/window.py:106
 msgid "Name:"
 msgstr "姓名:"
 
-#: ../src/jarabe/intro/window.py:135
+#: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
 msgstr "点击改变颜色："
 
-#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
 msgstr "后退"
 
-#: ../src/jarabe/intro/window.py:213
+#: ../src/jarabe/intro/window.py:214
 msgid "Next"
 msgstr "下一步"
 
-#: ../src/jarabe/journal/expandedentry.py:124
-msgid "Comments:"
-msgstr "注释:"
-
-#: ../src/jarabe/journal/expandedentry.py:153
-#: ../src/jarabe/journal/journaltoolbox.py:421
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:472
 #: ../src/jarabe/journal/palettes.py:151
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "你想永久删除“%s”？"
 
-#: ../src/jarabe/journal/expandedentry.py:293
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
-#: ../src/jarabe/journal/palettes.py:67
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:705
+#: ../src/jarabe/journal/palettes.py:68
 #: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "无标题"
 
-#: ../src/jarabe/journal/expandedentry.py:404
+#: ../src/jarabe/journal/expandedentry.py:407
 msgid "No preview"
 msgstr "无预览"
 
-#: ../src/jarabe/journal/expandedentry.py:418
+#: ../src/jarabe/journal/expandedentry.py:421
 #, python-format
 msgid "Kind: %s"
 msgstr "种类: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:418
+#: ../src/jarabe/journal/expandedentry.py:421
 #: ../src/jarabe/journal/listmodel.py:151
 #: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr "未知"
 
-#: ../src/jarabe/journal/expandedentry.py:419
+#: ../src/jarabe/journal/expandedentry.py:422
 #, python-format
 msgid "Date: %s"
 msgstr "日期： %s"
 
-#: ../src/jarabe/journal/expandedentry.py:420
+#: ../src/jarabe/journal/expandedentry.py:423
 #, python-format
 msgid "Size: %s"
 msgstr "大小：%s"
 
-#: ../src/jarabe/journal/expandedentry.py:446
+#: ../src/jarabe/journal/expandedentry.py:450
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "无日期"
 
-#: ../src/jarabe/journal/expandedentry.py:455
+#: ../src/jarabe/journal/expandedentry.py:459
 msgid "Participants:"
 msgstr "参与者:"
 
-#: ../src/jarabe/journal/expandedentry.py:493
+#: ../src/jarabe/journal/expandedentry.py:497
 msgid "Description:"
 msgstr "说明:"
 
-#: ../src/jarabe/journal/expandedentry.py:499
+#: ../src/jarabe/journal/expandedentry.py:503
 msgid "Tags:"
 msgstr "标签:"
 
-#: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:83
-#: ../src/jarabe/journal/journaltoolbox.py:462
+#: ../src/jarabe/journal/expandedentry.py:508
+msgid "Comments:"
+msgstr "注释:"
+
+#: ../src/jarabe/journal/journalactivity.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:88
+#: ../src/jarabe/journal/journaltoolbox.py:513
 #: ../src/jarabe/journal/palettes.py:219
-#: ../src/jarabe/journal/volumestoolbar.py:362
+#: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "日志"
 
-#: ../src/jarabe/journal/journaltoolbox.py:92
+#: ../src/jarabe/journal/journaltoolbox.py:97
 msgid "Favorite entries"
 msgstr "最喜爱的条目"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Anytime"
 msgstr "任何时间"
 
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Today"
 msgstr "今天"
 
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Since yesterday"
 msgstr "一天内"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past week"
 msgstr "上一周"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Past month"
 msgstr "上个月"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Past year"
 msgstr "上一年"
 
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:150
 msgid "Anyone"
 msgstr "任何人"
 
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:152
 msgid "My friends"
 msgstr "我的好友"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My class"
 msgstr "我的类别"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:287
+#: ../src/jarabe/journal/journaltoolbox.py:325
 msgid "Anything"
 msgstr "所有类型"
 
-#: ../src/jarabe/journal/journaltoolbox.py:373
-#: ../src/jarabe/journal/palettes.py:96
+#: ../src/jarabe/journal/journaltoolbox.py:414
+#: ../src/jarabe/journal/palettes.py:97
 msgid "Copy to"
 msgstr "复制到"
 
-#: ../src/jarabe/journal/journaltoolbox.py:381
-#: ../src/jarabe/journal/palettes.py:107 ../src/jarabe/view/viewsource.py:280
+#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr "复制"
 
-#: ../src/jarabe/journal/journaltoolbox.py:414
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:286
-#: ../src/jarabe/journal/volumestoolbar.py:309
+#: ../src/jarabe/journal/journaltoolbox.py:428
+msgid "Refresh"
+msgstr "刷新"
+
+#: ../src/jarabe/journal/journaltoolbox.py:465
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
+#: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "复制条目出错。%s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:415
-#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:287
-#: ../src/jarabe/journal/volumestoolbar.py:310
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
+#: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr "错误"
 
-#: ../src/jarabe/journal/journaltoolbox.py:473
+#: ../src/jarabe/journal/journaltoolbox.py:524
 #: ../src/jarabe/journal/palettes.py:230
-#: ../src/jarabe/journal/volumestoolbar.py:210
+#: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
 msgstr "文档"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:517
-#: ../src/jarabe/journal/palettes.py:77
+#: ../src/jarabe/journal/journaltoolbox.py:589
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Start"
 msgstr "启动"
 
-#: ../src/jarabe/journal/journaltoolbox.py:545
+#: ../src/jarabe/journal/journaltoolbox.py:617
 msgid "Sort by date modified"
 msgstr "按修改日期排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:546
+#: ../src/jarabe/journal/journaltoolbox.py:618
 msgid "Sort by date created"
 msgstr "按新建日期排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:547
+#: ../src/jarabe/journal/journaltoolbox.py:619
 msgid "Sort by size"
 msgstr "按大小排序"
 
-#: ../src/jarabe/journal/journaltoolbox.py:556
+#: ../src/jarabe/journal/journaltoolbox.py:628
 msgid "Sort view"
 msgstr "排序方式"
 
-#: ../src/jarabe/journal/listview.py:338
+#: ../src/jarabe/journal/listview.py:339
 msgid "Your Journal is empty"
 msgstr "你的日志是空的"
 
-#: ../src/jarabe/journal/listview.py:341
+#: ../src/jarabe/journal/listview.py:342
 msgid "Your documents folder is empty"
 msgstr "你的文件夹是空的"
 
-#: ../src/jarabe/journal/listview.py:343
+#: ../src/jarabe/journal/listview.py:344
 msgid "The device is empty"
 msgstr "设备为空"
 
-#: ../src/jarabe/journal/listview.py:345
+#: ../src/jarabe/journal/listview.py:346
 msgid "No matching entries"
 msgstr "没有匹配的条目"
 
-#: ../src/jarabe/journal/misc.py:273
+#: ../src/jarabe/journal/misc.py:275
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr "旧版本的%s活动"
 
-#: ../src/jarabe/journal/misc.py:274
+#: ../src/jarabe/journal/misc.py:276
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr "要降级到版本%s"
@@ -1490,40 +1519,45 @@ msgstr "要降级到版本%s"
 msgid "Your Journal is full"
 msgstr "日志空间已满"
 
-#: ../src/jarabe/journal/modalalert.py:69
+#: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr "请删除一些旧的日志条目以腾出空间给新的日志。"
 
-#: ../src/jarabe/journal/modalalert.py:83
+#: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
 msgstr "显示日志"
 
-#: ../src/jarabe/journal/objectchooser.py:152
+#: ../src/jarabe/journal/objectchooser.py:151
 msgid "Choose an object"
 msgstr "选择对象"
 
-#: ../src/jarabe/journal/objectchooser.py:157
-#: ../src/jarabe/view/viewsource.py:416
+#: ../src/jarabe/journal/objectchooser.py:156
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr "选择活动 %s 要打开的一个对象"
+
+#: ../src/jarabe/journal/objectchooser.py:164
+#: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "关闭"
 
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Resume with"
 msgstr "恢复"
 
-#: ../src/jarabe/journal/palettes.py:78
+#: ../src/jarabe/journal/palettes.py:79
 msgid "Start with"
 msgstr "开始"
 
-#: ../src/jarabe/journal/palettes.py:91 ../src/jarabe/journal/palettes.py:389
+#: ../src/jarabe/journal/palettes.py:92 ../src/jarabe/journal/palettes.py:393
 msgid "No activity to start entry"
 msgstr "没有活动要开始"
 
-#: ../src/jarabe/journal/palettes.py:115
+#: ../src/jarabe/journal/palettes.py:116
 msgid "Send to"
 msgstr "发送到"
 
-#: ../src/jarabe/journal/palettes.py:124
+#: ../src/jarabe/journal/palettes.py:125
 msgid "View Details"
 msgstr "查看详细信息"
 
@@ -1531,250 +1565,250 @@ msgstr "查看详细信息"
 msgid "Entries without a file cannot be sent."
 msgstr "不能发送没有文件的条目。"
 
-#: ../src/jarabe/journal/palettes.py:277 ../src/jarabe/journal/palettes.py:310
-#: ../src/jarabe/journal/volumestoolbar.py:300
+#: ../src/jarabe/journal/palettes.py:281 ../src/jarabe/journal/palettes.py:314
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
 msgstr "不能复制没有文件的条目。"
 
-#: ../src/jarabe/journal/palettes.py:299
+#: ../src/jarabe/journal/palettes.py:303
 msgid "Clipboard"
 msgstr "剪贴板"
 
-#: ../src/jarabe/journal/palettes.py:354
+#: ../src/jarabe/journal/palettes.py:358
 msgid "No friends present"
 msgstr "朋友不存在"
 
-#: ../src/jarabe/journal/palettes.py:359
+#: ../src/jarabe/journal/palettes.py:363
 msgid "No valid connection found"
 msgstr "未找到有效的连接"
 
-#: ../src/jarabe/journal/palettes.py:387
+#: ../src/jarabe/journal/palettes.py:391
 msgid "No activity to resume entry"
 msgstr "没有活动要恢复"
 
-#: ../src/jarabe/journal/volumestoolbar.py:385
+#: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "剩余%(free_space)d MB 空间"
 
-#: ../src/jarabe/model/network.py:211
+#: ../src/jarabe/model/network.py:212
 msgid "The reason for the device state change is unknown."
 msgstr "设备状态变化的原因未知。"
 
-#: ../src/jarabe/model/network.py:213
+#: ../src/jarabe/model/network.py:214
 msgid "The state change is normal."
 msgstr "状态变化是正常的。"
 
-#: ../src/jarabe/model/network.py:215
+#: ../src/jarabe/model/network.py:216
 msgid "The device is now managed."
 msgstr "设备管理中。"
 
-#: ../src/jarabe/model/network.py:217
+#: ../src/jarabe/model/network.py:218
 msgid "The device is no longer managed."
 msgstr "设备不在管理中。"
 
-#: ../src/jarabe/model/network.py:219
+#: ../src/jarabe/model/network.py:220
 msgid "The device could not be readied for configuration."
 msgstr "设备未就绪。"
 
-#: ../src/jarabe/model/network.py:221
+#: ../src/jarabe/model/network.py:222
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr "IP配置不能保留（没有可用的地址，超时等）。"
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:225
 msgid "The IP configuration is no longer valid."
 msgstr "IP配置不再合法。"
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:227
 msgid "Secrets were required, but not provided."
 msgstr "需要密钥，请提供。"
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:229
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "802.1X请求被接入点或认证服务器断开。"
 
-#: ../src/jarabe/model/network.py:231
+#: ../src/jarabe/model/network.py:232
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "802.1X请求配置失败。"
 
-#: ../src/jarabe/model/network.py:233
+#: ../src/jarabe/model/network.py:234
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "802.1X请求退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:235
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "802.1X请求认证超时。"
 
-#: ../src/jarabe/model/network.py:237
+#: ../src/jarabe/model/network.py:238
 msgid "The PPP service failed to start within the allowed time."
 msgstr "PPP服务启动超时。"
 
-#: ../src/jarabe/model/network.py:239
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service disconnected unexpectedly."
 msgstr "PPP服务意外断开。"
 
-#: ../src/jarabe/model/network.py:241
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "PPP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:243
+#: ../src/jarabe/model/network.py:244
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "DHCP服务启动超时。"
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service reported an unexpected error."
 msgstr "DHCP服务意外错误。"
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "DHCP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:249
+#: ../src/jarabe/model/network.py:250
 msgid "The shared connection service failed to start."
 msgstr "共享连接服务启动失败。"
 
-#: ../src/jarabe/model/network.py:251
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr "共享连接服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:254
+#: ../src/jarabe/model/network.py:255
 msgid "The AutoIP service failed to start."
 msgstr "自动IP服务​​无法启动。"
 
-#: ../src/jarabe/model/network.py:256
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service reported an unexpected error."
 msgstr "自动IP服务​​意外错误。"
 
-#: ../src/jarabe/model/network.py:258
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "自动IP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:260
+#: ../src/jarabe/model/network.py:261
 msgid "Dialing failed because the line was busy."
 msgstr "拨号失败，线路忙。"
 
-#: ../src/jarabe/model/network.py:262
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because there was no dial tone."
 msgstr "拨号失败，没有拨号音。"
 
-#: ../src/jarabe/model/network.py:264
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no carrier."
 msgstr "拨号失败，没有运营商网络。"
 
-#: ../src/jarabe/model/network.py:266
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing timed out."
 msgstr "拨号超时。"
 
-#: ../src/jarabe/model/network.py:268
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing failed."
 msgstr "拨号失败。"
 
-#: ../src/jarabe/model/network.py:270
+#: ../src/jarabe/model/network.py:271
 msgid "Modem initialization failed."
 msgstr "调制解调器初始化失败。"
 
-#: ../src/jarabe/model/network.py:272
+#: ../src/jarabe/model/network.py:273
 msgid "Failed to select the specified GSM APN"
 msgstr "无法选择指定的GSM的APN"
 
-#: ../src/jarabe/model/network.py:274
+#: ../src/jarabe/model/network.py:275
 msgid "Not searching for networks."
 msgstr "不搜索网络。"
 
-#: ../src/jarabe/model/network.py:276
+#: ../src/jarabe/model/network.py:277
 msgid "Network registration was denied."
 msgstr "网络注册被拒绝。"
 
-#: ../src/jarabe/model/network.py:278
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration timed out."
 msgstr "网络注册超时。"
 
-#: ../src/jarabe/model/network.py:280
+#: ../src/jarabe/model/network.py:281
 msgid "Failed to register with the requested GSM network."
 msgstr "无法注册请求的GSM网络。"
 
-#: ../src/jarabe/model/network.py:282
+#: ../src/jarabe/model/network.py:283
 msgid "PIN check failed."
 msgstr "PIN检查失败。"
 
-#: ../src/jarabe/model/network.py:284
+#: ../src/jarabe/model/network.py:285
 msgid "Necessary firmware for the device may be missing."
 msgstr "设备必需的固件可能会丢失。"
 
-#: ../src/jarabe/model/network.py:286
+#: ../src/jarabe/model/network.py:287
 msgid "The device was removed."
 msgstr "设备已被删除。"
 
-#: ../src/jarabe/model/network.py:288
+#: ../src/jarabe/model/network.py:289
 msgid "NetworkManager went to sleep."
 msgstr "“网络管理员”进入休眠状态。"
 
-#: ../src/jarabe/model/network.py:290
+#: ../src/jarabe/model/network.py:291
 msgid "The device's active connection was removed or disappeared."
 msgstr "设备的活动连接被删除或消失。"
 
-#: ../src/jarabe/model/network.py:293
+#: ../src/jarabe/model/network.py:294
 msgid "A user or client requested the disconnection."
 msgstr "用户或客户端请求断开。"
 
-#: ../src/jarabe/model/network.py:295
+#: ../src/jarabe/model/network.py:296
 msgid "The device's carrier/link changed."
 msgstr "设备的运营商/链路改变。"
 
-#: ../src/jarabe/model/network.py:297
+#: ../src/jarabe/model/network.py:298
 msgid "The device's existing connection was assumed."
 msgstr "采用设备的现有连接。"
 
-#: ../src/jarabe/model/network.py:299
+#: ../src/jarabe/model/network.py:300
 msgid "The supplicant is now available."
 msgstr "请求者可用。"
 
-#: ../src/jarabe/model/network.py:301
+#: ../src/jarabe/model/network.py:302
 msgid "The modem could not be found."
 msgstr "无法找到调制解调器。"
 
-#: ../src/jarabe/model/network.py:303
+#: ../src/jarabe/model/network.py:304
 msgid "The Bluetooth connection failed or timed out."
 msgstr "蓝牙连接失败或超时。"
 
-#: ../src/jarabe/model/network.py:305
+#: ../src/jarabe/model/network.py:306
 msgid "Unused."
 msgstr "未使用。"
 
-#: ../src/jarabe/view/buddymenu.py:73
+#: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
 msgstr "删除好友"
 
-#: ../src/jarabe/view/buddymenu.py:76
+#: ../src/jarabe/view/buddymenu.py:75
 msgid "Make friend"
 msgstr "结交好友"
 
-#: ../src/jarabe/view/buddymenu.py:92
+#: ../src/jarabe/view/buddymenu.py:91
 msgid "Shutdown"
 msgstr "关机"
 
-#: ../src/jarabe/view/buddymenu.py:99
+#: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
 msgstr "重启"
 
-#: ../src/jarabe/view/buddymenu.py:105
+#: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
 msgstr "注销"
 
-#: ../src/jarabe/view/buddymenu.py:110
+#: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
 msgstr "我的设置"
 
-#: ../src/jarabe/view/buddymenu.py:150
+#: ../src/jarabe/view/buddymenu.py:149
 #, python-format
 msgid "Invite to %s"
 msgstr "邀请到%s"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b>启动失败。"
@@ -1805,36 +1839,35 @@ msgctxt "Volume"
 msgid "Remove"
 msgstr "删除"
 
-#: ../src/jarabe/view/viewsource.py:269
+#: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
 msgstr "实例源代码"
 
-#: ../src/jarabe/view/viewsource.py:318
+#: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
 msgstr "源代码"
 
-#: ../src/jarabe/view/viewsource.py:380
+#: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
 msgstr "活动包源代码"
 
-#: ../src/jarabe/view/viewsource.py:399
+#: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
 msgstr "Sugar工具包源代码"
 
-#: ../src/jarabe/view/viewsource.py:406
+#: ../src/jarabe/view/viewsource.py:408
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "查看源代码：%s"
 
-#: ../src/jarabe/view/viewsource.py:407
+#: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
 msgstr "查看源代码：%r"
 
-#: ../src/jarabe/util/emulator.py:41
-msgid "Sugar in a window"
-msgstr "窗口化Sugar"
+#~ msgid "Sugar in a window"
+#~ msgstr "窗口化Sugar"
 
 #~ msgid "Software update"
 #~ msgstr "软件更新"
