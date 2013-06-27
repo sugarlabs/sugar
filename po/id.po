@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-21 00:34-0400\n"
-"PO-Revision-Date: 2013-06-18 18:40+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-06-27 17:30+0200\n"
+"Last-Translator: andika <andika@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -121,11 +121,11 @@ msgstr "Latar Belakang"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr ""
+msgstr "Pilih latar belakang:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
-msgstr ""
+msgstr "Hapus latar belakang"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -412,7 +412,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
-msgstr ""
+msgstr "Tata Layanan Web Anda"
 
 #: ../extensions/cpsection/webaccount/view.py:42
 #, python-format
@@ -420,6 +420,8 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"Tak ada layanan web yang terpasang.\n"
+"Silakan kunjungi %s untuk rinciannya."
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
@@ -1456,7 +1458,7 @@ msgstr "Duplikat"
 
 #: ../src/jarabe/journal/journaltoolbox.py:428
 msgid "Refresh"
-msgstr ""
+msgstr "Segarkan"
 
 #: ../src/jarabe/journal/journaltoolbox.py:465
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
@@ -1546,7 +1548,7 @@ msgstr "Pilih sebuah objek"
 #: ../src/jarabe/journal/objectchooser.py:156
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Pilih sebuah objek untuk dibuka dengan aktivitas %s"
 
 #: ../src/jarabe/journal/objectchooser.py:164
 #: ../src/jarabe/view/viewsource.py:418
