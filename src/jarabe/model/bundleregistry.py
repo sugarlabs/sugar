@@ -17,11 +17,13 @@
 
 import os
 import logging
+from threading import Thread, Lock
 
 from gi.repository import GConf
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gio
+from gi.repository import Gtk
 import json
 
 from sugar3.bundle import bundle_from_dir
@@ -74,7 +76,14 @@ class BundleRegistry(GObject.GObject):
 
         self._mime_defaults = self._load_mime_defaults()
 
+        # Queue of bundles to be installed/upgraded
+        self._install_queue = _InstallQueue(self)
+
+        # Bundle installation happens in a separate thread, which needs
+        # access to _bundles. Protect all _bundles access with a lock.
+        self._lock = Lock()
         self._bundles = []
+
         # hold a reference to the monitors so they don't get disposed
         self._gio_monitors = []
 
@@ -186,7 +195,7 @@ class BundleRegistry(GObject.GObject):
 
         for bundle_id in default_activities:
             max_version = '0'
-            for bundle in self._bundles:
+            for bundle in self:
                 if bundle.get_bundle_id() == bundle_id and \
                         NormalizedVersion(max_version) < \
                         NormalizedVersion(bundle.get_activity_version()):
@@ -203,16 +212,20 @@ class BundleRegistry(GObject.GObject):
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
-        for bundle in self._bundles:
-            if bundle.get_bundle_id() == bundle_id:
-                return bundle
+        with self._lock:
+            for bundle in self._bundles:
+                if bundle.get_bundle_id() == bundle_id:
+                    return bundle
         return None
 
     def __iter__(self):
-        return self._bundles.__iter__()
+        with self._lock:
+            copy = list(self._bundles)
+        return copy.__iter__()
 
     def __len__(self):
-        return len(self._bundles)
+        with self._lock:
+            return len(self._bundles)
 
     def _scan_directory(self, path):
         if not os.path.isdir(path):
@@ -241,7 +254,8 @@ class BundleRegistry(GObject.GObject):
                 logging.exception('Error while processing installed activity'
                                   ' bundle %s:', folder)
 
-    def add_bundle(self, bundle_path, set_favorite=False, emit_signals=True):
+    def add_bundle(self, bundle_path, set_favorite=False, emit_signals=True,
+                   force_downgrade=False):
         """
         Add a bundle to the registry.
         If the bundle is a duplicate with one already in the registry,
@@ -264,7 +278,8 @@ class BundleRegistry(GObject.GObject):
                     NormalizedVersion(bundle.get_activity_version()):
                 logging.debug("Bundle already known")
                 return installed
-            if NormalizedVersion(installed.get_activity_version()) >= \
+            if not force_downgrade and \
+                    NormalizedVersion(installed.get_activity_version()) >= \
                     NormalizedVersion(bundle.get_activity_version()):
                 logging.debug('Skip old version for %s', bundle_id)
                 return None
@@ -277,19 +292,25 @@ class BundleRegistry(GObject.GObject):
                                       bundle.get_activity_version(),
                                       True)
 
-        self._bundles.append(bundle)
+        with self._lock:
+            self._bundles.append(bundle)
         if emit_signals:
             self.emit('bundle-added', bundle)
         return bundle
 
     def remove_bundle(self, bundle_path, emit_signals=True):
+        removed = None
+        self._lock.acquire()
         for bundle in self._bundles:
             if bundle.get_path() == bundle_path:
                 self._bundles.remove(bundle)
-                if emit_signals:
-                    self.emit('bundle-removed', bundle)
-                return True
-        return False
+                removed = bundle
+                break
+        self._lock.release()
+
+        if emit_signals and removed is not None:
+            self.emit('bundle-removed', removed)
+        return removed is not None
 
     def get_activities_for_type(self, mime_type):
         result = []
@@ -298,7 +319,7 @@ class BundleRegistry(GObject.GObject):
         default_bundle_id = mime.get_default_activity(mime_type)
         default_bundle = None
 
-        for bundle in self._bundles:
+        for bundle in self:
             if not isinstance(bundle, ActivityBundle):
                 continue
             if mime_type in (bundle.get_mime_types() or []):
@@ -319,10 +340,11 @@ class BundleRegistry(GObject.GObject):
         return self._mime_defaults.get(mime_type)
 
     def _find_bundle(self, bundle_id, version):
-        for bundle in self._bundles:
-            if bundle.get_bundle_id() == bundle_id and \
-                    bundle.get_activity_version() == version:
-                return bundle
+        with self._lock:
+            for bundle in self._bundles:
+                if bundle.get_bundle_id() == bundle_id and \
+                        bundle.get_activity_version() == version:
+                    return bundle
         raise ValueError('No bundle %r with version %r exists.' %
                         (bundle_id, version))
 
@@ -388,7 +410,7 @@ class BundleRegistry(GObject.GObject):
         json.dump(favorites_data, open(path, 'w'), indent=1)
 
     def is_installed(self, bundle):
-        for installed_bundle in self._bundles:
+        for installed_bundle in self:
             if bundle.get_bundle_id() == installed_bundle.get_bundle_id() and \
                     NormalizedVersion(bundle.get_activity_version()) == \
                     NormalizedVersion(installed_bundle.get_activity_version()):
@@ -416,38 +438,59 @@ class BundleRegistry(GObject.GObject):
         RegistrationException is raised if the bundle cannot be registered
         after it is installed.
         """
-        bundle_id = bundle.get_bundle_id()
-        act = self.get_bundle(bundle_id)
-        if act:
-            # Same version already installed?
-            if act.get_activity_version() == bundle.get_activity_version():
-                logging.debug('No upgrade needed, same version already '
-                              'installed.')
-                return False
+        result = [None]
+        self.install_async(bundle, self._sync_install_cb, result,
+                           force_downgrade)
+        while result[0] is None:
+            Gtk.main_iteration()
 
-            # Would this new installation be a downgrade?
-            if NormalizedVersion(bundle.get_activity_version()) <= \
-                    NormalizedVersion(act.get_activity_version()) \
-                    and not force_downgrade:
-                raise AlreadyInstalledException
+        if isinstance(result[0], Exception):
+            raise result[0]
+        return result[0]
 
-            # Uninstall the previous version, if we can
-            if act.is_user_activity():
-                try:
-                    self.uninstall(act, force=True)
-                except Exception:
-                    logging.exception('Uninstall failed, still trying to '
-                                      'install newer bundle:')
-            else:
-                logging.warning('Unable to uninstall system activity, '
-                                'installing upgraded version in user '
-                                'activities')
+    def _sync_install_cb(self, bundle, result, user_data):
+        # Async callback for install()
+        user_data[0] = result
 
-        install_path = bundle.install()
-        if bundle_id is not None:
-            if self.add_bundle(install_path, set_favorite=True) is None:
-                raise RegistrationException
-        return True
+    def install_async(self, bundle, callback, user_data,
+                      force_downgrade=False):
+        """
+        Asynchronous version of install().
+        The result of the installation is presented to a user-defined callback
+        with the following parameters:
+          1. The bundle that passed to this method
+          2. The result of the operation (True, False, or an Exception -
+             see the install() docs)
+          3. The user_data passed to this method
+
+        The callback is always invoked from main-loop context.
+        """
+        self._install_queue.enqueue(bundle, force_downgrade,
+                                    self._bundle_installed_cb,
+                                    [callback, user_data])
+
+    def _bundle_installed_cb(self, bundle, result, data):
+        """
+        Completion handler for the bundle Install thread.
+        Called in main loop context. Finishes registration and invokes user
+        callback as necessary.
+        """
+        callback = data[0]
+        user_data = data[1]
+
+        # Installation didn't happen, or error?
+        if isinstance(result, Exception) or result is False:
+            callback(bundle, result, user_data)
+            return
+
+        if bundle.get_bundle_id() is not None:
+            registered = self.add_bundle(result, set_favorite=True,
+                                         force_downgrade=True)
+            if registered is None:
+                callback(bundle, RegistrationException(), user_data)
+                return
+
+        callback(bundle, True, user_data)
 
     def uninstall(self, bundle, force=False, delete_profile=False):
         """
@@ -476,6 +519,103 @@ class BundleRegistry(GObject.GObject):
         install_path = act.get_path()
         bundle.uninstall(force, delete_profile)
         self.remove_bundle(install_path)
+
+
+class _InstallQueue(object):
+    """
+    A class to represent a queue of bundles to be installed, and to handle
+    execution of each task in the queue. Only for internal bundleregistry use.
+
+    The use of a queue means that we serialize all bundle upgrade processing.
+    This is necessary to avoid many difficult corner-cases like: what happens
+    if two users try to asynchronously and simultaenously install different
+    version of the same bundle?
+
+    We maintain at maximum one thread to do the actual bundle install. When
+    done, the thread enqueues a callback in the main thread (via the GLib
+    main loop).
+    """
+    def __init__(self, registry):
+        self._lock = Lock()
+        self._queue = []
+        self._thread_running = False
+        self._registry = registry
+
+    def enqueue(self, bundle, force_downgrade, callback, user_data):
+        task = _InstallTask(bundle, force_downgrade, callback, user_data)
+        self._lock.acquire()
+        self._queue.append(task)
+        if not self._thread_running:
+            self._thread_running = True
+            Thread(target=self._thread_func).start()
+        self._lock.release()
+
+    def _thread_func(self):
+        while True:
+            self._lock.acquire()
+            if len(self._queue) == 0:
+                self._thread_running = False
+                self._lock.release()
+                return
+
+            task = self._queue.pop()
+            self._lock.release()
+
+            self._do_work(task)
+
+    def _do_work(self, task):
+        bundle = task.bundle
+        bundle_id = bundle.get_bundle_id()
+        act = self._registry.get_bundle(bundle_id)
+        logging.debug("InstallQueue task %s installed %r", bundle_id, act)
+
+        if act:
+            # Same version already installed?
+            if act.get_activity_version() == bundle.get_activity_version():
+                logging.debug('No upgrade needed, same version already '
+                              'installed.')
+                task.queue_callback(False)
+                return
+
+            # Would this new installation be a downgrade?
+            if NormalizedVersion(bundle.get_activity_version()) <= \
+                    NormalizedVersion(act.get_activity_version()) \
+                    and not task.force_downgrade:
+                task.queue_callback(AlreadyInstalledException())
+                return
+
+            # Uninstall the previous version, if we can
+            if act.is_user_activity():
+                try:
+                    act.uninstall()
+                except:
+                    logging.exception('Uninstall failed, still trying to '
+                                      'install newer bundle')
+            else:
+                logging.warning('Unable to uninstall system activity, '
+                                'installing upgraded version in user '
+                                'activities')
+
+        try:
+            task.queue_callback(bundle.install())
+        except Exception, e:
+            logging.debug("InstallThread install failed: %r", e)
+            task.queue_callback(e)
+
+
+class _InstallTask(object):
+    """
+    Simple class to represent a bundle installation/upgrade task.
+    Only for use internal to InstallQueue.
+    """
+    def __init__(self, bundle, force_downgrade, callback, user_data):
+        self.bundle = bundle
+        self.callback = callback
+        self.force_downgrade = force_downgrade
+        self.user_data = user_data
+
+    def queue_callback(self, result):
+        GLib.idle_add(self.callback, self.bundle, result, self.user_data)
 
 
 def get_registry():

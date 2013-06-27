@@ -17,91 +17,126 @@
 
 import os
 import logging
+import time
+import importlib
 
 from gi.repository import GObject
 from gi.repository import GLib
+from gi.repository import GConf
 
-from sugar3.datastore import datastore
-from sugar3.bundle.activitybundle import ActivityBundle
-from sugar3.bundle.bundleversion import NormalizedVersion
+from sugar3.bundle import bundle_from_archive
 
 from jarabe.model import bundleregistry
 from jarabe.util.downloader import Downloader
 
-from jarabe.model.update import BundleUpdate, aslo
+_logger = logging.getLogger('Updater')
+_instance = None
+_LAST_UPDATE_KEY = '/desktop/sugar/update/last_activity_update'
+_UPDATE_FREQUENCY_KEY = '/desktop/sugar/update/auto_update_frequency'
+_UPDATE_BACKEND_KEY = '/desktop/sugar/update/backend'
+_URGENT_TRIGGER_FILE = os.path.expanduser('~/.sugar-update')
+
+STATE_IDLE = 0
+STATE_CHECKING = 1
+STATE_CHECKED = 2
+STATE_DOWNLOADING = 3
+STATE_UPDATING = 4
+
+
+class UpdaterStateException(Exception):
+    pass
 
 
 class Updater(GObject.GObject):
     __gtype_name__ = 'SugarUpdater'
 
     __gsignals__ = {
+        'updates-available': (GObject.SignalFlags.RUN_FIRST,
+                              None,
+                              (object,)),
         'progress': (GObject.SignalFlags.RUN_FIRST,
                      None,
-                     ([int, str, float, int])),
+                     (int, str, float)),
+        'finished': (GObject.SignalFlags.RUN_FIRST,
+                     None,
+                     (object, object, bool))
     }
-
-    ACTION_CHECKING = 0
-    ACTION_UPDATING = 1
-    ACTION_DOWNLOADING = 2
 
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        self.updates = None
-        self._bundles_to_check = None
+        client = GConf.Client.get_default()
+        backend = client.get_string(_UPDATE_BACKEND_KEY)
+        module_name, class_name = backend.rsplit('.', 1)
+        _logger.debug("Use backend %s.%s", module_name, class_name)
+        module = importlib.import_module("jarabe.model.update." + module_name)
+        self._model = getattr(module, class_name)()
+
+        self._updates = None
         self._bundles_to_update = None
         self._total_bundles_to_update = 0
         self._bundle_update = None
+        self._bundles_updated = None
+        self._bundles_failed = None
+
         self._downloader = None
         self._cancelling = False
+        self._state = STATE_IDLE
+        self._auto = False
 
-    def check_updates(self):
-        self.updates = []
-        self._bundles_to_check = list(bundleregistry.get_registry())
-        self._check_next_update()
+    def get_state(self):
+        return self._state
 
-    def _check_next_update(self):
-        total = len(bundleregistry.get_registry())
-        current = total - len(self._bundles_to_check)
+    def trigger_automatic_update(self):
+        if self._state == STATE_IDLE:
+            _logger.debug("Starting automatic activity update")
+            self.check_updates(True)
 
-        if not self._bundles_to_check:
-            return False
+    def check_updates(self, auto=False):
+        if self._state != STATE_IDLE:
+            raise UpdaterStateException()
 
-        bundle = self._bundles_to_check.pop()
-        self.emit('progress', Updater.ACTION_CHECKING, bundle.get_name(),
-                  current, total)
+        self._auto = auto
+        self._updates = []
+        self._bundles_updated = []
+        self._bundles_failed = []
+        self._state = STATE_CHECKING
+        bundles = list(bundleregistry.get_registry())
+        self._model.fetch_update_info(bundles, auto,
+                                      self._backend_progress_cb,
+                                      self._backend_finished_cb)
 
-        aslo.fetch_update_info(bundle, self.__check_completed_cb)
+    def _backend_progress_cb(self, bundle_name, progress):
+        self.emit('progress', self._state, bundle_name, progress)
 
-    def __check_completed_cb(self, bundle, version, link, size, error_message):
-        if error_message is not None:
-            logging.error('Error getting update information from server:\n'
-                          '%s' % error_message)
-
-        if version is not None and \
-                version > NormalizedVersion(bundle.get_activity_version()):
-            self.updates.append(BundleUpdate(bundle, version, link, size))
-
+    def _backend_finished_cb(self, updates):
+        _logger.debug("_backend_finished_cb")
         if self._cancelling:
-            self._cancel_checking()
-        elif self._bundles_to_check:
-            GLib.idle_add(self._check_next_update)
+            self._finished(True)
+            return
+
+        self._updates = updates
+        self._state = STATE_CHECKED
+        if self._auto:
+            self.update(None)
         else:
-            total = len(bundleregistry.get_registry())
-            if bundle is None:
-                name = ''
-            else:
-                name = bundle.get_name()
-            self.emit('progress', Updater.ACTION_CHECKING, name, total,
-                      total)
+            self.emit('updates-available', self._updates)
 
     def update(self, bundle_ids):
-        self._bundles_to_update = []
-        for bundle_update in self.updates:
-            if bundle_update.bundle.get_bundle_id() in bundle_ids:
-                self._bundles_to_update.append(bundle_update)
+        if self._state != STATE_CHECKED:
+            raise UpdaterStateException()
+
+        if bundle_ids is None:
+            self._bundles_to_update = self._updates
+        else:
+            self._bundles_to_update = []
+            for bundle_update in self._updates:
+                if bundle_update.bundle_id in bundle_ids:
+                    self._bundles_to_update.append(bundle_update)
 
         self._total_bundles_to_update = len(self._bundles_to_update)
+        _logger.debug("Starting update of %d activities",
+                      self._total_bundles_to_update)
         self._download_next_update()
 
     def _download_next_update(self):
@@ -109,13 +144,19 @@ class Updater(GObject.GObject):
             self._cancel_updating()
             return
 
+        if len(self._bundles_to_update) == 0:
+            self._finished()
+            return
+
+        self._state = STATE_DOWNLOADING
         self._bundle_update = self._bundles_to_update.pop()
+        _logger.debug("Downloading update for %s",
+                      self._bundle_update.bundle_id)
 
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2
-
-        self.emit('progress', Updater.ACTION_DOWNLOADING,
-                  self._bundle_update.bundle.get_name(), current, total)
+        progress = current / float(total)
+        self.emit('progress', self._state, self._bundle_update.name, progress)
 
         self._downloader = Downloader(self._bundle_update.link)
         self._downloader.connect('progress', self.__downloader_progress_cb)
@@ -123,88 +164,89 @@ class Updater(GObject.GObject):
         self._downloader.connect('complete', self.__downloader_complete_cb)
 
     def __downloader_complete_cb(self, downloader):
+        if self._cancelling:
+            self._cancel_updating()
+            return
+
         self._install_update(self._bundle_update,
                              self._downloader.get_local_file_path())
         self._downloader = None
 
     def __downloader_progress_cb(self, downloader, progress):
-        logging.debug('__downloader_progress_cb %r', progress)
-
         if self._cancelling:
             self._cancel_updating()
             return
 
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2 + progress
-
-        self.emit('progress', Updater.ACTION_DOWNLOADING,
-                  self._bundle_update.bundle.get_name(),
-                  current, total)
+        progress = current / float(total)
+        self.emit('progress', self._state, self._bundle_update.name, progress)
 
     def __downloader_error_cb(self, downloader, error_message):
-        logging.error('Error downloading update:\n%s', error_message)
+        _logger.error('Error downloading update:\n%s', error_message)
+        self._bundles_failed.append(self._bundle_update)
 
         if self._cancelling:
             self._cancel_updating()
             return
 
-        total = self._total_bundles_to_update
-        current = total - len(self._bundles_to_update)
-        self.emit('progress', Updater.ACTION_UPDATING, '', current, total)
-
         if self._bundles_to_update:
-            # do it in idle so the UI has a chance to refresh
-            GLib.idle_add(self._download_next_update)
+            self._download_next_update()
 
     def _install_update(self, bundle_update, local_file_path):
-
+        self._state = STATE_UPDATING
         total = self._total_bundles_to_update
         current = total - len(self._bundles_to_update) - 0.5
+        progress = current / float(total)
 
-        self.emit('progress', Updater.ACTION_UPDATING,
-                  bundle_update.bundle.get_name(),
-                  current, total)
+        _logger.debug("Installing update for %s", bundle_update.bundle_id)
+        self.emit('progress', self._state, bundle_update.name, progress)
 
-        # TODO: Should we first expand the zip async so we can provide progress
-        # and only then copy to the journal?
-        jobject = datastore.create()
+        current += 0.5
+        bundle = bundle_from_archive(local_file_path)
+        registry = bundleregistry.get_registry()
+        registry.install_async(bundle, self._bundle_installed_cb, current)
+
+    def _bundle_installed_cb(self, bundle, result, progress):
+        _logger.debug("%s installed: %r", bundle.get_bundle_id(), result)
+        progress = progress / float(self._total_bundles_to_update)
+        self.emit('progress', self._state, bundle.get_name(), progress)
+
+        # Remove downloaded bundle archive
         try:
-            title = '%s-%s' % (bundle_update.bundle.get_name(),
-                               bundle_update.version)
-            jobject.metadata['title'] = title
-            jobject.metadata['mime_type'] = ActivityBundle.MIME_TYPE
-            jobject.file_path = local_file_path
-            datastore.write(jobject, transfer_ownership=True)
-        finally:
-            jobject.destroy()
+            os.unlink(bundle.get_path())
+        except OSError:
+            pass
 
-        self.emit('progress', Updater.ACTION_UPDATING,
-                  bundle_update.bundle.get_name(),
-                  current + 0.5, total)
+        if result is True:
+            self._bundles_updated.append(bundle)
+        else:
+            self._bundles_failed.append(bundle)
 
-        if self._bundles_to_update:
-            # do it in idle so the UI has a chance to refresh
-            GLib.idle_add(self._download_next_update)
+        # do it in idle so the UI has a chance to refresh
+        GLib.idle_add(self._download_next_update)
 
-    def cancel(self):
-        self._cancelling = True
-
-    def _cancel_checking(self):
-        logging.debug('Updater._cancel_checking')
-        total = len(bundleregistry.get_registry())
-        current = total - len(self._bundles_to_check)
-        self.emit('progress', Updater.ACTION_CHECKING, '', current,
-                  current)
-        self._bundles_to_check = None
+    def _finished(self, cancelled=False):
+        self._state = STATE_IDLE
         self._cancelling = False
 
-    def _cancel_updating(self):
-        logging.debug('Updater._cancel_updating')
-        current = (self._total_bundles_to_update -
-                   len(self._bundles_to_update) - 1)
-        self.emit('progress', Updater.ACTION_UPDATING, '', current,
-                  current)
+        _logger.debug("Update finished")
+        self.emit('finished', self._bundles_updated, self._bundles_failed,
+                  cancelled)
+        if not cancelled and len(self._bundles_failed) == 0:
+            client = GConf.Client.get_default()
+            client.set_int(_LAST_UPDATE_KEY, time.time())
+            try:
+                os.unlink(_URGENT_TRIGGER_FILE)
+            except OSError:
+                pass
 
+    def cancel(self):
+        self._model.cancel()
+        self._cancelling = True
+
+    def _cancel_updating(self):
+        _logger.debug('Updater._cancel_updating')
         if self._downloader is not None:
             self._downloader.cancel()
             file_path = self._downloader.get_local_file_path()
@@ -212,6 +254,54 @@ class Updater(GObject.GObject):
                 os.unlink(file_path)
             self._downloader = None
 
-        self._total_bundles_to_update = 0
-        self._bundles_to_update = None
-        self._cancelling = False
+        self._finished(True)
+
+
+def get_instance():
+    global _instance
+    if _instance is None:
+        _instance = Updater()
+    return _instance
+
+
+def check_urgent_update():
+    if os.path.isfile(_URGENT_TRIGGER_FILE):
+        get_instance().trigger_automatic_update()
+        return True
+    else:
+        return False
+
+
+def _check_periodic_update():
+    if check_urgent_update():
+        return True
+
+    client = GConf.Client.get_default()
+    update_frequency = client.get_int(_UPDATE_FREQUENCY_KEY)
+    if update_frequency == 0:
+        # automatic update disabled
+        return False
+
+    # convert update frequency from days to seconds
+    update_frequency *= 24 * 60 * 60
+
+    last_update = client.get_int(_LAST_UPDATE_KEY)
+    now = time.time()
+    _logger.debug("_check_periodic_update %r %r", last_update, now)
+    if now - last_update > update_frequency:
+        get_instance().trigger_automatic_update()
+
+    return True
+
+
+def startup_periodic_update():
+    """
+    Called a few minutes after Sugar starts.
+    Checks to see if we have met the threshold where we should perform a
+    periodic activity update. If so, perform an update.
+    If automatic updates are enabled, the same check is then scheduled to
+    run every 60 minutes.
+    """
+
+    if _check_periodic_update():
+        GLib.timeout_add_seconds(3600, _check_periodic_update)

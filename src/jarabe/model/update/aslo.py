@@ -50,15 +50,16 @@ An example::
 
 import logging
 from xml.etree.ElementTree import XML
-import traceback
 
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import GObject
 
 from sugar3.bundle.bundleversion import NormalizedVersion
 from sugar3.bundle.bundleversion import InvalidVersionError
 
 from jarabe import config
+from jarabe.model.update import BundleUpdate
 
 _FIND_DESCRIPTION = \
     './/{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description'
@@ -68,14 +69,23 @@ _FIND_SIZE = './/{http://www.mozilla.org/2004/em-rdf#}updateSize'
 
 _UPDATE_PATH = 'http://activities.sugarlabs.org/services/update-aslo.php'
 
-_fetcher = None
+_logger = logging.getLogger('ASLO')
 
 
-class _UpdateFetcher(object):
-
+class _UpdateChecker(GObject.GObject):
+    __gsignals__ = {
+        'check-complete': (GObject.SignalFlags.RUN_FIRST, None, (object,)),
+    }
     _CHUNK_SIZE = 10240
 
-    def __init__(self, bundle, completion_cb):
+    def __init__(self):
+        GObject.GObject.__init__(self)
+        self._file = None
+        self._stream = None
+        self._xml_data = ''
+        self._bundle = None
+
+    def check(self, bundle):
         # ASLO knows only about stable SP releases
         major, minor = config.version.split('.')[0:2]
         sp_version = '%s.%s' % (major, int(minor) + int(minor) % 2)
@@ -83,9 +93,8 @@ class _UpdateFetcher(object):
         url = '%s?id=%s&appVersion=%s' % \
             (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
 
-        logging.debug('Fetch %s', url)
+        _logger.debug('Fetch %s', url)
 
-        self._completion_cb = completion_cb
         self._file = Gio.File.new_for_uri(url)
         self._stream = None
         self._xml_data = ''
@@ -97,10 +106,8 @@ class _UpdateFetcher(object):
     def __file_read_async_cb(self, gfile, result, user_data):
         try:
             self._stream = self._file.read_finish(result)
-        except:
-            global _fetcher
-            _fetcher = None
-            self._completion_cb(None, None, None, None, traceback.format_exc())
+        except Exception, e:
+            self.emit('check-complete', e)
             return
 
         self._stream.read_bytes_async(self._CHUNK_SIZE, GLib.PRIORITY_DEFAULT,
@@ -109,11 +116,9 @@ class _UpdateFetcher(object):
     def __stream_read_async_cb(self, stream, result, user_data):
         data = stream.read_bytes_finish(result)
         if data is None:
-            global _fetcher
-            _fetcher = None
-            self._completion_cb(self._bundle, None, None, None,
-                                'Error reading update information for %s from '
-                                'server.' % self._bundle.get_bundle_id())
+            e = Exception('Error reading update information for %s from '
+                          'server.' % self._bundle.get_bundle_id())
+            self.emit('check-complete', e)
             return
         elif data.get_size() == 0:
             stream.close(None)
@@ -128,50 +133,93 @@ class _UpdateFetcher(object):
 
     def _process_result(self):
         if self._xml_data is None:
-            logging.error('No XML update data returned from ASLO')
+            _logger.error('No XML update data returned from ASLO')
             return
 
         document = XML(self._xml_data)
 
         if document.find(_FIND_DESCRIPTION) is None:
-            logging.debug('Bundle %s not available in the server for the '
+            _logger.debug('Bundle %s not available in the server for the '
                           'version %s',
                           self._bundle.get_bundle_id(),
                           config.version)
             version = None
             link = None
             size = None
+            self.emit('check-complete', None)
+            return
+
+        try:
+            version = NormalizedVersion(document.find(_FIND_VERSION).text)
+        except InvalidVersionError:
+            _logger.exception('Exception occured while parsing version')
+            self.emit('check-complete', None)
+            return
+
+        link = document.find(_FIND_LINK).text
+
+        try:
+            size = long(document.find(_FIND_SIZE).text) * 1024
+        except ValueError:
+            _logger.exception('Exception occured while parsing size')
+            size = 0
+
+        if version > NormalizedVersion(self._bundle.get_activity_version()):
+            result = BundleUpdate(self._bundle.get_bundle_id(),
+                                  self._bundle.get_name(), version, link, size)
         else:
-            try:
-                version = NormalizedVersion(document.find(_FIND_VERSION).text)
-            except InvalidVersionError:
-                logging.exception('Exception occured while parsing version')
-                version = '0'
+            result = None
 
-            link = document.find(_FIND_LINK).text
-
-            try:
-                size = long(document.find(_FIND_SIZE).text) * 1024
-            except ValueError:
-                logging.exception('Exception occured while parsing size')
-                size = 0
-
-        global _fetcher
-        _fetcher = None
-        self._completion_cb(self._bundle, version, link, size, None)
+        self.emit('check-complete', result)
 
 
-def fetch_update_info(bundle, completion_cb):
-    """Queries the server for a newer version of the ActivityBundle.
-
-       completion_cb receives bundle, version, link, size and possibly
-       an error message:
-
-       def completion_cb(bundle, version, link, size, error_message):
+class AsloUpdater(object):
     """
-    global _fetcher
+    Track state while querying Activites.SugarLabs.Org for activity updates.
+    """
 
-    if _fetcher is not None:
-        raise RuntimeError('Multiple simultaneous requests are not supported')
+    def __init__(self):
+        self._completion_cb = None
+        self._progress_cb = None
+        self._cancelling = False
+        self._updates = []
+        self._checker = _UpdateChecker()
+        self._checker.connect('check-complete', self._check_complete_cb)
 
-    _fetcher = _UpdateFetcher(bundle, completion_cb)
+    def _check_complete_cb(self, checker, result):
+        if isinstance(result, Exception):
+            logging.warning("Failed to check bundle: %r", result)
+        elif isinstance(result, BundleUpdate):
+            self._updates.append(result)
+
+        if self._cancelling:
+            self._completion_cb(None)
+        else:
+            GLib.idle_add(self._check_next_update)
+
+    def _check_next_update(self):
+        total = self._total_bundles_to_check
+        current = total - len(self._bundles_to_check)
+        progress = current / float(total)
+
+        if not self._bundles_to_check:
+            self._completion_cb(self._updates)
+            return
+
+        bundle = self._bundles_to_check.pop()
+        _logger.debug("Checking %s", bundle.get_bundle_id())
+        self._progress_cb(bundle.get_name(), progress)
+        self._checker.check(bundle)
+
+    def fetch_update_info(self, installed_bundles, auto, progress_cb,
+                          completion_cb):
+        self._completion_cb = completion_cb
+        self._progress_cb = progress_cb
+        self._cancelling = False
+        self._updates = []
+        self._bundles_to_check = installed_bundles
+        self._total_bundles_to_check = len(self._bundles_to_check)
+        self._check_next_update()
+
+    def cancel(self):
+        self._cancelling = True
