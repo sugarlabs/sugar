@@ -8,7 +8,7 @@ AC_CONFIG_SRCDIR([configure.ac])
 SUCROSE_VERSION="0.99.0"
 AC_SUBST(SUCROSE_VERSION)
 
-AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
