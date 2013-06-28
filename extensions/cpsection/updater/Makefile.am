@@ -1,5 +1,3 @@
-SUBDIRS = backends
-
 sugardir = $(pkgdatadir)/extensions/cpsection/updater
 
 sugar_PYTHON = 		\

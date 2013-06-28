@@ -13,8 +13,6 @@ EXTRA_DIST =                    \
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
-check: test
-	flake8 $(top_srcdir)
-
 test:
+	flake8 $(top_srcdir)
 	python -m sugar3.test.discover $(top_srcdir)/tests

@@ -27,8 +27,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
 
 from jarabe.controlpanel.sectionview import SectionView
-
-from model import UpdateModel
+from jarabe.model.update.updater import Updater
 
 _DEBUG_VIEW_ALL = True
 
@@ -38,7 +37,7 @@ class ActivityUpdater(SectionView):
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
-        self._model = UpdateModel()
+        self._model = Updater()
         self._model.connect('progress', self.__progress_cb)
 
         self.set_spacing(style.DEFAULT_SPACING)
@@ -118,18 +117,18 @@ class ActivityUpdater(SectionView):
             self._update_box = None
 
     def __progress_cb(self, model, action, bundle_name, current, total):
-        if current == total and action == UpdateModel.ACTION_CHECKING:
+        if current == total and action == Updater.ACTION_CHECKING:
             self._finished_checking()
             return
         elif current == total:
             self._finished_updating(int(current))
             return
 
-        if action == UpdateModel.ACTION_CHECKING:
+        if action == Updater.ACTION_CHECKING:
             message = _('Checking %s...') % bundle_name
-        elif action == UpdateModel.ACTION_DOWNLOADING:
+        elif action == Updater.ACTION_DOWNLOADING:
             message = _('Downloading %s...') % bundle_name
-        elif action == UpdateModel.ACTION_UPDATING:
+        elif action == Updater.ACTION_UPDATING:
             message = _('Updating %s...') % bundle_name
 
         self._switch_to_progress_pane()
