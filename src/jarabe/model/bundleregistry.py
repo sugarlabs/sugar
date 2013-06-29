@@ -87,7 +87,7 @@ class BundleRegistry(GObject.GObject):
         # hold a reference to the monitors so they don't get disposed
         self._gio_monitors = []
 
-        dirs = [env.get_user_activities_path()]
+        dirs = [env.get_user_activities_path(), env.get_user_library_path()]
 
         for data_dir in GLib.get_system_data_dirs():
             dirs.append(os.path.join(data_dir, "sugar", "activities"))
@@ -125,8 +125,6 @@ class BundleRegistry(GObject.GObject):
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
-        if not one_file.get_path().endswith('.activity'):
-            return
         if event_type == Gio.FileMonitorEvent.CREATED:
             self.add_bundle(one_file.get_path(), set_favorite=True)
         elif event_type == Gio.FileMonitorEvent.DELETED:
@@ -234,8 +232,6 @@ class BundleRegistry(GObject.GObject):
         # Sort by mtime to ensure a stable activity order
         bundles = {}
         for f in os.listdir(path):
-            if not f.endswith('.activity'):
-                continue
             try:
                 bundle_dir = os.path.join(path, f)
                 if os.path.isdir(bundle_dir):
