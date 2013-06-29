@@ -40,14 +40,13 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GConf
 from gi.repository import Gtk
-from gi.repository import Gdk
 from gi.repository import Gst
-import dbus.glib
 from gi.repository import Wnck
 
 from sugar3 import env
 
 from jarabe.model.session import get_session_manager
+from jarabe.model.update import updater
 from jarabe.model import screen
 from jarabe.view import keyhandler
 from jarabe.view import gesturehandler
@@ -104,13 +103,6 @@ def setup_journal_cb():
     journalactivity.start()
 
 
-def show_software_updates_cb():
-    logging.debug('STARTUP: show_software_updates_cb')
-    if os.path.isfile(os.path.expanduser('~/.sugar-update')):
-        home_window = homewindow.get_instance()
-        home_window.get_home_box().show_software_updates_alert()
-
-
 def setup_notification_service_cb():
     notifications.init()
 
@@ -144,7 +136,7 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_journal_cb)
     GLib.idle_add(setup_notification_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
-    GLib.idle_add(show_software_updates_cb)
+    GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
     apisocket.start()
 
@@ -274,9 +266,10 @@ def _check_profile():
 
 
 def main():
+    # This can be removed once pygobject-3.10 is a requirement.
+    # https://bugzilla.gnome.org/show_bug.cgi?id=686914
     GLib.threads_init()
-    Gdk.threads_init()
-    dbus.glib.threads_init()
+
     Gst.init(sys.argv)
 
     cleanup_temporary_files()

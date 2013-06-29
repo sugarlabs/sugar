@@ -17,8 +17,9 @@
 
 
 class BundleUpdate(object):
-    def __init__(self, bundle, version, link, size):
-        self.bundle = bundle
+    def __init__(self, bundle_id, name, version, link, size):
+        self.bundle_id = bundle_id
+        self.name = name
         self.version = version
         self.link = link
         self.size = size

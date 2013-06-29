@@ -33,6 +33,8 @@ import ctypes
 from sugar3 import dispatch
 from sugar3 import env
 
+from jarabe.model.update.updater import check_urgent_update
+
 NM_STATE_UNKNOWN = 0
 NM_STATE_ASLEEP = 10
 NM_STATE_DISCONNECTED = 20
@@ -557,6 +559,8 @@ def set_connected():
     except:
         # pylint: disable=W0702
         logging.exception('Error calling libc.__res_init')
+
+    check_urgent_update()
 
 
 class SecretAgent(dbus.service.Object):
