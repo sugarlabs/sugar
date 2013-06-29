@@ -5,6 +5,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	buddy.py		\
 	bundleregistry.py	\
+	desktop.py		\
 	filetransfer.py		\
 	friends.py		\
 	invites.py		\
