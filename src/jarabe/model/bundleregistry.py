@@ -26,7 +26,7 @@ from gi.repository import Gio
 from gi.repository import Gtk
 import json
 
-from sugar3.bundle import bundle_from_dir
+from sugar3.bundle.helpers import bundle_from_dir
 from sugar3.bundle.activitybundle import ActivityBundle
 from sugar3.bundle.bundleversion import NormalizedVersion
 from sugar3.bundle.bundle import MalformedBundleException, \
