@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-21 00:34-0400\n"
-"PO-Revision-Date: 2013-06-23 04:30+0200\n"
+"POT-Creation-Date: 2013-06-29 00:34-0400\n"
+"PO-Revision-Date: 2013-07-01 17:36+0200\n"
 "Last-Translator: lite <litekok@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -130,7 +130,7 @@ msgstr "日期与时间"
 msgid "Error timezone does not exist."
 msgstr "错误, 时区资料不存在。"
 
-#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
 msgstr "时区"
 
@@ -304,92 +304,104 @@ msgstr "自动省电管理开关发生错误。"
 msgid "Power management"
 msgstr "省电管理"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
 msgstr "自动省电管理(延长电池寿命)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
 msgid "Software Update"
 msgstr "软件更新"
 
-#: ../extensions/cpsection/updater/view.py:63
+#: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr "软件更新会修正错误，消除安全漏洞，以及提供新的功能。"
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:79
+msgid "Update in progress..."
+msgstr "正在更新..."
+
+#: ../extensions/cpsection/updater/view.py:106
+msgid "Checking for updates..."
+msgstr "正在检查更新…"
+
+#: ../extensions/cpsection/updater/view.py:108
+msgid "Installing updates..."
+msgstr "正在安装更新…"
+
+#: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
 msgstr "正在检查 %s..."
 
-#: ../extensions/cpsection/updater/view.py:131
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Looking for updates..."
+msgstr "正在查找更新…"
+
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
 msgstr "正在下载 %s..."
 
-#: ../extensions/cpsection/updater/view.py:133
+#: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
 msgstr "正在更新 %s..."
 
-#: ../extensions/cpsection/updater/view.py:143
+#: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
 msgstr "您的软件是最新的"
 
-#: ../extensions/cpsection/updater/view.py:145
+#: ../extensions/cpsection/updater/view.py:155
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "你可以安装 %s个更新"
 
-#: ../extensions/cpsection/updater/view.py:163
-msgid "Checking for updates..."
-msgstr "正在检查更新…"
-
-#: ../extensions/cpsection/updater/view.py:168
-msgid "Installing updates..."
-msgstr "正在安装更新…"
-
-#: ../extensions/cpsection/updater/view.py:177
+#: ../extensions/cpsection/updater/view.py:184
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "已安装 %s个更新"
 
-#: ../extensions/cpsection/updater/view.py:261
+#: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
 msgstr "安装已选择的更新"
 
-#: ../extensions/cpsection/updater/view.py:282
+#: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
 msgstr "下载大小：%s"
 
-#: ../extensions/cpsection/updater/view.py:370
+#: ../extensions/cpsection/updater/view.py:373
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "從版本 %(current)s 更新到 %(new)s （大小：%(size)s）"
 
+#: ../extensions/cpsection/updater/view.py:380
+#, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr "版本 %(version)s (大小: %(size)s)"
+
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:397
 msgid "None"
 msgstr "无"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:400
 msgid "1 KB"
 msgstr "1千字节"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:394
+#: ../extensions/cpsection/updater/view.py:403
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f 千字节"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:397
+#: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f 兆字节"
@@ -508,7 +520,7 @@ msgstr "已切断"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:67 ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/desktop/keydialog.py:101
 #: ../src/jarabe/frame/activitiestray.py:625
 #: ../src/jarabe/frame/activitiestray.py:746
 #: ../src/jarabe/frame/activitiestray.py:778
@@ -668,134 +680,159 @@ msgid ""
 "long name."
 msgstr "\"disabled\" 当初始化的时候会询问昵称； \"system\"重用了UNIX系统账户。"
 
+#: ../data/sugar.schemas.in.h:2
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr "上次活动更新成功的unix时间戳（纪元以来的秒数）。"
+
 #: ../data/sugar.schemas.in.h:3
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr "活动更新后台模块，后面跟一个点，接着是类名。"
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Activity update backend."
+msgstr "活动更新后台。"
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Automatic update frequency."
+msgstr "自动更新频率。"
+
+#: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
 msgstr "备份网址"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
 msgstr "受保护活动的包编号"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:9
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr "XO的图标颜色使用于整个桌面。笔触和填充颜色组成的字符串格式是RGB颜色。例如：＃AC32FF，＃9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
 msgstr "转角延迟"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
 msgstr "默认字体"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
 msgstr "默认字体大小"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
 msgstr "默认昵称"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
 msgstr "屏幕四角触发边框显示的延迟时间。"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:15
 msgid "Delay for the activation of the frame using the edges."
 msgstr "屏幕边缘触发边框显示的延迟时间。"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
 msgstr "边沿延迟"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:17
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "极低电源管理（关闭无线，增加电池使用时间）"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:18
 msgid "Favorites Layout"
 msgstr "偏好布局"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
 msgstr "最爱的恢复模式"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
 msgstr "整个桌面使用的字体。"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
 msgstr "整个桌面使用的字体大小。"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:22
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
+msgstr "活动自动更新的频率，以天来计算。 0表示禁用。"
+
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM网络的APN（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSM网络的PIN（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:25
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSM网络的PUK（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络的接入点配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "GSM网络号码（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "GSM网络密码（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络密码配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络个人识别号码配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络个人解锁码配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络电话号码配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "GSM网络用户名（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "GSM网络用户名配置（不推荐/未使用）"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr "如果为TRUE，Sugar可以让我们被Jabber服务器的其他用户搜索。"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "如果为TRUE，Sugar会显示“注销”选项。"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "如果为TRUE，Sugar会显示“重启”选项。"
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:38
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -803,125 +840,138 @@ msgid ""
 msgstr ""
 "如果为TRUE，Sugar会显示频道为1,6和11的缺省Ad-hoc网络。如果启动时没有发现任何“已知”网络，Suger不会自动连接到Ad-hoc网络。"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
 msgstr "Jabber服务器"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:40
 msgid "Keyboard layouts"
 msgstr "键盘布局"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:41
 msgid "Keyboard model"
 msgstr "键盘型号"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
 msgstr "键盘选项"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
 msgstr "偏好模式的布局。"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:44
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "键盘布局列表。每一个条目应当在窗体布局（改版）中"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
 msgstr "键盘选项列表"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:46
+msgid "Microformat update URL."
+msgstr "Microformat 更新网址。"
+
+#: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
 msgstr "Sugar语音服务的音调值"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
 msgstr "Sugar语音服务中使用的音调值"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
 msgstr "功率自动"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
 msgstr "功率极限"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
 msgstr "发布到“道具”"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
 msgstr "Sugar语音服务的速率值"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
 msgstr "Sugar语音服务中使用的速率值"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
 msgstr "设备设置为静音。"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
 msgstr "显示“注销”"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
 msgstr "显示“重启”"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
 msgstr "显示“Sugar Ad-hoc 网络”"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
 msgstr "已静音"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
 msgstr "要使用的键盘型号"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:60
+msgid "Timestamp of last activity update."
+msgstr "上次活动更新的时间戳。"
+
+#: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
 msgstr "系统时区设置。"
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
 msgstr "要使用的Jabber服务器网址"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:64
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr "活动更新信息中 microformat 更新后端所使用的网址。"
+
+#: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
 msgstr "保存备份的网址。"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:66
 msgid "User Color"
 msgstr "用户颜色"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:67
 msgid "User Name"
 msgstr "用户名"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
 msgstr "整个桌面使用的用户名。"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:69
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr "在列表视图中不能擦除活动。"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
 msgstr "音量大小"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
 msgstr "声音设备的音量。"
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -994,7 +1044,7 @@ msgstr "更改需重启系统"
 msgid "Cancel changes"
 msgstr "取消更改"
 
-#: ../src/jarabe/controlpanel/gui.py:333 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
 msgstr "稍后"
 
@@ -1018,30 +1068,30 @@ msgid "Done"
 msgstr "完成"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:366
+#: ../src/jarabe/desktop/favoritesview.py:373
 #: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "确定"
 
-#: ../src/jarabe/desktop/activitieslist.py:253
+#: ../src/jarabe/desktop/activitieslist.py:256
 #, python-format
 msgid "Version %s"
 msgstr "版本%s"
 
-#: ../src/jarabe/desktop/activitieslist.py:354
+#: ../src/jarabe/desktop/activitieslist.py:357
 #: ../src/jarabe/journal/listview.py:427
 msgid "Clear search"
 msgstr "清除搜索"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:430
 msgid "No matching activities"
 msgstr "没有匹配的活动"
 
-#: ../src/jarabe/desktop/activitieslist.py:463
+#: ../src/jarabe/desktop/activitieslist.py:466
 msgid "Confirm erase"
 msgstr "确认删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:465
+#: ../src/jarabe/desktop/activitieslist.py:468
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "确认删除：是否永久删除 %s ？"
@@ -1050,14 +1100,14 @@ msgstr "确认删除：是否永久删除 %s ？"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:469
+#: ../src/jarabe/desktop/activitieslist.py:472
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "保存"
 
-#: ../src/jarabe/desktop/activitieslist.py:472
-#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/desktop/activitieslist.py:475
+#: ../src/jarabe/desktop/activitieslist.py:532
 #: ../src/jarabe/journal/expandedentry.py:154
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/journaltoolbox.py:470
@@ -1065,11 +1115,11 @@ msgstr "保存"
 msgid "Erase"
 msgstr "删除"
 
-#: ../src/jarabe/desktop/activitieslist.py:544
+#: ../src/jarabe/desktop/activitieslist.py:547
 msgid "Remove favorite"
 msgstr "移除偏好"
 
-#: ../src/jarabe/desktop/activitieslist.py:548
+#: ../src/jarabe/desktop/activitieslist.py:551
 msgid "Make favorite"
 msgstr "指定偏好"
 
@@ -1105,34 +1155,26 @@ msgstr "方形"
 msgid "Triangle"
 msgstr "三角形"
 
-#: ../src/jarabe/desktop/favoritesview.py:357
+#: ../src/jarabe/desktop/favoritesview.py:364
 msgid "Registration Failed"
 msgstr "注册失败"
 
-#: ../src/jarabe/desktop/favoritesview.py:360
+#: ../src/jarabe/desktop/favoritesview.py:367
 msgid "Registration Successful"
 msgstr "注册成功"
 
-#: ../src/jarabe/desktop/favoritesview.py:361
+#: ../src/jarabe/desktop/favoritesview.py:368
 msgid "You are now registered with your school server."
 msgstr "您已成功注册到校园服务器。"
 
-#: ../src/jarabe/desktop/favoritesview.py:645
+#: ../src/jarabe/desktop/favoritesview.py:652
 msgid "Register"
 msgstr "注册"
 
-#: ../src/jarabe/desktop/favoritesview.py:648
-#: ../src/jarabe/desktop/favoritesview.py:664
+#: ../src/jarabe/desktop/favoritesview.py:655
+#: ../src/jarabe/desktop/favoritesview.py:671
 msgid "Register again"
 msgstr "重新注册"
-
-#: ../src/jarabe/desktop/homebox.py:63
-msgid "Update your activities to ensure compatibility with your new software"
-msgstr "更新活动使其与新版软件兼容"
-
-#: ../src/jarabe/desktop/homebox.py:72
-msgid "Check now"
-msgstr "立即检查"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -1354,7 +1396,7 @@ msgid "Size: %s"
 msgstr "大小：%s"
 
 #: ../src/jarabe/journal/expandedentry.py:450
-#: ../src/jarabe/journal/misc.py:108
+#: ../src/jarabe/journal/misc.py:109
 msgid "No date"
 msgstr "无日期"
 
@@ -1374,7 +1416,7 @@ msgstr "标签:"
 msgid "Comments:"
 msgstr "注释:"
 
-#: ../src/jarabe/journal/journalactivity.py:141
+#: ../src/jarabe/journal/journalactivity.py:138
 #: ../src/jarabe/journal/journaltoolbox.py:88
 #: ../src/jarabe/journal/journaltoolbox.py:513
 #: ../src/jarabe/journal/palettes.py:219
@@ -1505,12 +1547,12 @@ msgstr "设备为空"
 msgid "No matching entries"
 msgstr "没有匹配的条目"
 
-#: ../src/jarabe/journal/misc.py:275
+#: ../src/jarabe/journal/misc.py:256
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr "旧版本的%s活动"
 
-#: ../src/jarabe/journal/misc.py:276
+#: ../src/jarabe/journal/misc.py:257
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr "要降级到版本%s"
@@ -1592,190 +1634,190 @@ msgstr "没有活动要恢复"
 msgid "%(free_space)d MB Free"
 msgstr "剩余%(free_space)d MB 空间"
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
 msgstr "设备状态变化的原因未知。"
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
 msgstr "状态变化是正常的。"
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:218
 msgid "The device is now managed."
 msgstr "设备管理中。"
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:220
 msgid "The device is no longer managed."
 msgstr "设备不在管理中。"
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
 msgstr "设备未就绪。"
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr "IP配置不能保留（没有可用的地址，超时等）。"
 
-#: ../src/jarabe/model/network.py:225
+#: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
 msgstr "IP配置不再合法。"
 
-#: ../src/jarabe/model/network.py:227
+#: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
 msgstr "需要密钥，请提供。"
 
-#: ../src/jarabe/model/network.py:229
+#: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "802.1X请求被接入点或认证服务器断开。"
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "802.1X请求配置失败。"
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "802.1X请求退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "802.1X请求认证超时。"
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
 msgstr "PPP服务启动超时。"
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
 msgstr "PPP服务意外断开。"
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "PPP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:244
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "DHCP服务启动超时。"
 
-#: ../src/jarabe/model/network.py:246
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
 msgstr "DHCP服务意外错误。"
 
-#: ../src/jarabe/model/network.py:248
+#: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "DHCP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:250
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
 msgstr "共享连接服务启动失败。"
 
-#: ../src/jarabe/model/network.py:252
+#: ../src/jarabe/model/network.py:254
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr "共享连接服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:255
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
 msgstr "自动IP服务​​无法启动。"
 
-#: ../src/jarabe/model/network.py:257
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
 msgstr "自动IP服务​​意外错误。"
 
-#: ../src/jarabe/model/network.py:259
+#: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "自动IP服务退出或意外失败。"
 
-#: ../src/jarabe/model/network.py:261
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
 msgstr "拨号失败，线路忙。"
 
-#: ../src/jarabe/model/network.py:263
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
 msgstr "拨号失败，没有拨号音。"
 
-#: ../src/jarabe/model/network.py:265
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
 msgstr "拨号失败，没有运营商网络。"
 
-#: ../src/jarabe/model/network.py:267
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
 msgstr "拨号超时。"
 
-#: ../src/jarabe/model/network.py:269
+#: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
 msgstr "拨号失败。"
 
-#: ../src/jarabe/model/network.py:271
+#: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
 msgstr "调制解调器初始化失败。"
 
-#: ../src/jarabe/model/network.py:273
+#: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
 msgstr "无法选择指定的GSM的APN"
 
-#: ../src/jarabe/model/network.py:275
+#: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
 msgstr "不搜索网络。"
 
-#: ../src/jarabe/model/network.py:277
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
 msgstr "网络注册被拒绝。"
 
-#: ../src/jarabe/model/network.py:279
+#: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
 msgstr "网络注册超时。"
 
-#: ../src/jarabe/model/network.py:281
+#: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
 msgstr "无法注册请求的GSM网络。"
 
-#: ../src/jarabe/model/network.py:283
+#: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
 msgstr "PIN检查失败。"
 
-#: ../src/jarabe/model/network.py:285
+#: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
 msgstr "设备必需的固件可能会丢失。"
 
-#: ../src/jarabe/model/network.py:287
+#: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
 msgstr "设备已被删除。"
 
-#: ../src/jarabe/model/network.py:289
+#: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
 msgstr "“网络管理员”进入休眠状态。"
 
-#: ../src/jarabe/model/network.py:291
+#: ../src/jarabe/model/network.py:293
 msgid "The device's active connection was removed or disappeared."
 msgstr "设备的活动连接被删除或消失。"
 
-#: ../src/jarabe/model/network.py:294
+#: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
 msgstr "用户或客户端请求断开。"
 
-#: ../src/jarabe/model/network.py:296
+#: ../src/jarabe/model/network.py:298
 msgid "The device's carrier/link changed."
 msgstr "设备的运营商/链路改变。"
 
-#: ../src/jarabe/model/network.py:298
+#: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
 msgstr "采用设备的现有连接。"
 
-#: ../src/jarabe/model/network.py:300
+#: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
 msgstr "请求者可用。"
 
-#: ../src/jarabe/model/network.py:302
+#: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
 msgstr "无法找到调制解调器。"
 
-#: ../src/jarabe/model/network.py:304
+#: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
 msgstr "蓝牙连接失败或超时。"
 
-#: ../src/jarabe/model/network.py:306
+#: ../src/jarabe/model/network.py:308
 msgid "Unused."
 msgstr "未使用。"
 
@@ -1865,6 +1907,12 @@ msgstr "查看源代码：%s"
 #, python-format
 msgid "View source: %r"
 msgstr "查看源代码：%r"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr "更新活动使其与新版软件兼容"
+
+#~ msgid "Check now"
+#~ msgstr "立即检查"
 
 #~ msgid "Sugar in a window"
 #~ msgstr "窗口化Sugar"
