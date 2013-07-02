@@ -1,4 +1,8 @@
+# -*- encoding: utf-8 -*-
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
+# Copyright (C) 2010 Andrés Ambrois
+# Copyright (C) 2012 Ajay Garg
+# Copyright (C) 2013 Miguel González
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +29,16 @@ from sugar3.graphics import style
 from jarabe.controlpanel.sectionview import SectionView
 
 
+from .model import ServiceProviderDatabaseError
+
 APPLY_TIMEOUT = 1000
+
+
+def list_filler(gtk_list, iterable, unpacker=lambda x: (x.name, x)):
+    gtk_list.clear()
+    for i in iterable:
+        gtk_list.append(unpacker(i))
+    return gtk_list
 
 
 class EntryWithLabel(Gtk.HBox):
@@ -63,7 +76,19 @@ class ModemConfiguration(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
+
+        self._label_group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
+        self._combo_group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
+
+        scrolled_win = Gtk.ScrolledWindow()
+        scrolled_win.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        self.add(scrolled_win)
+        scrolled_win.show()
+
+        main_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        main_box.set_border_width(style.DEFAULT_SPACING)
+        scrolled_win.add_with_viewport(main_box)
+        main_box.show()
 
         explanation = _('You will need to provide the following information'
                         ' to set up a mobile broadband connection to a'
@@ -71,40 +96,131 @@ class ModemConfiguration(SectionView):
         self._text = Gtk.Label(label=explanation)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
-        self.pack_start(self._text, False, False, 0)
+        main_box.pack_start(self._text, True, False, 0)
         self._text.show()
+
+        upper_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        upper_box.set_border_width(style.DEFAULT_SPACING)
+        main_box.pack_start(upper_box, True, False, 0)
+        upper_box.show()
+
+        country_store = Gtk.ListStore(str, object)
+        country_store.append([])
+
+        provider_store = Gtk.ListStore(str, object)
+        provider_store.append([])
+
+        plan_store = Gtk.ListStore(str)
+        plan_store.append([])
+
+        box, self.country_combo = self._make_combo_with_label(country_store,
+                                                              _('Country:'))
+        upper_box.pack_start(box, False, True, 0)
+        box.show()
+
+        box, self.provider_combo = self._make_combo_with_label(provider_store,
+                                                               _('Provider:'))
+        upper_box.pack_start(box, False, True, 0)
+        box.show()
+
+        box, self.plan_combo = self._make_combo_with_label(plan_store,
+                                                           _('Plan:'))
+        upper_box.pack_start(box, False, True, 0)
+        box.show()
+
+        separator = Gtk.HSeparator()
+        main_box.pack_start(separator, True, False, 0)
+        separator.show()
+
+        try:
+            self.db_manager = self._model.ServiceProvidersDatabase()
+        except ServiceProviderDatabaseError:
+            self.db_manager = None
+        else:
+            countries = self.db_manager.get_countries()
+            list_filler(country_store, countries)
+            providers = self.db_manager.get_providers()
+            plans = self.db_manager.get_plans()
+            provider_store = list_filler(Gtk.ListStore(str, object), providers)
+            plan_store = list_filler(Gtk.ListStore(str, object), plans)
+            current_country = self.db_manager.get_country()
+            current_provider = self.db_manager.get_provider()
+            current_plan = self.db_manager.get_plan()
+            self.country_combo.set_model(country_store)
+            self.country_combo.set_active(current_country.idx)
+            self.provider_combo.set_model(provider_store)
+            self.provider_combo.set_active(current_provider.idx)
+            self.plan_combo.set_model(plan_store)
+            self.plan_combo.set_active(current_plan.idx)
+
+        self.country_combo.connect("changed", self._country_selected_cb)
+        self.provider_combo.connect("changed", self._provider_selected_cb)
+        self.plan_combo.connect("changed", self._plan_selected_cb)
+
+        lower_box = Gtk.VBox(spacing=style.DEFAULT_SPACING)
+        lower_box.set_border_width(style.DEFAULT_SPACING)
+        main_box.pack_start(lower_box, True, False, 0)
+        lower_box.show()
 
         self._username_entry = EntryWithLabel(_('Username:'))
         self._username_entry.entry.connect('changed', self.__entry_changed_cb)
-        self._group.add_widget(self._username_entry.label)
-        self.pack_start(self._username_entry, False, True, 0)
+        self._label_group.add_widget(self._username_entry.label)
+        self._combo_group.add_widget(self._username_entry.entry)
+        lower_box.pack_start(self._username_entry, False, True, 0)
         self._username_entry.show()
 
         self._password_entry = EntryWithLabel(_('Password:'))
         self._password_entry.entry.connect('changed', self.__entry_changed_cb)
-        self._group.add_widget(self._password_entry.label)
-        self.pack_start(self._password_entry, False, True, 0)
+        self._label_group.add_widget(self._password_entry.label)
+        self._combo_group.add_widget(self._password_entry.entry)
+        lower_box.pack_start(self._password_entry, False, True, 0)
         self._password_entry.show()
 
         self._number_entry = EntryWithLabel(_('Number:'))
         self._number_entry.entry.connect('changed', self.__entry_changed_cb)
-        self._group.add_widget(self._number_entry.label)
-        self.pack_start(self._number_entry, False, True, 0)
+        self._label_group.add_widget(self._number_entry.label)
+        self._combo_group.add_widget(self._number_entry.entry)
+        lower_box.pack_start(self._number_entry, False, True, 0)
         self._number_entry.show()
 
         self._apn_entry = EntryWithLabel(_('Access Point Name (APN):'))
         self._apn_entry.entry.connect('changed', self.__entry_changed_cb)
-        self._group.add_widget(self._apn_entry.label)
-        self.pack_start(self._apn_entry, False, True, 0)
+        self._label_group.add_widget(self._apn_entry.label)
+        self._combo_group.add_widget(self._apn_entry.entry)
+        lower_box.pack_start(self._apn_entry, False, True, 0)
         self._apn_entry.show()
 
         self._pin_entry = EntryWithLabel(_('Personal Identity Number (PIN):'))
         self._pin_entry.entry.connect('changed', self.__entry_changed_cb)
-        self._group.add_widget(self._pin_entry.label)
-        self.pack_start(self._pin_entry, False, True, 0)
+        self._label_group.add_widget(self._pin_entry.label)
+        self._combo_group.add_widget(self._pin_entry.entry)
+        lower_box.pack_start(self._pin_entry, False, True, 0)
         self._pin_entry.show()
 
         self.setup()
+
+    def _make_combo_with_label(self, store, label_text=''):
+        label = Gtk.Label(label_text)
+        label.set_alignment(1, 0.5)
+        self._label_group.add_widget(label)
+
+        combo = Gtk.ComboBox()
+        self._combo_group.add_widget(combo)
+        combo.set_model(store)
+        renderer_text = Gtk.CellRendererText()
+        renderer_text.set_property("max-width-chars", 25)
+        renderer_text.set_property("width-chars", 25)
+        renderer_text.set_property("xalign", 0.5)
+        combo.pack_start(renderer_text, True)
+        combo.add_attribute(renderer_text, "text", 0)
+
+        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        box.pack_start(label, True, False, 0)
+        label.show()
+        box.pack_start(combo, True, False, 0)
+        combo.show()
+        return box, combo
+
 
     def undo(self):
         self._model.undo()
@@ -144,3 +260,40 @@ class ModemConfiguration(SectionView):
         settings['apn'] = self._apn_entry.entry.get_text()
         settings['pin'] = self._pin_entry.entry.get_text()
         self._model.set_modem_settings(settings)
+
+    def _country_selected_cb(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            country = model[tree_iter][1]
+            self.db_manager.set_country(country.idx)
+            providers = self.db_manager.get_providers()
+            store = list_filler(Gtk.ListStore(str, object), providers)
+            current = self.db_manager.get_provider()
+            self.provider_combo.set_model(store)
+            self.provider_combo.set_active(current.idx)
+
+    def _provider_selected_cb(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            provider = model[tree_iter][1]
+            self.db_manager.set_provider(provider.idx)
+            plans = self.db_manager.get_plans()
+            store = list_filler(Gtk.ListStore(str, object), plans)
+            current = self.db_manager.get_plan()
+            self.plan_combo.set_model(store)
+            self.plan_combo.set_active(current.idx)
+
+    def _plan_selected_cb(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            plan = model[tree_iter][1]
+            self.db_manager.set_plan(plan.idx)
+            self.db_manager.save()
+            plan = self.db_manager.get_plan()
+            self._username_entry.entry.set_text(plan.username)
+            self._password_entry.entry.set_text(plan.password)
+            self._number_entry.entry.set_text(plan.number)
+            self._apn_entry.entry.set_text(plan.apn)
