@@ -486,13 +486,12 @@ class _Account(GObject.GObject):
 
                 connection = self._connection[
                     CONNECTION_INTERFACE_ACTIVITY_PROPERTIES]
-                connection.GetProperties(room_handle,
-                                         reply_handler=partial(
-                                         self.__get_properties_cb,
-                                         room_handle),
-                                         error_handler=partial(
-                                         self.__error_handler_cb,
-                                         'ActivityProperties.GetProperties'))
+                connection.GetProperties(
+                    room_handle,
+                    reply_handler=partial(self.__get_properties_cb,
+                                          room_handle),
+                    error_handler=partial(self.__error_handler_cb,
+                                          'ActivityProperties.GetProperties'))
 
                 if buddy_handle != self._self_handle:
                     # Sometimes we'll get CurrentActivityChanged before we get

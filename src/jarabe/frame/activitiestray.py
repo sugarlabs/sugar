@@ -689,9 +689,9 @@ class IncomingTransferPalette(BaseTransferPalette):
             extension = '.bin'
         fd, file_path = tempfile.mkstemp(suffix=extension,
                                          prefix=self._sanitize(
-                                         self.file_transfer.title),
+                                             self.file_transfer.title),
                                          dir=os.path.join(
-                                         env.get_profile_path(), 'data'))
+                                             env.get_profile_path(), 'data'))
         os.close(fd)
         os.unlink(file_path)
 
