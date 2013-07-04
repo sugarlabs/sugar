@@ -390,7 +390,7 @@ class BundleRegistry(GObject.GObject):
             self.emit('bundle-changed', bundle)
 
     def _set_bundle_favorite(self, bundle_id, version, favorite,
-                             favorite_view):
+                             favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
         if favorite and not key in self._favorite_bundles[favorite_view]:
             self._favorite_bundles[favorite_view][key] = None
