@@ -32,6 +32,8 @@ from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.model import bundleregistry
 
+from jarabe.journal.iconview import IconView
+
 
 class ObjectChooser(Gtk.Window):
 
@@ -41,7 +43,8 @@ class ObjectChooser(Gtk.Window):
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
-    def __init__(self, parent=None, what_filter='', filter_type=None):
+    def __init__(self, parent=None, what_filter='', filter_type=None,
+                 show_preview=False):
         Gtk.Window.__init__(self)
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.set_decorated(False)
@@ -50,6 +53,7 @@ class ObjectChooser(Gtk.Window):
         self.set_has_resize_grip(False)
 
         self._selected_object_id = None
+        self._show_preview = show_preview
 
         self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self.connect('visibility-notify-event',
@@ -87,11 +91,19 @@ class ObjectChooser(Gtk.Window):
         vbox.pack_start(self._toolbar, False, True, 0)
         self._toolbar.show()
 
-        self._list_view = ChooserListView()
-        self._list_view.connect('entry-activated', self.__entry_activated_cb)
-        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-        vbox.pack_start(self._list_view, True, True, 0)
-        self._list_view.show()
+        if not self._show_preview:
+            self._list_view = ChooserListView()
+            self._list_view.connect('entry-activated',
+                                    self.__entry_activated_cb)
+            self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
+            vbox.pack_start(self._list_view, True, True, 0)
+            self._list_view.show()
+        else:
+            self._icon_view = IconView()
+            self._icon_view.connect('entry-activated',
+                                    self.__entry_activated_cb)
+            vbox.pack_start(self._icon_view, True, True, 0)
+            self._icon_view.show()
 
         width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
@@ -126,7 +138,10 @@ class ObjectChooser(Gtk.Window):
         return self._selected_object_id
 
     def __query_changed_cb(self, toolbar, query):
-        self._list_view.update_with_query(query)
+        if not self._show_preview:
+            self._list_view.update_with_query(query)
+        else:
+            self._icon_view.update_with_query(query)
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
@@ -135,7 +150,10 @@ class ObjectChooser(Gtk.Window):
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
         visible = event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED
-        self._list_view.set_is_visible(visible)
+        if not self._show_preview:
+            self._list_view.set_is_visible(visible)
+        else:
+            self._icon_view.set_is_visible(visible)
 
     def __clear_clicked_cb(self, list_view):
         self._toolbar.clear_query()
