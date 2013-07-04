@@ -35,7 +35,6 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory
 from sugar3 import dispatch
 from sugar3.datastore import datastore
-from sugar3.bundle.activitybundle import ActivityBundle
 
 from jarabe.view.palettes import JournalPalette
 from jarabe.view.palettes import CurrentActivityPalette
@@ -158,8 +157,6 @@ class FavoritesView(ViewContainer):
             self.set_layout(self._layout)
             registry = bundleregistry.get_registry()
             for info in registry:
-                if not isinstance(info, ActivityBundle):
-                    continue
                 if registry.is_bundle_favorite(info.get_bundle_id(),
                                                info.get_activity_version()):
                     self._add_activity(info)
@@ -292,8 +289,6 @@ class FavoritesView(ViewContainer):
         registry = bundleregistry.get_registry()
 
         for info in registry:
-            if not isinstance(info, ActivityBundle):
-                continue
             if registry.is_bundle_favorite(info.get_bundle_id(),
                                            info.get_activity_version()):
                 self._add_activity(info)
@@ -312,8 +307,6 @@ class FavoritesView(ViewContainer):
         icon.show()
 
     def __activity_added_cb(self, activity_registry, activity_info):
-        if not isinstance(activity_info, ActivityBundle):
-            return
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
                                        activity_info.get_activity_version()):
