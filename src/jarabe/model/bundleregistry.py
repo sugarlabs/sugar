@@ -33,6 +33,7 @@ from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar3 import env
 
+from jarabe.model import desktop
 from jarabe.model import mimeregistry
 
 """
@@ -55,6 +56,7 @@ when new activities installed by external processes, they will be picked up
 immediately by the shell.
 """
 
+_DEFAULT_VIEW = 0
 _instance = None
 
 
@@ -100,8 +102,11 @@ class BundleRegistry(GObject.GObject):
             monitor.connect('changed', self.__file_monitor_changed_cb)
             self._gio_monitors.append(monitor)
 
-        self._last_defaults_mtime = -1
-        self._favorite_bundles = {}
+        self._last_defaults_mtime = []
+        self._favorite_bundles = []
+        for i in range(desktop.get_number_of_views()):
+            self._favorite_bundles.append({})
+            self._last_defaults_mtime.append(-1)
 
         client = GConf.Client.get_default()
         self._protected_activities = []
@@ -122,6 +127,23 @@ class BundleRegistry(GObject.GObject):
             logging.exception('Error while loading favorite_activities.')
 
         self._merge_default_favorites()
+
+        self._desktop_model = desktop.get_model()
+        self._desktop_model.connect('desktop-view-icons-changed',
+                                    self.__desktop_view_icons_changed_cb)
+
+    def __desktop_view_icons_changed_cb(self, model):
+        number_of_views = desktop.get_number_of_views()
+        if len(self._last_defaults_mtime) < number_of_views:
+            for i in range(number_of_views - len(self._last_defaults_mtime)):
+                self._last_defaults_mtime.append(-1)
+        if len(self._favorite_bundles) < number_of_views:
+            for i in range(number_of_views - len(self._favorite_bundles)):
+                self._favorite_bundles.append({})
+        try:
+            self._load_favorites()
+        except Exception:
+            logging.exception('Error while loading favorite_activities.')
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
@@ -154,39 +176,49 @@ class BundleRegistry(GObject.GObject):
         return '%s %s' % (bundle_id, version)
 
     def _load_favorites(self):
-        favorites_path = env.get_profile_path('favorite_activities')
-        if os.path.exists(favorites_path):
-            favorites_data = json.load(open(favorites_path))
+        for i in range(desktop.get_number_of_views()):
+            # Special-case 0 for backward compatibility
+            if i == 0:
+                favorites_path = env.get_profile_path('favorite_activities')
+            else:
+                favorites_path = env.get_profile_path(
+                    'favorite_activities_%d' % (i))
+            if os.path.exists(favorites_path):
+                favorites_data = json.load(open(favorites_path))
 
-            favorite_bundles = favorites_data['favorites']
-            if not isinstance(favorite_bundles, dict):
-                raise ValueError('Invalid format in %s.' % favorites_path)
-            if favorite_bundles:
-                first_key = favorite_bundles.keys()[0]
-                if not isinstance(first_key, basestring):
+                favorite_bundles = favorites_data['favorites']
+                if not isinstance(favorite_bundles, dict):
                     raise ValueError('Invalid format in %s.' % favorites_path)
+                if favorite_bundles:
+                    first_key = favorite_bundles.keys()[0]
+                    if not isinstance(first_key, basestring):
+                        raise ValueError('Invalid format in %s.' %
+                                         favorites_path)
 
-                first_value = favorite_bundles.values()[0]
-                if first_value is not None and \
-                   not isinstance(first_value, dict):
-                    raise ValueError('Invalid format in %s.' % favorites_path)
+                    first_value = favorite_bundles.values()[0]
+                    if first_value is not None and \
+                       not isinstance(first_value, dict):
+                        raise ValueError('Invalid format in %s.' %
+                                         favorites_path)
 
-            self._last_defaults_mtime = float(favorites_data['defaults-mtime'])
-            self._favorite_bundles = favorite_bundles
+                self._last_defaults_mtime[i] = \
+                    float(favorites_data['defaults-mtime'])
+                self._favorite_bundles[i] = favorite_bundles
 
     def _merge_default_favorites(self):
+        # Only merge defaults to _DEFAULT_VIEW
         default_activities = []
         defaults_path = os.environ["SUGAR_ACTIVITIES_DEFAULTS"]
         if os.path.exists(defaults_path):
             file_mtime = os.stat(defaults_path).st_mtime
-            if file_mtime > self._last_defaults_mtime:
+            if file_mtime > self._last_defaults_mtime[_DEFAULT_VIEW]:
                 f = open(defaults_path, 'r')
                 for line in f.readlines():
                     line = line.strip()
                     if line and not line.startswith('#'):
                         default_activities.append(line)
                 f.close()
-                self._last_defaults_mtime = file_mtime
+                self._last_defaults_mtime[_DEFAULT_VIEW] = file_mtime
 
         if not default_activities:
             return
@@ -201,12 +233,13 @@ class BundleRegistry(GObject.GObject):
 
             key = self._get_favorite_key(bundle_id, max_version)
             if NormalizedVersion(max_version) > NormalizedVersion('0') and \
-                    key not in self._favorite_bundles:
-                self._favorite_bundles[key] = None
+                    key not in self._favorite_bundles[_DEFAULT_VIEW]:
+                self._favorite_bundles[_DEFAULT_VIEW][key] = None
 
-        logging.debug('After merging: %r', self._favorite_bundles)
+        logging.debug('After merging: %r',
+                      self._favorite_bundles[_DEFAULT_VIEW])
 
-        self._write_favorites_file()
+        self._write_favorites_file(_DEFAULT_VIEW)
 
     def get_bundle(self, bundle_id):
         """Returns an bundle given his service name"""
@@ -344,65 +377,75 @@ class BundleRegistry(GObject.GObject):
         raise ValueError('No bundle %r with version %r exists.' %
                         (bundle_id, version))
 
-    def set_bundle_favorite(self, bundle_id, version, favorite):
-        changed = self._set_bundle_favorite(bundle_id, version, favorite)
+    def set_bundle_favorite(self, bundle_id, version, favorite,
+                            favorite_view=0):
+        changed = self._set_bundle_favorite(bundle_id, version, favorite,
+                                            favorite_view)
         if changed:
             bundle = self._find_bundle(bundle_id, version)
             self.emit('bundle-changed', bundle)
 
-    def _set_bundle_favorite(self, bundle_id, version, favorite):
+    def _set_bundle_favorite(self, bundle_id, version, favorite,
+                             favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        if favorite and not key in self._favorite_bundles:
-            self._favorite_bundles[key] = None
-        elif not favorite and key in self._favorite_bundles:
-            del self._favorite_bundles[key]
+        if favorite and not key in self._favorite_bundles[favorite_view]:
+            self._favorite_bundles[favorite_view][key] = None
+        elif not favorite and key in self._favorite_bundles[favorite_view]:
+            del self._favorite_bundles[favorite_view][key]
         else:
             return False
 
-        self._write_favorites_file()
+        self._write_favorites_file(favorite_view)
         return True
 
-    def is_bundle_favorite(self, bundle_id, version):
+    def is_bundle_favorite(self, bundle_id, version, favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        return key in self._favorite_bundles
+        return key in self._favorite_bundles[favorite_view]
 
     def is_activity_protected(self, bundle_id):
         return bundle_id in self._protected_activities
 
-    def set_bundle_position(self, bundle_id, version, x, y):
+    def set_bundle_position(self, bundle_id, version, x, y, favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        if key not in self._favorite_bundles:
+        if key not in self._favorite_bundles[favorite_view]:
             raise ValueError('Bundle %s %s not favorite' %
                              (bundle_id, version))
 
-        if self._favorite_bundles[key] is None:
-            self._favorite_bundles[key] = {}
-        if 'position' not in self._favorite_bundles[key] or \
-                [x, y] != self._favorite_bundles[key]['position']:
-            self._favorite_bundles[key]['position'] = [x, y]
+        if self._favorite_bundles[favorite_view][key] is None:
+            self._favorite_bundles[favorite_view][key] = {}
+        if 'position' not in self._favorite_bundles[favorite_view][key] or \
+                [x, y] != \
+                self._favorite_bundles[favorite_view][key]['position']:
+            self._favorite_bundles[favorite_view][key]['position'] = [x, y]
         else:
             return
 
-        self._write_favorites_file()
+        self._write_favorites_file(favorite_view)
         bundle = self._find_bundle(bundle_id, version)
         self.emit('bundle-changed', bundle)
 
-    def get_bundle_position(self, bundle_id, version):
+    def get_bundle_position(self, bundle_id, version, favorite_view=0):
         """Get the coordinates where the user wants the representation of this
         bundle to be displayed. Coordinates are relative to a 1000x1000 area.
         """
         key = self._get_favorite_key(bundle_id, version)
-        if key not in self._favorite_bundles or \
-                self._favorite_bundles[key] is None or \
-                'position' not in self._favorite_bundles[key]:
+        if key not in self._favorite_bundles[favorite_view] or \
+                self._favorite_bundles[favorite_view][key] is None or \
+                'position' not in self._favorite_bundles[favorite_view][key]:
             return (-1, -1)
         else:
-            return tuple(self._favorite_bundles[key]['position'])
+            return \
+                tuple(self._favorite_bundles[favorite_view][key]['position'])
 
-    def _write_favorites_file(self):
-        path = env.get_profile_path('favorite_activities')
-        favorites_data = {'defaults-mtime': self._last_defaults_mtime,
-                          'favorites': self._favorite_bundles}
+    def _write_favorites_file(self, favorite_view):
+        if favorite_view == 0:
+            path = env.get_profile_path('favorite_activities')
+        else:
+            path = env.get_profile_path('favorite_activities_%d' %
+                                        (favorite_view))
+        favorites_data = {
+            'defaults-mtime': self._last_defaults_mtime[favorite_view],
+            'favorites': self._favorite_bundles[favorite_view]}
         json.dump(favorites_data, open(path, 'w'), indent=1)
 
     def is_installed(self, bundle):
