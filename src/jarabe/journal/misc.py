@@ -182,24 +182,9 @@ def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
 
     # Are we launching a bundle?
     if ds_bundle is not None and bundle_id is None:
-        uri = None
-        activity_bundle_id = None
-
-        if is_activity_bundle(metadata):
-            activity_bundle_id = ds_bundle.get_bundle_id()
-        if is_content_bundle(metadata):
-            activities = _get_activities_for_mime('text/html')
-            if len(activities) == 0:
-                logging.warning('No activity can open HTML content bundles')
-                return
-
-            activity_bundle_id = activities[0].get_bundle_id()
-            uri = ds_bundle.get_start_uri()
-            logging.debug('Launching content bundle with uri %s', uri)
-
-        activity_bundle = registry.get_bundle(activity_bundle_id)
+        activity_bundle = registry.get_bundle(ds_bundle.get_bundle_id())
         if activity_bundle is not None:
-            launch(activity_bundle, uri=uri)
+            launch(activity_bundle)
         return
 
     # Otherwise we are launching a regular journal entry
@@ -231,6 +216,17 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
                   bundle.get_bundle_id(), activity_id, object_id, uri)
+
+    if isinstance(bundle, ContentBundle):
+        # Content bundles are a special case: we treat them as launching
+        # Browse with a specific URI.
+        uri = bundle.get_start_uri()
+        activities = _get_activities_for_mime('text/html')
+        if len(activities) == 0:
+            logging.error("No browser available for content bundle")
+            return
+        bundle = activities[0]
+        logging.debug('Launching content bundle with uri %s', uri)
 
     shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
