@@ -289,9 +289,9 @@ class BaseListView(Gtk.Bin):
             cell_text = self.sort_column.get_cells()[0]
             self.sort_column.set_attributes(cell_text,
                                             text=getattr(
-                                            ListModel, 'COLUMN_' +
-                                            property_.upper(),
-                                            ListModel.COLUMN_TIMESTAMP))
+                                                ListModel, 'COLUMN_' +
+                                                property_.upper(),
+                                                ListModel.COLUMN_TIMESTAMP))
         self._query = query_dict
 
         self.refresh()
