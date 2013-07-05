@@ -304,8 +304,6 @@ class FavoritesView(ViewContainer):
         registry.connect('bundle-changed', self.__activity_changed_cb)
 
     def _add_activity(self, activity_info):
-        if not isinstance(activity_info, ActivityBundle):
-            return
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
         icon = ActivityIcon(activity_info)
