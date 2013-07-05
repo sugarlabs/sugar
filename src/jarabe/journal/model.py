@@ -437,8 +437,12 @@ def _get_file_metadata(path, stat, fetch_preview=True):
     metadata = _get_file_metadata_from_json(dir_path, filename, fetch_preview)
     if metadata:
         if 'filesize' not in metadata:
-            metadata['filesize'] = stat.st_size
+            if stat is not None:
+                metadata['filesize'] = stat.st_size
         return metadata
+
+    if stat is None:
+        raise ValueError('File does not exist')
 
     mime_type, uncertain_result_ = Gio.content_type_guess(filename=path,
                                                           data=None)
