@@ -204,6 +204,14 @@ class BaseResultSet(object):
 
         return self._cache[self._position - self._offset]
 
+    def can_handle_favorite(self, metadata):
+        if self._favorite == '0':
+            return True
+
+        return ((metadata is not None) and
+                ('keep' in metadata.keys()) and
+                (str(metadata['keep']) == '1'))
+
 
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
@@ -266,6 +274,7 @@ class InplaceResultSet(BaseResultSet):
         self._mime_types = query.get('mime_type', [])
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
+        self._favorite = str(query.get('keep', 0))
 
     def setup(self):
         self._file_list = []
@@ -374,10 +383,14 @@ class InplaceResultSet(BaseResultSet):
         if S_IFMT(stat.st_mode) != S_IFREG:
             return
 
+        metadata = _get_file_metadata(full_path, stat,
+                                      fetch_preview=False)
+
+        if not self.can_handle_favorite(metadata):
+            return
+
         if self._regex is not None and \
                 not self._regex.match(full_path):
-            metadata = _get_file_metadata(full_path, stat,
-                                          fetch_preview=False)
             if not metadata:
                 return
             add_to_list = False
