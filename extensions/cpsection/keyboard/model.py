@@ -17,6 +17,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
+
 from gi.repository import Xkl
 from gi.repository import GConf
 from gi.repository import SugarExt
@@ -30,9 +32,16 @@ _MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
 def _item_str(s):
     '''Convert a zero-terminated byte array to a proper str'''
-
-    i = s.find(b'\x00')
-    return s[:i].decode("utf-8")
+    if isinstance(s, list):
+	string = ''
+	for c in s:
+            if c == 0:
+                break
+            string += chr(c).decode('utf-8')
+        return string
+    else:
+	i = s.find(b'\x00')
+        return s[:i].decode("utf-8")
 
 
 class KeyboardManager(object):
