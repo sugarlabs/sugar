@@ -730,6 +730,21 @@ def _write_entry_on_external_device(metadata, file_path):
         clean_name, extension_ = os.path.splitext(file_name)
         metadata['title'] = clean_name
 
+    _write_metadata_and_preview(metadata, file_name)
+
+    if not os.path.dirname(destination_path) == os.path.dirname(file_path):
+        shutil.copy(file_path, destination_path)
+    else:
+        _rename_entry_on_external_device(file_path, destination_path,
+                                         metadata_dir_path)
+
+    object_id = destination_path
+    created.send(None, object_id=object_id)
+
+    return object_id
+
+
+def _write_metadata_and_preview(metadata, file_name):
     metadata_copy = metadata.copy()
     metadata_copy.pop('mountpoint', None)
     metadata_copy.pop('uid', None)
@@ -767,17 +782,6 @@ def _write_entry_on_external_device(metadata, file_path):
             os.write(fh, preview)
             os.close(fh)
             os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
-
-    if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
-    else:
-        _rename_entry_on_external_device(file_path, destination_path,
-                                         metadata_dir_path)
-
-    object_id = destination_path
-    created.send(None, object_id=object_id)
-
-    return object_id
 
 
 def get_file_name(title, mime_type):
