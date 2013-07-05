@@ -17,8 +17,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-import logging
-
 from gi.repository import Xkl
 from gi.repository import GConf
 from gi.repository import SugarExt
