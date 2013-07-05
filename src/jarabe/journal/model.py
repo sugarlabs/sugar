@@ -674,7 +674,8 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
                                                 file_path,
                                                 transfer_ownership)
     else:
-        object_id = _write_entry_on_external_device(metadata, file_path)
+        object_id = _write_entry_on_external_device(metadata, file_path,
+                                                    transfer_ownership)
 
     return object_id
 
@@ -699,7 +700,8 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
-def _write_entry_on_external_device(metadata, file_path):
+def _write_entry_on_external_device(metadata, file_path,
+                                    transfer_ownership):
     """Create and update an entry copied from the
     DS to an external storage device.
 
@@ -732,11 +734,11 @@ def _write_entry_on_external_device(metadata, file_path):
 
     _write_metadata_and_preview(metadata, file_name)
 
-    if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
+    if (os.path.dirname(destination_path) == os.path.dirname(file_path)) or \
+       transfer_ownership:
+        _rename_entry_on_external_device(file_path, destination_path)
     else:
-        _rename_entry_on_external_device(file_path, destination_path,
-                                         metadata_dir_path)
+        shutil.copy(file_path, destination_path)
 
     object_id = destination_path
     created.send(None, object_id=object_id)
