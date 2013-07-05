@@ -28,13 +28,6 @@ _OPTIONS_KEY = '/desktop/sugar/peripherals/keyboard/options'
 _MODEL_KEY = '/desktop/sugar/peripherals/keyboard/model'
 
 
-def _item_str(s):
-    '''Convert a zero-terminated byte array to a proper str'''
-
-    i = s.find(b'\x00')
-    return s[:i].decode("utf-8")
-
-
 class KeyboardManager(object):
     def __init__(self, display):
         self._engine = Xkl.Engine.get_instance(display)
@@ -46,16 +39,16 @@ class KeyboardManager(object):
         self._gconf_client = GConf.Client.get_default()
 
     def _populate_one(self, config_registry, item, store):
-        store.append([_item_str(item.description), _item_str(item.name)])
+        store.append([item.get_description(), item.get_name()])
 
     def _populate_two(self, config_registry, item, subitem, store):
-        layout = _item_str(item.name)
+        layout = item.get_name()
         if subitem:
-            description = '%s, %s' % (_item_str(subitem.description),
-                                      _item_str(item.description))
-            variant = _item_str(subitem.name)
+            description = '%s, %s' % (subitem.get_description(),
+                                      item.get_description())
+            variant = subitem.get_name()
         else:
-            description = 'Default layout, %s' % _item_str(item.description)
+            description = 'Default layout, %s' % item.get_description()
             variant = ''
         store.append([description, ('%s(%s)' % (layout, variant))])
 
