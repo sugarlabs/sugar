@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-29 00:34-0400\n"
-"PO-Revision-Date: 2013-07-03 02:02+0200\n"
+"POT-Creation-Date: 2013-07-05 00:34-0400\n"
+"PO-Revision-Date: 2013-07-06 12:02+0200\n"
 "Last-Translator: andika <andika@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -665,7 +665,7 @@ msgstr "Kelompok"
 
 #: ../extensions/globalkey/screenshot.py:65
 #: ../src/jarabe/desktop/homewindow.py:214
-#: ../src/jarabe/desktop/viewtoolbar.py:62
+#: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "Rumah"
@@ -1086,7 +1086,7 @@ msgid "Restart now"
 msgstr "Mulai ulang sekarang"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
-#: ../src/jarabe/desktop/viewtoolbar.py:100
+#: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:88
 #, python-format
 msgid "Search in %s"
@@ -1101,44 +1101,44 @@ msgid "Done"
 msgstr "Selesai"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:373
+#: ../src/jarabe/desktop/favoritesview.py:374
 #: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:256
+#: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format
 msgid "Version %s"
 msgstr "Versi %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:427
 msgid "Clear search"
 msgstr "Bersihkan pencarian"
 
-#: ../src/jarabe/desktop/activitieslist.py:430
+#: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
 msgstr "Tak ada aktivitas yang cocok"
 
-#: ../src/jarabe/desktop/activitieslist.py:466
+#: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
 msgstr "Konfirmasikan penghapusan"
 
-#: ../src/jarabe/desktop/activitieslist.py:468
+#: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr ""
 "Konfirmasikan penghapusan: Apakah anda yakin untuk secara permanen "
 "menghapuskan %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:472
+#: ../src/jarabe/desktop/activitieslist.py:511
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "Simpan"
 
-#: ../src/jarabe/desktop/activitieslist.py:475
-#: ../src/jarabe/desktop/activitieslist.py:532
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:578
 #: ../src/jarabe/journal/expandedentry.py:154
 #: ../src/jarabe/journal/journaltoolbox.py:438
 #: ../src/jarabe/journal/journaltoolbox.py:470
@@ -1146,11 +1146,11 @@ msgstr "Simpan"
 msgid "Erase"
 msgstr "Hapus"
 
-#: ../src/jarabe/desktop/activitieslist.py:547
+#: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
 msgstr "Hilangkan kesukaan"
 
-#: ../src/jarabe/desktop/activitieslist.py:551
+#: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
 msgstr "Buat jadi kesukaan"
 
@@ -1179,24 +1179,24 @@ msgstr "Kotak"
 msgid "Triangle"
 msgstr "Segi tiga"
 
-#: ../src/jarabe/desktop/favoritesview.py:364
+#: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
 msgstr "Pendaftaran Gagal"
 
-#: ../src/jarabe/desktop/favoritesview.py:367
+#: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
 msgstr "Pendaftaran Berhasil"
 
-#: ../src/jarabe/desktop/favoritesview.py:368
+#: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
 msgstr "Sekarang anda terdaftar di server sekolah anda."
 
-#: ../src/jarabe/desktop/favoritesview.py:652
+#: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
 msgstr "Daftarkan"
 
-#: ../src/jarabe/desktop/favoritesview.py:655
-#: ../src/jarabe/desktop/favoritesview.py:671
+#: ../src/jarabe/desktop/favoritesview.py:656
+#: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
 msgstr "Mendaftar lagi"
 
@@ -1260,21 +1260,21 @@ msgstr "Tidak dapat terhubung ke server."
 msgid "The server could not complete the request."
 msgstr "Servernya tidak dapat menyelesaikan permintaan anda."
 
-#: ../src/jarabe/desktop/viewtoolbar.py:80
+#: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
 msgstr "Tampilan daftar"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:81
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
+#: ../src/jarabe/desktop/viewtoolbar.py:97
+#: ../src/jarabe/desktop/viewtoolbar.py:195
+#: ../src/jarabe/desktop/viewtoolbar.py:209
+#, python-format, 
+msgid "<Ctrl>%d"
+msgstr "<Ctrl>%d"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:149
-msgid "Favorites view"
-msgstr "Tampilan kesukaan"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:150
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
+#: ../src/jarabe/desktop/viewtoolbar.py:208
+#, python-format, 
+msgid "Favorites view %d"
+msgstr "Tampilan favorit %d"
 
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
@@ -1565,12 +1565,12 @@ msgstr "Perangkat kosong"
 msgid "No matching entries"
 msgstr "Tidak ada masukan yang cocok"
 
-#: ../src/jarabe/journal/misc.py:256
+#: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr "Aktivitas Versi %s yang Lebih Lama"
 
-#: ../src/jarabe/journal/misc.py:257
+#: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr "Apakah Anda ingin menuruntingkatkan ke versi %s"
@@ -1929,6 +1929,9 @@ msgstr "Lihat sumber: %s"
 #, python-format
 msgid "View source: %r"
 msgstr "Lihat sumber: %r"
+
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
 
 #~ msgid "Update your activities to ensure compatibility with your new software"
 #~ msgstr ""
