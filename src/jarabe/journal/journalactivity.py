@@ -104,10 +104,10 @@ class JournalActivityDBusService(dbus.service.Object):
 
         return chooser_id
 
-    @dbus.service.method(J_DBUS_INTERFACE, in_signature='iss',
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='issb',
                          out_signature='s')
     def ChooseObjectWithFilter(self, parent_xid, what_filter='',
-                               filter_type=None):
+                               filter_type=None, show_preview=False):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
             display = Gdk.Display.get_default()
@@ -115,7 +115,7 @@ class JournalActivityDBusService(dbus.service.Object):
                 display, parent_xid)
         else:
             parent = None
-        chooser = ObjectChooser(parent, what_filter, filter_type)
+        chooser = ObjectChooser(parent, what_filter, filter_type, show_preview)
         chooser.connect('response', self._chooser_response_cb, chooser_id)
         chooser.show()
 
