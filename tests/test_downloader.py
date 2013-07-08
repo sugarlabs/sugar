@@ -80,3 +80,14 @@ class TestDownloader(unittest.TestCase):
             Gtk.main_iteration()
 
         self.assertEqual("hello\n", self._result.get_data())
+
+    def test_get_size(self):
+        downloader = Downloader("http://0.0.0.0:%d/data/test.txt" % self._port)
+        self._complete = False
+        downloader.connect('complete', self.download_complete_cb)
+        downloader.get_size()
+
+        while not self._complete:
+            Gtk.main_iteration()
+
+        self.assertEqual(6, self._result)
