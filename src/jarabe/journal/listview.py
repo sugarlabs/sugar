@@ -70,8 +70,9 @@ class BaseListView(Gtk.Bin):
         'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
-    def __init__(self):
+    def __init__(self, enable_multi_operations=False):
         self._query = {}
+        self._enable_multi_operations = enable_multi_operations
         self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
@@ -137,6 +138,20 @@ class BaseListView(Gtk.Bin):
             return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
+        if self._enable_multi_operations:
+            cell_select = Gtk.CellRendererToggle()
+            cell_select.connect('toggled', self.__cell_select_toggled_cb)
+            cell_select.props.activatable = True
+            cell_select.props.xpad = style.DEFAULT_PADDING
+            cell_select.props.indicator_size = style.zoom(26)
+
+            column = Gtk.TreeViewColumn()
+            column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+            column.props.fixed_width = style.GRID_CELL_SIZE
+            column.pack_start(cell_select, True)
+            column.set_cell_data_func(cell_select, self.__select_set_data_cb)
+            self.tree_view.append_column(column)
+
         cell_favorite = CellRendererFavorite(self.tree_view)
         cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
@@ -279,6 +294,18 @@ class BaseListView(Gtk.Bin):
         else:
             metadata['keep'] = '1'
         model.write(metadata, update_mtime=False)
+
+    def __select_set_data_cb(self, column, cell, tree_model, tree_iter,
+                             data):
+        uid = tree_model[tree_iter][ListModel.COLUMN_UID]
+        if uid is None:
+            return
+        cell.props.active = self._model.is_selected(uid)
+
+    def __cell_select_toggled_cb(self, cell, path):
+        tree_iter = self._model.get_iter(path)
+        uid = self._model[tree_iter][ListModel.COLUMN_UID]
+        self._model.set_selected(uid, not cell.get_active())
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
@@ -513,8 +540,8 @@ class ListView(BaseListView):
                                 ([])),
     }
 
-    def __init__(self):
-        BaseListView.__init__(self)
+    def __init__(self, enable_multi_operations=False):
+        BaseListView.__init__(self, enable_multi_operations)
         self._is_dragging = False
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)

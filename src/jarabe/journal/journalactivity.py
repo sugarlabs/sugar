@@ -193,7 +193,7 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
         self._main_view.set_can_focus(True)
 
-        self._list_view = ListView()
+        self._list_view = ListView(enable_multi_operations=True)
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
         self._list_view.connect('volume-error', self.__volume_error_cb)
