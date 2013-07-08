@@ -161,16 +161,16 @@ class Updater(GObject.GObject):
         self._downloader = Downloader(self._bundle_update.link)
         self._downloader.connect('progress', self.__downloader_progress_cb)
         self._downloader.connect('complete', self.__downloader_complete_cb)
-        self._downloader.run()
+        self._downloader.download_to_temp()
 
-    def __downloader_complete_cb(self, downloader, error):
+    def __downloader_complete_cb(self, downloader, result):
         if self._cancelling:
             self._cleanup_downloader()
             self._finished(True)
             return
 
-        if error is not None:
-            _logger.error('Error downloading update: %s', error)
+        if isinstance(result, Exception):
+            _logger.error('Error downloading update: %s', result)
             self._cleanup_downloader()
             self._bundles_failed.append(self._bundle_update)
             self._download_next_update()
