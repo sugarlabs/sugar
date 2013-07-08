@@ -17,15 +17,12 @@
 
 import logging
 from gettext import gettext as _
-import StringIO
 import time
 import os
 
-import cairo
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Gdk
 import json
 
 from sugar3.graphics import style
@@ -34,6 +31,7 @@ from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.alert import Alert
 from sugar3.util import format_size
+from sugar3.graphics.objectchooser import get_preview_pixbuf
 
 from jarabe.journal.keepicon import KeepIcon
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -349,57 +347,17 @@ class ExpandedEntry(Gtk.EventBox):
         return date
 
     def _create_preview(self):
-        width = style.zoom(320)
-        height = style.zoom(240)
 
         box = Gtk.EventBox()
         box.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        if len(self._metadata.get('preview', '')) > 4:
-            if self._metadata['preview'][1:4] == 'PNG':
-                preview_data = self._metadata['preview']
-            else:
-                # TODO: We are close to be able to drop this.
-                import base64
-                preview_data = base64.b64decode(
-                    self._metadata['preview'])
-
-            png_file = StringIO.StringIO(preview_data)
-            try:
-                # Load image and scale to dimensions
-                im = Gtk.Image()
-                surface = cairo.ImageSurface.create_from_png(png_file)
-                png_width = surface.get_width()
-                png_height = surface.get_height()
-
-                preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
-                                                     width, height)
-                cr = cairo.Context(preview_surface)
-
-                scale_w = width * 1.0 / png_width
-                scale_h = height * 1.0 / png_height
-                scale = min(scale_w, scale_h)
-
-                cr.scale(scale, scale)
-
-                cr.set_source_rgba(1, 1, 1, 0)
-                cr.set_operator(cairo.OPERATOR_SOURCE)
-                cr.paint()
-                cr.set_source_surface(surface)
-                cr.paint()
-
-                pixbuf_bg = Gdk.pixbuf_get_from_surface(preview_surface, 0, 0,
-                                                        width, height)
-                im.set_from_pixbuf(pixbuf_bg)
-
-                has_preview = True
-            except Exception:
-                logging.exception('Error while loading the preview')
-                has_preview = False
-        else:
-            has_preview = False
+        metadata = self._metadata
+        pixbuf = get_preview_pixbuf(metadata.get('preview', ''))
+        has_preview = pixbuf is not None
 
         if has_preview:
+            im = Gtk.Image()
+            im.set_from_pixbuf(pixbuf)
             box.add(im)
             im.show()
         else:
