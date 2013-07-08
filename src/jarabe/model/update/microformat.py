@@ -32,7 +32,6 @@ from threading import Thread
 from urlparse import urljoin
 from HTMLParser import HTMLParser
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GConf
@@ -42,6 +41,7 @@ from sugar3.bundle.bundleversion import NormalizedVersion, InvalidVersionError
 from jarabe.util import httprange
 from jarabe.model import bundleregistry
 from jarabe.model.update import BundleUpdate
+from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('microformat')
 _MICROFORMAT_URL_KEY = "/desktop/sugar/update/microformat_update_url"
@@ -177,39 +177,25 @@ class MicroformatUpdater(object):
             return
 
         self._parser = _UpdateHTMLParser(url)
-        gfile = Gio.File.new_for_uri(url)
-        gfile.read_async(GLib.PRIORITY_DEFAULT, None,
-                         self._file_read_async_cb, None)
+        downloader = Downloader(url)
+        downloader.connect('got-chunk', self._got_chunk_cb)
+        downloader.connect('complete', self._complete_cb)
+        downloader.download_chunked()
         self._progress_cb(None, 0)
 
-    def _file_read_async_cb(self, gfile, result, user_data):
-        try:
-            stream = gfile.read_finish(result)
-        except Exception:
-            _logger.exception("Couldn't query update URL")
-            self._completion_cb([])
-            return
-
-        stream.read_bytes_async(512 * 1024, GLib.PRIORITY_DEFAULT,
-                                None, self._stream_read_async_cb, None)
-
-    def _stream_read_async_cb(self, stream, result, user_data):
-        data = stream.read_bytes_finish(result)
-        if data is None:
-            _logger.warning("Failed to read update info")
-            self._completion_cb([])
-            return
-        elif data.get_size() == 0:
-            stream.close(None)
-            self._parser.close()
-            _logger.debug("Found %d activities", len(self._parser.results))
-            self._filter_results()
-            self._check_next_update()
-            return
-
+    def _got_chunk_cb(self, downloader, data):
         self._parser.feed(data.get_data())
-        stream.read_bytes_async(512 * 1024, GLib.PRIORITY_DEFAULT, None,
-                                self._stream_read_async_cb, None)
+
+    def _complete_cb(self, downloader, result):
+        if isinstance(result, Exception):
+            _logger.warning("Failed to read update info: %s", result)
+            self._completion_cb([])
+            return
+
+        self._parser.close()
+        _logger.debug("Found %d activities", len(self._parser.results))
+        self._filter_results()
+        self._check_next_update()
 
     def _filter_results(self):
         # Remove updates for which we already have an equivalent or newer
@@ -249,9 +235,9 @@ class MicroformatUpdater(object):
         if self._bundle_update.name is not None:
             # if we know the name, we just perform an asynchronous size check
             _logger.debug("Performing async size lookup")
-            check_file = Gio.File.new_for_uri(self._bundle_update.link)
-            check_file.read_async(GLib.PRIORITY_DEFAULT, None,
-                                  self._size_lookup_async_cb, None)
+            size_check = Downloader(self._bundle_update.link)
+            size_check.connect('complete', self._size_lookup_cb)
+            size_check.get_size()
             self._progress_cb(self._bundle_update.name, progress)
         else:
             # if we don't know the name, we run a metadata lookup and get
@@ -262,17 +248,13 @@ class MicroformatUpdater(object):
             namelookup.run()
             self._progress_cb(self._bundle_update.bundle_id, progress)
 
-    def _size_lookup_async_cb(self, gfile, result, user_data):
-        try:
-            input_stream = gfile.read_finish(result)
-        except:
-            _logger.exception("Failed to check activity")
-            self._check_next_update()
-            return
+    def _size_lookup_cb(self, downloader, result):
+        if isinstance(result, Exception):
+            _logger.warning("Failed to perform size lookup: %s", result)
+        else:
+            self._bundle_update.size = result()
+            self._updates.append(self._bundle_update)
 
-        info = input_stream.query_info(Gio.FILE_ATTRIBUTE_STANDARD_SIZE, None)
-        self._bundle_update.size = info.get_size()
-        self._updates.append(self._bundle_update)
         GLib.idle_add(self._check_next_update)
 
     def _name_lookup_complete(self, lookup, result, size):

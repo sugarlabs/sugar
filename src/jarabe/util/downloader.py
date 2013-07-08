@@ -48,6 +48,9 @@ class Downloader(GObject.GObject):
         'progress': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      ([float])),
+        'got-chunk': (GObject.SignalFlags.RUN_FIRST,
+                      None,
+                      (object,)),
         'complete': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      (object,)),
@@ -55,7 +58,7 @@ class Downloader(GObject.GObject):
 
     def __init__(self, url, session=None):
         GObject.GObject.__init__(self)
-        url = Soup.URI.new(url)
+        self._uri = Soup.URI.new(url)
         self._session = session or get_soup_session()
         self._pending_buffers = []
         self._downloaded_size = 0
@@ -64,8 +67,10 @@ class Downloader(GObject.GObject):
         self._status_code = None
         self._output_file = None
         self._output_stream = None
+        self._message = None
 
-        self._message = Soup.Message(method="GET", uri=url)
+    def _setup_message(self, method="GET"):
+        self._message = Soup.Message(method=method, uri=self._uri)
         self._message.connect('got-chunk', self._got_chunk_cb)
         self._message.connect('got-headers', self._headers_cb, None)
 
@@ -76,12 +81,21 @@ class Downloader(GObject.GObject):
         is saved. Upon completion, a successful download is indicated by a
         result of None in the complete signal parameters.
         """
-        url = self._message.get_uri().to_string(False)
+        url = self._uri.to_string(False)
         temp_file_path = self._get_temp_file_path(url)
         self._output_file = Gio.File.new_for_path(temp_file_path)
         self._output_stream = self._output_file.create(
             Gio.FileCreateFlags.PRIVATE, None)
+        self.download_chunked()
 
+    def download_chunked(self):
+        """
+        Download the contents of the provided URL into memory. The download
+        is done in chunks, and each chunk is emitted over the 'got-chunk'
+        signal. Upon completion, a successful download is indicated by a
+        reuslt of None in the complete signal parameters.
+        """
+        self._setup_message()
         self._message.response_body.set_accumulate(False)
         self._session.queue_message(self._message, self._message_cb, None)
 
@@ -91,6 +105,15 @@ class Downloader(GObject.GObject):
         Upon completion, the downloaded data will be passed as GBytes to the
         result parameter of the complete signal handler.
         """
+        self._setup_message()
+        self._session.queue_message(self._message, self._message_cb, None)
+
+    def get_size(self):
+        """
+        Perform a HTTP HEAD request to find the size of the remote content.
+        The size is returned in the result parameter of the 'complete' signal.
+        """
+        self._setup_message("HEAD")
         self._session.queue_message(self._message, self._message_cb, None)
 
     def _message_cb(self, session, message, user_data):
@@ -110,8 +133,10 @@ class Downloader(GObject.GObject):
                 not soup_status_is_successful(message.status_code):
             return
 
+        data = buf.get_as_bytes()
+        self.emit('got-chunk', data)
         if self._output_stream:
-            self._pending_buffers.append(buf.get_as_bytes())
+            self._pending_buffers.append(data)
             self._write_next_buffer()
 
     def __write_async_cb(self, output_stream, result, user_data):
@@ -130,7 +155,10 @@ class Downloader(GObject.GObject):
 
         result = None
         if soup_status_is_successful(self._status_code):
-            if self._message.response_body.get_accumulate():
+            if self._message.method == "HEAD":
+                # this is a get_size request
+                result = self._total_size
+            elif self._message.response_body.get_accumulate():
                 # the message body must be flattened so that it can be
                 # retrieved as GBytes because response_body.data gets
                 # incorrectly treated by introspection as a NULL-terminated
