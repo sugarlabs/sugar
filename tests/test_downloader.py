@@ -66,20 +66,31 @@ class TestDownloader(unittest.TestCase):
     def _run_http_server(self):
         self._server.serve_forever()
 
-    def download_complete_cb(self, downloader, error):
+    def download_complete_cb(self, downloader, result):
         self._complete = True
-        self._error = error
+        self._result = result
+
+    def test_download_to_temp(self):
+        downloader = Downloader("http://0.0.0.0:%d/data/test.txt" % self._port)
+        self._complete = False
+        downloader.connect('complete', self.download_complete_cb)
+        downloader.download_to_temp()
+
+        while not self._complete:
+            Gtk.main_iteration()
+
+        self.assertIsNone(self._result)
+        path = downloader.get_local_file_path()
+        text = open(path, "r").read()
+        self.assertEqual("hello\n", text)
 
     def test_download(self):
         downloader = Downloader("http://0.0.0.0:%d/data/test.txt" % self._port)
         self._complete = False
         downloader.connect('complete', self.download_complete_cb)
-        downloader.run()
+        downloader.download()
 
         while not self._complete:
             Gtk.main_iteration()
 
-        self.assertIsNone(self._error)
-        path = downloader.get_local_file_path()
-        text = open(path, "r").read()
-        self.assertEqual("hello\n", text)
+        self.assertEqual("hello\n", self._result.get_data())

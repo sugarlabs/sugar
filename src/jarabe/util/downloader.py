@@ -55,7 +55,6 @@ class Downloader(GObject.GObject):
 
     def __init__(self, url, session=None):
         GObject.GObject.__init__(self)
-        temp_file_path = self._get_temp_file_path(url)
         url = Soup.URI.new(url)
         self._session = session or get_soup_session()
         self._pending_buffers = []
@@ -63,17 +62,35 @@ class Downloader(GObject.GObject):
         self._total_size = 0
         self._cancelling = False
         self._status_code = None
-
-        self._output_file = Gio.File.new_for_path(temp_file_path)
-        self._output_stream = self._output_file.create(
-            Gio.FileCreateFlags.PRIVATE, None)
+        self._output_file = None
+        self._output_stream = None
 
         self._message = Soup.Message(method="GET", uri=url)
         self._message.connect('got-chunk', self._got_chunk_cb)
         self._message.connect('got-headers', self._headers_cb, None)
-        self._message.request_body.set_accumulate(False)
 
-    def run(self):
+    def download_to_temp(self):
+        """
+        Download the contents of the provided URL to temporary file storage.
+        Use .get_local_file_path() to find the location of where the file
+        is saved. Upon completion, a successful download is indicated by a
+        result of None in the complete signal parameters.
+        """
+        url = self._message.get_uri().to_string(False)
+        temp_file_path = self._get_temp_file_path(url)
+        self._output_file = Gio.File.new_for_path(temp_file_path)
+        self._output_stream = self._output_file.create(
+            Gio.FileCreateFlags.PRIVATE, None)
+
+        self._message.response_body.set_accumulate(False)
+        self._session.queue_message(self._message, self._message_cb, None)
+
+    def download(self):
+        """
+        Download the contents of the provided URL into memory.
+        Upon completion, the downloaded data will be passed as GBytes to the
+        result parameter of the complete signal handler.
+        """
         self._session.queue_message(self._message, self._message_cb, None)
 
     def _message_cb(self, session, message, user_data):
@@ -93,8 +110,9 @@ class Downloader(GObject.GObject):
                 not soup_status_is_successful(message.status_code):
             return
 
-        self._pending_buffers.append(buf.get_as_bytes())
-        self._write_next_buffer()
+        if self._output_stream:
+            self._pending_buffers.append(buf.get_as_bytes())
+            self._write_next_buffer()
 
     def __write_async_cb(self, output_stream, result, user_data):
         count = output_stream.write_bytes_finish(result)
@@ -107,11 +125,20 @@ class Downloader(GObject.GObject):
         self._check_if_finished()
 
     def _complete(self):
-        error = None
-        if not soup_status_is_successful(self._status_code):
-            error = IOError("HTTP error code %d" % self._status_code)
-        self._output_stream.close(None)
-        self.emit('complete', error)
+        if self._output_stream:
+            self._output_stream.close(None)
+
+        result = None
+        if soup_status_is_successful(self._status_code):
+            if self._message.response_body.get_accumulate():
+                # the message body must be flattened so that it can be
+                # retrieved as GBytes because response_body.data gets
+                # incorrectly treated by introspection as a NULL-terminated
+                # string
+                result = self._message.response_body.flatten().get_as_bytes()
+        else:
+            result = IOError("HTTP error code %d" % self._status_code)
+        self.emit('complete', result)
 
     def _check_if_finished(self):
         # To finish (for both successful completion and cancellation), we
@@ -119,6 +146,10 @@ class Downloader(GObject.GObject):
         #  1. Soup message callback has been called
         #  2. Any pending output file write completes
         # Those conditions can become true in either order.
+        if not self._output_stream:
+            self._complete()
+            return
+
         if self._cancelling or not self._pending_buffers:
             if self._status_code is not None \
                     and not self._output_stream.has_pending():
@@ -150,4 +181,5 @@ class Downloader(GObject.GObject):
         return file_path
 
     def get_local_file_path(self):
-        return self._output_file.get_path()
+        if self._output_file:
+            return self._output_file.get_path()
