@@ -81,6 +81,7 @@ class MainToolbox(ToolbarBox):
 
         self._mount_point = None
         self._filter_type = None
+        self._what_filter = None
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -306,6 +307,7 @@ class MainToolbox(ToolbarBox):
     def update_filters(self, mount_point, what_filter, filter_type=None):
         self._mount_point = mount_point
         self._filter_type = filter_type
+        self._what_filter = what_filter
         self.set_what_filter(what_filter)
         self._update_if_needed()
 
@@ -382,7 +384,10 @@ class MainToolbox(ToolbarBox):
 
     def clear_query(self):
         self.search_entry.props.text = ''
-        self._what_search_combo.set_active(0)
+        if self._what_filter is None:
+            self._what_search_combo.set_active(0)
+        else:
+            self.set_what_filter(self._what_filter)
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False
 
