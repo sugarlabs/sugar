@@ -234,6 +234,11 @@ class Updater(GObject.GObject):
                 pass
 
     def cancel(self):
+        # From STATE_CHECKED we can cancel immediately.
+        if self._state == STATE_CHECKED:
+            self._state = STATE_IDLE
+            return
+
         self._cancelling = True
         self._model.cancel()
         if self._downloader:
