@@ -28,7 +28,6 @@ import logging
 from StringIO import StringIO
 from ConfigParser import ConfigParser
 from zipfile import ZipFile
-from threading import Thread
 from urlparse import urljoin
 from HTMLParser import HTMLParser
 
@@ -166,8 +165,8 @@ class MicroformatUpdater(object):
      2. For each activity update:
        a) If we already have this activity installed, use GIO to asynchronously
           lookup the size of the download.
-       b) If we don't have the activity installed, use ThreadedMetadataLookup
-          to lookup activity name and size in a thread.
+       b) If we don't have the activity installed, use MetadataLookup
+          to lookup activity name and size.
     """
     def _query(self):
         url = GConf.Client.get_default().get_string(_MICROFORMAT_URL_KEY)
@@ -242,8 +241,8 @@ class MicroformatUpdater(object):
         else:
             # if we don't know the name, we run a metadata lookup and get
             # the size and name that way
-            _logger.debug("Performing threaded metadata lookup")
-            namelookup = ThreadedMetadataLookup(self._bundle_update.link)
+            _logger.debug("Performing metadata lookup")
+            namelookup = MetadataLookup(self._bundle_update.link)
             namelookup.connect('complete', self._name_lookup_complete)
             namelookup.run()
             self._progress_cb(self._bundle_update.bundle_id, progress)
@@ -290,16 +289,12 @@ class MicroformatUpdater(object):
         self._cancelling = True
 
 
-class ThreadedMetadataLookup(GObject.GObject):
+class MetadataLookup(GObject.GObject):
     """
     Look up the localized activity name and size of a bundle.
 
     This is useful when no previous version of the activity is installed,
     and there is no local source of the activity's name.
-
-    This is implemented using blocking standard library calls, so the
-    actual lookup is done in a thread. The result is then reported via a signal
-    emission in the main thread.
     """
     __gsignals__ = {
         'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int)),
@@ -311,9 +306,6 @@ class ThreadedMetadataLookup(GObject.GObject):
         self._size = None
 
     def run(self):
-        Thread(target=self._name_lookup).start()
-
-    def _name_lookup(self):
         # Perform the name lookup, catch any exceptions, and report the result.
         try:
             name = self._do_name_lookup()

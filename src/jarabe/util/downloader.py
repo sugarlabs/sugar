@@ -99,13 +99,17 @@ class Downloader(GObject.GObject):
         self._message.response_body.set_accumulate(False)
         self._session.queue_message(self._message, self._message_cb, None)
 
-    def download(self):
+    def download(self, start=None, end=None):
         """
         Download the contents of the provided URL into memory.
         Upon completion, the downloaded data will be passed as GBytes to the
         result parameter of the complete signal handler.
+        The start and end parameters can optionally be set to perform a
+        partial read of the remote data.
         """
         self._setup_message()
+        if start is not None:
+            self._message.request_headers.set_range(start, end)
         self._session.queue_message(self._message, self._message_cb, None)
 
     def get_size(self):
