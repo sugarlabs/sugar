@@ -1,4 +1,6 @@
+# -*- encoding: utf-8 -*-
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
+# Copyright (C) 2013 Miguel González
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,11 +17,26 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  US
 
 import logging
+import locale
+import os.path
+from xml.etree.cElementTree import ElementTree
+from gettext import gettext as _
 
 import dbus
 from gi.repository import GLib
+from gi.repository import GConf
 
 from jarabe.model import network
+
+
+PROVIDERS_PATH = ("/usr/share/mobile-broadband-provider-info/"
+                  "serviceproviders.xml")
+PROVIDERS_FORMAT_SUPPORTED = "2.0"
+COUNTRY_CODES_PATH = "/usr/share/zoneinfo/iso3166.tab"
+
+GCONF_SP_COUNTRY = '/desktop/sugar/network/gsm/country'
+GCONF_SP_PROVIDER = '/desktop/sugar/network/gsm/provider'
+GCONF_SP_PLAN = '/desktop/sugar/network/gsm/plan'
 
 
 def get_connection():
@@ -94,3 +111,268 @@ def set_modem_settings(modem_settings):
     _set_or_clear(gsm_settings, 'apn', apn)
     _set_or_clear(gsm_settings, 'pin', pin)
     connection.update_settings(settings)
+
+
+class ServiceProvidersError(Exception):
+    pass
+
+
+def _get_name(el):
+    language_code = locale.getdefaultlocale()[0]
+    LANG = language_code[0:2]
+    LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
+    tag = el.find('name[@%s="%s"]' % (LANG_NS_ATTR, LANG))
+    if tag is None:
+        tag = el.find('name')
+    if tag is not None:
+        name = tag.text
+    else:
+        name = None
+    return name
+
+
+class Country(object):
+    def __init__(self, idx, code, name):
+        self.idx = idx
+        self.code = code
+        self.name = name
+
+
+class Provider(object):
+    @classmethod
+    def from_xml(cls, idx, el):
+        name = _get_name(el)
+        return Provider(idx, name)
+
+    def __init__(self, idx, name):
+        self.idx = idx
+        self.name = name
+
+
+class Plan(object):
+    DEFAULT_NUMBER = '*99#'
+
+    @classmethod
+    def from_xml(cls, idx, el):
+        name = _get_name(el) or _('Plan #%s' % (idx + 1))
+        username_el = el.find('username')
+        password_el = el.find('password')
+        kwargs = {
+            'apn': el.get('value'),
+            'name': name,
+            'username': username_el.text if username_el is not None else None,
+            'password': password_el.text if password_el is not None else None,
+        }
+        return Plan(idx, **kwargs)
+
+    def __init__(self, idx, name, apn, username=None, password=None,
+                 number=None):
+        self.idx = idx
+        self.name = name
+        self.apn = apn
+        self.username = username or ''
+        self.password = password or ''
+        self.number = number or self.DEFAULT_NUMBER
+
+
+class CountryCodeDatabase(object):
+    def _load_country_names():
+        # Check ISO 3166 alpha-2 country code file exists
+        if not os.path.isfile(COUNTRY_CODES_PATH):
+            msg = ("Mobile broadband provider database: Country "
+                   "codes path %s not found.") % COUNTRY_CODES_PATH
+            logging.warning(msg)
+            raise ServiceProvidersError(msg)
+
+        # Load country code label mapping
+        data = {}
+        with open(COUNTRY_CODES_PATH) as codes_file:
+            for line in codes_file:
+                if line.startswith('#'):
+                    continue
+                code, name = line.split('\t')[:2]
+                data[code.lower()] = name.strip()
+        return data
+
+    _data = _load_country_names()
+
+    def get(self, country_code):
+        try:
+            return self._data[country_code]
+        except KeyError:
+            raise KeyError('Not found country name for code "%s"'
+                           % country_code)
+
+
+class ServiceProvidersParser(object):
+    def __init__(self):
+        # Check service provider database file exists
+        try:
+            tree = ElementTree(file=PROVIDERS_PATH)
+        except (IOError, SyntaxError), e:
+            msg = ("Mobile broadband provider database: Could not read "
+                   "provider information %s error=%s") % (PROVIDERS_PATH, e)
+            logging.warning(msg)
+            raise ServiceProvidersError(msg)
+
+        # Check service provider database format
+        self.root = tree.getroot()
+        if self.root.get('format') != PROVIDERS_FORMAT_SUPPORTED:
+            msg = ("Mobile broadband provider database: Could not "
+                   "read provider information. Wrong format.")
+            logging.warning(msg)
+            raise ServiceProvidersError(msg)
+
+        # Get locale LANGUAGE to retrieve correct name tag
+        language_code = locale.getdefaultlocale()[0]
+        self.LANG = language_code[0:2]
+        self.LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
+
+        # Populate countries list
+        names = CountryCodeDatabase()
+        self._countries = self.root.findall('country')
+        self._countries.sort(key=lambda x: names.get(x.attrib['code']))
+        self._country_codes = [c_el.attrib['code'] for c_el in self._countries]
+        self._country_names = [names.get(code) for code in self._country_codes]
+
+    def _get_country(self, country_idx):
+        return self._countries[country_idx]
+
+    def _get_provider(self, country_idx, provider_idx):
+        try:
+            return self.get_providers(country_idx)[provider_idx]
+        except IndexError:
+            return None
+
+    def get_country_idx_by_code(self, country_code):
+        return self._country_codes.index(country_code)
+
+    def get_country_name_by_idx(self, country_idx):
+        return self._country_names[country_idx]
+
+    def get_countries(self):
+        return self._countries
+
+    def get_providers(self, country_idx):
+        return [
+            provider
+            for provider in self._get_country(country_idx).findall('provider')
+            if provider.find('.//gsm')
+        ]
+
+    def get_plans(self, country_idx, provider_idx):
+        provider_el = self._get_provider(country_idx, provider_idx)
+        if provider_el is None:
+            plans = []
+        else:
+            plans = provider_el.findall('.//apn')
+        return plans
+
+
+class ServiceProvidersDatabase(object):
+    def __init__(self):
+        self._db = ServiceProvidersParser()
+        self._gconf = GConf.Client.get_default()
+
+        # Get initial values from GConf or default ones
+        country_code, provider_name, plan_idx = self._get_initials()
+
+        # Update status: countries, providers and plans
+        self._countries = self._db.get_countries()
+        country_idx = self._db.get_country_idx_by_code(country_code)
+        self._current_country = country_idx
+        self._providers = self._db.get_providers(self._current_country)
+
+        provider_idx = 0
+        for idx, provider_el in enumerate(self._providers):
+            name = _get_name(provider_el) or _('Provider %s' % idx)
+            if provider_name == name:
+                provider_idx = idx
+                break
+        self._current_provider = provider_idx
+        self._plans = self._db.get_plans(self._current_country,
+                                         self._current_provider)
+
+        self._current_plan = plan_idx
+
+    def _guess_country_code(self):
+        """Return country based on locale lang attribute."""
+        language_code = locale.getdefaultlocale()[0]
+        return language_code[3:5].lower()
+
+    def _get_initials(self):
+        """Retrieve values stored in GConf or get default ones."""
+        client = GConf.Client.get_default()
+        country_code = client.get_string(GCONF_SP_COUNTRY)
+        provider_name = client.get_string(GCONF_SP_PROVIDER).decode('utf-8')
+        plan_idx = client.get_int(GCONF_SP_PLAN)
+        return (country_code or self._guess_country_code(),
+                provider_name or '',
+                plan_idx or 0)
+
+    def set_country(self, idx):
+        self._current_country = idx
+        country = self.get_country()
+        self._gconf.set_string(GCONF_SP_COUNTRY, country.code)
+        self._providers = self._db.get_providers(self._current_country)
+        self.set_provider(0)
+        return country
+
+    def set_provider(self, idx):
+        self._current_provider = idx
+        provider = self.get_provider()
+        if provider is not None:
+            self._gconf.set_string(GCONF_SP_PROVIDER,
+                                   provider.name.encode('utf-8'))
+        self._plans = self._db.get_plans(self._current_country,
+                                         self._current_provider)
+        self.set_plan(0)
+        return provider
+
+    def set_plan(self, idx):
+        self._current_plan = idx
+        plan = self.get_plan()
+        if plan is not None:
+            self._gconf.set_int(GCONF_SP_PLAN, idx)
+        return plan
+
+    def get_countries(self):
+        countries = []
+        for idx, country_el in enumerate(self._countries):
+            country = Country(idx, country_el.attrib['code'],
+                              self._db.get_country_name_by_idx(idx))
+            countries.append(country)
+        return countries
+
+    def get_providers(self):
+        providers = []
+        for idx, provider_el in enumerate(self._providers):
+            provider = Provider.from_xml(idx, provider_el)
+            providers.append(provider)
+        return providers
+
+    def get_plans(self):
+        plans = []
+        for idx, apn_el in enumerate(self._plans):
+            plan = Plan.from_xml(idx, apn_el)
+            plans.append(plan)
+        return plans
+
+    def get_country(self):
+        country_el = self._countries[self._current_country]
+        return Country(self._current_country, country_el.attrib['code'],
+                       self._db.get_country_name_by_idx(self._current_country))
+
+    def get_provider(self):
+        if self._providers == []:
+            return None
+        else:
+            return Provider.from_xml(self._current_provider,
+                                     self._providers[self._current_provider])
+
+    def get_plan(self):
+        if self._plans == []:
+            return None
+        else:
+            return Plan.from_xml(self._current_plan,
+                                 self._plans[self._current_plan])
