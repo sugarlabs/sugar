@@ -141,7 +141,7 @@ class Updater(GObject.GObject):
 
     def _download_next_update(self):
         if self._cancelling:
-            self._cancel_updating()
+            self._finished(True)
             return
 
         if len(self._bundles_to_update) == 0:
@@ -160,38 +160,30 @@ class Updater(GObject.GObject):
 
         self._downloader = Downloader(self._bundle_update.link)
         self._downloader.connect('progress', self.__downloader_progress_cb)
-        self._downloader.connect('error', self.__downloader_error_cb)
         self._downloader.connect('complete', self.__downloader_complete_cb)
+        self._downloader.download_to_temp()
 
-    def __downloader_complete_cb(self, downloader):
+    def __downloader_complete_cb(self, downloader, result):
         if self._cancelling:
-            self._cancel_updating()
+            self._cleanup_downloader()
+            self._finished(True)
             return
 
-        self._install_update(self._bundle_update,
-                             self._downloader.get_local_file_path())
-        self._downloader = None
+        if isinstance(result, Exception):
+            _logger.error('Error downloading update: %s', result)
+            self._cleanup_downloader()
+            self._bundles_failed.append(self._bundle_update)
+            self._download_next_update()
+        else:
+            self._install_update(self._bundle_update,
+                                 self._downloader.get_local_file_path())
+            self._downloader = None
 
     def __downloader_progress_cb(self, downloader, progress):
-        if self._cancelling:
-            self._cancel_updating()
-            return
-
         total = self._total_bundles_to_update * 2
         current = total - len(self._bundles_to_update) * 2 - 2 + progress
         progress = current / float(total)
         self.emit('progress', self._state, self._bundle_update.name, progress)
-
-    def __downloader_error_cb(self, downloader, error_message):
-        _logger.error('Error downloading update:\n%s', error_message)
-        self._bundles_failed.append(self._bundle_update)
-
-        if self._cancelling:
-            self._cancel_updating()
-            return
-
-        if self._bundles_to_update:
-            self._download_next_update()
 
     def _install_update(self, bundle_update, local_file_path):
         self._state = STATE_UPDATING
@@ -242,19 +234,23 @@ class Updater(GObject.GObject):
                 pass
 
     def cancel(self):
-        self._model.cancel()
+        # From STATE_CHECKED we can cancel immediately.
+        if self._state == STATE_CHECKED:
+            self._state = STATE_IDLE
+            return
+
         self._cancelling = True
-
-    def _cancel_updating(self):
-        _logger.debug('Updater._cancel_updating')
-        if self._downloader is not None:
+        self._model.cancel()
+        if self._downloader:
             self._downloader.cancel()
-            file_path = self._downloader.get_local_file_path()
-            if file_path is not None and os.path.exists(file_path):
-                os.unlink(file_path)
-            self._downloader = None
 
-        self._finished(True)
+    def _cleanup_downloader(self):
+        if self._downloader is None:
+            return
+
+        file_path = self._downloader.get_local_file_path()
+        if file_path is not None and os.path.exists(file_path):
+            os.unlink(file_path)
 
 
 def get_instance():

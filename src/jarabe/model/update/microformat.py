@@ -28,11 +28,9 @@ import logging
 from StringIO import StringIO
 from ConfigParser import ConfigParser
 from zipfile import ZipFile
-from threading import Thread
 from urlparse import urljoin
 from HTMLParser import HTMLParser
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import GConf
@@ -42,6 +40,7 @@ from sugar3.bundle.bundleversion import NormalizedVersion, InvalidVersionError
 from jarabe.util import httprange
 from jarabe.model import bundleregistry
 from jarabe.model.update import BundleUpdate
+from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('microformat')
 _MICROFORMAT_URL_KEY = "/desktop/sugar/update/microformat_update_url"
@@ -166,8 +165,8 @@ class MicroformatUpdater(object):
      2. For each activity update:
        a) If we already have this activity installed, use GIO to asynchronously
           lookup the size of the download.
-       b) If we don't have the activity installed, use ThreadedMetadataLookup
-          to lookup activity name and size in a thread.
+       b) If we don't have the activity installed, use MetadataLookup
+          to lookup activity name and size.
     """
     def _query(self):
         url = GConf.Client.get_default().get_string(_MICROFORMAT_URL_KEY)
@@ -177,39 +176,25 @@ class MicroformatUpdater(object):
             return
 
         self._parser = _UpdateHTMLParser(url)
-        gfile = Gio.File.new_for_uri(url)
-        gfile.read_async(GLib.PRIORITY_DEFAULT, None,
-                         self._file_read_async_cb, None)
+        downloader = Downloader(url)
+        downloader.connect('got-chunk', self._got_chunk_cb)
+        downloader.connect('complete', self._complete_cb)
+        downloader.download_chunked()
         self._progress_cb(None, 0)
 
-    def _file_read_async_cb(self, gfile, result, user_data):
-        try:
-            stream = gfile.read_finish(result)
-        except Exception:
-            _logger.exception("Couldn't query update URL")
-            self._completion_cb([])
-            return
-
-        stream.read_bytes_async(512 * 1024, GLib.PRIORITY_DEFAULT,
-                                None, self._stream_read_async_cb, None)
-
-    def _stream_read_async_cb(self, stream, result, user_data):
-        data = stream.read_bytes_finish(result)
-        if data is None:
-            _logger.warning("Failed to read update info")
-            self._completion_cb([])
-            return
-        elif data.get_size() == 0:
-            stream.close(None)
-            self._parser.close()
-            _logger.debug("Found %d activities", len(self._parser.results))
-            self._filter_results()
-            self._check_next_update()
-            return
-
+    def _got_chunk_cb(self, downloader, data):
         self._parser.feed(data.get_data())
-        stream.read_bytes_async(512 * 1024, GLib.PRIORITY_DEFAULT, None,
-                                self._stream_read_async_cb, None)
+
+    def _complete_cb(self, downloader, result):
+        if isinstance(result, Exception):
+            _logger.warning("Failed to read update info: %s", result)
+            self._completion_cb([])
+            return
+
+        self._parser.close()
+        _logger.debug("Found %d activities", len(self._parser.results))
+        self._filter_results()
+        self._check_next_update()
 
     def _filter_results(self):
         # Remove updates for which we already have an equivalent or newer
@@ -249,30 +234,26 @@ class MicroformatUpdater(object):
         if self._bundle_update.name is not None:
             # if we know the name, we just perform an asynchronous size check
             _logger.debug("Performing async size lookup")
-            check_file = Gio.File.new_for_uri(self._bundle_update.link)
-            check_file.read_async(GLib.PRIORITY_DEFAULT, None,
-                                  self._size_lookup_async_cb, None)
+            size_check = Downloader(self._bundle_update.link)
+            size_check.connect('complete', self._size_lookup_cb)
+            size_check.get_size()
             self._progress_cb(self._bundle_update.name, progress)
         else:
             # if we don't know the name, we run a metadata lookup and get
             # the size and name that way
-            _logger.debug("Performing threaded metadata lookup")
-            namelookup = ThreadedMetadataLookup(self._bundle_update.link)
+            _logger.debug("Performing metadata lookup")
+            namelookup = MetadataLookup(self._bundle_update.link)
             namelookup.connect('complete', self._name_lookup_complete)
             namelookup.run()
             self._progress_cb(self._bundle_update.bundle_id, progress)
 
-    def _size_lookup_async_cb(self, gfile, result, user_data):
-        try:
-            input_stream = gfile.read_finish(result)
-        except:
-            _logger.exception("Failed to check activity")
-            self._check_next_update()
-            return
+    def _size_lookup_cb(self, downloader, result):
+        if isinstance(result, Exception):
+            _logger.warning("Failed to perform size lookup: %s", result)
+        else:
+            self._bundle_update.size = result()
+            self._updates.append(self._bundle_update)
 
-        info = input_stream.query_info(Gio.FILE_ATTRIBUTE_STANDARD_SIZE, None)
-        self._bundle_update.size = info.get_size()
-        self._updates.append(self._bundle_update)
         GLib.idle_add(self._check_next_update)
 
     def _name_lookup_complete(self, lookup, result, size):
@@ -308,16 +289,12 @@ class MicroformatUpdater(object):
         self._cancelling = True
 
 
-class ThreadedMetadataLookup(GObject.GObject):
+class MetadataLookup(GObject.GObject):
     """
     Look up the localized activity name and size of a bundle.
 
     This is useful when no previous version of the activity is installed,
     and there is no local source of the activity's name.
-
-    This is implemented using blocking standard library calls, so the
-    actual lookup is done in a thread. The result is then reported via a signal
-    emission in the main thread.
     """
     __gsignals__ = {
         'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int)),
@@ -329,9 +306,6 @@ class ThreadedMetadataLookup(GObject.GObject):
         self._size = None
 
     def run(self):
-        Thread(target=self._name_lookup).start()
-
-    def _name_lookup(self):
         # Perform the name lookup, catch any exceptions, and report the result.
         try:
             name = self._do_name_lookup()
