@@ -330,8 +330,7 @@ class ServiceProvidersDatabase(object):
         self._current_provider = idx
         provider = self.get_provider()
         if provider is not None:
-            self._gconf.set_string(GCONF_SP_PROVIDER,
-                                   provider.name.encode('utf-8'))
+            self._gconf.set_string(GCONF_SP_PROVIDER, provider.name)
         self._plans = self._db.get_plans(self._current_country,
                                          self._current_provider)
         self.set_plan(0)
