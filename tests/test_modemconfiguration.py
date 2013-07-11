@@ -18,6 +18,7 @@
 import sys
 import unittest
 from xml.etree.cElementTree import ElementTree
+from mock import patch
 
 from jarabe import config
 
@@ -26,6 +27,10 @@ sys.path.append(config.ext_path)
 from cpsection.modemconfiguration.model import (
     CountryCodeDatabase, ServiceProvidersParser, ServiceProvidersDatabase,
     PROVIDERS_PATH
+)
+
+from cpsection.modemconfiguration.model import (
+    GCONF_SP_COUNTRY, GCONF_SP_PROVIDER, GCONF_SP_PLAN
 )
 
 
@@ -143,3 +148,48 @@ class ServiceProvidersDatabaseTest(unittest.TestCase):
                     self.assertEqual(country2.idx, country.idx)
                     self.assertEqual(provider2.idx, provider.idx)
                     self.assertEqual(plan2.idx, plan.idx)
+
+
+class FakeGConfClient(object):
+    store = {
+        GCONF_SP_COUNTRY: '',
+        GCONF_SP_PROVIDER: '',
+        GCONF_SP_PLAN: '',
+    }
+
+    def __init__(self, **kwargs):
+        self.store.update(kwargs)
+
+    def get_string(self, key):
+        return self.store[key]
+
+    def set_string(self, key, value):
+        self.store[key] = value
+        return
+
+    def get_int(self, key):
+        return self.store[key]
+
+    def set_int(self, key, value):
+        self.store[key] = value
+        return
+
+
+class ServiceProvidersGuessCountryTest(unittest.TestCase):
+    def setUp(self):
+        # patch GConf.Client.get_default to use a fake client
+        gconf_patcher = patch('gi.repository.GConf.Client.get_default')
+        gconf_mock = gconf_patcher.start()
+        gconf_mock.return_value = FakeGConfClient(GCONF_SP_COUNTRY=None)
+        self.addCleanup(gconf_patcher.stop)
+
+    def test_guess_country(self):
+        LOCALE = ('hi_IN', 'UTF-8')
+        default_country_code = LOCALE[0][3:5].lower()
+
+        with patch('locale.getdefaultlocale') as locale_mock:
+            locale_mock.return_value = LOCALE
+
+            db = ServiceProvidersDatabase()
+            country = db.get_country()
+            self.assertEqual(country.code, default_country_code)
