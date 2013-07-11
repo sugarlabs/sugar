@@ -152,9 +152,9 @@ class ServiceProvidersDatabaseTest(unittest.TestCase):
 
 class FakeGConfClient(object):
     store = {
-        GCONF_SP_COUNTRY: '',
-        GCONF_SP_PROVIDER: '',
-        GCONF_SP_PLAN: '',
+        GCONF_SP_COUNTRY: None,
+        GCONF_SP_PROVIDER: None,
+        GCONF_SP_PLAN: None,
     }
 
     def __init__(self, **kwargs):
