@@ -303,12 +303,20 @@ class ServiceProvidersDatabase(object):
     def _get_initials(self):
         """Retrieve values stored in GConf or get default ones."""
         client = GConf.Client.get_default()
+
         country_code = client.get_string(GCONF_SP_COUNTRY)
-        provider_name = client.get_string(GCONF_SP_PROVIDER).decode('utf-8')
-        plan_idx = client.get_int(GCONF_SP_PLAN)
-        return (country_code or self._guess_country_code(),
-                provider_name or '',
-                plan_idx or 0)
+        if country_code is None:
+            country_code = self._guess_country_code()
+
+        provider_name = client.get_string(GCONF_SP_PROVIDER)
+        if provider_name is None:
+            provider_name = u''
+        else:
+            provider_name = provider_name.decode('utf-8')
+
+        plan_idx = client.get_int(GCONF_SP_PLAN) or 0
+
+        return (country_code, provider_name, plan_idx)
 
     def set_country(self, idx):
         self._current_country = idx
