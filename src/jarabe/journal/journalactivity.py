@@ -32,8 +32,10 @@ from sugar3 import env
 from sugar3.activity import activityfactory
 from gi.repository import SugarExt
 
+from jarabe.journal.journaltoolbox import MainToolbox
+from jarabe.journal.journaltoolbox import DetailToolbox
+from jarabe.journal.journaltoolbox import EditToolbox
 
-from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -144,6 +146,9 @@ class JournalActivity(JournalWindow):
         self._main_toolbox = None
         self._detail_toolbox = None
         self._volumes_toolbar = None
+        self._mount_point = '/'
+
+        self._editing_mode = False
 
         self._setup_main_view()
         self._setup_secondary_view()
@@ -190,6 +195,7 @@ class JournalActivity(JournalWindow):
 
     def _setup_main_view(self):
         self._main_toolbox = MainToolbox()
+        self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
         self._main_view.set_can_focus(True)
 
@@ -201,6 +207,8 @@ class JournalActivity(JournalWindow):
                                 self.__title_edit_started_cb)
         self._list_view.connect('title-edit-finished',
                                 self.__title_edit_finished_cb)
+        self._list_view.connect('selection-changed',
+                                self.__selection_changed_cb)
         self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
@@ -213,7 +221,7 @@ class JournalActivity(JournalWindow):
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
         self._main_toolbox.search_entry.connect('icon-press',
                                                 self.__search_icon_pressed_cb)
-        self._main_toolbox.set_mount_point('/')
+        self._main_toolbox.set_mount_point(self._mount_point)
 
     def _setup_secondary_view(self):
         self._secondary_view = Gtk.VBox()
@@ -241,6 +249,12 @@ class JournalActivity(JournalWindow):
     def __clear_clicked_cb(self, list_view):
         self._main_toolbox.clear_query()
 
+    def __selection_changed_cb(self, list_view, selected_items):
+        self._editing_mode = selected_items != 0
+        self._edit_toolbox.set_selected_entries(selected_items)
+        self._edit_toolbox.display_selected_entries_status()
+        self.show_main_view()
+
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 
@@ -258,9 +272,15 @@ class JournalActivity(JournalWindow):
         self.connect('key-press-event', self._key_press_event_cb)
 
     def show_main_view(self):
-        if self.toolbar_box != self._main_toolbox:
-            self.set_toolbar_box(self._main_toolbox)
-            self._main_toolbox.show()
+        if self._editing_mode:
+            self._toolbox = self._edit_toolbox
+            self._toolbox.set_total_number_of_entries(
+                self.get_total_number_of_entries())
+        else:
+            self._toolbox = self._main_toolbox
+
+        self.set_toolbar_box(self._toolbox)
+        self._toolbox.show()
 
         if self.canvas != self._main_view:
             self.set_canvas(self._main_view)
@@ -294,6 +314,8 @@ class JournalActivity(JournalWindow):
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
+        self._mount_point = mount_point
+        self.set_editing_mode(False)
         self._main_toolbox.set_mount_point(mount_point)
 
     def __model_created_cb(self, sender, **kwargs):
@@ -358,6 +380,26 @@ class JournalActivity(JournalWindow):
     def show_journal(self):
         """Become visible and show main view"""
         self.reveal()
+        self.show_main_view()
+
+    def get_list_view(self):
+        return self._list_view
+
+    def get_total_number_of_entries(self):
+        list_view_model = self.get_list_view().get_model()
+        return len(list_view_model)
+
+    def get_editing_mode(self):
+        return self._editing_mode
+
+    def set_editing_mode(self, editing_mode):
+        if editing_mode == self._editing_mode:
+            return
+        self._editing_mode = editing_mode
+        if self._editing_mode:
+            self.get_list_view().disable_drag_and_copy()
+        else:
+            self.get_list_view().enable_drag_and_copy()
         self.show_main_view()
 
 

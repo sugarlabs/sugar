@@ -240,6 +240,9 @@ class DatastoreResultSet(BaseResultSet):
 
         return entries, total_count
 
+    def find_ids(self, query):
+        return _get_datastore().find_ids(query)
+
 
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
@@ -304,8 +307,6 @@ class InplaceResultSet(BaseResultSet):
         if self._stopped:
             raise ValueError('InplaceResultSet already stopped')
 
-        t = time.time()
-
         offset = int(query.get('offset', 0))
         limit = int(query.get('limit', len(self._file_list)))
         total_count = len(self._file_list)
@@ -319,9 +320,19 @@ class InplaceResultSet(BaseResultSet):
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
-        logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
-
         return entries, total_count
+
+    def find_ids(self, query):
+        if self._file_list is None:
+            raise ValueError('Need to call setup() first')
+
+        if self._stopped:
+            raise ValueError('InplaceResultSet already stopped')
+
+        ids = []
+        for file_path, stat, mtime_, size_, metadata in self._file_list:
+            ids.append(file_path)
+        return ids
 
     def _scan(self):
         if self._stopped:

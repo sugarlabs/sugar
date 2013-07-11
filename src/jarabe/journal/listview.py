@@ -68,6 +68,7 @@ class BaseListView(Gtk.Bin):
 
     __gsignals__ = {
         'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'selection-changed': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
     def __init__(self, enable_multi_operations=False):
@@ -103,10 +104,7 @@ class BaseListView(Gtk.Bin):
         self.sort_column = None
         self._add_columns()
 
-        self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
-                                                [('text/uri-list', 0, 0),
-                                                 ('journal-object-id', 0, 0)],
-                                                Gdk.DragAction.COPY)
+        self.enable_drag_and_copy()
 
         # Auto-update stuff
         self._fully_obscured = True
@@ -117,6 +115,15 @@ class BaseListView(Gtk.Bin):
         model.created.connect(self.__model_created_cb)
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
+
+    def enable_drag_and_copy(self):
+        self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
+                                                [('text/uri-list', 0, 0),
+                                                 ('journal-object-id', 0, 0)],
+                                                Gdk.DragAction.COPY)
+
+    def disable_drag_and_copy(self):
+        self.tree_view.unset_rows_drag_source()
 
     def __model_created_cb(self, sender, signal, object_id):
         if self._is_new_item_visible(object_id):
@@ -248,7 +255,8 @@ class BaseListView(Gtk.Bin):
         self.get_child().size_allocate(allocation)
 
     def do_size_request(self, requisition):
-        requisition.width, requisition.height = self.get_child().size_request()
+        requisition.width, requisition.height = \
+            self.get_child().size_request()
 
     def __destroy_cb(self, widget):
         if self._model is not None:
@@ -302,29 +310,13 @@ class BaseListView(Gtk.Bin):
         if uid is None:
             return
 
-        # Hack to associate the cell with the metadata, so that it (the
-        # cell) is available offline as well (example during
-        # batch-operations, when the processing has to be done, without
-        # actually clicking any cell.
-        try:
-            metadata = model.get(uid)
-        except:
-            # https://dev.laptop.org.au/issues/1119
-            # http://bugs.sugarlabs.org/ticket/3344
-            # Occurs, when copying entries from journal to pen-drive.
-            # Simply swallow the exception, and return, as this too,
-            # like the above case, does not have any impact on the
-            # functionality.
-            return
-
-        tree_model.update_uid_metadata_assoc(uid, metadata)
-
         cell.props.active = self._model.get_selected_value(uid)
 
     def __cell_select_toggled_cb(self, cell, path):
         tree_iter = self._model.get_iter(path)
         uid = self._model[tree_iter][ListModel.COLUMN_UID]
-        self._model.set_selected_value(uid, not cell.get_active())
+        self._model.set_selected(uid, not cell.get_active())
+        self.emit('selection-changed', len(self._model.get_selected_items()))
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
@@ -543,6 +535,24 @@ class BaseListView(Gtk.Bin):
     def __update_dates_timer_cb(self):
         self.update_dates()
         return True
+
+    def get_model(self):
+        return self._model
+
+    def __redraw(self):
+        tree_view_window = self.tree_view.get_bin_window()
+        tree_view_window.hide()
+        tree_view_window.show()
+
+    def select_all(self):
+        self.get_model().select_all()
+        self.__redraw()
+        self.emit('selection-changed', len(self._model.get_selected_items()))
+
+    def select_none(self):
+        self.get_model().select_none()
+        self.__redraw()
+        self.emit('selection-changed', len(self._model.get_selected_items()))
 
 
 class ListView(BaseListView):

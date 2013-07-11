@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import time
 
 import json
 from gi.repository import GObject
@@ -79,10 +80,14 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._last_requested_index = None
         self._cached_row = None
+        self._query = query
+        self._all_ids = []
+        t = time.time()
         self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        logging.debug('init resultset: %r', time.time() - t)
+
         self._temp_drag_file_path = None
-        self._selected = {}
-        self._uid_metadata_assoc = {}
+        self._selected = []
 
         # HACK: The view will tell us that it is resizing so the model can
         # avoid hitting D-Bus and disk.
@@ -91,7 +96,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
 
+    def get_all_ids(self):
+        return self._all_ids
+
     def __result_set_ready_cb(self, **kwargs):
+        t = time.time()
+        self._all_ids = self._result_set.find_ids(self._query)
+        logging.debug('get all ids: %r', time.time() - t)
         self.emit('ready')
 
     def __result_set_progress_cb(self, **kwargs):
@@ -256,14 +267,11 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         return False
 
-    def update_uid_metadata_assoc(self, uid, metadata):
-        self._uid_metadata_assoc[uid] = metadata
-
-    def set_selected_value(self, uid, value):
+    def set_selected(self, uid, value):
         if value:
-            self._selected[uid] = value
+            self._selected.append(uid)
         else:
-            del self._selected[uid]
+            self._selected.remove(uid)
 
     def get_selected_value(self, uid):
         return uid in self._selected
@@ -271,6 +279,8 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def get_selected_items(self):
         return self._selected
 
-    def get_in_memory_metadata(self, path):
-        uid = self[path][ListModel.COLUMN_UID]
-        return self._uid_metadata_assoc[uid]
+    def select_all(self):
+        self._selected = self._all_ids[:]
+
+    def select_none(self):
+        self._selected = []
