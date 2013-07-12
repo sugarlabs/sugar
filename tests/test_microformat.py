@@ -20,7 +20,7 @@ import os
 from sugar3.bundle.bundleversion import NormalizedVersion
 
 from jarabe.model.update.microformat import _UpdateHTMLParser
-from jarabe.model.update.microformat import ThreadedMetadataLookup
+from jarabe.model.update.microformat import MetadataLookup
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
@@ -48,6 +48,6 @@ class TestMicroformat(unittest.TestCase):
 
     def test_zip_name_lookup(self):
         fd = open(os.path.join(data_dir, "activity-1.xo"))
-        lookup = ThreadedMetadataLookup(None)
+        lookup = MetadataLookup(None)
         name = lookup._name_from_fd(fd)
         self.assertEqual("My Activity", name)

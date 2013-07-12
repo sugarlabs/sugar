@@ -51,7 +51,6 @@ An example::
 import logging
 from xml.etree.ElementTree import XML
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 
@@ -60,6 +59,7 @@ from sugar3.bundle.bundleversion import InvalidVersionError
 
 from jarabe import config
 from jarabe.model.update import BundleUpdate
+from jarabe.util.downloader import Downloader
 
 _FIND_DESCRIPTION = \
     './/{http://www.w3.org/1999/02/22-rdf-syntax-ns#}Description'
@@ -80,9 +80,6 @@ class _UpdateChecker(GObject.GObject):
 
     def __init__(self):
         GObject.GObject.__init__(self)
-        self._file = None
-        self._stream = None
-        self._xml_data = ''
         self._bundle = None
 
     def check(self, bundle):
@@ -93,50 +90,23 @@ class _UpdateChecker(GObject.GObject):
         url = '%s?id=%s&appVersion=%s' % \
             (_UPDATE_PATH, bundle.get_bundle_id(), sp_version)
 
-        _logger.debug('Fetch %s', url)
-
-        self._file = Gio.File.new_for_uri(url)
-        self._stream = None
-        self._xml_data = ''
         self._bundle = bundle
 
-        self._file.read_async(GLib.PRIORITY_DEFAULT, None,
-                              self.__file_read_async_cb, None)
+        _logger.debug('Fetch %s', url)
+        self._downloader = Downloader(url)
+        self._downloader.connect('complete', self.__downloader_complete_cb)
+        self._downloader.download()
 
-    def __file_read_async_cb(self, gfile, result, user_data):
-        try:
-            self._stream = self._file.read_finish(result)
-        except Exception, e:
-            self.emit('check-complete', e)
+    def __downloader_complete_cb(self, downloader, result):
+        if isinstance(result, Exception):
+            self.emit('check-complete', result)
             return
 
-        self._stream.read_bytes_async(self._CHUNK_SIZE, GLib.PRIORITY_DEFAULT,
-                                      None, self.__stream_read_async_cb, None)
-
-    def __stream_read_async_cb(self, stream, result, user_data):
-        data = stream.read_bytes_finish(result)
-        if data is None:
-            e = Exception('Error reading update information for %s from '
-                          'server.' % self._bundle.get_bundle_id())
-            self.emit('check-complete', e)
-            return
-        elif data.get_size() == 0:
-            stream.close(None)
-            self._process_result()
-            return
-        else:
-            xml_data = data.get_data()
-            self._xml_data += str(xml_data)
-
-        stream.read_bytes_async(self._CHUNK_SIZE, GLib.PRIORITY_DEFAULT, None,
-                                self.__stream_read_async_cb, None)
-
-    def _process_result(self):
-        if self._xml_data is None:
+        if result is None:
             _logger.error('No XML update data returned from ASLO')
             return
 
-        document = XML(self._xml_data)
+        document = XML(result.get_data())
 
         if document.find(_FIND_DESCRIPTION) is None:
             _logger.debug('Bundle %s not available in the server for the '
