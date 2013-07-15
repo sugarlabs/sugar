@@ -224,11 +224,6 @@ class ServiceProvidersParser(object):
             logging.warning(msg)
             raise ServiceProvidersError(msg)
 
-        # Get locale LANGUAGE to retrieve correct name tag
-        language_code = locale.getdefaultlocale()[0]
-        self.LANG = language_code[0:2]
-        self.LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
-
         # Populate countries list
         names = CountryCodeDatabase()
         self._countries = self.root.findall('country')
