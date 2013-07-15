@@ -22,31 +22,32 @@ from mock import patch
 
 from jarabe import config
 
-sys.path.append(config.ext_path)
 
-from cpsection.modemconfiguration.model import (
-    CountryCodeDatabase, ServiceProvidersParser, ServiceProvidersDatabase,
-    PROVIDERS_PATH
-)
+def setUpModule():
+    sys.path.append(config.ext_path)
 
-from cpsection.modemconfiguration.model import (
-    GCONF_SP_COUNTRY, GCONF_SP_PROVIDER, GCONF_SP_PLAN
-)
+
+def tearDownModule():
+    sys.path.remove(config.ext_path)
 
 
 class CountryCodeDatabaseTest(unittest.TestCase):
     def test_get_country(self):
+        from cpsection.modemconfiguration.model import CountryCodeDatabase
         self.assertEqual(CountryCodeDatabase().get('ad'), 'Andorra')
         self.assertEqual(CountryCodeDatabase().get('es'), 'Spain')
         self.assertEqual(CountryCodeDatabase().get('zw'), 'Zimbabwe')
 
     def test_raise_if_not_found(self):
+        from cpsection.modemconfiguration.model import CountryCodeDatabase
         with self.assertRaises(KeyError):
             CountryCodeDatabase().get('xx')
 
 
 class ServiceProvidersParserTest(unittest.TestCase):
     def setUp(self):
+        from cpsection.modemconfiguration.model import ServiceProvidersParser,\
+                PROVIDERS_PATH
         self.tree = ElementTree(file=PROVIDERS_PATH)
         self.countries_from_xml = self.tree.findall('country')
         self.db = ServiceProvidersParser()
@@ -63,6 +64,7 @@ class ServiceProvidersParserTest(unittest.TestCase):
             self.assertEqual(idx, country_idx)
 
     def test_get_country_name_by_idx(self):
+        from cpsection.modemconfiguration.model import CountryCodeDatabase
         for idx, country in enumerate(self.countries_from_class):
             country_code = country.attrib['code']
             self.assertEqual(
@@ -115,10 +117,12 @@ class ServiceProvidersParserTest(unittest.TestCase):
 
 class ServiceProvidersDatabaseTest(unittest.TestCase):
     def setUp(self):
+        from cpsection.modemconfiguration.model import ServiceProvidersDatabase
         self.db = ServiceProvidersDatabase()
         self.countries = self.db.get_countries()
 
     def test_go_trough_all_combo_options(self):
+        from cpsection.modemconfiguration.model import ServiceProvidersDatabase
         # Traverse countries
         for country in self.countries:
             # Check if country is stored
@@ -153,13 +157,15 @@ class ServiceProvidersDatabaseTest(unittest.TestCase):
 
 
 class FakeGConfClient(object):
-    store = {
-        GCONF_SP_COUNTRY: None,
-        GCONF_SP_PROVIDER: None,
-        GCONF_SP_PLAN: None,
-    }
 
     def __init__(self, **kwargs):
+        from cpsection.modemconfiguration.model import \
+                GCONF_SP_COUNTRY, GCONF_SP_PROVIDER, GCONF_SP_PLAN
+        self.store = {
+            GCONF_SP_COUNTRY: None,
+            GCONF_SP_PROVIDER: None,
+            GCONF_SP_PLAN: None,
+        }
         self.store.update(kwargs)
 
     def get_string(self, key):
@@ -186,6 +192,7 @@ class ServiceProvidersGuessCountryTest(unittest.TestCase):
         self.addCleanup(gconf_patcher.stop)
 
     def test_guess_country(self):
+        from cpsection.modemconfiguration.model import ServiceProvidersDatabase
         LOCALE = ('hi_IN', 'UTF-8')
         default_country_code = LOCALE[0][3:5].lower()
 
