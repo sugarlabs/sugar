@@ -18,7 +18,6 @@
 
 import logging
 import locale
-import os.path
 from xml.etree.cElementTree import ElementTree
 from gettext import gettext as _
 
@@ -29,8 +28,9 @@ from gi.repository import GConf
 from jarabe.model import network
 
 
-PROVIDERS_PATH = ("/usr/share/mobile-broadband-provider-info/"
-                  "serviceproviders.xml")
+PROVIDERS_PATH = "/usr/share/mobile-broadband-provider-info/"\
+                 "serviceproviders.xml"
+
 PROVIDERS_FORMAT_SUPPORTED = "2.0"
 COUNTRY_CODES_PATH = "/usr/share/zoneinfo/iso3166.tab"
 
@@ -119,15 +119,14 @@ class ServiceProvidersError(Exception):
 
 def _get_name(el):
     language_code = locale.getdefaultlocale()[0]
-    LANG = language_code[0:2]
-    LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
-    tag = el.find('name[@%s="%s"]' % (LANG_NS_ATTR, LANG))
+    lang = language_code.split('_')[0]
+    lang_ns_attr = '{http://www.w3.org/XML/1998/namespace}lang'
+
+    tag = el.find('name[@%s="%s"]' % (lang_ns_attr, lang))
     if tag is None:
         tag = el.find('name')
-    if tag is not None:
-        name = tag.text
-    else:
-        name = None
+
+    name = tag.text if tag is not None else None
     return name
 
 
@@ -177,21 +176,23 @@ class Plan(object):
 
 class CountryCodeDatabase(object):
     def _load_country_names():
-        # Check ISO 3166 alpha-2 country code file exists
-        if not os.path.isfile(COUNTRY_CODES_PATH):
+        # Load country code label mapping
+        data = {}
+        try:
+            with open(COUNTRY_CODES_PATH) as codes_file:
+                for line in codes_file:
+                    if line.startswith('#'):
+                        continue
+                    code, name = line.split('\t')[:2]
+                    data[code.lower()] = name.strip()
+
+        except IOError:
+            # Error reading ISO 3166 alpha-2 country code file
             msg = ("Mobile broadband provider database: Country "
                    "codes path %s not found.") % COUNTRY_CODES_PATH
             logging.warning(msg)
             raise ServiceProvidersError(msg)
 
-        # Load country code label mapping
-        data = {}
-        with open(COUNTRY_CODES_PATH) as codes_file:
-            for line in codes_file:
-                if line.startswith('#'):
-                    continue
-                code, name = line.split('\t')[:2]
-                data[code.lower()] = name.strip()
         return data
 
     _data = _load_country_names()
@@ -222,11 +223,6 @@ class ServiceProvidersParser(object):
                    "read provider information. Wrong format.")
             logging.warning(msg)
             raise ServiceProvidersError(msg)
-
-        # Get locale LANGUAGE to retrieve correct name tag
-        language_code = locale.getdefaultlocale()[0]
-        self.LANG = language_code[0:2]
-        self.LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
 
         # Populate countries list
         names = CountryCodeDatabase()
@@ -279,7 +275,9 @@ class ServiceProvidersDatabase(object):
 
         # Update status: countries, providers and plans
         self._countries = self._db.get_countries()
-        country_idx = self._db.get_country_idx_by_code(country_code)
+        country_idx = 0
+        if country_code:
+            country_idx = self._db.get_country_idx_by_code(country_code)
         self._current_country = country_idx
         self._providers = self._db.get_providers(self._current_country)
 
@@ -298,7 +296,9 @@ class ServiceProvidersDatabase(object):
     def _guess_country_code(self):
         """Return country based on locale lang attribute."""
         language_code = locale.getdefaultlocale()[0]
-        return language_code[3:5].lower()
+        lc_list = language_code.split('_')
+        country_code = lc_list[1].lower() if len(lc_list) >= 2 else ''
+        return country_code
 
     def _get_initials(self):
         """Retrieve values stored in GConf or get default ones."""
