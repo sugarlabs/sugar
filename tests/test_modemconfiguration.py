@@ -102,9 +102,11 @@ class ServiceProvidersParserTest(unittest.TestCase):
         for country in self.countries_from_xml:
             country_code = country.attrib['code']
             country_idx = self.db.get_country_idx_by_code(country_code)
+
             for provider_idx, provider in self.get_providers(country):
                 plans_from_class = self.db.get_plans(country_idx,
                                                      provider_idx)
+
                 for plan_idx, plan in self.get_plans(provider):
                     plan_from_class = plans_from_class[plan_idx]
                     self.assertEqual(plan.attrib['value'],
