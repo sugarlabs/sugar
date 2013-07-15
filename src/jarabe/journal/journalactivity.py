@@ -173,7 +173,7 @@ class JournalActivity(JournalWindow):
         self._critical_space_alert = None
         self._check_available_space()
 
-    def __volume_error_cb(self, gobject, message, severity):
+    def volume_error_cb(self, gobject, message, severity):
         alert = ErrorAlert(title=severity, msg=message)
         alert.connect('response', self.__alert_response_cb)
         self.add_alert(alert)
@@ -199,10 +199,10 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
         self._main_view.set_can_focus(True)
 
-        self._list_view = ListView(enable_multi_operations=True)
+        self._list_view = ListView(self, enable_multi_operations=True)
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-        self._list_view.connect('volume-error', self.__volume_error_cb)
+        self._list_view.connect('volume-error', self.volume_error_cb)
         self._list_view.connect('title-edit-started',
                                 self.__title_edit_started_cb)
         self._list_view.connect('title-edit-finished',
@@ -215,7 +215,7 @@ class JournalActivity(JournalWindow):
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
                                       self.__volume_changed_cb)
-        self._volumes_toolbar.connect('volume-error', self.__volume_error_cb)
+        self._volumes_toolbar.connect('volume-error', self.volume_error_cb)
         self._main_view.pack_start(self._volumes_toolbar, False, True, 0)
 
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
@@ -227,10 +227,9 @@ class JournalActivity(JournalWindow):
         self._secondary_view = Gtk.VBox()
 
         self._detail_toolbox = DetailToolbox()
-        self._detail_toolbox.connect('volume-error',
-                                     self.__volume_error_cb)
+        self._detail_toolbox.connect('volume-error', self.volume_error_cb)
 
-        self._detail_view = DetailView()
+        self._detail_view = DetailView(self)
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
@@ -401,6 +400,9 @@ class JournalActivity(JournalWindow):
         else:
             self.get_list_view().enable_drag_and_copy()
         self.show_main_view()
+
+    def get_mount_point(self):
+        return self._mount_point
 
 
 def get_journal():
