@@ -120,15 +120,14 @@ class ServiceProvidersError(Exception):
 
 def _get_name(el):
     language_code = locale.getdefaultlocale()[0]
-    LANG = language_code[0:2]
-    LANG_NS_ATTR = '{http://www.w3.org/XML/1998/namespace}lang'
-    tag = el.find('name[@%s="%s"]' % (LANG_NS_ATTR, LANG))
+    lang = language_code.split('_')[0]
+    lang_ns_attr = '{http://www.w3.org/XML/1998/namespace}lang'
+
+    tag = el.find('name[@%s="%s"]' % (lang_ns_attr, lang))
     if tag is None:
         tag = el.find('name')
-    if tag is not None:
-        name = tag.text
-    else:
-        name = None
+
+    name = tag.text if tag is not None else None
     return name
 
 
