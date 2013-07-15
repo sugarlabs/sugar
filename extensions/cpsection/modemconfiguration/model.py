@@ -18,7 +18,6 @@
 
 import logging
 import locale
-import os.path
 from xml.etree.cElementTree import ElementTree
 from gettext import gettext as _
 
@@ -177,21 +176,23 @@ class Plan(object):
 
 class CountryCodeDatabase(object):
     def _load_country_names():
-        # Check ISO 3166 alpha-2 country code file exists
-        if not os.path.isfile(COUNTRY_CODES_PATH):
+        # Load country code label mapping
+        data = {}
+        try:
+            with open(COUNTRY_CODES_PATH) as codes_file:
+                for line in codes_file:
+                    if line.startswith('#'):
+                        continue
+                    code, name = line.split('\t')[:2]
+                    data[code.lower()] = name.strip()
+
+        except IOError:
+            # Error reading ISO 3166 alpha-2 country code file
             msg = ("Mobile broadband provider database: Country "
                    "codes path %s not found.") % COUNTRY_CODES_PATH
             logging.warning(msg)
             raise ServiceProvidersError(msg)
 
-        # Load country code label mapping
-        data = {}
-        with open(COUNTRY_CODES_PATH) as codes_file:
-            for line in codes_file:
-                if line.startswith('#'):
-                    continue
-                code, name = line.split('\t')[:2]
-                data[code.lower()] = name.strip()
         return data
 
     _data = _load_country_names()
