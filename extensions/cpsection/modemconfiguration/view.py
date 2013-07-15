@@ -34,7 +34,7 @@ from .model import ServiceProvidersError
 APPLY_TIMEOUT = 1000
 
 
-def service_providers_store_factory(items):
+def _create_providers_list_store(items):
     gtk_list = Gtk.ListStore(str, object)
     for i in items:
         gtk_list.append((i.name, i))
@@ -146,9 +146,9 @@ class ModemConfiguration(SectionView):
             current_provider = self.service_providers.get_provider()
             current_plan = self.service_providers.get_plan()
 
-            country_store = service_providers_store_factory(countries)
-            provider_store = service_providers_store_factory(providers)
-            plan_store = service_providers_store_factory(plans)
+            country_store = _create_providers_list_store(countries)
+            provider_store = _create_providers_list_store(providers)
+            plan_store = _create_providers_list_store(plans)
 
             self.country_combo.set_model(country_store)
             self.country_combo.set_active(current_country.idx)
@@ -273,7 +273,7 @@ class ModemConfiguration(SectionView):
             country = model[tree_iter][1]
             self.service_providers.set_country(country.idx)
             providers = self.service_providers.get_providers()
-            store = service_providers_store_factory(providers)
+            store = _create_providers_list_store(providers)
             current = self.service_providers.get_provider()
             self.provider_combo.set_model(store)
             self.provider_combo.set_active(current.idx)
@@ -285,7 +285,7 @@ class ModemConfiguration(SectionView):
             provider = model[tree_iter][1]
             self.service_providers.set_provider(provider.idx)
             plans = self.service_providers.get_plans()
-            store = service_providers_store_factory(plans)
+            store = _create_providers_list_store(plans)
             current = self.service_providers.get_plan()
             self.plan_combo.set_model(store)
             self.plan_combo.set_active(current.idx)
