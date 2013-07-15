@@ -280,7 +280,9 @@ class ServiceProvidersDatabase(object):
 
         # Update status: countries, providers and plans
         self._countries = self._db.get_countries()
-        country_idx = self._db.get_country_idx_by_code(country_code)
+        country_idx = 0
+        if country_code:
+            country_idx = self._db.get_country_idx_by_code(country_code)
         self._current_country = country_idx
         self._providers = self._db.get_providers(self._current_country)
 
@@ -299,7 +301,9 @@ class ServiceProvidersDatabase(object):
     def _guess_country_code(self):
         """Return country based on locale lang attribute."""
         language_code = locale.getdefaultlocale()[0]
-        return language_code[3:5].lower()
+        lc_list = language_code.split('_')
+        country_code = lc_list[1].lower() if len(lc_list) >= 2 else ''
+        return country_code
 
     def _get_initials(self):
         """Retrieve values stored in GConf or get default ones."""
