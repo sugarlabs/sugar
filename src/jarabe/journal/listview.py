@@ -71,8 +71,9 @@ class BaseListView(Gtk.Bin):
         'selection-changed': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
-    def __init__(self, enable_multi_operations=False):
+    def __init__(self, journalactivity, enable_multi_operations=False):
         self._query = {}
+        self._journalactivity = journalactivity
         self._enable_multi_operations = enable_multi_operations
         self._model = None
         self._progress_bar = None
@@ -170,7 +171,8 @@ class BaseListView(Gtk.Bin):
         column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.tree_view.append_column(column)
 
-        self.cell_icon = CellRendererActivityIcon(self.tree_view)
+        self.cell_icon = CellRendererActivityIcon(self._journalactivity,
+                                                  self.tree_view)
 
         column = Gtk.TreeViewColumn()
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
@@ -569,8 +571,8 @@ class ListView(BaseListView):
                                 ([])),
     }
 
-    def __init__(self, enable_multi_operations=False):
-        BaseListView.__init__(self, enable_multi_operations)
+    def __init__(self, journalactivity, enable_multi_operations=False):
+        BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
@@ -692,7 +694,8 @@ class CellRendererActivityIcon(CellRendererIcon):
                          ([str, str])),
     }
 
-    def __init__(self, tree_view):
+    def __init__(self, journalactivity, tree_view):
+        self._journalactivity = journalactivity
         self._show_palette = True
 
         CellRendererIcon.__init__(self, tree_view)
@@ -711,7 +714,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         tree_model = self.tree_view.get_model()
         metadata = tree_model.get_metadata(self.props.palette_invoker.path)
 
-        palette = ObjectPalette(metadata, detail=True)
+        palette = ObjectPalette(self._journalactivity, metadata, detail=True)
         palette.connect('detail-clicked',
                         self.__detail_clicked_cb)
         palette.connect('volume-error',

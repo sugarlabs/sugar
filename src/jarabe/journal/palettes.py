@@ -53,8 +53,9 @@ class ObjectPalette(Palette):
                          ([str, str])),
     }
 
-    def __init__(self, metadata, detail=False):
+    def __init__(self, journalactivity, metadata, detail=False):
 
+        self._journalactivity = journalactivity
         self._metadata = metadata
 
         activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
@@ -100,7 +101,7 @@ class ObjectPalette(Palette):
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
-        copy_menu = CopyMenu(metadata)
+        copy_menu = CopyMenu(self._journalactivity, self.__get_uid_list_cb)
         copy_menu.connect('volume-error', self.__volume_error_cb)
         menu_item.set_submenu(copy_menu)
 
@@ -131,6 +132,9 @@ class ObjectPalette(Palette):
         menu_item.connect('activate', self.__erase_activate_cb)
         self.menu.append(menu_item)
         menu_item.show()
+
+    def __get_uid_list_cb(self):
+        return [self._metadata['uid']]
 
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata)
@@ -201,22 +205,23 @@ class CopyMenu(Gtk.Menu):
                          ([str, str])),
     }
 
-    def __init__(self, metadata):
+    def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
 
-        self._metadata = metadata
+        self._journalactivity = journalactivity
+        self._get_uid_list_cb = get_uid_list_cb
 
-        clipboard_menu = ClipboardMenu(self._metadata)
+        clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
                                       icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
         self.append(clipboard_menu)
         clipboard_menu.show()
 
-        if self._metadata['mountpoint'] != '/':
+        if journalactivity.get_mount_point() != '/':
             client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
+            journal_menu = VolumeMenu(self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
                                         icon_size=Gtk.IconSize.MENU))
@@ -225,9 +230,9 @@ class CopyMenu(Gtk.Menu):
             journal_menu.show()
 
         documents_path = model.get_documents_path()
-        if documents_path is not None and not \
-                self._metadata['uid'].startswith(documents_path):
-            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+        if documents_path is not None and \
+                journalactivity.get_mount_point() != documents_path:
+            documents_menu = VolumeMenu(self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
                                           icon_size=Gtk.IconSize.MENU))
@@ -238,9 +243,10 @@ class CopyMenu(Gtk.Menu):
         volume_monitor = Gio.VolumeMonitor.get()
         icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
-            if self._metadata['mountpoint'] == mount.get_root().get_path():
+            mount_path = mount.get_root().get_path()
+            if journalactivity.get_mount_point() == mount_path:
                 continue
-            volume_menu = VolumeMenu(self._metadata, mount.get_name(),
+            volume_menu = VolumeMenu(self._get_uid_list_cb, mount.get_name(),
                                      mount.get_root().get_path())
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
@@ -253,7 +259,8 @@ class CopyMenu(Gtk.Menu):
 
         for account in accountsmanager.get_configured_accounts():
             self.append(
-                account.get_shared_journal_entry().get_share_menu(metadata))
+                account.get_shared_journal_entry().get_share_menu(
+                    get_uid_list_cb))
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
@@ -267,28 +274,33 @@ class VolumeMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, metadata, label, mount_point):
+    def __init__(self, get_uid_list_cb, label, mount_point):
         MenuItem.__init__(self, label)
-        self._metadata = metadata
+        self._get_uid_list_cb = get_uid_list_cb
         self.connect('activate', self.__copy_to_volume_cb, mount_point)
 
     def __copy_to_volume_cb(self, menu_item, mount_point):
-        file_path = model.get_file(self._metadata['uid'])
+        uid_list = self._get_uid_list_cb()
+        if len(uid_list) == 1:
+            uid = uid_list[0]
+            file_path = model.get_file(uid)
 
-        if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
-            self.emit('volume-error',
-                      _('Entries without a file cannot be copied.'),
-                      _('Warning'))
-            return
+            if not file_path or not os.path.exists(file_path):
+                logging.warn('Entries without a file cannot be copied.')
+                self.emit('volume-error',
+                          _('Entries without a file cannot be copied.'),
+                          _('Warning'))
+                return
 
-        try:
-            model.copy(self._metadata, mount_point)
-        except IOError, e:
-            logging.exception('Error while copying the entry. %s', e.strerror)
-            self.emit('volume-error',
-                      _('Error while copying the entry. %s') % e.strerror,
-                      _('Error'))
+            try:
+                metadata = model.get(uid)
+                model.copy(metadata, mount_point)
+            except IOError, e:
+                logging.exception('Error while copying the entry. %s',
+                                  e.strerror)
+                self.emit('volume-error',
+                          _('Error while copying the entry. %s') % e.strerror,
+                          _('Error'))
 
 
 class ClipboardMenu(MenuItem):
@@ -299,32 +311,37 @@ class ClipboardMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, metadata):
+    def __init__(self, get_uid_list_cb):
         MenuItem.__init__(self, _('Clipboard'))
 
         self._temp_file_path = None
-        self._metadata = metadata
+        self._get_uid_list_cb = get_uid_list_cb
         self.connect('activate', self.__copy_to_clipboard_cb)
 
     def __copy_to_clipboard_cb(self, menu_item):
-        file_path = model.get_file(self._metadata['uid'])
-        if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
-            self.emit('volume-error',
-                      _('Entries without a file cannot be copied.'),
-                      _('Warning'))
-            return
-
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        clipboard.set_with_data([Gtk.TargetEntry.new('text/uri-list', 0, 0)],
-                                self.__clipboard_get_func_cb,
-                                self.__clipboard_clear_func_cb, None)
+        uid_list = self._get_uid_list_cb()
+        if len(uid_list) == 1:
+            uid = uid_list[0]
+            file_path = model.get_file(uid)
+            if not file_path or not os.path.exists(file_path):
+                logging.warn('Entries without a file cannot be copied.')
+                self.emit('volume-error',
+                          _('Entries without a file cannot be copied.'),
+                          _('Warning'))
+                return
+
+            clipboard.set_with_data(
+                [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
+                self.__clipboard_get_func_cb,
+                self.__clipboard_clear_func_cb, None)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
-        self._temp_file_path = model.get_file(self._metadata['uid'])
-        logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
-        selection_data.set_uris(['file://' + self._temp_file_path])
+        for uid in self._uid_list:
+            self._temp_file_path = model.get_file(uid)
+            logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
+            selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
         # Release and delete the temp file
