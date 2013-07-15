@@ -271,6 +271,7 @@ class ModemConfiguration(SectionView):
         if tree_iter is not None:
             model = combo.get_model()
             country = model[tree_iter][1]
+
             self.service_providers.set_country(country.idx)
             providers = self.service_providers.get_providers()
             store = _create_providers_list_store(providers)
@@ -283,6 +284,7 @@ class ModemConfiguration(SectionView):
         if tree_iter is not None:
             model = combo.get_model()
             provider = model[tree_iter][1]
+
             self.service_providers.set_provider(provider.idx)
             plans = self.service_providers.get_plans()
             store = _create_providers_list_store(plans)
@@ -295,6 +297,7 @@ class ModemConfiguration(SectionView):
         if tree_iter is not None:
             model = combo.get_model()
             plan = model[tree_iter][1]
+
             self.service_providers.set_plan(plan.idx)
             plan = self.service_providers.get_plan()
             self._username_entry.entry.set_text(plan.username)
