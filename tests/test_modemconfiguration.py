@@ -29,6 +29,13 @@ def setUpModule():
 
 def tearDownModule():
     sys.path.remove(config.ext_path)
+    # Needed to actually get rid of imported modules
+    try:
+        del sys.modules['cpesection.modemconfiguration.model']
+        del sys.modules['cpesection.modemconfiguration']
+        del sys.modules['cpesection']
+    except KeyError:
+        pass
 
 
 class CountryCodeDatabaseTest(unittest.TestCase):
