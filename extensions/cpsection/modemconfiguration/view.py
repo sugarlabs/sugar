@@ -114,8 +114,8 @@ class ModemConfiguration(SectionView):
         plan_store = Gtk.ListStore(str, object)
         plan_store.append([])
 
-        box, self.country_combo = self._make_combo_with_label(country_store,
-                                                              _('Country:'))
+        box, self._country_combo = self._make_combo_with_label(country_store,
+                                                               _('Country:'))
         upper_box.pack_start(box, False, True, 0)
         box.show()
 
@@ -150,8 +150,8 @@ class ModemConfiguration(SectionView):
             provider_store = _create_providers_list_store(providers)
             plan_store = _create_providers_list_store(plans)
 
-            self.country_combo.set_model(country_store)
-            self.country_combo.set_active(current_country.idx)
+            self._country_combo.set_model(country_store)
+            self._country_combo.set_active(current_country.idx)
 
             self.provider_combo.set_model(provider_store)
             self.provider_combo.set_active(current_provider.idx)
@@ -159,7 +159,7 @@ class ModemConfiguration(SectionView):
             self.plan_combo.set_model(plan_store)
             self.plan_combo.set_active(current_plan.idx)
 
-            self.country_combo.connect("changed", self._country_selected_cb)
+            self._country_combo.connect("changed", self._country_selected_cb)
             self.provider_combo.connect("changed", self._provider_selected_cb)
             self.plan_combo.connect("changed", self._plan_selected_cb)
 
