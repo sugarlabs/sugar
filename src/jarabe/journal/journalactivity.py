@@ -226,7 +226,7 @@ class JournalActivity(JournalWindow):
     def _setup_secondary_view(self):
         self._secondary_view = Gtk.VBox()
 
-        self._detail_toolbox = DetailToolbox()
+        self._detail_toolbox = DetailToolbox(self)
         self._detail_toolbox.connect('volume-error', self.volume_error_cb)
 
         self._detail_view = DetailView(self)
