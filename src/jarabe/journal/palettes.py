@@ -208,14 +208,31 @@ class CopyMenu(Gtk.Menu):
     def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
 
+        CopyMenuBuilder(journalactivity, get_uid_list_cb,
+                        self.__volume_error_cb, self)
+
+    def __volume_error_cb(self, menu_item, message, severity):
+        self.emit('volume-error', message, severity)
+
+
+class CopyMenuBuilder():
+
+    def __init__(self, journalactivity, get_uid_list_cb, __volume_error_cb,
+                 menu):
+
         self._journalactivity = journalactivity
         self._get_uid_list_cb = get_uid_list_cb
+        self.__volume_error_cb = __volume_error_cb
+        self._menu = menu
+
+        self._mount_added_hid = None
+        self._mount_removed_hid = None
 
         clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
                                       icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
-        self.append(clipboard_menu)
+        self._menu.append(clipboard_menu)
         clipboard_menu.show()
 
         if journalactivity.get_mount_point() != '/':
@@ -226,7 +243,7 @@ class CopyMenu(Gtk.Menu):
                                         xo_color=color,
                                         icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(journal_menu)
+            self._menu.append(journal_menu)
             journal_menu.show()
 
         documents_path = model.get_documents_path()
@@ -237,33 +254,54 @@ class CopyMenu(Gtk.Menu):
             documents_menu.set_image(Icon(icon_name='user-documents',
                                           icon_size=Gtk.IconSize.MENU))
             documents_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(documents_menu)
+            self._menu.append(documents_menu)
             documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
-        icon_theme = Gtk.IconTheme.get_default()
+        self._volumes = {}
         for mount in volume_monitor.get_mounts():
-            mount_path = mount.get_root().get_path()
-            if journalactivity.get_mount_point() == mount_path:
-                continue
-            volume_menu = VolumeMenu(self._get_uid_list_cb, mount.get_name(),
-                                     mount.get_root().get_path())
-            for name in mount.get_icon().props.names:
-                if icon_theme.has_icon(name):
-                    volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=Gtk.IconSize.MENU))
-                    break
-            volume_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(volume_menu)
-            volume_menu.show()
+            self._add_mount(mount)
+
+        self._mount_added_hid = volume_monitor.connect('mount-added',
+                                                       self.__mount_added_cb)
+        self._mount_removed_hid = volume_monitor.connect(
+            'mount-removed',
+            self.__mount_removed_cb)
 
         for account in accountsmanager.get_configured_accounts():
-            self.append(
+            self._menu.append(
                 account.get_shared_journal_entry().get_share_menu(
                     get_uid_list_cb))
 
-    def __volume_error_cb(self, menu_item, message, severity):
-        self.emit('volume-error', message, severity)
+    def __mount_added_cb(self, volume_monitor, mount):
+        self._add_mount(mount)
+
+    def _add_mount(self, mount):
+        mount_path = mount.get_root().get_path()
+        if self._journalactivity.get_mount_point() == mount_path:
+            return
+        volume_menu = VolumeMenu(self._get_uid_list_cb, mount.get_name(),
+                                 mount.get_root().get_path())
+        icon_theme = Gtk.IconTheme.get_default()
+        for name in mount.get_icon().props.names:
+            if icon_theme.has_icon(name):
+                volume_menu.set_image(Icon(icon_name=name,
+                                           icon_size=Gtk.IconSize.MENU))
+                break
+        volume_menu.connect('volume-error', self.__volume_error_cb)
+        self._menu.append(volume_menu)
+        self._volumes[mount.get_root().get_path()] = volume_menu
+        volume_menu.show()
+
+    def __mount_removed_cb(self, volume_monitor, mount):
+        volume_menu = self._volumes[mount.get_root().get_path()]
+        self._menu.remove(volume_menu)
+        del self._volumes[mount.get_root().get_path()]
+
+    def __destroy_cb(self, widget):
+        volume_monitor = Gio.VolumeMonitor.get()
+        volume_monitor.disconnect(self._mount_added_hid)
+        volume_monitor.disconnect(self._mount_removed_hid)
 
 
 class VolumeMenu(MenuItem):

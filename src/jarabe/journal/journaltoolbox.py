@@ -23,7 +23,6 @@ from gi.repository import GConf
 import time
 
 from gi.repository import GObject
-from gi.repository import Gio
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette
@@ -47,8 +46,7 @@ from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
-from jarabe.journal.palettes import ClipboardMenu
-from jarabe.journal.palettes import VolumeMenu
+from jarabe.journal.palettes import CopyMenuBuilder
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 
@@ -398,9 +396,9 @@ class DetailToolbox(ToolbarBox):
                          ([str, str])),
     }
 
-    def __init__(self):
+    def __init__(self, journalactivity):
         ToolbarBox.__init__(self)
-
+        self._journalactivity = journalactivity
         self._metadata = None
         self._temp_file_path = None
         self._refresh = None
@@ -501,59 +499,16 @@ class DetailToolbox(ToolbarBox):
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
 
+        # Use the menu defined in CopyMenu
         for menu_item in palette.menu.get_children():
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        clipboard_menu = ClipboardMenu(self._metadata)
-        clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=Gtk.IconSize.MENU))
-        clipboard_menu.connect('volume-error', self.__volume_error_cb)
-        palette.menu.append(clipboard_menu)
-        clipboard_menu.show()
+        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
+                        self.__volume_error_cb, palette.menu)
 
-        if self._metadata['mountpoint'] != '/':
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
-            journal_menu.set_image(Icon(icon_name='activity-journal',
-                                        xo_color=color,
-                                        icon_size=Gtk.IconSize.MENU))
-            journal_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(journal_menu)
-            journal_menu.show()
-
-        documents_path = model.get_documents_path()
-        if documents_path is not None and not \
-                self._metadata['uid'].startswith(documents_path):
-            documents_menu = VolumeMenu(self._metadata, _('Documents'),
-                                        documents_path)
-            documents_menu.set_image(Icon(icon_name='user-documents',
-                                          icon_size=Gtk.IconSize.MENU))
-            documents_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(documents_menu)
-            documents_menu.show()
-
-        volume_monitor = Gio.VolumeMonitor.get()
-        icon_theme = Gtk.IconTheme.get_default()
-        for mount in volume_monitor.get_mounts():
-            if self._metadata['mountpoint'] == mount.get_root().get_path():
-                continue
-            volume_menu = VolumeMenu(self._metadata, mount.get_name(),
-                                     mount.get_root().get_path())
-            for name in mount.get_icon().props.names:
-                if icon_theme.has_icon(name):
-                    volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=Gtk.IconSize.MENU))
-                    break
-            volume_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(volume_menu)
-            volume_menu.show()
-
-        for account in accountsmanager.get_configured_accounts():
-            share_menu = account.get_shared_journal_entry().get_share_menu(
-                self._metadata)
-            palette.menu.append(share_menu)
+    def __get_uid_list_cb(self):
+        return [self._metadata['uid']]
 
     def _refresh_duplicate_palette(self):
         color = misc.get_icon_color(self._metadata)
