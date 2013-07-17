@@ -47,7 +47,7 @@ from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
-from jarabe.journal.palettes import CopyMenu
+from jarabe.journal.palettes import CopyMenuBuilder
 from jarabe.journal.palettes import BatchOperator
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
@@ -500,18 +500,14 @@ class DetailToolbox(ToolbarBox):
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
-        copy_menu = CopyMenu(self._journalactivity, self.__get_uid_list_cb)
-        copy_menu.connect('volume-error', self.__volume_error_cb)
 
         # Use the menu defined in CopyMenu
         for menu_item in palette.menu.get_children():
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        for menu_item in copy_menu.get_children():
-            copy_menu.remove(menu_item)
-            palette.menu.append(menu_item)
-            menu_item.show()
+        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
+                        self.__volume_error_cb, palette.menu)
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
@@ -635,6 +631,7 @@ class EditToolbox(ToolbarBox):
 
         self.toolbar.add(Gtk.SeparatorToolItem())
 
+        self.toolbar.add(BatchCopyButton(journalactivity))
         self.toolbar.add(BatchEraseButton(journalactivity))
 
         self.toolbar.add(Gtk.SeparatorToolItem())
@@ -706,6 +703,26 @@ class BatchEraseButton(ToolButton):
     def _operate(self, metadata):
         model.delete(metadata['uid'])
         self._model.set_selected(metadata['uid'], False)
+
+
+class BatchCopyButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        self._journalactivity = journalactivity
+        ToolButton.__init__(self, 'edit-copy')
+        self.props.tooltip = _('Copy')
+        self.connect('clicked', self.__clicked_cb)
+
+        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
+                        self._journalactivity.volume_error_cb,
+                        self.get_palette().menu)
+
+    def __clicked_cb(self, button):
+        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+    def __get_uid_list_cb(self):
+        model = self._journalactivity.get_list_view().get_model()
+        return model.get_selected_items()
 
 
 class MultiSelectEntriesInfoWidget(Gtk.ToolItem):

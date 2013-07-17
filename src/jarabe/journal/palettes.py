@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+from gettext import ngettext
 import logging
 import os
 
@@ -208,36 +209,49 @@ class CopyMenu(Gtk.Menu):
     def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
 
+        CopyMenuBuilder(journalactivity, get_uid_list_cb,
+                        self.__volume_error_cb, self)
+
+    def __volume_error_cb(self, menu_item, message, severity):
+        self.emit('volume-error', message, severity)
+
+
+class CopyMenuBuilder():
+
+    def __init__(self, journalactivity, get_uid_list_cb, __volume_error_cb,
+                 menu):
         self._journalactivity = journalactivity
         self._get_uid_list_cb = get_uid_list_cb
 
         clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
                                       icon_size=Gtk.IconSize.MENU))
-        clipboard_menu.connect('volume-error', self.__volume_error_cb)
-        self.append(clipboard_menu)
+        clipboard_menu.connect('volume-error', __volume_error_cb)
+        menu.append(clipboard_menu)
         clipboard_menu.show()
 
         if journalactivity.get_mount_point() != '/':
             client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            journal_menu = VolumeMenu(self._get_uid_list_cb, _('Journal'), '/')
+            journal_menu = VolumeMenu(self._journalactivity,
+                                      self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
                                         icon_size=Gtk.IconSize.MENU))
-            journal_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(journal_menu)
+            journal_menu.connect('volume-error', __volume_error_cb)
+            menu.append(journal_menu)
             journal_menu.show()
 
         documents_path = model.get_documents_path()
         if documents_path is not None and \
                 journalactivity.get_mount_point() != documents_path:
-            documents_menu = VolumeMenu(self._get_uid_list_cb, _('Documents'),
+            documents_menu = VolumeMenu(self._journalactivity,
+                                        self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
                                           icon_size=Gtk.IconSize.MENU))
-            documents_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(documents_menu)
+            documents_menu.connect('volume-error', __volume_error_cb)
+            menu.append(documents_menu)
             documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
@@ -246,24 +260,22 @@ class CopyMenu(Gtk.Menu):
             mount_path = mount.get_root().get_path()
             if journalactivity.get_mount_point() == mount_path:
                 continue
-            volume_menu = VolumeMenu(self._get_uid_list_cb, mount.get_name(),
+            volume_menu = VolumeMenu(self._journalactivity,
+                                     self._get_uid_list_cb, mount.get_name(),
                                      mount.get_root().get_path())
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
                                                icon_size=Gtk.IconSize.MENU))
                     break
-            volume_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(volume_menu)
+            volume_menu.connect('volume-error', __volume_error_cb)
+            menu.append(volume_menu)
             volume_menu.show()
 
         for account in accountsmanager.get_configured_accounts():
-            self.append(
+            menu.append(
                 account.get_shared_journal_entry().get_share_menu(
                     get_uid_list_cb))
-
-    def __volume_error_cb(self, menu_item, message, severity):
-        self.emit('volume-error', message, severity)
 
 
 class VolumeMenu(MenuItem):
@@ -274,12 +286,14 @@ class VolumeMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, get_uid_list_cb, label, mount_point):
+    def __init__(self, journalactivity, get_uid_list_cb, label, mount_point):
         MenuItem.__init__(self, label)
+        self._journalactivity = journalactivity
         self._get_uid_list_cb = get_uid_list_cb
-        self.connect('activate', self.__copy_to_volume_cb, mount_point)
+        self._mount_point = mount_point
+        self.connect('activate', self.__copy_to_volume_cb)
 
-    def __copy_to_volume_cb(self, menu_item, mount_point):
+    def __copy_to_volume_cb(self, menu_item):
         uid_list = self._get_uid_list_cb()
         if len(uid_list) == 1:
             uid = uid_list[0]
@@ -294,13 +308,30 @@ class VolumeMenu(MenuItem):
 
             try:
                 metadata = model.get(uid)
-                model.copy(metadata, mount_point)
+                model.copy(metadata, self._mount_point)
             except IOError, e:
                 logging.exception('Error while copying the entry. %s',
                                   e.strerror)
                 self.emit('volume-error',
                           _('Error while copying the entry. %s') % e.strerror,
                           _('Error'))
+        else:
+            BatchOperator(
+                self._journalactivity, uid_list, _('Copy'),
+                self._get_confirmation_alert_message(len(uid_list)),
+                self._perform_copy)
+
+    def _get_confirmation_alert_message(self, entries_len):
+        return ngettext('Do you want to copy %d entry?',
+                        'Do you want to copy %d entries?',
+                        entries_len) % (entries_len)
+
+    def _perform_copy(self, metadata):
+        try:
+            model.copy(metadata, self._mount_point)
+        except IOError, e:
+            logging.exception('Error while copying the entry. %s',
+                              e.strerror)
 
 
 class ClipboardMenu(MenuItem):
