@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+from gettext import ngettext
 import logging
 from datetime import datetime, timedelta
 import os
@@ -23,7 +24,6 @@ from gi.repository import GConf
 import time
 
 from gi.repository import GObject
-from gi.repository import Gio
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette
@@ -48,6 +48,7 @@ from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal.palettes import CopyMenu
+from jarabe.journal.palettes import BatchOperator
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 
@@ -634,6 +635,10 @@ class EditToolbox(ToolbarBox):
 
         self.toolbar.add(Gtk.SeparatorToolItem())
 
+        self.toolbar.add(BatchEraseButton(journalactivity))
+
+        self.toolbar.add(Gtk.SeparatorToolItem())
+
         self._multi_select_info_widget = MultiSelectEntriesInfoWidget()
         self.toolbar.add(self._multi_select_info_widget)
 
@@ -675,6 +680,32 @@ class SelectAllButton(ToolButton):
 
     def __do_select_all(self, widget_clicked):
         self._journalactivity.get_list_view().select_all()
+
+
+class BatchEraseButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        self._journalactivity = journalactivity
+        ToolButton.__init__(self, 'edit-delete')
+        self.connect('clicked', self.__button_cliecked_cb)
+        self.props.tooltip = _('Erase')
+
+    def __button_cliecked_cb(self, button):
+        self._model = self._journalactivity.get_list_view().get_model()
+        selected_uids = self._model.get_selected_items()
+        BatchOperator(
+            self._journalactivity, selected_uids, _('Erase'),
+            self._get_confirmation_alert_message(len(selected_uids)),
+            self._operate)
+
+    def _get_confirmation_alert_message(self, entries_len):
+        return ngettext('Do you want to erase %d entry?',
+                        'Do you want to erase %d entries?',
+                        entries_len) % (entries_len)
+
+    def _operate(self, metadata):
+        model.delete(metadata['uid'])
+        self._model.set_selected(metadata['uid'], False)
 
 
 class MultiSelectEntriesInfoWidget(Gtk.ToolItem):

@@ -109,6 +109,7 @@ class BaseListView(Gtk.Bin):
 
         # Auto-update stuff
         self._fully_obscured = True
+        self._updates_disabled = False
         self._dirty = False
         self._refresh_idle_handler = None
         self._update_dates_timer = None
@@ -508,9 +509,17 @@ class BaseListView(Gtk.Bin):
                 path = tree_model.get_path(next_iter)
 
     def _set_dirty(self):
-        if self._fully_obscured:
+        if self._fully_obscured or self._updates_disabled:
             self._dirty = True
         else:
+            self.refresh()
+
+    def disable_updates(self):
+        self._updates_disabled = True
+
+    def enable_updates(self):
+        self._updates_disabled = False
+        if self._dirty:
             self.refresh()
 
     def set_is_visible(self, visible):

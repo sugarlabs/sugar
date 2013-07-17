@@ -434,3 +434,108 @@ class BuddyPalette(Palette):
                          icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.
+
+
+class BatchOperator(GObject.GObject):
+    """
+    This class implements the course of actions that happens when clicking
+    upon an BatchOperation  (eg. Batch-Copy-Toolbar-button;
+                             Batch-Copy-To-Journal-button;
+                             Batch-Copy-To-Documents-button;
+                             Batch-Copy-To-Mounted-Drive-button;
+                             Batch-Copy-To-Clipboard-button;
+                             Batch-Erase-Button;
+    """
+
+    def __init__(self, journalactivity,
+                 uid_list,
+                 alert_title, alert_message,
+                 operation_cb):
+        """
+
+        """
+        GObject.GObject.__init__(self)
+
+        self._journalactivity = journalactivity
+
+        self._uid_list = uid_list[:]
+        self._alert_title = alert_title
+        self._alert_message = alert_message
+        self._operation_cb = operation_cb
+
+        self._show_confirmation_alert()
+
+    def _show_confirmation_alert(self):
+        self._journalactivity.freeze_ui()
+        GObject.idle_add(self.__show_confirmation_alert_internal)
+
+    def __show_confirmation_alert_internal(self):
+        # Show a alert requesting confirmation before run the batch operation
+        self._confirmation_alert = Alert()
+        self._confirmation_alert.props.title = self._alert_title
+        self._confirmation_alert.props.msg = self._alert_message
+
+        stop_icon = Icon(icon_name='dialog-cancel')
+        self._confirmation_alert.add_button(Gtk.ResponseType.CANCEL,
+                                            _('Stop'), stop_icon)
+        stop_icon.show()
+
+        ok_icon = Icon(icon_name='dialog-ok')
+        self._confirmation_alert.add_button(Gtk.ResponseType.OK,
+                                            _('Continue'), ok_icon)
+        ok_icon.show()
+
+        self._journalactivity.add_alert(self._confirmation_alert)
+        self._confirmation_alert.connect('response',
+                                         self.__confirmation_response_cb)
+        self._confirmation_alert.show()
+
+    def __confirmation_response_cb(self, alert, response):
+        if response == Gtk.ResponseType.CANCEL:
+            self._journalactivity.unfreeze_ui()
+            self._journalactivity.remove_alert(alert)
+            # this is only in the case the operation already started
+            # and the user want stop it.
+            self._stop_batch_operation()
+        else:
+            GObject.idle_add(self._prepare_batch_execution)
+
+    def _prepare_batch_execution(self):
+        self._object_index = 0
+        # Next, proceed with the objects
+        self._operate_by_uid()
+
+    def _operate_by_uid(self):
+        GObject.idle_add(self._operate_by_uid_internal)
+
+    def _operate_by_uid_internal(self):
+        # If there is still some uid left, proceed with the operation.
+        # Else, proceed to post-operations.
+        if self._object_index < len(self._uid_list):
+            uid = self._uid_list[self._object_index]
+            metadata = model.get(uid)
+
+            alert_message = _('%(index)d of %(total)d : %(object_title)s') % {
+                'index': self._object_index,
+                'total': len(self._uid_list),
+                'object_title': metadata['title']}
+
+            self._confirmation_alert.props.msg = alert_message
+            GObject.idle_add(self._operate_per_metadata, metadata)
+        else:
+            self._finish_batch_execution()
+
+    def _operate_per_metadata(self, metadata):
+        self._operation_cb(metadata)
+
+        # process the next
+        self._object_index = self._object_index + 1
+        GObject.idle_add(self._operate_by_uid_internal)
+
+    def _stop_batch_execution(self):
+        self._object_index = len(self._uid_list)
+
+    def _finish_batch_execution(self):
+        self._journalactivity.unfreeze_ui()
+        self._journalactivity.remove_alert(self._confirmation_alert)
+        self._journalactivity.update_selected_items_ui()
