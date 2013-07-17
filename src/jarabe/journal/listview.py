@@ -113,6 +113,7 @@ class BaseListView(Gtk.Bin):
         self._dirty = False
         self._refresh_idle_handler = None
         self._update_dates_timer = None
+        self._backup_selected = None
 
         model.created.connect(self.__model_created_cb)
         model.updated.connect(self.__model_updated_cb)
@@ -332,14 +333,17 @@ class BaseListView(Gtk.Bin):
                                                 property_.upper(),
                                                 ListModel.COLUMN_TIMESTAMP))
         self._query = query_dict
+        self.refresh(new_query=True)
 
-        self.refresh()
-
-    def refresh(self):
+    def refresh(self, new_query=False):
         logging.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
 
         if self._model is not None:
+            if new_query:
+                self._backup_selected = None
+            else:
+                self._backup_selected = self._model.get_selected_items()
             self._model.stop()
         self._dirty = False
 
@@ -359,6 +363,11 @@ class BaseListView(Gtk.Bin):
         if x11_window is not None:
             # prevent glitches while later vadjustment setting, see #1235
             self.tree_view.get_bin_window().hide()
+
+        # if the selection was preserved, restore it
+        if self._backup_selected is not None:
+            tree_model.restore_selection(self._backup_selected)
+            self.emit('selection-changed', len(self._backup_selected))
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
