@@ -279,6 +279,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def get_selected_items(self):
         return self._selected
 
+    def restore_selection(self, selected):
+        self._selected = selected
+
     def select_all(self):
         self._selected = self._all_ids[:]
 
