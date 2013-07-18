@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import time
 
 import json
 from gi.repository import GObject
@@ -54,6 +55,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_BUDDY_1 = 9
     COLUMN_BUDDY_2 = 10
     COLUMN_BUDDY_3 = 11
+    COLUMN_SELECT = 12
 
     _COLUMN_TYPES = {
         COLUMN_UID: str,
@@ -68,6 +70,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         COLUMN_BUDDY_1: object,
         COLUMN_BUDDY_3: object,
         COLUMN_BUDDY_2: object,
+        COLUMN_SELECT: bool,
     }
 
     _PAGE_SIZE = 10
@@ -77,8 +80,14 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._last_requested_index = None
         self._cached_row = None
+        self._query = query
+        self._all_ids = []
+        t = time.time()
         self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        logging.debug('init resultset: %r', time.time() - t)
+
         self._temp_drag_file_path = None
+        self._selected = []
 
         # HACK: The view will tell us that it is resizing so the model can
         # avoid hitting D-Bus and disk.
@@ -87,7 +96,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
 
+    def get_all_ids(self):
+        return self._all_ids
+
     def __result_set_ready_cb(self, **kwargs):
+        t = time.time()
+        self._all_ids = self._result_set.find_ids(self._query)
+        logging.debug('get all ids: %r', time.time() - t)
         self.emit('ready')
 
     def __result_set_progress_cb(self, **kwargs):
@@ -251,3 +266,24 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             return True
 
         return False
+
+    def set_selected(self, uid, value):
+        if value:
+            self._selected.append(uid)
+        else:
+            self._selected.remove(uid)
+
+    def get_selected_value(self, uid):
+        return uid in self._selected
+
+    def get_selected_items(self):
+        return self._selected
+
+    def restore_selection(self, selected):
+        self._selected = selected
+
+    def select_all(self):
+        self._selected = self._all_ids[:]
+
+    def select_none(self):
+        self._selected = []

@@ -204,6 +204,14 @@ class BaseResultSet(object):
 
         return self._cache[self._position - self._offset]
 
+    def can_handle_favorite(self, metadata):
+        if self._favorite == '0':
+            return True
+
+        return ((metadata is not None) and
+                ('keep' in metadata.keys()) and
+                (str(metadata['keep']) == '1'))
+
 
 class DatastoreResultSet(BaseResultSet):
     """Encapsulates the result of a query on the datastore
@@ -231,6 +239,9 @@ class DatastoreResultSet(BaseResultSet):
             entry['mountpoint'] = '/'
 
         return entries, total_count
+
+    def find_ids(self, query):
+        return _get_datastore().find_ids(query)
 
 
 class InplaceResultSet(BaseResultSet):
@@ -266,6 +277,7 @@ class InplaceResultSet(BaseResultSet):
         self._mime_types = query.get('mime_type', [])
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
+        self._favorite = str(query.get('keep', 0))
 
     def setup(self):
         self._file_list = []
@@ -295,8 +307,6 @@ class InplaceResultSet(BaseResultSet):
         if self._stopped:
             raise ValueError('InplaceResultSet already stopped')
 
-        t = time.time()
-
         offset = int(query.get('offset', 0))
         limit = int(query.get('limit', len(self._file_list)))
         total_count = len(self._file_list)
@@ -310,9 +320,19 @@ class InplaceResultSet(BaseResultSet):
             metadata['mountpoint'] = self._mount_point
             entries.append(metadata)
 
-        logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
-
         return entries, total_count
+
+    def find_ids(self, query):
+        if self._file_list is None:
+            raise ValueError('Need to call setup() first')
+
+        if self._stopped:
+            raise ValueError('InplaceResultSet already stopped')
+
+        ids = []
+        for file_path, stat, mtime_, size_, metadata in self._file_list:
+            ids.append(file_path)
+        return ids
 
     def _scan(self):
         if self._stopped:
@@ -374,10 +394,14 @@ class InplaceResultSet(BaseResultSet):
         if S_IFMT(stat.st_mode) != S_IFREG:
             return
 
+        metadata = _get_file_metadata(full_path, stat,
+                                      fetch_preview=False)
+
+        if not self.can_handle_favorite(metadata):
+            return
+
         if self._regex is not None and \
                 not self._regex.match(full_path):
-            metadata = _get_file_metadata(full_path, stat,
-                                          fetch_preview=False)
             if not metadata:
                 return
             add_to_list = False
@@ -437,8 +461,12 @@ def _get_file_metadata(path, stat, fetch_preview=True):
     metadata = _get_file_metadata_from_json(dir_path, filename, fetch_preview)
     if metadata:
         if 'filesize' not in metadata:
-            metadata['filesize'] = stat.st_size
+            if stat is not None:
+                metadata['filesize'] = stat.st_size
         return metadata
+
+    if stat is None:
+        raise ValueError('File does not exist')
 
     mime_type, uncertain_result_ = Gio.content_type_guess(filename=path,
                                                           data=None)
@@ -657,7 +685,8 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
                                                 file_path,
                                                 transfer_ownership)
     else:
-        object_id = _write_entry_on_external_device(metadata, file_path)
+        object_id = _write_entry_on_external_device(metadata, file_path,
+                                                    transfer_ownership)
 
     return object_id
 
@@ -682,7 +711,8 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
-def _write_entry_on_external_device(metadata, file_path):
+def _write_entry_on_external_device(metadata, file_path,
+                                    transfer_ownership):
     """Create and update an entry copied from the
     DS to an external storage device.
 
@@ -713,6 +743,21 @@ def _write_entry_on_external_device(metadata, file_path):
         clean_name, extension_ = os.path.splitext(file_name)
         metadata['title'] = clean_name
 
+    _write_metadata_and_preview(metadata, file_name)
+
+    if (os.path.dirname(destination_path) == os.path.dirname(file_path)) or \
+       transfer_ownership:
+        _rename_entry_on_external_device(file_path, destination_path)
+    else:
+        shutil.copy(file_path, destination_path)
+
+    object_id = destination_path
+    created.send(None, object_id=object_id)
+
+    return object_id
+
+
+def _write_metadata_and_preview(metadata, file_name):
     metadata_copy = metadata.copy()
     metadata_copy.pop('mountpoint', None)
     metadata_copy.pop('uid', None)
@@ -750,17 +795,6 @@ def _write_entry_on_external_device(metadata, file_path):
             os.write(fh, preview)
             os.close(fh)
             os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
-
-    if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
-    else:
-        _rename_entry_on_external_device(file_path, destination_path,
-                                         metadata_dir_path)
-
-    object_id = destination_path
-    created.send(None, object_id=object_id)
-
-    return object_id
 
 
 def get_file_name(title, mime_type):
