@@ -662,3 +662,86 @@ class SortingButton(ToolButton):
 
     def get_current_sort(self):
         return (self._property, self._order)
+
+
+class EditToolbox(ToolbarBox):
+
+    def __init__(self, journalactivity):
+        ToolbarBox.__init__(self)
+        self._journalactivity = journalactivity
+        self.toolbar.add(SelectNoneButton(journalactivity))
+        self.toolbar.add(SelectAllButton(journalactivity))
+
+        self.toolbar.add(Gtk.SeparatorToolItem())
+
+        self._multi_select_info_widget = MultiSelectEntriesInfoWidget()
+        self.toolbar.add(self._multi_select_info_widget)
+
+        self.show_all()
+        self.toolbar.show_all()
+
+    def display_selected_entries_status(self):
+        info_widget = self._multi_select_info_widget
+        GObject.idle_add(info_widget.display_selected_entries)
+
+    def set_total_number_of_entries(self, total):
+        self._multi_select_info_widget.set_total_number_of_entries(total)
+
+    def set_selected_entries(self, selected):
+        self._multi_select_info_widget.set_selected_entries(selected)
+
+
+class SelectNoneButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        ToolButton.__init__(self, 'select-none')
+        self.props.tooltip = _('Deselect all')
+        self._journalactivity = journalactivity
+
+        self.connect('clicked', self.__do_deselect_all)
+
+    def __do_deselect_all(self, widget_clicked):
+        self._journalactivity.get_list_view().select_none()
+
+
+class SelectAllButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        ToolButton.__init__(self, 'select-all')
+        self.props.tooltip = _('Select all')
+        self._journalactivity = journalactivity
+
+        self.connect('clicked', self.__do_select_all)
+
+    def __do_select_all(self, widget_clicked):
+        self._journalactivity.get_list_view().select_all()
+
+
+class MultiSelectEntriesInfoWidget(Gtk.ToolItem):
+
+    def __init__(self):
+        Gtk.ToolItem.__init__(self)
+
+        self._box = Gtk.VBox()
+        self._selected_entries = 0
+
+        self._label = Gtk.Label()
+        self._box.pack_start(self._label, True, True, 0)
+
+        self.add(self._box)
+
+        self.show_all()
+        self._box.show_all()
+
+    def set_total_number_of_entries(self, total):
+        self._total = total
+
+    def set_selected_entries(self, selected_entries):
+        self._selected_entries = selected_entries
+
+    def display_selected_entries(self):
+        # TRANS: Do not translate %(selected)d and %(total)d.
+        message = _('Selected %(selected)d of %(total)d') % {
+            'selected': self._selected_entries, 'total': self._total}
+        self._label.set_text(message)
+        self._label.show()
