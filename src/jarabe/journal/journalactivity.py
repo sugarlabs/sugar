@@ -254,6 +254,11 @@ class JournalActivity(JournalWindow):
         self._edit_toolbox.display_selected_entries_status()
         self.show_main_view()
 
+    def update_selected_items_ui(self):
+        selected_items = \
+            len(self.get_list_view().get_model().get_selected_items())
+        self.__selection_changed_cb(None, selected_items)
+
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 
@@ -403,6 +408,21 @@ class JournalActivity(JournalWindow):
 
     def get_mount_point(self):
         return self._mount_point
+
+    def _set_widgets_sensitive_state(self, sensitive_state):
+        self._toolbox.set_sensitive(sensitive_state)
+        self._list_view.set_sensitive(sensitive_state)
+        if sensitive_state:
+            self._list_view.enable_updates()
+        else:
+            self._list_view.disable_updates()
+        self._volumes_toolbar.set_sensitive(sensitive_state)
+
+    def freeze_ui(self):
+        self._set_widgets_sensitive_state(False)
+
+    def unfreeze_ui(self):
+        self._set_widgets_sensitive_state(True)
 
 
 def get_journal():
