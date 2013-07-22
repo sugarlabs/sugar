@@ -577,11 +577,15 @@ class BatchOperator(GObject.GObject):
         if self._object_index < len(self._uid_list):
             uid = self._uid_list[self._object_index]
             metadata = model.get(uid)
-
+            title = None
+            if 'title' in metadata:
+                title = metadata['title']
+            if title is None or title == '':
+                title = _('Untitled')
             alert_message = _('%(index)d of %(total)d : %(object_title)s') % {
                 'index': self._object_index,
                 'total': len(self._uid_list),
-                'object_title': metadata['title']}
+                'object_title': title}
 
             self._confirmation_alert.props.msg = alert_message
             GObject.idle_add(self._operate_per_metadata, metadata)
