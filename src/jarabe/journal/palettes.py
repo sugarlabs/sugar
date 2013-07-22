@@ -225,11 +225,14 @@ class CopyMenuBuilder():
         self._get_uid_list_cb = get_uid_list_cb
         self.__volume_error_cb = __volume_error_cb
         self._menu = menu
+        self._add_clipboard_menu = add_clipboard_menu
 
         self._mount_added_hid = None
         self._mount_removed_hid = None
+        self._create_menu_items()
 
-        if add_clipboard_menu:
+    def _create_menu_items(self):
+        if self._add_clipboard_menu:
             clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
             clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
                                           icon_size=Gtk.IconSize.MENU))
@@ -237,7 +240,7 @@ class CopyMenuBuilder():
             self._menu.append(clipboard_menu)
             clipboard_menu.show()
 
-        if journalactivity.get_mount_point() != '/':
+        if self._journalactivity.get_mount_point() != '/':
             client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             journal_menu = VolumeMenu(self._journalactivity,
@@ -251,7 +254,7 @@ class CopyMenuBuilder():
 
         documents_path = model.get_documents_path()
         if documents_path is not None and \
-                journalactivity.get_mount_point() != documents_path:
+                self._journalactivity.get_mount_point() != documents_path:
             documents_menu = VolumeMenu(self._journalactivity,
                                         self._get_uid_list_cb, _('Documents'),
                                         documents_path)
@@ -275,7 +278,13 @@ class CopyMenuBuilder():
         for account in accountsmanager.get_configured_accounts():
             self._menu.append(
                 account.get_shared_journal_entry().get_share_menu(
-                    get_uid_list_cb))
+                    self._get_uid_list_cb))
+
+    def update_mount_point(self):
+        for menu_item in self._menu.get_children():
+            if isinstance(menu_item, MenuItem):
+                self._menu.remove(menu_item)
+        self._create_menu_items()
 
     def __mount_added_cb(self, volume_monitor, mount):
         self._add_mount(mount)

@@ -321,6 +321,7 @@ class JournalActivity(JournalWindow):
         self._mount_point = mount_point
         self.set_editing_mode(False)
         self._main_toolbox.set_mount_point(mount_point)
+        self._edit_toolbox.batch_copy_button.update_mount_point()
 
     def __model_created_cb(self, sender, **kwargs):
         misc.handle_bundle_installation(model.get(kwargs['object_id']))

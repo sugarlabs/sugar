@@ -631,7 +631,8 @@ class EditToolbox(ToolbarBox):
 
         self.toolbar.add(Gtk.SeparatorToolItem())
 
-        self.toolbar.add(BatchCopyButton(journalactivity))
+        self.batch_copy_button = BatchCopyButton(journalactivity)
+        self.toolbar.add(self.batch_copy_button)
         self.toolbar.add(BatchEraseButton(journalactivity))
 
         self.toolbar.add(Gtk.SeparatorToolItem())
@@ -713,9 +714,13 @@ class BatchCopyButton(ToolButton):
         self.props.tooltip = _('Copy')
         self.connect('clicked', self.__clicked_cb)
 
-        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
-                        self._journalactivity.volume_error_cb,
-                        self.get_palette().menu, add_clipboard_menu=False)
+        self.menu_builder = CopyMenuBuilder(
+            self._journalactivity, self.__get_uid_list_cb,
+            self._journalactivity.volume_error_cb,
+            self.get_palette().menu, add_clipboard_menu=False)
+
+    def update_mount_point(self):
+        self.menu_builder.update_mount_point()
 
     def __clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
