@@ -201,7 +201,8 @@ class CellRendererCommentIcon(CellRendererIcon):
 
 
 class ExpandedEntry(Gtk.EventBox):
-    def __init__(self):
+    def __init__(self, journalactivity):
+        self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)
         self._vbox = Gtk.VBox()
         self.add(self._vbox)
@@ -334,7 +335,7 @@ class ExpandedEntry(Gtk.EventBox):
             xo_color = misc.get_icon_color(self._metadata)
         icon.props.xo_color = xo_color
 
-        icon.set_palette(ObjectPalette(self._metadata))
+        icon.set_palette(ObjectPalette(self._journalactivity, self._metadata))
 
         return icon
 
