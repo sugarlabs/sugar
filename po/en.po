@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-05 00:34-0400\n"
-"PO-Revision-Date: 2013-07-05 07:15+0200\n"
+"POT-Creation-Date: 2013-07-23 00:34-0400\n"
+"PO-Revision-Date: 2013-07-23 18:00+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: en\n"
@@ -220,7 +220,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Modem Configuration"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:68
+#: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -228,23 +228,35 @@ msgstr ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 
-#: ../extensions/cpsection/modemconfiguration/view.py:77
+#: ../extensions/cpsection/modemconfiguration/view.py:117
+msgid "Country:"
+msgstr "Country:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Provider:"
+msgstr "Provider:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:119
+msgid "Plan:"
+msgstr "Plan:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
 msgstr "Username:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:83
+#: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
 msgstr "Password:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:89
+#: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
 msgstr "Number:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:95
+#: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
 msgstr "Access Point Name (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "Personal Identity Number (PIN):"
 
@@ -534,8 +546,8 @@ msgstr "Disconnected"
 #: ../src/jarabe/frame/activitiestray.py:625
 #: ../src/jarabe/frame/activitiestray.py:746
 #: ../src/jarabe/frame/activitiestray.py:778
-#: ../src/jarabe/journal/expandedentry.py:160
-#: ../src/jarabe/journal/journaltoolbox.py:475
+#: ../src/jarabe/journal/expandedentry.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:480
 #: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
 msgstr "Cancel"
@@ -1081,7 +1093,7 @@ msgstr "Restart now"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
-#: ../src/jarabe/journal/journaltoolbox.py:88
+#: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
 msgstr "Search in %s"
@@ -1106,7 +1118,7 @@ msgid "Version %s"
 msgstr "Version %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
-#: ../src/jarabe/journal/listview.py:427
+#: ../src/jarabe/journal/listview.py:427 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -1131,9 +1143,9 @@ msgstr "Keep"
 
 #: ../src/jarabe/desktop/activitieslist.py:514
 #: ../src/jarabe/desktop/activitieslist.py:578
-#: ../src/jarabe/journal/expandedentry.py:154
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:443
+#: ../src/jarabe/journal/journaltoolbox.py:475
 #: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
 msgid "Erase"
 msgstr "Erase"
@@ -1224,7 +1236,7 @@ msgstr "Wireless Security:"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:586
+#: ../src/jarabe/journal/journaltoolbox.py:591
 #: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Resume"
@@ -1259,12 +1271,14 @@ msgstr "List view"
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
-#, python-format, 
+#, python-format
+#, python-format,
 msgid "Favorites view %d"
 msgstr "Favorites view %d"
 
@@ -1371,189 +1385,190 @@ msgstr "Back"
 msgid "Next"
 msgstr "Next"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/journaltoolbox.py:472
+#: ../src/jarabe/journal/expandedentry.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:477
 #: ../src/jarabe/journal/palettes.py:151
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Do you want to permanently erase \"%s\"?"
 
-#: ../src/jarabe/journal/expandedentry.py:296
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:705
+#: ../src/jarabe/journal/expandedentry.py:295
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:706
 #: ../src/jarabe/journal/palettes.py:68
 #: ../src/jarabe/journal/volumestoolbar.py:131
+#: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
 msgstr "Untitled"
 
-#: ../src/jarabe/journal/expandedentry.py:407
+#: ../src/jarabe/journal/expandedentry.py:366
 msgid "No preview"
 msgstr "No preview"
 
-#: ../src/jarabe/journal/expandedentry.py:421
+#: ../src/jarabe/journal/expandedentry.py:381
 #, python-format
 msgid "Kind: %s"
 msgstr "Kind: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:421
+#: ../src/jarabe/journal/expandedentry.py:381
 #: ../src/jarabe/journal/listmodel.py:151
 #: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr "Unknown"
 
-#: ../src/jarabe/journal/expandedentry.py:422
+#: ../src/jarabe/journal/expandedentry.py:382
 #, python-format
 msgid "Date: %s"
 msgstr "Date: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:423
+#: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Size: %s"
 msgstr "Size: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:450
+#: ../src/jarabe/journal/expandedentry.py:410
 #: ../src/jarabe/journal/misc.py:109
 msgid "No date"
 msgstr "No date"
 
-#: ../src/jarabe/journal/expandedentry.py:459
+#: ../src/jarabe/journal/expandedentry.py:419
 msgid "Participants:"
 msgstr "Participants:"
 
-#: ../src/jarabe/journal/expandedentry.py:497
+#: ../src/jarabe/journal/expandedentry.py:457
 msgid "Description:"
 msgstr "Description:"
 
-#: ../src/jarabe/journal/expandedentry.py:503
+#: ../src/jarabe/journal/expandedentry.py:463
 msgid "Tags:"
 msgstr "Tags:"
 
-#: ../src/jarabe/journal/expandedentry.py:508
+#: ../src/jarabe/journal/expandedentry.py:468
 msgid "Comments:"
 msgstr "Comments:"
 
 #: ../src/jarabe/journal/journalactivity.py:138
-#: ../src/jarabe/journal/journaltoolbox.py:88
-#: ../src/jarabe/journal/journaltoolbox.py:513
+#: ../src/jarabe/journal/journaltoolbox.py:89
+#: ../src/jarabe/journal/journaltoolbox.py:518
 #: ../src/jarabe/journal/palettes.py:219
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "Journal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:97
+#: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
 msgstr "Favorite entries"
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
 msgstr "Anytime"
 
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Today"
 msgstr "Today"
 
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Since yesterday"
 msgstr "Since yesterday"
 
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:140
 msgid "Past week"
 msgstr "Past week"
 
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:142
 msgid "Past month"
 msgstr "Past month"
 
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:144
 msgid "Past year"
 msgstr "Past year"
 
-#: ../src/jarabe/journal/journaltoolbox.py:150
+#: ../src/jarabe/journal/journaltoolbox.py:151
 msgid "Anyone"
 msgstr "Anyone"
 
-#: ../src/jarabe/journal/journaltoolbox.py:152
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My friends"
 msgstr "My friends"
 
-#: ../src/jarabe/journal/journaltoolbox.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:154
 msgid "My class"
 msgstr "My class"
 
-#: ../src/jarabe/journal/journaltoolbox.py:325
+#: ../src/jarabe/journal/journaltoolbox.py:327
 msgid "Anything"
 msgstr "Anything"
 
-#: ../src/jarabe/journal/journaltoolbox.py:414
+#: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:97
 msgid "Copy to"
 msgstr "Copy to"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr "Duplicate"
 
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
 msgstr "Refresh"
 
-#: ../src/jarabe/journal/journaltoolbox.py:465
+#: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "Error while copying the entry. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/journaltoolbox.py:471
 #: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr "Error"
 
-#: ../src/jarabe/journal/journaltoolbox.py:524
+#: ../src/jarabe/journal/journaltoolbox.py:529
 #: ../src/jarabe/journal/palettes.py:230
 #: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
 msgstr "Documents"
 
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:589
+#: ../src/jarabe/journal/journaltoolbox.py:594
 #: ../src/jarabe/journal/palettes.py:78
 msgid "Start"
 msgstr "Start"
 
-#: ../src/jarabe/journal/journaltoolbox.py:617
+#: ../src/jarabe/journal/journaltoolbox.py:622
 msgid "Sort by date modified"
 msgstr "Sort by date modified"
 
-#: ../src/jarabe/journal/journaltoolbox.py:618
+#: ../src/jarabe/journal/journaltoolbox.py:623
 msgid "Sort by date created"
 msgstr "Sort by date created"
 
-#: ../src/jarabe/journal/journaltoolbox.py:619
+#: ../src/jarabe/journal/journaltoolbox.py:624
 msgid "Sort by size"
 msgstr "Sort by size"
 
-#: ../src/jarabe/journal/journaltoolbox.py:628
+#: ../src/jarabe/journal/journaltoolbox.py:633
 msgid "Sort view"
 msgstr "Sort view"
 
-#: ../src/jarabe/journal/listview.py:339
+#: ../src/jarabe/journal/listview.py:339 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "Your Journal is empty"
 
-#: ../src/jarabe/journal/listview.py:342
+#: ../src/jarabe/journal/listview.py:342 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
 msgstr "Your documents folder is empty"
 
-#: ../src/jarabe/journal/listview.py:344
+#: ../src/jarabe/journal/listview.py:344 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
 msgstr "The device is empty"
 
-#: ../src/jarabe/journal/listview.py:346
+#: ../src/jarabe/journal/listview.py:346 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
 msgstr "No matching entries"
 
@@ -1579,16 +1594,16 @@ msgstr "Please delete some old Journal entries to make space for new ones."
 msgid "Show Journal"
 msgstr "Show Journal"
 
-#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
 msgstr "Choose an object"
 
-#: ../src/jarabe/journal/objectchooser.py:156
+#: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
 msgstr "Choose an object to open with %s activity"
 
-#: ../src/jarabe/journal/objectchooser.py:164
+#: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "Close"
