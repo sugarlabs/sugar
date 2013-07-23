@@ -291,6 +291,8 @@ class CopyMenuBuilder():
 
     def _add_mount(self, mount):
         mount_path = mount.get_root().get_path()
+        if mount_path in self._volumes:
+            return
         if self._journalactivity.get_mount_point() == mount_path:
             return
         volume_menu = VolumeMenu(self._journalactivity,
