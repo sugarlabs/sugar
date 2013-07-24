@@ -219,13 +219,14 @@ class CopyMenu(Gtk.Menu):
 class CopyMenuBuilder():
 
     def __init__(self, journalactivity, get_uid_list_cb, __volume_error_cb,
-                 menu, add_clipboard_menu=True):
+                 menu, add_clipboard_menu=True, add_webservices_menu=True):
 
         self._journalactivity = journalactivity
         self._get_uid_list_cb = get_uid_list_cb
         self.__volume_error_cb = __volume_error_cb
         self._menu = menu
         self._add_clipboard_menu = add_clipboard_menu
+        self._add_webservices_menu = add_webservices_menu
 
         self._mount_added_hid = None
         self._mount_removed_hid = None
@@ -275,10 +276,11 @@ class CopyMenuBuilder():
             'mount-removed',
             self.__mount_removed_cb)
 
-        for account in accountsmanager.get_configured_accounts():
-            self._menu.append(
-                account.get_shared_journal_entry().get_share_menu(
-                    self._get_uid_list_cb))
+        if self._add_webservices_menu:
+            for account in accountsmanager.get_configured_accounts():
+                self._menu.append(
+                    account.get_shared_journal_entry().get_share_menu(
+                        self._get_uid_list_cb))
 
     def update_mount_point(self):
         for menu_item in self._menu.get_children():

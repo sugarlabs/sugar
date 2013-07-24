@@ -717,7 +717,8 @@ class BatchCopyButton(ToolButton):
         self.menu_builder = CopyMenuBuilder(
             self._journalactivity, self.__get_uid_list_cb,
             self._journalactivity.volume_error_cb,
-            self.get_palette().menu, add_clipboard_menu=False)
+            self.get_palette().menu, add_clipboard_menu=False,
+            add_webservices_menu=False)
 
     def update_mount_point(self):
         self.menu_builder.update_mount_point()
