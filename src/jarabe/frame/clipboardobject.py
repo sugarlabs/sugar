@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from gettext import gettext as _
 from sugar3 import mime
 from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.graphics.objectchooser import get_preview_pixbuf
 
 
 class ClipboardObject(object):
@@ -77,6 +78,11 @@ class ClipboardObject(object):
         for mime_type in ['text/plain']:
             if mime_type in self._formats:
                 return self._formats[mime_type].get_data()
+        for mime_type in ['image/png']:
+            if mime_type in self._formats:
+                pixbuf = get_preview_pixbuf(
+                    self._formats[mime_type].get_data())
+                return pixbuf
         return ''
 
     def is_bundle(self):

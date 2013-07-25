@@ -23,6 +23,7 @@ from gi.repository import GConf
 from gi.repository import GLib
 
 from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
@@ -148,7 +149,11 @@ class ClipboardMenu(Palette):
         self.props.primary_text = GLib.markup_escape_text(name)
         preview = self._cb_object.get_preview()
         if preview:
-            self.props.secondary_text = GLib.markup_escape_text(preview)
+            if isinstance(preview, str):
+                self.props.secondary_text = GLib.markup_escape_text(preview)
+            if isinstance(preview, GdkPixbuf.Pixbuf):
+                self.set_pixbuf(preview)
+
         self._update_items_visibility()
         self._update_open_submenu()
 
