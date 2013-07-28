@@ -317,23 +317,28 @@ class VolumeButton(BaseButton):
         mount_point = mount.get_root().get_path()
         BaseButton.__init__(self, mount_point)
 
-        icon_name = None
-        icon_theme = Gtk.IconTheme.get_default()
-        for icon_name in mount.get_icon().props.names:
-            icon_info = icon_theme.lookup_icon(icon_name,
-                                               Gtk.IconSize.LARGE_TOOLBAR, 0)
-            if icon_info is not None:
-                break
-
-        if icon_name is None:
-            icon_name = 'drive'
-
-        self.props.icon_name = icon_name
+        self.props.icon_name = self._find_icon_name(mount)
 
         # TODO: retrieve the colors from the owner of the device
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
+
+    def _find_icon_name(self, mount):
+        name = 'drive'
+        try:
+            icon = mount.get_icon()
+            icon_names = icon.props.names
+        except AttributeError:
+            logging.error('Cannot find icon names for %s, %s',
+                          str(icon), str(mount))
+        else:
+            icon_theme = Gtk.IconTheme.get_default()
+            for icon_name in icon_names:
+                if icon_theme.has_icon(icon_name):
+                    name = icon_name
+                    break
+        return name
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
