@@ -81,9 +81,11 @@ class DeviceView(TrayIcon):
     def _find_icon_name(self, mount):
         name = 'drive'
         try:
-            icon_names = mount.get_icon().props.names
+            icon = mount.get_icon()
+            icon_names = icon.props.names
         except AttributeError:
-            logging.error('Cannot find icon names for %s', str(mount))
+            logging.error('Cannot find icon names for %s, %s',
+                          str(icon), str(mount))
         else:
             icon_theme = Gtk.IconTheme.get_default()
             for icon_name in icon_names:
