@@ -277,11 +277,10 @@ class CopyMenuBuilder():
             self.__mount_removed_cb)
 
         if self._add_webservices_menu:
-            metadata = model.get(self._get_uid_list_cb()[0])
             for account in accountsmanager.get_configured_accounts():
                 self._menu.append(
                     account.get_shared_journal_entry().get_share_menu(
-                        metadata))
+                        self._get_uid_list_cb))
 
     def update_mount_point(self):
         for menu_item in self._menu.get_children():
