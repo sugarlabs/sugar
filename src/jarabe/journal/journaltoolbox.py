@@ -738,6 +738,7 @@ class MultiSelectEntriesInfoWidget(Gtk.ToolItem):
 
         self._box = Gtk.VBox()
         self._selected_entries = 0
+        self._total = 0
 
         self._label = Gtk.Label()
         self._box.pack_start(self._label, True, True, 0)
