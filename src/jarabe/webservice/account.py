@@ -80,12 +80,12 @@ class SharedJournalEntry():
         'comments-changed': (GObject.SignalFlags.RUN_FIRST, None, ([str]))
     }
 
-    def get_share_menu(self, metadata):
+    def get_share_menu(self, get_uid_list):
         ''' get_share_menu returns a menu item used on the Copy To
         palette in the Journal and on the Journal detail-view toolbar.
 
-        :param: journal_entry_metadata
-        :type: dict
+        :param: journal_entry_get_uid_list
+        :type: bound method
         :returns: MenuItem
         :rtype: MenuItem
         '''
