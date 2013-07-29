@@ -23,9 +23,15 @@ from sugar3.graphics.palette import Palette
 
 from jarabe import config
 from jarabe.journal.journaltoolbox import DetailToolbox
+from jarabe.journal.journalwindow import JournalWindow
 from jarabe.webservice.account import Account
 
 ACCOUNT_NAME = 'mock'
+
+
+class JournalMock(JournalWindow):
+    def get_mount_point(self):
+        return '/'
 
 tests_dir = os.getcwd()
 extension_dir = os.path.join(tests_dir, 'extensions')
@@ -36,7 +42,7 @@ sys.path.append(config.ext_path)
 
 window = Gtk.Window()
 
-toolbox = DetailToolbox()
+toolbox = DetailToolbox(JournalMock())
 toolbox.show()
 
 window.add(toolbox)
