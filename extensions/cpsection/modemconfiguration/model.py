@@ -276,7 +276,7 @@ class ServiceProviders(object):
         self._gconf = GConf.Client.get_default()
 
         # Get initial values from GConf or default ones
-        country_code, provider_name, plan_idx = self._get_initials()
+        country_code, provider_name, plan_idx = self._get_initial_config()
 
         # Update status: countries, providers and plans
         self._countries = self._db.get_countries()
@@ -308,7 +308,7 @@ class ServiceProviders(object):
             country_code = lc_list[1].lower() if len(lc_list) >= 2 else None
         return country_code
 
-    def _get_initials(self):
+    def _get_initial_config(self):
         """Retrieve values stored in GConf or get default ones."""
         client = GConf.Client.get_default()
 
