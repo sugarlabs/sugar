@@ -119,10 +119,15 @@ class ServiceProvidersError(Exception):
 
 def _get_name(el):
     language_code = locale.getdefaultlocale()[0]
-    lang = language_code.split('_')[0]
-    lang_ns_attr = '{http://www.w3.org/XML/1998/namespace}lang'
 
-    tag = el.find('name[@%s="%s"]' % (lang_ns_attr, lang))
+    if language_code is None:
+        tag = None
+    else:
+        lang = language_code.split('_')[0]
+        lang_ns_attr = '{http://www.w3.org/XML/1998/namespace}lang'
+
+        tag = el.find('name[@%s="%s"]' % (lang_ns_attr, lang))
+
     if tag is None:
         tag = el.find('name')
 
@@ -296,8 +301,11 @@ class ServiceProviders(object):
     def _guess_country_code(self):
         """Return country based on locale lang attribute."""
         language_code = locale.getdefaultlocale()[0]
-        lc_list = language_code.split('_')
-        country_code = lc_list[1].lower() if len(lc_list) >= 2 else ''
+        if language_code is None:
+            country_code = ''
+        else:
+            lc_list = language_code.split('_')
+            country_code = lc_list[1].lower() if len(lc_list) >= 2 else ''
         return country_code
 
     def _get_initials(self):
