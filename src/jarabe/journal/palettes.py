@@ -29,6 +29,7 @@ from gi.repository import GLib
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import find_icon_name
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
@@ -300,12 +301,8 @@ class CopyMenuBuilder():
         volume_menu = VolumeMenu(self._journalactivity,
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
-        icon_theme = Gtk.IconTheme.get_default()
-        for name in mount.get_icon().props.names:
-            if icon_theme.has_icon(name):
-                volume_menu.set_image(Icon(icon_name=name,
-                                           icon_size=Gtk.IconSize.MENU))
-                break
+        volume_menu.set_image(Icon(icon_name=find_icon_name(mount),
+                                   icon_size=Gtk.IconSize.MENU))
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
         self._volumes[mount.get_root().get_path()] = volume_menu
