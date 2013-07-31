@@ -23,60 +23,61 @@ from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import WebKit
 
+from sugar3 import env
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.bundle.activitybundle import ActivityBundle
 
 import logging
 import os
+import json
 from os.path import expanduser
-from helplink import get_links
 
 _logger = logging.getLogger('ViewHelp')
-links = get_links()
-activity_path = None
+
+# get the activity path
+activity_path = env.get_user_activities_path()
 
 
 def setup_view_help(activity):
-    global activity_path
+    # check whether the execution was from an activity
     bundle_path = activity.get_bundle_path()
     if bundle_path is None:
-        # display error message
+        _logger.error('Not executed from an activity')
         return
+
+    # get activity name and window id
     activity_bundle = ActivityBundle(bundle_path)
     activity_name = activity_bundle.get_name()
-    activity_path = str.join(os.sep, activity.get_bundle_path().split(os.sep)[:-1])
-#    _logger.exception('ACTIVITY PATH:' + activity_path)
+    window_xid = activity.get_xid()
 
-    if activity_name in links.keys():
-        viewhelp = ViewHelp(activity_name, links[activity_name])
-        viewhelp.show()
-    else:
-        # display error message
-        return
+    # get the help file name for the activity
+    try:
+	help_content_link = os.path.join(activity_path, 'Help.activity/helplink.json')
+        json_file = open(help_content_link)
+        links = json.load(json_file)
+
+        # display the activity help in a window
+        if activity_name in links.keys():
+            viewhelp = ViewHelp(activity_name, links[activity_name], window_xid)
+            viewhelp.show()
+    except Exception:
+    	_logger.error('helplink.json file was not found or the json was malformed')
 
 
 class ViewHelp(Gtk.Window):
-    def __init__(self, activity_name, help_file):
+    parent_window_xid = None
+    def __init__(self, activity_name, help_file, window_xid):
+        parent_window_xid = window_xid
+
+    	# initiate Gtk Window
         Gtk.Window.__init__(self)
         box = Gtk.Box()
         box.set_orientation(Gtk.Orientation.VERTICAL)
         self.add(box)
         box.show()
-
-        toolbar = Toolbar(activity_name)
-        box.pack_start(toolbar, False, False, 0)
-        toolbar.show()
-        toolbar.connect('stop-clicked', self.stop_clicked_cb)
-
-        webview = WebKit.WebView()
-        webview.set_full_content_zoom(True)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.add(webview)
-        scrolled_window.show()
-
-        self.set_decorated(False)
+        
+	self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)
         self.set_has_resize_grip(False)
@@ -85,16 +86,50 @@ class ViewHelp(Gtk.Window):
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
+	self.connect('realize', self.realize_cb)
+
+        # implement the tool bar
+        toolbar = Toolbar(activity_name)
+        box.pack_start(toolbar, False, False, 0)
+        toolbar.show()
+        toolbar.connect('stop-clicked', self.stop_clicked_cb)
+
+        # implement WebKit WebView
+        webview = WebKit.WebView()
+        webview.set_full_content_zoom(True)
+
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.add(webview)
+        scrolled_window.show()
+
         box.pack_start(scrolled_window, True, True, 0)
 
         webview.show()
-        language = self.get_current_language()
+
+	# get the current language and display load the relavent html file
+        
+	
+	
+	language = self.get_current_language()
         locale_dir = self.get_locale_directory(language)
+
+
+
+
         #_logger.exception('LOCALE_DIR: ', locale_dir)
         webview.load_uri('file://' + os.path.join(locale_dir + help_file))
 
     def stop_clicked_cb(self, widget):
         self.destroy()
+
+    def realize_cb(self, widget):
+    	# focus the help viewer and prompt it over the activity window
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+	window = self.get_window()
+	window.set_accept_focus(True)
+	display = Gdk.Display.get_default()
+	parent = GdkX11.X11Window.foreign_new_for_display(display, self.parent_window_xid)
+	window.set_transient_for(parent)
 
     def get_current_language(self):
         language_file_path = os.path.join(expanduser('~'), '.i18n')
@@ -126,6 +161,7 @@ class Toolbar(Gtk.Toolbar):
 
         self.add_separator(False)
 
+        # display activity name as the title of the window
         label = Gtk.Label()
         label.set_markup('<b>%s</b>' % title)
         label.set_alignment(0, 0.5)
