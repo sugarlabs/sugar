@@ -300,12 +300,9 @@ class CopyMenuBuilder():
         volume_menu = VolumeMenu(self._journalactivity,
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
-        icon_theme = Gtk.IconTheme.get_default()
-        for name in mount.get_icon().props.names:
-            if icon_theme.has_icon(name):
-                volume_menu.set_image(Icon(icon_name=name,
-                                           icon_size=Gtk.IconSize.MENU))
-                break
+        icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
+        volume_menu.set_image(Icon(icon_size=Gtk.IconSize.MENU,
+                                   icon_name=icon_name))
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
         self._volumes[mount.get_root().get_path()] = volume_menu
