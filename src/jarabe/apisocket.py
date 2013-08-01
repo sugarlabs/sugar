@@ -30,13 +30,13 @@ from sugar3 import env
 from jarabe.model import shell
 
 
-class StreamMonitor:
+class StreamMonitor(object):
     def __init__(self):
         self.on_data = None
         self.on_close = None
 
 
-class API:
+class API(object):
     def __init__(self, client):
         self._client = client
 
@@ -198,7 +198,7 @@ class DatastoreAPI(API):
                                 error_handler=error_handler)
 
 
-class APIClient:
+class APIClient(object):
     def __init__(self, session):
         self._session = session
 
@@ -223,7 +223,7 @@ class APIClient:
         self._session.send_message(data, binary=True)
 
 
-class APIServer:
+class APIServer(object):
     def __init__(self):
         self._stream_monitors = {}
 
