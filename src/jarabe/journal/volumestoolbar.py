@@ -37,6 +37,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3 import env
 
 from jarabe.journal import model
+from jarabe.journal.misc import get_mount_icon_name
 from jarabe.view.palettes import VolumePalette
 
 
@@ -317,19 +318,8 @@ class VolumeButton(BaseButton):
         mount_point = mount.get_root().get_path()
         BaseButton.__init__(self, mount_point)
 
-        icon_name = None
-        icon_theme = Gtk.IconTheme.get_default()
-        for icon_name in mount.get_icon().props.names:
-            icon_info = icon_theme.lookup_icon(icon_name,
-                                               Gtk.IconSize.LARGE_TOOLBAR, 0)
-            if icon_info is not None:
-                break
-
-        if icon_name is None:
-            icon_name = 'drive'
-
-        self.props.icon_name = icon_name
-
+        self.props.icon_name = get_mount_icon_name(mount,
+                                                   Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
