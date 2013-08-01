@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-25 00:33-0400\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
 "PO-Revision-Date: 2013-07-31 22:18+0200\n"
 "Last-Translator: andika <andika@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -261,6 +261,16 @@ msgstr "Access Point Name (APN):"
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "Personal Identity Number (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -1580,7 +1590,7 @@ msgid "Copy"
 msgstr "Salin"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
-#: ../src/jarabe/journal/journaltoolbox.py:758
+#: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
 msgstr ""
@@ -1674,10 +1684,10 @@ msgid "Entries without a file cannot be copied."
 msgstr "Entri tanpa suatu berkas tak dapat disalin."
 
 #: ../src/jarabe/journal/palettes.py:369
-#, python-format
+#, python-format, fuzzy
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
+msgstr[0] "Apakah Anda ingin menghapus %d entri?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
