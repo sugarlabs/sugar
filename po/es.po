@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-25 00:33-0400\n"
-"PO-Revision-Date: 2013-07-30 17:13+0200\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
+"PO-Revision-Date: 2013-08-03 00:04+0200\n"
 "Last-Translator: AlanJAS <alanjas@hotmail.com>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "Language: es\n"
@@ -264,6 +264,16 @@ msgstr "Nombre de punto de acceso (APN):"
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "Número de identificación personal (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr "Plan #%s"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr "Proveedor %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -727,7 +737,6 @@ msgstr ""
 "seguido por el nombre de la clase."
 
 #: ../data/sugar.schemas.in.h:4
-#, fuzzy
 msgid "Activity update backend."
 msgstr "Backend de la Actividad actualizar."
 
@@ -929,7 +938,6 @@ msgid "List of keyboard options."
 msgstr "Lista de las opciones del teclado."
 
 #: ../data/sugar.schemas.in.h:46
-#, fuzzy
 msgid "Microformat update URL."
 msgstr "URL con el microformato de actualización."
 
@@ -998,7 +1006,6 @@ msgid "URL of the jabber server to use."
 msgstr "URL del servidor de Jabber para usar."
 
 #: ../data/sugar.schemas.in.h:64
-#, fuzzy
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
@@ -1312,13 +1319,13 @@ msgstr "Vista en lista"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
 msgstr "Vista de favoritos %d"
 
@@ -1615,7 +1622,7 @@ msgid "Copy"
 msgstr "Copiar"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
-#: ../src/jarabe/journal/journaltoolbox.py:758
+#: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
 msgstr "Seleccionadas %(selected)d de %(total)d"
