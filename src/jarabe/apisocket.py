@@ -47,6 +47,11 @@ class API(object):
 
 
 class ActivityAPI(API):
+    def __init__(self, client):
+        API.__init__(self, client)
+        self._activity.connect('pause', self._pause_cb)
+        self._activity.connect('resume', self._resume_cb)
+
     def get_xo_color(self, request):
         gconf_client = GConf.Client.get_default()
         color_string = gconf_client.get_string('/desktop/sugar/user/color')
@@ -57,6 +62,12 @@ class ActivityAPI(API):
         self._activity.get_window().close(GLib.get_current_time())
 
         self._client.send_result(request, [])
+
+    def _pause_cb(self, event):
+        self._client.send_notification("activity.pause")
+
+    def _resume_cb(self, event):
+        self._client.send_notification("activity.resume")
 
 
 class DatastoreAPI(API):
@@ -216,6 +227,15 @@ class APIClient(object):
         response = {"result": None,
                     "error": error,
                     "id": request["id"]}
+
+        self._session.send_message(json.dumps(response))
+
+    def send_notification(self, method, params=None):
+        if params is None:
+            params = []
+
+        response = {"method": method,
+                    "params": params}
 
         self._session.send_message(json.dumps(response))
 
