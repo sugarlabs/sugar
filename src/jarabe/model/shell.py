@@ -50,6 +50,11 @@ class Activity(GObject.GObject):
 
     __gtype_name__ = 'SugarHomeActivity'
 
+    __gsignals__ = {
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'resume': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
     LAUNCHING = 0
     LAUNCH_FAILED = 1
     LAUNCHED = 2
@@ -106,11 +111,14 @@ class Activity(GObject.GObject):
 
     launch_status = GObject.property(getter=get_launch_status)
 
-    def add_window(self, window):
+    def add_window(self, window, is_main_window=False):
         """Add a window to the windows stack."""
         if not window:
             raise ValueError('window must be valid')
         self._windows.append(window)
+
+        if is_main_window:
+            main_window.connect('state-changed', self._state_changed_cb)
 
     def remove_window_by_xid(self, xid):
         """Remove a window from the windows stack."""
@@ -311,6 +319,13 @@ class Activity(GObject.GObject):
     def __launch_failed_cb(self, model, home_activity):
         if home_activity is self:
             self._set_launch_status(Activity.LAUNCH_FAILED)
+
+    def _state_changed_cb(self, main_window, changed_mask, new_state):
+        if changed_mask & Wnck.WindowState.MINIMIZED:
+            if new_state & Wnck.WindowState.MINIMIZED:
+                self.emit('pause')
+            else:
+                self.emit('resume')
 
 
 class ShellModel(GObject.GObject):
@@ -548,19 +563,27 @@ class ShellModel(GObject.GObject):
 
                 window.maximize()
 
+            is_main_window = False
+
             if not home_activity:
                 logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
                 self._add_activity(home_activity)
+
             else:
                 logging.debug('window registered for %s', activity_id)
-                home_activity.add_window(window)
 
-            if window.get_window_type() != Wnck.WindowType.SPLASHSCREEN \
-                    and \
-                    home_activity.get_launch_status() == Activity.LAUNCHING:
+                # Check if window is the 'main' app window, not the
+                # launcher window.
+                is_main_window = window.get_window_type() != \
+                    Wnck.WindowType.SPLASHSCREEN and \
+                    home_activity.get_launch_status() == Activity.LAUNCHING
+
+                home_activity.add_window(window, is_main_window)
+
+            if is_main_window:
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
