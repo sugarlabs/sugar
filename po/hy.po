@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-23 00:34-0400\n"
-"PO-Revision-Date: 2013-07-24 14:20+0200\n"
-"Last-Translator: anushnur <anush.mkrtchyan@ca1492.com>\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
+"PO-Revision-Date: 2013-08-02 08:53+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -260,6 +260,16 @@ msgstr "Միացման Կետի Անունը (APN)."
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "Անձնական Համարը (PIN)."
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr "Պլան #%s"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr "Մատակարար %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -554,7 +564,7 @@ msgstr "Անջատված է"
 #: ../src/jarabe/frame/activitiestray.py:778
 #: ../src/jarabe/journal/expandedentry.py:159
 #: ../src/jarabe/journal/journaltoolbox.py:480
-#: ../src/jarabe/journal/palettes.py:154
+#: ../src/jarabe/journal/palettes.py:159
 msgid "Cancel"
 msgstr "Չեղարկել"
 
@@ -1091,8 +1101,8 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Ձեր փոփոխությունները կիրառելու համար դուք պետք է վերամեկնարկեք Sugar-ը:\n"
 
-#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:182
-#: ../src/jarabe/journal/palettes.py:282 ../src/jarabe/journal/palettes.py:315
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
+#: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "Զգուշացում"
@@ -1142,7 +1152,7 @@ msgid "Version %s"
 msgstr "Տարբերակ %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
-#: ../src/jarabe/journal/listview.py:427 ../src/jarabe/journal/iconview.py:299
+#: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
 msgstr "Ջնջել որոնումը"
 
@@ -1170,7 +1180,9 @@ msgstr "Պահել"
 #: ../src/jarabe/journal/expandedentry.py:153
 #: ../src/jarabe/journal/journaltoolbox.py:443
 #: ../src/jarabe/journal/journaltoolbox.py:475
-#: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:689
+#: ../src/jarabe/journal/journaltoolbox.py:695
+#: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
 msgstr "Ջնջել"
 
@@ -1261,8 +1273,8 @@ msgstr "Անլար կապի անվտանգության."
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:591
-#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
+#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Վերադառնալ"
 
@@ -1402,7 +1414,7 @@ msgstr "Անուն."
 msgid "Click to change color:"
 msgstr "Քլիք`գույնը փոփոխելու համար."
 
-#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
 msgstr "Հետ"
 
@@ -1412,69 +1424,68 @@ msgstr "Հաջորդ"
 
 #: ../src/jarabe/journal/expandedentry.py:155
 #: ../src/jarabe/journal/journaltoolbox.py:477
-#: ../src/jarabe/journal/palettes.py:151
+#: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Ցանկանում ես ընդմիշտ ջնջել  \"%s\"?"
 
-#: ../src/jarabe/journal/expandedentry.py:295
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:706
-#: ../src/jarabe/journal/palettes.py:68
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
+#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/journal/palettes.py:597
 #: ../src/jarabe/journal/volumestoolbar.py:131
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
 msgstr "Անվերնագիր"
 
-#: ../src/jarabe/journal/expandedentry.py:366
+#: ../src/jarabe/journal/expandedentry.py:367
 msgid "No preview"
 msgstr "Առանց նախադիտում"
 
-#: ../src/jarabe/journal/expandedentry.py:381
+#: ../src/jarabe/journal/expandedentry.py:382
 #, python-format
 msgid "Kind: %s"
 msgstr "Տեսակ. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:381
-#: ../src/jarabe/journal/listmodel.py:151
-#: ../src/jarabe/journal/listmodel.py:159
+#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/listmodel.py:165
+#: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
 msgstr "Անծանոթ"
 
-#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Date: %s"
 msgstr "Ամսաթիվ. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:383
+#: ../src/jarabe/journal/expandedentry.py:384
 #, python-format
 msgid "Size: %s"
 msgstr "Չափս. %s"
 
-#: ../src/jarabe/journal/expandedentry.py:410
+#: ../src/jarabe/journal/expandedentry.py:411
 #: ../src/jarabe/journal/misc.py:109
 msgid "No date"
 msgstr "Ամսաթիվ չկա"
 
-#: ../src/jarabe/journal/expandedentry.py:419
+#: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
 msgstr "Մասնակիցներ."
 
-#: ../src/jarabe/journal/expandedentry.py:457
+#: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
 msgstr "Նկարագրություն."
 
-#: ../src/jarabe/journal/expandedentry.py:463
+#: ../src/jarabe/journal/expandedentry.py:464
 msgid "Tags:"
 msgstr "Պիտակներ."
 
-#: ../src/jarabe/journal/expandedentry.py:468
+#: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
 msgstr "Մեկնաբանություններ`"
 
-#: ../src/jarabe/journal/journalactivity.py:138
+#: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
-#: ../src/jarabe/journal/journaltoolbox.py:518
-#: ../src/jarabe/journal/palettes.py:219
+#: ../src/jarabe/journal/palettes.py:248
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "Մատյան"
@@ -1527,12 +1538,12 @@ msgid "Anything"
 msgstr "Ամենը"
 
 #: ../src/jarabe/journal/journaltoolbox.py:419
-#: ../src/jarabe/journal/palettes.py:97
+#: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
 msgstr "Պատճենել"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
-#: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
+#: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr "Կրկնօրինակել"
 
@@ -1541,7 +1552,7 @@ msgid "Refresh"
 msgstr "Թարմացնել"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
+#: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
@@ -1549,52 +1560,72 @@ msgstr "Գրառման պատճենահանման ձախողում: %s"
 
 # Խափանում, վրիպում, սխալ
 #: ../src/jarabe/journal/journaltoolbox.py:471
-#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
+#: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr "Ձախողում"
 
-#: ../src/jarabe/journal/journaltoolbox.py:529
-#: ../src/jarabe/journal/palettes.py:230
-#: ../src/jarabe/journal/volumestoolbar.py:211
-msgid "Documents"
-msgstr "Փաստաթղթեր"
-
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:594
-#: ../src/jarabe/journal/palettes.py:78
+#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/palettes.py:80
 msgid "Start"
 msgstr "Մեկնարկ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:622
+#: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
 msgstr "Դասավորել ըստ փոփոխման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:623
+#: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
 msgstr "Դասավորել ըստ ստեղծման ամսաթվի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:624
+#: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
 msgstr "Դասավորել ըստ չափսի"
 
-#: ../src/jarabe/journal/journaltoolbox.py:633
+#: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
 msgstr "Դասավորված տեսք"
 
-#: ../src/jarabe/journal/listview.py:339 ../src/jarabe/journal/iconview.py:211
+#: ../src/jarabe/journal/journaltoolbox.py:661
+msgid "Deselect all"
+msgstr "Ապանշել բոլորը"
+
+#: ../src/jarabe/journal/journaltoolbox.py:674
+msgid "Select all"
+msgstr "Նշել բոլորը"
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+#, python-format
+msgid "Do you want to erase %d entry?"
+msgid_plural "Do you want to erase %d entries?"
+msgstr[0] "Ցանակնո՞մ եք ջնջել %d մուտքագրումը:"
+msgstr[1] "Ցանկանո՞մ եք ջնջել %d մուտքագրումները:"
+
+#: ../src/jarabe/journal/journaltoolbox.py:714
+#: ../src/jarabe/journal/palettes.py:364
+msgid "Copy"
+msgstr "Պատճենել"
+
+#. TRANS: Do not translate %(selected)d and %(total)d.
+#: ../src/jarabe/journal/journaltoolbox.py:759
+#, python-format
+msgid "Selected %(selected)d of %(total)d"
+msgstr "Ընտրված %(selected)d of %(total)d -ից"
+
+#: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "Ձեր Մատյանը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:342 ../src/jarabe/journal/iconview.py:214
+#: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
 msgstr "Ձեր թղթապանակը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:344 ../src/jarabe/journal/iconview.py:216
+#: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
 msgstr "Սարքը դատարկ է"
 
-#: ../src/jarabe/journal/listview.py:346 ../src/jarabe/journal/iconview.py:218
+#: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
 msgstr "Համընկնող գրառումներ չկան"
 
@@ -1636,50 +1667,75 @@ msgstr "Ընտրել առարկան %s գործունեության միջոցո
 msgid "Close"
 msgstr "Փակել"
 
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Resume with"
 msgstr "Վերսկսել"
 
-#: ../src/jarabe/journal/palettes.py:79
+#: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
 msgstr "Մեկնարկել"
 
-#: ../src/jarabe/journal/palettes.py:92 ../src/jarabe/journal/palettes.py:393
+#: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
 msgstr "Գրառումը սկսելու համար չկա ոչ մի գործունեություն"
 
-#: ../src/jarabe/journal/palettes.py:116
+#: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
 msgstr "ՈՒղարկել"
 
-#: ../src/jarabe/journal/palettes.py:125
+#: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
 msgstr "Դիտել մանրամասները"
 
-#: ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
 msgstr "Առանց ֆայլի գրառումները չեն կարող ուղարկվել:"
 
-#: ../src/jarabe/journal/palettes.py:281 ../src/jarabe/journal/palettes.py:314
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:211
+msgid "Documents"
+msgstr "Փաստաթղթեր"
+
+#: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
 msgstr "Առանց ֆայլի գրառումները չեն կարող պատճենահանվել:"
 
-#: ../src/jarabe/journal/palettes.py:303
+#: ../src/jarabe/journal/palettes.py:369
+#, python-format
+msgid "Do you want to copy %d entry?"
+msgid_plural "Do you want to copy %d entries?"
+msgstr[0] "Ցանկանո՞ւմ եք պատճենել  %d մուտքագրումը:"
+msgstr[1] "Ցանկանո՞ւմ եք պատճենել  %d մուտքագրումները:"
+
+#: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
 msgstr "Ցուցատախտակ"
 
-#: ../src/jarabe/journal/palettes.py:358
+#: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
 msgstr "Ներկա չի ոչ մի ընկեր"
 
-#: ../src/jarabe/journal/palettes.py:363
+#: ../src/jarabe/journal/palettes.py:459
 msgid "No valid connection found"
 msgstr "Ոչ մի վավեր կապ չի գտնվել"
 
-#: ../src/jarabe/journal/palettes.py:391
+#: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
 msgstr "Գրառումը շարունակելու համար չկա ոչ մի գործունեություն"
+
+#: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
+msgid "Stop"
+msgstr "Կանգ"
+
+#: ../src/jarabe/journal/palettes.py:561
+msgid "Continue"
+msgstr "Շարունակել:"
+
+#: ../src/jarabe/journal/palettes.py:598
+#, python-format
+msgid "%(index)d of %(total)d : %(object_title)s"
+msgstr "%(index)d of %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
@@ -1924,10 +1980,6 @@ msgstr "Գործունեության մեկնարկը ձախողվեց:"
 #: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
 msgstr "Դիտել աղբյուրը"
-
-#: ../src/jarabe/view/palettes.py:110
-msgid "Stop"
-msgstr "Կանգ"
 
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
