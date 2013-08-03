@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-07-31 22:18+0200\n"
+"PO-Revision-Date: 2013-08-03 06:24+0200\n"
 "Last-Translator: andika <andika@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -238,9 +238,8 @@ msgid "Provider:"
 msgstr "Penyedia:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
-#, fuzzy
 msgid "Plan:"
-msgstr "Langganan:"
+msgstr "Layanan:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
@@ -265,12 +264,12 @@ msgstr "Personal Identity Number (PIN):"
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Layanan #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Operator %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -1593,7 +1592,7 @@ msgstr "Salin"
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Dipilih %(selected)d dari %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
@@ -1684,10 +1683,10 @@ msgid "Entries without a file cannot be copied."
 msgstr "Entri tanpa suatu berkas tak dapat disalin."
 
 #: ../src/jarabe/journal/palettes.py:369
-#, python-format, fuzzy
+#, python-format, 
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] "Apakah Anda ingin menghapus %d entri?"
+msgstr[0] "Apakah Anda ingin menyalin %d entri?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
@@ -1711,12 +1710,12 @@ msgstr "Hentikan"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Lanjutkan"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d dari %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
