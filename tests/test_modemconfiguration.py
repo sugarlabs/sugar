@@ -15,46 +15,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-import sys
 import unittest
 from xml.etree.cElementTree import ElementTree
+
 from mock import patch
 
-from jarabe import config
-
-
-def setUpModule():
-    sys.path.append(config.ext_path)
-
-
-def tearDownModule():
-    sys.path.remove(config.ext_path)
-    # Needed to actually get rid of imported modules
-    try:
-        del sys.modules['cpesection.modemconfiguration.model']
-        del sys.modules['cpesection.modemconfiguration']
-        del sys.modules['cpesection']
-    except KeyError:
-        pass
+from cpsection.modemconfiguration.model import CountryCodeParser, \
+    ServiceProvidersParser, ServiceProviders, PROVIDERS_PATH
+from cpsection.modemconfiguration.model import GCONF_SP_COUNTRY, \
+    GCONF_SP_PROVIDER, GCONF_SP_PLAN
 
 
 class CountryCodeParserTest(unittest.TestCase):
     def test_get_country(self):
-        from cpsection.modemconfiguration.model import CountryCodeParser
         self.assertEqual(CountryCodeParser().get('ad'), 'Andorra')
         self.assertEqual(CountryCodeParser().get('es'), 'Spain')
         self.assertEqual(CountryCodeParser().get('zw'), 'Zimbabwe')
 
     def test_raise_if_not_found(self):
-        from cpsection.modemconfiguration.model import CountryCodeParser
         with self.assertRaises(KeyError):
             CountryCodeParser().get('xx')
 
 
 class ServiceProvidersParserTest(unittest.TestCase):
     def setUp(self):
-        from cpsection.modemconfiguration.model import ServiceProvidersParser,\
-            PROVIDERS_PATH
         self.tree = ElementTree(file=PROVIDERS_PATH)
         self.countries_from_xml = self.tree.findall('country')
         self.db = ServiceProvidersParser()
@@ -71,7 +55,6 @@ class ServiceProvidersParserTest(unittest.TestCase):
             self.assertEqual(idx, country_idx)
 
     def test_get_country_name_by_idx(self):
-        from cpsection.modemconfiguration.model import CountryCodeParser
         for idx, country in enumerate(self.countries_from_class):
             country_code = country.attrib['code']
             self.assertEqual(
@@ -124,12 +107,10 @@ class ServiceProvidersParserTest(unittest.TestCase):
 
 class ServiceProvidersTest(unittest.TestCase):
     def setUp(self):
-        from cpsection.modemconfiguration.model import ServiceProviders
         self.db = ServiceProviders()
         self.countries = self.db.get_countries()
 
     def test_go_trough_all_combo_options(self):
-        from cpsection.modemconfiguration.model import ServiceProviders
         # Traverse countries
         for country in self.countries:
             # Check if country is stored
@@ -166,8 +147,6 @@ class ServiceProvidersTest(unittest.TestCase):
 class FakeGConfClient(object):
 
     def __init__(self, **kwargs):
-        from cpsection.modemconfiguration.model import \
-            GCONF_SP_COUNTRY, GCONF_SP_PROVIDER, GCONF_SP_PLAN
         self.store = {
             GCONF_SP_COUNTRY: None,
             GCONF_SP_PROVIDER: None,
@@ -199,7 +178,6 @@ class ServiceProvidersGuessCountryTest(unittest.TestCase):
         self.addCleanup(gconf_patcher.stop)
 
     def test_guess_country(self):
-        from cpsection.modemconfiguration.model import ServiceProviders
         LOCALE = ('hi_IN', 'UTF-8')
         default_country_code = LOCALE[0][3:5].lower()
 

@@ -13,6 +13,9 @@ EXTRA_DIST =                    \
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-update-mimedb
 
-test:
+lint:
 	flake8 $(top_srcdir)
+
+test: lint
+	PYTHONPATH=$(pkgdatadir)/extensions:$(PYTHONPATH) \
 	python -m sugar3.test.discover $(top_srcdir)/tests
