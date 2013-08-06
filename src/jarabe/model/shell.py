@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
+from gi.repository import GLib
 import dbus
 
 from sugar3 import dispatch
@@ -53,6 +54,7 @@ class Activity(GObject.GObject):
     __gsignals__ = {
         'pause': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'resume': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'stop': (GObject.SignalFlags.RUN_LAST, GObject.TYPE_BOOLEAN, ([])),
     }
 
     LAUNCHING = 0
@@ -118,7 +120,19 @@ class Activity(GObject.GObject):
         self._windows.append(window)
 
         if is_main_window:
-            main_window.connect('state-changed', self._state_changed_cb)
+            window.connect('state-changed', self._state_changed_cb)
+
+    def stop(self):
+        # For web activities the Apisocket will connect to the 'stop'
+        # signal, thus preventing the window close.  Then, on the
+        # 'activity.close' method, it will call close_window()
+        # directly.
+        close_window = not self.emit('stop')
+        if close_window:
+            self.close_window()
+
+    def close_window(self):
+        self.get_window().close(GLib.get_current_time())
 
     def remove_window_by_xid(self, xid):
         """Remove a window from the windows stack."""
@@ -564,8 +578,8 @@ class ShellModel(GObject.GObject):
                 window.maximize()
 
             is_main_window = window.get_window_type() != \
-                    Wnck.WindowType.SPLASHSCREEN and \
-                    home_activity.get_launch_status() == Activity.LAUNCHING
+                Wnck.WindowType.SPLASHSCREEN and \
+                home_activity.get_launch_status() == Activity.LAUNCHING
 
             if not home_activity:
                 logging.debug('first window registered for %s', activity_id)
