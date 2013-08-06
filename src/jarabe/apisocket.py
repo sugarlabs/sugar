@@ -30,13 +30,13 @@ from sugar3 import env
 from jarabe.model import shell
 
 
-class StreamMonitor:
+class StreamMonitor(object):
     def __init__(self):
         self.on_data = None
         self.on_close = None
 
 
-class API:
+class API(object):
     def __init__(self, client):
         self._client = client
 
@@ -47,6 +47,12 @@ class API:
 
 
 class ActivityAPI(API):
+    def __init__(self, client):
+        API.__init__(self, client)
+        self._activity.connect('pause', self._pause_cb)
+        self._activity.connect('resume', self._resume_cb)
+        self._activity.connect('stop', self._stop_cb)
+
     def get_xo_color(self, request):
         gconf_client = GConf.Client.get_default()
         color_string = gconf_client.get_string('/desktop/sugar/user/color')
@@ -57,6 +63,21 @@ class ActivityAPI(API):
         self._activity.get_window().close(GLib.get_current_time())
 
         self._client.send_result(request, [])
+
+    def _pause_cb(self, event):
+        self._client.send_notification("activity.pause")
+
+    def _resume_cb(self, event):
+        self._client.send_notification("activity.resume")
+
+    def _stop_cb(self, event):
+        # When the web activity receives this notification, it has
+        # time for saving the state and do any cleanup needed.  Then
+        # it must send a 'close' message to complete the activity
+        # closing.
+        self._client.send_notification("activity.stop")
+        return True
+
 
 
 class DatastoreAPI(API):
@@ -198,7 +219,7 @@ class DatastoreAPI(API):
                                 error_handler=error_handler)
 
 
-class APIClient:
+class APIClient(object):
     def __init__(self, session):
         self._session = session
 
@@ -219,11 +240,20 @@ class APIClient:
 
         self._session.send_message(json.dumps(response))
 
+    def send_notification(self, method, params=None):
+        if params is None:
+            params = []
+
+        response = {"method": method,
+                    "params": params}
+
+        self._session.send_message(json.dumps(response))
+
     def send_binary(self, data):
         self._session.send_message(data, binary=True)
 
 
-class APIServer:
+class APIServer(object):
     def __init__(self):
         self._stream_monitors = {}
 
