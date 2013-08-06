@@ -127,7 +127,7 @@ class CurrentActivityPalette(BasePalette):
         self.emit('done')
 
     def __stop_activate_cb(self, menu_item):
-        self._home_activity.get_window().close(1)
+        self._home_activity.stop()
         self.emit('done')
 
 

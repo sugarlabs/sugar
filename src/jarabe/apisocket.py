@@ -51,6 +51,7 @@ class ActivityAPI(API):
         API.__init__(self, client)
         self._activity.connect('pause', self._pause_cb)
         self._activity.connect('resume', self._resume_cb)
+        self._activity.connect('stop', self._stop_cb)
 
     def get_xo_color(self, request):
         gconf_client = GConf.Client.get_default()
@@ -68,6 +69,15 @@ class ActivityAPI(API):
 
     def _resume_cb(self, event):
         self._client.send_notification("activity.resume")
+
+    def _stop_cb(self, event):
+        # When the web activity receives this notification, it has
+        # time for saving the state and do any cleanup needed.  Then
+        # it must send a 'close' message to complete the activity
+        # closing.
+        self._client.send_notification("activity.stop")
+        return True
+
 
 
 class DatastoreAPI(API):
