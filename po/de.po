@@ -1326,13 +1326,13 @@ msgstr "Listenansicht"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
 msgstr "Favoritenansicht %d"
 
