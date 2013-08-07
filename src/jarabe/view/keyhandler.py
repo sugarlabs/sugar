@@ -118,7 +118,7 @@ class KeyHandler(object):
         if active_activity.is_journal():
             return
 
-        active_activity.get_window().close()
+        active_activity.stop()
 
     def handle_zoom_mesh(self, event_time):
         shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH, event_time)
