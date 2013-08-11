@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-10 12:53+0200\n"
+"PO-Revision-Date: 2013-08-11 18:09+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Informazioni su"
+msgstr "Informazioni"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -120,7 +120,7 @@ msgstr "Sfondo"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr "Seleziona sfondo"
+msgstr "Seleziona sfondo:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
@@ -702,7 +702,6 @@ msgstr "Casa"
 # Nel contesto di Sugar Lab dovrebbe essere intesa come "Componente aggiuntivo", come si può vedere cambiando lingua in questa pagina: http://activities.sugarlabs.org//en-US/sugar/
 #: ../extensions/globalkey/screenshot.py:71
 #: ../src/jarabe/frame/zoomtoolbar.py:62
-#, fuzzy
 msgid "Activity"
 msgstr "Attività"
 
@@ -720,8 +719,8 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"se \"disabled\" viene richiesto il nome alla inizializzazione; se \"system\" "
-"verrà utilizzato il nome presente nell'account UNIX."
+"\"disabled\" per richiedere il nome durante l'inizializzazione; \"system\" per "
+"riutilizzare il nome presente nell'account UNIX."
 
 #: ../data/sugar.schemas.in.h:2
 msgid ""
@@ -1610,29 +1609,29 @@ msgstr "Vista per ordinamento"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "Deseleziona tutto"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "Seleziona tutto"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vuoi eliminare %d elemento?"
+msgstr[1] "Vuoi eliminare %d elementi?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "Copia"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Selezionati %(selected)d di %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
@@ -1683,7 +1682,7 @@ msgstr "Scegli un oggetto"
 #: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Scegli un oggetto da aprire con l'attività %s"
 
 #: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
@@ -1728,8 +1727,8 @@ msgstr "Elementi senza file non possono essere copiati."
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vuoi copiare %d elemento?"
+msgstr[1] "Vuoi copiare %d elementi?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
@@ -1753,12 +1752,12 @@ msgstr "Chiudi"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d di %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
@@ -1783,9 +1782,8 @@ msgid "The device is no longer managed."
 msgstr "Il dispositivo non è più gestito."
 
 #: ../src/jarabe/model/network.py:222
-#, fuzzy
 msgid "The device could not be readied for configuration."
-msgstr "Il dispositivo non può essere pronto per la configurazione."
+msgstr "Il dispositivo potrebbe non essere pronto per la configurazione."
 
 #: ../src/jarabe/model/network.py:224
 msgid ""
@@ -1866,7 +1864,7 @@ msgstr "Il servizio AutoIP ha riportato un errore imprevisto."
 
 #: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "Il servizio AutoIP è terminato o mancato in modo imprevisto."
+msgstr "Il servizio AutoIP è terminato in modo imprevisto."
 
 #: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
@@ -1878,9 +1876,9 @@ msgstr ""
 "La composizione del numero è fallita perché non c'era il segnale di linea."
 
 #: ../src/jarabe/model/network.py:267
-#, fuzzy
 msgid "Dialing failed because there was no carrier."
-msgstr "La composizione del numero è fallita perché non c'era la linea."
+msgstr ""
+"La composizione del numero è fallita perché non c'era il gestore telefonico."
 
 #: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
@@ -1908,16 +1906,15 @@ msgstr "Registrazione alla rete negata."
 
 #: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
-msgstr "Registrazione alla rete scaduta."
+msgstr "Tempo scaduto per la registrazione alla rete."
 
 #: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
 msgstr "La registrazione alla rete GSM richiesta è fallita."
 
 #: ../src/jarabe/model/network.py:285
-#, fuzzy
 msgid "PIN check failed."
-msgstr "Controllo del PIN respinto."
+msgstr "Controllo del PIN fallito."
 
 #: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
@@ -1952,14 +1949,12 @@ msgid "The supplicant is now available."
 msgstr "Il supplicant è ora disponibile."
 
 #: ../src/jarabe/model/network.py:304
-#, fuzzy
 msgid "The modem could not be found."
 msgstr "Il modem non è stato trovato."
 
 #: ../src/jarabe/model/network.py:306
-#, fuzzy
 msgid "The Bluetooth connection failed or timed out."
-msgstr "La connessione Bluetooth non riuscita o scaduta."
+msgstr "Connessione Bluetooth non riuscita o scaduta."
 
 #: ../src/jarabe/model/network.py:308
 msgid "Unused."
@@ -1983,7 +1978,7 @@ msgstr "Riavvia"
 
 #: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
-msgstr "Disconnessione"
+msgstr "Disconnetti"
 
 #: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
@@ -1996,7 +1991,7 @@ msgstr "Invito per %s"
 
 #: ../src/jarabe/view/launcher.py:144
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> non è riuscito ad avviarsi."
 
@@ -2006,7 +2001,7 @@ msgstr "Inizio..."
 
 #: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
-msgstr "L'attività ha fallito l'avvio"
+msgstr "L'attività non è riuscita ad avviarsi"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
@@ -2036,7 +2031,7 @@ msgstr "Sorgente della Attività"
 
 #: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
-msgstr "Sorgente della Sugar Toolkit"
+msgstr "Sorgente Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:408
 #, python-format
