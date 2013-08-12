@@ -50,6 +50,7 @@ def setup_view_help(activity):
     # get activity name and window id
     activity_bundle = ActivityBundle(bundle_path)
     activity_name = activity_bundle.get_name()
+    bundle_id = activity_bundle.get_bundle_id()
     window_xid = activity.get_xid()
 
     # get the help file name for the activity
@@ -59,8 +60,8 @@ def setup_view_help(activity):
         links = json.load(json_file)
 
         # display the activity help in a window
-        if activity_name in links.keys():
-            viewhelp = ViewHelp(activity_name, links[activity_name], window_xid)
+        if bundle_id in links.keys():
+            viewhelp = ViewHelp(activity_name, links[bundle_id], window_xid)
             viewhelp.show()
         else:
             _logger.error('Help content is not available for the activity')
@@ -110,18 +111,10 @@ class ViewHelp(Gtk.Window):
 
         webview.show()
 
-        # get the current language and display load the relavent html file
-
-
-
+        # get the current language and display relavent html file
         language = self.get_current_language()
-        locale_dir = self.get_locale_directory(language)
-
-
-
-
-        #_logger.exception('LOCALE_DIR: ', locale_dir)
-        webview.load_uri('file://' + os.path.join(locale_dir + help_file))
+        view_file = self.get_help_file(language, help_file)
+        webview.load_uri('file://' + view_file)
 
     def stop_clicked_cb(self, widget):
         self.destroy()
@@ -136,19 +129,13 @@ class ViewHelp(Gtk.Window):
         window.set_transient_for(parent)
 
     def get_current_language(self):
-        language_file_path = os.path.join(expanduser('~'), '.i18n')
-        f = open(language_file_path, 'r')
-        language = f.readlines()[0].split('=')[1]
-        language = language.split('.')[0]
-        f.close()
-        return language
+        locale = os.environ.get('LANG')
+        return locale.split('.')[0].split('_')[0].lower()
 
-    def get_locale_directory(self, language):
-        path = os.path.join(activity_path, 'Help.activity/help/')
-        #locale_path = os.path.join(path, language)
-        #_logger.exception('LOCALE PATH: ' + locale_path)
-        #if os.path.isdir(locale_path):
-        #return locale_path
+    def get_help_file(self, language, help_file):
+        path = os.path.join(activity_path, 'Help.activity/help/', language, help_file)
+        if not os.path.isfile(path):
+            path = os.path.join(activity_path, 'Help.activity/help/en/', help_file)
         return path
 
 
