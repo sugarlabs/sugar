@@ -428,7 +428,8 @@ msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "من الإصدارة %(current)s إلى %(new)s (الحجم %(size)s)"
 
 #: ../extensions/cpsection/updater/view.py:380
-#, python-format, fuzzy
+#, python-format, 
+#, python-format,
 msgid "Version %(version)s (Size: %(size)s)"
 msgstr "إصدارة %(current)s  (الحجم %(size)s)"
 
@@ -456,7 +457,7 @@ msgstr "%.1f م.بايت"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
-msgstr ""
+msgstr "اضبط خدمات الوب"
 
 #: ../extensions/cpsection/webaccount/view.py:42
 #, python-format
@@ -464,6 +465,8 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"لم تُثبّت أي خدمات وب.\n"
+"من فضلك زُر %s لمزيد من المعلومات."
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
@@ -494,7 +497,7 @@ msgstr "مشحون"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
-msgstr ""
+msgstr "اعرض لوحة المفاتيح"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -1098,11 +1101,11 @@ msgstr "أعِد التشغيل الآن"
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "ابحث في %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "الإعدادات"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1126,7 +1129,7 @@ msgstr "امسح البحث"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
-msgstr ""
+msgstr "لا توجد أنشطة مطابقة"
 
 #: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
@@ -1281,15 +1284,17 @@ msgstr "منظور القائمة"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
+#, python-format, python-format
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
-msgstr "المنظور المفضل"
+msgstr "منظور المفضلات %d"
 
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
@@ -1399,7 +1404,7 @@ msgstr "التالي"
 #: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "أتريد إزالة \"%s\" نهائيًا؟"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1453,7 +1458,7 @@ msgstr "الوُسوم:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "التعليقات:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1464,7 +1469,7 @@ msgstr "الدفتر"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr ""
+msgstr "المدخلات المفضلة"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
@@ -1525,7 +1530,7 @@ msgstr "استنسخ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "أعد التحميل"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
@@ -1565,11 +1570,11 @@ msgstr "رتّب المنظور"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "ألغ أختيار الكل"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "اختر الكل"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
@@ -1585,7 +1590,7 @@ msgstr[5] ""
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "انسخ"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
@@ -1683,12 +1688,12 @@ msgstr "لا يمكن نسخ المدخلات التي لا ملفات لها."
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "أتريد نسخ مدخلة واحدة؟"
+msgstr[1] "أتريد نسخ مدخلة واحدة؟"
+msgstr[2] "أتريد نسخ مدخلتين؟"
+msgstr[3] "أتريد نسخ %d مدخلات؟"
+msgstr[4] "أتريد نسخ %d مدخلة؟"
+msgstr[5] "أتريد نسخ %d مدخلة؟"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
@@ -1712,12 +1717,12 @@ msgstr "أوقف"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "أكمل"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d من %(total)d :‏ %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
