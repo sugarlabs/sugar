@@ -26,7 +26,7 @@ _session_manager = None
 
 
 def have_systemd():
-    return os.access("/run/systemd/seats", 0) >= 0
+    return os.access("/run/systemd/seats", os.F_OK)
 
 
 class SessionManager(session.SessionManager):
