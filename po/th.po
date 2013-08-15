@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-21 00:34-0400\n"
-"PO-Revision-Date: 2012-06-19 19:08+0200\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
+"PO-Revision-Date: 2013-08-15 13:24+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: th\n"
@@ -133,7 +133,7 @@ msgstr "วันที่และเวลา"
 msgid "Error timezone does not exist."
 msgstr "ข้อผิดพลาดไม่พบเขตเวลา"
 
-#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
 msgstr "เขตเวลา"
 
@@ -217,7 +217,7 @@ msgstr "เพิ่มภาษาที่คุณต้องการ ถ�
 msgid "Modem Configuration"
 msgstr "การกำหนดค่าโมเด็ม"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:68
+#: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -225,25 +225,47 @@ msgstr ""
 "คุณจะต้องให้ข้อมูลต่อไปนี้เพื่อตั้ง การเชื่อมต่อบรอดแบนด์โทรศัพท์มือถือ กับ "
 "เครือข่ายโทรศัพท์มือถือ (3G)"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:77
+#: ../extensions/cpsection/modemconfiguration/view.py:117
+msgid "Country:"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Provider:"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/view.py:119
+msgid "Plan:"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
 msgstr "ชื่อผู้ใช้:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:83
+#: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
 msgstr "รหัสผ่าน:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:89
+#: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
 msgstr "หมายเลข:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:95
+#: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
 msgstr "ชื่อจุดเชื่อม (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "หมายเลขประจำตัว (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr ""
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr ""
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -312,93 +334,106 @@ msgstr "ข้อผิดพลาดในอาร์กิวเมนต์
 msgid "Power management"
 msgstr "การจัดการพลังงาน"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
 msgstr "การจัดการพลังงานอัตโนมัติ (เพิ่มอายุแบตเตอรี่)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:62
 msgid "Software Update"
 msgstr "การปรับปรุงซอฟต์แวร์"
 
-#: ../extensions/cpsection/updater/view.py:63
+#: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
 "การปรับปรุงซอฟแวร์แก้ไขข้อผิดพลาดขจัดช่องโหว่ความปลอดภัยและให้ลูกเล่นใหม่ ๆ"
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:79
+msgid "Update in progress..."
+msgstr ""
+
+#: ../extensions/cpsection/updater/view.py:106
+msgid "Checking for updates..."
+msgstr "การตรวจสอบสำหรับการปรับปรุง..."
+
+#: ../extensions/cpsection/updater/view.py:108
+msgid "Installing updates..."
+msgstr "การกำลังติดตั้งการปรับปรุง..."
+
+#: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
 msgstr "กำลังตรวจสอบ %s..."
 
-#: ../extensions/cpsection/updater/view.py:131
+#: ../extensions/cpsection/updater/view.py:139
+#, fuzzy
+msgid "Looking for updates..."
+msgstr "การตรวจสอบสำหรับการปรับปรุง..."
+
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
 msgstr "กำลังดาวน์โหลด %s..."
 
-#: ../extensions/cpsection/updater/view.py:133
+#: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
 msgstr "กำลังปรับปรุง %s..."
 
-#: ../extensions/cpsection/updater/view.py:143
+#: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
 msgstr "ซอฟต์แวร์ของคุณเป็นปัจจุบัน"
 
-#: ../extensions/cpsection/updater/view.py:145
+#: ../extensions/cpsection/updater/view.py:155
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "คุณสามารถติดตั้งโปรแกรมปรับปรุง %s"
 
-#: ../extensions/cpsection/updater/view.py:163
-msgid "Checking for updates..."
-msgstr "การตรวจสอบสำหรับการปรับปรุง..."
-
-#: ../extensions/cpsection/updater/view.py:168
-msgid "Installing updates..."
-msgstr "การกำลังติดตั้งการปรับปรุง..."
-
-#: ../extensions/cpsection/updater/view.py:177
+#: ../extensions/cpsection/updater/view.py:184
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "ได้ทำการปรับปรุงซอฟต์แวร์ %s"
 
-#: ../extensions/cpsection/updater/view.py:261
+#: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
 msgstr "ติดตั้งที่เลือก"
 
-#: ../extensions/cpsection/updater/view.py:282
+#: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
 msgstr "ดาวน์โหลดขนาด: %s"
 
-#: ../extensions/cpsection/updater/view.py:370
+#: ../extensions/cpsection/updater/view.py:373
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "จากรุ่น %(current)s ไป %(new)s (ขนาด : %(size)s)"
 
+#: ../extensions/cpsection/updater/view.py:380
+#, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr ""
+
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:397
 msgid "None"
 msgstr "ไม่มี"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:400
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:394
+#: ../extensions/cpsection/updater/view.py:403
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:397
+#: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
@@ -510,13 +545,13 @@ msgstr "ตัดการเชื่อมต่อแล้ว"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:67 ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/desktop/keydialog.py:101
 #: ../src/jarabe/frame/activitiestray.py:625
 #: ../src/jarabe/frame/activitiestray.py:746
 #: ../src/jarabe/frame/activitiestray.py:778
-#: ../src/jarabe/journal/expandedentry.py:160
-#: ../src/jarabe/journal/journaltoolbox.py:475
-#: ../src/jarabe/journal/palettes.py:154
+#: ../src/jarabe/journal/expandedentry.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:480
+#: ../src/jarabe/journal/palettes.py:159
 msgid "Cancel"
 msgstr "ยกเลิก"
 
@@ -644,7 +679,7 @@ msgstr "กลุ่ม"
 
 #: ../extensions/globalkey/screenshot.py:65
 #: ../src/jarabe/desktop/homewindow.py:214
-#: ../src/jarabe/desktop/viewtoolbar.py:62
+#: ../src/jarabe/desktop/viewtoolbar.py:73
 #: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "บ้าน"
@@ -669,15 +704,35 @@ msgid ""
 "long name."
 msgstr "\"หยุดทำงาน\" ที่ถามชื่อย่อ; \"ระบบ\" เพื่อกลับมาใช้ระบบชื่อแบบยาวของ UNIX"
 
+#: ../data/sugar.schemas.in.h:2
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr ""
+
 #: ../data/sugar.schemas.in.h:3
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Activity update backend."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Automatic update frequency."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
 msgstr "URL สำรอง"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
 msgstr "บันเดิลรหัสของกิจกรรมที่ป้องกัน"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:9
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -687,120 +742,125 @@ msgstr ""
 "ค่าจะประกอบด้วยการระบายสีและใส่สีในรูปแบบของสี rbg ตัวอย่าง : #AC32FF, "
 "#9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
 msgstr "หน่วงเวลาของ Corner"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
 msgstr "รูปแบบตัวอักษรเริ่มต้น"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
 msgstr "ขนาดตัวอักษรเริ่มต้น"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
 msgstr "ชื่อย่อเริ่มต้น"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
 msgstr "การหน่วงเวลาสำหรับการเปิดใช้งานของกรอบการใช้มุม"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:15
 msgid "Delay for the activation of the frame using the edges."
 msgstr "การหน่วงเวลาสำหรับการเปิดใช้งานของเฟรมโดยใช้ขอบ"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
 msgstr "ความหน่วงเวลาของขอบ"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:17
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr "การจัดการพลังงานแบบสุดขีด (ปิดวิทยุไร้สายจะเพิ่มขึ้นแบตเตอรี่)"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:18
 msgid "Favorites Layout"
 msgstr "เค้าโครงที่โปรดปราน"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
 msgstr "รายการโปรดโหมดการทำงานต่อ"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
 msgstr "แบบอักษรที่ใช้ในพื้นที่ทำงาน"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
 msgstr "ขนาดตัวอักษรที่ใช้ในพื้นที่ทำงาน"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:22
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "APN ของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "PIN ของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:25
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "PUK ของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่าจุดเชื่อมต่อของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "หมายเลขเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "รหัสผ่านเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่ารหัสผ่านเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่าหมายเลขประจำตัวบุคคลของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่ากุญแจปลดล็อคส่วนบุคคลของเครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่าหมายเลขโทรศัพท์เครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "ชื่อผู้ใช้เครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "การตั้งค่าชื่อผู้ใช้เครือข่าย GSM (เลิกใช้/ไม่ได้ใช้)"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
 "ถ้าเป็นจริง ชูการ์จะทำให้เราค้นหาได้สำหรับผู้ใช้อื่นๆ ของเซิร์ฟเวอร์ Jabber"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "ถ้าเป็นจริง ชูการ์จะโชว์ทางเลือก \"ออกจากระบบ\""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "ถ้าเป็นจริง ชูการ์จะโชว์ทางเลือก \"เริ่มระบบใหม่\""
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:38
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -810,125 +870,138 @@ msgstr ""
 "ถ้าชูการ์ยังไม่มีเครือข่าย \"รู้จัก\" ก็จะเชื่อมต่ออัตโนมัติกับเครือข่าย Ad-"
 "hoc"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
 msgstr "เซิร์ฟเวอร์ Jabber"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:40
 msgid "Keyboard layouts"
 msgstr "ผังแป้นพิมพ์"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:41
 msgid "Keyboard model"
 msgstr "รุ่นแป้นพิมพ์"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
 msgstr "ตัวเลือกแป้นพิมพ์"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
 msgstr "เค้าโครงจากมุมมองในรายการโปรด"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:44
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr "รายชื่อของผังแป้นพิมพ์ แต่ละรายการควรจะอยู่ในรูปแบบฟอร์ม(แตกต่าง)"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
 msgstr "รายการของตัวเลือกแป้นพิมพ์"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:46
+msgid "Microformat update URL."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
 msgstr "ค่าระดับเสียงสำหรับบริการเสียงพูดในชูการ์"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
 msgstr "ค่าระดับเสียงใช้บริการเสียงพูดในชูการ์"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
 msgstr "พลังงานแบบอัตโนมัติ"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
 msgstr "พลังงานสูงสุด"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
 msgstr "เผยแพร่ไปยัง Gadget"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
 msgstr "ค่าอัตราการบริการเสียงพูดในชูการ์"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
 msgstr "ค่าอัตราการใช้การบริการเสียงพูดในชูการ์"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
 msgstr "การตั้งค่าเพื่อปิดอุปกรณ์เสียง"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
 msgstr "แสดง ออกจากระบบ"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
 msgstr "แสดง เริ่มระบบใหม่"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
 msgstr "แสดงเครือข่าย Ad-hoc ของชูการ์"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
 msgstr "ปิดเสียง"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
 msgstr "รูปแบบแป้นพิมพ์ที่จะใช้"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:60
+msgid "Timestamp of last activity update."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
 msgstr "การตั้งค่าเขตเวลาสำหรับระบบ"
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
 msgstr "URL ของเซิร์ฟเวอร์ Jabber ที่จะใช้"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:64
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
 msgstr "URL ที่สำรองจะถูกบันทึกไว้"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:66
 msgid "User Color"
 msgstr "สีของผู้ใช้"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:67
 msgid "User Name"
 msgstr "ชื่อผู้ใช้"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
 msgstr "ชื่อผู้ใช้งานที่ถูกนำมาใช้ทั้งพื้นที่ทำงาน"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:69
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr "ผู้ใช้จะไม่ได้รับอนุญาตให้ลบกิจกรรมเหล่านี้ผ่านมุมมองรายการ"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
 msgstr "ระดับเสียง"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
 msgstr "ระดับเสียงสำหรับอุปกรณ์เสียง"
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -988,8 +1061,8 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "ถ้าคุณต้องการใช้การเปลี่ยนแปลงของคุณ คุณจะต้องเริ่้มต้นระบบใหม่.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:182
-#: ../src/jarabe/journal/palettes.py:282 ../src/jarabe/journal/palettes.py:315
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
+#: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "คำเตือน"
@@ -1003,7 +1076,7 @@ msgstr "การเปลี่ยนแปลงที่จำเป็นต
 msgid "Cancel changes"
 msgstr "ยกเลิกการเปลี่ยนแปลง"
 
-#: ../src/jarabe/controlpanel/gui.py:333 ../src/jarabe/desktop/homebox.py:69
+#: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
 msgstr "ภายหลัง"
 
@@ -1012,8 +1085,8 @@ msgid "Restart now"
 msgstr "ภายหลัง"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:88
+#: ../src/jarabe/desktop/viewtoolbar.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
 msgstr ""
@@ -1027,54 +1100,56 @@ msgid "Done"
 msgstr "เรียบร้อยแล้ว"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:366
+#: ../src/jarabe/desktop/favoritesview.py:374
 #: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "ตกลง"
 
-#: ../src/jarabe/desktop/activitieslist.py:253
+#: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format
 msgid "Version %s"
 msgstr "รุ่น %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:354
-#: ../src/jarabe/journal/listview.py:427
+#: ../src/jarabe/desktop/activitieslist.py:385
+#: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
 msgstr "ล้างการค้นหา"
 
-#: ../src/jarabe/desktop/activitieslist.py:427
+#: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
 msgstr ""
 
-#: ../src/jarabe/desktop/activitieslist.py:463
+#: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
 msgstr "ยืนยันการลบ"
 
-#: ../src/jarabe/desktop/activitieslist.py:465
+#: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "ยืนยันการลบ : คุณต้องการที่จะลบ %s อย่างถาวรหรือไม่?"
 
-#: ../src/jarabe/desktop/activitieslist.py:469
+#: ../src/jarabe/desktop/activitieslist.py:511
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "เก็บไว้"
 
-#: ../src/jarabe/desktop/activitieslist.py:472
-#: ../src/jarabe/desktop/activitieslist.py:529
-#: ../src/jarabe/journal/expandedentry.py:154
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/journaltoolbox.py:470
-#: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:578
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:443
+#: ../src/jarabe/journal/journaltoolbox.py:475
+#: ../src/jarabe/journal/journaltoolbox.py:689
+#: ../src/jarabe/journal/journaltoolbox.py:695
+#: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
 msgstr "ลบ"
 
-#: ../src/jarabe/desktop/activitieslist.py:544
+#: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
 msgstr "ลบรายการโปรด"
 
-#: ../src/jarabe/desktop/activitieslist.py:548
+#: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
 msgstr "สร้างรายการโปรด"
 
@@ -1103,34 +1178,26 @@ msgstr "กล่อง"
 msgid "Triangle"
 msgstr "สามเหลี่ยม"
 
-#: ../src/jarabe/desktop/favoritesview.py:357
+#: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
 msgstr "การลงทะเบียนล้มเหลว"
 
-#: ../src/jarabe/desktop/favoritesview.py:360
+#: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
 msgstr "การลงทะเบียนสำเร็จ"
 
-#: ../src/jarabe/desktop/favoritesview.py:361
+#: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
 msgstr "ขณะนี้คุณกำลังลงทะเบียนที่เครื่องเซิร์ฟเวอร์ที่โรงเรียนของคุณ"
 
-#: ../src/jarabe/desktop/favoritesview.py:645
+#: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
 msgstr "ลงทะเบียน"
 
-#: ../src/jarabe/desktop/favoritesview.py:648
-#: ../src/jarabe/desktop/favoritesview.py:664
+#: ../src/jarabe/desktop/favoritesview.py:656
+#: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
 msgstr "ลงทะเบียนอีกครั้ง"
-
-#: ../src/jarabe/desktop/homebox.py:63
-msgid "Update your activities to ensure compatibility with your new software"
-msgstr "ปรับปรุงกิจกรรมของคุณเพื่อให้แน่ใจว่าเข้ากันได้กับซอฟต์แวร์ใหม่ของคุณ"
-
-#: ../src/jarabe/desktop/homebox.py:72
-msgid "Check now"
-msgstr "ตรวจสอบเดี๋ยวนี้"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -1165,8 +1232,8 @@ msgstr "ความปลอดภัยของเครือข่ายไ
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:586
-#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
+#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "ทำต่อ"
 
@@ -1193,21 +1260,23 @@ msgstr "ไม่สามารถเชื่อมต่อกับเคร
 msgid "The server could not complete the request."
 msgstr "เซิร์ฟเวอร์ไม่สามารถดำเนินการตามคำขอ"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:80
+#: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
 msgstr "แสดงแบบรายการ"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:81
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
+#: ../src/jarabe/desktop/viewtoolbar.py:97
+#: ../src/jarabe/desktop/viewtoolbar.py:195
+#: ../src/jarabe/desktop/viewtoolbar.py:209
+#, python-format
+#, python-format, 
+msgid "<Ctrl>%d"
+msgstr "<Ctrl>%d"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:149
-msgid "Favorites view"
-msgstr "แสดงรายการโปรด"
-
-#: ../src/jarabe/desktop/viewtoolbar.py:150
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
+#: ../src/jarabe/desktop/viewtoolbar.py:208
+#, python-format
+#, python-format, 
+msgid "Favorites view %d"
+msgstr "แสดงรายการโปรด %d"
 
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
@@ -1303,7 +1372,7 @@ msgstr "ชื่อ:"
 msgid "Click to change color:"
 msgstr "คลิกเพื่อเปลี่ยนสี:"
 
-#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
 msgstr "กลับ"
 
@@ -1311,202 +1380,221 @@ msgstr "กลับ"
 msgid "Next"
 msgstr "ถัดไป"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/journaltoolbox.py:472
-#: ../src/jarabe/journal/palettes.py:151
+#: ../src/jarabe/journal/expandedentry.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:477
+#: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:296
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:705
-#: ../src/jarabe/journal/palettes.py:68
+#: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
+#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/journal/palettes.py:597
 #: ../src/jarabe/journal/volumestoolbar.py:131
+#: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
 msgstr "ไม่มีชื่อ"
 
-#: ../src/jarabe/journal/expandedentry.py:407
+#: ../src/jarabe/journal/expandedentry.py:367
 msgid "No preview"
 msgstr "ไม่มีตัวอย่าง"
 
-#: ../src/jarabe/journal/expandedentry.py:421
+#: ../src/jarabe/journal/expandedentry.py:382
 #, python-format
 msgid "Kind: %s"
 msgstr "ชนิด: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:421
-#: ../src/jarabe/journal/listmodel.py:151
-#: ../src/jarabe/journal/listmodel.py:159
+#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/listmodel.py:165
+#: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
 msgstr "ไม่ทราบ"
 
-#: ../src/jarabe/journal/expandedentry.py:422
+#: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Date: %s"
 msgstr "วันที่: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:423
+#: ../src/jarabe/journal/expandedentry.py:384
 #, python-format
 msgid "Size: %s"
 msgstr "ขนาด: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:450
-#: ../src/jarabe/journal/misc.py:108
+#: ../src/jarabe/journal/expandedentry.py:411
+#: ../src/jarabe/journal/misc.py:109
 msgid "No date"
 msgstr "ไม่มีวันที่"
 
-#: ../src/jarabe/journal/expandedentry.py:459
+#: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
 msgstr "ผู้เข้าร่วม:"
 
-#: ../src/jarabe/journal/expandedentry.py:497
+#: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
 msgstr "รายละเอียด:"
 
-#: ../src/jarabe/journal/expandedentry.py:503
+#: ../src/jarabe/journal/expandedentry.py:464
 msgid "Tags:"
 msgstr "ป้ายกำกับ:"
 
-#: ../src/jarabe/journal/expandedentry.py:508
+#: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
 msgstr ""
 
-#: ../src/jarabe/journal/journalactivity.py:141
-#: ../src/jarabe/journal/journaltoolbox.py:88
-#: ../src/jarabe/journal/journaltoolbox.py:513
-#: ../src/jarabe/journal/palettes.py:219
+#: ../src/jarabe/journal/journalactivity.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:89
+#: ../src/jarabe/journal/palettes.py:248
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "บันทึกประจำวัน"
 
-#: ../src/jarabe/journal/journaltoolbox.py:97
+#: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:133
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
 msgstr "ทุกเวลา"
 
-#: ../src/jarabe/journal/journaltoolbox.py:135
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Today"
 msgstr "วันนี้"
 
-#: ../src/jarabe/journal/journaltoolbox.py:137
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Since yesterday"
 msgstr "ตั้งแต่เมื่อวานนี้"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:140
 msgid "Past week"
 msgstr "สัปดาห์ที่แล้ว"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:142
 msgid "Past month"
 msgstr "เดือนที่แล้ว"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:144
 msgid "Past year"
 msgstr "ปีที่แล้ว"
 
-#: ../src/jarabe/journal/journaltoolbox.py:150
+#: ../src/jarabe/journal/journaltoolbox.py:151
 msgid "Anyone"
 msgstr "ทุกคน"
 
-#: ../src/jarabe/journal/journaltoolbox.py:152
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My friends"
 msgstr "เพื่อนของฉัน"
 
-#: ../src/jarabe/journal/journaltoolbox.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:154
 msgid "My class"
 msgstr "ชั้นเรียนของฉัน"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:325
+#: ../src/jarabe/journal/journaltoolbox.py:327
 msgid "Anything"
 msgstr "ทุกอย่าง"
 
-#: ../src/jarabe/journal/journaltoolbox.py:414
-#: ../src/jarabe/journal/palettes.py:97
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
 msgstr "คัดลอกไปยัง"
 
-#: ../src/jarabe/journal/journaltoolbox.py:422
-#: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
+#: ../src/jarabe/journal/journaltoolbox.py:427
+#: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr "ทำซ้ำ"
 
-#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:465
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
+#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr "เกิดข้อผิดพลาดขณะคัดลอก %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:466
-#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
+#: ../src/jarabe/journal/journaltoolbox.py:471
+#: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr "ข้อผิดพลาด"
 
-#: ../src/jarabe/journal/journaltoolbox.py:524
-#: ../src/jarabe/journal/palettes.py:230
-#: ../src/jarabe/journal/volumestoolbar.py:211
-msgid "Documents"
-msgstr "เอกสาร"
-
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:589
-#: ../src/jarabe/journal/palettes.py:78
+#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/palettes.py:80
 msgid "Start"
 msgstr "เริ่ม"
 
-#: ../src/jarabe/journal/journaltoolbox.py:617
+#: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
 msgstr "เรียงตามวันที่แก้ไข"
 
-#: ../src/jarabe/journal/journaltoolbox.py:618
+#: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
 msgstr "เรียงตามวันที่สร้าง"
 
-#: ../src/jarabe/journal/journaltoolbox.py:619
+#: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
 msgstr "เรียงตามขนาด"
 
-#: ../src/jarabe/journal/journaltoolbox.py:628
+#: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
 msgstr "แสดงแบบจัดเรียง"
 
-#: ../src/jarabe/journal/listview.py:339
+#: ../src/jarabe/journal/journaltoolbox.py:661
+msgid "Deselect all"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:674
+msgid "Select all"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+#, python-format
+msgid "Do you want to erase %d entry?"
+msgid_plural "Do you want to erase %d entries?"
+msgstr[0] ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:714
+#: ../src/jarabe/journal/palettes.py:364
+msgid "Copy"
+msgstr ""
+
+#. TRANS: Do not translate %(selected)d and %(total)d.
+#: ../src/jarabe/journal/journaltoolbox.py:759
+#, python-format
+msgid "Selected %(selected)d of %(total)d"
+msgstr ""
+
+#: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "บันทึกประจำวันของคุณว่างเปล่า"
 
-#: ../src/jarabe/journal/listview.py:342
+#: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
 msgstr "โฟลเดอร์เอกสารของคุณว่างเปล่า"
 
-#: ../src/jarabe/journal/listview.py:344
+#: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
 msgstr "อุปกรณ์ว่างเปล่า"
 
-#: ../src/jarabe/journal/listview.py:346
+#: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
 msgstr "ไม่มีรายการที่ตรงกัน"
 
-#: ../src/jarabe/journal/misc.py:275
+#: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr "รุ่นเก่าของกิจกรรม %s"
 
-#: ../src/jarabe/journal/misc.py:276
+#: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr "คุณต้องการที่จะลดระดับรุ่น %s"
@@ -1523,64 +1611,88 @@ msgstr "กรุณาลบบันทึกเก่าบางรายก
 msgid "Show Journal"
 msgstr "แสดงบันทึกประจำวัน"
 
-#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
 msgstr "เลือกวัตถุ"
 
-#: ../src/jarabe/journal/objectchooser.py:156
+#: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
 msgstr ""
 
-#: ../src/jarabe/journal/objectchooser.py:164
+#: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "ปิด"
 
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Resume with"
 msgstr "ทำต่อโดย"
 
-#: ../src/jarabe/journal/palettes.py:79
+#: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
 msgstr "เริ่มด้วย"
 
-#: ../src/jarabe/journal/palettes.py:92 ../src/jarabe/journal/palettes.py:393
+#: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
 msgstr "ไม่มีรายการกิจกรรมที่จะเริ่ม"
 
-#: ../src/jarabe/journal/palettes.py:116
+#: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
 msgstr "ส่งไปที่"
 
-#: ../src/jarabe/journal/palettes.py:125
+#: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
 msgstr "ดูรายละเอียด"
 
-#: ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
 msgstr "การกรอกข้อมูลโดยไม่มีไฟล์ไม่สามารถส่ง"
 
-#: ../src/jarabe/journal/palettes.py:281 ../src/jarabe/journal/palettes.py:314
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:211
+msgid "Documents"
+msgstr "เอกสาร"
+
+#: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
 msgstr "การกรอกข้อมูลโดยไม่มีไฟล์ไม่สามารถคัดลอก"
 
-#: ../src/jarabe/journal/palettes.py:303
+#: ../src/jarabe/journal/palettes.py:369
+#, python-format
+msgid "Do you want to copy %d entry?"
+msgid_plural "Do you want to copy %d entries?"
+msgstr[0] ""
+
+#: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
 msgstr "คลิปบอร์ด"
 
-#: ../src/jarabe/journal/palettes.py:358
+#: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
 msgstr "ไม่พบเพื่อน"
 
-#: ../src/jarabe/journal/palettes.py:363
+#: ../src/jarabe/journal/palettes.py:459
 msgid "No valid connection found"
 msgstr "ไม่พบการเชื่อมต่อ"
 
-#: ../src/jarabe/journal/palettes.py:391
+#: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
 msgstr "ไม่มีกิจกรรมที่จะทำต่อ"
+
+#: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
+msgid "Stop"
+msgstr "หยุด"
+
+#: ../src/jarabe/journal/palettes.py:561
+msgid "Continue"
+msgstr ""
+
+#: ../src/jarabe/journal/palettes.py:598
+#, python-format
+msgid "%(index)d of %(total)d : %(object_title)s"
+msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
@@ -1588,190 +1700,190 @@ msgstr "ไม่มีกิจกรรมที่จะทำต่อ"
 msgid "%(free_space)d MB Free"
 msgstr "พื้นที่ว่าง %(free_space)d MB"
 
-#: ../src/jarabe/model/network.py:212
+#: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
 msgstr "ไม่ทราบสาเหตุการเปลี่ยนสถานะของอุปกรณ์"
 
-#: ../src/jarabe/model/network.py:214
+#: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
 msgstr "การเปลี่ยนแปลงสถานะเป็นปกติ"
 
-#: ../src/jarabe/model/network.py:216
+#: ../src/jarabe/model/network.py:218
 msgid "The device is now managed."
 msgstr "อุปกรณ์ถูกการจัดการในขณะนี้"
 
-#: ../src/jarabe/model/network.py:218
+#: ../src/jarabe/model/network.py:220
 msgid "The device is no longer managed."
 msgstr "อุปกรณ์ไม่ถูกการจัดการอีกต่อไป"
 
-#: ../src/jarabe/model/network.py:220
+#: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
 msgstr "อุปกรณ์ไม่พร้อมสำหรับการกำหนดค่า"
 
-#: ../src/jarabe/model/network.py:222
+#: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr "การกำหนดค่า IP ไม่สามารถสงวนได้ (ไม่มี address ว่าง, หมดเวลารอ, ฯลฯ)"
 
-#: ../src/jarabe/model/network.py:225
+#: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
 msgstr "การกำหนดค่า IP ไม่ถูกต้อง"
 
-#: ../src/jarabe/model/network.py:227
+#: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
 msgstr "รหัสลับถูกเรียกร้อง แต่ไม่ได้กำหนด"
 
-#: ../src/jarabe/model/network.py:229
+#: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "802.1X ตัดการเชื่อมต่อจากจุดเชื่อมต่อหรือเซิร์ฟเวอร์การตรวจสอบสิทธิ์"
 
-#: ../src/jarabe/model/network.py:232
+#: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "การกำหนดค่าของ 802.1X ล้มเหลว"
 
-#: ../src/jarabe/model/network.py:234
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "ผู้ขอ 802.1X หยุดการทำงานโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:236
+#: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "ผู้ขอ 802.1X นานเกินไปในการตรวจสอบ"
 
-#: ../src/jarabe/model/network.py:238
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
 msgstr "ไม่สามารถเริ่มบริการ PPP ได้ในเวลาที่กำหนด"
 
-#: ../src/jarabe/model/network.py:240
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
 msgstr "บริการ PPP ตัดการเชื่อมต่อโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:242
+#: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "บริการ PPP หยุดการทำงานโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:244
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "ไม่สามารถเริ่มบริการ DHCP ในเวลาที่กำหนด"
 
-#: ../src/jarabe/model/network.py:246
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
 msgstr "บริการ DHCP รายงานข้อผิดพลาดที่ไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:248
+#: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "บริการ DHCP หยุดการทำงานโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:250
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
 msgstr "บริการการเชื่อมต่อที่ใช้ร่วมกันล้มเหลวในการเริ่มต้น"
 
-#: ../src/jarabe/model/network.py:252
+#: ../src/jarabe/model/network.py:254
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr "บริการการเชื่อมต่อที่ใช้ร่วมกันหยุดการทำงานโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:255
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
 msgstr "บริการ AutoIP ล้มเหลวในการเริ่มต้น"
 
-#: ../src/jarabe/model/network.py:257
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
 msgstr "บริการ AutoIP รายงานข้อผิดพลาดที่ไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:259
+#: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "บริการ AutoIP เลิกหรือล้มเหลวโดยไม่ทราบสาเหตุ"
 
-#: ../src/jarabe/model/network.py:261
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
 msgstr "การเรียกเลขหมายล้มเหลวเพราะสายไม่ว่าง"
 
-#: ../src/jarabe/model/network.py:263
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
 msgstr "การเรียกเลขหมายล้มเหลวเพราะไม่มีเสียงโทร"
 
-#: ../src/jarabe/model/network.py:265
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
 msgstr "การเรียกเลขหมายล้มเหลวเนื่องจากไม่มีพาหะ"
 
-#: ../src/jarabe/model/network.py:267
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
 msgstr "การเรียกเลขหมายหมดเวลา"
 
-#: ../src/jarabe/model/network.py:269
+#: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
 msgstr "การเรียกเลขหมายล้มเหลว"
 
-#: ../src/jarabe/model/network.py:271
+#: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
 msgstr "การเริ่มต้น Modem ล้มเหลว"
 
-#: ../src/jarabe/model/network.py:273
+#: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
 msgstr "ล้มเหลวในการเลือกที่ระบุ GSM APN"
 
-#: ../src/jarabe/model/network.py:275
+#: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
 msgstr "ไม่ค้นหาสำหรับเครือข่าย"
 
-#: ../src/jarabe/model/network.py:277
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
 msgstr "การลงทะเบียนเครือข่ายถูกปฏิเสธ"
 
-#: ../src/jarabe/model/network.py:279
+#: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
 msgstr "การลงทะเบียนเครือข่ายหมดเวลา"
 
-#: ../src/jarabe/model/network.py:281
+#: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
 msgstr "การลงทะเบียนกับเครือข่าย GSM ที่ร้องขอล้มเหลว"
 
-#: ../src/jarabe/model/network.py:283
+#: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
 msgstr "การตรวจ PIN ล้มเหลว"
 
-#: ../src/jarabe/model/network.py:285
+#: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
 msgstr "เฟิร์มแวร์ที่จำเป็นสำหรับอุปกรณ์อาจหายไป"
 
-#: ../src/jarabe/model/network.py:287
+#: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
 msgstr "อุปกรณ์ถูกเอาออก"
 
-#: ../src/jarabe/model/network.py:289
+#: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
 msgstr "ตัวจัดการเครือข่ายเข้าสู่โหมดการหลับ"
 
-#: ../src/jarabe/model/network.py:291
+#: ../src/jarabe/model/network.py:293
 msgid "The device's active connection was removed or disappeared."
 msgstr "การเชื่อมต่ออุปกรณ์ถูกยกเลิกหรือหายไป"
 
-#: ../src/jarabe/model/network.py:294
+#: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
 msgstr "ผู้ใช้ขอยกเลิกการเชื่อมต่อ"
 
-#: ../src/jarabe/model/network.py:296
+#: ../src/jarabe/model/network.py:298
 msgid "The device's carrier/link changed."
 msgstr "การเชื่อมต่ออุปกรณ์มีการเปลี่ยนแปลง"
 
-#: ../src/jarabe/model/network.py:298
+#: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
 msgstr "การเชื่อมต่อที่มีอยู่ของอุปกรณ์ที่ถูกสมมุติ"
 
-#: ../src/jarabe/model/network.py:300
+#: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
 msgstr "ผู้ขอใช้ได้ในขณะนี้"
 
-#: ../src/jarabe/model/network.py:302
+#: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
 msgstr "ไม่พบโมเด็ม"
 
-#: ../src/jarabe/model/network.py:304
+#: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
 msgstr "การเชื่อมต่อบลูทูธล้มเหลวหรือหมดเวลา"
 
-#: ../src/jarabe/model/network.py:306
+#: ../src/jarabe/model/network.py:308
 msgid "Unused."
 msgstr "ไม่ได้ใช้"
 
@@ -1822,10 +1934,6 @@ msgstr "กิจกรรมไม่สามารถเริ่มได้
 msgid "View Source"
 msgstr "ดูที่มา"
 
-#: ../src/jarabe/view/palettes.py:110
-msgid "Stop"
-msgstr "หยุด"
-
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
 msgstr "เริ่มใหม่"
@@ -1861,6 +1969,15 @@ msgstr "ดูที่มา: %s"
 #, python-format
 msgid "View source: %r"
 msgstr "ดูที่มา: %r"
+
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr "ปรับปรุงกิจกรรมของคุณเพื่อให้แน่ใจว่าเข้ากันได้กับซอฟต์แวร์ใหม่ของคุณ"
+
+#~ msgid "Check now"
+#~ msgstr "ตรวจสอบเดี๋ยวนี้"
 
 #~ msgid "Sugar in a window"
 #~ msgstr "Sugar ในหน้าต่าง"
