@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: Sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-13 16:38+0200\n"
-"Last-Translator: Yannis <kiolalis@gmail.com>\n"
+"PO-Revision-Date: 2013-08-15 13:19+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Greek <olpc@grnet.gr>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -266,7 +266,7 @@ msgstr "Προσωπικός αριθμός (PIN):"
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr " Σχέδιο #%s"
+msgstr "Σχέδιο #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
