@@ -434,7 +434,8 @@ class _Account(GObject.GObject):
 
     def __buddy_info_updated_cb(self, handle, properties):
         logging.debug('_Account.__buddy_info_updated_cb %r', handle)
-        self.emit('buddy-updated', self._buddy_handles[handle], properties)
+        if handle in self._buddy_handles:
+            self.emit('buddy-updated', self._buddy_handles[handle], properties)
 
     def __current_activity_changed_cb(self, contact_handle, activity_id,
                                       room_handle):
