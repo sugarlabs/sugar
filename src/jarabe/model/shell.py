@@ -584,6 +584,13 @@ class ShellModel(GObject.GObject):
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
+
+                # Check if window is the 'main' app window, not the
+                # launcher window.
+                is_main_window = window.get_window_type() != \
+                    Wnck.WindowType.SPLASHSCREEN and \
+                    home_activity.get_launch_status() == Activity.LAUNCHING
+
                 self._add_activity(home_activity)
 
             else:
