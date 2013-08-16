@@ -577,27 +577,27 @@ class ShellModel(GObject.GObject):
 
                 window.maximize()
 
-            is_main_window = False
+            def is_main_window(window, home_activity):
+                # Check if window is the 'main' app window, not the
+                # launcher window.
+                return window.get_window_type() != \
+                    Wnck.WindowType.SPLASHSCREEN and \
+                    home_activity.get_launch_status() == Activity.LAUNCHING
 
-            if not home_activity:
+            if home_activity is None:
                 logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
+
                 self._add_activity(home_activity)
 
             else:
                 logging.debug('window registered for %s', activity_id)
+                home_activity.add_window(window, is_main_window(window,
+                                                                home_activity))
 
-                # Check if window is the 'main' app window, not the
-                # launcher window.
-                is_main_window = window.get_window_type() != \
-                    Wnck.WindowType.SPLASHSCREEN and \
-                    home_activity.get_launch_status() == Activity.LAUNCHING
-
-                home_activity.add_window(window, is_main_window)
-
-            if is_main_window:
+            if is_main_window(window, home_activity):
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
