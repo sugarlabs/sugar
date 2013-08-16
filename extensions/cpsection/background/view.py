@@ -15,7 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+import os
+
+import gi
 from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
@@ -32,6 +37,8 @@ class Background(SectionView):
 
         self._model = model
 
+        self.connect('realize', self.__realize_cb)
+
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
 
@@ -39,7 +46,9 @@ class Background(SectionView):
         label_bg = Gtk.Label(label=_('Select a background:'))
         label_bg.modify_fg(Gtk.StateType.NORMAL,
                            style.COLOR_SELECTION_GREY.get_gdk_color())
+        label_bg.show()
         label_box.pack_start(label_bg, False, True, 0)
+        label_box.show()
         self.pack_start(label_box, False, True, 1)
 
         clear_button = Gtk.Button()
@@ -55,16 +64,15 @@ class Background(SectionView):
         self.pack_start(scrolled_window, True, True, 0)
         scrolled_window.show()
 
-        store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
+        self._store = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
 
-        icon_view = Gtk.IconView.new_with_model(store)
-        icon_view.set_selection_mode(Gtk.SelectionMode.SINGLE)
-        icon_view.connect('selection-changed', self._background_selected,
-                          store)
-        icon_view.set_pixbuf_column(0)
-        icon_view.grab_focus()
-        scrolled_window.add(icon_view)
-        icon_view.show()
+        self._icon_view = Gtk.IconView.new_with_model(self._store)
+        self._icon_view.set_selection_mode(Gtk.SelectionMode.SINGLE)
+        self._icon_view.connect('selection-changed', self._background_selected)
+        self._icon_view.set_pixbuf_column(0)
+        self._icon_view.grab_focus()
+        scrolled_window.add(self._icon_view)
+        self._icon_view.show()
 
         alpha = self._model.get_background_alpha_level()
 
@@ -91,40 +99,70 @@ class Background(SectionView):
         self.pack_start(alpha_alignment, False, False, 0)
         alpha_alignment.show()
 
-        paths_list = self._model.fill_background_list(store)
-        self._select_background(icon_view, paths_list)
+        self._paths_list = []
 
+        file_paths = []
+        for directory in self._model.BACKGROUNDS_DIRS:
+            if directory is not None and os.path.exists(directory):
+                for root, dirs, files in os.walk(directory):
+                    for file_ in files:
+                        file_paths.append(os.path.join(root, file_))
+
+        self._append_to_store(file_paths)
         self.setup()
+
+    def _append_to_store(self, file_paths):
+        if file_paths:
+            file_path = file_paths.pop()
+            pixbuf = None
+
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    file_path, style.XLARGE_ICON_SIZE,
+                    style.XLARGE_ICON_SIZE)
+            except gi._glib._glib.GError:
+                pass
+            else:
+                self._store.append([pixbuf, file_path])
+                self._paths_list.append(file_path)
+
+            GObject.idle_add(self._append_to_store, file_paths)
+        else:
+            self._select_background()
+            self.get_window().set_cursor(None)
+
+    def __realize_cb(self, widget):
+        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
 
     def _set_alpha_cb(self, widget, value):
         self._model.set_background_alpha_level(value)
 
-    def _get_selected_path(self, widget, store):
+    def _get_selected_path(self, widget):
         try:
-            iter_ = store.get_iter(widget.get_selected_items()[0])
-            image_path = store.get(iter_, 1)[0]
+            iter_ = self._store.get_iter(widget.get_selected_items()[0])
+            image_path = self._store.get(iter_, 1)[0]
 
             return image_path, iter_
         except:
             return None
 
-    def _background_selected(self, widget, store):
-        selected = self._get_selected_path(widget, store)
+    def _background_selected(self, widget):
+        selected = self._get_selected_path(widget)
 
         if selected is None:
             return
 
         image_path, _iter = selected
-        iter_ = store.get_iter(widget.get_selected_items()[0])
-        image_path = store.get(iter_, 1)[0]
+        iter_ = self._store.get_iter(widget.get_selected_items()[0])
+        image_path = self._store.get(iter_, 1)[0]
         self._model.set_background_image_path(image_path)
 
-    def _select_background(self, icon_view, paths_list):
+    def _select_background(self):
         background = self._model.get_background_image_path()
-        if background in paths_list:
-            _path = paths_list.index(background)
-            path = Gtk.TreePath.new_from_string('%s' % _path)
-            icon_view.select_path(path)
+        if background in self._paths_list:
+            self._icon_view.select_path(
+                Gtk.TreePath.new_from_string(
+                    '%s' % self._paths_list.index(background)))
 
     def _clear_clicked_cb(self, widget, event=None):
         self._model.set_background_image_path(None)
