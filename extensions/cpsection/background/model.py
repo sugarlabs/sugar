@@ -17,9 +17,7 @@
 #
 
 from gi.repository import GConf
-from gi.repository import GdkPixbuf
 
-from sugar3.graphics import style
 from jarabe.journal.model import get_documents_path
 from jarabe.desktop.homebackgroundbox import BACKGROUND_IMAGE_PATH_STRING
 from jarabe.desktop.homebackgroundbox import BACKGROUND_ALPHA_LEVEL_STRING
@@ -69,38 +67,6 @@ def get_background_alpha_level():
     return alpha
 
 PREVIOUS_BACKGROUND_ALPHA_LEVEL = get_background_alpha_level()
-
-
-def fill_background_list(store):
-    """
-    Traverse the background directories looking for images.  Append
-    them to the given store.
-
-    Return a list of paths for the image files found in the background
-    directories.
-    """
-    paths_list = []
-
-    for directory in BACKGROUNDS_DIRS:
-        if directory is not None and os.path.exists(directory):
-            for root, dirs, files in os.walk(directory):
-                for file_ in files:
-                    filepath = os.path.join(root, file_)
-                    pixbuf = None
-                    try:
-                        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-                            filepath, style.XLARGE_ICON_SIZE,
-                            style.XLARGE_ICON_SIZE)
-                    except:
-                        # if the file can't be converted to a pixbuf,
-                        # ie it is not a valid image, gi will raise a
-                        # generic gi._glib.GError .
-                        pass
-                    else:
-                        store.append([pixbuf, filepath])
-                        paths_list.append(filepath)
-
-    return paths_list
 
 
 def undo(store):
