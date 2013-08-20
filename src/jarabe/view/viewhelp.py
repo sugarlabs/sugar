@@ -1,6 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
-# Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
-# Copyright (C) 2011 Walter Bender
+# Copyright (C) 2013 Kalpa Welivitigoda
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +30,6 @@ from sugar3.bundle.activitybundle import ActivityBundle
 import logging
 import os
 import json
-from os.path import expanduser
 
 _logger = logging.getLogger('ViewHelp')
 
@@ -55,7 +52,8 @@ def setup_view_help(activity):
 
     # get the help file name for the activity
     try:
-        help_content_link = os.path.join(activity_path, 'Help.activity/helplink.json')
+        help_content_link = os.path.join(activity_path, 
+                                         'Help.activity/helplink.json')
         json_file = open(help_content_link)
         links = json.load(json_file)
 
@@ -66,7 +64,7 @@ def setup_view_help(activity):
         else:
             _logger.error('Help content is not available for the activity')
     except Exception:
-        _logger.error('helplink.json file was not found or the json was malformed')
+        _logger.error('helplink.json file was not found or malformed')
 
 
 class ViewHelp(Gtk.Window):
@@ -125,7 +123,8 @@ class ViewHelp(Gtk.Window):
         window = self.get_window()
         window.set_accept_focus(True)
         display = Gdk.Display.get_default()
-        parent = GdkX11.X11Window.foreign_new_for_display(display, self.parent_window_xid)
+        parent = GdkX11.X11Window.foreign_new_for_display(
+            display, self.parent_window_xid)
         window.set_transient_for(parent)
 
     def get_current_language(self):
@@ -133,9 +132,11 @@ class ViewHelp(Gtk.Window):
         return locale.split('.')[0].split('_')[0].lower()
 
     def get_help_file(self, language, help_file):
-        path = os.path.join(activity_path, 'Help.activity/help/', language, help_file)
+        path = os.path.join(activity_path, 'Help.activity/help/', 
+                            language, help_file)
         if not os.path.isfile(path):
-            path = os.path.join(activity_path, 'Help.activity/help/en/', help_file)
+            path = os.path.join(activity_path, 
+                                'Help.activity/help/en/', help_file)
         return path
 
 
