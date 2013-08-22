@@ -190,12 +190,19 @@ class ViewSource(Gtk.Window):
 
         activity_bundle = ActivityBundle(bundle_path)
         command = activity_bundle.get_command()
-        if len(command.split(' ')) > 1:
+
+        if _is_web_activity(bundle_path):
+            file_name = 'index.html'
+
+        elif len(command.split(' ')) > 1:
             name = command.split(' ')[1].split('.')[-1]
             tmppath = command.split(' ')[1].replace('.', '/')
             file_name = tmppath[0:-(len(name) + 1)] + '.py'
-            path = os.path.join(activity_bundle.get_path(), file_name)
-            self._selected_bundle_file = path
+
+        if file_name:
+            path = os.path.join(bundle_path, file_name)
+            if os.path.exists(path):
+                self._selected_bundle_file = path
 
         # Split the tree pane into two vertical panes, one of which
         # will be hidden
