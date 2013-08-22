@@ -54,6 +54,40 @@ _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
 
 
+def _is_web_activity(bundle_path):
+    activity_bundle = ActivityBundle(bundle_path)
+    return activity_bundle.get_command() == 'sugar-activity-web'
+
+
+def _is_gtk3_activity(bundle_path):
+    # FIXME, find a way to check if the activity is GTK3 or GTK2.
+    return True
+
+
+def _get_toolkit_path(bundle_path):
+    sugar_toolkit_path = None
+
+    if _is_web_activity(bundle_path):
+        sugar_web_path = os.path.join(bundle_path, 'lib', 'sugar-web')
+        if os.path.exists(sugar_web_path):
+            return sugar_web_path
+        else:
+            return None
+
+    if _is_gtk3_activity(bundle_path):
+        sugar_module = 'sugar3'
+    else:
+        sugar_module = 'sugar'
+
+    for path in sys.path:
+        if path.endswith('site-packages'):
+            sugar_toolkit_path = os.path.join(path, sugar_module)
+            if os.path.exists(sugar_toolkit_path):
+                return sugar_toolkit_path
+
+    return None
+
+
 def setup_view_source(activity):
     service = activity.get_service()
     if service is not None:
@@ -98,12 +132,7 @@ def setup_view_source(activity):
         _logger.debug('Activity without bundle_path nor document_path')
         return
 
-    sugar_toolkit_path = None
-    for path in sys.path:
-        if path.endswith('site-packages'):
-            if os.path.exists(os.path.join(path, 'sugar')):
-                sugar_toolkit_path = os.path.join(path, 'sugar')
-                break
+    sugar_toolkit_path = _get_toolkit_path(bundle_path)
 
     if sugar_toolkit_path is None:
         _logger.error("Path to toolkit not found.")
@@ -179,17 +208,23 @@ class ViewSource(Gtk.Window):
         tree_panes.add1(self._bundle_source_viewer)
         self._bundle_source_viewer.show()
 
-        self._selected_sugar_file = None
         self._sugar_source_viewer = None
 
         if sugar_toolkit_path is not None:
-            file_name = 'env.py'
+            if _is_web_activity(bundle_path):
+                file_name = 'env.js'
+            else:
+                file_name = 'env.py'
+
             self._selected_sugar_file = os.path.join(sugar_toolkit_path,
                                                      file_name)
+
             self._sugar_source_viewer = FileViewer(sugar_toolkit_path,
                                                    file_name)
+
             self._sugar_source_viewer.connect('file-selected',
                                               self.__file_selected_cb)
+
             tree_panes.add2(self._sugar_source_viewer)
             self._sugar_source_viewer.hide()
 
