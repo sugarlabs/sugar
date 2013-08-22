@@ -190,7 +190,12 @@ class ViewSource(Gtk.Window):
 
         activity_bundle = ActivityBundle(bundle_path)
         command = activity_bundle.get_command()
-        if len(command.split(' ')) > 1:
+        if _is_web_activity(bundle_path):
+            activity_js = os.path.join(bundle_path, 'js', 'activity.js')
+            if os.path.exists(activity_js):
+                self._selected_bundle_file = activity_js
+
+        elif len(command.split(' ')) > 1:
             name = command.split(' ')[1].split('.')[-1]
             tmppath = command.split(' ')[1].replace('.', '/')
             file_name = tmppath[0:-(len(name) + 1)] + '.py'
