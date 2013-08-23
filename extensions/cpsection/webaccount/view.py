@@ -14,9 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import glib
 from gettext import gettext as _
 
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from jarabe.webservice.accountsmanager import get_webaccount_services
@@ -38,7 +38,7 @@ class WebServicesConfig(SectionView):
             label = Gtk.Label()
             label.set_markup(
                 '<span size="x-large" weight="bold">' +
-                glib.markup_escape_text(
+                GLib.markup_escape_text(
                     _('No web services are installed.\n'
                       'Please visit %s for more details.' %
                       'http://wiki.sugarlabs.org/go/WebServices')) +
