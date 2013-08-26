@@ -29,6 +29,8 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 # Suppress unneeded auto-resolved build-dependency on python-dev
 CDBS_BUILD_DEPENDS_class_python-autotools_python = python$(cdbs_python_nondefault_version)
 
+CDBS_BUILD_DEPENDS +=, libgtk-3-dev
+
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.bz2
