@@ -16,64 +16,97 @@
 
 import math
 
-import gobject
-import hippo
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 
 _BASE_DISTANCE = style.zoom(25)
 _CHILDREN_FACTOR = style.zoom(3)
 
 
-class SnowflakeLayout(gobject.GObject, hippo.CanvasLayout):
+class SnowflakeLayout(Gtk.Container):
     __gtype_name__ = 'SugarSnowflakeLayout'
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        Gtk.Container.__init__(self)
+        self.set_has_window(False)
         self._nflakes = 0
-        self._box = None
+        self._children = {}
 
-    def add(self, child, center=False):
+    def do_realize(self):
+        self.set_realized(True)
+        self.set_window(self.get_parent_window())
+        for child in self._children.keys():
+            child.set_parent_window(self.get_parent_window())
+        self.queue_resize()
+
+    def do_add(self, child):
+        if child.get_realized():
+            child.set_parent_window(self.get_parent_window())
+        child.set_parent(self)
+
+    def do_forall(self, include_internals, callback):
+        for child in self._children.keys():
+            callback(child)
+
+    def do_remove(self, child):
+        child.unparent()
+
+    def add_icon(self, child, center=False):
         if not center:
             self._nflakes += 1
 
-        self._box.append(child)
-
-        box_child = self._box.find_box_child(child)
-        box_child.is_center = center
+        self._children[child] = center
+        self.add(child)
 
     def remove(self, child):
-        box_child = self._box.find_box_child(child)
-        if not box_child.is_center:
+        if not child in self._children:
+            return
+
+        if not self._children[child]:  # not centered
             self._nflakes -= 1
 
-        self._box.remove(child)
+        del self._children[child]
+        self.remove(child)
 
-    def do_set_box(self, box):
-        self._box = box
+    def do_get_preferred_size(self):
+        size = self._calculate_size()
+        requisition = Gtk.Requisition()
+        requisition.width = size
+        requisition.height = size
+        return (requisition, requisition)
 
-    def do_get_height_request(self, for_width):
+    def do_get_preferred_width(self):
         size = self._calculate_size()
         return (size, size)
 
-    def do_get_width_request(self):
+    def do_get_preferred_height(self):
         size = self._calculate_size()
         return (size, size)
 
-    def do_allocate(self, x, y, width, height,
-                    req_width, req_height, origin_changed):
+    def do_size_allocate(self, allocation):
+        self.set_allocation(allocation)
+
         r = self._get_radius()
         index = 0
 
-        for child in self._box.get_layout_children():
-            min_width, child_width = child.get_width_request()
-            min_height, child_height = child.get_height_request(child_width)
+        for child, centered in self._children.items():
+            child_request = child.size_request()
+            child_width, child_height = \
+                child_request.width, child_request.height
+            rect = Gdk.Rectangle()
+            rect.x = 0
+            rect.y = 0
+            rect.width = child_width
+            rect.height = child_height
 
-            if child.is_center:
-                child.allocate(x + (width - child_width) / 2,
-                               y + (height - child_height) / 2,
-                               child_width, child_height, origin_changed)
+            width = allocation.width - child_width
+            height = allocation.height - child_height
+            if centered:
+                rect.x = allocation.x + width / 2
+                rect.y = allocation.y + height / 2
             else:
                 angle = 2 * math.pi * index / self._nflakes
 
@@ -83,29 +116,30 @@ class SnowflakeLayout(gobject.GObject, hippo.CanvasLayout):
                 dx = math.cos(angle) * r
                 dy = math.sin(angle) * r
 
-                child_x = int(x + (width - child_width) / 2 + dx)
-                child_y = int(y + (height - child_height) / 2 + dy)
-
-                child.allocate(child_x, child_y, child_width,
-                               child_height, origin_changed)
+                rect.x = int(allocation.x + width / 2 + dx)
+                rect.y = int(allocation.y + height / 2 + dy)
 
                 index += 1
 
+            child.size_allocate(rect)
+
     def _get_radius(self):
         radius = int(_BASE_DISTANCE + _CHILDREN_FACTOR * self._nflakes)
-        for child in self._box.get_layout_children():
-            if child.is_center:
-                [min_w, child_w] = child.get_width_request()
-                [min_h, child_h] = child.get_height_request(child_w)
-                radius += max(child_w, child_h) / 2
+        for child, centered in self._children.items():
+            if centered:
+                child_request = child.size_request()
+                child_width, child_height = \
+                    child_request.width, child_request.height
+                radius += max(child_width, child_height) / 2
 
         return radius
 
     def _calculate_size(self):
         thickness = 0
-        for child in self._box.get_layout_children():
-            [min_width, child_width] = child.get_width_request()
-            [min_height, child_height] = child.get_height_request(child_width)
+        for child in self._children.keys():
+            child_request = child.size_request()
+            child_width, child_height = \
+                child_request.width, child_request.height
             thickness = max(thickness, max(child_width, child_height))
 
         return self._get_radius() * 2 + thickness

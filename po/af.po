@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
+"POT-Creation-Date: 2012-08-29 00:34-0400\n"
 "PO-Revision-Date: 2012-02-11 02:52+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Error in specified colors."
 msgstr "Vout in gespesifiseerde kleure."
 
-#: ../extensions/cpsection/aboutme/view.py:235
+#: ../extensions/cpsection/aboutme/view.py:216
 msgid "Click to change your color:"
 msgstr "Kliek om jou kleur te verander:"
 
@@ -117,7 +117,7 @@ msgstr "Datem & Tyd"
 msgid "Error timezone does not exist."
 msgstr ""
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "Tydsone"
 
@@ -288,21 +288,12 @@ msgstr ""
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr ""
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
-msgstr ""
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -396,27 +387,27 @@ msgstr ""
 msgid "My Battery"
 msgstr ""
 
-#: ../extensions/deviceicon/battery.py:147
+#: ../extensions/deviceicon/battery.py:152
 #, fuzzy
 msgid "Removed"
 msgstr "Verwyder"
 
-#: ../extensions/deviceicon/battery.py:150
+#: ../extensions/deviceicon/battery.py:155
 msgid "Charging"
 msgstr ""
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:158
 msgid "Very little power remaining"
 msgstr "Baie min krag oor"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:160
+#: ../extensions/deviceicon/battery.py:165
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d oor"
 
-#: ../extensions/deviceicon/battery.py:163
+#: ../extensions/deviceicon/battery.py:168
 msgid "Charged"
 msgstr ""
 
@@ -428,15 +419,15 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:93
 #: ../extensions/deviceicon/network.py:292
 #: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:492
+#: ../src/jarabe/desktop/networkviews.py:495
 msgid "Disconnect"
 msgstr "Ontkoppel"
 
 #: ../extensions/deviceicon/network.py:101
 #: ../extensions/deviceicon/network.py:284
 #: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:529
-#: ../src/jarabe/desktop/networkviews.py:663
+#: ../src/jarabe/desktop/networkviews.py:533
+#: ../src/jarabe/desktop/networkviews.py:668
 msgid "Connecting..."
 msgstr "Koppel..."
 
@@ -444,8 +435,8 @@ msgstr "Koppel..."
 #: ../extensions/deviceicon/network.py:106
 #: ../extensions/deviceicon/network.py:174
 #: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:535
-#: ../src/jarabe/desktop/networkviews.py:669
+#: ../src/jarabe/desktop/networkviews.py:539
+#: ../src/jarabe/desktop/networkviews.py:674
 msgid "Connected"
 msgstr "Gekoppel"
 
@@ -475,8 +466,8 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:275
 #: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:488
-#: ../src/jarabe/desktop/networkviews.py:619
+#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:624
 msgid "Connect"
 msgstr "Koppel"
 
@@ -486,10 +477,12 @@ msgstr "Ontkoppel"
 
 #: ../extensions/deviceicon/network.py:283
 #: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:603
-#: ../src/jarabe/frame/activitiestray.py:705
-#: ../src/jarabe/frame/activitiestray.py:733
+#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/frame/activitiestray.py:605
+#: ../src/jarabe/frame/activitiestray.py:707
+#: ../src/jarabe/frame/activitiestray.py:735
+#: ../src/jarabe/journal/journaltoolbox.py:428
+#: ../src/jarabe/journal/palettes.py:153
 msgid "Cancel"
 msgstr "Kanselleer"
 
@@ -534,20 +527,20 @@ msgstr ""
 msgid "Check your configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:597
+#: ../extensions/deviceicon/network.py:602
 msgid "Mesh Network"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:641
+#: ../extensions/deviceicon/network.py:647
 #, python-format
 msgid "Mesh Network %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:757
+#: ../extensions/deviceicon/network.py:777
 msgid "No GSM connection available."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:758
+#: ../extensions/deviceicon/network.py:778
 msgid "Create a connection in the control panel."
 msgstr ""
 
@@ -593,30 +586,34 @@ msgstr ""
 msgid "finger"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr ""
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr ""
+
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:180
+msgid "Show contents"
+msgstr "Wys inhoud"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
 msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "Group"
 msgstr "Groep"
 
 #: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "Home"
 msgstr "Tuis"
 
 #: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "Activity"
 msgstr "Aktiwiteit"
 
@@ -635,262 +632,259 @@ msgid ""
 "long name."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -933,8 +927,8 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Om jou veranderings te gebruik moet jy Sugar herbegin.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
-#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
+#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:181
+#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
 #: ../src/jarabe/journal/volumestoolbar.py:307
 msgid "Warning"
 msgstr "Waarskuwing"
@@ -948,7 +942,7 @@ msgstr "Veranderings het herbegin nodig"
 msgid "Cancel changes"
 msgstr "Kanselleer veranderings"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:65
 msgid "Later"
 msgstr "Later"
 
@@ -956,12 +950,12 @@ msgstr "Later"
 msgid "Restart now"
 msgstr "Herbegin nou"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:211
 msgid "Done"
 msgstr "Klaar"
 
 #: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:347
+#: ../src/jarabe/desktop/favoritesview.py:326
 msgid "Ok"
 msgstr "Reg"
 
@@ -987,8 +981,9 @@ msgstr "Hou"
 
 #: ../src/jarabe/desktop/activitieslist.py:366
 #: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:413
-#: ../src/jarabe/journal/palettes.py:126
+#: ../src/jarabe/journal/journaltoolbox.py:394
+#: ../src/jarabe/journal/journaltoolbox.py:423
+#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
 msgid "Erase"
 msgstr "Uitwis"
 
@@ -1001,77 +996,61 @@ msgid "Make favorite"
 msgstr ""
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:127
+#: ../src/jarabe/desktop/favoriteslayout.py:187
 msgid "Freeform"
 msgstr ""
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:215
+#: ../src/jarabe/desktop/favoriteslayout.py:281
 msgid "Ring"
 msgstr ""
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:402
+#: ../src/jarabe/desktop/favoriteslayout.py:425
 msgid "Spiral"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:472
+#: ../src/jarabe/desktop/favoriteslayout.py:493
 msgid "Box"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:515
+#: ../src/jarabe/desktop/favoriteslayout.py:536
 msgid "Triangle"
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:317
 msgid "Registration Failed"
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:341
+#: ../src/jarabe/desktop/favoritesview.py:320
 msgid "Registration Successful"
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:342
+#: ../src/jarabe/desktop/favoritesview.py:321
 msgid "You are now registered with your school server."
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:644
+#: ../src/jarabe/desktop/favoritesview.py:629
 msgid "Register"
 msgstr "Registreer"
 
-#: ../src/jarabe/desktop/favoritesview.py:646
-#: ../src/jarabe/desktop/favoritesview.py:663
+#: ../src/jarabe/desktop/favoritesview.py:631
+#: ../src/jarabe/desktop/favoritesview.py:645
 msgid "Register again"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:66
+#: ../src/jarabe/desktop/homebox.py:58
 msgid "Software Update"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:67
+#: ../src/jarabe/desktop/homebox.py:59
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:76
+#: ../src/jarabe/desktop/homebox.py:68
 msgid "Check now"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:197
-msgid "List view"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:198
-msgid "<Ctrl>2"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:253
-msgid "Favorites view"
-msgstr ""
-
-#: ../src/jarabe/desktop/homebox.py:254
-msgid "<Ctrl>1"
 msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:91
@@ -1099,23 +1078,23 @@ msgstr ""
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+#: ../src/jarabe/desktop/meshbox.py:81
+#: ../src/jarabe/journal/journaltoolbox.py:507
+#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:84
 msgid "Resume"
 msgstr "Aangaan"
 
-#: ../src/jarabe/desktop/meshbox.py:87
+#: ../src/jarabe/desktop/meshbox.py:86
 #: ../src/jarabe/frame/activitiestray.py:182
 msgid "Join"
 msgstr "Aansluit"
 
-#: ../src/jarabe/desktop/networkviews.py:484
+#: ../src/jarabe/desktop/networkviews.py:486
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:616
+#: ../src/jarabe/desktop/networkviews.py:621
 #, python-format
 msgid "Mesh Network %d"
 msgstr ""
@@ -1128,52 +1107,68 @@ msgstr ""
 msgid "The server could not complete the request."
 msgstr ""
 
+#: ../src/jarabe/desktop/viewtoolbar.py:79
+msgid "List view"
+msgstr ""
+
+#: ../src/jarabe/desktop/viewtoolbar.py:80
+msgid "<Ctrl>2"
+msgstr ""
+
+#: ../src/jarabe/desktop/viewtoolbar.py:142
+msgid "Favorites view"
+msgstr ""
+
+#: ../src/jarabe/desktop/viewtoolbar.py:143
+msgid "<Ctrl>1"
+msgstr ""
+
 #: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:575
+#: ../src/jarabe/frame/activitiestray.py:577
 msgid "Decline"
 msgstr "Weier"
 
-#: ../src/jarabe/frame/activitiestray.py:523
+#: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 msgid "%dB"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:525
+#: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 msgid "%dKB"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:527
+#: ../src/jarabe/frame/activitiestray.py:529
 #, python-format
 msgid "%dMB"
 msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:545
+#: ../src/jarabe/frame/activitiestray.py:547
 #, python-format
 msgid "%s of %s"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:559
+#: ../src/jarabe/frame/activitiestray.py:561
 #, python-format
 msgid "Transfer from %s"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:570
+#: ../src/jarabe/frame/activitiestray.py:572
 msgid "Accept"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:627
-#: ../src/jarabe/frame/activitiestray.py:640
-#: ../src/jarabe/frame/activitiestray.py:758
+#: ../src/jarabe/frame/activitiestray.py:629
+#: ../src/jarabe/frame/activitiestray.py:642
+#: ../src/jarabe/frame/activitiestray.py:760
 msgid "Dismiss"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:646
 msgid "The other participant canceled the file transfer"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:692
+#: ../src/jarabe/frame/activitiestray.py:694
 #, python-format
 msgid "Transfer to %s"
 msgstr ""
@@ -1198,212 +1193,215 @@ msgstr "Maak oop met"
 msgid "%s clipping"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "Neighborhood"
 msgstr "Buurt"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:48
 msgid "F1"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F2"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../src/jarabe/frame/zoomtoolbar.py:52
 msgid "F3"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F4"
 msgstr ""
 
-#: ../src/jarabe/intro/window.py:103
+#: ../src/jarabe/intro/window.py:106
 msgid "Name:"
 msgstr "Naam:"
 
-#: ../src/jarabe/intro/window.py:133
+#: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
 msgstr "Kliek om die kleur the verander:"
 
-#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
 msgstr "Terug"
 
-#: ../src/jarabe/intro/window.py:211
+#: ../src/jarabe/intro/window.py:214
 msgid "Next"
 msgstr "Volgende"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/expandedentry.py:142
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:66
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "Titelloos"
 
-#: ../src/jarabe/journal/expandedentry.py:245
+#: ../src/jarabe/journal/expandedentry.py:246
 msgid "No preview"
 msgstr "Geen preview"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:256
 #, python-format
 msgid "Kind: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:257
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
 msgid "Unknown"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:265
+#: ../src/jarabe/journal/expandedentry.py:258
 #, python-format
 msgid "Date: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:266
+#: ../src/jarabe/journal/expandedentry.py:259
 #, python-format
 msgid "Size: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:294
+#: ../src/jarabe/journal/expandedentry.py:282
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "Geen datum"
 
-#: ../src/jarabe/journal/expandedentry.py:301
+#: ../src/jarabe/journal/expandedentry.py:291
 msgid "Participants:"
 msgstr "Deelnemers:"
 
-#: ../src/jarabe/journal/expandedentry.py:323
+#: ../src/jarabe/journal/expandedentry.py:331
 msgid "Description:"
 msgstr "Beskrywing:"
 
-#: ../src/jarabe/journal/expandedentry.py:348
+#: ../src/jarabe/journal/expandedentry.py:334
 msgid "Tags:"
 msgstr "Etikette:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:468
-#: ../src/jarabe/journal/palettes.py:198
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:218
 #: ../src/jarabe/journal/volumestoolbar.py:368
 msgid "Journal"
 msgstr "Joernaal"
 
-#: ../src/jarabe/journal/journaltoolbox.py:72
-msgid "Search"
-msgstr "Soek"
-
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:129
 msgid "Anytime"
 msgstr "Enige Tyd"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:131
 msgid "Today"
 msgstr "Vandag"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Since yesterday"
 msgstr "Sedert gister"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Past week"
 msgstr "Verlede week"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Past month"
 msgstr "Verlede maand"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past year"
 msgstr "Verlede jaar"
 
-#: ../src/jarabe/journal/journaltoolbox.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:146
 msgid "Anyone"
 msgstr "Enigiemand"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:148
 msgid "My friends"
 msgstr "My vriende"
 
-#: ../src/jarabe/journal/journaltoolbox.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:149
 msgid "My class"
 msgstr "My klass"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:301
+#: ../src/jarabe/journal/journaltoolbox.py:291
 msgid "Anything"
 msgstr "Enigiets"
 
-#: ../src/jarabe/journal/journaltoolbox.py:396
-#: ../src/jarabe/journal/palettes.py:93
+#: ../src/jarabe/journal/journaltoolbox.py:377
+#: ../src/jarabe/journal/palettes.py:95
 msgid "Copy to"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:404
-#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:385
+#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:274
 msgid "Duplicate"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:437
-#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
+#: ../src/jarabe/journal/journaltoolbox.py:418
+#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
 #: ../src/jarabe/journal/volumestoolbar.py:315
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
 #: ../src/jarabe/journal/volumestoolbar.py:316
 msgid "Error"
 msgstr ""
 
+#: ../src/jarabe/journal/journaltoolbox.py:425
+#: ../src/jarabe/journal/palettes.py:150
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr ""
+
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:512
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/journaltoolbox.py:510
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Start"
 msgstr "Begin"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:538
 msgid "Sort by date modified"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:541
+#: ../src/jarabe/journal/journaltoolbox.py:539
 msgid "Sort by date created"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:542
+#: ../src/jarabe/journal/journaltoolbox.py:540
 msgid "Sort by size"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/journaltoolbox.py:549
 msgid "Sort view"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:317
+#: ../src/jarabe/journal/listview.py:318
 msgid "Your Journal is empty"
 msgstr "Jou joernaal is leeg"
 
-#: ../src/jarabe/journal/listview.py:320
+#: ../src/jarabe/journal/listview.py:321
 msgid "Your documents folder is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:322
+#: ../src/jarabe/journal/listview.py:323
 msgid "The device is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:324
+#: ../src/jarabe/journal/listview.py:325
 #, fuzzy
 msgid "No matching entries"
 msgstr "Geen toepaslike inskrywings"
 
-#: ../src/jarabe/journal/listview.py:398
+#: ../src/jarabe/journal/listview.py:400
 msgid "Clear search"
 msgstr ""
 
@@ -1438,48 +1436,48 @@ msgstr "Kies 'n objek"
 msgid "Close"
 msgstr "Toemaak"
 
-#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/journal/palettes.py:74
 msgid "Resume with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:77
 msgid "Start with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
 msgid "No activity to start entry"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/journal/palettes.py:114
 msgid "Send to"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:121
+#: ../src/jarabe/journal/palettes.py:123
 msgid "View Details"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:160
+#: ../src/jarabe/journal/palettes.py:180
 msgid "Entries without a file cannot be sent."
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
+#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
 #: ../src/jarabe/journal/volumestoolbar.py:306
 msgid "Entries without a file cannot be copied."
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:267
+#: ../src/jarabe/journal/palettes.py:287
 msgid "Clipboard"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:322
+#: ../src/jarabe/journal/palettes.py:342
 msgid "No friends present"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:327
+#: ../src/jarabe/journal/palettes.py:347
 msgid "No valid connection found"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:355
+#: ../src/jarabe/journal/palettes.py:375
 msgid "No activity to resume entry"
 msgstr ""
 
@@ -1709,7 +1707,7 @@ msgstr ""
 msgid "Invite to %s"
 msgstr "Nooi na %s"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:142
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr ""
@@ -1734,10 +1732,6 @@ msgstr "Stop"
 #: ../src/jarabe/view/palettes.py:139
 msgid "Start new"
 msgstr ""
-
-#: ../src/jarabe/view/palettes.py:180
-msgid "Show contents"
-msgstr "Wys inhoud"
 
 #: ../src/jarabe/view/palettes.py:229
 #, fuzzy
@@ -1774,3 +1768,6 @@ msgstr ""
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+#~ msgid "Search"
+#~ msgstr "Soek"

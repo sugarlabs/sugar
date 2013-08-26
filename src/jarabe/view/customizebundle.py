@@ -18,12 +18,12 @@ import os
 import glob
 import hashlib
 
-import gtk
+from gi.repository import Gtk
 
-from sugar import profile
-from sugar.activity import bundlebuilder
-from sugar.datastore import datastore
-from sugar.env import get_user_activities_path
+from sugar3 import profile
+from sugar3.activity import bundlebuilder
+from sugar3.datastore import datastore
+from sugar3.env import get_user_activities_path
 
 import logging
 _logger = logging.getLogger('ViewSource')
@@ -152,7 +152,7 @@ def _create_custom_icon(new_basename, icon_name):
     """
     user_activities_path = get_user_activities_path()
     badge_path = None
-    for path in gtk.icon_theme_get_default().get_search_path():
+    for path in Gtk.IconTheme.get_default().get_search_path():
         if os.path.exists(os.path.join(path, 'sugar', 'scalable',
                                        BADGE_SUBPATH)):
             badge_path = path

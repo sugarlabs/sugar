@@ -19,7 +19,7 @@ import logging
 
 import dbus
 
-from sugar import dispatch
+from sugar3 import dispatch
 
 from jarabe import config
 

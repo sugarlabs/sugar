@@ -14,10 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
+from gi.repository import Gtk
 from gettext import gettext as _
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
@@ -34,51 +34,53 @@ class Power(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._automatic_pm_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._automatic_pm_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
-        separator_pm = gtk.HSeparator()
-        self.pack_start(separator_pm, expand=False)
+        separator_pm = Gtk.HSeparator()
+        self.pack_start(separator_pm, False, True, 0)
         separator_pm.show()
 
-        label_pm = gtk.Label(_('Power management'))
+        label_pm = Gtk.Label(label=_('Power management'))
         label_pm.set_alignment(0, 0)
-        self.pack_start(label_pm, expand=False)
+        self.pack_start(label_pm, False, True, 0)
         label_pm.show()
-        box_pm = gtk.VBox()
+        box_pm = Gtk.VBox()
         box_pm.set_border_width(style.DEFAULT_SPACING * 2)
         box_pm.set_spacing(style.DEFAULT_SPACING)
 
-        box_automatic_pm = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_automatic_pm = gtk.Label(
+        box_automatic_pm = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_automatic_pm = Gtk.Label(label=
             _('Automatic power management (increases battery life)'))
         label_automatic_pm.set_alignment(0, 0.5)
-        self._automatic_button = gtk.CheckButton()
+        self._automatic_button = Gtk.CheckButton()
         self._automatic_button.set_alignment(0, 0)
-        box_automatic_pm.pack_start(self._automatic_button, expand=False)
-        box_automatic_pm.pack_start(label_automatic_pm, expand=False)
+        box_automatic_pm.pack_start(self._automatic_button, False, True, 0)
+        box_automatic_pm.pack_start(label_automatic_pm, False, True, 0)
         self._automatic_button.show()
         label_automatic_pm.show()
         group.add_widget(label_automatic_pm)
-        box_pm.pack_start(box_automatic_pm, expand=False)
+        box_pm.pack_start(box_automatic_pm, False, True, 0)
         box_automatic_pm.show()
 
         self._automatic_pm_alert = InlineAlert()
-        label_automatic_pm_error = gtk.Label()
+        label_automatic_pm_error = Gtk.Label()
         group.add_widget(label_automatic_pm_error)
         self._automatic_pm_alert_box.pack_start(label_automatic_pm_error,
-                                                expand=False)
+                                                expand=False, fill=True,
+                                                padding=0)
         label_automatic_pm_error.show()
         self._automatic_pm_alert_box.pack_start(self._automatic_pm_alert,
-                                                expand=False)
-        box_pm.pack_end(self._automatic_pm_alert_box, expand=False)
+                                                expand=False, fill=True,
+                                                padding=0)
+        box_pm.pack_end(self._automatic_pm_alert_box, False, True, 0)
         self._automatic_pm_alert_box.show()
         if 'automatic_pm' in self.restart_alerts:
             self._automatic_pm_alert.props.msg = self.restart_msg
             self._automatic_pm_alert.show()
 
-        self.pack_start(box_pm, expand=False)
+        self.pack_start(box_pm, False, True, 0)
         box_pm.show()
 
         self.setup()

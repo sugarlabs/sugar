@@ -15,14 +15,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+from gettext import gettext as _
 
-import gobject
-import gio
-import gtk
-import gconf
+from gi.repository import GObject
+from gi.repository import Gio
+from gi.repository import Gtk
+from gi.repository import GConf
 
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.icon import Icon
 
 from jarabe.journal import journalactivity
 from jarabe.view.palettes import VolumePalette
@@ -30,6 +34,7 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
 _icons = {}
+volume_monitor = None
 
 
 class DeviceView(TrayIcon):
@@ -40,45 +45,59 @@ class DeviceView(TrayIcon):
 
         self._mount = mount
 
-        icon_name = None
-        icon_theme = gtk.icon_theme_get_default()
+        self._icon_name = None
+        icon_theme = Gtk.IconTheme.get_default()
         for icon_name in self._mount.get_icon().props.names:
             icon_info = icon_theme.lookup_icon(icon_name,
-                                               gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+                                               Gtk.IconSize.LARGE_TOOLBAR, 0)
             if icon_info is not None:
+                self._icon_name = icon_name
                 break
 
-        if icon_name is None:
-            icon_name = 'drive'
+        if self._icon_name is None:
+            self._icon_name = 'drive'
 
         # TODO: retrieve the colors from the owner of the device
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
-
-        self.connect('button-release-event', self.__button_release_event_cb)
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
         palette.set_group_id('frame')
+
+        menu_item = PaletteMenuItem(_('Show contents'))
+        client = GConf.Client.get_default()
+        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon = Icon(icon_name=self._icon_name, icon_size=Gtk.IconSize.MENU,
+                    xo_color=color)
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__show_contents_cb)
+        palette.content_box.pack_start(menu_item, True, True, 0)
+        palette.content_box.reorder_child(menu_item, 0)
+        menu_item.show()
+
         return palette
 
-    def __button_release_event_cb(self, widget, event):
+    def __show_contents_cb(self, menu_item):
         journal = journalactivity.get_journal()
         journal.set_active_volume(self._mount)
         journal.reveal()
-        return True
 
 
 def setup(tray):
-    gobject.idle_add(_setup_volumes, tray)
+    GObject.idle_add(_setup_volumes, tray)
 
 
 def _setup_volumes(tray):
-    volume_monitor = gio.volume_monitor_get()
+    global volume_monitor
+    volume_monitor = Gio.VolumeMonitor.get()
 
     for volume in volume_monitor.get_volumes():
         _mount(volume, tray)
@@ -99,17 +118,20 @@ def _mount(volume, tray):
     # Follow Nautilus behaviour here
     # since it has the same issue with removable device
     # and it would be good to not invent our own workflow
-    if hasattr(volume, 'should_automount') and not volume.should_automount():
+    if not volume.should_automount():
         return
 
     #TODO: should be done by some other process, like gvfs-hal-volume-monitor
-    #TODO: use volume.should_automount() when it gets into pygtk
     if volume.get_mount() is None and volume.can_mount():
         #TODO: pass None as mount_operation, or better, SugarMountOperation
-        volume.mount(gtk.MountOperation(tray.get_toplevel()), _mount_cb)
+        flags = 0
+        mount_operation = Gtk.MountOperation(parent=tray.get_toplevel())
+        cancellable = None
+        user_data = None
+        volume.mount(flags, mount_operation, cancellable, _mount_cb, user_data)
 
 
-def _mount_cb(volume, result):
+def _mount_cb(volume, result, user_data):
     logging.debug('_mount_cb %r %r', volume, result)
     volume.mount_finish(result)
 

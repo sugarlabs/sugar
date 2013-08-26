@@ -3,8 +3,7 @@ python_scripts =		\
 	sugar-emulator		\
 	sugar-install-bundle	\
 	sugar-launch		\
-	sugar-session		\
-	sugar-ui-check
+	sugar-session
 
 bin_SCRIPTS = 			\
 	sugar			\

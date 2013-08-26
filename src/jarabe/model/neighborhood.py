@@ -18,8 +18,8 @@ import logging
 from functools import partial
 from hashlib import sha1
 
-import gobject
-import gconf
+from gi.repository import GObject
+from gi.repository import GConf
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import ACCOUNT, \
@@ -42,8 +42,8 @@ from telepathy.constants import HANDLE_TYPE_CONTACT, \
                                 CONNECTION_STATUS_DISCONNECTED
 from telepathy.client import Connection, Channel
 
-from sugar.graphics.xocolor import XoColor
-from sugar.profile import get_profile
+from sugar3.graphics.xocolor import XoColor
+from sugar3.profile import get_profile
 
 from jarabe.model.buddy import BuddyModel, get_owner_instance
 from jarabe.model import bundleregistry
@@ -70,20 +70,20 @@ will be very slow in returning these queries, so just be patient.
 _model = None
 
 
-class ActivityModel(gobject.GObject):
+class ActivityModel(GObject.GObject):
     __gsignals__ = {
-        'current-buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'current-buddy-added': (GObject.SignalFlags.RUN_FIRST, None,
                                 ([object])),
-        'current-buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'current-buddy-removed': (GObject.SignalFlags.RUN_FIRST, None,
                                   ([object])),
-        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-added': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
-        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-removed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
     }
 
     def __init__(self, activity_id, room_handle):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.activity_id = activity_id
         self.room_handle = room_handle
@@ -100,7 +100,7 @@ class ActivityModel(gobject.GObject):
     def set_color(self, color):
         self._color = color
 
-    color = gobject.property(type=object, getter=get_color, setter=set_color)
+    color = GObject.property(type=object, getter=get_color, setter=set_color)
 
     def get_bundle(self):
         return self._bundle
@@ -108,7 +108,7 @@ class ActivityModel(gobject.GObject):
     def set_bundle(self, bundle):
         self._bundle = bundle
 
-    bundle = gobject.property(type=object, getter=get_bundle,
+    bundle = GObject.property(type=object, getter=get_bundle,
                               setter=set_bundle)
 
     def get_name(self):
@@ -117,7 +117,7 @@ class ActivityModel(gobject.GObject):
     def set_name(self, name):
         self._name = name
 
-    name = gobject.property(type=object, getter=get_name, setter=set_name)
+    name = GObject.property(type=object, getter=get_name, setter=set_name)
 
     def is_private(self):
         return self._private
@@ -125,7 +125,7 @@ class ActivityModel(gobject.GObject):
     def set_private(self, private):
         self._private = private
 
-    private = gobject.property(type=object, getter=is_private,
+    private = GObject.property(type=object, getter=is_private,
                                setter=set_private)
 
     def get_buddies(self):
@@ -141,7 +141,7 @@ class ActivityModel(gobject.GObject):
         self.notify('buddies')
         self.emit('buddy-removed', buddy)
 
-    buddies = gobject.property(type=object, getter=get_buddies)
+    buddies = GObject.property(type=object, getter=get_buddies)
 
     def get_current_buddies(self):
         return self._current_buddies
@@ -156,35 +156,35 @@ class ActivityModel(gobject.GObject):
         self.notify('current-buddies')
         self.emit('current-buddy-removed', buddy)
 
-    current_buddies = gobject.property(type=object, getter=get_current_buddies)
+    current_buddies = GObject.property(type=object, getter=get_current_buddies)
 
 
-class _Account(gobject.GObject):
+class _Account(GObject.GObject):
     __gsignals__ = {
-        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
                            ([object, object])),
-        'activity-updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-updated': (GObject.SignalFlags.RUN_FIRST, None,
                              ([object, object])),
-        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-removed': (GObject.SignalFlags.RUN_FIRST, None,
                              ([object])),
-        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-added': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object, object, object])),
-        'buddy-updated': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-updated': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object, object])),
-        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-removed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
-        'buddy-joined-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-joined-activity': (GObject.SignalFlags.RUN_FIRST, None,
                                   ([object, object])),
-        'buddy-left-activity': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-left-activity': (GObject.SignalFlags.RUN_FIRST, None,
                                 ([object, object])),
-        'current-activity-updated': (gobject.SIGNAL_RUN_FIRST,
-                                     gobject.TYPE_NONE, ([object, object])),
-        'connected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'disconnected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'current-activity-updated': (GObject.SignalFlags.RUN_FIRST,
+                                     None, ([object, object])),
+        'connected': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'disconnected': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, account_path):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.object_path = account_path
 
@@ -672,20 +672,20 @@ class _Account(gobject.GObject):
         logging.debug('_Account.__set_enabled_cb success')
 
 
-class Neighborhood(gobject.GObject):
+class Neighborhood(GObject.GObject):
     __gsignals__ = {
-        'activity-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
                            ([object])),
-        'activity-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'activity-removed': (GObject.SignalFlags.RUN_FIRST, None,
                              ([object])),
-        'buddy-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-added': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
-        'buddy-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'buddy-removed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._buddies = {None: get_owner_instance()}
         self._activities = {}
@@ -693,13 +693,13 @@ class Neighborhood(gobject.GObject):
         self._server_account = None
         self._shell_model = shell.get_model()
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         client.add_dir('/desktop/sugar/collaboration',
-                       gconf.CLIENT_PRELOAD_NONE)
+                       GConf.ClientPreloadType.PRELOAD_NONE)
         client.notify_add('/desktop/sugar/collaboration/jabber_server',
-                          self.__jabber_server_changed_cb)
-        client.add_dir('/desktop/sugar/user/nick', gconf.CLIENT_PRELOAD_NONE)
-        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb)
+                          self.__jabber_server_changed_cb, None)
+        client.add_dir('/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
+        client.notify_add('/desktop/sugar/user/nick', self.__nick_changed_cb, None)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -766,7 +766,7 @@ class Neighborhood(gobject.GObject):
 
         logging.debug('Still dont have a Salut account, creating one')
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
 
         params = {
@@ -801,7 +801,7 @@ class Neighborhood(gobject.GObject):
 
         logging.debug('Still dont have a Gabble account, creating one')
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         nick = client.get_string('/desktop/sugar/user/nick')
         server = client.get_string('/desktop/sugar/collaboration'
                                    '/jabber_server')
@@ -835,7 +835,7 @@ class Neighborhood(gobject.GObject):
 
     def _get_jabber_account_id(self):
         public_key_hash = sha1(get_profile().pubkey).hexdigest()
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         server = client.get_string('/desktop/sugar/collaboration'
                                    '/jabber_server')
         return '%s@%s' % (public_key_hash, server)
@@ -924,7 +924,8 @@ class Neighborhood(gobject.GObject):
         is_new = buddy.props.key is None and 'key' in properties
 
         if 'color' in properties:
-            buddy.props.color = XoColor(properties['color'])
+            # arrives unicode but we connect with byte_arrays=True - SL #4157
+            buddy.props.color = XoColor(str(properties['color']))
 
         if 'key' in properties:
             buddy.props.key = properties['key']
@@ -975,7 +976,8 @@ class Neighborhood(gobject.GObject):
 
         is_new = activity.props.bundle is None
 
-        activity.props.color = XoColor(properties['color'])
+        # arrives unicode but we connect with byte_arrays=True - SL #4157
+        activity.props.color = XoColor(str(properties['color']))
         activity.props.bundle = bundle
         activity.props.name = properties['name']
         activity.props.private = properties['private']

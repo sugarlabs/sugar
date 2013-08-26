@@ -18,16 +18,16 @@
 from gettext import gettext as _
 import os
 
-import gtk
-import gconf
-import glib
+from gi.repository import Gtk
+from gi.repository import GConf
+from gi.repository import GLib
 
 import logging
 
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.palette import Palette
-from sugar.graphics import style
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.palette import Palette
+from sugar3.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -51,7 +51,7 @@ class DeviceView(TrayIcon):
         """ Create the icon that represents the touchpad. """
         icon_name = STATUS_ICON[_read_touchpad_mode()]
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
@@ -61,7 +61,7 @@ class DeviceView(TrayIcon):
     def create_palette(self):
         """ Create a palette for this icon; called by the Sugar framework
         when a palette needs to be displayed. """
-        label = glib.markup_escape_text(_('My touchpad'))
+        label = GLib.markup_escape_text(_('My touchpad'))
         self.palette = ResourcePalette(label, self.icon)
         self.palette.set_group_id('frame')
         return self.palette
@@ -82,11 +82,11 @@ class ResourcePalette(Palette):
 
         self._icon = icon
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.set_content(vbox)
 
-        self._status_text = gtk.Label()
-        vbox.pack_start(self._status_text, padding=style.DEFAULT_PADDING)
+        self._status_text = Gtk.Label()
+        vbox.pack_start(self._status_text, True, True, style.DEFAULT_PADDING)
         self._status_text.show()
 
         vbox.show()

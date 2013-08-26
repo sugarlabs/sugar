@@ -21,23 +21,26 @@ from gettext import gettext as _
 import tempfile
 import os
 
-import gobject
-import gconf
-import gio
-import glib
-import gtk
+from gi.repository import GObject
+from gi.repository import GConf
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.tray import HTray
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.icon import Icon, get_icon_file_name
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.datastore import datastore
-from sugar import mime
-from sugar import env
+from sugar3.graphics import style
+from sugar3.graphics.tray import HTray
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.icon import Icon, get_icon_file_name
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.datastore import datastore
+from sugar3 import mime
+from sugar3 import env
 
 from jarabe.model import shell
 from jarabe.model import invites
@@ -84,8 +87,13 @@ class ActivityButton(RadioToolButton):
             palette = JournalPalette(self._home_activity)
         else:
             palette = CurrentActivityPalette(self._home_activity)
+            palette.connect('done', self.__palette_item_selected_cb)
         palette.set_group_id('frame')
         self.set_palette(palette)
+
+    def __palette_item_selected_cb(self, widget):
+        frame = jarabe.frame.get_view()
+        frame.hide()
 
     def _on_failed_launch(self):
         # TODO http://bugs.sugarlabs.org/ticket/2007
@@ -104,7 +112,7 @@ class InviteButton(ToolButton):
     """Invite to shared activity"""
 
     __gsignals__ = {
-        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'remove-invite': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, invite):
@@ -144,7 +152,7 @@ class InviteButton(ToolButton):
             self._notif_icon.props.icon_name = 'image-missing'
 
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, gtk.CORNER_TOP_LEFT)
+        frame.add_notification(self._notif_icon, Gtk.CornerType.TOP_LEFT)
 
     def __button_release_event_cb(self, icon, event):
         if self._notif_icon is not None:
@@ -171,7 +179,7 @@ class InvitePalette(Palette):
     """Palette for frame or notification icon for invites."""
 
     __gsignals__ = {
-        'remove-invite': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'remove-invite': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, invite):
@@ -198,7 +206,7 @@ class InvitePalette(Palette):
         else:
             name = bundle_id
 
-        self.set_primary_text(glib.markup_escape_text(name))
+        self.set_primary_text(GLib.markup_escape_text(name))
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
@@ -261,8 +269,9 @@ class ActivitiesTray(HTray):
         self.scroll_to_item(button)
         # Redraw immediately.
         # The widget may not be realized yet, and then there is no window.
-        if self.window:
-            self.window.process_updates(True)
+        x11_window = self.get_window()
+        if x11_window:
+            x11_window.process_updates(True)
 
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)
@@ -286,7 +295,9 @@ class ActivitiesTray(HTray):
             logging.debug('ActivitiesTray.__activity_clicked_cb')
             window = home_activity.get_window()
             if window:
-                window.activate(gtk.get_current_event_time())
+                window.activate(Gtk.get_current_event_time())
+                frame = jarabe.frame.get_view()
+                frame.hide()
 
     def __remove_invite_cb(self, icon, invite):
         self._invites.remove_invite(invite)
@@ -377,7 +388,7 @@ class IncomingTransferButton(BaseTransferButton):
         file_transfer.connect('notify::transferred-bytes',
                               self.__notify_transferred_bytes_cb)
 
-        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons = Gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
         for icon_name in icons:
             icon_name = 'transfer-from-%s' % icon_name
@@ -393,7 +404,7 @@ class IncomingTransferButton(BaseTransferButton):
 
         frame = jarabe.frame.get_view()
         frame.add_notification(self.notif_icon,
-                               gtk.CORNER_TOP_LEFT)
+                               Gtk.CornerType.TOP_LEFT)
 
     def create_palette(self):
         palette = IncomingTransferPalette(self.file_transfer)
@@ -452,7 +463,7 @@ class OutgoingTransferButton(BaseTransferButton):
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
-        icons = gio.content_type_get_icon(file_transfer.mime_type).props.names
+        icons = Gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
         for icon_name in icons:
             icon_name = 'transfer-to-%s' % icon_name
@@ -462,14 +473,14 @@ class OutgoingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
         frame = jarabe.frame.get_view()
         frame.add_notification(self.notif_icon,
-                               gtk.CORNER_TOP_LEFT)
+                               Gtk.CornerType.TOP_LEFT)
 
     def create_palette(self):
         palette = OutgoingTransferPalette(self.file_transfer)
@@ -488,11 +499,11 @@ class BaseTransferPalette(Palette):
     __gtype_name__ = 'SugarBaseTransferPalette'
 
     __gsignals__ = {
-        'dismiss-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'dismiss-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, file_transfer):
-        Palette.__init__(self, glib.markup_escape_text(file_transfer.title))
+        Palette.__init__(self, GLib.markup_escape_text(file_transfer.title))
 
         self.file_transfer = file_transfer
 
@@ -556,7 +567,7 @@ class IncomingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(self.file_transfer.buddy.props.nick)
-        label = glib.markup_escape_text(_('Transfer from %s') % (nick,))
+        label = GLib.markup_escape_text(_('Transfer from %s') % (nick,))
         self.props.secondary_text = label
 
         self._update()
@@ -565,85 +576,110 @@ class IncomingTransferPalette(BaseTransferPalette):
         self._update()
 
     def _update(self):
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
+
         logging.debug('_update state: %r', self.file_transfer.props.state)
         if self.file_transfer.props.state == filetransfer.FT_STATE_PENDING:
-            menu_item = MenuItem(_('Accept'), icon_name='dialog-ok')
+            menu_item = PaletteMenuItem(_('Accept'))
+            icon = Icon(icon_name='dialog-ok', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__accept_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
-            menu_item = MenuItem(_('Decline'), icon_name='dialog-cancel')
+            menu_item = PaletteMenuItem(_('Decline'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__decline_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
-            self.set_content(vbox)
-            vbox.show()
+            separator = PaletteMenuItemSeparator()
+            box.append_item(separator)
+            separator.show()
+
+            inner_box = Gtk.VBox()
+            inner_box.set_spacing(style.DEFAULT_PADDING)
+            box.append_item(inner_box, vertical_padding=0)
+            inner_box.show()
 
             if self.file_transfer.description:
-                label = gtk.Label(self.file_transfer.description)
-                vbox.add(label)
+                label = Gtk.Label(label=self.file_transfer.description)
+                inner_box.add(label)
                 label.show()
 
             mime_type = self.file_transfer.mime_type
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label('%s (%s)' % (size, type_description))
-            vbox.add(label)
+            label = Gtk.Label(label='%s (%s)' % (size, type_description))
+            inner_box.add(label)
             label.show()
 
         elif self.file_transfer.props.state in \
                 [filetransfer.FT_STATE_ACCEPTED, filetransfer.FT_STATE_OPEN]:
-
-            for item in self.menu.get_children():
-                self.menu.remove(item)
-
-            menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
+            menu_item = PaletteMenuItem(_('Cancel'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
-            self.set_content(vbox)
-            vbox.show()
+            separator = PaletteMenuItemSeparator()
+            box.append_item(separator)
+            separator.show()
 
-            self.progress_bar = gtk.ProgressBar()
-            vbox.add(self.progress_bar)
+            inner_box = Gtk.VBox()
+            inner_box.set_spacing(style.DEFAULT_PADDING)
+            box.append_item(inner_box, vertical_padding=0)
+            inner_box.show()
+
+            self.progress_bar = Gtk.ProgressBar()
+            inner_box.add(self.progress_bar)
             self.progress_bar.show()
 
-            self.progress_label = gtk.Label('')
-            vbox.add(self.progress_label)
+            self.progress_label = Gtk.Label(label='')
+            inner_box.add(self.progress_label)
             self.progress_label.show()
 
             self.update_progress()
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
-
-            for item in self.menu.get_children():
-                self.menu.remove(item)
-
-            menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+            menu_item = PaletteMenuItem(_('Dismiss'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
             self.update_progress()
+
         elif self.file_transfer.props.state == filetransfer.FT_STATE_CANCELLED:
-
-            for item in self.menu.get_children():
-                self.menu.remove(item)
-
             if self.file_transfer.reason_last_change == \
                     filetransfer.FT_REASON_REMOTE_STOPPED:
-                menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+                menu_item = PaletteMenuItem(_('Dismiss'))
+                icon = Icon(icon_name='dialog-cancel',
+                            icon_size=Gtk.IconSize.MENU)
+                menu_item.set_image(icon)
+                icon.show()
                 menu_item.connect('activate', self.__dismiss_activate_cb)
-                self.menu.append(menu_item)
+                box.append_item(menu_item)
                 menu_item.show()
+
+                inner_box = Gtk.VBox()
+                inner_box.set_spacing(style.DEFAULT_PADDING)
+                box.append_item(inner_box, vertical_padding=0)
+                inner_box.show()
+
                 text = _('The other participant canceled the file transfer')
-                label = gtk.Label(text)
-                self.set_content(label)
+                label = Gtk.Label(label=text)
+                inner_box.add(label)
                 label.show()
 
     def __accept_activate_cb(self, menu_item):
@@ -689,7 +725,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(file_transfer.buddy.props.nick)
-        label = glib.markup_escape_text(_('Transfer to %s') % (nick,))
+        label = GLib.markup_escape_text(_('Transfer to %s') % (nick,))
         self.props.secondary_text = label
 
         self._update()
@@ -700,64 +736,78 @@ class OutgoingTransferPalette(BaseTransferPalette):
     def _update(self):
         new_state = self.file_transfer.props.state
         logging.debug('_update state: %r', new_state)
-        if new_state == filetransfer.FT_STATE_PENDING:
 
-            menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
+        if new_state == filetransfer.FT_STATE_PENDING:
+            menu_item = PaletteMenuItem(_('Cancel'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
-            self.set_content(vbox)
-            vbox.show()
+            separator = PaletteMenuItemSeparator()
+            box.append_item(separator)
+            separator.show()
+
+            inner_box = Gtk.VBox()
+            inner_box.set_spacing(style.DEFAULT_PADDING)
+            box.append_item(inner_box, vertical_padding=0)
+            inner_box.show()
 
             if self.file_transfer.description:
-                label = gtk.Label(self.file_transfer.description)
-                vbox.add(label)
+                label = Gtk.Label(label=self.file_transfer.description)
+                inner_box.add(label)
                 label.show()
 
             mime_type = self.file_transfer.mime_type
             type_description = mime.get_mime_description(mime_type)
 
             size = self._format_size(self.file_transfer.file_size)
-            label = gtk.Label('%s (%s)' % (size, type_description))
-            vbox.add(label)
+            label = Gtk.Label(label='%s (%s)' % (size, type_description))
+            inner_box.add(label)
             label.show()
 
         elif new_state in [filetransfer.FT_STATE_ACCEPTED,
                            filetransfer.FT_STATE_OPEN]:
-
-            for item in self.menu.get_children():
-                self.menu.remove(item)
-
-            menu_item = MenuItem(_('Cancel'), icon_name='dialog-cancel')
+            menu_item = PaletteMenuItem(_('Cancel'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
-            vbox = gtk.VBox()
-            self.set_content(vbox)
-            vbox.show()
+            separator = PaletteMenuItemSeparator()
+            box.append_item(separator)
+            separator.show()
 
-            self.progress_bar = gtk.ProgressBar()
-            vbox.add(self.progress_bar)
+            inner_box = Gtk.VBox()
+            inner_box.set_spacing(style.DEFAULT_PADDING)
+            box.append_item(inner_box, vertical_padding=0)
+            inner_box.show()
+
+            self.progress_bar = Gtk.ProgressBar()
+            inner_box.add(self.progress_bar)
             self.progress_bar.show()
 
-            self.progress_label = gtk.Label('')
-            vbox.add(self.progress_label)
+            self.progress_label = Gtk.Label(label='')
+            inner_box.add(self.progress_label)
             self.progress_label.show()
 
             self.update_progress()
 
         elif new_state in [filetransfer.FT_STATE_COMPLETED,
                            filetransfer.FT_STATE_CANCELLED]:
-
-            for item in self.menu.get_children():
-                self.menu.remove(item)
-
-            menu_item = MenuItem(_('Dismiss'), icon_name='dialog-cancel')
+            menu_item = PaletteMenuItem(_('Dismiss'))
+            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            menu_item.set_image(icon)
+            icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)
-            self.menu.append(menu_item)
+            box.append_item(menu_item)
             menu_item.show()
 
             self.update_progress()

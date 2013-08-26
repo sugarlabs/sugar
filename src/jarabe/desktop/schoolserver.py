@@ -26,10 +26,10 @@ import time
 import uuid
 import sys
 
-import gconf
+from gi.repository import GConf
 
-from sugar import env
-from sugar.profile import get_profile
+from sugar3 import env
+from sugar3.profile import get_profile
 
 _REGISTER_URL = 'http://schoolserver:8080/'
 _REGISTER_TIMEOUT = 8
@@ -108,7 +108,7 @@ class _TimeoutTransport(xmlrpclib.Transport):
 def register_laptop(url=_REGISTER_URL):
 
     profile = get_profile()
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
 
     if _have_ofw_tree():
         sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))

@@ -15,13 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 from gettext import gettext as _
 
-from sugar.graphics.icon import Icon
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor, colors
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor, colors
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
@@ -111,37 +111,18 @@ _NEXT_STROKE_COLOR = 3
 _PREVIOUS_STROKE_COLOR = 4
 
 
-class EventIcon(gtk.EventBox):
-    __gtype_name__ = 'SugarEventIcon'
-
-    def __init__(self, **kwargs):
-        gtk.EventBox.__init__(self)
-
-        self.icon = Icon(pixel_size=style.XLARGE_ICON_SIZE, **kwargs)
-
-        self.set_visible_window(False)
-        self.set_app_paintable(True)
-        self.set_events(gtk.gdk.BUTTON_PRESS_MASK)
-
-        self.add(self.icon)
-        self.icon.show()
-
-
-class ColorPicker(EventIcon):
+class ColorPicker(CanvasIcon):
     __gsignals__ = {
-        'color-changed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
+        'color-changed': (GObject.SignalFlags.RUN_FIRST,
+                          None,
                           ([object])),
         }
 
     def __init__(self, picker):
-        EventIcon.__init__(self)
-
-        self.icon.props.icon_name = 'computer-xo'
+        CanvasIcon.__init__(self, icon_name='computer-xo',
+                            pixel_size=style.XLARGE_ICON_SIZE)
         self._picker = picker
         self._color = None
-
-        self.icon.props.pixel_size = style.XLARGE_ICON_SIZE
 
         self.connect('button_press_event', self.__pressed_cb, picker)
 
@@ -156,7 +137,7 @@ class ColorPicker(EventIcon):
             self._color = XoColor(_get_next_stroke_color(color))
         else:
             self._color = color
-        self.icon.props.xo_color = self._color
+        self.props.xo_color = self._color
 
     def __pressed_cb(self, button, event, picker):
         if picker != _CURRENT_COLOR:
@@ -176,11 +157,11 @@ class AboutMe(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._color_label = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._color_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._color_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._color_label = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._color_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._color_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._color_alert = None
 
         self._pickers = {
@@ -195,81 +176,77 @@ class AboutMe(SectionView):
         initial_color = XoColor(self._model.get_color_xo())
         self._update_pickers(initial_color)
 
-        self._nick_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._nick_alert_box = gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._nick_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._nick_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._nick_entry = None
         self._nick_alert = None
         self._setup_nick()
         self.setup()
 
     def _setup_nick(self):
-        self._nick_entry = gtk.Entry()
-        self._nick_entry.modify_bg(gtk.STATE_INSENSITIVE,
-                                   style.COLOR_WHITE.get_gdk_color())
-        self._nick_entry.modify_base(gtk.STATE_INSENSITIVE,
-                                     style.COLOR_WHITE.get_gdk_color())
+        self._nick_entry = Gtk.Entry()
         self._nick_entry.set_width_chars(25)
-        self._nick_box.pack_start(self._nick_entry, expand=False)
+        self._nick_box.pack_start(self._nick_entry, False, True, 0)
         self._nick_entry.show()
 
-        label_entry_error = gtk.Label()
+        label_entry_error = Gtk.Label()
         self._group.add_widget(label_entry_error)
-        self._nick_alert_box.pack_start(label_entry_error, expand=False)
+        self._nick_alert_box.pack_start(label_entry_error, False, True, 0)
         label_entry_error.show()
 
         self._nick_alert = InlineAlert()
-        self._nick_alert_box.pack_start(self._nick_alert)
+        self._nick_alert_box.pack_start(self._nick_alert, True, True, 0)
         if 'nick' in self.restart_alerts:
             self._nick_alert.props.msg = self.restart_msg
             self._nick_alert.show()
 
-        self._center_in_panel = gtk.Alignment(0.5)
+        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._nick_box)
-        self.pack_start(self._center_in_panel, False)
-        self.pack_start(self._nick_alert_box, False)
+        self.pack_start(self._center_in_panel, False, False, 0)
+        self.pack_start(self._nick_alert_box, False, False, 0)
         self._nick_box.show()
         self._nick_alert_box.show()
         self._center_in_panel.show()
 
     def _setup_color(self):
-        label_color = gtk.Label(_('Click to change your color:'))
-        label_color.modify_fg(gtk.STATE_NORMAL,
+        label_color = Gtk.Label(label=_('Click to change your color:'))
+        label_color.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         self._group.add_widget(label_color)
-        self._color_label.pack_start(label_color, expand=False)
+        self._color_label.pack_start(label_color, False, True, 0)
         label_color.show()
 
         for picker_index in sorted(self._pickers.keys()):
             if picker_index == _CURRENT_COLOR:
-                left_separator = gtk.SeparatorToolItem()
+                left_separator = Gtk.SeparatorToolItem()
                 left_separator.show()
-                self._color_box.pack_start(left_separator, expand=False)
+                self._color_box.pack_start(left_separator, False, True, 0)
 
             picker = self._pickers[picker_index]
             picker.show()
-            self._color_box.pack_start(picker, expand=False)
+            self._color_box.pack_start(picker, False, True, 0)
 
             if picker_index == _CURRENT_COLOR:
-                right_separator = gtk.SeparatorToolItem()
+                right_separator = Gtk.SeparatorToolItem()
                 right_separator.show()
-                self._color_box.pack_start(right_separator, expand=False)
+                self._color_box.pack_start(right_separator, False, True, 0)
 
-        label_color_error = gtk.Label()
+        label_color_error = Gtk.Label()
         self._group.add_widget(label_color_error)
-        self._color_alert_box.pack_start(label_color_error, expand=False)
+        self._color_alert_box.pack_start(label_color_error, False, True, 0)
         label_color_error.show()
 
         self._color_alert = InlineAlert()
-        self._color_alert_box.pack_start(self._color_alert)
+        self._color_alert_box.pack_start(self._color_alert, True, True, 0)
         if 'color' in self.restart_alerts:
             self._color_alert.props.msg = self.restart_msg
             self._color_alert.show()
 
-        self._center_in_panel = gtk.Alignment(0.5)
+        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._color_box)
-        self.pack_start(self._color_label, False)
-        self.pack_start(self._center_in_panel, False)
-        self.pack_start(self._color_alert_box, False)
+        self.pack_start(self._color_label, False, False, 0)
+        self.pack_start(self._center_in_panel, False, False, 0)
+        self.pack_start(self._color_alert_box, False, False, 0)
         self._color_label.show()
         self._color_box.show()
         self._color_alert_box.show()
@@ -302,8 +279,8 @@ class AboutMe(SectionView):
 
     def __nick_changed_cb(self, widget, data=None):
         if self._nick_sid:
-            gobject.source_remove(self._nick_sid)
-        self._nick_sid = gobject.timeout_add(self._APPLY_TIMEOUT,
+            GObject.source_remove(self._nick_sid)
+        self._nick_sid = GObject.timeout_add(self._APPLY_TIMEOUT,
                                              self.__nick_timeout_cb, widget)
 
     def __nick_timeout_cb(self, widget):

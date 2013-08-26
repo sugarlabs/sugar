@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 21:06+0200\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-06-20 06:42+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn\n"
@@ -122,7 +122,7 @@ msgstr "তারিখ & সময়"
 msgid "Error timezone does not exist."
 msgstr "ত্রুটিযুক্ত সময় জোনের অস্তিত্ব নেই।"
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "সময় অঞ্চল"
 
@@ -298,25 +298,13 @@ msgstr "বিদ্যুৎ"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "স্বয়ংক্রিয় pm আরগুমেন্টের ত্রুটি, চালু/বন্ধ ব্যবহার করুন।"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "চূড়ান্ত pm আরগুমেন্টের ত্রুটি, চালু/বন্ধ ব্যবহার করুন।"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "বিদুৎ ব্যবস্থাপনা"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "স্বয়ংক্রিয় বিদুৎ ব্যবস্থাপনা (ব্যাটারির আয়ু বাড়ায়)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"সর্বোচ্চ বিদ্যুৎ ব্যবস্থাপনা (তারবিহীন বেতার নিষ্ক্রিয় করে, ব্যাটারির আয়ু "
-"বাড়ায়)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -610,11 +598,11 @@ msgstr "নিঃশব্দ"
 msgid "finger"
 msgstr "আঙ্গুল"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "স্টাইলাস"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "আমার টাচপ্যাড"
 
@@ -654,19 +642,15 @@ msgstr ""
 "শুরু করার সময় নিকে জিজ্ঞাসা করার জন্য \"নিস্ক্রিয়\"; UNIX অ্যাকাউন্টের দীর্ঘ "
 "নাম পুনরায় ব্যবহার করার জন্য \"সিস্টেম\"।"
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr "অতিরিক্ত ডিরেক্টরিতে হালনাগাদকৃত অনুবাদ থাকে।"
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "ব্যাকআপ URL"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "সুরক্ষিত কাজের আইডি একজায়গায় করা"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -675,104 +659,108 @@ msgstr ""
 "ডেক্সটপ জুড়ে ব্যবহৃত হয় এমন XO আইকনের রং। এই স্ট্রিংটি রং এর আঁচড় এবং রঙের "
 "ভরাটের সমন্বয়ে গঠিত হয়, ফরম্যাটটি হলো rbg রঙের। উদাহরণ: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "কোন বিলম্ব"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "পূর্বনির্ধারিত ফন্টের চেহারা"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "পূর্বনির্ধারিত ফন্টের আকার"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "পূর্বনির্ধারিত নিক"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "কোন ব্যবহার করে ফ্রেম সক্রিয়করণের বিলম্ব।"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "ফ্রেমের পার্শ্ববর্তী অংশ ব্যবহার করে ফ্রেম সক্রিয়করণের বিলম্ব।"
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "অনুবাদ অনুসন্ধান করার জন্য ডিরেক্টরি"
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "ফ্রেমের পাশের অংশের বিলম্ব"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"সর্বোচ্চ বিদ্যুৎ ব্যবস্থাপনা (তারবিহীন বেতার নিষ্ক্রিয় করে, ব্যাটারির আয়ু "
+"বাড়ায়)"
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "পছন্দনীয় বিন্যাস"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "পছন্দনীয় পুনরায় শুরু করার মোড"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -780,15 +768,15 @@ msgstr ""
 "যদি TRUE হয় তাহলে সুগারের মাধ্যমে আমরা Jabber সার্ভারের অন্যান্য "
 "ব্যবহারকারীকে অনুসন্ধান করতে পারি।"
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "যদি সত্যি হয়, সুগার \"লগআউট\" অপশন প্রদর্শন করবে।"
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "যদি সত্যি হয়, সুগার \"পুনরায় শুরু করা\" অপশন প্রদর্শন করবে।"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -798,127 +786,127 @@ msgstr ""
 "নেটওয়ার্ক প্রদর্শন করবে। যদি শুরু করার সময় সুগার কোনো \"জানা\" নেটওয়ার্ক না "
 "দেখে তবে এটা অ্যাড হক নেটওয়ার্কে স্বয়ংক্রিয়ভাবে সংযুক্ত হয়।"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Jabber সার্ভার"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "কীবোর্ড লেআউট"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "কীবোর্ড মডেল"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "কীবোর্ড অপশন"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "পছন্দনীয় ভিউ এর বিন্যাস।"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "কীবোর্ড লেআউটের তালিকা। ফরম বহির্বিন্যাসে (ভেরিয়েন্ট) প্রত্যেক প্রবেশ থাকতে "
 "হবে।"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "কীবোর্ড অপশনের তালিকা।"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "স্বয়ংক্রিয় বিদ্যুৎ"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "সর্বোচ্চ পরিমান বিদ্যুৎ"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "গেজেটে প্রকাশ করো"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "শব্দের যন্ত্র নীরব করার জন্য সেটিং।"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "লগআউট প্রদর্শন"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr "পুনরায় শুরু প্রদর্শন"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr "সুগার এড-হক নেটওয়ার্ক প্রদর্শন"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "নিঃশব্দ করার হয়েছে"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "কীবোর্ড মডেলটি ব্যবহার করতে হবে"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "সিস্টেমের জন্য সময়অঞ্চলের সেটিং।"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr "jabber সার্ভার ব্যবহারের জন্য URL।"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "ব্যাকআপ সংরক্ষণ করার জন্য URL।"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "ব্যবহারকারীর রং"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "ব্যবহারকারীর নাম"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "ডেক্সটপে ব্যবহৃত ব্যবহারকারীর নাম।"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr "ব্যবহারকারী এ ধরণের কার্যকলাপ তালিকা প্রদর্শনের সময় মুছে ফেলে না।"
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "ভলিউমের মাত্রা"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "শব্দ যন্ত্রের জন্য ভলিউমের মাত্রা।"
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1286,7 +1274,8 @@ msgid "Next"
 msgstr "পরবর্তী"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "শিরোনামহীন"
@@ -1712,7 +1701,7 @@ msgstr "ব্যবহারকারী বা ক্লায়েন্ট স
 
 #: ../src/jarabe/model/network.py:295
 msgid "The device's carrier/link changed."
-msgstr "The device's carrier/link changed."
+msgstr ""
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
@@ -1829,3 +1818,12 @@ msgstr "উৎস দেখাও:%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "উইন্ডোতে সুগার"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "অতিরিক্ত ডিরেক্টরিতে হালনাগাদকৃত অনুবাদ থাকে।"
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "অনুবাদ অনুসন্ধান করার জন্য ডিরেক্টরি"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "চূড়ান্ত pm আরগুমেন্টের ত্রুটি, চালু/বন্ধ ব্যবহার করুন।"

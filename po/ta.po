@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-28 17:03+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-04-24 16:31+0200\n"
+"Last-Translator: Thangamani <thangam.arunx@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -27,17 +27,17 @@ msgstr "நீங்கள் பெயரை பதிவு செய்யு
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 #, python-format, ,
 msgid "stroke:   color=%s hue=%s"
-msgstr "வீச்சு: நிறம்=%s சாயல்=%s"
+msgstr "வீச்சு:   நிறம்=%s சாயல்=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
-#, python-format, fuzzy
+#, python-format,
 #, python-format, ,
 msgid "stroke:   %s"
-msgstr "வீச்சு: %s"
+msgstr "வீச்சு:   %s"
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
@@ -126,7 +126,7 @@ msgstr "திகதியும் நேரமும்"
 msgid "Error timezone does not exist."
 msgstr "தவறு நேர வலையமைப்பு ஏற்கனவே இல்லை."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "நேரவலயம்"
 
@@ -306,24 +306,13 @@ msgstr "வலு"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "தன்னியக்க pmவிவாதத்தில் தவறு. உபயோகிon/off."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "கடுமையான pm விவாதம் தவறு . உபயோகி on/off."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "வலு முகாமைத்துவம்"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "தன்னியக்க வலு முகாமைத்துவம் (மின் கலத்தின் வலுவைக் கூட்டுதல்)."
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"கடுமையான வலு முகாமைத்துவம் (கம்பித் தொடுகையற்ற கதிருக்கு மின்கலத்தின் மூலம் "
-"ஆயுளை கொடுத்தல்)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -615,11 +604,11 @@ msgstr "ஒலியை நிறுத்து"
 msgid "finger"
 msgstr "விரல்"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "தட்டி"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "எண் தொடுப்பட்டை"
 
@@ -659,19 +648,15 @@ msgstr ""
 "தொடங்கும் வேலையில் புனைப்பெயர் கேட்பதை நிறுத்தப்பட்டது; \"கணினி\" யூனிக்ஸ் "
 "கணக்கின் நீள பெயரை மீண்டும் பயன்படுத்த."
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr "மேம்பட்ட மொழியாக்கங்களை அதிகமான அடைவுகள் வைத்திருக்க முடியும்."
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "URL ஊடாக மேலே செல்"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "ID களின் தடுக்கப்பட்ட செயற்பாடுகளுக்கான கட்டு"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -681,118 +666,121 @@ msgstr ""
 "நிறத்தினையும் நிரப்பிய நிறத்தினையும்,rbg நிறக்கலவையினுாடாகப் "
 "பெற்றுக்கொள்ளலாம். எ.கா #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "மூலை தாமதம்"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "தன்னார்ந்த எழுத்துரு முகம்"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "தன்னார்ந்த எழுத்துரு அளவு"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "தன்னார்ந்த புனை"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "மூலையைப் பயன்படுத்துவதனால் சட்டகத்தின் செயற்பாடு தாமதம் அடைகின்றது"
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr ""
 "ஒரத்தினைப் பயன் படுத்துவதனால் சட்டகச் செயற்பாட்டில் தாமதம் ஏற்படுகின்றது"
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "மொழியாக்கங்களை தேடுவதற்க்கான அடைவு"
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "ஒரத்தின் தாமதம்"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"கடுமையான வலு முகாமைத்துவம் (கம்பித் தொடுகையற்ற கதிருக்கு மின்கலத்தின் மூலம் "
+"ஆயுளை கொடுத்தல்)"
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "விருப்பமான தளக்கோலம்"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "விருப்பத்துக்குரியதை மீழ ஆரம்பி"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "திரையினூடாக உட்செல்வதற்கு உபயோகிக்கும் பெயரைப் பயன்படுத்து"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "திரையினூடாக உட்செல்வதற்கு உபயோகிக்கும் பெயரைப் பயன்படுத்து"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "ஜிஎஸ்எம்(GSM) ஏபிஎன் பிணையம்(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "ஜிஎஸ்எம்(GSM) பிணையம் பிஐஎன் (நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "ஜிஎஸ்எம்(GSM) பிணையம் பியுகே(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணைய அணுகு புள்ளியின் பெயர் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "ஜிஎஸ்எம்(GSM) பிணைய எண் (நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "ஜிஎஸ்எம்(GSM) பிணைய கடவுச்சொல் (நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணைய கடவுச்சொல்லின் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணையத்தின் அடையாள எண்ணின் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணையத்தின் பூட்டு திறக்கும் சாவியின் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணையத்தின் தொலைதொடர்பு எண்ணின் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணையத்தின் பயனர்பெயர் (நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "ஜிஎஸ்எம்(GSM) பிணையத்தின் பயனர்பெயரின் கட்டமைப்பு "
 "(நீக்கப்பட்டது/பயன்படுத்தப்படவில்லை)"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -800,15 +788,15 @@ msgstr ""
 "உண்மையாயின் Sugar எங்களை Jabberவழங்கி (கணினி)யின் ஊடக தேடல் நிலைக்கு இட்டுச் "
 "செல்லும்"
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "உண்மையாகில், Sugar \"வெளிச்செல்\" தேரிவைக் காட்டும்."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "உண்மையாகில், Sugar \"வெளிச்செல்\" தேரிவைக் காட்டும்."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -818,129 +806,129 @@ msgstr ""
 "காட்டும். இல்லையென்றால் தெரிந்த பிணையத்தை பார்க்காது. இது "
 "தொடங்கும்பொருட்டு Ad-hoc பிணையத்தை தானாக இணைக்காது."
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Jabber வழங்கி (கணினி)"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "விசைப்பலகை தளக்கோலங்கள்"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "விசைப்பலகை மாதிரி"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "விசைப்பலகை விருப்பங்கள்"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "விருப்பத்தித்குரிய செயற்பாட்டின் தளக்கோலதின் பார்வை"
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "விசைப்பலகை மாதிறிகளின் பட்டியல். அனைத்து மாதிறிகளும் தளக்கோல வடிவத்தில் "
 "இருக்கனும்"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "விசைப்பலகை மாதிறிகளின் பட்டியல்."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr "பேச்சு சுகர் சேவைக்கான சுருதி எண்"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr "சுகரினுள் பேச்சு சேவையால் சுருதி எண் பயன்படுத்படுகிறது"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "தன்னியக்க வலு"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "கூடுதலான வலு"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "கருவிக்கு வெளிப்படுத்து"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr "பேச்சு சுகர் சேவைக்கான விகித எண்"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr "சுகரினுள் பேச்சு சேவையால் விகித எண் பயன்படுத்படுகிறது"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "ஒலித்திட்டமிடலை இல்லாமல் செய்வதற்கான செயற்பாடு"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "வெளிச் செல்கையைக் காட்டு"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr "மீள் ஆரம்பிப்பதை காட்டு"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr "சுகர் Ad-hoc பிணையங்களை காட்டு"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "ஒலியை நிறுத்து"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "இந்த விசைப்பலகை மாதிறி பயன்படுத்தப்படும்"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "நேர வலையமைப்பை செயற்படுத்துவதற்கான அமைப்பு"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr "jabber வழங்கி (கணினி)யிலுள்ள URL ஐ உபயோகி"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "URL எதனுள் சேமிக்கப்பட்டுள்ளது"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "உபயோகிப்பவரின் நிறம்"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "உபயோகிப்பவரின் பெயர்"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "திரையினுாடாக உட்செல்வதற்கு உபயோகிக்கும் பெயரைப் பயன்படுத்து"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "பட்டியல் பார்வையின் மூலமாக இந்த செயற்பாடுகளை அழிக்க பயனாளர்களை அனுமதிக்கபட "
 "மாட்டாது."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "சத்தத்தின் அளவு"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "ஒலிஉபகரணத்திற்கான சத்தத்தின் அளவு"
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1304,7 +1292,8 @@ msgid "Next"
 msgstr "அடுத்தது"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "பெயரிடப்படாத"
@@ -1844,3 +1833,12 @@ msgstr "வளப் (மூலம்)பார்வை:%r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "சாளரத்தினுள் சுகர்"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "மேம்பட்ட மொழியாக்கங்களை அதிகமான அடைவுகள் வைத்திருக்க முடியும்."
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "மொழியாக்கங்களை தேடுவதற்க்கான அடைவு"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "கடுமையான pm விவாதம் தவறு . உபயோகி on/off."

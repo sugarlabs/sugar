@@ -21,7 +21,7 @@ import logging
 
 import dbus
 import dbus.mainloop.glib
-import gobject
+from gi.repository import GObject
 
 from telepathy.client import Connection
 from telepathy.interfaces import CONN_INTERFACE
@@ -32,16 +32,16 @@ from telepathy.constants import CONNECTION_STATUS_CONNECTED, \
 _instance = None
 
 
-class ConnectionWatcher(gobject.GObject):
+class ConnectionWatcher(GObject.GObject):
     __gsignals__ = {
-        'connection-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT])),
-        'connection-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                        ([gobject.TYPE_PYOBJECT])),
+        'connection-added': (GObject.SignalFlags.RUN_FIRST, None,
+                        ([GObject.TYPE_PYOBJECT])),
+        'connection-removed': (GObject.SignalFlags.RUN_FIRST, None,
+                        ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, bus=None):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         if bus is None:
             self.bus = dbus.Bus()
@@ -118,5 +118,5 @@ if __name__ == '__main__':
     watcher.connect('connection-added', connection_added_cb)
     watcher.connect('connection-removed', connection_removed_cb)
 
-    loop = gobject.MainLoop()
+    loop = GObject.MainLoop()
     loop.run()

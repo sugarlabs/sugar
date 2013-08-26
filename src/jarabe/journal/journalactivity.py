@@ -19,18 +19,21 @@ import logging
 from gettext import gettext as _
 import uuid
 
-import gtk
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
 import dbus
 import statvfs
 import os
 
-from sugar.graphics.window import Window
-from sugar.graphics.alert import ErrorAlert
+from sugar3.graphics.window import Window
+from sugar3.graphics.alert import ErrorAlert
 
-from sugar.bundle.bundle import ZipExtractException, RegistrationException
-from sugar import env
-from sugar.activity import activityfactory
-from sugar import wm
+from sugar3.bundle.bundle import ZipExtractException, RegistrationException
+from sugar3 import env
+from sugar3.activity import activityfactory
+from gi.repository import SugarExt
+
 
 from jarabe.model import bundleregistry
 from jarabe.journal.journaltoolbox import MainToolbox, DetailToolbox
@@ -76,7 +79,7 @@ class JournalActivityDBusService(dbus.service.Object):
 
     def _chooser_response_cb(self, chooser, response_id, chooser_id):
         logging.debug('JournalActivityDBusService._chooser_response_cb')
-        if response_id == gtk.RESPONSE_ACCEPT:
+        if response_id == Gtk.ResponseType.ACCEPT:
             object_id = chooser.get_selected_object_id()
             self.ObjectChooserResponse(chooser_id, object_id)
         else:
@@ -89,7 +92,9 @@ class JournalActivityDBusService(dbus.service.Object):
     def ChooseObject(self, parent_xid, what_filter=''):
         chooser_id = uuid.uuid4().hex
         if parent_xid > 0:
-            parent = gtk.gdk.window_foreign_new(parent_xid)
+            display = Gdk.Display.get_default()
+            parent = GdkX11.X11Window.foreign_new_for_display( \
+                display, parent_xid)
         else:
             parent = None
         chooser = ObjectChooser(parent, what_filter)
@@ -125,8 +130,8 @@ class JournalActivity(JournalWindow):
         self._setup_main_view()
         self._setup_secondary_view()
 
-        self.add_events(gtk.gdk.ALL_EVENTS_MASK |
-                        gtk.gdk.VISIBILITY_NOTIFY_MASK)
+        self.add_events(Gdk.EventMask.ALL_EVENTS_MASK |
+                        Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._realized_sid = self.connect('realize', self.__realize_cb)
         self.connect('visibility-notify-event',
                      self.__visibility_notify_event_cb)
@@ -155,9 +160,10 @@ class JournalActivity(JournalWindow):
         self.remove_alert(alert)
 
     def __realize_cb(self, window):
-        wm.set_bundle_id(window.window, _BUNDLE_ID)
+        xid = window.get_window().get_xid()
+        SugarExt.wm_set_bundle_id(xid, _BUNDLE_ID)
         activity_id = activityfactory.create_activity_id()
-        wm.set_activity_id(window.window, str(activity_id))
+        SugarExt.wm_set_activity_id(xid, str(activity_id))
         self.disconnect(self._realized_sid)
         self._realized_sid = None
 
@@ -166,39 +172,48 @@ class JournalActivity(JournalWindow):
 
     def _setup_main_view(self):
         self._main_toolbox = MainToolbox()
-        self._main_view = gtk.VBox()
+        self._main_view = Gtk.VBox()
+        self._main_view.set_can_focus(True)
 
         self._list_view = ListView()
         self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
         self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
         self._list_view.connect('volume-error', self.__volume_error_cb)
-        self._main_view.pack_start(self._list_view)
+        self._list_view.connect('title-edit-started',
+                                self.__title_edit_started_cb)
+        self._list_view.connect('title-edit-finished',
+                                self.__title_edit_finished_cb)
+        self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
                                       self.__volume_changed_cb)
         self._volumes_toolbar.connect('volume-error', self.__volume_error_cb)
-        self._main_view.pack_start(self._volumes_toolbar, expand=False)
+        self._main_view.pack_start(self._volumes_toolbar, False, True, 0)
 
-        search_toolbar = self._main_toolbox.search_toolbar
-        search_toolbar.connect('query-changed', self._query_changed_cb)
-        search_toolbar.set_mount_point('/')
+        self._main_toolbox.connect('query-changed', self._query_changed_cb)
+        self._main_toolbox.search_entry.connect('icon-press',
+                                                self.__search_icon_pressed_cb)
+        self._main_toolbox.set_mount_point('/')
 
     def _setup_secondary_view(self):
-        self._secondary_view = gtk.VBox()
+        self._secondary_view = Gtk.VBox()
 
         self._detail_toolbox = DetailToolbox()
-        self._detail_toolbox.entry_toolbar.connect('volume-error',
-                                                   self.__volume_error_cb)
+        self._detail_toolbox.connect('volume-error',
+                                     self.__volume_error_cb)
 
         self._detail_view = DetailView()
         self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
-        self._secondary_view.pack_end(self._detail_view)
+        self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
     def _key_press_event_cb(self, widget, event):
-        keyname = gtk.gdk.keyval_name(event.keyval)
+        if not self._main_toolbox.search_entry.has_focus():
+            self._main_toolbox.search_entry.grab_focus()
+
+        keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
             self.show_main_view()
 
@@ -206,7 +221,7 @@ class JournalActivity(JournalWindow):
         self._show_secondary_view(object_id)
 
     def __clear_clicked_cb(self, list_view):
-        self._main_toolbox.search_toolbar.clear_query()
+        self._main_toolbox.clear_query()
 
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
@@ -214,6 +229,15 @@ class JournalActivity(JournalWindow):
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
         self.show_main_view()
+
+    def __search_icon_pressed_cb(self, entry, icon_pos, event):
+        self._main_view.grab_focus()
+
+    def __title_edit_started_cb(self, list_view):
+        self.disconnect_by_func(self._key_press_event_cb)
+
+    def __title_edit_finished_cb(self, list_view):
+        self.connect('key-press-event', self._key_press_event_cb)
 
     def show_main_view(self):
         if self.toolbar_box != self._main_toolbox:
@@ -227,7 +251,7 @@ class JournalActivity(JournalWindow):
     def _show_secondary_view(self, object_id):
         metadata = model.get(object_id)
         try:
-            self._detail_toolbox.entry_toolbar.set_metadata(metadata)
+            self._detail_toolbox.set_metadata(metadata)
         except Exception:
             logging.exception('Exception while displaying entry:')
 
@@ -252,12 +276,11 @@ class JournalActivity(JournalWindow):
 
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
-        self._main_toolbox.search_toolbar.set_mount_point(mount_point)
-        self._main_toolbox.set_current_toolbar(0)
+        self._main_toolbox.set_mount_point(mount_point)
 
     def __model_created_cb(self, sender, **kwargs):
         self._check_for_bundle(kwargs['object_id'])
-        self._main_toolbox.search_toolbar.refresh_filters()
+        self._main_toolbox.refresh_filters()
         self._check_available_space()
 
     def __model_updated_cb(self, sender, **kwargs):
@@ -275,7 +298,6 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
-        self.search_grab_focus()
         self._list_view.update_dates()
 
     def _check_for_bundle(self, object_id):
@@ -314,20 +336,16 @@ class JournalActivity(JournalWindow):
         metadata['bundle_id'] = bundle.get_bundle_id()
         model.write(metadata)
 
-    def search_grab_focus(self):
-        search_toolbar = self._main_toolbox.search_toolbar
-        search_toolbar.give_entry_focus()
-
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
-        if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
+        if event.changed_mask & Gdk.WindowState.ICONIFIED:
             state = event.new_window_state
-            visible = not state & gtk.gdk.WINDOW_STATE_ICONIFIED
+            visible = not state & Gdk.WindowState.ICONIFIED
             self._list_view.set_is_visible(visible)
 
     def __visibility_notify_event_cb(self, window, event):
         logging.debug('visibility_notify_event_cb %r', self)
-        visible = event.state != gtk.gdk.VISIBILITY_FULLY_OBSCURED
+        visible = event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED
         self._list_view.set_is_visible(visible)
 
     def _check_available_space(self):
@@ -355,12 +373,10 @@ class JournalActivity(JournalWindow):
     def set_active_volume(self, mount):
         self._volumes_toolbar.set_active_volume(mount)
 
-    def focus_search(self):
-        """Become visible and give focus to the search entry
-        """
+    def show_journal(self):
+        """Become visible and show main view"""
         self.reveal()
         self.show_main_view()
-        self.search_grab_focus()
 
 
 def get_journal():

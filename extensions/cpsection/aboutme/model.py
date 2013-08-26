@@ -16,7 +16,7 @@
 #
 
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
 
 _COLORS = {
@@ -32,7 +32,7 @@ _MODIFIERS = ('dark', 'medium', 'light')
 
 
 def get_nick():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     return client.get_string('/desktop/sugar/user/nick')
 
 
@@ -48,13 +48,13 @@ def set_nick(nick):
         raise ValueError(_('You must enter a name.'))
     if not isinstance(nick, unicode):
         nick = unicode(nick, 'utf-8')
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/nick', nick)
     return 1
 
 
 def get_color():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     return client.get_string('/desktop/sugar/user/color')
 
 
@@ -106,13 +106,13 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     color = _COLORS[stroke][stroke_modifier] + ',' \
             + _COLORS[fill][fill_modifier]
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)
     return 1
 
 
 def get_color_xo():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     return client.get_string('/desktop/sugar/user/color')
 
 
@@ -120,6 +120,6 @@ def set_color_xo(color):
     """Set a color with an XoColor
     This method is used by the graphical user interface
     """
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)
     return 1
