@@ -19,32 +19,34 @@ from gettext import gettext as _
 import logging
 from datetime import datetime, timedelta
 import os
-import gconf
+from gi.repository import GConf
 import time
 
-import gobject
-import gio
-import glib
-import gtk
+from gi.repository import GObject
+from gi.repository import Gio
+from gi.repository import Gtk
 
-from sugar.graphics.palette import Palette
-from sugar.graphics.toolbox import Toolbox
-from sugar.graphics.toolcombobox import ToolComboBox
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.toggletoolbutton import ToggleToolButton
-from sugar.graphics.combobox import ComboBox
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import iconentry
-from sugar.graphics import style
-from sugar import mime
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.graphics.toolcombobox import ToolComboBox
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toggletoolbutton import ToggleToolButton
+from sugar3.graphics.combobox import ComboBox
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import Alert
+from sugar3.graphics import iconentry
+from sugar3 import mime
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal.palettes import ClipboardMenu
 from jarabe.journal.palettes import VolumeMenu
+from jarabe.journal import journalwindow
 
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -63,60 +65,49 @@ _ACTION_MY_FRIENDS = 1
 _ACTION_MY_CLASS = 2
 
 
-class MainToolbox(Toolbox):
-    def __init__(self):
-        Toolbox.__init__(self)
-
-        self.search_toolbar = SearchToolbar()
-        self.search_toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
-        self.add_toolbar(_('Search'), self.search_toolbar)
-        self.search_toolbar.show()
-
-
-class SearchToolbar(gtk.Toolbar):
-    __gtype_name__ = 'SearchToolbar'
+class MainToolbox(ToolbarBox):
 
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
         }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        ToolbarBox.__init__(self)
 
         self._mount_point = None
 
-        self._search_entry = iconentry.IconEntry()
-        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                              'system-search')
-        self._search_entry.connect('activate', self._search_entry_activated_cb)
-        self._search_entry.connect('changed', self._search_entry_changed_cb)
-        self._search_entry.add_clear_button()
+        self.search_entry = iconentry.IconEntry()
+        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                             'system-search')
+        text = _('Search in %s') % _('Journal')
+        self.search_entry.set_placeholder_text(text)
+        self.search_entry.connect('activate', self._search_entry_activated_cb)
+        self.search_entry.connect('changed', self._search_entry_changed_cb)
+        self.search_entry.add_clear_button()
         self._autosearch_timer = None
-        self._add_widget(self._search_entry, expand=True)
+        self._add_widget(self.search_entry, expand=True)
 
         self._favorite_button = ToggleToolButton('emblem-favorite')
         self._favorite_button.connect('toggled',
                                       self.__favorite_button_toggled_cb)
-        self.insert(self._favorite_button, -1)
+        self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
                 'changed', self._combo_changed_cb)
         tool_item = ToolComboBox(self._what_search_combo)
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
         self._when_search_combo = self._get_when_search_combo()
         tool_item = ToolComboBox(self._when_search_combo)
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
         self._sorting_button = SortingButton()
-        self._sorting_button.connect('clicked',
-                                     self.__sorting_button_clicked_cb)
-        self.insert(self._sorting_button, -1)
+        self.toolbar.insert(self._sorting_button, -1)
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
         self._sorting_button.show()
@@ -130,9 +121,6 @@ class SearchToolbar(gtk.Toolbar):
         self._query = self._build_query()
 
         self.refresh_filters()
-
-    def give_entry_focus(self):
-        self._search_entry.grab_focus()
 
     def _get_when_search_combo(self):
         when_search = ComboBox()
@@ -167,13 +155,13 @@ class SearchToolbar(gtk.Toolbar):
         return with_search
 
     def _add_widget(self, widget, expand=False):
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)
         widget.show()
 
-        self.insert(tool_item, -1)
+        self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
     def _build_query(self):
@@ -198,14 +186,14 @@ class SearchToolbar(gtk.Toolbar):
             date_from, date_to = self._get_date_range()
             query['timestamp'] = {'start': date_from, 'end': date_to}
 
-        if self._search_entry.props.text:
-            text = self._search_entry.props.text.strip()
+        if self.search_entry.props.text:
+            text = self.search_entry.props.text.strip()
             if text:
                 query['query'] = text
 
         property_, order = self._sorting_button.get_current_sort()
 
-        if order == gtk.SORT_ASCENDING:
+        if order == Gtk.SortType.ASCENDING:
             sign = '+'
         else:
             sign = '-'
@@ -236,9 +224,6 @@ class SearchToolbar(gtk.Toolbar):
     def __sort_changed_cb(self, button):
         self._update_if_needed()
 
-    def __sorting_button_clicked_cb(self, button):
-        self._sorting_button.palette.popup(immediate=True, state=1)
-
     def _update_if_needed(self):
         new_query = self._build_query()
         if self._query != new_query:
@@ -247,7 +232,7 @@ class SearchToolbar(gtk.Toolbar):
 
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
+            GObject.source_remove(self._autosearch_timer)
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -259,14 +244,14 @@ class SearchToolbar(gtk.Toolbar):
             return
 
         if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
+            GObject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
                                                      self._autosearch_timer_cb)
 
     def _autosearch_timer_cb(self):
         logging.debug('_autosearch_timer_cb')
         self._autosearch_timer = None
-        self._search_entry.activate()
+        self.search_entry.activate()
         return False
 
     def set_mount_point(self, mount_point):
@@ -333,7 +318,7 @@ class SearchToolbar(gtk.Toolbar):
                         self._what_search_combo.append_item(service_name,
                                 activity_info.get_name(),
                                 file_name=activity_info.get_icon())
-                    except glib.GError, exception:
+                    except GObject.GError, exception:
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
                                         ' invalid icon: %s',
@@ -355,39 +340,30 @@ class SearchToolbar(gtk.Toolbar):
         self._update_if_needed()
 
     def clear_query(self):
-        self._search_entry.props.text = ''
+        self.search_entry.props.text = ''
         self._what_search_combo.set_active(0)
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False
 
 
-class DetailToolbox(Toolbox):
-    def __init__(self):
-        Toolbox.__init__(self)
-
-        self.entry_toolbar = EntryToolbar()
-        self.add_toolbar('', self.entry_toolbar)
-        self.entry_toolbar.show()
-
-
-class EntryToolbar(gtk.Toolbar):
+class DetailToolbox(ToolbarBox):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
         }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        ToolbarBox.__init__(self)
 
         self._metadata = None
         self._temp_file_path = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
-        self.add(self._resume)
+        self.toolbar.insert(self._resume, -1)
         self._resume.show()
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
@@ -395,7 +371,7 @@ class EntryToolbar(gtk.Toolbar):
         icon.show()
         self._copy.set_tooltip(_('Copy to'))
         self._copy.connect('clicked', self._copy_clicked_cb)
-        self.add(self._copy)
+        self.toolbar.insert(self._copy, -1)
         self._copy.show()
 
         self._duplicate = ToolButton()
@@ -403,16 +379,16 @@ class EntryToolbar(gtk.Toolbar):
         self._duplicate.set_icon_widget(icon)
         self._duplicate.set_tooltip(_('Duplicate'))
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
-        self.add(self._duplicate)
+        self.toolbar.insert(self._duplicate, -1)
 
-        separator = gtk.SeparatorToolItem()
-        self.add(separator)
+        separator = Gtk.SeparatorToolItem()
+        self.toolbar.insert(separator, -1)
         separator.show()
 
         erase_button = ToolButton('list-remove')
         erase_button.set_tooltip(_('Erase'))
         erase_button.connect('clicked', self._erase_button_clicked_cb)
-        self.add(erase_button)
+        self.toolbar.insert(erase_button, -1)
         erase_button.show()
 
     def set_metadata(self, metadata):
@@ -438,12 +414,29 @@ class EntryToolbar(gtk.Toolbar):
                       _('Error'))
 
     def _erase_button_clicked_cb(self, button):
-        registry = bundleregistry.get_registry()
+        alert = Alert()
+        erase_string = _('Erase')
+        alert.props.title = erase_string
+        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
+            % self._metadata['title']
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
+        icon.show()
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
+        ok_icon.show()
+        alert.connect('response', self.__erase_alert_response_cb)
+        journalwindow.get_journal_window().add_alert(alert)
+        alert.show()
 
-        bundle = misc.get_bundle(self._metadata)
-        if bundle is not None and registry.is_installed(bundle):
-            registry.uninstall(bundle)
-        model.delete(self._metadata['uid'])
+    def __erase_alert_response_cb(self, alert, response_id):
+        journalwindow.get_journal_window().remove_alert(alert)
+        if response_id is Gtk.ResponseType.OK:
+            registry = bundleregistry.get_registry()
+            bundle = misc.get_bundle(self._metadata)
+            if bundle is not None and registry.is_installed(bundle):
+                registry.uninstall(bundle)
+            model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
         misc.resume(self._metadata, service_name)
@@ -457,24 +450,35 @@ class EntryToolbar(gtk.Toolbar):
 
         clipboard_menu = ClipboardMenu(self._metadata)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=gtk.ICON_SIZE_MENU))
+                                      icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
         palette.menu.append(clipboard_menu)
         clipboard_menu.show()
 
         if self._metadata['mountpoint'] != '/':
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             palette.menu.append(journal_menu)
             journal_menu.show()
 
-        volume_monitor = gio.volume_monitor_get()
-        icon_theme = gtk.icon_theme_get_default()
+        documents_path = model.get_documents_path()
+        if documents_path is not None and not \
+                self._metadata['uid'].startswith(documents_path):
+            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+                                        documents_path)
+            documents_menu.set_image(Icon(icon_name='user-documents',
+                                          icon_size=Gtk.IconSize.MENU))
+            documents_menu.connect('volume-error', self.__volume_error_cb)
+            palette.menu.append(documents_menu)
+            documents_menu.show()
+
+        volume_monitor = Gio.VolumeMonitor.get()
+        icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
@@ -483,7 +487,7 @@ class EntryToolbar(gtk.Toolbar):
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=gtk.ICON_SIZE_MENU))
+                                               icon_size=Gtk.IconSize.MENU))
                     break
             volume_menu.connect('volume-error', self.__volume_error_cb)
             palette.menu.append(volume_menu)
@@ -520,7 +524,7 @@ class EntryToolbar(gtk.Toolbar):
         for activity_info in misc.get_activities(self._metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                                 activity_info.get_bundle_id())
             palette.menu.append(menu_item)
@@ -531,8 +535,8 @@ class SortingButton(ToolButton):
     __gtype_name__ = 'JournalSortingButton'
 
     __gsignals__ = {
-        'sort-property-changed': (gobject.SIGNAL_RUN_FIRST,
-                                  gobject.TYPE_NONE,
+        'sort-property-changed': (GObject.SignalFlags.RUN_FIRST,
+                                  None,
                                   ([])),
     }
 
@@ -546,24 +550,34 @@ class SortingButton(ToolButton):
         ToolButton.__init__(self)
 
         self._property = 'timestamp'
-        self._order = gtk.SORT_ASCENDING
+        self._order = Gtk.SortType.ASCENDING
 
         self.props.tooltip = _('Sort view')
         self.props.icon_name = 'view-lastedit'
 
+        self.props.hide_tooltip_on_click = False
+        self.palette_invoker.props.toggle_palette = True
+
+        menu_box = PaletteMenuBox()
+        self.props.palette.set_content(menu_box)
+        menu_box.show()
+
         for property_, icon, label in self._SORT_OPTIONS:
-            button = MenuItem(icon_name=icon, text_label=label)
+            button = PaletteMenuItem(label)
+            button_icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name=icon)
+            button.set_image(button_icon)
+            button_icon.show()
             button.connect('activate',
                            self.__sort_type_changed_cb,
                            property_,
                            icon)
             button.show()
-            self.props.palette.menu.insert(button, -1)
+            menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
         self._property = property_
         #FIXME: Implement sorting order
-        self._order = gtk.SORT_ASCENDING
+        self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
         self.props.icon_name = icon_name

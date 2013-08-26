@@ -17,43 +17,35 @@
 import logging
 from gettext import gettext as _
 
-import gobject
-import gtk
-import hippo
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
 
 from jarabe.journal.expandedentry import ExpandedEntry
 from jarabe.journal import model
 
 
-class DetailView(gtk.VBox):
+class DetailView(Gtk.VBox):
     __gtype_name__ = 'DetailView'
 
     __gsignals__ = {
-        'go-back-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
+        'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, **kwargs):
         self._metadata = None
         self._expanded_entry = None
 
-        canvas = hippo.Canvas()
-
-        self._root = hippo.CanvasBox()
-        self._root.props.background_color = style.COLOR_PANEL_GREY.get_int()
-        canvas.set_root(self._root)
+        Gtk.VBox.__init__(self)
 
         back_bar = BackBar()
         back_bar.connect('button-release-event',
                          self.__back_bar_release_event_cb)
-        self._root.append(back_bar)
+        self.pack_start(back_bar, False, True, 0)
 
-        gobject.GObject.__init__(self, **kwargs)
-
-        self.pack_start(canvas)
-        canvas.show()
+        self.show_all()
 
     def _fav_icon_activated_cb(self, fav_icon):
         keep = not self._expanded_entry.get_keep()
@@ -67,8 +59,9 @@ class DetailView(gtk.VBox):
     def _update_view(self):
         if self._expanded_entry is None:
             self._expanded_entry = ExpandedEntry()
-            self._root.append(self._expanded_entry, hippo.PACK_EXPAND)
+            self.pack_start(self._expanded_entry, True, True, 0)
         self._expanded_entry.set_metadata(self._metadata)
+        self.show_all()
 
     def refresh(self):
         logging.debug('DetailView.refresh')
@@ -82,38 +75,43 @@ class DetailView(gtk.VBox):
         self._metadata = metadata
         self._update_view()
 
-    metadata = gobject.property(
+    metadata = GObject.property(
             type=object, getter=get_metadata, setter=set_metadata)
 
 
-class BackBar(hippo.CanvasBox):
+class BackBar(Gtk.EventBox):
     def __init__(self):
-        hippo.CanvasBox.__init__(self,
-                orientation=hippo.ORIENTATION_HORIZONTAL,
-                border=style.LINE_WIDTH,
-                background_color=style.COLOR_PANEL_GREY.get_int(),
-                border_color=style.COLOR_SELECTION_GREY.get_int(),
-                padding=style.DEFAULT_PADDING,
-                padding_left=style.DEFAULT_SPACING,
-                spacing=style.DEFAULT_SPACING)
+        Gtk.EventBox.__init__(self)
+        self.modify_bg(Gtk.StateType.NORMAL,
+                       style.COLOR_PANEL_GREY.get_gdk_color())
+        hbox = Gtk.HBox(spacing=style.DEFAULT_PADDING)
+        hbox.set_border_width(style.DEFAULT_PADDING)
+        icon = Icon(icon_name='go-previous', icon_size=Gtk.IconSize.MENU,
+                    fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
+        hbox.pack_start(icon, False, False, 0)
 
-        icon = CanvasIcon(icon_name='go-previous',
-                          size=style.SMALL_ICON_SIZE,
-                          fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
-        self.append(icon)
+        label = Gtk.Label()
+        label.set_text(_('Back'))
+        halign = Gtk.Alignment.new(0, 0.5, 0, 1)
+        halign.add(label)
+        hbox.pack_start(halign, True, True, 0)
+        hbox.show()
+        self.add(hbox)
 
-        label = hippo.CanvasText(text=_('Back'),
-                                 font_desc=style.FONT_NORMAL.get_pango_desc())
-        self.append(label)
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
+            # Reverse hbox children.
+            for child in hbox.get_children():
+                hbox.reorder_child(child, 0)
 
-        if gtk.widget_get_default_direction() == gtk.TEXT_DIR_RTL:
-            self.reverse()
+        self.connect('enter-notify-event', self.__enter_notify_event_cb)
+        self.connect('leave-notify-event', self.__leave_notify_event_cb)
 
-        self.connect('motion-notify-event', self.__motion_notify_event_cb)
+    def __enter_notify_event_cb(self, box, event):
+        box.modify_bg(Gtk.StateType.NORMAL,
+                      style.COLOR_SELECTION_GREY.get_gdk_color())
+        return False
 
-    def __motion_notify_event_cb(self, box, event):
-        if event.detail == hippo.MOTION_DETAIL_ENTER:
-            box.props.background_color = style.COLOR_SELECTION_GREY.get_int()
-        elif event.detail == hippo.MOTION_DETAIL_LEAVE:
-            box.props.background_color = style.COLOR_PANEL_GREY.get_int()
+    def __leave_notify_event_cb(self, box, event):
+        box.modify_bg(Gtk.StateType.NORMAL,
+                      style.COLOR_PANEL_GREY.get_gdk_color())
         return False

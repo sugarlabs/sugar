@@ -29,7 +29,7 @@ from telepathy.server import DBusProperties
 from telepathy.constants import CONNECTION_HANDLE_TYPE_ROOM
 from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT
 
-from sugar import dispatch
+from sugar3 import dispatch
 
 
 SUGAR_CLIENT_SERVICE = 'org.freedesktop.Telepathy.Client.Sugar'

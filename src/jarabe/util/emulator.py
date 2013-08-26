@@ -22,10 +22,11 @@ import time
 from optparse import OptionParser
 from gettext import gettext as _
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GObject
 
-from sugar import env
+from sugar3 import env
 
 
 ERROR_NO_DISPLAY = 30
@@ -39,7 +40,7 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
     cmd.append('-ac')
     cmd += ['-title', _('Sugar in a window')]
 
-    screen_size = (gtk.gdk.screen_width(), gtk.gdk.screen_height())
+    screen_size = (Gdk.Screen.width(), Gdk.Screen.height())
 
     if (not dimensions) and (fullscreen is None) and \
        (screen_size <= default_dimensions):
@@ -51,7 +52,7 @@ def _run_xephyr(display, dpi, dimensions, fullscreen):
         dimensions = '%dx%d' % default_dimensions
 
     if not dpi:
-        dpi = gtk.settings_get_default().get_property('gtk-xft-dpi') / 1024
+        dpi = Gtk.Settings.get_default().get_property('gtk-xft-dpi') / 1024
 
     if fullscreen:
         cmd.append('-fullscreen')
@@ -116,10 +117,18 @@ def _start_window_manager():
 
     cmd.extend(['--no-force-fullscreen'])
 
-    gobject.spawn_async(cmd, flags=gobject.SPAWN_SEARCH_PATH)
+    GObject.spawn_async(cmd, flags=GObject.SPAWN_SEARCH_PATH)
 
 
 def _setup_env(display, scaling, emulator_pid):
+    # We need to remove the environment related to gnome-keyring-daemon,
+    # so a new instance of gnome-keyring-daemon can be started and
+    # registered properly.
+    for variable in ['GPG_AGENT_INFO', 'SSH_AUTH_SOCK',
+                     'GNOME_KEYRING_CONTROL', 'GNOME_KEYRING_PID']:
+        if variable in os.environ:
+            del os.environ[variable]
+
     os.environ['SUGAR_EMULATOR'] = 'yes'
     os.environ['GABBLE_LOGFILE'] = os.path.join(
             env.get_profile_path(), 'logs', 'telepathy-gabble.log')

@@ -18,8 +18,9 @@ import os
 import logging
 import socket
 
-import gobject
-import gio
+from gi.repository import GObject
+from gi.repository import Gio
+from gi.repository import GLib
 import dbus
 from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS, CHANNEL
 from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
@@ -27,8 +28,8 @@ from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
                                 SOCKET_ACCESS_CONTROL_LOCALHOST
 from telepathy.client import Connection, Channel
 
-from sugar.presence import presenceservice
-from sugar import dispatch
+from sugar3.presence import presenceservice
+from sugar3 import dispatch
 
 from jarabe.util.telepathy import connection_watcher
 from jarabe.model import neighborhood
@@ -57,46 +58,53 @@ new_file_transfer = dispatch.Signal()
 
 
 # TODO Move to use splice_async() in Sugar 0.88
-class StreamSplicer(gobject.GObject):
+class StreamSplicer(GObject.GObject):
     _CHUNK_SIZE = 10240  # 10K
     __gsignals__ = {
-        'finished': (gobject.SIGNAL_RUN_FIRST,
-                     gobject.TYPE_NONE,
+        'finished': (GObject.SignalFlags.RUN_FIRST,
+                     None,
                      ([])),
     }
 
     def __init__(self, input_stream, output_stream):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._input_stream = input_stream
         self._output_stream = output_stream
         self._pending_buffers = []
 
     def start(self):
-        self._input_stream.read_async(self._CHUNK_SIZE, self.__read_async_cb,
-                                      gobject.PRIORITY_LOW)
+        self._input_stream.read_bytes_async(
+            self._CHUNK_SIZE, GLib.PRIORITY_LOW,
+            None, self.__read_async_cb, None)
 
-    def __read_async_cb(self, input_stream, result):
-        data = input_stream.read_finish(result)
+    def __read_async_cb(self, input_stream, result, user_data):
+        data = input_stream.read_bytes_finish(result)
 
-        if not data:
-            logging.debug('closing input stream')
-            self._input_stream.close()
+        if data is None:
+            # TODO: an error occured. Report something
+            logging.error('An error occured in the file transfer.')
+        elif data.get_size() == 0:
+            # We read the file completely
+            logging.debug('Closing input stream. Reading finished.')
+            self._input_stream.close(None)
         else:
+            logging.debug('Data received (bytes): %s', data.get_size())
             self._pending_buffers.append(data)
-            self._input_stream.read_async(self._CHUNK_SIZE,
-                                            self.__read_async_cb,
-                                            gobject.PRIORITY_LOW)
+            self._input_stream.read_bytes_async(
+                self._CHUNK_SIZE, GLib.PRIORITY_LOW,
+                None, self.__read_async_cb, None)
         self._write_next_buffer()
 
     def __write_async_cb(self, output_stream, result, user_data):
-        count_ = output_stream.write_finish(result)
+        size = output_stream.write_bytes_finish(result)
+        logging.debug('Size written (bytes): %s', size)
 
         if not self._pending_buffers and \
                 not self._output_stream.has_pending() and \
                 not self._input_stream.has_pending():
-            logging.debug('closing output stream')
-            output_stream.close()
+            logging.debug('Closing output stream. Writing finished.')
+            output_stream.close(None)
             self.emit('finished')
         else:
             self._write_next_buffer()
@@ -104,17 +112,15 @@ class StreamSplicer(gobject.GObject):
     def _write_next_buffer(self):
         if self._pending_buffers and not self._output_stream.has_pending():
             data = self._pending_buffers.pop(0)
-            # TODO: we pass the buffer as user_data because of
-            # http://bugzilla.gnome.org/show_bug.cgi?id=564102
-            self._output_stream.write_async(data, self.__write_async_cb,
-                                            gobject.PRIORITY_LOW,
-                                            user_data=data)
+            self._output_stream.write_bytes_async(
+                data, GLib.PRIORITY_LOW, None,
+                self.__write_async_cb, None)
 
 
-class BaseFileTransfer(gobject.GObject):
+class BaseFileTransfer(GObject.GObject):
 
     def __init__(self, connection):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._connection = connection
         self._state = FT_STATE_NONE
         self._transferred_bytes = 0
@@ -159,7 +165,7 @@ class BaseFileTransfer(gobject.GObject):
     def _get_transferred_bytes(self):
         return self._transferred_bytes
 
-    transferred_bytes = gobject.property(type=int, default=0,
+    transferred_bytes = GObject.property(type=int, default=0,
             getter=_get_transferred_bytes, setter=_set_transferred_bytes)
 
     def __initial_offset_defined_cb(self, offset):
@@ -177,7 +183,7 @@ class BaseFileTransfer(gobject.GObject):
     def _get_state(self):
         return self._state
 
-    state = gobject.property(type=int, getter=_get_state, setter=_set_state)
+    state = GObject.property(type=int, getter=_get_state, setter=_set_state)
 
     def cancel(self):
         self.channel[CHANNEL].Close()
@@ -215,11 +221,12 @@ class IncomingFileTransfer(BaseFileTransfer):
             # close the fd when it goes out of scope
             self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             self._socket.connect(self._socket_address)
-            input_stream = gio.unix.InputStream(self._socket.fileno(), True)
+            input_stream = Gio.UnixInputStream.new(self._socket.fileno(), True)
 
-            destination_file = gio.File(self.destination_path)
+            destination_file = Gio.File.new_for_path(self.destination_path)
             if self.initial_offset == 0:
-                output_stream = destination_file.create()
+                output_stream = destination_file.create(
+                    Gio.FileCreateFlags.PRIVATE, None)
             else:
                 output_stream = destination_file.append_to()
 
@@ -277,10 +284,11 @@ class OutgoingFileTransfer(BaseFileTransfer):
             # closes the fd when it goes out of scope
             self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             self._socket.connect(self._socket_address)
-            output_stream = gio.unix.OutputStream(self._socket.fileno(), True)
+            output_stream = Gio.UnixOutputStream.new(
+                self._socket.fileno(), True)
 
             logging.debug('opening %s for reading', self._file_name)
-            input_stream = gio.File(self._file_name).read()
+            input_stream = Gio.File.new_for_path(self._file_name).read(None)
             if self.initial_offset > 0:
                 input_stream.skip(self.initial_offset)
 
@@ -356,13 +364,16 @@ def file_transfer_available():
 if __name__ == '__main__':
     import tempfile
 
-    test_file_name = '/home/tomeu/isos/Soas2-200904031934.iso'
-    test_input_stream = gio.File(test_file_name).read()
-    test_output_stream = gio.File(tempfile.mkstemp()[1]).append_to()
+    test_file_name = '/home/humitos/test.py'
+    test_temp_file = tempfile.mkstemp()[1]
+    print test_temp_file
+    test_input_stream = Gio.File.new_for_path(test_file_name).read(None)
+    test_output_stream = Gio.File.new_for_path(test_temp_file)\
+        .append_to(Gio.FileCreateFlags.PRIVATE, None)
 
     # TODO: Use splice_async when it gets implemented
     splicer = StreamSplicer(test_input_stream, test_output_stream)
     splicer.start()
 
-    loop = gobject.MainLoop()
+    loop = GObject.MainLoop()
     loop.run()

@@ -15,27 +15,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import hippo
+from gi.repository import Gtk
 
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics import style
+from sugar3.graphics import style
+from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model import bundleregistry
 
 
-class FriendView(hippo.CanvasBox):
+class FriendView(Gtk.VBox):
     def __init__(self, buddy, **kwargs):
-        hippo.CanvasBox.__init__(self, **kwargs)
+        Gtk.VBox.__init__(self)
+
+        # round icon sizes to an even number so that it can be accurately
+        # centered in a larger bounding box also of even dimensions
+        size = style.LARGE_ICON_SIZE & ~1
 
         self._buddy = buddy
         self._buddy_icon = BuddyIcon(buddy)
-        self._buddy_icon.props.size = style.LARGE_ICON_SIZE
-        self.append(self._buddy_icon)
+        self._buddy_icon.props.pixel_size = size
+        self.add(self._buddy_icon)
+        self._buddy_icon.show()
 
-        self._activity_icon = CanvasIcon(size=style.LARGE_ICON_SIZE)
-        self._activity_icon_visible = False
-
+        self._activity_icon = CanvasIcon(pixel_size=size)
         self._update_activity()
 
         self._buddy.connect('notify::current-activity',
@@ -51,9 +54,9 @@ class FriendView(hippo.CanvasBox):
         return None
 
     def _remove_activity_icon(self):
-        if self._activity_icon_visible:
+        if self._activity_icon.get_visible():
+            self._activity_icon.hide()
             self.remove(self._activity_icon)
-            self._activity_icon_visible = False
 
     def __buddy_notify_current_activity_cb(self, buddy, pspec):
         self._update_activity()
@@ -70,9 +73,9 @@ class FriendView(hippo.CanvasBox):
         if name:
             self._activity_icon.props.file_name = name
             self._activity_icon.props.xo_color = self._buddy.props.color
-            if not self._activity_icon_visible:
-                self.append(self._activity_icon, hippo.PACK_EXPAND)
-                self._activity_icon_visible = True
+            if not self._activity_icon.get_visible():
+                self.add(self._activity_icon)
+                self._activity_icon.show()
         else:
             self._remove_activity_icon()
 

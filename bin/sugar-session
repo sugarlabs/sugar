@@ -22,26 +22,41 @@ import time
 import subprocess
 import shutil
 
+# Change the default encoding to avoid UnicodeDecodeError
+# http://lists.sugarlabs.org/archive/sugar-devel/2012-August/038928.html
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 if os.environ.get('SUGAR_LOGGER_LEVEL', '') == 'debug':
     print '%r STARTUP: Starting the shell' % time.time()
     sys.stdout.flush()
 
 import gettext
 import logging
+import sys
 
-import gconf
-import gtk
-import gobject
+from gi.repository import GLib
+from gi.repository import GConf
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
+from gi.repository import GObject
+from gi.repository import Gst
 import dbus.glib
-import wnck
+from gi.repository import Wnck
 
+_USE_XKL = False
 try:
-    import xklavier
+    from gi.repository import Xkl
+    _USE_XKL = True
 except ImportError:
     logging.debug('Could not load xklavier for keyboard configuration')
 
-gtk.gdk.threads_init()
+GLib.threads_init()
+Gdk.threads_init()
 dbus.glib.threads_init()
+
+Gst.init(sys.argv)
 
 def cleanup_logs(logs_dir):
     """Clean up the log directory, moving old logs into a numbered backup
@@ -103,6 +118,17 @@ def setup_keyhandler_cb():
     from jarabe import frame
     keyhandler.setup(frame.get_view())
 
+def setup_gesturehandler_cb():
+    logging.debug('STARTUP: setup_gesturehandler_cb')
+    from jarabe.view import gesturehandler
+    from jarabe import frame
+    gesturehandler.setup(frame.get_view())
+
+def setup_cursortracker_cb():
+    logging.debug('STARTUP: setup_cursortracker_cb')
+    from jarabe.view import cursortracker
+    cursortracker.setup()
+
 def setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     from jarabe.journal import journalactivity
@@ -126,32 +152,35 @@ def setup_file_transfer_cb():
 def setup_keyboard_cb():
     logging.debug('STARTUP: setup_keyboard_cb')
 
-    gconf_client = gconf.client_get_default()
+    gconf_client = GConf.Client.get_default()
     have_config = False
 
     try:
-        display = gtk.gdk.display_get_default()
+        display = GdkX11.x11_get_default_xdisplay()
         if display is not None:
-            engine = xklavier.Engine(display)
+            engine = Xkl.Engine.get_instance(display)
         else:
             logging.debug('setup_keyboard_cb: Could not get default display.')
             return
 
-        configrec = xklavier.ConfigRec()
+        configrec = Xkl.ConfigRec()
         configrec.get_from_server(engine)
 
-        layouts = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/layouts', gconf.VALUE_STRING)
+        # FIXME, gconf_client_get_list not introspectable #681433
+        layouts_from_gconf = gconf_client.get(
+            '/desktop/sugar/peripherals/keyboard/layouts')
         layouts_list = []
         variants_list = []
-        for layout in layouts:
-            layouts_list.append(layout.split('(')[0])
-            variants_list.append(layout.split('(')[1][:-1])
+        if layouts_from_gconf:
+            for gval in layouts_from_gconf.get_list():
+                layout = gval.get_string()
+                layouts_list.append(layout.split('(')[0])
+                variants_list.append(layout.split('(')[1][:-1])
 
-        if layouts_list and variants_list:
-            have_config = True
-            configrec.set_layouts(layouts_list)
-            configrec.set_variants(variants_list)
+            if layouts_list and variants_list:
+                have_config = True
+                configrec.set_layouts(layouts_list)
+                configrec.set_variants(variants_list)
 
         model = gconf_client.get_string(\
             '/desktop/sugar/peripherals/keyboard/model')
@@ -159,11 +188,17 @@ def setup_keyboard_cb():
             have_config = True
             configrec.set_model(model)
 
-        options = gconf_client.get_list(\
-            '/desktop/sugar/peripherals/keyboard/options', gconf.VALUE_STRING)
-        if options:
-            have_config = True
-            configrec.set_options(options)
+        options = []
+        # FIXME, gconf_client_get_list not introspectable #681433
+        options_from_gconf = gconf_client.get(\
+            '/desktop/sugar/peripherals/keyboard/options')
+        if options_from_gconf:
+            for gval in options_from_gconf.get_list():
+                option = gval.get_string()
+                options.append(option)
+            if options:
+                have_config = True
+                configrec.set_options(options)
 
         if have_config:
             configrec.activate(engine)
@@ -181,32 +216,63 @@ def setup_window_manager():
             shell=True):
         logging.warning('Can not disable metacity keybindings')
 
+    if subprocess.call('metacity-message disable-mouse-button-modifiers',
+            shell=True):
+        logging.warning('Can not disable metacity mouse button modifiers')
+
 def bootstrap():
     setup_window_manager()
 
     from jarabe.view import launcher
     launcher.setup()
 
-    gobject.idle_add(setup_frame_cb)
-    gobject.idle_add(setup_keyhandler_cb)
-    gobject.idle_add(setup_journal_cb)
-    gobject.idle_add(setup_notification_service_cb)
-    gobject.idle_add(setup_file_transfer_cb)
-    gobject.idle_add(show_software_updates_cb)
+    GObject.idle_add(setup_frame_cb)
+    GObject.idle_add(setup_keyhandler_cb)
+    GObject.idle_add(setup_gesturehandler_cb)
+    GObject.idle_add(setup_journal_cb)
+    GObject.idle_add(setup_notification_service_cb)
+    GObject.idle_add(setup_file_transfer_cb)
+    GObject.idle_add(show_software_updates_cb)
 
-    if sys.modules.has_key('xklavier'):
-        gobject.idle_add(setup_keyboard_cb)
+    if _USE_XKL:
+        GObject.idle_add(setup_keyboard_cb)
 
 def set_fonts():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     face = client.get_string('/desktop/sugar/font/default_face')
     size = client.get_float('/desktop/sugar/font/default_size')
-    settings = gtk.settings_get_default()
+    settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
+
+def set_theme():
+    settings = Gtk.Settings.get_default()
+    sugar_theme = 'sugar-72'
+    if 'SUGAR_SCALING' in os.environ:
+        if os.environ['SUGAR_SCALING'] == '100':
+            sugar_theme = 'sugar-100'
+    settings.set_property('gtk-theme-name', sugar_theme)
+    settings.set_property('gtk-icon-theme-name', 'sugar')
+
+def start_home():
+    from jarabe.desktop import homewindow
+
+    start_ui_service()
+    start_session_manager()
+
+    # open homewindow before window_manager to let desktop appear fast
+    home_window = homewindow.get_instance()
+    home_window.show()
+
+    screen = Wnck.Screen.get_default()
+    screen.connect('window-manager-changed', __window_manager_changed_cb)
+    _check_for_window_manager(screen)
+
+def intro_window_done_cb(window):
+    start_home()
 
 def main():
     try:
-        from sugar import env
+        from sugar3 import env
         # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
@@ -217,7 +283,7 @@ def main():
         # starting if (for example) the disk is full or read-only.
         print 'logs cleanup failed: %s' % e
 
-    from sugar import logger
+    from sugar3 import logger
     # NOTE: This needs to happen so early because some modules register translatable
     # strings in the module scope.
     from jarabe import config
@@ -225,13 +291,13 @@ def main():
     gettext.bindtextdomain('sugar-toolkit', config.locale_path)
     gettext.textdomain('sugar')
 
-    from jarabe.desktop import homewindow
     from jarabe.model import sound
     from jarabe import intro
+    from jarabe.intro.window import IntroWindow
 
     logger.start('shell')
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_string('/apps/metacity/general/mouse_button_modifier',
                       '<Super>')
 
@@ -240,37 +306,34 @@ def main():
         os.environ['TZ'] = timezone
 
     set_fonts()
+    set_theme()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
-    gobject.idle_add(unfreeze_dcon_cb)
+    GObject.idle_add(unfreeze_dcon_cb)
 
+    GObject.idle_add(setup_cursortracker_cb)
     # make sure we have the correct cursor in the intro screen
     # TODO #3204
     if subprocess.call('echo $DISPLAY; xsetroot -cursor_name left_ptr', shell=True):
         logging.warning('Can not reset cursor')
-    intro.check_profile()
-
-    start_ui_service()
-    start_session_manager()
 
     sound.restore()
 
     sys.path.append(config.ext_path)
 
     icons_path = os.path.join(config.data_path, 'icons')
-    gtk.icon_theme_get_default().append_search_path(icons_path)
+    Gtk.IconTheme.get_default().append_search_path(icons_path)
 
-    # open homewindow before window_manager to let desktop appear fast
-    home_window = homewindow.get_instance()
-    home_window.show()
-
-    screen = wnck.screen_get_default()
-    screen.connect('window-manager-changed', __window_manager_changed_cb)
-    _check_for_window_manager(screen)
+    if not intro.check_profile():
+        win = IntroWindow()
+        win.connect("done", intro_window_done_cb)
+        win.show_all()
+    else:
+        start_home()
 
     try:
-        gtk.main()
+        Gtk.main()
     except KeyboardInterrupt:
         print 'Ctrl+C pressed, exiting...'
 

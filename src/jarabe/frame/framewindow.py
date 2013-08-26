@@ -14,14 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
-from gtk import gdk
-import gobject
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 
-class FrameContainer(gtk.Bin):
+class FrameContainer(Gtk.Bin):
     """A container class for frame panel rendering. Hosts a child 'box' where
     frame elements can be added. Excludes grid-sized squares at each end
     of the frame panel, and a space alongside the inside of the screen where
@@ -30,87 +29,88 @@ class FrameContainer(gtk.Bin):
     __gtype_name__ = 'SugarFrameContainer'
 
     def __init__(self, position):
-        gtk.Bin.__init__(self)
+        Gtk.Bin.__init__(self)
         self._position = position
 
         if self.is_vertical():
-            box = gtk.VBox()
+            box = Gtk.VBox()
         else:
-            box = gtk.HBox()
+            box = Gtk.HBox()
         self.add(box)
         box.show()
 
     def is_vertical(self):
-        return self._position in (gtk.POS_LEFT, gtk.POS_RIGHT)
+        return self._position in (Gtk.PositionType.LEFT, Gtk.PositionType.RIGHT)
 
-    def do_expose_event(self, event):
+    def do_draw(self, cr):
         # Draw the inner border as a rectangle
-        cr = self.get_parent_window().cairo_create()
         r, g, b, a = style.COLOR_BUTTON_GREY.get_rgba()
         cr.set_source_rgba (r, g, b, a)
 
+        allocation = self.get_allocation()
         if self.is_vertical():
-            x = style.GRID_CELL_SIZE if self._position == gtk.POS_LEFT else 0
+            x = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.LEFT else 0
             y = style.GRID_CELL_SIZE
             width = style.LINE_WIDTH
-            height = self.allocation.height - (style.GRID_CELL_SIZE * 2)
+            height = allocation.height - (style.GRID_CELL_SIZE * 2)
         else:
             x = style.GRID_CELL_SIZE
-            y = style.GRID_CELL_SIZE if self._position == gtk.POS_TOP else 0
+            y = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.TOP else 0
             height = style.LINE_WIDTH
-            width = self.allocation.width - (style.GRID_CELL_SIZE * 2)
+            width = allocation.width - (style.GRID_CELL_SIZE * 2)
 
         cr.rectangle(x, y, width, height)
         cr.fill()
 
-        gtk.Bin.do_expose_event(self, event)
+        Gtk.Bin.do_draw(self, cr)
         return False
 
     def do_size_request(self, req):
         if self.is_vertical():
-            req.height = gdk.screen_height()
+            req.height = Gdk.Screen.height()
             req.width = style.GRID_CELL_SIZE + style.LINE_WIDTH
         else:
-            req.width = gdk.screen_width()
+            req.width = Gdk.Screen.width()
             req.height = style.GRID_CELL_SIZE + style.LINE_WIDTH
 
         self.get_child().size_request()
 
     def do_size_allocate(self, allocation):
-        self.allocation = allocation
+        self.set_allocation(allocation)
 
         # exclude grid squares at two ends of the frame
         # allocate remaining space to child box, minus the space needed for
         # drawing the border
-        allocation = gdk.Rectangle()
+        allocation = Gdk.Rectangle()
         if self.is_vertical():
-            allocation.x = 0 if self._position == gtk.POS_LEFT \
+            allocation.x = 0 if self._position == Gtk.PositionType.LEFT \
                 else style.LINE_WIDTH
             allocation.y = style.GRID_CELL_SIZE
-            allocation.width = self.allocation.width - style.LINE_WIDTH
-            allocation.height = self.allocation.height \
+            allocation.width = self.get_allocation().width - style.LINE_WIDTH
+            allocation.height = self.get_allocation().height \
                 - (style.GRID_CELL_SIZE * 2)
         else:
             allocation.x = style.GRID_CELL_SIZE
-            allocation.y = 0 if self._position == gtk.POS_TOP \
+            allocation.y = 0 if self._position == Gtk.PositionType.TOP \
                 else style.LINE_WIDTH
-            allocation.width = self.allocation.width \
+            allocation.width = self.get_allocation().width \
                 - (style.GRID_CELL_SIZE * 2)
-            allocation.height = self.allocation.height - style.LINE_WIDTH
+            allocation.height = self.get_allocation().height - style.LINE_WIDTH
 
         self.get_child().size_allocate(allocation)
 
 
-class FrameWindow(gtk.Window):
+class FrameWindow(Gtk.Window):
     __gtype_name__ = 'SugarFrameWindow'
 
     def __init__(self, position):
-        gtk.Window.__init__(self)
+        Gtk.Window.__init__(self)
+        self.set_has_resize_grip(False)
         self.hover = False
         self.size = style.GRID_CELL_SIZE + style.LINE_WIDTH
 
-        accel_group = gtk.AccelGroup()
-        self.set_data('sugar-accel-group', accel_group)
+        accel_group = Gtk.AccelGroup()
+        self.sugar_accel_group = accel_group
         self.add_accel_group(accel_group)
 
         self._position = position
@@ -125,28 +125,29 @@ class FrameWindow(gtk.Window):
         self._container.show()
         self._update_size()
 
-        screen = gdk.screen_get_default()
+        screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
     def append(self, child, expand=True, fill=True):
-        self._container.get_child().pack_start(child, expand=expand, fill=fill)
+        self._container.get_child().pack_start(child, expand=expand, fill=fill,
+                                               padding=0)
 
     def _update_size(self):
-        if self._position == gtk.POS_TOP or self._position == gtk.POS_BOTTOM:
-            self.resize(gdk.screen_width(), self.size)
+        if self._position == Gtk.PositionType.TOP or self._position == Gtk.PositionType.BOTTOM:
+            self.resize(Gdk.Screen.width(), self.size)
         else:
-            self.resize(self.size, gdk.screen_height())
+            self.resize(self.size, Gdk.Screen.height())
 
     def _realize_cb(self, widget):
-        self.window.set_type_hint(gdk.WINDOW_TYPE_HINT_DOCK)
-        self.window.set_accept_focus(False)
+        self.set_type_hint(Gdk.WindowTypeHint.DOCK)
+        self.get_window().set_accept_focus(False)
 
     def _enter_notify_cb(self, window, event):
-        if event.detail != gdk.NOTIFY_INFERIOR:
+        if event.detail != Gdk.NotifyType.INFERIOR:
             self.hover = True
 
     def _leave_notify_cb(self, window, event):
-        if event.detail != gdk.NOTIFY_INFERIOR:
+        if event.detail != Gdk.NotifyType.INFERIOR:
             self.hover = False
 
     def _size_changed_cb(self, screen):

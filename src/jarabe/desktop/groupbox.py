@@ -16,47 +16,35 @@
 
 import logging
 
-import gobject
-import hippo
-import gconf
+from sugar3.graphics import style
 
-from sugar.graphics import style
-from sugar.graphics.icon import CanvasIcon
-from sugar.graphics.xocolor import XoColor
-
-from jarabe.view.buddymenu import BuddyMenu
+from jarabe.view.buddyicon import BuddyIcon
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import friends
 from jarabe.desktop.friendview import FriendView
-from jarabe.desktop.spreadlayout import SpreadLayout
+from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.desktop.favoriteslayout import SpreadLayout
+from jarabe.util.normalize import normalize_string
 
 
-class GroupBox(hippo.Canvas):
+class GroupBox(ViewContainer):
     __gtype_name__ = 'SugarGroupBox'
 
-    def __init__(self):
+    def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the group view')
 
-        gobject.GObject.__init__(self)
+        layout = SpreadLayout()
 
-        self._box = hippo.CanvasBox()
-        self._box.props.background_color = style.COLOR_WHITE.get_int()
-        self.set_root(self._box)
+        # Round off icon size to an even number to ensure that the icon
+        owner_icon = BuddyIcon(get_owner_instance(),
+                               style.LARGE_ICON_SIZE & ~1)
+        ViewContainer.__init__(self, layout, owner_icon)
 
+        self._query = ''
+        toolbar.connect('query-changed', self._toolbar_query_changed_cb)
+        toolbar.search_entry.connect('icon-press',
+                                     self.__clear_icon_pressed_cb)
         self._friends = {}
-
-        self._layout = SpreadLayout()
-        self._box.set_layout(self._layout)
-
-        client = gconf.client_get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-
-        self._owner_icon = CanvasIcon(icon_name='computer-xo', cache=True,
-                                      xo_color=color)
-        self._owner_icon.props.size = style.LARGE_ICON_SIZE
-
-        self._owner_icon.set_palette(BuddyMenu(get_owner_instance()))
-        self._layout.add(self._owner_icon)
 
         friends_model = friends.get_model()
 
@@ -68,27 +56,24 @@ class GroupBox(hippo.Canvas):
 
     def add_friend(self, buddy_info):
         icon = FriendView(buddy_info)
-        self._layout.add(icon)
-
+        self.add(icon)
         self._friends[buddy_info.get_key()] = icon
+        icon.show()
 
     def _friend_added_cb(self, data_model, buddy_info):
         self.add_friend(buddy_info)
 
     def _friend_removed_cb(self, data_model, key):
         icon = self._friends[key]
-        self._layout.remove(icon)
+        self.remove(icon)
         del self._friends[key]
         icon.destroy()
 
-    def do_size_allocate(self, allocation):
-        width = allocation.width
-        height = allocation.height
+    def _toolbar_query_changed_cb(self, toolbar, query):
+        self._query = normalize_string(query.decode('utf-8'))
+        for icon in self.get_children():
+            if hasattr(icon, 'set_filter'):
+                icon.set_filter(self._query)
 
-        min_w_, icon_width = self._owner_icon.get_width_request()
-        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
-        x = (width - icon_width) / 2
-        y = (height - icon_height) / 2
-        self._layout.move(self._owner_icon, x, y)
-
-        hippo.Canvas.do_size_allocate(self, allocation)
+    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+        self.grab_focus()

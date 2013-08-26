@@ -20,10 +20,11 @@ import shutil
 import urlparse
 import tempfile
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar import mime
+from sugar3 import mime
 
 from jarabe.frame.clipboardobject import ClipboardObject, Format
 
@@ -31,21 +32,21 @@ from jarabe.frame.clipboardobject import ClipboardObject, Format
 _instance = None
 
 
-class Clipboard(gobject.GObject):
+class Clipboard(GObject.GObject):
 
     __gsignals__ = {
-        'object-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-added': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
-        'object-deleted': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
                         ([long])),
-        'object-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
                         ([long])),
-        'object-state-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
                         ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._objects = {}
         self._next_id = 0
@@ -84,11 +85,7 @@ class Clipboard(gobject.GObject):
         logging.debug('Clipboard.add_object_format')
         cb_object = self._objects[object_id]
 
-        if format_type == 'XdndDirectSave0':
-            format_ = Format('text/uri-list', data + '\r\n', on_disk)
-            format_.owns_disk_data = True
-            cb_object.add_format(format_)
-        elif on_disk and cb_object.get_percent() == 100:
+        if on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
             logging.debug('Added format of type ' + format_type
@@ -103,7 +100,7 @@ class Clipboard(gobject.GObject):
         cb_object = self._objects.pop(object_id)
         cb_object.destroy()
         if not self._objects:
-            gtk_clipboard = gtk.Clipboard()
+            gtk_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
             gtk_clipboard.clear()
         self.emit('object-deleted', object_id)
         logging.debug('Deleted object with object_id %r', object_id)

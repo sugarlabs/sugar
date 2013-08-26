@@ -18,11 +18,11 @@ import os
 import logging
 from ConfigParser import ConfigParser
 
-import gobject
+from gi.repository import GObject
 import dbus
 
-from sugar import env
-from sugar.graphics.xocolor import XoColor
+from sugar3 import env
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.model.buddy import BuddyModel
 from jarabe.model import neighborhood
@@ -81,7 +81,7 @@ class FriendBuddyModel(BuddyModel):
     def is_present(self):
         return self._online_buddy is not None
 
-    present = gobject.property(type=bool, default=False, getter=is_present)
+    present = GObject.property(type=bool, default=False, getter=is_present)
 
     def get_color(self):
         if self._online_buddy is not None:
@@ -89,7 +89,7 @@ class FriendBuddyModel(BuddyModel):
         else:
             return XoColor(FriendBuddyModel._NOT_PRESENT_COLOR)
 
-    color = gobject.property(type=object, getter=get_color)
+    color = GObject.property(type=object, getter=get_color)
 
     def get_handle(self):
         if self._online_buddy is not None:
@@ -97,19 +97,19 @@ class FriendBuddyModel(BuddyModel):
         else:
             return None
 
-    handle = gobject.property(type=object, getter=get_handle)
+    handle = GObject.property(type=object, getter=get_handle)
 
 
-class Friends(gobject.GObject):
+class Friends(GObject.GObject):
     __gsignals__ = {
-        'friend-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'friend-added': (GObject.SignalFlags.RUN_FIRST, None,
                          ([object])),
-        'friend-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'friend-removed': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         self._friends = {}
         self._path = os.path.join(env.get_profile_path(), 'friends')

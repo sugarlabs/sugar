@@ -22,7 +22,7 @@
 
 import os
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
 _zone_tab = '/usr/share/zoneinfo/zone.tab'
 
@@ -71,7 +71,7 @@ def read_all_timezones(fn=_zone_tab):
 
 
 def get_timezone():
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     return client.get_string('/desktop/sugar/date/timezone')
 
 
@@ -86,7 +86,7 @@ def set_timezone(timezone):
     timezones = read_all_timezones()
     if timezone in timezones:
         os.environ['TZ'] = timezone
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         client.set_string('/desktop/sugar/date/timezone', timezone)
     else:
         raise ValueError(_('Error timezone does not exist.'))

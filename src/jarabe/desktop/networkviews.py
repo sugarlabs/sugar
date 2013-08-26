@@ -19,22 +19,27 @@
 from gettext import gettext as _
 import logging
 import hashlib
+import uuid
 
 import dbus
-import glib
+from gi.repository import GLib
 
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics import xocolor
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state
-from sugar.graphics import palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.util import unique_id
-from sugar import profile
+from gi.repository import Gtk
 
-from jarabe.view.pulsingicon import CanvasPulsingIcon
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import xocolor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state
+from sugar3.graphics import palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3 import profile
+
+from jarabe.view.pulsingicon import EventPulsingIcon
 from jarabe.desktop import keydialog
+from jarabe.util.normalize import normalize_string
 from jarabe.model import network
 from jarabe.model.network import Settings
 from jarabe.model.network import IP4Config
@@ -48,10 +53,10 @@ _OLPC_MESH_ICON_NAME = 'network-mesh'
 _FILTERED_ALPHA = 0.33
 
 
-class WirelessNetworkView(CanvasPulsingIcon):
+class WirelessNetworkView(EventPulsingIcon):
     def __init__(self, initial_ap):
-        CanvasPulsingIcon.__init__(self, size=style.STANDARD_ICON_SIZE,
-                                   cache=True)
+        EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._access_points = {initial_ap.model.object_path: initial_ap}
         self._active_ap = None
@@ -85,12 +90,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                           (xocolor.colors[index][0],
                                            xocolor.colors[index][1]))
 
-        self.connect('button-release-event', self.__button_release_event_cb)
-
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
 
+        self.props.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._color
@@ -119,17 +123,27 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
-        label = glib.markup_escape_text(self._display_name)
+        label = GLib.markup_escape_text(self._display_name)
         p = palette.Palette(primary_text=label, icon=self._palette_icon)
 
-        self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
-        self._connect_item.connect('activate', self.__connect_activate_cb)
-        p.menu.append(self._connect_item)
+        self.menu_box = Gtk.VBox()
 
-        self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
-        self._disconnect_item.connect('activate',
-                                        self._disconnect_activate_cb)
-        p.menu.append(self._disconnect_item)
+        self._connect_item = PaletteMenuItem(_('Connect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        self._connect_item.set_image(icon)
+        self._connect_item.connect('activate', self.__connect_activate_cb)
+        self.menu_box.add(self._connect_item)
+
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        self._disconnect_item.set_image(icon)
+        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self.menu_box.add(self._disconnect_item)
+
+        p.set_content(self.menu_box)
+        self.menu_box.show_all()
+
+        self.connect_to_palette_pop_events(p)
 
         return p
 
@@ -255,11 +269,11 @@ class WirelessNetworkView(CanvasPulsingIcon):
         self.props.base_color = self._color
         if self._filtered:
             self.props.pulsing = False
-            self.alpha = _FILTERED_ALPHA
+            self.props.alpha = _FILTERED_ALPHA
         else:
-            self.alpha = 1.0
+            self.props.alpha = 1.0
 
-    def _disconnect_activate_cb(self, item):
+    def __disconnect_activate_cb(self, item):
         ap_paths = self._access_points.keys()
         network.disconnect_access_points(ap_paths)
 
@@ -329,9 +343,6 @@ class WirelessNetworkView(CanvasPulsingIcon):
     def __connect_activate_cb(self, icon):
         self._connect()
 
-    def __button_release_event_cb(self, icon, event):
-        self._connect()
-
     def _connect(self):
         # Activate existing connection, if there is one
         connection = network.find_connection_by_ssid(self._ssid)
@@ -345,7 +356,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
         logging.debug('Creating new connection for SSID %r', self._ssid)
         settings = Settings()
         settings.connection.id = self._display_name
-        settings.connection.uuid = unique_id()
+        settings.connection.uuid = str(uuid.uuid4())
         settings.connection.type = '802-11-wireless'
         settings.wireless.ssid = self._ssid
 
@@ -368,7 +379,8 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                             self.get_first_ap().model)
 
     def set_filter(self, query):
-        self._filtered = self._display_name.lower().find(query) == -1
+        normalized_name = normalize_string(self._display_name.decode('utf-8'))
+        self._filtered = normalized_name.find(query) == -1
         self._update_icon()
         self._update_color()
 
@@ -436,7 +448,7 @@ class WirelessNetworkView(CanvasPulsingIcon):
                                          dbus_interface=network.NM_WIRELESS_IFACE)
 
 
-class SugarAdhocView(CanvasPulsingIcon):
+class SugarAdhocView(EventPulsingIcon):
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
     three channels 1, 6, 11. This is the class for an icon
@@ -448,9 +460,10 @@ class SugarAdhocView(CanvasPulsingIcon):
     _NAME = 'Ad-hoc Network '
 
     def __init__(self, channel):
-        CanvasPulsingIcon.__init__(self,
-                                   icon_name=self._ICON_NAME + str(channel),
-                                   size=style.STANDARD_ICON_SIZE, cache=True)
+        EventPulsingIcon.__init__(self,
+                                  icon_name=self._ICON_NAME + str(channel),
+                                  pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._channel = channel
         self._disconnect_item = None
@@ -463,7 +476,6 @@ class SugarAdhocView(CanvasPulsingIcon):
         get_adhoc_manager_instance().connect('state-changed',
                                              self.__state_changed_cb)
 
-        self.connect('button-release-event', self.__button_release_event_cb)
 
         pulse_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                          style.COLOR_TRANSPARENT.get_svg()))
@@ -472,6 +484,7 @@ class SugarAdhocView(CanvasPulsingIcon):
                                        (profile.get_color().get_stroke_color(),
                                         style.COLOR_TRANSPARENT.get_svg()))
         self.props.base_color = self._state_color
+        self.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
         self.set_palette(self._palette)
         self._palette_icon.props.xo_color = self._state_color
@@ -482,22 +495,30 @@ class SugarAdhocView(CanvasPulsingIcon):
                 icon_size=style.STANDARD_ICON_SIZE)
 
         text = _('Ad-hoc Network %d') % (self._channel, )
-        palette_ = palette.Palette(glib.markup_escape_text(text),
+        palette_ = palette.Palette(GLib.markup_escape_text(text),
                                    icon=self._palette_icon)
 
-        self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
-        self._connect_item.connect('activate', self.__connect_activate_cb)
-        palette_.menu.append(self._connect_item)
+        self.menu_box = Gtk.VBox()
 
-        self._disconnect_item = MenuItem(_('Disconnect'), 'media-eject')
-        self._disconnect_item.connect('activate',
-                                      self.__disconnect_activate_cb)
-        palette_.menu.append(self._disconnect_item)
+        self._connect_item = PaletteMenuItem(_('Connect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        self._connect_item.set_image(icon)
+        self._connect_item.connect('activate', self.__connect_activate_cb)
+        self.menu_box.add(self._connect_item)
+
+        self._disconnect_item = PaletteMenuItem(_('Disconnect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        self._disconnect_item.set_image(icon)
+        self._disconnect_item.connect('activate', self.__disconnect_activate_cb)
+        self.menu_box.add(self._disconnect_item)
+
+        palette_.set_content(self.menu_box)
+        self.menu_box.show_all()
+        self._disconnect_item.hide()
+
+        self.connect_to_palette_pop_events(palette_)
 
         return palette_
-
-    def __button_release_event_cb(self, icon, event):
-        get_adhoc_manager_instance().activate_channel(self._channel)
 
     def __connect_activate_cb(self, icon):
         get_adhoc_manager_instance().activate_channel(self._channel)
@@ -572,10 +593,11 @@ class SugarAdhocView(CanvasPulsingIcon):
         self._update_color()
 
 
-class OlpcMeshView(CanvasPulsingIcon):
+class OlpcMeshView(EventPulsingIcon):
     def __init__(self, mesh_mgr, channel):
-        CanvasPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
-                                   size=style.STANDARD_ICON_SIZE, cache=True)
+        EventPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
+                                  pixel_size=style.STANDARD_ICON_SIZE,
+                                  cache=True)
         self._bus = dbus.SystemBus()
         self._channel = channel
         self._mesh_mgr = mesh_mgr
@@ -585,8 +607,6 @@ class OlpcMeshView(CanvasPulsingIcon):
         self._device_state = None
         self._active = False
         device = mesh_mgr.mesh_device
-
-        self.connect('button-release-event', self.__button_release_event_cb)
 
         interface_props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
         interface_props.Get(network.NM_DEVICE_IFACE, 'State',
@@ -609,16 +629,24 @@ class OlpcMeshView(CanvasPulsingIcon):
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
         self.props.base_color = profile.get_color()
+        self.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
         self.set_palette(self._palette)
 
     def _create_palette(self):
         text = _('Mesh Network %d') % (self._channel, )
-        _palette = palette.Palette(glib.markup_escape_text(text))
+        _palette = palette.Palette(GLib.markup_escape_text(text))
 
-        self._connect_item = MenuItem(_('Connect'), 'dialog-ok')
+        self.menu_box = Gtk.VBox()
+
+        self._connect_item = PaletteMenuItem(_('Connect'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        self._connect_item.set_image(icon)
         self._connect_item.connect('activate', self.__connect_activate_cb)
-        _palette.menu.append(self._connect_item)
+        self.menu_box.add(self._connect_item)
+
+        _palette.set_content(self.menu_box)
+        self.menu_box.show_all()
 
         return _palette
 
@@ -683,9 +711,6 @@ class OlpcMeshView(CanvasPulsingIcon):
             self.alpha = 1.0
 
     def __connect_activate_cb(self, icon):
-        self._connect()
-
-    def __button_release_event_cb(self, icon, event):
         self._connect()
 
     def _connect(self):

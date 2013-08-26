@@ -16,7 +16,7 @@
 
 import logging
 
-from sugar.graphics.tray import VTray, TrayIcon
+from sugar3.graphics.tray import VTray, TrayIcon
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -33,6 +33,7 @@ class FriendIcon(TrayIcon):
         self._buddy = buddy
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.cache_palette = False
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         palette = BuddyMenu(self._buddy)
