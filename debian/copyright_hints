@@ -41,11 +41,11 @@ Files: AUTHORS
  debian/control
  debian/control.in
  debian/gbp.conf
- debian/patches/danish_l10n_autotools.patch
  debian/patches/empy_from_system.patch
  debian/patches/empy_from_system_autotools.patch
  debian/patches/fix_shell_posix_and_quoting.patch
  debian/patches/fix_tz_config_path.patch
+ debian/patches/logind_check.patch
  debian/patches/series
  debian/python-jarabe-__VER__.install.in
  debian/source/format
@@ -339,22 +339,6 @@ Copyright: 2008, Tomeu Vizoso
 License: GPL-2+
  FIXME
 
-Files: COPYING
- data/GPLv2
-Copyright: 1989, 1991 Free Software Foundation, Inc.
-  <year> <name of author>
-  HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-  HOLDERS AND/OR OTHER PARTIES
-  disclaimer" for the program, if
-  holder saying it may be distributed
-  holder who places the Program under this License
-  interest in the program
-  law:
-  the software, and
-  year name of author
-License: GPL-2+
- FIXME
-
 Files: src/jarabe/model/neighborhood.py
  src/jarabe/model/telepathyclient.py
 Copyright: 2010, Collabora Ltd. <http://www.collabora.co.uk/>
@@ -379,6 +363,27 @@ Files: extensions/cpsection/updater/backends/__init__.py
  extensions/cpsection/updater/backends/aslo.py
 Copyright: 2009, Sugar Labs
 License: GPL-2+
+ FIXME
+
+Files: COPYING
+ data/GPLv2
+Copyright: 1989, 1991 Free Software Foundation, Inc.
+  <year> <name of author>
+  HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+  HOLDERS AND/OR OTHER PARTIES
+  disclaimer" for the program, if
+  holder saying it may be distributed
+  holder who places the Program under this License
+  interest in the program
+  law:
+  the software, and
+  year name of author
+License: GPL-ever
+ FIXME
+
+Files: install-sh
+Copyright: 1994, X Consortium
+License: Expat
  FIXME
 
 Files: missing
@@ -589,11 +594,6 @@ Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
  FIXME
 
-Files: install-sh
-Copyright: 1994, X Consortium
-License: MIT/X11 (BSD like)
- FIXME
-
 Files: configure
 Copyright: (ISLOWER ? 'A' + ( - 'a') : )
   (ISLOWER ? ( | 0x40) : )
@@ -638,12 +638,6 @@ Files: po/cs.po
 Copyright: Jm√no"
   YEAR THE PACKAGE'S HOLDER
   povolen√≠:"
-License: UNKNOWN
- FIXME
-
-Files: debian/patches/danish_l10n.patch
-Copyright: 2008, Jonas Smedegaard <dr@jones.dk>
-  2008, One Laptop per Child Association Inc; Red Hat Inc; and Contributors."
 License: UNKNOWN
  FIXME
 

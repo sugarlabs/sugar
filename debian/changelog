@@ -1,9 +1,15 @@
-sugar-0.96 (0.96.1-2.2) UNRELEASED; urgency=low
+sugar-0.98 (0.98.8-1~1) UNRELEASED; urgency=low
 
+  * New upstream release
+
+  [ Martin Pitt ]
   * Add logind_check.patch: Properly check for logind. Patch taken from
     curren upstream git head.
 
- -- Martin Pitt <mpitt@debian.org>  Mon, 29 Apr 2013 13:53:00 -0700
+  [ Santiago ]
+  * Switch packaging to upstream 0.98 version branch
+
+ -- Santiago Ruano Rincón <santiago@debian.org>  Mon, 26 Aug 2013 11:29:49 +0200
 
 sugar-0.96 (0.96.1-2.1) unstable; urgency=low
 
