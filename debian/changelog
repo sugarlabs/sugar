@@ -2,10 +2,6 @@ sugar-0.98 (0.98.8-1~1) UNRELEASED; urgency=low
 
   * New upstream release
 
-  [ Martin Pitt ]
-  * Add logind_check.patch: Properly check for logind. Patch taken from
-    curren upstream git head.
-
   [ Santiago ]
   * Switch packaging to upstream 0.98 version branch
 
