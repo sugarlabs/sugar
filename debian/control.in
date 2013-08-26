@@ -1,4 +1,4 @@
-Source: sugar-0.96
+Source: sugar-0.98
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
@@ -10,7 +10,7 @@ Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
-Package: sucrose-0.96
+Package: sucrose-0.98
 Architecture: all
 Depends: ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -18,7 +18,7 @@ Suggests: ${cdbs:Suggests}
 Provides: ${python:Provides}, ${cdbs:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - Sucrose 0.96
+Description: Sugar graphical shell - Sucrose 0.98
  Sugar is a graphical user interface aimed at children.
  .
  Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
@@ -28,7 +28,7 @@ Description: Sugar graphical shell - Sucrose 0.96
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
 
-Package: sugar-session-0.96
+Package: sugar-session-0.98
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -46,7 +46,7 @@ Description: Sugar graphical shell - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-emulator-0.96
+Package: sugar-emulator-0.98
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -65,7 +65,7 @@ Description: Sugar graphical shell - emulator
  This package contains a wrapper script to run Sugar in a Xephyr window,
  making it possible to run it from inside another Desktop environment.
 
-Package: sugar-tools-0.96
+Package: sugar-tools-0.98
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
 Recommends: ${cdbs:Recommends}
@@ -88,7 +88,7 @@ Description: Sugar graphical shell - window manager
   - sugar-launch
   - sugar-ui-check
 
-Package: python-jarabe-0.96
+Package: python-jarabe-0.98
 Section: python
 Architecture: all
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
