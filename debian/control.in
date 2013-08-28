@@ -2,7 +2,7 @@ Source: sugar-0.98
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
-Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>
+Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>, Santiago Ruano Rincón <santiago@debian.org>
 DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.3
