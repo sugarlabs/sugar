@@ -1,11 +1,12 @@
-sugar-0.98 (0.98.8-1~1) UNRELEASED; urgency=low
+sugar-0.98 (0.98.8-1) unstable; urgency=low
 
   * New upstream release
 
   [ Santiago ]
   * Switch packaging to upstream 0.98 version branch
+  * Adding myself to Uploaders
 
- -- Santiago Ruano Rincón <santiago@debian.org>  Mon, 26 Aug 2013 11:29:49 +0200
+ -- Santiago Ruano Rincón <santiago@debian.org>  Wed, 28 Aug 2013 23:49:24 +0200
 
 sugar-0.96 (0.96.1-2.1) unstable; urgency=low
 

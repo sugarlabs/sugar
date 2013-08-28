@@ -2,7 +2,7 @@ Source: sugar-0.98
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
-Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>
+Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>, Santiago Ruano Rincón <santiago@debian.org>
 DM-Upload-Allowed: yes
 Build-Depends: cdbs (>= 0.4.97~),
  devscripts,
@@ -16,8 +16,7 @@ Build-Depends: cdbs (>= 0.4.97~),
  gettext,
  intltool,
  shared-mime-info,
- python-empy,
- libgtk-3-dev
+ python-empy
 Standards-Version: 3.9.3
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
