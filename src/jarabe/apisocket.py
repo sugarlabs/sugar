@@ -217,6 +217,20 @@ class DatastoreAPI(API):
                                 reply_handler=reply_handler,
                                 error_handler=error_handler)
 
+    def display_journal(self, request):
+        chooser = ObjectChooser(self._activity, what_filter='Text', show_preview=True)
+        chooser.connect('response', self._chooser_response_cb, request)
+        chooser.show()
+        
+    def _chooser_response_cb(self, chooser, response_id, request):        
+        if response_id == Gtk.ResponseType.ACCEPT:
+            object_id = chooser.get_selected_object_id()
+            self._client.send_result(request, [object_id])
+            chooser.destroy()
+            del chooser
+        else:      
+            chooser.destroy()
+            del chooser
 
 class APIClient(object):
     def __init__(self, session):
