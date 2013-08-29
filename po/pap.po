@@ -1,21 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# User <juneleonora@yahoo.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-15 13:50+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2013-08-29 04:36-0400\n"
+"Last-Translator: User <juneleonora@yahoo.com>\n"
+"Language-Team: JuneLeonora\n"
 "Language: pap\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -23,7 +23,7 @@ msgstr "Tokante mi mes"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
-msgstr "Bo mester pone un nòmber."
+msgstr "Bo mester yena un nòmber."
 
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
@@ -55,7 +55,7 @@ msgstr "Eror den e kolónan spesifiká."
 
 #: ../extensions/cpsection/aboutme/view.py:212
 msgid "Click to change your color:"
-msgstr "Klèk pa kambia bo koló:"
+msgstr "Klek pa kambia bo koló:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -63,7 +63,7 @@ msgstr "Tokante mi kòmpiuter"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
-msgstr "E no ta disponibel"
+msgstr "No ta disponibel"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
@@ -71,11 +71,11 @@ msgstr "Identidat"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
-msgstr "Nùmber di serie:"
+msgstr "Nùmber di seri:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
-msgstr "Sòftwèr"
+msgstr "Software"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
@@ -83,7 +83,7 @@ msgstr "Vershon:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
-msgstr "Suku:"
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
@@ -91,11 +91,11 @@ msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr "Firmware sin waya:"
+msgstr "Firmware di ret sin waya:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
-msgstr "Derechi di kopia i Lisensia"
+msgstr "Derechi di outor i lisensia"
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:187
@@ -105,10 +105,10 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Suku ta e konekshon grafiko pa usadó ku bo ta mira aworaki. Suku ta un "
-"programa pòrnada, kubrí pa e lisensia públiko di GNU General Public License, "
-"i bo ta pèrmití pa kambié i/o distribuí kopia di dje bou di sierto "
-"kondishonnan deskribí den e lisensia."
+"Sugar ta e interface gráfiko pa usuario ku bo ta mira bo dilanti. Sugar ta "
+"software gratis, bou di e lisensia General Public License di GNU, i ta "
+"pèrmití bo kambi´é i/òf distribuí kopia di dje bou di sierto kondishon "
+"deskribí den e lisensia."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
@@ -116,15 +116,15 @@ msgstr "Lisensia kompleto:"
 
 #: ../extensions/cpsection/background/__init__.py:21
 msgid "Background"
-msgstr ""
+msgstr "Fondo"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr ""
+msgstr "Skohe un fondo:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
-msgstr ""
+msgstr "Limpia fondo"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -132,7 +132,7 @@ msgstr "Fecha i ora"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
-msgstr "Eror e zona di tempu no ta èksistí."
+msgstr "Eror di zona di tempu no ta eksistí."
 
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
@@ -145,7 +145,7 @@ msgstr "Kuadro"
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr "E balor mester ta un nùmber henter."
+msgstr "E balor mester ta un number hinté."
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
@@ -162,7 +162,7 @@ msgstr "%s sekònde"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Tardansa den e aktivashon"
+msgstr "Tardansa di aktivashon"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -183,11 +183,11 @@ msgstr "Modèl di teklado"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Tekla(nan) pa kambia diseño"
+msgstr "Tekla pa kambia diseño"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Skema di teklado"
+msgstr "Diseño di teklado"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -196,55 +196,58 @@ msgstr "Idioma"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr "No por a drenta ~/.i18n. Krea esenarionan stándart."
+msgstr "No por a haña akseso ~/.i18n. Krea konfigurashon stándart."
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "No tabata posibel determiná e idioma pa e kódigo =%s."
+msgstr "No por a determiná idioma pa kódigo =%s."
 
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
 msgid "Sorry I do not speak '%s'."
-msgstr "Despensami, pero mi no ta papia '%s'."
+msgstr "Despensá mi, mi no ta papia '%s'."
 
 #: ../extensions/cpsection/language/view.py:57
 msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Agregá idioma den e órden ku bo ta preferá. Si no tin tradukshon disponibel "
-"lo usa e próksimo riba lista."
+"Agregá idioma den e sekuensia ku bo ta preferá. Si no tin tradukshon "
+"disponibel lo usa e próksimo riba lista."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Formashon di modem"
+msgstr "Konfigurashon di modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
+#, fuzzy
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"Bo mester duna e siguiente informashon pa stablesé un konekshon di banda "
+"hanchu móbil ku/pa un ret di selular (3G). "
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Pais:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "Proveedó di servisio di internet:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "Plan:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "Nòmber di uzadó:"
+msgstr "Nòmber di usuario:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr "kódigo sekreto:"
+msgstr "Kódigo sekreto:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
@@ -252,26 +255,26 @@ msgstr "Number:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "Nòmber di Punto di Akseso (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "Number di Identidat Personal (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Plan #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Proveedó %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr "Reda"
+msgstr "Ret"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
@@ -279,11 +282,11 @@ msgstr "E estado ta deskonosí."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "Eròr den e argumento spesifiká; uza sendé/pagá."
+msgstr "Eror den e argumento spesifiká; usa sende/paga."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr "Eror den e argumento spesifiká, uza 0/1."
+msgstr "Eror den e argumento spesifiká, usa 0/1."
 
 #: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
@@ -291,7 +294,7 @@ msgstr "Sin waya"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Paga e radio pa spar e bateria"
+msgstr "Paga e radio sin waya pa spar bateria"
 
 #: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
@@ -299,11 +302,11 @@ msgstr "Radio"
 
 #: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr "Deskartá historia di e reda si bo tin problema pa konektá ku e reda"
+msgstr "Deskartá historia di ret si bo tin problema pa konektá ku e ret"
 
 #: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
-msgstr "Deskartá historia di e reda"
+msgstr "Deskartá historia di ret"
 
 #: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
@@ -315,16 +318,16 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
-"E sirbidó ta komparabel ku e kamber ku bo ta aden; hende riba e mesun server "
-"por wak otro, asta ora nan no ta riba mesun reda."
+"E server ta komparabel ku e kamber ku bo ta aden; hende riba e mesun server "
+"por mira otro, asta ora nan no ta riba mesun ret."
 
 #: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
-msgstr "Sirbidó:"
+msgstr "Server:"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr "Karga"
+msgstr "Energia"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
@@ -332,27 +335,27 @@ msgstr "Eror den e argumento pm outomátiko, usa sende/paga."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr "Maneho di karga"
+msgstr "Maneho di energia"
 
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
-msgstr "Maneho outomátiko di karga (prolongá bida di bateria)"
+msgstr "Maneho outomátiko di energia (ta prolongá bida di bateria)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr "Aktualisashon di programa"
+msgstr "Aktualisashon di software"
 
 #: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Aktualisashonnan di programa ta korigí eror, eliminá problema di seguridat i "
+"Aktualisashonnan di software ta korigí eror, eliminá problema di seguridat i "
 "ofresé karakterístika nobo."
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "Aktualisashon den desaroyo..."
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
@@ -368,9 +371,8 @@ msgid "Checking %s..."
 msgstr "Kontrolando %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
-#, fuzzy
 msgid "Looking for updates..."
-msgstr "Kontrolando aktualisashonnan..."
+msgstr "Buskando aktualisashon..."
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
@@ -384,7 +386,7 @@ msgstr "Aktualisando %s..."
 
 #: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
-msgstr "Bo programa ta aktualisá"
+msgstr "Bo software ta aktualisá"
 
 #: ../extensions/cpsection/updater/view.py:155
 #, python-format
@@ -402,7 +404,7 @@ msgstr[1] "aktualisashonnan %s a kaba di instalá"
 
 #: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
-msgstr "Instalá e loke a selektá"
+msgstr "Instalá loke a selektá"
 
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
@@ -417,12 +419,12 @@ msgstr "Di vershon %(current)s pa %(new)s (Tamaño: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:380
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
+msgstr "Vershon %(version)s (Tamaño: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
 msgid "None"
-msgstr "Ningun"
+msgstr "Niun"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:400
@@ -443,7 +445,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
-msgstr ""
+msgstr "Konfigurá bo servisionan di web"
 
 #: ../extensions/cpsection/webaccount/view.py:42
 #, python-format
@@ -451,10 +453,12 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"No tin niun servisio di web instalá.\n"
+"Bishitá %s pa mas detaye."
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr "Mi Bateria"
+msgstr "Mi bateria"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
@@ -481,7 +485,7 @@ msgstr "Kargá"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Mustra mi teklado"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -514,7 +518,7 @@ msgstr "Konektá"
 
 #: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
-msgstr ""
+msgstr "No tin konekshon sin waya"
 
 #: ../extensions/deviceicon/network.py:139
 msgid "Channel"
@@ -522,11 +526,11 @@ msgstr "Kanal"
 
 #: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
-msgstr "Reda ku waya"
+msgstr "Ret ku waya"
 
 #: ../extensions/deviceicon/network.py:183
 msgid "Speed"
-msgstr "Velosidad"
+msgstr "Velosidat"
 
 #: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
@@ -534,7 +538,7 @@ msgstr "Modem sin waya"
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
-msgstr "Un momento por fabor..."
+msgstr "Un momentu por fabor..."
 
 #: ../extensions/deviceicon/network.py:281
 #: ../src/jarabe/desktop/networkviews.py:129
@@ -561,22 +565,22 @@ msgstr "Kanselá"
 
 #: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
-msgstr ""
+msgstr "Purba konektá atrobe"
 
 #: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Eror: %s"
 
 #: ../extensions/deviceicon/network.py:335
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Sugerensia: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "Konektá ku %s"
 
 #: ../extensions/deviceicon/network.py:350
 #: ../extensions/deviceicon/network.py:351
@@ -586,62 +590,62 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "Chèk bo konfigurashon PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "Chèk bo konfigurashon di Nòmber di Punto di Akseso (APN)"
 
 #: ../extensions/deviceicon/network.py:363
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "Chèk e konfigurashon di number."
 
 #: ../extensions/deviceicon/network.py:365
 msgid "Check your configuration."
-msgstr ""
+msgstr "Chèk bo konfigurashon."
 
 #: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
-msgstr "Reda di routernan independiente"
+msgstr "Ret di routernan independiente"
 
 #: ../extensions/deviceicon/network.py:668
 #, python-format
 msgid "Mesh Network %s"
-msgstr "Reda di router independiente %s"
+msgstr "Ret di router independiente %s"
 
 #: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
-msgstr ""
+msgstr "No tin konekshon di GSM disponibel."
 
 #: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Krea un konekshon den control panel."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Lenguahe"
 
 #: ../extensions/deviceicon/speech.py:76
 #: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
-msgstr ""
+msgstr "Bisa teksto selektá"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Stòp e playback"
 
 #: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
-msgstr ""
+msgstr "Haltura di tono"
 
 #: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
-msgstr ""
+msgstr "Velosidat"
 
 #: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
-msgstr ""
+msgstr "Pousa e playback"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -649,7 +653,7 @@ msgstr "Mi spikernan"
 
 #: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
-msgstr "Desaktivá státus di silensio"
+msgstr "Desaktivá estado di silensio"
 
 #: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
@@ -657,15 +661,15 @@ msgstr "Silensiá"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "dede"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "pèn"
 
 #: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "Mi plachi táktíl"
 
 #: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
@@ -707,46 +711,49 @@ msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
-"E no ta posibel pa pùntra e apudo; 'sistema' pa reusá e nòmber largu di e "
-"kwenta di UNIX."
+"\"desaktivá\" pa pidi e apodo ora kuminsá; \"sistema\" pa reusá e nòmber largu "
+"di e kuenta di UNIX."
 
 #: ../data/sugar.schemas.in.h:2
 msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
+"Un stampia di tempu di unix (sekònde for di époka) di e último aktualisashon "
+"di aktividat eksitoso  "
 
 #: ../data/sugar.schemas.in.h:3
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
+"Aktividat aktualisashon di módulo Backend, siguí pa un punto, siguí pa e "
+"nòmber di klase."
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Activity update backend."
-msgstr ""
+msgstr "Aktividat aktualisashon di backend."
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "Frekuensia di aktualisashon outomátiko "
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
-msgstr "URL pa warda kopia"
+msgstr "URL di kopia di reserva"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Pakete di ID di aktividat protehá"
 
 #: ../data/sugar.schemas.in.h:9
-#, fuzzy
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Koló di e símbolo di XO ku usá na e desktop. E seri ta konsistí di koló pa "
-"strepi i koló pa yena, e format ta meskos ku esun di kolónan rbg. Por "
+"Koló pa e símbolo di XO ku ta usá na e desktop. E seri ta konsistí di koló "
+"pa strepi i koló pa yena, e format ta meskos ku esun di e kolónan kbb. Por "
 "ehèmpel: #AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:10
@@ -755,15 +762,15 @@ msgstr "Tardansa di huki"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
-msgstr "Tipo di lèter skohí pa e sistema"
+msgstr "Tipo di lèter stándart"
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
-msgstr "Tamaño di lèter skohí pa e sistema"
+msgstr "Tamaño di lèter stándart"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
-msgstr "Apodo skohí pa e sistema"
+msgstr "Apodo standart"
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
@@ -771,87 +778,94 @@ msgstr "Tardansa di aktivashon di e kuadro usando e hukinan."
 
 #: ../data/sugar.schemas.in.h:15
 msgid "Delay for the activation of the frame using the edges."
-msgstr "Tardansa di aktivashon di e kuadro uzando e rantnan."
+msgstr "Tardansa di aktivashon di e kuadro usando e rantnan."
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
 msgstr "Tardansa di rant"
 
 #: ../data/sugar.schemas.in.h:17
-#, fuzzy
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
-msgstr "Maneho ekstremo di karga (ta paga radio, prolongá bida di bateria)"
+msgstr ""
+"Maneho ekstremo di energia (ta paga radio sin waya, ta alargá bida di "
+"bateria)"
 
 #: ../data/sugar.schemas.in.h:18
 msgid "Favorites Layout"
-msgstr "Skema di faboritonan"
+msgstr "Diseño di faboritonan"
 
 #: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
-msgstr "Funshonalidat di habri favoritonan"
+msgstr "Funshon di reanudashon di faboritonan"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
-msgstr "Tipo di lèter ku ta usa na e desktop."
+msgstr "Tipo di lèter ku ta usá na e desktop."
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
-msgstr "Tamaño di lèter ku ta usa na e desktop."
+msgstr "Tamaño di lèter ku ta usá na e desktop."
 
 #: ../data/sugar.schemas.in.h:22
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"Frekuensia di aktualisashon di actividat outomátiko, midí den dia. 0 ta "
+"nifiká desaktivá."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "APN di ret di GSM (OPSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:24
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PIN di ret di GSM (OPSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:25
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "PUK di ret di GSM (OPSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Konfigurashon di nòmber di punto di akseso di ret di GSM (OBSOLETO NO/USÁ)  "
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Number di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Kódigo sekreto riba ret di GSM (OBSOLETO/NO USÁ) \t"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Konfigurashon di kódigo sekreto di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:30
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Konfigurashon di number di identifikashon personal di ret di GSM (OPSOLETO, "
+"NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Konfigurashon di klave personal pa desblòkia ret di GSM (OBSOLETO/NO USÁ) "
 
 #: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Konfigurashon di number di telefòn di ret di GSM (OBSOLETO/NO USÁ)  "
 
 #: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Nòmber di usuario di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Konfigurashon di nòmber di usuario di ret di GSM"
 
 # Kisas BERDAT mester bira TRUE, si e ta un òrdu den e programa?
 #: ../data/sugar.schemas.in.h:35
@@ -859,17 +873,16 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Si ta BERDAT, Suku lo pone ku e otro usadónan di e sirbidó Jabber por buska "
-"nos."
+"Si ta KOREKTO, Sugar lo hasi nos buskabel pa e otro usuarionan di e Jabber "
+"server."
 
 #: ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Si ta BERDAT, Suku lo mustra e opshon \"Deskonektá usadó\"."
+msgstr "Si ta KOREKTO, Sugar lo mustra e opshon \"Deskonektá\"."
 
 #: ../data/sugar.schemas.in.h:37
-#, fuzzy
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Si ta BERDAT, Suku lo mustra e opshon \"Deskonektá usadó\"."
+msgstr "Si ta KOREKTO, Sugar lo mustra e opshon \"Reanudá\"."
 
 #: ../data/sugar.schemas.in.h:38
 msgid ""
@@ -877,14 +890,17 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Si ta KOREKTO, Sugar lo mustra e retnan Ad-hoc skohé pa e sistema pa kanal "
+"1,6 i 11. Si Sugar no mira un ret \"konosí\" ora e start, lo e hasi un "
+"outokonekshon pa un ret Ad-hoc."
 
 #: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
-msgstr "E sirbidó Jabber"
+msgstr "Jabber server"
 
 #: ../data/sugar.schemas.in.h:40
 msgid "Keyboard layouts"
-msgstr "Skema di teklado"
+msgstr "Diseño di teklado"
 
 #: ../data/sugar.schemas.in.h:41
 msgid "Keyboard model"
@@ -896,67 +912,67 @@ msgstr "Opshonnan di teklado"
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
-msgstr "Skema di e bista di favoritonan."
+msgstr "Skema di bista di favoritonan."
 
 # Mi ta asumí ku "layout (variant)" ta parti di e lenga di e programa. Si no ta asina e mester bira "... skema(variante)"
 #: ../data/sugar.schemas.in.h:44
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
-"Lista di skemanan di teklado. Kada drentada mester ta den forma "
-"layout(variant)"
+"Lista di skema di teklado. Kada entrada mester ta den e skema di forma "
+"(variant)"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
-msgstr "Lista ku opshonnan di teklado."
+msgstr "Lista di opshon di teklado."
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Microformat update URL."
-msgstr ""
+msgstr "Microformat aktualisashon URL. "
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Balor di tono pa e servisio di lenguahe di Sugar"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Balor di tono usá pa e servisio di lenguahe den Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
-msgstr "Karga outomátiko"
+msgstr "Maneho di energia: outomátiko"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
-msgstr "Karga ekstremo"
+msgstr "Maneho di energia: ekstremo"
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
-msgstr "Publiká na gadget"
+msgstr "Publiká den Gadget"
 
 #: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Balor di velosidat pa e servisio di lenguahe den Sugar"
 
 #: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Balor di velosidat usá pa e servisio di lenguahe den Sugar "
 
 #: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
-msgstr "Konfigurashon pa silensiá e aparato di zonidu."
+msgstr "Konfigurashon pa silensiá e aparato di zonido."
 
 #: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
-msgstr "Mustra Deskonektá Usadó"
+msgstr "Mustra \"Deskonektá\""
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr ""
+msgstr "Mustra \"Reanudá\""
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Mustra e retnan Ad-hoc di Sugar"
 
 #: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
@@ -968,7 +984,7 @@ msgstr "Modèl di teklado pa usa"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "Stampia di tempu di último aktualisashon di aktividat"
 
 #: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
@@ -976,33 +992,36 @@ msgstr "Konfigurashon di e zona di orario pa e sistema."
 
 #: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
-msgstr "URL pa usa pa e sirbidó jabber."
+msgstr "URL di jabber server pa uza."
 
 #: ../data/sugar.schemas.in.h:64
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"URL usá pa e microformat aktualisashon backend pa informashon di aktividat "
+"di aktualisashon.  "
 
 #: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
-msgstr "URL kaminda e backup ta wardá."
+msgstr "URL kaminda e kopia di reserva ta wardá."
 
 #: ../data/sugar.schemas.in.h:66
 msgid "User Color"
-msgstr "Koló di usadó"
+msgstr "Koló di usuario"
 
 #: ../data/sugar.schemas.in.h:67
 msgid "User Name"
-msgstr "Nòmber di usadó"
+msgstr "Nòmber di usuario"
 
 #: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
-msgstr "Nòmber di usadó usá na e desktop."
+msgstr "Nòmber di usadó usá riba e desktop kompleto."
 
 #: ../data/sugar.schemas.in.h:69
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Lo no pèrmití usuarionan pa kita e aktividatnan akí usando e bista di lista."
 
 #: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
@@ -1010,15 +1029,15 @@ msgstr "Nivel di volúmen"
 
 #: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
-msgstr "Nivel di volúmen pa e aparato di zonidu."
+msgstr "Nivel di volúmen pa e aparato di zonido."
 
 #: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
-"Si bo klek riba un símbolo faborito den e funshonalidat di reanudashon esaki "
-"lo pone ku lo reanudá e drentada pa e aktividat ei."
+"Si bo klek riba símbolo di un favorito den e funshon di reanudashon, esaki "
+"lo pone ku lo reanudá e último entrada pa e aktividat ei."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1056,8 +1075,8 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
-"Uso: sugar-control-panel [ opshon ] tekla [ argumentonan ... ] \n"
-"    Kontròl pa e ambiente di suku.\n"
+"Uso: sugar-control-panel [ opshon ] klave [ argumentonan ... ] \n"
+"    Kontròl pa e ambiente di Sugar\n"
 "    Opshonnan: \n"
 "    -h           mustra e mensahe di yudansa aki i sali \n"
 "    -l           lista tur opshon disponibel \n"
@@ -1068,24 +1087,23 @@ msgstr ""
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
-#, fuzzy
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Pa apliká bo kambionan bo tin ku inisiá suku di nobo.\n"
+msgstr "Pa apliká bo kambionan bo tin ku start Sugar di nobo.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
 #: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
-msgstr "Kidou"
+msgstr "Kuidou"
 
 #: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr "Kambionan ta rekerí inisiá di nobo"
+msgstr "Kambionan ta rekerí pa start di nobo"
 
 #: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
-msgstr "Kanselá kambionan"
+msgstr "Kanselá e kambionan"
 
 #: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
@@ -1093,18 +1111,18 @@ msgstr "Despues"
 
 #: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
-msgstr "re-inisiá awor"
+msgstr "Start di nobo awor"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Buska den %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Konfigurashon"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1124,11 +1142,11 @@ msgstr "Vershon %s"
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
-msgstr "Klara búskeda"
+msgstr "Kita búskeda"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
-msgstr ""
+msgstr "No tin aktividat ku ta korespondé"
 
 #: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
@@ -1137,7 +1155,7 @@ msgstr "Konfirmá limpiamentu"
 #: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
-msgstr "Konfirmá limpiamentu: bo ke lipia %s permanentemente?"
+msgstr "Konfirmá ku a paga: bo ke paga %s permanentemente?"
 
 #: ../src/jarabe/desktop/activitieslist.py:511
 #: ../src/jarabe/frame/clipboardmenu.py:65
@@ -1154,15 +1172,15 @@ msgstr "Mantené"
 #: ../src/jarabe/journal/journaltoolbox.py:695
 #: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
-msgstr "Limpia"
+msgstr "Paga"
 
 #: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
-msgstr "Kita faborito"
+msgstr "Kita favorito"
 
 #: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
-msgstr "Krea faborito"
+msgstr "Krea favorito"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:199
@@ -1182,7 +1200,7 @@ msgstr "Spiral"
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
-msgstr "Kaha"
+msgstr "Kuadro"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:570
@@ -1191,7 +1209,7 @@ msgstr "Triángulo"
 
 #: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
-msgstr "E registrashon a frakasá"
+msgstr "Registrashon a frakasá"
 
 #: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
@@ -1199,7 +1217,7 @@ msgstr "Registrashon eksitoso"
 
 #: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
-msgstr "Bo ta registrá ku e sirbidó di bo skol."
+msgstr "Bo ta registrá awor na e server di bo skol."
 
 #: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
@@ -1208,19 +1226,19 @@ msgstr "Registrá"
 #: ../src/jarabe/desktop/favoritesview.py:656
 #: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
-msgstr ""
+msgstr "Registrá atrobe"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr "Besindario"
+msgstr "Bario"
 
 #: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
-msgstr ""
+msgstr "Mester di un klave sifrá pa e ret sin waya '%s'.  "
 
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
@@ -1254,20 +1272,20 @@ msgstr "Djòin"
 #: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Ret %d ad-hoc"
 
 #: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
 msgid "Mesh Network %d"
-msgstr "Reda di router independiente %d"
+msgstr "Ret di router independiente %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr "No por konektá ku e sirbidó."
+msgstr "No por konektá ku e server."
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr "E sirbidó no por kompletá e petishon."
+msgstr "E server no por a kompletá e petishon."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
@@ -1285,7 +1303,7 @@ msgstr "<Ctrl>%d"
 #, python-format
 #, python-format, 
 msgid "Favorites view %d"
-msgstr "Bista di faboritonan %d"
+msgstr "Bista di favoritonan %d"
 
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
@@ -1327,17 +1345,17 @@ msgstr "Aseptá"
 #: ../src/jarabe/frame/activitiestray.py:666
 #: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
-msgstr "Retirá"
+msgstr "Deskartá"
 
 #: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "E otro partisipante a kanselá e transferensia di archivo"
 
 #: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
-msgstr "Transferí na %s"
+msgstr "Transferí pa %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
 #, fuzzy
@@ -1357,7 +1375,7 @@ msgstr "Habri ku"
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "%s kòrta"
+msgstr "%s kòrtamentu"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
@@ -1396,7 +1414,7 @@ msgstr "Siguiente"
 #: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "Bo ke paga \"%s\" permanentemente?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1438,7 +1456,7 @@ msgstr "Sin fecha"
 
 #: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
-msgstr "Partisipantenan:"
+msgstr "Partisipante:"
 
 #: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
@@ -1446,11 +1464,11 @@ msgstr "Deskripshon:"
 
 #: ../src/jarabe/journal/expandedentry.py:464
 msgid "Tags:"
-msgstr "Etikèt:"
+msgstr "Label:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "Komentario:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1461,7 +1479,7 @@ msgstr "Diario"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr ""
+msgstr "Entrada favorito"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
@@ -1508,34 +1526,34 @@ msgstr "Mi klas"
 # TRANS: Item in a combo box that filters by entry type.
 #: ../src/jarabe/journal/journaltoolbox.py:327
 msgid "Anything"
-msgstr "Kualker kos"
+msgstr "Kualke kos"
 
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
-msgstr ""
+msgstr "Kopia pa"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "Dupliká"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "Aktualisá"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Eror durante kopiamentu di entrada. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:471
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "Eror"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
@@ -1546,34 +1564,34 @@ msgstr "Kuminsá"
 
 #: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Surti segun fecha di modifikashon "
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
-msgstr ""
+msgstr "Surti segun fecha di kreashon"
 
 #: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr ""
+msgstr "Surti segun tamaño"
 
 #: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
-msgstr ""
+msgstr "Bista di surti"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "Deselekshoná tur"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "Selekshoná tur"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bo ke paga e entrada %d?"
+msgstr[1] "Bo ke paga e entradanan %d?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
@@ -1584,33 +1602,34 @@ msgstr "Kopia"
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Selekshoná %(selected)d d di %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "Bo diario ta bashí"
 
 #: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
+#, fuzzy
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Bo folder di dokumento ta bashí"
 
 #: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
-msgstr ""
+msgstr "E aparato ta bashí"
 
 #: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
-msgstr "No tin drentada ku ta korespondé"
+msgstr "No tin entrada korespondiente"
 
 #: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Vershon mas bieu di aktividat %s"
 
 #: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Bo ke baha na vershon %s"
 
 #: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
@@ -1618,7 +1637,9 @@ msgstr "Bo diario ta yen"
 
 #: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
-msgstr "Por fabor, eliminá algun drentada bieu pa traha lugá pa drentada nobo."
+msgstr ""
+"Por fabor, eliminá algun entrada di diario bieu pa traha lugá pa entrada "
+"nobo."
 
 #: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
@@ -1626,12 +1647,12 @@ msgstr "Mustra diario"
 
 #: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
-msgstr "Skohe un obheto"
+msgstr "Skohe un opheto"
 
 #: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Skohe un opheto pa habri ku aktividat %s"
 
 #: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
@@ -1644,15 +1665,15 @@ msgstr "Reanudá ku"
 
 #: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
-msgstr "Inisiá ku"
+msgstr "Start ku"
 
 #: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
-msgstr "No tin aktividat pa inisiá drentada"
+msgstr "No tin aktividat pa start entrada"
 
 #: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
-msgstr "Manda na"
+msgstr "Manda pa"
 
 #: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
@@ -1660,40 +1681,40 @@ msgstr "Mira detaye"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "No por manda entrada sin un fail "
 
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
-msgstr ""
+msgstr "Dokumento"
 
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "No por kopia entrada sin un fail."
 
 #: ../src/jarabe/journal/palettes.py:369
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bo ke kopia %d entrada?"
+msgstr[1] "Bo ke kopia %d entrada?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
-msgstr ""
+msgstr "Klepbòrt"
 
 #: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
-msgstr "No tin ningun amigu presente"
+msgstr "No tin niun amigu presente"
 
 #: ../src/jarabe/journal/palettes.py:459
 msgid "No valid connection found"
-msgstr "No a topa ningun konekshon bálido"
+msgstr "No a topa niun konekshon bálido"
 
 #: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
-msgstr "No tin aktividat pa reanudá drentada"
+msgstr "No tin aktividat pa reanudá entrada"
 
 #: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
 msgid "Stop"
@@ -1701,12 +1722,12 @@ msgstr "Stòp"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Kontinuá"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d di %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
@@ -1716,190 +1737,193 @@ msgstr "%(free_space)d MB disponibel"
 
 #: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "E motibu pa kambio di estado di e aparato ta deskonosí."
 
 #: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
-msgstr ""
+msgstr "E kambio di estado ta normal."
 
 #: ../src/jarabe/model/network.py:218
 msgid "The device is now managed."
-msgstr ""
+msgstr "E aparato ta manehá awor."
 
 #: ../src/jarabe/model/network.py:220
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "E aparato no ta manehá mas."
 
 #: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "No por a prepará e aparato pa konfigurashon."
 
 #: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"No por a reservá konfigurashon di IP (adrès no disponibel, timeout, etc)."
 
 #: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "E konfigurashon di IP no ta bálido mas."
 
 #: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Sekreto tabata rekerí, pero no a suministrá nan."
 
 #: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"E solisitante 802.1X a deskonektá for di e punto di akseso òf server di "
+"outentikashon."
 
 #: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "Konfigurashon di e solisitante 802.1X a faya."
 
 #: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "E solisitante 802.1X a sali òf faya inesperadamente."
 
 #: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "E solisitante 802.1X a tuma muchu tempu pa outentiká."
 
 #: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "E servisio PPP no a start den e tempu pèrmití. "
 
 #: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "E servisio PPP a deskonektá inesperadamente."
 
 #: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "E servisio PPP a stòp òf faya inesperadamente. "
 
 #: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "E servisio DHCP no a start den e tempu pèrmití. "
 
 #: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "E servisio DHCP a raportá un eror inesperá."
 
 #: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "E servisio DHCP a stòp òf faya inesperadamente. "
 
 #: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "E konekshon kompartí no a start."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "E konekshon kompartí a stòp òf faya inesperadamente. "
 
 #: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "E servisio AutoIP no a start."
 
 #: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "E servisio AutoIP a raportá un eror inesperá."
 
 #: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "E servisio AutoIP a stòp òf faya inesperadamente. "
 
 #: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "E konekshon di yamada a faya pasobra e liña tabata okupá."
 
 #: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "E konekshon di yamada a faya pasobra no tabatin kiston."
 
 #: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "E konekshon di yamada a faya pasobra no tabatin portadó."
 
 #: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
-msgstr ""
+msgstr "E konekshon di yamada a faya pa límite di tempu."
 
 #: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
-msgstr ""
+msgstr "E konekshon di yamada a faya."
 
 #: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Inisialisashon di modem a faya."
 
 #: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Selekshon di APN di GSM spesifiká a faya."
 
 #: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
-msgstr ""
+msgstr "No ta buskando ret."
 
 #: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
-msgstr ""
+msgstr "A nenga registrashon di ret."
 
 #: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Registashon di ret a faya pa límite di tempu."
 
 #: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "No a logra registrá serka e ret di GSM solisitá."
 
 #: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
-msgstr ""
+msgstr "Chekeo di PIN a faya."
 
 #: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Por ta falta firmware nesesario pa e aparato."
 
 #: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
-msgstr ""
+msgstr "A kita e aparato."
 
 #: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "NetworkManager a bai drumi."
 
 #: ../src/jarabe/model/network.py:293
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "A kita e konekshon aktivo di e aparato òf el a disparsé."
 
 #: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Un usuario òf kliente a pidi e deskonekshon."
 
 #: ../src/jarabe/model/network.py:298
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "A kambia e portadó/lenk di e aparato."
 
 #: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "A asumí e konekshon eksistente di e aparato."
 
 #: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "E solisitante ta disponibel awor."
 
 #: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
-msgstr ""
+msgstr "No por a haña e modem."
 
 #: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "E konekshon Bluetooth a faya òf pasa límite di tempu."
 
 #: ../src/jarabe/model/network.py:308
 msgid "Unused."
-msgstr ""
+msgstr "No usá."
 
 #: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
@@ -1915,11 +1939,11 @@ msgstr "Paga"
 
 #: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
-msgstr ""
+msgstr "Start di nobo"
 
 #: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
-msgstr "Mèldu ku ta bai"
+msgstr "Deskonektá"
 
 #: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
@@ -1933,15 +1957,15 @@ msgstr "Invitá pa %s"
 #: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b> a keda sin start."
 
 #: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
-msgstr "Kuminsando..."
+msgstr "Inisiando..."
 
 #: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Aktividat a keda sin start"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
@@ -1953,14 +1977,13 @@ msgid "Start new"
 msgstr "Kuminsá ku unu nobo"
 
 #: ../src/jarabe/view/palettes.py:241
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Eliminá"
 
 #: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
-msgstr "Fuente Instantáneo"
+msgstr "Fuente di instansia"
 
 #: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
@@ -1972,7 +1995,7 @@ msgstr "Fuente di pakete di aktividat"
 
 #: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Fuente di Sugar Toolkit"
 
 #: ../src/jarabe/view/viewsource.py:408
 #, python-format
