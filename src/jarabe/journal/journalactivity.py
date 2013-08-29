@@ -45,6 +45,8 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 
+from jarabe.model import session
+
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -173,6 +175,9 @@ class JournalActivity(JournalWindow):
         self._critical_space_alert = None
         self._check_available_space()
 
+        session.get_session_manager().connect(
+            'stop', self._session_manager_stop_cb)
+
     def volume_error_cb(self, gobject, message, severity):
         alert = ErrorAlert(title=severity, msg=message)
         alert.connect('response', self.__alert_response_cb)
@@ -189,6 +194,9 @@ class JournalActivity(JournalWindow):
         SugarExt.wm_set_activity_id(xid, str(activity_id))
         self.disconnect(self._realized_sid)
         self._realized_sid = None
+
+    def _session_manager_stop_cb(self, event):
+        self.destroy()
 
     def can_close(self):
         return False
