@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 04:36-0400\n"
-"Last-Translator: User <juneleonora@yahoo.com>\n"
+"PO-Revision-Date: 2013-08-29 23:11+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: JuneLeonora\n"
 "Language: pap\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Pootle 2.0.5\n"
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
@@ -221,13 +221,12 @@ msgid "Modem Configuration"
 msgstr "Konfigurashon di modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
-#, fuzzy
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
-"Bo mester duna e siguiente informashon pa stablesé un konekshon di banda "
-"hanchu móbil ku/pa un ret di selular (3G). "
+"Bo mester duna e siguiente informashon pa establesé un konekshon móbil di "
+"banda hanchu ku un ret di selular (3G)."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
@@ -720,7 +719,7 @@ msgid ""
 "update."
 msgstr ""
 "Un stampia di tempu di unix (sekònde for di époka) di e último aktualisashon "
-"di aktividat eksitoso  "
+"di aktividat eksitoso."
 
 #: ../data/sugar.schemas.in.h:3
 msgid ""
@@ -736,7 +735,7 @@ msgstr "Aktividat aktualisashon di backend."
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr "Frekuensia di aktualisashon outomátiko "
+msgstr "Frekuensia di aktualisashon outomátiko."
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
@@ -801,18 +800,18 @@ msgstr "Funshon di reanudashon di faboritonan"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
-msgstr "Tipo di lèter ku ta usá na e desktop."
+msgstr "Tipo di lèter ku ta usá tur kaminda riba e desktop."
 
 #: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
-msgstr "Tamaño di lèter ku ta usá na e desktop."
+msgstr "Tamaño di lèter ku ta usá tur kaminda riba e desktop."
 
 #: ../data/sugar.schemas.in.h:22
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"Frekuensia di aktualisashon di actividat outomátiko, midí den dia. 0 ta "
-"nifiká desaktivá."
+"Frekuensia di aktualisashon outomátiko di aktividat, ekspresá na kantidat di "
+"dia. 0 ta nifiká desaktivá."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -829,7 +828,7 @@ msgstr "PUK di ret di GSM (OPSOLETO/NO USÁ)"
 #: ../data/sugar.schemas.in.h:26
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Konfigurashon di nòmber di punto di akseso di ret di GSM (OBSOLETO NO/USÁ)  "
+"Konfigurashon di nòmber di punto di akseso di ret di GSM (OBSOLETO NO/USÁ)."
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
@@ -837,7 +836,7 @@ msgstr "Number di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:28
 msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr "Kódigo sekreto riba ret di GSM (OBSOLETO/NO USÁ) \t"
+msgstr "Kódigo sekreto riba ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:29
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
@@ -853,11 +852,11 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Konfigurashon di klave personal pa desblòkia ret di GSM (OBSOLETO/NO USÁ) "
+"Konfigurashon di klave personal pa desblòkia ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr "Konfigurashon di number di telefòn di ret di GSM (OBSOLETO/NO USÁ)  "
+msgstr "Konfigurashon di number di telefòn di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
@@ -928,7 +927,7 @@ msgstr "Lista di opshon di teklado."
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Microformat update URL."
-msgstr "Microformat aktualisashon URL. "
+msgstr "Microformat aktualisashon URL."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
@@ -956,7 +955,7 @@ msgstr "Balor di velosidat pa e servisio di lenguahe den Sugar"
 
 #: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
-msgstr "Balor di velosidat usá pa e servisio di lenguahe den Sugar "
+msgstr "Balor di velosidat usá pa e servisio di lenguahe den Sugar"
 
 #: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
@@ -999,7 +998,7 @@ msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
 "URL usá pa e microformat aktualisashon backend pa informashon di aktividat "
-"di aktualisashon.  "
+"di aktualisashon."
 
 #: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
@@ -1238,7 +1237,7 @@ msgstr "Bario"
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
-msgstr "Mester di un klave sifrá pa e ret sin waya '%s'.  "
+msgstr "Mester di un klave sifrá pa e ret sin waya '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
@@ -1358,10 +1357,9 @@ msgid "Transfer to %s"
 msgstr "Transferí pa %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Eliminá"
+msgstr "Kita"
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
@@ -1564,7 +1562,7 @@ msgstr "Kuminsá"
 
 #: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr "Surti segun fecha di modifikashon "
+msgstr "Surti segun fecha di modifikashon"
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
@@ -1609,7 +1607,6 @@ msgid "Your Journal is empty"
 msgstr "Bo diario ta bashí"
 
 #: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
-#, fuzzy
 msgid "Your documents folder is empty"
 msgstr "Bo folder di dokumento ta bashí"
 
@@ -1681,7 +1678,7 @@ msgstr "Mira detaye"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
-msgstr "No por manda entrada sin un fail "
+msgstr "No por manda entrada sin un fail."
 
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
@@ -1791,7 +1788,7 @@ msgstr "E solisitante 802.1X a tuma muchu tempu pa outentiká."
 
 #: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
-msgstr "E servisio PPP no a start den e tempu pèrmití. "
+msgstr "E servisio PPP no a start den e tempu pèrmití."
 
 #: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
@@ -1799,11 +1796,11 @@ msgstr "E servisio PPP a deskonektá inesperadamente."
 
 #: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
-msgstr "E servisio PPP a stòp òf faya inesperadamente. "
+msgstr "E servisio PPP a stòp òf faya inesperadamente."
 
 #: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
-msgstr "E servisio DHCP no a start den e tempu pèrmití. "
+msgstr "E servisio DHCP no a start den e tempu pèrmití."
 
 #: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
@@ -1811,7 +1808,7 @@ msgstr "E servisio DHCP a raportá un eror inesperá."
 
 #: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr "E servisio DHCP a stòp òf faya inesperadamente. "
+msgstr "E servisio DHCP a stòp òf faya inesperadamente."
 
 #: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
@@ -1819,7 +1816,7 @@ msgstr "E konekshon kompartí no a start."
 
 #: ../src/jarabe/model/network.py:254
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr "E konekshon kompartí a stòp òf faya inesperadamente. "
+msgstr "E konekshon kompartí a stòp òf faya inesperadamente."
 
 #: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
@@ -1831,7 +1828,7 @@ msgstr "E servisio AutoIP a raportá un eror inesperá."
 
 #: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr "E servisio AutoIP a stòp òf faya inesperadamente. "
+msgstr "E servisio AutoIP a stòp òf faya inesperadamente."
 
 #: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
