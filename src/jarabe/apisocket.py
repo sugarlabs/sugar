@@ -98,6 +98,24 @@ class DatastoreAPI(API):
 
         return file_path, file_object
 
+    def choose_object(self, request):
+        try:
+            chooser = ObjectChooser(self._activity, what_filter=self.get_bundle_id(),
+                                    filter_type=FILTER_TYPE_MIME_BY_ACTIVITY)
+        except:
+            chooser = ObjectChooser(parent=self,
+                                    what_filter=mime.GENERIC_TYPE_TEXT) 
+
+        chooser.connect('response', self._chooser_response_cb, request)
+        chooser.show()
+        
+    def _chooser_response_cb(self, chooser, response_id, request):        
+        if response_id == Gtk.ResponseType.ACCEPT:
+            object_id = chooser.get_selected_object_id()
+            self._client.send_result(request, [object_id])
+            
+        chooser.destroy()    
+
     def get_metadata(self, request):
         def get_properties_reply_handler(properties):
             self._client.send_result(request, [properties])
