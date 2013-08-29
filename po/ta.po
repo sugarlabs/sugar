@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-15 13:22+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-08-29 06:02+0200\n"
+"Last-Translator: Thangamani <thangam.arunx@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -807,7 +807,7 @@ msgstr "விருப்பமான தளக்கோலம்"
 
 #: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
-msgstr "விருப்பத்துக்குரியதை மீழ ஆரம்பி"
+msgstr "மீள்துவக்கத்தை விருப்ப முறையாக்கு"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
