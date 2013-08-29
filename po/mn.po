@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-14 03:03+0200\n"
+"PO-Revision-Date: 2013-08-29 00:41+0200\n"
 "Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
@@ -221,7 +221,7 @@ msgstr "Модемын тохиргоо"
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
-msgstr ""
+msgstr "3G Сүлжээ ашиглахын тулд, дараах мэдээлэл оруулах хэрэгтэй."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
@@ -233,7 +233,7 @@ msgstr "Сүлжээ:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "Үйлчилгээ:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
@@ -258,12 +258,12 @@ msgstr "Хувийн нэвтрэх тоо (PIN):"
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Үйлчилгээ #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Сүлжээ %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
