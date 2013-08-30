@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 23:11+0200\n"
+"PO-Revision-Date: 2013-08-30 00:00+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: JuneLeonora\n"
 "Language: pap\n"
@@ -864,7 +864,7 @@ msgstr "Nòmber di usuario di ret di GSM (OBSOLETO/NO USÁ)"
 
 #: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr "Konfigurashon di nòmber di usuario di ret di GSM"
+msgstr "Konfigurashon di nòmber di usuario di ret di GSM (OBSOLETO/NO USÁ)"
 
 # Kisas BERDAT mester bira TRUE, si e ta un òrdu den e programa?
 #: ../data/sugar.schemas.in.h:35
