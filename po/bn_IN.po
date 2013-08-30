@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 04:51+0200\n"
+"PO-Revision-Date: 2013-08-29 20:43+0200\n"
 "Last-Translator: Mohona <mohonabose@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
@@ -55,20 +55,19 @@ msgstr ""
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "ভর:     %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
-msgstr "উল্লেখিত রং পরিবর্তকে ত্রুটি।"
+msgstr "উল্লিখিত রং পরিবর্তকে ত্রুটি।"
 
 #: ../extensions/cpsection/aboutme/model.py:97
 msgid "Error in specified colors."
-msgstr "উল্লেখিত রং এ ত্রুটি।"
+msgstr "উল্লিখিত রং এ ত্রুটি।"
 
 #: ../extensions/cpsection/aboutme/view.py:212
-#, fuzzy
 msgid "Click to change your color:"
-msgstr "রং পরিবর্তন করতে ক্লিক:"
+msgstr "রং পরিবর্তন করতে ক্লিক্ কর:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
@@ -96,15 +95,15 @@ msgstr "গড়"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
-msgstr "শুগার"
+msgstr "সুগার"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
-msgstr ""
+msgstr "ফার্মওয়্যার"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr ""
+msgstr "বেতার ফার্মওয়্যার"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
@@ -154,7 +153,7 @@ msgstr ""
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
 msgid "Value must be an integer."
-msgstr ""
+msgstr "এর মান পূর্ণসংখ্যা হতে হবে।"
 
 #: ../extensions/cpsection/frame/view.py:27
 msgid "never"
@@ -172,7 +171,7 @@ msgstr "%s সেকেন্ড"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr ""
+msgstr "সক্রিয়করণে দেরি"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -185,7 +184,7 @@ msgstr "ধার"
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr ""
+msgstr "কীবোর্ড"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
@@ -282,7 +281,7 @@ msgstr ""
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr ""
+msgstr "নেটওয়ার্ক"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
@@ -290,12 +289,14 @@ msgstr "অবস্থানটি অজানা।"
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "উল্লেখিত রেডিও প্রেরিত মান ব্যবহার on/off তে ত্রুটি।"
+msgstr ""
+"উল্লিখিত রেডিও প্রেরিত মানটিতে ত্রুটি আছে যেখানে বলা হয়েছে on/off ব্যাবহার "
+"কর।"
 
 #: ../extensions/cpsection/network/model.py:152
-#, fuzzy
 msgid "Error in specified argument use 0/1."
-msgstr "উল্লেখিত রেডিও প্রেরিত মান ব্যবহার on/off তে ত্রুটি।"
+msgstr ""
+"উল্লিখিত রেডিও প্রেরিত মানটিতে ত্রুটি আছে যেখানে বলা হয়েছে 0/1 ব্যাবহার কর।"
 
 #: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
@@ -315,11 +316,11 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
-msgstr ""
+msgstr "নেটওয়ার্ক এর ইতিহাসটি (হিস্টরী) বাতিল কর।"
 
 #: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
-msgstr ""
+msgstr "সহযোগিতা"
 
 #: ../extensions/cpsection/network/view.py:139
 msgid ""
@@ -330,7 +331,7 @@ msgstr ""
 
 #: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
-msgstr ""
+msgstr "সার্ভার"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
@@ -360,15 +361,15 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "আপডেট চলছে..."
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
-msgstr ""
+msgstr "আপডেট নিয়ন্ত্রণ করা হচ্ছে..."
 
 #: ../extensions/cpsection/updater/view.py:108
 msgid "Installing updates..."
-msgstr ""
+msgstr "আপডেট ইনস্টল করা হচ্ছে..."
 
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
@@ -377,7 +378,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
-msgstr ""
+msgstr "আপডেট খোঁজা চলছে..."
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
@@ -465,17 +466,16 @@ msgid "My Battery"
 msgstr ""
 
 #: ../extensions/deviceicon/battery.py:153
-#, fuzzy
 msgid "Removed"
-msgstr "মোছো"
+msgstr "মুছে গেছে"
 
 #: ../extensions/deviceicon/battery.py:156
 msgid "Charging"
-msgstr ""
+msgstr "চার্জ ভরা হচ্ছে"
 
 #: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
-msgstr ""
+msgstr "খুব অল্প পাওয়ার বাকি"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
@@ -514,9 +514,8 @@ msgstr "সংযোগ বিচ্ছিন্ন"
 #: ../src/jarabe/desktop/networkviews.py:251
 #: ../src/jarabe/desktop/networkviews.py:551
 #: ../src/jarabe/desktop/networkviews.py:693
-#, fuzzy
 msgid "Connecting..."
-msgstr "সংযোগ বিচ্ছিন্ন..."
+msgstr "সংযোগ স্থাপন করা হচ্ছে..."
 
 #: ../extensions/deviceicon/network.py:112
 #: ../extensions/deviceicon/network.py:180
@@ -540,7 +539,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:183
 msgid "Speed"
-msgstr ""
+msgstr "গতি"
 
 #: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
@@ -548,7 +547,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
-msgstr ""
+msgstr "দয়া করে অপেক্ষা করো..."
 
 #: ../extensions/deviceicon/network.py:281
 #: ../src/jarabe/desktop/networkviews.py:129
@@ -575,12 +574,12 @@ msgstr "বাতিল"
 
 #: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
-msgstr ""
+msgstr "আরেকবার সংযোগ স্থাপনের চেষ্টা করো"
 
 #: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "ত্রুটি: %s"
 
 #: ../extensions/deviceicon/network.py:335
 #, python-format
@@ -626,7 +625,7 @@ msgstr "মেশ নেটওয়ার্ক %s"
 
 #: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
-msgstr ""
+msgstr "কোনো জি.এস.এম সংযোগ পাওয়া যাচ্ছে না।"
 
 #: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
@@ -640,11 +639,11 @@ msgstr ""
 #: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
-msgstr ""
+msgstr "বেছে নেওয়া টেক্সটটি বল"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "প্লেব্যাক বন্ধ কর"
 
 #: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
@@ -652,11 +651,11 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
-msgstr ""
+msgstr "হার"
 
 #: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
-msgstr ""
+msgstr "প্লেব্যাক স্থগিত কর"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -664,23 +663,23 @@ msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
-msgstr ""
+msgstr "সশব্দ"
 
 #: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
-msgstr ""
+msgstr "নীরব"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "আঙ্গুল"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "লেখনী"
 
 #: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "আমার টাচপ্যাড"
 
 #: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
@@ -688,7 +687,7 @@ msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
-msgstr ""
+msgstr "জাল"
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/desktop/homewindow.py:221
