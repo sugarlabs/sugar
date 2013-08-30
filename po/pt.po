@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-15 01:02+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-08-15 15:37+0200\n"
+"Last-Translator: Alexander Dupuy <alex.dupuy@mac.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -234,11 +234,11 @@ msgstr "País:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "Fornecedor:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "Plano:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
@@ -263,12 +263,12 @@ msgstr "Número de Identificação Pessoal (PIN):"
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Plano #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Fornecedor %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -370,9 +370,8 @@ msgid "Checking %s..."
 msgstr "A verificar %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
-#, fuzzy
 msgid "Looking for updates..."
-msgstr "A verificar por atualizações..."
+msgstr "Procurando por atualizações"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
@@ -419,7 +418,7 @@ msgstr "Da versão %(current)s para a versão %(new)s (Tamanho: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:380
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
+msgstr "Versão %(version)s (Tamanho: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
@@ -735,14 +734,16 @@ msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
+"Módulo backend de atualização de atividades, seguido por um período, seguido "
+"pelo nome da classe."
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Activity update backend."
-msgstr ""
+msgstr "Backend de atualização de atividades"
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "Freqüência de atualização automática."
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
@@ -817,6 +818,8 @@ msgstr "Tamanho de letra que é utilizado no ambiente gráfico."
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"Freqüência de atualização automática de atividades, medido em dias. 0 "
+"significa desativado."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -931,8 +934,9 @@ msgid "List of keyboard options."
 msgstr "Lista de opções de teclado."
 
 #: ../data/sugar.schemas.in.h:46
+#, fuzzy
 msgid "Microformat update URL."
-msgstr ""
+msgstr "URL de atualização de microformato."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
