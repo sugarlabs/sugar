@@ -15,11 +15,13 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gtk
+from gi.repository import GObject
+from gi.repository import SugarExt
 import dbus
 import os
 import logging
 
-from sugar3 import session
+from jarabe.model import shell
 
 
 _session_manager = None
@@ -29,24 +31,64 @@ def have_systemd():
     return os.access("/run/systemd/seats", os.F_OK)
 
 
-class SessionManager(session.SessionManager):
+class SessionManager(GObject.GObject):
+    __gsignals__ = {
+        'stop': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
     MODE_LOGOUT = 0
     MODE_SHUTDOWN = 1
     MODE_REBOOT = 2
 
+    SHUTDOWN_TIMEOUT = 1
+    MAX_SHUTDOWN_TRIES = 10
+
     def __init__(self):
-        session.SessionManager.__init__(self)
+        GObject.GObject.__init__(self)
+
+        address = SugarExt.xsmp_init()
+        os.environ['SESSION_MANAGER'] = address
+        SugarExt.xsmp_run()
+
+        self.session = SugarExt.Session.create_global()
+        self._shell_model = shell.get_model()
+        self._shutdown_tries = 0
         self._logout_mode = None
 
+    def start(self):
+        self.session.start()
+        self.session.connect('shutdown_completed',
+                             self.__shutdown_completed_cb)
+
+    def initiate_shutdown(self):
+        self.session.initiate_shutdown()
+
+    def __shutdown_completed_cb(self, session):
+        GObject.timeout_add_seconds(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
+
+    def _try_shutdown(self):
+        if len(self._shell_model) > 0:
+            self._shutdown_tries += 1
+            if self._shutdown_tries < self.MAX_SHUTDOWN_TRIES:
+                # returning True, the timeout_add_seconds will try
+                # again in the specified seconds
+                return True
+
+        self.shutdown_completed()
+        return False
+
     def logout(self):
+        self.emit('stop')
         self._logout_mode = self.MODE_LOGOUT
         self.initiate_shutdown()
 
     def shutdown(self):
+        self.emit('stop')
         self._logout_mode = self.MODE_SHUTDOWN
         self.initiate_shutdown()
 
     def reboot(self):
+        self.emit('stop')
         self._logout_mode = self.MODE_REBOOT
         self.initiate_shutdown()
 
@@ -85,7 +127,7 @@ class SessionManager(session.SessionManager):
                     self.session.cancel_shutdown()
                     return
 
-        session.SessionManager.shutdown_completed(self)
+        SugarExt.xsmp_shutdown()
         Gtk.main_quit()
 
 

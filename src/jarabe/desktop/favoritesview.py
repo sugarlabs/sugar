@@ -593,8 +593,10 @@ class CurrentActivityIcon(CanvasIcon):
         window.activate(Gtk.get_current_event_time())
 
     def _update(self):
-        self.props.file_name = self._home_activity.get_icon_path()
-        self.props.xo_color = self._home_activity.get_icon_color()
+        if self._home_activity is not None:
+            self.props.file_name = self._home_activity.get_icon_path()
+            self.props.xo_color = self._home_activity.get_icon_color()
+
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
