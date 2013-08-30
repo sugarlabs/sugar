@@ -276,6 +276,9 @@ class ActivitiesTray(HTray):
     def __activity_changed_cb(self, home_model, home_activity):
         logging.debug('__activity_changed_cb: %r', home_activity)
 
+        if home_activity is None:
+            return
+
         # Only select the new activity, if there is no tabbing activity.
         if home_model.get_tabbing_activity() is None:
             self._activate_activity(home_activity)
