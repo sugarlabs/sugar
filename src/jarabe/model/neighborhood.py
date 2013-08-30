@@ -387,6 +387,9 @@ class _Account(GObject.GObject):
                 'Connection.GetMembers'))
 
     def __active_activity_changed_cb(self, model, home_activity):
+        if home_activity is None:
+            return
+
         room_handle = 0
         home_activity_id = home_activity.get_activity_id()
         for handle, activity_id in self._activity_handles.items():
