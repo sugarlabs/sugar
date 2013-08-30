@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-15 13:55+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-08-29 17:17+0200\n"
+"Last-Translator: filmsi <miles@filmsi.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -121,11 +121,11 @@ msgstr "Ozadje"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr ""
+msgstr "Izberite ozadje:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
-msgstr ""
+msgstr "Počisti ozadje"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -202,7 +202,7 @@ msgstr "Dostop do ~/.i18n ni mogoče. Ustvari standardne nastavitve."
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
 msgid "Language for code=%s could not be determined."
-msgstr "Jezika za kodo=%s ni bilo mogoče določiti."
+msgstr "Jezika za kodo %s ni bilo mogoče določiti."
 
 #: ../extensions/cpsection/language/model.py:152
 #, python-format
@@ -217,7 +217,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Konfiguracija Modema"
+msgstr "Konfiguracija modema"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -227,11 +227,11 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Država:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "Ponudnik:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
@@ -251,7 +251,7 @@ msgstr "Številka:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Ime Dostopne Točke (APN):"
+msgstr "Ime dostopne točke (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
@@ -260,12 +260,12 @@ msgstr ""
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Paket #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Ponudnik %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -290,19 +290,20 @@ msgstr "Brezžično"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Izklopi brezžično radijsko povezavo za podaljšanje trajanja baterije"
+msgstr ""
+"Izklopi anteno za brezžično omrežje z namenom podaljšanja trajanja baterije"
 
 #: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
-msgstr "Radijska povezava"
+msgstr "Antena"
 
 #: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
-msgstr "Zavrži zgodovino mreže, če imate težave pri povezavi z mrežo"
+msgstr "Zavrzi zgodovino omrežja, če imate težave pri povezavi z omrežjem"
 
 #: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
-msgstr "Zavrži zgodovino mreže"
+msgstr "Zavrzi zgodovino omrežja"
 
 #: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
@@ -351,15 +352,15 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "Posodobitev je v teku ..."
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Preverjanje obstoja posodobitev ..."
 
 #: ../extensions/cpsection/updater/view.py:108
 msgid "Installing updates..."
-msgstr ""
+msgstr "Nameščanje posodobitev ..."
 
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
@@ -368,7 +369,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
-msgstr ""
+msgstr "Iskanje posodobitev ..."
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
@@ -423,9 +424,8 @@ msgstr ""
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
-#, fuzzy
 msgid "None"
-msgstr "Končano"
+msgstr "Brez"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:400
@@ -484,7 +484,7 @@ msgstr "Polno"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
-msgstr ""
+msgstr "Pokaži tipkovnico"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -504,7 +504,7 @@ msgstr "Prekini"
 #: ../src/jarabe/desktop/networkviews.py:551
 #: ../src/jarabe/desktop/networkviews.py:693
 msgid "Connecting..."
-msgstr "Povezujem..."
+msgstr "Povezovanje v teku ..."
 
 # TODO: show the channel number
 #: ../extensions/deviceicon/network.py:112
@@ -513,7 +513,7 @@ msgstr "Povezujem..."
 #: ../src/jarabe/desktop/networkviews.py:557
 #: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
-msgstr "Povezan"
+msgstr "Povezani"
 
 #: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
@@ -533,11 +533,11 @@ msgstr "Hitrost"
 
 #: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
-msgstr ""
+msgstr "Brezžični modem"
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
-msgstr ""
+msgstr "Prosimo, počakajte ..."
 
 #: ../extensions/deviceicon/network.py:281
 #: ../src/jarabe/desktop/networkviews.py:129
@@ -548,7 +548,7 @@ msgstr "Poveži"
 
 #: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
-msgstr "Odklopljen"
+msgstr "Odklopljeni"
 
 #: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
@@ -569,7 +569,7 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Napaka: %s"
 
 #: ../extensions/deviceicon/network.py:335
 #, python-format
@@ -622,29 +622,29 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Govor"
 
 #: ../extensions/deviceicon/speech.py:76
 #: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
-msgstr ""
+msgstr "Izgovori izbrano besedilo"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Ustavi predvajanje"
 
 #: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
-msgstr ""
+msgstr "Višina tona"
 
 #: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
-msgstr ""
+msgstr "Hitrost"
 
 #: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
-msgstr ""
+msgstr "Prekini predvajanje"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
@@ -653,11 +653,11 @@ msgstr "Moji zvočniki"
 # malo težko je UNMUTE prevest drugače
 #: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
-msgstr "Glasno"
+msgstr "Slišno"
 
 #: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
-msgstr "Tiho"
+msgstr "Nemo"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
@@ -677,7 +677,7 @@ msgstr "Prikaži vsebino"
 
 #: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
-msgstr "Mesh"
+msgstr ""
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/desktop/homewindow.py:221
@@ -695,7 +695,7 @@ msgstr "Domov"
 #: ../extensions/globalkey/screenshot.py:71
 #: ../src/jarabe/frame/zoomtoolbar.py:62
 msgid "Activity"
-msgstr "Aktivnost"
+msgstr "Dejavnost"
 
 #: ../extensions/globalkey/screenshot.py:74
 msgid "Screenshot"
@@ -757,15 +757,15 @@ msgstr "Zamik pri kotu"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
-msgstr ""
+msgstr "Privzeta pisava"
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
-msgstr ""
+msgstr "Privzeta velikost pisave"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
-msgstr ""
+msgstr "Privzeti vzdevek"
 
 #: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
@@ -891,9 +891,8 @@ msgid "Keyboard layouts"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:41
-#, fuzzy
 msgid "Keyboard model"
-msgstr "Model Tipkovnice"
+msgstr "Model tipkovnice"
 
 #: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
@@ -997,11 +996,11 @@ msgstr "Barva uporabnika"
 
 #: ../data/sugar.schemas.in.h:67
 msgid "User Name"
-msgstr "Uporabnikovo ime"
+msgstr "Uporabniško ime"
 
 #: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
-msgstr "Uporabnikovo ime, ki se uporablja po celotnem namizju."
+msgstr "Uporabniško ime, ki se uporablja po celotnem namizju."
 
 #: ../data/sugar.schemas.in.h:69
 msgid ""
@@ -1107,7 +1106,7 @@ msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "Nastavitve"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1122,7 +1121,7 @@ msgstr "V redu"
 #: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format
 msgid "Version %s"
-msgstr ""
+msgstr "Različica %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
@@ -1232,11 +1231,11 @@ msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
-msgstr "Tip ključa:"
+msgstr "Vrsta ključa:"
 
 #: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
-msgstr "Tip prepoznave:"
+msgstr "Vrsta overjanja:"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
@@ -1244,7 +1243,7 @@ msgstr "WPA in WPA2 Osebni ključ"
 
 #: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
-msgstr "Varovanje brezžičnega omrežja:"
+msgstr "Varnost brezžičnega omrežja:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1369,19 +1368,19 @@ msgstr "%s strižem"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:106
 msgid "Name:"
@@ -1389,7 +1388,7 @@ msgstr "Ime:"
 
 #: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
-msgstr "Klikni za spremembo barve:"
+msgstr "Kliknite za spremembo barve:"
 
 #: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
@@ -1412,7 +1411,7 @@ msgstr ""
 #: ../src/jarabe/journal/volumestoolbar.py:131
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr "Neimenovan"
+msgstr "Neimenovano"
 
 #: ../src/jarabe/journal/expandedentry.py:367
 msgid "No preview"
@@ -1427,17 +1426,17 @@ msgstr ""
 #: ../src/jarabe/journal/listmodel.py:165
 #: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
-msgstr ""
+msgstr "Neznano"
 
 #: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Date: %s"
-msgstr ""
+msgstr "Datum: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:384
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "Velikost: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:411
 #: ../src/jarabe/journal/misc.py:109
@@ -1458,18 +1457,18 @@ msgstr "Oznake:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "Komentarji:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #: ../src/jarabe/journal/palettes.py:248
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
-msgstr "Beležka"
+msgstr "Dnevnik"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr ""
+msgstr "Priljubljeni vnosi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
@@ -1503,7 +1502,7 @@ msgstr "V zadnjem letu"
 
 #: ../src/jarabe/journal/journaltoolbox.py:151
 msgid "Anyone"
-msgstr "Kdorkoli"
+msgstr "Vsi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My friends"
@@ -1521,29 +1520,29 @@ msgstr "Karkoli"
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
-msgstr ""
+msgstr "Kopiraj v"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "Podvoji"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "Osveži"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Napaka pri kopiranju vnosa. %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:471
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "Napaka"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
@@ -1598,20 +1597,19 @@ msgstr ""
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
-msgstr "Tvoja beležka je prazna"
+msgstr "Vaš dnevnik je prazen"
 
 #: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Mapa z dokumenti je prazna."
 
 #: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
-msgstr ""
+msgstr "Naprava je prazna."
 
 #: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
-#, fuzzy
 msgid "No matching entries"
-msgstr "Ne najdem vsebine za"
+msgstr "Ni zadetkov."
 
 #: ../src/jarabe/journal/misc.py:252
 #, python-format
@@ -1625,7 +1623,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
-msgstr "Tvoja beležka je polna"
+msgstr "Vaš dnevnik je poln."
 
 #: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
@@ -1633,7 +1631,7 @@ msgstr "Izbriši starejše vpise v beležko, da narediš prostor za nove."
 
 #: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
-msgstr "Prikaži beležko"
+msgstr "Pokaži dnevnik"
 
 #: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
@@ -1659,7 +1657,7 @@ msgstr "Začni z"
 
 #: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
-msgstr "Ni aktivnosti za začetek"
+msgstr "Ni dejavnosti za začetek vnosa"
 
 #: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
@@ -1667,7 +1665,7 @@ msgstr "Pošlji"
 
 #: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
-msgstr "Poglej podrobnosti"
+msgstr "Pokaži podrobnosti"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
@@ -1675,9 +1673,8 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
-#, fuzzy
 msgid "Documents"
-msgstr "Dokument"
+msgstr "Dokumenti"
 
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
@@ -1695,7 +1692,7 @@ msgstr[3] ""
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
-msgstr ""
+msgstr "Odložišče"
 
 #: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
@@ -1707,7 +1704,7 @@ msgstr "Na voljo ni nobena veljavna povezava"
 
 #: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
-msgstr "Ni aktivnosti za nadaljevanje"
+msgstr "Ni dejavnosti za nadaljevanje vnosa"
 
 #: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
 msgid "Stop"
@@ -1715,7 +1712,7 @@ msgstr "Ustavi"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Nadaljuj"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
@@ -1951,7 +1948,7 @@ msgstr ""
 
 #: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
-msgstr "Zaganjam..."
+msgstr "Zaganjanje ..."
 
 #: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
@@ -1967,7 +1964,6 @@ msgid "Start new"
 msgstr ""
 
 #: ../src/jarabe/view/palettes.py:241
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Odstrani"
