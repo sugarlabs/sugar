@@ -28,6 +28,7 @@ from gwebsockets.server import Message
 from sugar3 import env
 
 from jarabe.model import shell
+from jarabe.model import session
 
 
 class StreamMonitor(object):
@@ -53,6 +54,9 @@ class ActivityAPI(API):
         self._activity.connect('resume', self._resume_cb)
         self._activity.connect('stop', self._stop_cb)
 
+        session.get_session_manager().shutdown_signal.connect(
+            self._session_manager_shutdown_cb)
+
     def get_xo_color(self, request):
         gconf_client = GConf.Client.get_default()
         color_string = gconf_client.get_string('/desktop/sugar/user/color')
@@ -77,6 +81,9 @@ class ActivityAPI(API):
         # closing.
         self._client.send_notification("activity.stop")
         return True
+
+    def _session_manager_shutdown_cb(self, event):
+        self._client.send_notification("activity.stop")
 
 
 class DatastoreAPI(API):
