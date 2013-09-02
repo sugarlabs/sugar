@@ -22,13 +22,15 @@ import time
 import dbus
 from gi.repository import GConf
 from gi.repository import GLib
+from gi.repository import Gtk
 from gwebsockets.server import Server
 from gwebsockets.server import Message
 
 from sugar3 import env
+from sugar3 import mime
 
 from jarabe.model import shell
-
+from jarabe.journal.objectchooser import ObjectChooser
 
 class StreamMonitor(object):
     def __init__(self):
@@ -78,6 +80,24 @@ class ActivityAPI(API):
         self._client.send_notification("activity.stop")
         return True
 
+    def choose_object(self, request):
+        try:
+            chooser = ObjectChooser(self._activity, what_filter='',
+                                    filter_type=FILTER_TYPE_MIME_BY_ACTIVITY,
+                                    show_preview=True)
+        except:
+            chooser = ObjectChooser(parent=self,
+                                    what_filter=mime.GENERIC_TYPE_TEXT) 
+
+        chooser.connect('response', self._chooser_response_cb, request)
+        chooser.show()
+        
+    def _chooser_response_cb(self, chooser, response_id, request):        
+        if response_id == Gtk.ResponseType.ACCEPT:
+            object_id = chooser.get_selected_object_id()
+            self._client.send_result(request, [object_id])
+            
+        chooser.destroy()
 
 class DatastoreAPI(API):
     def __init__(self, client):
