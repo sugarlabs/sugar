@@ -1,15 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Chris Leonard <cjlhomeaddress@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 18:54+0200\n"
-"Last-Translator: Odette <odettepret@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2013-09-03 01:46+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
+"Language-Team: Sugar Labs\n"
 "Language: af\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +36,7 @@ msgid "stroke:   %s"
 msgstr ""
 
 #: ../extensions/cpsection/aboutme/model.py:80
+#, python-format
 #, python-format, fuzzy
 msgid "fill:     color=%s hue=%s"
 msgstr "Vul: Kleur=%s kleur=%s"
@@ -174,11 +175,11 @@ msgstr "Rand"
 #: ../extensions/cpsection/keyboard/__init__.py:21
 #: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
-msgstr ""
+msgstr "Sleutelbord"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr ""
+msgstr "Sleutelbord Model:"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
@@ -186,7 +187,7 @@ msgstr "Sleutel(s) om uitleg te verander"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "Sleutelborduitleg"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -336,52 +337,54 @@ msgstr ""
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr ""
+msgstr "Krag bestuur"
 
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "Outomatiese krag bestuur (verhoog battery lewe)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr ""
+msgstr "Sagteware Opdateer"
 
 #: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"Sagteware opdatering stel foute reg, skakel sekuriteits kwesbaarheid uit en "
+"voorsien nuwe funksies."
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "Opdatering onderweg..."
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
-msgstr ""
+msgstr "Soek na opdaterings..."
 
 #: ../extensions/cpsection/updater/view.py:108
 msgid "Installing updates..."
-msgstr ""
+msgstr "Installeer opdaterings..."
 
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "Soek %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
-msgstr ""
+msgstr "Soek na opdaterings..."
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
-msgstr ""
+msgstr "Laai tans %s af…"
 
 #: ../extensions/cpsection/updater/view.py:143
-#, python-format
+#, fuzzy, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Dateer tans op %s..."
 
 #: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
@@ -406,9 +409,9 @@ msgid "Install selected"
 msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:284
-#, python-format
+#, fuzzy, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "Grootte van aflaai: %s"
 
 #: ../extensions/cpsection/updater/view.py:373
 #, python-format
@@ -427,20 +430,21 @@ msgstr "Geen"
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:400
+#, fuzzy
 msgid "1 KB"
-msgstr ""
+msgstr "1 KG"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:403
-#, python-format
+#, fuzzy, python-format
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f KG"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:406
-#, python-format
+#, fuzzy, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MG"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
@@ -463,8 +467,9 @@ msgid "Removed"
 msgstr "Verwyder"
 
 #: ../extensions/deviceicon/battery.py:156
+#, fuzzy
 msgid "Charging"
-msgstr ""
+msgstr "Laai tans"
 
 #: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
@@ -478,17 +483,18 @@ msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d oor"
 
 #: ../extensions/deviceicon/battery.py:169
+#, fuzzy
 msgid "Charged"
-msgstr ""
+msgstr "Volgelaai"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:50
-#, python-format
+#, fuzzy, python-format
 msgid "IP address: %s"
-msgstr ""
+msgstr "IP-adres: %s"
 
 #: ../extensions/deviceicon/network.py:82
 #: ../extensions/deviceicon/network.py:298
@@ -523,20 +529,23 @@ msgid "Channel"
 msgstr "Kanaal"
 
 #: ../extensions/deviceicon/network.py:154
+#, fuzzy
 msgid "Wired Network"
-msgstr ""
+msgstr "Draadnetwerk"
 
 #: ../extensions/deviceicon/network.py:183
+#, fuzzy
 msgid "Speed"
-msgstr ""
+msgstr "Spoed"
 
 #: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:276
+#, fuzzy
 msgid "Please wait..."
-msgstr ""
+msgstr "Wag asseblief..."
 
 #: ../extensions/deviceicon/network.py:281
 #: ../src/jarabe/desktop/networkviews.py:129
@@ -566,14 +575,14 @@ msgid "Try connection again"
 msgstr ""
 
 #: ../extensions/deviceicon/network.py:331
-#, python-format
+#, fuzzy, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Fout: %s"
 
 #: ../extensions/deviceicon/network.py:335
-#, python-format
+#, fuzzy, python-format
 msgid "Suggestion: %s"
-msgstr ""
+msgstr "Voorstelle: %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
@@ -582,9 +591,9 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:350
 #: ../extensions/deviceicon/network.py:351
-#, python-format
+#, fuzzy, python-format
 msgid "%d KB"
-msgstr ""
+msgstr "%d KG"
 
 #: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
@@ -630,36 +639,43 @@ msgid "Say selected text"
 msgstr ""
 
 #: ../extensions/deviceicon/speech.py:83
+#, fuzzy
 msgid "Stop playback"
-msgstr ""
+msgstr "Stop terugspeel"
 
 #: ../extensions/deviceicon/speech.py:92
+#, fuzzy
 msgid "Pitch"
-msgstr ""
+msgstr "Toonhoogte"
 
 #: ../extensions/deviceicon/speech.py:107
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "Koers"
 
 #: ../extensions/deviceicon/speech.py:145
+#, fuzzy
 msgid "Pause playback"
-msgstr ""
+msgstr "Pouseer terugspeel"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr ""
 
 #: ../extensions/deviceicon/speaker.py:136
+#, fuzzy
 msgid "Unmute"
-msgstr ""
+msgstr "Hoor weer"
 
 #: ../extensions/deviceicon/speaker.py:139
+#, fuzzy
 msgid "Mute"
-msgstr ""
+msgstr "Dower"
 
 #: ../extensions/deviceicon/touchpad.py:38
+#, fuzzy
 msgid "finger"
-msgstr ""
+msgstr "vinger"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
@@ -696,8 +712,9 @@ msgid "Activity"
 msgstr "Aktiwiteit"
 
 #: ../extensions/globalkey/screenshot.py:74
+#, fuzzy
 msgid "Screenshot"
-msgstr ""
+msgstr "Skermkiekie"
 
 #: ../extensions/globalkey/screenshot.py:76
 #, python-format
@@ -874,12 +891,14 @@ msgid "Jabber Server"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:40
+#, fuzzy
 msgid "Keyboard layouts"
-msgstr ""
+msgstr "Sleutelbord uitleg"
 
 #: ../data/sugar.schemas.in.h:41
+#, fuzzy
 msgid "Keyboard model"
-msgstr ""
+msgstr "Sleutelbord model"
 
 #: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
@@ -947,8 +966,9 @@ msgid "Show Sugar Ad-hoc networks"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:58
+#, fuzzy
 msgid "Sound Muted"
-msgstr ""
+msgstr "Klank af"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
@@ -980,8 +1000,9 @@ msgid "User Color"
 msgstr ""
 
 #: ../data/sugar.schemas.in.h:67
+#, fuzzy
 msgid "User Name"
-msgstr ""
+msgstr "Gebruiker Naam"
 
 #: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
@@ -1074,8 +1095,9 @@ msgid "Search in %s"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
+#, fuzzy
 msgid "Settings"
-msgstr ""
+msgstr "Opstelling"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1088,14 +1110,15 @@ msgid "Ok"
 msgstr "Reg"
 
 #: ../src/jarabe/desktop/activitieslist.py:282
-#, python-format
+#, fuzzy, python-format
 msgid "Version %s"
-msgstr ""
+msgstr "Weergawe %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
+#, fuzzy
 msgid "Clear search"
-msgstr ""
+msgstr "Wis soektog"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
@@ -1128,8 +1151,9 @@ msgid "Erase"
 msgstr "Uitwis"
 
 #: ../src/jarabe/desktop/activitieslist.py:594
+#, fuzzy
 msgid "Remove favorite"
-msgstr ""
+msgstr "Verwyder uit gunstelinge"
 
 #: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
@@ -1152,13 +1176,15 @@ msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:527
+#, fuzzy
 msgid "Box"
-msgstr ""
+msgstr "Boks"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:570
+#, fuzzy
 msgid "Triangle"
-msgstr ""
+msgstr "Driehoek"
 
 #: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
@@ -1206,8 +1232,9 @@ msgid "WPA & WPA2 Personal"
 msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:242
+#, fuzzy
 msgid "Wireless Security:"
-msgstr ""
+msgstr "Draadloos-sekuriteit:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1241,15 +1268,16 @@ msgid "The server could not complete the request."
 msgstr ""
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
+#, fuzzy
 msgid "List view"
-msgstr ""
+msgstr "Lysaangesig"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
-#, python-format
+#, fuzzy, python-format
 msgid "<Ctrl>%d"
-msgstr ""
+msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
@@ -1262,19 +1290,19 @@ msgid "Decline"
 msgstr "Weier"
 
 #: ../src/jarabe/frame/activitiestray.py:534
-#, python-format
+#, fuzzy, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%dG"
 
 #: ../src/jarabe/frame/activitiestray.py:536
-#, python-format
+#, fuzzy, python-format
 msgid "%dKB"
-msgstr ""
+msgstr "%dKG"
 
 #: ../src/jarabe/frame/activitiestray.py:538
-#, python-format
+#, fuzzy, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%dMG"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:556
@@ -1288,8 +1316,9 @@ msgid "Transfer from %s"
 msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:585
+#, fuzzy
 msgid "Accept"
-msgstr ""
+msgstr "Aanvaar"
 
 #: ../src/jarabe/frame/activitiestray.py:653
 #: ../src/jarabe/frame/activitiestray.py:666
@@ -1328,19 +1357,19 @@ msgstr ""
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:106
 msgid "Name:"
@@ -1385,18 +1414,19 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:382
 #: ../src/jarabe/journal/listmodel.py:165
 #: ../src/jarabe/journal/listmodel.py:173
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "Onbekend"
 
 #: ../src/jarabe/journal/expandedentry.py:383
-#, python-format
+#, fuzzy, python-format
 msgid "Date: %s"
-msgstr ""
+msgstr "Datum: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:384
-#, python-format
+#, fuzzy, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "Grootte: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:411
 #: ../src/jarabe/journal/misc.py:109
@@ -1416,8 +1446,9 @@ msgid "Tags:"
 msgstr "Etikette:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
+#, fuzzy
 msgid "Comments:"
-msgstr ""
+msgstr "Opmerkings:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1479,17 +1510,20 @@ msgstr "Enigiets"
 
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:99
+#, fuzzy
 msgid "Copy to"
-msgstr ""
+msgstr "Kopieer na"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
+#, fuzzy
 msgid "Duplicate"
-msgstr ""
+msgstr "Dupliseer"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
+#, fuzzy
 msgid "Refresh"
-msgstr ""
+msgstr "Verfris"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
@@ -1501,8 +1535,9 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:471
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
+#, fuzzy
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
@@ -1528,12 +1563,14 @@ msgid "Sort view"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
+#, fuzzy
 msgid "Deselect all"
-msgstr ""
+msgstr "Ontkies Alle"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
+#, fuzzy
 msgid "Select all"
-msgstr ""
+msgstr "Kies almal"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
@@ -1619,12 +1656,14 @@ msgid "No activity to start entry"
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:118
+#, fuzzy
 msgid "Send to"
-msgstr ""
+msgstr "Stuur vir"
 
 #: ../src/jarabe/journal/palettes.py:127
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "Bekyk besonderhede"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
@@ -1632,8 +1671,9 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
@@ -1648,16 +1688,18 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../src/jarabe/journal/palettes.py:394
+#, fuzzy
 msgid "Clipboard"
-msgstr ""
+msgstr "Knipbord"
 
 #: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:459
+#, fuzzy
 msgid "No valid connection found"
-msgstr ""
+msgstr "Geen geldige aktiewe verbindings gevind nie!"
 
 #: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
@@ -1668,8 +1710,9 @@ msgid "Stop"
 msgstr "Stop"
 
 #: ../src/jarabe/journal/palettes.py:561
+#, fuzzy
 msgid "Continue"
-msgstr ""
+msgstr "Gaan voort"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
@@ -1866,8 +1909,9 @@ msgid "The Bluetooth connection failed or timed out."
 msgstr ""
 
 #: ../src/jarabe/model/network.py:308
+#, fuzzy
 msgid "Unused."
-msgstr ""
+msgstr "Ongebruik."
 
 #: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
@@ -1886,12 +1930,14 @@ msgid "Restart"
 msgstr "Herbegin"
 
 #: ../src/jarabe/view/buddymenu.py:104
+#, fuzzy
 msgid "Logout"
-msgstr ""
+msgstr "Afmelding"
 
 #: ../src/jarabe/view/buddymenu.py:109
+#, fuzzy
 msgid "My Settings"
-msgstr ""
+msgstr "My Instellings"
 
 #: ../src/jarabe/view/buddymenu.py:149
 #, python-format
@@ -1913,8 +1959,9 @@ msgstr ""
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
+#, fuzzy
 msgid "View Source"
-msgstr ""
+msgstr "Bekyk bronkode"
 
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
@@ -1931,8 +1978,9 @@ msgid "Instance Source"
 msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:320
+#, fuzzy
 msgid "Source"
-msgstr ""
+msgstr "Bron"
 
 #: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
