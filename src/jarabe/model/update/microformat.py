@@ -251,7 +251,7 @@ class MicroformatUpdater(object):
         if isinstance(result, Exception):
             _logger.warning("Failed to perform size lookup: %s", result)
         else:
-            self._bundle_update.size = result()
+            self._bundle_update.size = result
             self._updates.append(self._bundle_update)
 
         GLib.idle_add(self._check_next_update)

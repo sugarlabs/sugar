@@ -93,7 +93,7 @@ class Updater(GObject.GObject):
             self.check_updates(True)
 
     def check_updates(self, auto=False):
-        if self._state != STATE_IDLE:
+        if self._state not in (STATE_IDLE, STATE_CHECKED):
             raise UpdaterStateException()
 
         self._auto = auto
