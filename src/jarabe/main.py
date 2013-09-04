@@ -35,6 +35,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 import gettext
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
 
 from gi.repository import Gio
 from gi.repository import GLib
