@@ -158,11 +158,10 @@ class JournalActivity(JournalWindow):
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK |
                         Gdk.EventMask.VISIBILITY_NOTIFY_MASK)
         self._realized_sid = self.connect('realize', self.__realize_cb)
-        self.connect('visibility-notify-event',
-                     self.__visibility_notify_event_cb)
         self.connect('window-state-event', self.__window_state_event_cb)
         self.connect('key-press-event', self._key_press_event_cb)
         self.connect('focus-in-event', self._focus_in_event_cb)
+        self.connect('focus-out-event', self._focus_out_event_cb)
 
         model.created.connect(self.__model_created_cb)
         model.updated.connect(self.__model_updated_cb)
@@ -351,7 +350,10 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
-        self._list_view.update_dates()
+        self._list_view.set_is_visible(True)
+
+    def _focus_out_event_cb(self, window, event):
+        self._list_view.set_is_visible(False)
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
@@ -359,11 +361,6 @@ class JournalActivity(JournalWindow):
             state = event.new_window_state
             visible = not state & Gdk.WindowState.ICONIFIED
             self._list_view.set_is_visible(visible)
-
-    def __visibility_notify_event_cb(self, window, event):
-        logging.debug('visibility_notify_event_cb %r', self)
-        visible = event.get_state() != Gdk.VisibilityState.FULLY_OBSCURED
-        self._list_view.set_is_visible(visible)
 
     def _check_available_space(self):
         """Check available space on device
