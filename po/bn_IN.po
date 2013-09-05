@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 20:43+0200\n"
+"PO-Revision-Date: 2013-09-03 23:02+0200\n"
 "Last-Translator: Mohona <mohonabose@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
@@ -266,7 +266,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "ব্যক্তিগত পরিচিতি সংখ্যা (পিন)"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
@@ -383,12 +383,12 @@ msgstr "আপডেট খোঁজা চলছে..."
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
-msgstr ""
+msgstr "ডাউনলোড করা হচ্ছে %s..."
 
 #: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "আপডেট করা হচ্ছে %s..."
 
 #: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
@@ -410,12 +410,12 @@ msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
-msgstr ""
+msgstr "ইনস্টল বেছে নেওয়া হয়েছে"
 
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "ডাউনলোডের পরিমাণ হল: %s "
 
 #: ../extensions/cpsection/updater/view.py:373
 #, python-format
