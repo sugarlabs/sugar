@@ -21,6 +21,9 @@ import sys
 import dbus
 import argparse
 
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+
 from sugar3.activity import activityfactory
 from sugar3.bundle.activitybundle import ActivityBundle
 
