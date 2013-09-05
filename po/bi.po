@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-01 01:47+0200\n"
+"PO-Revision-Date: 2013-09-05 05:59+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: bi\n"
@@ -858,8 +858,8 @@ msgstr "Dilei blong ej"
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Manajem paoa bigwan (disebol redio blong waeales, i mekem se lbatri i save "
-"go longtaem moa)"
+"Manajem paoa bigwan (disebol redio blong waeales, i mekem se batri i save go "
+"longtaem moa)"
 
 #: ../data/sugar.schemas.in.h:18
 #, fuzzy
@@ -934,28 +934,39 @@ msgstr ""
 #: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Fasin blong setemap namba blong telefon blong netwok GSM (OLFALA/ OLI NOMO "
+"YUSUM)"
 
 #: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Nem blong man we i yusum netwok GSM (username) (OLFALA/ OLI NOMO YUSUM)"
 
 #: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Fasin blong setemap nem blong man we i yusum netwok GSM (username) (OLFALA/ "
+"OLI NOMO YUSUM)"
 
 #: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
+"Sipos hemi TRUE, Sugar mbae hemi mekem se ol narafala we i stap long Jabber "
+"seva oli save lukaotem yumi."
 
 #: ../data/sugar.schemas.in.h:36
+#, fuzzy
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr ""
+"Sipos hemi TRUE, Sugar mbae hemi soem wan samting blong yu save jusum "
+"\"Finisim taem blong yu wan long komputa\""
 
 #: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr ""
+"Sipos hemi TRUE, Sugar mbae hemi soem wan samting blong yu save jusum "
+"\"Statem komputa bakegen\"."
 
 #: ../data/sugar.schemas.in.h:38
 msgid ""
@@ -963,10 +974,13 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Sipos hemi TRUE, Sugar mbae hemi soem ol Ad-hoc netwok blong janel 1,6 mo "
+"11. Sipos Sugar luk se i no gat netwok we hemi save finis taem we hemi stat, "
+"hemi mekem koneksen automatik (i mekem hem wan) long wan Ad-hoc netwok."
 
 #: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
-msgstr ""
+msgstr "Jabber Seva"
 
 #: ../data/sugar.schemas.in.h:40
 #, fuzzy
@@ -980,128 +994,151 @@ msgstr "Kaen blong ol ki blong taep"
 
 #: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
-msgstr ""
+msgstr "Ol samting we yu save jenisim long saed blong ol ki blong taep"
 
 #: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
-msgstr ""
+msgstr "Fasin blong soem ol fevrit."
 
 #: ../data/sugar.schemas.in.h:44
+#, fuzzy
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
+"Lis blong ol fasin we ol ki blong taep oli stap. Evri samting long lis i mas "
+"gat fasin olsem: fasin(kaen)"
 
 #: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
 msgstr ""
+"Lis blong ol samting we yu save jenisim long saed blong ol ki blong taep"
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Microformat update URL."
-msgstr ""
+msgstr "URL wetem ol niufala pat blong fasin smolsmol (microformat)."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Kaen blong saon blong sevis blong toktok blong Sugar"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Kaen blong saon blong sevis blong toktok long Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
-msgstr ""
+msgstr "Paoa automatik (komputa i manajem paoa hem wan)"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
-msgstr ""
+msgstr "Paoa bigwan"
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
-msgstr ""
+msgstr "Raetem go long Gadget"
 
 #: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Spid blong sevis blong toktok blong Sugar"
 
 #: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Spid blong sevis blong toktok long Sugar"
 
 #: ../data/sugar.schemas.in.h:54
+#, fuzzy
 msgid "Setting for muting the sound device."
-msgstr ""
+msgstr "Fasin blong setemap blong mekem se i no mekem nois"
 
 #: ../data/sugar.schemas.in.h:55
+#, fuzzy
 msgid "Show Log out"
-msgstr ""
+msgstr "Soem Finisim taem long komputa blong yu wan"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr ""
+msgstr "Soem Statem komputa bakegen"
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Soem ol Ad-hoc netwok blong Sugar"
 
 #: ../data/sugar.schemas.in.h:58
+#, fuzzy
 msgid "Sound Muted"
-msgstr ""
+msgstr "Bae i no mekem saon"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
-msgstr ""
+msgstr "Kaen blong ol ki blong taep we mbae i yusum"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "Mak blong taem blong lastaem we i karem ol niufala pat blong aktiviti."
 
 #: ../data/sugar.schemas.in.h:62
+#, fuzzy
 msgid "Timezone setting for the system."
-msgstr ""
+msgstr "Zon blong taem blong sistem."
 
 #: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
-msgstr ""
+msgstr "URL we Jabber seva mbae i yusum."
 
 #: ../data/sugar.schemas.in.h:64
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"URL we baksaed blong karem ol niufala pat blong fasin smolsmol (microformat) "
+"i yusum blong karem ol infomesen blong ol niufala pat blong ol aktiviti."
 
 #: ../data/sugar.schemas.in.h:65
+#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr ""
+"URL we hemi ples we i sevem ol infomesen blong karembak ol samting sipos "
+"trabol i hapen."
 
 #: ../data/sugar.schemas.in.h:66
+#, fuzzy
 msgid "User Color"
-msgstr ""
+msgstr "Kala blong man we i yusum"
 
 #: ../data/sugar.schemas.in.h:67
+#, fuzzy
 msgid "User Name"
-msgstr ""
+msgstr "Nem blong man we i yusum"
 
 #: ../data/sugar.schemas.in.h:68
+#, fuzzy
 msgid "User name that is used throughout the desktop."
-msgstr ""
+msgstr "Nem blong man we i yusum we i yusum long evri ples long destop."
 
 #: ../data/sugar.schemas.in.h:69
+#, fuzzy
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Ol man we oli yusum mbae oli no save karemaot ol aktiviti ia long fasin "
+"blong luk long lis"
 
 #: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
-msgstr ""
+msgstr "Level blong saon"
 
 #: ../data/sugar.schemas.in.h:71
+#, fuzzy
 msgid "Volume level for the sound device."
-msgstr ""
+msgstr "Level blong saon blong samting we i mekem saon"
 
 #: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
 msgstr ""
+"Taem we yu stap long fasin blong gobak long sem ples, klikim long smol pikja "
+"we hemi fevrit mbae i mekem se aktiviti ia mbae i gobak long sem ples we yu "
+"stap lastaem we yu yusum aktiviti ia."
 
 #: ../src/jarabe/controlpanel/cmd.py:28
 #, python-format
@@ -1109,16 +1146,18 @@ msgid ""
 "sugar-control-panel: WARNING, found more than one option with the same name: "
 "%s module: %r"
 msgstr ""
+"sugar-control-panel: LUKAOT, i faenem moa bitim wan samting we yu save "
+"jenisim we i gat nem we oli semak: %s modul: %r"
 
 #: ../src/jarabe/controlpanel/cmd.py:30
 #, python-format
 msgid "sugar-control-panel: key=%s not an available option"
-msgstr ""
+msgstr "sugar-control-panel: ki=%s hemi no wan samting we yu save jusum."
 
 #: ../src/jarabe/controlpanel/cmd.py:31
 #, python-format
 msgid "sugar-control-panel: %s"
-msgstr ""
+msgstr "sugar-control-panel: %s"
 
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
@@ -1135,84 +1174,99 @@ msgid ""
 "    -c key       clear the current value for the key \n"
 "    "
 msgstr ""
+"Fasin blong yusum: sugar-control-panel [samting we yu save jenisim] ki [args "
+"... ]\n"
+"    Fasin blong kontrolem blong ples blong sugar. \n"
+"    Ol samting we yu save jenisim: \n"
+"    -h           soem mesej blong halp mo klosem \n"
+"    -l           soem lis blong ol samting we yu save jenisim \n"
+"    -h ki       soem infomesen long saed blong ki ia \n"
+"    -g ki       karem namba blong ki ia naoia \n"
+"    -s ki       putum namba blong ki ia naoia \n"
+"    -c ki       kliarem namba blong ki ia naoia \n"
+"    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr ""
+msgstr "Blong finisim ol jenis we yu mekem, mbae yu mas statem Sugar bakegen.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
 #: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
+#, fuzzy
 msgid "Warning"
-msgstr ""
+msgstr "Lukaot"
 
 #: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr ""
+msgstr "Ol jenis min se yu mas statem komputa bakegen"
 
 #: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
-msgstr ""
+msgstr "Kanselem ol jenis"
 
 #: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
-msgstr ""
+msgstr "Afta"
 
 #: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
-msgstr ""
+msgstr "Statem bakegen naoia"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "Lukaotem long %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
+#, fuzzy
 msgid "Settings"
-msgstr ""
+msgstr "Ol fasin blong wok"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
-#, fuzzy
 msgid "Done"
-msgstr "No gat"
+msgstr "Finis"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 #: ../src/jarabe/desktop/favoritesview.py:374
 #: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../src/jarabe/desktop/activitieslist.py:282
-#, python-format
+#, python-format, 
 msgid "Version %s"
-msgstr ""
+msgstr "Vesin %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
+#, fuzzy
 msgid "Clear search"
-msgstr ""
+msgstr "Kliarem ol samting blong lukaotem"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
-msgstr ""
+msgstr "I no faenem aktiviti we i semak wetem wanem yu talem"
 
 #: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
-msgstr ""
+msgstr "Talem se hemi oraet tru blong karemaot"
 
 #: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr ""
+"Talem se hemi oraet tru blong karemaot: yu sua se yu wantem karemaot we yu "
+"no save karem bak hemia %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:511
 #: ../src/jarabe/frame/clipboardmenu.py:65
 #: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
-msgstr ""
+msgstr "Kipim"
 
 #: ../src/jarabe/desktop/activitieslist.py:514
 #: ../src/jarabe/desktop/activitieslist.py:578
@@ -1223,66 +1277,71 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:695
 #: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
-msgstr ""
+msgstr "Karemaot"
 
 #: ../src/jarabe/desktop/activitieslist.py:594
+#, fuzzy
 msgid "Remove favorite"
-msgstr ""
+msgstr "Karemaot fevrit"
 
 #: ../src/jarabe/desktop/activitieslist.py:598
+#, fuzzy
 msgid "Make favorite"
-msgstr ""
+msgstr "Mekem fevrit"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:199
+#, fuzzy
 msgid "Freeform"
-msgstr ""
+msgstr "Yu droem nomo"
 
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
-msgstr ""
+msgstr "Sekol"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:459
+#, fuzzy
 msgid "Spiral"
-msgstr ""
+msgstr "Olsem spring"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
-msgstr ""
+msgstr "Katon"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
-msgstr ""
+msgstr "Traeangol"
 
 #: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
-msgstr ""
+msgstr "Rejistarem i no wok"
 
 #: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
-msgstr ""
+msgstr "I gat sakses blong rejista"
 
 #: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
-msgstr ""
+msgstr "Yu rejista finis wetem seva blong skul blong yu."
 
+# noun or intransitive verb; transitive verb is rejjistarem
 #: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
-msgstr ""
+msgstr "Rejista"
 
 #: ../src/jarabe/desktop/favoritesview.py:656
 #: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
-msgstr ""
+msgstr "Rejista bakegen"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
-msgstr ""
+msgstr "Haf vilij"
 
 #: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
@@ -1290,39 +1349,42 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"I mas gat wan ki we i haedem infomesen blong waeales blong\n"
+" waeales netwok '%s'."
 
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
-msgstr ""
+msgstr "Kaen blong ki blong taep:"
 
 #: ../src/jarabe/desktop/keydialog.py:170
+#, fuzzy
 msgid "Authentication Type:"
-msgstr ""
+msgstr "Kaen blong fasin blong luk se ol samting i stret (authentication type):"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA mo WPA2 blong yu"
 
 #: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
-msgstr ""
+msgstr "Sekuriti blong waeales"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
 #: ../src/jarabe/journal/journaltoolbox.py:548
 #: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
-msgstr ""
+msgstr "Statem bakegen long semples blong lastaem"
 
 #: ../src/jarabe/desktop/meshbox.py:89
 #: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
-msgstr ""
+msgstr "Joenem"
 
 #: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Ad-hoc Netwok %d"
 
 #: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
@@ -1332,77 +1394,78 @@ msgstr "Netwok we hemi olsem net blong fis %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "I no save mekem koneksen wetem seva."
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
-msgstr ""
+msgstr "Seva i no save mekem wanem yu talem."
 
 #: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
-msgstr ""
+msgstr "Lukim long lis"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:97
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
 msgid "<Ctrl>%d"
-msgstr ""
+msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
-#, python-format
+#, python-format, fuzzy
 msgid "Favorites view %d"
-msgstr ""
+msgstr "Lukim ol fevrit %d"
 
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
+#, fuzzy
 msgid "Decline"
-msgstr ""
+msgstr "Talem no"
 
 #: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
 msgid "%dB"
-msgstr ""
+msgstr "%dB"
 
 #: ../src/jarabe/frame/activitiestray.py:536
-#, python-format, fuzzy
+#, python-format, 
 msgid "%dKB"
-msgstr "%d KB"
+msgstr "%dKB"
 
 #: ../src/jarabe/frame/activitiestray.py:538
 #, python-format
 msgid "%dMB"
-msgstr ""
+msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
 msgid "%s of %s"
-msgstr ""
+msgstr "%s blong %s"
 
 #: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
 msgid "Transfer from %s"
-msgstr ""
+msgstr "Karem blong %s"
 
 #: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
-msgstr ""
+msgstr "I oraet"
 
 #: ../src/jarabe/frame/activitiestray.py:653
 #: ../src/jarabe/frame/activitiestray.py:666
 #: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
-msgstr ""
+msgstr "Lego"
 
 #: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "Narafala we i stap wok wetem yu blong muvum fael, hemi kanselem"
 
 #: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 msgid "Transfer to %s"
-msgstr ""
+msgstr "Sanem i go long %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
 #, fuzzy
@@ -1413,56 +1476,55 @@ msgstr "Karemaot finis"
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
-msgstr ""
+msgstr "Openem"
 
 #: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
-msgstr ""
+msgstr "Openem wetem"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
-#, python-format
+#, python-format, fuzzy
 msgid "%s clipping"
-msgstr ""
+msgstr "Haf blong %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
-msgstr ""
+msgstr "F2"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
-msgstr ""
+msgstr "F3"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
-msgstr ""
+msgstr "F4"
 
 #: ../src/jarabe/intro/window.py:106
 msgid "Name:"
-msgstr ""
+msgstr "Nem:"
 
 #: ../src/jarabe/intro/window.py:136
-#, fuzzy
 msgid "Click to change color:"
-msgstr "Klikim blong jenisim kala blong yu:"
+msgstr "Klikim blong jenisim kala:"
 
 #: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
-msgstr ""
+msgstr "Bak"
 
 #: ../src/jarabe/intro/window.py:214
 msgid "Next"
-msgstr ""
+msgstr "Nekis"
 
 #: ../src/jarabe/journal/expandedentry.py:155
 #: ../src/jarabe/journal/journaltoolbox.py:477
 #: ../src/jarabe/journal/palettes.py:156
-#, python-format
+#, python-format, fuzzy
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "Yu wantem karemaot \"%s\" we yu no save karembak?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1470,262 +1532,269 @@ msgstr ""
 #: ../src/jarabe/journal/volumestoolbar.py:131
 #: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
-msgstr ""
+msgstr "No gat nem"
 
 #: ../src/jarabe/journal/expandedentry.py:367
 msgid "No preview"
-msgstr ""
+msgstr "No gat fasin blong lukluk fastaem"
 
 #: ../src/jarabe/journal/expandedentry.py:382
 #, python-format
 msgid "Kind: %s"
-msgstr ""
+msgstr "Kaen: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:382
 #: ../src/jarabe/journal/listmodel.py:165
 #: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
-msgstr ""
+msgstr "No save"
 
 #: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Date: %s"
-msgstr ""
+msgstr "Det: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:384
 #, python-format
 msgid "Size: %s"
-msgstr ""
+msgstr "Bigwan: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:411
 #: ../src/jarabe/journal/misc.py:109
 msgid "No date"
-msgstr ""
+msgstr "No gat det"
 
 #: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
-msgstr ""
+msgstr "Ol man we oli stap patisipet:"
 
 #: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
-msgstr ""
+msgstr "Deskripsen:"
 
 #: ../src/jarabe/journal/expandedentry.py:464
+#, fuzzy
 msgid "Tags:"
-msgstr ""
+msgstr "Ol tag:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "Ol komen:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #: ../src/jarabe/journal/palettes.py:248
 #: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
-msgstr ""
+msgstr "Buk blong raet"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr ""
+msgstr "Fevrit samting we yu raetem"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
-msgstr ""
+msgstr "Eni taem"
 
 #: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Today"
-msgstr ""
+msgstr "Tedei"
 
 #: ../src/jarabe/journal/journaltoolbox.py:138
+#, fuzzy
 msgid "Since yesterday"
-msgstr ""
+msgstr "Long yestedei i go"
 
 #. TRANS: Filter entries modified during the last 7 days.
 #: ../src/jarabe/journal/journaltoolbox.py:140
 msgid "Past week"
-msgstr ""
+msgstr "Wik ia (las 7 dei)"
 
 #. TRANS: Filter entries modified during the last 30 days.
 #: ../src/jarabe/journal/journaltoolbox.py:142
 msgid "Past month"
-msgstr ""
+msgstr "Manis ia (las 30 dei)"
 
 #. TRANS: Filter entries modified during the last 356 days.
 #: ../src/jarabe/journal/journaltoolbox.py:144
 msgid "Past year"
-msgstr ""
+msgstr "Yia ia (las 365 dei)"
 
 #: ../src/jarabe/journal/journaltoolbox.py:151
 msgid "Anyone"
-msgstr ""
+msgstr "Eniwan"
 
 #: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My friends"
-msgstr ""
+msgstr "Ol fren blong mi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:154
 msgid "My class"
-msgstr ""
+msgstr "Klas blong mi"
 
 #: ../src/jarabe/journal/journaltoolbox.py:327
 msgid "Anything"
-msgstr ""
+msgstr "Eni samting"
 
 #: ../src/jarabe/journal/journaltoolbox.py:419
 #: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
-msgstr ""
+msgstr "Kopiem i go long"
 
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "Mekem narawan we hemi semak"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "Lodem bakegen"
 
+# I used "page" for "entry"-- I don't think Bislama has another word for a journal entry
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
 #: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Trabol taem we i stap kopiem pej: %s"
 
 #: ../src/jarabe/journal/journaltoolbox.py:471
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "Trabol"
 
 #. TRANS: Action label for starting an entry.
 #: ../src/jarabe/journal/journaltoolbox.py:551
 #: ../src/jarabe/journal/palettes.py:80
 msgid "Start"
-msgstr ""
+msgstr "Stat"
 
 #: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Putum long oda blong det we yu bin jenisim"
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
-msgstr ""
+msgstr "Putum long oda blong det we yu mekem fastaem"
 
 #: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr ""
+msgstr "Putum long oda blong bigfala"
 
 #: ../src/jarabe/journal/journaltoolbox.py:590
+#, fuzzy
 msgid "Sort view"
-msgstr ""
+msgstr "Putum long oda"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "Kliarem ol samting we yu jusum"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "Jusum evri samting"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
-#, python-format
+#, python-format, fuzzy
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
+msgstr[0] "Yu wantem karemaot pej %d?Yu wantem karemaot ol pej %d?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "Kopiem"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "I bin jusum %(selected)d blong %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
-msgstr ""
+msgstr "Buk blong raet blong yu hemi no gat wan samting insaed long hem"
 
 #: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Ples blong holem ol dokumen hemi no gat wan samting insaed long hem"
 
 #: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
-msgstr ""
+msgstr "Masin i no gat wan samting insaed long hem"
 
 #: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
-msgstr ""
+msgstr "I no faenem wan pej we i gat ol ting we yu talem"
 
 #: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Olfala Vesin blong %s Aktiviti"
 
 #: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Yu wantem go back long olfala vesin %s?"
 
 #: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
-msgstr ""
+msgstr "Buk blong raet blong yu hemi fulap finis"
 
 #: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
+"Plis mbae yu karemaot samfala olfala pej blong buk blong raet blong yu save "
+"putum samfala niufala pej."
 
 #: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
-msgstr ""
+msgstr "Soem Buk blong Raet"
 
 #: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
-msgstr ""
+msgstr "Jusum wan samting"
 
 #: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Jusum wan samting blong openem wetem %s aktiviti"
 
 #: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
-msgstr ""
+msgstr "Klosem"
 
 #: ../src/jarabe/journal/palettes.py:78
 msgid "Resume with"
-msgstr ""
+msgstr "Statem bakegen long ples we yu stap lastaem wetem"
 
 #: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
-msgstr ""
+msgstr "Statem wetem"
 
 #: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
+#, fuzzy
 msgid "No activity to start entry"
-msgstr ""
+msgstr "I no gat aktiviti blong statem pej"
 
 #: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
-msgstr ""
+msgstr "Sanem i go long"
 
 #: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
-msgstr ""
+msgstr "Lukim ol smolsmol samting"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "I no save sanem ol pej we i no gat fael."
 
 #: ../src/jarabe/journal/palettes.py:260
 #: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
-msgstr ""
+msgstr "Ol Dokumen"
 
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
