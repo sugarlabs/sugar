@@ -17,6 +17,9 @@
 import os
 
 from gi.repository import Gtk
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
+
 from jarabe.desktop.activitieslist import ActivityListPalette
 
 

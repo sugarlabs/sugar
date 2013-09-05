@@ -18,6 +18,8 @@ import os
 import sys
 
 from gi.repository import Gtk
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
 
 from sugar3.graphics.palette import Palette
 
