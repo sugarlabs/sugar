@@ -5,8 +5,9 @@ sugar-0.98 (0.98.8-1) unstable; urgency=low
   [ Santiago ]
   * Switch packaging to upstream 0.98 version branch
   * Adding myself to Uploaders
+  * Bump Standars-Versions to 3.9.4 
 
- -- Santiago Ruano Rincón <santiago@debian.org>  Wed, 28 Aug 2013 23:49:24 +0200
+ -- Santiago Ruano Rincón <santiago@debian.org>  Sat, 07 Sep 2013 00:46:58 +0200
 
 sugar-0.96 (0.96.1-2.1) unstable; urgency=low
 

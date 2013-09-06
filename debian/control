@@ -17,7 +17,7 @@ Build-Depends: cdbs (>= 0.4.97~),
  intltool,
  shared-mime-info,
  python-empy
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
