@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-05 05:59+0200\n"
+"PO-Revision-Date: 2013-09-10 00:50+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: bi\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #: ../extensions/cpsection/aboutme/__init__.py:24
 msgid "About Me"
-msgstr "Long saed long mi"
+msgstr "Long saed blong mi"
 
 #: ../extensions/cpsection/aboutme/model.py:48
 msgid "You must enter a name."
@@ -80,7 +80,6 @@ msgid "Not available"
 msgstr "No gat"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:60
-#, fuzzy
 msgid "Identity"
 msgstr "Nem"
 
@@ -101,12 +100,10 @@ msgid "Sugar:"
 msgstr "Suka:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:130
-#, fuzzy
 msgid "Firmware:"
 msgstr "Femwea:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
-#, fuzzy
 msgid "Wireless Firmware:"
 msgstr "Femwea blong waeales:"
 
@@ -133,7 +130,6 @@ msgid "Full license:"
 msgstr "Laesens we hemi fulwan:"
 
 #: ../extensions/cpsection/background/__init__.py:21
-#, fuzzy
 msgid "Background"
 msgstr "Pikja o kala we i stap bihaen"
 
@@ -158,7 +154,6 @@ msgid "Timezone"
 msgstr "Zon blong taem"
 
 #: ../extensions/cpsection/frame/__init__.py:21
-#, fuzzy
 msgid "Frame"
 msgstr "Skwea"
 
@@ -249,13 +244,12 @@ msgid "Modem Configuration"
 msgstr "Fasin blong wok blong modem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
-#, fuzzy
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
 "Mbae yu mas givim ol infomesen we oli askem nexis blong yu save setemap wan "
-"coneksen long mobael i go long mobael (3G) netwok."
+"koneksen blong mobael long mobael (3G) netwok."
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
@@ -283,7 +277,7 @@ msgstr "Namba:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Nem blong ples blong coneksen (\"Access Point Name\", APN):"
+msgstr "Nem blong ples blong koneksen (\"Access Point Name\", APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
@@ -296,7 +290,7 @@ msgstr "Plan #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Provider %s"
 msgstr "Kampani we i provaedem sevis %s"
 
@@ -306,7 +300,6 @@ msgid "Network"
 msgstr "Netwok"
 
 #: ../extensions/cpsection/network/model.py:73
-#, fuzzy
 msgid "State is unknown."
 msgstr "I no save stet."
 
@@ -321,13 +314,12 @@ msgid "Error in specified argument use 0/1."
 msgstr "I gat trabol long wan samting we yu traem blong putum go. Yusum 0/1."
 
 #: ../extensions/cpsection/network/view.py:68
-#, fuzzy
 msgid "Wireless"
 msgstr "Waeales"
 
 #: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
-msgstr "Ofem redio blong waeales blong sevem laef blong batri"
+msgstr "Ofem redio blong waeales blong mekem se batri i save go longtaem moa"
 
 #: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
@@ -342,7 +334,6 @@ msgid "Discard network history"
 msgstr "Karemaot histri blong netwok"
 
 #: ../extensions/cpsection/network/view.py:131
-#, fuzzy
 msgid "Collaboration"
 msgstr "Fasin blong wok tugeta"
 
@@ -368,8 +359,8 @@ msgstr "Paoa"
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
 msgstr ""
-"I gat trabol long saed long manajem paoa otomatik (hemi we komputa i manajem "
-"hem wan), yusum on/off."
+"I gat trabol long saed blong manajem paoa otomatik (hemi we komputa i "
+"manajem hem wan), yusum on/off."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
@@ -383,7 +374,6 @@ msgstr ""
 "longtaem moa)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#, fuzzy
 msgid "Software Update"
 msgstr "Karem ol niufala pat blong softwea"
 
@@ -411,7 +401,7 @@ msgstr "I stap setemap ol niufala pat blong softwea..."
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
-msgstr "I stap jekem %s..."
+msgstr "I stap luk se ol samting i stret wetem %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
@@ -429,7 +419,6 @@ msgid "Updating %s..."
 msgstr "Karem ol niufala pat blong %s..."
 
 #: ../extensions/cpsection/updater/view.py:153
-#, fuzzy
 msgid "Your software is up-to-date"
 msgstr "Softwea we yu gat hemi gat ol niufala pat finis"
 
@@ -446,9 +435,8 @@ msgid_plural "%s updates were installed"
 msgstr[0] "I setemap ol niufala pat blong %s finis"
 
 #: ../extensions/cpsection/updater/view.py:266
-#, fuzzy
 msgid "Install selected"
-msgstr "Fasin blong setemap we yu jusumaot"
+msgstr "Fasin blong setemap we yu jusum"
 
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
@@ -457,19 +445,18 @@ msgstr "Bigwan blong daonlod: %s"
 
 #: ../extensions/cpsection/updater/view.py:373
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "I stat long vesin %(current)s i go long %(new)s (Bigwan: %(size)s)"
 
 #: ../extensions/cpsection/updater/view.py:380
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Version %(version)s (Size: %(size)s)"
 msgstr "Vesin %(version)s (Bigwan: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
-#, fuzzy
 msgid "None"
 msgstr "No gat"
 
@@ -536,7 +523,7 @@ msgstr "Soem ol ki blong taep blong mi"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "IP address: %s"
 msgstr "Ples blong IP: %s"
 
@@ -544,7 +531,6 @@ msgstr "Ples blong IP: %s"
 #: ../extensions/deviceicon/network.py:298
 #: ../src/jarabe/desktop/networkviews.py:135
 #: ../src/jarabe/desktop/networkviews.py:509
-#, fuzzy
 msgid "Disconnect"
 msgstr "Ofem koneksen"
 
@@ -565,7 +551,6 @@ msgid "Connected"
 msgstr "Koneksen i stap"
 
 #: ../extensions/deviceicon/network.py:125
-#, fuzzy
 msgid "No wireless connection"
 msgstr "No gat koneksen long waeales"
 
@@ -575,7 +560,6 @@ msgid "Channel"
 msgstr "janel"
 
 #: ../extensions/deviceicon/network.py:154
-#, fuzzy
 msgid "Wired Network"
 msgstr "Netwok wetem waea"
 
@@ -584,7 +568,6 @@ msgid "Speed"
 msgstr "Spid"
 
 #: ../extensions/deviceicon/network.py:208
-#, fuzzy
 msgid "Wireless modem"
 msgstr "Waeales modem"
 
@@ -617,18 +600,18 @@ msgstr "Kanselem"
 
 #: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
-msgstr "Traem konektem bakegen"
+msgstr "Traem koneksen bakegen"
 
 #: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr "Problem: %s"
+msgstr "Trabol: %s"
 
 #: ../extensions/deviceicon/network.py:335
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Suggestion: %s"
-msgstr "Sagjesten: %s"
+msgstr "Samting we oli ting se hemi gud (Sagjesten): %s"
 
 #: ../extensions/deviceicon/network.py:344
 #, python-format
@@ -643,44 +626,40 @@ msgstr "%d KB"
 
 #: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
-msgstr "Lukluk se fasin blong wok blong PIN/PUK hemi oraet."
+msgstr "Lukim se fasin blong wok blong PIN/PUK hemi oraet."
 
 #: ../extensions/deviceicon/network.py:359
-#, fuzzy
 msgid "Check your Access Point Name (APN) configuration"
 msgstr ""
-"Lukuk se fasin blong wok blong nem blong ples we i mekem koneksen (APN) hemi "
+"Lukim se fasin blong wok blong nem blong ples we i mekem koneksen (APN) hemi "
 "oraet"
 
 #: ../extensions/deviceicon/network.py:363
 #, fuzzy
 msgid "Check the Number configuration."
-msgstr "Lukluk se oli setemap ol namba mo oli stret."
+msgstr "Lukim se oli setemap ol namba mo oli stret."
 
 #: ../extensions/deviceicon/network.py:365
-#, fuzzy
 msgid "Check your configuration."
-msgstr "Lukluk se ol fasin blong wok (configuration) hemi oraet."
+msgstr "Lukim se ol fasin blong wok (configuration) hemi oraet."
 
 #: ../extensions/deviceicon/network.py:621
-#, fuzzy
 msgid "Mesh Network"
 msgstr "Netwok we hemi olsem net blong fis"
 
 #: ../extensions/deviceicon/network.py:668
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "Mesh Network %s"
 msgstr "Netwok we hemi olsem net blong fis %s"
 
 #: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
-msgstr "I no gat GSM coneksen we i save mekem."
+msgstr "I no gat GSM koneksen we hemi redi."
 
 #: ../extensions/deviceicon/network.py:789
-#, fuzzy
 msgid "Create a connection in the control panel."
-msgstr "Mekem wan coneksen long samting we i gat ol baten blong kontrol."
+msgstr "Mekem wan koneksen insaed long samting we i gat ol baten blong kontrol."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
@@ -690,12 +669,11 @@ msgstr "Toktok"
 #: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
-msgstr "Talem ol wod we oli jusumaot"
+msgstr "Talem ol wod we yu jusumaot"
 
 #: ../extensions/deviceicon/speech.py:83
-#, fuzzy
 msgid "Stop playback"
-msgstr "Stopem hemia we i pleinem bakegen"
+msgstr "Stopem hemia we i plem bakegen"
 
 #: ../extensions/deviceicon/speech.py:92
 #, fuzzy
@@ -703,14 +681,12 @@ msgid "Pitch"
 msgstr "Kaen blong saon"
 
 #: ../extensions/deviceicon/speech.py:107
-#, fuzzy
 msgid "Rate"
 msgstr "Spid"
 
 #: ../extensions/deviceicon/speech.py:145
-#, fuzzy
 msgid "Pause playback"
-msgstr "Stopem smol nomo hemia we i pleinem bakegen"
+msgstr "Stopem hemia we i plem bakegen long ples we yu stap"
 
 #: ../extensions/deviceicon/speaker.py:61
 #, fuzzy
@@ -742,9 +718,8 @@ msgid "Show contents"
 msgstr "Soem ol ting we i stap insaed"
 
 #: ../extensions/globalkey/screenshot.py:61
-#, fuzzy
 msgid "Mesh"
-msgstr "Net we hemi olsem net blong fis"
+msgstr "Net olsem net blong fis"
 
 #: ../extensions/globalkey/screenshot.py:63
 #: ../src/jarabe/desktop/homewindow.py:221
@@ -804,7 +779,9 @@ msgstr "Baksaed blong ol niufala pat blong aktiviti."
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr "Hamas taem i karem automatik ol niufala pat blong softwea."
+msgstr ""
+"Hamas taem i karem otomatik (komputa i karem hem wan) ol niufala pat blong "
+"softwea."
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
@@ -822,7 +799,7 @@ msgid ""
 msgstr ""
 "Kala blong smol pikja blong XO we i yusum long destop. String ia hemi gat "
 "tufala pat, we oli kala blong laen mo kala we i stap insaed, fasin blong "
-"talemaot hemi fasin ia RGB kala. Exsampol: #AC32FF,#9A5200"
+"talemaot hemi fasin ia RGB kala. Eksampol: #AC32FF,#9A5200"
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
@@ -854,7 +831,6 @@ msgid "Edge Delay"
 msgstr "Dilei blong ej"
 
 #: ../data/sugar.schemas.in.h:17
-#, fuzzy
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
@@ -862,14 +838,12 @@ msgstr ""
 "longtaem moa)"
 
 #: ../data/sugar.schemas.in.h:18
-#, fuzzy
 msgid "Favorites Layout"
 msgstr "Fasin blong yu luk se ol fevrit oli stap"
 
 #: ../data/sugar.schemas.in.h:19
-#, fuzzy
 msgid "Favorites resume mode"
-msgstr "Fasin blong putum bak ol fevrit"
+msgstr "Fasin blong statem bakegen ol fevrit"
 
 #: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
@@ -883,9 +857,9 @@ msgstr "Bigwan blong leta we i yusum evri ples long destop."
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
-"Hamas taem i pas long taem we i karem automatik ol niufala pat blong "
-"aktiviti i go kasem nexis taem we i karem automatik ol niufala pat, we i "
-"makem long dei. 0 hemi min se hemi disebol."
+"Hamas taem i pas long taem we i karem otomatik ol niufala pat blong aktiviti "
+"i go kasem nexis taem we i karem otomatik ol niufala pat, we i makem long "
+"dei. 0 hemi min se hemi disebol."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -900,11 +874,10 @@ msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "PUK blong netwok GSM (OLFALA/ OLI NOMO YUSUM)"
 
 #: ../data/sugar.schemas.in.h:26
-#, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
-"Fasin blong setemap nem blong ples blong yusum (APN) blong netwok GSM "
-"(OLFALA/ OLI NOMO YUSUM)"
+"Fasin blong setemap nem blong ples blong mekem koneksen (APN) blong netwok "
+"GSM (OLFALA/ OLI NOMO YUSUM)"
 
 #: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
@@ -975,20 +948,18 @@ msgid ""
 "hoc network."
 msgstr ""
 "Sipos hemi TRUE, Sugar mbae hemi soem ol Ad-hoc netwok blong janel 1,6 mo "
-"11. Sipos Sugar luk se i no gat netwok we hemi save finis taem we hemi stat, "
-"hemi mekem koneksen automatik (i mekem hem wan) long wan Ad-hoc netwok."
+"11. Sipos Sugar luk se i no gat netwok we hemi save finis, taem we hemi "
+"stat, hemi mekem koneksen otomatik (i mekem hem wan) long wan Ad-hoc netwok."
 
 #: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
 msgstr "Jabber Seva"
 
 #: ../data/sugar.schemas.in.h:40
-#, fuzzy
 msgid "Keyboard layouts"
 msgstr "Fasin we ol ki blong taep oli stap"
 
 #: ../data/sugar.schemas.in.h:41
-#, fuzzy
 msgid "Keyboard model"
 msgstr "Kaen blong ol ki blong taep"
 
@@ -1001,7 +972,6 @@ msgid "Layout of the favorites view."
 msgstr "Fasin blong soem ol fevrit."
 
 #: ../data/sugar.schemas.in.h:44
-#, fuzzy
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
@@ -1027,7 +997,7 @@ msgstr "Kaen blong saon blong sevis blong toktok long Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
-msgstr "Paoa automatik (komputa i manajem paoa hem wan)"
+msgstr "Paoa otomatik (komputa i manajem paoa hem wan)"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
@@ -1046,14 +1016,12 @@ msgid "Rate value used by the speech service in Sugar"
 msgstr "Spid blong sevis blong toktok long Sugar"
 
 #: ../data/sugar.schemas.in.h:54
-#, fuzzy
 msgid "Setting for muting the sound device."
-msgstr "Fasin blong setemap blong mekem se i no mekem nois"
+msgstr "Fasin blong wok blong mekem se i no mekem saon."
 
 #: ../data/sugar.schemas.in.h:55
-#, fuzzy
 msgid "Show Log out"
-msgstr "Soem Finisim taem long komputa blong yu wan"
+msgstr "Soem Finisim taem blong yu wan long komputa"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
@@ -1064,20 +1032,18 @@ msgid "Show Sugar Ad-hoc networks"
 msgstr "Soem ol Ad-hoc netwok blong Sugar"
 
 #: ../data/sugar.schemas.in.h:58
-#, fuzzy
 msgid "Sound Muted"
-msgstr "Bae i no mekem saon"
+msgstr "Mbae i no mekem saon"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
-msgstr "Kaen blong ol ki blong taep we mbae i yusum"
+msgstr "Kaen blong ol ki blong taep we mbae yu yusum"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
 msgstr "Mak blong taem blong lastaem we i karem ol niufala pat blong aktiviti."
 
 #: ../data/sugar.schemas.in.h:62
-#, fuzzy
 msgid "Timezone setting for the system."
 msgstr "Zon blong taem blong sistem."
 
@@ -1093,29 +1059,24 @@ msgstr ""
 "i yusum blong karem ol infomesen blong ol niufala pat blong ol aktiviti."
 
 #: ../data/sugar.schemas.in.h:65
-#, fuzzy
 msgid "URL where the backup is saved to."
 msgstr ""
 "URL we hemi ples we i sevem ol infomesen blong karembak ol samting sipos "
 "trabol i hapen."
 
 #: ../data/sugar.schemas.in.h:66
-#, fuzzy
 msgid "User Color"
 msgstr "Kala blong man we i yusum"
 
 #: ../data/sugar.schemas.in.h:67
-#, fuzzy
 msgid "User Name"
 msgstr "Nem blong man we i yusum"
 
 #: ../data/sugar.schemas.in.h:68
-#, fuzzy
 msgid "User name that is used throughout the desktop."
-msgstr "Nem blong man we i yusum we i yusum long evri ples long destop."
+msgstr "Nem blong man we i yusum we hemi stap yusum long evri ples long destop."
 
 #: ../data/sugar.schemas.in.h:69
-#, fuzzy
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
@@ -1127,9 +1088,8 @@ msgid "Volume Level"
 msgstr "Level blong saon"
 
 #: ../data/sugar.schemas.in.h:71
-#, fuzzy
 msgid "Volume level for the sound device."
-msgstr "Level blong saon blong samting we i mekem saon"
+msgstr "Level blong saon blong masin blong mekem saon"
 
 #: ../data/sugar.schemas.in.h:72
 msgid ""
@@ -1193,14 +1153,13 @@ msgstr "Blong finisim ol jenis we yu mekem, mbae yu mas statem Sugar bakegen.\n"
 #: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
 #: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
-#, fuzzy
 msgid "Warning"
 msgstr "Lukaot"
 
 #: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr "Ol jenis min se yu mas statem komputa bakegen"
+msgstr "Ol jenis oli min se yu mas statem komputa bakegen"
 
 #: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
@@ -1222,7 +1181,6 @@ msgid "Search in %s"
 msgstr "Lukaotem long %s"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
-#, fuzzy
 msgid "Settings"
 msgstr "Ol fasin blong wok"
 
@@ -1234,7 +1192,7 @@ msgstr "Finis"
 #: ../src/jarabe/desktop/favoritesview.py:374
 #: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
-msgstr "Ok"
+msgstr "I oraet"
 
 #: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format, 
@@ -1243,7 +1201,6 @@ msgstr "Vesin %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
-#, fuzzy
 msgid "Clear search"
 msgstr "Kliarem ol samting blong lukaotem"
 
@@ -1253,14 +1210,14 @@ msgstr "I no faenem aktiviti we i semak wetem wanem yu talem"
 
 #: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
-msgstr "Talem se hemi oraet tru blong karemaot"
+msgstr "Hemi oraet blong karemaot"
 
 #: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr ""
-"Talem se hemi oraet tru blong karemaot: yu sua se yu wantem karemaot we yu "
-"no save karem bak hemia %s?"
+"Hemi oraet blong karemaot: yu sua se yu wantem karemaot, we yu no save karem "
+"bak, hemia %s?"
 
 #: ../src/jarabe/desktop/activitieslist.py:511
 #: ../src/jarabe/frame/clipboardmenu.py:65
@@ -1280,18 +1237,15 @@ msgid "Erase"
 msgstr "Karemaot"
 
 #: ../src/jarabe/desktop/activitieslist.py:594
-#, fuzzy
 msgid "Remove favorite"
 msgstr "Karemaot fevrit"
 
 #: ../src/jarabe/desktop/activitieslist.py:598
-#, fuzzy
 msgid "Make favorite"
 msgstr "Mekem fevrit"
 
 #. TRANS: label for the freeform layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:199
-#, fuzzy
 msgid "Freeform"
 msgstr "Yu droem nomo"
 
@@ -1302,7 +1256,6 @@ msgstr "Sekol"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:459
-#, fuzzy
 msgid "Spiral"
 msgstr "Olsem spring"
 
@@ -1357,7 +1310,6 @@ msgid "Key Type:"
 msgstr "Kaen blong ki blong taep:"
 
 #: ../src/jarabe/desktop/keydialog.py:170
-#, fuzzy
 msgid "Authentication Type:"
 msgstr "Kaen blong fasin blong luk se ol samting i stret (authentication type):"
 
@@ -1388,7 +1340,6 @@ msgstr "Ad-hoc Netwok %d"
 
 #: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
-#, fuzzy
 msgid "Mesh Network %d"
 msgstr "Netwok we hemi olsem net blong fis %d"
 
@@ -1412,7 +1363,7 @@ msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
-#, python-format, fuzzy
+#, python-format, 
 msgid "Favorites view %d"
 msgstr "Lukim ol fevrit %d"
 
@@ -1468,10 +1419,9 @@ msgid "Transfer to %s"
 msgstr "Sanem i go long %s"
 
 #: ../src/jarabe/frame/clipboardmenu.py:54
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
-msgstr "Karemaot finis"
+msgstr "Karemaot"
 
 #: ../src/jarabe/frame/clipboardmenu.py:60
 #: ../src/jarabe/frame/clipboardmenu.py:83
@@ -1483,9 +1433,9 @@ msgid "Open with"
 msgstr "Openem wetem"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
-#, python-format, fuzzy
+#, python-format, , fuzzy
 msgid "%s clipping"
-msgstr "Haf blong %s"
+msgstr "samting we yu kopiem blong %s"
 
 #: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
@@ -1522,9 +1472,9 @@ msgstr "Nekis"
 #: ../src/jarabe/journal/expandedentry.py:155
 #: ../src/jarabe/journal/journaltoolbox.py:477
 #: ../src/jarabe/journal/palettes.py:156
-#, python-format, fuzzy
+#, python-format, 
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr "Yu wantem karemaot \"%s\" we yu no save karembak?"
+msgstr "Yu wantem karemaot, we yu no save karembak, \"%s\"?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1590,7 +1540,7 @@ msgstr "Buk blong raet"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr "Fevrit samting we yu raetem"
+msgstr "Ol fevrit pej"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
@@ -1601,7 +1551,6 @@ msgid "Today"
 msgstr "Tedei"
 
 #: ../src/jarabe/journal/journaltoolbox.py:138
-#, fuzzy
 msgid "Since yesterday"
 msgstr "Long yestedei i go"
 
@@ -1676,11 +1625,11 @@ msgstr "Putum long oda blong det we yu bin jenisim"
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
-msgstr "Putum long oda blong det we yu mekem fastaem"
+msgstr "Putum long oda blong det we yu bin mekem fastaem"
 
 #: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr "Putum long oda blong bigfala"
+msgstr "Putum long oda blong bigwan"
 
 #: ../src/jarabe/journal/journaltoolbox.py:590
 #, fuzzy
@@ -1696,10 +1645,10 @@ msgid "Select all"
 msgstr "Jusum evri samting"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
-#, python-format, fuzzy
+#, python-format, 
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] "Yu wantem karemaot pej %d?Yu wantem karemaot ol pej %d?"
+msgstr[0] "Yu wantem karemaot ol pej %d?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
@@ -1736,7 +1685,7 @@ msgstr "Olfala Vesin blong %s Aktiviti"
 #: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr "Yu wantem go back long olfala vesin %s?"
+msgstr "Yu wantem go bak long olfala vesin %s?"
 
 #: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
@@ -1775,7 +1724,6 @@ msgid "Start with"
 msgstr "Statem wetem"
 
 #: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
-#, fuzzy
 msgid "No activity to start entry"
 msgstr "I no gat aktiviti blong statem pej"
 
@@ -1799,315 +1747,341 @@ msgstr "Ol Dokumen"
 #: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
 #: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "I no save kopiem ol pej we i no gat fael."
 
 #: ../src/jarabe/journal/palettes.py:369
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
+msgstr[0] "Yu wantem kopiem ol pej %d?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
-msgstr ""
+msgstr "Ples blong holem wanem yu kopiem"
 
 #: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
-msgstr ""
+msgstr "Ol fren oli no stap"
 
 #: ../src/jarabe/journal/palettes.py:459
 msgid "No valid connection found"
-msgstr ""
+msgstr "I no faenem wan gudfala koneksen"
 
 #: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
 msgstr ""
+"No gat aktiviti blong statem pej bakegen long ples we yu stap long hem "
+"lastaem"
 
+# intransitive "stop"
+# transitive "stopem"
 #: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Gohed"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d blong %(total)d: %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
 #, python-format
 msgid "%(free_space)d MB Free"
-msgstr ""
+msgstr "%(free_space)d MB Fri"
 
 #: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "Yumi no save from wanem masin i jenisim stet blong hem."
 
 #: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
-msgstr ""
+msgstr "Jenis blong stet hemi stret nomo."
 
+# Says "they manage the device". There is no passive construction in Bislama.
 #: ../src/jarabe/model/network.py:218
+#, fuzzy
 msgid "The device is now managed."
-msgstr ""
+msgstr "Oli manajem masin naoia."
 
 #: ../src/jarabe/model/network.py:220
+#, fuzzy
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "Oli nomo manajem masin."
 
 #: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "I no save mekem se masin hemi redi blong setemap (configuration)."
 
 #: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"I no save resevem ol fasin blong setemap blong IP (no gat ples we i stap, "
+"taem i finis, etc)."
 
 #: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "Fasin blong setemap IP ia hemi nomo gudwan."
 
 #: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "I mas gat ol sikret, be yu no givim."
 
 #: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"Hem we i yusum 802.1X hemi nomo gat koneksen long ples blong konekesen o "
+"seva blong luk se evri samting i stret (authentication server)."
 
 #: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "Fasin blong setemap hem we i yusum 802.1X i no wok aot."
 
 #: ../src/jarabe/model/network.py:236
+#, fuzzy
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "Hem we i yusum 802.1X hemi stop blong wok."
 
 #: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr ""
+"Hem we i yusum 802.1X i tekem taem we i longfala tumas blong luk se evri "
+"samting i stret."
 
 #: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Sevis blong PPP i no stat long taem we hemi gat blong stat."
 
 #: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
 msgstr ""
+"Sevis blong PPP hemi karemaot koneksen long taem we yumi no ting se mbae i "
+"hapen."
 
 #: ../src/jarabe/model/network.py:244
+#, fuzzy
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Sevis blong PPP i stop blong wok."
 
 #: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Sevis blong DHCP i no stat long taem we hemi gat blong stat."
 
 #: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
 msgstr ""
+"Sevis blong DHCP i talem se hemi faenem trabol we yumi no ting se mbae i "
+"hapen."
 
 #: ../src/jarabe/model/network.py:250
+#, fuzzy
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Sevis blong DHCP i stop blong wok."
 
 #: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
-msgstr ""
+msgstr "Sevis blong koneksen we oli serem hemi no stat."
 
 #: ../src/jarabe/model/network.py:254
+#, fuzzy
 msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Sevis blong koneksen we oli serem i stop blong wok."
 
 #: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Sevis blong AutoIP i no stat."
 
 #: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
 msgstr ""
+"Sevis blong AutoIP i talem se i faenem trabol we yumi no ting se mbae i "
+"hapen."
 
 #: ../src/jarabe/model/network.py:261
+#, fuzzy
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "Sevis blong AutoIP i stop blong wok."
 
 #: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "Ring go i no wok aot from se laen hemi bisi."
 
 #: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "Ring go i no wok aot from se no gat saon blong ring (dial tone)."
 
 #: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "Ring go i no wok aot from se no gat sevis blong karem infomesen."
 
 #: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
-msgstr ""
+msgstr "Ring go i tekem tumas taem."
 
 #: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
-msgstr ""
+msgstr "Ring go i no wok aot."
 
 #: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "Setemap modem i no wok aot."
 
 #: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Hemi no jusum GSM APN we yu talem"
 
 #: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
-msgstr ""
+msgstr "I no stap lukaotem netwok."
 
 #: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
-msgstr ""
+msgstr "Oli talem se yu no save rejistarem netwok ia."
 
 #: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
-msgstr ""
+msgstr "Rejistarem netwok i tekem tumas taem."
 
 #: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "I no save rejista wetem GSM netwok we yu askem."
 
 #: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
-msgstr ""
+msgstr "Hemi traem luk se PIN i stret, be i no wok aot."
 
 #: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Mebi femwea we yu nidim blong masin hemi no gat."
 
 #: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
-msgstr ""
+msgstr "Wan man i karemaot masin."
 
 #: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
-msgstr ""
+msgstr "NetworkManager i slip finis."
 
 #: ../src/jarabe/model/network.py:293
 msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "Wan man i karemaot koneksen blong masin, o koneksen ia i nomo stap."
 
 #: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Wan man we i yusum hemi askem blong ofem koneksen."
 
 #: ../src/jarabe/model/network.py:298
+#, fuzzy
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "Sevis blong karem infomesen o link blong masin hemi jenis."
 
+# This says something more like, "The device is using the existing connection." (Bislama has no passive constructions and doesn't really have a word for "assume").
 #: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "Masin i yusum koneksen we i stap finis."
 
 #: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "Hem we i askem (supplicant) hemi stap redi nao."
 
 #: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
-msgstr ""
+msgstr "I no save faenem modem."
 
 #: ../src/jarabe/model/network.py:306
+#, fuzzy
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "Koneksen blong Bluetooth i stop blong wok o taem blong hem i finis."
 
 #: ../src/jarabe/model/network.py:308
 msgid "Unused."
-msgstr ""
+msgstr "Oli no yusum."
 
 #: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
-msgstr ""
+msgstr "Karemaot fren"
 
 #: ../src/jarabe/view/buddymenu.py:75
 msgid "Make friend"
-msgstr ""
+msgstr "Mekem se hemi fren"
 
 #: ../src/jarabe/view/buddymenu.py:91
 msgid "Shutdown"
-msgstr ""
+msgstr "Ofem"
 
 #: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
-msgstr ""
+msgstr "Statem bakegen"
 
 #: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
-msgstr ""
+msgstr "Finisim taem blong yu wan long komputa"
 
 #: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
-msgstr ""
+msgstr "Ol fasin blong wok blong mi"
 
 #: ../src/jarabe/view/buddymenu.py:149
 #, python-format
 msgid "Invite to %s"
-msgstr ""
+msgstr "Askem long %s"
 
 #: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s<b> i no stat."
 
 #: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
-msgstr ""
+msgstr "I stap stat..."
 
 #: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Aktiviti i no stat"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
-msgstr ""
+msgstr "Lukim ples we samting ia i kamaot long hem"
 
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
-msgstr ""
+msgstr "Statem niufala"
 
 #: ../src/jarabe/view/palettes.py:241
-#, fuzzy
 msgctxt "Volume"
 msgid "Remove"
-msgstr "Karemaot finis"
+msgstr "Karemaot"
 
 #: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
-msgstr ""
+msgstr "Ples we instens (instance) i kamaot long hem"
 
 #: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
-msgstr ""
+msgstr "Ples we ol samting oli kamaot long hem"
 
 #: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
-msgstr ""
+msgstr "Ples we grup blong aktiviti i kamaot long hem"
 
 #: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Ples we Sugar Toolkit (samting blong holem ol tul) i kamaot long hem"
 
 #: ../src/jarabe/view/viewsource.py:408
 #, python-format
 msgid "View source: %s"
-msgstr ""
+msgstr "Lukim ples we samting ia i kamaot long hem: %s"
 
 #: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "Lukim ples we samting ia i kamaot long hem: %r"
