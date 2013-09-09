@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-03 23:02+0200\n"
-"Last-Translator: Mohona <mohonabose@gmail.com>\n"
+"PO-Revision-Date: 2013-09-10 00:42+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
 "MIME-Version: 1.0\n"
@@ -415,7 +415,7 @@ msgstr "ইনস্টল বেছে নেওয়া হয়েছে"
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
-msgstr "ডাউনলোডের পরিমাণ হল: %s "
+msgstr "ডাউনলোডের পরিমাণ হল: %s"
 
 #: ../extensions/cpsection/updater/view.py:373
 #, python-format
@@ -436,19 +436,19 @@ msgstr "করা হয়েছে"
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:400
 msgid "1 KB"
-msgstr ""
+msgstr "১ KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:403
 #, python-format
 msgid "%.0f KB"
-msgstr ""
+msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "%.1f MB"
-msgstr ""
+msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
@@ -482,15 +482,15 @@ msgstr "খুব অল্প পাওয়ার বাকি"
 #: ../extensions/deviceicon/battery.py:166
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr ""
+msgstr "%(hour)d:%(min).2d অবশিষ্ট"
 
 #: ../extensions/deviceicon/battery.py:169
 msgid "Charged"
-msgstr ""
+msgstr "চার্য করা হয়েছে"
 
 #: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
-msgstr ""
+msgstr "আমার কীবোর্ড দেখাও"
 
 #: ../extensions/deviceicon/network.py:50
 #, python-format
@@ -523,11 +523,11 @@ msgstr "সংযোগ স্থাপন করা হচ্ছে..."
 #: ../src/jarabe/desktop/networkviews.py:557
 #: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
-msgstr ""
+msgstr "সংযুক্ত"
 
 #: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
-msgstr ""
+msgstr "কোন বেতার সংযোগ নেই"
 
 #: ../extensions/deviceicon/network.py:139
 msgid "Channel"
@@ -543,7 +543,7 @@ msgstr "গতি"
 
 #: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
-msgstr ""
+msgstr "বেতার মডেম"
 
 #: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
@@ -554,7 +554,7 @@ msgstr "দয়া করে অপেক্ষা করো..."
 #: ../src/jarabe/desktop/networkviews.py:503
 #: ../src/jarabe/desktop/networkviews.py:644
 msgid "Connect"
-msgstr ""
+msgstr "সংযোগ করো"
 
 #: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
@@ -589,13 +589,13 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "%s এর জন্য সংযুক্ত"
 
 #: ../extensions/deviceicon/network.py:350
 #: ../extensions/deviceicon/network.py:351
 #, python-format
 msgid "%d KB"
-msgstr ""
+msgstr "%d কে.বি."
 
 #: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
@@ -1949,7 +1949,7 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
-msgstr ""
+msgstr "সোর্স"
 
 #: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
@@ -1967,7 +1967,7 @@ msgstr ""
 #: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
-msgstr ""
+msgstr "সোর্স প্রদর্শন: %r"
 
 #~ msgid "Search"
 #~ msgstr "অনুসন্ধান"
