@@ -219,7 +219,7 @@ def setup_locale():
     # NOTE: This needs to happen early because some modules register
     # translatable strings in the module scope.
     gettext.bindtextdomain('sugar', config.locale_path)
-    gettext.bindtextdomain('sugar-toolkit', config.locale_path)
+    gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
     gettext.textdomain('sugar')
 
     client = GConf.Client.get_default()
