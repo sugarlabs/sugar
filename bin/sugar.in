@@ -8,6 +8,10 @@ if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
 fi
 
 # Set default profile dir
+if test -z "$SUGAR_HOME"; then
+    export SUGAR_HOME=$HOME/.sugar
+fi
+
 if test -z "$SUGAR_PROFILE"; then
     export SUGAR_PROFILE=default
 fi
@@ -42,8 +46,8 @@ export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
 if [ -f ~/.i18n ]; then
         . ~/.i18n
 fi
-if [ -f ~/.sugar/debug ]; then
-        . ~/.sugar/debug
+if [ -f $SUGAR_HOME/$SUGAR_PROFILE/debug ]; then
+        . $SUGAR_HOME/$SUGAR_PROFILE/debug
 fi
 
 exec python -m jarabe.main
