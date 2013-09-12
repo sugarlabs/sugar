@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-10 00:42+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-09-12 16:51+0200\n"
+"Last-Translator: Mohona <mohonabose@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
 "MIME-Version: 1.0\n"
@@ -607,11 +607,11 @@ msgstr ""
 
 #: ../extensions/deviceicon/network.py:363
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "সংখ্যার কনফিগারেশনটি দেখে নিও।"
 
 #: ../extensions/deviceicon/network.py:365
 msgid "Check your configuration."
-msgstr ""
+msgstr "তোমার কনফিগারেশন দেখে নিও।"
 
 #: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
@@ -633,7 +633,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "বক্তৃতা"
 
 #: ../extensions/deviceicon/speech.py:76
 #: ../extensions/deviceicon/speech.py:150
@@ -659,7 +659,7 @@ msgstr "প্লেব্যাক স্থগিত কর"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr ""
+msgstr "আমার স্পিকার"
 
 #: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
@@ -683,7 +683,7 @@ msgstr "আমার টাচপ্যাড"
 
 #: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
-msgstr ""
+msgstr "বিষয়বস্তু দেখাও"
 
 #: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
@@ -783,7 +783,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
-msgstr ""
+msgstr "প্রান্তে দেরী"
 
 #: ../data/sugar.schemas.in.h:17
 msgid ""
@@ -872,7 +872,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr ""
+msgstr "যদি সত্য হয়, সুগার একটি \"পুনরায় শুরু\" করার বিকল্প দেখাবে।"
 
 #: ../data/sugar.schemas.in.h:38
 msgid ""
@@ -924,11 +924,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
-msgstr ""
+msgstr "স্বয়ংক্রিয় পাওয়ার"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
-msgstr ""
+msgstr "চরম পাওয়ার"
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
@@ -936,11 +936,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "সুগারের বক্তৃতা পরিষেবার হার মান"
 
 #: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "সুগারের বক্তৃতা পরিষেবা দ্বারা ব্যবহৃত হার মান"
 
 #: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
@@ -948,11 +948,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
-msgstr ""
+msgstr "লগ আউট দেখাও"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr ""
+msgstr "পুনরায় শুরু দেখাও"
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
@@ -960,7 +960,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
-msgstr ""
+msgstr "শব্দ অনুচ্চারিত"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
@@ -968,7 +968,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "সর্বশেষ কার্যকলাপ আপডেটের টাইমস্ট্যাম্প"
 
 #: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
@@ -989,11 +989,11 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:66
 msgid "User Color"
-msgstr ""
+msgstr "ব্যবহারকারী রঙ"
 
 #: ../data/sugar.schemas.in.h:67
 msgid "User Name"
-msgstr ""
+msgstr "ইউসার নেম"
 
 #: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
@@ -1006,7 +1006,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
-msgstr ""
+msgstr "ভলিউম স্তর"
 
 #: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
@@ -1059,24 +1059,24 @@ msgstr "তোমার পরিবর্তন কার্যকর করা
 #: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
 #: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
-msgstr ""
+msgstr "সতর্কবার্তা"
 
 #: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
-msgstr ""
+msgstr "পরিবর্তন হলে পুনরায় শুরু করা অবশ্যক"
 
 #: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
-msgstr ""
+msgstr "পরিবর্তন বাতিল কর"
 
 #: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
-msgstr ""
+msgstr "পরে"
 
 #: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
-msgstr ""
+msgstr "এখন পুনরায় শুরু কর"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:129
@@ -1107,7 +1107,7 @@ msgstr ""
 #: ../src/jarabe/desktop/activitieslist.py:385
 #: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
-msgstr ""
+msgstr "অনুসন্ধান মুছে ফেল"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
@@ -1141,7 +1141,7 @@ msgstr "রাখো"
 #: ../src/jarabe/journal/journaltoolbox.py:695
 #: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
-msgstr "মুছে ফেলুন"
+msgstr "মুছে ফেলো"
 
 #: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
@@ -1159,7 +1159,7 @@ msgstr ""
 #. TRANS: label for the ring layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
-msgstr ""
+msgstr "রিং"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:459
@@ -1174,7 +1174,7 @@ msgstr ""
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
-msgstr ""
+msgstr "ত্রিভুজ"
 
 #: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
@@ -1195,7 +1195,7 @@ msgstr "রেজিস্টার"
 #: ../src/jarabe/desktop/favoritesview.py:656
 #: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
-msgstr ""
+msgstr "আবার রেজিস্টার কর"
 
 #: ../src/jarabe/desktop/homewindow.py:228
 #: ../src/jarabe/frame/zoomtoolbar.py:49
@@ -1276,7 +1276,7 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:195
 #: ../src/jarabe/frame/activitiestray.py:593
 msgid "Decline"
-msgstr ""
+msgstr "প্রত্যাখ্যান"
 
 #: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
@@ -1306,13 +1306,13 @@ msgstr ""
 
 #: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
-msgstr ""
+msgstr "গ্রহণ"
 
 #: ../src/jarabe/frame/activitiestray.py:653
 #: ../src/jarabe/frame/activitiestray.py:666
 #: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
-msgstr ""
+msgstr "বাদ দাও"
 
 #: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
