@@ -23,9 +23,7 @@ from gi.repository import Gdk
 
 import dbus
 
-from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-
 from jarabe.model import network
 
 
@@ -96,15 +94,8 @@ class KeyDialog(Gtk.Dialog):
                           % (display_name, ))
         self.vbox.pack_start(label, True, True, 0)
 
-        button = Gtk.Button()
-        button.set_image(Icon(icon_name='dialog-cancel'))
-        button.set_label(_('Cancel'))
-        self.add_action_widget(button, Gtk.ResponseType.CANCEL)
-        button = Gtk.Button()
-        button.set_image(Icon(icon_name='dialog-ok'))
-        button.set_label(_('Ok'))
-        self.add_action_widget(button, Gtk.ResponseType.OK)
-
+        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_OK, Gtk.ResponseType.OK)
         self.set_default_response(Gtk.ResponseType.OK)
 
     def add_key_entry(self):
