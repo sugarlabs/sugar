@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-12 16:51+0200\n"
-"Last-Translator: Mohona <mohonabose@gmail.com>\n"
+"PO-Revision-Date: 2013-09-18 14:05+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
 "MIME-Version: 1.0\n"
@@ -463,7 +463,7 @@ msgstr ""
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr ""
+msgstr "আমার ব্যাটারি"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
@@ -952,7 +952,7 @@ msgstr "লগ আউট দেখাও"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr "পুনরায় শুরু দেখাও"
+msgstr "রিস্টার্ট দেখাও"
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
@@ -1169,7 +1169,7 @@ msgstr ""
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
-msgstr ""
+msgstr "বাক্স"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:570
@@ -1223,7 +1223,7 @@ msgstr ""
 
 #: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
-msgstr ""
+msgstr "বেতার নিরাপত্তা:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1251,7 +1251,7 @@ msgstr "মেশ নেটওয়ার্ক %d"
 
 #: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
-msgstr ""
+msgstr "সার্ভারে সংযোগ স্থাপন করা যাচ্ছে না।"
 
 #: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
@@ -1403,7 +1403,7 @@ msgstr ""
 #: ../src/jarabe/journal/listmodel.py:165
 #: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
-msgstr ""
+msgstr "অজানা"
 
 #: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
@@ -1422,7 +1422,7 @@ msgstr "তারিখ নেই"
 
 #: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
-msgstr ""
+msgstr "অংশগ্রহণকারীরা:"
 
 #: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
@@ -1434,7 +1434,7 @@ msgstr "ট্যাগসমূহ:"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "মন্তব্য:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1502,7 +1502,7 @@ msgstr ""
 #: ../src/jarabe/journal/journaltoolbox.py:427
 #: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "প্রতিলিপি"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
@@ -1519,7 +1519,7 @@ msgstr ""
 #: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
 #: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "ত্রুটি"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
@@ -1530,7 +1530,7 @@ msgstr "শুরু"
 
 #: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr ""
+msgstr "পরিবর্তনের তারিখ অনুসারে সাজাও"
 
 #: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
@@ -1538,7 +1538,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr ""
+msgstr "আয়তন অনুসারে সাজাও"
 
 #: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
@@ -1550,7 +1550,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "সবটা বেছে নাও"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
@@ -1637,7 +1637,7 @@ msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
-msgstr ""
+msgstr "এখানে পাঠাও"
 
 #: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
@@ -1848,7 +1848,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
-msgstr ""
+msgstr "ডিভাইসটি সরানো হয়েছে।"
 
 #: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
@@ -1884,7 +1884,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:308
 msgid "Unused."
-msgstr ""
+msgstr "অব্যবহৃত।"
 
 #: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
@@ -1900,15 +1900,15 @@ msgstr "বন্ধ করো"
 
 #: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
-msgstr ""
+msgstr "রিস্টার্ট"
 
 #: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
-msgstr ""
+msgstr "লগাউট"
 
 #: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
-msgstr ""
+msgstr "আমার সেটিংস"
 
 #: ../src/jarabe/view/buddymenu.py:149
 #, python-format
@@ -1918,7 +1918,7 @@ msgstr "%s কে নিমণ্ত্রণ"
 #: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "<b>%s</b>শুরু হতে ব্যর্থ।"
 
 #: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
@@ -1926,16 +1926,16 @@ msgstr "শুরু হচ্ছে..."
 
 #: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
-msgstr ""
+msgstr "কার্যকলাপ শুরু হতে ব্যর্থ"
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
-msgstr ""
+msgstr "সোর্স দেখাও"
 
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
-msgstr ""
+msgstr "নতুন শুরু কর"
 
 #: ../src/jarabe/view/palettes.py:241
 #, fuzzy
@@ -1945,7 +1945,7 @@ msgstr "মোছো"
 
 #: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
-msgstr ""
+msgstr "সোর্স উদাহরণ"
 
 #: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
