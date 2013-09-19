@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 06:02+0200\n"
+"PO-Revision-Date: 2013-09-19 10:07+0200\n"
 "Last-Translator: Thangamani <thangam.arunx@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ta\n"
@@ -821,6 +821,8 @@ msgstr "திரையினூடாக உட்செல்வதற்க�
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"புதுப்பிப்புகள் தானாக செயற்படும் வீதம், நாட்களால் மதிப்பிடப்படுகிறது. 0 "
+"என்றால் முடக்கப்பட்டது."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -943,7 +945,7 @@ msgstr "விசைப்பலகை மாதிறிகளின் பட�
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Microformat update URL."
-msgstr ""
+msgstr "நுன்வடிவ புதுப்பிப்பு URL."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
@@ -999,7 +1001,7 @@ msgstr "இந்த விசைப்பலகை மாதிறி பயன
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "புதுப்பிப்பு செயற்பாட்டின் கடைசி நேரமுத்திரை."
 
 #: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
@@ -1013,6 +1015,8 @@ msgstr "jabber வழங்கி (கணினி)யிலுள்ள URL ஐ
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"புதுபிப்பு செயற்பாட்டிற்க்கான தகவல் நுன்வடிவ புதுபிப்பு பின்னணியால் "
+"பயன்படுத்தப்பட்ட URL."
 
 #: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
@@ -1130,11 +1134,11 @@ msgstr "இப்போது மீள் ஆரம்பி"
 #: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
-msgstr ""
+msgstr "%s இல் தேடுகிறது"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 msgid "Settings"
-msgstr ""
+msgstr "அமைப்புகள்"
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
@@ -1159,7 +1163,7 @@ msgstr "தேடலை நீக்கு"
 
 #: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
-msgstr ""
+msgstr "பொருந்தும் செயற்பாடுகள் ஏதுமில்லை"
 
 #: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
@@ -1254,6 +1258,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"ஒரு கம்பி்ல்லா குறியாக்க விசை \n"
+"கம்பில்லா '%s' பிணையத்திற்கு தேவை."
 
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
@@ -1309,13 +1315,13 @@ msgstr "பட்டியல் பார்வை"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
 msgstr "விருப்புக்குரிய பார்வை %d"
 
@@ -1342,10 +1348,10 @@ msgstr "%dMB"
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
 #: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 #, python-format,
 msgid "%s of %s"
-msgstr "%s of %s"
+msgstr "%s உடைய %s"
 
 #: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
@@ -1429,7 +1435,7 @@ msgstr "அடுத்தது"
 #: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
-msgstr ""
+msgstr "உங்களுக்கு நிரந்திரமாக அழிக்க விருப்பமா \"%s\"?"
 
 #: ../src/jarabe/journal/expandedentry.py:296
 #: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
@@ -1483,7 +1489,7 @@ msgstr "இணைக்கயிறு"
 
 #: ../src/jarabe/journal/expandedentry.py:469
 msgid "Comments:"
-msgstr ""
+msgstr "கருத்துக்கள்:"
 
 #: ../src/jarabe/journal/journalactivity.py:140
 #: ../src/jarabe/journal/journaltoolbox.py:89
@@ -1494,7 +1500,7 @@ msgstr "சஞ்சிகை"
 
 #: ../src/jarabe/journal/journaltoolbox.py:98
 msgid "Favorite entries"
-msgstr ""
+msgstr "பிடித்த உள்ளீடுகள்"
 
 #: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
@@ -1551,7 +1557,7 @@ msgstr "நகல்"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "மறுபுதுப்பிப்பு"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
@@ -1590,29 +1596,29 @@ msgstr "வைப்பு பார்வை"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "அனைத்தையும் தேர்ந்தெடுக்காத"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "அனைத்தையும் தேர்ந்தெடு"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "உங்களுக்கு %d உள்ளிட்டை அழிக்க விருப்பமா?"
+msgstr[1] "உங்களுக்கு %d உள்ளிட்டுகளை அழிக்க விருப்பமா?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "படியெடு"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "%(total)d இல் %(selected)d தெரிவு செய்தது"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
@@ -1659,7 +1665,7 @@ msgstr "பொருளைத் தெரிவுசெய்"
 #: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "செயற்பாட்டுடன் %s திறக்க ஒரு பொருளை தெரிவுசெய்"
 
 #: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
@@ -1704,8 +1710,8 @@ msgstr "இருக்கின்றவையில் கோப்பி�
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "உங்களுக்கு %d உள்ளீட்டை படியெடுக்க விருப்பமா?"
+msgstr[1] "உங்களுக்கு %d உள்ளீடுகளை படியெடுக்க விருப்பமா?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
@@ -1729,12 +1735,12 @@ msgstr "நிறுத்து"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "தொடரவும்"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(total)d உடைய %(index)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
