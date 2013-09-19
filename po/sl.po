@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 17:17+0200\n"
+"PO-Revision-Date: 2013-09-18 17:31+0200\n"
 "Last-Translator: filmsi <miles@filmsi.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sl\n"
@@ -180,7 +180,7 @@ msgstr "Tipkovnica"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr "Model Tipkovnice"
+msgstr "Model tipkovnice"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
@@ -188,7 +188,7 @@ msgstr ""
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "Razpored tipkovnice"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -214,6 +214,8 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"Jezike dodajte v želenem zaporedju. Če prevod ni na voljo, bo izbran "
+"naslednji s seznama."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
@@ -235,7 +237,7 @@ msgstr "Ponudnik:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "Paket:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
@@ -255,7 +257,7 @@ msgstr "Ime dostopne točke (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "PIN (Personal Identity Number):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
@@ -349,6 +351,8 @@ msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"Posodobitve programa odpravljajo napake, varnostne luknje in omogočajo nove "
+"funkcionalnosti."
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
@@ -365,7 +369,7 @@ msgstr "Nameščanje posodobitev ..."
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "Preverjanje %s ..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
@@ -379,7 +383,7 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Posodabljanje %s ..."
 
 #: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
@@ -405,12 +409,12 @@ msgstr[3] ""
 
 #: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
-msgstr ""
+msgstr "Namesti izbrano"
 
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
-msgstr ""
+msgstr "Velikost prenosa: %s"
 
 #: ../extensions/cpsection/updater/view.py:373
 #, python-format
@@ -420,7 +424,7 @@ msgstr ""
 #: ../extensions/cpsection/updater/view.py:380
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
+msgstr "Različica %(version)s (velikost: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
@@ -489,7 +493,7 @@ msgstr "Pokaži tipkovnico"
 #: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
-msgstr "IP naslov: %s"
+msgstr "Naslov IP: %s"
 
 #: ../extensions/deviceicon/network.py:82
 #: ../extensions/deviceicon/network.py:298
@@ -1284,7 +1288,7 @@ msgstr "Seznam"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
