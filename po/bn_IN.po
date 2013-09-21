@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-18 14:05+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-09-20 06:13+0200\n"
+"Last-Translator: Mohona <mohonabose@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
 "MIME-Version: 1.0\n"
@@ -144,11 +144,11 @@ msgstr "ত্রুটিযুক্ত সময় জোনের অস্ত
 
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
-msgstr ""
+msgstr "সময় অঞ্চল"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
-msgstr ""
+msgstr "ফ্রেম"
 
 #: ../extensions/cpsection/frame/model.py:41
 #: ../extensions/cpsection/frame/model.py:66
@@ -1880,7 +1880,7 @@ msgstr ""
 
 #: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "ব্লুটুথ সংযোগটি ব্যর্থ হয়েছে অথবা সময় পেরিয়ে গেছে।"
 
 #: ../src/jarabe/model/network.py:308
 msgid "Unused."
@@ -1962,7 +1962,7 @@ msgstr ""
 #: ../src/jarabe/view/viewsource.py:408
 #, python-format
 msgid "View source: %s"
-msgstr ""
+msgstr "সোর্স প্রদর্শন: %s"
 
 #: ../src/jarabe/view/viewsource.py:409
 #, python-format
