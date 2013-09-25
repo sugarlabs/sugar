@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: pl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-15 01:10+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: 2013-09-25 12:42+0200\n"
+"Last-Translator: Jakub <jamarat@o2.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -124,11 +124,11 @@ msgstr "Tło"
 
 #: ../extensions/cpsection/background/view.py:39
 msgid "Select a background:"
-msgstr ""
+msgstr "Wybierz tło:"
 
 #: ../extensions/cpsection/background/view.py:46
 msgid "Clear background"
-msgstr ""
+msgstr "Wyczyść tło"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -235,15 +235,15 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/view.py:117
 msgid "Country:"
-msgstr ""
+msgstr "Kraj:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "Dostawca:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr ""
+msgstr "Taryfa:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
@@ -269,12 +269,12 @@ msgstr "Numer PIN:"
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
 msgid "Plan #%s"
-msgstr ""
+msgstr "Taryfa #%s"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "Dostawca %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -365,7 +365,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "Trwa aktualizacja..."
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
@@ -381,7 +381,6 @@ msgid "Checking %s..."
 msgstr "Sprawdzam %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
-#, fuzzy
 msgid "Looking for updates..."
 msgstr "Szukam uaktualnień..."
 
@@ -432,7 +431,7 @@ msgstr "Z wersji %(current)s do %(new)s (Rozmiar: %(size)s)"
 #: ../extensions/cpsection/updater/view.py:380
 #, python-format
 msgid "Version %(version)s (Size: %(size)s)"
-msgstr ""
+msgstr "Wersja %(version)s (Rozmiar: %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:397
@@ -458,7 +457,7 @@ msgstr "%.1f MB"
 
 #: ../extensions/cpsection/webaccount/__init__.py:24
 msgid "Configure your Web Services"
-msgstr ""
+msgstr "Skonfiguruj swoje usługi sieciowe"
 
 #: ../extensions/cpsection/webaccount/view.py:42
 #, python-format
@@ -466,6 +465,8 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
+"Nie ma zainstalowanych żadnych usług sieciowych.\n"
+"Więcej szczegółów na stronie %s "
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
@@ -735,20 +736,24 @@ msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
+"Stempel czasowy (liczba sekund systemu UNIX) ostatniego udanego "
+"uaktualnienia aktywności."
 
 #: ../data/sugar.schemas.in.h:3
 msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
+"Moduł wykonywania uaktualnień aktywności (Activity update backend module), "
+"następnie przecinek, następnie nazwa klasy. "
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Activity update backend."
-msgstr ""
+msgstr "Moduł wykonywania uaktualnień aktywności (Activity update backend)"
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "Częstotliwość uaktualnień automatycznych."
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
@@ -823,6 +828,8 @@ msgstr "Rozmiar czcionki używany na pulpicie."
 msgid ""
 "Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"Częstotliwość automatycznych uaktualnień aktywności. Podana w dniach. 0 "
+"oznacza wyłączenie automatu."
 
 #: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
@@ -932,7 +939,7 @@ msgstr "Lista opcji klawiatury."
 
 #: ../data/sugar.schemas.in.h:46
 msgid "Microformat update URL."
-msgstr ""
+msgstr "Adres URL uaktualnień (microformat)."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
@@ -988,7 +995,7 @@ msgstr "Model klawiatury, który ma być użyty"
 
 #: ../data/sugar.schemas.in.h:60
 msgid "Timestamp of last activity update."
-msgstr ""
+msgstr "Stempel czasowy ostatniego uaktualnienia aktywności."
 
 #: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
@@ -1002,6 +1009,8 @@ msgstr "URL serwera Jabbera, który ma być użyty."
 msgid ""
 "URL used by the microformat update backend for activity update information."
 msgstr ""
+"Adres URL informacji używanych przez moduł uaktualnień aktywności "
+"(microformat)."
 
 #: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
@@ -1302,13 +1311,13 @@ msgstr "Wszystkie Aktywności"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
 msgstr "Moje Aktywności %d"
 
@@ -1549,7 +1558,7 @@ msgstr "Duplikuj"
 
 #: ../src/jarabe/journal/journaltoolbox.py:433
 msgid "Refresh"
-msgstr ""
+msgstr "Odśwież"
 
 #: ../src/jarabe/journal/journaltoolbox.py:470
 #: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
@@ -1588,30 +1597,30 @@ msgstr "Sortowanie"
 
 #: ../src/jarabe/journal/journaltoolbox.py:661
 msgid "Deselect all"
-msgstr ""
+msgstr "Odznacz wszystko"
 
 #: ../src/jarabe/journal/journaltoolbox.py:674
 msgid "Select all"
-msgstr ""
+msgstr "Zaznacz wszystko"
 
 #: ../src/jarabe/journal/journaltoolbox.py:700
 #, python-format
 msgid "Do you want to erase %d entry?"
 msgid_plural "Do you want to erase %d entries?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Czy chcesz usunąć %d wpis?"
+msgstr[1] "Czy chcesz usunąć %d wpisy?"
+msgstr[2] "Czy chcesz usunąć %d wpisów?"
 
 #: ../src/jarabe/journal/journaltoolbox.py:714
 #: ../src/jarabe/journal/palettes.py:364
 msgid "Copy"
-msgstr ""
+msgstr "Kopiuj"
 
 #. TRANS: Do not translate %(selected)d and %(total)d.
 #: ../src/jarabe/journal/journaltoolbox.py:759
 #, python-format
 msgid "Selected %(selected)d of %(total)d"
-msgstr ""
+msgstr "Zaznaczono %(selected)d z %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
@@ -1659,7 +1668,7 @@ msgstr "Wybierz obiekt"
 #: ../src/jarabe/journal/objectchooser.py:175
 #, python-format
 msgid "Choose an object to open with %s activity"
-msgstr ""
+msgstr "Wybierz obiekt do otwarcia z aktywnością %s"
 
 #: ../src/jarabe/journal/objectchooser.py:183
 #: ../src/jarabe/view/viewsource.py:418
@@ -1704,9 +1713,9 @@ msgstr "Nie można skopiować wpisów bez pliku."
 #, python-format
 msgid "Do you want to copy %d entry?"
 msgid_plural "Do you want to copy %d entries?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Czy chcesz skopiować %d wpis?"
+msgstr[1] "Czy chcesz skopiować %d wpisy?"
+msgstr[2] "Czy chcesz skopiować %d wpisów?"
 
 #: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
@@ -1730,12 +1739,12 @@ msgstr "Zatrzymaj"
 
 #: ../src/jarabe/journal/palettes.py:561
 msgid "Continue"
-msgstr ""
+msgstr "Kontynuuj"
 
 #: ../src/jarabe/journal/palettes.py:598
 #, python-format
 msgid "%(index)d of %(total)d : %(object_title)s"
-msgstr ""
+msgstr "%(index)d z %(total)d : %(object_title)s"
 
 #: ../src/jarabe/journal/volumestoolbar.py:386
 #: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
