@@ -42,6 +42,7 @@ def get_soup_session():
         _session.set_property("timeout", 60)
         _session.set_property("idle-timeout", 60)
         _session.set_property("user-agent", "Sugar/%s" % config.version)
+        _session.add_feature_by_type(Soup.ProxyResolverDefault)
     return _session
 
 
