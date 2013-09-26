@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-08-29 00:41+0200\n"
-"Last-Translator: Cris Anderson <anderson861@gmail.com>\n"
+"PO-Revision-Date: 2013-09-26 09:11+0200\n"
+"Last-Translator: Bulgantamir  <ar_uul_us@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
@@ -314,6 +314,9 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"Сервер -- энэ бол таны сууж буй өрөө л гэсэн үг; нэг серверт холбоотой "
+"хүмүүс өөр өөр сүлжээнд холбогдсон байсан ч бие биенээ харах боломжтой "
+"байдагт учир нь байгаа юм"
 
 #: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
@@ -344,10 +347,13 @@ msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"Програм хангамжийн шинэчлэл хийх нь тухай програмын алдааг засахаас гадна "
+"системийн гадны нөлөөнд өртөхөөс сэргийлэх ба шинэ боломж бололцоог нээж "
+"өгдөг"
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
-msgstr ""
+msgstr "Шинэчлэл хийгдэж байна"
 
 #: ../extensions/cpsection/updater/view.py:106
 msgid "Checking for updates..."
@@ -375,7 +381,7 @@ msgstr "%s Татаж авч байна"
 #: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
-msgstr ""
+msgstr "Шинэчлэл %s хийгдсэн байна"
 
 #: ../extensions/cpsection/updater/view.py:153
 #, fuzzy
@@ -384,17 +390,17 @@ msgstr "Таны програм хангамж шинэчлэгдлээ"
 
 #: ../extensions/cpsection/updater/view.py:155
 #, python-format
-#, python-format, fuzzy
+#, python-format, 
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "Шинэчлэл %s суулгах боломжтой"
-msgstr[1] ""
+msgstr[1] "Шинэчлэлийн %s-г хийх боломжтой"
 
 #: ../extensions/cpsection/updater/view.py:184
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
+msgstr[0] "шинэчлэлийн %s хийгдсэн байна"
 msgstr[1] ""
 
 #: ../extensions/cpsection/updater/view.py:266
@@ -403,7 +409,7 @@ msgstr ""
 
 #: ../extensions/cpsection/updater/view.py:284
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Download size: %s"
 msgstr "Татаж авалтын хэмжээ: %s"
 
@@ -430,14 +436,14 @@ msgstr "1 КБайт"
 #. TRANS: download size of small updates, e.g. '250 KB'
 #: ../extensions/cpsection/updater/view.py:403
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%.0f KB"
 msgstr "%.0f КБайт"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
 #: ../extensions/cpsection/updater/view.py:406
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%.1f MB"
 msgstr "%.1f МБайт"
 
@@ -585,7 +591,7 @@ msgstr ""
 #: ../extensions/deviceicon/network.py:350
 #: ../extensions/deviceicon/network.py:351
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "%d KB"
 msgstr "%d КБайт"
 
@@ -706,7 +712,7 @@ msgstr "Дэлгэцний зураг"
 
 #: ../extensions/globalkey/screenshot.py:76
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Screenshot of \"%s\""
 msgstr "\"%s\"-н дэлгэцний зураг"
 
@@ -1280,13 +1286,13 @@ msgstr "Жагсаалтыг харах"
 #: ../src/jarabe/desktop/viewtoolbar.py:195
 #: ../src/jarabe/desktop/viewtoolbar.py:209
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "<Ctrl>%d"
 msgstr "<Ctrl>%d"
 
 #: ../src/jarabe/desktop/viewtoolbar.py:208
 #, python-format
-#, python-format, 
+#, python-format,
 msgid "Favorites view %d"
 msgstr "Дуртай зүйлсийг үзэх %d"
 
