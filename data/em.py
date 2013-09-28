@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # $Id: //projects/empy/em.py#146 $ $Date: 2003/10/27 $
 
