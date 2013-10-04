@@ -278,9 +278,11 @@ class CopyMenuBuilder():
 
         if self._add_webservices_menu:
             for account in accountsmanager.get_configured_accounts():
-                self._menu.append(
-                    account.get_shared_journal_entry().get_share_menu(
-                        self._get_uid_list_cb))
+                if hasattr(account, 'get_shared_journal_entry'):
+                    entry = account.get_shared_journal_entry()
+                    if hasattr(entry, 'get_share_menu'):
+                        self._menu.append(entry.get_share_menu(
+                                          self._get_uid_list_cb))
 
     def update_mount_point(self):
         for menu_item in self._menu.get_children():
