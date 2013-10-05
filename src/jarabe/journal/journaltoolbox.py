@@ -535,9 +535,12 @@ class DetailToolbox(ToolbarBox):
             palette.menu.remove(menu_item)
 
         for account in accountsmanager.get_configured_accounts():
-            menu = account.get_shared_journal_entry().get_refresh_menu()
-            palette.menu.append(menu)
-            menu.set_metadata(self._metadata)
+            if hasattr(account, 'get_shared_journal_entry'):
+                entry = account.get_shared_journal_entry()
+                if hasattr(entry, 'get_refresh_menu'):
+                    menu = entry.get_refresh_menu()
+                    palette.menu.append(menu)
+                    menu.set_metadata(self._metadata)
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
