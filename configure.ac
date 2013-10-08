@@ -12,6 +12,7 @@ AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
+PYTHON=python2
 AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0 gconf-2.0)
