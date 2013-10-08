@@ -59,8 +59,5 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
 endif
 
-icondir = $(datadir)/icons/hicolor/scalable/apps
-icon_DATA = sugar-xo.svg
-
 EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA)
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
