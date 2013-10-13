@@ -452,7 +452,7 @@ class ActivityIcon(CanvasIcon):
         self.palette = None
         if not self._resume_mode or not self._journal_entries:
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                          style.COLOR_TRANSPARENT.get_svg()))
+                                          style.COLOR_WHITE.get_svg()))
         else:
             xo_color = misc.get_icon_color(self._journal_entries[0])
         self.props.xo_color = xo_color
@@ -535,7 +535,7 @@ class FavoritePalette(ActivityPalette):
 
         if not journal_entries:
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                          style.COLOR_TRANSPARENT.get_svg()))
+                                          style.COLOR_WHITE.get_svg()))
         else:
             xo_color = misc.get_icon_color(journal_entries[0])
 
