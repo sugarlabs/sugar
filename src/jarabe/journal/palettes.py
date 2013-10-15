@@ -595,7 +595,7 @@ class BatchOperator(GObject.GObject):
             if title is None or title == '':
                 title = _('Untitled')
             alert_message = _('%(index)d of %(total)d : %(object_title)s') % {
-                'index': self._object_index,
+                'index': self._object_index + 1,
                 'total': len(self._uid_list),
                 'object_title': title}
 
