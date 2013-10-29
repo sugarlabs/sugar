@@ -61,6 +61,8 @@ _actions_table = {
     '<alt><shift>q': 'logout'
 }
 
+# These keys will not be trigger a action if a modal dialog is opened
+_non_modal_action_keys = ('F1', 'F2', 'F3', 'F4', 'F5', 'F6')
 
 _instance = None
 
@@ -167,6 +169,14 @@ class KeyHandler(object):
             self._key_pressed = key
             self._keycode_pressed = keycode
             self._keystate_pressed = state
+
+            # avoid switch to the Journal or change views if a modal dialog
+            # is opened http://bugs.sugarlabs.org/ticket/4601
+            if key in _non_modal_action_keys and \
+                    shell.get_model().has_modal():
+                logging.debug(
+                    'Key %s action stopped due to modal dialog open', key)
+                return
 
             action = _actions_table[key]
             if self._tabbing_handler.is_tabbing():
