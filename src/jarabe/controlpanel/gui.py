@@ -30,6 +30,7 @@ from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
+from jarabe.view.keyhandler import set_control_panel_opened
 
 POWERD_FLAG_DIR = '/etc/powerd/flags'
 
@@ -88,6 +89,9 @@ class ControlPanel(Gtk.Window):
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
+
+        # Notify to the key handler the control panel is opened.
+        set_control_panel_opened(True)
 
     def __size_changed_cb(self, event):
         self._calculate_max_columns()
@@ -367,6 +371,8 @@ class ControlPanel(Gtk.Window):
         self._update(query)
 
     def __stop_clicked_cb(self, widget):
+        # Notify to the key handler the control panel is closed.
+        set_control_panel_opened(False)
         self.destroy()
 
     def __close_request_cb(self, widget, event=None):
