@@ -400,6 +400,7 @@ class ShellModel(GObject.GObject):
         self._active_activity = None
         self._tabbing_activity = None
         self._launchers = {}
+        self._modal_windows_counter = 0
 
         self._screen.toggle_showing_desktop(True)
 
@@ -711,6 +712,15 @@ class ShellModel(GObject.GObject):
                           activity_id)
             self.notify_launch_failed(activity_id)
         return False
+
+    def push_modal(self):
+        self._modal_windows_counter = self._modal_windows_counter + 1
+
+    def pop_modal(self):
+        self._modal_windows_counter = self._modal_windows_counter - 1
+
+    def has_modal(self):
+        return self._modal_windows_counter > 0
 
 
 def get_model():
