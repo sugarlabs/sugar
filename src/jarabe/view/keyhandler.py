@@ -71,6 +71,7 @@ class KeyHandler(object):
         self._key_pressed = None
         self._keycode_pressed = 0
         self._keystate_pressed = 0
+        self._control_panel_opened = False
 
         self._key_grabber = SugarExt.KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -168,6 +169,12 @@ class KeyHandler(object):
             self._keycode_pressed = keycode
             self._keystate_pressed = state
 
+            # avoid switch to the Journal or change views if the control panel
+            # is opened http://bugs.sugarlabs.org/ticket/4601
+            if key in ('F1', 'F2', 'F3', 'F4', 'F5', 'F6') and \
+                    self._control_panel_opened:
+                return
+
             action = _actions_table[key]
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
@@ -209,3 +216,12 @@ class KeyHandler(object):
 def setup(frame):
     global _instance
     _instance = KeyHandler(frame)
+
+
+def set_control_panel_opened(control_panel_opened):
+    """
+    The setup(frame) is already run at sugar-session startup.
+    So, we can safely assume the "_instance" is fully-grown up.
+    """
+
+    _instance._control_panel_opened = control_panel_opened
