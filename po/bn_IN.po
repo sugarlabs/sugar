@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Update 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-07-31 00:33-0400\n"
-"PO-Revision-Date: 2013-09-20 06:13+0200\n"
+"PO-Revision-Date: 2013-10-18 07:39+0200\n"
 "Last-Translator: Mohona <mohonabose@gmail.com>\n"
 "Language-Team: Bengali <core@bengalinux.org>\n"
 "Language: bn_IN\n"
@@ -40,22 +40,22 @@ msgstr "এখানে নাম লিখতে ভুলোনা যেন�
 #: ../extensions/cpsection/aboutme/model.py:75
 #, python-format
 msgid "stroke:   color=%s hue=%s"
-msgstr ""
+msgstr "স্ট্রোক: ... ... ... রং=%s হিউ=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "স্ট্রোক: ... ... ... %s"
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
 msgid "fill:     color=%s hue=%s"
-msgstr ""
+msgstr "ভর: ... ... ... ... ... রং=%s হিউ=%s"
 
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr "ভর:     %s"
+msgstr "ভর: ... ... ... ... ... %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
@@ -107,7 +107,7 @@ msgstr "বেতার ফার্মওয়্যার"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
-msgstr ""
+msgstr "গ্রহস্বত্ব ও লাইসেন্স"
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:187
@@ -188,15 +188,15 @@ msgstr "কীবোর্ড"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr ""
+msgstr "কীবোর্ড মডেল"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "লেআউট পরিবর্তনের চাবি"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr ""
+msgstr "কীবোর্ড লেআউট"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -228,7 +228,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr ""
+msgstr "মোডেম কনফিগারেশন"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -242,19 +242,19 @@ msgstr "দেশ"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:118
 msgid "Provider:"
-msgstr ""
+msgstr "প্রদানকারী:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:119
 msgid "Plan:"
-msgstr "পরিকল্পনা"
+msgstr "পরিকল্পনা:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr ""
+msgstr "ব্যবহারকারীর নাম:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
-msgstr ""
+msgstr "পাসওয়ার্ড:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
@@ -262,11 +262,11 @@ msgstr "সংখ্যা"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "প্রবেশের পয়েন্ট নাম (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "ব্যক্তিগত পরিচিতি সংখ্যা (পিন)"
+msgstr "ব্যক্তিগত পরিচিতি সংখ্যা (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
@@ -276,7 +276,7 @@ msgstr "পরিকল্পনা #%s"
 #: ../extensions/cpsection/modemconfiguration/model.py:291
 #, python-format
 msgid "Provider %s"
-msgstr ""
+msgstr "প্রদানকারী %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -313,6 +313,8 @@ msgstr "রেডিও"
 #: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
+"নেটওয়ার্ক ইতিহাস উপেক্ষা করো যদি তোমার নেটওয়ার্কে সংযোগ স্থাপন করতে "
+"অসুবিধা হয়।"
 
 #: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
@@ -328,6 +330,8 @@ msgid ""
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
+"সার্ভার একটি ঘরের সমতুল্য; যেখানে সবাই সবাইকে দেখতে পায়, সবাই একি নেটওয়ার্কে "
+"যদি নাও থাকে।  "
 
 #: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
@@ -335,7 +339,7 @@ msgstr "সার্ভার"
 
 #: ../extensions/cpsection/power/__init__.py:21
 msgid "Power"
-msgstr ""
+msgstr "শক্তি"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
@@ -343,21 +347,23 @@ msgstr ""
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
-msgstr ""
+msgstr "শক্তি পরিচালন"
 
 #: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
-msgstr ""
+msgstr "স্বয়ংক্রিয় শক্তি পরিচালন (ব্যাটারির আয়ু বৃদ্ধি করে)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software Update"
-msgstr ""
+msgstr "সফ্টওয়্যার আপডেট"
 
 #: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
+"সফ্টওয়্যার আপডেট ত্রুটি সংশোধন করে, সুরক্ষা সংক্রান্ত দুর্বলতা দূর করে ও "
+"নতুন বৈশিষ্ট্য প্রদান করে।"
 
 #: ../extensions/cpsection/updater/view.py:79
 msgid "Update in progress..."
@@ -374,7 +380,7 @@ msgstr "আপডেট ইনস্টল করা হচ্ছে..."
 #: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
-msgstr ""
+msgstr "পরীক্ষা করা হচ্ছে %s..."
 
 #: ../extensions/cpsection/updater/view.py:139
 msgid "Looking for updates..."
@@ -535,7 +541,7 @@ msgstr "চ্যানেল"
 
 #: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
-msgstr ""
+msgstr "তারযুক্ত নেটওয়ার্ক"
 
 #: ../extensions/deviceicon/network.py:183
 msgid "Speed"
@@ -647,7 +653,7 @@ msgstr "প্লেব্যাক বন্ধ কর"
 
 #: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
-msgstr ""
+msgstr "স্বরের মাত্রা"
 
 #: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
@@ -714,7 +720,7 @@ msgstr "স্ক্রীণশট"
 #: ../extensions/globalkey/screenshot.py:76
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "\"%s\" - এর স্ক্রীণশট"
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
@@ -740,7 +746,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
-msgstr ""
+msgstr "স্বয়ংক্রিয় আপডেট ফ্রিকোয়েন্সি।"
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
@@ -759,15 +765,15 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
-msgstr ""
+msgstr "কোণার বিলম্ব"
 
 #: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
-msgstr ""
+msgstr "ডিফল্ট হরফ মুখ"
 
 #: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
-msgstr ""
+msgstr "ডিফল্ট ফন্টের আকার"
 
 #: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
