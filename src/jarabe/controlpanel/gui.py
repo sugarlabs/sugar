@@ -30,6 +30,7 @@ from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
+from jarabe.model import shell
 
 POWERD_FLAG_DIR = '/etc/powerd/flags'
 
@@ -88,6 +89,8 @@ class ControlPanel(Gtk.Window):
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
+        # the modal windows counter is updated to disable hot keys - SL#4601
+        shell.get_model().push_modal()
 
     def __size_changed_cb(self, event):
         self._calculate_max_columns()
@@ -367,6 +370,7 @@ class ControlPanel(Gtk.Window):
         self._update(query)
 
     def __stop_clicked_cb(self, widget):
+        shell.get_model().pop_modal()
         self.destroy()
 
     def __close_request_cb(self, widget, event=None):
