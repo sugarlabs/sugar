@@ -416,7 +416,7 @@ class ClipboardMenu(MenuItem):
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
-        for uid in self._uid_list:
+        for uid in self._uid_list_cb():
             self._temp_file_path = model.get_file(uid)
             logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
             selection_data.set_uris(['file://' + self._temp_file_path])
