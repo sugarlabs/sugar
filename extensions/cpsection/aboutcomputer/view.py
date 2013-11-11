@@ -66,6 +66,25 @@ class AboutComputer(SectionView):
         vbox_identity.set_spacing(style.DEFAULT_SPACING)
 
         box_identity = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+
+        hardware_model = self._model.get_hardware_model()
+        if hardware_model:
+            label_model = Gtk.Label(label=_('Model:'))
+            label_model.set_alignment(1, 0)
+            label_model.modify_fg(Gtk.StateType.NORMAL,
+                                  style.COLOR_SELECTION_GREY.get_gdk_color())
+            box_identity.pack_start(label_model, False, True, 0)
+            self._group.add_widget(label_model)
+
+            label_model.show()
+            label_model_value = Gtk.Label(label=hardware_model)
+            label_model_value.set_alignment(0, 0)
+            box_identity.pack_start(label_model_value, False, True, 0)
+            label_model_value.show()
+            vbox_identity.pack_start(box_identity, False, True, 0)
+            box_identity.show()
+
+        box_identity = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         label_serial = Gtk.Label(label=_('Serial Number:'))
         label_serial.set_alignment(1, 0)
         label_serial.modify_fg(Gtk.StateType.NORMAL,
