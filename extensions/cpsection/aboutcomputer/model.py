@@ -24,6 +24,7 @@ import errno
 import dbus
 
 from jarabe import config
+from gi.repository import GConf
 
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -120,6 +121,12 @@ def get_firmware_number():
         if firmware_no is None:
             firmware_no = _not_available
     return firmware_no
+
+
+def get_hardware_model():
+    client = GConf.Client.get_default()
+    return client.get_string(
+        '/desktop/sugar/extensions/aboutcomputer/hardware_model')
 
 
 def print_firmware_number():
