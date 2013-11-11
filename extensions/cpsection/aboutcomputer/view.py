@@ -218,7 +218,20 @@ class AboutComputer(SectionView):
         expander = Gtk.Expander(label=_('Full license:'))
         expander.connect('notify::expanded', self.license_expander_cb)
         expander.show()
-        vbox_copyright.pack_start(expander, True, True, 0)
+        vbox_copyright.pack_start(expander, False, True, 0)
+
+        # display secondary licenses, if any
+        for license_text in self._model.get_secondary_licenses():
+            label_license = Gtk.Label(label=license_text)
+            label_license.set_alignment(0, 0)
+            label_license.set_line_wrap(True)
+            label_license.set_size_request(Gdk.Screen.width() / 2, -1)
+            label_license.show()
+
+            separator = Gtk.HSeparator()
+            vbox_copyright.pack_start(separator, False, True, 0)
+            separator.show()
+            vbox_copyright.pack_start(label_license, False, True, 0)
 
         self._vbox.pack_start(vbox_copyright, True, True, 0)
         vbox_copyright.show()

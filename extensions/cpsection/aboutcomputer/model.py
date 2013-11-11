@@ -129,6 +129,21 @@ def get_hardware_model():
         '/desktop/sugar/extensions/aboutcomputer/hardware_model')
 
 
+def get_secondary_licenses():
+    licenses = []
+    # Check if there are more licenses to display
+    licenses_path = config.licenses_path
+    if os.path.isdir(licenses_path):
+        for file_name in os.listdir(licenses_path):
+            try:
+                file_path = os.path.join(licenses_path, file_name)
+                with open(file_path) as f:
+                    licenses.append(f.read())
+            except IOError:
+                logging.error('Error trying open %s', file_path)
+    return licenses
+
+
 def print_firmware_number():
     print get_firmware_number()
 
