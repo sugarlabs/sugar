@@ -22,6 +22,7 @@ from gettext import gettext as _
 import errno
 
 import dbus
+from gi.repository import GConf
 
 from jarabe import config
 
@@ -120,6 +121,12 @@ def get_firmware_number():
         if firmware_no is None:
             firmware_no = _not_available
     return firmware_no
+
+
+def get_hardware_model():
+    client = GConf.Client.get_default()
+    return client.get_string(
+        '/desktop/sugar/extensions/aboutcomputer/hardware_model')
 
 
 def print_firmware_number():
