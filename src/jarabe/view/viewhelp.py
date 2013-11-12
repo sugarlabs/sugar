@@ -56,15 +56,17 @@ def setup_view_help(activity):
                                          'Help.activity/helplink.json')
         json_file = open(help_content_link)
         links = json.load(json_file)
-
-        # display the activity help in a window
-        if bundle_id in links.keys():
-            viewhelp = ViewHelp(activity_name, links[bundle_id], window_xid)
-            viewhelp.show()
-        else:
-            _logger.error('Help content is not available for the activity')
-    except Exception:
+        json_file.close()
+    
+    except IOError:
         _logger.error('helplink.json file was not found or malformed')
+
+    # display the activity help in a window
+    if bundle_id in links.keys():
+        viewhelp = ViewHelp(activity_name, links[bundle_id], window_xid)
+        viewhelp.show()
+    else:
+        _logger.error('Help content is not available for the activity')
 
 
 class ViewHelp(Gtk.Window):
@@ -73,7 +75,6 @@ class ViewHelp(Gtk.Window):
     def __init__(self, activity_name, help_file, window_xid):
         self.parent_window_xid = window_xid
 
-        # initiate Gtk Window
         Gtk.Window.__init__(self)
         box = Gtk.Box()
         box.set_orientation(Gtk.Orientation.VERTICAL)
@@ -89,15 +90,13 @@ class ViewHelp(Gtk.Window):
         height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
-        self.connect('realize', self.realize_cb)
+        self.connect('realize', self.__realize_cb)
 
-        # implement the tool bar
         toolbar = Toolbar(activity_name)
         box.pack_start(toolbar, False, False, 0)
         toolbar.show()
-        toolbar.connect('stop-clicked', self.stop_clicked_cb)
+        toolbar.connect('stop-clicked', self.__stop_clicked_cb)
 
-        # implement WebKit WebView
         webview = WebKit.WebView()
         webview.set_full_content_zoom(True)
 
@@ -109,16 +108,14 @@ class ViewHelp(Gtk.Window):
 
         webview.show()
 
-        # get the current language and display relavent html file
-        language = self.get_current_language()
-        view_file = self.get_help_file(language, help_file)
+        language = self.__get_current_language()
+        view_file = self.__get_help_file(language, help_file)
         webview.load_uri('file://' + view_file)
 
-    def stop_clicked_cb(self, widget):
+    def __stop_clicked_cb(self, widget):
         self.destroy()
 
-    def realize_cb(self, widget):
-        # focus the help viewer and prompt it over the activity window
+    def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         window = self.get_window()
         window.set_accept_focus(True)
@@ -127,16 +124,16 @@ class ViewHelp(Gtk.Window):
             display, self.parent_window_xid)
         window.set_transient_for(parent)
 
-    def get_current_language(self):
+    def __get_current_language(self):
         locale = os.environ.get('LANG')
         return locale.split('.')[0].split('_')[0].lower()
 
-    def get_help_file(self, language, help_file):
-        path = os.path.join(activity_path, 'Help.activity/help/', 
+    def __get_help_file(self, language, help_file):
+        path = os.path.join(activity_path, 'Help.activity/html/', 
                             language, help_file)
         if not os.path.isfile(path):
             path = os.path.join(activity_path, 
-                                'Help.activity/help/en/', help_file)
+                                'Help.activity/html/', help_file)
         return path
 
 
@@ -151,33 +148,32 @@ class Toolbar(Gtk.Toolbar):
 
         title = 'Help: ' + activity_name
 
-        self.add_separator(False)
+        self.__add_separator(False)
 
-        # display activity name as the title of the window
         label = Gtk.Label()
         label.set_markup('<b>%s</b>' % title)
         label.set_alignment(0, 0.5)
-        self.add_widget(label)
+        self.__add_widget(label)
 
-        self.add_separator(True)
+        self.__add_separator(True)
 
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
-        stop.connect('clicked', self.stop_clicked_cb)
+        stop.connect('clicked', self.__stop_clicked_cb)
         self.insert(stop, -1)
         stop.show()
 
-    def stop_clicked_cb(self, widget):
+    def __stop_clicked_cb(self, widget):
         self.emit('stop-clicked')
 
-    def add_widget(self, widget):
+    def __add_widget(self, widget):
         tool_item = Gtk.ToolItem()
         tool_item.add(widget)
         widget.show()
         self.insert(tool_item, -1)
         tool_item.show()
 
-    def add_separator(self, expand=False):
+    def __add_separator(self, expand=False):
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         if expand:
