@@ -739,10 +739,11 @@ def _write_entry_on_external_device(metadata, file_path):
         os.mkdir(metadata_dir_path)
 
     # Set the HIDDEN attrib even when the metadata directory already
-    # exists for backward compatibility.
-    if not SugarExt.fat_set_hidden_attrib(metadata_dir_path):
-        logging.error('Could not set hidden attribute on %s' %
-                      (metadata_dir_path))
+    # exists for backward compatibility; but don't set it in ~/Documents
+    if not metadata['mountpoint'] == get_documents_path():
+        if not SugarExt.fat_set_hidden_attrib(metadata_dir_path):
+            logging.error('Could not set hidden attribute on %s' %
+                          (metadata_dir_path))
 
     preview = None
     if 'preview' in metadata_copy:
