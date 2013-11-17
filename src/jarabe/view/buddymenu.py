@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
 import logging
 from gettext import gettext as _
 
@@ -88,19 +89,33 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
 
     def _add_my_items(self):
-        item = PaletteMenuItem(_('Shutdown'), 'system-shutdown')
-        item.connect('activate', self.__shutdown_activate_cb)
-        self.menu_box.pack_start(item, True, True, 0)
-
         client = GConf.Client.get_default()
 
-        if client.get_bool('/desktop/sugar/show_restart'):
+        show_shutdown = client.get_bool('/desktop/sugar/show_shutdown')
+        show_restart = client.get_bool('/desktop/sugar/show_restart')
+        show_logout = client.get_bool('/desktop/sugar/show_logout')
+
+        if "SUGAR_SHOW_SHUTDOWN" in os.environ:
+            show_shutdown = os.environ["SUGAR_SHOW_SHUTDOWN"] == "yes"
+
+        if "SUGAR_SHOW_RESTART" in os.environ:
+            show_restart = os.environ["SUGAR_SHOW_RESTART"] == "yes"
+
+        if "SUGAR_SHOW_LOGOUT" in os.environ:
+            show_logout = os.environ["SUGAR_SHOW_LOGOUT"] == "yes"
+
+        if show_shutdown:
+            item = PaletteMenuItem(_('Shutdown'), 'system-shutdown')
+            item.connect('activate', self.__shutdown_activate_cb)
+            self.menu_box.pack_start(item, True, True, 0)
+
+        if show_restart:
             item = PaletteMenuItem(_('Restart'), 'system-restart')
             item.connect('activate', self.__reboot_activate_cb)
             self.menu_box.pack_start(item, True, True, 0)
             item.show()
 
-        if client.get_bool('/desktop/sugar/show_logout'):
+        if show_logout:
             item = PaletteMenuItem(_('Logout'), 'system-logout')
             item.connect('activate', self.__logout_activate_cb)
             self.menu_box.pack_start(item, True, True, 0)
