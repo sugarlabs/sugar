@@ -24,6 +24,7 @@ from gi.repository import GdkX11
 
 from sugar3.graphics import style
 from sugar3.graphics import palettegroup
+from sugar3.graphics.alert import ErrorAlert
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
@@ -97,8 +98,35 @@ class HomeWindow(Gtk.Window):
         self._transition_box.connect('completed',
                                      self._transition_completed_cb)
 
-        shell.get_model().zoom_level_changed.connect(
-            self.__zoom_level_changed_cb)
+        self._alert = None
+        shell_model = shell.get_model()
+        shell_model.zoom_level_changed.connect(self.__zoom_level_changed_cb)
+        shell_model.connect('open-activity-error',
+                            self.__open_activity_error_cb)
+
+    def add_alert(self, alert):
+        if self._alert is not None:
+            self.remove_alert()
+        self._alert = alert
+        self._box.pack_start(alert, False, True, 0)
+        self._box.reorder_child(alert, 1)
+
+    def remove_alert(self):
+        self._box.remove(self._alert)
+        self._alert = None
+
+    def __open_activity_error_cb(self, model, title, message):
+        logging.error('%s: %s' % (title, message))
+        if self._alert is None:
+            self._alert = ErrorAlert()
+            self._alert.connect('response', self.__alert_response_cb)
+            self.add_alert(self._alert)
+            self._alert.show()
+        self._alert.props.title = title
+        self._alert.props.msg = message
+
+    def __alert_response_cb(self, alert, response_id):
+        self.remove_alert()
 
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')

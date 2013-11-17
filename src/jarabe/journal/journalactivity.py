@@ -45,7 +45,7 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 
-from jarabe.model import session
+from jarabe.model import session, shell
 
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
@@ -173,10 +173,19 @@ class JournalActivity(JournalWindow):
         self._critical_space_alert = None
         self._check_available_space()
 
+        self._alert = None
+        shell.get_model().connect('open-activity-error-from-journal',
+                            self.__open_activity_error_cb)
+
         session.get_session_manager().shutdown_signal.connect(
             self._session_manager_shutdown_cb)
 
     def volume_error_cb(self, gobject, message, severity):
+        if self._alert is not None:
+            # Volume-error alert should override maximum-reached alert
+            self.remove_alert(self._alert)
+            self._alert = None
+
         alert = ErrorAlert(title=severity, msg=message)
         alert.connect('response', self.__alert_response_cb)
         self.add_alert(alert)
@@ -184,6 +193,17 @@ class JournalActivity(JournalWindow):
 
     def __alert_response_cb(self, alert, response_id):
         self.remove_alert(alert)
+        self._alert = None
+
+    def __open_activity_error_cb(self, model, title, message):
+        logging.error('%s: %s' % (title, message))
+        if self._alert is None:
+            self._alert = ErrorAlert()
+            self._alert.connect('response', self.__alert_response_cb)
+            self.add_alert(self._alert)
+            self._alert.show()
+        self._alert.props.title = title
+        self._alert.props.msg = message
 
     def __realize_cb(self, window):
         xid = window.get_window().get_xid()
