@@ -204,6 +204,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/show_shutdown</key>
+      <applyto>/desktop/sugar/show_shutdown</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Shutdown</short>
+        <long>If TRUE, Sugar will show a "Shutdown" option.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/peripherals/keyboard/layouts</key>
       <applyto>/desktop/sugar/peripherals/keyboard/layouts</applyto>
       <owner>sugar</owner>
