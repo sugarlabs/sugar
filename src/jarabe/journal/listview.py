@@ -83,7 +83,7 @@ class BaseListView(Gtk.Bin):
         Gtk.Bin.__init__(self)
 
         self.connect('map', self.__map_cb)
-        self.connect('unrealize', self.__unrealize_cb)
+        self.connect('unmap', self.__unmap_cb)
         self.connect('destroy', self.__destroy_cb)
 
         self._scrolled_window = Gtk.ScrolledWindow()
@@ -400,10 +400,12 @@ class BaseListView(Gtk.Bin):
         logging.debug('ListView.__map_cb %r', self._scroll_position)
         self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
+        self.set_is_visible(True)
 
-    def __unrealize_cb(self, widget):
+    def __unmap_cb(self, widget):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__map_cb %r', self._scroll_position)
+        logging.debug('ListView.__unmap_cb %r', self._scroll_position)
+        self.set_is_visible(False)
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
