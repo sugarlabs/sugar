@@ -176,6 +176,29 @@ class AboutComputer(SectionView):
         box_software.pack_start(box_wireless_fw, False, True, 0)
         box_wireless_fw.show()
 
+        days_from_last_update = self._model.days_from_last_update()
+        if days_from_last_update >= 0:
+            box_system_update = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+            label_system_update = Gtk.Label(label=_('Last system update:'))
+            label_system_update.set_alignment(1, 0)
+            label_system_update.modify_fg(
+                Gtk.StateType.NORMAL,
+                style.COLOR_SELECTION_GREY.get_gdk_color())
+            box_system_update.pack_start(label_system_update, False, True, 0)
+            self._group.add_widget(label_system_update)
+            label_system_update.show()
+
+            if days_from_last_update > 0:
+                msg = _('%d days ago') % days_from_last_update
+            else:
+                msg = _('Today')
+            system_update_value = Gtk.Label(label=msg)
+            system_update_value.set_alignment(0, 0)
+            box_system_update.pack_start(system_update_value, False, True, 0)
+            system_update_value.show()
+            box_software.pack_start(box_system_update, False, True, 0)
+            box_system_update.show()
+
         self._vbox.pack_start(box_software, False, True, 0)
         box_software.show()
 
