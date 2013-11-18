@@ -197,6 +197,12 @@ class ObjectPalette(Palette):
         filetransfer.start_transfer(buddy, file_name, title, description,
                                     mime_type)
 
+    def popup(self, immediate=False, state=None):
+        if self._journalactivity.get_list_view().is_dragging():
+            return
+
+        Palette.popup(self, immediate)
+
 
 class CopyMenu(Gtk.Menu):
     __gtype_name__ = 'JournalCopyMenu'

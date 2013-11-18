@@ -606,6 +606,9 @@ class ListView(BaseListView):
         column.pack_start(cell_detail, True)
         self.tree_view.append_column(column)
 
+    def is_dragging(self):
+        return self._is_dragging
+
     def __drag_begin_cb(self, widget, drag_context):
         self._is_dragging = True
 
@@ -720,6 +723,9 @@ class CellRendererActivityIcon(CellRendererIcon):
 
     def create_palette(self):
         if not self._show_palette:
+            return None
+
+        if self._journalactivity.get_list_view().is_dragging():
             return None
 
         tree_model = self.tree_view.get_model()
