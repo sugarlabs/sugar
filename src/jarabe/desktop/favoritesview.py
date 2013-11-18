@@ -649,18 +649,20 @@ class OwnerIcon(BuddyIcon):
         palette = BuddyMenu(get_owner_instance())
 
         client = GConf.Client.get_default()
-        backup_url = client.get_string('/desktop/sugar/backup_url')
+        if client.get_bool('/desktop/sugar/show_register'):
+            backup_url = client.get_string('/desktop/sugar/backup_url')
 
-        if not backup_url:
-            self._register_menu = PaletteMenuItem(_('Register'),
-                                                  'media-record')
-        else:
-            self._register_menu = PaletteMenuItem(_('Register again'),
-                                                  'media-record')
+            if not backup_url:
+                self._register_menu = PaletteMenuItem(_('Register'),
+                                                      'media-record')
+            else:
+                self._register_menu = PaletteMenuItem(_('Register again'),
+                                                      'media-record')
 
-        self._register_menu.connect('activate', self.__register_activate_cb)
-        palette.menu_box.pack_end(self._register_menu, True, True, 0)
-        self._register_menu.show()
+            self._register_menu.connect('activate',
+                                        self.__register_activate_cb)
+            palette.menu_box.pack_end(self._register_menu, True, True, 0)
+            self._register_menu.show()
 
         self.connect_to_palette_pop_events(palette)
 
