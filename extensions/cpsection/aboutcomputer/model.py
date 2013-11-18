@@ -20,6 +20,7 @@ import logging
 import subprocess
 from gettext import gettext as _
 import errno
+import time
 
 import dbus
 from gi.repository import GConf
@@ -247,3 +248,22 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def days_from_last_update():
+
+    last_update_seconds = -1
+    # Get the number of seconds of the last update date.
+    try:
+        flag_file = '/var/lib/misc/last_os_update.stamp'
+        if os.path.exists(flag_file):
+            last_update_seconds = int(os.stat(flag_file).st_mtime)
+    except IOError:
+        _logger.error('couldn''t get last modification time')
+
+    if last_update_seconds == -1:
+        return -1
+
+    now = time.time()
+    days_from_last_update = (now - last_update_seconds) / (24 * 60 * 60)
+    return int(days_from_last_update)
