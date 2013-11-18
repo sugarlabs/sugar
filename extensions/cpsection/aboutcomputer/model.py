@@ -22,8 +22,10 @@ from gettext import gettext as _
 import errno
 
 import dbus
+import time
 
 from jarabe import config
+from gi.repository import GConf
 
 
 _NM_SERVICE = 'org.freedesktop.NetworkManager'
@@ -120,6 +122,26 @@ def get_firmware_number():
         if firmware_no is None:
             firmware_no = _not_available
     return firmware_no
+
+
+def get_hardware_model():
+    client = GConf.Client.get_default()
+    return client.get_string(
+        '/desktop/sugar/extensions/aboutcomputer/hardware_model')
+
+
+def get_secondary_licenses():
+    licenses = []
+    # Check if there are more licenses to display
+    licenses_path = config.licenses_path
+    if os.path.isdir(licenses_path):
+        for file_name in os.listdir(licenses_path):
+            try:
+                file_path = os.path.join(licenses_path, file_name)
+                licenses.append(open(file_path).read())
+            except:
+                logging.error('Error trying open %s', file_path)
+    return licenses
 
 
 def print_firmware_number():
@@ -225,3 +247,25 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def show_rpm_updates():
+    client = GConf.Client.get_default()
+    return client.get_bool(
+        '/desktop/sugar/extensions/aboutcomputer/show_rpm_updates')
+
+
+def days_from_last_rpm_update():
+
+    days_from_last_update = -1
+    # Get the number of seconds of the last update date.
+    try:
+        last_update_seconds = int(
+            os.stat('/var/lib/rpm/Packages').st_mtime)
+    except:
+        _logger.error('couldn''t get last modification time in yum database')
+        return days_from_last_update
+
+    now = time.time()
+    days_from_last_update = (now - last_update_seconds) / (24 * 60 * 60)
+    return int(days_from_last_update)
