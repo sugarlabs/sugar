@@ -216,6 +216,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/show_register</key>
+      <applyto>/desktop/sugar/show_register</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Register</short>
+        <long>If TRUE, Sugar will show a "Register" option in the buddy palette.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/peripherals/keyboard/layouts</key>
       <applyto>/desktop/sugar/peripherals/keyboard/layouts</applyto>
       <owner>sugar</owner>
