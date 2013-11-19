@@ -400,10 +400,12 @@ class BaseListView(Gtk.Bin):
         logging.debug('ListView.__map_cb %r', self._scroll_position)
         self.tree_view.props.vadjustment.props.value = self._scroll_position
         self.tree_view.props.vadjustment.value_changed()
+        self.set_is_visible(True)
 
     def __unrealize_cb(self, widget):
         self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__map_cb %r', self._scroll_position)
+        self.set_is_visible(False)
+        logging.debug('ListView.__unrealize_cb %r', self._scroll_position)
 
     def _is_query_empty(self):
         # FIXME: This is a hack, we shouldn't have to update this every time
