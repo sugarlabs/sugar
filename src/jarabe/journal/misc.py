@@ -222,6 +222,8 @@ def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
            invited=False):
+    shell_model = shell.get_model()
+
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
 
@@ -239,11 +241,16 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         bundle = activities[0]
         logging.debug('Launching content bundle with uri %s', uri)
 
-    shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
     if activity is not None:
         logging.debug('re-launch %r', activity.get_window())
         activity.get_window().activate(Gtk.get_current_event_time())
+        return
+
+    if shell_model.reached_maximum_number_of_open_activities():
+        return
+
+    if shell_model.more_than_one_open_instance(bundle):
         return
 
     if color is None:

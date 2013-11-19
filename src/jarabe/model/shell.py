@@ -17,6 +17,7 @@
 
 import logging
 import time
+from gettext import gettext as _
 
 from gi.repository import GConf
 from gi.repository import Wnck
@@ -38,6 +39,12 @@ _SERVICE_PATH = '/org/laptop/Activity'
 _SERVICE_INTERFACE = 'org.laptop.Activity'
 
 _model = None
+
+_ACTIVITY_ALERT_TITLE = _('Activity launcher')
+_MAX_NUMBER_OF_ACTIVITIES_MESSAGE = _('The maximum number of open activities \
+has been reached. Please close an activity before launching a new one.')
+_MORE_THAN_ONE_INSTANCE_MESSAGE = _('%s is already running. Please stop %s \
+before launching it again.')
 
 
 class Activity(GObject.GObject):
@@ -192,6 +199,13 @@ class Activity(GObject.GObject):
         sugar3.util.unique_id
         """
         return self._activity_id
+
+    def get_bundle_id(self):
+        """ Returns the activity's bundle id"""
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_bundle_id()
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
@@ -358,6 +372,10 @@ class ShellModel(GObject.GObject):
     """
 
     __gsignals__ = {
+        'open-activity-error': (GObject.SignalFlags.RUN_FIRST, None,
+                                ([str, str])),
+        'open-activity-error-from-journal': (GObject.SignalFlags.RUN_FIRST,
+                                             None, ([str, str])),
         'activity-added': (GObject.SignalFlags.RUN_FIRST, None,
                            ([GObject.TYPE_PYOBJECT])),
         'activity-removed': (GObject.SignalFlags.RUN_FIRST, None,
@@ -403,6 +421,10 @@ class ShellModel(GObject.GObject):
         self._modal_dialogs_counter = 0
 
         self._screen.toggle_showing_desktop(True)
+
+        client = GConf.Client.get_default()
+        self._maximum_number_of_open_activities = client.get_int(
+            '/desktop/sugar/maximum_number_of_open_activities')
 
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
@@ -645,6 +667,42 @@ class ShellModel(GObject.GObject):
             self._set_active_activity(act)
 
         self._update_zoom_level(window)
+
+    def more_than_one_open_instance(self, bundle):
+        if bundle.get_one_open_instance():
+            bundle_id = bundle.get_bundle_id()
+            name = ''
+            for activity in self._get_activities_with_window():
+                if activity.get_bundle_id() == bundle_id:
+                    name = activity.get_activity_name()
+                    if self._zoom_level == 3:
+                        self.emit('open-activity-error-from-journal',
+                                  _ACTIVITY_ALERT_TITLE,
+                                  _MORE_THAN_ONE_INSTANCE_MESSAGE %
+                                  (name, name))
+                    else:
+                        self.emit('open-activity-error',
+                                  _ACTIVITY_ALERT_TITLE,
+                                  _MORE_THAN_ONE_INSTANCE_MESSAGE %
+                                  (name, name))
+                    return True
+        return False
+
+    def reached_maximum_number_of_open_activities(self):
+        activities = self._get_activities_with_window()
+        if self._maximum_number_of_open_activities > 0 and \
+           len(activities) > self._maximum_number_of_open_activities:
+            if self._zoom_level == 3:
+                self.emit('open-activity-error-from-journal',
+                          _ACTIVITY_ALERT_TITLE,
+                          _MAX_NUMBER_OF_ACTIVITIES_MESSAGE)
+            else:
+                self.emit('open-activity-error',
+                          _ACTIVITY_ALERT_TITLE,
+                          _MAX_NUMBER_OF_ACTIVITIES_MESSAGE)
+            return True
+        else:
+            return False
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)

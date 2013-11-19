@@ -120,6 +120,9 @@ def setup():
 def add_launcher(activity_id, icon_path, icon_color):
     model = shell.get_model()
 
+    if model.reached_maximum_number_of_open_activities():
+        return
+
     if model.get_launcher(activity_id) is not None:
         return
 
