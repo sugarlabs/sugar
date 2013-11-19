@@ -20,8 +20,10 @@ import logging
 import subprocess
 from gettext import gettext as _
 import errno
+import time
 
 import dbus
+from gi.repository import GConf
 
 from jarabe import config
 
@@ -120,6 +122,27 @@ def get_firmware_number():
         if firmware_no is None:
             firmware_no = _not_available
     return firmware_no
+
+
+def get_hardware_model():
+    client = GConf.Client.get_default()
+    return client.get_string(
+        '/desktop/sugar/extensions/aboutcomputer/hardware_model')
+
+
+def get_secondary_licenses():
+    licenses = []
+    # Check if there are more licenses to display
+    licenses_path = config.licenses_path
+    if os.path.isdir(licenses_path):
+        for file_name in os.listdir(licenses_path):
+            try:
+                file_path = os.path.join(licenses_path, file_name)
+                with open(file_path) as f:
+                    licenses.append(f.read())
+            except IOError:
+                logging.error('Error trying open %s', file_path)
+    return licenses
 
 
 def print_firmware_number():
@@ -225,3 +248,22 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def days_from_last_update():
+
+    last_update_seconds = -1
+    # Get the number of seconds of the last update date.
+    try:
+        flag_file = '/var/lib/misc/last_os_update.stamp'
+        if os.path.exists(flag_file):
+            last_update_seconds = int(os.stat(flag_file).st_mtime)
+    except IOError:
+        _logger.error('couldn''t get last modification time')
+
+    if last_update_seconds == -1:
+        return -1
+
+    now = time.time()
+    days_from_last_update = (now - last_update_seconds) / (24 * 60 * 60)
+    return int(days_from_last_update)

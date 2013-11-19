@@ -452,5 +452,17 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/extensions/aboutcomputer/hardware_model</key>
+      <applyto>/desktop/desktop/sugar/extensions/aboutcomputer/hardware_model</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>A description of the hardware available to the user.</short>
+        <long>This string is displayed in the control panel, about computer section.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>
