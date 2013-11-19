@@ -52,6 +52,22 @@ class AboutComputer(SectionView):
         self._setup_software()
         self._setup_copyright()
 
+    def create_information_box(self, label_text, value_text):
+        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label = Gtk.Label(label=label_text)
+        label.set_alignment(1, 0)
+        label.modify_fg(Gtk.StateType.NORMAL,
+                        style.COLOR_SELECTION_GREY.get_gdk_color())
+        box.pack_start(label, False, True, 0)
+        self._group.add_widget(label)
+        label.show()
+        value = Gtk.Label(label=value_text)
+        value.set_alignment(0, 0)
+        box.pack_start(value, False, True, 0)
+        value.show()
+        box.show()
+        return box
+
     def _setup_identity(self):
         separator_identity = Gtk.HSeparator()
         self._vbox.pack_start(separator_identity, False, True, 0)
@@ -65,39 +81,16 @@ class AboutComputer(SectionView):
         vbox_identity.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_identity.set_spacing(style.DEFAULT_SPACING)
 
-        box_identity = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-
         hardware_model = self._model.get_hardware_model()
         if hardware_model:
-            label_model = Gtk.Label(label=_('Model:'))
-            label_model.set_alignment(1, 0)
-            label_model.modify_fg(Gtk.StateType.NORMAL,
-                                  style.COLOR_SELECTION_GREY.get_gdk_color())
-            box_identity.pack_start(label_model, False, True, 0)
-            self._group.add_widget(label_model)
+            vbox_identity.pack_start(
+                self.create_information_box(_('Model:'), hardware_model),
+                False, True, 0)
 
-            label_model.show()
-            label_model_value = Gtk.Label(label=hardware_model)
-            label_model_value.set_alignment(0, 0)
-            box_identity.pack_start(label_model_value, False, True, 0)
-            label_model_value.show()
-            vbox_identity.pack_start(box_identity, False, True, 0)
-            box_identity.show()
-
-        box_identity = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_serial = Gtk.Label(label=_('Serial Number:'))
-        label_serial.set_alignment(1, 0)
-        label_serial.modify_fg(Gtk.StateType.NORMAL,
-                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_identity.pack_start(label_serial, False, True, 0)
-        self._group.add_widget(label_serial)
-        label_serial.show()
-        label_serial_no = Gtk.Label(label=self._model.get_serial_number())
-        label_serial_no.set_alignment(0, 0)
-        box_identity.pack_start(label_serial_no, False, True, 0)
-        label_serial_no.show()
-        vbox_identity.pack_start(box_identity, False, True, 0)
-        box_identity.show()
+        vbox_identity.pack_start(
+            self.create_information_box(_('Serial Number:'),
+                                        self._model.get_serial_number()),
+            False, True, 0)
 
         self._vbox.pack_start(vbox_identity, False, True, 0)
         vbox_identity.show()
@@ -115,89 +108,36 @@ class AboutComputer(SectionView):
         box_software.set_border_width(style.DEFAULT_SPACING * 2)
         box_software.set_spacing(style.DEFAULT_SPACING)
 
-        box_build = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_build = Gtk.Label(label=_('Build:'))
-        label_build.set_alignment(1, 0)
-        label_build.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_build.pack_start(label_build, False, True, 0)
-        self._group.add_widget(label_build)
-        label_build.show()
-        label_build_no = Gtk.Label(label=self._model.get_build_number())
-        label_build_no.set_alignment(0, 0)
-        box_build.pack_start(label_build_no, False, True, 0)
-        label_build_no.show()
-        box_software.pack_start(box_build, False, True, 0)
-        box_build.show()
+        box_software.pack_start(
+            self.create_information_box(_('Build:'),
+                                        self._model.get_build_number()),
+            False, True, 0)
 
-        box_sugar = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_sugar = Gtk.Label(label=_('Sugar:'))
-        label_sugar.set_alignment(1, 0)
-        label_sugar.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_sugar.pack_start(label_sugar, False, True, 0)
-        self._group.add_widget(label_sugar)
-        label_sugar.show()
-        label_sugar_ver = Gtk.Label(label=config.version)
-        label_sugar_ver.set_alignment(0, 0)
-        box_sugar.pack_start(label_sugar_ver, False, True, 0)
-        label_sugar_ver.show()
-        box_software.pack_start(box_sugar, False, True, 0)
-        box_sugar.show()
+        box_software.pack_start(
+            self.create_information_box(_('Sugar:'),
+                                        config.version),
+            False, True, 0)
 
-        box_firmware = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_firmware = Gtk.Label(label=_('Firmware:'))
-        label_firmware.set_alignment(1, 0)
-        label_firmware.modify_fg(Gtk.StateType.NORMAL,
-                                 style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_firmware.pack_start(label_firmware, False, True, 0)
-        self._group.add_widget(label_firmware)
-        label_firmware.show()
-        label_firmware_no = Gtk.Label(label=self._model.get_firmware_number())
-        label_firmware_no.set_alignment(0, 0)
-        box_firmware.pack_start(label_firmware_no, False, True, 0)
-        label_firmware_no.show()
-        box_software.pack_start(box_firmware, False, True, 0)
-        box_firmware.show()
+        box_software.pack_start(
+            self.create_information_box(_('Firmware:'),
+                                        self._model.get_firmware_number()),
+            False, True, 0)
 
-        box_wireless_fw = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_wireless_fw = Gtk.Label(label=_('Wireless Firmware:'))
-        label_wireless_fw.set_alignment(1, 0)
-        label_wireless_fw.modify_fg(Gtk.StateType.NORMAL,
-                                    style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_wireless_fw.pack_start(label_wireless_fw, False, True, 0)
-        self._group.add_widget(label_wireless_fw)
-        label_wireless_fw.show()
-        wireless_fw_no = self._model.get_wireless_firmware()
-        label_wireless_fw_no = Gtk.Label(label=wireless_fw_no)
-        label_wireless_fw_no.set_alignment(0, 0)
-        box_wireless_fw.pack_start(label_wireless_fw_no, False, True, 0)
-        label_wireless_fw_no.show()
-        box_software.pack_start(box_wireless_fw, False, True, 0)
-        box_wireless_fw.show()
+        box_software.pack_start(
+            self.create_information_box(_('Wireless Firmware:'),
+                                        self._model.get_wireless_firmware()),
+            False, True, 0)
 
         days_from_last_update = self._model.days_from_last_update()
         if days_from_last_update >= 0:
-            box_system_update = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-            label_system_update = Gtk.Label(label=_('Last system update:'))
-            label_system_update.set_alignment(1, 0)
-            label_system_update.modify_fg(
-                Gtk.StateType.NORMAL,
-                style.COLOR_SELECTION_GREY.get_gdk_color())
-            box_system_update.pack_start(label_system_update, False, True, 0)
-            self._group.add_widget(label_system_update)
-            label_system_update.show()
-
             if days_from_last_update > 0:
                 msg = _('%d days ago') % days_from_last_update
             else:
                 msg = _('Today')
-            system_update_value = Gtk.Label(label=msg)
-            system_update_value.set_alignment(0, 0)
-            box_system_update.pack_start(system_update_value, False, True, 0)
-            system_update_value.show()
-            box_software.pack_start(box_system_update, False, True, 0)
-            box_system_update.show()
+
+            box_software.pack_start(
+                self.create_information_box(_('Last system update:'), msg),
+                False, True, 0)
 
         self._vbox.pack_start(box_software, False, True, 0)
         box_software.show()
