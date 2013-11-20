@@ -386,9 +386,7 @@ class ExpandedEntry(Gtk.EventBox):
             style.COLOR_BUTTON_GREY.get_html(), kind))
 
         lines = [
-            _(" "),
             _('Date: %s') % (self._format_date(),),
-            _(" "),
             _('Size: %s') % (format_size(
                              int(self._metadata.get(
                                  'filesize',
