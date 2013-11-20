@@ -23,7 +23,6 @@ import os
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
-
 import json
 
 from sugar3 import mime
@@ -32,7 +31,6 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.alert import Alert
-from sugar3.graphics.combobox import ComboBox
 from sugar3.util import format_size
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.activity.activity import PREVIEW_SIZE
