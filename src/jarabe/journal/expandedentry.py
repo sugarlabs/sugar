@@ -23,6 +23,7 @@ import os
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
+
 import json
 
 from sugar3 import mime
@@ -31,6 +32,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.alert import Alert
+from sugar3.graphics.combobox import ComboBox
 from sugar3.util import format_size
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.activity.activity import PREVIEW_SIZE
@@ -399,10 +401,10 @@ class ExpandedEntry(Gtk.EventBox):
 
         generic_types = mime.get_all_generic_types()
 
-        for All in generic_types:
-            for mime_type in All.mime_types:
+        for sub_types in generic_types:
+            for mime_type in sub_types.mime_types:
                 mimelist.append([mime_type])
-        
+
         cell = Gtk.CellRendererText()
         cell.set_property("max-width-chars", 16)
         cell.set_property("xalign", 0.5)
@@ -432,15 +434,11 @@ class ExpandedEntry(Gtk.EventBox):
     def _mime_activated_cb(self, mimescombo):
         model = mimescombo.get_model()
         index = mimescombo.get_active()
-        needs_update = False
         old_mime = self._metadata.get('mime_type', None)
         new_mime = model[index][0]
 
         if old_mime != new_mime:
             self._metadata['mime_type'] = new_mime
-            needs_update = True
-
-        if needs_update:
             self._write_entry()
 
     def _format_date(self):
