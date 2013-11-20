@@ -386,9 +386,7 @@ class ExpandedEntry(Gtk.EventBox):
             style.COLOR_BUTTON_GREY.get_html(), kind))
 
         lines = [
-            _(" "),
             _('Date: %s') % (self._format_date(),),
-            _(" "),
             _('Size: %s') % (format_size(
                              int(self._metadata.get(
                                  'filesize',
@@ -396,25 +394,24 @@ class ExpandedEntry(Gtk.EventBox):
         ]
 
         mimelist = Gtk.ListStore(str)
-        current_mime = self._metadata.get('mime_type')
-        mimelist.append([current_mime])
-
         generic_types = mime.get_all_generic_types()
 
-        for All in generic_types:
-            for mime_type in All.mime_types:
+        for sub_types in generic_types:
+            for mime_type in sub_types.mime_types:
                 mimelist.append([mime_type])
-        
-        cell = Gtk.CellRendererText()
-        cell.set_property("max-width-chars", 16)
-        cell.set_property("xalign", 0.5)
-        cell.set_fixed_size(100, 18)
 
         mimescombo = Gtk.ComboBox.new_with_model(mimelist)
-        mimescombo.pack_start(cell, True)
         mimescombo.connect("changed", self._mime_activated_cb)
+        cell = Gtk.CellRendererText()
+        cell.set_property("xalign", 0.5)
+        cell.set_fixed_size(150, 18)
+        mimescombo.pack_start(cell, True)
         mimescombo.add_attribute(cell, "text", 0)
-        mimescombo.set_active(0)
+
+        for index, element in enumerate(mimelist):
+            if element[0] == self._metadata['mime_type']:
+                mimescombo.set_active(index)
+                break
 
         vbox.pack_start(hbox, False, False, 0)
         hbox.pack_start(kindlabel, False, False, 0)
