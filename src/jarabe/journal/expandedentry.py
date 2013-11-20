@@ -23,6 +23,7 @@ import os
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
+
 import json
 
 from sugar3.graphics import style
@@ -30,7 +31,9 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.alert import Alert
+from sugar3.graphics.combobox import ComboBox
 from sugar3.util import format_size
+from sugar3 import mime
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.activity.activity import PREVIEW_SIZE
 
@@ -39,7 +42,6 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
-
 
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
@@ -376,27 +378,71 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _create_technical(self):
         vbox = Gtk.VBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
+        hbox = Gtk.HBox()
+
+        kind = _('Kind: ')
+        kindlabel = Gtk.Label()
+        kindlabel.set_markup('<span foreground="%s">%s</span>' % (
+                style.COLOR_BUTTON_GREY.get_html(), kind))
 
         lines = [
-            _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
+            _(" "),
             _('Date: %s') % (self._format_date(),),
+            _(" "),
             _('Size: %s') % (format_size(
                              int(self._metadata.get(
-                                 'filesize',
-                                 model.get_file_size(self._metadata['uid'])))))
+                                'filesize',
+                                model.get_file_size(self._metadata['uid'])))))
         ]
+
+        mimelist = Gtk.ListStore(str)
+        current_mime = self._metadata.get('mime_type')
+        mimelist.append([current_mime])
+
+        generic_types = mime.get_all_generic_types()
+
+        for All in generic_types:
+            for mime_type in All.mime_types:
+                mimelist.append([mime_type])
+        
+        cell = Gtk.CellRendererText()
+        cell.set_property("max-width-chars", 16)
+        cell.set_property("xalign", 0.5)
+        cell.set_fixed_size(100, 18)
+
+        mimescombo = Gtk.ComboBox.new_with_model(mimelist)
+        mimescombo.pack_start(cell, True)
+        mimescombo.connect("changed", self._mime_activated_cb)
+        mimescombo.add_attribute(cell, "text", 0)
+        mimescombo.set_active(0)
+
+        vbox.pack_start(hbox, False, False, 0)
+        hbox.pack_start(kindlabel, False, False, 0)
+        hbox.pack_start(mimescombo, False, False, 0)
 
         for line in lines:
             linebox = Gtk.HBox()
             vbox.pack_start(linebox, False, False, 0)
-
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), line))
             linebox.pack_start(text, False, False, 0)
 
         return vbox
+
+    def _mime_activated_cb(self, mimescombo):
+        model = mimescombo.get_model()
+        index = mimescombo.get_active()
+        needs_update = False
+        old_mime = self._metadata.get('mime_type', None)
+        new_mime = model[index][0]
+
+        if old_mime != new_mime:
+            self._metadata['mime_type'] = new_mime
+            needs_update = True
+
+        if needs_update:
+            self._write_entry()
 
     def _format_date(self):
         if 'timestamp' in self._metadata:
