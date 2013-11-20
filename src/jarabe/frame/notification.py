@@ -19,7 +19,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 
 from sugar3.graphics import style
-from sugar3.graphics.xocolor import XoColor
 
 from jarabe.view.pulsingicon import PulsingIcon
 
@@ -33,28 +32,16 @@ class NotificationIcon(Gtk.EventBox):
         'icon-filename': (str, None, None, None, GObject.PARAM_READWRITE),
     }
 
-    _PULSE_TIMEOUT = 3
-
     def __init__(self, **kwargs):
         self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
         Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
 
-        self._icon.props.pulse_color = \
-            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                               style.COLOR_TRANSPARENT.get_svg()))
-        self._icon.props.pulsing = True
+        self._icon.props.pulsing = False
         self.add(self._icon)
         self._icon.show()
 
-        GObject.timeout_add_seconds(self._PULSE_TIMEOUT,
-                                    self.__stop_pulsing_cb)
-
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
-
-    def __stop_pulsing_cb(self):
-        self._icon.props.pulsing = False
-        return False
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'xo-color':
