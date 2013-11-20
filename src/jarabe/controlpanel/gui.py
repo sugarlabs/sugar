@@ -32,8 +32,6 @@ from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 from jarabe.model import shell
 
-POWERD_FLAG_DIR = '/etc/powerd/flags'
-
 _logger = logging.getLogger('ControlPanel')
 
 
@@ -153,10 +151,6 @@ class ControlPanel(Gtk.Window):
                                    self.__search_changed_cb)
 
     def _setup_options(self):
-        if not os.access(POWERD_FLAG_DIR, os.W_OK):
-            del self._options['power']
-            del self._options['keyboard']
-
         # If the screen width only supports two columns, start
         # placing from the second row.
         if self._max_columns == 2:
