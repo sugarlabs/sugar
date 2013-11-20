@@ -25,6 +25,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 import json
 
+from sugar3 import mime
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
@@ -377,15 +378,45 @@ class ExpandedEntry(Gtk.EventBox):
     def _create_technical(self):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
+        hbox = Gtk.HBox()
+
+        kind = _('Kind: ')
+        kindlabel = Gtk.Label()
+        kindlabel.set_markup('<span foreground="%s">%s</span>' % (
+            style.COLOR_BUTTON_GREY.get_html(), kind))
 
         lines = [
-            _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
             _('Date: %s') % (self._format_date(),),
             _('Size: %s') % (format_size(
                              int(self._metadata.get(
                                  'filesize',
                                  model.get_file_size(self._metadata['uid'])))))
         ]
+
+        mimelist = Gtk.ListStore(str)
+        current_mime = self._metadata.get('mime_type')
+        mimelist.append([current_mime])
+
+        generic_types = mime.get_all_generic_types()
+
+        for sub_types in generic_types:
+            for mime_type in sub_types.mime_types:
+                mimelist.append([mime_type])
+
+        cell = Gtk.CellRendererText()
+        cell.set_property("max-width-chars", 16)
+        cell.set_property("xalign", 0.5)
+        cell.set_fixed_size(100, 18)
+
+        mimescombo = Gtk.ComboBox.new_with_model(mimelist)
+        mimescombo.pack_start(cell, True)
+        mimescombo.connect("changed", self._mime_activated_cb)
+        mimescombo.add_attribute(cell, "text", 0)
+        mimescombo.set_active(0)
+
+        vbox.pack_start(hbox, False, False, 0)
+        hbox.pack_start(kindlabel, False, False, 0)
+        hbox.pack_start(mimescombo, False, False, 0)
 
         for line in lines:
             linebox = Gtk.HBox()
@@ -397,6 +428,16 @@ class ExpandedEntry(Gtk.EventBox):
             linebox.pack_start(text, False, False, 0)
 
         return vbox
+
+    def _mime_activated_cb(self, mimescombo):
+        model = mimescombo.get_model()
+        index = mimescombo.get_active()
+        old_mime = self._metadata.get('mime_type', None)
+        new_mime = model[index][0]
+
+        if old_mime != new_mime:
+            self._metadata['mime_type'] = new_mime
+            self._write_entry()
 
     def _format_date(self):
         if 'timestamp' in self._metadata:
