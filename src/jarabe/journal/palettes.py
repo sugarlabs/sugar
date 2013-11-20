@@ -124,7 +124,7 @@ class ObjectPalette(Palette):
         menu_item.set_submenu(friends_menu)
 
         if detail is True:
-            menu_item = MenuItem(_('View Details'), 'go-right')
+            menu_item = MenuItem(_('View Details'), 'show-details')
             menu_item.connect('activate', self.__detail_activate_cb)
             self.menu.append(menu_item)
             menu_item.show()
