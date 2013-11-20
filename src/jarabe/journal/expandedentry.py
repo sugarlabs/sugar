@@ -23,12 +23,9 @@ import os
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Pango
-
 
 import json
 
-from sugar3 import mime
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import CanvasIcon, get_icon_file_name
@@ -45,7 +42,6 @@ from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
-
 
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
