@@ -1,4 +1,7 @@
 sugardir = $(pythondir)/jarabe/journal
+
+SUBDIRS = backup
+
 sugar_PYTHON =				\
 	__init__.py			\
 	detailview.py			\

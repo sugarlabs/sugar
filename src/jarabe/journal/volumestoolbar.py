@@ -34,12 +34,16 @@ import shutil
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3 import env
 
 from jarabe.journal import model
 from jarabe.journal.misc import get_mount_icon_name
 from jarabe.view.palettes import VolumePalette
+from jarabe.journal.backup.backupwindow import BackupWindow
 
 
 _JOURNAL_0_METADATA_DIR = '.olpc.store'
@@ -353,19 +357,37 @@ class JournalButtonPalette(Palette):
     def __init__(self, mount):
         Palette.__init__(self, GLib.markup_escape_text(_('Journal')))
 
-        grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL,
-                        margin=style.DEFAULT_SPACING,
-                        row_spacing=style.DEFAULT_SPACING)
+        grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
         self.set_content(grid)
         grid.show()
 
+        menu_item = PaletteMenuItem(_('Backup'))
+        icon = Icon(icon_name='backup',
+                    icon_size=Gtk.IconSize.MENU)
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__backup_activate_cb)
+        grid.add(menu_item)
+        menu_item.show()
+
+        separator = PaletteMenuItemSeparator()
+        grid.add(separator)
+        separator.show()
+
+        progress_grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL,
+                                 margin=style.DEFAULT_SPACING,
+                                 row_spacing=style.DEFAULT_SPACING)
+        grid.add(progress_grid)
+        progress_grid.show()
+
         self._progress_bar = Gtk.ProgressBar()
-        grid.add(self._progress_bar)
+        progress_grid.add(self._progress_bar)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        grid.add(self._free_space_label)
+        progress_grid.add(self._free_space_label)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)
@@ -379,6 +401,9 @@ class JournalButtonPalette(Palette):
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
             {'free_space': free_space / (1024 * 1024)}
+
+    def __backup_activate_cb(self, menu_item):
+        backup_window = BackupWindow()
 
 
 class DocumentsButton(BaseButton):

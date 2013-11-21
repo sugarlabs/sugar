@@ -37,6 +37,7 @@ from sugar3.activity.i18n import pgettext
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
 from jarabe.journal import misc
+from jarabe.journal.backup.backupwindow import BackupWindow
 
 
 class BasePalette(Palette):
@@ -192,6 +193,17 @@ class JournalPalette(BasePalette):
         box.append_item(menu_item)
         menu_item.show()
 
+        menu_item = PaletteMenuItem(_('Backup'))
+        icon = Icon(icon_name='backup',
+                    icon_size=Gtk.IconSize.MENU,
+                    xo_color=self._home_activity.get_icon_color())
+        menu_item.set_image(icon)
+        icon.show()
+
+        menu_item.connect('activate', self.__backup_activate_cb)
+        box.append_item(menu_item)
+        menu_item.show()
+
         separator = PaletteMenuItemSeparator()
         box.append_item(separator)
         separator.show()
@@ -224,6 +236,9 @@ class JournalPalette(BasePalette):
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
             {'free_space': free_space / (1024 * 1024)}
+
+    def __backup_activate_cb(self, menu_item):
+        backup_window = BackupWindow()
 
 
 class VolumePalette(Palette):
