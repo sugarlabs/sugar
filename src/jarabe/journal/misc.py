@@ -35,7 +35,7 @@ from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
 from sugar3 import util
 
-from jarabe.view import launcher
+from jarabe.view import launcher, alerts
 from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
@@ -179,7 +179,51 @@ def get_activities(metadata):
     return activities
 
 
-def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
+def get_bundle_id_from_metadata(metadata):
+    activities = get_activities(metadata)
+    if not activities:
+        logging.warning('No activity can open this object, %s.',
+                        metadata.get('mime_type', None))
+        return None
+    return activities[0].get_bundle_id()
+
+
+def _is_safe_to_launch(bundle_id, metadata, alert_window):
+    if bundle_id is None:
+        return False
+
+    shell_model = shell.get_model()
+
+    if metadata is not None:  # It is always safe to resume an open activity
+        activity_id = metadata.get('activity_id', '')
+        if shell_model.get_activity_by_id(activity_id) is not None:
+            logging.debug('RESUMING OPEN ACTIVITY')
+            return True
+
+    if not shell_model.can_launch_activity():
+        if alert_window is None:
+            from jarabe.desktop import homewindow
+            alert_window = homewindow.get_instance()
+        if alert_window is not None:
+            alerts.show_max_open_activities_alert(alert_window)
+        return False
+
+    registry = bundleregistry.get_registry()
+    bundle = registry.get_bundle(bundle_id)
+    if not shell_model.can_launch_activity_instance(bundle):
+        if alert_window is None:
+            from jarabe.desktop import homewindow
+            alert_window = homewindow.get_instance()
+        if alert_window is not None:
+            alerts.show_multiple_instance_alert(
+                alert_window, shell_model.get_name_from_bundle_id(bundle_id))
+        return False
+
+    return True
+
+
+def resume(metadata, bundle_id=None, alert_window=None,
+           force_bundle_downgrade=False):
     registry = bundleregistry.get_registry()
 
     ds_bundle, downgrade_required = \
@@ -217,11 +261,14 @@ def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
         object_id = model.copy(metadata, '/')
 
     launch(bundle, activity_id=activity_id, object_id=object_id,
-           color=get_icon_color(metadata))
+           color=get_icon_color(metadata), alert_window=alert_window)
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
-           invited=False):
+           invited=False, metadata=None, alert_window=None):
+
+    bundle_id = bundle.get_bundle_id()
+
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
 
@@ -244,6 +291,9 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
     if activity is not None:
         logging.debug('re-launch %r', activity.get_window())
         activity.get_window().activate(Gtk.get_current_event_time())
+        return
+
+    if not _is_safe_to_launch(bundle_id, metadata, alert_window):
         return
 
     if color is None:
