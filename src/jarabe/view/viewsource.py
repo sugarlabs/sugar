@@ -461,7 +461,8 @@ class Toolbar(Gtk.Toolbar):
             sugar_button.show()
             self._add_separator()
 
-        self.activity_title_text = _('View source: %s') % title
+        path_title_text = title + ' ( ' + bundle_path + ' ) '			
+        self.activity_title_text = _('View source: %s') % path_title_text
         self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
         self.label = Gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
