@@ -11,6 +11,7 @@ sugar_DATA =                        \
 	module-network.svg              \
 	module-power.svg                \
 	module-updater.svg		\
-	module-webaccount.svg
+	module-webaccount.svg	\
+	python-mime-type.svg
 
 EXTRA_DIST = $(sugar_DATA)
