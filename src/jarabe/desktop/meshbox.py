@@ -101,8 +101,9 @@ class _ActivityIcon(CanvasIcon):
 
     def __palette_item_clicked_cb(self, item):
         bundle = self._model.get_bundle()
-        misc.launch(bundle, activity_id=self._model.activity_id,
-                    color=self._model.get_color())
+        if misc.is_safe_to_launch(bundle.get_bundle_id()):
+            misc.launch(bundle, activity_id=self._model.activity_id,
+                        color=self._model.get_color())
 
 
 class ActivityView(SnowflakeLayout):

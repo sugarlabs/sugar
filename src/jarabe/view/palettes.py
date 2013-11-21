@@ -162,7 +162,8 @@ class ActivityPalette(Palette):
         # TODO: start-with
 
     def __start_activate_cb(self, menu_item):
-        misc.launch(self._activity_info)
+        if misc.is_safe_to_launch(self._activity_info.get_bundle_id()):
+            misc.launch(self._activity_info)
 
 
 class JournalPalette(BasePalette):
