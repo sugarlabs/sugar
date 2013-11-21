@@ -158,7 +158,10 @@ class ClipboardMenu(Palette):
         if percent < 100 or menu_item.get_submenu() is not None:
             return
         jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, self._get_activities()[0])
+        if misc.is_safe_to_launch(
+                misc.get_bundle_id_from_metadata(jobject.metadata),
+                metadata=jobject.metadata):
+            misc.resume(jobject.metadata, self._get_activities()[0])
         jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
@@ -167,7 +170,10 @@ class ClipboardMenu(Palette):
         if percent < 100:
             return
         jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, service_name)
+        if misc.is_safe_to_launch(
+                misc.get_bundle_id_from_metadata(jobject.metadata),
+                metadata=jobject.metadata):
+            misc.resume(jobject.metadata, service_name)
         jobject.destroy()
 
     def _remove_item_activate_cb(self, menu_item):

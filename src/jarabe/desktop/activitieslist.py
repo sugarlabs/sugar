@@ -166,7 +166,8 @@ class ActivitiesTreeView(Gtk.TreeView):
         registry = bundleregistry.get_registry()
         bundle = registry.get_bundle(row[self._model.column_bundle_id])
 
-        misc.launch(bundle)
+        if misc.is_safe_to_launch(bundle.get_bundle_id()):
+            misc.launch(bundle)
 
     def set_filter(self, query):
         """Set a new query and refilter the model, return the number

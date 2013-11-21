@@ -486,7 +486,9 @@ class ActivityIcon(CanvasIcon):
     def _resume(self, journal_entry):
         if not journal_entry['activity_id']:
             journal_entry['activity_id'] = activityfactory.create_activity_id()
-        misc.resume(journal_entry, self._activity_info.get_bundle_id())
+        bundle_id = self._activity_info.get_bundle_id()
+        if misc.is_safe_to_launch(bundle_id, metadata=journal_entry):
+            misc.resume(journal_entry, bundle_id)
 
     def _activate(self):
         if self.palette is not None:
@@ -495,7 +497,8 @@ class ActivityIcon(CanvasIcon):
         if self._resume_mode and self._journal_entries:
             self._resume(self._journal_entries[0])
         else:
-            misc.launch(self._activity_info)
+            if misc.is_safe_to_launch(self._activity_info.get_bundle_id()):
+                misc.launch(self._activity_info)
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()

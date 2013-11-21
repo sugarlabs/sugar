@@ -114,8 +114,9 @@ class ActivityInvite(BaseInvite):
 
         model = neighborhood.get_model()
         activity_id = model.get_activity_by_room(self._handle).activity_id
-        misc.launch(bundle, color=self.get_color(), invited=True,
-                    activity_id=activity_id)
+        if misc.is_safe_to_launch(bundle_id):
+            misc.launch(bundle, color=self.get_color(), invited=True,
+                        activity_id=activity_id)
 
 
 class PrivateInvite(BaseInvite):
@@ -140,8 +141,9 @@ class PrivateInvite(BaseInvite):
                                 'NameOwnerChanged',
                                 'org.freedesktop.DBus',
                                 arg0=self._handler)
-        misc.launch(bundle, color=self.get_color(), invited=True,
-                    uri=self._private_channel)
+        if misc.is_safe_to_launch(bundle_id):
+            misc.launch(bundle, color=self.get_color(), invited=True,
+                        uri=self._private_channel)
 
 
 class Invites(GObject.GObject):

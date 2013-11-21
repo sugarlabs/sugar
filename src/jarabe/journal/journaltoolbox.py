@@ -453,7 +453,11 @@ class DetailToolbox(ToolbarBox):
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
-        misc.resume(self._metadata)
+        if misc.is_safe_to_launch(
+                misc.get_bundle_id_from_metadata(self._metadata),
+                metadata=self._metadata,
+                alert_window=journalwindow.get_journal_window()):
+            misc.resume(self._metadata)
 
     def _copy_clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
@@ -496,7 +500,11 @@ class DetailToolbox(ToolbarBox):
             model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
-        misc.resume(self._metadata, service_name)
+        if misc.is_safe_to_launch(
+                misc.get_bundle_id_from_metadata(self._metadata),
+                metadata=self._metadata,
+                alert_window=journalwindow.get_journal_window()):
+            misc.resume(self._metadata, service_name)
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()

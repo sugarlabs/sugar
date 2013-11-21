@@ -35,7 +35,7 @@ from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
 from sugar3 import util
 
-from jarabe.view import launcher
+from jarabe.view import launcher, alerts
 from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
@@ -177,6 +177,46 @@ def get_activities(metadata):
                 activities.append(activity_info)
 
     return activities
+
+
+def get_bundle_id_from_metadata(metadata):
+    activities = get_activities(metadata)
+    if not activities:
+        logging.warning('No activity can open this object, %s.',
+                        metadata.get('mime_type', None))
+        return None
+    return activities[0].get_bundle_id()
+
+
+def is_safe_to_launch(bundle_id, metadata=None, alert_window=None):
+    if bundle_id is None:
+        return False
+
+    shell_model = shell.get_model()
+
+    if metadata is not None:  # It is always safe to resume an open activity
+        activity_id = metadata.get('activity_id', '')
+        if shell_model.get_activity_by_id(activity_id) is not None:
+            return True
+
+    if shell_model.reached_maximum_number_of_open_activities():
+        if alert_window is None:
+            alert_window = shell_model.get_default_alert_window()
+        if alert_window is not None:
+            alerts.maximum_instances(alert_window)
+        return False
+
+    registry = bundleregistry.get_registry()
+    bundle = registry.get_bundle(bundle_id)
+    if shell_model.more_than_one_open_instance(bundle):
+        if alert_window is None:
+            alert_window = shell_model.get_default_alert_window()
+        if alert_window is not None:
+            alerts.open_instance(
+                alert_window, shell_model.get_name_from_bundle_id(bundle_id))
+        return False
+
+    return True
 
 
 def resume(metadata, bundle_id=None, force_bundle_downgrade=False):

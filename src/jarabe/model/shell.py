@@ -193,6 +193,13 @@ class Activity(GObject.GObject):
         """
         return self._activity_id
 
+    def get_bundle_id(self):
+        """ Returns the activity's bundle id"""
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_bundle_id()
+
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
         if self._windows:
@@ -401,8 +408,13 @@ class ShellModel(GObject.GObject):
         self._tabbing_activity = None
         self._launchers = {}
         self._modal_dialogs_counter = 0
+        self._default_alert_window = None
 
         self._screen.toggle_showing_desktop(True)
+
+        client = GConf.Client.get_default()
+        self._maximum_number_of_open_activities = client.get_int(
+            '/desktop/sugar/maximum_number_of_open_activities')
 
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
@@ -645,6 +657,34 @@ class ShellModel(GObject.GObject):
             self._set_active_activity(act)
 
         self._update_zoom_level(window)
+
+    def set_default_alert_window(self, window):
+        self._default_alert_window = window
+
+    def get_default_alert_window(self):
+        return self._default_alert_window
+
+    def get_name_from_bundle_id(self, bundle_id):
+        for activity in self._get_activities_with_window():
+            if activity.get_bundle_id() == bundle_id:
+                return activity.get_activity_name()
+        return ''
+
+    def more_than_one_open_instance(self, bundle):
+        if bundle.get_single_instance():
+            bundle_id = bundle.get_bundle_id()
+            for activity in self._get_activities_with_window():
+                if activity.get_bundle_id() == bundle_id:
+                    return True
+        return False
+
+    def reached_maximum_number_of_open_activities(self):
+        activities = self._get_activities_with_window()
+        if self._maximum_number_of_open_activities > 0 and \
+           len(activities) > self._maximum_number_of_open_activities:
+            return True
+        else:
+            return False
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)
