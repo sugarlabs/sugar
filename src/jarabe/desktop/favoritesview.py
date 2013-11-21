@@ -495,7 +495,8 @@ class ActivityIcon(CanvasIcon):
         if self._resume_mode and self._journal_entries:
             self._resume(self._journal_entries[0])
         else:
-            misc.launch(self._activity_info)
+            misc.launch(self._activity_info,
+                        metadata=self._journal_entries[0])
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()
