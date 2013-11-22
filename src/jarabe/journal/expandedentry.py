@@ -378,13 +378,15 @@ class ExpandedEntry(Gtk.EventBox):
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
 
+	if 'filesize' in self._metadata:
+	    filesize = self._metadata.get('filesize')
+	else:
+	    filesize = model.get_file_size(self._metadata['uid'])
+
         lines = [
             _('Kind: %s') % (self._metadata.get('mime_type') or _('Unknown'),),
             _('Date: %s') % (self._format_date(),),
-            _('Size: %s') % (format_size(
-                             int(self._metadata.get(
-                                 'filesize',
-                                 model.get_file_size(self._metadata['uid'])))))
+            _('Size: %s') % (format_size(int(filesize)))
         ]
 
         for line in lines:
