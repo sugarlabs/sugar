@@ -539,10 +539,12 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _icon_button_release_event_cb(self, button, event):
         logging.debug('_icon_button_release_event_cb')
-        misc.resume(self._metadata)
+        misc.resume(self._metadata,
+                    alert_window=journalwindow.get_journal_window())
         return True
 
     def _preview_box_button_release_event_cb(self, button, event):
         logging.debug('_preview_box_button_release_event_cb')
-        misc.resume(self._metadata)
+        misc.resume(self._metadata,
+                    alert_window=journalwindow.get_journal_window())
         return True

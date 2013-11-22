@@ -157,7 +157,7 @@ class Activity(GObject.GObject):
         if self._windows:
             return self._windows[0].get_name()
         else:
-            return ''
+            return None
 
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
@@ -192,6 +192,13 @@ class Activity(GObject.GObject):
         sugar3.util.unique_id
         """
         return self._activity_id
+
+    def get_bundle_id(self):
+        """ Returns the activity's bundle id"""
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_bundle_id()
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
@@ -403,6 +410,10 @@ class ShellModel(GObject.GObject):
         self._modal_dialogs_counter = 0
 
         self._screen.toggle_showing_desktop(True)
+
+        client = GConf.Client.get_default()
+        self._maximum_open_activities = client.get_int(
+            '/desktop/sugar/maximum_number_of_open_activities')
 
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
@@ -645,6 +656,28 @@ class ShellModel(GObject.GObject):
             self._set_active_activity(act)
 
         self._update_zoom_level(window)
+
+    def get_name_from_bundle_id(self, bundle_id):
+        for activity in self._get_activities_with_window():
+            if activity.get_bundle_id() == bundle_id:
+                return activity.get_activity_name()
+        return ''
+
+    def can_launch_activity_instance(self, bundle):
+        if bundle.get_single_instance():
+            bundle_id = bundle.get_bundle_id()
+            for activity in self._get_activities_with_window():
+                if activity.get_bundle_id() == bundle_id:
+                    return False
+        return True
+
+    def can_launch_activity(self):
+        activities = self._get_activities_with_window()
+        if self._maximum_open_activities > 0 and \
+           len(activities) > self._maximum_open_activities:
+            return False
+        else:
+            return True
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)
