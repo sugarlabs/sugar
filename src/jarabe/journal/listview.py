@@ -34,6 +34,7 @@ from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
+from jarabe.journal import journalwindow
 
 
 UPDATE_INTERVAL = 300
@@ -651,7 +652,8 @@ class ListView(BaseListView):
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
-        misc.resume(metadata)
+        misc.resume(metadata,
+                    alert_window=journalwindow.get_journal_window())
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         row = self._model[path]

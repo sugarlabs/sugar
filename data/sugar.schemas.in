@@ -464,5 +464,17 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/maximum_number_of_open_activities</key>
+      <applyto>/desktop/sugar/maximum_number_of_open_activities</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>A limit to the number of simultaneously open activities.</short>
+        <long>This int is used to set a limit to the number of open activities. By default (0), there is no limit.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

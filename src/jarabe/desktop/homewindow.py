@@ -100,6 +100,13 @@ class HomeWindow(Gtk.Window):
         shell.get_model().zoom_level_changed.connect(
             self.__zoom_level_changed_cb)
 
+    def add_alert(self, alert):
+        self._box.pack_start(alert, False, True, 0)
+        self._box.reorder_child(alert, 1)
+
+    def remove_alert(self, alert):
+        self._box.remove(alert)
+
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')
         group.popdown()

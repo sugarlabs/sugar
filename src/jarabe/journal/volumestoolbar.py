@@ -34,7 +34,6 @@ import shutil
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
 from sugar3 import env
 
 from jarabe.journal import model
@@ -352,20 +351,17 @@ class JournalButtonPalette(Palette):
 
     def __init__(self, mount):
         Palette.__init__(self, GLib.markup_escape_text(_('Journal')))
-
-        grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL,
-                        margin=style.DEFAULT_SPACING,
-                        row_spacing=style.DEFAULT_SPACING)
-        self.set_content(grid)
-        grid.show()
+        vbox = Gtk.VBox()
+        self.set_content(vbox)
+        vbox.show()
 
         self._progress_bar = Gtk.ProgressBar()
-        grid.add(self._progress_bar)
+        vbox.add(self._progress_bar)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        grid.add(self._free_space_label)
+        vbox.add(self._free_space_label)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)
