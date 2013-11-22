@@ -138,7 +138,8 @@ class ObjectPalette(Palette):
         return [self._metadata['uid']]
 
     def __start_activate_cb(self, menu_item):
-        misc.resume(self._metadata)
+        misc.resume(self._metadata,
+                    alert_window=journalwindow.get_journal_window())
 
     def __duplicate_activate_cb(self, menu_item):
         try:
@@ -502,7 +503,8 @@ class StartWithMenu(Gtk.Menu):
         if mime_type:
             mime_registry = mimeregistry.get_registry()
             mime_registry.set_default_activity(mime_type, service_name)
-        misc.resume(self._metadata, service_name)
+        misc.resume(self._metadata, bundle_id=service_name,
+                    alert_window=journalwindow.get_journal_window())
 
 
 class BuddyPalette(Palette):
