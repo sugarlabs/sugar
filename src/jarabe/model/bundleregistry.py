@@ -166,13 +166,25 @@ class BundleRegistry(GObject.GObject):
 
         return defaults
 
+    def _remove_bundle_id_spaces(self, bundle_id):
+        """This takes a bundle_id and replaces spaces with .s
+        and it doesn't use regex!"""
+        new_bundle_id = ''
+        for char in bundle_id:
+            if not char == ' ':
+                new_bundle_id += char
+            else:
+                new_bundle_id += '.'
+        return new_bundle_id
+
     def _get_favorite_key(self, bundle_id, version):
         """We use a string as a composite key for the favorites dictionary
         because JSON doesn't support tuples and python won't accept a list
         as a dictionary key.
         """
         if ' ' in bundle_id:
-            raise ValueError('bundle_id cannot contain spaces')
+            logging.exception("Spaces found in bundle_id %s", bundle_id)
+            bundle_id = self._remove_bundle_id_spaces(bundle_id)
         return '%s %s' % (bundle_id, version)
 
     def _load_favorites(self):
