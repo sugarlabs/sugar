@@ -11,6 +11,7 @@ sugar_PYTHON =				\
 	launcher.py			\
 	palettes.py			\
 	pulsingicon.py			\
+	screenshot.py			\
 	service.py			\
 	tabbinghandler.py		\
 	viewsource.py
