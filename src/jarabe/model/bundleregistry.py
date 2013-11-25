@@ -172,7 +172,8 @@ class BundleRegistry(GObject.GObject):
         as a dictionary key.
         """
         if ' ' in bundle_id:
-            raise ValueError('bundle_id cannot contain spaces')
+            logging.exception("Spaces found in bundle_id %s", bundle_id)
+            bundle_id = bundle_id.replace(' ', '.')
         return '%s %s' % (bundle_id, version)
 
     def _load_favorites(self):
