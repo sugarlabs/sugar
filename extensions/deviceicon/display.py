@@ -18,6 +18,7 @@ from gettext import gettext as _
 
 from gi.repository import GConf
 from gi.repository import Gtk
+from gi.repository import GLib
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.menuitem import MenuItem
@@ -25,13 +26,14 @@ from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.xocolor import XoColor
 
+import jarabe.frame
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.view.screenshot import take_screenshot
 
 _ICON_NAME = 'camera-external'
 
 
-class DeviceView(TrayIcon):
+class DisplayDeviceView(TrayIcon):
 
     FRAME_POSITION_RELATIVE = 500
 
@@ -43,8 +45,11 @@ class DeviceView(TrayIcon):
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
-        self.palette = DisplayPalette(_('Display'))
-        self.palette.set_group_id('frame')
+    def create_palette(self):
+        label = GLib.markup_escape_text(_('Display'))
+        palette = DisplayPalette(label)
+        palette.set_group_id('frame')
+        return palette
 
 
 class DisplayPalette(Palette):
@@ -52,7 +57,7 @@ class DisplayPalette(Palette):
     def __init__(self, primary_text):
         Palette.__init__(self, primary_text)
 
-        self._screenshot_item = MenuItem('Take a screenshot')
+        self._screenshot_item = PaletteMenuItem(_('Take a screenshot'))
         self._screenshot_icon = Icon(icon_name=_ICON_NAME,
                                      icon_size=Gtk.IconSize.MENU)
         self._screenshot_item.set_image(self._screenshot_icon)
@@ -64,8 +69,11 @@ class DisplayPalette(Palette):
                                       self.__screenshot_activate_cb)
 
     def __screenshot_activate_cb(self, menuitem_):
+        frame = jarabe.frame.get_view()
+        frame.show()
         take_screenshot()
+        frame.hide()
 
 
 def setup(tray):
-    tray.add_device(DeviceView())
+    tray.add_device(DisplayDeviceView())
