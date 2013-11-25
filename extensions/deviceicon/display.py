@@ -70,9 +70,9 @@ class DisplayPalette(Palette):
 
     def __screenshot_activate_cb(self, menuitem_):
         frame = jarabe.frame.get_view()
-        frame.show()
-        take_screenshot()
         frame.hide()
+        take_screenshot()
+        frame.show()
 
 
 def setup(tray):
