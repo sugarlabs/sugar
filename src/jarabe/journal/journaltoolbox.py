@@ -453,6 +453,11 @@ class DetailToolbox(ToolbarBox):
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
+        if not (misc.get_activities(self._metadata) or
+                misc.is_bundle(self._metadata)):
+            palette = self._resume.get_palette()
+            palette.popup(immediate=True)
+
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
 
@@ -567,6 +572,13 @@ class DetailToolbox(ToolbarBox):
                                      icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                               activity_info.get_bundle_id())
+            palette.menu.append(menu_item)
+            menu_item.show()
+
+        if not (misc.get_activities(self._metadata) or
+                misc.is_bundle(self._metadata)):
+            menu_item = MenuItem(_('No activity to start entry'))
+            menu_item.set_sensitive(False)
             palette.menu.append(menu_item)
             menu_item.show()
 
