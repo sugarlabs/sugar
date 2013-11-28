@@ -497,7 +497,7 @@ class DetailToolbox(ToolbarBox):
             model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
-        misc.resume(self._metadata,
+        misc.resume(self._metadata, service_name,
                     alert_window=journalwindow.get_journal_window())
 
     def _refresh_copy_palette(self):
