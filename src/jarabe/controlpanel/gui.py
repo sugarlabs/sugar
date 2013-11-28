@@ -203,6 +203,10 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
+        # if the user clicked out of the window - fix SL #3188
+        if not self.is_active():
+            self.present()
+
         entry = self._main_toolbar.get_entry()
         if not entry.has_focus():
             entry.grab_focus()
