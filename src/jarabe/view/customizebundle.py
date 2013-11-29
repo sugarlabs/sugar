@@ -80,7 +80,7 @@ def generate_bundle(nick, new_basename):
 
     config = bundlebuilder.Config(source_dir=os.path.join(
         user_activities_path, new_basename),
-        dist_name='%s-1.xo' % (new_activity_name))
+        dist_name='%s-1' % (new_activity_name))
     bundlebuilder.cmd_dist_xo(config, None)
 
     dsobject = datastore.create()
