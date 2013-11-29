@@ -409,6 +409,7 @@ class DetailToolbox(ToolbarBox):
         self._resume.connect('clicked', self._resume_clicked_cb)
         self.toolbar.insert(self._resume, -1)
         self._resume.show()
+        self._resume_menu = None
 
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -561,17 +562,21 @@ class DetailToolbox(ToolbarBox):
 
         palette = self._resume.get_palette()
 
-        for menu_item in palette.menu.get_children():
-            palette.menu.remove(menu_item)
-            menu_item.destroy()
+        if self._resume_menu is None:
+            self._resume_menu = PaletteMenuBox()
+            palette.set_content(self._resume_menu)
+            self._resume_menu.show()
+        else:
+            for menu_item in self._resume_menu.get_children():
+                self._resume_menu.remove(menu_item)
+                menu_item.destroy()
 
         for activity_info in misc.get_activities(self._metadata):
-            menu_item = MenuItem(activity_info.get_name())
-            menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=Gtk.IconSize.MENU))
+            menu_item = PaletteMenuItem(file_name=activity_info.get_icon(),
+                                        text_label=activity_info.get_name())
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                               activity_info.get_bundle_id())
-            palette.menu.append(menu_item)
+            self._resume_menu.append_item(menu_item)
             menu_item.show()
 
         if not misc.can_resume(self._metadata):
