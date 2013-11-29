@@ -72,7 +72,7 @@ class ObjectPalette(Palette):
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
-        if misc.get_activities(metadata) or misc.is_bundle(metadata):
+        if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
                 resume_label = _('Resume')
                 resume_with_label = _('Resume with')

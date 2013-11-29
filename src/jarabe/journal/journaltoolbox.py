@@ -453,8 +453,7 @@ class DetailToolbox(ToolbarBox):
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
-        if not (misc.get_activities(self._metadata) or
-                misc.is_bundle(self._metadata)):
+        if not misc.can_resume(self._metadata):
             palette = self._resume.get_palette()
             palette.popup(immediate=True)
 
@@ -575,8 +574,7 @@ class DetailToolbox(ToolbarBox):
             palette.menu.append(menu_item)
             menu_item.show()
 
-        if not (misc.get_activities(self._metadata) or
-                misc.is_bundle(self._metadata)):
+        if not misc.can_resume(self._metadata):
             menu_item = MenuItem(_('No activity to start entry'))
             menu_item.set_sensitive(False)
             palette.menu.append(menu_item)
