@@ -404,6 +404,7 @@ class JournalButtonPalette(Palette):
 
     def __backup_activate_cb(self, menu_item):
         backup_window = BackupWindow()
+        backup_window.show_all()
 
 
 class DocumentsButton(BaseButton):

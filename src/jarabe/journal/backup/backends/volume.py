@@ -26,41 +26,12 @@ from gi.repository import Gio
 from gi.repository import GObject
 
 from sugar import env
-
+from backend_tools import Backend, PreConditionsError, PreConditionsChoose
 
 DIR_SIZE = 4096
 DS_SOURCE_NAME = 'datastore'
 SN_PATH_X86 = '/ofw/serial-number/serial-number'
 SN_PATH_ARM = '/proc/device-tree/serial-number'
-
-
-class PreConditionsError(Exception):
-    pass
-
-
-class PreConditionsChoose(Exception):
-
-    def __init__(self, message, options):
-        Exception.__init__(self, message)
-        self.options = options
-
-
-class Backend(GObject.GObject):
-
-    __gsignals__ = {
-        'started':   (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'progress':  (GObject.SignalFlags.RUN_FIRST, None, ([float])),
-        'finished':  (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'cancelled': (GObject.SignalFlags.RUN_FIRST, None, ([]))}
-
-    def verify_preconditions(self):
-        raise NotImplementedError()
-
-    def start(self):
-        raise NotImplementedError()
-
-    def cancel(self):
-        raise NotImplementedError()
 
 
 class Backup(Backend):
@@ -70,6 +41,7 @@ class Backup(Backend):
     def __init__(self):
         Backend.__init__(self)
         self._volume = None
+        self._percent = 0
 
     def _set_volume(self, option):
         if self._volume is not None:
@@ -79,15 +51,22 @@ class Backup(Backend):
             self._volume = option['volume']
             return
 
-        options = _get_volume_options()
-        volume = _value_if_one_option(options)
+        volume_options = _get_volume_options()
+        logging.error('volume_options %s', volume_options)
+        if not volume_options['options']:
+            raise PreConditionsError(_('Please connect a device to continue'))
+
+        volume = _value_if_one_option(volume_options)
         if volume is not None:
             self._volume = volume
             return
 
-        raise PreConditionsChoose(_('Select your volume'), options)
+        raise PreConditionsChoose(_('Select your volume'), volume_options)
 
     def verify_preconditions(self, option=None):
+        """
+        option: dictionary
+        """
         self._set_volume(option)
         if _get_volume_space(self._volume) < _get_datastore_size():
             raise PreConditionsError(_('Not enough space in volume'))
@@ -108,9 +87,11 @@ class Backup(Backend):
 
     def _do_continue(self):
         self._tarfile.add(self._entries.pop())
-        percent = (1.0 - float(len(self._entries)) / self._total) * 100
-        logging.debug('backup-local progress is %d', percent)
-        self.emit('progress', percent)
+        percent = int((1.0 - float(len(self._entries)) / self._total) * 100)
+        if percent != self._percent:
+            self._percent = percent
+            logging.debug('restore-local progress is %f', percent)
+            self.emit('progress', float(percent) / 100.0)
 
         if self._cancelled:
             self._do_cancel()
@@ -148,6 +129,7 @@ class Restore(Backend):
         self._volume = None
         self._checkpoint = None
         self._checkpoint_size = None
+        self._percent = 0
 
     def _reset_datastore(self):
         ''' erase all contents from current datastore '''
@@ -164,13 +146,17 @@ class Restore(Backend):
             self._volume = option['volume']
             return
 
-        options = _get_volume_options()
-        volume = _value_if_one_option(options)
+        volume_options = _get_volume_options()
+        logging.error('volume_options %s', volume_options)
+        if not volume_options['options']:
+            raise PreConditionsError(_('Please connect a device to continue'))
+
+        volume = _value_if_one_option(volume_options)
         if volume is not None:
             self._volume = volume
             return
 
-        raise PreConditionsChoose(_('Select your volume'), options)
+        raise PreConditionsChoose(_('Select your volume'), volume_options)
 
     def _set_checkpoint(self, option):
         if self._checkpoint is not None:
@@ -180,13 +166,18 @@ class Restore(Backend):
             self._checkpoint = option['checkpoint']
             return
 
-        options = _get_checkpoint_options(self._volume)
-        checkpoint = _value_if_one_option(options)
+        checkpoint_options = _get_checkpoint_options(self._volume)
+
+        if not checkpoint_options['options']:
+            raise PreConditionsError(_('No checkpoints found in the device'))
+
+        checkpoint = _value_if_one_option(checkpoint_options)
         if checkpoint is not None:
             self._checkpoint = checkpoint
             return
 
-        raise PreConditionsChoose(_('Select your checkpoint'), options)
+        raise PreConditionsChoose(_('Select your checkpoint'),
+                                  checkpoint_options)
 
     def _set_checkpoint_size(self):
         self._checkpoint_size = _get_checkpoint_size(self._checkpoint)
@@ -201,11 +192,13 @@ class Restore(Backend):
     def _do_continue(self):
         tarinfo = self._tarfile.next()
         if tarinfo is not None:
-            self._tarfile.extract(tarinfo)
+            self._tarfile.extract(tarinfo, path='/')
             self._bytes += DIR_SIZE if tarinfo.isdir() else tarinfo.size
-            percent = self._bytes / self._checkpoint_size * 100
-            logging.debug('restore-local progress is %d', percent)
-            self.emit('progress', percent)
+            percent = int(self._bytes / self._checkpoint_size * 100)
+            if percent != self._percent:
+                self._percent = percent
+                logging.debug('restore-local progress is %f', percent)
+                self.emit('progress', float(percent) / 100.0)
             GObject.idle_add(self._do_continue)
         else:
             self._do_finish()
@@ -216,6 +209,7 @@ class Restore(Backend):
 
     def start(self):
         self.emit('started')
+        logging.debug('Starting with checkpoint %s', self._checkpoint)
         self._tarfile = tarfile.open(self._checkpoint, 'r:gz')
         self._bytes = 0.0
         self._reset_datastore()
@@ -271,7 +265,6 @@ def _value_if_one_option(options):
 def _get_checkpoint_options(volume):
     options = {}
     options['parameter'] = 'checkpoint'
-    options['message'] = _('Select your restore check point')
     options['options'] = []
 
     for checkpoint in os.listdir(volume):
@@ -288,7 +281,6 @@ def _get_checkpoint_options(volume):
 def _get_volume_options():
     options = {}
     options['parameter'] = 'volume'
-    options['message'] = _('Select your device')
     options['options'] = []
 
     for mount in Gio.VolumeMonitor.get().get_mounts():
@@ -301,12 +293,12 @@ def _get_volume_options():
 
 
 def get_name():
-    return _('Local Backup')
+    return _('Local Device Backup')
 
 
 def get_backup():
-    return Backup
+    return Backup()
 
 
 def get_restore():
-    return Restore
+    return Restore()
