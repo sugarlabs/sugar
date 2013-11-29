@@ -139,6 +139,13 @@ class WirelessNetworkView(EventPulsingIcon):
             'activate', self.__disconnect_activate_cb)
         self.menu_box.add(self._disconnect_item)
 
+        self._forget_item = PaletteMenuItem(_('Forget network'))
+        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='edit-delete')
+        self._forget_item.set_image(icon)
+        self._forget_item.connect(
+            'activate', self.__forget_activate_cb)
+        self.menu_box.add(self._forget_item)
+
         p.set_content(self.menu_box)
         self.menu_box.show_all()
 
@@ -247,6 +254,8 @@ class WirelessNetworkView(EventPulsingIcon):
            state == network.NM_DEVICE_STATE_IP_CONFIG:
             if self._disconnect_item:
                 self._disconnect_item.show()
+            if self._forget_item:
+                self._forget_item.hide()
             self._connect_item.hide()
             self._palette.props.secondary_text = _('Connecting...')
             self.props.pulsing = True
@@ -254,6 +263,8 @@ class WirelessNetworkView(EventPulsingIcon):
             network.set_connected()
             if self._disconnect_item:
                 self._disconnect_item.show()
+            if self._forget_item:
+                self._forget_item.hide()
             self._connect_item.hide()
             self._palette.props.secondary_text = _('Connected')
             self.props.pulsing = False
@@ -263,6 +274,14 @@ class WirelessNetworkView(EventPulsingIcon):
             self._connect_item.show()
             self._palette.props.secondary_text = None
             self.props.pulsing = False
+            if self._forget_item:
+                self._update_forget_item()
+
+    def _update_forget_item(self):
+        if network.find_connection_by_ssid(self._ssid) is not None:
+            self._forget_item.show()
+        else:
+            self._forget_item.hide()
 
     def _update_color(self):
         self.props.base_color = self._color
@@ -338,6 +357,15 @@ class WirelessNetworkView(EventPulsingIcon):
             wireless_security.pairwise = pairwise
             wireless_security.group = group
             return wireless_security
+
+    def __forget_activate_cb(self, icon):
+        connection = network.find_connection_by_ssid(self._ssid)
+        if connection is not None:
+            logging.debug('Removing existing connection for SSID %r',
+                          self._ssid)
+            connection.delete()
+            self._forget_item.hide()
+            self._update_badge()
 
     def __connect_activate_cb(self, icon):
         self._connect()
