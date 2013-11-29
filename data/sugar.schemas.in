@@ -37,6 +37,47 @@
 	</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/gender</key>
+      <applyto>/desktop/sugar/user/gender</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>User Gender</short>
+        <long>Gender of the Sugar user. The string is either 'male' or
+	'female'.
+	</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/age</key>
+      <applyto>/desktop/sugar/user/age</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default></default>
+      <locale name="C">
+        <short>User Age</short>
+        <long>Approximate age of the Sugar user. The int is one of
+	[3, 5, 7, 9, 11, 12, 15, 25] and is used to select one of 8
+	age-gender encoded icons.
+	</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/birth_timestamp</key>
+      <applyto>/desktop/sugar/user/birth_timestamp</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default></default>
+      <locale name="C">
+        <short>User Birth Timestamp</short>
+        <long>Approximate birth time of the Sugar user. The int is
+	calculated by subtracting age * number of seconds in a year
+	from the time when age is set or reset by the user.
+	</long>
+      </locale>
+    </schema>
 
     <schema>
       <key>/schemas/desktop/sugar/sound/volume</key>
