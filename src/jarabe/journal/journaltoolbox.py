@@ -32,7 +32,6 @@ from sugar3.graphics.toolcombobox import ToolComboBox
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toggletoolbutton import ToggleToolButton
 from sugar3.graphics.combobox import ComboBox
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -578,10 +577,7 @@ class DetailToolbox(ToolbarBox):
             menu_item.show()
 
         if not misc.can_resume(self._metadata):
-            menu_item = MenuItem(_('No activity to start entry'))
-            menu_item.set_sensitive(False)
-            palette.menu.append(menu_item)
-            menu_item.show()
+            self._resume.set_tooltip(_('No activity to start entry'))
 
 
 class SortingButton(ToolButton):
