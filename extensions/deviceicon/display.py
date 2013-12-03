@@ -82,11 +82,12 @@ class DisplayPalette(Palette):
         GObject.idle_add(self._take_screenshot, frame_)
 
     def _take_screenshot(self, frame_):
-        while frame_.is_visible():
+        if frame_.is_visible():
             return True
 
         take_screenshot()
         frame_.show()
+        return False
 
 
 def setup(tray):
