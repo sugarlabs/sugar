@@ -25,7 +25,9 @@ from gettext import gettext as _
 from gi.repository import Gio
 from gi.repository import GObject
 
-from sugar import env
+from sugar3 import env
+from sugar3 import profile
+from jarabe.journal import model
 from backend_tools import Backend, PreConditionsError, PreConditionsChoose
 
 DIR_SIZE = 4096
@@ -68,7 +70,8 @@ class Backup(Backend):
         option: dictionary
         """
         self._set_volume(option)
-        if _get_volume_space(self._volume) < _get_datastore_size():
+        self._uncompressed_size = _get_datastore_size()
+        if _get_volume_space(self._volume) < self._uncompressed_size:
             raise PreConditionsError(_('Not enough space in volume'))
 
     def _get_datastore_entries(self):
@@ -90,7 +93,7 @@ class Backup(Backend):
         percent = int((1.0 - float(len(self._entries)) / self._total) * 100)
         if percent != self._percent:
             self._percent = percent
-            logging.debug('restore-local progress is %f', percent)
+            logging.debug('backup-local progress is %f', percent)
             self.emit('progress', float(percent) / 100.0)
 
         if self._cancelled:
@@ -107,6 +110,15 @@ class Backup(Backend):
 
     def _do_finish(self):
         self._tarfile.close()
+
+        # Add metadata to the file created
+        metadata = model.get(self._checkpoint)
+        metadata['description'] = _('Backup from user %s') % \
+            profile.get_nick_name()
+        metadata['icon_color'] = profile.get_color().to_string()
+        metadata['uncompressed_size'] = self._uncompressed_size
+        model.write(metadata, self._checkpoint)
+
         self.emit('finished')
 
     def start(self):
@@ -237,6 +249,14 @@ def _get_checkpoint_size(path):
     with tarfile.open(path, 'r:gz') as file:
         for tarinfo in file:
             size += DIR_SIZE if tarinfo.isdir() else tarinfo.size
+    logging.error('_get_checkpoint_size = %d', size)
+
+    # read information in the metadata
+    metadata = model.get(path)
+    if 'uncompressed_size' in metadata:
+        size = int(metadata['uncompressed_size'])
+        logging.error('size from metadata = %d', size)
+
     return size
 
 
