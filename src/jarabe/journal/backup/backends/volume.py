@@ -28,6 +28,7 @@ from gi.repository import GObject
 from sugar3 import env
 from sugar3 import profile
 from jarabe.journal import model
+from backend_tools import get_valid_file_name
 from backend_tools import Backend, PreConditionsError, PreConditionsChoose
 
 DIR_SIZE = 4096
@@ -38,7 +39,7 @@ SN_PATH_ARM = '/proc/device-tree/serial-number'
 
 class Backup(Backend):
 
-    BACKUP_NAME = '%s.xob'
+    BACKUP_NAME = '%s_%s.xob'
 
     def __init__(self):
         Backend.__init__(self)
@@ -85,8 +86,10 @@ class Backup(Backend):
         return entries
 
     def _generate_checkpoint(self):
-        return os.path.join(self._volume, self.BACKUP_NAME %
-                           (datetime.now().strftime('%Y%m%d')))
+        backup_file_name = self.BACKUP_NAME % (
+            _get_identifier(), datetime.now().strftime('%Y%m%d'))
+        backup_file_name = get_valid_file_name(backup_file_name)
+        return os.path.join(self._volume, backup_file_name)
 
     def _do_continue(self):
         self._tarfile.add(self._entries.pop())
@@ -116,6 +119,7 @@ class Backup(Backend):
         metadata['description'] = _('Backup from user %s') % \
             profile.get_nick_name()
         metadata['icon_color'] = profile.get_color().to_string()
+        metadata['mime_type'] = 'application/vnd.olpc-journal-backup'
         metadata['uncompressed_size'] = self._uncompressed_size
         model.write(metadata, self._checkpoint)
 
@@ -269,7 +273,7 @@ def _get_identifier():
     if path is not None:
         with open(path, 'r') as file:
             return file.read().rstrip('\0\n')
-    return 'user'
+    return profile.get_nick_name()
 
 
 def _get_datastore_path():
