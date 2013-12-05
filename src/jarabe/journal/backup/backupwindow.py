@@ -363,7 +363,12 @@ class OperationPanel(Gtk.VBox):
 
     def __operation_finished_cb(self, backend):
         self._progress_bar.set_fraction(1.0)
-        self._message_label.set_text(_('Operation finished succesfully'))
+        if self._operation == OPERATION_RESTORE:
+            self._message_label.set_text(_('Backup finished successfully'))
+        if self._operation == OPERATION_RESTORE:
+            self._message_label.set_text(
+                _('Restore realized successfully.'
+                  'You need restart Sugar to to finish.'))
 
     def __operation_cancelled_cb(self, backend):
         pass
