@@ -172,7 +172,7 @@ class BundleRegistry(GObject.GObject):
         as a dictionary key.
         """
         if ' ' in bundle_id:
-            raise ValueError('bundle_id cannot contain spaces')
+            raise MalformedBundleException('bundle_id cannot contain spaces')
         return '%s %s' % (bundle_id, version)
 
     def _load_favorites(self):
@@ -230,11 +230,14 @@ class BundleRegistry(GObject.GObject):
                         NormalizedVersion(max_version) < \
                         NormalizedVersion(bundle.get_activity_version()):
                     max_version = bundle.get_activity_version()
-
-            key = self._get_favorite_key(bundle_id, max_version)
-            if NormalizedVersion(max_version) > NormalizedVersion('0') and \
+            try:
+                key = self._get_favorite_key(bundle_id, max_version)
+                if NormalizedVersion(max_version) > NormalizedVersion('0') and \
                     key not in self._favorite_bundles[_DEFAULT_VIEW]:
-                self._favorite_bundles[_DEFAULT_VIEW][key] = None
+                        self._favorite_bundles[_DEFAULT_VIEW][key] = None
+            except MalformedBundleException:
+                logging.warning("Bundle id with spaces found! EXTERMINATE!")
+            	pass
 
         logging.debug('After merging: %r',
                       self._favorite_bundles[_DEFAULT_VIEW])
@@ -387,7 +390,10 @@ class BundleRegistry(GObject.GObject):
 
     def _set_bundle_favorite(self, bundle_id, version, favorite,
                              favorite_view=0):
-        key = self._get_favorite_key(bundle_id, version)
+        try:
+            key = self._get_favorite_key(bundle_id, version)
+        except MalformedBundleException:
+        	return False
         if favorite and not key in self._favorite_bundles[favorite_view]:
             self._favorite_bundles[favorite_view][key] = None
         elif not favorite and key in self._favorite_bundles[favorite_view]:
@@ -399,14 +405,20 @@ class BundleRegistry(GObject.GObject):
         return True
 
     def is_bundle_favorite(self, bundle_id, version, favorite_view=0):
-        key = self._get_favorite_key(bundle_id, version)
+        try:
+            key = self._get_favorite_key(bundle_id, version)
+        except MalformedBundleException:
+            return False
         return key in self._favorite_bundles[favorite_view]
 
     def is_activity_protected(self, bundle_id):
         return bundle_id in self._protected_activities
 
     def set_bundle_position(self, bundle_id, version, x, y, favorite_view=0):
-        key = self._get_favorite_key(bundle_id, version)
+        try:
+            key = self._get_favorite_key(bundle_id, version)
+        except MalformedBundleException:
+            raise ValueError('Bundle ids must not have spaces')
         if key not in self._favorite_bundles[favorite_view]:
             raise ValueError('Bundle %s %s not favorite' %
                              (bundle_id, version))
@@ -428,7 +440,10 @@ class BundleRegistry(GObject.GObject):
         """Get the coordinates where the user wants the representation of this
         bundle to be displayed. Coordinates are relative to a 1000x1000 area.
         """
-        key = self._get_favorite_key(bundle_id, version)
+        try:
+            key = self._get_favorite_key(bundle_id, version)
+        except MalformedBundleException:
+            return (-1, -1)
         if key not in self._favorite_bundles[favorite_view] or \
                 self._favorite_bundles[favorite_view][key] is None or \
                 'position' not in self._favorite_bundles[favorite_view][key]:
