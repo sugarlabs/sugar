@@ -21,14 +21,31 @@ from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import GLib
+from gi.repository import GConf
 
+from sugar3 import util
+from sugar3.graphics.icon import Icon, CellRendererIcon
 from jarabe.journal.iconmodel import IconModel
-from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
 from jarabe.journal import model
 from sugar3.graphics.objectchooser import get_preview_pixbuf
 from sugar3.graphics import style
 from sugar3.activity.activity import PREVIEW_SIZE
 
+class CellRendererFavorite(CellRendererIcon):
+    __gtype_name__ = 'JournalCellRendererFavoriteA'
+
+    def __init__(self, tree_view=None):
+        CellRendererIcon.__init__(self, tree_view)
+
+        self.props.width = style.GRID_CELL_SIZE
+        self.props.height = style.GRID_CELL_SIZE
+        self.props.size = style.SMALL_ICON_SIZE
+        self.props.icon_name = 'emblem-favorite'
+        client = GConf.Client.get_default()
+        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
+        self.props.prelit_fill_color = prelit_color.get_fill_color()
 
 class PreviewRenderer(Gtk.CellRendererPixbuf):
 
@@ -54,13 +71,21 @@ class PreviewRenderer(Gtk.CellRendererPixbuf):
 
 class PreviewIconView(Gtk.IconView):
 
-    def __init__(self, title_col, preview_col):
+    def __init__(self, title_col, time_col, preview_col, fav_col):
         Gtk.IconView.__init__(self)
 
         self._preview_col = preview_col
+        self._time_col = time_col
         self._title_col = title_col
+        self._fav_col = fav_col
 
         self.set_spacing(3)
+        
+        #_fav_renderer = CellRendererFavorite(self)
+        #_fav_renderer.set_alignment(0.5, 0.5)
+        #self.pack_start(_fav_renderer, False)
+        #self.set_cell_data_func(_fav_renderer,
+        #                        self._fav_data_func, None)
 
         _preview_renderer = PreviewRenderer()
         _preview_renderer.set_alignment(0.5, 0.5)
@@ -73,6 +98,21 @@ class PreviewIconView(Gtk.IconView):
         self.pack_start(_title_renderer, True)
         self.set_cell_data_func(_title_renderer,
                                 self._title_data_func, None)
+                                
+        _time_renderer = Gtk.CellRendererText()
+        _time_renderer.set_alignment(0.5, 0.5)
+        self.pack_start(_time_renderer, True)
+        self.set_cell_data_func(_time_renderer,
+                                self._time_data_func, None)
+
+    def _fav_data_func(self, view, cell, store, i, data):
+        favorite = store.get_value(i, self._fav_col)
+        if favorite:
+            client = GConf.Client.get_default()
+            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            cell.props.xo_color = color
+        else:
+            cell.props.xo_color = None
 
     def _preview_data_func(self, view, cell, store, i, data):
         preview_data = store.get_value(i, self._preview_col)
@@ -81,6 +121,10 @@ class PreviewIconView(Gtk.IconView):
     def _title_data_func(self, view, cell, store, i, data):
         title = store.get_value(i, self._title_col)
         cell.props.markup = title
+        
+    def _time_data_func(self, view, cell, store, i, data):
+        time = store.get_value(i, self._time_col)
+        cell.props.markup = time
 
 
 class IconView(Gtk.Bin):
@@ -112,7 +156,9 @@ class IconView(Gtk.Bin):
         self._scrolled_window.show()
 
         self.icon_view = PreviewIconView(IconModel.COLUMN_TITLE,
-                                         IconModel.COLUMN_PREVIEW)
+                                         IconModel.COLUMN_TIME,
+                                         IconModel.COLUMN_PREVIEW,
+                                         IconModel.COLUMN_IS_FAV)
         self.icon_view.connect('item-activated', self.__item_activated_cb)
 
         self.icon_view.connect('button-release-event',

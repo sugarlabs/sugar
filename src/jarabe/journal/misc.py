@@ -323,10 +323,6 @@ def is_bundle(metadata):
         is_journal_bundle(metadata)
 
 
-def can_resume(metadata):
-    return get_activities(metadata) or is_bundle(metadata)
-
-
 def handle_bundle_installation(metadata, force_downgrade=False):
     """
     Check metadata for a journal entry. If the metadata corresponds to a
