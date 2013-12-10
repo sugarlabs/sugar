@@ -16,9 +16,12 @@
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import GConf
 
 from gettext import gettext as _
 
+from sugar3 import util
+from sugar3.graphics.xocolor import XoColor
 from jarabe.journal import model
 
 DS_DBUS_SERVICE = 'org.laptop.sugar.DataStore'
@@ -37,11 +40,15 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     COLUMN_UID = 0
     COLUMN_TITLE = 1
     COLUMN_PREVIEW = 2
+    COLUMN_TIME = 3
+    COLUMN_IS_FAV = 4
 
     _COLUMN_TYPES = {
         COLUMN_UID: str,
         COLUMN_TITLE: str,
         COLUMN_PREVIEW: str,
+        COLUMN_TIME: str,
+        COLUMN_IS_FAV: bool,
     }
 
     _PAGE_SIZE = 100
@@ -105,12 +112,25 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._last_requested_index = index
         self._cached_row = []
         self._cached_row.append(metadata['uid'])
-
+        
+        isfav = metadata.get('keep', '0') == '1'
+        title_template = '(STARED)<b> %s</b>' if isfav else '<b>%s</b>'
+        
         title = GObject.markup_escape_text(metadata.get('title',
                                            _('Untitled')))
-        self._cached_row.append(title)
+        self._cached_row.append(title_template % title)
 
         self._cached_row.append(metadata.get('preview', ''))
+        
+        try:
+            timestamp = float(metadata.get('timestamp', 0))
+        except (TypeError, ValueError):
+            timestamp_content = _('Unknown')
+        else:
+            timestamp_content = util.timestamp_to_elapsed_string(timestamp)
+        self._cached_row.append(timestamp_content)
+
+        self._cached_row.append(isfav)
 
         return self._cached_row[column]
 
