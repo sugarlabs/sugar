@@ -39,6 +39,7 @@ class Background(SectionView):
         self._images_loaded = False
 
         self.connect('realize', self.__realize_cb)
+        self.connect('unrealize', self.__unrealize_cb)
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -140,6 +141,9 @@ class Background(SectionView):
             self.get_window().set_cursor(None)
         else:
             self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+
+    def __unrealize_cb(self, widget):
+        self.get_window().set_cursor(None)
 
     def _set_alpha_cb(self, widget, value):
         self._model.set_background_alpha_level(value)
