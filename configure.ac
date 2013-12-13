@@ -75,6 +75,8 @@ src/jarabe/desktop/Makefile
 src/jarabe/frame/Makefile
 src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
+src/jarabe/journal/backup/Makefile
+src/jarabe/journal/backup/backends/Makefile
 src/jarabe/Makefile
 src/jarabe/model/Makefile
 src/jarabe/model/update/Makefile
