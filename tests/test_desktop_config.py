@@ -24,8 +24,10 @@ from jarabe.model import desktop
 _VIEW_DIR = '/desktop/sugar/desktop'
 _VIEW_ENTRY = 'view_icons'
 _FAVORITE_ENTRY = 'favorite_icons'
+_FAVORITE_NAME_ENTRY = 'favorite_names'
 _VIEW_KEY = '%s/%s' % (_VIEW_DIR, _VIEW_ENTRY)
 _FAVORITE_KEY = '%s/%s' % (_VIEW_DIR, _FAVORITE_ENTRY)
+_FAVORITE_NAME_KEY = '%s/%s' % (_VIEW_DIR, _FAVORITE_NAME_ENTRY)
 
 _VIEW_ICONS = ['view-radial']
 _MOCK_LIST = ['view-radial', 'view-random']
@@ -54,6 +56,14 @@ class TestDesktopConfig(unittest.UITestCase):
         else:
             self._save_favorite_icons = None
 
+        options = client.get(_FAVORITE_NAME_KEY)
+        if options is not None:
+            self._save_favorite_names = []
+            for gval in options.get_list():
+                self._save_favorite_names.append(gval.get_string())
+        else:
+            self._save_favorite_names = None
+
         self.model = desktop.get_model()
         self.model.connect('desktop-view-icons-changed',
                            self.__desktop_view_icons_changed_cb)
@@ -70,6 +80,9 @@ class TestDesktopConfig(unittest.UITestCase):
 
         favorite_icons = desktop.get_favorite_icons()
         self.assertTrue(len(favorite_icons) >= len(self.target))
+
+        favorite_names = desktop.get_favorite_names()
+        self.assertTrue(len(favorite_names) >= len(self.target))
 
     def test_unset_views(self):
         self.target = _VIEW_ICONS
@@ -98,3 +111,10 @@ class TestDesktopConfig(unittest.UITestCase):
             SugarExt.gconf_client_set_string_list(client,
                                                   _FAVORITE_KEY,
                                                   self._save_favorite_icons)
+
+        if self._save_favorite_names is None:
+            client.unset(_FAVORITE_NAME_KEY)
+        else:
+            SugarExt.gconf_client_set_string_list(client,
+                                                  _FAVORITE_NAME_KEY,
+                                                  self._save_favorite_names)
