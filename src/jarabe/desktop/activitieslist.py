@@ -252,6 +252,9 @@ class ListModel(Gtk.TreeModelSort):
     def _add_activity(self, activity_info):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
+            
+        if not activity_info.get_show_launcher():
+            return
 
         timestamp = activity_info.get_installation_time()
         version = activity_info.get_activity_version()
