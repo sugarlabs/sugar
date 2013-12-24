@@ -25,9 +25,11 @@ from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
+from jarabe.intro.agepicker import AGES, AGE_LABELS 
 
 _STROKE_COLOR = 0
 _FILL_COLOR = 1
+_NOCOLOR = XoColor('#010101,#ffffff')
 
 
 def _get_next_stroke_color(color):
@@ -120,7 +122,7 @@ class ColorPicker(CanvasIcon):
 
     def __init__(self, picker):
         CanvasIcon.__init__(self, icon_name='computer-xo',
-                            pixel_size=style.XLARGE_ICON_SIZE)
+                            pixel_size=style.LARGE_ICON_SIZE)
         self._picker = picker
         self._color = None
 
@@ -144,6 +146,94 @@ class ColorPicker(CanvasIcon):
             self.emit('color-changed', self._color)
 
 
+class GenderPicker(CanvasIcon):
+    __gsignals__ = {
+        'gender-changed': (GObject.SignalFlags.RUN_FIRST,
+                           None,
+                           ([object])),
+    }
+
+    def __init__(self, color, gender):
+        CanvasIcon.__init__(self, icon_name='%s-6' % (gender),
+                            pixel_size=style.XLARGE_ICON_SIZE)
+        self._gender = gender
+        self._color = color
+
+        self.update_selected()
+
+        self.connect('button_press_event', self.__pressed_cb)
+
+    def update_color(self, color, gender):
+        self._color = color
+        self.update_selected(gender)
+
+    def update_selected(self, gender=None):
+        if self._gender == gender:
+            self.props.xo_color = self._color
+        else:
+            self.props.xo_color = _NOCOLOR
+
+    def __pressed_cb(self, button, event):
+        self.emit('gender-changed', self._gender)
+
+
+class AgePicker(Gtk.VBox):
+    __gsignals__ = {
+        'age-changed': (GObject.SignalFlags.RUN_FIRST,
+                        None,
+                        ([object])),
+    }
+
+    def __init__(self, color, gender, age):
+        Gtk.VBox.__init__(self)
+        self._color = color
+        self._gender = gender
+        self._age = age
+
+        if self._gender == None:
+            self._gender = 'male'
+
+        eventbox = Gtk.EventBox()
+        self._icon = CanvasIcon(icon_name='%s-%d' % (self._gender, self._age),
+                                pixel_size=style.LARGE_ICON_SIZE)
+        self._icon.show()
+        eventbox.connect('button-press-event', self.__pressed_cb)
+        eventbox.add(self._icon)
+        eventbox.show()
+
+        label = Gtk.Label()
+        label.set_text(AGE_LABELS[self._age])
+        label.show()
+        
+        self.pack_end(label, True, True, 0)
+        self.pack_end(eventbox, True, True, 0)
+
+        self.update_selected()
+
+    def update_color(self, color, age):
+        self._color = color
+        self.update_selected(age)
+
+    def update_selected(self, age=None):
+        if age in AGES:
+            age_index = AGES.index(age)
+        else:
+            age_index = None
+        
+        if age_index == self._age:
+            self._icon.props.xo_color = self._color
+        else:
+            self._icon.props.xo_color = _NOCOLOR
+        self._icon.show()
+
+    def update_gender(self, gender):
+        self._icon.set_icon_name('%s-%d' % (gender, self._age))
+        self._icon.show()
+
+    def __pressed_cb(self, button, event):
+        self.emit('age-changed', self._age)
+
+
 class AboutMe(SectionView):
 
     def __init__(self, model, alerts):
@@ -154,6 +244,9 @@ class AboutMe(SectionView):
         self._nick_sid = 0
         self._color_valid = True
         self._nick_valid = True
+        self._color = None
+        self._gender = None
+        self._age = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -173,14 +266,28 @@ class AboutMe(SectionView):
         }
 
         self._setup_color()
-        initial_color = XoColor(self._model.get_color_xo())
-        self._update_pickers(initial_color)
+        self._color = XoColor(self._model.get_color_xo())
+        self._update_pickers(self._color)
 
         self._nick_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._nick_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._nick_entry = None
         self._nick_alert = None
         self._setup_nick()
+
+        self._gender_label = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._gender_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._female_picker = GenderPicker(self._color, 'female')
+        self._male_picker = GenderPicker(self._color, 'male')
+        self._setup_gender()
+
+        self._age_label = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._age_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._age_pickers = []
+        for i in range(len(AGES)):
+            self._age_pickers.append(AgePicker(self._color, self._gender, i))
+        self._setup_age()
+
         self.setup()
 
     def _setup_nick(self):
@@ -252,6 +359,54 @@ class AboutMe(SectionView):
         self._color_alert_box.show()
         self._center_in_panel.show()
 
+    def _setup_gender(self):
+        self._gender = self._model.get_gender()
+
+        label_gender = Gtk.Label(label=_('Select gender:'))
+        label_gender.modify_fg(Gtk.StateType.NORMAL,
+                               style.COLOR_SELECTION_GREY.get_gdk_color())
+        self._group.add_widget(label_gender)
+        self._gender_label.pack_start(label_gender, False, True, 0)
+        label_gender.show()
+
+        self._gender_box.pack_start(self._female_picker, False, True, 0)
+        self._female_picker.update_selected(self._gender)
+        self._female_picker.show()
+        self._gender_box.pack_start(self._male_picker, False, True, 0)
+        self._male_picker.update_selected(self._gender)
+        self._male_picker.show()
+
+        self._gender_center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        self._gender_center_in_panel.add(self._gender_box)
+        self.pack_start(self._gender_label, False, False, 0)
+        self.pack_start(self._gender_center_in_panel, False, False, 0)
+        self._gender_label.show()
+        self._gender_box.show()
+        self._gender_center_in_panel.show()
+
+    def _setup_age(self):
+        self._age = self._model.get_age()
+
+        label_age = Gtk.Label(label=_('Select age:'))
+        label_age.modify_fg(Gtk.StateType.NORMAL,
+                               style.COLOR_SELECTION_GREY.get_gdk_color())
+        self._group.add_widget(label_age)
+        self._age_label.pack_start(label_age, False, True, 0)
+        label_age.show()
+
+        for i in range(len(AGES)):
+            self._age_box.pack_start(self._age_pickers[i], False, True, 0)
+            self._age_pickers[i].update_selected(self._age)
+            self._age_pickers[i].show()
+
+        self._age_center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        self._age_center_in_panel.add(self._age_box)
+        self.pack_start(self._age_label, False, False, 0)
+        self.pack_start(self._age_center_in_panel, False, False, 0)
+        self._age_label.show()
+        self._age_box.show()
+        self._age_center_in_panel.show()
+
     def setup(self):
         self._nick_entry.set_text(self._model.get_nick())
         self._color_valid = True
@@ -261,9 +416,15 @@ class AboutMe(SectionView):
         self._nick_entry.connect('changed', self.__nick_changed_cb)
         for picker in self._pickers.values():
             picker.connect('color-changed', self.__color_changed_cb)
+        self._female_picker.connect('gender-changed', self.__gender_changed_cb)
+        self._male_picker.connect('gender-changed', self.__gender_changed_cb)
+        for picker in self._age_pickers:
+            picker.connect('age-changed', self.__age_changed_cb)
 
     def undo(self):
         self._model.undo()
+        self._model.set_gender(self._gender)
+        self._model.set_age(self._age)
         self._nick_alert.hide()
         self._color_alert.hide()
 
@@ -313,5 +474,22 @@ class AboutMe(SectionView):
         self._color_alert.show()
 
         self._update_pickers(color)
+        self._female_picker.update_color(color, self._gender)
+        self._male_picker.update_color(color, self._gender)
+        for i in range(len(AGES)):
+            self._age_pickers[i].update_color(color, self._age)
+        return False
 
+    def __gender_changed_cb(self, genderpicker, gender):
+        self._model.set_gender(gender)
+        self._female_picker.update_selected(gender)
+        self._male_picker.update_selected(gender)
+        for i in range(len(AGES)):
+            self._age_pickers[i].update_gender(gender)
+        return False
+
+    def __age_changed_cb(self, agepicker, age):
+        self._model.set_age(AGES[age])
+        for i in range(len(AGES)):
+            self._age_pickers[i].update_selected(AGES[age])
         return False
