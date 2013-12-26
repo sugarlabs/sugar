@@ -21,25 +21,25 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
-from gi.repository import GConf
+from gi.repository import Gio
 
-BACKGROUND_STRING = '/desktop/sugar/user/background'
-BACKGROUND_IMAGE_PATH_STRING = BACKGROUND_STRING + '/image-path'
-BACKGROUND_ALPHA_LEVEL_STRING = BACKGROUND_STRING + '/alpha-level'
+BACKGROUND_DIR = 'org.sugarlabs.user.background'
+BACKGROUND_IMAGE_PATH_KEY = 'image-path'
+BACKGROUND_ALPHA_LEVEL_KEY = 'alpha-level'
 DEFAULT_BACKGROUND_ALPHA_LEVEL = 0.20
 
 
 def get_background_image_path():
-    client = GConf.Client.get_default()
-    path = client.get_string(BACKGROUND_IMAGE_PATH_STRING)
+    settings = Gio.Settings(BACKGROUND_DIR)
+    path = settings.get_string(BACKGROUND_IMAGE_PATH_KEY)
     if path is None:
         return ''
     return path
 
 
 def get_background_alpha_level():
-    client = GConf.Client.get_default()
-    alpha = client.get_string(BACKGROUND_ALPHA_LEVEL_STRING)
+    settings = Gio.Settings(BACKGROUND_DIR)
+    alpha = settings.get_string(BACKGROUND_ALPHA_LEVEL_KEY)
     if alpha is None:
         alpha = DEFAULT_BACKGROUND_ALPHA_LEVEL
     else:
@@ -61,14 +61,8 @@ class HomeBackgroundBox(Gtk.VBox):
         self._update_background_image()
         self.connect('draw', self.__draw_cb)
 
-        client = GConf.Client.get_default()
-        client.add_dir(BACKGROUND_STRING, GConf.ClientPreloadType.PRELOAD_NONE)
-        self._gconf_id = client.notify_add(BACKGROUND_STRING,
-                                           self.__gconf_changed_cb, None)
-
-    def __del__(self):
-        client = GConf.Client.get_default()
-        client.notify_remove(self._gconf_id)
+        self._settings = Gio.Settings(BACKGROUND_DIR)
+        self._settings.connect('changed', self.__conf_changed_cb, None)
 
     def __draw_cb(self, widget, context):
         if self._background_pixbuf is None:
@@ -86,7 +80,7 @@ class HomeBackgroundBox(Gtk.VBox):
         alpha = get_background_alpha_level()
         context.paint_with_alpha(alpha)
 
-    def __gconf_changed_cb(self, client, timestamp, entry, *extra):
+    def __conf_changed_cb(self, settings, key, data):
         self._update_background_image()
         self.queue_draw()
 

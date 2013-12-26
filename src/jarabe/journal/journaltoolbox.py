@@ -20,7 +20,6 @@ from gettext import ngettext
 import logging
 from datetime import datetime, timedelta
 import os
-from gi.repository import GConf
 import time
 
 from gi.repository import GObject
@@ -35,10 +34,10 @@ from sugar3.graphics.combobox import ComboBox
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics import iconentry
 from sugar3 import mime
+from sugar3 import profile
 from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 from sugar3.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
 from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
@@ -410,8 +409,7 @@ class DetailToolbox(ToolbarBox):
         self._resume.show()
         self._resume_menu = None
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
         self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
         self._copy.set_icon_widget(icon)

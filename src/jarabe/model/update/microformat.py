@@ -33,7 +33,7 @@ from HTMLParser import HTMLParser
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.bundle.bundleversion import NormalizedVersion, InvalidVersionError
 
@@ -43,7 +43,8 @@ from jarabe.model.update import BundleUpdate
 from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('microformat')
-_MICROFORMAT_URL_KEY = "/desktop/sugar/update/microformat_update_url"
+_MICROFORMAT_URL_PATH = 'org.sugarlabs.update'
+_MICROFORMAT_URL_KEY = 'microformat-update-url'
 
 
 class _UpdateHTMLParser(HTMLParser):
@@ -169,7 +170,8 @@ class MicroformatUpdater(object):
           to lookup activity name and size.
     """
     def _query(self):
-        url = GConf.Client.get_default().get_string(_MICROFORMAT_URL_KEY)
+        settings = Gio.Settings(_MICROFORMAT_URL_PATH)
+        url = settings.get_string(_MICROFORMAT_URL_KEY)
         _logger.debug("Query %s %r", url, url)
         if url == "":
             self._completion_cb([])

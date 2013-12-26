@@ -20,7 +20,6 @@ import os
 from gettext import gettext as _
 
 from gi.repository import Gio
-from gi.repository import GConf
 from gi.repository import Gtk
 
 from sugar3.activity import activityfactory
@@ -34,6 +33,7 @@ from sugar3.bundle.activitybundle import ActivityBundle
 from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
 from sugar3 import util
+from sugar3 import profile
 
 from jarabe.view import launcher
 from jarabe.view import alerts
@@ -278,8 +278,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         return
 
     if color is None:
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
     activity_handle = ActivityHandle(activity_id=activity_id,
@@ -371,7 +370,6 @@ def handle_bundle_installation(metadata, force_downgrade=False):
 
 def get_icon_color(metadata):
     if metadata is None or not 'icon-color' in metadata:
-        client = GConf.Client.get_default()
-        return XoColor(client.get_string('/desktop/sugar/user/color'))
+        return profile.get_color()
     else:
         return XoColor(metadata['icon-color'])

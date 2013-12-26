@@ -16,16 +16,13 @@
 
 from sugar3.test import unittest
 
-from gi.repository import GConf
-from gi.repository import SugarExt
+from gi.repository import Gio
 
 from jarabe.model import desktop
 
-_VIEW_DIR = '/desktop/sugar/desktop'
-_VIEW_ENTRY = 'view_icons'
-_FAVORITE_ENTRY = 'favorite_icons'
-_VIEW_KEY = '%s/%s' % (_VIEW_DIR, _VIEW_ENTRY)
-_FAVORITE_KEY = '%s/%s' % (_VIEW_DIR, _FAVORITE_ENTRY)
+_DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
+_VIEW_KEY = 'view-icons'
+_FAVORITE_KEY = 'favorite-icons'
 
 _VIEW_ICONS = ['view-radial']
 _MOCK_LIST = ['view-radial', 'view-random']
@@ -36,23 +33,9 @@ class TestDesktopConfig(unittest.UITestCase):
     def setUp(self):
         self.target = []
 
-        client = GConf.Client.get_default()
-
-        options = client.get(_VIEW_KEY)
-        if options is not None:
-            self._save_view_icons = []
-            for gval in options.get_list():
-                self._save_view_icons.append(gval.get_string())
-        else:
-            self._save_view_icons = None
-
-        options = client.get(_FAVORITE_KEY)
-        if options is not None:
-            self._save_favorite_icons = []
-            for gval in options.get_list():
-                self._save_favorite_icons.append(gval.get_string())
-        else:
-            self._save_favorite_icons = None
+        settings = Gio.Settings(_DESKTOP_CONF_DIR)
+        self._save_view_icons = settings.get_strv(_VIEW_KEY)
+        self._save_favorite_icons = settings.get_strv(_FAVORITE_KEY)
 
         self.model = desktop.get_model()
         self.model.connect('desktop-view-icons-changed',
@@ -74,27 +57,23 @@ class TestDesktopConfig(unittest.UITestCase):
     def test_unset_views(self):
         self.target = _VIEW_ICONS
         with self.run_view("gtk_main"):
-            client = GConf.Client.get_default()
-            client.unset(_VIEW_KEY)
+            settings = Gio.Settings(_DESKTOP_CONF_DIR)
+            settings.set_strv(_VIEW_KEY, [])
 
     def test_set_views(self):
         self.target = _MOCK_LIST
         with self.run_view("gtk_main"):
-            client = GConf.Client.get_default()
-            SugarExt.gconf_client_set_string_list(client, _VIEW_KEY,
-                                                  _MOCK_LIST)
+            settings = Gio.Settings(_DESKTOP_CONF_DIR)
+            settings.set_strv(_VIEW_KEY, _MOCK_LIST)
 
     def tearDown(self):
-        client = GConf.Client.get_default()
+        settings = Gio.Settings(_DESKTOP_CONF_DIR)
         if self._save_view_icons is None:
-            client.unset(_VIEW_KEY)
+            settings.set_strv(_VIEW_KEY, [])
         else:
-            SugarExt.gconf_client_set_string_list(client,
-                                                  _VIEW_KEY,
-                                                  self._save_view_icons)
+            settings.set_strv(_VIEW_KEY, self._save_view_icons)
+
         if self._save_favorite_icons is None:
-            client.unset(_FAVORITE_KEY)
+            settings.set_strv(_FAVORITE_KEY, [])
         else:
-            SugarExt.gconf_client_set_string_list(client,
-                                                  _FAVORITE_KEY,
-                                                  self._save_favorite_icons)
+            settings.set_strv(_FAVORITE_KEY, self._save_favorite_icons)

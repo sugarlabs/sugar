@@ -19,13 +19,12 @@ from gettext import gettext as _
 import os
 
 from gi.repository import Gtk
-from gi.repository import GConf
 from gi.repository import GLib
 
 import logging
 
+from sugar3 import profile
 from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.palette import Palette
 from sugar3.graphics import style
 
@@ -51,8 +50,7 @@ class DeviceView(TrayIcon):
         """ Create the icon that represents the touchpad. """
         icon_name = STATUS_ICON[_read_touchpad_mode()]
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))

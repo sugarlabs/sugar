@@ -40,7 +40,6 @@ DBusGMainLoop(set_as_default=True)
 
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gst
 from gi.repository import Wnck
@@ -215,6 +214,13 @@ def cleanup_temporary_files():
         print 'temporary files cleanup failed: %s' % e
 
 
+def _gconf_to_gsettings_data_convert():
+    try:
+        subprocess.call('gsettings-data-convert')
+    except subprocess.CalledProcessError:
+        logging.error('Unable to convert data.')
+
+
 def setup_locale():
     # NOTE: This needs to happen early because some modules register
     # translatable strings in the module scope.
@@ -222,16 +228,17 @@ def setup_locale():
     gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
     gettext.textdomain('sugar')
 
-    client = GConf.Client.get_default()
-    timezone = client.get_string('/desktop/sugar/date/timezone')
+    settings = Gio.Settings('org.sugarlabs.date')
+    timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
 
 def setup_fonts():
-    client = GConf.Client.get_default()
-    face = client.get_string('/desktop/sugar/font/default_face')
-    size = client.get_float('/desktop/sugar/font/default_size')
+    settings = Gio.Settings('org.sugarlabs.font')
+    face = settings.get_string('default-face')
+    size = settings.get_double('default-size')
+
     settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
@@ -273,6 +280,8 @@ def main():
     GLib.threads_init()
 
     Gst.init(sys.argv)
+
+    _gconf_to_gsettings_data_convert()
 
     cleanup_temporary_files()
 

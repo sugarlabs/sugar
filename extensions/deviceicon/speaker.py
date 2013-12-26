@@ -15,12 +15,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
-from gi.repository import GConf
 
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
+from sugar3 import profile
 from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state, Icon
 from sugar3.graphics.tray import TrayIcon
@@ -41,8 +41,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 

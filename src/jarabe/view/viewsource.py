@@ -29,7 +29,7 @@ from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GtkSource
 import dbus
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
@@ -326,8 +326,8 @@ class DocumentButton(RadioToolButton):
 
         self.props.tooltip = _('Instance Source')
 
-        client = GConf.Client.get_default()
-        self._color = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        self._color = settings.get_string('color')
         icon = Icon(file=file_name,
                     icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                     xo_color=XoColor(self._color))

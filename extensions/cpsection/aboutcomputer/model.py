@@ -23,7 +23,7 @@ import errno
 import time
 
 import dbus
-from gi.repository import GConf
+from gi.repository import Gio
 
 from jarabe import config
 
@@ -125,9 +125,8 @@ def get_firmware_number():
 
 
 def get_hardware_model():
-    client = GConf.Client.get_default()
-    return client.get_string(
-        '/desktop/sugar/extensions/aboutcomputer/hardware_model')
+    settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
+    return settings.get_string('hardware-model')
 
 
 def get_secondary_licenses():

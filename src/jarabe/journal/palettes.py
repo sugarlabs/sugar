@@ -22,7 +22,6 @@ import os
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 
@@ -33,6 +32,7 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3 import mime
+from sugar3 import profile
 
 from jarabe.model import friends
 from jarabe.model import filetransfer
@@ -249,8 +249,7 @@ class CopyMenuBuilder():
             clipboard_menu.show()
 
         if self._journalactivity.get_mount_point() != '/':
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            color = profile.get_color()
             journal_menu = VolumeMenu(self._journalactivity,
                                       self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
