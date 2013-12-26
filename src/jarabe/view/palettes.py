@@ -36,6 +36,8 @@ from sugar3.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
+from jarabe.view.viewhelp import setup_view_help
+from jarabe.view.viewhelp import get_help_url_and_title
 from jarabe.journal import misc
 
 
@@ -103,6 +105,12 @@ class CurrentActivityPalette(BasePalette):
         menu_item.connect('activate', self.__view_source__cb)
         self.menu_box.append_item(menu_item)
 
+        help_url_and_title = get_help_url_and_title(self._home_activity)
+        if help_url_and_title:
+            menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
+            menu_item.connect('activate', self.__view_help__cb)
+            self.menu_box.append_item(menu_item)
+
         separator = PaletteMenuItemSeparator()
         self.menu_box.append_item(separator)
         separator.show()
@@ -124,6 +132,10 @@ class CurrentActivityPalette(BasePalette):
         if self._home_activity is not shell_model.get_active_activity():
             self._home_activity.get_window().activate(
                 Gtk.get_current_event_time())
+        self.emit('done')
+
+    def __view_help__cb(self, menu_item):
+        setup_view_help(self._home_activity)
         self.emit('done')
 
     def __stop_activate_cb(self, menu_item):
