@@ -20,8 +20,8 @@ from functools import partial
 import json
 
 from gi.repository import GObject
+from gi.repository import Gio
 import dbus
-from gi.repository import GConf
 from telepathy.interfaces import CHANNEL, \
     CHANNEL_DISPATCHER, \
     CHANNEL_DISPATCH_OPERATION, \
@@ -126,8 +126,8 @@ class PrivateInvite(BaseInvite):
         self._private_channel = private_channel
 
     def get_color(self):
-        client = GConf.Client.get_default()
-        return XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        return XoColor(settings.get_string('color'))
 
     def join(self):
         logging.error('PrivateInvite.join handler %r', self._handler)

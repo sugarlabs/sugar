@@ -18,7 +18,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Wnck
-from gi.repository import GConf
+from gi.repository import Gio
 
 
 _MAX_DELAY = 1000
@@ -36,10 +36,9 @@ class EventArea(GObject.GObject):
         self._windows = []
         self._hover = False
         self._sids = {}
-        client = GConf.Client.get_default()
-        self._edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
-        self._corner_delay = client.get_int('/desktop/sugar/frame'
-                                            '/corner_delay')
+        settings = Gio.Settings('org.sugarlabs.frame')
+        self._edge_delay = settings.get_int('edge-delay')
+        self._corner_delay = settings.get_int('corner-delay')
 
         right = Gdk.Screen.width() - 1
         bottom = Gdk.Screen.height() - 1

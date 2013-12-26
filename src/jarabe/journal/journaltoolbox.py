@@ -20,11 +20,11 @@ from gettext import ngettext
 import logging
 from datetime import datetime, timedelta
 import os
-from gi.repository import GConf
 import time
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gio
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.toolbarbox import ToolbarBox
@@ -410,8 +410,8 @@ class DetailToolbox(ToolbarBox):
         self._resume.show()
         self._resume_menu = None
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
         self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
         self._copy.set_icon_widget(icon)

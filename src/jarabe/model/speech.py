@@ -17,7 +17,7 @@
 import os
 import logging
 
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import Gst
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -113,16 +113,16 @@ class SpeechManager(GObject.GObject):
         self.say_text(text)
 
     def save(self):
-        client = GConf.Client.get_default()
-        client.set_int('/desktop/sugar/speech/pitch', self._pitch)
-        client.set_int('/desktop/sugar/speech/rate', self._rate)
+        settings = Gio.Settings('org.sugarlabs.speech')
+        settings.set_int('pitch', self._pitch)
+        settings.set_int('rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
                       self._pitch, self._rate)
 
     def restore(self):
-        client = GConf.Client.get_default()
-        self._pitch = client.get_int('/desktop/sugar/speech/pitch')
-        self._rate = client.get_int('/desktop/sugar/speech/rate')
+        settings = Gio.Settings('org.sugarlabs.speech')
+        self._pitch = settings.get_int('pitch')
+        self._rate = settings.get_int('rate')
         logging.debug('loading speech configuration pitch %s rate %s',
                       self._pitch, self._rate)
 

@@ -17,10 +17,10 @@
 import logging
 from gettext import gettext as _
 
-from gi.repository import GConf
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gio
 import dbus
 
 from sugar3.graphics import style
@@ -60,8 +60,8 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, battery):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        self._color = XoColor(settings.get_string('color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 

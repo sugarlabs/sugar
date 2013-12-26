@@ -59,5 +59,11 @@ if GCONF_SCHEMAS_INSTALL
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
 endif
 
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA)
+gsettings_SCHEMAS = org.sugarlabs.gschema.xml
+@GSETTINGS_RULES@
+
+convertdir = $(datarootdir)/GConf/gsettings
+convert_DATA = sugar-schemas.convert
+
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA)
 CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)

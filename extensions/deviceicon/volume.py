@@ -20,7 +20,6 @@ from gettext import gettext as _
 from gi.repository import GLib
 from gi.repository import Gio
 from gi.repository import Gtk
-from gi.repository import GConf
 
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.xocolor import XoColor
@@ -47,8 +46,8 @@ class DeviceView(TrayIcon):
         self._icon_name = get_mount_icon_name(mount,
                                               Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
 
         TrayIcon.__init__(self, icon_name=self._icon_name, xo_color=color)
 
@@ -60,8 +59,8 @@ class DeviceView(TrayIcon):
         palette.set_group_id('frame')
 
         menu_item = PaletteMenuItem(_('Show contents'))
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
         icon = Icon(icon_name=self._icon_name, icon_size=Gtk.IconSize.MENU,
                     xo_color=color)
         menu_item.set_image(icon)

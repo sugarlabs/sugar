@@ -22,7 +22,7 @@ import StringIO
 import cairo
 
 from gi.repository import Gdk
-from gi.repository import GConf
+from gi.repository import Gio
 import dbus
 
 from sugar3.datastore import datastore
@@ -49,8 +49,8 @@ def handle_key_press(key):
     cr.paint()
     screenshot_surface.write_to_png(file_path)
 
-    client = GConf.Client.get_default()
-    color = client.get_string('/desktop/sugar/user/color')
+    settings = Gio.Settings('org.sugarlabs.user')
+    color = settings.get_string('color')
 
     content_title = None
     shell_model = shell.get_model()

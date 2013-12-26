@@ -19,7 +19,7 @@ import tempfile
 import urlparse
 import os
 import logging
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 
 from gi.repository import Gtk
@@ -63,8 +63,8 @@ class ClipboardMenu(Palette):
         self._open_item.show()
 
         self._journal_item = MenuItem(_('Keep'))
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
         icon = Icon(icon_name='document-save', icon_size=Gtk.IconSize.MENU,
                     xo_color=color)
         self._journal_item.set_image(icon)
@@ -225,8 +225,8 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        client = GConf.Client.get_default()
-        color = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = settings.get_string('color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path

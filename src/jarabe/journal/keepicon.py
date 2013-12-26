@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -39,9 +39,8 @@ class KeepIcon(Gtk.ToggleButton):
         self.connect('button-press-event', self.__button_press_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
-        client = GConf.Client.get_default()
-        self._xo_color = XoColor(client.get_string(
-            '/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        self._xo_color = XoColor(settings.get_string('color'))
 
     def do_get_preferred_width(self):
         return 0, style.GRID_CELL_SIZE

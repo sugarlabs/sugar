@@ -19,10 +19,10 @@ import statvfs
 from gettext import gettext as _
 import logging
 
-from gi.repository import GConf
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
+from gi.repository import Gio
 
 from sugar3 import env
 from sugar3.graphics.palette import Palette
@@ -137,8 +137,8 @@ class ActivityPalette(Palette):
     def __init__(self, activity_info):
         self._activity_info = activity_info
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
         activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=color,
                              icon_size=Gtk.IconSize.LARGE_TOOLBAR)

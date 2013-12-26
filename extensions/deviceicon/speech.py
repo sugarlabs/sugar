@@ -18,7 +18,7 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.tray import TrayIcon
@@ -40,8 +40,8 @@ class SpeechDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 150
 
     def __init__(self):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        self._color = XoColor(settings.get_string('color'))
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.props.toggle_palette = True

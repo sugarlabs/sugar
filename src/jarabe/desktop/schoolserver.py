@@ -26,7 +26,7 @@ import time
 import uuid
 import sys
 
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3 import env
 from sugar3.profile import get_profile
@@ -109,7 +109,6 @@ class _TimeoutTransport(xmlrpclib.Transport):
 def register_laptop(url=_REGISTER_URL):
 
     profile = get_profile()
-    client = GConf.Client.get_default()
 
     if _have_ofw_tree():
         sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
@@ -123,14 +122,15 @@ def register_laptop(url=_REGISTER_URL):
     sn = sn or 'SHF00000000'
     uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
 
-    setting_name = '/desktop/sugar/collaboration/jabber_server'
-    jabber_server = client.get_string(setting_name)
+    settings = Gio.Settings('org.sugarlabs.user')
+    nick = settings.get_string('nick')
+
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    jabber_server = settings.get_string('jabber-server')
     _store_identifiers(sn, uuid_, jabber_server)
 
     if jabber_server:
         url = 'http://' + jabber_server + ':8080/'
-
-    nick = client.get_string('/desktop/sugar/user/nick')
 
     if sys.hexversion < 0x2070000:
         server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
@@ -150,9 +150,9 @@ def register_laptop(url=_REGISTER_URL):
                       data['error'])
         raise RegisterError(_('The server could not complete the request.'))
 
-    client.set_string('/desktop/sugar/collaboration/jabber_server',
-                      data['jabberserver'])
-    client.set_string('/desktop/sugar/backup_url', data['backupurl'])
+    settings.set_string('jabber-server', data['jabberserver'])
+    settings = Gio.Settings('org.sugarlabs')
+    settings.set_string('backup-url', data['backupurl'])
 
     return True
 
