@@ -23,7 +23,7 @@ from gettext import gettext as _
 
 import dbus
 from gi.repository import GLib
-from gi.repository import GConf
+from gi.repository import Gio
 
 from jarabe.model import network
 
@@ -34,9 +34,10 @@ PROVIDERS_PATH = "/usr/share/mobile-broadband-provider-info/"\
 PROVIDERS_FORMAT_SUPPORTED = "2.0"
 COUNTRY_CODES_PATH = "/usr/share/zoneinfo/iso3166.tab"
 
-GCONF_SP_COUNTRY = '/desktop/sugar/network/gsm/country'
-GCONF_SP_PROVIDER = '/desktop/sugar/network/gsm/provider'
-GCONF_SP_PLAN = '/desktop/sugar/network/gsm/plan'
+CONF_GSM_DIR = 'org.sugarlabs.network.gsm'
+CONF_SP_COUNTRY = 'country'
+CONF_SP_PROVIDER = 'provider'
+CONF_SP_PLAN = 'plan'
 
 
 def get_connection():
@@ -273,9 +274,9 @@ class ServiceProvidersParser(object):
 class ServiceProviders(object):
     def __init__(self):
         self._db = ServiceProvidersParser()
-        self._gconf = GConf.Client.get_default()
+        self._settings = Gio.Settings(CONF_GSM_DIR)
 
-        # Get initial values from GConf or default ones
+        # Get initial values from GSettings or default ones
         country_code, provider_name, plan_idx = self._get_initial_config()
 
         # Update status: countries, providers and plans
@@ -309,27 +310,26 @@ class ServiceProviders(object):
         return country_code
 
     def _get_initial_config(self):
-        """Retrieve values stored in GConf or get default ones."""
-        client = GConf.Client.get_default()
+        """Retrieve values stored in GSettings or get default ones."""
 
-        country_code = client.get_string(GCONF_SP_COUNTRY)
-        if country_code is None:
+        country_code = self._settings.get_string(CONF_SP_COUNTRY)
+        if not country_code:
             country_code = self._guess_country_code()
 
-        provider_name = client.get_string(GCONF_SP_PROVIDER)
-        if provider_name is None:
+        provider_name = self._settings.get_string(CONF_SP_PROVIDER)
+        if not provider_name:
             provider_name = u''
         else:
             provider_name = provider_name.decode('utf-8')
 
-        plan_idx = client.get_int(GCONF_SP_PLAN) or 0
+        plan_idx = self._settings.get_int(CONF_SP_PLAN) or 0
 
         return (country_code, provider_name, plan_idx)
 
     def set_country(self, idx):
         self._current_country = idx
         country = self.get_country()
-        self._gconf.set_string(GCONF_SP_COUNTRY, country.code)
+        self._settings.set_string(CONF_SP_COUNTRY, country.code)
         self._providers = self._db.get_providers(self._current_country)
         self.set_provider(0)
         return country
@@ -338,7 +338,7 @@ class ServiceProviders(object):
         self._current_provider = idx
         provider = self.get_provider()
         if provider is not None:
-            self._gconf.set_string(GCONF_SP_PROVIDER, provider.name)
+            self._settings.set_string(CONF_SP_PROVIDER, provider.name)
         self._plans = self._db.get_plans(self._current_country,
                                          self._current_provider)
         self.set_plan(0)
@@ -348,7 +348,7 @@ class ServiceProviders(object):
         self._current_plan = idx
         plan = self.get_plan()
         if plan is not None:
-            self._gconf.set_int(GCONF_SP_PLAN, idx)
+            self._settings.set_int(CONF_SP_PLAN, idx)
         return plan
 
     def get_countries(self):

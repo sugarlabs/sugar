@@ -42,6 +42,7 @@ if test "$GCONFTOOL" = no; then
 fi
 
 AM_GCONF_SOURCE_2
+GLIB_GSETTINGS
 
 
 AC_CONFIG_FILES([

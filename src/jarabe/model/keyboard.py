@@ -17,13 +17,13 @@
 
 import logging
 
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GdkX11
 from gi.repository import Xkl
 
 
 def setup():
-    gconf_client = GConf.Client.get_default()
+    settings = Gio.Settings('org.sugarlabs.peripherals.keyboard')
     have_config = False
 
     try:
@@ -37,14 +37,12 @@ def setup():
         configrec = Xkl.ConfigRec()
         configrec.get_from_server(engine)
 
-        # FIXME, gconf_client_get_list not introspectable #681433
-        layouts_from_gconf = gconf_client.get(
-            '/desktop/sugar/peripherals/keyboard/layouts')
+        # TODO: confirm that GSettings works in this way
+        layouts = settings.get_strv('layouts')
         layouts_list = []
         variants_list = []
-        if layouts_from_gconf:
-            for gval in layouts_from_gconf.get_list():
-                layout = gval.get_string()
+        if layouts:
+            for layout in layouts:
                 layouts_list.append(layout.split('(')[0])
                 variants_list.append(layout.split('(')[1][:-1])
 
@@ -53,23 +51,16 @@ def setup():
                 configrec.set_layouts(layouts_list)
                 configrec.set_variants(variants_list)
 
-        model = gconf_client.get_string(
-            '/desktop/sugar/peripherals/keyboard/model')
+        model = settings.get_string('model')
         if model:
             have_config = True
             configrec.set_model(model)
 
-        options = []
-        # FIXME, gconf_client_get_list not introspectable #681433
-        options_from_gconf = gconf_client.get(
-            '/desktop/sugar/peripherals/keyboard/options')
-        if options_from_gconf:
-            for gval in options_from_gconf.get_list():
-                option = gval.get_string()
-                options.append(option)
-            if options:
-                have_config = True
-                configrec.set_options(options)
+        # TODO: confirm that GSettings works in this way
+        options = settings.get_strv('options')
+        if options:
+            have_config = True
+            configrec.set_options(options)
 
         if have_config:
             configrec.activate(engine)

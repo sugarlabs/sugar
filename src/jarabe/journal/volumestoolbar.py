@@ -24,7 +24,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 import cPickle
 import xapian
 import json
@@ -33,9 +32,9 @@ import shutil
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import style
 from sugar3 import env
+from sugar3 import profile
 
 from jarabe.journal import model
 from jarabe.journal.misc import get_mount_icon_name
@@ -322,9 +321,7 @@ class VolumeButton(BaseButton):
         self.props.icon_name = get_mount_icon_name(mount,
                                                    Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = profile.get_color()
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
@@ -338,10 +335,7 @@ class JournalButton(BaseButton):
         BaseButton.__init__(self, mount_point='/')
 
         self.props.icon_name = 'activity-journal'
-
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = profile.get_color()
 
     def create_palette(self):
         palette = JournalButtonPalette(self)
@@ -387,7 +381,4 @@ class DocumentsButton(BaseButton):
         BaseButton.__init__(self, mount_point=documents_path)
 
         self.props.icon_name = 'user-documents'
-
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = profile.get_color()

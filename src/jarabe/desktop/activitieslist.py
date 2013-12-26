@@ -25,10 +25,10 @@ from gettext import gettext as _
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Pango
-from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+from sugar3 import profile
 from sugar3 import util
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
@@ -141,9 +141,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         favorite = \
             model[tree_iter][self._model.column_favorites[cell.favorite_view]]
         if favorite:
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            cell.props.xo_color = color
+            cell.props.xo_color = profile.get_color()
         else:
             cell.props.xo_color = None
 
@@ -303,8 +301,7 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = desktop.get_favorite_icons()[favorite_view]
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-        client = GConf.Client.get_default()
-        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        prelit_color = profile.get_color()
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
 
@@ -327,8 +324,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
-        client = GConf.Client.get_default()
-        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        prelit_color = profile.get_color()
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
 
@@ -596,8 +592,7 @@ class ActivityListPalette(ActivityPalette):
                                           style.COLOR_TRANSPARENT.get_svg()))
         else:
             self._favorite_items[favorite_view].set_label(_('Make favorite'))
-            client = GConf.Client.get_default()
-            xo_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            xo_color = profile.get_color()
 
         self._favorite_icons[favorite_view].props.xo_color = xo_color
 

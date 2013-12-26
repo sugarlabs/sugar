@@ -22,7 +22,6 @@ import tempfile
 import os
 
 from gi.repository import GObject
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -41,6 +40,7 @@ from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.datastore import datastore
 from sugar3 import mime
 from sugar3 import env
+from sugar3 import profile
 
 from jarabe.model import shell
 from jarabe.model import invites
@@ -476,8 +476,7 @@ class OutgoingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        client = GConf.Client.get_default()
-        icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon_color = profile.get_color()
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 

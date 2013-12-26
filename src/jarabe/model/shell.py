@@ -18,7 +18,7 @@
 import logging
 import time
 
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -28,7 +28,7 @@ from gi.repository import GLib
 import dbus
 
 from sugar3 import dispatch
-from sugar3.graphics.xocolor import XoColor
+from sugar3 import profile
 from gi.repository import SugarExt
 
 from jarabe.model.bundleregistry import get_registry
@@ -85,9 +85,7 @@ class Activity(GObject.GObject):
         if color is not None:
             self._color = color
         else:
-            client = GConf.Client.get_default()
-            color = client.get_string('/desktop/sugar/user/color')
-            self._color = XoColor(color)
+            self._color = profile.get_color()
 
         if window is not None:
             self.add_window(window)
@@ -411,9 +409,9 @@ class ShellModel(GObject.GObject):
 
         self._screen.toggle_showing_desktop(True)
 
-        client = GConf.Client.get_default()
-        self._maximum_open_activities = client.get_int(
-            '/desktop/sugar/maximum_number_of_open_activities')
+        settings = Gio.Settings('org.sugarlabs')
+        self._maximum_open_activities = settings.get_int(
+            'maximum-number-of-open-activities')
 
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
