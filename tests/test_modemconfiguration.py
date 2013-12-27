@@ -22,8 +22,8 @@ from mock import patch
 
 from cpsection.modemconfiguration.model import CountryCodeParser, \
     ServiceProvidersParser, ServiceProviders, PROVIDERS_PATH
-from cpsection.modemconfiguration.model import GCONF_SP_COUNTRY, \
-    GCONF_SP_PROVIDER, GCONF_SP_PLAN
+from cpsection.modemconfiguration.model import CONF_SP_COUNTRY, \
+    CONF_SP_PROVIDER, CONF_SP_PLAN
 
 
 class CountryCodeParserTest(unittest.TestCase):
@@ -144,13 +144,13 @@ class ServiceProvidersTest(unittest.TestCase):
                     self.assertEqual(plan2.idx, plan.idx)
 
 
-class FakeGConfClient(object):
+class FakeConfClient(object):
 
     def __init__(self, **kwargs):
         self.store = {
-            GCONF_SP_COUNTRY: None,
-            GCONF_SP_PROVIDER: None,
-            GCONF_SP_PLAN: None,
+            CONF_SP_COUNTRY: None,
+            CONF_SP_PROVIDER: None,
+            CONF_SP_PLAN: None,
         }
         self.store.update(kwargs)
 
@@ -171,11 +171,11 @@ class FakeGConfClient(object):
 
 class ServiceProvidersGuessCountryTest(unittest.TestCase):
     def setUp(self):
-        # patch GConf.Client.get_default to use a fake client
-        gconf_patcher = patch('gi.repository.GConf.Client.get_default')
-        gconf_mock = gconf_patcher.start()
-        gconf_mock.return_value = FakeGConfClient(GCONF_SP_COUNTRY=None)
-        self.addCleanup(gconf_patcher.stop)
+        # patch Gio.Settings to use a fake client
+        conf_patcher = patch('gi.repository.Gio.Settings')
+        conf_mock = conf_patcher.start()
+        conf_mock.return_value = FakeConfClient(CONF_SP_COUNTRY=None)
+        self.addCleanup(conf_patcher.stop)
 
     def test_guess_country(self):
         LOCALE = ('hi_IN', 'UTF-8')

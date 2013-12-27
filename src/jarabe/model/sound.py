@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from gi.repository import GConf
+from gi.repository import Gio
 
 from gi.repository import SugarExt
 from sugar3 import dispatch
@@ -51,10 +51,10 @@ def set_muted(new_state):
 
 
 def save():
-    client = GConf.Client.get_default()
-    client.set_int('/desktop/sugar/sound/volume', get_volume())
+    settings = Gio.Settings('org.sugarlabs.sound')
+    settings.set_int('volume', get_volume())
 
 
 def restore():
-    client = GConf.Client.get_default()
-    set_volume(client.get_int('/desktop/sugar/sound/volume'))
+    settings = Gio.Settings('org.sugarlabs.sound')
+    set_volume(settings.get_int('volume'))

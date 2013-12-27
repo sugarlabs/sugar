@@ -16,6 +16,7 @@
 
 import re
 
+# FIXME: find a way to port this to GSettings
 from gi.repository import GConf
 
 

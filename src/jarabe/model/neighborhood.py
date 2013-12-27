@@ -19,7 +19,7 @@ from functools import partial
 from hashlib import sha1
 
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import ACCOUNT, \
@@ -705,15 +705,13 @@ class Neighborhood(GObject.GObject):
         self._server_account = None
         self._shell_model = shell.get_model()
 
-        client = GConf.Client.get_default()
-        client.add_dir('/desktop/sugar/collaboration',
-                       GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add('/desktop/sugar/collaboration/jabber_server',
-                          self.__jabber_server_changed_cb, None)
-        client.add_dir(
-            '/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add(
-            '/desktop/sugar/user/nick', self.__nick_changed_cb, None)
+        self._settings_collaboration = \
+            Gio.Settings('org.sugarlabs.collaboration')
+        self._settings_collaboration.connect(
+            'changed::jabber-server', self.__jabber_server_changed_cb, None)
+        self._settings_user = Gio.Settings('org.sugarlabs.user')
+        self._settings_user.connect(
+            'changed::nick', self.__nick_changed_cb, None)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -780,8 +778,7 @@ class Neighborhood(GObject.GObject):
 
         logging.debug('Still dont have a Salut account, creating one')
 
-        client = GConf.Client.get_default()
-        nick = client.get_string('/desktop/sugar/user/nick')
+        nick = self._settings_user.get_string('nick')
 
         params = {
             'nickname': nick,
@@ -815,10 +812,8 @@ class Neighborhood(GObject.GObject):
 
         logging.debug('Still dont have a Gabble account, creating one')
 
-        client = GConf.Client.get_default()
-        nick = client.get_string('/desktop/sugar/user/nick')
-        server = client.get_string('/desktop/sugar/collaboration'
-                                   '/jabber_server')
+        nick = self._settings_user.get_string('nick')
+        server = self._settings_collaboration.get_string('jabber-server')
         key_hash = get_profile().privkey_hash
 
         params = {
@@ -849,20 +844,17 @@ class Neighborhood(GObject.GObject):
 
     def _get_jabber_account_id(self):
         public_key_hash = sha1(get_profile().pubkey).hexdigest()
-        client = GConf.Client.get_default()
-        server = client.get_string('/desktop/sugar/collaboration'
-                                   '/jabber_server')
+        server = self._settings_collaboration.get_string('jabber-server')
         return '%s@%s' % (public_key_hash, server)
 
-    def __jabber_server_changed_cb(self, client, timestamp, entry, *extra):
+    def __jabber_server_changed_cb(self, settings, key, data):
         logging.debug('__jabber_server_changed_cb')
 
         bus = dbus.Bus()
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
                                  self._server_account.object_path)
 
-        server = client.get_string(
-            '/desktop/sugar/collaboration/jabber_server')
+        server = settings.get_string('jabber-server')
         account_id = self._get_jabber_account_id()
         params_needing_reconnect = account.UpdateParameters(
             {'server': server,
@@ -874,10 +866,10 @@ class Neighborhood(GObject.GObject):
 
         self._update_jid()
 
-    def __nick_changed_cb(self, client, timestamp, entry, *extra):
+    def __nick_changed_cb(self, settings, key, data):
         logging.debug('__nick_changed_cb')
 
-        nick = client.get_string('/desktop/sugar/user/nick')
+        nick = settings.get_string('nick')
 
         bus = dbus.Bus()
         server_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,

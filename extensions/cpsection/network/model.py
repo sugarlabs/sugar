@@ -19,7 +19,7 @@ import logging
 
 import dbus
 from gettext import gettext as _
-from gi.repository import GConf
+from gi.repository import Gio
 
 from jarabe.model import network
 
@@ -40,8 +40,8 @@ class ReadError(Exception):
 
 
 def get_jabber():
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/collaboration/jabber_server')
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    return settings.get_string('jabber-server')
 
 
 def print_jabber():
@@ -52,8 +52,8 @@ def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/collaboration/jabber_server', server)
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings.set_string('jabber-server', server)
 
     return 0
 
@@ -106,8 +106,8 @@ def set_radio(state):
 def clear_registration():
     """Clear the registration with the schoolserver
     """
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/backup_url', '')
+    settings = Gio.Settings('org.sugarlabs')
+    settings.set_string('backup-url', '')
     return 1
 
 
@@ -132,8 +132,8 @@ def have_networks():
 
 
 def get_publish_information():
-    client = GConf.Client.get_default()
-    publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    publish = settings.get_boolean('publish-gadget')
     return publish
 
 
@@ -151,6 +151,6 @@ def set_publish_information(value):
     except:
         raise ValueError(_('Error in specified argument use 0/1.'))
 
-    client = GConf.Client.get_default()
-    client.set_bool('/desktop/sugar/collaboration/publish_gadget', value)
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings.set_boolean('publish-gadget', value)
     return 0

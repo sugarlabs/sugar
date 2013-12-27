@@ -20,7 +20,7 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 import dbus
 
@@ -89,11 +89,11 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
 
     def _add_my_items(self):
-        client = GConf.Client.get_default()
+        settings = Gio.Settings('org.sugarlabs')
 
-        show_shutdown = client.get_bool('/desktop/sugar/show_shutdown')
-        show_restart = client.get_bool('/desktop/sugar/show_restart')
-        show_logout = client.get_bool('/desktop/sugar/show_logout')
+        show_shutdown = settings.get_boolean('show-shutdown')
+        show_restart = settings.get_boolean('show-restart')
+        show_logout = settings.get_boolean('show-logout')
 
         if "SUGAR_SHOW_SHUTDOWN" in os.environ:
             show_shutdown = os.environ["SUGAR_SHOW_SHUTDOWN"] == "yes"

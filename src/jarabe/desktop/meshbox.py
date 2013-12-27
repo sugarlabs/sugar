@@ -24,7 +24,7 @@ import dbus
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
@@ -219,7 +219,8 @@ class DeviceObserver(GObject.GObject):
 
 class NetworkManagerObserver(object):
 
-    _SHOW_ADHOC_GCONF_KEY = '/desktop/sugar/network/adhoc'
+    _SHOW_ADHOC_CONF_DIR = 'org.sugarlabs.network'
+    _SHOW_ADHOC_CONF_KEY = 'adhoc'
 
     def __init__(self, box):
         self._box = box
@@ -228,8 +229,9 @@ class NetworkManagerObserver(object):
         self._netmgr = None
         self._olpc_mesh_device_o = None
 
-        client = GConf.Client.get_default()
-        self._have_adhoc_networks = client.get_bool(self._SHOW_ADHOC_GCONF_KEY)
+        settings = Gio.Settings(self._SHOW_ADHOC_CONF_DIR)
+        self._have_adhoc_networks = \
+            settings.get_boolean(self._SHOW_ADHOC_CONF_KEY)
 
     def listen(self):
         try:

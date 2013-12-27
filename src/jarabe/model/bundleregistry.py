@@ -19,7 +19,6 @@ import os
 import logging
 from threading import Thread, Lock
 
-from gi.repository import GConf
 from gi.repository import GObject
 from gi.repository import GLib
 from gi.repository import Gio
@@ -108,18 +107,8 @@ class BundleRegistry(GObject.GObject):
             self._favorite_bundles.append({})
             self._last_defaults_mtime.append(-1)
 
-        client = GConf.Client.get_default()
-        self._protected_activities = []
-
-        # FIXME, gconf_client_get_list not introspectable #681433
-        protected_activities = client.get(
-            '/desktop/sugar/protected_activities')
-        for gval in protected_activities.get_list():
-            activity_id = gval.get_string()
-            self._protected_activities.append(activity_id)
-
-        if self._protected_activities is None:
-            self._protected_activities = []
+        settings = Gio.Settings('org.sugarlabs')
+        self._protected_activities = settings.get_strv('protected-activities')
 
         try:
             self._load_favorites()

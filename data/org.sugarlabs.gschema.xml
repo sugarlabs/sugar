@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <schema id="org.sugarlabs" path="/desktop/sugar/">
+        <key name="backup-url" type="s">
+            <default>''</default>
+            <summary>Backup URL</summary>
+            <description>URL where the backup is saved to.</description>
+        </key>
+        <key name="show-logout" type="b">
+            <default>true</default>
+            <summary>Show Log out</summary>
+            <description>If TRUE, Sugar will show a "Log out" option.</description>
+        </key>
+        <key name="show-restart" type="b">
+            <default>true</default>
+            <summary>Show Restart</summary>
+            <description>If TRUE, Sugar will show a "Restart" option.</description>
+        </key>
+        <key name="show-shutdown" type="b">
+            <default>true</default>
+            <summary>Show Shutdown</summary>
+            <description>If TRUE, Sugar will show a "Shutdown" option.</description>
+        </key>
+        <key name="show-register" type="b">
+            <default>true</default>
+            <summary>Show Register</summary>
+            <description>If TRUE, Sugar will show a "Register" option in the buddy palette.</description>
+        </key>
+        <key name="protected-activities" type="as">
+            <default>[]</default>
+            <summary>Bundle IDs of protected activities</summary>
+            <description>Users will not be allowed to erase these activities through the list view.</description>
+        </key>
+        <key name="maximum-number-of-open-activities" type="i">
+            <default>0</default>
+            <summary>A limit to the number of simultaneously open activities.</summary>
+            <description>This int is used to set a limit to the number of open activities. By default (0), there is no limit.</description>
+        </key>
+        <child name="user" schema="org.sugarlabs.user" />
+        <child name="sound" schema="org.sugarlabs.sound" />
+        <child name="date" schema="org.sugarlabs.date" />
+        <child name="desktop" schema="org.sugarlabs.desktop" />
+        <child name="frame" schema="org.sugarlabs.frame" />
+        <child name="collaboration" schema="org.sugarlabs.collaboration" />
+        <child name="power" schema="org.sugarlabs.power" />
+        <child name="peripherals" schema="org.sugarlabs.peripherals" />
+        <child name="font" schema="org.sugarlabs.font" />
+        <child name="network" schema="org.sugarlabs.network" />
+        <child name="speech" schema="org.sugarlabs.speech" />
+        <child name="update" schema="org.sugarlabs.update" />
+        <child name="extensions" schema="org.sugarlabs.extensions" />
+    </schema>
+    <schema id="org.sugarlabs.user" path="/desktop/sugar/user/">
+        <key name="nick" type="s">
+            <default>''</default>
+            <summary>User Name</summary>
+            <description>User name that is used throughout the desktop.</description>
+        </key>
+        <key name="default-nick" type="s">
+            <default>'system'</default>
+            <summary>Default nick</summary>
+            <description>"disabled" to ask nick on initialization; "system" to reuse UNIX account long name.</description>
+        </key>
+        <key name="color" type="s">
+            <default>''</default>
+            <summary>User Color</summary>
+            <description>Color for the XO icon that is used throughout the desktop. The string is composed of the stroke color and fill color, format is that of rgb colors. Example: #AC32FF,#9A5200</description>
+        </key>
+        <child name="background" schema="org.sugarlabs.user.background" />
+    </schema>
+    <schema id="org.sugarlabs.user.background" path="/desktop/sugar/user/background/">
+        <key name="image-path" type="s">
+            <default>''</default>
+            <summary>Background image path</summary>
+            <description>Path to the image to be used as a background in the sugar environment</description>
+        </key>
+        <key name="alpha-level" type="s">
+            <default>''</default>
+            <summary>Background alpha level</summary>
+            <description>The opacity of the background image, used on sugar's desktop</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.sound" path="/desktop/sugar/sound/">
+        <key name="volume" type="i">
+            <default>80</default>
+            <summary>Volume Level</summary>
+            <description>Volume level for the sound device.</description>
+        </key>
+        <key name="mute" type="b">
+            <default>false</default>
+            <summary>Sound Muted</summary>
+            <description>Setting for muting the sound device.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.date" path="/desktop/sugar/date/">
+        <key name="timezone" type="s">
+            <default>''</default>
+            <summary>Timezone</summary>
+            <description>Timezone setting for the system.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.desktop" path="/desktop/sugar/desktop/">
+        <key name="favorites-layout" type="s">
+            <default>'ring-layout'</default>
+            <summary>Favorites Layout</summary>
+            <description>Layout of the favorites view.</description>
+        </key>
+        <key name="favorites-mode" type="b">
+            <default>false</default>
+            <summary>Favorites resume mode</summary>
+            <description>When in resume mode, clicking on a favorite icon will cause the last entry for that activity to be resumed.</description>
+        </key>
+        <key name="favorite-icons" type="as">
+            <default>[]</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+        <key name="view-icons" type="as">
+            <default>[]</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.frame" path="/desktop/sugar/frame/">
+        <key name="edge-delay" type="i">
+            <default>1000</default>
+            <summary>Edge Delay</summary>
+            <description>Delay for the activation of the frame using the edges.</description>
+        </key>
+        <key name="corner-delay" type="i">
+            <default>0</default>
+            <summary>Corner Delay</summary>
+            <description>Delay for the activation of the frame using the corners.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.collaboration" path="/desktop/sugar/collaboration/">
+        <key name="jabber-server" type="s">
+            <default>'jabber.sugarlabs.org'</default>
+            <summary>Jabber Server</summary>
+            <description>URL of the jabber server to use.</description>
+        </key>
+        <key name="publish-gadget" type="b">
+            <default>true</default>
+            <summary>Publish to Gadget</summary>
+            <description>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.power" path="/desktop/sugar/power/">
+        <key name="automatic" type="b">
+            <default>false</default>
+            <summary>Power Automatic</summary>
+            <description>Automatic power management (increases battery life)</description>
+        </key>
+        <key name="extreme" type="b">
+            <default>false</default>
+            <summary>Power Extreme</summary>
+            <description>Extreme power management (disables wireless radio, increases battery life)</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.peripherals" path="/desktop/sugar/peripherals/">
+        <child name="keyboard" schema="org.sugarlabs.peripherals.keyboard" />
+    </schema>
+    <schema id="org.sugarlabs.peripherals.keyboard" path="/desktop/sugar/peripherals/keyboard/">
+        <key name="layouts" type="as">
+            <default>[]</default>
+            <summary>Keyboard layouts</summary>
+            <description>List of keyboard layouts. Each entry should be in the form layout(variant)</description>
+        </key>
+        <key name="options" type="as">
+            <default>[]</default>
+            <summary>Keyboard options</summary>
+            <description>List of keyboard options.</description>
+        </key>
+        <key name="model" type="s">
+            <default>''</default>
+            <summary>Keyboard model</summary>
+            <description>The keyboard model to be used</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.font" path="/desktop/sugar/font/">
+        <key name="default-face" type="s">
+            <default>'Sans Serif'</default>
+            <summary>Default font face</summary>
+            <description>Font face that is used throughout the desktop.</description>
+        </key>
+        <key name="default-size" type="d">
+            <default>10</default>
+            <summary>Default font size</summary>
+            <description>Font size that is used throughout the desktop.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.network" path="/desktop/sugar/network/">
+        <key name="adhoc" type="b">
+            <default>true</default>
+            <summary>Show Sugar Ad-hoc networks</summary>
+            <description>If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If Sugar sees no "known" network when it starts, it does autoconnect to an Ad-hoc network.</description>
+        </key>
+        <child name="gsm" schema="org.sugarlabs.network.gsm" />
+    </schema>
+    <schema id="org.sugarlabs.network.gsm" path="/desktop/sugar/network/gsm/">
+        <key name="username" type="s">
+            <default>''</default>
+            <summary>GSM network username (DEPRECATED/UNUSED)</summary>
+            <description>GSM network username configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="password" type="s">
+            <default>''</default>
+            <summary>GSM network password (DEPRECATED/UNUSED)</summary>
+            <description>GSM network password configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="number" type="s">
+            <default>'*99#'</default>
+            <summary>GSM network number (DEPRECATED/UNUSED)</summary>
+            <description>GSM network telephone number configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="apn" type="s">
+            <default>''</default>
+            <summary>GSM network APN (DEPRECATED/UNUSED)</summary>
+            <description>GSM network access point name configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="pin" type="s">
+            <default>''</default>
+            <summary>GSM network PIN (DEPRECATED/UNUSED)</summary>
+            <description>GSM network personal identification number configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="puk" type="s">
+            <default>''</default>
+            <summary>GSM network PUK (DEPRECATED/UNUSED)</summary>
+            <description>GSM network personal unlock key configuration (DEPRECATED/UNUSED)</description>
+        </key>
+        <key name="country" type="s">
+            <default>''</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+        <key name="provider" type="s">
+            <default>''</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+        <key name="plan" type="i">
+            <default>0</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.speech" path="/desktop/sugar/speech/">
+        <key name="pitch" type="i">
+            <default>0</default>
+            <summary>Pitch value for the speech sugar service</summary>
+            <description>Pitch value used by the speech service in Sugar</description>
+        </key>
+        <key name="rate" type="i">
+            <default>0</default>
+            <summary>Rate value for the speech sugar service</summary>
+            <description>Rate value used by the speech service in Sugar</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.update" path="/desktop/sugar/update/">
+        <key name="backend" type="s">
+            <default>'aslo.AsloUpdater'</default>
+            <summary>Activity update backend.</summary>
+            <description>Activity update backend module, followed by a period, followed by the class name.</description>
+        </key>
+        <key name="microformat-update-url" type="s">
+            <default>''</default>
+            <summary>Microformat update URL.</summary>
+            <description>URL used by the microformat update backend for activity update information.</description>
+        </key>
+        <key name="auto-update-frequency" type="i">
+            <default>0</default>
+            <summary>Automatic update frequency.</summary>
+            <description>Frequency of automatic activity updates, measured in days. 0 means disabled.</description>
+        </key>
+        <key name="last-activity-update" type="i">
+            <default>0</default>
+            <summary>Timestamp of last activity update.</summary>
+            <description>A unix timestamp (seconds since epoch) of the last successful activity update.</description>
+        </key>
+    </schema>
+    <schema id="org.sugarlabs.extensions" path="/desktop/sugar/extensions/">
+        <child name="aboutcomputer" schema="org.sugarlabs.extensions.aboutcomputer" />
+    </schema>
+    <schema id="org.sugarlabs.extensions.aboutcomputer" path="/desktop/sugar/extensions/aboutcomputer/">
+        <key name="hardware-model" type="s">
+            <default>''</default>
+            <summary>A description of the hardware available to the user.</summary>
+            <description>This string is displayed in the control panel, about computer section.</description>
+        </key>
+    </schema>
+</schemalist>

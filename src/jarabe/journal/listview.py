@@ -22,13 +22,12 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.xocolor import XoColor
 from sugar3 import util
+from sugar3 import profile
 
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -291,9 +290,7 @@ class BaseListView(Gtk.Bin):
                                tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            cell.props.xo_color = color
+            cell.props.xo_color = profile.get_color()
         else:
             cell.props.xo_color = None
 
@@ -679,8 +676,7 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-        client = GConf.Client.get_default()
-        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        prelit_color = profile.get_color()
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
 

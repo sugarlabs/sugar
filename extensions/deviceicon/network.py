@@ -28,7 +28,6 @@ import time
 from gi.repository import Gtk
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import GConf
 import dbus
 
 from sugar3.graphics.icon import get_icon_state
@@ -724,8 +723,7 @@ class WiredDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 301
 
     def __init__(self, speed, address):
-        client = GConf.Client.get_default()
-        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
 
@@ -747,8 +745,7 @@ class GsmDeviceView(TrayIcon):
 
         self._connection_timestamp = 0
 
-        client = GConf.Client.get_default()
-        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
 
