@@ -107,12 +107,8 @@ class BundleRegistry(GObject.GObject):
             self._favorite_bundles.append({})
             self._last_defaults_mtime.append(-1)
 
-        # TODO: confirm that GSettings works in this way
         settings = Gio.Settings('org.sugarlabs')
         self._protected_activities = settings.get_strv('protected-activities')
-
-        if self._protected_activities is None:
-            self._protected_activities = []
 
         try:
             self._load_favorites()

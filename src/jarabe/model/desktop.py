@@ -66,14 +66,13 @@ class DesktopViewModel(GObject.GObject):
         if self._view_icons is not None and not update:
             return
 
-        # TODO: confirm that GSettings works in this way
         self._view_icons = self._settings.get_strv(_VIEW_KEY)
-        if self._view_icons is None or self._view_icons == []:
+        if not self._view_icons:
             self._view_icons = _VIEW_ICONS[:]
         self._number_of_views = len(self._view_icons)
 
         self._favorite_icons = self._settings.get_strv(_FAVORITE_KEY)
-        if self._favorite_icons is None:
+        if not self._favorite_icons:
             self._favorite_icons = _FAVORITE_ICONS[:]
 
         if len(self._favorite_icons) < self._number_of_views:

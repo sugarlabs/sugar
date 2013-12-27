@@ -71,13 +71,13 @@
     <schema id="org.sugarlabs.user.background" path="/desktop/sugar/user/background/">
         <key name="image-path" type="s">
             <default>''</default>
-            <summary>TODO: add summary</summary>
-            <description>TODO: add description</description>
+            <summary>Background image path</summary>
+            <description>Path to the image to be used as a background in the sugar environment</description>
         </key>
         <key name="alpha-level" type="s">
             <default>''</default>
-            <summary>TODO: add summary</summary>
-            <description>TODO: add description</description>
+            <summary>Background alpha level</summary>
+            <description>The opacity of the background image, used on sugar's desktop</description>
         </key>
     </schema>
     <schema id="org.sugarlabs.sound" path="/desktop/sugar/sound/">

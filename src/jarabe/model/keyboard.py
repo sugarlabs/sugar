@@ -37,7 +37,6 @@ def setup():
         configrec = Xkl.ConfigRec()
         configrec.get_from_server(engine)
 
-        # TODO: confirm that GSettings works in this way
         layouts = settings.get_strv('layouts')
         layouts_list = []
         variants_list = []
@@ -56,7 +55,6 @@ def setup():
             have_config = True
             configrec.set_model(model)
 
-        # TODO: confirm that GSettings works in this way
         options = settings.get_strv('options')
         if options:
             have_config = True

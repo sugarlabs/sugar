@@ -683,8 +683,8 @@ class OwnerIcon(BuddyIcon):
 
 class FavoritesSetting(object):
 
-    # TODO: find a way to port this to GSettings
-    # TODO: maybe make favorites_layout a list of strings?
+    # FIXME: find a way to port this to GSettings
+    # FIXME: maybe make favorites_layout a list of strings?
 
     _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 

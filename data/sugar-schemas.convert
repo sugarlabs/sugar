@@ -18,14 +18,14 @@ alpha-level = /desktop/sugar/user/background/alpha-level
 
 [org.sugarlabs.sound]
 volume = /desktop/sugar/sound/volume
-# mute = /desktop/sugar/sound/mute
+mute = /desktop/sugar/sound/mute
 
 [org.sugarlabs.date]
 timezone = /desktop/sugar/date/timezone
 
 [org.sugarlabs.desktop]
 favorites-layout = /desktop/sugar/desktop/favorites-layout
-# favorites-mode = /desktop/sugar/desktop/favorites-mode
+favorites-mode = /desktop/sugar/desktop/favorites-mode
 
 [org.sugarlabs.frame]
 edge-delay = /desktop/sugar/frame/edge_delay

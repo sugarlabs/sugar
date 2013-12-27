@@ -16,7 +16,7 @@
 
 import re
 
-#TODO: find a way to port this to GSettings
+# FIXME: find a way to port this to GSettings
 from gi.repository import GConf
 
 

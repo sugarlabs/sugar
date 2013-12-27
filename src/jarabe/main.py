@@ -215,10 +215,9 @@ def cleanup_temporary_files():
 
 
 def _gconf_to_gsettings_data_convert():
-    # How should this be done?
     try:
         subprocess.call('gsettings-data-convert')
-    except Exception:
+    except subprocess.CalledProcessError:
         logging.error('Unable to convert data.')
 
 

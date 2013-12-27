@@ -93,7 +93,6 @@ class KeyboardManager(object):
 
     def get_current_layouts(self):
         """Return the enabled keyboard layouts with variants"""
-        # TODO: confirm that GSettings works in this way
         layouts = self._settings.get_strv(_LAYOUTS_KEY)
         if layouts:
             return layouts
@@ -115,7 +114,6 @@ class KeyboardManager(object):
 
     def get_current_option_group(self):
         """Return the enabled option for switching keyboard group"""
-        # TODO: confirm that GSettings works in this way
         options = self._settings.get_strv(_OPTIONS_KEY)
 
         if not options:
@@ -150,7 +148,6 @@ class KeyboardManager(object):
         else:
             options = [option_group]
 
-        # TODO: confirm that GSettings works in this way
         self._settings.set_strv(_OPTIONS_KEY, options)
         self._configrec.set_options(options)
         self._configrec.activate(self._engine)
@@ -160,7 +157,6 @@ class KeyboardManager(object):
         if layouts is None or not layouts:
             return
 
-        # TODO: confirm that GSettings works in this way
         self._settings.set_strv(_LAYOUTS_KEY, layouts)
 
         layouts_list = []
