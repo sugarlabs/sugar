@@ -50,6 +50,11 @@ def set_nick(nick):
         nick = unicode(nick, 'utf-8')
     settings = Gio.Settings('org.sugarlabs.user')
     settings.set_string('nick', nick)
+
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/user/nick', nick)
     return 1
 
 
@@ -108,6 +113,11 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
 
     settings = Gio.Settings('org.sugarlabs.user')
     settings.set_string('color', color)
+
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/user/color', color)
     return 1
 
 
@@ -122,4 +132,9 @@ def set_color_xo(color):
     """
     settings = Gio.Settings('org.sugarlabs.user')
     settings.set_string('color', color)
+
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/user/color', color)
     return 1

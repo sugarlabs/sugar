@@ -113,6 +113,12 @@ class SpeechManager(GObject.GObject):
         self.say_text(text)
 
     def save(self):
+        # DEPRECATED
+        from gi.repository import GConf
+        client = GConf.Client.get_default()
+        client.set_int('/desktop/sugar/speech/pitch', self._pitch)
+        client.set_int('/desktop/sugar/speech/rate', self._rate)
+
         settings = Gio.Settings('org.sugarlabs.speech')
         settings.set_int('pitch', self._pitch)
         settings.set_int('rate', self._rate)
