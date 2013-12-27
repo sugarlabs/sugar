@@ -23,7 +23,7 @@ import pwd
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 
 from sugar3 import env
@@ -39,10 +39,10 @@ def create_profile(name, color=None):
     if not color:
         color = XoColor()
 
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/user/nick', name)
-    client.set_string('/desktop/sugar/user/color', color.to_string())
-    client.suggest_sync()
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_string('nick', name)
+    settings.set_string('color', color.to_string())
+    # settings.sync()
 
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
         logging.info('Valid key pair found, skipping generation.')
@@ -168,8 +168,8 @@ class _IntroBox(Gtk.VBox):
         self._current_page = None
         self._next_button = None
 
-        client = GConf.Client.get_default()
-        default_nick = client.get_string('/desktop/sugar/user/default_nick')
+        settings = Gio.Settings('org.sugarlabs.user')
+        default_nick = settings.get_string('default-nick')
         if default_nick != 'disabled':
             self._page = self.PAGE_COLOR
             if default_nick == 'system':

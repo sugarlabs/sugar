@@ -16,8 +16,8 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 from gettext import gettext as _
-from gi.repository import GConf
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -50,8 +50,8 @@ class ModalAlert(Gtk.Window):
         self._main_view.add(self._vbox)
         self._vbox.show()
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
 
         icon = Icon(icon_name='activity-journal',
                     pixel_size=style.XLARGE_ICON_SIZE,

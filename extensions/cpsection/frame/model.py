@@ -16,12 +16,12 @@
 #
 
 from gettext import gettext as _
-from gi.repository import GConf
+from gi.repository import Gio
 
 
 def get_corner_delay():
-    client = GConf.Client.get_default()
-    corner_delay = client.get_int('/desktop/sugar/frame/corner_delay')
+    settings = Gio.Settings('org.sugarlabs.frame')
+    corner_delay = settings.get_int('corner-delay')
     return corner_delay
 
 
@@ -39,14 +39,14 @@ def set_corner_delay(delay):
         int(delay)
     except ValueError:
         raise ValueError(_('Value must be an integer.'))
-    client = GConf.Client.get_default()
-    client.set_int('/desktop/sugar/frame/corner_delay', int(delay))
+    settings = Gio.Settings('org.sugarlabs.frame')
+    settings.set_int('corner-delay', int(delay))
     return 0
 
 
 def get_edge_delay():
-    client = GConf.Client.get_default()
-    edge_delay = client.get_int('/desktop/sugar/frame/edge_delay')
+    settings = Gio.Settings('org.sugarlabs.frame')
+    edge_delay = settings.get_int('edge-delay')
     return edge_delay
 
 
@@ -64,6 +64,6 @@ def set_edge_delay(delay):
         int(delay)
     except ValueError:
         raise ValueError(_('Value must be an integer.'))
-    client = GConf.Client.get_default()
-    client.set_int('/desktop/sugar/frame/edge_delay', int(delay))
+    settings = Gio.Settings('org.sugarlabs.frame')
+    settings.set_int('edge-delay', int(delay))
     return 0

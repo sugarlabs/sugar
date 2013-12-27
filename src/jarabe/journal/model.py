@@ -30,7 +30,6 @@ from gettext import gettext as _
 
 import dbus
 from gi.repository import Gio
-from gi.repository import GConf
 from gi.repository import GLib
 
 from gi.repository import SugarExt
@@ -640,8 +639,8 @@ def copy(metadata, mount_point):
     """
     metadata = get(metadata['uid'])
     if mount_point == '/' and metadata['icon-color'] == '#000000,#ffffff':
-        client = GConf.Client.get_default()
-        metadata['icon-color'] = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        metadata['icon-color'] = settings.get_string('color')
     file_path = get_file(metadata['uid'])
     if file_path is None:
         file_path = ''

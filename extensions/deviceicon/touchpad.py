@@ -19,8 +19,8 @@ from gettext import gettext as _
 import os
 
 from gi.repository import Gtk
-from gi.repository import GConf
 from gi.repository import GLib
+from gi.repository import Gio
 
 import logging
 
@@ -51,8 +51,8 @@ class DeviceView(TrayIcon):
         """ Create the icon that represents the touchpad. """
         icon_name = STATUS_ICON[_read_touchpad_mode()]
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = XoColor(settings.get_string('color'))
         TrayIcon.__init__(self, icon_name=icon_name, xo_color=color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))

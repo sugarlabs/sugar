@@ -16,7 +16,7 @@
 #
 
 from gettext import gettext as _
-from gi.repository import GConf
+from gi.repository import Gio
 
 
 _COLORS = {
@@ -32,8 +32,8 @@ _MODIFIERS = ('dark', 'medium', 'light')
 
 
 def get_nick():
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/user/nick')
+    settings = Gio.Settings('org.sugarlabs.user')
+    return settings.get_string('nick')
 
 
 def print_nick():
@@ -48,14 +48,14 @@ def set_nick(nick):
         raise ValueError(_('You must enter a name.'))
     if not isinstance(nick, unicode):
         nick = unicode(nick, 'utf-8')
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/user/nick', nick)
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_string('nick', nick)
     return 1
 
 
 def get_color():
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/user/color')
+    settings = Gio.Settings('org.sugarlabs.user')
+    return settings.get_string('color')
 
 
 def print_color():
@@ -106,20 +106,20 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
     color = _COLORS[stroke][stroke_modifier] + ',' \
         + _COLORS[fill][fill_modifier]
 
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/user/color', color)
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_string('color', color)
     return 1
 
 
 def get_color_xo():
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/user/color')
+    settings = Gio.Settings('org.sugarlabs.user')
+    return settings.get_string('color')
 
 
 def set_color_xo(color):
     """Set a color with an XoColor
     This method is used by the graphical user interface
     """
-    client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/user/color', color)
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_string('color', color)
     return 1

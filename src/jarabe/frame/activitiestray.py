@@ -22,7 +22,6 @@ import tempfile
 import os
 
 from gi.repository import GObject
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -476,8 +475,8 @@ class OutgoingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        client = GConf.Client.get_default()
-        icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = XoColor(settings.get_string('color'))
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 

@@ -22,7 +22,7 @@ import importlib
 
 from gi.repository import GObject
 from gi.repository import GLib
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.bundle.helpers import bundle_from_archive
 
@@ -31,9 +31,10 @@ from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('Updater')
 _instance = None
-_LAST_UPDATE_KEY = '/desktop/sugar/update/last_activity_update'
-_UPDATE_FREQUENCY_KEY = '/desktop/sugar/update/auto_update_frequency'
-_UPDATE_BACKEND_KEY = '/desktop/sugar/update/backend'
+_UPDATE_KEYS_PATH = 'org.sugarlabs.update'
+_LAST_UPDATE_KEY = 'last-activity-update'
+_UPDATE_FREQUENCY_KEY = 'auto-update-frequency'
+_UPDATE_BACKEND_KEY = 'backend'
 _URGENT_TRIGGER_FILE = os.path.expanduser('~/.sugar-update')
 
 STATE_IDLE = 0
@@ -65,8 +66,8 @@ class Updater(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        client = GConf.Client.get_default()
-        backend = client.get_string(_UPDATE_BACKEND_KEY)
+        settings = Gio.Settings(_UPDATE_KEYS_PATH)
+        backend = settings.get_string(_UPDATE_BACKEND_KEY)
         module_name, class_name = backend.rsplit('.', 1)
         _logger.debug("Use backend %s.%s", module_name, class_name)
         module = importlib.import_module("jarabe.model.update." + module_name)
@@ -226,8 +227,8 @@ class Updater(GObject.GObject):
         self.emit('finished', self._bundles_updated, self._bundles_failed,
                   cancelled)
         if not cancelled and len(self._bundles_failed) == 0:
-            client = GConf.Client.get_default()
-            client.set_int(_LAST_UPDATE_KEY, time.time())
+            settings = Gio.Settings(_UPDATE_KEYS_PATH)
+            settings.set_int(_LAST_UPDATE_KEY, time.time())
             try:
                 os.unlink(_URGENT_TRIGGER_FILE)
             except OSError:
@@ -275,8 +276,8 @@ def _check_periodic_update():
     if check_urgent_update():
         return True
 
-    client = GConf.Client.get_default()
-    update_frequency = client.get_int(_UPDATE_FREQUENCY_KEY)
+    settings = Gio.Settings(_UPDATE_KEYS_PATH)
+    update_frequency = settings.get_int(_UPDATE_FREQUENCY_KEY)
     if update_frequency == 0:
         # automatic update disabled
         return False

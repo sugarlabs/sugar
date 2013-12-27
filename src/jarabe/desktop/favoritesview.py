@@ -23,6 +23,7 @@ from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -648,9 +649,9 @@ class OwnerIcon(BuddyIcon):
 
         palette = BuddyMenu(get_owner_instance())
 
-        client = GConf.Client.get_default()
-        if client.get_bool('/desktop/sugar/show_register'):
-            backup_url = client.get_string('/desktop/sugar/backup_url')
+        settings = Gio.Settings('org.sugarlabs')
+        if settings.get_boolean('show-register'):
+            backup_url = settings.get_string('backup-url')
 
             if not backup_url:
                 self._register_menu = PaletteMenuItem(_('Register'),

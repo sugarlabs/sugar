@@ -22,7 +22,6 @@ import os
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 
@@ -249,8 +248,8 @@ class CopyMenuBuilder():
             clipboard_menu.show()
 
         if self._journalactivity.get_mount_point() != '/':
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            settings = Gio.Settings('org.sugarlabs.user')
+            color = XoColor(settings.get_string('color'))
             journal_menu = VolumeMenu(self._journalactivity,
                                       self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',

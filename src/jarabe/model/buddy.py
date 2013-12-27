@@ -18,7 +18,7 @@
 import logging
 
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 import dbus
 from telepathy.client import Connection
 from telepathy.interfaces import CONNECTION
@@ -97,9 +97,9 @@ class OwnerBuddyModel(BaseBuddyModel):
     def __init__(self):
         BaseBuddyModel.__init__(self)
 
-        client = GConf.Client.get_default()
-        self.props.nick = client.get_string('/desktop/sugar/user/nick')
-        color = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        self.props.nick = settings.get_string('nick')
+        color = settings.get_string('color')
         self.props.color = XoColor(color)
 
         self.props.key = get_profile().pubkey
