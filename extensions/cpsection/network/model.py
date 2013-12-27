@@ -55,6 +55,11 @@ def set_jabber(server):
     settings = Gio.Settings('org.sugarlabs.collaboration')
     settings.set_string('jabber-server', server)
 
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/collaboration/jabber_server', server)
+
     return 0
 
 
@@ -108,6 +113,11 @@ def clear_registration():
     """
     settings = Gio.Settings('org.sugarlabs')
     settings.set_string('backup-url', '')
+
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
 

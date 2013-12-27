@@ -91,4 +91,9 @@ def set_automatic_pm(enabled):
 
     settings = Gio.Settings('org.sugarlabs.power')
     settings.set_boolean('automatic', enabled)
+
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.CLient.get_default()
+    client.set_string('/desktop/sugar/power/automatic', enabled)
     return

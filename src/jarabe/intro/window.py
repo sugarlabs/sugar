@@ -44,6 +44,13 @@ def create_profile(name, color=None):
     settings.set_string('color', color.to_string())
     # settings.sync()
 
+    # DEPRECATED
+    from gi.repository import GConf
+    client = GConf.Client.get_default()
+    client.set_string('/desktop/sugar/user/nick', name)
+    client.set_string('/desktop/sugar/user/color', color.to_string())
+    client.suggest_sync()
+
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
         logging.info('Valid key pair found, skipping generation.')
         return
