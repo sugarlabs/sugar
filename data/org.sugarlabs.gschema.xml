@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-    <schema id="org.sugarlabs" path="/desktop/sugar/">
+    <schema id="org.sugarlabs" path="/org/sugarlabs/">
         <key name="backup-url" type="s">
             <default>''</default>
             <summary>Backup URL</summary>
@@ -50,7 +50,7 @@
         <child name="update" schema="org.sugarlabs.update" />
         <child name="extensions" schema="org.sugarlabs.extensions" />
     </schema>
-    <schema id="org.sugarlabs.user" path="/desktop/sugar/user/">
+    <schema id="org.sugarlabs.user" path="/org/sugarlabs/user/">
         <key name="nick" type="s">
             <default>''</default>
             <summary>User Name</summary>
@@ -68,7 +68,7 @@
         </key>
         <child name="background" schema="org.sugarlabs.user.background" />
     </schema>
-    <schema id="org.sugarlabs.user.background" path="/desktop/sugar/user/background/">
+    <schema id="org.sugarlabs.user.background" path="/org/sugarlabs/user/background/">
         <key name="image-path" type="s">
             <default>''</default>
             <summary>Background image path</summary>
@@ -80,7 +80,7 @@
             <description>The opacity of the background image.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.sound" path="/desktop/sugar/sound/">
+    <schema id="org.sugarlabs.sound" path="/org/sugarlabs/sound/">
         <key name="volume" type="i">
             <default>80</default>
             <summary>Volume Level</summary>
@@ -92,14 +92,14 @@
             <description>Setting for muting the sound device.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.date" path="/desktop/sugar/date/">
+    <schema id="org.sugarlabs.date" path="/org/sugarlabs/date/">
         <key name="timezone" type="s">
             <default>''</default>
             <summary>Timezone</summary>
             <description>Timezone setting for the system.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.desktop" path="/desktop/sugar/desktop/">
+    <schema id="org.sugarlabs.desktop" path="/org/sugarlabs/desktop/">
         <key name="favorites-layout" type="s">
             <default>'ring-layout'</default>
             <summary>Favorites Layout</summary>
@@ -121,7 +121,7 @@
             <description>TODO: add description</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.frame" path="/desktop/sugar/frame/">
+    <schema id="org.sugarlabs.frame" path="/org/sugarlabs/frame/">
         <key name="edge-delay" type="i">
             <default>1000</default>
             <summary>Edge Delay</summary>
@@ -133,7 +133,7 @@
             <description>Delay for the activation of the frame using the corners.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.collaboration" path="/desktop/sugar/collaboration/">
+    <schema id="org.sugarlabs.collaboration" path="/org/sugarlabs/collaboration/">
         <key name="jabber-server" type="s">
             <default>'jabber.sugarlabs.org'</default>
             <summary>Jabber Server</summary>
@@ -145,7 +145,7 @@
             <description>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.power" path="/desktop/sugar/power/">
+    <schema id="org.sugarlabs.power" path="/org/sugarlabs/power/">
         <key name="automatic" type="b">
             <default>false</default>
             <summary>Power Automatic</summary>
@@ -157,10 +157,10 @@
             <description>Extreme power management (disables wireless radio, increases battery life)</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.peripherals" path="/desktop/sugar/peripherals/">
+    <schema id="org.sugarlabs.peripherals" path="/org/sugarlabs/peripherals/">
         <child name="keyboard" schema="org.sugarlabs.peripherals.keyboard" />
     </schema>
-    <schema id="org.sugarlabs.peripherals.keyboard" path="/desktop/sugar/peripherals/keyboard/">
+    <schema id="org.sugarlabs.peripherals.keyboard" path="/org/sugarlabs/peripherals/keyboard/">
         <key name="layouts" type="as">
             <default>[]</default>
             <summary>Keyboard layouts</summary>
@@ -177,7 +177,7 @@
             <description>The keyboard model to be used</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.font" path="/desktop/sugar/font/">
+    <schema id="org.sugarlabs.font" path="/org/sugarlabs/font/">
         <key name="default-face" type="s">
             <default>'Sans Serif'</default>
             <summary>Default font face</summary>
@@ -189,7 +189,7 @@
             <description>Font size that is used throughout the desktop.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.network" path="/desktop/sugar/network/">
+    <schema id="org.sugarlabs.network" path="/org/sugarlabs/network/">
         <key name="adhoc" type="b">
             <default>true</default>
             <summary>Show Sugar Ad-hoc networks</summary>
@@ -197,7 +197,7 @@
         </key>
         <child name="gsm" schema="org.sugarlabs.network.gsm" />
     </schema>
-    <schema id="org.sugarlabs.network.gsm" path="/desktop/sugar/network/gsm/">
+    <schema id="org.sugarlabs.network.gsm" path="/org/sugarlabs/network/gsm/">
         <key name="username" type="s">
             <default>''</default>
             <summary>GSM network username (DEPRECATED/UNUSED)</summary>
@@ -244,7 +244,7 @@
             <description>TODO: add description</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.speech" path="/desktop/sugar/speech/">
+    <schema id="org.sugarlabs.speech" path="/org/sugarlabs/speech/">
         <key name="pitch" type="i">
             <default>0</default>
             <summary>Pitch value for the speech sugar service</summary>
@@ -256,7 +256,7 @@
             <description>Rate value used by the speech service in Sugar</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.update" path="/desktop/sugar/update/">
+    <schema id="org.sugarlabs.update" path="/org/sugarlabs/update/">
         <key name="backend" type="s">
             <default>'aslo.AsloUpdater'</default>
             <summary>Activity update backend.</summary>
@@ -278,10 +278,10 @@
             <description>A unix timestamp (seconds since epoch) of the last successful activity update.</description>
         </key>
     </schema>
-    <schema id="org.sugarlabs.extensions" path="/desktop/sugar/extensions/">
+    <schema id="org.sugarlabs.extensions" path="/org/sugarlabs/extensions/">
         <child name="aboutcomputer" schema="org.sugarlabs.extensions.aboutcomputer" />
     </schema>
-    <schema id="org.sugarlabs.extensions.aboutcomputer" path="/desktop/sugar/extensions/aboutcomputer/">
+    <schema id="org.sugarlabs.extensions.aboutcomputer" path="/org/sugarlabs/extensions/aboutcomputer/">
         <key name="hardware-model" type="s">
             <default>''</default>
             <summary>A description of the hardware available to the user.</summary>
