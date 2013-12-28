@@ -22,7 +22,6 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import GObject
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -683,23 +682,21 @@ class OwnerIcon(BuddyIcon):
 
 class FavoritesSetting(object):
 
-    # FIXME: find a way to port this to GSettings
-    # FIXME: maybe make favorites_layout a list of strings?
-
-    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
+    _DESKTOP_DIR = 'org.sugarlabs.desktop'
+    _HOMEVIEWS_KEY = 'homeviews'
 
     def __init__(self, favorite_view):
-        client = GConf.Client.get_default()
-        # Special-case 0 for backward compatibility
-        if favorite_view == 0:
-            self._client_string = self._FAVORITES_KEY
-        else:
-            self._client_string = '%s_%d' % (self._FAVORITES_KEY,
-                                             favorite_view)
+        self._favorite_view = int(favorite_view)
 
-        self._layout = client.get_string(self._client_string)
-        if self._layout is None:
+        settings = Gio.Settings(self._DESKTOP_DIR)
+        layouts = settings.get_value(self._HOMEVIEWS_KEY).unpack()
+
+        # should always be false
+        if self._favorite_view >= len(layouts):
             self._layout = favoriteslayout.RingLayout.key
+        else:
+            self._layout = layouts[self._favorite_view]['layout']
+
         logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
@@ -714,8 +711,17 @@ class FavoritesSetting(object):
         if layout != self._layout:
             self._layout = layout
 
-            client = GConf.Client.get_default()
-            client.set_string(self._client_string, layout)
+            settings = Gio.Settings(self._DESKTOP_DIR)
+            layouts = settings.get_value(self._FAVORITES_KEY).unpack()
+
+            # should always be false
+            if self._favorite_view >= len(layouts):
+                layouts.append({'layout': layout})
+            else:
+                layouts[self._favorite_view]['layout'] = layout
+
+            variant = GLib.Variant('aa{ss}', layouts)
+            settings.set_value(self._HOMEVIEWS_KEY, variant)
 
             self.changed.send(self)
 
