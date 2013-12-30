@@ -48,7 +48,7 @@ DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 PROPERTIES = ['activity', 'activity_id', 'buddies', 'bundle_id',
               'creation_time', 'filesize', 'icon-color', 'keep', 'mime_type',
               'mountpoint', 'mtime', 'progress', 'timestamp', 'title', 'uid',
-              'preview']
+              'preview', 'children', 'is_child']
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5

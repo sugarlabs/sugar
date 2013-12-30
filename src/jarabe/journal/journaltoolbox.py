@@ -30,8 +30,8 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolcombobox import ToolComboBox
 from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.toggletoolbutton import ToggleToolButton
 from sugar3.graphics.combobox import ComboBox
+from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -66,6 +66,11 @@ _ACTION_ANYTHING = 0
 _ACTION_EVERYBODY = 0
 _ACTION_MY_FRIENDS = 1
 _ACTION_MY_CLASS = 2
+_ACTION_JUST_ME = 3
+
+_DISPLAY_RADIO_GROUP = None
+_VIEW_MODE_LIST = 0
+_VIEW_MODE_ICONS = 1
 
 
 class MainToolbox(ToolbarBox):
@@ -73,6 +78,8 @@ class MainToolbox(ToolbarBox):
     __gsignals__ = {
         'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
+        'view-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                         ([int])),
     }
 
     def __init__(self):
@@ -93,12 +100,12 @@ class MainToolbox(ToolbarBox):
         self._autosearch_timer = None
         self._add_widget(self.search_entry, expand=True)
 
-        self._favorite_button = ToggleToolButton('emblem-favorite')
-        self._favorite_button.set_tooltip(_('Favorite entries'))
-        self._favorite_button.connect('toggled',
-                                      self.__favorite_button_toggled_cb)
-        self.toolbar.insert(self._favorite_button, -1)
-        self._favorite_button.show()
+        #self._favorite_button = ToggleToolButton('emblem-favorite')
+        #self._favorite_button.set_tooltip(_('Favorite entries'))
+        #self._favorite_button.connect('toggled',
+        #                              self.__favorite_button_toggled_cb)
+        #self.toolbar.insert(self._favorite_button, -1)
+        #self._favorite_button.show()
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
@@ -112,17 +119,18 @@ class MainToolbox(ToolbarBox):
         self.toolbar.insert(tool_item, -1)
         tool_item.show()
 
+
+        # TODO: enable it when the DS supports saving the buddies.
+        #self._with_search_combo = self._get_with_search_combo()
+        #tool_item = ToolComboBox(self._with_search_combo)
+        #self.toolbar.insert(tool_item, -1)
+        #tool_item.show()
+
         self._sorting_button = SortingButton()
         self.toolbar.insert(self._sorting_button, -1)
         self._sorting_button.connect('sort-property-changed',
                                      self.__sort_changed_cb)
         self._sorting_button.show()
-
-        # TODO: enable it when the DS supports saving the buddies.
-        # self._with_search_combo = self._get_with_search_combo()
-        # tool_item = ToolComboBox(self._with_search_combo)
-        # self.insert(tool_item, -1)
-        # tool_item.show()
 
         self._query = self._build_query()
 
@@ -151,10 +159,11 @@ class MainToolbox(ToolbarBox):
         with_search.append_separator()
         with_search.append_item(_ACTION_MY_FRIENDS, _('My friends'))
         with_search.append_item(_ACTION_MY_CLASS, _('My class'))
+        with_search.append_item(_ACTION_JUST_ME, _('Just me'))
         with_search.append_separator()
 
         # TODO: Ask the model for buddies.
-        with_search.append_item(3, 'Dan', 'theme:xo')
+        #with_search.append_item(3, 'Dan', 'computer-xo')
 
         with_search.set_active(0)
         with_search.connect('changed', self._combo_changed_cb)
@@ -176,8 +185,8 @@ class MainToolbox(ToolbarBox):
         if self._mount_point:
             query['mountpoints'] = [self._mount_point]
 
-        if self._favorite_button.props.active:
-            query['keep'] = 1
+        #if self._favorite_button.props.active:
+        #    query['keep'] = 1
 
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
@@ -408,7 +417,6 @@ class DetailToolbox(ToolbarBox):
         self._resume.connect('clicked', self._resume_clicked_cb)
         self.toolbar.insert(self._resume, -1)
         self._resume.show()
-        self._resume_menu = None
 
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -453,10 +461,6 @@ class DetailToolbox(ToolbarBox):
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
-        if not misc.can_resume(self._metadata):
-            palette = self._resume.get_palette()
-            palette.popup(immediate=True)
-
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
 
@@ -501,7 +505,7 @@ class DetailToolbox(ToolbarBox):
             model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
-        misc.resume(self._metadata, service_name,
+        misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
 
     def _refresh_copy_palette(self):
@@ -561,23 +565,18 @@ class DetailToolbox(ToolbarBox):
 
         palette = self._resume.get_palette()
 
-        if self._resume_menu is not None:
-            self._resume_menu.destroy()
-
-        self._resume_menu = PaletteMenuBox()
-        palette.set_content(self._resume_menu)
-        self._resume_menu.show()
+        for menu_item in palette.menu.get_children():
+            palette.menu.remove(menu_item)
+            menu_item.destroy()
 
         for activity_info in misc.get_activities(self._metadata):
-            menu_item = PaletteMenuItem(file_name=activity_info.get_icon(),
-                                        text_label=activity_info.get_name())
+            menu_item = MenuItem(activity_info.get_name())
+            menu_item.set_image(Icon(file=activity_info.get_icon(),
+                                     icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                               activity_info.get_bundle_id())
-            self._resume_menu.append_item(menu_item)
+            palette.menu.append(menu_item)
             menu_item.show()
-
-        if not misc.can_resume(self._metadata):
-            self._resume.set_tooltip(_('No activity to start entry'))
 
 
 class SortingButton(ToolButton):

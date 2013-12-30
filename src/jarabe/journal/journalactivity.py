@@ -33,11 +33,9 @@ from sugar3.activity import activityfactory
 from gi.repository import SugarExt
 
 from jarabe.journal.journaltoolbox import MainToolbox
-from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
 
-from jarabe.journal.listview import ListView
-from jarabe.journal.detailview import DetailView
+from jarabe.journal.newview import NewView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
 from jarabe.journal.objectchooser import ObjectChooser
@@ -46,7 +44,6 @@ from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 
 from jarabe.model import session
-
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -144,11 +141,15 @@ class JournalActivity(JournalWindow):
         self._main_view = None
         self._secondary_view = None
         self._list_view = None
+        self._icon_view = None
         self._detail_view = None
         self._main_toolbox = None
         self._detail_toolbox = None
         self._volumes_toolbar = None
         self._mount_point = '/'
+        self._query = None
+        self._last_list_query = None
+        self._last_icon_query = None
 
         self._editing_mode = False
 
@@ -205,18 +206,9 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
         self._main_view.set_can_focus(True)
 
-        self._list_view = ListView(self, enable_multi_operations=True)
-        self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
-        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-        self._list_view.connect('volume-error', self.volume_error_cb)
-        self._list_view.connect('title-edit-started',
-                                self.__title_edit_started_cb)
-        self._list_view.connect('title-edit-finished',
-                                self.__title_edit_finished_cb)
-        self._list_view.connect('selection-changed',
-                                self.__selection_changed_cb)
-        self._main_view.pack_start(self._list_view, True, True, 0)
-        self._list_view.show()
+        self._new_view = NewView(self)
+        self._main_view.pack_start(self._new_view, True, True, 0)
+        self._new_view.show()
 
         self._volumes_toolbar = VolumesToolbar()
         self._volumes_toolbar.connect('volume-changed',
@@ -225,20 +217,22 @@ class JournalActivity(JournalWindow):
         self._main_view.pack_start(self._volumes_toolbar, False, True, 0)
 
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
+        self._main_toolbox.connect('view-changed', self._change_main_view_cb)
         self._main_toolbox.search_entry.connect('icon-press',
                                                 self.__search_icon_pressed_cb)
         self._main_toolbox.set_mount_point(self._mount_point)
 
+        self.show_main_view()
+
+    def _change_main_view_cb(self, toolbar, new_mode):
+        self.change_main_view(new_mode)
+
+    def change_main_view(self, new_mode, force_update=False):
+        if self._query is not None:
+            self._new_view.update_with_query(self._query)
+
     def _setup_secondary_view(self):
-        self._secondary_view = Gtk.VBox()
-
-        self._detail_toolbox = DetailToolbox(self)
-        self._detail_toolbox.connect('volume-error', self.volume_error_cb)
-
-        self._detail_view = DetailView(self)
-        self._detail_view.connect('go-back-clicked', self.__go_back_clicked_cb)
-        self._secondary_view.pack_end(self._detail_view, True, True, 0)
-        self._detail_view.show()
+        return
 
     def _key_press_event_cb(self, widget, event):
         if not self._main_toolbox.search_entry.has_focus():
@@ -249,7 +243,8 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def __detail_clicked_cb(self, list_view, object_id):
-        self._show_secondary_view(object_id)
+        #self._show_secondary_view(object_id)
+        return
 
     def __clear_clicked_cb(self, list_view):
         self._main_toolbox.clear_query()
@@ -261,16 +256,14 @@ class JournalActivity(JournalWindow):
         self.show_main_view()
 
     def update_selected_items_ui(self):
-        selected_items = \
-            len(self.get_list_view().get_model().get_selected_items())
-        self.__selection_changed_cb(None, selected_items)
+        return
 
-    def __go_back_clicked_cb(self, detail_view):
-        self.show_main_view()
+    #def __go_back_clicked_cb(self, detail_view):
+    #    self.show_main_view()
 
     def _query_changed_cb(self, toolbar, query):
-        self._list_view.update_with_query(query)
-        self.show_main_view()
+        self._query = query
+        self._new_view.update_with_query(query)
 
     def __search_icon_pressed_cb(self, entry, icon_pos, event):
         self._main_view.grab_focus()
@@ -296,38 +289,12 @@ class JournalActivity(JournalWindow):
             self.set_canvas(self._main_view)
             self._main_view.show()
 
-    def _show_secondary_view(self, object_id):
-        metadata = model.get(object_id)
-        try:
-            self._detail_toolbox.set_metadata(metadata)
-        except Exception:
-            logging.exception('Exception while displaying entry:')
-
-        self.set_toolbar_box(self._detail_toolbox)
-        self._detail_toolbox.show()
-
-        try:
-            self._detail_view.props.metadata = metadata
-        except Exception:
-            logging.exception('Exception while displaying entry:')
-
-        self.set_canvas(self._secondary_view)
-        self._secondary_view.show()
-
-    def show_object(self, object_id):
-        metadata = model.get(object_id)
-        if metadata is None:
-            return False
-        else:
-            self._show_secondary_view(object_id)
-            return True
-
     def __volume_changed_cb(self, volume_toolbar, mount_point):
         logging.debug('Selected volume: %r.', mount_point)
         self._mount_point = mount_point
         self.set_editing_mode(False)
         self._main_toolbox.set_mount_point(mount_point)
-        self._edit_toolbox.batch_copy_button.update_mount_point()
+        self._edit_toolbox.batch_copy_button.update_mount_poi
 
     def __model_created_cb(self, sender, **kwargs):
         misc.handle_bundle_installation(model.get(kwargs['object_id']))
@@ -349,17 +316,16 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
-        self._list_view.set_is_visible(True)
+        #self._list_view.set_is_visible(True)
+        self._new_view.update_with_query(self._query)
+        return
 
     def _focus_out_event_cb(self, window, event):
-        self._list_view.set_is_visible(False)
+        #self._list_view.set_is_visible(False)
+        return
 
     def __window_state_event_cb(self, window, event):
-        logging.debug('window_state_event_cb %r', self)
-        if event.changed_mask & Gdk.WindowState.ICONIFIED:
-            state = event.new_window_state
-            visible = not state & Gdk.WindowState.ICONIFIED
-            self._list_view.set_is_visible(visible)
+        pass
 
     def _check_available_space(self):
         """Check available space on device
@@ -392,7 +358,7 @@ class JournalActivity(JournalWindow):
         self.show_main_view()
 
     def get_list_view(self):
-        return self._list_view
+        return self._new_view
 
     def get_total_number_of_entries(self):
         list_view_model = self.get_list_view().get_model()
@@ -416,11 +382,11 @@ class JournalActivity(JournalWindow):
 
     def _set_widgets_sensitive_state(self, sensitive_state):
         self._toolbox.set_sensitive(sensitive_state)
-        self._list_view.set_sensitive(sensitive_state)
-        if sensitive_state:
-            self._list_view.enable_updates()
-        else:
-            self._list_view.disable_updates()
+        #self._list_view.set_sensitive(sensitive_state)
+        #if sensitive_state:
+        #    self._list_view.enable_updates()
+        #else:
+        #    self._list_view.disable_updates()
         self._volumes_toolbar.set_sensitive(sensitive_state)
 
     def freeze_ui(self):
