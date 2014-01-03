@@ -20,7 +20,6 @@ import errno
 import subprocess
 from datetime import datetime
 import time
-import shutil
 import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
@@ -634,11 +633,11 @@ def delete(object_id):
         deleted.send(None, object_id=object_id)
 
 
-def copy(metadata, mount_point):
+def copy(metadata, mount_point, ready_callback=None):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
-    if mount_point == '/' and metadata['icon-color'] == '#000000,#ffffff':
+    if mount_point == '/' and metadata.get('icon-color') == '#000000,#ffffff':
         settings = Gio.Settings('org.sugarlabs.user')
         metadata['icon-color'] = settings.get_string('color')
     file_path = get_file(metadata['uid'])
@@ -648,12 +647,25 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    return write(metadata, file_path, transfer_ownership=False)
+    write(metadata, file_path, transfer_ownership=False,
+          ready_callback=ready_callback)
 
 
-def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
+def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
+          ready_callback=None):
     """Creates or updates an entry for that id
     """
+    def created_reply_handler(object_id):
+        if ready_callback:
+            ready_callback(metadata, file_path, object_id)
+
+    def updated_reply_handler():
+        if ready_callback:
+            ready_callback(metadata, file_path, metadata['uid'])
+
+    def error_handler(error):
+        logging.error('Could not create/update datastore entry')
+
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
                   update_mtime)
     if update_mtime:
@@ -662,18 +674,21 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
 
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
-            object_id = _get_datastore().update(metadata['uid'],
-                                                dbus.Dictionary(metadata),
-                                                file_path,
-                                                transfer_ownership)
+            _get_datastore().update(metadata['uid'],
+                                    dbus.Dictionary(metadata),
+                                    file_path,
+                                    transfer_ownership,
+                                    reply_handler=updated_reply_handler,
+                                    error_handler=error_handler)
         else:
-            object_id = _get_datastore().create(dbus.Dictionary(metadata),
-                                                file_path,
-                                                transfer_ownership)
+            _get_datastore().create(dbus.Dictionary(metadata),
+                                    file_path,
+                                    transfer_ownership,
+                                    reply_handler=created_reply_handler,
+                                    error_handler=error_handler)
     else:
-        object_id = _write_entry_on_external_device(metadata, file_path)
-
-    return object_id
+        _write_entry_on_external_device(
+            metadata, file_path, ready_callback=ready_callback)
 
 
 def _rename_entry_on_external_device(file_path, destination_path,
@@ -696,7 +711,7 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
-def _write_entry_on_external_device(metadata, file_path):
+def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     """Create and update an entry copied from the
     DS to an external storage device.
 
@@ -709,6 +724,14 @@ def _write_entry_on_external_device(metadata, file_path):
     handled failsafe.
 
     """
+    def _ready_cb():
+        if ready_callback:
+            ready_callback(metadata, file_path, destination_path)
+
+    def _splice_cb(*args):
+        created.send(None, object_id=destination_path)
+        _ready_cb()
+
     if 'uid' in metadata and os.path.exists(metadata['uid']):
         file_path = metadata['uid']
 
@@ -767,15 +790,21 @@ def _write_entry_on_external_device(metadata, file_path):
             os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
 
     if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
+        input_stream = Gio.File.new_for_path(file_path).read(None)
+        output_stream = Gio.File.new_for_path(destination_path)\
+            .append_to(Gio.FileCreateFlags.PRIVATE |
+                       Gio.FileCreateFlags.REPLACE_DESTINATION, None)
+
+        # TODO: use Gio.File.copy_async, when implemented
+        output_stream.splice_async(
+            input_stream,
+            Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+            Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+            GLib.PRIORITY_LOW, None, _splice_cb, None)
     else:
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
-
-    object_id = destination_path
-    created.send(None, object_id=object_id)
-
-    return object_id
+        _ready_cb()
 
 
 def get_file_name(title, mime_type):
