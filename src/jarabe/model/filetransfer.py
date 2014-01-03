@@ -57,66 +57,6 @@ CHANNEL_TYPE_FILE_TRANSFER = \
 new_file_transfer = dispatch.Signal()
 
 
-# TODO Move to use splice_async() in Sugar 0.88
-class StreamSplicer(GObject.GObject):
-    _CHUNK_SIZE = 10240  # 10K
-    __gsignals__ = {
-        'finished': (GObject.SignalFlags.RUN_FIRST,
-                     None,
-                     ([])),
-    }
-
-    def __init__(self, input_stream, output_stream):
-        GObject.GObject.__init__(self)
-
-        self._input_stream = input_stream
-        self._output_stream = output_stream
-        self._pending_buffers = []
-
-    def start(self):
-        self._input_stream.read_bytes_async(
-            self._CHUNK_SIZE, GLib.PRIORITY_LOW,
-            None, self.__read_async_cb, None)
-
-    def __read_async_cb(self, input_stream, result, user_data):
-        data = input_stream.read_bytes_finish(result)
-
-        if data is None:
-            # TODO: an error occured. Report something
-            logging.error('An error occured in the file transfer.')
-        elif data.get_size() == 0:
-            # We read the file completely
-            logging.debug('Closing input stream. Reading finished.')
-            self._input_stream.close(None)
-        else:
-            logging.debug('Data received (bytes): %s', data.get_size())
-            self._pending_buffers.append(data)
-            self._input_stream.read_bytes_async(
-                self._CHUNK_SIZE, GLib.PRIORITY_LOW,
-                None, self.__read_async_cb, None)
-        self._write_next_buffer()
-
-    def __write_async_cb(self, output_stream, result, user_data):
-        size = output_stream.write_bytes_finish(result)
-        logging.debug('Size written (bytes): %s', size)
-
-        if not self._pending_buffers and \
-                not self._output_stream.has_pending() and \
-                not self._input_stream.has_pending():
-            logging.debug('Closing output stream. Writing finished.')
-            output_stream.close(None)
-            self.emit('finished')
-        else:
-            self._write_next_buffer()
-
-    def _write_next_buffer(self):
-        if self._pending_buffers and not self._output_stream.has_pending():
-            data = self._pending_buffers.pop(0)
-            self._output_stream.write_bytes_async(
-                data, GLib.PRIORITY_LOW, None,
-                self.__write_async_cb, None)
-
-
 class BaseFileTransfer(GObject.GObject):
 
     def __init__(self, connection):
@@ -236,9 +176,11 @@ class IncomingFileTransfer(BaseFileTransfer):
             else:
                 output_stream = destination_file.append_to()
 
-            # TODO: Use splice_async when it gets implemented
-            self._splicer = StreamSplicer(input_stream, output_stream)
-            self._splicer.start()
+            output_stream.splice_async(
+                input_stream,
+                Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+                Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+                GLib.PRIORITY_LOW, None, None, None)
 
 
 class OutgoingFileTransfer(BaseFileTransfer):
@@ -298,9 +240,11 @@ class OutgoingFileTransfer(BaseFileTransfer):
             if self.initial_offset > 0:
                 input_stream.skip(self.initial_offset)
 
-            # TODO: Use splice_async when it gets implemented
-            self._splicer = StreamSplicer(input_stream, output_stream)
-            self._splicer.start()
+            output_stream.splice_async(
+                input_stream,
+                Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+                Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+                GLib.PRIORITY_LOW, None, None, None)
 
     def cancel(self):
         self.channel[CHANNEL].Close()
@@ -378,9 +322,11 @@ if __name__ == '__main__':
     test_output_stream = Gio.File.new_for_path(test_temp_file)\
         .append_to(Gio.FileCreateFlags.PRIVATE, None)
 
-    # TODO: Use splice_async when it gets implemented
-    splicer = StreamSplicer(test_input_stream, test_output_stream)
-    splicer.start()
+    test_output_stream.splice_async(
+        test_input_stream,
+        Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+        Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+        GLib.PRIORITY_LOW, None, None, None)
 
     loop = GObject.MainLoop()
     loop.run()
