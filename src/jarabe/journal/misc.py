@@ -191,6 +191,14 @@ def get_bundle_id_from_metadata(metadata):
 
 def resume(metadata, bundle_id=None, alert_window=None,
            force_bundle_downgrade=False):
+
+    def launch_activity(object_id):
+        launch(bundle, activity_id=activity_id, object_id=object_id,
+               color=get_icon_color(metadata), alert_window=alert_window)
+
+    def ready_callback(metadata, source, destination):
+        launch_activity(destination)
+
     registry = bundleregistry.get_registry()
 
     ds_bundle, downgrade_required = \
@@ -224,11 +232,9 @@ def resume(metadata, bundle_id=None, alert_window=None,
 
     if metadata.get('mountpoint', '/') == '/':
         object_id = metadata['uid']
+        launch_activity(object_id)
     else:
-        object_id = model.copy(metadata, '/')
-
-    launch(bundle, activity_id=activity_id, object_id=object_id,
-           color=get_icon_color(metadata), alert_window=alert_window)
+        model.copy(metadata, '/', ready_callback=ready_callback)
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
