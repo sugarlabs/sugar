@@ -57,7 +57,7 @@ def set_jabber(server):
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
 
     return 0
@@ -116,7 +116,7 @@ def clear_registration():
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
