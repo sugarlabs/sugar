@@ -32,7 +32,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import Icon, get_icon_file_name
-from sugar3.graphics.icon import PulsingIcon
+from sugar3.graphics.pulsingicon import PulsingIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
