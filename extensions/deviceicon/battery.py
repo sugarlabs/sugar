@@ -88,8 +88,7 @@ class DeviceView(TrayIcon):
         elif self._model.props.charging:
             status = _STATUS_CHARGING
             name += '-charging'
-            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                          style.COLOR_WHITE.get_svg()))
+
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
             if current_level <= _WARN_MIN_PERCENTAGE:
