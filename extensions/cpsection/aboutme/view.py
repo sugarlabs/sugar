@@ -159,9 +159,15 @@ class AboutMe(SectionView):
         self.set_spacing(style.DEFAULT_SPACING)
         self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._color_label = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._color_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._color_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._color_label = Gtk.Grid()
+        self._color_label.set_row_spacing(style.DEFAULT_SPACING)
+        self._color_label.set_column_spacing(style.DEFAULT_SPACING)
+
+        self._color_box = Gtk.Grid()
+        self._color_box.set_row_spacing(style.DEFAULT_SPACING)
+        self._color_box.set_column_spacing(style.DEFAULT_SPACING)
+
+        self._color_alert_box = Gtk.Grid()
         self._color_alert = None
 
         self._pickers = {
@@ -176,8 +182,12 @@ class AboutMe(SectionView):
         initial_color = XoColor(self._model.get_color_xo())
         self._update_pickers(initial_color)
 
-        self._nick_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._nick_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._nick_box = Gtk.Grid()
+        self._nick_box.set_row_spacing(style.DEFAULT_SPACING)
+        self._nick_box.set_column_spacing(style.DEFAULT_SPACING)
+
+        self._nick_alert_box = Gtk.Grid()
+
         self._nick_entry = None
         self._nick_alert = None
         self._setup_nick()
@@ -186,71 +196,80 @@ class AboutMe(SectionView):
     def _setup_nick(self):
         self._nick_entry = Gtk.Entry()
         self._nick_entry.set_width_chars(25)
-        self._nick_box.pack_start(self._nick_entry, False, True, 0)
+        self._nick_box.attach(self._nick_entry, 0, 0, 1, 1)
         self._nick_entry.show()
 
-        label_entry_error = Gtk.Label()
-        self._group.add_widget(label_entry_error)
-        self._nick_alert_box.pack_start(label_entry_error, False, True, 0)
-        label_entry_error.show()
-
         self._nick_alert = InlineAlert()
-        self._nick_alert_box.pack_start(self._nick_alert, True, True, 0)
+        self._nick_alert_box.attach(self._nick_alert, 0, 0, 1, 1)
         if 'nick' in self.restart_alerts:
             self._nick_alert.props.msg = self.restart_msg
             self._nick_alert.show()
 
         self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._nick_box)
+
+        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_alert.add(self._nick_alert_box)
+
         self.pack_start(self._center_in_panel, False, False, 0)
-        self.pack_start(self._nick_alert_box, False, False, 0)
+        self.pack_start(center_alert, False, False, 0)
         self._nick_box.show()
         self._nick_alert_box.show()
         self._center_in_panel.show()
+        center_alert.show()
 
     def _setup_color(self):
         label_color = Gtk.Label(label=_('Click to change your color:'))
         label_color.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         self._group.add_widget(label_color)
-        self._color_label.pack_start(label_color, False, True, 0)
+        self._color_label.attach(label_color, 0, 0, 1, 1)
         label_color.show()
 
+        current = 1
         for picker_index in sorted(self._pickers.keys()):
             if picker_index == _CURRENT_COLOR:
                 left_separator = Gtk.SeparatorToolItem()
+                self._color_box.attach(left_separator, current, 0, 1, 1)
                 left_separator.show()
-                self._color_box.pack_start(left_separator, False, True, 0)
+                current += 1
 
             picker = self._pickers[picker_index]
             picker.show()
-            self._color_box.pack_start(picker, False, True, 0)
+            self._color_box.attach(picker, current, 0, 1, 1)
+            current += 1
 
             if picker_index == _CURRENT_COLOR:
                 right_separator = Gtk.SeparatorToolItem()
                 right_separator.show()
-                self._color_box.pack_start(right_separator, False, True, 0)
+                self._color_box.attach(right_separator, current, 0, 1, 1)
+                current += 1
 
         label_color_error = Gtk.Label()
         self._group.add_widget(label_color_error)
-        self._color_alert_box.pack_start(label_color_error, False, True, 0)
+        self._color_alert_box.attach(label_color_error, 0, 0, 1, 1)
         label_color_error.show()
 
         self._color_alert = InlineAlert()
-        self._color_alert_box.pack_start(self._color_alert, True, True, 0)
+        self._color_alert_box.attach(self._color_alert, 0, 0, 1, 1)
         if 'color' in self.restart_alerts:
             self._color_alert.props.msg = self.restart_msg
             self._color_alert.show()
 
         self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         self._center_in_panel.add(self._color_box)
+
+        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_alert.add(self._color_alert_box)
+
         self.pack_start(self._color_label, False, False, 0)
         self.pack_start(self._center_in_panel, False, False, 0)
-        self.pack_start(self._color_alert_box, False, False, 0)
+        self.pack_start(center_alert, False, False, 0)
         self._color_label.show()
         self._color_box.show()
         self._color_alert_box.show()
         self._center_in_panel.show()
+        center_alert.show()
 
     def setup(self):
         self._nick_entry.set_text(self._model.get_nick())
