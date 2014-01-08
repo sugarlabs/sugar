@@ -94,6 +94,6 @@ def set_automatic_pm(enabled):
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/power/automatic', enabled)
     return

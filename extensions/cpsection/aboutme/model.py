@@ -53,7 +53,7 @@ def set_nick(nick):
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/nick', nick)
     return 1
 
@@ -116,7 +116,7 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)
     return 1
 
@@ -135,6 +135,6 @@ def set_color_xo(color):
 
     # DEPRECATED
     from gi.repository import GConf
-    client = GConf.CLient.get_default()
+    client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)
     return 1
