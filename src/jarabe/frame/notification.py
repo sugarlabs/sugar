@@ -20,8 +20,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
-
-from jarabe.view.pulsingicon import PulsingIcon
+from sugar3.graphics.icon import PulsingIcon
 
 
 class NotificationIcon(Gtk.EventBox):

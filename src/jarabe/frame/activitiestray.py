@@ -32,6 +32,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import Icon, get_icon_file_name
+from sugar3.graphics.icon import PulsingIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
@@ -47,7 +48,6 @@ from jarabe.model import invites
 from jarabe.model import bundleregistry
 from jarabe.model import filetransfer
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
-from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 import jarabe.frame
