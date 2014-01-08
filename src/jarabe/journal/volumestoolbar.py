@@ -17,6 +17,7 @@
 import logging
 import os
 import statvfs
+import hashlib
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -42,6 +43,19 @@ from jarabe.view.palettes import VolumePalette
 
 
 _JOURNAL_0_METADATA_DIR = '.olpc.store'
+
+
+def _get_mount_color(mount):
+    sha_hash = hashlib.sha1()
+    data = mount.get_root().get_path()
+    sha_hash.update(data)
+    digest = hash(sha_hash.digest())
+    index = digest % len(colors)
+
+    color = XoColor('%s,%s' %
+        (colors[index][0],
+        colors[index][1]))
+    return color
 
 
 def _get_id(document):
@@ -321,7 +335,8 @@ class VolumeButton(BaseButton):
         self.props.icon_name = get_mount_icon_name(mount,
                                                    Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        self.props.xo_color = profile.get_color()
+        color = _get_mount_color(self._mount)
+        self.props.xo_color = color
 
     def create_palette(self):
         palette = VolumePalette(self._mount)

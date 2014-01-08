@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +19,7 @@ from gettext import gettext as _
 from gettext import ngettext
 import logging
 import os
+import hashlib
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -30,6 +32,7 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import colors
 from sugar3.graphics.alert import Alert
 from sugar3 import mime
 from sugar3 import profile
@@ -41,6 +44,19 @@ from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
+
+
+def _get_mount_color(mount):
+    sha_hash = hashlib.sha1()
+    data = mount.get_root().get_path()
+    sha_hash.update(data)
+    digest = hash(sha_hash.digest())
+    index = digest % len(colors)
+
+    color = XoColor('%s,%s' %
+        (colors[index][0],
+        colors[index][1]))
+    return color
 
 
 class ObjectPalette(Palette):
@@ -309,8 +325,11 @@ class CopyMenuBuilder():
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
         icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
-        volume_menu.set_image(Icon(icon_size=Gtk.IconSize.MENU,
-                                   icon_name=icon_name))
+        color = _get_mount_color(mount)
+        icon = Icon(icon_size=Gtk.IconSize.MENU,
+                icon_name=icon_name,
+                xo_color=color)
+        volume_menu.set_image(icon)
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
         self._volumes[mount.get_root().get_path()] = volume_menu
