@@ -42,6 +42,7 @@ from sugar3.bundle.activitybundle import ActivityBundle
 from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 from sugar3 import mime
+from sugar3.graphics.alert import Alert
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.alert import NotifyAlert
 
@@ -334,9 +335,9 @@ class DocumentButton(RadioToolButton):
 
     __gsignals__ = {
         'add-alert': (GObject.SignalFlags.RUN_FIRST, None,
-                ([object])),
+                     ([object])),
         'remove-alert': (GObject.SignalFlags.RUN_FIRST, None,
-                ([object])),
+                        ([object])),
     }
 
     def __init__(self, file_name, document_path, title, bundle=False):
@@ -382,7 +383,13 @@ class DocumentButton(RadioToolButton):
 
             def internal_callback():
                 self.emit('remove-alert', alert)
-                GObject.idle_add(self.__copy_to_home_cb)
+                GObject.idle_add(self.__copy_to_home_cb, new_alert)
+
+            alert.hide()
+            new_alert = Alert()
+            new_alert.props.title = _("Duplicate activity")
+            new_alert.props.msg = _("Copying...")
+            self.emit('add-alert', new_alert)
 
             GObject.idle_add(internal_callback)
         else:
@@ -417,12 +424,13 @@ class DocumentButton(RadioToolButton):
         alert.connect('response', remove_alert)
         self.emit('add-alert', alert)
 
-    def __copy_to_home_cb(self):
+    def __copy_to_home_cb(self, alert):
         """Make a local copy of the activity bundle in user_activities_path"""
         user_activities_path = get_user_activities_path()
         nick = customizebundle.generate_unique_id()
         new_basename = '%s_copy_of_%s' % (
             nick, os.path.basename(self._document_path))
+
         if not os.path.exists(os.path.join(user_activities_path,
                                            new_basename)):
             exists = False
@@ -433,6 +441,8 @@ class DocumentButton(RadioToolButton):
         else:
             exists = True
             _logger.debug('%s already exists', new_basename)
+
+        self.emit('remove-alert', alert)
 
         watch = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
         gdk_window = self.get_root_window()
@@ -496,10 +506,10 @@ class Toolbar(Gtk.Toolbar):
                                     document_path)
 
             document_button.connect('add-alert',
-                lambda x, y: self.emit('add-alert', y))
+                                    lambda x, y: self.emit('add-alert', y))
 
             document_button.connect('remove-alert',
-                lambda x, y: self.emit('remove-alert', y))
+                                    lambda x, y: self.emit('remove-alert', y))
 
             self.insert(document_button, -1)
             document_button.show()
@@ -509,10 +519,10 @@ class Toolbar(Gtk.Toolbar):
             activity_button = DocumentButton(file_name, bundle_path, title,
                                              bundle=True)
             activity_button.connect('add-alert',
-                lambda x, y: self.emit('add-alert', y))
+                                    lambda x, y: self.emit('add-alert', y))
 
             activity_button.connect('remove-alert',
-                lambda x, y: self.emit('remove-alert', y))
+                                    lambda x, y: self.emit('remove-alert', y))
 
             icon = Icon(file=file_name,
                         icon_size=Gtk.IconSize.LARGE_TOOLBAR,
