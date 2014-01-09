@@ -37,6 +37,30 @@
 	</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/gender</key>
+      <applyto>/desktop/sugar/user/gender</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>User Gender</short>
+        <long>Gender of the Sugar user, either male, female, or unassigned
+	</long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/desktop/sugar/user/birth_timestamp</key>
+      <applyto>/desktop/sugar/user/birth_timestamp</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default></default>
+      <locale name="C">
+        <short>User Birth Timestamp</short>
+        <long>Timestamp of Sugar user (time.time() minus the user's age times the number of seconds in a year
+	</long>
+      </locale>
+    </schema>
 
     <schema>
       <key>/schemas/desktop/sugar/sound/volume</key>
