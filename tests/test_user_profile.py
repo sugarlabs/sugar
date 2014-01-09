@@ -33,7 +33,7 @@ class TestUserProfile(unittest.TestCase):
         self.start_nick = model.get_nick()
         self.start_color = model.get_color()
 
-    def test_user_profile(self):
+    def test_user_gender_age(self):
         for gender in GENDERS:
             for age in AGES:
                 model.set_gender(gender)
@@ -41,11 +41,13 @@ class TestUserProfile(unittest.TestCase):
                 self.assertEqual(model.get_age(), age)
                 self.assertEqual(model.get_gender(), gender)
 
+    def test_user_nick(self):
         for current in range(1, 26):
             new_nick = ''.join(random.sample(CHARSET * current, current))
             model.set_nick(new_nick)
             self.assertEqual(model.get_nick(), new_nick)
 
+    def test_user_color(self):
         for current in range(10):
             new_color = random.choice(colors)
             new_color = "%s,%s" % (new_color[0], new_color[1])
