@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +25,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -71,6 +73,34 @@ class ObjectPalette(Palette):
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
+
+        if metadata.get('description', ''):
+            label = Gtk.Label()
+            label.set_max_width_chars(style.MENU_WIDTH_CHARS)
+            label.set_justify(Gtk.Justification.LEFT)
+            label.set_ellipsize(Pango.EllipsizeMode.END)
+            label.set_line_wrap(True)
+
+            description = str(metadata.get('description', ''))
+            description = description.replace('\n', ' ')
+
+            if len(description) >= style.MENU_WIDTH_CHARS:
+                import textwrap
+                description = '\n'.join(textwrap.wrap(description,
+                                        len(description) / 2))
+            label.set_text(description)
+            label.modify_fg(Gtk.StateType.INSENSITIVE,
+                            Gdk.color_parse('white'))
+
+            item = Gtk.MenuItem()
+            item.add(label)
+            item.set_sensitive(False)
+            self.menu.append(item)
+            item.show_all()
+
+            separator = Gtk.SeparatorMenuItem()
+            self.menu.append(separator)
+            separator.show()
 
         if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
