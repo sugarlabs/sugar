@@ -578,7 +578,7 @@ class BatchOperator(GObject.GObject):
             self._journalactivity.remove_alert(alert)
             # this is only in the case the operation already started
             # and the user want stop it.
-            self._stop_batch_operation()
+            self._stop_batch_execution()
         else:
             GObject.idle_add(self._prepare_batch_execution)
 
