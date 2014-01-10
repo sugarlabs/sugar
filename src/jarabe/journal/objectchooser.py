@@ -96,6 +96,7 @@ class ObjectChooser(Gtk.Window):
             self._list_view.connect('entry-activated',
                                     self.__entry_activated_cb)
             self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
+            self._list_view.set_favorite_read_only(True)
             vbox.pack_start(self._list_view, True, True, 0)
             self._list_view.show()
         else:

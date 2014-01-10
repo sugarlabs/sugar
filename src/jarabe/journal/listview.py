@@ -79,6 +79,7 @@ class BaseListView(Gtk.Bin):
         self._progress_bar = None
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
+        self._is_favorite_read_only = False
 
         Gtk.Bin.__init__(self)
 
@@ -286,6 +287,9 @@ class BaseListView(Gtk.Bin):
         progress = tree_model[tree_iter][ListModel.COLUMN_PROGRESS]
         cell.props.visible = progress < 100
 
+    def set_favorite_read_only(self, read_only):
+        self._is_favorite_read_only = read_only
+
     def __favorite_set_data_cb(self, column, cell, tree_model,
                                tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
@@ -295,6 +299,9 @@ class BaseListView(Gtk.Bin):
             cell.props.xo_color = None
 
     def __favorite_clicked_cb(self, cell, path):
+        if self._is_favorite_read_only:
+            return
+
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         if not model.is_editable(metadata):
