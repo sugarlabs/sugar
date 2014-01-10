@@ -220,6 +220,84 @@ def _gconf_to_gsettings_data_convert():
     except subprocess.CalledProcessError:
         logging.error('Unable to convert data.')
 
+    # TODO: this function should be removed after some time
+    # perhaps this function has to be executed only once
+    # and not every time sugar is ran
+
+    from gi.repository import GConf
+    client = GConf.Client.get_default()
+
+    # Now this isn't good
+    # keys in /desktop/sugar/journal/defaults are mime types
+    # which are of the sort text/plain
+    # so, GConf is thinking test is a directory and the key is plain
+    # while the key should be 'text/plain'
+    entries = client.all_entries('/desktop/sugar/journal/defaults')
+    for directory in client.all_dirs('/desktop/sugar/journal/defaults'):
+        entries.extend(client.all_entries(directory))
+
+    gconf_defaults = {}
+    trim = '/desktop/sugar/journal/defaults/'
+    ltrim = len(trim)
+    for entry in entries:
+        key = entry.get_key()
+        if key.startswith(trim):  # always True
+            key = key[ltrim:]
+        # entry.get_value().get_string() causes sugar to crash later
+        # not on the call, but after some random time
+        # was impossible to debug (almost impossible)
+        value = entry.value.get_string()
+        gconf_defaults[key] = value
+
+    settings = Gio.Settings('org.sugarlabs.journal')
+    defaults = settings.get_value('defaults').unpack()
+    gconf_defaults.update(defaults)
+    defaults = gconf_defaults
+    variant = GLib.Variant('a{ss}', defaults)
+    settings.set_value('defaults', variant)
+
+    # Merge several keys into one... yay!
+    options = client.get('/desktop/sugar/desktop/view-icons')
+    gconf_view_icons = []
+    if options:
+        gconf_view_icons = [gval.get_string() for gval in options.get_list()]
+
+    # assume view-icons is the leading key
+    number_of_views = len(gconf_view_icons)
+
+    entries = client.all_entries('/desktop/sugar/desktop')
+    layouts = []
+    trim = '/desktop/sugar/desktop/favorites_layout'
+    for entry in entries:
+        key = entry.get_key()
+        if key.startswith(trim):
+            # entry.get_value().get_string() causes sugar to crash later
+            # not on the call, but after some random time
+            # was impossible to debug (almost impossible)
+            value = entry.value.get_string()
+            layouts.append((key, value))
+    layouts.sort()
+    gconf_layouts = [layout[1] for layout in layouts][:number_of_views]
+
+    options = client.get('/desktop/sugar/desktop/favorite-icons')
+    gconf_fav_icons = []
+    if options:
+        gconf_fav_icons = [gval.get_string() for gval in options.get_list()]
+        gconf_fav_icons = gconf_fav_icons[:number_of_views]
+    else:
+        while len(gconf_fav_icons) < number_of_views:
+            gconf_fav_icons.append('emblem-favorite')
+
+    settings = Gio.Settings('org.sugarlabs.desktop')
+    homeviews = settings.get_value('homeviews').unpack()
+    gsettings_view_icons = [view['view-icon'] for view in homeviews]
+    for i, view_icon in enumerate(gconf_view_icons):
+        if view_icon not in gsettings_view_icons:
+            homeviews.append({'view-icon': view_icon,
+                'layout': gconf_layouts[i], 'favorite-icon': gconf_fav_icons[i]})
+    variant = GLib.Variant('aa{ss}', homeviews)
+    settings.set_value('homeviews', variant)
+
 
 def setup_locale():
     # NOTE: This needs to happen early because some modules register

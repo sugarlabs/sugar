@@ -14,14 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import re
+from gi.repository import GLib
+from gi.repository import Gio
 
-# FIXME: find a way to port this to GSettings
-from gi.repository import GConf
-
-
-_DEFAULTS_KEY = '/desktop/sugar/journal/defaults'
-_GCONF_INVALID_CHARS = re.compile('[^a-zA-Z0-9-_/.]')
+_JOURNAL_DIR = 'org.sugarlabs.journal'
+_DEFAULTS_KEY = 'defaults'
 
 _instance = None
 
@@ -30,13 +27,17 @@ class MimeRegistry(object):
 
     def __init__(self):
         # TODO move here all mime_type related code from jarabe modules
-        self._gconf = GConf.Client.get_default()
+        self._settings = Gio.Settings(_JOURNAL_DIR)
 
     def get_default_activity(self, mime_type):
-        return self._gconf.get_string(_key_name(mime_type))
+        dictionary = self._settings.get_value(_DEFAULTS_KEY).unpack()
+        return dictionary.get(mime_type)
 
     def set_default_activity(self, mime_type, bundle_id):
-        self._gconf.set_string(_key_name(mime_type), bundle_id)
+        dictionary = self._settings.get_value(_DEFAULTS_KEY).unpack()
+        dictionary[mime_type] = bundle_id
+        variant = GLib.Variant('a{ss}', dictionary)
+        self._settings.set_value(_DEFAULTS_KEY, variant)
 
 
 def get_registry():
@@ -44,8 +45,3 @@ def get_registry():
     if _instance is None:
         _instance = MimeRegistry()
     return _instance
-
-
-def _key_name(mime_type):
-    mime_type = _GCONF_INVALID_CHARS.sub('_', mime_type)
-    return '%s/%s' % (_DEFAULTS_KEY, mime_type)

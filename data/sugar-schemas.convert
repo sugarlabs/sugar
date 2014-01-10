@@ -23,10 +23,6 @@ mute = /desktop/sugar/sound/mute
 [org.sugarlabs.date]
 timezone = /desktop/sugar/date/timezone
 
-[org.sugarlabs.desktop]
-favorites-layout = /desktop/sugar/desktop/favorites-layout
-favorites-mode = /desktop/sugar/desktop/favorites-mode
-
 [org.sugarlabs.frame]
 edge-delay = /desktop/sugar/frame/edge_delay
 corner-delay = /desktop/sugar/frame/corner_delay

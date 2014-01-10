@@ -37,6 +37,7 @@
             <description>This int is used to set a limit to the number of open activities. By default (0), there is no limit.</description>
         </key>
         <child name="user" schema="org.sugarlabs.user" />
+        <child name="journal" schema="org.sugarlabs.journal" />
         <child name="sound" schema="org.sugarlabs.sound" />
         <child name="date" schema="org.sugarlabs.date" />
         <child name="desktop" schema="org.sugarlabs.desktop" />
@@ -80,6 +81,13 @@
             <description>The opacity of the background image.</description>
         </key>
     </schema>
+    <schema id="org.sugarlabs.journal" path="/org/sugarlabs/journal/">
+        <key name="defaults" type="a{ss}">
+            <default>{}</default>
+            <summary>TODO: add summary</summary>
+            <description>TODO: add description</description>
+        </key>
+    </schema>
     <schema id="org.sugarlabs.sound" path="/org/sugarlabs/sound/">
         <key name="volume" type="i">
             <default>80</default>
@@ -100,25 +108,10 @@
         </key>
     </schema>
     <schema id="org.sugarlabs.desktop" path="/org/sugarlabs/desktop/">
-        <key name="favorites-layout" type="s">
-            <default>'ring-layout'</default>
-            <summary>Favorites Layout</summary>
-            <description>Layout of the favorites view.</description>
-        </key>
-        <key name="favorites-mode" type="b">
-            <default>false</default>
-            <summary>Favorites resume mode</summary>
-            <description>When in resume mode, clicking on a favorite icon will cause the last entry for that activity to be resumed.</description>
-        </key>
-        <key name="favorite-icons" type="as">
-            <default>[]</default>
-            <summary>TODO: add summary</summary>
-            <description>TODO: add description</description>
-        </key>
-        <key name="view-icons" type="as">
-            <default>[]</default>
-            <summary>TODO: add summary</summary>
-            <description>TODO: add description</description>
+        <key name="homeviews" type="aa{ss}">
+            <default>[{'layout': 'ring-layout', 'view-icon': 'view-radial', 'favorite-icon': 'emblem-favorite'}]</default>
+            <summary>Home views TODO: update summary</summary>
+            <description>List of home views, including the view icon, the favorite icon and the layout</description>
         </key>
     </schema>
     <schema id="org.sugarlabs.frame" path="/org/sugarlabs/frame/">

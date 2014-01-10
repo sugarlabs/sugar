@@ -20,12 +20,8 @@ from gi.repository import Gio
 
 _desktop_view_instance = None
 
-_VIEW_ICONS = ['view-radial']
-_FAVORITE_ICONS = ['emblem-favorite']
-
 _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
-_VIEW_KEY = 'view-icons'
-_FAVORITE_KEY = 'favorite-icons'
+_HOMEVIEWS_KEY = 'homeviews'
 
 
 class DesktopViewModel(GObject.GObject):
@@ -45,7 +41,7 @@ class DesktopViewModel(GObject.GObject):
         self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
         self._settings.connect(
-            'changed::%s' % _VIEW_KEY, self.__conf_changed_cb, None)
+            'changed::%s' % _HOMEVIEWS_KEY, self.__conf_changed_cb, None)
 
     def get_view_icons(self):
         return self._view_icons
@@ -66,18 +62,10 @@ class DesktopViewModel(GObject.GObject):
         if self._view_icons is not None and not update:
             return
 
-        self._view_icons = self._settings.get_strv(_VIEW_KEY)
-        if not self._view_icons:
-            self._view_icons = _VIEW_ICONS[:]
-        self._number_of_views = len(self._view_icons)
-
-        self._favorite_icons = self._settings.get_strv(_FAVORITE_KEY)
-        if not self._favorite_icons:
-            self._favorite_icons = _FAVORITE_ICONS[:]
-
-        if len(self._favorite_icons) < self._number_of_views:
-            for i in range(self._number_of_views - len(self._favorite_icons)):
-                self._favorite_icons.append(_FAVORITE_ICONS[0])
+        homeviews = self._settings.get_value(_HOMEVIEWS_KEY).unpack()
+        self._number_of_views = len(homeviews)
+        self._view_icons = [view['view-icon'] for view in homeviews]
+        self._favorite_icons = [view['favorite-icon'] for view in homeviews]
 
         self.emit('desktop-view-icons-changed')
 
