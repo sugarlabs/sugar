@@ -49,6 +49,7 @@ class ClipboardIcon(RadioToolButton):
         self._notif_icon = None
         self._current_percent = None
 
+        # FIXME: pixel_size=style.STANDARD_ICON_SIZE don't work.
         self._icon = Icon()
         color = profile.get_color()
         self._icon.props.xo_color = color

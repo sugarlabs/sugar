@@ -3,6 +3,7 @@
 # Copyright (C) 2008-2013 Sugar Labs
 # Copyright (C) 2013 Daniel Francis
 # Copyright (C) 2013 Walter Bender
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -542,7 +543,7 @@ class FavoritePalette(ActivityPalette):
 
         self.props.icon = Icon(file=activity_info.get_icon(),
                                xo_color=xo_color,
-                               icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                               pixel_size=style.STANDARD_ICON_SIZE)
 
         if journal_entries:
             title = journal_entries[0]['title']

@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,7 +60,7 @@ class ObjectPalette(Palette):
         self._journalactivity = journalactivity
         self._metadata = metadata
 
-        activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+        activity_icon = Icon(pixel_size=style.STANDARD_ICON_SIZE)
         activity_icon.props.file = misc.get_icon_name(metadata)
         color = misc.get_icon_color(metadata)
         activity_icon.props.xo_color = color
@@ -98,7 +99,7 @@ class ObjectPalette(Palette):
 
         menu_item = MenuItem(_('Copy to'))
         icon = Icon(icon_name='edit-copy', xo_color=color,
-                    icon_size=Gtk.IconSize.MENU)
+                    pixel_size=style.SMALL_ICON_SIZE)
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
@@ -109,7 +110,7 @@ class ObjectPalette(Palette):
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate', xo_color=color,
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             menu_item.connect('activate', self.__duplicate_activate_cb)
             self.menu.append(menu_item)
@@ -243,7 +244,7 @@ class CopyMenuBuilder():
         if self._add_clipboard_menu:
             clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
             clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                          icon_size=Gtk.IconSize.MENU))
+                                          pixel_size=style.SMALL_ICON_SIZE))
             clipboard_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(clipboard_menu)
             clipboard_menu.show()
@@ -254,7 +255,7 @@ class CopyMenuBuilder():
                                       self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=Gtk.IconSize.MENU))
+                                        pixel_size=style.SMALL_ICON_SIZE))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(journal_menu)
             journal_menu.show()
@@ -266,7 +267,7 @@ class CopyMenuBuilder():
                                         self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
-                                          icon_size=Gtk.IconSize.MENU))
+                                          pixel_size=style.SMALL_ICON_SIZE))
             documents_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(documents_menu)
             documents_menu.show()
@@ -308,8 +309,8 @@ class CopyMenuBuilder():
         volume_menu = VolumeMenu(self._journalactivity,
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
-        icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
-        volume_menu.set_image(Icon(icon_size=Gtk.IconSize.MENU,
+        icon_name = misc.get_mount_icon_name(mount, style.SMALL_ICON_SIZE)
+        volume_menu.set_image(Icon(pixel_size=style.SMALL_ICON_SIZE,
                                    icon_name=icon_name))
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
@@ -481,7 +482,7 @@ class StartWithMenu(Gtk.Menu):
         for activity_info in misc.get_activities(metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=Gtk.IconSize.MENU))
+                                     pixel_size=style.SMALL_ICON_SIZE))
             menu_item.connect('activate', self.__item_activate_cb,
                               activity_info.get_bundle_id())
             self.append(menu_item)
@@ -512,7 +513,7 @@ class BuddyPalette(Palette):
 
         nick, colors = buddy
         buddy_icon = Icon(icon_name='computer-xo',
-                          icon_size=style.STANDARD_ICON_SIZE,
+                          pixel_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
         Palette.__init__(self, primary_text=GLib.markup_escape_text(nick),
