@@ -27,6 +27,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import EventPulsingIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import xocolor
 from sugar3.graphics import style
@@ -35,7 +36,7 @@ from sugar3.graphics import palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3 import profile
 
-from jarabe.view.pulsingicon import EventPulsingIcon
+
 from jarabe.desktop import keydialog
 from jarabe.util.normalize import normalize_string
 from jarabe.model import network
