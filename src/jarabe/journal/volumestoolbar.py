@@ -38,6 +38,7 @@ from sugar3 import profile
 
 from jarabe.journal import model
 from jarabe.journal.misc import get_mount_icon_name
+from jarabe.journal.misc import get_mount_color
 from jarabe.view.palettes import VolumePalette
 
 
@@ -321,7 +322,8 @@ class VolumeButton(BaseButton):
         self.props.icon_name = get_mount_icon_name(mount,
                                                    Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        self.props.xo_color = profile.get_color()
+        color = get_mount_color(self._mount)
+        self.props.xo_color = color
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
