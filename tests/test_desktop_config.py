@@ -23,6 +23,7 @@ from jarabe.model import desktop
 _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
 _VIEW_KEY = 'view-icons'
 _FAVORITE_KEY = 'favorite-icons'
+_FAVORITE_NAME_KEY = 'favorite-names'
 
 _VIEW_ICONS = ['view-radial']
 _MOCK_LIST = ['view-radial', 'view-random']
@@ -36,6 +37,7 @@ class TestDesktopConfig(unittest.UITestCase):
         settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._save_view_icons = settings.get_strv(_VIEW_KEY)
         self._save_favorite_icons = settings.get_strv(_FAVORITE_KEY)
+        self._save_favorite_names = settings.get_strv(_FAVORITE_NAME_KEY)
 
         self.model = desktop.get_model()
         self.model.connect('desktop-view-icons-changed',
@@ -53,6 +55,9 @@ class TestDesktopConfig(unittest.UITestCase):
 
         favorite_icons = desktop.get_favorite_icons()
         self.assertTrue(len(favorite_icons) >= len(self.target))
+
+        favorite_names = desktop.get_favorite_names()
+        self.assertTrue(len(favorite_names) == len(self.target))
 
     def test_unset_views(self):
         self.target = _VIEW_ICONS
@@ -77,3 +82,8 @@ class TestDesktopConfig(unittest.UITestCase):
             settings.set_strv(_FAVORITE_KEY, [])
         else:
             settings.set_strv(_FAVORITE_KEY, self._save_favorite_icons)
+
+        if self._save_favorite_names is None:
+            settings.set_strv(_FAVORITE_NAME_KEY, [])
+        else:
+            settings.set_strv(_FAVORITE_NAME_KEY, self._save_favorite_names)
