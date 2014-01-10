@@ -3,6 +3,7 @@
 # Copyright (C) 2008-2013 Sugar Labs
 # Copyright (C) 2013 Daniel Francis
 # Copyright (C) 2013 Walter Bender
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -384,7 +385,7 @@ class ClearMessageBox(Gtk.EventBox):
         button = Gtk.Button(label=_('Clear search'))
         button.connect('clicked', button_callback)
         button.props.image = Icon(icon_name='dialog-cancel',
-                                  icon_size=Gtk.IconSize.BUTTON)
+                                  pixel_size=style.SMALL_ICON_SIZE)
         button_box.pack_start(button, expand=True, fill=False, padding=0)
         button.show()
 
@@ -552,7 +553,7 @@ class ActivityListPalette(ActivityPalette):
             self._favorite_items.append(PaletteMenuItem())
             self._favorite_icons.append(
                 Icon(icon_name=desktop.get_favorite_icons()[i],
-                     icon_size=Gtk.IconSize.MENU))
+                     pixel_size=style.SMALL_ICON_SIZE))
             self._favorite_items[i].set_image(self._favorite_icons[i])
             self._favorite_icons[i].show()
             self._favorite_items[i].connect(

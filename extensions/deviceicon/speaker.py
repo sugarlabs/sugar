@@ -1,4 +1,5 @@
 # Copyright (C) 2008 Martin Dengler
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -95,7 +96,7 @@ class SpeakerPalette(Palette):
         box.show()
 
         self._mute_item = PaletteMenuItem('')
-        self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
+        self._mute_icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         self._mute_item.set_image(self._mute_icon)
         box.append_item(self._mute_item)
         self._mute_item.show()

@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -237,8 +238,8 @@ class ControlPanel(Gtk.Window):
         self._set_toolbar(self._section_toolbar)
 
         icon = self._section_toolbar.get_icon()
-        icon.set_from_icon_name(self._options[option]['icon'],
-                                Gtk.IconSize.LARGE_TOOLBAR)
+        icon.props.icon_name = self._options[option]['icon']
+        icon.props.pixel_size = style.STANDARD_ICON_SIZE
         icon.props.xo_color = self._options[option]['color']
         title = self._section_toolbar.get_title()
         title.set_text(self._options[option]['title'])

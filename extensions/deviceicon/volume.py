@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@ from gi.repository import Gio
 from gi.repository import Gtk
 
 from sugar3 import profile
+from sugar3.graphics import style
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -43,8 +45,7 @@ class DeviceView(TrayIcon):
     def __init__(self, mount):
 
         self._mount = mount
-        self._icon_name = get_mount_icon_name(mount,
-                                              Gtk.IconSize.LARGE_TOOLBAR)
+        self._icon_name = get_mount_icon_name(mount, style.STANDARD_ICON_SIZE)
         # TODO: retrieve the colors from the owner of the device
         color = profile.get_color()
 
@@ -59,7 +60,8 @@ class DeviceView(TrayIcon):
 
         menu_item = PaletteMenuItem(_('Show contents'))
         color = profile.get_color()
-        icon = Icon(icon_name=self._icon_name, icon_size=Gtk.IconSize.MENU,
+        icon = Icon(icon_name=self._icon_name,
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
         menu_item.set_image(icon)
         icon.show()

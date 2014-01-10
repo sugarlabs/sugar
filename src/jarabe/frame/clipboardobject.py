@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +24,7 @@ from gi.repository import Gtk
 from gettext import gettext as _
 from sugar3 import mime
 from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.graphics import style
 
 
 class ClipboardObject(object):
@@ -66,7 +68,7 @@ class ClipboardObject(object):
             for icon_name in icons.props.names:
                 icon_info = (
                     icon_theme.lookup_icon(icon_name,
-                                           Gtk.IconSize.LARGE_TOOLBAR, 0))
+                                           style.STANDARD_ICON_SIZE, 0))
                 if icon_info is not None:
                     icon_info.free()
                     return icon_name
