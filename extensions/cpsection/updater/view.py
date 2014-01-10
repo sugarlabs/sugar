@@ -1,5 +1,6 @@
 # Copyright (C) 2008, One Laptop Per Child
 # Copyright (C) 2009, Tomeu Vizoso
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -91,7 +92,7 @@ class ActivityUpdater(SectionView):
             self._update_box.refresh_button.connect(
                 'clicked',
                 self.__refresh_button_clicked_cb)
-            self._update_box.install_button.connect(
+            self._update_box.install_btn.connect(
                 'clicked',
                 self.__install_button_clicked_cb)
 
@@ -263,11 +264,11 @@ class UpdateBox(Gtk.VBox):
         bottom_box.pack_start(self.refresh_button, False, True, 0)
         self.refresh_button.show()
 
-        self.install_button = Gtk.Button(_('Install selected'))
-        self.install_button.props.image = Icon(icon_name='emblem-downloads',
-                                               icon_size=Gtk.IconSize.BUTTON)
-        bottom_box.pack_start(self.install_button, False, True, 0)
-        self.install_button.show()
+        self.install_btn = Gtk.Button(_('Install selected'))
+        self.install_btn.props.image = Icon(icon_name='emblem-downloads',
+                                            pixel_size=style.SMALL_ICON_SIZE)
+        bottom_box.pack_start(self.install_btn, False, True, 0)
+        self.install_btn.show()
 
         self._update_total_size_label()
 
@@ -287,9 +288,9 @@ class UpdateBox(Gtk.VBox):
     def _update_install_button(self):
         for row in self._update_list.props.model:
             if row[UpdateListModel.SELECTED]:
-                self.install_button.props.sensitive = True
+                self.install_btn.props.sensitive = True
                 return
-        self.install_button.props.sensitive = False
+        self.install_btn.props.sensitive = False
 
     def get_bundles_to_update(self):
         bundles_to_update = []

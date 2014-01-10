@@ -1,5 +1,6 @@
 # Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2009, Walter Bender
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,6 +37,7 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.alert import Alert
 from sugar3.graphics import iconentry
+from sugar3.graphics import style
 from sugar3 import mime
 from sugar3 import profile
 from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
@@ -411,7 +413,8 @@ class DetailToolbox(ToolbarBox):
 
         color = profile.get_color()
         self._copy = ToolButton()
-        icon = Icon(icon_name='edit-copy', xo_color=color)
+        icon = Icon(icon_name='edit-copy', xo_color=color,
+                    pixel_size=style.STANDARD_ICON_SIZE)
         self._copy.set_icon_widget(icon)
         icon.show()
         self._copy.set_tooltip(_('Copy to'))
@@ -420,7 +423,8 @@ class DetailToolbox(ToolbarBox):
         self._copy.show()
 
         self._duplicate = ToolButton()
-        icon = Icon(icon_name='edit-duplicate', xo_color=color)
+        icon = Icon(icon_name='edit-duplicate', xo_color=color,
+                    pixel_size=style.STANDARD_ICON_SIZE)
         self._duplicate.set_icon_widget(icon)
         self._duplicate.set_tooltip(_('Duplicate'))
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
@@ -479,10 +483,12 @@ class DetailToolbox(ToolbarBox):
         alert.props.title = erase_string
         alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
             % self._metadata['title']
-        icon = Icon(icon_name='dialog-cancel')
+        icon = Icon(icon_name='dialog-cancel',
+                    pixel_size=style.SMALL_ICON_SIZE)
         alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
         icon.show()
-        ok_icon = Icon(icon_name='dialog-ok')
+        ok_icon = Icon(icon_name='dialog-ok',
+                       pixel_size=style.SMALL_ICON_SIZE)
         alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
         ok_icon.show()
         alert.connect('response', self.__erase_alert_response_cb)
@@ -611,7 +617,8 @@ class SortingButton(ToolButton):
 
         for property_, icon, label in self._SORT_OPTIONS:
             button = PaletteMenuItem(label)
-            button_icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name=icon)
+            button_icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                               icon_name=icon)
             button.set_image(button_icon)
             button_icon.show()
             button.connect('activate',

@@ -1,5 +1,6 @@
 # Copyright (C) 2006-2007 Owen Williams.
 # Copyright (C) 2006-2008 Red Hat, Inc.
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +28,7 @@ from gi.repository import GdkX11
 from gi.repository import GLib
 import dbus
 
+from sugar3.graphics import style
 from sugar3 import dispatch
 from sugar3 import profile
 from gi.repository import SugarExt
@@ -162,7 +164,7 @@ class Activity(GObject.GObject):
         if self.is_journal():
             icon_theme = Gtk.IconTheme.get_default()
             info = icon_theme.lookup_icon('activity-journal',
-                                          Gtk.IconSize.SMALL_TOOLBAR, 0)
+                                          style.SMALL_ICON_SIZE, 0)
             if not info:
                 return None
             fname = info.get_filename()
