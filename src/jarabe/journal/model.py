@@ -20,7 +20,6 @@ import errno
 import subprocess
 from datetime import datetime
 import time
-import shutil
 import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
@@ -634,7 +633,7 @@ def delete(object_id):
         deleted.send(None, object_id=object_id)
 
 
-def copy(metadata, mount_point):
+def copy(metadata, mount_point, progress_callback=None, ready_callback=None):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
@@ -648,10 +647,13 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    return write(metadata, file_path, transfer_ownership=False)
+    return write(metadata, file_path, transfer_ownership=False,
+                 progress_callback=progress_callback,
+                 ready_callback=ready_callback)
 
 
-def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
+def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
+          progress_callback=None, ready_callback=None):
     """Creates or updates an entry for that id
     """
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
@@ -660,6 +662,7 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
 
+    # TODO: find a way to redirect the callbacks to the datastore
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
             object_id = _get_datastore().update(metadata['uid'],
@@ -671,7 +674,10 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
                                                 file_path,
                                                 transfer_ownership)
     else:
-        object_id = _write_entry_on_external_device(metadata, file_path)
+        object_id = _write_entry_on_external_device(
+            metadata, file_path,
+            progress_callback=progress_callback,
+            ready_callback=ready_callback)
 
     return object_id
 
@@ -696,7 +702,9 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
-def _write_entry_on_external_device(metadata, file_path):
+def _write_entry_on_external_device(metadata, file_path,
+                                    progress_callback=None,
+                                    ready_callback=None):
     """Create and update an entry copied from the
     DS to an external storage device.
 
@@ -709,6 +717,14 @@ def _write_entry_on_external_device(metadata, file_path):
     handled failsafe.
 
     """
+    def _progress_callback():
+        pass
+
+    def _ready_callback(garbage1, garbage2, args):
+        metadata, source, destination = args
+        created.send(None, object_id=destination)
+        ready_callback(metadata, source, destination)
+
     if 'uid' in metadata and os.path.exists(metadata['uid']):
         file_path = metadata['uid']
 
@@ -767,15 +783,21 @@ def _write_entry_on_external_device(metadata, file_path):
             os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
 
     if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
+        input_stream = Gio.File.new_for_path(file_path).read(None)
+        output_stream = Gio.File.new_for_path(destination_path)\
+            .append_to(Gio.FileCreateFlags.PRIVATE |
+                       Gio.FileCreateFlags.REPLACE_DESTINATION, None)
+
+        # TODO: use Gio.File.copy_async, when implemented
+        output_stream.splice_async(
+            input_stream,
+            Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+            Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+            GLib.PRIORITY_LOW, None, _ready_callback,
+            (metadata, file_path, destination_path))
     else:
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
-
-    object_id = destination_path
-    created.send(None, object_id=object_id)
-
-    return object_id
 
 
 def get_file_name(title, mime_type):
