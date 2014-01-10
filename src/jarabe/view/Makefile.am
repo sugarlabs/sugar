@@ -10,7 +10,6 @@ sugar_PYTHON =				\
 	keyhandler.py			\
 	launcher.py			\
 	palettes.py			\
-	pulsingicon.py			\
 	service.py			\
 	tabbinghandler.py		\
 	viewsource.py
