@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -87,7 +88,7 @@ class BackBar(Gtk.EventBox):
                        style.COLOR_PANEL_GREY.get_gdk_color())
         hbox = Gtk.HBox(spacing=style.DEFAULT_PADDING)
         hbox.set_border_width(style.DEFAULT_PADDING)
-        icon = Icon(icon_name='go-previous', icon_size=Gtk.IconSize.MENU,
+        icon = Icon(icon_name='go-previous', pixel_size=style.SMALL_ICON_SIZE,
                     fill_color=style.COLOR_TOOLBAR_GREY.get_svg())
         hbox.pack_start(icon, False, False, 0)
 

@@ -2,6 +2,7 @@
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +24,6 @@ import logging
 import dbus
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Gtk
 from gi.repository import Gio
 
 from sugar3.graphics.icon import Icon
@@ -67,7 +67,7 @@ class _ActivityIcon(CanvasIcon):
         secondary_text = GLib.markup_escape_text(self._model.get_name())
         palette_icon = Icon(file=self._model.bundle.get_icon(),
                             xo_color=self._model.get_color())
-        palette_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
+        palette_icon.props.icon_size = style.STANDARD_ICON_SIZE
         palette = Palette(None,
                           primary_text=primary_text,
                           secondary_text=secondary_text,
@@ -81,14 +81,14 @@ class _ActivityIcon(CanvasIcon):
         if joined:
             item = PaletteMenuItem(_('Resume'))
             icon = Icon(
-                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+                pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
         elif not private:
             item = PaletteMenuItem(_('Join'))
             icon = Icon(
-                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+                pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)

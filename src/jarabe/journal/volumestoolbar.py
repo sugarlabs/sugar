@@ -319,7 +319,7 @@ class VolumeButton(BaseButton):
         BaseButton.__init__(self, mount_point)
 
         self.props.icon_name = get_mount_icon_name(mount,
-                                                   Gtk.IconSize.LARGE_TOOLBAR)
+                                                   style.STANDARD_ICON_SIZE)
         # TODO: retrieve the colors from the owner of the device
         self.props.xo_color = profile.get_color()
 

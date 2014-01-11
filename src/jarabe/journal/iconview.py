@@ -1,4 +1,5 @@
 # Copyright (C) 2013, Gonzalo Odiard
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -299,7 +300,7 @@ class IconView(Gtk.Bin):
             button = Gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
-                                      icon_size=Gtk.IconSize.BUTTON)
+                                      pixel_size=style.SMALL_ICON_SIZE)
             button_box.pack_start(button, expand=True, fill=False, padding=0)
 
         background_box.show_all()

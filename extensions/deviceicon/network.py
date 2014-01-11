@@ -3,6 +3,7 @@
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2010 Plan Ceibal, Daniel Castelo
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,7 +80,7 @@ class WirelessPalette(Palette):
         self._info = Gtk.VBox()
 
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
         self._disconnect_item.connect('activate',
                                       self.__disconnect_activate_cb)
@@ -232,7 +233,7 @@ class GsmPalette(Palette):
         self.info_box.pack_start(self.error_description_label, True, True, 0)
 
         self.connection_info_box = Gtk.HBox()
-        icon = Icon(icon_name='data-upload', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='data-upload', pixel_size=style.SMALL_ICON_SIZE)
         self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
 
@@ -243,7 +244,8 @@ class GsmPalette(Palette):
         self._data_label_up.show()
         label_alignment.show()
 
-        icon = Icon(icon_name='data-download', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='data-download',
+                    pixel_size=style.SMALL_ICON_SIZE)
         self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
         self._data_label_down = Gtk.Label()
@@ -286,7 +288,7 @@ class GsmPalette(Palette):
             label = GLib.markup_escape_text(_('Disconnected'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
@@ -294,7 +296,7 @@ class GsmPalette(Palette):
             label = GLib.markup_escape_text(_('Connecting...'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTED:
@@ -302,7 +304,7 @@ class GsmPalette(Palette):
             self._toggle_state_item.set_label(_('Disconnect'))
             self.update_connection_time()
             icon = Icon(icon_name='media-eject',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_FAILED:
@@ -393,7 +395,7 @@ class WirelessDeviceView(ToolButton):
         self._color = None
         self._active_ap_op = None
 
-        self._icon = PulsingIcon()
+        self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
         self._icon.props.icon_name = get_icon_state('network-wireless', 0)
         self._inactive_color = xocolor.XoColor(
             '%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
