@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+from gettext import gettext as _
 from gi.repository import GObject
 from gi.repository import Gio
 
@@ -22,10 +23,12 @@ _desktop_view_instance = None
 
 _VIEW_ICONS = ['view-radial']
 _FAVORITE_ICONS = ['emblem-favorite']
+_FAVORITE_NAME = _("Favorites view %d")
 
 _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
 _VIEW_KEY = 'view-icons'
 _FAVORITE_KEY = 'favorite-icons'
+_FAVORITE_NAME_KEY = 'favorite-names'
 
 
 class DesktopViewModel(GObject.GObject):
@@ -41,6 +44,7 @@ class DesktopViewModel(GObject.GObject):
         self._number_of_views = 1
         self._view_icons = None
         self._favorite_icons = None
+        self._favorite_names = None
 
         self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
@@ -62,6 +66,11 @@ class DesktopViewModel(GObject.GObject):
 
     favorite_icons = GObject.property(type=object, getter=get_favorite_icons)
 
+    def get_favorite_names(self):
+        return self._favorite_names
+
+    favorite_names = GObject.property(type=object, getter=get_favorite_names)
+
     def _ensure_view_icons(self, update=False):
         if self._view_icons is not None and not update:
             return
@@ -75,9 +84,24 @@ class DesktopViewModel(GObject.GObject):
         if not self._favorite_icons:
             self._favorite_icons = _FAVORITE_ICONS[:]
 
+        self._favorite_names = self._settings.get_strv(_FAVORITE_NAME_KEY)
+        if not self._favorite_names:
+            self._favorite_names = \
+                [_FAVORITE_NAME % i
+                 for i in range(1, self._number_of_views+1)]
+
         if len(self._favorite_icons) < self._number_of_views:
             for i in range(self._number_of_views - len(self._favorite_icons)):
                 self._favorite_icons.append(_FAVORITE_ICONS[0])
+
+        if len(self._favorite_names) > self._number_of_views:
+            self._favorite_names = self._favorite_names[:self._number_of_views]
+        elif self._number_of_views < len(self._favorite_names):
+            defaults = \
+                [_FAVORITE_NAME % i
+                 for i in range(len(self._favorite_names)+1,
+                                self._number_of_views+1)]
+            self._favorite_names.extend(defaults)
 
         self.emit('desktop-view-icons-changed')
 
@@ -102,3 +126,7 @@ def get_favorite_icons():
 
 def get_number_of_views():
     return get_model().get_number_of_views()
+
+
+def get_favorite_names():
+    return get_model().get_favorite_names()

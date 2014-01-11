@@ -120,6 +120,11 @@
             <summary>TODO: add summary</summary>
             <description>TODO: add description</description>
         </key>
+        <key name="favorite-names" type="as">
+            <default>[]</default>
+            <summary>Favorite Names</summary>
+            <description>Names of the Favorite Views</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.frame" path="/org/sugarlabs/frame/">
         <key name="edge-delay" type="i">
