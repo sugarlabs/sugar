@@ -62,6 +62,7 @@ from jarabe import config
 from jarabe.model import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
+from jarabe.intro.window import UserProfile
 from jarabe.intro.window import create_profile
 from jarabe import frame
 from jarabe.view.service import UIService
@@ -268,7 +269,9 @@ def _check_profile():
 
     profile_name = os.environ.get("SUGAR_PROFILE_NAME", None)
     if profile_name is not None:
-        create_profile(profile_name)
+        user_profile = UserProfile()
+        user_profile.props.nick = profile_name
+        create_profile(user_profile)
         return True
 
     return False
