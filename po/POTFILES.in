@@ -1,3 +1,4 @@
+data/org.sugarlabs.gschema.xml
 extensions/cpsection/aboutme/__init__.py
 extensions/cpsection/aboutme/model.py
 extensions/cpsection/aboutme/view.py
