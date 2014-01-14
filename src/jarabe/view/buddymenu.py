@@ -27,6 +27,7 @@ import dbus
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.model import friends
@@ -41,7 +42,7 @@ class BuddyMenu(Palette):
 
         buddy_icon = Icon(icon_name='computer-xo',
                           xo_color=buddy.get_color(),
-                          icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                          pixel_size=style.STANDARD_ICON_SIZE)
         nick = buddy.get_nick()
         Palette.__init__(self, None,
                          primary_text=GLib.markup_escape_text(nick),
@@ -164,7 +165,7 @@ class BuddyMenu(Palette):
             self._invite_menu.set_label(_('Invite to %s') % title)
 
             icon = Icon(file=activity.get_icon_path(),
-                        icon_size=Gtk.IconSize.SMALL_TOOLBAR)
+                        pixel_size=style.SMALL_ICON_SIZE)
             icon.props.xo_color = activity.get_icon_color()
             self._invite_menu.set_image(icon)
             icon.show()

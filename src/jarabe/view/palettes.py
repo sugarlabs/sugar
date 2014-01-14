@@ -140,7 +140,7 @@ class ActivityPalette(Palette):
         color = profile.get_color()
         activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=color,
-                             icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                             pixel_size=style.STANDARD_ICON_SIZE)
 
         name = activity_info.get_name()
         Palette.__init__(self, primary_text=GLib.markup_escape_text(name),
@@ -182,7 +182,7 @@ class JournalPalette(BasePalette):
 
         menu_item = PaletteMenuItem(_('Show contents'))
         icon = Icon(file=self._home_activity.get_icon_path(),
-                    icon_size=Gtk.IconSize.MENU,
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=self._home_activity.get_icon_color())
         menu_item.set_image(icon)
         icon.show()
@@ -239,7 +239,7 @@ class VolumePalette(Palette):
 
         menu_item = PaletteMenuItem(pgettext('Volume', 'Remove'))
 
-        icon = Icon(icon_name='media-eject', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='media-eject', pixel_size=style.SMALL_ICON_SIZE)
         menu_item.set_image(icon)
         icon.show()
 

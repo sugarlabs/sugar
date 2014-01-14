@@ -25,6 +25,7 @@ from sugar3 import profile
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 
 from jarabe.journal import journalactivity
 from jarabe.journal.misc import get_mount_icon_name
@@ -59,7 +60,8 @@ class DeviceView(TrayIcon):
 
         menu_item = PaletteMenuItem(_('Show contents'))
         color = profile.get_color()
-        icon = Icon(icon_name=self._icon_name, icon_size=Gtk.IconSize.MENU,
+        icon = Icon(icon_name=self._icon_name,
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
         menu_item.set_image(icon)
         icon.show()

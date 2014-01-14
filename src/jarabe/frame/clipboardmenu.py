@@ -27,6 +27,7 @@ from gi.repository import Gtk
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 from sugar3.datastore import datastore
 from sugar3 import mime
 from sugar3 import env
@@ -64,7 +65,8 @@ class ClipboardMenu(Palette):
 
         self._journal_item = MenuItem(_('Keep'))
         color = profile.get_color()
-        icon = Icon(icon_name='document-save', icon_size=Gtk.IconSize.MENU,
+        icon = Icon(icon_name='document-save',
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
