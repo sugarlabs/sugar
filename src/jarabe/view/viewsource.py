@@ -329,7 +329,7 @@ class DocumentButton(RadioToolButton):
         settings = Gio.Settings('org.sugarlabs.user')
         self._color = settings.get_string('color')
         icon = Icon(file=file_name,
-                    icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                    pixel_size=style.STANDARD_ICON_SIZE,
                     xo_color=XoColor(self._color))
         self.set_icon_widget(icon)
         icon.show()
@@ -337,13 +337,13 @@ class DocumentButton(RadioToolButton):
         if bundle:
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate',
-                        icon_size=Gtk.IconSize.MENU,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__copy_to_home_cb)
         else:
             menu_item = MenuItem(_('Keep'))
             icon = Icon(icon_name='document-save',
-                        icon_size=Gtk.IconSize.MENU,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
@@ -428,7 +428,7 @@ class Toolbar(Gtk.Toolbar):
             activity_button = DocumentButton(file_name, bundle_path, title,
                                              bundle=True)
             icon = Icon(file=file_name,
-                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                        pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
@@ -445,7 +445,7 @@ class Toolbar(Gtk.Toolbar):
         if sugar_toolkit_path is not None:
             sugar_button = RadioToolButton()
             icon = Icon(icon_name='computer-xo',
-                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                        pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             sugar_button.set_icon_widget(icon)

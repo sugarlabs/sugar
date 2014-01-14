@@ -127,13 +127,13 @@ class WirelessNetworkView(EventPulsingIcon):
         self.menu_box = Gtk.VBox()
 
         self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
         self._connect_item.set_image(icon)
         self._connect_item.connect('activate', self.__connect_activate_cb)
         self.menu_box.add(self._connect_item)
 
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
         self._disconnect_item.connect(
             'activate', self.__disconnect_activate_cb)
@@ -501,13 +501,13 @@ class SugarAdhocView(EventPulsingIcon):
         self.menu_box = Gtk.VBox()
 
         self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
         self._connect_item.set_image(icon)
         self._connect_item.connect('activate', self.__connect_activate_cb)
         self.menu_box.add(self._connect_item)
 
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='media-eject')
         self._disconnect_item.set_image(icon)
         self._disconnect_item.connect(
             'activate', self.__disconnect_activate_cb)
@@ -642,7 +642,7 @@ class OlpcMeshView(EventPulsingIcon):
         self.menu_box = Gtk.VBox()
 
         self._connect_item = PaletteMenuItem(_('Connect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='dialog-ok')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='dialog-ok')
         self._connect_item.set_image(icon)
         self._connect_item.connect('activate', self.__connect_activate_cb)
         self.menu_box.add(self._connect_item)

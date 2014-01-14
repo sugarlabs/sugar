@@ -36,6 +36,7 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.alert import Alert
 from sugar3.graphics import iconentry
+from sugar3.graphics import style
 from sugar3 import mime
 from sugar3 import profile
 from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
@@ -611,7 +612,8 @@ class SortingButton(ToolButton):
 
         for property_, icon, label in self._SORT_OPTIONS:
             button = PaletteMenuItem(label)
-            button_icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name=icon)
+            button_icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                               icon_name=icon)
             button.set_image(button_icon)
             button_icon.show()
             button.connect('activate',

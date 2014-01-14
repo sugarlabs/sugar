@@ -541,7 +541,7 @@ class FavoritePalette(ActivityPalette):
 
         self.props.icon = Icon(file=activity_info.get_icon(),
                                xo_color=xo_color,
-                               icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                               pixel_size=style.STANDARD_ICON_SIZE)
 
         if journal_entries:
             title = journal_entries[0]['title']

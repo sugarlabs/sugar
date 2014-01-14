@@ -585,7 +585,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         logging.debug('_update state: %r', self.file_transfer.props.state)
         if self.file_transfer.props.state == filetransfer.FT_STATE_PENDING:
             menu_item = PaletteMenuItem(_('Accept'))
-            icon = Icon(icon_name='dialog-ok', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-ok',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__accept_activate_cb)
@@ -593,7 +594,8 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item.show()
 
             menu_item = PaletteMenuItem(_('Decline'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__decline_activate_cb)
@@ -625,7 +627,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         elif self.file_transfer.props.state in \
                 [filetransfer.FT_STATE_ACCEPTED, filetransfer.FT_STATE_OPEN]:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -653,7 +656,8 @@ class IncomingTransferPalette(BaseTransferPalette):
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
             menu_item = PaletteMenuItem(_('Dismiss'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)
@@ -667,7 +671,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                     filetransfer.FT_REASON_REMOTE_STOPPED:
                 menu_item = PaletteMenuItem(_('Dismiss'))
                 icon = Icon(icon_name='dialog-cancel',
-                            icon_size=Gtk.IconSize.MENU)
+                            pixel_size=style.SMALL_ICON_SIZE)
                 menu_item.set_image(icon)
                 icon.show()
                 menu_item.connect('activate', self.__dismiss_activate_cb)
@@ -746,7 +750,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         box.show()
         if new_state == filetransfer.FT_STATE_PENDING:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -778,7 +783,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         elif new_state in [filetransfer.FT_STATE_ACCEPTED,
                            filetransfer.FT_STATE_OPEN]:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -807,7 +813,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         elif new_state in [filetransfer.FT_STATE_COMPLETED,
                            filetransfer.FT_STATE_CANCELLED]:
             menu_item = PaletteMenuItem(_('Dismiss'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)

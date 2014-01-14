@@ -264,8 +264,9 @@ class UpdateBox(Gtk.VBox):
         self.refresh_button.show()
 
         self.install_button = Gtk.Button(_('Install selected'))
-        self.install_button.props.image = Icon(icon_name='emblem-downloads',
-                                               icon_size=Gtk.IconSize.BUTTON)
+        self.install_button.props.image = Icon(
+            icon_name='emblem-downloads',
+            pixel_size=style.SMALL_ICON_SIZE)
         bottom_box.pack_start(self.install_button, False, True, 0)
         self.install_button.show()
 
