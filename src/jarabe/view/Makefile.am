@@ -13,4 +13,5 @@ sugar_PYTHON =				\
 	pulsingicon.py			\
 	service.py			\
 	tabbinghandler.py		\
-	viewsource.py
+	viewsource.py			\
+	viewhelp.py
