@@ -80,4 +80,5 @@ src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
+src/jarabe/view/viewhelp.py
 src/jarabe/view/viewsource.py
