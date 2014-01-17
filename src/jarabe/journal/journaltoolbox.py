@@ -725,7 +725,11 @@ class BatchCopyButton(ToolButton):
         ToolButton.__init__(self, 'edit-copy')
         self.props.tooltip = _('Copy')
         self.connect('clicked', self.__clicked_cb)
+        self.menu_builder = None
 
+    def _refresh_menu_options(self):
+        if self.menu_builder is not None:
+            return
         self.menu_builder = CopyMenuBuilder(
             self._journalactivity, self.__get_uid_list_cb,
             self._journalactivity.volume_error_cb,
@@ -733,10 +737,12 @@ class BatchCopyButton(ToolButton):
             add_webservices_menu=False)
 
     def update_mount_point(self):
-        self.menu_builder.update_mount_point()
+        if self.menu_builder is not None:
+            self.menu_builder.update_mount_point()
 
     def __clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self._refresh_menu_options()
 
     def __get_uid_list_cb(self):
         model = self._journalactivity.get_list_view().get_model()
