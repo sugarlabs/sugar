@@ -208,7 +208,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                     logging.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:
-                    self._cached_row.append((nick, XoColor(color)))
+                    self._cached_row.append([nick, XoColor(color)])
                     continue
 
             self._cached_row.append(None)
