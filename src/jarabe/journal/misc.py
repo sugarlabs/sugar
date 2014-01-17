@@ -17,6 +17,7 @@
 import logging
 import time
 import os
+import hashlib
 from gettext import gettext as _
 
 from gi.repository import Gio
@@ -26,6 +27,7 @@ from sugar3.activity import activityfactory
 from sugar3.activity.activityhandle import ActivityHandle
 from sugar3.graphics.icon import get_icon_file_name
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import colors
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3 import mime
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException
@@ -379,3 +381,16 @@ def get_icon_color(metadata):
         return profile.get_color()
     else:
         return XoColor(metadata['icon-color'])
+
+
+def get_mount_color(mount):
+    sha_hash = hashlib.sha1()
+    data = mount.get_root().get_path()
+    sha_hash.update(data)
+    digest = hash(sha_hash.digest())
+    index = digest % len(colors)
+
+    color = XoColor('%s,%s' %
+                    (colors[index][0],
+                    colors[index][1]))
+    return color
