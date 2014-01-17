@@ -121,21 +121,41 @@ def clear_registration():
     return 1
 
 
-def clear_networks():
-    """Clear saved passwords and network configurations.
-    """
+def non_sugar_wireless(connection):
+    """Check for wireless connection not internal to Sugar."""
+
+    wifi_settings = connection.get_settings('802-11-wireless')
+    return wifi_settings and \
+        not (wifi_settings['mode'] == 'adhoc' and
+            connection.get_id().startswith(network.ADHOC_CONNECTION_ID_PREFIX))
+
+
+def clear_wireless_networks():
+    """Remove all wireless connections except Sugar-internal ones."""
+
     try:
         connections = network.get_connections()
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
-        return
-    connections.clear()
+
+    else:
+        non_sugar_wireless_connections = (connection
+            for connection in connections.get_list()
+                if non_sugar_wireless(connection))
+        for connection in non_sugar_wireless_connections:
+            try:
+                connection.delete()
+            except dbus.DBusException:
+                logging.debug("Could not remove connection %s",
+                              connection.get_id())
 
 
-def have_networks():
+def have_wireless_networks():
+    """Check that there are non-Sugar-internal wireless connections."""
     try:
         connections = network.get_connections()
-        return len(connections.get_list()) > 0
+        return any(non_sugar_wireless(connection)
+                   for connection in connections.get_list())
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
         return False
