@@ -22,9 +22,9 @@ from gi.repository import Gdk
 
 from gi.repository import SugarExt
 from sugar3.graphics import style
+from sugar3.graphics.pulsingicon import PulsingIcon
 
 from jarabe.model import shell
-from jarabe.view.pulsingicon import PulsingIcon
 
 
 class LaunchWindow(Gtk.Window):
