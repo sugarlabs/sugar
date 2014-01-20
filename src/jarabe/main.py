@@ -62,7 +62,7 @@ from jarabe import config
 from jarabe.model import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
-from jarabe.intro.window import create_profile
+from jarabe.intro.window import create_profile_with_nickname
 from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
@@ -364,7 +364,7 @@ def _check_profile():
 
     profile_name = os.environ.get("SUGAR_PROFILE_NAME", None)
     if profile_name is not None:
-        create_profile(profile_name)
+        create_profile_with_nickname(profile_name)
         return True
 
     return False
