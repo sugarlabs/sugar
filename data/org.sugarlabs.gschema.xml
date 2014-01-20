@@ -72,6 +72,16 @@
             <summary>User Color</summary>
             <description>Color for the XO icon that is used throughout the desktop. The string is composed of the stroke color and fill color, format is that of rgb colors. Example: #AC32FF,#9A5200</description>
         </key>
+        <key name="gender" type="s">
+            <default>''</default>
+            <summary>User Gender</summary>
+            <description>Gender of the Sugar user, either male, female, or unassigned</description>
+        </key>
+        <key name="birth-timestamp" type="i">
+            <default>0</default>
+            <summary>User Birth Timestamp</summary>
+            <description>Birth timestamp (seconds since the epoch)</description>
+	</key>
         <child name="background" schema="org.sugarlabs.user.background" />
     </schema>
     <schema id="org.sugarlabs.user.background" path="/org/sugarlabs/user/background/">
