@@ -1,5 +1,7 @@
 # Copyright (C) 2008, OLPC
-# Copyright (C) 2010, Sugar Labs
+# Copyright (C) 2010-14, Sugar Labs
+# Copyright (C) 2010-14, Walter Bender
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,13 +23,16 @@ from gettext import gettext as _
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor, colors
-from sugar3.graphics.icon import CanvasIcon
+from sugar3.graphics.icon import EventIcon
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
+from jarabe.intro.agepicker import AGES, AGE_LABELS
+
 
 _STROKE_COLOR = 0
 _FILL_COLOR = 1
+_NOCOLOR = XoColor('#010101,#FFFFFF')
 
 
 def _get_next_stroke_color(color):
@@ -111,22 +116,20 @@ _NEXT_STROKE_COLOR = 3
 _PREVIOUS_STROKE_COLOR = 4
 
 
-class ColorPicker(CanvasIcon):
-    __gsignals__ = {
-        'color-changed': (GObject.SignalFlags.RUN_FIRST,
-                          None,
-                          ([object])),
-    }
+class ColorPicker(EventIcon):
+
+    color_changed_signal = GObject.Signal('color-changed',
+                                          arg_types=([object]))
 
     def __init__(self, picker):
-        CanvasIcon.__init__(self, icon_name='computer-xo',
-                            pixel_size=style.XLARGE_ICON_SIZE)
+        EventIcon.__init__(self, icon_name='computer-xo',
+                           pixel_size=style.LARGE_ICON_SIZE)
         self._picker = picker
         self._color = None
 
         self.connect('button_press_event', self.__pressed_cb, picker)
 
-    def update(self, color):
+    def set_color(self, color):
         if self._picker == _PREVIOUS_FILL_COLOR:
             self._color = XoColor(_get_previous_fill_color(color))
         elif self._picker == _PREVIOUS_STROKE_COLOR:
@@ -139,9 +142,98 @@ class ColorPicker(CanvasIcon):
             self._color = color
         self.props.xo_color = self._color
 
+    color = GObject.property(type=object, setter=set_color)
+
     def __pressed_cb(self, button, event, picker):
         if picker != _CURRENT_COLOR:
-            self.emit('color-changed', self._color)
+            self.color_changed_signal.emit(self._color)
+
+
+class GenderPicker(EventIcon):
+
+    gender_changed_signal = GObject.Signal('gender-changed',
+                                           arg_types=([str]))
+
+    def __init__(self, color, gender):
+        EventIcon.__init__(self, icon_name='%s-6' % (gender),
+                           pixel_size=style.XLARGE_ICON_SIZE)
+        self._gender = gender
+        self._color = color
+
+        self.set_gender()
+
+        self.connect('button_press_event', self.__pressed_cb)
+
+    def set_color(self, color, gender):
+        self._color = color
+        self.set_gender(gender)
+
+    def set_gender(self, gender=None):
+        if self._gender == gender:
+            self.props.xo_color = self._color
+        else:
+            self.props.xo_color = _NOCOLOR
+
+    gender = GObject.property(type=object, setter=set_gender)
+
+    def __pressed_cb(self, button, event):
+        self.gender_changed_signal.emit(self._gender)
+
+
+class AgePicker(Gtk.Grid):
+
+    age_changed_signal = GObject.Signal('age-changed',
+                                        arg_types=([int]))
+
+    def __init__(self, color, gender, age):
+        Gtk.Grid.__init__(self)
+        self._color = color
+        self._gender = gender
+        self._age = age
+
+        if self._gender is None:
+            # Used for graphic only; does not set user's gender preference.
+            self._gender = 'female'
+
+        self._icon = EventIcon(icon_name='%s-%d' % (self._gender, self._age),
+                               pixel_size=style.LARGE_ICON_SIZE)
+        self._icon.connect('button-press-event', self.__pressed_cb)
+        self.attach(self._icon, 0, 0, 1, 1)
+        self._icon.show()
+
+        label = Gtk.Label()
+        label.set_text(AGE_LABELS[self._age])
+        self.attach(label, 0, 1, 1, 1)
+        label.show()
+
+        self.set_age()
+
+    def set_color(self, color, age):
+        self._color = color
+        self.set_age(age)
+
+    def set_age(self, age=None):
+        if age in AGES:
+            age_index = AGES.index(age)
+        else:
+            age_index = None
+
+        if age_index == self._age:
+            self._icon.props.xo_color = self._color
+        else:
+            self._icon.props.xo_color = _NOCOLOR
+        self._icon.show()
+
+    age = GObject.property(type=object, setter=set_age)
+
+    def set_gender(self, gender):
+        self._icon.set_icon_name('%s-%d' % (gender, self._age))
+        self._icon.show()
+
+    gender = GObject.property(type=object, setter=set_gender)
+
+    def __pressed_cb(self, button, event):
+        self.age_changed_signal.emit(self._age)
 
 
 class AboutMe(SectionView):
@@ -154,20 +246,73 @@ class AboutMe(SectionView):
         self._nick_sid = 0
         self._color_valid = True
         self._nick_valid = True
+        self._color = None
+        self._gender = None
+        self._age = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._color_label = Gtk.Grid()
-        self._color_label.set_row_spacing(style.DEFAULT_SPACING)
-        self._color_label.set_column_spacing(style.DEFAULT_SPACING)
+        self._color = XoColor(self._model.get_color())
 
-        self._color_box = Gtk.Grid()
-        self._color_box.set_row_spacing(style.DEFAULT_SPACING)
-        self._color_box.set_column_spacing(style.DEFAULT_SPACING)
+        self._setup_color()
+        self._setup_nick()
+        self._setup_gender()
+        self._setup_age()
 
-        self._color_alert_box = Gtk.Grid()
+        self._update_pickers(self._color)
+
+        self._nick_entry.set_text(self._model.get_nick())
+        self._color_valid = True
+        self._nick_valid = True
+        self.needs_restart = False
+
+        self._nick_entry.connect('changed', self.__nick_changed_cb)
+
+        for picker in self._pickers.values():
+            picker.connect('color-changed', self.__color_changed_cb)
+
+        self._female_picker.connect('gender-changed', self.__gender_changed_cb)
+        self._male_picker.connect('gender-changed', self.__gender_changed_cb)
+
+        for picker in self._age_pickers:
+            picker.connect('age-changed', self.__age_changed_cb)
+
+    def _setup_nick(self):
+        grid = Gtk.Grid()
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+
+        self._nick_entry = Gtk.Entry()
+        self._nick_entry.set_width_chars(25)
+        grid.attach(self._nick_entry, 0, 0, 1, 1)
+        self._nick_entry.show()
+
+        alert_grid = Gtk.Grid()
+        self._nick_alert = InlineAlert()
+        alert_grid.attach(self._nick_alert, 0, 0, 1, 1)
+        if 'nick' in self.restart_alerts:
+            self._nick_alert.props.msg = self.restart_msg
+            self._nick_alert.show()
+
+        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_in_panel.add(grid)
+        grid.show()
+
+        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_alert.add(alert_grid)
+        alert_grid.show()
+
+        self.pack_start(center_in_panel, False, False, 0)
+        self.pack_start(center_alert, False, False, 0)
+        center_in_panel.show()
+        center_alert.show()
+
+    def _setup_color(self):
+        grid = Gtk.Grid()
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+
         self._color_alert = None
 
         self._pickers = {
@@ -178,117 +323,124 @@ class AboutMe(SectionView):
             _PREVIOUS_STROKE_COLOR: ColorPicker(_PREVIOUS_STROKE_COLOR),
         }
 
-        self._setup_color()
-        initial_color = XoColor(self._model.get_color_xo())
-        self._update_pickers(initial_color)
-
-        self._nick_box = Gtk.Grid()
-        self._nick_box.set_row_spacing(style.DEFAULT_SPACING)
-        self._nick_box.set_column_spacing(style.DEFAULT_SPACING)
-
-        self._nick_alert_box = Gtk.Grid()
-
-        self._nick_entry = None
-        self._nick_alert = None
-        self._setup_nick()
-        self.setup()
-
-    def _setup_nick(self):
-        self._nick_entry = Gtk.Entry()
-        self._nick_entry.set_width_chars(25)
-        self._nick_box.attach(self._nick_entry, 0, 0, 1, 1)
-        self._nick_entry.show()
-
-        self._nick_alert = InlineAlert()
-        self._nick_alert_box.attach(self._nick_alert, 0, 0, 1, 1)
-        if 'nick' in self.restart_alerts:
-            self._nick_alert.props.msg = self.restart_msg
-            self._nick_alert.show()
-
-        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        self._center_in_panel.add(self._nick_box)
-
-        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_alert.add(self._nick_alert_box)
-
-        self.pack_start(self._center_in_panel, False, False, 0)
-        self.pack_start(center_alert, False, False, 0)
-        self._nick_box.show()
-        self._nick_alert_box.show()
-        self._center_in_panel.show()
-        center_alert.show()
-
-    def _setup_color(self):
         label_color = Gtk.Label(label=_('Click to change your color:'))
         label_color.modify_fg(Gtk.StateType.NORMAL,
                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        self._group.add_widget(label_color)
-        self._color_label.attach(label_color, 0, 0, 1, 1)
+        grid.attach(label_color, 0, 0, 3, 1)
         label_color.show()
 
-        current = 1
+        current = 0
         for picker_index in sorted(self._pickers.keys()):
             if picker_index == _CURRENT_COLOR:
                 left_separator = Gtk.SeparatorToolItem()
-                self._color_box.attach(left_separator, current, 0, 1, 1)
+                grid.attach(left_separator, current, 1, 1, 1)
                 left_separator.show()
                 current += 1
 
             picker = self._pickers[picker_index]
             picker.show()
-            self._color_box.attach(picker, current, 0, 1, 1)
+            grid.attach(picker, current, 1, 1, 1)
             current += 1
 
             if picker_index == _CURRENT_COLOR:
                 right_separator = Gtk.SeparatorToolItem()
                 right_separator.show()
-                self._color_box.attach(right_separator, current, 0, 1, 1)
+                grid.attach(right_separator, current, 1, 1, 1)
                 current += 1
 
         label_color_error = Gtk.Label()
-        self._group.add_widget(label_color_error)
-        self._color_alert_box.attach(label_color_error, 0, 0, 1, 1)
+        grid.attach(label_color_error, 0, 2, 3, 1)
         label_color_error.show()
 
         self._color_alert = InlineAlert()
-        self._color_alert_box.attach(self._color_alert, 0, 0, 1, 1)
+        grid.attach(self._color_alert, 0, 3, 3, 1)
         if 'color' in self.restart_alerts:
             self._color_alert.props.msg = self.restart_msg
             self._color_alert.show()
 
-        self._center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
-        self._center_in_panel.add(self._color_box)
+        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_in_panel.add(grid)
+        grid.show()
 
-        center_alert = Gtk.Alignment.new(0.5, 0, 0, 0)
-        center_alert.add(self._color_alert_box)
+        self.pack_start(center_in_panel, False, False, 0)
+        center_in_panel.show()
 
-        self.pack_start(self._color_label, False, False, 0)
-        self.pack_start(self._center_in_panel, False, False, 0)
-        self.pack_start(center_alert, False, False, 0)
-        self._color_label.show()
-        self._color_box.show()
-        self._color_alert_box.show()
-        self._center_in_panel.show()
-        center_alert.show()
+    def _setup_gender(self):
+        self._gender = self._model.get_gender()
+
+        grid = Gtk.Grid()
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+
+        label_gender = Gtk.Label(label=_('Select gender:'))
+        label_gender.modify_fg(Gtk.StateType.NORMAL,
+                               style.COLOR_SELECTION_GREY.get_gdk_color())
+        grid.attach(label_gender, 0, 0, 1, 1)
+        label_gender.show()
+
+        self._female_picker = GenderPicker(self._color, 'female')
+        grid.attach(self._female_picker, 0, 1, 1, 1)
+        self._female_picker.props.gender = self._gender
+        self._female_picker.show()
+
+        self._male_picker = GenderPicker(self._color, 'male')
+        grid.attach(self._male_picker, 1, 1, 1, 1)
+        self._male_picker.props.gender = self._gender
+        self._male_picker.show()
+
+        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_in_panel.add(grid)
+        grid.show()
+
+        self.pack_start(center_in_panel, False, False, 0)
+        center_in_panel.show()
+
+    def _setup_age(self):
+        self._age = self._model.get_age()
+
+        grid = Gtk.Grid()
+        grid.set_row_spacing(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+
+        self._age_pickers = []
+        for i in range(len(AGES)):
+            self._age_pickers.append(AgePicker(self._color, self._gender, i))
+
+        label_age = Gtk.Label(label=_('Select age:'))
+        label_age.modify_fg(Gtk.StateType.NORMAL,
+                            style.COLOR_SELECTION_GREY.get_gdk_color())
+        grid.attach(label_age, 0, 0, 1, 1)
+        label_age.show()
+
+        for i in range(len(AGES)):
+            grid.attach(self._age_pickers[i], i, 1, 1, 1)
+            self._age_pickers[i].set_age(self._age)
+            self._age_pickers[i].show()
+
+        center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
+        center_in_panel.add(grid)
+        grid.show()
+        self.pack_start(center_in_panel, False, False, 0)
+        center_in_panel.show()
 
     def setup(self):
-        self._nick_entry.set_text(self._model.get_nick())
-        self._color_valid = True
-        self._nick_valid = True
-        self.needs_restart = False
-
-        self._nick_entry.connect('changed', self.__nick_changed_cb)
-        for picker in self._pickers.values():
-            picker.connect('color-changed', self.__color_changed_cb)
+        pass
 
     def undo(self):
         self._model.undo()
         self._nick_alert.hide()
         self._color_alert.hide()
 
+        self._model.set_gender(self._gender)
+        self._model.set_age(self._age)
+
     def _update_pickers(self, color):
         for picker in self._pickers.values():
-            picker.update(color)
+            picker.props.color = color
+        self._female_picker.set_color(color, self._gender)
+        self._male_picker.set_color(color, self._gender)
+        for i in range(len(AGES)):
+            self._age_pickers[i].set_color(color, self._age)
 
     def _validate(self):
         if self._nick_valid and self._color_valid:
@@ -322,7 +474,7 @@ class AboutMe(SectionView):
         return False
 
     def __color_changed_cb(self, colorpicker, color):
-        self._model.set_color_xo(color.to_string())
+        self._model.set_color(color.to_string())
         self.needs_restart = True
         self._color_alert.props.msg = self.restart_msg
         self._color_valid = True
@@ -332,5 +484,18 @@ class AboutMe(SectionView):
         self._color_alert.show()
 
         self._update_pickers(color)
+        return False
 
+    def __gender_changed_cb(self, genderpicker, gender):
+        self._model.set_gender(gender)
+        self._female_picker.props.gender = gender
+        self._male_picker.props.gender = gender
+        for i in range(len(AGES)):
+            self._age_pickers[i].props.gender = gender
+        return False
+
+    def __age_changed_cb(self, agepicker, age):
+        self._model.set_age(AGES[age])
+        for i in range(len(AGES)):
+            self._age_pickers[i].props.age = AGES[age]
         return False
