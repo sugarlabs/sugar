@@ -1,4 +1,6 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2010-14, Sugar Labs
+# Copyright (C) 2010-14, Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,10 +17,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+import logging
 from gettext import gettext as _
+
 from gi.repository import Gio
+
 from sugar3 import profile
 
+from jarabe.intro.window import calculate_birth_timestamp, calculate_age
+from jarabe.intro.agepicker import AGES
 
 _COLORS = {
     'red': {'dark': '#b20008', 'medium': '#e6000a', 'light': '#ffadce'},
@@ -138,3 +145,71 @@ def set_color_xo(color):
     client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)
     return 1
+
+
+def get_gender():
+    settings = Gio.Settings('org.sugarlabs.user')
+    return settings.get_string('gender')
+
+
+def print_gender():
+    print get_gender()
+
+
+def set_gender(gender):
+    """Set the gender, e.g. 'female'
+    """
+    if not gender:
+        gender = ''  # default value in gsettings indicates no gender selected
+    elif not gender in ['male', 'female', '']:
+        raise ValueError(_('Gender must be male or female.'))
+
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_string('gender', gender)
+    return
+
+
+def get_age():
+    settings = Gio.Settings('org.sugarlabs.user')
+    birth_timestamp = settings.get_int('birth-timestamp')
+
+    if birth_timestamp == 0:
+        return None
+
+    birth_age = calculate_age(birth_timestamp)
+
+    age = (AGES[-2] + AGES[-1]) / 2.
+    if birth_age >= age:
+        return AGES[-1]
+
+    for i in range(len(AGES) - 1):
+        age = (AGES[i] + AGES[i + 1]) / 2.
+        if birth_age < age:
+            return AGES[i]
+
+    return None
+
+
+def print_age():
+    print get_age()
+
+
+def set_age(age):
+    """Set the age and an approximate birth timestamp
+    age: e.g. 8
+    birth_timestamp: time - age * #seconds per year
+    """
+    try:
+        i = int(age)
+    except ValueError, e:
+        logging.error('set_age: %s' % (e))
+        i = None
+
+    if i is None or i < 1:
+        raise ValueError(_('Age must be a positive integer.'))
+
+    birth_timestamp = calculate_birth_timestamp(age)
+
+    settings = Gio.Settings('org.sugarlabs.user')
+    settings.set_int('birth-timestamp', birth_timestamp)
+    return
