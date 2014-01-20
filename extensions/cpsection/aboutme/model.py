@@ -161,7 +161,7 @@ def set_gender(gender):
     """
     if not gender:
         gender = ''  # default value in gsettings indicates no gender selected
-    elif not gender in ['male', 'female']:
+    elif not gender in ['male', 'female', '']:
         raise ValueError(_('Gender must be male or female.'))
 
     settings = Gio.Settings('org.sugarlabs.user')
