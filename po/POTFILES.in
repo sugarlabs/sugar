@@ -60,6 +60,7 @@ src/jarabe/frame/clipboardobject.py
 src/jarabe/frame/devicestray.py
 src/jarabe/frame/zoomtoolbar.py
 src/jarabe/intro/window.py
+src/jarabe/intro/agepicker.py
 src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py
