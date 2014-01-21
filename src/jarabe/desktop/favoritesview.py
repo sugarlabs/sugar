@@ -50,8 +50,6 @@ from jarabe.model import bundleregistry
 from jarabe.model import desktop
 from jarabe.journal import misc
 
-from jarabe.desktop import schoolserver
-from jarabe.desktop.schoolserver import RegisterError
 from jarabe.desktop import favoriteslayout
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.util.normalize import normalize_string
@@ -117,7 +115,6 @@ class FavoritesView(ViewContainer):
         self._layout = None
 
         owner_icon = OwnerIcon(style.XLARGE_ICON_SIZE)
-        owner_icon.connect('register-activate', self.__register_activate_cb)
 
         current_activity = CurrentActivityIcon()
 
@@ -357,28 +354,6 @@ class FavoritesView(ViewContainer):
                 else:
                     icon.alpha = 0.33
 
-    def __register_activate_cb(self, icon):
-        alert = Alert()
-        try:
-            schoolserver.register_laptop()
-        except RegisterError, e:
-            alert.props.title = _('Registration Failed')
-            alert.props.msg = '%s' % e
-        else:
-            alert.props.title = _('Registration Successful')
-            alert.props.msg = _('You are now registered '
-                                'with your school server.')
-            self._owner_icon.set_registered()
-
-        ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
-
-        self._box.add_alert(alert)
-        alert.connect('response', self.__register_alert_response_cb)
-
-    def __register_alert_response_cb(self, alert, response_id):
-        self._box.remove_alert()
-
     def set_resume_mode(self, resume_mode):
         self._resume_mode = resume_mode
         for icon in self.get_children():
@@ -614,70 +589,6 @@ class CurrentActivityIcon(CanvasIcon):
     def __active_activity_changed_cb(self, home_model, home_activity):
         self._home_activity = home_activity
         self._update()
-
-
-class OwnerIcon(BuddyIcon):
-    __gtype_name__ = 'SugarFavoritesOwnerIcon'
-
-    __gsignals__ = {
-        'register-activate': (GObject.SignalFlags.RUN_FIRST, None,
-                              ([])),
-    }
-
-    def __init__(self, size):
-        BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
-
-        self.palette_invoker.cache_palette = True
-
-        self._palette_enabled = False
-        self._register_menu = None
-
-        # This is a workaround to skip the callback for
-        # enter-notify-event in the parent class the first time.
-        def __enter_notify_event_cb(icon, event):
-            self.unset_state_flags(Gtk.StateFlags.PRELIGHT)
-            self.disconnect(self._enter_notify_hid)
-
-        self._enter_notify_hid = self.connect('enter-notify-event',
-                                              __enter_notify_event_cb)
-
-    def create_palette(self):
-        if not self._palette_enabled:
-            self._palette_enabled = True
-            return
-
-        palette = BuddyMenu(get_owner_instance())
-
-        settings = Gio.Settings('org.sugarlabs')
-        if settings.get_boolean('show-register'):
-            backup_url = settings.get_string('backup-url')
-
-            if not backup_url:
-                self._register_menu = PaletteMenuItem(_('Register'),
-                                                      'media-record')
-            else:
-                self._register_menu = PaletteMenuItem(_('Register again'),
-                                                      'media-record')
-
-            self._register_menu.connect('activate',
-                                        self.__register_activate_cb)
-            palette.menu_box.pack_end(self._register_menu, True, True, 0)
-            self._register_menu.show()
-
-        self.connect_to_palette_pop_events(palette)
-
-        return palette
-
-    def __register_activate_cb(self, menuitem):
-        self.emit('register-activate')
-
-    def set_registered(self):
-        self.palette.menu_box.remove(self._register_menu)
-        self._register_menu = PaletteMenuItem(_('Register again'),
-                                              'media-record')
-        self._register_menu.connect('activate', self.__register_activate_cb)
-        self.palette.menu_box.pack_end(self._register_menu, True, True, 0)
-        self._register_menu.show()
 
 
 class FavoritesSetting(object):
