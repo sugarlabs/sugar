@@ -192,6 +192,10 @@ def get_bundle_id_from_metadata(metadata):
 def resume(metadata, bundle_id=None, alert_window=None,
            force_bundle_downgrade=False):
 
+    # These are set later, and used in the following functions.
+    bundle = None
+    activity_id = None
+
     def launch_activity(object_id):
         launch(bundle, activity_id=activity_id, object_id=object_id,
                color=get_icon_color(metadata), alert_window=alert_window)
