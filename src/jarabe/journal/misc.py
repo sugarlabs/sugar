@@ -218,6 +218,8 @@ def resume(metadata, bundle_id=None, alert_window=None,
         return
 
     # Otherwise we are launching a regular journal entry
+    activity_id = metadata.get('activity_id', '')
+
     if bundle_id is None:
         activities = get_activities(metadata)
         if not activities:
