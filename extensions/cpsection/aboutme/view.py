@@ -473,7 +473,7 @@ class AboutMe(SectionView):
         return False
 
     def __color_changed_cb(self, colorpicker, color):
-        self._model.set_color(color.to_string())
+        self._model.set_color_xo(color.to_string())
         self.needs_restart = True
         self._color_alert.props.msg = self.restart_msg
         self._color_valid = True
