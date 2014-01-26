@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Sugar Labs, Frederick Grose
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -121,21 +122,47 @@ def clear_registration():
     return 1
 
 
-def clear_networks():
-    """Clear saved passwords and network configurations.
+def non_sugar_wireless(connection):
+    """Check for wireless connection not internal to Sugar.
+    """
+    wifi_settings = connection.get_settings(
+                               network.NM_CONNECTION_TYPE_802_11_WIRELESS)
+    if wifi_settings:
+        return not (wifi_settings['mode'] == 'adhoc' and
+                    connection.get_id().startswith(
+                                        network.ADHOC_CONNECTION_ID_PREFIX))
+
+    mesh_settings = connection.get_settings(
+                               network.NM_CONNECTION_TYPE_802_11_OLPC_MESH)
+    if mesh_settings:
+        return not (connection.get_id().startswith(
+                                        network.MESH_CONNECTION_ID_PREFIX) or
+                    connection.get_id().startswith(
+                                        network.XS_MESH_CONNECTION_ID_PREFIX))
+
+
+def clear_wireless_networks():
+    """Remove all wireless connections except Sugar-internal ones.
     """
     try:
         connections = network.get_connections()
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
-        return
-    connections.clear()
+    else:
+        non_sugar_wireless_connections = (connection
+                for connection in connections.get_list()
+                    if non_sugar_wireless(connection))
+
+        connections.clear(non_sugar_wireless_connections)
 
 
-def have_networks():
+def have_wireless_networks():
+    """Check that there are non-Sugar-internal wireless connections.
+    """
     try:
         connections = network.get_connections()
-        return len(connections.get_list()) > 0
+        return any(non_sugar_wireless(connection)
+                   for connection in connections.get_list())
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
         return False

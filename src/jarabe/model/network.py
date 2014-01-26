@@ -3,6 +3,7 @@
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2010 Plan Ceibal, Daniel Castelo
+# Copyright (C) 2014 Sugar Labs, Frederick Grose
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,6 +69,7 @@ NM_DEVICE_STATE_ACTIVATED = 100
 NM_DEVICE_STATE_DEACTIVATING = 110
 NM_DEVICE_STATE_FAILED = 120
 
+NM_CONNECTION_TYPE_802_11_OLPC_MESH = '802-11-olpc-mesh'
 NM_CONNECTION_TYPE_802_11_WIRELESS = '802-11-wireless'
 NM_CONNECTION_TYPE_GSM = 'gsm'
 
@@ -832,16 +834,6 @@ class Connection(GObject.GObject):
     def get_path(self):
         return self._connection.object_path
 
-    def is_sugar_internal_connection(self):
-        """Returns True if this connection is a 'special' Sugar connection,
-        i.e. one that has been created by Sugar internals and should not be
-        visible to the user or deleted by connection-clearing code."""
-        connection_id = self.get_id()
-        return connection_id == GSM_CONNECTION_ID \
-            or connection_id.startswith(ADHOC_CONNECTION_ID_PREFIX) \
-            or connection_id.startswith(MESH_CONNECTION_ID_PREFIX) \
-            or connection_id.startswith(XS_MESH_CONNECTION_ID_PREFIX)
-
 
 class Connections(object):
     def __init__(self):
@@ -869,15 +861,10 @@ class Connections(object):
         connection.disconnect_by_func(self._connection_removed_cb)
         self._connections.remove(connection)
 
-    def clear(self):
-        """Remove all connections except Sugar-internal ones."""
-
-        # copy the list, to avoid problems with removing elements of a list
-        # while looping over it
-        connections = list(self._connections)
-        for connection in connections:
-            if connection.is_sugar_internal_connection():
-                continue
+    def clear(self, discard_list=[]):
+        """Remove connections in the discard_list.
+        """
+        for connection in discard_list:
             try:
                 connection.delete()
             except dbus.DBusException:
