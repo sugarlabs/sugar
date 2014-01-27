@@ -1043,6 +1043,14 @@ def find_gsm_connection():
     return find_connection_by_id(GSM_CONNECTION_ID)
 
 
+def wireless_driver_available():
+    """
+    Check for the presence of a wireless driver in kernel memory.
+    """
+    return any(os.listdir(os.path.join(os.sep,
+                                      'sys', 'module', 'cfg80211', 'holders')))
+
+
 def disconnect_access_points(ap_paths):
     """
     Disconnect all devices connected to any of the given access points.
