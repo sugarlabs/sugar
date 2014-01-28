@@ -604,11 +604,14 @@ class CurrentActivityIcon(CanvasIcon):
             self.palette = None
 
     def create_palette(self):
-        if self._home_activity.is_journal():
-            palette = JournalPalette(self._home_activity)
+        if self._home_activity is not None:
+            if self._home_activity.is_journal():
+                palette = JournalPalette(self._home_activity)
+            else:
+                palette = CurrentActivityPalette(self._home_activity)
+            self.connect_to_palette_pop_events(palette)
         else:
-            palette = CurrentActivityPalette(self._home_activity)
-        self.connect_to_palette_pop_events(palette)
+            palette = None
         return palette
 
     def __active_activity_changed_cb(self, home_model, home_activity):
