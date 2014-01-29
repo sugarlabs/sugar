@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import time
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -140,9 +141,9 @@ class Frame(object):
         zoom_toolbar.show()
         zoom_toolbar.connect('level-clicked', self._level_clicked_cb)
 
-        activities_tray = ActivitiesTray()
-        panel.append(activities_tray)
-        activities_tray.show()
+        self._activities_tray = ActivitiesTray()
+        panel.append(self._activities_tray)
+        self._activities_tray.show()
 
         return panel
 
@@ -256,13 +257,29 @@ class Frame(object):
 
     def __notification_received_cb(self, **kwargs):
         logging.debug('__notification_received_cb')
-        icon = NotificationIcon()
+
+        id_ = kwargs.get('replaces_id', -1)
+
+        app_id = kwargs.get('app_name', None)
+
+        duration = kwargs.get('expire_timeout', -1)
+        if duration == -1:
+            duration = _NOTIFICATION_DURATION
+        timeout = time.time() + duration
+
+        summary = kwargs.get('summary', '')
+        body = kwargs.get('body', '')
+
+        icon = NotificationIcon(draw_little_icon=True)
 
         hints = kwargs['hints']
 
         icon_file_name = hints.get('x-sugar-icon-file-name', '')
+        icon_name = hints.get('x-sugar-icon-name', '')
         if icon_file_name:
             icon.props.icon_filename = icon_file_name
+        elif icon_name:
+            icon.props.icon_name = icon_name
         else:
             icon.props.icon_name = 'application-octet-stream'
 
@@ -271,13 +288,13 @@ class Frame(object):
             icon_colors = profile.get_color()
         icon.props.xo_color = icon_colors
 
-        duration = kwargs.get('expire_timeout', -1)
-        if duration == -1:
-            duration = _NOTIFICATION_DURATION
+        self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 
-        self.add_notification(icon, Gtk.CornerType.TOP_RIGHT, duration)
+        data = {'summary': summary, 'body': body,
+                'timeout': timeout, 'id': id_}
+
+        self._activities_tray.add_notification(app_id, data, hints)
 
     def __notification_cancelled_cb(self, **kwargs):
-        # Do nothing for now. Our notification UI is so simple, there's no
-        # point yet.
-        pass
+        id_ = kwargs['notification_id']
+        self._activities_tray.remove_notification(id_)
