@@ -103,12 +103,14 @@ class CurrentActivityPalette(BasePalette):
 
         menu_item = PaletteMenuItem(_('View Source'), 'view-source')
         menu_item.connect('activate', self.__view_source__cb)
+        menu_item.set_accelerator('Shift+Alt+V')
         self.menu_box.append_item(menu_item)
 
         help_url_and_title = get_help_url_and_title(self._home_activity)
         if help_url_and_title:
             menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
             menu_item.connect('activate', self.__view_help__cb)
+            menu_item.set_accelerator('Shift+Alt+H')
             self.menu_box.append_item(menu_item)
 
         separator = PaletteMenuItemSeparator()

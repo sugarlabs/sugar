@@ -71,7 +71,8 @@ class SpeechPalette(Palette):
         self._pause_icon = Icon(icon_name='player_pause')
         self._play_pause_menu = PaletteMenuItem(
             icon_name='player_play',
-            text_label=_('Say selected text'))
+            text_label=_('Say selected text'),
+            accelerator='Shift+Alt+S')
         self._play_pause_menu.set_image(self._play_icon)
         self._play_pause_menu.connect('activate', self.__play_activated_cb)
         box.append_item(self._play_pause_menu)
