@@ -23,6 +23,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
+from sugar3 import power
 
 DEFAULT_PITCH = 0
 
@@ -150,6 +151,7 @@ class _GstSpeechPlayer(GObject.GObject):
             logging.debug('Trying to restart not initialized sound device')
             return
 
+        power.get_power_manager().inhibit_suspend()
         self._pipeline.set_state(Gst.State.PLAYING)
         self.emit('play')
 
@@ -158,6 +160,7 @@ class _GstSpeechPlayer(GObject.GObject):
             return
 
         self._pipeline.set_state(Gst.State.PAUSED)
+        power.get_power_manager().restore_suspend()
         self.emit('pause')
 
     def stop_sound_device(self):
@@ -165,6 +168,7 @@ class _GstSpeechPlayer(GObject.GObject):
             return
 
         self._pipeline.set_state(Gst.State.NULL)
+        power.get_power_manager().restore_suspend()
         self.emit('stop')
 
     def make_pipeline(self, command):
@@ -179,11 +183,10 @@ class _GstSpeechPlayer(GObject.GObject):
         bus.connect('message', self.__pipe_message_cb)
 
     def __pipe_message_cb(self, bus, message):
-        if message.type == Gst.MessageType.EOS:
+        if message.type in (Gst.MessageType.EOS, Gst.MessageType.ERROR):
             self._pipeline.set_state(Gst.State.NULL)
-            self.emit('stop')
-        elif message.type == Gst.MessageType.ERROR:
-            self._pipeline.set_state(Gst.State.NULL)
+            self._pipeline = None
+            power.get_power_manager().restore_suspend()
             self.emit('stop')
 
     def speak(self, pitch, rate, voice_name, text):
