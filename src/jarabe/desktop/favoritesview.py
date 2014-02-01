@@ -711,7 +711,7 @@ class FavoritesSetting(object):
             self._layout = layout
 
             settings = Gio.Settings(self._DESKTOP_DIR)
-            homeviews = settings.get_value(self._FAVORITES_KEY).unpack()
+            homeviews = settings.get_value(self._HOMEVIEWS_KEY).unpack()
 
             homeviews[self._favorite_view]['layout'] = layout
 
