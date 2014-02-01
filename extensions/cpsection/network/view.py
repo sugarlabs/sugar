@@ -1,4 +1,5 @@
 # Copyright (C) 2008, OLPC
+# Copyright (C) 2014, Sugar Labs, Frederick Grose
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,16 +41,20 @@ class Network(SectionView):
         self.restart_alerts = alerts
         self._jabber_sid = 0
         self._jabber_valid = True
-        self._radio_valid = True
         self._jabber_change_handler = None
-        self._radio_change_handler = None
-        self._network_configuration_reset_handler = None
+
+        self._radio_valid = True
+        self.wireless_available = \
+            self._model.network.wireless_driver_available()
+        if self.wireless_available:
+            self._radio_change_handler = None
+            self._wireless_configuration_reset_handler = None
+            self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
         group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
-        self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._jabber_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
         scrolled = Gtk.ScrolledWindow()
@@ -61,68 +66,72 @@ class Network(SectionView):
         scrolled.add_with_viewport(workspace)
         workspace.show()
 
-        separator_wireless = Gtk.HSeparator()
-        workspace.pack_start(separator_wireless, False, True, 0)
-        separator_wireless.show()
+        if self.wireless_available:
+            separator_wireless = Gtk.HSeparator()
+            workspace.pack_start(separator_wireless, False, True, 0)
+            separator_wireless.show()
 
-        label_wireless = Gtk.Label(label=_('Wireless'))
-        label_wireless.set_alignment(0, 0)
-        workspace.pack_start(label_wireless, False, True, 0)
-        label_wireless.show()
-        box_wireless = Gtk.VBox()
-        box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
-        box_wireless.set_spacing(style.DEFAULT_SPACING)
+            label_wireless = Gtk.Label(label=_('Wireless'))
+            label_wireless.set_alignment(0, 0)
+            workspace.pack_start(label_wireless, False, True, 0)
+            label_wireless.show()
+            box_wireless = Gtk.VBox()
+            box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
+            box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = Gtk.Label(label=
-                               _('Turn off the wireless radio to save battery'
-                                 ' life'))
-        radio_info.set_alignment(0, 0)
-        radio_info.set_line_wrap(True)
-        radio_info.show()
-        box_wireless.pack_start(radio_info, False, True, 0)
+            radio_info = Gtk.Label(label=_('The wireless radio may be turned'
+                                           ' off to save battery life.'))
+            radio_info.set_alignment(0, 0)
+            radio_info.set_line_wrap(True)
+            radio_info.show()
+            box_wireless.pack_start(radio_info, False, True, 0)
 
-        box_radio = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._button = Gtk.CheckButton()
-        self._button.set_alignment(0, 0)
-        box_radio.pack_start(self._button, False, True, 0)
-        self._button.show()
+            box_radio = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+            self._button = Gtk.CheckButton()
+            self._button.set_alignment(0, 0)
+            box_radio.pack_start(self._button, False, True, 0)
+            self._button.show()
 
-        label_radio = Gtk.Label(label=_('Radio'))
-        label_radio.set_alignment(0, 0.5)
-        box_radio.pack_start(label_radio, False, True, 0)
-        label_radio.show()
+            label_radio = Gtk.Label(label=_('Radio'))
+            label_radio.set_alignment(0, 0.5)
+            box_radio.pack_start(label_radio, False, True, 0)
+            label_radio.show()
 
-        box_wireless.pack_start(box_radio, False, True, 0)
-        box_radio.show()
+            box_wireless.pack_start(box_radio, False, True, 0)
+            box_radio.show()
 
-        self._radio_alert = InlineAlert()
-        self._radio_alert_box.pack_start(self._radio_alert, False, True, 0)
-        box_radio.pack_end(self._radio_alert_box, False, True, 0)
-        self._radio_alert_box.show()
-        if 'radio' in self.restart_alerts:
-            self._radio_alert.props.msg = self.restart_msg
-            self._radio_alert.show()
+            self._radio_alert = InlineAlert()
+            self._radio_alert_box.pack_start(self._radio_alert, False, True, 0)
+            box_radio.pack_end(self._radio_alert_box, False, True, 0)
+            self._radio_alert_box.show()
+            if 'radio' in self.restart_alerts:
+                self._radio_alert.props.msg = self.restart_msg
+                self._radio_alert.show()
 
-        history_info = Gtk.Label(label=_('Discard network history if you have'
-                                         ' trouble connecting to the network'))
-        history_info.set_alignment(0, 0)
-        history_info.set_line_wrap(True)
-        history_info.show()
-        box_wireless.pack_start(history_info, False, True, 0)
+            wireless_info = Gtk.Label(label=_('Discard wireless connections if'
+                               ' you have trouble connecting to the network.'))
+            wireless_info.set_alignment(0, 0)
+            wireless_info.set_line_wrap(True)
+            wireless_info.show()
+            box_wireless.pack_start(wireless_info, False, True, 0)
 
-        box_clear_history = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._clear_history_button = Gtk.Button()
-        self._clear_history_button.set_label(_('Discard network history'))
-        box_clear_history.pack_start(
-            self._clear_history_button, False, True, 0)
-        if not self._model.have_networks():
-            self._clear_history_button.set_sensitive(False)
-        self._clear_history_button.show()
-        box_wireless.pack_start(box_clear_history, False, True, 0)
-        box_clear_history.show()
+            box_clear_wireless = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+            self._clear_wireless_button = Gtk.Button()
+            self._clear_wireless_button.set_label(_(
+                                        'Discard wireless connections'))
+            box_clear_wireless.pack_start(
+                self._clear_wireless_button, False, True, 0)
+            if not self._model.have_wireless_networks():
+                self._clear_wireless_button.set_sensitive(False)
+            self._clear_wireless_button.show()
+            box_wireless.pack_start(box_clear_wireless, False, True, 0)
+            box_clear_wireless.show()
 
-        workspace.pack_start(box_wireless, False, True, 0)
-        box_wireless.show()
+            workspace.pack_start(box_wireless, False, True, 0)
+            box_wireless.show()
+        else:
+            # Delete radio code objects in memory for this invocation.
+            del self._model._options['radio']
 
         separator_mesh = Gtk.HSeparator()
         workspace.pack_start(separator_mesh, False, False, 0)
@@ -180,31 +189,34 @@ class Network(SectionView):
 
     def setup(self):
         self._entry.set_text(self._model.get_jabber())
-        try:
-            radio_state = self._model.get_radio()
-        except self._model.ReadError, detail:
-            self._radio_alert.props.msg = detail
-            self._radio_alert.show()
-        else:
-            self._button.set_active(radio_state)
+
+        if self.wireless_available:
+            try:
+                radio_state = self._model.get_radio()
+            except self._model.ReadError, detail:
+                self._radio_alert.props.msg = detail
+                self._radio_alert.show()
+            else:
+                self._button.set_active(radio_state)
+                self._radio_change_handler = self._button.connect(
+                        'toggled', self.__radio_toggled_cb)
+                self._wireless_configuration_reset_handler =  \
+                        self._clear_wireless_button.connect(
+                        'clicked', self.__wireless_configuration_reset_cb)
+                self._radio_valid = True
 
         self._jabber_valid = True
-        self._radio_valid = True
         self.needs_restart = False
-        self._radio_change_handler = self._button.connect(
-            'toggled', self.__radio_toggled_cb)
         self._jabber_change_handler = self._entry.connect(
             'changed', self.__jabber_changed_cb)
-        self._network_configuration_reset_handler =  \
-            self._clear_history_button.connect(
-                'clicked', self.__network_configuration_reset_cb)
 
     def undo(self):
-        self._button.disconnect(self._radio_change_handler)
+        if self.wireless_available:
+            self._button.disconnect(self._radio_change_handler)
+            self._radio_alert.hide()
         self._entry.disconnect(self._jabber_change_handler)
         self._model.undo()
         self._jabber_alert.hide()
-        self._radio_alert.hide()
 
     def _validate(self):
         if self._jabber_valid and self._radio_valid:
@@ -221,8 +233,8 @@ class Network(SectionView):
             self._radio_valid = False
         else:
             self._radio_valid = True
-            if self._model.have_networks():
-                self._clear_history_button.set_sensitive(True)
+            if self._model.have_wireless_networks():
+                self._clear_wireless_button.set_sensitive(True)
 
         self._validate()
         return False
@@ -252,9 +264,8 @@ class Network(SectionView):
         self._validate()
         return False
 
-    def __network_configuration_reset_cb(self, widget):
+    def __wireless_configuration_reset_cb(self, widget):
         # FIXME: takes effect immediately, not after CP is closed with
         # confirmation button
-        self._model.clear_networks()
-        if not self._model.have_networks():
-            self._clear_history_button.set_sensitive(False)
+        self._model.clear_wireless_networks()
+        self._clear_wireless_button.set_sensitive(False)
