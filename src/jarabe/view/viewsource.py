@@ -48,6 +48,9 @@ _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
                        '.xo', '.tar', '.bz2', '.zip', '.gz')
 _EXCLUDE_NAMES = ['.deps', '.libs']
 
+_IMPORT_TYPES = {'from sugar3': 3, 'from gi.repository import Gtk': 3,
+                 'from sugar.': 2, 'import pygtk': 2, 'pygtk.require': 2}
+
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
@@ -60,9 +63,24 @@ def _is_web_activity(bundle_path):
 
 
 def _is_gtk3_activity(bundle_path):
-    # FIXME, find a way to check if the activity is GTK3 or GTK2.
+    files = os.listdir(bundle_path)
+    # Most of the main files import gtk
+    # And most of them have activity in their name
+    key = lambda x: 1 if 'activity' in x.lower() else 2
+    files.sort(key=key)
+    for p in files:
+        if p.endswith('.py'):
+            with open(os.path.join(bundle_path, p)) as f:
+                code = f.read()
+                for sign in _IMPORT_TYPES:
+                    if sign in code:
+                        version = _IMPORT_TYPES[sign]
+                        if version == 3:
+                            return True
+                        else:
+                            return False
+    logging.error("Can't identify the gtk version of %s" % bundle_path)
     return True
-
 
 def _get_toolkit_path(bundle_path):
     sugar_toolkit_path = None
