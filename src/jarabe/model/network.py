@@ -3,6 +3,7 @@
 # Copyright (C) 2009-2010 One Laptop per Child
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2010 Plan Ceibal, Daniel Castelo
+# Copyright (C) 2014 Sugar Labs, Frederick Grose
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1030,6 +1031,22 @@ def _migrate_old_gsm_connection():
 
 def find_gsm_connection():
     return find_connection_by_id(GSM_CONNECTION_ID)
+
+
+def wireless_device_available():
+    """
+    Check for the presence of a registered wireless adapter.
+    """
+    bus = dbus.SystemBus()
+    netmgr_obj = bus.get_object(NM_SERVICE, NM_PATH)
+    netmgr = dbus.Interface(netmgr_obj, NM_IFACE)
+    devices = netmgr.GetDevices()
+    for device in devices:
+        dev_proxy = bus.get_object(NM_IFACE, device)
+        prop_iface = dbus.Interface(dev_proxy, dbus.PROPERTIES_IFACE)
+        device_type = prop_iface.Get(NM_DEVICE_IFACE, 'DeviceType')
+        if device_type == NM_DEVICE_TYPE_WIFI:
+            return True
 
 
 def disconnect_access_points(ap_paths):
