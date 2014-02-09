@@ -17,6 +17,7 @@
 import logging
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
@@ -46,8 +47,12 @@ class HomeBox(Gtk.VBox):
         self._desktop_model.connect('desktop-view-icons-changed',
                                     self.__desktop_view_icons_changed_cb)
 
+
+        toolbar.search_entry._icon_selected = []
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
+        toolbar.search_entry.connect('key-press-event',
+                                     self.__search_entry_key_press_event_cb)
         toolbar.search_entry.connect('icon-press',
                                      self.__clear_icon_pressed_cb)
         self._list_view.connect('clear-clicked',
@@ -83,9 +88,20 @@ class HomeBox(Gtk.VBox):
         self._list_view.set_filter(self._query)
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)
+            toolbar.search_entry._icon_selected.append(
+                    self._favorites_boxes[i]._get_selected(self._query))
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
+
+    def __search_entry_key_press_event_cb(self, entry, event):
+        # wherever a single item is selected in a desktop view,
+        # launch the activity on pressing return
+        if event.keyval == Gdk.KEY_Return and entry._icon_selected:
+            for icons in entry._icon_selected:
+                if len(icons) == 1:
+                    icons[0].run_activity()
+            entry._icon_selected = []
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()

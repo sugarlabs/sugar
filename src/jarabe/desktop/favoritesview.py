@@ -108,6 +108,8 @@ class FavoritesBox(Gtk.VBox):
         self.remove(self._alert)
         self._alert = None
 
+    def _get_selected(self, query):
+        return self._view._get_selected(query)
 
 class FavoritesView(ViewContainer):
     __gtype_name__ = 'SugarFavoritesView'
@@ -357,6 +359,17 @@ class FavoritesView(ViewContainer):
                 else:
                     icon.alpha = 0.33
 
+    def _get_selected(self, query):
+        query = query.strip()
+        selected = []
+        for icon in self.get_children():
+            if icon not in [self._owner_icon, self._activity_icon]:
+                activity_name = icon.get_activity_name().decode('utf-8')
+                normalized_name = normalize_string(activity_name)
+                if normalized_name.find(query) > -1:
+                    selected.append(icon)
+        return selected
+
     def __register_activate_cb(self, icon):
         alert = Alert()
         try:
@@ -496,6 +509,9 @@ class ActivityIcon(CanvasIcon):
             self._resume(self._journal_entries[0])
         else:
             misc.launch(self._activity_info)
+
+    def run_activity(self):
+        self._activate()
 
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()
