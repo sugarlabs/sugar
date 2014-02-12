@@ -59,7 +59,7 @@ class Downloader(GObject.GObject):
                      (object,)),
     }
 
-    def __init__(self, url, session=None):
+    def __init__(self, url, session=None, request_headers=None):
         GObject.GObject.__init__(self)
         self._uri = Soup.URI.new(url)
         self._session = session or get_soup_session()
@@ -71,11 +71,16 @@ class Downloader(GObject.GObject):
         self._output_file = None
         self._output_stream = None
         self._message = None
+        self._request_headers = request_headers
 
     def _setup_message(self, method="GET"):
         self._message = Soup.Message(method=method, uri=self._uri)
         self._message.connect('got-chunk', self._got_chunk_cb)
         self._message.connect('got-headers', self._headers_cb, None)
+        if self._request_headers is not None:
+            for header_key in self._request_headers.keys():
+                self._message.request_headers.append(
+                    header_key, self._request_headers[header_key])
 
     def download_to_temp(self):
         """
