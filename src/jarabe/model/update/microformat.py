@@ -178,7 +178,10 @@ class MicroformatUpdater(object):
             return
 
         self._parser = _UpdateHTMLParser(url)
-        downloader = Downloader(url)
+        # wiki.laptop.org have agresive cache, we set max-age=600
+        # to be sure the page is no older than 10 minutes
+        request_headers = {'Cache-Control': 'max-age=600'}
+        downloader = Downloader(url, request_headers=request_headers)
         downloader.connect('got-chunk', self._got_chunk_cb)
         downloader.connect('complete', self._complete_cb)
         downloader.download_chunked()
