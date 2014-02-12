@@ -72,6 +72,31 @@ class ObjectPalette(Palette):
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
+        if metadata.get('description', ''):
+            label = Gtk.Label()
+            label.set_max_width_chars(style.MENU_WIDTH_CHARS)
+            label.set_justify(Gtk.Justification.LEFT)
+            label.set_line_wrap(True)
+            label.set_halign(Gtk.Align.START)
+
+            description = str(metadata.get('description', ''))
+            description = description.replace('\n', ' ')
+            maxlen = style.MENU_WIDTH_CHARS
+            description = self._smart_truncate(description, maxlen-4)
+            label.set_text(description)
+            label.modify_fg(Gtk.StateType.INSENSITIVE,
+                            Gdk.color_parse('white'))
+
+            item = Gtk.MenuItem()
+            item.add(label)
+            item.set_sensitive(False)
+            self.menu.append(item)
+            item.show_all()
+
+            separator = Gtk.SeparatorMenuItem()
+            self.menu.append(separator)
+            separator.show()
+
         if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
                 resume_label = _('Resume')
@@ -203,6 +228,13 @@ class ObjectPalette(Palette):
             return
 
         Palette.popup(self, immediate)
+
+    @staticmethod
+    def _smart_truncate(content, length=100, suffix='...'):
+        if len(content) <= length:
+            return content
+        else:
+            return ' '.join(content[:length+1].split(' ')[0:-1]) + suffix
 
 
 class CopyMenu(Gtk.Menu):
