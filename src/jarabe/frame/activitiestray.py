@@ -326,7 +326,49 @@ class ActivitiesTray(HTray):
             bnt = self._buttons[app_id]
             bnt.add_notification(data)
         else:
-            pass
+            icon = NotificationFrameIcon()
+            icon_file_name = hints.get('x-sugar-icon-file-name', '')
+            icon_name = hints.get('x-sugar-icon-name', '')
+            if icon_file_name:
+                icon.props.icon_filename = icon_file_name
+            elif icon_name:
+                icon.props.icon_name = icon_name
+            else:
+                icon.props.icon_name = 'application-octet-stream'
+
+            icon_colors = hints.get('x-sugar-icon-colors', '')
+            if not icon_colors:
+                icon_colors = profile.get_color()
+            icon.props.xo_color = icon_colors
+            icon.gen_little_icon(icon_colors)
+
+            button = ToolButton()
+            button.props.icon_widget = icon
+            icon.show()
+
+            palette = Palette()
+            palette.props.primary_text = data['summary']
+            palette.props.secondary_text = data['body']
+
+            box = PaletteMenuBox()
+            palette.set_content(box)
+            box.show()
+
+            menu_item = PaletteMenuItem(_('Dismiss'))
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
+            menu_item.set_image(icon)
+            icon.show()
+            menu_item.connect('activate', self.__hide_button, button)
+            box.append_item(menu_item)
+            menu_item.show()
+
+            button.set_palette_invoker(FrameWidgetInvoker(button))
+            button.palette_invoker.props.palette = palette
+
+            self.add_item(button)
+            self._buttons[button] = button
+            button.show()
 
     def __hide_button(self, caller, button):
         button.hide()
