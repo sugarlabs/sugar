@@ -47,7 +47,6 @@ class HomeBox(Gtk.VBox):
         self._desktop_model.connect('desktop-view-icons-changed',
                                     self.__desktop_view_icons_changed_cb)
 
-
         toolbar.search_entry._icon_selected = []
         toolbar.connect('query-changed', self.__toolbar_query_changed_cb)
         toolbar.connect('view-changed', self.__toolbar_view_changed_cb)
@@ -89,7 +88,7 @@ class HomeBox(Gtk.VBox):
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)
             toolbar.search_entry._icon_selected.append(
-                    self._favorites_boxes[i]._get_selected(self._query))
+                self._favorites_boxes[i]._get_selected(self._query))
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)

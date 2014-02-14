@@ -111,6 +111,7 @@ class FavoritesBox(Gtk.VBox):
     def _get_selected(self, query):
         return self._view._get_selected(query)
 
+
 class FavoritesView(ViewContainer):
     __gtype_name__ = 'SugarFavoritesView'
 
