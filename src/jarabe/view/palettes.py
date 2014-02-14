@@ -42,9 +42,14 @@ from jarabe.journal import misc
 
 
 class BasePalette(Palette):
+    __gsignals__ = {
+        'notification-removed': (GObject.SignalFlags.RUN_FIRST, None, [int])
+    }
+
     def __init__(self, home_activity):
         Palette.__init__(self)
 
+        self.notifications_by_id = {}
         self._notify_launch_hid = None
 
         if home_activity.props.launch_status == shell.Activity.LAUNCHING:
@@ -70,6 +75,45 @@ class BasePalette(Palette):
             self._on_failed_launch()
         else:
             self.setup_palette()
+
+    def add_notification(self, data):
+        if not self.notifications_by_id:
+            separator = PaletteMenuItemSeparator()
+            self.menu_box.append_item(separator)
+            separator.show()
+
+        markup = '<b>%s</b>\n%s' % (data['summary'], data['body'])
+        menu_item = PaletteMenuItem(None, 'emblem-notification',
+                                    markup_label=markup)
+        self.menu_box.append_item(menu_item)
+        menu_item.connect('activate', self.__notification_clicked)
+        menu_item.data = data
+
+        self.notifications_by_id[data['id']] = menu_item
+
+    def __notification_clicked(self, notification):
+        data = notification.data
+        notification.hide()
+        self.menu_box.remove(notification)
+        self.notifications_by_id[data['id']] = None
+
+        self.emit('notification-removed', data['id'])
+
+        # TODO: use intents to do something when we make intents
+
+    def remove_notification(self, id_):
+        notification = self.notifications_by_id[id_]
+        notification.hide()
+        self.menu_box.remove(notification)
+        self.notifications_by_id[id_] = None
+
+    def remove_all_notifications(self):
+        for button in self.notifications_by_id.values():
+            button.hide()
+            self.menu_box.remove(button)
+
+        self.notifications_by_id = {}
+        self.notification_buttons = []
 
 
 class CurrentActivityPalette(BasePalette):
@@ -190,9 +234,9 @@ class JournalPalette(BasePalette):
         title = self._home_activity.get_title()
         self.set_primary_text(GLib.markup_escape_text(title))
 
-        box = PaletteMenuBox()
-        self.set_content(box)
-        box.show()
+        self.menu_box = PaletteMenuBox()
+        self.set_content(self.menu_box)
+        self.menu_box.show()
 
         menu_item = PaletteMenuItem(_('Show contents'))
         icon = Icon(file=self._home_activity.get_icon_path(),
@@ -202,16 +246,16 @@ class JournalPalette(BasePalette):
         icon.show()
 
         menu_item.connect('activate', self.__open_activate_cb)
-        box.append_item(menu_item)
+        self.menu_box.append_item(menu_item)
         menu_item.show()
 
         separator = PaletteMenuItemSeparator()
-        box.append_item(separator)
+        self.menu_box.append_item(separator)
         separator.show()
 
         inner_box = Gtk.VBox()
         inner_box.set_spacing(style.DEFAULT_PADDING)
-        box.append_item(inner_box, vertical_padding=0)
+        self.menu_box.append_item(inner_box, vertical_padding=0)
         inner_box.show()
 
         self._progress_bar = Gtk.ProgressBar()
