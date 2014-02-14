@@ -132,17 +132,18 @@ mesh_whitelist = ('OLPC Mesh Network 1',
                   'OLPC XS Mesh Network 6',
                   'OLPC XS Mesh Network 11')
 
+
 def is_wireless(connection):
     """Check for wireless connection not whitelisted by Sugar.
     """
     wifi_settings = connection.get_settings(
-                               network.NM_CONNECTION_TYPE_802_11_WIRELESS)
+        network.NM_CONNECTION_TYPE_802_11_WIRELESS)
     if wifi_settings:
         return not (wifi_settings['mode'] == 'adhoc' and
                     connection.get_id() in wifi_whitelist)
 
     mesh_settings = connection.get_settings(
-                               network.NM_CONNECTION_TYPE_802_11_OLPC_MESH)
+        network.NM_CONNECTION_TYPE_802_11_OLPC_MESH)
     if mesh_settings:
         return not connection.get_id() in mesh_whitelist
 
@@ -155,8 +156,11 @@ def clear_wireless_networks():
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
     else:
-        for connection in (connection for connection in connections.get_list()
-                                          if is_wireless(connection)):
+        wireless_connections = \
+            (connection for connection in
+             connections.get_list() if is_wireless(connection))
+
+        for connection in wireless_connections:
             try:
                 connection.delete()
             except dbus.DBusException:

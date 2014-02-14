@@ -103,8 +103,9 @@ class Network(SectionView):
             self._radio_alert.props.msg = self.restart_msg
             self._radio_alert.show()
 
-        wireless_info = Gtk.Label(label=_('Discard wireless connections if'
-                            ' you have trouble connecting to the network'))
+        wireless_info = Gtk.Label(
+            label=_('Discard wireless connections if'
+                    ' you have trouble connecting to the network'))
         wireless_info.set_alignment(0, 0)
         wireless_info.set_line_wrap(True)
         wireless_info.show()
@@ -112,8 +113,8 @@ class Network(SectionView):
 
         box_clear_wireless = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._clear_wireless_button = Gtk.Button()
-        self._clear_wireless_button.set_label(_(
-                                    'Discard wireless connections'))
+        self._clear_wireless_button.set_label(
+            _('Discard wireless connections'))
         box_clear_wireless.pack_start(
             self._clear_wireless_button, False, True, 0)
         if not self._model.have_wireless_networks():
