@@ -20,6 +20,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.icon import get_surface, Icon
 
 from jarabe.view.pulsingicon import PulsingIcon
 
@@ -35,10 +36,13 @@ class NotificationIcon(Gtk.EventBox):
 
     _PULSE_TIMEOUT = 3
 
-    def __init__(self, **kwargs):
+    def __init__(self, draw_little_icon=False, **kwargs):
         self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
         Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
+
+        self._draw_little_icon = draw_little_icon
+        self._notfication_icon = None
 
         self._icon.props.pulse_color = \
             XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
@@ -60,6 +64,11 @@ class NotificationIcon(Gtk.EventBox):
         if pspec.name == 'xo-color':
             if self._icon.props.base_color != value:
                 self._icon.props.base_color = value
+                self._notfication_icon = get_surface(
+                    icon_name='emblem-notification',
+                    width=22, height=22,
+                    stroke_color=value.get_stroke_color(),
+                    fill_color=value.get_fill_color())
         elif pspec.name == 'icon-name':
             if self._icon.props.icon_name != value:
                 self._icon.props.icon_name = value
@@ -82,6 +91,38 @@ class NotificationIcon(Gtk.EventBox):
         return self._icon.palette
 
     palette = property(_get_palette, _set_palette)
+
+    def do_draw(self, cr):
+        self._icon.do_draw(cr)
+
+        if self._draw_little_icon:
+            cr.set_source_surface(self._notfication_icon, 28, 28)
+            cr.paint()
+
+        return False
+
+
+class NotificationFrameIcon(Icon):
+
+    def __init__(self):
+        Icon.__init__(self)
+        self._notfication_icon = None
+
+    def gen_little_icon(self, xocolor):
+        self._notfication_icon = get_surface(
+            icon_name='emblem-notification',
+            width=21, height=21,
+            stroke_color=xocolor.get_stroke_color(),
+            fill_color=xocolor.get_fill_color())
+
+    def do_draw(self, cr):
+        Icon.do_draw(self, cr)
+
+        if self._notfication_icon:
+            cr.set_source_surface(self._notfication_icon, 19, 19)
+            cr.paint()
+
+        return False
 
 
 class NotificationWindow(Gtk.Window):
