@@ -18,7 +18,7 @@
 
 from gettext import gettext as _
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Pango
 from gi.repository import Gdk
 
 from sugar3.graphics import style
@@ -206,6 +206,8 @@ class AboutComputer(SectionView):
             view_license = Gtk.TextView()
             view_license.set_editable(False)
             view_license.get_buffer().set_text(self._model.get_license())
+            fd = Pango.FontDescription('Monospace')
+            view_license.modify_font(fd)
             view_license.show()
             expander.add(view_license)
         else:
