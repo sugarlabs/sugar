@@ -51,7 +51,7 @@ class TestUserProfile(unittest.TestCase):
         for current in range(10):
             new_color = random.choice(colors)
             new_color = "%s,%s" % (new_color[0], new_color[1])
-            model.set_color(new_color)
+            model.set_color_xo(new_color)
             self.assertEqual(model.get_color(), new_color)
 
     def tearDown(self):
@@ -64,4 +64,4 @@ class TestUserProfile(unittest.TestCase):
             model.set_nick(self.start_nick)
 
         if isinstance(self.start_color, str):
-            model.set_color(self.start_color)
+            model.set_color_xo(self.start_color)
