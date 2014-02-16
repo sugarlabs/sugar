@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
@@ -14,16 +15,31 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import random
-import string
 import unittest
 
 from cpsection.aboutme import model
 from jarabe.intro.agepicker import AGES
 from jarabe.intro.genderpicker import GENDERS
-from sugar3.graphics.xocolor import colors
 
-CHARSET = string.ascii_uppercase + string.digits
+TEST_NICKS = ['Ajay Garg', 'Aleksey Lim',
+              'Bernie H. Innocenti', 'Daniel Narvaez',
+              'Emil Dudev', 'Gonzalo Odiard',
+              'Ignacio Rodríguez', 'Jorge Alberto Gómez López',
+              'Sai Vineet', 'Sam Parkinson',
+              'Sascha Silbe', 'Walter Bender']
+
+TEST_COLORS = [['#FF8F00', '#FF2B34'],
+               ['#00A0FF', '#008009'],
+               ['#BCCEFF', '#F8E800'],
+               ['#FF2B34', '#7F00BF'],
+               ['#FF2B34', '#5E008C'],
+               ['#BCCDFF', '#AC32FF'],
+               ['#00EA11', '#9A5200'],
+               ['#A700FF', '#FF8F00'],
+               ['#00EA11', '#7F00BF'],
+               ['#8BFF7A', '#F8E800'],
+               ['#00A0FF', '#5E008C'],
+               ['#7F00BF', '#AC32FF']]
 
 
 class TestUserProfile(unittest.TestCase):
@@ -36,14 +52,12 @@ class TestUserProfile(unittest.TestCase):
                 self.assertEqual(model.get_gender(), gender)
 
     def test_user_nick(self):
-        for current in range(1, 26):
-            new_nick = ''.join(random.sample(CHARSET * current, current))
-            model.set_nick(new_nick)
-            self.assertEqual(model.get_nick(), new_nick)
+        for nick in TEST_NICKS:
+            model.set_nick(nick)
+            self.assertEqual(model.get_nick(), nick)
 
     def test_user_color(self):
-        for current in range(10):
-            new_color = random.choice(colors)
+        for new_color in TEST_COLORS:
             new_color = "%s,%s" % (new_color[0], new_color[1])
             model.set_color_xo(new_color)
             self.assertEqual(model.get_color(), new_color)
