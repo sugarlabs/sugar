@@ -193,7 +193,7 @@ class MicroformatUpdater(object):
     def _complete_cb(self, downloader, result):
         if isinstance(result, Exception):
             _logger.warning("Failed to read update info: %s", result)
-            self._completion_cb([])
+            self._error_cb(result)
             return
 
         self._parser.close()
@@ -280,9 +280,10 @@ class MicroformatUpdater(object):
         self._check_next_update()
 
     def fetch_update_info(self, installed_bundles, auto, progress_cb,
-                          completion_cb):
+                          completion_cb, error_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
+        self._error_cb = error_cb
         self._cancelling = False
         self._updates = []
         self._bundles_to_check = []
