@@ -118,7 +118,10 @@ class _UpdateHTMLParser(HTMLParser):
             self.group_desc = data.strip()
 
         if self.in_activity_id > 0:
-            self.last_id = data.strip()
+            if self.last_id is None:
+                self.last_id = data.strip()
+            else:
+                self.last_id = self.last_id + data.strip()
 
         if self.in_activity_version > 0:
             try:
