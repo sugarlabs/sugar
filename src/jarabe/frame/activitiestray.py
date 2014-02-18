@@ -31,7 +31,7 @@ from sugar3.graphics.tray import HTray
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.icon import Icon, get_icon_file_name
+from sugar3.graphics.icon import Icon, get_icon_file_name, get_surface
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
@@ -49,13 +49,20 @@ from jarabe.model import filetransfer
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
-from jarabe.frame.notification import NotificationIcon
+from jarabe.frame.notification import NotificationIcon, NotificationFrameIcon
 import jarabe.frame
 
 
 class ActivityButton(RadioToolButton):
     def __init__(self, home_activity, group):
         RadioToolButton.__init__(self, group=group)
+        self.notifications = []
+        stroke = home_activity.get_icon_color().get_stroke_color()
+        fill = home_activity.get_icon_color().get_fill_color()
+        self._notfication_icon = get_surface(icon_name='emblem-notification',
+                                             width=22, height=22,
+                                             stroke_color=stroke,
+                                             fill_color=fill)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.cache_palette = False
@@ -88,8 +95,44 @@ class ActivityButton(RadioToolButton):
         else:
             palette = CurrentActivityPalette(self._home_activity)
             palette.connect('done', self.__palette_item_selected_cb)
+
+        for i in self.notifications:
+            palette.add_notification(i)
+
+        palette.connect('notification-removed', self.__notification_removed)
         palette.set_group_id('frame')
         self.set_palette(palette)
+
+    def add_notification(self, data):
+        palette = self.get_palette()
+        if palette:
+            palette.add_notification(data)
+        else:
+            self.notifications.append(data)
+        self.queue_draw()
+
+    def __notification_removed(self, palette, id_):
+        new_notifications = []
+
+        for i in self.notifications:
+            if i['id'] != id_:
+                new_notifications.append(i)
+        self.notifications = new_notifications
+
+        if not self.notifications:
+            self.queue_draw()
+
+    def remove_all_notifications(self):
+        self._icon.props.pulsing = False
+        self.notifications = []
+        if self.palette:
+            self.palette.remove_all_notifications()
+        self.queue_draw()
+
+    def remove_notification(self, app_id):
+        if self.palette:
+            self.palette.remove_notification(app_id)
+        self.queue_draw()
 
     def __palette_item_selected_cb(self, widget):
         frame = jarabe.frame.get_view()
@@ -106,6 +149,19 @@ class ActivityButton(RadioToolButton):
             self._on_failed_launch()
         else:
             self._icon.props.pulsing = False
+        self.queue_draw()
+
+    def do_draw(self, cr):
+        super(ActivityButton, self).do_draw(cr)
+
+        if self.notifications:
+            cr.set_source_surface(self._notfication_icon, 28, 28)
+            cr.paint()
+
+        if self._icon.props.pulsing:
+            self.queue_draw()
+
+        return False
 
 
 class InviteButton(ToolButton):
@@ -223,6 +279,8 @@ class ActivitiesTray(HTray):
         self._buttons = {}
         self._invite_to_item = {}
         self._freeze_button_clicks = False
+        self._journal_activity_id = None
+        self._notification_id_button = {}
 
         self._home_model = shell.get_model()
         self._home_model.connect('activity-added', self.__activity_added_cb)
@@ -243,6 +301,8 @@ class ActivitiesTray(HTray):
 
     def __activity_added_cb(self, home_model, home_activity):
         logging.debug('__activity_added_cb: %r', home_activity)
+        if home_activity.is_journal():
+            self._journal_activity_id = home_activity.get_activity_id()
         if self.get_children():
             group = self.get_children()[0]
         else:
@@ -250,18 +310,86 @@ class ActivitiesTray(HTray):
 
         button = ActivityButton(home_activity, group)
         self.add_item(button)
-        self._buttons[home_activity] = button
+        self._buttons[home_activity.get_activity_id()] = button
         button.connect('clicked', self.__activity_clicked_cb, home_activity)
         button.show()
 
+    def add_notification(self, app_id, data, hints):
+        """
+        Insert a notification into the frame
+        """
+        if not app_id in self._notification_id_button:
+            self._notification_id_button[app_id] = []
+        self._notification_id_button[app_id].append(data['id'])
+
+        if app_id in self._buttons:
+            bnt = self._buttons[app_id]
+            bnt.add_notification(data)
+        else:
+            icon = NotificationFrameIcon()
+            icon_file_name = hints.get('x-sugar-icon-file-name', '')
+            icon_name = hints.get('x-sugar-icon-name', '')
+            if icon_file_name:
+                icon.props.icon_filename = icon_file_name
+            elif icon_name:
+                icon.props.icon_name = icon_name
+            else:
+                icon.props.icon_name = 'application-octet-stream'
+
+            icon_colors = hints.get('x-sugar-icon-colors', '')
+            if not icon_colors:
+                icon_colors = profile.get_color()
+            icon.props.xo_color = icon_colors
+            icon.gen_little_icon(icon_colors)
+
+            button = ToolButton()
+            button.props.icon_widget = icon
+            icon.show()
+
+            palette = Palette()
+            palette.props.primary_text = data['summary']
+            palette.props.secondary_text = data['body']
+
+            box = PaletteMenuBox()
+            palette.set_content(box)
+            box.show()
+
+            menu_item = PaletteMenuItem(_('Dismiss'))
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
+            menu_item.set_image(icon)
+            icon.show()
+            menu_item.connect('activate', self.__hide_button, button)
+            box.append_item(menu_item)
+            menu_item.show()
+
+            button.set_palette_invoker(FrameWidgetInvoker(button))
+            button.palette_invoker.props.palette = palette
+
+            self.add_item(button)
+            self._buttons[button] = button
+            button.show()
+
+    def __hide_button(self, caller, button):
+        button.hide()
+        return True
+
+    def remove_notification(self, app_id):
+        """
+        Removes the given notification from the frame
+        """
+        if app_id in self._buttons:
+            bnt = self._buttons[app_id]
+            bnt.remove_notification(app_id)
+
     def __activity_removed_cb(self, home_model, home_activity):
         logging.debug('__activity_removed_cb: %r', home_activity)
-        button = self._buttons[home_activity]
+        button = self._buttons[home_activity.get_activity_id()]
         self.remove_item(button)
-        del self._buttons[home_activity]
+        del self._buttons[home_activity.get_activity_id()]
 
     def _activate_activity(self, home_activity):
-        button = self._buttons[home_activity]
+        button = self._buttons[home_activity.get_activity_id()]
         self._freeze_button_clicks = True
         button.props.active = True
         self._freeze_button_clicks = False
@@ -294,6 +422,8 @@ class ActivitiesTray(HTray):
         self._activate_activity(home_activity)
 
     def __activity_clicked_cb(self, button, home_activity):
+        button.remove_all_notifications()
+
         if not self._freeze_button_clicks and button.props.active:
             logging.debug('ActivitiesTray.__activity_clicked_cb')
             window = home_activity.get_window()
