@@ -129,6 +129,7 @@ class Updater(GObject.GObject):
     def _backend_error_cb(self, error):
         _logger.debug("_backend_error_cb %s", error)
         self._finished(True)
+        self._state = STATE_CHECKED
         self.emit('error', error)
 
     def update(self, bundle_ids):
