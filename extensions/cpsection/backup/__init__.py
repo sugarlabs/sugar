@@ -15,7 +15,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+from sugar3.graphics.xocolor import XoColor
 
 CLASS = 'BackupView'
-ICON = 'backup'
+ICON = 'backup-backup'
 TITLE = _('Backup')
+COLOR = XoColor('#FFFFFF,#000000')
