@@ -254,6 +254,7 @@ class AboutMe(SectionView):
 
         self._color = XoColor(self._model.get_color())
 
+        self._original_nick = self._model.get_nick()
         self._setup_color()
         self._setup_nick()
         self._setup_gender()
@@ -261,7 +262,7 @@ class AboutMe(SectionView):
 
         self._update_pickers(self._color)
 
-        self._nick_entry.set_text(self._model.get_nick())
+        self._nick_entry.set_text(self._original_nick)
         self._color_valid = True
         self._nick_valid = True
         self.needs_restart = False
@@ -463,13 +464,19 @@ class AboutMe(SectionView):
         except ValueError, detail:
             self._nick_alert.props.msg = detail
             self._nick_valid = False
+            self._nick_alert.show()
         else:
-            self._nick_alert.props.msg = self.restart_msg
             self._nick_valid = True
-            self.needs_restart = True
-            self.restart_alerts.append('nick')
+            if widget.get_text() == self._original_nick:
+                self.needs_restart = False
+                self.restart_alerts.remove('nick')
+                self._nick_alert.hide()
+            else:
+                self._nick_alert.props.msg = self.restart_msg
+                self.needs_restart = True
+                self.restart_alerts.append('nick')
+                self._nick_alert.show()
         self._validate()
-        self._nick_alert.show()
         return False
 
     def __color_changed_cb(self, colorpicker, color):
