@@ -14,7 +14,26 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 from gi.repository import GObject
+
+
+def get_valid_file_name(file_name):
+    # Invalid characters in VFAT filenames. From
+    # http://en.wikipedia.org/wiki/File_Allocation_Table
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '\x7F']
+    invalid_chars.extend([chr(x) for x in range(0, 32)])
+    for char in invalid_chars:
+        file_name = file_name.replace(char, '_')
+
+    # FAT limit is 255, leave some space for uniqueness
+    max_len = 250
+    if len(file_name) > max_len:
+        name, extension = os.path.splitext(file_name)
+        file_name = name[0:max_len - len(extension)] + extension
+
+    return file_name
 
 
 class PreConditionsError(Exception):
