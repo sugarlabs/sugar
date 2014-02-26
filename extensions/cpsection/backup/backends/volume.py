@@ -27,6 +27,7 @@ from gi.repository import GObject
 
 from sugar3 import env
 from sugar3 import profile
+from jarabe.journal import model
 
 from backend_tools import Backend, PreConditionsError, PreConditionsChoose
 from backend_tools import get_valid_file_name
@@ -72,7 +73,8 @@ class Backup(Backend):
         option: dictionary
         """
         self._set_volume(option)
-        if _get_volume_space(self._volume) < _get_datastore_size():
+        self._uncompressed_size = _get_datastore_size()
+        if _get_volume_space(self._volume) < self._uncompressed_size:
             raise PreConditionsError(_('Not enough space in volume'))
 
     def _get_datastore_entries(self):
@@ -115,6 +117,13 @@ class Backup(Backend):
 
     def _do_finish(self):
         self._tarfile.close()
+        # Add metadata to the file created
+        metadata = model.get(self._checkpoint)
+        metadata['description'] = _('Backup from user %s') % \
+            profile.get_nick_name()
+        metadata['icon_color'] = profile.get_color().to_string()
+        metadata['uncompressed_size'] = self._uncompressed_size
+        model.write(metadata, self._checkpoint)
         self.emit('finished')
 
     def start(self):
@@ -250,10 +259,16 @@ def _get_datastore_size():
 
 
 def _get_checkpoint_size(path):
-    size = 0
-    with tarfile.open(path, 'r:gz') as file:
-        for tarinfo in file:
-            size += DIR_SIZE if tarinfo.isdir() else tarinfo.size
+    # read information in the metadata
+    metadata = model.get(path)
+    if 'uncompressed_size' in metadata:
+        size = int(metadata['uncompressed_size'])
+        logging.error('size from metadata = %d', size)
+    else:
+        size = 0
+        with tarfile.open(path, 'r:gz') as file:
+            for tarinfo in file:
+                size += DIR_SIZE if tarinfo.isdir() else tarinfo.size
     return size
 
 
