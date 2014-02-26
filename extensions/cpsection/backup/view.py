@@ -273,11 +273,13 @@ class OperationPanel(Gtk.Grid):
 
         if self._operation == OPERATION_BACKUP:
             self._operator = self._backend.get_backup()
+            self._message_label.set_text(_('Starting backup...'))
 
         if self._operation == OPERATION_RESTORE:
             self._operator = self._backend.get_restore()
+            self._message_label.set_text(_('Starting restore...'))
 
-        self._continue_operation()
+        GObject.idle_add(self._continue_operation)
 
     def _continue_operation(self, options={}):
         need_more_information = True
@@ -292,9 +294,6 @@ class OperationPanel(Gtk.Grid):
                               self._assign_parameter_backend)
         if not need_more_information:
             if self._operation == OPERATION_BACKUP:
-                logging.error('Starting backup...')
-                self._message_label.set_text(
-                    _('Starting backup...'))
                 GObject.idle_add(self._internal_start_operation)
 
             if self._operation == OPERATION_RESTORE:
