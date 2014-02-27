@@ -241,7 +241,7 @@ class AboutMe(SectionView):
         SectionView.__init__(self)
 
         self._model = model
-        self.restart_alerts = alerts
+        self.restart_alerts = alerts if alerts else set()
         self._nick_sid = 0
         self._color_valid = True
         self._nick_valid = True
@@ -458,6 +458,10 @@ class AboutMe(SectionView):
         self._nick_sid = 0
 
         if widget.get_text() == self._model.get_nick():
+            self.restart_alerts.remove('nick')
+            if not self.restart_alerts:
+                self.needs_restart = False
+            self._nick_alert.hide()
             return False
         try:
             self._model.set_nick(widget.get_text())
@@ -469,11 +473,13 @@ class AboutMe(SectionView):
             self._nick_valid = True
             if widget.get_text() == self._original_nick:
                 self.restart_alerts.remove('nick')
+                if not self.restart_alerts:
+                    self.needs_restart = False
                 self._nick_alert.hide()
             else:
                 self._nick_alert.props.msg = self.restart_msg
                 self.needs_restart = True
-                self.restart_alerts.append('nick')
+                self.restart_alerts.add('nick')
                 self._nick_alert.show()
         self._validate()
         return False
@@ -483,7 +489,7 @@ class AboutMe(SectionView):
         self.needs_restart = True
         self._color_alert.props.msg = self.restart_msg
         self._color_valid = True
-        self.restart_alerts.append('color')
+        self.restart_alerts.add('color')
 
         self._validate()
         self._color_alert.show()
