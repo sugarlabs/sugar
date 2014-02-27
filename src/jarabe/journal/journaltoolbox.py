@@ -32,6 +32,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toggletoolbutton import ToggleToolButton
+from sugar3.graphics.palette import ToolInvoker
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -105,10 +106,16 @@ class MainToolbox(ToolbarBox):
         self._favorite_button.show()
 
         self._what_widget = Gtk.ToolItem()
+
+        self._what_search_button = FilterToolItem(
+            'go-down', _('Anything'), self._what_widget)
+
+        """
         self._what_search_button = ListPaletteToolButton(
             page=self._what_widget,
             label=_('Anything'),
             icon_name='go-down')
+        """
         self._what_widget.show()
         self.toolbar.insert(self._what_search_button, -1)
         self._what_search_button.show()
@@ -862,6 +869,106 @@ class MultiSelectEntriesInfoWidget(Gtk.ToolItem):
         self._label.show()
 
 
+class FilterToolItem(Gtk.ToolItem):
+
+    __gsignals__ = {
+        'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
+
+    def __init__(self, default_icon, default_label, palette_content):
+        self._palette_invoker = ToolInvoker()
+        Gtk.ToolItem.__init__(self)
+        self._filter_label = Gtk.Label(default_label)
+        bt = Gtk.Button('')
+        bt.set_can_focus(False)
+        bt.remove(bt.get_children()[0])
+        box = Gtk.HBox()
+        bt.add(box)
+        icon = Icon(icon_name=default_icon)
+        box.pack_start(icon, False, False, 10)
+        box.pack_start(self._filter_label, False, False, 10)
+        self.add(bt)
+        self.show_all()
+
+        # theme the button, can be removed if add the style to the sugar css
+        """
+        if style.zoom(100) == 100:
+            subcell_size = 15
+        else:
+            subcell_size = 11
+        radius = 2 * subcell_size
+        theme = "GtkButton {border-radius: %dpx;}" % radius
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(theme)
+        style_context = bt.get_style_context()
+        style_context.add_provider(css_provider,
+                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
+        """
+        # init palette
+        self._hide_tooltip_on_click = True
+        self._palette_invoker.attach_tool(self)
+        self._palette_invoker.props.toggle_palette = True
+
+        self.palette = Palette(_('Select filter'))
+        self.palette.set_invoker(self._palette_invoker)
+
+        # load the fonts in the palette menu
+        #self._menu_box = PaletteMenuBox()
+        self.props.palette.set_content(palette_content)
+        #self._menu_box.show()
+
+    """
+    def __font_selected_cb(self, menu, font_name):
+        self._font_name = font_name
+        self._font_label.set_font(font_name)
+        self.emit('changed')
+
+    def _add_menu(self, font_name, activate_cb):
+        label = '<span font="%s">%s</span>' % (font_name, font_name)
+        menu_item = PaletteMenuItem()
+        menu_item.set_label(label)
+        menu_item.connect('activate', activate_cb, font_name)
+        self._menu_box.append_item(menu_item)
+        menu_item.show()
+    """
+
+    def __destroy_cb(self, icon):
+        if self._palette_invoker is not None:
+            self._palette_invoker.detach()
+
+    def create_palette(self):
+        return None
+
+    def get_palette(self):
+        return self._palette_invoker.palette
+
+    def set_palette(self, palette):
+        self._palette_invoker.palette = palette
+
+    palette = GObject.property(
+        type=object, setter=set_palette, getter=get_palette)
+
+    def get_palette_invoker(self):
+        return self._palette_invoker
+
+    def set_palette_invoker(self, palette_invoker):
+        self._palette_invoker.detach()
+        self._palette_invoker = palette_invoker
+
+    palette_invoker = GObject.property(
+        type=object, setter=set_palette_invoker, getter=get_palette_invoker)
+
+    """
+    def set_filter(self, filter_value):
+        self._font_label.set_font(font_name)
+
+    def get_font_name(self):
+        return self._font_name
+    """
+
+
+
+
+
 class ListPaletteToolButton(ToolbarButton):
     ''' A toolbar button with label '''
 
@@ -964,7 +1071,7 @@ def set_palette_list(palette_list):
                 event_box.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
                 event_box.connect('button_press_event', item['callback'],
                                   item)
-
+                event_box.set_size_request(menuitem_width, menuitem_height)
                 grid.attach(event_box, x, y, 1, 1)
                 event_box.show()
                 x += 1
