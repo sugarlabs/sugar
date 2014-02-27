@@ -266,6 +266,8 @@ class ControlPanel(Gtk.Window):
 
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
+        self._section_view.connect('notify::is-cancellable',
+                                   self.__cancellable_section_cb)
         self._section_view.connect('request-close',
                                    self.__close_request_cb)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
@@ -324,12 +326,13 @@ class ControlPanel(Gtk.Window):
             alert.props.title = _('Warning')
             alert.props.msg = _('Changes require restart')
 
-            icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(Gtk.ResponseType.CANCEL,
-                             _('Cancel changes'), icon)
-            icon.show()
+            if self._section_view.props.is_cancellable:
+                icon = Icon(icon_name='dialog-cancel')
+                alert.add_button(Gtk.ResponseType.CANCEL,
+                                 _('Cancel changes'), icon)
+                icon.show()
 
-            if self._current_option != 'aboutme':
+            if self._current_option not in ('aboutme', 'backup'):
                 icon = Icon(icon_name='dialog-ok')
                 alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
                 icon.show()
@@ -377,6 +380,10 @@ class ControlPanel(Gtk.Window):
     def __valid_section_cb(self, section_view, pspec):
         section_is_valid = section_view.props.is_valid
         self._section_toolbar.accept_button.set_sensitive(section_is_valid)
+
+    def __cancellable_section_cb(self, section_view, pspec):
+        cancellable = section_view.props.is_cancellable
+        self._section_toolbar.cancel_button.set_sensitive(cancellable)
 
 
 class ModelWrapper(object):
