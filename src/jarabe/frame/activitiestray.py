@@ -51,6 +51,8 @@ from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
+from jarabe.frame.notification import NotificationButton
+from jarabe.frame.notification import NotificationPulsingIcon
 import jarabe.frame
 
 
@@ -253,6 +255,20 @@ class ActivitiesTray(HTray):
         name = kwargs.get('app_name')
 
         button = self._buttons_by_name.get(name, None)
+        if button is None:
+            hints = kwargs.get('hints')
+            icon = NotificationPulsingIcon(
+                hints.get('x-sugar-icon-file-name', ''),
+                hints.get('x-sugar-icon-name', ''),
+                hints.get('x-sugar-icon-colors', ''))
+
+            button = NotificationButton(name)
+            button.set_icon(icon)
+            button.show()
+
+            self.add_item(button)
+            self._buttons_by_name[name] = button
+
         if hasattr(button, 'show_badge'):
             button.show_badge()
 
@@ -262,6 +278,11 @@ class ActivitiesTray(HTray):
         name = kwargs.get('app_name', None)
 
         button = self._buttons_by_name.get(name, None)
+        if isinstance(button, NotificationButton):
+            self.remove_item(button)
+            del self._buttons_by_name[name]
+            return
+
         if hasattr(button, 'hide_badge'):
             button.hide_badge()
 
