@@ -46,6 +46,7 @@ from jarabe.model import shell
 from jarabe.model import invites
 from jarabe.model import bundleregistry
 from jarabe.model import filetransfer
+from jarabe.model import notifications
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
 from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
@@ -221,6 +222,7 @@ class ActivitiesTray(HTray):
         HTray.__init__(self)
 
         self._buttons = {}
+        self._buttons_by_name = {}
         self._invite_to_item = {}
         self._freeze_button_clicks = False
 
@@ -240,6 +242,28 @@ class ActivitiesTray(HTray):
         self._invites.connect('invite-removed', self.__invite_removed_cb)
 
         filetransfer.new_file_transfer.connect(self.__new_file_transfer_cb)
+
+        service = notifications.get_service()
+        service.notification_received.connect(self.__notification_received_cb)
+        service.buffer_cleared.connect(self.__buffer_cleared_cb)
+
+    def __notification_received_cb(self, **kwargs):
+        logging.debug('ActivitiesTray.__notification_received_cb')
+
+        name = kwargs.get('app_name')
+
+        button = self._buttons_by_name.get(name, None)
+        if hasattr(button, 'show_badge'):
+            button.show_badge()
+
+    def __buffer_cleared_cb(self, **kwargs):
+        logging.debug('ActivitiesTray.__buffer_cleared_cb')
+
+        name = kwargs.get('app_name', None)
+
+        button = self._buttons_by_name.get(name, None)
+        if hasattr(button, 'hide_badge'):
+            button.hide_badge()
 
     def __activity_added_cb(self, home_model, home_activity):
         logging.debug('__activity_added_cb: %r', home_activity)
