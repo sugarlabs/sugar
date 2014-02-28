@@ -137,6 +137,7 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_journal_cb)
     GLib.idle_add(setup_notification_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
+    GLib.idle_add(setup_custom_mime_types)
     GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
     apisocket.start()
@@ -315,6 +316,18 @@ def _migrate_gconf_to_gsettings():
         _migrate_homeviews_settings()
 
         settings.set_boolean('gsettings-migrated', True)
+
+
+def setup_custom_mime_types():
+    from sugar3 import mime
+
+    # Add in this list, if more mime types are needed
+    custom_mime_types = [
+        {'mime_type': 'application/vnd.olpc-journal-backup',
+         'description': 'Journal backup files',
+         'pattern': '*.xob'}]
+
+    mime.install_custom_mime_types(custom_mime_types)
 
 
 def setup_locale():
