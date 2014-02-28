@@ -123,6 +123,7 @@ class Backup(Backend):
             profile.get_nick_name()
         metadata['icon_color'] = profile.get_color().to_string()
         metadata['uncompressed_size'] = self._uncompressed_size
+        metadata['mime_type'] = 'application/vnd.olpc-journal-backup'
         model.write(metadata, self._checkpoint)
         self.emit('finished')
 
