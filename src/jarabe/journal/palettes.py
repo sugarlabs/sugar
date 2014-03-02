@@ -18,6 +18,7 @@ from gettext import gettext as _
 from gettext import ngettext
 import logging
 import os
+import textwrap
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -71,6 +72,30 @@ class ObjectPalette(Palette):
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
+
+        if metadata.get('description', ''):
+            textview = Gtk.TextView()
+            textview.set_editable(False)
+            buffer = textview.get_buffer()
+
+            textview.set_justification(Gtk.Justification.LEFT)
+            textview.modify_bg(Gtk.StateType.INSENSITIVE,
+                               Gdk.color_parse('black'))
+            textview.modify_fg(Gtk.StateType.INSENSITIVE,
+                               Gdk.color_parse('white'))
+
+            description = str(metadata.get('description', ''))
+            description = self._format_text(description)
+            buffer.set_text(description)
+            item = Gtk.MenuItem()
+            item.add(textview)
+            item.set_sensitive(False)
+            self.menu.append(item)
+            item.show_all()
+
+            separator = Gtk.SeparatorMenuItem()
+            self.menu.append(separator)
+            separator.show()
 
         if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
@@ -203,6 +228,17 @@ class ObjectPalette(Palette):
             return
 
         Palette.popup(self, immediate)
+
+    @staticmethod
+    def _format_text(content):
+        LINES_OF_DESCRIPTION = 3
+        # -4 for the ellipsis
+        length = LINES_OF_DESCRIPTION * style.MENU_WIDTH_CHARS - 4
+        content = content.replace('\n', ' ')
+        if len(content) > length:
+            content = ' '.join(content[:length+1].split(' ')[0:-1]) + '...'
+        content = textwrap.fill(content, width=style.MENU_WIDTH_CHARS)
+        return content
 
 
 class CopyMenu(Gtk.Menu):
