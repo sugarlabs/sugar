@@ -14,14 +14,113 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
+from gettext import gettext as _
+
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 
+from jarabe.model import notifications
 from jarabe.view.pulsingicon import PulsingIcon
+
+
+class NotificationBox(Gtk.VBox):
+
+    MAX_ITEMS = 5
+    MAX_WIDTH = 70
+
+    def __init__(self, name):
+        Gtk.VBox.__init__(self)
+        self._name = name
+
+        self._notifications_box = Gtk.VBox()
+        self._notifications_box.show()
+
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.add(self._notifications_box)
+        self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                         Gtk.PolicyType.AUTOMATIC)
+        self._scrolled_window.show()
+
+        separator = PaletteMenuItemSeparator()
+        separator.show()
+
+        clear_item = PaletteMenuItem(_('Clear notifications'), 'dialog-cancel')
+        clear_item.connect('activate', self.__clear_cb)
+        clear_item.show()
+
+        self.add(self._scrolled_window)
+        self.add(separator)
+        self.add(clear_item)
+
+        self._service = notifications.get_service()
+        for entry in self._service.retrieve_by_name(self._name):
+            self._add(entry['summary'], entry['body'])
+        self._service.notification_received.connect(
+            self.__notification_received_cb)
+
+    def _update_scrolled_size(self):
+        entries = self._notifications_box.get_children()
+        req1, req2 = entries[0].get_preferred_size()
+        height = min(self.MAX_ITEMS, len(entries)) * req2.height
+        self._scrolled_window.set_size_request(-1, height)
+
+    def _add(self, summary, body):
+        icon = Icon()
+        icon.props.icon_name = 'emblem-notification'
+        icon.props.icon_size = Gtk.IconSize.SMALL_TOOLBAR
+        icon.props.xo_color = \
+            XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                               style.COLOR_BLACK.get_svg()))
+        icon.show()
+
+        summary_label = Gtk.Label()
+        summary_label.set_max_width_chars(self.MAX_WIDTH)
+        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+        summary_label.set_alignment(0, 0.5)
+        summary_label.set_markup('<b>%s</b>' % summary)
+        summary_label.show()
+
+        body_label = Gtk.Label()
+        body_label.set_max_width_chars(self.MAX_WIDTH)
+        body_label.set_ellipsize(Pango.EllipsizeMode.END)
+        body_label.set_alignment(0, 0.5)
+        body_label.set_text(body)
+        body_label.show()
+
+        grid = Gtk.Grid()
+        grid.set_border_width(style.DEFAULT_SPACING)
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        grid.set_row_spacing(0)
+        grid. set_row_homogeneous(True)
+        grid.attach(icon, 0, 0, 1, 2)
+        grid.attach(summary_label, 1, 0, 1, 1)
+        grid.attach(body_label, 1, 1, 1, 1)
+        grid.show()
+
+        self._notifications_box.add(grid)
+        self._update_scrolled_size()
+        self.show()
+
+    def __clear_cb(self, clear_item):
+        logging.debug('NotificationBox.__clear_cb')
+        for entry in self._notifications_box.get_children():
+            self._notifications_box.remove(entry)
+        self._service.clear_by_name(self._name)
+        self.hide()
+
+    def __notification_received_cb(self, **kwargs):
+        logging.debug('NotificationBox.__notification_received_cb')
+        if kwargs.get('app_name', '') == self._name:
+            self._add(kwargs.get('summary', ''), kwargs.get('body', ''))
 
 
 class NotificationIcon(Gtk.EventBox):
