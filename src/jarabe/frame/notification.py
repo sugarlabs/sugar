@@ -23,14 +23,19 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Pango
 
+from sugar3 import profile
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import get_surface
+from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.graphics.toolbutton import ToolButton
 
 from jarabe.model import notifications
 from jarabe.view.pulsingicon import PulsingIcon
+from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
 class NotificationBox(Gtk.VBox):
@@ -144,6 +149,80 @@ class NotificationBox(Gtk.VBox):
         service = notifications.get_service()
         service.notification_received.disconnect(
             self. __notification_received_cb)
+
+
+class NotificationButton(ToolButton):
+
+    def __init__(self, name):
+        ToolButton.__init__(self)
+        self._name = name
+        self._icon = None
+        self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.cache_palette = False
+        self.connect('clicked', self.__clicked_cb)
+
+    def set_icon(self, icon):
+        self._icon = icon
+        self._icon.show()
+        self.set_icon_widget(self._icon)
+
+    def show_badge(self):
+        if self._icon:
+            self._icon.show_badge()
+
+    def hide_badge(self):
+        if self._icon:
+            self._icon.hide_badge()
+
+    def create_palette(self):
+        notification_box = NotificationBox(self._name)
+        palette = Palette(self._name)
+        palette.set_group_id('frame')
+        palette.set_content(notification_box)
+        self.set_palette(palette)
+
+    def __clicked_cb(self, button):
+        self.create_palette()
+        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+
+class NotificationPulsingIcon(PulsingIcon):
+
+    SIZE = 19
+    POSITION = 22
+
+    def __init__(self, filename=None, name=None, colors=None):
+        PulsingIcon.__init__(self)
+        self._badge = None
+
+        if filename:
+            self.props.icon_filename = filename
+        elif name:
+            self.props.icon_name = name
+        else:
+            self.props.icon_name = 'application-octet-stream'
+
+        if not colors:
+            colors = profile.get_color()
+        self.props.base_color = colors
+        self.props.pulse_color = \
+            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                               style.COLOR_TOOLBAR_GREY.get_svg()))
+
+    def show_badge(self):
+        self._badge = get_surface(icon_name='emblem-notification',
+                                  stroke_color=style.COLOR_WHITE.get_svg(),
+                                  fill_color=style.COLOR_BLACK.get_svg(),
+                                  width=self.SIZE, height=self.SIZE)
+
+    def hide_badge(self):
+        self._badge = None
+
+    def do_draw(self, cr):
+        PulsingIcon.do_draw(self, cr)
+        if self._badge:
+            cr.set_source_surface(self._badge, self.POSITION, self.POSITION)
+            cr.paint()
 
 
 class NotificationIcon(Gtk.EventBox):
