@@ -511,8 +511,13 @@ class DetailToolbox(ToolbarBox):
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
-                        self.__volume_error_cb, palette.menu)
+        self._menu_builder = CopyMenuBuilder(
+            self._journalactivity, self.__get_uid_list_cb,
+            self.__volume_error_cb, palette.menu)
+
+    def cleanup(self):
+        if self._menu_builder is not None:
+            self._menu_builder.cleanup()
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
@@ -727,6 +732,7 @@ class BatchCopyButton(ToolButton):
         ToolButton.__init__(self, 'edit-copy')
         self.props.tooltip = _('Copy')
         self.connect('clicked', self.__clicked_cb)
+        self.connect('destroy', self.__destroy_cb)
         self._menu_builder = None
 
     def _refresh_menu_options(self):
@@ -749,6 +755,9 @@ class BatchCopyButton(ToolButton):
     def __get_uid_list_cb(self):
         model = self._journalactivity.get_list_view().get_model()
         return model.get_selected_items()
+
+    def __destroy_cb(self, widget):
+        self._menu_builder.cleanup()
 
 
 class MultiSelectEntriesInfoWidget(Gtk.ToolItem):

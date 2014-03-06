@@ -266,6 +266,7 @@ class JournalActivity(JournalWindow):
         self.__selection_changed_cb(None, selected_items)
 
     def __go_back_clicked_cb(self, detail_view):
+        self._detail_toolbox.cleanup()
         self.show_main_view()
 
     def _query_changed_cb(self, toolbar, query):

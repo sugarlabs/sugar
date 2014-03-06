@@ -55,9 +55,9 @@ class ObjectPalette(Palette):
     }
 
     def __init__(self, journalactivity, metadata, detail=False):
-
         self._journalactivity = journalactivity
         self._metadata = metadata
+        self._copy_menu = None
 
         activity_icon = Icon(pixel_size=style.STANDARD_ICON_SIZE)
         activity_icon.props.file = misc.get_icon_name(metadata)
@@ -102,9 +102,10 @@ class ObjectPalette(Palette):
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
-        copy_menu = CopyMenu(self._journalactivity, self.__get_uid_list_cb)
-        copy_menu.connect('volume-error', self.__volume_error_cb)
-        menu_item.set_submenu(copy_menu)
+        self._copy_menu = CopyMenu(self._journalactivity,
+                                   self.__get_uid_list_cb)
+        self._copy_menu.connect('volume-error', self.__volume_error_cb)
+        menu_item.set_submenu(self._copy_menu)
 
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
@@ -204,6 +205,11 @@ class ObjectPalette(Palette):
 
         Palette.popup(self, immediate)
 
+    def popdown(self, immediate=False):
+        if self._copy_menu is not None:
+            self._copy_menu.cleanup()
+        Palette.popdown(self, immediate)
+
 
 class CopyMenu(Gtk.Menu):
     __gtype_name__ = 'JournalCopyMenu'
@@ -216,11 +222,14 @@ class CopyMenu(Gtk.Menu):
     def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
 
-        CopyMenuBuilder(journalactivity, get_uid_list_cb,
-                        self.__volume_error_cb, self)
+        self._copy_menu_builder = CopyMenuBuilder(
+            journalactivity, get_uid_list_cb, self.__volume_error_cb, self)
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
+
+    def cleanup(self):
+        self._copy_menu_builder.cleanup()
 
 
 class CopyMenuBuilder():
@@ -321,7 +330,7 @@ class CopyMenuBuilder():
         self._menu.remove(volume_menu)
         del self._volumes[mount.get_root().get_path()]
 
-    def __destroy_cb(self, widget):
+    def cleanup(self):
         volume_monitor = Gio.VolumeMonitor.get()
         volume_monitor.disconnect(self._mount_added_hid)
         volume_monitor.disconnect(self._mount_removed_hid)
