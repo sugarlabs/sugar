@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import textwrap
 from gettext import gettext as _
 
 from gi.repository import GObject
@@ -39,8 +40,9 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 class NotificationBox(Gtk.VBox):
 
-    MAX_ITEMS = 5
-    MAX_WIDTH = 70
+    LINES = 3
+    MAX_ENTRIES = 3
+    ELLIPSIS_AND_BREAKS = 6
 
     def __init__(self, name):
         Gtk.VBox.__init__(self)
@@ -74,8 +76,13 @@ class NotificationBox(Gtk.VBox):
 
     def _update_scrolled_size(self):
         entries = self._notifications_box.get_children()
-        req1, req2 = entries[0].get_preferred_size()
-        height = min(self.MAX_ITEMS, len(entries)) * req2.height
+
+        height = 0
+        fitting = min(self.MAX_ENTRIES, len(entries))
+        for entry in entries[:fitting]:
+            requests = entry.get_preferred_size()
+            height += requests[1].height
+
         self._scrolled_window.set_size_request(-1, height)
 
     def _add(self, summary, body):
@@ -88,15 +95,21 @@ class NotificationBox(Gtk.VBox):
         icon.show()
 
         summary_label = Gtk.Label()
-        summary_label.set_max_width_chars(self.MAX_WIDTH)
+        summary_label.set_max_width_chars(style.MENU_WIDTH_CHARS)
         summary_label.set_ellipsize(Pango.EllipsizeMode.END)
         summary_label.set_alignment(0, 0.5)
         summary_label.set_markup('<b>%s</b>' % summary)
         summary_label.show()
 
+        # FIXME use set_lines when using Gtk 3.10
+        body_width = self.LINES * style.MENU_WIDTH_CHARS
+        body_width -= self.ELLIPSIS_AND_BREAKS
+        body = body.replace('\n', ' ')
+        if len(body) > body_width:
+            body = ' '.join(body[:body_width].split(' ')[:-1]) + '...'
+        body = textwrap.fill(body, width=style.MENU_WIDTH_CHARS)
+
         body_label = Gtk.Label()
-        body_label.set_max_width_chars(self.MAX_WIDTH)
-        body_label.set_ellipsize(Pango.EllipsizeMode.END)
         body_label.set_alignment(0, 0.5)
         body_label.set_text(body)
         body_label.show()
@@ -105,7 +118,6 @@ class NotificationBox(Gtk.VBox):
         grid.set_border_width(style.DEFAULT_SPACING)
         grid.set_column_spacing(style.DEFAULT_SPACING)
         grid.set_row_spacing(0)
-        grid. set_row_homogeneous(True)
         grid.attach(icon, 0, 0, 1, 2)
         grid.attach(summary_label, 1, 0, 1, 1)
         grid.attach(body_label, 1, 1, 1, 1)
