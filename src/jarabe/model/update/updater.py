@@ -58,6 +58,8 @@ class Updater(GObject.GObject):
         'progress': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      (int, str, float)),
+        'error': (GObject.SignalFlags.RUN_FIRST,
+                  None, (str,)),
         'finished': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      (object, object, bool))
@@ -105,7 +107,8 @@ class Updater(GObject.GObject):
         bundles = list(bundleregistry.get_registry())
         self._model.fetch_update_info(bundles, auto,
                                       self._backend_progress_cb,
-                                      self._backend_finished_cb)
+                                      self._backend_finished_cb,
+                                      self._backend_error_cb)
 
     def _backend_progress_cb(self, bundle_name, progress):
         self.emit('progress', self._state, bundle_name, progress)
@@ -122,6 +125,12 @@ class Updater(GObject.GObject):
             self.update(None)
         else:
             self.emit('updates-available', self._updates)
+
+    def _backend_error_cb(self, error):
+        _logger.debug("_backend_error_cb %s", error)
+        self._finished(True)
+        self._state = STATE_CHECKED
+        self.emit('error', error)
 
     def update(self, bundle_ids):
         if self._state != STATE_CHECKED:

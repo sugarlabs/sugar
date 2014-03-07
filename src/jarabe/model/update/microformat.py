@@ -118,7 +118,10 @@ class _UpdateHTMLParser(HTMLParser):
             self.group_desc = data.strip()
 
         if self.in_activity_id > 0:
-            self.last_id = data.strip()
+            if self.last_id is None:
+                self.last_id = data.strip()
+            else:
+                self.last_id = self.last_id + data.strip()
 
         if self.in_activity_version > 0:
             try:
@@ -178,7 +181,10 @@ class MicroformatUpdater(object):
             return
 
         self._parser = _UpdateHTMLParser(url)
-        downloader = Downloader(url)
+        # wiki.laptop.org have agresive cache, we set max-age=600
+        # to be sure the page is no older than 10 minutes
+        request_headers = {'Cache-Control': 'max-age=600'}
+        downloader = Downloader(url, request_headers=request_headers)
         downloader.connect('got-chunk', self._got_chunk_cb)
         downloader.connect('complete', self._complete_cb)
         downloader.download_chunked()
@@ -190,7 +196,7 @@ class MicroformatUpdater(object):
     def _complete_cb(self, downloader, result):
         if isinstance(result, Exception):
             _logger.warning("Failed to read update info: %s", result)
-            self._completion_cb([])
+            self._error_cb(result)
             return
 
         self._parser.close()
@@ -277,9 +283,10 @@ class MicroformatUpdater(object):
         self._check_next_update()
 
     def fetch_update_info(self, installed_bundles, auto, progress_cb,
-                          completion_cb):
+                          completion_cb, error_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
+        self._error_cb = error_cb
         self._cancelling = False
         self._updates = []
         self._bundles_to_check = []
