@@ -196,7 +196,15 @@ class _Account(GObject.GObject):
         self._buddies_per_activity = {}
         self._activities_per_buddy = {}
 
+        self._home_changed_hid = None
+
         self._start_listening()
+
+    def _cleanup(self):
+        if self._home_changed_hid is not None:
+            model = shell.get_model()
+            model.disconnect(self._home_changed_hid)
+            self._home_changed_hid = None
 
     def _start_listening(self):
         bus = dbus.Bus()
@@ -250,6 +258,7 @@ class _Account(GObject.GObject):
         if properties['Connection'] == '/':
             self._check_registration_error()
             self._connection = None
+            self._cleanup()
         elif self._connection is None:
             self._prepare_connection(properties['Connection'])
 
@@ -310,6 +319,7 @@ class _Account(GObject.GObject):
 
         if status == CONNECTION_STATUS_DISCONNECTED:
             self._connection = None
+            self._cleanup()
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
@@ -347,9 +357,12 @@ class _Account(GObject.GObject):
 
             connection.connect_to_signal('CurrentActivityChanged',
                                          self.__current_activity_changed_cb)
-            home_model = shell.get_model()
-            home_model.connect('active-activity-changed',
-                               self.__active_activity_changed_cb)
+
+            if self._home_changed_hid is None:
+                home_model = shell.get_model()
+                self._home_changed_hid = home_model.connect(
+                    'active-activity-changed',
+                    self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
                             'properties', self._connection.object_path)
@@ -670,6 +683,7 @@ class _Account(GObject.GObject):
         logging.debug('_Account.disable %s', self.object_path)
         self._set_enabled(False)
         self._connection = None
+        self._cleanup()
 
     def _set_enabled(self, value):
         bus = dbus.Bus()
