@@ -265,6 +265,9 @@ class Updater(GObject.GObject):
             except OSError:
                 pass
 
+    def clean(self):
+        self._model.clean()
+
 
 def get_instance():
     global _instance

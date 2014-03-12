@@ -89,6 +89,7 @@ class ActivityUpdater(SectionView):
         self._model.disconnect(self._id_updates)
         self._model.disconnect(self._id_error)
         self._model.disconnect(self._id_finished)
+        self._model.clean()
 
     def _switch_to_update_box(self, updates):
         if self._update_box in self.get_children():
@@ -390,6 +391,9 @@ class UpdateListModel(Gtk.ListStore):
             row[self.SELECTED] = True
             if installed:
                 row[self.ICON_FILE_NAME] = installed.get_icon()
+            else:
+                if bundle_update.icon_file_name is not None:
+                    row[self.ICON_FILE_NAME] = bundle_update.icon_file_name
 
             if installed:
                 details = _('From version %(current)s to %(new)s (Size: '
