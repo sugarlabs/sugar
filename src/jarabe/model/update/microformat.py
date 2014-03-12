@@ -264,7 +264,7 @@ class MicroformatUpdater(object):
 
         GLib.idle_add(self._check_next_update)
 
-    def _name_lookup_complete(self, lookup, result, size):
+    def _name_lookup_complete(self, lookup, result, size, icon_data):
         _logger.debug("Name lookup result: %r", result)
         if size is None:
             # if the size lookup failed, assume this update is bad
@@ -279,6 +279,9 @@ class MicroformatUpdater(object):
             self._bundle_update.name = result
 
         self._bundle_update.size = size
+        if icon_data is not None:
+            self._bundle_update.icon_data = icon_data
+
         self._updates.append(self._bundle_update)
         self._check_next_update()
 
@@ -306,12 +309,13 @@ class MetadataLookup(GObject.GObject):
     and there is no local source of the activity's name.
     """
     __gsignals__ = {
-        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int)),
+        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int, str)),
     }
 
     def __init__(self, url):
         GObject.GObject.__init__(self)
         self._url = url
+        self._icon_data = None
         self._size = None
 
     def run(self):
@@ -356,10 +360,22 @@ class MetadataLookup(GObject.GObject):
         # case of a content bundle, that name is expected to be already
         # localized according to the content.
         name = self._locale_data_lookup()
+        icon_path = None
         if not name and have_activity_info:
-            name = self._activity_info_lookup()
+            name = self._activity_info_lookup('name')
         if not name and have_library_info:
-            name = self._library_info_lookup()
+            name = self._library_info_lookup('name')
+
+        # get icondata
+        if have_activity_info:
+            icon_name = self._activity_info_lookup('icon')
+        if not name and have_library_info:
+            icon_name = self._library_info_lookup('icon')
+        icon_path = os.path.join(self._prefix, 'activity',
+                                 '%s.svg' % icon_name)
+        if icon_path is not None and icon_path in self._namelist:
+            self._icon_data = self._zf.read(icon_path)
+
         return name
 
     def _locale_data_lookup(self):
@@ -377,17 +393,18 @@ class MetadataLookup(GObject.GObject):
             return cp.get('Activity', 'name')
         return None
 
-    def _activity_info_lookup(self):
+    def _activity_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'activity', 'activity.info')
         cp = ConfigParser()
         cp.readfp(StringIO(self._zf.read(filename)))
-        return cp.get('Activity', 'name')
+        return cp.get('Activity', parameter)
 
-    def _library_info_lookup(self):
+    def _library_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'library', 'library.info')
         cp = ConfigParser()
         cp.readfp(StringIO(self._zf.read(filename)))
-        return cp.get('Library', 'name')
+        return cp.get('Library', parameter)
 
     def _complete(self, result):
-        GLib.idle_add(self.emit, 'complete', result, self._size)
+        GLib.idle_add(self.emit, 'complete', result, self._size,
+                      self._icon_data)
