@@ -39,10 +39,14 @@ class ActivityUpdater(SectionView):
         SectionView.__init__(self)
 
         self._model = updater.get_instance()
-        self._model.connect('progress', self.__progress_cb)
-        self._model.connect('updates-available', self.__updates_available_cb)
-        self._model.connect('error', self.__error_cb)
-        self._model.connect('finished', self.__finished_cb)
+        self._id_progresss = self._model.connect('progress',
+                                                 self.__progress_cb)
+        self._id_updates = self._model.connect('updates-available',
+                                               self.__updates_available_cb)
+        self._id_error = self._model.connect('error',
+                                             self.__error_cb)
+        self._id_finished = self._model.connect('finished',
+                                                self.__finished_cb)
 
         self.set_spacing(style.DEFAULT_SPACING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
@@ -78,6 +82,12 @@ class ActivityUpdater(SectionView):
                        updater.STATE_UPDATING):
             self._switch_to_progress_pane()
             self._progress_pane.set_message(_('Update in progress...'))
+
+    def cleanup(self):
+        self._model.disconnect(self._id_progresss)
+        self._model.disconnect(self._id_updates)
+        self._model.disconnect(self._id_error)
+        self._model.disconnect(self._id_finished)
 
     def _switch_to_update_box(self, updates):
         if self._update_box in self.get_children():

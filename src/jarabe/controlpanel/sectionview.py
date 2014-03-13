@@ -52,3 +52,8 @@ class SectionView(Gtk.VBox):
     def undo(self):
         """Undo here the changes that have been made in this section."""
         pass
+
+    def cleanup(self):
+        """Clean here all when the sectionview is closed,
+        remove temporary files, or disconnect signals if needed."""
+        pass
