@@ -190,6 +190,10 @@ class ControlPanel(Gtk.Window):
             self._options[option]['button'] = sectionicon
 
     def _show_main_view(self):
+        if self._section_view is not None:
+            self._section_view.destroy()
+            self._section_view = None
+
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
         self._set_canvas(self._scrolledwindow)
