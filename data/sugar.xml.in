@@ -12,4 +12,8 @@
     <_comment>Sugar Journal entry bundle</_comment>
     <glob pattern="*.xoj"/>
   </mime-type>
+  <mime-type type="application/vnd.olpc-journal-backup">
+    <_comment>Journal backup files</_comment>
+    <glob pattern="*.xob"/>
+  </mime-type>
 </mime-info>
