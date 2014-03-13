@@ -18,7 +18,7 @@ from gi.repository import Gio
 
 from gi.repository import SugarExt
 from sugar3 import dispatch
-
+from sugar3 import env
 
 VOLUME_STEP = 10
 
@@ -51,10 +51,12 @@ def set_muted(new_state):
 
 
 def save():
-    settings = Gio.Settings('org.sugarlabs.sound')
-    settings.set_int('volume', get_volume())
+    if not env.is_runner():
+        settings = Gio.Settings('org.sugarlabs.sound')
+        settings.set_int('volume', get_volume())
 
 
 def restore():
-    settings = Gio.Settings('org.sugarlabs.sound')
-    set_volume(settings.get_int('volume'))
+    if not env.is_runner():
+        settings = Gio.Settings('org.sugarlabs.sound')
+        set_volume(settings.get_int('volume'))
