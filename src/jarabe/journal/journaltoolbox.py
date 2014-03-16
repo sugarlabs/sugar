@@ -334,7 +334,8 @@ class MainToolbox(ToolbarBox):
                     self._what_search_combo.append_separator()
                     appended_separator = True
                 self._what_search_combo.append_item(
-                    generic_type.type_id, generic_type.name, generic_type.icon)
+                    generic_type.type_id, generic_type.name, generic_type.icon,
+                                              high_contrast=True)
                 if generic_type.type_id == current_value:
                     current_value_index = \
                         len(self._what_search_combo.get_model()) - 1
@@ -358,7 +359,8 @@ class MainToolbox(ToolbarBox):
                         self._what_search_combo.append_item(
                             service_name,
                             activity_info.get_name(),
-                            file_name=activity_info.get_icon())
+                            file_name=activity_info.get_icon(),
+                            high_contrast=True)
                     except GObject.GError, exception:
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -372,7 +374,8 @@ class MainToolbox(ToolbarBox):
                 self._what_search_combo.append_item(
                     service_name,
                     activity_info.get_name(),
-                    icon_name='application-octet-stream')
+                    icon_name='application-octet-stream',
+                    high_contrast=True)
 
         finally:
             self._what_search_combo.handler_unblock(
