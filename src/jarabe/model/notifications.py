@@ -41,6 +41,19 @@ class NotificationService(dbus.service.Object):
         self.notification_received = dispatch.Signal()
         self.notification_cancelled = dispatch.Signal()
 
+        self._buffer = {}
+        self.buffer_cleared = dispatch.Signal()
+
+    def retrieve_by_name(self, name):
+        if name in self._buffer:
+            return self._buffer[name]
+        return None
+
+    def clear_by_name(self, name):
+        if name in self._buffer:
+            del self._buffer[name]
+        self.buffer_cleared.send(self, app_name=name)
+
     @dbus.service.method(_DBUS_IFACE,
                          in_signature='susssava{sv}i', out_signature='u')
     def Notify(self, app_name, replaces_id, app_icon, summary, body, actions,
@@ -58,6 +71,17 @@ class NotificationService(dbus.service.Object):
             else:
                 self._notification_counter += 1
             notification_id = self._notification_counter
+
+        if app_name not in self._buffer:
+            self._buffer[app_name] = []
+        self._buffer[app_name].append({'app_name': app_name,
+                                       'replaces_id': replaces_id,
+                                       'app_icon': app_icon,
+                                       'summary': summary,
+                                       'body': body,
+                                       'actions': actions,
+                                       'hints': hints,
+                                       'expire_timeout': expire_timeout})
 
         self.notification_received.send(self,
                                         app_name=app_name,
