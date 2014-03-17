@@ -19,6 +19,7 @@ from gettext import gettext as _
 from gettext import ngettext
 import locale
 import logging
+import os
 
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -121,6 +122,7 @@ class ActivityUpdater(SectionView):
         self._top_label.set_markup('<big>%s</big>' % top_message)
 
         if self._update_box in self.get_children():
+            self._update_box.clean()
             self.remove(self._update_box)
             self._update_box = None
 
@@ -140,6 +142,7 @@ class ActivityUpdater(SectionView):
             self._progress_pane = None
 
         if self._update_box in self.get_children():
+            self._update_box.clean()
             self.remove(self._update_box)
             self._update_box = None
 
@@ -190,12 +193,17 @@ class ActivityUpdater(SectionView):
         self._refresh()
 
     def _refresh(self):
+        if self._update_box is not None:
+            self._update_box.clean()
         self._model.check_updates()
 
     def __install_button_clicked_cb(self, button):
+        self._update_box.clean()
         self._model.update(self._update_box.get_bundles_to_update())
 
     def __cancel_button_clicked_cb(self, button):
+        if self._update_box is not None:
+            self._update_box.clean()
         self._model.cancel()
 
     def __finished_cb(self, model, installed_updates, failed_updates,
@@ -211,6 +219,8 @@ class ActivityUpdater(SectionView):
 
     def undo(self):
         self._model.cancel()
+        if self._update_box is not None:
+            self._update_box.clean()
 
 
 class ProgressPane(Gtk.VBox):
@@ -320,6 +330,9 @@ class UpdateBox(Gtk.VBox):
                 bundles_to_update.append(row[UpdateListModel.BUNDLE_ID])
         return bundles_to_update
 
+    def clean(self):
+        self._update_list.get_model().clean()
+
 
 class UpdateList(Gtk.TreeView):
 
@@ -382,6 +395,7 @@ class UpdateListModel(Gtk.ListStore):
     def __init__(self, updates):
         Gtk.ListStore.__init__(self, str, bool, str, str, int)
         registry = bundleregistry.get_registry()
+        self._icon_temp_files = []
 
         for bundle_update in updates:
             installed = registry.get_bundle(bundle_update.bundle_id)
@@ -390,6 +404,12 @@ class UpdateListModel(Gtk.ListStore):
             row[self.SELECTED] = True
             if installed:
                 row[self.ICON_FILE_NAME] = installed.get_icon()
+            else:
+                if bundle_update.icon_file_name is not None:
+                    self._icon_temp_files.append(bundle_update.icon_file_name)
+                    row[self.ICON_FILE_NAME] = bundle_update.icon_file_name
+                    logging.debug('Adding temporary file %s to list',
+                                  bundle_update.icon_file_name)
 
             if installed:
                 details = _('From version %(current)s to %(new)s (Size: '
@@ -410,6 +430,14 @@ class UpdateListModel(Gtk.ListStore):
             row[self.SIZE] = bundle_update.size
 
             self.append(row)
+
+    def clean(self):
+        for filename in self._icon_temp_files:
+            logging.debug('Removing temporary file %s', filename)
+            try:
+                os.unlink(filename)
+            except OSError:
+                pass
 
 
 def _format_size(size):
