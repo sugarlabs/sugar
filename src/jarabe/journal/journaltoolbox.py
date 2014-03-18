@@ -74,6 +74,7 @@ _WHITE = style.COLOR_WHITE.get_html()
 _LABEL_MAX_WIDTH = 18
 _MAXIMUM_PALETTE_COLUMNS = 4
 
+
 class MainToolbox(ToolbarBox):
 
     query_changed_signal = GObject.Signal('query-changed',
