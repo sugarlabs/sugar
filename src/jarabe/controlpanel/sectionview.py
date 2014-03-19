@@ -28,6 +28,7 @@ class SectionView(Gtk.VBox):
 
     __gproperties__ = {
         'is_valid': (bool, None, None, True, GObject.PARAM_READWRITE),
+        'is_cancellable': (bool, None, None, True, GObject.PARAM_READWRITE),
     }
 
     _APPLY_TIMEOUT = 1000
@@ -35,6 +36,7 @@ class SectionView(Gtk.VBox):
     def __init__(self):
         Gtk.VBox.__init__(self)
         self._is_valid = True
+        self._is_cancellable = True
         self.auto_close = False
         self.needs_restart = False
         self.restart_alerts = []
@@ -44,10 +46,15 @@ class SectionView(Gtk.VBox):
         if pspec.name == 'is-valid':
             if self._is_valid != value:
                 self._is_valid = value
+        if pspec.name == 'is-cancellable':
+            if self._is_cancellable != value:
+                self._is_cancellable = value
 
     def do_get_property(self, pspec):
         if pspec.name == 'is-valid':
             return self._is_valid
+        if pspec.name == 'is-cancellable':
+            return self._is_cancellable
 
     def undo(self):
         """Undo here the changes that have been made in this section."""
