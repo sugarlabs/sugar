@@ -176,10 +176,15 @@ class OperationPanel(Gtk.Grid):
         _icon.show()
 
         self._message_label = Gtk.Label()
-        self._message_label.set_size_request(
-            Gdk.Screen.width() - style.GRID_CELL_SIZE * 6, -1)
+        self._message_label.set_line_wrap(True)
+        self._message_label.set_width_chars(40)
         self._message_label.set_single_line_mode(False)
-        self.add(self._message_label)
+        align = Gtk.Alignment.new(0.5, 0.5, 0, 0)
+        align.set_padding(0, 0, style.GRID_CELL_SIZE * 2,
+                          style.GRID_CELL_SIZE * 2)
+        align.show()
+        align.add(self._message_label)
+        self.add(align)
         self._message_label.show()
 
         self._options_combo = Gtk.ComboBox()
@@ -194,10 +199,18 @@ class OperationPanel(Gtk.Grid):
             Gdk.Screen.width() - style.GRID_CELL_SIZE * 6, -1)
 
         self._confirm_restore_chkbtn = Gtk.CheckButton()
-        self.add(self._confirm_restore_chkbtn)
+        align = Gtk.Alignment()
+        align.set_padding(0, 0, style.GRID_CELL_SIZE * 2,
+                          style.GRID_CELL_SIZE * 2)
+        align.show()
+        align.add(self._confirm_restore_chkbtn)
+        self.add(align)
 
+        btn_box = Gtk.ButtonBox()
+        btn_box.show()
         self._continue_btn = Gtk.Button(_('Continue'))
-        self.add(self._continue_btn)
+        btn_box.add(self._continue_btn)
+        self.add(btn_box)
         self._continue_btn_handler_id = 0
 
         self.show()
