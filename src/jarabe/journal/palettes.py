@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,6 +42,7 @@ from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
+from jarabe.journal.misc import get_mount_color
 
 
 class ObjectPalette(Palette):
@@ -309,8 +311,12 @@ class CopyMenuBuilder():
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
         icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
-        volume_menu.set_image(Icon(pixel_size=style.SMALL_ICON_SIZE,
-                                   icon_name=icon_name))
+        color = get_mount_color(mount)
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                    icon_name=icon_name,
+                    xo_color=color)
+
+        volume_menu.set_image(icon)
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
         self._volumes[mount.get_root().get_path()] = volume_menu

@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +22,6 @@ from gi.repository import GLib
 from gi.repository import Gio
 from gi.repository import Gtk
 
-from sugar3 import profile
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -29,6 +29,7 @@ from sugar3.graphics import style
 
 from jarabe.journal import journalactivity
 from jarabe.journal.misc import get_mount_icon_name
+from jarabe.journal.misc import get_mount_color
 from jarabe.view.palettes import VolumePalette
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -47,7 +48,7 @@ class DeviceView(TrayIcon):
         self._icon_name = get_mount_icon_name(mount,
                                               Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        color = profile.get_color()
+        color = get_mount_color(self._mount)
 
         TrayIcon.__init__(self, icon_name=self._icon_name, xo_color=color)
 
@@ -59,7 +60,7 @@ class DeviceView(TrayIcon):
         palette.set_group_id('frame')
 
         menu_item = PaletteMenuItem(_('Show contents'))
-        color = profile.get_color()
+        color = get_mount_color(self._mount)
         icon = Icon(icon_name=self._icon_name,
                     pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
