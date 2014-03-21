@@ -114,6 +114,7 @@ class NotificationBox(Gtk.VBox):
             body_label.set_line_wrap(True)
             body_label.set_ellipsize(Pango.EllipsizeMode.END)
             body_label.set_lines(self.LINES)
+            body_label.set_justify(Gtk.Justification.FILL)
         else:
             # FIXME: fallback for Gtk < 3.10
             body_width = self.LINES * style.MENU_WIDTH_CHARS
