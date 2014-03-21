@@ -194,3 +194,6 @@ class AsloUpdater(object):
 
     def cancel(self):
         self._cancelling = True
+
+    def clean(self):
+        pass
