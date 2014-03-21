@@ -48,6 +48,9 @@ _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
                        '.xo', '.tar', '.bz2', '.zip', '.gz')
 _EXCLUDE_NAMES = ['.deps', '.libs']
 
+_IMPORT_TYPES = {'sugar3': 3, 'from gi.repository import Gtk': 3,
+                 'sugar.': 2, 'import pygtk': 2, 'pygtk.require': 2}
+
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
@@ -59,12 +62,27 @@ def _is_web_activity(bundle_path):
     return activity_bundle.get_command() == 'sugar-activity-web'
 
 
-def _is_gtk3_activity(bundle_path):
-    # FIXME, find a way to check if the activity is GTK3 or GTK2.
+def _is_gtk3_activity(bundle_path, bundle_id):
+    setup_py_path = os.path.join(bundle_path, 'setup.py')
+    main_filename = '/'.join(bundle_id.split('.')[-1]) + '.py'
+    main_file_path = os.path.join(bundle_path, main_filename)
+    all_files = os.listdir(bundle_path)
+    try_paths = [setup_py_path, main_file_path] + all_files
+
+    for path in try_paths:
+        if os.path.isfile(path):
+            with open(path) as f:
+                text = f.read()
+                for sign in _IMPORT_TYPES:
+                    if sign in text:
+                        version = _IMPORT_TYPES[sign]
+                        return version == 3
+
+    #  Fallback to assuming GTK3
     return True
 
 
-def _get_toolkit_path(bundle_path):
+def _get_toolkit_path(bundle_path, bundle_id):
     sugar_toolkit_path = None
 
     if _is_web_activity(bundle_path):
@@ -74,7 +92,7 @@ def _get_toolkit_path(bundle_path):
         else:
             return None
 
-    if _is_gtk3_activity(bundle_path):
+    if _is_gtk3_activity(bundle_path, bundle_id):
         sugar_module = 'sugar3'
     else:
         sugar_module = 'sugar'
@@ -109,6 +127,7 @@ def setup_view_source(activity):
         return
 
     bundle_path = activity.get_bundle_path()
+    bundle_id = activity.get_bundle_id()
 
     if window_xid in map_activity_to_window:
         _logger.debug('Viewsource window already open for %s %s', window_xid,
@@ -132,7 +151,7 @@ def setup_view_source(activity):
         _logger.debug('Activity without bundle_path nor document_path')
         return
 
-    sugar_toolkit_path = _get_toolkit_path(bundle_path)
+    sugar_toolkit_path = _get_toolkit_path(bundle_path, bundle_id)
 
     if sugar_toolkit_path is None:
         _logger.error("Path to toolkit not found.")
