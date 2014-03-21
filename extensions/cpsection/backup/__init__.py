@@ -18,6 +18,6 @@ from gettext import gettext as _
 from sugar3.graphics.xocolor import XoColor
 
 CLASS = 'BackupView'
-ICON = 'backup-backup'
+ICON = 'backup'
 TITLE = _('Backup')
 COLOR = XoColor('#FFFFFF,#000000')
