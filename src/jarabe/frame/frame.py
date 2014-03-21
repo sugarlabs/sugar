@@ -254,15 +254,23 @@ class Frame(object):
         window.destroy()
         del self._notif_by_icon[icon]
 
+    def __button_release_event_cb(self, icon, data=None):
+        self.remove_notification(icon)
+        self.show()
+
     def __notification_received_cb(self, **kwargs):
         logging.debug('__notification_received_cb')
         icon = NotificationIcon()
+        icon.connect('button-release-event', self.__button_release_event_cb)
 
         hints = kwargs['hints']
 
         icon_file_name = hints.get('x-sugar-icon-file-name', '')
+        icon_name = hints.get('x-sugar-icon-name', '')
         if icon_file_name:
             icon.props.icon_filename = icon_file_name
+        elif icon_name:
+            icon.props.icon_name = icon_name
         else:
             icon.props.icon_name = 'application-octet-stream'
 
@@ -275,7 +283,7 @@ class Frame(object):
         if duration == -1:
             duration = _NOTIFICATION_DURATION
 
-        self.add_notification(icon, Gtk.CornerType.TOP_RIGHT, duration)
+        self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 
     def __notification_cancelled_cb(self, **kwargs):
         # Do nothing for now. Our notification UI is so simple, there's no
