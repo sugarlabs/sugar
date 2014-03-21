@@ -23,7 +23,7 @@ from gi.repository import SugarExt
 
 from sugar3.test import uitree
 
-from jarabe.model import sound
+from jarabe.model.sound import sound
 from jarabe.model import shell
 from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
@@ -187,7 +187,7 @@ class KeyHandler(object):
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
-                if not action in ['next_window', 'previous_window']:
+                if action not in ['next_window', 'previous_window']:
                     self._tabbing_handler.stop(event_time)
                     return True
 
