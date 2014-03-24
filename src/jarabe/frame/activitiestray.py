@@ -74,7 +74,15 @@ class ActivityButton(RadioToolButton):
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
-            self._icon.props.icon_name = 'image-missing'
+            # Let's see if the X11 window can give us an icon.
+            window = home_activity.get_window()
+
+            if not window.get_icon_is_fallback():
+                pixbuf = window.get_icon()
+                self._icon.pixbuf = pixbuf
+            else:
+                self._icon.props.icon_name = 'image-missing'
+
         self.set_icon_widget(self._icon)
         self._icon.show()
 
