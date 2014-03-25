@@ -1,5 +1,6 @@
 # Copyright (C) 2008, OLPC
 # Copyright (C) 2009, Simon Schampijer
+# Copyright (C) 2014, Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +16,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+import logging
+
 from gi.repository import Gtk
+from gi.repository import Gdk
 from gi.repository import GObject
+from gi.repository import Pango
 import gettext
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
+
+from sugar3.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
@@ -32,6 +39,8 @@ CLASS = 'Language'
 ICON = 'module-language'
 TITLE = gettext.gettext('Language')
 
+_LABEL_MAX_WIDTH = 18
+
 
 class Language(SectionView):
     def __init__(self, model, alerts):
@@ -42,14 +51,26 @@ class Language(SectionView):
         self._lang_sid = 0
         self._selected_lang_count = 0
         self._labels = []
-        self._stores = []
-        self._comboboxes = []
+        self._language_dict = {}
+        self._country_dict = {}
+        self._language_buttons = []
+        self._country_buttons = []
+        self._language_widgets = []
+        self._country_widgets = []
+        self._country_codes = []
         self._add_remove_boxes = []
         self._changed = False
         self._cursor_change_handler = None
 
         self._available_locales = self._model.read_all_languages()
         self._selected_locales = self._model.get_languages()
+
+        for language, country, code in self._available_locales:
+            if not language in self._language_dict:
+                self._language_dict[language] = _translate_language(language)
+                self._country_dict[language] = [[code, country]]
+            else:
+                self._country_dict[language].append([code, country])
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -68,7 +89,7 @@ class Language(SectionView):
         scrolled.show()
         self.pack_start(scrolled, True, True, 0)
 
-        self._table = Gtk.Table(rows=1, columns=3, homogeneous=False)
+        self._table = Gtk.Table(rows=2, columns=4, homogeneous=False)
         self._table.set_border_width(style.DEFAULT_SPACING * 2)
         self._table.show()
         scrolled.add_with_viewport(self._table)
@@ -86,50 +107,89 @@ class Language(SectionView):
         self.setup()
 
     def _add_row(self, locale_code=None):
-        """Adds a row to the table"""
+        """Adds two rows to the table:
+           (1) the buttons and labels for language and country;
+           (2) the tables of languages and country options"""
 
         self._selected_lang_count += 1
 
-        self._table.resize(self._selected_lang_count, 3)
+        self._table.resize(self._selected_lang_count * 2, 3)
 
         label = Gtk.Label(label=str(self._selected_lang_count))
         label.modify_fg(Gtk.StateType.NORMAL,
                         style.COLOR_SELECTION_GREY.get_gdk_color())
         self._labels.append(label)
-        self._attach_to_table(label, 0, 1, padding=1)
+        self._attach_to_table(label, 0, 1, self._selected_lang_count * 2 - 1,
+                              xpadding=1, ypadding=1)
         label.show()
 
-        store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING)
+        self._country_codes.append(locale_code)
+        locale_language = None
+        locale_country = None
+
         for language, country, code in self._available_locales:
-            description = '%s (%s)' % (_translate_language(language),
-                                       _translate_country(country))
-            store.append([code, description])
+            if code == locale_code:
+                locale_language = language
+                locale_country = country
 
-        combobox = Gtk.ComboBox(model=store)
-        cell = Gtk.CellRendererText()
-        combobox.pack_start(cell, True)
-        combobox.add_attribute(cell, 'text', 1)
+        language_palette = []
+        key_list = self._language_dict.keys()
+        for language_key in sorted(key_list):
+            language_palette.append(
+                {'label': self._language_dict[language_key],
+                 'index': len(self._language_buttons),
+                 'callback': self._language_changed})
 
-        if locale_code:
-            for row in store:
-                lang = locale_code.split('.')[0]
-                lang_column = row[0].split('.')[0]
-                if lang in lang_column:
-                    combobox.set_active_iter(row.iter)
-                    break
+        new_language_widget = set_palette_list(language_palette)
+        if locale_language is not None:
+            new_language_button = FilterToolItem(
+                'go-down', 'go-up', locale_language, new_language_widget)
+            country_list = self._build_country_list(locale_language)
         else:
-            combobox.set_active(1)
+            locale_language = 'English'
+            new_language_button = FilterToolItem(
+                'go-down', 'go-up', 'English', new_language_widget)
+            country_list = self._build_country_list('English')
 
-        combobox.connect('changed', self.__combobox_changed_cb)
+        new_country_widget = set_palette_list(country_list)
+        if locale_country is not None:
+            new_country_button = FilterToolItem(
+                'go-down', 'go-up', locale_country, new_country_widget)
+        else:
+            if locale_language == 'English':
+                country_label = 'USA'
+            else:
+                country_label = self._country_dict[locale_language][0]
 
-        self._stores.append(store)
-        self._comboboxes.append(combobox)
+            new_country_button = FilterToolItem(
+                'go-down', 'go-up', country_label, new_country_widget)
+
+        self._language_buttons.append(new_language_button)
         self._attach_to_table(
-            combobox, 1, 2, yoptions=Gtk.AttachOptions.SHRINK)
+            new_language_button, 1, 2, self._selected_lang_count * 2 - 1,
+            yoptions=Gtk.AttachOptions.SHRINK)
+
+        self._language_widgets.append(new_language_widget)
+        self._attach_to_table(new_language_widget, 1, 2,
+                              self._selected_lang_count * 2,
+                              xpadding=style.DEFAULT_PADDING,
+                              ypadding=0)
+
+        self._country_buttons.append(new_country_button)
+        self._attach_to_table(
+            new_country_button, 2, 3, self._selected_lang_count * 2 - 1,
+            yoptions=Gtk.AttachOptions.SHRINK)
+
+        self._country_widgets.append(new_country_widget)
+        self._attach_to_table(new_country_widget, 2, 3,
+                              self._selected_lang_count * 2,
+                              xpadding=style.DEFAULT_PADDING,
+                              ypadding=0)
 
         add_remove_box = self._create_add_remove_box()
         self._add_remove_boxes.append(add_remove_box)
-        self._attach_to_table(add_remove_box, 2, 3)
+        self._attach_to_table(add_remove_box, 3, 4,
+                              self._selected_lang_count * 2 - 1)
 
         add_remove_box.show_all()
 
@@ -143,30 +203,62 @@ class Language(SectionView):
             add_button_, remove_button = add_remove_box.get_children()
             remove_button.props.visible = False
 
-        combobox.show()
+        new_language_button.show()
+        new_country_button.show()
 
-    def _attach_to_table(self, widget, row, column, padding=20,
+    def _build_country_list(self, language, idx=None):
+        country_list = []
+        if idx is None:
+            idx = len(self._country_buttons)
+
+        for country, code in sorted((_translate_country(entry[1]), entry[0])
+                                    for entry in self._country_dict[language]):
+            country_list.append(
+                {'label': country,
+                 'code': code,
+                 'index': idx,
+                 'callback': self._country_changed})
+        return country_list
+
+    def _attach_to_table(self, widget, left, right, above,
+                         xpadding=style.DEFAULT_SPACING,
+                         ypadding=style.DEFAULT_SPACING,
                          yoptions=Gtk.AttachOptions.FILL):
-        self._table.attach(widget, row, column,
-                           self._selected_lang_count -
-                           1, self._selected_lang_count,
+        self._table.attach(widget, left, right,
+                           above,
+                           above + 1,
                            xoptions=Gtk.AttachOptions.FILL,
                            yoptions=yoptions,
-                           xpadding=padding,
-                           ypadding=padding)
+                           xpadding=xpadding,
+                           ypadding=ypadding)
 
     def _delete_last_row(self):
-        """Deletes the last row of the table"""
+        """Deletes the last two rows of the table"""
 
         self._selected_lang_count -= 1
 
-        label, add_remove_box, combobox, store_ = self._get_last_row()
-
+        label = self._labels.pop()
         label.destroy()
-        add_remove_box.destroy()
-        combobox.destroy()
 
-        self._table.resize(self._selected_lang_count, 3)
+        add_remove_box = self._add_remove_boxes.pop()
+        add_remove_box.destroy()
+
+        language_button = self._language_buttons.pop()
+        language_button.destroy()
+
+        country_button = self._country_buttons.pop()
+        country_button.destroy()
+
+        language_widget = self._language_widgets.pop()
+        language_widget.destroy()
+
+        country_widget = self._country_widgets.pop()
+        country_widget.destroy()
+
+        # Remove language code associated with last row
+        code = self._country_codes.pop()
+
+        self._table.resize(self._selected_lang_count * 2, 3)
 
         self._add_remove_boxes[-1].show_all()
 
@@ -179,16 +271,9 @@ class Language(SectionView):
         else:
             remove_button.props.visible = True
 
-    def _get_last_row(self):
-        label = self._labels.pop()
-        add_remove_box = self._add_remove_boxes.pop()
-        combobox = self._comboboxes.pop()
-        store = self._stores.pop()
-
-        return label, add_remove_box, combobox, store
-
     def setup(self):
         for locale in self._selected_locales:
+            logging.debug('locale_code=%s' % (locale))
             self._add_row(locale_code=locale)
 
     def undo(self):
@@ -226,11 +311,47 @@ class Language(SectionView):
         self._delete_last_row()
         self._check_change()
 
-    def __combobox_changed_cb(self, button):
+    def _language_changed(self, widget, event, item):
+        i = item['index']
+
+        for language_key in self._language_dict.keys():
+            if self._language_dict[language_key] == item['label']:
+                new_country_list = \
+                    self._build_country_list(language_key, idx=i)
+                break
+
+        self._language_buttons[i].set_widget_label(item['label'])
+        self._language_buttons[i].button_cb()
+
+        self._country_buttons[i].set_widget_label(
+            _translate_country(self._country_dict[language_key][0][1])),
+        self._country_codes[i] = self._country_dict[language_key][0][0]
+
+        old_country_widget = self._country_widgets[i]
+        old_country_widget.destroy()
+
+        new_country_widget = set_palette_list(new_country_list)
+        self._country_buttons[i].set_widget(new_country_widget)
+        self._country_widgets[i] = new_country_widget
+        self._attach_to_table(new_country_widget, 2, 3, (i + 1) * 2,
+                              xpadding=style.DEFAULT_PADDING,
+                              ypadding=0)
+
+        self._update_country(new_country_list[0])
+
+    def _country_changed(self, widget, event, item):
+        self._update_country(item)
+
+    def _update_country(self, item):
+        i = item['index']
+        self._country_codes[i] = item['code']
+        self._country_buttons[i].set_widget_label(item['label'])
+        self._country_buttons[i].button_cb()
+
         self._check_change()
 
     def _check_change(self):
-        selected_langs = self._get_selected_langs()
+        selected_langs = self._country_codes[:]
 
         self._changed = (selected_langs != self._selected_locales)
 
@@ -251,16 +372,6 @@ class Language(SectionView):
                                              self.__lang_timeout_cb,
                                              selected_langs)
 
-    def _get_selected_langs(self):
-        new_codes = []
-        for combobox in self._comboboxes:
-            it = combobox.get_active_iter()
-            model = combobox.get_model()
-            lang_code = model.get(it, 0)[0]
-            new_codes.append(lang_code)
-
-        return new_codes
-
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
         self._model.set_languages_list(codes)
@@ -269,3 +380,140 @@ class Language(SectionView):
         self._lang_alert.props.msg = self.restart_msg
         self._lang_alert.show()
         return False
+
+
+class FilterToolItem(Gtk.ToolItem):
+    def __init__(self, primary_icon, secondary_icon, default_label,
+                 widget):
+        Gtk.ToolItem.__init__(self)
+
+        self.set_size_request(style.GRID_CELL_SIZE * 3, -1)
+
+        self._widget = widget
+        self._visible = False
+
+        grid = Gtk.Grid()
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        self.add(grid)
+        grid.show()
+
+        self._primary_icon = Icon(icon_name=primary_icon)
+        self._secondary_icon = Icon(icon_name=secondary_icon)
+        self._button = Gtk.Button()
+        self._button.set_image(self._primary_icon)
+        self._primary_icon.show()
+        self._secondary_icon.show()
+        grid.attach(self._button, 0, 0, 1, 1)
+        self._button.show()
+        self._button.connect('clicked', self.button_cb)
+
+        self._label_widget = Gtk.Label()
+        self._label_widget.set_alignment(0.0, 0.5)
+        self._label_widget.set_use_markup(True)
+        self.set_widget_label(default_label)
+        grid.attach(self._label_widget, 1, 0, 1, 1)
+        self._label_widget.show()
+
+    def set_widget(self, widget):
+        self._widget.destroy()
+        self._widget = widget
+        if self._visible:
+            self._widget.show()
+        else:
+            self._widget.hide()
+
+    def is_visible(self):
+        return self._visible
+
+    def button_cb(self, widget=None):
+        if self._visible:
+            self._widget.hide()
+            self._button.set_image(self._primary_icon)
+        else:
+            self._widget.show()
+            self._button.set_image(self._secondary_icon)
+        self._visible = not self._visible
+
+    def set_widget_label(self, label):
+        size = 'x-large'
+        color = style.COLOR_BLACK.get_html()
+        span = '<span foreground="%s" size="%s">' % (color, size)
+        self._label_widget.set_markup(span + label + '</span>')
+
+
+class BlackLabel(PaletteMenuItem):
+    ''' Label in palette menu item with black text on white background '''
+
+    def __init__(self, text_label=None):
+        PaletteMenuItem.__init__(self, text_label=None, text_maxlen=0)
+
+        self.id_enter_notify_cb = self.connect('enter-notify-event',
+                                               self.__enter_notify_cb)
+        self.id_leave_notify_cb = self.connect('leave-notify-event',
+                                               self.__leave_notify_cb)
+        self.set_label(text_label)
+
+    def set_label(self, text_label):
+        text = '<span foreground="%s">' % style.COLOR_BLACK.get_html() + \
+            text_label + '</span>'
+        self.label.set_markup(text)
+
+    def __enter_notify_cb(self, widget, event):
+        self.modify_bg(Gtk.StateType.NORMAL,
+                       style.COLOR_HIGHLIGHT.get_gdk_color())
+
+    def __leave_notify_cb(self, widget, event):
+        self.modify_bg(Gtk.StateType.NORMAL,
+                       style.COLOR_WHITE.get_gdk_color())
+
+
+def set_palette_list(palette_list):
+    menu_item = BlackLabel(text_label='English')
+    _req1, req2 = menu_item.get_preferred_size()
+    item_width = req2.width
+    item_height = req2.height
+
+    palette_width = int(Gdk.Screen.width() / 2)
+    palette_height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 3
+
+    nx = min(4, int(palette_width / item_width))
+    ny = min(8, int(palette_height / item_height), len(palette_list) + 1)
+
+    if ny >= len(palette_list):
+        nx = 1
+        ny = len(palette_list)
+    elif ny >= len(palette_list) / 2:
+        nx = 2
+        ny = int((len(palette_list) + 1) / 2)
+    elif ny >= len(palette_list) / 3:
+        nx = 3
+        ny = int((len(palette_list) + 2) / 3)
+
+    grid = Gtk.Grid()
+    grid.set_row_spacing(style.DEFAULT_PADDING)
+    grid.set_column_spacing(0)
+    grid.set_border_width(0)
+
+    scrolled_window = Gtk.ScrolledWindow()
+    scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scrolled_window.set_size_request(nx * item_width, ny * item_height)
+    scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+    scrolled_window.add_with_viewport(grid)
+    grid.show()
+
+    x = 0
+    y = 0
+
+    for item in palette_list:
+        menu_item = BlackLabel(item['label'])
+
+        menu_item.connect('button-release-event', item['callback'], item)
+        grid.attach(menu_item, x, y, 1, 1)
+        x += 1
+        if x == nx:
+            x = 0
+            y += 1
+
+        menu_item.show()
+
+    return scrolled_window
