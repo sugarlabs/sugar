@@ -38,18 +38,30 @@ def read_all_languages():
     for line in lines:
         if line.find('locale:') != -1:
             locale = line.split()[1]
+        elif line.find('title |') != -1:
+            title = line.lstrip('title |')
         elif line.find('language |') != -1:
             lang = line.lstrip('language |')
+            # Sometimes language is a language code, not the language name
+            if len(lang) <= 3:
+                lang = title.split()[0]
         elif line.find('territory |') != -1:
             territory = line.lstrip('territory |')
+            # Sometimes territory is a territory code, not the territory name
+            if len(territory) <= 3:
+                if ' locale for ' in title:
+                    territory = title.split(' locale for ')[-1]
+                    # Aesthetic cleanup up for titles with trailing .
+                    if territory[-1] == '.':
+                        territory = territory[:-1]
+                else:
+                    territory = title.split()[-1]
             if locale.endswith('utf8') and len(lang):
                 locales.append((lang, territory, locale))
 
     # FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
-    locales.append(('Kreyol', 'Haiti', 'ht_HT.utf8'))
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
-    locales.append(('Pashto', 'Afghanistan', 'ps_AF.utf8'))
 
     locales.sort()
     return locales
