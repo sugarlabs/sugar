@@ -261,6 +261,7 @@ class Frame(object):
     def __notification_received_cb(self, **kwargs):
         logging.debug('__notification_received_cb')
         icon = NotificationIcon()
+        icon.show_badge()
         icon.connect('button-release-event', self.__button_release_event_cb)
 
         hints = kwargs['hints']
