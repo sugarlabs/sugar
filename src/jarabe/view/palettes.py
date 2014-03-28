@@ -82,6 +82,7 @@ class CurrentActivityPalette(BasePalette):
 
     def __init__(self, home_activity):
         self._home_activity = home_activity
+        self._id = home_activity.get_activity_id()
         BasePalette.__init__(self, home_activity)
 
     def setup_palette(self):
@@ -98,6 +99,7 @@ class CurrentActivityPalette(BasePalette):
         menu_item = PaletteMenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
         self.menu_box.append_item(menu_item)
+        menu_item.show()
 
         # TODO: share-with, keep
 
@@ -105,6 +107,7 @@ class CurrentActivityPalette(BasePalette):
         menu_item.connect('activate', self.__view_source__cb)
         menu_item.set_accelerator('Shift+Alt+V')
         self.menu_box.append_item(menu_item)
+        menu_item.show()
 
         help_url_and_title = get_help_url_and_title(self._home_activity)
         if help_url_and_title:
@@ -112,6 +115,18 @@ class CurrentActivityPalette(BasePalette):
             menu_item.connect('activate', self.__view_help__cb)
             menu_item.set_accelerator('Shift+Alt+H')
             self.menu_box.append_item(menu_item)
+            menu_item.show()
+
+        # Must be here to stop weird __init__.py related circular importing
+        from jarabe.frame.notification import NotificationBox
+
+        menu_item = NotificationBox(self._id)
+        self.menu_box.append_item(menu_item, 0, 0)
+
+        separator = PaletteMenuItemSeparator()
+        menu_item.pack_start(separator, False, True, 0)
+        menu_item.reorder_child(separator, 0)
+        separator.show()
 
         separator = PaletteMenuItemSeparator()
         self.menu_box.append_item(separator)
@@ -120,9 +135,10 @@ class CurrentActivityPalette(BasePalette):
         menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
         menu_item.connect('activate', self.__stop_activate_cb)
         self.menu_box.append_item(menu_item)
+        menu_item.show()
 
         self.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.show()
 
     def __resume_activate_cb(self, menu_item):
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
