@@ -205,7 +205,7 @@ class NotificationPulsingIcon(PulsingIcon):
         self._badge = None
 
         if filename:
-            self.props.icon_filename = filename
+            self.props.file = filename
         elif name:
             self.props.icon_name = name
         else:
