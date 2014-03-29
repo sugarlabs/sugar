@@ -83,3 +83,7 @@ src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
 src/jarabe/view/viewhelp.py
 src/jarabe/view/viewsource.py
+extensions/cpsection/backup/__init__.py
+extensions/cpsection/backup/backends/volume.py
+extensions/cpsection/backup/view.py
+src/jarabe/frame/notification.py
