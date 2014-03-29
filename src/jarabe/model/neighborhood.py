@@ -479,7 +479,7 @@ class _Account(GObject.GObject):
     def _update_buddy_activities(self, buddy_handle, activities):
         logging.debug('_Account._update_buddy_activities')
 
-        if not buddy_handle in self._activities_per_buddy:
+        if buddy_handle not in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
 
         for activity_id, room_handle in activities:
@@ -522,7 +522,7 @@ class _Account(GObject.GObject):
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetCurrentActivity'))
 
-            if not activity_id in self._buddies_per_activity:
+            if activity_id not in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
             self._buddies_per_activity[activity_id].add(buddy_handle)
             if activity_id not in self._activities_per_buddy[buddy_handle]:
@@ -535,7 +535,7 @@ class _Account(GObject.GObject):
         current_activity_ids = \
             [activity_id for activity_id, room_handle in activities]
         for activity_id in self._activities_per_buddy[buddy_handle].copy():
-            if not activity_id in current_activity_ids:
+            if activity_id not in current_activity_ids:
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
 
     def __get_properties_cb(self, room_handle, properties):

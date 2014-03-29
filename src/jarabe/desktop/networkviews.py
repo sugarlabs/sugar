@@ -481,8 +481,8 @@ class SugarAdhocView(EventPulsingIcon):
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
         self._state_color = XoColor('%s,%s' %
-                                   (profile.get_color().get_stroke_color(),
-                                    style.COLOR_TRANSPARENT.get_svg()))
+                                    (profile.get_color().get_stroke_color(),
+                                     style.COLOR_TRANSPARENT.get_svg()))
         self.props.base_color = self._state_color
         self.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()

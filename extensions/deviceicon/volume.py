@@ -110,9 +110,9 @@ def _mount(volume, tray):
     if not volume.should_automount():
         return
 
-    #TODO: should be done by some other process, like gvfs-hal-volume-monitor
+    # TODO: should be done by some other process, like gvfs-hal-volume-monitor
     if volume.get_mount() is None and volume.can_mount():
-        #TODO: pass None as mount_operation, or better, SugarMountOperation
+        # TODO: pass None as mount_operation, or better, SugarMountOperation
         flags = 0
         mount_operation = Gtk.MountOperation(parent=tray.get_toplevel())
         cancellable = None

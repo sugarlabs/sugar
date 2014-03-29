@@ -379,7 +379,7 @@ class InplaceResultSet(BaseResultSet):
 
         if S_IFMT(stat.st_mode) == S_IFDIR:
             id_tuple = stat.st_ino, stat.st_dev
-            if not id_tuple in self._visited_directories:
+            if id_tuple not in self._visited_directories:
                 self._visited_directories.append(id_tuple)
                 self._pending_directories.append(full_path)
             return

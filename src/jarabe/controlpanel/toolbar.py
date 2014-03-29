@@ -37,7 +37,7 @@ class MainToolbar(Gtk.Toolbar):
                          ([])),
         'search-changed': (GObject.SignalFlags.RUN_FIRST,
                            None,
-                          ([str])),
+                           ([str])),
     }
 
     def __init__(self):

@@ -63,7 +63,7 @@ class Language(SectionView):
         self._selected_locales = self._model.get_languages()
 
         for language, country, code in self._available_locales:
-            if not language in self._language_dict:
+            if language not in self._language_dict:
                 self._language_dict[language] = _translate_language(language)
                 self._country_dict[language] = [[code, country]]
             else:
