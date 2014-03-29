@@ -1,5 +1,5 @@
-#Copyright (C) 2010 Software for Education, Entertainment and Training
-#Activities
+# Copyright (C) 2010 Software for Education, Entertainment and Training
+# Activities
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

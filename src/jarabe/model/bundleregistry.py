@@ -364,7 +364,7 @@ class BundleRegistry(GObject.GObject):
                         bundle.get_activity_version() == version:
                     return bundle
         raise ValueError('No bundle %r with version %r exists.' %
-                        (bundle_id, version))
+                         (bundle_id, version))
 
     def set_bundle_favorite(self, bundle_id, version, favorite,
                             favorite_view=0):
@@ -377,7 +377,7 @@ class BundleRegistry(GObject.GObject):
     def _set_bundle_favorite(self, bundle_id, version, favorite,
                              favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        if favorite and not key in self._favorite_bundles[favorite_view]:
+        if favorite and key not in self._favorite_bundles[favorite_view]:
             self._favorite_bundles[favorite_view][key] = None
         elif not favorite and key in self._favorite_bundles[favorite_view]:
             del self._favorite_bundles[favorite_view][key]

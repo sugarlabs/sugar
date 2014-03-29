@@ -62,7 +62,7 @@ class SnowflakeLayout(Gtk.Container):
         self.add(child)
 
     def remove(self, child):
-        if not child in self._children:
+        if child not in self._children:
             return
 
         if not self._children[child]:  # not centered

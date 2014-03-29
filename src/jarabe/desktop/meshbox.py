@@ -429,7 +429,7 @@ class MeshBox(ViewContainer):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
                       buddy_model.props.current_activity)
         if buddy_model.props.current_activity is None:
-            if not buddy_model.props.key in self._buddies:
+            if buddy_model.props.key not in self._buddies:
                 self._add_buddy(buddy_model)
         elif buddy_model.props.key in self._buddies:
             self._remove_buddy(buddy_model)
