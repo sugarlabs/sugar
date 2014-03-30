@@ -6,7 +6,9 @@ test -n "${srcdir}" || srcdir="$(pwd)"
 olddir="$(pwd)"
 cd "$srcdir"
 
-intltoolize
+mkdir -p m4
+
+intltoolize --force
 autoreconf -i
 
 cd "$olddir"
