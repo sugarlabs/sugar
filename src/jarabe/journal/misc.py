@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +18,7 @@
 import logging
 import time
 import os
+import hashlib
 from gettext import gettext as _
 
 from gi.repository import Gio
@@ -26,6 +28,7 @@ from sugar3.activity import activityfactory
 from sugar3.activity.activityhandle import ActivityHandle
 from sugar3.graphics.icon import get_icon_file_name
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import colors
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3 import mime
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException
@@ -379,7 +382,27 @@ def handle_bundle_installation(metadata, force_downgrade=False):
 
 
 def get_icon_color(metadata):
-    if metadata is None or not 'icon-color' in metadata:
+    if metadata is None or 'icon-color' not in metadata:
         return profile.get_color()
     else:
         return XoColor(metadata['icon-color'])
+
+
+def get_mount_color(mount):
+    sha_hash = hashlib.sha1()
+    path = mount.get_root().get_path()
+    uuid = mount.get_uuid()
+
+    if uuid:
+        sha_hash.update(uuid)
+    else:
+        mount_name = os.path.basename(path)
+        sha_hash.update(mount_name)
+
+    digest = hash(sha_hash.digest())
+    index = digest % len(colors)
+
+    color = XoColor('%s,%s' %
+                    (colors[index][0],
+                     colors[index][1]))
+    return color

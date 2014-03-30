@@ -1,4 +1,4 @@
-AC_INIT([Sugar],[0.101.3],[],[sugar])
+AC_INIT([Sugar],[0.101.5],[],[sugar])
 
 AC_PREREQ([2.59])
 
@@ -53,6 +53,8 @@ data/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
 extensions/cpsection/background/Makefile
+extensions/cpsection/backup/Makefile
+extensions/cpsection/backup/backends/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile

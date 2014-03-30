@@ -1,5 +1,4 @@
-# Copyright (C) 2010 Software for Education, Entertainment and Training
-# Activities
+# Copyright (C) 2014, SugarLabs
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,20 +13,3 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-from sugar3.graphics.window import Window
-
-_journal_window = None
-
-
-class JournalWindow(Window):
-
-    def __init__(self):
-
-        global _journal_window
-        Window.__init__(self)
-        _journal_window = self
-
-
-def get_journal_window():
-    return _journal_window

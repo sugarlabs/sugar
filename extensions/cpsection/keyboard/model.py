@@ -140,7 +140,7 @@ class KeyboardManager(object):
 
     def set_option_group(self, option_group):
         """Sets the supplied option for switching keyboard group"""
-        #XXX: Merge, not overwrite previous options
+        # XXX: Merge, not overwrite previous options
         if not option_group:
             options = ['']
         elif isinstance(option_group, list):

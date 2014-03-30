@@ -196,7 +196,16 @@ class _Account(GObject.GObject):
         self._buddies_per_activity = {}
         self._activities_per_buddy = {}
 
+        self._home_changed_hid = None
+
         self._start_listening()
+
+    def _close_connection(self):
+        self._connection = None
+        if self._home_changed_hid is not None:
+            model = shell.get_model()
+            model.disconnect(self._home_changed_hid)
+            self._home_changed_hid = None
 
     def _start_listening(self):
         bus = dbus.Bus()
@@ -249,7 +258,7 @@ class _Account(GObject.GObject):
             return
         if properties['Connection'] == '/':
             self._check_registration_error()
-            self._connection = None
+            self._close_connection()
         elif self._connection is None:
             self._prepare_connection(properties['Connection'])
 
@@ -309,7 +318,7 @@ class _Account(GObject.GObject):
             self.emit('disconnected')
 
         if status == CONNECTION_STATUS_DISCONNECTED:
-            self._connection = None
+            self._close_connection()
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
@@ -347,9 +356,12 @@ class _Account(GObject.GObject):
 
             connection.connect_to_signal('CurrentActivityChanged',
                                          self.__current_activity_changed_cb)
-            home_model = shell.get_model()
-            home_model.connect('active-activity-changed',
-                               self.__active_activity_changed_cb)
+
+            if self._home_changed_hid is None:
+                home_model = shell.get_model()
+                self._home_changed_hid = home_model.connect(
+                    'active-activity-changed',
+                    self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
                             'properties', self._connection.object_path)
@@ -467,7 +479,7 @@ class _Account(GObject.GObject):
     def _update_buddy_activities(self, buddy_handle, activities):
         logging.debug('_Account._update_buddy_activities')
 
-        if not buddy_handle in self._activities_per_buddy:
+        if buddy_handle not in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
 
         for activity_id, room_handle in activities:
@@ -510,7 +522,7 @@ class _Account(GObject.GObject):
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetCurrentActivity'))
 
-            if not activity_id in self._buddies_per_activity:
+            if activity_id not in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
             self._buddies_per_activity[activity_id].add(buddy_handle)
             if activity_id not in self._activities_per_buddy[buddy_handle]:
@@ -523,7 +535,7 @@ class _Account(GObject.GObject):
         current_activity_ids = \
             [activity_id for activity_id, room_handle in activities]
         for activity_id in self._activities_per_buddy[buddy_handle].copy():
-            if not activity_id in current_activity_ids:
+            if activity_id not in current_activity_ids:
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
 
     def __get_properties_cb(self, room_handle, properties):
@@ -669,7 +681,7 @@ class _Account(GObject.GObject):
     def disable(self):
         logging.debug('_Account.disable %s', self.object_path)
         self._set_enabled(False)
-        self._connection = None
+        self._close_connection()
 
     def _set_enabled(self, value):
         bus = dbus.Bus()
