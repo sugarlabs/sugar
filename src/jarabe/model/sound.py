@@ -1,4 +1,5 @@
 # Copyright (C) 2006-2008 Red Hat, Inc.
+# Copyright (C) 2014 Emil Dudev
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,41 +21,64 @@ from gi.repository import SugarExt
 from sugar3 import dispatch
 
 
-VOLUME_STEP = 10
-
-muted_changed = dispatch.Signal()
-volume_changed = dispatch.Signal()
-
-_volume = SugarExt.VolumeAlsa()
+_PLAYBACK = 0
+_CAPTURE = 1
 
 
-def get_muted():
-    return _volume.get_mute()
+class PlaybackSound(object):
+    _volume = SugarExt.VolumeAlsa.new(_PLAYBACK)
+
+    muted_changed = dispatch.Signal()
+    volume_changed = dispatch.Signal()
+
+    VOLUME_STEP = 10
+
+    def get_muted(self):
+        return self._volume.get_mute()
+
+    def get_volume(self):
+        return self._volume.get_volume()
+
+    def set_volume(self, new_volume):
+        self._volume.set_volume(new_volume)
+        self.volume_changed.send(None)
+        self.save()
+
+    def set_muted(self, new_state):
+        self._volume.set_mute(new_state)
+        self.muted_changed.send(None)
+        self.save()
+
+    def save(self):
+        settings = Gio.Settings('org.sugarlabs.sound')
+        settings.set_int('volume', self.get_volume())
+
+    def restore(self):
+        settings = Gio.Settings('org.sugarlabs.sound')
+        self.set_volume(settings.get_int('volume'))
 
 
-def get_volume():
-    return _volume.get_volume()
+class CaptureSound(object):
+    _volume = SugarExt.VolumeAlsa.new(_CAPTURE)
+
+    muted_changed = dispatch.Signal()
+    volume_changed = dispatch.Signal()
+
+    def get_muted(self):
+        return self._volume.get_mute()
+
+    def get_volume(self):
+        return self._volume.get_volume()
+
+    def set_volume(self, new_volume):
+        self._volume.set_volume(new_volume)
+
+        self.volume_changed.send(None)
+
+    def set_muted(self, new_state):
+        self._volume.set_mute(new_state)
+        self.muted_changed.send(None)
 
 
-def set_volume(new_volume):
-    _volume.set_volume(new_volume)
-
-    volume_changed.send(None)
-    save()
-
-
-def set_muted(new_state):
-    _volume.set_mute(new_state)
-
-    muted_changed.send(None)
-    save()
-
-
-def save():
-    settings = Gio.Settings('org.sugarlabs.sound')
-    settings.set_int('volume', get_volume())
-
-
-def restore():
-    settings = Gio.Settings('org.sugarlabs.sound')
-    set_volume(settings.get_int('volume'))
+sound = PlaybackSound()
+capture_sound = CaptureSound()
