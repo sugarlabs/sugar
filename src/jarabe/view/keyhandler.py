@@ -23,7 +23,7 @@ from gi.repository import SugarExt
 
 from sugar3.test import uitree
 
-from jarabe.model import sound
+from jarabe.model.sound import sound
 from jarabe.model import shell
 from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
