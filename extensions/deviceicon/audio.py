@@ -183,7 +183,7 @@ class AudioManagerWidget(Gtk.VBox):
         value = self._adjustment.props.value
         self._device.props.level = value
 
-        #FIXME use callbacks intead
+        # FIXME use callbacks instead
         if value <= 0:
             self._device.props.muted = True
         else:
