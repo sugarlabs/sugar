@@ -59,7 +59,7 @@ from jarabe.view import launcher
 from jarabe.model import keyboard
 from jarabe.desktop import homewindow
 from jarabe import config
-from jarabe.model import sound
+from jarabe.model.sound import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
 from jarabe.intro.window import create_profile_with_nickname
