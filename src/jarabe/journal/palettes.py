@@ -19,12 +19,14 @@ from gettext import gettext as _
 from gettext import ngettext
 import logging
 import os
+import textwrap
 
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
+from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -73,6 +75,44 @@ class ObjectPalette(Palette):
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
+
+        description = metadata.get('description', '')
+        if description:
+            NO_OF_LINES = 3
+            ELLIPSIS_LENGTH = 6
+
+            description = description.replace('\n', ' ')
+
+            self._secondary_label.modify_fg(Gtk.StateType.INSENSITIVE,
+                                            Gdk.color_parse('white'))
+            self._secondary_label.set_justify(Gtk.Justification.FILL)
+            self._secondary_label.set_alignment(0, 0)
+
+            # for Gtk >= 3.10
+            if hasattr(self._secondary_label, 'set_lines'):
+                self._secondary_label.\
+                    set_max_width_chars(style.MENU_WIDTH_CHARS)
+                self._secondary_label.set_line_wrap(True)
+                self._secondary_label.set_ellipsize(Pango.EllipsizeMode.END)
+                self._secondary_label.set_lines(3)
+            else:
+                # FIXME: fallback for Gtk < 3.10
+                body_width = NO_OF_LINES * style.MENU_WIDTH_CHARS
+                body_width -= ELLIPSIS_LENGTH
+                if len(description) > body_width:
+                    description = ' '.join(description[:body_width]
+                                           .split(' ')[:-1]) + '...'
+                description = textwrap.fill(description,
+                                            width=style.MENU_WIDTH_CHARS)
+
+            self._secondary_label.set_text(description)
+            self._secondary_label.show()
+            self._secondary_label_alignment.show()
+
+            if len(description) > style.MENU_WIDTH_CHARS:
+                pad = style.DEFAULT_SPACING
+                self._primary_label_alignment.set_padding(pad, 0, 0, 0)
+                self._secondary_label_alignment.set_padding(0, pad, 0, pad)
 
         if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
