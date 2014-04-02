@@ -74,6 +74,10 @@ class ObjectPalette(Palette):
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
+        description = metadata.get('description', '')
+        if description:
+            self.set_secondary_text(description)
+
         if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
                 resume_label = _('Resume')
