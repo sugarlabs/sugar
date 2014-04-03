@@ -22,17 +22,12 @@ from gettext import gettext as _
 import errno
 import time
 
-import dbus
 from gi.repository import Gio
+from gi.repository import NMClient
+from gi.repository import NetworkManager
 
 from jarabe import config
 
-
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_DEVICE_TYPE_WIFI = 2
 
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
@@ -150,24 +145,15 @@ def print_firmware_number():
 
 def _get_wireless_interfaces():
     try:
-        bus = dbus.SystemBus()
-        manager_object = bus.get_object(_NM_SERVICE, _NM_PATH)
-        network_manager = dbus.Interface(manager_object, _NM_IFACE)
-    except dbus.DBusException:
-        _logger.warning('Cannot connect to NetworkManager, falling back to'
-                        ' static list of devices')
+        network_manager = NMClient.Client()
+    except:
         return ['wlan0', 'eth0']
 
     interfaces = []
-    for device_path in network_manager.GetDevices():
-        device_object = bus.get_object(_NM_SERVICE, device_path)
-        properties = dbus.Interface(device_object,
-                                    'org.freedesktop.DBus.Properties')
-        device_type = properties.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type != _NM_DEVICE_TYPE_WIFI:
+    for device in network_manager.get_devices():
+        if device.get_device_type() is not NetworkManager.DeviceType.WIFI:
             continue
-
-        interfaces.append(properties.Get(_NM_DEVICE_IFACE, 'Interface'))
+        interfaces.append(device.get_iface())
 
     return interfaces
 
