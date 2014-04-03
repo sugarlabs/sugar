@@ -21,13 +21,10 @@ import logging
 import dbus
 from gettext import gettext as _
 from gi.repository import Gio
+from gi.repository import NMClient
 
 from jarabe.model import network
 
-
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
@@ -66,16 +63,9 @@ def set_jabber(server):
 
 def get_radio():
     try:
-        bus = dbus.SystemBus()
-        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-    except dbus.DBusException:
-        raise ReadError('%s service not available' % _NM_SERVICE)
-
-    state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
-    if state in (0, 1):
-        return state
-    else:
+        nm_client = NMClient.Client()
+        return nm_client.wireless_get_enabled()
+    except:
         raise ReadError(_('State is unknown.'))
 
 
@@ -87,26 +77,12 @@ def set_radio(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
     """
-    if state == 'on' or state == 1:
-        try:
-            bus = dbus.SystemBus()
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
-    elif state == 'off' or state == 0:
-        try:
-            bus = dbus.SystemBus()
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
-    else:
+    try:
+        state = state or state == 'on' or state == 1
+        nm_client = NMClient.Client()
+        nm_client.wireless_set_enabled(state)
+    except:
         raise ValueError(_('Error in specified radio argument use on/off.'))
-
-    return 0
 
 
 def clear_registration():
