@@ -30,6 +30,10 @@ DEFAULT_PITCH = 0
 
 DEFAULT_RATE = 0
 
+
+_SAVE_TIMEOUT = 500
+
+
 _speech_manager = None
 
 
@@ -60,6 +64,7 @@ class SpeechManager(GObject.GObject):
         self._rate = DEFAULT_RATE
         self._is_playing = False
         self._is_paused = False
+        self._save_timeout_id = -1
         self.restore()
 
     def _update_state(self, player, signal):
@@ -87,11 +92,15 @@ class SpeechManager(GObject.GObject):
 
     def set_pitch(self, pitch):
         self._pitch = pitch
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def set_rate(self, rate):
         self._rate = rate
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def say_text(self, text):
         if text:
@@ -114,6 +123,7 @@ class SpeechManager(GObject.GObject):
         self.say_text(text)
 
     def save(self):
+        self._save_timeout_id = -1
         # DEPRECATED
         from gi.repository import GConf
         client = GConf.Client.get_default()
@@ -125,6 +135,7 @@ class SpeechManager(GObject.GObject):
         settings.set_int('rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
                       self._pitch, self._rate)
+        return False
 
     def restore(self):
         settings = Gio.Settings('org.sugarlabs.speech')
