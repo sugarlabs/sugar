@@ -720,10 +720,10 @@ class Neighborhood(GObject.GObject):
         self._settings_collaboration = \
             Gio.Settings('org.sugarlabs.collaboration')
         self._settings_collaboration.connect(
-            'changed::jabber-server', self.__jabber_server_changed_cb, None)
+            'changed::jabber-server', self.__jabber_server_changed_cb)
         self._settings_user = Gio.Settings('org.sugarlabs.user')
         self._settings_user.connect(
-            'changed::nick', self.__nick_changed_cb, None)
+            'changed::nick', self.__nick_changed_cb)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -859,7 +859,7 @@ class Neighborhood(GObject.GObject):
         server = self._settings_collaboration.get_string('jabber-server')
         return '%s@%s' % (public_key_hash, server)
 
-    def __jabber_server_changed_cb(self, settings, key, data):
+    def __jabber_server_changed_cb(self, settings, key):
         logging.debug('__jabber_server_changed_cb')
 
         bus = dbus.Bus()
@@ -878,7 +878,7 @@ class Neighborhood(GObject.GObject):
 
         self._update_jid()
 
-    def __nick_changed_cb(self, settings, key, data):
+    def __nick_changed_cb(self, settings, key):
         logging.debug('__nick_changed_cb')
 
         nick = settings.get_string('nick')

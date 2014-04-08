@@ -41,7 +41,7 @@ class DesktopViewModel(GObject.GObject):
         self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
         self._settings.connect(
-            'changed::%s' % _HOMEVIEWS_KEY, self.__conf_changed_cb, None)
+            'changed::%s' % _HOMEVIEWS_KEY, self.__conf_changed_cb)
 
     def get_view_icons(self):
         return self._view_icons
@@ -74,7 +74,7 @@ class DesktopViewModel(GObject.GObject):
 
         self.emit('desktop-view-icons-changed')
 
-    def __conf_changed_cb(self, settings, key, data):
+    def __conf_changed_cb(self, settings, key):
         self._ensure_view_icons(update=True)
 
 
