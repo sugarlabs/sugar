@@ -225,7 +225,7 @@ class _GenderPage(_Page):
         grid.attach(label, 0, 0, 1, 1)
         label.show()
 
-        self._gp = genderpicker.GenderPicker()
+        self._gp = genderpicker.GenderPicker(self)
         grid.attach(self._gp, 0, 1, 1, 1)
         self._gp.show()
 
@@ -233,6 +233,7 @@ class _GenderPage(_Page):
         alignment.show()
 
         self._gender = self._gp.get_gender()
+        # Don't require gender
         self.set_valid(True)
 
     def get_gender(self):
@@ -257,7 +258,7 @@ class _AgePage(_Page):
         grid.attach(label, 0, 0, 1, 1)
         label.show()
 
-        self._ap = agepicker.AgePicker(gender)
+        self._ap = agepicker.AgePicker(self, gender)
         grid.attach(self._ap, 0, 1, 1, 1)
         self._ap.show()
 
@@ -265,7 +266,6 @@ class _AgePage(_Page):
         alignment.show()
 
         self._age = self._ap.get_age()
-        self.set_valid(True)
 
     def update_gender(self, gender):
         self._ap.update_gender(gender)
@@ -420,7 +420,7 @@ class UserProfile():
         self.nickname = None
         self.colors = None
         self.gender = None
-        self.age = 12
+        self.age = 0
 
 
 class IntroWindow(Gtk.Window):

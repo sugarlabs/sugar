@@ -31,13 +31,14 @@ AGE_LABELS = [_('0-3'), _('4-5'), _('6-7'), _('8-9'), _('10-11'), _('12'),
 
 class AgePicker(Gtk.Grid):
 
-    def __init__(self, gender):
+    def __init__(self, page, gender):
         Gtk.Grid.__init__(self)
         self.set_row_spacing(style.DEFAULT_SPACING)
         self.set_column_spacing(style.DEFAULT_SPACING)
 
+        self._page = page
         self._gender = gender
-        self._age = 5
+        self._age = None
         self._buttons = []
         self._nocolor = XoColor('#010101,#ffffff')
         self._color = XoColor()
@@ -75,6 +76,7 @@ class AgePicker(Gtk.Grid):
 
     def _set_age(self, age):
         self._age = age
+        self._page.set_valid(True)
 
     def update_color(self, color):
         self._color = color
