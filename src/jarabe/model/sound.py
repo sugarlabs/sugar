@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gio
+from gi.repository import GObject
 
 from gi.repository import SugarExt
 from sugar3 import dispatch
@@ -23,6 +24,9 @@ from sugar3 import dispatch
 
 _PLAYBACK = 0
 _CAPTURE = 1
+
+
+_SAVE_TIMEOUT = 500
 
 
 class PlaybackSound(object):
@@ -33,6 +37,9 @@ class PlaybackSound(object):
 
     VOLUME_STEP = 10
 
+    def __init__(self):
+        self._save_timeout_id = -1
+
     def get_muted(self):
         return self._volume.get_mute()
 
@@ -42,16 +49,22 @@ class PlaybackSound(object):
     def set_volume(self, new_volume):
         self._volume.set_volume(new_volume)
         self.volume_changed.send(None)
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def set_muted(self, new_state):
         self._volume.set_mute(new_state)
         self.muted_changed.send(None)
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def save(self):
+        self._save_timeout_id = -1
         settings = Gio.Settings('org.sugarlabs.sound')
         settings.set_int('volume', self.get_volume())
+        return False
 
     def restore(self):
         settings = Gio.Settings('org.sugarlabs.sound')
