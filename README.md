@@ -1,4 +1,4 @@
-Sugar
+ Sugar
 =====
 
 Sugar is the core component of a worldwide effort to provide every
