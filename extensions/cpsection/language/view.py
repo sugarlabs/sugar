@@ -124,8 +124,9 @@ class Language(SectionView):
         locale_language = None
         locale_country = None
 
+        target_locale = locale_code.split('.')[0]
         for language, country, code in self._available_locales:
-            if code == locale_code:
+            if code.split('.')[0] == target_locale:
                 locale_language = language
                 locale_country = country
 
