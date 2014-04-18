@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# The Spanish translation file for the Sugar software package.
+# Copyright (C) 2014 Sugar Labs.
+# This file is distributed under the same license as the Sugar package.
+# E-mail address not available.
 msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar\n"
@@ -62,7 +62,7 @@ msgstr "Clic para cambiar su color:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
-msgstr "Acerca de mi computadora"
+msgstr "Acerca de mi Computadora"
 
 #: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
@@ -74,7 +74,7 @@ msgstr "Identidad"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
-msgstr "Número de serie:"
+msgstr "Número de Serie:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
@@ -87,7 +87,7 @@ msgstr "Ensamble:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
-msgstr "Azúcar:"
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
@@ -95,11 +95,11 @@ msgstr "Firmware:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr "Firmware de la red inalámbrica:"
+msgstr "Firmware de la Red Inalámbrica:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
-msgstr "Licencia y derechos de autor"
+msgstr "Licencia y Derechos de Autor"
 
 #. TRANS: The word "Sugar" should not be translated.
 #: ../extensions/cpsection/aboutcomputer/view.py:187
@@ -109,9 +109,9 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Azúcar, es la interfaz gráfica del usuario que esta mirando. Azucar es "
-"software libre, se encuentra bajo la licencia \"GNU Licencia Publica "
-"General\", y esta invitado para cambiar y/o distribuir copias de ésta, bajo "
+"Sugar, es la interfaz gráfica del usuario que esta mirando. Sugar es "
+"software libre, se encuentra bajo la licencia GNU General Public "
+"License, y esta invitado para cambiar y/o distribuir copias de ésta, bajo "
 "ciertas condiciones que se describen en ella."
 
 #: ../extensions/cpsection/aboutcomputer/view.py:199
@@ -132,7 +132,7 @@ msgstr "Limpiar fondo"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
-msgstr "Fecha y hora"
+msgstr "Fecha y Hora"
 
 #: ../extensions/cpsection/datetime/model.py:92
 msgid "Error timezone does not exist."
@@ -140,7 +140,7 @@ msgstr "Error, zona horaria no existe."
 
 #: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
-msgstr "Zona horaria"
+msgstr "Zona Horaria"
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -166,7 +166,7 @@ msgstr "%s segundos"
 
 #: ../extensions/cpsection/frame/view.py:54
 msgid "Activation Delay"
-msgstr "Retraso de la activación"
+msgstr "Retraso de la Activación"
 
 #: ../extensions/cpsection/frame/view.py:78
 msgid "Corner"
@@ -183,7 +183,7 @@ msgstr "Teclado"
 
 #: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
-msgstr "Modelo de teclado"
+msgstr "Modelo de Teclado"
 
 #: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
@@ -191,7 +191,7 @@ msgstr "Tecla(s) para cambiar el diseño"
 
 #: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Diseño(s) de teclado"
+msgstr "Diseño(s) de Teclado"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -200,8 +200,7 @@ msgstr "Idioma"
 
 #: ../extensions/cpsection/language/model.py:30
 msgid "Could not access ~/.i18n. Create standard settings."
-msgstr ""
-"No se puede acceder a ~/.i18n. Crear configuración internacional estándar."
+msgstr "No se puede acceder a ~/.i18n. Crear configuración internacional estándar."
 
 #: ../extensions/cpsection/language/model.py:129
 #, python-format
@@ -223,7 +222,7 @@ msgstr ""
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
-msgstr "Configuración del módem"
+msgstr "Configuración del Módem"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
@@ -247,7 +246,7 @@ msgstr "Plan:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
-msgstr "Nombre de usuario:"
+msgstr "Nombre de Usuario:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
@@ -259,11 +258,11 @@ msgstr "Número:"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Nombre de punto de acceso (APN):"
+msgstr "Nombre de Punto de Acceso (APN):"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "Número de identificación personal (PIN):"
+msgstr "Número de Identificación Personal (PIN):"
 
 #: ../extensions/cpsection/modemconfiguration/model.py:161
 #, python-format
@@ -458,12 +457,12 @@ msgid ""
 "No web services are installed.\n"
 "Please visit %s for more details."
 msgstr ""
-"Ningún servicio web está instalado.\n"
+"Ningún servicio Web está instalado.\n"
 "Por favor visita %s para mas detalles."
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
-msgstr "Mi batería"
+msgstr "Mi Batería"
 
 #: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
@@ -654,7 +653,7 @@ msgstr "Pausar la grabación"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
-msgstr "Mis parlantes"
+msgstr "Mis Parlantes"
 
 # la traducción la tome del AlsaMixer de Gnome.
 #: ../extensions/deviceicon/speaker.py:136
@@ -725,7 +724,7 @@ msgid ""
 "A unix timestamp (seconds since epoch) of the last successful activity "
 "update."
 msgstr ""
-"Una marca de tiempo Unix (segundos desde la época) de la última "
+"Una marca de tiempo UNIX (segundos desde la época) de la última "
 "actualización exitosa de la actividad."
 
 #: ../data/sugar.schemas.in.h:3
@@ -733,12 +732,12 @@ msgid ""
 "Activity update backend module, followed by a period, followed by the class "
 "name."
 msgstr ""
-"Backend del módulo de actualización de Actividad, seguido de un período, "
+"Backend del módulo de actualización de actividad, seguido de un período, "
 "seguido por el nombre de la clase."
 
 #: ../data/sugar.schemas.in.h:4
 msgid "Activity update backend."
-msgstr "Backend de la Actividad actualizar."
+msgstr "Backend de la actividad actualizar."
 
 #: ../data/sugar.schemas.in.h:6
 msgid "Automatic update frequency."
@@ -746,7 +745,7 @@ msgstr "Frecuencia de actualización automática."
 
 #: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
-msgstr "URL de Respaldo"
+msgstr "URL de respaldo"
 
 #: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
@@ -943,19 +942,19 @@ msgstr "URL con el microformato de actualización."
 
 #: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
-msgstr "Registro del Tono Vocal para el Servicio de Lenguaje Azucar/Sugar"
+msgstr "Registro del tono vocal para el servicio de lenguaje Sugar"
 
 #: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "Registro del Tono Vocal usado por el Servicio de Lenguaje Azucar/Sugar"
+msgstr "Registro del tono vocal usado por el servicio de lenguaje Sugar"
 
 #: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
-msgstr "Manejo automática de energía"
+msgstr "Manejo Automática de Energía"
 
 #: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
-msgstr "Manejo extremo de energía"
+msgstr "Manejo Extremo de Energía"
 
 #: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
@@ -975,19 +974,19 @@ msgstr "Configuración para silenciar el dispositivo de sonido."
 
 #: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
-msgstr "Mostrar Terminar Sesión"
+msgstr "Mostrar en el Control para el Terminar Sesión"
 
 #: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr "Mostrar Reiniciar"
+msgstr "Mostrar en el Control para Reiniciar"
 
 #: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
-msgstr "Mostrar redes específicas de Azúcar"
+msgstr "Mostrar redes específicas de Sugar"
 
 #: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
-msgstr "Sonido silenciado"
+msgstr "Sonido Silenciado"
 
 #: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
@@ -1018,11 +1017,11 @@ msgstr "URL donde se guarda el backup."
 
 #: ../data/sugar.schemas.in.h:66
 msgid "User Color"
-msgstr "Color del usuario"
+msgstr "Color del Usuario"
 
 #: ../data/sugar.schemas.in.h:67
 msgid "User Name"
-msgstr "Nombre de usuario"
+msgstr "Nombre de Usuario"
 
 #: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
@@ -1037,7 +1036,7 @@ msgstr ""
 
 #: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
-msgstr "Nivel de volumen"
+msgstr "Nivel de Volumen"
 
 #: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
@@ -1070,8 +1069,6 @@ msgstr "sugar-control-panel: clave=%s no es una opción disponible"
 msgid "sugar-control-panel: %s"
 msgstr "sugar-control-panel: %s"
 
-# TRANS: Translators, there's a empty line at the end of this string,<br /><br />
-# which must appear in the translated string (msgstr) as well.
 #. TRANS: Translators, there's a empty line at the end of this string,
 #. which must appear in the translated string (msgstr) as well.
 #: ../src/jarabe/controlpanel/cmd.py:38
@@ -1090,17 +1087,17 @@ msgstr ""
 "Uso: sugar-control-panel [ opción ] clave [ args ... ] \n"
 "    Control para el ambiente de sugar. \n"
 "    Opciones: \n"
-"    -h               muestra este mensaje de ayuda y sale \n"
-"    -l                enumera todas las opciones disponibles \n"
-"    -h clave       muestra la información sobre esta clave \n"
-"    -g clave       obtiene el valor actual de la clave \n"
-"    -s clave       establece el valor actual de la clave \n"
-"    -c clave  vaciar el valor actual de la clave \n"
+"    -h           muestra este mensaje de ayuda y sale \n"
+"    -l           enumera todas las opciones disponibles \n"
+"    -h clave     muestra la información sobre esta clave \n"
+"    -g clave     obtiene el valor actual de la clave \n"
+"    -s clave     establece el valor actual de la clave \n"
+"    -c clave     vaciar el valor actual de la clave \n"
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
-msgstr "Para aplicar sus cambios tiene que reiniciar Azúcar.\n"
+msgstr "Para aplicar sus cambios tiene que reiniciar Sugar.\n"
 
 #: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
 #: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
@@ -1230,11 +1227,11 @@ msgstr "Triángulo"
 
 #: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
-msgstr "Error al registrar"
+msgstr "Error al Registrar"
 
 #: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
-msgstr "Registro exitoso"
+msgstr "Registro Exitoso"
 
 #: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
@@ -1266,11 +1263,11 @@ msgstr ""
 # This is an encryption key type, not a keyboard key
 #: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
-msgstr "Tipo de clave:"
+msgstr "Tipo de Clave:"
 
 #: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
-msgstr "Tipo de autenticación:"
+msgstr "Tipo de Autenticación:"
 
 #: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
@@ -1278,7 +1275,7 @@ msgstr "WPA y WPA2 Personal"
 
 #: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
-msgstr "Seguridad inalámbrica:"
+msgstr "Seguridad Inalámbrica:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
@@ -1296,7 +1293,7 @@ msgstr "Unirse"
 #: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr "Red específica %d"
+msgstr "Red Específica %d"
 
 #: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
@@ -1629,7 +1626,7 @@ msgstr "Seleccionadas %(selected)d de %(total)d"
 
 #: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
-msgstr "Su diario está vacío"
+msgstr "Su Diario está vacío"
 
 #: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
@@ -1646,7 +1643,7 @@ msgstr "No hay entradas coincidentes"
 #: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr "Versión más antigua de la actividad %s"
+msgstr "Versión Más Antigua de la Actividad %s"
 
 #: ../src/jarabe/journal/misc.py:253
 #, python-format
@@ -1655,17 +1652,17 @@ msgstr "¿Desea instalar la versión %s, mas antigua?"
 
 #: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
-msgstr "Su diario está lleno"
+msgstr "Su Diario está lleno"
 
 #: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
-"Por favor borre algunas entradas viejas del diario para hacer espacio a las "
+"Por favor borre algunas entradas viejas del Diario para hacer espacio a las "
 "nuevas entradas."
 
 #: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
-msgstr "Mostrar diario"
+msgstr "Mostrar Diario"
 
 #: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
@@ -1699,7 +1696,7 @@ msgstr "Enviar a"
 
 #: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
-msgstr "Ver detalles"
+msgstr "Ver Detalles"
 
 #: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
@@ -1976,7 +1973,7 @@ msgstr "Salir"
 
 #: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
-msgstr "Mis ajustes"
+msgstr "Mis Ajustes"
 
 #: ../src/jarabe/view/buddymenu.py:149
 #, python-format
@@ -1999,7 +1996,7 @@ msgstr "Actividad falló al iniciar"
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
-msgstr "Ver fuente"
+msgstr "Ver Fuente"
 
 #: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
@@ -2012,7 +2009,7 @@ msgstr "Quitar"
 
 #: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
-msgstr "Fuente de la instancia"
+msgstr "Fuente de la Instancia"
 
 #: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
@@ -2020,7 +2017,7 @@ msgstr "Fuente"
 
 #: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
-msgstr "Fuente del paquete de la actividad"
+msgstr "Fuente del Paquete de la Actividad"
 
 #: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
