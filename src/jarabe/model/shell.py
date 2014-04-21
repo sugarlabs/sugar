@@ -594,7 +594,8 @@ class ShellModel(GObject.GObject):
                     Wnck.WindowType.SPLASHSCREEN and \
                     home_activity.get_launch_status() == Activity.LAUNCHING
 
-            if home_activity is None:
+            if home_activity is None and \
+                window.get_window_type() != Wnck.WindowType.SPLASHSCREEN:
                 logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
