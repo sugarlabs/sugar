@@ -610,14 +610,21 @@ class ShellModel(GObject.GObject):
                 home_activity.add_window(window, is_main_window(window,
                                                                 home_activity))
 
-            if is_main_window(window, home_activity):
-                self.emit('launch-completed', home_activity)
-                startup_time = time.time() - home_activity.get_launch_time()
-                logging.debug('%s launched in %f seconds.',
-                              activity_id, startup_time)
-
-            if self._active_activity is None:
-                self._set_active_activity(home_activity)
+            with open(os.path.join(os.environ['SUGAR_HOME'], "denied_activities"),
+                      "a") as f:
+                for line in f:
+                    if is_main_window(window, home_activity):
+                        if line == home_activity:
+                            self.emit('launch-failed', home_activity)
+                            logging.debug('%s failed to launch.',
+                                          activity_id)
+                        else:
+                            self.emit('launch-completed', home_activity)
+                            startup_time = time.time() - home_activity.get_launch_time()
+                            logging.debug('%s launched in %f seconds.',
+                                          activity_id, startup_time)
+                            if self._active_activity is None:
+                                self._set_active_activity(home_activity)
 
     def _window_closed_cb(self, screen, window):
         if window.get_window_type() == Wnck.WindowType.NORMAL or \

@@ -1,0 +1,99 @@
+#!/usr/bin/python
+
+# Change to the administrator account.
+
+"""
+Change to the administrator account.
+
+Helper file used by the parental controls library.
+Can also be used by other Sugar components and by non-Sugar external
+applications.
+"""
+
+import logging
+import os
+import sys
+import crypt
+import getpass
+import pwd, grp
+import fnmatch
+
+from gettext import gettext as _
+from subprocess import popen
+from gi.repository import GObject, Gtk, Gdk
+
+if os.geteuid() = "0":
+    raise KeyError("I cannot run as root!")
+
+class AdmPasswordWindow(Gtk.Window):
+    def __init__(self):
+        Gtk.Window.__init__(self, title=_('Root Password'))
+        self.set_border_width(10)
+
+        hbox = Gtk.Box(spacing=6)
+        self.add(hbox)
+
+        self.entry = Gtk.Entry(visibility=False)
+        text = self.entry.get_text()
+        hbox.pack_start(self.entry, True, True, 0)
+
+        button = Gtk.Button(label=_('OK'))
+        button.connect("clicked", self.on_ok_click)
+
+        button = Gtk.Button(label=_('Cancel'))
+        button.connect("clicked", self.on_cancel_click)
+
+    def on_ok_click(self):
+        cryptedpasswd = pwd.getpwnam(getpass.getuser())[1]
+        if cryptedpasswd:
+            if cryptedpasswd == 'x' or cryptedpasswd == '*':
+                raise NotImplementedError(
+                    _("Shadow passwords are not supported."))
+            elif text != crypt.crypt(text, cryptedpasswd):
+                raise ValueError(_("The password you typed was wrong."))
+            else:
+                Gtk.main_quit()
+                with open("/etc/sudoers") as f:
+                    for line in f:
+                        if fnmatch.fnmatch(line, '#*'):
+                            pass
+                        elif fnmatch.fnmatch(line, 'Defaults *'):
+                            pass
+                        elif fnmatch.fnmatch(line, '%*'):
+                            v = line.split(' ')[0]
+                            a = v.split('%', 2)[0]
+                            del v
+                            try:
+                                grpenum = grp.getgrnam(a)
+                                if os.environ['USER'] in grpenum.gr_mem:
+                                    pass
+                                else:
+                                    print "I could not find you in " \
+                                          "any group that can use " \
+                                          "sudo."
+                            except KeyError:
+                                raise KeyError("One or more of the" \
+                                               "groups in the sudoers" \
+                                               "file is not valid!")
+                        else:
+                            v = line.split(' ')[0]
+                            try:
+                                username = pwd.getpwnam(v)[0]
+                                if os.environ['USER'] == username:
+                                    pass
+                            except KeyError:
+                                raise KeyError("One or more of the" \
+                                               "users in the sudoers" \
+                                               "file is not valid!")
+                print(_("Executing command '%s'"), str(sys.argv))
+                Gtk.main_quit() # Close the password window
+                c = os.system('/bin/bash -c \'sudo -S %s <<< %s\''
+                           % str(sys.argv), text).read()
+                sys.exit(c)
+        else:
+            raise ValueError(_("I could not read your password."))
+
+win = AdmPasswordWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
