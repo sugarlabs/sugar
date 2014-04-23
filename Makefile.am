@@ -22,6 +22,12 @@ check-po:
 			exit 1; \
 		fi; \
 	done;
+	
+check-cpanel:
+	sed "s/@sysconfdir@/$(SYSCONFDIR)/g" \
+	extensions/cpsection/forparents/view.py.in > \
+	extensions/cpsection/forparents/view.py
+	rm -f extensions/cpsection/forparents/view.py.in
 
 lint:
 	flake8 $(top_srcdir)
