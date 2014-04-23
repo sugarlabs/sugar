@@ -1,0 +1,131 @@
+#!/usr/bin/python
+
+# sugarexttime -- Grant extended time for parental controls
+# Copyright (C) 2014 Ryan Cunningham
+
+# PACKAGERS: Please place in /usr/bin.
+
+"""
+Grant extended time for parental controls.
+
+Used by jarabe.parentalcontrols.
+"""
+
+from gi.repository import Gtk
+import logging
+import sys
+import os
+import time
+import jarabe.parentalcontrols
+
+if os.geteuid() != 0:
+    raise RuntimeError("You can only run this program as root.")
+
+logging.debug('START: Extended time requested')
+
+from gettext import gettext as _
+
+class SugarExtTimeWindow(Gtk.Window):
+    """
+The window created by the Python script 'sugarexttime'.
+"""
+
+    def __init__(self):
+        """
+The initialization method for every Python class.
+
+For this class, this method creates the window's contents.
+"""
+
+        Gtk.Window.__init__(self, title=_("sugarexttime"))
+        self.set_border_width(10)
+
+        hbox = Gtk.Box(spacing=6)
+        self.add(hbox)
+
+        listbox = Gtk.ListBox()
+        listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        hbox.pack_start(listbox, True, True, 0)
+
+        row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        row.add(hbox)
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        hbox.pack_start(vbox, True, True, 0)
+
+        label = Gtk.Label(_("Grant time until (24hr)"), xalign=0)
+        hbox.pack_start(label, True, True, 0)
+
+        hour = int(time.strftime("%H"))
+        adjustment = Gtk.Adjustment(0, 0, 23, 1, 1, 0)
+        self.spinbutton = Gtk.SpinButton()
+        self.spinbutton.set_adjustment(adjustment)
+        self.spinbutton.set_value(hour)
+        hbox.pack_start(self.spinbutton, False, True, 0)
+        self.hour_value = self.spinbutton.get_value_as_int()
+
+        label = Gtk.Label(":", xalign=0)
+        hbox.pack_start(label, True, True, 0)
+
+        minute = int(time.strftime("%M"))
+        adjustment = Gtk.Adjustment(0, 0, 59, 1, 1, 0)
+        self.spinbutton = Gtk.SpinButton()
+        self.spinbutton.set_adjustment(adjustment)
+        self.spinbutton.set_value(minute)
+        hbox.pack_start(self.spinbutton, False, True, 0)
+        self.minute_value = self.spinbutton.get_value_as_int()
+
+        listbox.add(row)
+
+        row = Gtk.ListBoxRow()
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=50)
+        row.add(hbox)
+        label = Gtk.Label(_("Date (day-month-year):"), xalign=0)
+        hbox.pack_start(label, True, True, 0)
+
+        day = int(time.strftime("%d"))
+        adjustment = Gtk.Adjustment(1, 1, 31, 1, 1, 0)
+        self.spinbutton = Gtk.SpinButton()
+        self.spinbutton.set_adjustment(adjustment)
+        self.spinbutton.set_value(day)
+        hbox.pack_start(self.spinbutton, False, True, 0)
+        self.day_value = self.spinbutton.get_value_as_int()
+
+        month = int(time.strftime("%m"))
+        adjustment = Gtk.Adjustment(1, 1, 12, 1, 1, 0)
+        self.spinbutton = Gtk.SpinButton()
+        self.spinbutton.set_adjustment(adjustment)
+        self.spinbutton.set_value(month)
+        hbox.pack_start(self.spinbutton, False, True, 0)
+        self.month_value = self.spinbutton.get_value_as_int()
+
+        year = int(time.strftime("%Y"))
+        adjustment = Gtk.Adjustment(0, 1, 9999, 1, 1, 0)
+        self.spinbutton = Gtk.SpinButton()
+        self.spinbutton.set_adjustment(adjustment)
+        self.spinbutton.set_value(year)
+        hbox.pack_start(self.spinbutton, False, True, 0)
+        self.year_value = self.spinbutton.get_value_as_int()
+
+        listbox.add(row)
+
+        button = Gtk.Button(label=_("Grant this much time"))
+        button.connect("clicked", self.on_button_click)
+        listbox.add(button)
+
+    def on_button_click(self, widget):
+        """
+What to do when the button is clicked.
+"""
+        hour = print("%s-%s-%s %s:%s", month, day, year, hour, minute)
+        format = "%m-%d-%Y %H:%S"
+        time = time.mktime(time.strptime(hour, format))
+        if not time:
+            raise ValueError(_("Is it not yet 1970?"))
+        parentalcontrols.ParentalControlsMain.set_end_time(time)
+        sys.exit(0)
+
+win = SugarExtTimeWindow()
+win.connect("delete-event", Gtk.main_quit)
+win.show_all()
+Gtk.main()
