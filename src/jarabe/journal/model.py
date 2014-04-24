@@ -768,14 +768,33 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
 
     if not metadata.get('title'):
         metadata['title'] = _('Untitled')
-    file_name = get_file_name(metadata['title'], metadata['mime_type'])
 
-    destination_path = os.path.join(metadata['mountpoint'], file_name)
-    if destination_path != file_path:
-        file_name = get_unique_file_name(metadata['mountpoint'], file_name)
+    original_file_name = os.path.basename(file_path)
+    original_dir_name = os.path.dirname(file_path)
+    # if is a file in the exernal device or Documents
+    # and the title is equal to the file name don't change it
+    if original_file_name == metadata['title'] and \
+            original_dir_name.startswith(metadata['mountpoint']):
+        destination_path = file_path
+        file_name = original_file_name
+    else:
+        file_name = metadata['title']
+        # only change the extension if the title don't have a good extension
+        clean_name, extension = os.path.splitext(file_name)
+        extension = extension.replace('.', '').lower()
+        mime_extensions = mime.get_extensions_by_mimetype(
+            metadata['mime_type'])
+        if extension not in mime_extensions:
+            file_name = get_file_name(metadata['title'],
+                                      metadata['mime_type'])
+
         destination_path = os.path.join(metadata['mountpoint'], file_name)
-        clean_name, extension_ = os.path.splitext(file_name)
-        metadata['title'] = clean_name
+        if destination_path != file_path:
+            file_name = get_unique_file_name(metadata['mountpoint'],
+                                             file_name)
+            destination_path = os.path.join(metadata['mountpoint'],
+                                            file_name)
+            metadata['title'] = file_name
 
     metadata_copy = metadata.copy()
     metadata_copy.pop('mountpoint', None)
