@@ -551,8 +551,12 @@ def find(query_, page_size):
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
+    # get_documents_path() is expensive, cache to not execute in every cycle
+    documents_path = get_documents_path()
     while dir_path:
-        if os.path.ismount(dir_path):
+        if dir_path == documents_path:
+            return documents_path
+        elif os.path.ismount(dir_path):
             return dir_path
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
