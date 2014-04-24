@@ -196,12 +196,8 @@ class NotificationButton(ToolButton):
 
 class NotificationPulsingIcon(PulsingIcon):
 
-    position = GObject.property(type=int, default=22)
-
-    SIZE = 19
-
     def __init__(self, filename=None, name=None, colors=None):
-        PulsingIcon.__init__(self)
+        PulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE)
         self._badge = None
 
         if filename:
@@ -222,7 +218,8 @@ class NotificationPulsingIcon(PulsingIcon):
         self._badge = get_surface(icon_name='emblem-notification',
                                   stroke_color=style.COLOR_WHITE.get_svg(),
                                   fill_color=style.COLOR_BLACK.get_svg(),
-                                  width=self.SIZE, height=self.SIZE)
+                                  width=self.get_badge_size(),
+                                  height=self.get_badge_size())
 
     def hide_badge(self):
         self._badge = None
@@ -230,9 +227,14 @@ class NotificationPulsingIcon(PulsingIcon):
     def do_draw(self, cr):
         PulsingIcon.do_draw(self, cr)
         if self._badge:
-            cr.set_source_surface(self._badge,
-                                  self.props.position,
-                                  self.props.position)
+            allocation = self.get_allocation()
+
+            # XXX assume icon is centered in its container
+            offset = int(self.props.pixel_size / 2) - self.get_badge_size()
+            x = int(allocation.width / 2) + offset
+            y = int(allocation.height / 2) + offset
+
+            cr.set_source_surface(self._badge, x, y)
             cr.paint()
 
 
@@ -250,7 +252,6 @@ class NotificationIcon(Gtk.EventBox):
     def __init__(self, **kwargs):
         self._icon = NotificationPulsingIcon()
         self._icon.props.pixel_size = style.STANDARD_ICON_SIZE
-        self._icon.props.position = 28
 
         Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
