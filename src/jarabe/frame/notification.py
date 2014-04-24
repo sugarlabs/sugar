@@ -28,6 +28,7 @@ from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import get_surface
+from sugar3.graphics.icon import _BADGE_SIZE
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
@@ -196,13 +197,10 @@ class NotificationButton(ToolButton):
 
 class NotificationPulsingIcon(PulsingIcon):
 
-    position = GObject.property(type=int, default=22)
-
-    SIZE = 19
-
     def __init__(self, filename=None, name=None, colors=None):
-        PulsingIcon.__init__(self)
+        PulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE)
         self._badge = None
+        self._badge_size = None
 
         if filename:
             self.props.file = filename
@@ -219,10 +217,13 @@ class NotificationPulsingIcon(PulsingIcon):
                                style.COLOR_TOOLBAR_GREY.get_svg()))
 
     def show_badge(self):
+        self._badge_size = int(self.props.pixel_size * _BADGE_SIZE)
+        logging.debug('show_badge is %s', str(self._badge_size))
         self._badge = get_surface(icon_name='emblem-notification',
                                   stroke_color=style.COLOR_WHITE.get_svg(),
                                   fill_color=style.COLOR_BLACK.get_svg(),
-                                  width=self.SIZE, height=self.SIZE)
+                                  width=self._badge_size,
+                                  height=self._badge_size)
 
     def hide_badge(self):
         self._badge = None
@@ -230,9 +231,13 @@ class NotificationPulsingIcon(PulsingIcon):
     def do_draw(self, cr):
         PulsingIcon.do_draw(self, cr)
         if self._badge:
-            cr.set_source_surface(self._badge,
-                                  self.props.position,
-                                  self.props.position)
+            allocation = self.get_allocation()
+
+            offset = int(self.props.pixel_size / 2) - self._badge_size
+            x = int(allocation.width / 2) + offset
+            y = int(allocation.height / 2) + offset
+
+            cr.set_source_surface(self._badge, x, y)
             cr.paint()
 
 
@@ -250,7 +255,6 @@ class NotificationIcon(Gtk.EventBox):
     def __init__(self, **kwargs):
         self._icon = NotificationPulsingIcon()
         self._icon.props.pixel_size = style.STANDARD_ICON_SIZE
-        self._icon.props.position = 28
 
         Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
