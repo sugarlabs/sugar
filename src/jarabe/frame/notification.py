@@ -196,9 +196,9 @@ class NotificationButton(ToolButton):
 
 class NotificationPulsingIcon(PulsingIcon):
 
-    position = GObject.property(type=int, default=22)
+    position = GObject.property(type=int, default=style.zoom(26))
 
-    SIZE = 19
+    SIZE = style.SMALL_ICON_SIZE
 
     def __init__(self, filename=None, name=None, colors=None):
         PulsingIcon.__init__(self)
@@ -250,7 +250,7 @@ class NotificationIcon(Gtk.EventBox):
     def __init__(self, **kwargs):
         self._icon = NotificationPulsingIcon()
         self._icon.props.pixel_size = style.STANDARD_ICON_SIZE
-        self._icon.props.position = 28
+        self._icon.props.position = style.zoom(36)
 
         Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
