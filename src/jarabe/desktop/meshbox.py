@@ -54,11 +54,12 @@ _FILTERED_ALPHA = 0.33
 
 class _ActivityIcon(CanvasIcon):
     def __init__(self, model, file_name, xo_color,
-                 size=style.STANDARD_ICON_SIZE):
+                 size=style.STANDARD_ICON_SIZE, joinable=None):
         CanvasIcon.__init__(self, file_name=file_name,
                             xo_color=xo_color, pixel_size=size)
 
         self._model = model
+        self._joinable = joinable
         self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
@@ -74,6 +75,7 @@ class _ActivityIcon(CanvasIcon):
 
         private = self._model.props.private
         joined = get_owner_instance() in self._model.props.buddies
+        joinable = self._joinable is None or self._joinable()
 
         menu_box = PaletteMenuBox()
 
@@ -84,7 +86,7 @@ class _ActivityIcon(CanvasIcon):
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
-        elif not private:
+        elif not private and joinable:
             item = PaletteMenuItem(_('Join'))
             icon = Icon(
                 pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
@@ -123,10 +125,15 @@ class ActivityView(SnowflakeLayout):
         for buddy in self._model.props.current_buddies:
             self._add_buddy(buddy)
 
+    def _joinable(self):
+        max_participants = self._model.bundle.get_max_participants()
+        return max_participants is None or len(self._icons) < max_participants
+
     def _create_icon(self):
         icon = _ActivityIcon(self._model,
                              file_name=self._model.bundle.get_icon(),
                              xo_color=self._model.get_color(),
+                             joinable=self._joinable,
                              size=style.STANDARD_ICON_SIZE)
         return icon
 
