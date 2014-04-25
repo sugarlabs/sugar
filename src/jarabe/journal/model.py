@@ -264,6 +264,8 @@ class InplaceResultSet(BaseResultSet):
             self._date_start = None
             self._date_end = None
 
+        self._only_favorites = int(query.get('keep', '0')) == 1
+
         self._mime_types = query.get('mime_type', [])
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
@@ -401,6 +403,18 @@ class InplaceResultSet(BaseResultSet):
                     add_to_list = True
                     break
             if not add_to_list:
+                return
+
+        if self._only_favorites:
+            if not metadata:
+                metadata = _get_file_metadata(full_path, stat,
+                                              fetch_preview=False)
+            if 'keep' not in metadata:
+                return
+            try:
+                if int(metadata['keep']) == 0:
+                    return
+            except ValueError:
                 return
 
         if self._date_start is not None and stat.st_mtime < self._date_start:
