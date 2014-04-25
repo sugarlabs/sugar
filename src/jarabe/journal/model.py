@@ -266,6 +266,8 @@ class InplaceResultSet(BaseResultSet):
 
         self._only_favorites = int(query.get('keep', '0')) == 1
 
+        self._filter_by_activity = query.get('activity', '')
+
         self._mime_types = query.get('mime_type', [])
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
@@ -415,6 +417,14 @@ class InplaceResultSet(BaseResultSet):
                 if int(metadata['keep']) == 0:
                     return
             except ValueError:
+                return
+
+        if self._filter_by_activity:
+            if not metadata:
+                metadata = _get_file_metadata(full_path, stat,
+                                              fetch_preview=False)
+            if 'activity' not in metadata or \
+                    metadata['activity'] != self._filter_by_activity:
                 return
 
         if self._date_start is not None and stat.st_mtime < self._date_start:
