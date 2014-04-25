@@ -290,6 +290,7 @@ class InplaceResultSet(BaseResultSet):
         self.ready.send(self)
 
     def find(self, query):
+        only_favorites = 'keep' in query and query['keep'] == 1
         if self._file_list is None:
             raise ValueError('Need to call setup() first')
 
@@ -300,7 +301,6 @@ class InplaceResultSet(BaseResultSet):
 
         offset = int(query.get('offset', 0))
         limit = int(query.get('limit', len(self._file_list)))
-        total_count = len(self._file_list)
 
         files = self._file_list[offset:offset + limit]
 
@@ -309,13 +309,17 @@ class InplaceResultSet(BaseResultSet):
             if metadata is None:
                 metadata = _get_file_metadata(file_path, stat)
             metadata['mountpoint'] = self._mount_point
+            if only_favorites:
+                if not self._check_favorite(metadata):
+                    continue
             entries.append(metadata)
 
         logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
 
-        return entries, total_count
+        return entries, len(entries)
 
     def find_ids(self, query):
+        only_favorites = 'keep' in query and query['keep'] == 1
         if self._file_list is None:
             raise ValueError('Need to call setup() first')
 
@@ -324,8 +328,21 @@ class InplaceResultSet(BaseResultSet):
 
         ids = []
         for file_path, stat, mtime_, size_, metadata in self._file_list:
+            if only_favorites:
+                if metadata is None:
+                    metadata = _get_file_metadata(file_path, stat)
+                if not self._check_favorite(metadata):
+                    continue
             ids.append(file_path)
         return ids
+
+    def _check_favorite(self, metadata):
+        if 'keep' not in metadata:
+            return False
+        try:
+            return int(metadata['keep']) == 1
+        except ValueError:
+            return False
 
     def _scan(self):
         if self._stopped:
