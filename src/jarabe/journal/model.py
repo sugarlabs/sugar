@@ -775,6 +775,10 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         if ready_callback:
             ready_callback(metadata, file_path, destination_path)
 
+    def _updated_cb(*args):
+        updated.send(None, object_id=destination_path)
+        _ready_cb()
+
     def _splice_cb(*args):
         created.send(None, object_id=destination_path)
         _ready_cb()
@@ -875,7 +879,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     else:
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
-        _ready_cb()
+        _updated_cb()
 
 
 def get_file_name(title, mime_type):
