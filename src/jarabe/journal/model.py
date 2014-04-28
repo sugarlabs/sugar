@@ -551,8 +551,12 @@ def find(query_, page_size):
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
+    # get_documents_path() is expensive, cache to not execute in every cycle
+    documents_path = get_documents_path()
     while dir_path:
-        if os.path.ismount(dir_path):
+        if dir_path == documents_path:
+            return documents_path
+        elif os.path.ismount(dir_path):
             return dir_path
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
@@ -728,6 +732,10 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         if ready_callback:
             ready_callback(metadata, file_path, destination_path)
 
+    def _updated_cb(*args):
+        updated.send(None, object_id=destination_path)
+        _ready_cb()
+
     def _splice_cb(*args):
         created.send(None, object_id=destination_path)
         _ready_cb()
@@ -741,14 +749,19 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
 
     if not metadata.get('title'):
         metadata['title'] = _('Untitled')
-    file_name = get_file_name(metadata['title'], metadata['mime_type'])
+    file_name = metadata['title']
+    # only change the extension if the title don't have a proper extension
+    clean_name, extension = os.path.splitext(file_name)
+    extension = extension.replace('.', '').lower()
+    mime_extensions = mime.get_extensions_by_mimetype(metadata['mime_type'])
+    if extension not in mime_extensions:
+        file_name = get_file_name(metadata['title'], metadata['mime_type'])
 
     destination_path = os.path.join(metadata['mountpoint'], file_name)
     if destination_path != file_path:
         file_name = get_unique_file_name(metadata['mountpoint'], file_name)
         destination_path = os.path.join(metadata['mountpoint'], file_name)
-        clean_name, extension_ = os.path.splitext(file_name)
-        metadata['title'] = clean_name
+        metadata['title'] = file_name
 
     metadata_copy = metadata.copy()
     metadata_copy.pop('mountpoint', None)
@@ -804,7 +817,7 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     else:
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
-        _ready_cb()
+        _updated_cb()
 
 
 def get_file_name(title, mime_type):
@@ -852,6 +865,9 @@ def is_editable(metadata):
         return os.access(metadata['mountpoint'], os.W_OK)
 
 
+_documents_path = None
+
+
 def get_documents_path():
     """Gets the path of the DOCUMENTS folder
 
@@ -861,14 +877,16 @@ def get_documents_path():
 
     Returns: Path to $HOME/DOCUMENTS or None if an error occurs
     """
-    try:
-        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
-                                stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(pipe.communicate()[0].strip())
-        if os.path.exists(documents_path) and \
-                os.environ.get('HOME') != documents_path:
-            return documents_path
-    except OSError, exception:
-        if exception.errno != errno.ENOENT:
-            logging.exception('Could not run xdg-user-dir')
-    return None
+    global _documents_path
+    if _documents_path is None:
+        try:
+            pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
+                                    stdout=subprocess.PIPE)
+            documents_path = os.path.normpath(pipe.communicate()[0].strip())
+            if os.path.exists(documents_path) and \
+                    os.environ.get('HOME') != documents_path:
+                _documents_path = documents_path
+        except OSError, exception:
+            if exception.errno != errno.ENOENT:
+                logging.exception('Could not run xdg-user-dir')
+    return _documents_path
