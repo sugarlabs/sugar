@@ -852,6 +852,9 @@ def is_editable(metadata):
         return os.access(metadata['mountpoint'], os.W_OK)
 
 
+_documents_path = None
+
+
 def get_documents_path():
     """Gets the path of the DOCUMENTS folder
 
@@ -861,14 +864,16 @@ def get_documents_path():
 
     Returns: Path to $HOME/DOCUMENTS or None if an error occurs
     """
-    try:
-        pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
-                                stdout=subprocess.PIPE)
-        documents_path = os.path.normpath(pipe.communicate()[0].strip())
-        if os.path.exists(documents_path) and \
-                os.environ.get('HOME') != documents_path:
-            return documents_path
-    except OSError, exception:
-        if exception.errno != errno.ENOENT:
-            logging.exception('Could not run xdg-user-dir')
-    return None
+    global _documents_path
+    if _documents_path is None:
+        try:
+            pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
+                                    stdout=subprocess.PIPE)
+            documents_path = os.path.normpath(pipe.communicate()[0].strip())
+            if os.path.exists(documents_path) and \
+                    os.environ.get('HOME') != documents_path:
+                _documents_path = documents_path
+        except OSError, exception:
+            if exception.errno != errno.ENOENT:
+                logging.exception('Could not run xdg-user-dir')
+    return _documents_path
