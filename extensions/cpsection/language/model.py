@@ -114,9 +114,13 @@ def get_languages():
         if line.startswith('LANGUAGE='):
             lang = line[9:].replace('"', '')
             lang = lang.strip()
+            if lang.endswith('UTF-8'):
+                lang = lang.replace('UTF-8', 'utf8')
             langlist = lang.split(':')
         elif line.startswith('LANG='):
             lang = line[5:].replace('"', '')
+            if lang.endswith('UTF-8'):
+                lang = lang.replace('UTF-8', 'utf8')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist is None:
