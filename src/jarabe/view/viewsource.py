@@ -37,7 +37,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.activitybundle import get_bundle_instance
 from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 from sugar3 import mime
@@ -58,7 +58,7 @@ map_activity_to_window = {}
 
 
 def _is_web_activity(bundle_path):
-    activity_bundle = ActivityBundle(bundle_path)
+    activity_bundle = get_bundle_instance(bundle_path)
     return activity_bundle.get_command() == 'sugar-activity-web'
 
 
@@ -207,7 +207,7 @@ class ViewSource(Gtk.Window):
         self._selected_sugar_file = None
         file_name = ''
 
-        activity_bundle = ActivityBundle(bundle_path)
+        activity_bundle = get_bundle_instance(bundle_path)
         command = activity_bundle.get_command()
 
         if _is_web_activity(bundle_path):
@@ -432,7 +432,7 @@ class Toolbar(Gtk.Toolbar):
 
         self._add_separator()
 
-        activity_bundle = ActivityBundle(bundle_path)
+        activity_bundle = get_bundle_instance(bundle_path)
         file_name = activity_bundle.get_icon()
 
         if document_path is not None and os.path.exists(document_path):
