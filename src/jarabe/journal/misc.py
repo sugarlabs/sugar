@@ -32,7 +32,7 @@ from sugar3.graphics.xocolor import colors
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3 import mime
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.activitybundle import ActivityBundle, get_bundle_instance
 from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
 from sugar3 import util
@@ -89,7 +89,7 @@ def get_icon_name(metadata):
         file_path = model.get_file(metadata['uid'])
         if file_path is not None and os.path.exists(file_path):
             try:
-                bundle = ActivityBundle(file_path)
+                bundle = get_bundle_instance(file_path)
                 file_name = bundle.get_icon()
             except Exception:
                 logging.exception('Could not read bundle')
@@ -131,7 +131,7 @@ def get_bundle(metadata):
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
-            return ActivityBundle(file_path)
+            return get_bundle_instance(file_path)
 
         elif is_content_bundle(metadata):
             file_path = model.get_file(metadata['uid'])

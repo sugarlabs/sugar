@@ -28,7 +28,7 @@ from gi.repository import GdkX11
 from sugar3 import env
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.activitybundle import get_bundle_instance
 from jarabe.model import shell
 
 
@@ -69,7 +69,7 @@ def get_help_url_and_title(activity):
             link_id = 'org.laptop.JournalActivity'
     else:
         # get activity name and window id
-        activity_bundle = ActivityBundle(bundle_path)
+        activity_bundle = get_bundle_instance(bundle_path)
         title = activity_bundle.get_name()
         link_id = activity_bundle.get_bundle_id()
 
