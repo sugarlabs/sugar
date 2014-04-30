@@ -382,7 +382,6 @@ class FavoritesView(ViewContainer):
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered '
                                 'with your school server.')
-            self._owner_icon.set_registered()
 
         ok_icon = Icon(icon_name='dialog-ok')
         alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
@@ -647,11 +646,6 @@ class OwnerIcon(BuddyIcon):
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
 
-        self.palette_invoker.cache_palette = True
-
-        self._palette_enabled = False
-        self._register_menu = None
-
         # This is a workaround to skip the callback for
         # enter-notify-event in the parent class the first time.
         def __enter_notify_event_cb(icon, event):
@@ -662,10 +656,6 @@ class OwnerIcon(BuddyIcon):
                                               __enter_notify_event_cb)
 
     def create_palette(self):
-        if not self._palette_enabled:
-            self._palette_enabled = True
-            return
-
         palette = BuddyMenu(get_owner_instance())
 
         settings = Gio.Settings('org.sugarlabs')
@@ -673,16 +663,14 @@ class OwnerIcon(BuddyIcon):
             backup_url = settings.get_string('backup-url')
 
             if not backup_url:
-                self._register_menu = PaletteMenuItem(_('Register'),
-                                                      'media-record')
+                text = _('Register')
             else:
-                self._register_menu = PaletteMenuItem(_('Register again'),
-                                                      'media-record')
+                text = _('Register again')
 
-            self._register_menu.connect('activate',
-                                        self.__register_activate_cb)
-            palette.menu_box.pack_end(self._register_menu, True, True, 0)
-            self._register_menu.show()
+            register_menu = PaletteMenuItem(text, 'media-record')
+            register_menu.connect('activate', self.__register_activate_cb)
+            palette.menu_box.pack_end(register_menu, True, True, 0)
+            register_menu.show()
 
         self.connect_to_palette_pop_events(palette)
 
@@ -690,14 +678,6 @@ class OwnerIcon(BuddyIcon):
 
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
-
-    def set_registered(self):
-        self.palette.menu_box.remove(self._register_menu)
-        self._register_menu = PaletteMenuItem(_('Register again'),
-                                              'media-record')
-        self._register_menu.connect('activate', self.__register_activate_cb)
-        self.palette.menu_box.pack_end(self._register_menu, True, True, 0)
-        self._register_menu.show()
 
 
 class FavoritesSetting(object):
