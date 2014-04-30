@@ -629,10 +629,18 @@ def delete(object_id):
         os.unlink(object_id)
         dir_path = os.path.dirname(object_id)
         filename = os.path.basename(object_id)
-        old_files = [os.path.join(dir_path, JOURNAL_METADATA_DIR,
-                                  filename + '.metadata'),
-                     os.path.join(dir_path, JOURNAL_METADATA_DIR,
-                                  filename + '.preview')]
+
+        mount_point = _get_mount_point(object_id)
+        subdir = ''
+        # check if the file is a subdirectory
+        if mount_point != dir_path:
+            subdir = os.path.relpath(dir_path, mount_point)
+
+        metadata_path = os.path.join(mount_point, JOURNAL_METADATA_DIR,
+                                     subdir)
+
+        old_files = [os.path.join(metadata_path, filename + '.metadata'),
+                     os.path.join(metadata_path, filename + '.preview')]
         for old_file in old_files:
             if os.path.exists(old_file):
                 try:
@@ -640,6 +648,11 @@ def delete(object_id):
                 except EnvironmentError:
                     logging.error('Could not remove metadata=%s '
                                   'for file=%s', old_file, filename)
+        try:
+            os.rmdir(metadata_path)
+        except:
+            # if can't remove is because there are other metadata
+            pass
         deleted.send(None, object_id=object_id)
 
 
