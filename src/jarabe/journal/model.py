@@ -445,9 +445,7 @@ def _get_file_metadata(path, stat, fetch_preview=True):
     metadata based on the file properties.
 
     """
-    filename = os.path.basename(path)
-    dir_path = os.path.dirname(path)
-    metadata = _get_file_metadata_from_json(dir_path, filename, fetch_preview)
+    metadata = _get_file_metadata_from_json(path, fetch_preview)
     if metadata:
         if 'filesize' not in metadata:
             metadata['filesize'] = stat.st_size
@@ -466,17 +464,26 @@ def _get_file_metadata(path, stat, fetch_preview=True):
             'description': path}
 
 
-def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
+def _get_file_metadata_from_json(path, fetch_preview):
     """Read the metadata from the json file and the preview
     stored on the external device.
 
     If the metadata is corrupted we do remove it and the preview as well.
 
     """
+    filename = os.path.basename(path)
+    dir_path = os.path.dirname(path)
+
     metadata = None
-    metadata_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+    mount_point = _get_mount_point(path)
+    subdir = ''
+    # check if the file is a subdirectory
+    if mount_point != dir_path:
+        subdir = dir_path[len(mount_point) + 1:]
+
+    metadata_path = os.path.join(mount_point, JOURNAL_METADATA_DIR, subdir,
                                  filename + '.metadata')
-    preview_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+    preview_path = os.path.join(mount_point, JOURNAL_METADATA_DIR, subdir,
                                 filename + '.preview')
 
     if not os.path.exists(metadata_path):
@@ -492,7 +499,7 @@ def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
                       'external device.', filename)
         return None
     else:
-        metadata['uid'] = os.path.join(dir_path, filename)
+        metadata['uid'] = path
 
     if not fetch_preview:
         if 'preview' in metadata:
@@ -780,8 +787,14 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
 
     metadata_dir_path = os.path.join(metadata['mountpoint'],
                                      JOURNAL_METADATA_DIR)
+    # check if the file is in a subdirectory in Documents or device
+    if original_dir_name.startswith(metadata['mountpoint']) and \
+            original_dir_name != metadata['mountpoint']:
+        subdir = original_dir_name[len(metadata['mountpoint']) + 1:]
+        metadata_dir_path = os.path.join(metadata_dir_path, subdir)
+        logging.error('metadata_dir_path %s', metadata_dir_path)
     if not os.path.exists(metadata_dir_path):
-        os.mkdir(metadata_dir_path)
+        os.makedirs(metadata_dir_path)
 
     # Set the HIDDEN attrib even when the metadata directory already
     # exists for backward compatibility; but don't set it in ~/Documents
