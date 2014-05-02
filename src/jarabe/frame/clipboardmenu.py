@@ -36,7 +36,9 @@ from sugar3.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
 from jarabe.journal import misc
+from jarabe.journal import journalwindow
 from jarabe.model import bundleregistry
+from jarabe.model import shell
 
 
 class ClipboardMenu(Palette):
@@ -153,22 +155,33 @@ class ClipboardMenu(Palette):
         self._update_items_visibility()
         self._update_open_submenu()
 
+    def _get_alert_window(self):
+        alert_window = None
+        shell_model = shell.get_model()
+        if shell_model._get_zoom_level() == shell.ShellModel.ZOOM_ACTIVITY:
+            active_activity = shell_model.get_active_activity()
+            if active_activity.is_journal():
+                alert_window = journalwindow.get_journal_window()
+            else:
+                alert_window = active_activity
+        return alert_window
+
     def _open_item_activate_cb(self, menu_item):
-        logging.debug('_open_item_activate_cb')
         percent = self._cb_object.get_percent()
         if percent < 100 or menu_item.get_submenu() is not None:
             return
         jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, self._get_activities()[0])
+        misc.resume(jobject.metadata, bundle_id=self._get_activities()[0],
+                    alert_window=self._get_alert_window())
         jobject.destroy()
 
     def _open_submenu_item_activate_cb(self, menu_item, service_name):
-        logging.debug('_open_submenu_item_activate_cb')
         percent = self._cb_object.get_percent()
         if percent < 100:
             return
         jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, service_name)
+        misc.resume(jobject.metadata, bundle_id=service_name,
+                    alert_window=self._get_alert_window())
         jobject.destroy()
 
     def _remove_item_activate_cb(self, menu_item):
