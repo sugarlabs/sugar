@@ -163,7 +163,7 @@ class BaseListView(Gtk.Bin):
             self.tree_view.append_column(column)
 
         cell_favorite = CellRendererFavorite(self.tree_view)
-        cell_favorite.connect('clicked', self.__favorite_clicked_cb)
+        cell_favorite.connect('clicked', self._favorite_clicked_cb)
 
         column = Gtk.TreeViewColumn()
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
@@ -294,7 +294,7 @@ class BaseListView(Gtk.Bin):
         else:
             cell.props.xo_color = None
 
-    def __favorite_clicked_cb(self, cell, path):
+    def _favorite_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         if not model.is_editable(metadata):

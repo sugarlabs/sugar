@@ -216,6 +216,9 @@ class ChooserListView(BaseListView):
     def __entry_activated_cb(self, entry):
         self.emit('entry-activated', entry)
 
+    def _favorite_clicked_cb(self, cell, path):
+        pass
+
     def __button_release_event_cb(self, tree_view, event):
         if event.window != tree_view.get_bin_window():
             return False
