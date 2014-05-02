@@ -79,6 +79,7 @@ class BaseListView(Gtk.Bin):
         self._progress_bar = None
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
+        self.is_object_chooser = False
 
         Gtk.Bin.__init__(self)
 
@@ -295,6 +296,9 @@ class BaseListView(Gtk.Bin):
             cell.props.xo_color = None
 
     def __favorite_clicked_cb(self, cell, path):
+        if self.is_object_chooser:
+            return
+
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         if not model.is_editable(metadata):
