@@ -390,9 +390,12 @@ class BaseListView(Gtk.Bin):
                     self._show_message(_('The device is empty'))
             else:
                 self._show_message(_('No matching entries'),
-                                   show_clear_query=True)
+                                   show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
+
+    def _can_clear_query(self):
+        return True
 
     def __map_cb(self, widget):
         logging.debug('ListView.__map_cb %r', self._scroll_position)
