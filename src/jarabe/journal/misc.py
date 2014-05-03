@@ -395,6 +395,8 @@ def get_mount_color(mount):
 
     if uuid:
         sha_hash.update(uuid)
+    elif path is None:
+        sha_hash.update(str(time.time()))
     else:
         mount_name = os.path.basename(path)
         sha_hash.update(mount_name)
