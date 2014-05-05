@@ -43,9 +43,8 @@ from jarabe.journal import journalwindow
 
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
-        Gtk.VBox.__init__(self,
-                          background_color=
-                          style.COLOR_PANEL_GREY.get_gdk_color())
+        Gtk.VBox.__init__(
+            self, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
