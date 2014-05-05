@@ -47,6 +47,7 @@ class DetailView(Gtk.VBox):
         self.pack_start(back_bar, False, True, 0)
 
         self.show_all()
+        self.connect('hide', self.__hide_cb)
 
     def _fav_icon_activated_cb(self, fav_icon):
         keep = not self._expanded_entry.get_keep()
@@ -78,6 +79,12 @@ class DetailView(Gtk.VBox):
 
     metadata = GObject.property(
         type=object, getter=get_metadata, setter=set_metadata)
+
+    def __hide_cb(self, widget):
+        # the expanded entry need be created every time to not mix
+        # the metadata in different objects - SL #4770
+        self.remove(self._expanded_entry)
+        self._expanded_entry = None
 
 
 class BackBar(Gtk.EventBox):
