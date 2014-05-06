@@ -535,9 +535,9 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _keep_icon_toggled_cb(self, keep_icon):
         if keep_icon.get_active():
-            self._metadata['keep'] = 1
+            self._metadata['keep'] = '1'
         else:
-            self._metadata['keep'] = 0
+            self._metadata['keep'] = '0'
         self._update_entry(needs_update=True)
 
     def _icon_button_release_event_cb(self, button, event):
