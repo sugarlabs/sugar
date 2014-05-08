@@ -203,6 +203,11 @@
             <summary>Show Sugar Ad-hoc networks</summary>
             <description>If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If Sugar sees no "known" network when it starts, it does autoconnect to an Ad-hoc network.</description>
         </key>
+        <key name="adhoc-autoconnect" type="b">
+            <default>true</default>
+            <summary>Enable Ad-hoc autoconnect</summary>
+            <description>If TRUE, Sugar will autoconnect to Ad-hoc networks.</description>
+        </key>
         <child name="gsm" schema="org.sugarlabs.network.gsm" />
     </schema>
     <schema id="org.sugarlabs.network.gsm" path="/org/sugarlabs/network/gsm/">

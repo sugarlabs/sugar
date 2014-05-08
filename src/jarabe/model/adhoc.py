@@ -18,6 +18,7 @@ import logging
 
 import dbus
 import uuid
+from gi.repository import Gio
 from gi.repository import GObject
 
 from jarabe.model import network
@@ -64,6 +65,7 @@ class AdHocManager(GObject.GObject):
         self._listening_called = 0
         self._device_state = network.NM_DEVICE_STATE_UNKNOWN
 
+        self._last_channel = None
         self._current_channel = None
         self._networks = {self._CHANNEL_1: None,
                           self._CHANNEL_6: None,
@@ -72,6 +74,9 @@ class AdHocManager(GObject.GObject):
         for channel in (self._CHANNEL_1, self._CHANNEL_6, self._CHANNEL_11):
             if not self._find_connection(channel):
                 self._add_connection(channel)
+
+        settings = Gio.Settings('org.sugarlabs.network')
+        self._autoconnect_enabled = settings.get_boolean('adhoc-autoconnect')
 
     def start_listening(self, device):
         self._listening_called += 1
@@ -157,18 +162,16 @@ class AdHocManager(GObject.GObject):
         return False
 
     def _autoconnect_adhoc(self):
-        """First we try if there is an Ad-hoc network that is used by other
-        learners in the area, if not we default to channel 1.
-
+        """Autoconnect to the last network used during the session, only
+        if previously connected. If autoconnect is enabled default to
+        the first network.
         """
-        if self._networks[self._CHANNEL_1] is not None:
-            self.activate_channel(self._CHANNEL_1)
-        elif self._networks[self._CHANNEL_6] is not None:
-            self.activate_channel(self._CHANNEL_6)
-        elif self._networks[self._CHANNEL_11] is not None:
-            self.activate_channel(self._CHANNEL_11)
-        else:
-            self.activate_channel(self._CHANNEL_1)
+        if self._autoconnect_enabled is False and \
+                self._last_channel is None:
+            logging.debug('autoconnect Sugar Ad-hoc: is not enabled.')
+            return
+
+        self.activate_channel(self._last_channel or self._CHANNEL_1)
 
     def activate_channel(self, channel):
         """Activate a sugar Ad-hoc network.
@@ -180,6 +183,7 @@ class AdHocManager(GObject.GObject):
         connection = self._find_connection(channel)
         if connection:
             connection.activate(self._device.object_path)
+            self._last_channel = channel
 
     @staticmethod
     def _get_connection_id(channel):
@@ -227,6 +231,7 @@ class AdHocManager(GObject.GObject):
                         network.NM_SERVICE, network.NM_PATH)
                     netmgr = dbus.Interface(obj, network.NM_IFACE)
                     netmgr.DeactivateConnection(connection_o)
+                    self._last_channel = None
 
     def __get_active_connections_error_cb(self, err):
         logging.error('Error getting the active connections: %s', err)
