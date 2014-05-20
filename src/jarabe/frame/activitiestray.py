@@ -25,6 +25,7 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -672,7 +673,10 @@ class IncomingTransferPalette(BaseTransferPalette):
             inner_box.show()
 
             if self.file_transfer.description:
-                label = Gtk.Label(label=self.file_transfer.description)
+                text = self.file_transfer.description.replace('\n', ' ')
+                label = Gtk.Label(label=text)
+                label.set_max_width_chars(style.MENU_WIDTH_CHARS)
+                label.set_ellipsize(Pango.EllipsizeMode.END)
                 inner_box.add(label)
                 label.show()
 

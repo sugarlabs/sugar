@@ -43,9 +43,8 @@ from jarabe.journal import journalwindow
 
 class Separator(Gtk.VBox):
     def __init__(self, orientation):
-        Gtk.VBox.__init__(self,
-                          background_color=
-                          style.COLOR_PANEL_GREY.get_gdk_color())
+        Gtk.VBox.__init__(
+            self, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
@@ -232,7 +231,7 @@ class ExpandedEntry(Gtk.EventBox):
         body.pack_start(second_column, True, True, 0)
 
         # Header
-        self._keep_icon = self._create_keep_icon()
+        self._keep_icon, self._keep_sid = self._create_keep_icon()
         header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
 
         self._icon = None
@@ -283,7 +282,9 @@ class ExpandedEntry(Gtk.EventBox):
             return
         self._metadata = metadata
 
+        self._keep_icon.handler_block(self._keep_sid)
         self._keep_icon.set_active(int(metadata.get('keep', 0)) == 1)
+        self._keep_icon.handler_unblock(self._keep_sid)
 
         self._icon = self._create_icon()
         for child in self._icon_box.get_children():
@@ -320,8 +321,8 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _create_keep_icon(self):
         keep_icon = KeepIcon()
-        keep_icon.connect('toggled', self._keep_icon_toggled_cb)
-        return keep_icon
+        keep_sid = keep_icon.connect('toggled', self._keep_icon_toggled_cb)
+        return keep_icon, keep_sid
 
     def _create_icon(self):
         icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
@@ -534,9 +535,9 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _keep_icon_toggled_cb(self, keep_icon):
         if keep_icon.get_active():
-            self._metadata['keep'] = 1
+            self._metadata['keep'] = '1'
         else:
-            self._metadata['keep'] = 0
+            self._metadata['keep'] = '0'
         self._update_entry(needs_update=True)
 
     def _icon_button_release_event_cb(self, button, event):

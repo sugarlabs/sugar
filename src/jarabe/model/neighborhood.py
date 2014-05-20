@@ -295,10 +295,8 @@ class _Account(GObject.GObject):
             self._connection[PROPERTIES_IFACE].Get(
                 CONNECTION,
                 'SelfHandle',
-                reply_handler=
-                self.__get_self_handle_cb,
-                error_handler=
-                partial(
+                reply_handler=self.__get_self_handle_cb,
+                error_handler=partial(
                     self.__error_handler_cb,
                     'Connection.GetSelfHandle'))
             self.emit('connected')
