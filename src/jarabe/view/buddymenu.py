@@ -33,7 +33,6 @@ from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
-import jarabe.desktop.homewindow
 
 
 class BuddyMenu(Palette):
@@ -128,6 +127,8 @@ class BuddyMenu(Palette):
         item.show()
 
     def _quit(self, action):
+        import jarabe.desktop.homewindow
+
         home_window = jarabe.desktop.homewindow.get_instance()
         home_window.busy_during_delayed_action(action)
 
