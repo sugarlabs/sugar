@@ -20,6 +20,10 @@ if test -z "$SUGAR_SCALING"; then
     export SUGAR_SCALING=72
 fi
 
+if test -z "$SUGAR_GROUP_LABELS"; then
+    export SUGAR_GROUP_LABELS="$sugardatadir/group-labels.defaults"
+fi
+
 if test -z "$SUGAR_MIME_DEFAULTS"; then
     export SUGAR_MIME_DEFAULTS="$sugardatadir/mime.defaults"
 fi

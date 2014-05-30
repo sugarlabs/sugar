@@ -17,6 +17,8 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
+from gi.repository import GObject
 
 from sugar3.graphics.icon import EventIcon
 from sugar3.graphics import style
@@ -26,13 +28,35 @@ from sugar3.graphics.xocolor import XoColor
 GENDERS = ['female', 'male']
 
 
+def load_gender():
+    settings = Gio.Settings('org.sugarlabs.user')
+    return settings.get_string('gender')
+
+
+def save_gender(gender):
+    settings = Gio.Settings('org.sugarlabs.user')
+    if gender is not None:
+        settings.set_string('gender', gender)
+    else:
+        settings.set_string('gender', '')
+
+    # DEPRECATED
+    from gi.repository import GConf
+    if gender is not None:
+        client = GConf.Client.get_default()
+        client.set_string('/desktop/sugar/user/gender', gender)
+
+
 class GenderPicker(Gtk.Grid):
+
+    gender_changed_signal = GObject.Signal('gender-changed', arg_types=([str]))
+
     def __init__(self):
         Gtk.Grid.__init__(self)
         self.set_row_spacing(style.DEFAULT_SPACING)
         self.set_column_spacing(style.DEFAULT_SPACING)
 
-        self._gender = None
+        self._gender = self.get_gender()
         self._buttons = []
         self._nocolor = XoColor('#010101,#ffffff')
         self._color = XoColor()
@@ -40,11 +64,23 @@ class GenderPicker(Gtk.Grid):
         for i, gender in enumerate(GENDERS):
             self._buttons.append(EventIcon(pixel_size=style.XLARGE_ICON_SIZE,
                                            icon_name='%s-6' % (gender)))
-            self._buttons[-1].show()
             self._buttons[-1].connect('button-press-event',
                                       self._button_press_cb, i)
+            self.attach(self._buttons[-1], i * 2, 0, 1, 1)
+            self._buttons[-1].show()
 
-            self.attach(self._buttons[-1], i, 0, 1, 1)
+        self.reset_button = EventIcon(pixel_size=style.SMALL_ICON_SIZE,
+                                      icon_name='entry-cancel')
+        self.reset_button.connect('button-press-event',
+                                  self._reset_button_press_cb)
+        self.attach(self.reset_button, 1, 0, 1, 1)
+        self.reset_button.xo_color = XoColor('#010101,#a0a0a0')
+        self.reset_button.show()
+
+    def _reset_button_press_cb(self, widget, event):
+        self._set_gender('')
+        for i in range(len(GENDERS)):
+            self._buttons[i].xo_color = self._nocolor
 
     def _button_press_cb(self, widget, event, gender_index):
         if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
@@ -53,9 +89,10 @@ class GenderPicker(Gtk.Grid):
             self._buttons[1 - gender_index].xo_color = self._nocolor
 
     def get_gender(self):
-        return self._gender
+        return load_gender()
 
     def _set_gender(self, gender):
+        self.gender_changed_signal.emit(gender)
         self._gender = gender
 
     def update_color(self, color):

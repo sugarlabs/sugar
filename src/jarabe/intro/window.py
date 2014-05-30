@@ -39,21 +39,6 @@ from jarabe.intro import agepicker
 from jarabe.intro import colorpicker
 from jarabe.intro import genderpicker
 
-_SECONDS_PER_YEAR = 365 * 24 * 60 * 60.
-
-
-def calculate_birth_timestamp(age):
-    age_in_seconds = age * _SECONDS_PER_YEAR
-    birth_timestamp = int(time.time() - age_in_seconds)
-    return birth_timestamp
-
-
-def calculate_age(birth_timestamp):
-    age_in_seconds = time.time() - birth_timestamp
-    # Round to nearest int
-    age = int(math.floor(age_in_seconds / _SECONDS_PER_YEAR) + 0.5)
-    return age
-
 
 def create_profile_with_nickname(nickname):
     user_profile = UserProfile()
@@ -64,6 +49,11 @@ def create_profile_with_nickname(nickname):
 def create_profile(user_profile):
     settings = Gio.Settings('org.sugarlabs.user')
 
+    if user_profile.nickname in [None, '']:
+        nick = settings.get_string('nick')
+        if nick is not None:
+            logging.debug('recovering old nickname %s' % (nick))
+            user_profile.nickname = nick
     settings.set_string('nick', user_profile.nickname)
 
     colors = user_profile.colors
@@ -71,14 +61,9 @@ def create_profile(user_profile):
         colors = XoColor()
     settings.set_string('color', colors.to_string())
 
-    if user_profile.gender is not None:
-        settings.set_string('gender', user_profile.gender)
-    else:
-        settings.set_string('gender', '')
+    genderpicker.save_gender(user_profile.gender)
 
-    settings.set_int('birth-timestamp',
-                     calculate_birth_timestamp(user_profile.age))
-    # settings.sync()
+    agepicker.save_age(user_profile.age)
 
     # DEPRECATED
     from gi.repository import GConf
@@ -88,11 +73,6 @@ def create_profile(user_profile):
 
     client.set_string('/desktop/sugar/user/color', colors.to_string())
 
-    if user_profile.gender is not None:
-        client.set_string('/desktop/sugar/user/gender', user_profile.gender)
-
-    client.set_int('/desktop/sugar/user/birth_timestamp',
-                   calculate_birth_timestamp(user_profile.age))
     client.suggest_sync()
 
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
@@ -253,11 +233,12 @@ class _AgePage(_Page):
         grid.set_column_spacing(style.DEFAULT_SPACING)
         alignment.add(grid)
 
-        label = Gtk.Label(label=_('Select age:'))
+        self._ap = agepicker.AgePicker(gender, self)
+
+        label = Gtk.Label(label=_(self._ap.get_label()))
         grid.attach(label, 0, 0, 1, 1)
         label.show()
 
-        self._ap = agepicker.AgePicker(gender)
         grid.attach(self._ap, 0, 1, 1, 1)
         self._ap.show()
 
@@ -265,7 +246,6 @@ class _AgePage(_Page):
         alignment.show()
 
         self._age = self._ap.get_age()
-        self.set_valid(True)
 
     def update_gender(self, gender):
         self._ap.update_gender(gender)
@@ -288,7 +268,7 @@ class _IntroBox(Gtk.VBox):
     PAGE_FIRST = min(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
     PAGE_LAST = max(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
 
-    def __init__(self):
+    def __init__(self, start_on_age_page):
         Gtk.VBox.__init__(self)
         self.set_border_width(style.zoom(30))
 
@@ -303,7 +283,10 @@ class _IntroBox(Gtk.VBox):
         settings = Gio.Settings('org.sugarlabs.user')
         default_nick = settings.get_string('default-nick')
         if default_nick != 'disabled':
-            self._page = self.PAGE_COLOR
+            if start_on_age_page:
+                self._page = self.PAGE_AGE
+            else:
+                self._page = self.PAGE_COLOR
             if default_nick == 'system':
                 pwd_entry = pwd.getpwuid(os.getuid())
                 default_nick = (pwd_entry.pw_gecos.split(',')[0] or
@@ -343,6 +326,7 @@ class _IntroBox(Gtk.VBox):
 
         setup_methods[self._page](self)
         self.pack_start(self._current_page, True, True, 0)
+        self._current_page.show()
 
         button_box = Gtk.HButtonBox()
         if self._page == self.PAGE_FIRST:
@@ -354,6 +338,7 @@ class _IntroBox(Gtk.VBox):
             back_button.set_image(image)
             back_button.connect('clicked', self._back_activated_cb)
             button_box.pack_start(back_button, True, True, 0)
+            back_button.show()
 
         self._next_button = Gtk.Button()
         image = Icon(icon_name='go-right')
@@ -370,12 +355,14 @@ class _IntroBox(Gtk.VBox):
 
         self._update_next_button()
         button_box.pack_start(self._next_button, True, True, 0)
+        self._next_button.show()
 
         self._current_page.connect('notify::valid',
                                    self._page_valid_changed_cb)
 
         self.pack_start(button_box, False, True, 0)
-        self.show_all()
+        button_box.show()
+        # self.show_all()
 
     def _update_next_button(self):
         self._next_button.set_sensitive(self._current_page.props.valid)
@@ -420,7 +407,7 @@ class UserProfile():
         self.nickname = None
         self.colors = None
         self.gender = None
-        self.age = 12
+        self.age = 0
 
 
 class IntroWindow(Gtk.Window):
@@ -430,13 +417,13 @@ class IntroWindow(Gtk.Window):
         'done': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
-    def __init__(self):
+    def __init__(self, start_on_age_page=False):
         Gtk.Window.__init__(self)
 
         self.props.decorated = False
         self.maximize()
 
-        self._intro_box = _IntroBox()
+        self._intro_box = _IntroBox(start_on_age_page)
         self._intro_box.connect('done', self._done_cb)
 
         self.add(self._intro_box)

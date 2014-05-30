@@ -82,6 +82,11 @@
             <summary>User Birth Timestamp</summary>
             <description>Birth timestamp (seconds since the epoch)</description>
         </key>
+        <key name="group-label" type="s">
+            <default>''</default>
+            <summary>Group Label</summary>
+            <description>Label associated with age, e.g., '2nd Grade'</description>
+        </key>
         <child name="background" schema="org.sugarlabs.user.background" />
     </schema>
     <schema id="org.sugarlabs.user.background" path="/org/sugarlabs/user/background/">
