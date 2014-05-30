@@ -149,6 +149,7 @@ class JournalActivity(JournalWindow):
         self._detail_toolbox = None
         self._volumes_toolbar = None
         self._mount_point = '/'
+        self._main_view_active = True
 
         self._editing_mode = False
 
@@ -282,6 +283,7 @@ class JournalActivity(JournalWindow):
         self.connect('key-press-event', self._key_press_event_cb)
 
     def show_main_view(self):
+        self._main_view_active = True
         if self._editing_mode:
             self._toolbox = self._edit_toolbox
             self._toolbox.set_total_number_of_entries(
@@ -297,6 +299,7 @@ class JournalActivity(JournalWindow):
             self._main_view.show()
 
     def _show_secondary_view(self, object_id):
+        self._main_view_active = False
         metadata = model.get(object_id)
         try:
             self._detail_toolbox.set_metadata(metadata)
@@ -349,6 +352,8 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
+        if not self._main_view_active:
+            return
         self._list_view.set_is_visible(True)
 
     def _focus_out_event_cb(self, window, event):
@@ -356,6 +361,9 @@ class JournalActivity(JournalWindow):
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
+        if not self._main_view_active:
+            return
+
         if event.changed_mask & Gdk.WindowState.ICONIFIED:
             state = event.new_window_state
             visible = not state & Gdk.WindowState.ICONIFIED
