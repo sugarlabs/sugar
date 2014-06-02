@@ -81,6 +81,8 @@ class HomeWindow(Gtk.Window):
         self._box.pack_start(self._toolbar, False, True, 0)
         self._toolbar.show()
 
+        self._alerts = []
+
         self._home_box = HomeBox(self._toolbar)
         self._box.pack_start(self._home_box, True, True, 0)
         self._home_box.show()
@@ -101,11 +103,22 @@ class HomeWindow(Gtk.Window):
             self.__zoom_level_changed_cb)
 
     def add_alert(self, alert):
-        self._box.pack_start(alert, False, True, 0)
-        self._box.reorder_child(alert, 1)
+        self._alerts.append(alert)
+        if len(self._alerts) == 1:
+            self._display_alert(alert)
 
     def remove_alert(self, alert):
-        self._box.remove(alert)
+        if alert in self._alerts:
+            self._alerts.remove(alert)
+            # if the alert is the visible one on top of the queue
+            if alert.get_parent() is not None:
+                self._box.remove(alert)
+                if len(self._alerts) >= 1:
+                    self._display_alert(self._alerts[0])
+
+    def _display_alert(self, alert):
+        self._box.pack_start(alert, False, False, 0)
+        self._box.reorder_child(alert, 1)
 
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')
