@@ -92,12 +92,13 @@ class IconView(Gtk.Bin):
                             None, ([str])),
     }
 
-    def __init__(self):
+    def __init__(self, toolbar):
         self._query = {}
         self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
+        self._toolbar = toolbar
 
         Gtk.Bin.__init__(self)
 
@@ -215,8 +216,9 @@ class IconView(Gtk.Bin):
                 else:
                     self._show_message(_('The device is empty'))
             else:
+                can_clear = self._toolbar.can_clear_query()
                 self._show_message(_('No matching entries'),
-                                   show_clear_query=True)
+                                   show_clear_query=can_clear)
         else:
             self._clear_message()
 
