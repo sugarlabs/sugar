@@ -86,6 +86,8 @@ class MainToolbox(ToolbarBox):
         self._filter_type = None
         self._what_filter = None
         self._when_filter = None
+        self.default_what_filter = None
+        self.default_filter_type = None
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -457,12 +459,18 @@ class MainToolbox(ToolbarBox):
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
+    def is_filter_changed(self):
+        return not (self._filter_type == self.default_filter_type and
+                    self._what_filter == self.default_what_filter and
+                    self._when_filter is None)
+
     def clear_query(self):
         self.search_entry.props.text = ''
+        self._filter_type = self.default_filter_type
 
         self._what_search_button.set_widget_icon(icon_name='view-type')
         self._what_search_button.set_widget_label(_('Anything'))
-        self._what_filter = None
+        self.set_what_filter(self.default_what_filter)
 
         self._when_search_button.set_widget_icon(icon_name='view-created')
         self._when_search_button.set_widget_label(_('Anytime'))
