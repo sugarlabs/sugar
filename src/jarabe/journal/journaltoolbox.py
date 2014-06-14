@@ -462,7 +462,9 @@ class MainToolbox(ToolbarBox):
     def is_filter_changed(self):
         return not (self._filter_type == self.default_filter_type and
                     self._what_filter == self.default_what_filter and
-                    self._when_filter is None)
+                    self._when_filter is None and
+                    self._favorite_button.props.active == False and
+                    self.search_entry.props.text == '')
 
     def clear_query(self):
         self.search_entry.props.text = ''
