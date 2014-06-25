@@ -86,6 +86,10 @@ class ObjectChooser(Gtk.Window):
         separator.show()
 
         self._toolbar = MainToolbox()
+        if what_filter:
+            self._toolbar.default_what_filter = what_filter
+        if filter_type:
+            self._toolbar.default_filter_type = filter_type
         self._toolbar.connect('query-changed', self.__query_changed_cb)
         self._toolbar.set_size_request(-1, style.GRID_CELL_SIZE)
         vbox.pack_start(self._toolbar, False, True, 0)
