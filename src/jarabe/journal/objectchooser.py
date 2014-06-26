@@ -93,14 +93,14 @@ class ObjectChooser(Gtk.Window):
         self._toolbar.show()
 
         if not self._show_preview:
-            self._list_view = ChooserListView()
+            self._list_view = ChooserListView(self._toolbar)
             self._list_view.connect('entry-activated',
                                     self.__entry_activated_cb)
             self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
             vbox.pack_start(self._list_view, True, True, 0)
             self._list_view.show()
         else:
-            self._icon_view = IconView()
+            self._icon_view = IconView(self._toolbar)
             self._icon_view.connect('entry-activated',
                                     self.__entry_activated_cb)
             self._icon_view.connect('clear-clicked', self.__clear_clicked_cb)
@@ -205,14 +205,18 @@ class ChooserListView(BaseListView):
                             ([str])),
     }
 
-    def __init__(self):
+    def __init__(self, toolbar):
         BaseListView.__init__(self, None)
+        self._toolbar = toolbar
 
         self.cell_icon.props.show_palette = False
         self.tree_view.props.hover_selection = True
 
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
+
+    def _can_clear_query(self):
+        return self._toolbar.is_filter_changed()
 
     def __entry_activated_cb(self, entry):
         self.emit('entry-activated', entry)
