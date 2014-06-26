@@ -80,12 +80,14 @@ class MainToolbox(ToolbarBox):
     query_changed_signal = GObject.Signal('query-changed',
                                           arg_types=([object]))
 
-    def __init__(self):
+    def __init__(self, default_what_filter=None, default_filter_type=None):
         ToolbarBox.__init__(self)
         self._mount_point = None
         self._filter_type = None
         self._what_filter = None
         self._when_filter = None
+        self._default_what_filter = default_what_filter
+        self._default_filter_type = default_filter_type
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -459,10 +461,11 @@ class MainToolbox(ToolbarBox):
 
     def clear_query(self):
         self.search_entry.props.text = ''
+        self._filter_type = self._default_filter_type
 
         self._what_search_button.set_widget_icon(icon_name='view-type')
         self._what_search_button.set_widget_label(_('Anything'))
-        self._what_filter = None
+        self.set_what_filter(self._default_what_filter)
 
         self._when_search_button.set_widget_icon(icon_name='view-created')
         self._when_search_button.set_widget_label(_('Anytime'))
