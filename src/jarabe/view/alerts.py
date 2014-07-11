@@ -18,6 +18,7 @@ import logging
 from gettext import gettext as _
 
 from sugar3.graphics.alert import ErrorAlert
+from jarabe.model.shell import Activity
 
 
 class BaseErrorAlert(ErrorAlert):
@@ -63,6 +64,11 @@ def show_multiple_instance_alert(window, activity_name):
 
 def show_max_open_activities_alert(window):
     alert = MaxOpenActivitiesAlert()
-    alert.connect('response', _alert_response_cb, window)
-    window.add_alert(alert)
-    alert.show()
+    if isinstance(window, Activity):
+        service = window.get_service()
+        if service is not None:
+            service.ShowAlert(alert.props.title, alert.props.msg)
+    else:
+        alert.connect('response', _alert_response_cb, window)
+        window.add_alert(alert)
+        alert.show()
