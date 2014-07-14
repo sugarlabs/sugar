@@ -83,8 +83,8 @@ class MainToolbox(ToolbarBox):
     def __init__(self, default_what_filter=None, default_filter_type=None):
         ToolbarBox.__init__(self)
         self._mount_point = None
-        self._filter_type = None
-        self._what_filter = None
+        self._filter_type = default_filter_type
+        self._what_filter = default_what_filter
         self._when_filter = None
         self._default_what_filter = default_what_filter
         self._default_filter_type = default_filter_type
@@ -235,7 +235,6 @@ class MainToolbox(ToolbarBox):
         if self._what_filter:
             filter_type = self._filter_type
             value = self._what_filter
-
             if filter_type == FILTER_TYPE_GENERIC_MIME:
                 generic_type = mime.get_generic_type(value)
                 if generic_type:
@@ -344,7 +343,7 @@ class MainToolbox(ToolbarBox):
                 elif 'file' in item:
                     self._what_search_button.set_widget_icon(
                         file_name=item['file'])
-                    self._filter_type = FILTER_TYPE_ACTIVITY
+                    self._filter_type = self._default_filter_type
                 self._what_filter = what_filter
                 break
 
@@ -369,7 +368,7 @@ class MainToolbox(ToolbarBox):
             self._filter_type = FILTER_TYPE_GENERIC_MIME
         elif 'file' in item:
             self._what_search_button.set_widget_icon(file_name=item['file'])
-            self._filter_type = FILTER_TYPE_ACTIVITY
+            self._filter_type = self._default_filter_type
 
         self._what_filter = item['id']
 
