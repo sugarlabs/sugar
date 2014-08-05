@@ -238,7 +238,8 @@ class MicroformatUpdater(object):
                     continue
 
             name = bundle.get_name() if bundle else None
-            bundle_update = BundleUpdate(bundle_id, name, data[0], data[1], 0)
+            bundle_update = BundleUpdate(bundle_id, name, data[0], data[1], 0,
+                                         optional=data[2])
             self._bundles_to_check.append(bundle_update)
         self._total_bundles_to_check = len(self._bundles_to_check)
         _logger.debug("%d results after filter", self._total_bundles_to_check)
