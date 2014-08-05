@@ -232,6 +232,11 @@ class MicroformatUpdater(object):
         registry = bundleregistry.get_registry()
         self._bundles_to_check = []
         for bundle_id, data in self._parser.results.iteritems():
+            # filter optional activities for automatic updates
+            if self._auto and data[2] is True:
+                logging.debug('filtered optional activity %s', bundle_id)
+                continue
+
             bundle = registry.get_bundle(bundle_id)
             if bundle:
                 if data[0] <= NormalizedVersion(bundle.get_activity_version()):
