@@ -328,7 +328,8 @@ class MetadataLookup(GObject.GObject):
     and there is no local source of the activity's name.
     """
     __gsignals__ = {
-        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int, str)),
+        'complete': (GObject.SignalFlags.RUN_FIRST,
+                     None, (object, object, object)),
     }
 
     def __init__(self, url):
