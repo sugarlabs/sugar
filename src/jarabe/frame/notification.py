@@ -126,7 +126,8 @@ class NotificationBox(Gtk.VBox):
                 self._add(entry.get('notification_id', 0),
                           entry.get('replcaces_id', 0),
                           entry.get('summary', ''),
-                          entry.get('body', ''))
+                          entry.get('body', ''),
+                          entry.get('hints', {}))
 
         self._service.notification_received.connect(
             self.__notification_received_cb)
@@ -143,7 +144,7 @@ class NotificationBox(Gtk.VBox):
 
         self._scrolled_window.set_size_request(-1, height)
 
-    def _add(self, notification_id, replaces_id, summary, body):
+    def _add(self, notification_id, replaces_id, summary, body, hints):
         icon = Icon()
         icon.props.icon_name = 'emblem-notification'
         icon.props.icon_size = Gtk.IconSize.SMALL_TOOLBAR
@@ -154,10 +155,24 @@ class NotificationBox(Gtk.VBox):
 
         summary_label = NotificationSummaryLabel(summary)
         summary_label.show()
-        body_label = NotificationBodyLabel(body)
-        body_label.show()
 
-        grid = NotificationGrid(icon, summary_label, body_label)
+        if hints.get('x-sugar-progress-bar', False):
+            body_item = Gtk.ProgressBar()
+            if hints.get('x-sugar-progress-pulse', False):
+                def pulse(body_item):
+                    body_item.pulse()
+                    return body_item.props.visible
+
+                GObject.timeout_add(100, pulse, body_item)
+                body_item.pulse()
+            else:
+                f = hints.get('x-sugar-progress-fraction', 0)
+                body_item.set_fraction(f)
+        else:
+            body_item = NotificationBodyLabel(body)
+        body_item.show()
+
+        grid = NotificationGrid(icon, summary_label, body_item)
         grid.show()
 
         if replaces_id in self._notifications:
@@ -183,7 +198,8 @@ class NotificationBox(Gtk.VBox):
             self._add(kwargs.get('notification_id', 0),
                       kwargs.get('replaces_id', 0),
                       kwargs.get('summary', ''),
-                      kwargs.get('body', ''))
+                      kwargs.get('body', ''),
+                      kwargs.get('hints', {}))
 
     def __destroy_cb(self, box):
         logging.debug('NotificationBox.__destroy_cb')
