@@ -32,7 +32,8 @@ from jarabe.frame.friendstray import FriendsTray
 from jarabe.frame.devicestray import DevicesTray
 from jarabe.frame.framewindow import FrameWindow
 from jarabe.frame.clipboardpanelwindow import ClipboardPanelWindow
-from jarabe.frame.notification import NotificationIcon, NotificationWindow
+from jarabe.frame.notification import NotificationIcon, NotificationWindow, \
+    NotificationSummaryLabel, NotificationBodyLabel, NotificationGrid
 from jarabe.model import notifications
 
 
@@ -40,6 +41,10 @@ TOP_RIGHT = 0
 TOP_LEFT = 1
 BOTTOM_RIGHT = 2
 BOTTOM_LEFT = 3
+
+URGENCY_LOW = 0
+URGENCY_NORMAL = 1
+URGENCY_CRITICAL = 2
 
 _NOTIFICATION_DURATION = 5000
 
@@ -217,10 +222,6 @@ class Frame(object):
 
     def add_notification(self, icon, corner=Gtk.CornerType.TOP_LEFT,
                          duration=_NOTIFICATION_DURATION):
-
-        if not isinstance(icon, NotificationIcon):
-            raise TypeError('icon must be a NotificationIcon.')
-
         window = NotificationWindow()
 
         screen = Gdk.Screen.get_default()
@@ -260,11 +261,14 @@ class Frame(object):
 
     def __notification_received_cb(self, **kwargs):
         logging.debug('__notification_received_cb')
+
+        hints = kwargs['hints']
+        if hints.get('urgency', URGENCY_NORMAL) == URGENCY_LOW:
+            return  # Don't show a notification for low urgency notifications
+
         icon = NotificationIcon()
         icon.show_badge()
         icon.connect('button-release-event', self.__button_release_event_cb)
-
-        hints = kwargs['hints']
 
         icon_file_name = hints.get('x-sugar-icon-file-name', '')
         icon_name = hints.get('x-sugar-icon-name', '')
@@ -284,7 +288,17 @@ class Frame(object):
         if duration == -1:
             duration = _NOTIFICATION_DURATION
 
-        self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
+        if hints.get('urgency', URGENCY_NORMAL) == URGENCY_CRITICAL:
+            summary_label = NotificationSummaryLabel(kwargs['summary'])
+            summary_label.show()
+            body_label = NotificationBodyLabel(kwargs['body'])
+            body_label.show()
+            icon.show()
+
+            grid = NotificationGrid(icon, summary_label, body_label)
+            self.add_notification(grid, Gtk.CornerType.TOP_LEFT, duration)
+        else:
+            self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 
     def __notification_cancelled_cb(self, **kwargs):
         # Do nothing for now. Our notification UI is so simple, there's no
