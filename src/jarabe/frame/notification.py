@@ -95,6 +95,7 @@ class NotificationBox(Gtk.VBox):
     def __init__(self, name):
         Gtk.VBox.__init__(self)
         self._name = name
+        self._notifications = {}
 
         self._notifications_box = Gtk.VBox()
         self._notifications_box.show()
@@ -120,8 +121,12 @@ class NotificationBox(Gtk.VBox):
         entries = self._service.retrieve_by_name(self._name)
 
         if entries:
+            logging.error(entries)
             for entry in entries:
-                self._add(entry['summary'], entry['body'])
+                self._add(entry.get('notification_id', 0),
+                          entry.get('replcaces_id', 0),
+                          entry.get('summary', ''),
+                          entry.get('body', ''))
 
         self._service.notification_received.connect(
             self.__notification_received_cb)
@@ -138,7 +143,7 @@ class NotificationBox(Gtk.VBox):
 
         self._scrolled_window.set_size_request(-1, height)
 
-    def _add(self, summary, body):
+    def _add(self, notification_id, replaces_id, summary, body):
         icon = Icon()
         icon.props.icon_name = 'emblem-notification'
         icon.props.icon_size = Gtk.IconSize.SMALL_TOOLBAR
@@ -155,7 +160,13 @@ class NotificationBox(Gtk.VBox):
         grid = NotificationGrid(icon, summary_label, body_label)
         grid.show()
 
+        if replaces_id in self._notifications:
+            old = self._notifications[replaces_id]
+            old.hide()
+            self._notifications_box.remove(old)
+
         self._notifications_box.add(grid)
+        self._notifications[notification_id] = grid
         self._update_scrolled_size()
         self.show()
 
@@ -169,7 +180,10 @@ class NotificationBox(Gtk.VBox):
     def __notification_received_cb(self, **kwargs):
         logging.debug('NotificationBox.__notification_received_cb')
         if kwargs.get('app_name', '') == self._name:
-            self._add(kwargs.get('summary', ''), kwargs.get('body', ''))
+            self._add(kwargs.get('notification_id', 0),
+                      kwargs.get('replaces_id', 0),
+                      kwargs.get('summary', ''),
+                      kwargs.get('body', ''))
 
     def __destroy_cb(self, box):
         logging.debug('NotificationBox.__destroy_cb')
