@@ -18,6 +18,8 @@
 """D-bus service providing access to the shell's functionality"""
 
 import dbus
+import importlib
+import logging
 from gi.repository import Gtk
 
 from jarabe.model import shell
@@ -88,3 +90,32 @@ class UIService(dbus.service.Object):
                          in_signature='s', out_signature='')
     def NotifyLaunchFailure(self, activity_id):
         shell.get_model().notify_launch_failed(activity_id)
+
+    @dbus.service.method(_DBUS_SHELL_IFACE,
+                         in_signature='ssas', out_signature='b')
+    def DelegateFunctionCall(self, import_module, function, args_list):
+        """Call a function via this dbus call.
+        params:
+        ------
+
+        `import_module`: (str) The module from which to import the function.
+        For example, 'jarabe.model.shell'
+
+        `function`: (str) The function name to be imported from the module.
+
+        `args_list`: (list) A list of srting arguments to be passed to this
+        function.
+        """
+        module = importlib.import_module(import_module)
+        func = getattr(module, function)
+        args_list = list(args_list) # convert from dbus.Array
+        args_list = [str(arg) for arg in args_list]
+
+        try:
+            ret = func(*args_list)
+        except Exception as e:
+            logging.debug('DelegateFunctionCall failed. ' + e)
+            return False
+        else:
+            # Must be bool
+            return bool(ret)
