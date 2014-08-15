@@ -115,7 +115,7 @@ class NotificationService(dbus.service.Object):
 
     @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='as')
     def GetCapabilities(self):
-        return []
+        return ['x-sugar-progress-bar']
 
     @dbus.service.method(_DBUS_IFACE, in_signature='', out_signature='sss')
     def GetServerInformation(self, name, vendor, version):

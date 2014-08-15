@@ -155,7 +155,20 @@ class NotificationBox(Gtk.VBox):
         summary_label = NotificationSummaryLabel(summary)
         summary_label.show()
 
-        body_item = NotificationBodyLabel(body)
+        if hints.get('x-sugar-progress-bar', False):
+            body_item = Gtk.ProgressBar()
+            if hints.get('x-sugar-progress-pulse', False):
+                def pulse(body_item):
+                    body_item.pulse()
+                    return body_item.props.visible
+
+                GObject.timeout_add(100, pulse, body_item)
+                body_item.pulse()
+            else:
+                f = hints.get('x-sugar-progress-fraction', 0)
+                body_item.set_fraction(f)
+        else:
+            body_item = NotificationBodyLabel(body)
         body_item.show()
 
         grid = NotificationGrid(icon, summary_label, body_item)
