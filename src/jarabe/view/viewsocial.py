@@ -24,29 +24,16 @@ from sugar3 import env
 from jarabe.model import bundleregistry
 from jarabe.journal.misc import launch
 
-logging.debug('Social Help Launched')
-
-DEFAULT_PORT = "8000"
 SOCIAL_ACTIVITY_BUNDLE_ID = "org.laptop.SocialActivity"
 
 def setup_view_social(activity_bundle_id):
+    logging.debug('Social Help launched for %s' % activity_bundle_id)
+
     settings = Gio.Settings('org.sugarlabs.collaboration')
     social_server = settings.get_string('social-help-server')
     activity_id = activityfactory.create_activity_id()
     bundle = bundleregistry.get_registry().\
         get_bundle(SOCIAL_ACTIVITY_BUNDLE_ID)
-    path = env.get_profile_path('social_sugar_port')
-    if os.path.exists(path):
-        # Read custom port from the file
-        with open(path, 'rb') as port_file:
-            port = port_file.read()
-    else:
-        # Use the default port.
-        port = DEFAULT_PORT
-        # Create the port file for future use. Write in the default port.
-        port_file = open(path, 'wb')
-        port_file.write(DEFAULT_PORT)
-        port_file.close()
-    uri = "http://%s:%s/goto/%s" % (social_server, port, activity_bundle_id)
+    uri = "http://%s/goto/%s" % (social_server, activity_bundle_id)
 
     launch(bundle, activity_id=activity_id, uri=uri)
