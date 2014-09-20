@@ -32,6 +32,8 @@ from jarabe.model import shell
 from jarabe.model import session
 from jarabe.journal.objectchooser import ObjectChooser
 
+from sugar3.cordova import cordovaSocket
+
 
 class StreamMonitor(object):
     def __init__(self):
@@ -100,6 +102,14 @@ class ActivityAPI(API):
             self._client.send_result(request, [None])
 
         chooser.destroy()
+
+    def cordova(self, request):
+        plugin_name = request['params'][0]
+        service_name = request['params'][1]
+        args = request['params'][2]
+        cordova_class = cordovaSocket.callCordova()
+        cordova_class.call_to_cordova(plugin_name, service_name,
+                                      args, self, request)
 
 
 class DatastoreAPI(API):
