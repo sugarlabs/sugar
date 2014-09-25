@@ -284,15 +284,17 @@ class _IntroBox(Gtk.VBox):
         settings = Gio.Settings('org.sugarlabs.user')
         default_nick = settings.get_string('default-nick')
         if default_nick != 'disabled':
-            if start_on_age_page:
-                self._page = self.PAGE_AGE
-            else:
-                self._page = self.PAGE_COLOR
+            self._page = self.PAGE_COLOR
             if default_nick == 'system':
                 pwd_entry = pwd.getpwuid(os.getuid())
                 default_nick = (pwd_entry.pw_gecos.split(',')[0] or
                                 pwd_entry.pw_name)
             self._name_page.set_name(default_nick)
+
+        # XXX should also consider whether or not there is a nick
+        nick = settings.get_string('nick')
+        if start_on_age_page and nick:
+            self._page = self.PAGE_AGE
 
         self._setup_page()
 
