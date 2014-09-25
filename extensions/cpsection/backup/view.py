@@ -324,6 +324,7 @@ class OperationPanel(Gtk.Grid):
         self._confirm_restore_chkbtn.show()
         self._options_combo.hide()
         self._continue_btn.set_label(_('Confirm'))
+        self._continue_btn.show()
         if self._continue_btn_handler_id != 0:
             self._continue_btn.disconnect(self._continue_btn_handler_id)
         self._continue_btn_handler_id = self._continue_btn.connect(
