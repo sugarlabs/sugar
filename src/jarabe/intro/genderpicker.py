@@ -56,7 +56,7 @@ class GenderPicker(Gtk.Grid):
         self.set_row_spacing(style.DEFAULT_SPACING)
         self.set_column_spacing(style.DEFAULT_SPACING)
 
-        self._gender = self.get_gender()
+        self._gender = load_gender()
         self._buttons = []
         self._nocolor = XoColor('#010101,#ffffff')
         self._color = XoColor()
@@ -89,7 +89,7 @@ class GenderPicker(Gtk.Grid):
             self._buttons[1 - gender_index].xo_color = self._nocolor
 
     def get_gender(self):
-        return load_gender()
+        return self._gender
 
     def _set_gender(self, gender):
         self.gender_changed_signal.emit(gender)

@@ -316,7 +316,7 @@ class AboutMe(SectionView):
         grid.set_row_spacing(style.DEFAULT_SPACING)
         grid.set_column_spacing(style.DEFAULT_SPACING)
 
-        self._age_pickers = AgePicker(self._gender)
+        self._age_pickers = AgePicker(self._saved_gender)
         center_in_panel = Gtk.Alignment.new(0.5, 0, 0, 0)
         center_in_panel.add(self._age_pickers)
         self._age_pickers.show()
