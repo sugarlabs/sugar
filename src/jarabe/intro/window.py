@@ -143,6 +143,7 @@ class _NamePage(_Page):
         self._entry.set_size_request(style.zoom(300), -1)
         self._entry.set_max_length(45)
         grid.attach(self._entry, 0, 1, 1, 1)
+        self._entry.show()
 
         grid.show()
         alignment.show()
@@ -362,7 +363,6 @@ class _IntroBox(Gtk.VBox):
 
         self.pack_start(button_box, False, True, 0)
         button_box.show()
-        # self.show_all()
 
     def _update_next_button(self):
         self._next_button.set_sensitive(self._current_page.props.valid)
