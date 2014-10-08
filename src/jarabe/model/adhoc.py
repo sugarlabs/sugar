@@ -18,6 +18,7 @@ import logging
 
 import dbus
 import uuid
+from gi.repository import Gio
 from gi.repository import GObject
 
 from jarabe.model import network
@@ -73,6 +74,9 @@ class AdHocManager(GObject.GObject):
         for channel in (self._CHANNEL_1, self._CHANNEL_6, self._CHANNEL_11):
             if not self._find_connection(channel):
                 self._add_connection(channel)
+
+        settings = Gio.Settings('org.sugarlabs.network')
+        self._autoconnect_enabled = settings.get_boolean('adhoc-autoconnect')
 
     def start_listening(self, device):
         self._listening_called += 1
@@ -158,8 +162,15 @@ class AdHocManager(GObject.GObject):
         return False
 
     def _autoconnect_adhoc(self):
-        """Autoconnect to the last network used during the session.
+        """Autoconnect to the last network used during the session, only
+        if previously connected. If autoconnect is enabled default to
+        the first network.
         """
+        if self._autoconnect_enabled is False and \
+                self._last_channel is None:
+            logging.debug('autoconnect Sugar Ad-hoc: is not enabled.')
+            return
+
         self.activate_channel(self._last_channel or self._CHANNEL_1)
 
     def activate_channel(self, channel):
