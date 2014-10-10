@@ -53,14 +53,6 @@ def read_all_timezones(fn=_zone_tab):
 
     for offset in xrange(-12, 13):
         if offset < 0:
-            tz = 'GMT%d' % offset
-        elif offset > 0:
-            tz = 'GMT+%d' % offset
-        else:
-            tz = 'GMT'
-        timezones.append(tz)
-    for offset in xrange(-12, 13):
-        if offset < 0:
             tz = 'UTC%d' % offset
         elif offset > 0:
             tz = 'UTC+%d' % offset
