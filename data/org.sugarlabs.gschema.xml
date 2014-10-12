@@ -153,7 +153,7 @@
             <description>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</description>
         </key>
         <key name="social-help-server" type="s">
-            <default>'54.187.40.150:8000'</default>
+            <default>'use.socialhelp.sugarlabs.org'</default>
             <summary>Social Help Server</summary>
             <description>URL of the social help server to use.</description>
         </key>
