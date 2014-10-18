@@ -27,12 +27,11 @@ from gwebsockets.server import Server
 from gwebsockets.server import Message
 
 from sugar3 import env
+from sugar3.cordova.cordovasocket import call_cordova
 
 from jarabe.model import shell
 from jarabe.model import session
 from jarabe.journal.objectchooser import ObjectChooser
-
-from sugar3.cordova import cordovaSocket
 
 
 class StreamMonitor(object):
@@ -104,12 +103,8 @@ class ActivityAPI(API):
         chooser.destroy()
 
     def cordova(self, request):
-        plugin_name = request['params'][0]
-        service_name = request['params'][1]
-        args = request['params'][2]
-        cordova_class = cordovaSocket.callCordova()
-        cordova_class.call_to_cordova(plugin_name, service_name,
-                                      args, self, request)
+        plugin_name, service_name, args = request['params']
+        call_cordova(plugin_name, service_name, args, self, request)
 
 
 class DatastoreAPI(API):
