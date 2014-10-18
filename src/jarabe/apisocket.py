@@ -106,6 +106,12 @@ class ActivityAPI(API):
         plugin_name, service_name, args = request['params']
         call_cordova(plugin_name, service_name, args, self, request)
 
+    def send_result(self, request, obj):
+        self._client.send_result(request, obj)
+
+    def send_error(self, request, obj):
+        self._client.send_error(request, obj)
+
 
 class DatastoreAPI(API):
     def __init__(self, client):
