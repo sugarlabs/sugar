@@ -38,15 +38,64 @@ from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
 
+class NotificationSummaryLabel(Gtk.AccelLabel):
+
+    def __init__(self, summary):
+        Gtk.Label.__init__(self)
+        self.set_max_width_chars(style.MENU_WIDTH_CHARS)
+        self.set_ellipsize(Pango.EllipsizeMode.END)
+        self.set_alignment(0, 0.5)
+        self.set_markup('<b>%s</b>' % summary)
+
+
+class NotificationBodyLabel(Gtk.AccelLabel):
+    ELLIPSIS_AND_BREAKS = 6
+
+    def __init__(self, body, max_lines=3):
+        Gtk.Label.__init__(self)
+        self.set_alignment(0, 0.5)
+
+        if hasattr(self, 'set_lines'):
+            self.set_max_width_chars(style.MENU_WIDTH_CHARS)
+            self.set_line_wrap(True)
+            self.set_ellipsize(Pango.EllipsizeMode.END)
+            self.set_lines(max_lines)
+            self.set_justify(Gtk.Justification.FILL)
+        else:
+            # FIXME: fallback for Gtk < 3.10
+            body_width = max_lines * style.MENU_WIDTH_CHARS
+            body_width -= self.ELLIPSIS_AND_BREAKS
+            body = body.replace('\n', ' ')
+            if len(body) > body_width:
+                body = ' '.join(body[:body_width].split(' ')[:-1]) + '...'
+            body = textwrap.fill(body, width=style.MENU_WIDTH_CHARS)
+
+        self.set_text(body)
+
+
+class NotificationGrid(Gtk.Grid):
+
+    def __init__(self, icon, summary_label, body_label,
+                 padding=style.DEFAULT_SPACING):
+        Gtk.Grid.__init__(self)
+
+        self.set_border_width(padding)
+        self.set_column_spacing(padding)
+        self.set_row_spacing(0)
+
+        self.attach(icon, 0, 0, 1, 2)
+        self.attach(summary_label, 1, 0, 1, 1)
+        self.attach(body_label, 1, 1, 1, 1)
+
+
 class NotificationBox(Gtk.VBox):
 
-    LINES = 3
     MAX_ENTRIES = 3
-    ELLIPSIS_AND_BREAKS = 6
 
     def __init__(self, name):
         Gtk.VBox.__init__(self)
         self._name = name
+        self._notifications = {}
 
         self._notifications_box = Gtk.VBox()
         self._notifications_box.show()
@@ -73,7 +122,11 @@ class NotificationBox(Gtk.VBox):
 
         if entries:
             for entry in entries:
-                self._add(entry['summary'], entry['body'])
+                self._add(entry.get('notification_id', 0),
+                          entry.get('replcaces_id', 0),
+                          entry.get('summary', ''),
+                          entry.get('body', ''),
+                          entry.get('hints', {}))
 
         self._service.notification_received.connect(
             self.__notification_received_cb)
@@ -90,7 +143,7 @@ class NotificationBox(Gtk.VBox):
 
         self._scrolled_window.set_size_request(-1, height)
 
-    def _add(self, summary, body):
+    def _add(self, notification_id, replaces_id, summary, body, hints):
         icon = Icon()
         icon.props.icon_name = 'emblem-notification'
         icon.props.icon_size = Gtk.IconSize.SMALL_TOOLBAR
@@ -99,44 +152,35 @@ class NotificationBox(Gtk.VBox):
                                style.COLOR_BLACK.get_svg()))
         icon.show()
 
-        summary_label = Gtk.Label()
-        summary_label.set_max_width_chars(style.MENU_WIDTH_CHARS)
-        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
-        summary_label.set_alignment(0, 0.5)
-        summary_label.set_markup('<b>%s</b>' % summary)
+        summary_label = NotificationSummaryLabel(summary)
         summary_label.show()
 
-        body_label = Gtk.Label()
-        body_label.set_alignment(0, 0.5)
+        if hints.get('x-sugar-progress-bar', False):
+            body_item = Gtk.ProgressBar()
+            if hints.get('x-sugar-progress-pulse', False):
+                def pulse(body_item):
+                    body_item.pulse()
+                    return body_item.props.visible
 
-        if hasattr(body_label, 'set_lines'):
-            body_label.set_max_width_chars(style.MENU_WIDTH_CHARS)
-            body_label.set_line_wrap(True)
-            body_label.set_ellipsize(Pango.EllipsizeMode.END)
-            body_label.set_lines(self.LINES)
-            body_label.set_justify(Gtk.Justification.FILL)
+                GObject.timeout_add(100, pulse, body_item)
+                body_item.pulse()
+            else:
+                f = hints.get('x-sugar-progress-fraction', 0)
+                body_item.set_fraction(f)
         else:
-            # FIXME: fallback for Gtk < 3.10
-            body_width = self.LINES * style.MENU_WIDTH_CHARS
-            body_width -= self.ELLIPSIS_AND_BREAKS
-            body = body.replace('\n', ' ')
-            if len(body) > body_width:
-                body = ' '.join(body[:body_width].split(' ')[:-1]) + '...'
-            body = textwrap.fill(body, width=style.MENU_WIDTH_CHARS)
+            body_item = NotificationBodyLabel(body)
+        body_item.show()
 
-        body_label.set_text(body)
-        body_label.show()
-
-        grid = Gtk.Grid()
-        grid.set_border_width(style.DEFAULT_SPACING)
-        grid.set_column_spacing(style.DEFAULT_SPACING)
-        grid.set_row_spacing(0)
-        grid.attach(icon, 0, 0, 1, 2)
-        grid.attach(summary_label, 1, 0, 1, 1)
-        grid.attach(body_label, 1, 1, 1, 1)
+        grid = NotificationGrid(icon, summary_label, body_item)
         grid.show()
 
+        if replaces_id in self._notifications:
+            old = self._notifications[replaces_id]
+            old.hide()
+            self._notifications_box.remove(old)
+
         self._notifications_box.add(grid)
+        self._notifications[notification_id] = grid
         self._update_scrolled_size()
         self.show()
 
@@ -150,7 +194,11 @@ class NotificationBox(Gtk.VBox):
     def __notification_received_cb(self, **kwargs):
         logging.debug('NotificationBox.__notification_received_cb')
         if kwargs.get('app_name', '') == self._name:
-            self._add(kwargs.get('summary', ''), kwargs.get('body', ''))
+            self._add(kwargs.get('notification_id', 0),
+                      kwargs.get('replaces_id', 0),
+                      kwargs.get('summary', ''),
+                      kwargs.get('body', ''),
+                      kwargs.get('hints', {}))
 
     def __destroy_cb(self, box):
         logging.debug('NotificationBox.__destroy_cb')
