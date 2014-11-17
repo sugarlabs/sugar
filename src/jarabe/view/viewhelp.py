@@ -111,6 +111,7 @@ def setup_view_help(activity):
 
     if url_and_title:
         viewhelp = ViewHelp(url_and_title[1], url_and_title[0], window_xid)
+        activity.add_shell_window(viewhelp)
         viewhelp.show()
     else:
         _logger.error('Help content is not available for the activity')
