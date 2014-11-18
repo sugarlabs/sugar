@@ -159,11 +159,19 @@ def setup_view_source(activity):
     view_source = ViewSource(window_xid, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
     map_activity_to_window[window_xid] = view_source
+
+    activity.push_shell_window(view_source)
+    view_source.connect('stop-clicked', activity.pop_shell_window)
+
     view_source.show()
 
 
 class ViewSource(Gtk.Window):
     __gtype_name__ = 'SugarViewSource'
+
+    __gsignals__ = {
+        'stop-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([]))
+    }
 
     def __init__(self, window_xid, bundle_path, document_path,
                  sugar_toolkit_path, title):
@@ -282,6 +290,7 @@ class ViewSource(Gtk.Window):
         window.set_transient_for(parent)
 
     def __stop_clicked_cb(self, widget):
+        self.emit('stop-clicked')
         self.destroy()
 
     def __source_selected_cb(self, widget, path):
