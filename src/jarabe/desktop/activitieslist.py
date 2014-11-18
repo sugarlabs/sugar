@@ -35,6 +35,8 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.scrollingdetector import ScrollingDetector
+from sugar3.graphics.palettewindow import TreeViewInvoker
 
 from jarabe.model import bundleregistry
 from jarabe.model import desktop
@@ -71,7 +73,7 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         cell_favorites = []
         for i in range(desktop.get_number_of_views()):
-            cell_favorites.append(CellRendererFavorite(self, i))
+            cell_favorites.append(CellRendererFavorite(i))
             cell_favorites[i].connect('clicked', self.__favorite_clicked_cb)
             column.pack_start(cell_favorites[i], True)
             column.set_cell_data_func(cell_favorites[i],
@@ -79,8 +81,7 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self.append_column(column)
 
-        cell_icon = CellRendererActivityIcon(self)
-        cell_icon.connect('erase-activated', self.__erase_activated_cb)
+        cell_icon = CellRendererActivityIcon()
         cell_icon.connect('clicked', self.__icon_clicked_cb)
 
         column = Gtk.TreeViewColumn()
@@ -134,8 +135,8 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.set_search_column(self._model.column_title)
         self.set_enable_search(False)
 
-    def __erase_activated_cb(self, cell_renderer, bundle_id):
-        self.emit('erase-activated', bundle_id)
+        self._invoker = TreeViewInvoker()
+        self._invoker.attach_treeview(self)
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = \
@@ -184,6 +185,20 @@ class ActivitiesTreeView(Gtk.TreeView):
     def do_row_activated(self, path, column):
         if column == self._icon_column:
             self._start_activity(path)
+
+    def create_palette(self, path, column):
+        if column == self._icon_column:
+            row = self.get_model()[path]
+            bundle_id = row[self.get_model().column_bundle_id]
+
+            registry = bundleregistry.get_registry()
+            palette = ActivityListPalette(registry.get_bundle(bundle_id))
+            palette.connect('erase-activated', self.__erase_activated_cb,
+                            bundle_id)
+            return palette
+
+    def __erase_activated_cb(self, palette, event, bundle_id):
+        self.emit('erase-activated', bundle_id)
 
 
 class ListModel(Gtk.TreeModelSort):
@@ -295,8 +310,8 @@ class ListModel(Gtk.TreeModelSort):
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'SugarCellRendererFavorite'
 
-    def __init__(self, tree_view, favorite_view):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self, favorite_view):
+        CellRendererIcon.__init__(self)
 
         self.favorite_view = favorite_view
         self.props.width = style.GRID_CELL_SIZE
@@ -317,8 +332,8 @@ class CellRendererActivityIcon(CellRendererIcon):
                             ([str])),
     }
 
-    def __init__(self, tree_view):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
@@ -330,21 +345,6 @@ class CellRendererActivityIcon(CellRendererIcon):
         prelit_color = profile.get_color()
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
-
-        self._tree_view = tree_view
-
-    def create_palette(self):
-        model = self._tree_view.get_model()
-        row = model[self.props.palette_invoker.path]
-        bundle_id = row[model.column_bundle_id]
-
-        registry = bundleregistry.get_registry()
-        palette = ActivityListPalette(registry.get_bundle(bundle_id))
-        palette.connect('erase-activated', self.__erase_activated_cb)
-        return palette
-
-    def __erase_activated_cb(self, palette, bundle_id):
-        self.emit('erase-activated', bundle_id)
 
 
 class ClearMessageBox(Gtk.EventBox):
@@ -414,6 +414,8 @@ class ActivitiesList(Gtk.VBox):
         self._tree_view.connect('erase-activated', self.__erase_activated_cb)
         self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
+        scrolling_detector = ScrollingDetector(self._scrolled_window)
+        scrolling_detector.connect_treeview(self._tree_view)
 
         self._alert = None
         self._clear_message_box = None
