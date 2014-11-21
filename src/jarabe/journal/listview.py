@@ -44,6 +44,13 @@ UPDATE_INTERVAL = 300
 class TreeView(Gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
 
+    __gsignals__ = {
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([object])),
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
+                         ([str, str])),
+    }
+
     def __init__(self, journalactivity):
         Gtk.TreeView.__init__(self)
 
@@ -125,6 +132,10 @@ class BaseListView(Gtk.Bin):
     __gsignals__ = {
         'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'selection-changed': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
+                           ([object])),
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
+                         ([str, str])),
     }
 
     def __init__(self, journalactivity, enable_multi_operations=False):
@@ -149,6 +160,8 @@ class BaseListView(Gtk.Bin):
         self._scrolled_window.show()
 
         self.tree_view = TreeView(self._journalactivity)
+        self.tree_view.connect('detail-clicked', self.__detail_clicked_cb)
+        self.tree_view.connect('volume-error', self.__volume_error_cb)
         selection = self.tree_view.get_selection()
         selection.set_mode(Gtk.SelectionMode.NONE)
         self.tree_view.props.fixed_height_mode = True
@@ -638,15 +651,17 @@ class BaseListView(Gtk.Bin):
         self.tree_view.queue_draw()
         self.emit('selection-changed', len(self._model.get_selected_items()))
 
+    def __detail_clicked_cb(self, palette, uid):
+        self.emit('detail-clicked', uid)
+
+    def __volume_error_cb(self, palette, message, severity):
+        self.emit('volume-error', message, severity)
+
 
 class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
 
     __gsignals__ = {
-        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([object])),
-        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
-                         ([str, str])),
         'title-edit-started': (GObject.SignalFlags.RUN_FIRST, None,
                                ([])),
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
