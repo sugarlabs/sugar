@@ -36,7 +36,11 @@ from jarabe.intro.genderpicker import GENDERS
 
 _group_labels = None
 _SECONDS_PER_YEAR = 365 * 24 * 60 * 60.
-
+_DEFAULT_PROMPT = _('Select grade:')
+_DEFAULT_LABELS = [_('Preschool'), _('Kindergarten'), _('1st Grade'),
+                   _('2nd Grade'), _('3rd Grade'), _('4th Grade'),
+                   _('5th Grade'), _('6th Grade'), _('7th Grade'),
+                   _('High School'), _('Adult')]
 
 def calculate_birth_timestamp(age):
     age_in_seconds = age * _SECONDS_PER_YEAR
