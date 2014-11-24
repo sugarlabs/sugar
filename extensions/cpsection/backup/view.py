@@ -317,13 +317,14 @@ class OperationPanel(Gtk.Grid):
 
     def _request_restore_confirmation(self):
         self._message_label.set_text(
-            _(' I want to restore the content of  my Journal. '
+            _('I want to restore the content of my Journal. '
               'In order to do this, my Journal will first be emptied of all '
               'its content; then the restored content will be added.'))
         self._confirm_restore_chkbtn.set_label(_('Accept'))
         self._confirm_restore_chkbtn.show()
         self._options_combo.hide()
         self._continue_btn.set_label(_('Confirm'))
+        self._continue_btn.show()
         if self._continue_btn_handler_id != 0:
             self._continue_btn.disconnect(self._continue_btn_handler_id)
         self._continue_btn_handler_id = self._continue_btn.connect(

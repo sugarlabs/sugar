@@ -32,6 +32,7 @@ class ColorPicker(Gtk.EventBox):
         self._set_random_colors()
         self.connect('button-press-event', self._button_press_cb)
         self.add(self._xo)
+        self._xo.show()
 
     def _button_press_cb(self, widget, event):
         if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:

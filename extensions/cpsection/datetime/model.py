@@ -51,15 +51,7 @@ def read_all_timezones(fn=_zone_tab):
             timezones.append(line[2])
     timezones.sort()
 
-    for offset in xrange(-12, 13):
-        if offset < 0:
-            tz = 'GMT%d' % offset
-        elif offset > 0:
-            tz = 'GMT+%d' % offset
-        else:
-            tz = 'GMT'
-        timezones.append(tz)
-    for offset in xrange(-12, 13):
+    for offset in xrange(-12, 15):
         if offset < 0:
             tz = 'UTC%d' % offset
         elif offset > 0:
@@ -79,12 +71,28 @@ def print_timezone():
     print get_timezone()
 
 
+def fix_UTC_time_zone(timezone):
+    # Fixes the issue where the timezones are
+    # wrong when using UTC to set the time.
+    # This works by inverting the +/- and using
+    # the Etc/GMT... to be POSIX compliant.
+    if '+' in timezone:
+        new = timezone.replace('+', '-')
+    elif '-' in timezone:
+        new = timezone.replace('-', '+')
+    else:
+        new = 'UTC'
+    return 'Etc/' + new.replace('UTC', 'GMT')
+
+
 def set_timezone(timezone):
     """Set the system timezone
     timezone : e.g. 'America/Los_Angeles'
     """
     timezones = read_all_timezones()
     if timezone in timezones:
+        if timezone.startswith('UTC'):
+            timezone = fix_UTC_time_zone(timezone)
         os.environ['TZ'] = timezone
         settings = Gio.Settings('org.sugarlabs.date')
         settings.set_string('timezone', timezone)

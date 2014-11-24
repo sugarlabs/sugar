@@ -82,6 +82,11 @@
             <summary>User Birth Timestamp</summary>
             <description>Birth timestamp (seconds since the epoch)</description>
         </key>
+        <key name="group-label" type="s">
+            <default>''</default>
+            <summary>Group Label</summary>
+            <description>Label associated with age, e.g., '2nd Grade'</description>
+        </key>
         <child name="background" schema="org.sugarlabs.user.background" />
     </schema>
     <schema id="org.sugarlabs.user.background" path="/org/sugarlabs/user/background/">
@@ -202,6 +207,11 @@
             <default>true</default>
             <summary>Show Sugar Ad-hoc networks</summary>
             <description>If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If Sugar sees no "known" network when it starts, it does autoconnect to an Ad-hoc network.</description>
+        </key>
+        <key name="adhoc-autoconnect" type="b">
+            <default>true</default>
+            <summary>Enable Ad-hoc autoconnect</summary>
+            <description>If TRUE, Sugar will autoconnect to Ad-hoc networks.</description>
         </key>
         <child name="gsm" schema="org.sugarlabs.network.gsm" />
     </schema>
