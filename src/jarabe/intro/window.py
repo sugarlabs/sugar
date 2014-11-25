@@ -19,8 +19,6 @@ import os.path
 import logging
 from gettext import gettext as _
 import pwd
-import time
-import math
 import commands
 
 from gi.repository import Gtk

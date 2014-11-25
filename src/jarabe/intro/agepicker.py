@@ -24,7 +24,6 @@ import os
 import json
 import time
 import math
-import logging
 
 from gettext import gettext as _
 
@@ -41,6 +40,7 @@ _DEFAULT_LABELS = [_('Preschool'), _('Kindergarten'), _('1st Grade'),
                    _('2nd Grade'), _('3rd Grade'), _('4th Grade'),
                    _('5th Grade'), _('6th Grade'), _('7th Grade'),
                    _('High School'), _('Adult')]
+
 
 def calculate_birth_timestamp(age):
     age_in_seconds = age * _SECONDS_PER_YEAR
@@ -78,7 +78,7 @@ def age_to_group_label(age):
 def group_label_to_age(label):
     group_labels = get_group_labels()
 
-    if labels not in group_labels.LABELS:
+    if label not in group_labels.LABELS:
         return None
 
     return group_labels.AGES[group_labels.LABELS.index(label)]
