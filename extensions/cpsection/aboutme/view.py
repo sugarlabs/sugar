@@ -18,10 +18,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 from gi.repository import Gtk
-from gi.repository import Gdk
 from gi.repository import GObject
 from gettext import gettext as _
-import logging
 
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor, colors
@@ -195,7 +193,6 @@ class AboutMe(SectionView):
         self._gender_pickers.connect('gender-changed',
                                      self.__gender_changed_cb)
         self._age_pickers.connect('age-changed', self.__age_changed_cb)
-
 
     def _setup_nick(self):
         grid = Gtk.Grid()
