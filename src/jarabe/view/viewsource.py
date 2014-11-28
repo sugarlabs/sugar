@@ -159,6 +159,9 @@ def setup_view_source(activity):
     view_source = ViewSource(window_xid, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
     map_activity_to_window[window_xid] = view_source
+
+    activity.push_shell_window(view_source)
+    view_source.connect('hide', activity.pop_shell_window)
     view_source.show()
 
 
