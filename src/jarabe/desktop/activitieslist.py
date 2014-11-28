@@ -200,6 +200,16 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __erase_activated_cb(self, palette, event, bundle_id):
         self.emit('erase-activated', bundle_id)
 
+    def connect_to_scroller(self, scrolled):
+        scrolled.connect('scroll-start', self._scroll_start_cb)
+        scrolled.connect('scroll-end', self._scroll_end_cb)
+
+    def _scroll_start_cb(self, event):
+        self._invoker.detach()
+
+    def _scroll_end_cb(self, event):
+        self._invoker.attach_treeview(self)
+
 
 class ListModel(Gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
@@ -415,7 +425,7 @@ class ActivitiesList(Gtk.VBox):
         self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
         scrolling_detector = ScrollingDetector(self._scrolled_window)
-        scrolling_detector.connect_treeview(self._tree_view)
+        self._tree_view.connect_to_scroller(scrolling_detector)
 
         self._alert = None
         self._clear_message_box = None
