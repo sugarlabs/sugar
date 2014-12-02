@@ -157,16 +157,24 @@ class HomeWindow(Gtk.Window):
             self._activate_view(shell.get_model().zoom_level)
 
     def __key_press_event_cb(self, window, event):
-        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
+        # When shift is on, <ALT> becomes <META>
+        shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
+        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
+           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift:
             self._home_box.set_resume_mode(False)
         else:
             if not self._toolbar.search_entry.has_focus():
                 self._toolbar.search_entry.grab_focus()
+
         return False
 
     def __key_release_event_cb(self, window, event):
-        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R]:
+        # When shift is on, <ALT> becomes <META>
+        shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
+        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
+           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift:
             self._home_box.set_resume_mode(True)
+
         return False
 
     def __button_pressed_cb(self, widget, event):
