@@ -901,7 +901,7 @@ class FilterToolItem(Gtk.ToolButton):
 
         self._label_widget = Gtk.Label()
         self._label_widget.set_alignment(0.0, 0.5)
-        self._label_widget.set_ellipsize(style.DEFAULT_ELLIPSIS_MODE)
+        self._label_widget.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
         self._label_widget.set_max_width_chars(_LABEL_MAX_WIDTH)
         self._label_widget.set_use_markup(True)
         self._label_widget.set_markup(default_label)
@@ -937,8 +937,7 @@ class FilterToolItem(Gtk.ToolButton):
         if label is None:
             label = self._label
         if len(label) > _LABEL_MAX_WIDTH:
-            label = label[0:style.DEFAULT_ELLIPSIS_CHARACTERS] + '...' + \
-                label[-style.DEFAULT_ELLIPSIS_CHARACTERS:]
+            label = label[0:7] + '...' + label[-7:]
         self._label_widget.set_markup(label)
         self._label = label
 
