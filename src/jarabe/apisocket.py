@@ -27,7 +27,7 @@ from gwebsockets.server import Server
 from gwebsockets.server import Message
 
 from sugar3 import env
-from sugar3.cordova.cordovasocket import call_cordova
+from sugar3.cordova import cordovaSocket
 
 from jarabe.model import shell
 from jarabe.model import session
