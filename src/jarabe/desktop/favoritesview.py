@@ -613,6 +613,9 @@ class CurrentActivityIcon(CanvasIcon):
             self.props.file_name = self._home_activity.get_icon_path()
             self.props.xo_color = self._home_activity.get_icon_color()
 
+            if self._home_activity.is_journal():
+                self.get_window().set_cursor(None)
+
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
