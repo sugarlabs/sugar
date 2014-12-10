@@ -1,6 +1,7 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +29,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GtkSource
+from gi.repository import GdkPixbuf
 import dbus
 from gi.repository import Gio
 
@@ -633,20 +635,66 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._source_view.set_show_right_margin(True)
         self._source_view.set_right_margin_position(80)
         # self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
+
+        self._media_box = Gtk.EventBox()
+        self._media_box.modify_bg(
+            Gtk.StateType.NORMAL,
+            Gdk.color_parse('white'))
+
+        self._nofile_label = Gtk.Label()
+        self._nofile_label.set_text(
+            _("Please select a file in the left panel."))
+
+        self._nofile_box = Gtk.EventBox()
+        self._nofile_box.modify_bg(
+            Gtk.StateType.NORMAL,
+            Gdk.color_parse('white'))
+
+        self._nofile_box.add(self._nofile_label)
+        self._nofile_label.show()
+
+        self._viewers = [self._media_box, self._source_view, self._nofile_box]
+
+        self._box = Gtk.Box()
+        for viewer in self._viewers:
+            self._box.pack_start(viewer, True, True, 0)
+            viewer.hide()
+
         self._source_view.modify_font(_SOURCE_FONT)
-        self.add(self._source_view)
+        self.add(self._box)
         self._source_view.show()
+        self._box.show()
 
         self._file_path = None
 
     def _set_file_path(self, file_path):
         self._file_path = file_path
 
+        for viewer in self._viewers:
+            viewer.hide()
+
         if self._file_path is None:
             self._buffer.set_text('')
+            self._nofile_box.show()
             return
 
         mime_type = mime.get_for_file(self._file_path)
+        if 'image/' in mime_type:
+            self._show_image_viewer(image=True)
+        elif 'audio/' in mime_type:
+            self._show_image_viewer(icon='audio-x-generic')
+        elif 'video/' in mime_type:
+            self._show_image_viewer(video='video-x-generic')
+        else:
+            response = self._show_text_viewer()
+            if not response:
+                self._show_image_viewer(icon='application-x-generic')
+
+    def _show_text_viewer(self):
+        self._source_view.show()
+
+        mime_type = mime.get_for_file(self._file_path)
+
         _logger.debug('Detected mime type: %r', mime_type)
 
         language_manager = GtkSource.LanguageManager.get_default()
@@ -662,9 +710,44 @@ class SourceDisplay(Gtk.ScrolledWindow):
                           detected_language.get_name())
 
         self._buffer.set_language(detected_language)
-        self._buffer.set_text(open(self._file_path, 'r').read())
+        text = open(self._file_path, 'r').read()
+        works = True
+        try:
+            text.encode()
+            self._buffer.set_text(text)
+        except UnicodeDecodeError:
+            works = False
+            self._source_view.hide()
+
+        return works
 
     def _get_file_path(self):
         return self._file_path
 
     file_path = property(_get_file_path, _set_file_path)
+
+    def _show_image_viewer(self, select_file=False, icon=None, image=False):
+        c = self._media_box.get_child()
+        if c:
+            self._media_box.remove(c)
+
+        if image:
+            image = Gtk.Image()
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
+            image.set_from_pixbuf(pixbuf)
+            self._media_box.add(image)
+            image.show()
+
+        if icon:
+            h = Gdk.Screen.width() / 3
+            icon = Icon(icon_name=icon, pixel_size=h)
+            self._media_box.add(icon)
+            icon.show()
+
+        if select_file:
+            self._nofile_label
+            label.set_text()
+            self._media_box.add(label)
+            label.show()
+
+        self._media_box.show()
