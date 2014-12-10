@@ -373,6 +373,14 @@ class FavoritesView(ViewContainer):
 
     def __register_activate_cb(self, icon):
         alert = Alert()
+        alert.props.title = _('Registration')
+        alert.props.msg = _('Please wait, searching for your school server.')
+        self._box.add_alert(alert)
+        GObject.idle_add(self.__register)
+
+    def __register(self):
+        self._box.remove_alert()
+        alert = Alert()
         try:
             schoolserver.register_laptop()
         except RegisterError, e:
@@ -388,6 +396,7 @@ class FavoritesView(ViewContainer):
 
         self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
+        return False
 
     def __register_alert_response_cb(self, alert, response_id):
         self._box.remove_alert()
