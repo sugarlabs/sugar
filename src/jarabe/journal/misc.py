@@ -23,6 +23,7 @@ from gettext import gettext as _
 
 from gi.repository import Gio
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.activity import activityfactory
 from sugar3.activity.activityhandle import ActivityHandle
@@ -363,6 +364,11 @@ def handle_bundle_installation(metadata, force_downgrade=False):
         return None, False
 
     registry = bundleregistry.get_registry()
+
+    window = journalwindow.get_journal_window().get_window()
+    window.set_cursor(Gdk.Cursor(Gdk.CursorType.WATCH))
+    Gdk.flush()
+
     try:
         installed = registry.install(bundle, force_downgrade)
     except AlreadyInstalledException:
@@ -370,6 +376,8 @@ def handle_bundle_installation(metadata, force_downgrade=False):
     except (ZipExtractException, RegistrationException):
         logging.exception('Could not install bundle %s', bundle.get_path())
         return None, False
+    finally:
+        window.set_cursor(None)
 
     # If we just installed a bundle, update the datastore accordingly.
     # We do not do this for JournalEntryBundles because the JEB code transforms
