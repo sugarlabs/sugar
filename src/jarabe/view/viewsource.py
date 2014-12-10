@@ -704,10 +704,6 @@ class SourceDisplay(Gtk.ScrolledWindow):
         media_box = Gtk.EventBox()
         media_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
 
-        c = media_box.get_child()
-        if c:
-            media_box.remove(c)
-
         if image:
             image = Gtk.Image()
             pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
