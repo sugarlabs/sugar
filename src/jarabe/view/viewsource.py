@@ -28,6 +28,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GtkSource
+from gi.repository import GdkPixbuf
 import dbus
 from gi.repository import Gio
 
@@ -112,7 +113,7 @@ def setup_view_source(activity):
         try:
             service.HandleViewSource()
             return
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
@@ -138,7 +139,7 @@ def setup_view_source(activity):
     if service is not None:
         try:
             document_path = service.GetDocumentPath()
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
@@ -633,9 +634,23 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._source_view.set_show_right_margin(True)
         self._source_view.set_right_margin_position(80)
         # self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
+
+        self.media_box = Gtk.EventBox()
+        self.media_box.modify_bg(
+            Gtk.StateType.NORMAL,
+            Gdk.color_parse('white'))
+
+        self._viewers = [self.media_box, self._source_view]
+
+        self._box = Gtk.Box()
+        for viewer in self._viewers:
+            self._box.pack_start(viewer, True, True, 0)
+            viewer.hide()
+
         self._source_view.modify_font(_SOURCE_FONT)
-        self.add(self._source_view)
+        self.add(self._box)
         self._source_view.show()
+        self._box.show()
 
         self._file_path = None
 
@@ -644,9 +659,29 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         if self._file_path is None:
             self._buffer.set_text('')
+            self.__viewer(select_file=True)
             return
 
         mime_type = mime.get_for_file(self._file_path)
+        if 'image/' in mime_type:
+            self.__viewer(image=True)
+        elif 'audio/' in mime_type:
+            self.__viewer(icon='audio-x-generic')
+        elif 'video/' in mime_type:
+            self.__viewer(video='video-x-generic')
+        else:
+            response = self._text_viewer()
+            if not response:
+                self.__viewer(icon='application-x-generic')
+
+    def _text_viewer(self):
+        for viewer in self._viewers:
+            viewer.hide()
+
+        self._source_view.show()
+
+        mime_type = mime.get_for_file(self._file_path)
+
         _logger.debug('Detected mime type: %r', mime_type)
 
         language_manager = GtkSource.LanguageManager.get_default()
@@ -662,9 +697,46 @@ class SourceDisplay(Gtk.ScrolledWindow):
                           detected_language.get_name())
 
         self._buffer.set_language(detected_language)
-        self._buffer.set_text(open(self._file_path, 'r').read())
+        text = open(self._file_path, 'r').read()
+        works = True
+        try:
+            text.encode()
+            self._buffer.set_text(text)
+        except UnicodeDecodeError:
+            works = False
+
+        return works
 
     def _get_file_path(self):
         return self._file_path
 
     file_path = property(_get_file_path, _set_file_path)
+
+    def __viewer(self, select_file=False, icon=None, image=False):
+        for viewer in self._viewers:
+            viewer.hide()
+
+        c = self.media_box.get_child()
+        if c:
+            self.media_box.remove(c)
+
+        if image:
+            image = Gtk.Image()
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
+            image.set_from_pixbuf(pixbuf)
+            self.media_box.add(image)
+            image.show()
+
+        if icon:
+            h = Gdk.Screen.width() / 3
+            icon = Icon(icon_name=icon, pixel_size=h)
+            self.media_box.add(icon)
+            icon.show()
+
+        if select_file:
+            label = Gtk.Label()
+            label.set_text(_("Please select a file in the left panel."))
+            self.media_box.add(label)
+            label.show()
+
+        self.media_box.show()
