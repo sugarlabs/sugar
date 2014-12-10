@@ -112,7 +112,7 @@ def setup_view_source(activity):
         try:
             service.HandleViewSource()
             return
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
@@ -138,7 +138,7 @@ def setup_view_source(activity):
     if service is not None:
         try:
             document_path = service.GetDocumentPath()
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
