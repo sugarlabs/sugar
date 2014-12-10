@@ -684,7 +684,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         elif 'audio/' in mime_type:
             self._show_image_viewer(icon='audio-x-generic')
         elif 'video/' in mime_type:
-            self._show_image_viewer(video='video-x-generic')
+            self._show_image_viewer(icon='video-x-generic')
         else:
             response = self._show_text_viewer()
             if not response:
