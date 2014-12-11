@@ -18,6 +18,7 @@ sugar_PYTHON =			\
         notifications.py        \
 	shell.py		\
 	screen.py		\
+	screenshot.py		\
         session.py		\
 	sound.py		\
 	speech.py		\
