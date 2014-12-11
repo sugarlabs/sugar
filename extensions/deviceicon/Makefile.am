@@ -4,6 +4,7 @@ sugar_PYTHON = 		\
 	__init__.py	\
 	audio.py	\
 	battery.py	\
+	display.py	\
 	frame.py	\
 	network.py	\
 	speech.py	\
