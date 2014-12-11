@@ -24,6 +24,7 @@ from gi.repository import Gio
 from gi.repository import GLib
 import dbus
 
+from sugar3.bundle.activitybundle import ActivityBundle
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
@@ -158,8 +159,14 @@ class BuddyMenu(Palette):
         else:
             buddy_activity_id = None
 
-        if activity is None or activity.is_journal() or \
-           activity.get_activity_id() == buddy_activity_id:
+        is_unshareable = activity is None or activity.is_journal() or \
+            activity.get_activity_id() == buddy_activity_id
+
+        if not is_unshareable:
+            bundle_activity = ActivityBundle(activity.get_bundle_path())
+            self._max_participants = bundle_activity.get_max_participants()
+
+        if is_unshareable or self._max_participants <= 1:
             self._invite_menu.hide()
         else:
             title = activity.get_title()
