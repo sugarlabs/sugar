@@ -64,7 +64,7 @@ class _ActivityIcon(CanvasIcon):
 
     def create_palette(self):
         primary_text = GLib.markup_escape_text(self._model.bundle.get_name())
-        secondary_text = GLib.markup_escape_text(self._model.get_name())
+        secondary_text = self._model.get_name()
         palette_icon = Icon(file=self._model.bundle.get_icon(),
                             pixel_size=style.STANDARD_ICON_SIZE,
                             xo_color=self._model.get_color())
