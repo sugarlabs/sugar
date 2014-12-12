@@ -791,8 +791,7 @@ class GsmDeviceView(TrayIcon):
                                 error_handler=self.__connect_error_cb)
         else:
             self._palette.add_alert(_('No GSM connection available.'),
-                                    _('Create a connection in the '
-                                      'control panel.'))
+                                    _('Create a connection in My Settings.'))
 
     def __connect_cb(self, active_connection):
         logging.debug('Connected successfully to gsm device, %s',
