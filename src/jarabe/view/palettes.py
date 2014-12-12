@@ -19,7 +19,6 @@ import statvfs
 from gettext import gettext as _
 import logging
 
-from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -50,7 +49,7 @@ class BasePalette(Palette):
         if home_activity.props.launch_status == shell.Activity.LAUNCHING:
             self._notify_launch_hid = home_activity.connect(
                 'notify::launch-status', self.__notify_launch_status_cb)
-            self.set_primary_text(GLib.markup_escape_text(_('Starting...')))
+            self.set_primary_text(_('Starting...'))
         elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
             self._on_failed_launch()
         else:
@@ -61,7 +60,7 @@ class BasePalette(Palette):
 
     def _on_failed_launch(self):
         message = _('Activity failed to start')
-        self.set_primary_text(GLib.markup_escape_text(message))
+        self.set_primary_text(message)
 
     def __notify_launch_status_cb(self, home_activity, pspec):
         home_activity.disconnect(self._notify_launch_hid)
@@ -87,11 +86,11 @@ class CurrentActivityPalette(BasePalette):
     def setup_palette(self):
         activity_name = self._home_activity.get_activity_name()
         if activity_name:
-            self.props.primary_text = GLib.markup_escape_text(activity_name)
+            self.props.primary_text = activity_name
 
         title = self._home_activity.get_title()
         if title and title != activity_name:
-            self.props.secondary_text = GLib.markup_escape_text(title)
+            self.props.secondary_text = title
 
         self.menu_box = PaletteMenuBox()
 
@@ -172,8 +171,7 @@ class ActivityPalette(Palette):
                              pixel_size=style.STANDARD_ICON_SIZE)
 
         name = activity_info.get_name()
-        Palette.__init__(self, primary_text=GLib.markup_escape_text(name),
-                         icon=activity_icon)
+        Palette.__init__(self, primary_text=name, icon=activity_icon)
 
         xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_TRANSPARENT.get_svg()))
@@ -203,7 +201,7 @@ class JournalPalette(BasePalette):
 
     def setup_palette(self):
         title = self._home_activity.get_title()
-        self.set_primary_text(GLib.markup_escape_text(title))
+        self.set_primary_text(title)
 
         box = PaletteMenuBox()
         self.set_content(box)
@@ -260,7 +258,7 @@ class VolumePalette(Palette):
         self._mount = mount
 
         path = mount.get_root().get_path()
-        self.props.secondary_text = GLib.markup_escape_text(path)
+        self.props.secondary_text = path
 
         self.content_box = PaletteMenuBox()
         self.set_content(self.content_box)

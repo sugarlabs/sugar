@@ -20,7 +20,6 @@ import urlparse
 import os
 import logging
 from gi.repository import Gio
-from gi.repository import GLib
 
 from gi.repository import Gtk
 
@@ -146,10 +145,10 @@ class ClipboardMenu(Palette):
 
     def _update(self):
         name = self._cb_object.get_name()
-        self.props.primary_text = GLib.markup_escape_text(name)
+        self.props.primary_text = name
         preview = self._cb_object.get_preview()
         if preview:
-            self.props.secondary_text = GLib.markup_escape_text(preview)
+            self.props.secondary_text = preview
         self._update_items_visibility()
         self._update_open_submenu()
 
