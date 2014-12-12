@@ -23,6 +23,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Pango
+from gi.repository import GdkPixbuf
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
@@ -120,10 +121,10 @@ class BaseListView(Gtk.Bin):
         model.deleted.connect(self.__model_deleted_cb)
 
     def enable_drag_and_copy(self):
-        self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
-                                                [('text/uri-list', 0, 0),
-                                                 ('journal-object-id', 0, 0)],
-                                                Gdk.DragAction.COPY)
+        self.tree_view.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
+                                       [Gtk.TargetEntry.new('text/uri-list', 0, 0),
+                                        Gtk.TargetEntry.new('journal-object-id', 0, 0)],
+                                       Gdk.DragAction.COPY)
 
     def disable_drag_and_copy(self):
         self.tree_view.unset_rows_drag_source()
@@ -589,6 +590,8 @@ class ListView(BaseListView):
         BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
 
+        self.tree_view.connect('button-press-event',
+                               self.__button_press_event_cb)
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
@@ -615,6 +618,16 @@ class ListView(BaseListView):
     def __drag_begin_cb(self, widget, drag_context):
         self._is_dragging = True
 
+    def __button_press_event_cb(self, widget, event):
+        try:
+            path = self.tree_view.get_path_at_pos(event.x, event.y)[0]
+        except:
+            return
+
+        _iter = self._model.get_iter(path)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._model.get_value(_iter, 2))
+        self.tree_view.drag_source_set_icon_pixbuf(pixbuf)
+
     def __button_release_event_cb(self, tree_view, event):
         try:
             if self._is_dragging:
@@ -627,8 +640,6 @@ class ListView(BaseListView):
             return
 
         path, column, x_, y_ = pos
-        if column != self._title_column:
-            return
 
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
