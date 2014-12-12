@@ -20,7 +20,6 @@
 
 from gettext import gettext as _
 
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -67,9 +66,9 @@ class DeviceView(TrayIcon):
         self._update_output_info()
 
     def create_palette(self):
-        device_label = GLib.markup_escape_text(_('My Audio'))
-        output_label = GLib.markup_escape_text(self._output_label)
-        input_label = GLib.markup_escape_text(self._input_label)
+        device_label = _('My Audio')
+        output_label = self._output_label
+        input_label = self._input_label
         palette = AudioPalette(device_label, output_label, input_label,
                                output_model=self._audio_output_model,
                                input_model=self._audio_input_model)

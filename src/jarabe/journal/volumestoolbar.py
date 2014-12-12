@@ -211,7 +211,7 @@ class VolumesToolbar(Gtk.Toolbar):
         if documents_path is not None:
             button = DocumentsButton(documents_path)
             button.props.group = self._volume_buttons[0]
-            label = GLib.markup_escape_text(_('Documents'))
+            label = _('Documents')
             button.set_palette(Palette(label))
             button.connect('toggled', self._button_toggled_cb)
             button.show()
@@ -347,7 +347,7 @@ class JournalButton(BaseButton):
 class JournalButtonPalette(Palette):
 
     def __init__(self, mount):
-        Palette.__init__(self, GLib.markup_escape_text(_('Journal')))
+        Palette.__init__(self, _('Journal'))
 
         grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL,
                         margin=style.DEFAULT_SPACING,

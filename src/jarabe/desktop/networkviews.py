@@ -22,7 +22,6 @@ import hashlib
 import uuid
 
 import dbus
-from gi.repository import GLib
 
 from gi.repository import Gtk
 
@@ -121,7 +120,7 @@ class WirelessNetworkView(EventPulsingIcon):
                                   icon_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
-        label = GLib.markup_escape_text(self._display_name)
+        label = self._display_name
         p = palette.Palette(primary_text=label, icon=self._palette_icon)
 
         self.menu_box = Gtk.VBox()
@@ -495,8 +494,7 @@ class SugarAdhocView(EventPulsingIcon):
             icon_size=style.STANDARD_ICON_SIZE)
 
         text = _('Ad-hoc Network %d') % (self._channel, )
-        palette_ = palette.Palette(GLib.markup_escape_text(text),
-                                   icon=self._palette_icon)
+        palette_ = palette.Palette(text, icon=self._palette_icon)
 
         self.menu_box = Gtk.VBox()
 
@@ -637,7 +635,7 @@ class OlpcMeshView(EventPulsingIcon):
 
     def _create_palette(self):
         text = _('Mesh Network %d') % (self._channel, )
-        _palette = palette.Palette(GLib.markup_escape_text(text))
+        _palette = palette.Palette(text)
 
         self.menu_box = Gtk.VBox()
 

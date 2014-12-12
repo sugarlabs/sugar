@@ -570,7 +570,7 @@ class FavoritePalette(ActivityPalette):
 
         if journal_entries:
             title = journal_entries[0]['title']
-            self.props.secondary_text = GLib.markup_escape_text(title)
+            self.props.secondary_text = title
 
             menu_items = []
             for entry in journal_entries:
