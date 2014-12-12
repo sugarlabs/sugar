@@ -624,6 +624,8 @@ class CurrentActivityIcon(CanvasIcon):
 
             if self._home_activity.is_journal():
                 self.get_window().set_cursor(None)
+                self.get_parent().get_parent(
+                ).get_parent().props.sensitive = True
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 

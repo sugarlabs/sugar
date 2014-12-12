@@ -32,6 +32,7 @@ class HomeBox(Gtk.VBox):
         logging.debug('STARTUP: Loading the home view')
 
         Gtk.VBox.__init__(self)
+        self.props.sensitive = False
 
         self._favorites_views_indicies = []
         for i in range(desktop.get_number_of_views()):
