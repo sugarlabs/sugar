@@ -18,6 +18,11 @@
 from gi.repository import GObject
 from gi.repository import Gio
 
+from jarabe.desktop.homebackgroundbox import BACKGROUND_DIR
+from jarabe.desktop.homebackgroundbox import BACKGROUND_IMAGE_PATH_KEY
+from jarabe.desktop.homebackgroundbox import BACKGROUND_ALPHA_LEVEL_KEY
+from jarabe.desktop.homebackgroundbox import DEFAULT_BACKGROUND_ALPHA_LEVEL
+
 _desktop_view_instance = None
 
 _DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
@@ -95,3 +100,38 @@ def get_favorite_icons():
 
 def get_number_of_views():
     return get_model().get_number_of_views()
+
+
+def set_background_image_path(file_path):
+    settings = Gio.Settings(BACKGROUND_DIR)
+    if file_path is None:
+        settings.set_string(BACKGROUND_IMAGE_PATH_KEY, '')
+    else:
+        settings.set_string(BACKGROUND_IMAGE_PATH_KEY, str(file_path))
+
+
+def get_background_image_path():
+    settings = Gio.Settings(BACKGROUND_DIR)
+    return settings.get_string(BACKGROUND_IMAGE_PATH_KEY)
+
+
+def set_background_alpha_level(alpha_level):
+    settings = Gio.Settings(BACKGROUND_DIR)
+    settings.set_string(BACKGROUND_ALPHA_LEVEL_KEY, str(alpha_level))
+
+
+def get_background_alpha_level():
+    settings = Gio.Settings(BACKGROUND_DIR)
+    alpha = settings.get_string(BACKGROUND_ALPHA_LEVEL_KEY)
+    if alpha is None:
+        alpha = DEFAULT_BACKGROUND_ALPHA_LEVEL
+    else:
+        try:
+            alpha = float(alpha)
+        except ValueError:
+            alpha = DEFAULT_BACKGROUND_ALPHA_LEVEL
+        if alpha < 0:
+            alpha = 0
+        elif alpha > 1.0:
+            alpha = 1.0
+    return alpha
