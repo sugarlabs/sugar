@@ -16,7 +16,6 @@
 
 from gettext import gettext as _
 
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from sugar3 import profile
@@ -47,8 +46,7 @@ class SpeechDeviceView(TrayIcon):
         self._manager = speech.get_speech_manager()
 
     def create_palette(self):
-        label = GLib.markup_escape_text(_('Speech'))
-        palette = SpeechPalette(label, manager=self._manager)
+        palette = SpeechPalette(_('Speech'), manager=self._manager)
         palette.set_group_id('frame')
         return palette
 

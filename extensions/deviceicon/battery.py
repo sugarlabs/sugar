@@ -67,7 +67,7 @@ class DeviceView(TrayIcon):
         self.set_palette_invoker(FrameWidgetInvoker(self))
 
         self._model = DeviceModel(battery)
-        self.palette = BatteryPalette(GLib.markup_escape_text(_('My Battery')))
+        self.palette = BatteryPalette(_('My Battery'))
         self.palette.set_group_id('frame')
         self.palette_invoker.props.toggle_palette = True
         self._model.connect('updated',
@@ -168,7 +168,7 @@ class BatteryPalette(Palette):
 
         self.set_content(progress_widget)
 
-        self.props.secondary_text = GLib.markup_escape_text(secondary_text)
+        self.props.secondary_text = secondary_text
         self._status_label.set_text(status_text)
 
 
