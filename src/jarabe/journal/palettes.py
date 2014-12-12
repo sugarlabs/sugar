@@ -43,6 +43,7 @@ from jarabe.journal import model
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 from jarabe.journal.misc import get_mount_color
+from jarabe.model.desktop import set_background_image_path
 
 
 class ObjectPalette(Palette):
@@ -277,6 +278,28 @@ class CopyMenuBuilder():
             self._menu.append(documents_menu)
             documents_menu.show()
 
+        uid_list = self._get_uid_list_cb()
+        if len(uid_list) == 1:
+            uid = uid_list[0]
+            file_path = model.get_file(uid)
+            mime_type = mime.get_for_file(file_path)
+        else:
+            return
+
+        if "image/" in mime_type and self._add_clipboard_menu:
+            background_menu = VolumeMenu(self._journalactivity,
+                                         self._get_uid_list_cb,
+                                         _('Background'),
+                                         documents_path,
+                                         set_background=True,
+                                         file_path=file_path)
+            background_menu.set_image(Icon(icon_name='image-x-generic',
+                                           pixel_size=style.SMALL_ICON_SIZE))
+
+            background_menu.connect('volume-error', self.__volume_error_cb)
+            self._menu.append(background_menu)
+            background_menu.show()
+
         volume_monitor = Gio.VolumeMonitor.get()
         self._volumes = {}
         for mount in volume_monitor.get_mounts():
@@ -344,11 +367,21 @@ class VolumeMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, journalactivity, get_uid_list_cb, label, mount_point):
+    def __init__(self, journalactivity, get_uid_list_cb,
+                 label, mount_point, set_background=False, file_path=None):
         MenuItem.__init__(self, label)
         self._get_uid_list_cb = get_uid_list_cb
         self._journalactivity = journalactivity
         self._mount_point = mount_point
+        self._destination_path = None
+        self._set_background = set_background
+        self._copy = True
+
+        documents_path = model.get_documents_path()
+        if documents_path is not None and \
+                self._journalactivity.get_mount_point() == documents_path:
+            self._copy = False
+
         self.connect('activate', self.__copy_to_volume_cb)
 
     def __copy_to_volume_cb(self, menu_item):
@@ -366,7 +399,16 @@ class VolumeMenu(MenuItem):
 
             try:
                 metadata = model.get(uid)
-                model.copy(metadata, self._mount_point)
+
+                if self._copy:
+                    self._destination_path = model.copy(
+                        metadata, self._mount_point)
+                else:
+                    self._destination_path = str(metadata['uid'])
+
+                if self._set_background:
+                    set_background_image_path(self._destination_path)
+
             except IOError, e:
                 logging.exception('Error while copying the entry. %s',
                                   e.strerror)

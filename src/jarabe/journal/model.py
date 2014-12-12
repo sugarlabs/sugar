@@ -694,8 +694,8 @@ def copy(metadata, mount_point, ready_callback=None):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    write(metadata, file_path, transfer_ownership=False,
-          ready_callback=ready_callback)
+    return write(metadata, file_path, transfer_ownership=False,
+                 ready_callback=ready_callback)
 
 
 def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
@@ -719,6 +719,7 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
 
+    destination_path = None
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
             _get_datastore().update(metadata['uid'],
@@ -734,8 +735,10 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
                                     reply_handler=created_reply_handler,
                                     error_handler=error_handler)
     else:
-        _write_entry_on_external_device(
+        destination_path = _write_entry_on_external_device(
             metadata, file_path, ready_callback=ready_callback)
+
+    return destination_path
 
 
 def _rename_entry_on_external_device(file_path, destination_path,
@@ -880,6 +883,8 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
         _updated_cb()
+
+    return destination_path
 
 
 def get_file_name(title, mime_type):
