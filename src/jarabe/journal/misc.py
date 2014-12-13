@@ -60,6 +60,8 @@ def _get_icon_for_mime(mime_type):
     for icon_name in icons.props.names:
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
+            if not '/icons/sugar/' in file_name:
+                continue
             return file_name
 
 
@@ -68,7 +70,11 @@ def get_mount_icon_name(mount, size):
     if isinstance(icon, Gio.ThemedIcon):
         icon_theme = Gtk.IconTheme.get_default()
         for icon_name in icon.props.names:
-            if icon_theme.lookup_icon(icon_name, size, 0) is not None:
+            lookup = icon_theme.lookup_icon(icon_name, size, 0)
+            if lookup is not None:
+                file_name = lookup.get_filename()
+                if not '/icons/sugar/' in file_name:
+                    continue
                 return icon_name
     logging.error('Cannot find icon name for %s, %s', icon, mount)
     return 'drive'
