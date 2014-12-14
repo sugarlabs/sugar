@@ -157,6 +157,9 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __icon_clicked_cb(self, cell, path):
         self._start_activity(path)
 
+    def run_top_activity(self):
+        self._start_activity(Gtk.TreePath.new_first())
+
     def _start_activity(self, path):
         model = self.get_model()
         row = model[path]
@@ -432,6 +435,9 @@ class ActivitiesList(Gtk.VBox):
             self._show_clear_message()
         else:
             self._hide_clear_message()
+
+    def run_top_activity(self):
+        self._tree_view.run_top_activity()
 
     def __desktop_view_icons_changed_cb(self, model):
         self._tree_view.destroy()
