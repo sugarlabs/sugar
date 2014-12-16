@@ -91,7 +91,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._icon_column = column
 
         cell_text = Gtk.CellRendererText()
-        cell_text.props.ellipsize = Pango.EllipsizeMode.MIDDLE
+        cell_text.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
         cell_text.props.ellipsize_set = True
 
         column = Gtk.TreeViewColumn()
