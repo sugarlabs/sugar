@@ -186,7 +186,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.append_column(column)
 
         self.cell_title = Gtk.CellRendererText()
-        self.cell_title.props.ellipsize = Pango.EllipsizeMode.MIDDLE
+        self.cell_title.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
         self.cell_title.props.ellipsize_set = True
 
         self._title_column = Gtk.TreeViewColumn()

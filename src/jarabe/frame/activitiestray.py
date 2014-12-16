@@ -674,7 +674,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 text = self.file_transfer.description.replace('\n', ' ')
                 label = Gtk.Label(label=text)
                 label.set_max_width_chars(style.MENU_WIDTH_CHARS)
-                label.set_ellipsize(Pango.EllipsizeMode.END)
+                label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
                 inner_box.add(label)
                 label.show()
 
