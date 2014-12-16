@@ -74,7 +74,7 @@ class ClipboardObject(object):
         return 'application-octet-stream'
 
     def get_preview(self):
-        for mime_type in ['text/plain']:
+        for mime_type in ['UTF8_STRING']:
             if mime_type in self._formats:
                 return self._formats[mime_type].get_data()
         return ''
