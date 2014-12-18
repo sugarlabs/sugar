@@ -19,6 +19,7 @@ import statvfs
 from gettext import gettext as _
 import logging
 
+from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -192,12 +193,14 @@ class ActivityPalette(Palette):
 
 
 class JournalPalette(BasePalette):
-    def __init__(self, home_activity):
+    def __init__(self, home_activity, show_accel=True):
         self._home_activity = home_activity
         self._progress_bar = None
         self._free_space_label = None
 
         BasePalette.__init__(self, home_activity)
+        if show_accel:
+            self._label.set_accel(Gdk.KEY_F5, 0)
 
     def setup_palette(self):
         self.set_primary_text(self._home_activity.get_title())
