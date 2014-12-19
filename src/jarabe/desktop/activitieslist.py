@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import re
 import logging
 from gettext import gettext as _
 
@@ -156,6 +157,9 @@ class ActivitiesTreeView(Gtk.TreeView):
 
     def __icon_clicked_cb(self, cell, path):
         self._start_activity(path)
+
+    def run_top_activity(self):
+        self._start_activity(Gtk.TreePath.new_first())
 
     def _start_activity(self, path):
         model = self.get_model()
@@ -432,6 +436,19 @@ class ActivitiesList(Gtk.VBox):
             self._show_clear_message()
         else:
             self._hide_clear_message()
+
+    def run_top_activity(self):
+        self._tree_view.run_top_activity()
+
+    def get_launchable_activity_name(self):
+        model = self._tree_view.get_model()
+        if len(model) == 1:
+            row = model[0]
+            markup = row[model.column_title]
+            match = re.match('<b>(.*)</b>', markup)
+            if match:
+                return match.group(1)
+        return None
 
     def __desktop_view_icons_changed_cb(self, model):
         self._tree_view.destroy()

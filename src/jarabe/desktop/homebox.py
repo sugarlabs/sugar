@@ -32,6 +32,7 @@ class HomeBox(Gtk.VBox):
         logging.debug('STARTUP: Loading the home view')
 
         Gtk.VBox.__init__(self)
+        self._current_view = None
 
         self._favorites_views_indicies = []
         for i in range(desktop.get_number_of_views()):
@@ -96,11 +97,28 @@ class HomeBox(Gtk.VBox):
     def __search_entry_key_press_event_cb(self, entry, event):
         # wherever a single item is selected in a desktop view,
         # launch the activity on pressing return
-        if event.keyval == Gdk.KEY_Return and entry._icon_selected:
+        if event.keyval == Gdk.KEY_Return \
+           and self._current_view in self._favorites_views_indicies \
+           and entry._icon_selected:
             for icons in entry._icon_selected:
                 if len(icons) == 1:
                     icons[0].run_activity()
+                    entry._icon_selected = []
+                    return
             entry._icon_selected = []
+
+        # Launch the first item in the list view if enter is pressed
+        # and the list view is the current view.
+        if event.keyval == Gdk.KEY_Return and \
+           self._current_view == self._list_view_index:
+            top_activity = self._list_view.get_launchable_activity_name()
+            if top_activity is None:
+                return
+            elif top_activity.lower() == entry.get_text().lower().strip():
+                self._list_view.run_top_activity()
+            else:
+                entry.set_text(top_activity)
+                entry.set_position(-1)
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()
@@ -135,6 +153,8 @@ class HomeBox(Gtk.VBox):
                 self.add(self._favorites_boxes[favorite])
                 self._favorites_boxes[favorite].show()
                 self._favorites_boxes[favorite].grab_focus()
+
+            self._current_view = view
         elif view == self._list_view_index:
             children = self.get_children()
             for i in range(desktop.get_number_of_views()):
@@ -145,6 +165,8 @@ class HomeBox(Gtk.VBox):
                 self.add(self._list_view)
                 self._list_view.show()
                 self._list_view.grab_focus()
+
+            self._current_view = view
         else:
             raise ValueError('Invalid view: %r' % view)
 
