@@ -489,10 +489,11 @@ class Toolbar(Gtk.Toolbar):
         self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
         self.label = Gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
+        self.label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         self.label.set_alignment(0, 0.5)
-        self._add_widget(self.label)
+        self._add_widget(self.label, expand=True)
 
-        self._add_separator(True)
+        self._add_separator(False)
 
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
