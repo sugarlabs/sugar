@@ -122,7 +122,7 @@ class CommentsView(Gtk.TreeView):
         self.set_model(self._store)
         col = Gtk.TreeViewColumn()
 
-        who_icon = CellRendererCommentIcon(self)
+        who_icon = CellRendererCommentIcon()
         col.pack_start(who_icon, False)
         col.add_attribute(who_icon, 'file-name', self.COMMENT_ICON)
         col.add_attribute(who_icon, 'xo-color', self.COMMENT_ICON_COLOR)
@@ -135,7 +135,7 @@ class CommentsView(Gtk.TreeView):
         col.pack_start(comment_text, True)
         col.add_attribute(comment_text, 'text', self.COMMENT_MESSAGE)
 
-        erase_icon = CellRendererCommentIcon(self)
+        erase_icon = CellRendererCommentIcon()
         erase_icon.connect('clicked', self._erase_comment_cb)
         col.pack_start(erase_icon, False)
         col.add_attribute(erase_icon, 'file-name', self.COMMENT_ERASE_ICON)
@@ -187,8 +187,8 @@ class CommentsView(Gtk.TreeView):
 
 
 class CellRendererCommentIcon(CellRendererIcon):
-    def __init__(self, tree_view):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.SMALL_ICON_SIZE
         self.props.height = style.SMALL_ICON_SIZE
