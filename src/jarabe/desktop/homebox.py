@@ -91,6 +91,10 @@ class HomeBox(Gtk.VBox):
         toolbar.search_entry._icon_selected.extend(
             self._favorites_boxes[i]._get_selected(self._query))
 
+        if len(toolbar.search_entry._icon_selected) == 1:
+            toolbar.search_entry.set_text(
+                toolbar.search_entry._icon_selected[0].get_activity_name())
+
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
 
