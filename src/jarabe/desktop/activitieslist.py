@@ -185,6 +185,15 @@ class ActivitiesTreeView(Gtk.TreeView):
         if column == self._icon_column:
             self._start_activity(path)
 
+    def get_activity_names(self):
+        names = []
+        for row in self.get_model():
+            names.append(row[self.get_model().column_activity_name])
+        return names
+
+    def run_top_activity(self):
+        self._start_activity(Gtk.TreePath.new_first())
+
 
 class ListModel(Gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
@@ -200,8 +209,9 @@ class ListModel(Gtk.TreeModelSort):
         self.column_version_text = self.column_version + 1
         self.column_date = self.column_version_text + 1
         self.column_date_text = self.column_date + 1
+        self.column_activity_name = self.column_date_text + 1
 
-        column_types = [str, str, str, str, str, int, str]
+        column_types = [str, str, str, str, str, int, str, str]
         for i in range(desktop.get_number_of_views()):
             column_types.insert(1, bool)
 
@@ -283,6 +293,7 @@ class ListModel(Gtk.TreeModelSort):
         model_list.append(_('Version %s') % version)
         model_list.append(int(timestamp))
         model_list.append(util.timestamp_to_elapsed_string(timestamp))
+        model_list.append(activity_info.get_name())
         self._model.append(model_list)
 
     def set_visible_func(self, func):
@@ -524,6 +535,12 @@ class ActivitiesList(Gtk.VBox):
             registry = bundleregistry.get_registry()
             bundle = registry.get_bundle(bundle_id)
             registry.uninstall(bundle, delete_profile=True)
+
+    def get_activity_names(self):
+        return self._tree_view.get_activity_names()
+
+    def run_top_activity(self):
+        self._tree_view.run_top_activity()
 
 
 class ActivityListPalette(ActivityPalette):
