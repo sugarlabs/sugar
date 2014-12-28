@@ -87,8 +87,13 @@ class HomeBox(Gtk.VBox):
         self._list_view.set_filter(self._query)
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)
-        toolbar.search_entry._icon_selected = self._favorites_boxes[
-            i]._get_selected(self._query)
+        toolbar.search_entry._icon_selected = \
+            self._list_view.get_activity_names()
+
+        if len(toolbar.search_entry._icon_selected) == 1:
+            toolbar.search_entry.set_text(
+                toolbar.search_entry._icon_selected[0])
+            toolbar.search_entry.set_position(-1)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -97,7 +102,7 @@ class HomeBox(Gtk.VBox):
         # wherever a single item is selected in a desktop view,
         # launch the activity on pressing return
         if event.keyval == Gdk.KEY_Return and len(entry._icon_selected) == 1:
-            entry._icon_selected[0].run_activity()
+            self._list_view.run_top_activity()
             entry._icon_selected = []
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
