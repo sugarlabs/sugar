@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import SugarExt
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -423,7 +424,8 @@ class ClipboardMenu(MenuItem):
                           _('Warning'))
                 return
 
-            clipboard.set_with_data(
+            SugarExt.clipboard_set_with_data(
+                clipboard,
                 [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
                 self.__clipboard_get_func_cb,
                 self.__clipboard_clear_func_cb, None)
