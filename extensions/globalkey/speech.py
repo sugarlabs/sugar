@@ -21,6 +21,9 @@ BOUND_KEYS = ['<alt><shift>s']
 
 def handle_key_press(key):
     manager = speech.get_speech_manager()
+    if not manager:
+        return
+
     if manager.is_paused:
         manager.restart()
     elif not manager.is_playing:
