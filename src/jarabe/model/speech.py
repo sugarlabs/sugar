@@ -25,4 +25,6 @@ def get_speech_manager():
 
     if _speech_manager is None:
         _speech_manager = SpeechManager()
+        if not _speech_manager.enabled():
+            _speech_manager = None
     return _speech_manager
