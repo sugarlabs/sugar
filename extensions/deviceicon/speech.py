@@ -154,4 +154,5 @@ class SpeechPalette(Palette):
 
 
 def setup(tray):
-    tray.add_device(SpeechDeviceView())
+    if speech.get_speech_manager() is not None:
+        tray.add_device(SpeechDeviceView())
