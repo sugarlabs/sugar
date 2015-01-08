@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from sugar3.speech import SpeechManager
+from sugar3 import speech
 
 
 _speech_manager = None
@@ -24,5 +24,7 @@ def get_speech_manager():
     global _speech_manager
 
     if _speech_manager is None:
-        _speech_manager = SpeechManager()
+        _speech_manager = speech.SpeechManager()
+        if not speech.check_modules():
+            _speech_manager = None
     return _speech_manager
