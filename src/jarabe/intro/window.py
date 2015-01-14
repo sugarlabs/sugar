@@ -27,6 +27,8 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 
+# Generate audio and video mimes from GStreamer
+from sugar3 import mime  # NOQA
 from sugar3 import env
 from sugar3 import profile
 from sugar3.graphics import style
