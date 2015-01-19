@@ -63,6 +63,8 @@ class HomeWindow(Gtk.Window):
 
         self.realize()
         self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        Gdk.flush()
+
         self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
