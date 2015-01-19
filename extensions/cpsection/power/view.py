@@ -24,6 +24,7 @@ from jarabe.controlpanel.inlinealert import InlineAlert
 
 
 class Power(SectionView):
+
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
@@ -88,7 +89,7 @@ class Power(SectionView):
     def setup(self):
         try:
             automatic_state = self._model.get_automatic_pm()
-        except Exception, detail:
+        except Exception as detail:
             self._automatic_pm_alert.props.msg = detail
             self._automatic_pm_alert.show()
         else:
@@ -114,7 +115,7 @@ class Power(SectionView):
         state = widget.get_active()
         try:
             self._model.set_automatic_pm(state)
-        except Exception, detail:
+        except Exception as detail:
             print detail
             self._automatic_pm_alert.props.msg = detail
         else:

@@ -36,6 +36,7 @@ os.environ["SUGAR_MIME_DEFAULTS"] = \
 
 
 class TestBundleRegistry(unittest.TestCase):
+
     def setUp(self):
         activities_path = tempfile.mkdtemp()
         library_path = tempfile.mkdtemp()

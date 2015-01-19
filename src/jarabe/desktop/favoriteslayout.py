@@ -35,6 +35,7 @@ _BASE_SCALE = 1000
 
 
 class Layout(object):
+
     def __init__(self):
         pass
 
@@ -46,6 +47,7 @@ class Layout(object):
 
 
 class ViewLayout(Layout):
+
     def __init__(self):
         self._grid = None
         self._width = 0
@@ -156,6 +158,7 @@ class ViewLayout(Layout):
 
 
 class SpreadLayout(ViewLayout):
+
     def __init__(self):
         ViewLayout.__init__(self)
 
@@ -185,6 +188,7 @@ class SpreadLayout(ViewLayout):
 
 
 class RandomLayout(SpreadLayout):
+
     """Lay out icons randomly; try to nudge them around to resolve overlaps."""
 
     __gtype_name__ = 'RandomLayout'
@@ -284,6 +288,7 @@ _INITIAL_ANGLE = math.pi
 
 
 class RingLayout(ViewLayout):
+
     """Lay out icons in a ring or spiral around the XO man."""
 
     __gtype_name__ = 'RingLayout'
@@ -442,6 +447,7 @@ Calculation: math.radians(360) / ( _GOLDEN_RATIO * _GOLDEN_RATIO )
 
 
 class SunflowerLayout(RingLayout):
+
     """Spiral layout based on Fibonacci ratio in phyllotaxis.
 
     See http://algorithmicbotany.org/papers/abop/abop-ch4.pdf
@@ -513,6 +519,7 @@ class SunflowerLayout(RingLayout):
 
 
 class BoxLayout(RingLayout):
+
     """Lay out icons in a square around the XO man."""
 
     __gtype_name__ = 'BoxLayout'
@@ -556,6 +563,7 @@ class BoxLayout(RingLayout):
 
 
 class TriangleLayout(RingLayout):
+
     """Lay out icons in a triangle around the XO man."""
 
     __gtype_name__ = 'TriangleLayout'

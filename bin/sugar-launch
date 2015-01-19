@@ -50,6 +50,7 @@ cmd_args = activityfactory.get_command(activity)
 if args.uri:
     cmd_args.extend(["--uri", args.uri])
 
+
 def _which(exec_file):
     if 'PATH' in os.environ:
         envpath = os.environ['PATH']

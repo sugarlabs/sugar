@@ -27,6 +27,7 @@ from jarabe.journal import model
 
 
 class JournalEntryBundle(Bundle):
+
     """A Journal entry bundle
 
     See http://wiki.laptop.org/go/Journal_entry_bundles for details

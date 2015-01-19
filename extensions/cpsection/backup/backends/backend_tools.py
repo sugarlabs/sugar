@@ -37,6 +37,7 @@ def get_valid_file_name(file_name):
 
 
 class PreConditionsError(Exception):
+
     """
     To manage a precondition error exception, the view only show a message
     and restart the process
@@ -45,6 +46,7 @@ class PreConditionsError(Exception):
 
 
 class PreConditionsChoose(Exception):
+
     """
     To manage a precondition choose exception, the view need show options
     to the user and continue process.
@@ -62,9 +64,9 @@ class PreConditionsChoose(Exception):
 class Backend(GObject.GObject):
 
     __gsignals__ = {
-        'started':   (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'progress':  (GObject.SignalFlags.RUN_FIRST, None, ([float])),
-        'finished':  (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'started': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'progress': (GObject.SignalFlags.RUN_FIRST, None, ([float])),
+        'finished': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'cancelled': (GObject.SignalFlags.RUN_FIRST, None, ([]))}
 
     def verify_preconditions(self):

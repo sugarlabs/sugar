@@ -85,6 +85,7 @@ class _Cache(object):
 
 
 class BaseResultSet(object):
+
     """Encapsulates the result of a query
     """
 
@@ -204,8 +205,10 @@ class BaseResultSet(object):
 
 
 class DatastoreResultSet(BaseResultSet):
+
     """Encapsulates the result of a query on the datastore
     """
+
     def __init__(self, query, page_size):
 
         if query.get('query', '') and not query['query'].startswith('"'):
@@ -235,8 +238,10 @@ class DatastoreResultSet(BaseResultSet):
 
 
 class InplaceResultSet(BaseResultSet):
+
     """Encapsulates the result of a query on a mount point
     """
+
     def __init__(self, query, page_size, mount_point):
         BaseResultSet.__init__(self, query, page_size)
         self._mount_point = mount_point
@@ -355,7 +360,7 @@ class InplaceResultSet(BaseResultSet):
 
         try:
             stat = os.lstat(full_path)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 logging.exception(
                     'Error reading metadata of file %r', full_path)
@@ -364,7 +369,7 @@ class InplaceResultSet(BaseResultSet):
         if S_IFMT(stat.st_mode) == S_IFLNK:
             try:
                 link = os.readlink(full_path)
-            except OSError, e:
+            except OSError as e:
                 logging.exception(
                     'Error reading target of link %r', full_path)
                 return
@@ -375,7 +380,7 @@ class InplaceResultSet(BaseResultSet):
             try:
                 stat = os.stat(full_path)
 
-            except OSError, e:
+            except OSError as e:
                 if e.errno != errno.ENOENT:
                     logging.exception(
                         'Error reading metadata of linked file %r', full_path)
@@ -450,7 +455,7 @@ class InplaceResultSet(BaseResultSet):
 
         try:
             entries = os.listdir(dir_path)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.EACCES:
                 logging.exception('Error reading directory %r', dir_path)
             return
@@ -950,7 +955,7 @@ def get_documents_path():
         if os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
             _documents_path = documents_path
-    except OSError, exception:
+    except OSError as exception:
         if exception.errno != errno.ENOENT:
             logging.exception('Could not run xdg-user-dir')
     return _documents_path

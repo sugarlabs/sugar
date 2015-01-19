@@ -32,6 +32,7 @@ web_extension_dir = os.path.join(extension_dir, 'webservice')
 
 
 class TestWebAccounts(unittest.TestCase):
+
     def setUp(self):
         os.environ["MOCK_ACCOUNT_STATE"] = str(Account.STATE_NONE)
         self.save_ext_path = config.ext_path

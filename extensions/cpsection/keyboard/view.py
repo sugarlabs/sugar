@@ -68,6 +68,7 @@ def _build_ISO_639_dictionary():
 
 
 class LayoutCombo(Gtk.HBox):
+
     """
     Custom GTK widget with two comboboxes side by side, one for layout, and
     the other for variants for the selected layout.
@@ -186,6 +187,7 @@ class LayoutCombo(Gtk.HBox):
 
 
 class Keyboard(SectionView):
+
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 

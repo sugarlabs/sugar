@@ -67,6 +67,7 @@ class EntryWithLabel(Gtk.HBox):
 
 
 class ModemConfiguration(SectionView):
+
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)
 

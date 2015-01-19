@@ -81,6 +81,7 @@ class DetailView(Gtk.VBox):
 
 
 class BackBar(Gtk.EventBox):
+
     def __init__(self):
         Gtk.EventBox.__init__(self)
         self.modify_bg(Gtk.StateType.NORMAL,

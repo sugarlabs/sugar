@@ -144,6 +144,7 @@ class _UpdateChecker(GObject.GObject):
 
 
 class AsloUpdater(object):
+
     """
     Track state while querying Activites.SugarLabs.Org for activity updates.
     """

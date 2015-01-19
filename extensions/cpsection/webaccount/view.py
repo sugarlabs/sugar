@@ -35,6 +35,7 @@ def get_service_name(service):
 
 
 class WebServicesConfig(SectionView):
+
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 

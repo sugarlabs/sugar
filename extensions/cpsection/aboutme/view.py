@@ -379,7 +379,7 @@ class AboutMe(SectionView):
             return False
         try:
             self._model.set_nick(widget.get_text())
-        except ValueError, detail:
+        except ValueError as detail:
             self._nick_alert.props.msg = detail
             self._nick_valid = False
             self._nick_alert.show()

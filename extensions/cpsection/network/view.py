@@ -34,6 +34,7 @@ _APPLY_TIMEOUT = 3000
 
 
 class Network(SectionView):
+
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
@@ -184,7 +185,7 @@ class Network(SectionView):
         self._entry.set_text(self._model.get_jabber())
         try:
             radio_state = self._model.get_radio()
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_alert.show()
         else:
@@ -218,7 +219,7 @@ class Network(SectionView):
         radio_state = widget.get_active()
         try:
             self._model.set_radio(radio_state)
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:
@@ -242,7 +243,7 @@ class Network(SectionView):
             return
         try:
             self._model.set_jabber(widget.get_text())
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
             self._jabber_alert.show()

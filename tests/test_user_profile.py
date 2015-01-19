@@ -43,6 +43,7 @@ TEST_COLORS = [['#FF8F00', '#FF2B34'],
 
 
 class TestUserProfile(unittest.TestCase):
+
     def test_user_gender_age(self):
         for gender in GENDERS:
             for age in AGES:

@@ -162,8 +162,7 @@ class ControlPanel(Gtk.Window):
             row = 0
             column = 2
 
-        options = self._options.keys()
-        options.sort()
+        options = sorted(self._options.keys())
 
         for option in options:
             sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
@@ -391,6 +390,7 @@ class ControlPanel(Gtk.Window):
 
 
 class ModelWrapper(object):
+
     def __init__(self, module):
         self._module = module
         self._options = {}
@@ -414,7 +414,7 @@ class ModelWrapper(object):
             if method and self._options[key] is not None:
                 try:
                     method(self._options[key])
-                except Exception, detail:
+                except Exception as detail:
                     _logger.debug('Error undo option: %s', detail)
 
 

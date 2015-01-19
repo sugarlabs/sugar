@@ -124,7 +124,7 @@ OPTION_INFO = [
     ("   --unicode-errors=<E>", "Set both input and output error handler"),
     ("   --unicode-input-errors=<E>", "Set input error handler"),
     ("   --unicode-output-errors=<E>", "Set output error handler"),
-    ]
+]
 
 USAGE_NOTES = """\
 Notes: Whitespace immediately inside parentheses of @(...) are
@@ -157,7 +157,7 @@ MARKUP_INFO = [
      "break; end X"),
     ("@%% KEY WHITESPACE VALUE NL", "Significator form of __KEY__ = VALUE"),
     ("@< CONTENTS >", "Custom markup; meaning provided by user"),
-    ]
+]
 
 ESCAPE_INFO = [
     ("@\\0", "NUL, null"),
@@ -179,7 +179,7 @@ ESCAPE_INFO = [
     ("@\\v", "VT, vertical tab"),
     ("@\\xHH", "two-digit hexadecimal code HH"),
     ("@\\z", "EOT, end of transmission"),
-    ]
+]
 
 PSEUDOMODULE_INFO = [
     ("VERSION", "String representing EmPy version"),
@@ -241,7 +241,7 @@ PSEUDOMODULE_INFO = [
     ("deregisterCallback()", "Deregister callback from interpreter"),
     ("invokeCallback(contents)", "Invoke the callback directly"),
     ("Interpreter", "The interpreter class"),
-    ]
+]
 
 ENVIRONMENT_INFO = [
     (OPTIONS_ENV, "Specified options will be included"),
@@ -257,10 +257,11 @@ ENVIRONMENT_INFO = [
     (OUTPUT_ENCODING_ENV, "Unicode output encoding"),
     (INPUT_ERRORS_ENV, "Unicode input error handler"),
     (OUTPUT_ERRORS_ENV, "Unicode output error handler"),
-    ]
+]
 
 
 class Error(Exception):
+
     """The base class for all EmPy errors."""
     pass
 
@@ -268,46 +269,55 @@ EmpyError = EmPyError = Error  # DEPRECATED
 
 
 class DiversionError(Error):
+
     """An error related to diversions."""
     pass
 
 
 class FilterError(Error):
+
     """An error related to filters."""
     pass
 
 
 class StackUnderflowError(Error):
+
     """A stack underflow."""
     pass
 
 
 class SubsystemError(Error):
+
     """An error associated with the Unicode subsystem."""
     pass
 
 
 class FlowError(Error):
+
     """An exception related to control flow."""
     pass
 
 
 class ContinueFlow(FlowError):
+
     """A continue control flow."""
     pass
 
 
 class BreakFlow(FlowError):
+
     """A break control flow."""
     pass
 
 
 class ParseError(Error):
+
     """A parse error occurred."""
     pass
 
 
 class TransientParseError(ParseError):
+
     """A parse error occurred which may be resolved by feeding more data.
     Such an error reaching the toplevel is an unexpected EOF error."""
     pass
@@ -1172,7 +1182,9 @@ class VerboseHook(Hook):
         self.indent = 0
 
         class FakeMethod:
+
             """This is a proxy method-like object."""
+
             def __init__(self, hook, name):
                 self.hook = hook
                 self.name = name
@@ -1203,7 +1215,9 @@ class Token:
 
 
 class NullToken(Token):
+
     """A chunk of data not containing markups."""
+
     def __init__(self, data):
         self.data = data
 
@@ -1215,7 +1229,9 @@ class NullToken(Token):
 
 
 class ExpansionToken(Token):
+
     """A token that involves an expansion."""
+
     def __init__(self, prefix, first):
         self.prefix = prefix
         self.first = first
@@ -1228,13 +1244,17 @@ class ExpansionToken(Token):
 
 
 class WhitespaceToken(ExpansionToken):
+
     """A whitespace markup."""
+
     def string(self):
         return '%s%s' % (self.prefix, self.first)
 
 
 class LiteralToken(ExpansionToken):
+
     """A literal markup."""
+
     def run(self, interpreter, locals):
         interpreter.write(self.first)
 
@@ -1243,7 +1263,9 @@ class LiteralToken(ExpansionToken):
 
 
 class PrefixToken(ExpansionToken):
+
     """A prefix markup."""
+
     def run(self, interpreter, locals):
         interpreter.write(interpreter.prefix)
 
@@ -1252,7 +1274,9 @@ class PrefixToken(ExpansionToken):
 
 
 class CommentToken(ExpansionToken):
+
     """A comment markup."""
+
     def scan(self, scanner):
         loc = scanner.find('\n')
         if loc >= 0:
@@ -1265,7 +1289,9 @@ class CommentToken(ExpansionToken):
 
 
 class ContextNameToken(ExpansionToken):
+
     """A context name change markup."""
+
     def scan(self, scanner):
         loc = scanner.find('\n')
         if loc >= 0:
@@ -1279,7 +1305,9 @@ class ContextNameToken(ExpansionToken):
 
 
 class ContextLineToken(ExpansionToken):
+
     """A context line change markup."""
+
     def scan(self, scanner):
         loc = scanner.find('\n')
         if loc >= 0:
@@ -1297,7 +1325,9 @@ class ContextLineToken(ExpansionToken):
 
 
 class EscapeToken(ExpansionToken):
+
     """An escape markup."""
+
     def scan(self, scanner):
         try:
             code = scanner.chop(1)
@@ -1383,7 +1413,9 @@ class EscapeToken(ExpansionToken):
 
 
 class SignificatorToken(ExpansionToken):
+
     """A significator markup."""
+
     def scan(self, scanner):
         loc = scanner.find('\n')
         if loc >= 0:
@@ -1419,7 +1451,9 @@ class SignificatorToken(ExpansionToken):
 
 
 class ExpressionToken(ExpansionToken):
+
     """An expression markup."""
+
     def scan(self, scanner):
         z = scanner.complex('(', ')', 0)
         try:
@@ -1477,7 +1511,9 @@ class ExpressionToken(ExpansionToken):
 
 
 class StringLiteralToken(ExpansionToken):
+
     """A string token markup."""
+
     def scan(self, scanner):
         scanner.retreat()
         assert scanner[0] == self.first
@@ -1492,7 +1528,9 @@ class StringLiteralToken(ExpansionToken):
 
 
 class SimpleExpressionToken(ExpansionToken):
+
     """A simple expression markup."""
+
     def scan(self, scanner):
         i = scanner.simple()
         self.code = self.first + scanner.chop(i)
@@ -1505,7 +1543,9 @@ class SimpleExpressionToken(ExpansionToken):
 
 
 class ReprToken(ExpansionToken):
+
     """A repr markup."""
+
     def scan(self, scanner):
         i = scanner.next('`', 0)
         self.code = scanner.chop(i, 1)
@@ -1518,7 +1558,9 @@ class ReprToken(ExpansionToken):
 
 
 class InPlaceToken(ExpansionToken):
+
     """An in-place markup."""
+
     def scan(self, scanner):
         i = scanner.next(':', 0)
         j = scanner.next(':', i + 1)
@@ -1536,7 +1578,9 @@ class InPlaceToken(ExpansionToken):
 
 
 class StatementToken(ExpansionToken):
+
     """A statement markup."""
+
     def scan(self, scanner):
         i = scanner.complex('{', '}', 0)
         self.code = scanner.chop(i, 1)
@@ -1549,7 +1593,9 @@ class StatementToken(ExpansionToken):
 
 
 class CustomToken(ExpansionToken):
+
     """A custom markup."""
+
     def scan(self, scanner):
         i = scanner.complex('<', '>', 0)
         self.contents = scanner.chop(i, 1)
@@ -1720,7 +1766,7 @@ class ControlToken(ExpansionToken):
                     self.subrun(info[0][1], interpreter, locals)
                 except FlowError:
                     raise
-                except Exception, e:
+                except Exception as e:
                     for secondary, tokens in info[1:]:
                         exception, variable = interpreter.clause(
                             secondary.rest)
@@ -1781,22 +1827,22 @@ class Scanner:
     # This is the token mapping table that maps first characters to
     # token classes.
     TOKEN_MAP = [
-        (None,                   PrefixToken),
-        (' \t\v\r\n',            WhitespaceToken),
-        (')]}',                  LiteralToken),
-        ('\\',                   EscapeToken),
-        ('#',                    CommentToken),
-        ('?',                    ContextNameToken),
-        ('!',                    ContextLineToken),
-        ('%',                    SignificatorToken),
-        ('(',                    ExpressionToken),
+        (None, PrefixToken),
+        (' \t\v\r\n', WhitespaceToken),
+        (')]}', LiteralToken),
+        ('\\', EscapeToken),
+        ('#', CommentToken),
+        ('?', ContextNameToken),
+        ('!', ContextLineToken),
+        ('%', SignificatorToken),
+        ('(', ExpressionToken),
         (IDENTIFIER_FIRST_CHARS, SimpleExpressionToken),
-        ('\'\"',                 StringLiteralToken),
-        ('`',                    ReprToken),
-        (':',                    InPlaceToken),
-        ('[',                    ControlToken),
-        ('{',                    StatementToken),
-        ('<',                    CustomToken),
+        ('\'\"', StringLiteralToken),
+        ('`', ReprToken),
+        (':', InPlaceToken),
+        ('[', ControlToken),
+        ('{', StatementToken),
+        ('<', CustomToken),
     ]
 
     def __init__(self, prefix, data=''):
@@ -2406,21 +2452,21 @@ class Interpreter:
         """Wrap around an application of a callable and handle errors.
         Return whether no error occurred."""
         try:
-            apply(callable, args)
+            callable(*args)
             self.reset()
             return True
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             # Handle keyboard interrupts specially: we should always exit
             # from these.
             self.fail(e, True)
-        except Exception, e:
+        except Exception as e:
             # A standard exception (other than a keyboard interrupt).
             self.fail(e)
         except:
             # If we get here, then either it's an exception not derived from
             # Exception or it's a string exception, so get the error type
             # from the sys module.
-            e = sys.exc_type
+            e = sys.exc_info()[0]
             self.fail(e)
         # An error occurred if we leak through to here, so do cleanup.
         self.reset()
@@ -2768,7 +2814,7 @@ class Interpreter:
                 hook.push()
                 try:
                     method = getattr(hook, _name)
-                    apply(method, (), keywords)
+                    method(*(), **keywords)
                 finally:
                     hook.pop()
 
@@ -2927,7 +2973,7 @@ class Interpreter:
 
     def invokeHook(self, _name, **keywords):
         """Manually invoke a hook."""
-        apply(self.invoke, (_name,), keywords)
+        self.invoke(*(_name,), **keywords)
 
     # Callbacks.
 
@@ -3390,10 +3436,11 @@ def invoke(args):
                                 _unicodeInputErrors, _unicodeOutputErrors)
     # Now initialize the output file if something has already been selected.
     if _output is not None:
-        _output = apply(AbstractFile, _output)
+        _output = AbstractFile(*_output)
     # Set up the main filename and the argument.
     if not remainder:
         remainder.append('-')
+    # flake8: noqa
     filename, arguments = remainder[0], remainder[1:]
     # Set up the interpreter.
     if _options[BUFFERED_OPT] and _output is None:

@@ -104,8 +104,10 @@ class AudioManagerWidget(Gtk.VBox):
 
         icon = Icon(icon_size=Gtk.IconSize.MENU)
         icon.props.icon_name = icon_name
-        icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                      style.COLOR_BUTTON_GREY.get_svg()))
+        icon.props.xo_color = XoColor(
+            '%s,%s' %
+            (style.COLOR_WHITE.get_svg(),
+             style.COLOR_BUTTON_GREY.get_svg()))
         icon.show()
 
         label = Gtk.Label(text)

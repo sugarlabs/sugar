@@ -70,12 +70,14 @@ def hash_passphrase(passphrase):
 
 
 class CanceledKeyRequestError(dbus.DBusException):
+
     def __init__(self):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 
 class KeyDialog(Gtk.Dialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         Gtk.Dialog.__init__(self, flags=Gtk.DialogFlags.MODAL)
         self.set_title('Wireless Key Required')
@@ -120,6 +122,7 @@ class KeyDialog(Gtk.Dialog):
 
 
 class WEPKeyDialog(KeyDialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
                            dev_caps, response)
@@ -215,6 +218,7 @@ class WEPKeyDialog(KeyDialog):
 
 
 class WPAKeyDialog(KeyDialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
                            dev_caps, response)

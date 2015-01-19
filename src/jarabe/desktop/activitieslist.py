@@ -24,7 +24,6 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -387,6 +386,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 
 
 class ClearMessageBox(Gtk.EventBox):
+
     def __init__(self, message, button_callback):
         Gtk.EventBox.__init__(self)
 

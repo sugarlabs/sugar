@@ -37,6 +37,7 @@ def get_adhoc_manager_instance():
 
 
 class AdHocManager(GObject.GObject):
+
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
     three channels 1, 6, 11. If Sugar sees no "known" network when it

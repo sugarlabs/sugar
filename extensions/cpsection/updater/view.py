@@ -215,6 +215,7 @@ class ActivityUpdater(SectionView):
 
 
 class ProgressPane(Gtk.VBox):
+
     """Container which replaces the `ActivityPane` during refresh or
     install."""
 

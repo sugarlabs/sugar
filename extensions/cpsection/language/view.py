@@ -40,6 +40,7 @@ TITLE = gettext.gettext('Language')
 
 
 class Language(SectionView):
+
     def __init__(self, model, alerts):
         SectionView.__init__(self)
 
@@ -372,6 +373,7 @@ class Language(SectionView):
 
 
 class FilterToolItem(Gtk.ToolItem):
+
     def __init__(self, primary_icon, secondary_icon, default_label,
                  widget):
         Gtk.ToolItem.__init__(self)
@@ -441,6 +443,7 @@ class FilterToolItem(Gtk.ToolItem):
 
 
 class BlackLabel(PaletteMenuItem):
+
     ''' Label in palette menu item with black text on white background '''
 
     def __init__(self, text_label=None):

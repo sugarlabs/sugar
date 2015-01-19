@@ -30,6 +30,7 @@ KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
 
 class ReadError(Exception):
+
     def __init__(self, value):
         self.value = value
 

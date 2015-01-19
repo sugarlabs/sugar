@@ -44,6 +44,7 @@ _instance = None
 
 
 class HomeWindow(Gtk.Window):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
         Gtk.Window.__init__(self)

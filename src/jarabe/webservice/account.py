@@ -20,6 +20,7 @@ from gi.repository import GObject
 
 
 class Account():
+
     ''' Account is a prototype class for online accounts. It provides
     stubs for public methods that are used by online services.
     '''
@@ -64,6 +65,7 @@ class Account():
 
 
 class SharedJournalEntry():
+
     ''' SharedJournalEntry is a class used to intermediate between the
     online service and the Sugar UI elements (MenuItems used in the
     Journal UI) for online accounts. It provides stubs for public

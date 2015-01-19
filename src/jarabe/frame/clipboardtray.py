@@ -27,7 +27,9 @@ from jarabe.frame.clipboardicon import ClipboardIcon
 
 
 class _ContextMap(object):
+
     """Maps a drag context to the clipboard object involved in the dragging."""
+
     def __init__(self):
         self._context_map = {}
 

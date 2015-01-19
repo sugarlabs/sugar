@@ -50,6 +50,7 @@ _MICROFORMAT_URL_KEY = 'microformat-update-url'
 
 
 class _UpdateHTMLParser(HTMLParser):
+
     """HTML parser to pull out data expressed in our microformat."""
 
     def __init__(self, base_href):
@@ -181,6 +182,7 @@ class _UpdateHTMLParser(HTMLParser):
 
 
 class MicroformatUpdater(object):
+
     """
     Microformat updater backend. The rough code flow here is:
      1. Query update URL and parse results
@@ -190,6 +192,7 @@ class MicroformatUpdater(object):
        b) If we don't have the activity installed, use MetadataLookup
           to lookup activity name and size.
     """
+
     def __init__(self):
         self._icon_temp_files = []
 
@@ -343,6 +346,7 @@ class MicroformatUpdater(object):
 
 
 class MetadataLookup(GObject.GObject):
+
     """
     Look up the localized activity name and size of a bundle.
 
@@ -365,7 +369,7 @@ class MetadataLookup(GObject.GObject):
         try:
             name = self._do_name_lookup()
             self._complete(name)
-        except Exception, e:
+        except Exception as e:
             self._complete(e)
 
     def _do_name_lookup(self):

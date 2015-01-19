@@ -16,6 +16,7 @@
 
 
 class WebService():
+
     def get_icon_name(self):
         raise "Not implemented"
 

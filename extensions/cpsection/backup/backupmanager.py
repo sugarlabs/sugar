@@ -68,7 +68,7 @@ class BackupManager():
 def _load_module(module):
     try:
         module = import_module('%s.%s' % (BACKENDS_MODULE, module))
-    except ImportError, e:
+    except ImportError as e:
         module = None
         logging.error('ImportError: %s' % (e))
     return module
