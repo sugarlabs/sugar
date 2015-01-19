@@ -45,6 +45,7 @@ _NOTIFICATION_DURATION = 5000
 
 
 class _Animation(animator.Animation):
+
     def __init__(self, frame, end):
         start = frame.current_position
         animator.Animation.__init__(self, start, end)
@@ -55,6 +56,7 @@ class _Animation(animator.Animation):
 
 
 class _KeyListener(object):
+
     def __init__(self, frame):
         self._frame = frame
 
@@ -66,6 +68,7 @@ class _KeyListener(object):
 
 
 class Frame(object):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 

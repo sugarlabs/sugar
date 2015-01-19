@@ -19,6 +19,7 @@ from sugar3.test import uitree
 
 
 class TestActivitiesList(unittest.UITestCase):
+
     def test_activity_list_palette(self):
         with self.run_view("activitieslist"):
             root = uitree.get_root()

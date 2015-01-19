@@ -27,6 +27,7 @@ from cpsection.modemconfiguration.model import CONF_SP_COUNTRY, \
 
 
 class CountryCodeParserTest(unittest.TestCase):
+
     def test_get_country(self):
         self.assertEqual(CountryCodeParser().get('ad'), 'Andorra')
         self.assertEqual(CountryCodeParser().get('es'), 'Spain')
@@ -38,6 +39,7 @@ class CountryCodeParserTest(unittest.TestCase):
 
 
 class ServiceProvidersParserTest(unittest.TestCase):
+
     def setUp(self):
         self.tree = ElementTree(file=PROVIDERS_PATH)
         self.countries_from_xml = self.tree.findall('country')
@@ -106,6 +108,7 @@ class ServiceProvidersParserTest(unittest.TestCase):
 
 
 class ServiceProvidersTest(unittest.TestCase):
+
     def setUp(self):
         self.db = ServiceProviders()
         self.countries = self.db.get_countries()
@@ -170,6 +173,7 @@ class FakeConfClient(object):
 
 
 class ServiceProvidersGuessCountryTest(unittest.TestCase):
+
     def setUp(self):
         # patch Gio.Settings to use a fake client
         conf_patcher = patch('gi.repository.Gio.Settings')

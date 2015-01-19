@@ -26,6 +26,7 @@ from jarabe.model import neighborhood
 
 
 class FriendIcon(TrayIcon):
+
     def __init__(self, buddy):
         TrayIcon.__init__(self, icon_name='computer-xo',
                           xo_color=buddy.get_color())
@@ -43,6 +44,7 @@ class FriendIcon(TrayIcon):
 
 
 class FriendsTray(VTray):
+
     def __init__(self):
         VTray.__init__(self)
 

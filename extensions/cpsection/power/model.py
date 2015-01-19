@@ -33,6 +33,7 @@ _logger = logging.getLogger('ControlPanel - Power')
 
 
 class ReadError(Exception):
+
     def __init__(self, value):
         self.value = value
 

@@ -159,11 +159,11 @@ def set_languages(languages):
         return 1
     else:
         langs = read_all_languages()
-        for lang, territory, locale in langs:
+        for lang, territory, locale_ in langs:
             code = lang.replace(' ', '_') + '/' \
                 + territory.replace(' ', '_')
             if code == languages:
-                set_languages_list([locale])
+                set_languages_list([locale_])
                 return 1
         print (_("Sorry I do not speak \'%s\'.") % languages)
 

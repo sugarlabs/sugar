@@ -41,6 +41,7 @@ _model = None
 
 
 class Activity(GObject.GObject):
+
     """Activity which appears in the "Home View" of the Sugar shell
 
     This class stores the Sugar Shell's metadata regarding a
@@ -364,6 +365,7 @@ class Activity(GObject.GObject):
 
 
 class ShellModel(GObject.GObject):
+
     """Model of the shell (activity management)
 
     The ShellModel is basically the point of registration

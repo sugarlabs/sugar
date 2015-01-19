@@ -25,6 +25,7 @@ _instance = None
 
 
 class GestureHandler(object):
+
     '''Handling gestures to show/hide the frame
 
     We use SugarExt.GestureGrabber to listen for

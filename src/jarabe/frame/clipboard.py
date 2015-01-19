@@ -163,7 +163,7 @@ class Clipboard(GObject.GObject):
         f_, new_file_path = tempfile.mkstemp(ext, root)
         del f_
         shutil.copyfile(path, new_file_path)
-        os.chmod(new_file_path, 0644)
+        os.chmod(new_file_path, 0o644)
 
         return 'file://' + new_file_path
 

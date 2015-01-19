@@ -28,6 +28,7 @@ from jarabe.controlpanel.sectionview import SectionView
 
 
 class AboutComputer(SectionView):
+
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)
 

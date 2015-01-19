@@ -30,6 +30,7 @@ _DBUS_PATH = '/org/laptop/Shell'
 
 
 class UIService(dbus.service.Object):
+
     """Provides d-bus service to script the shell's operations
 
     Uses a shell_model object to observe events such as changes to:

@@ -29,6 +29,7 @@ data_dir = os.path.join(tests_dir, "data")
 
 
 class MockActivityInfo:
+
     def get_bundle_id(self):
         return "mock"
 

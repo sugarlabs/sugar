@@ -21,6 +21,7 @@ from sugar3.graphics import style
 
 
 class FrameContainer(Gtk.Bin):
+
     """A container class for frame panel rendering. Hosts a child 'box' where
     frame elements can be added. Excludes grid-sized squares at each end
     of the frame panel, and a space alongside the inside of the screen where
@@ -138,7 +139,7 @@ class FrameWindow(Gtk.Window):
     def _update_size(self):
         if self._position == Gtk.PositionType.TOP \
                 or self._position == Gtk.PositionType.BOTTOM:
-                self.resize(Gdk.Screen.width(), self.size)
+            self.resize(Gdk.Screen.width(), self.size)
         else:
             self.resize(self.size, Gdk.Screen.height())
 

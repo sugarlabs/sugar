@@ -28,6 +28,7 @@ from jarabe.frame import clipboard
 
 
 class ClipboardPanelWindow(FrameWindow):
+
     def __init__(self, frame, orientation):
         FrameWindow.__init__(self, orientation)
 

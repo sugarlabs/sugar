@@ -27,6 +27,7 @@ ACCOUNT_NAME = 'mock'
 
 
 class MockAccount(account.Account):
+
     def __init__(self):
         return
 
@@ -41,6 +42,7 @@ class MockAccount(account.Account):
 
 
 class MockSharedJournalEntry(account.SharedJournalEntry):
+
     def __init__(self):
         return
 
@@ -54,12 +56,14 @@ class MockSharedJournalEntry(account.SharedJournalEntry):
 
 
 class ShareMenu(MenuItem):
+
     def __init__(self, metadata):
         MenuItem.__init__(self, text_label=ACCOUNT_NAME)
         self.show()
 
 
 class RefreshMenu(MenuItem):
+
     def __init__(self):
         MenuItem.__init__(self, text_label=ACCOUNT_NAME)
         self.show()

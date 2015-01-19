@@ -32,6 +32,7 @@ ACCOUNT_NAME = 'mock'
 
 
 class JournalMock(JournalWindow):
+
     def get_mount_point(self):
         return '/'
 

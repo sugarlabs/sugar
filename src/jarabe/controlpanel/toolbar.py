@@ -27,6 +27,7 @@ from sugar3.graphics import style
 
 
 class MainToolbar(Gtk.Toolbar):
+
     """ Main toolbar of the control panel
     """
     __gtype_name__ = 'MainToolbar'
@@ -89,6 +90,7 @@ class MainToolbar(Gtk.Toolbar):
 
 
 class SectionToolbar(Gtk.Toolbar):
+
     """ Toolbar of the sections of the control panel
     """
     __gtype_name__ = 'SectionToolbar'

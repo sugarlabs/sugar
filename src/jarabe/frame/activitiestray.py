@@ -24,7 +24,6 @@ import os
 from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -56,6 +55,7 @@ import jarabe.frame
 
 
 class ActivityButton(RadioToolButton):
+
     def __init__(self, home_activity, group):
         RadioToolButton.__init__(self, group=group)
 
@@ -125,6 +125,7 @@ class ActivityButton(RadioToolButton):
 
 
 class InviteButton(ToolButton):
+
     """Invite to shared activity"""
 
     __gsignals__ = {
@@ -192,6 +193,7 @@ class InviteButton(ToolButton):
 
 
 class InvitePalette(Palette):
+
     """Palette for frame or notification icon for invites."""
 
     __gsignals__ = {
@@ -233,6 +235,7 @@ class InvitePalette(Palette):
 
 
 class ActivitiesTray(HTray):
+
     def __init__(self):
         HTray.__init__(self)
 
@@ -398,8 +401,10 @@ class ActivitiesTray(HTray):
 
 
 class BaseTransferButton(ToolButton):
+
     """Button with a notification attached
     """
+
     def __init__(self, file_transfer):
         ToolButton.__init__(self)
 
@@ -440,8 +445,10 @@ class BaseTransferButton(ToolButton):
 
 
 class IncomingTransferButton(BaseTransferButton):
+
     """UI element representing an ongoing incoming file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
@@ -521,8 +528,10 @@ class IncomingTransferButton(BaseTransferButton):
 
 
 class OutgoingTransferButton(BaseTransferButton):
+
     """UI element representing an ongoing outgoing file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
@@ -556,6 +565,7 @@ class OutgoingTransferButton(BaseTransferButton):
 
 
 class BaseTransferPalette(Palette):
+
     """Base palette class for frame or notification icon for file transfers
     """
     __gtype_name__ = 'SugarBaseTransferPalette'
@@ -619,6 +629,7 @@ class BaseTransferPalette(Palette):
 
 
 class IncomingTransferPalette(BaseTransferPalette):
+
     """Palette for frame or notification icon for incoming file transfers
     """
     __gtype_name__ = 'SugarIncomingTransferPalette'
@@ -782,6 +793,7 @@ class IncomingTransferPalette(BaseTransferPalette):
 
 
 class OutgoingTransferPalette(BaseTransferPalette):
+
     """Palette for frame or notification icon for outgoing file transfers
     """
     __gtype_name__ = 'SugarOutgoingTransferPalette'

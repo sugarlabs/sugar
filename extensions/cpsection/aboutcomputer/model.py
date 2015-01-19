@@ -77,7 +77,7 @@ def get_build_number():
         try:
             popen = subprocess.Popen(['lsb_release', '-ds'],
                                      stdout=subprocess.PIPE)
-        except OSError, e:
+        except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
         else:
@@ -188,8 +188,8 @@ def get_wireless_firmware():
         return firmware_info.values()[0]
 
     return ', '.join(['%(interface)s: %(version)s' %
-                      {'interface': interface, 'version': version}
-                      for interface, version in firmware_info.items()])
+                      {'interface': interface, 'version': version_}
+                      for interface, version_ in firmware_info.items()])
 
 
 def print_wireless_firmware():

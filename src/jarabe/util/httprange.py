@@ -27,6 +27,7 @@ from jarabe.util.downloader import Downloader
 
 
 class _HttpRangeFileObject(object):
+
     def __init__(self, url):
         self._url = url
         self._size = None

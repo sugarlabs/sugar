@@ -28,7 +28,7 @@ from jarabe.util.downloader import Downloader
 
 profile_data_dir = os.path.join(env.get_profile_path(), 'data')
 if not os.path.isdir(profile_data_dir):
-        os.makedirs(profile_data_dir)
+    os.makedirs(profile_data_dir)
 
 tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
@@ -37,6 +37,7 @@ GLib.threads_init()
 
 
 class TestDownloader(unittest.TestCase):
+
     def setUp(self):
         handler = SimpleHTTPServer.SimpleHTTPRequestHandler
         self._server = SocketServer.TCPServer(("", 0), handler)

@@ -175,7 +175,7 @@ class FavoritesView(ViewContainer):
             layout = favoriteslayout.RingLayout.key
             assert layout in LAYOUT_MAP
 
-        if type(self._layout) == LAYOUT_MAP[layout]:
+        if isinstance(self._layout, LAYOUT_MAP[layout]):
             return False
 
         if self._layout is not None and self._dragging_mode:
@@ -383,7 +383,7 @@ class FavoritesView(ViewContainer):
         alert = Alert()
         try:
             schoolserver.register_laptop()
-        except RegisterError, e:
+        except RegisterError as e:
             alert.props.title = _('Registration Failed')
             alert.props.msg = '%s' % e
         else:
@@ -597,6 +597,7 @@ class FavoritePalette(ActivityPalette):
 
 
 class CurrentActivityIcon(CanvasIcon):
+
     def __init__(self):
         CanvasIcon.__init__(self, icon_name='activity-journal',
                             pixel_size=style.STANDARD_ICON_SIZE, cache=True)

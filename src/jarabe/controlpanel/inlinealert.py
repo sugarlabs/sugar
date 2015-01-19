@@ -16,13 +16,13 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
-from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 
 
 class InlineAlert(Gtk.HBox):
+
     """UI interface for Inline alerts
 
     Inline alerts are different from the other alerts beause they are

@@ -26,6 +26,7 @@ _RAISE_DELAY = 250
 
 
 class TabbingHandler(object):
+
     def __init__(self, frame, modifier):
         self._frame = frame
         self._tabbing = False

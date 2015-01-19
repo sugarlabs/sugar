@@ -25,7 +25,6 @@ import time
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import Pango
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.toolbarbox import ToolbarBox
@@ -434,7 +433,7 @@ class MainToolbox(ToolbarBox):
                              'file': activity_info.get_icon(),
                              'callback': self._what_palette_cb,
                              'id': bundle_id})
-                    except GObject.GError, exception:
+                    except GObject.GError as exception:
                         # fall back to generic icon
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -572,7 +571,7 @@ class DetailToolbox(ToolbarBox):
     def _duplicate_clicked_cb(self, button):
         try:
             model.copy(self._metadata, '/')
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry.')
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % (e.strerror, ),

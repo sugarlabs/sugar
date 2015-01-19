@@ -26,6 +26,7 @@ from jarabe import config
 
 
 class NewAsloUpdater(object):
+
     """
     Checks for updates using the new ASLO's update.json file
     """
@@ -69,7 +70,7 @@ class NewAsloUpdater(object):
         updates = []
 
         for i, bundle in enumerate(self._bundles):
-            self._progress_cb(bundle.get_name(), i/len(self._bundles))
+            self._progress_cb(bundle.get_name(), i / len(self._bundles))
 
             if bundle.get_bundle_id() not in activities:
                 logging.debug('%s not in activities' % bundle.get_bundle_id())

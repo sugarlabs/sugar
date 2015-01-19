@@ -41,6 +41,7 @@ NODE_PATH = '/sys/devices/platform/i8042/serio1/hgpk_mode'
 
 
 class DeviceView(TrayIcon):
+
     """ Manage the touchpad mode from the device palette on the Frame. """
 
     FRAME_POSITION_RELATIVE = 500
@@ -70,6 +71,7 @@ class DeviceView(TrayIcon):
 
 
 class ResourcePalette(Palette):
+
     """ Palette attached to the decive icon that represents the touchpas. """
 
     def __init__(self, primary_text, icon):
@@ -130,7 +132,7 @@ def _write_touchpad_mode_str(mode_str):
     """ Write the touchpad mode to the node path. """
     try:
         node_file_handle = open(NODE_PATH, 'w')
-    except IOError, e:
+    except IOError as e:
         logging.error('Error opening %s for writing: %s', NODE_PATH, e)
         return
     node_file_handle.write(mode_str)

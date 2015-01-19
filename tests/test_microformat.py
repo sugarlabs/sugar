@@ -27,6 +27,7 @@ data_dir = os.path.join(tests_dir, "data")
 
 
 class TestMicroformat(unittest.TestCase):
+
     def test_html_parser(self):
         parser = _UpdateHTMLParser("http://www.sugarlabs.org")
         fd = open(os.path.join(data_dir, "microformat.html"), "r")

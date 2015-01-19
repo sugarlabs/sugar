@@ -208,7 +208,7 @@ def cleanup_temporary_files():
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
         os.makedirs(data_dir)
-    except OSError, e:
+    except OSError as e:
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e

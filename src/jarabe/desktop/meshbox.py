@@ -52,6 +52,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class _ActivityIcon(CanvasIcon):
+
     def __init__(self, model, file_name, xo_color,
                  size=style.STANDARD_ICON_SIZE, is_joinable=None):
         CanvasIcon.__init__(self, file_name=file_name,
@@ -106,6 +107,7 @@ class _ActivityIcon(CanvasIcon):
 
 
 class ActivityView(SnowflakeLayout):
+
     def __init__(self, model):
         SnowflakeLayout.__init__(self)
 
