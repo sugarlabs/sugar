@@ -99,10 +99,13 @@ class HomeBox(Gtk.VBox):
                 toolbar.search_entry._icon_selected = [activity]
                 break
 
-        if len(toolbar.search_entry._icon_selected) == 1:
+        # Don't change the selection if the entry has been autocompleted
+        if len(toolbar.search_entry._icon_selected) == 1 \
+           and not toolbar.search_entry.get_text() == activity['name']:
+            pos = toolbar.search_entry.get_position()
             toolbar.search_entry.set_text(
                 toolbar.search_entry._icon_selected[0]['name'])
-            toolbar.search_entry.set_position(-1)
+            toolbar.search_entry.select_region(pos, -1)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
