@@ -1,6 +1,7 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +29,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GtkSource
+from gi.repository import GdkPixbuf
 import dbus
 from gi.repository import Gio
 
@@ -112,7 +114,7 @@ def setup_view_source(activity):
         try:
             service.HandleViewSource()
             return
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
@@ -138,7 +140,7 @@ def setup_view_source(activity):
     if service is not None:
         try:
             document_path = service.GetDocumentPath()
-        except dbus.DBusException, e:
+        except dbus.DBusException as e:
             expected_exceptions = [
                 'org.freedesktop.DBus.Error.UnknownMethod',
                 'org.freedesktop.DBus.Python.NotImplementedError']
@@ -159,6 +161,9 @@ def setup_view_source(activity):
     view_source = ViewSource(window_xid, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
     map_activity_to_window[window_xid] = view_source
+
+    activity.push_shell_window(view_source)
+    view_source.connect('hide', activity.pop_shell_window)
     view_source.show()
 
 
@@ -484,10 +489,11 @@ class Toolbar(Gtk.Toolbar):
         self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
         self.label = Gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
+        self.label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         self.label.set_alignment(0, 0.5)
-        self._add_widget(self.label)
+        self._add_widget(self.label, expand=True)
 
-        self._add_separator(True)
+        self._add_separator(False)
 
         stop = ToolButton(icon_name='dialog-cancel')
         stop.set_tooltip(_('Close'))
@@ -620,30 +626,49 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
 
-        self._buffer = GtkSource.Buffer()
-        self._buffer.set_highlight_syntax(True)
-
-        self._source_view = GtkSource.View(buffer=self._buffer)
-        self._source_view.set_editable(False)
-        self._source_view.set_cursor_visible(True)
-        self._source_view.set_show_line_numbers(True)
-        self._source_view.set_show_right_margin(True)
-        self._source_view.set_right_margin_position(80)
-        # self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
-        self._source_view.modify_font(_SOURCE_FONT)
-        self.add(self._source_view)
-        self._source_view.show()
+        self._box = Gtk.Box()
+        self.add(self._box)
+        self._box.show()
 
         self._file_path = None
 
     def _set_file_path(self, file_path):
         self._file_path = file_path
 
+        for child in self._box.get_children():
+            self._box.remove(child)
+
         if self._file_path is None:
-            self._buffer.set_text('')
+            self._show_no_file()
             return
 
         mime_type = mime.get_for_file(self._file_path)
+        if 'image/' in mime_type:
+            self._show_image_viewer(image=True)
+        elif 'audio/' in mime_type:
+            self._show_image_viewer(icon='audio-x-generic')
+        elif 'video/' in mime_type:
+            self._show_image_viewer(icon='video-x-generic')
+        else:
+            response = self._show_text_viewer()
+            if not response:
+                self._show_image_viewer(icon='application-x-generic')
+
+    def _show_text_viewer(self):
+        source_buffer = GtkSource.Buffer()
+        source_buffer.set_highlight_syntax(True)
+
+        source_view = GtkSource.View(buffer=source_buffer)
+        source_view.set_editable(False)
+        source_view.set_cursor_visible(True)
+        source_view.set_show_line_numbers(True)
+        source_view.set_show_right_margin(True)
+        source_view.set_right_margin_position(80)
+        source_view.modify_font(_SOURCE_FONT)
+        # source_view.set_highlight_current_line(True) #FIXME: Ugly color
+
+        mime_type = mime.get_for_file(self._file_path)
+
         _logger.debug('Detected mime type: %r', mime_type)
 
         language_manager = GtkSource.LanguageManager.get_default()
@@ -658,10 +683,51 @@ class SourceDisplay(Gtk.ScrolledWindow):
             _logger.debug('Detected language: %r',
                           detected_language.get_name())
 
-        self._buffer.set_language(detected_language)
-        self._buffer.set_text(open(self._file_path, 'r').read())
+        source_buffer.set_language(detected_language)
+        text = open(self._file_path, 'r').read()
+        works = True
+        try:
+            text.encode()
+            source_buffer.set_text(text)
+            self._box.pack_start(source_view, True, True, 0)
+            self._box.show_all()
+        except UnicodeDecodeError:
+            works = False
+
+        return works
 
     def _get_file_path(self):
         return self._file_path
 
     file_path = property(_get_file_path, _set_file_path)
+
+    def _show_image_viewer(self, icon=None, image=False):
+        media_box = Gtk.EventBox()
+        media_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
+
+        if image:
+            image = Gtk.Image()
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
+            image.set_from_pixbuf(pixbuf)
+            media_box.add(image)
+            image.show()
+
+        if icon:
+            h = Gdk.Screen.width() / 3
+            icon = Icon(icon_name=icon, pixel_size=h)
+            media_box.add(icon)
+            icon.show()
+
+        self._box.pack_start(media_box, True, True, 0)
+        self._box.show_all()
+
+    def _show_no_file(self):
+        nofile_label = Gtk.Label()
+        nofile_label.set_text(_("Please select a file in the left panel."))
+
+        nofile_box = Gtk.EventBox()
+        nofile_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
+
+        nofile_box.add(nofile_label)
+        self._box.pack_start(nofile_box, True, True, 0)
+        self._box.show_all()

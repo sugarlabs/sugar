@@ -35,6 +35,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.datastore import datastore
 
 from jarabe.model import bundleregistry
 from jarabe.model import desktop
@@ -91,7 +92,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._icon_column = column
 
         cell_text = Gtk.CellRendererText()
-        cell_text.props.ellipsize = Pango.EllipsizeMode.MIDDLE
+        cell_text.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
         cell_text.props.ellipsize_set = True
 
         column = Gtk.TreeViewColumn()
@@ -133,6 +134,7 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self.set_search_column(self._model.column_title)
         self.set_enable_search(False)
+        self._activity_selected = None
 
     def __erase_activated_cb(self, cell_renderer, bundle_id):
         self.emit('erase-activated', bundle_id)
@@ -185,6 +187,41 @@ class ActivitiesTreeView(Gtk.TreeView):
         if column == self._icon_column:
             self._start_activity(path)
 
+    def get_activities_selected(self):
+        activities = []
+        for row in self.get_model():
+            activities.append(
+                {'name': row[self.get_model().column_activity_name],
+                 'bundle_id': row[self.get_model().column_bundle_id]})
+        return activities
+
+    def run_activity(self, bundle_id, resume_mode):
+        if not resume_mode:
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(bundle_id)
+            misc.launch(bundle)
+            return
+
+        self._activity_selected = bundle_id
+        query = {'activity': bundle_id}
+        properties = ['uid', 'title', 'icon-color', 'activity', 'activity_id',
+                      'mime_type', 'mountpoint']
+        datastore.find(query, sorting=['+timestamp'],
+                       limit=1, properties=properties,
+                       reply_handler=self.__get_last_activity_reply_handler_cb,
+                       error_handler=self.__get_last_activity_error_handler_cb)
+
+    def __get_last_activity_reply_handler_cb(self, entries, total_count):
+        registry = bundleregistry.get_registry()
+        if entries:
+            misc.resume(entries[0], entries[0]['activity'])
+        else:
+            bundle = registry.get_bundle(self._activity_selected)
+            misc.launch(bundle)
+
+    def __get_last_activity_error_handler_cb(self, entries, total_count):
+        pass
+
 
 class ListModel(Gtk.TreeModelSort):
     __gtype_name__ = 'SugarListModel'
@@ -200,8 +237,9 @@ class ListModel(Gtk.TreeModelSort):
         self.column_version_text = self.column_version + 1
         self.column_date = self.column_version_text + 1
         self.column_date_text = self.column_date + 1
+        self.column_activity_name = self.column_date_text + 1
 
-        column_types = [str, str, str, str, str, int, str]
+        column_types = [str, str, str, str, str, int, str, str]
         for i in range(desktop.get_number_of_views()):
             column_types.insert(1, bool)
 
@@ -283,6 +321,7 @@ class ListModel(Gtk.TreeModelSort):
         model_list.append(_('Version %s') % version)
         model_list.append(int(timestamp))
         model_list.append(util.timestamp_to_elapsed_string(timestamp))
+        model_list.append(activity_info.get_name())
         self._model.append(model_list)
 
     def set_visible_func(self, func):
@@ -524,6 +563,12 @@ class ActivitiesList(Gtk.VBox):
             registry = bundleregistry.get_registry()
             bundle = registry.get_bundle(bundle_id)
             registry.uninstall(bundle, delete_profile=True)
+
+    def get_activities_selected(self):
+        return self._tree_view.get_activities_selected()
+
+    def run_activity(self, bundle_id, resume_mode):
+        self._tree_view.run_activity(bundle_id, resume_mode)
 
 
 class ActivityListPalette(ActivityPalette):

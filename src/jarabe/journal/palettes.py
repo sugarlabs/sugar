@@ -24,7 +24,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import GLib
+from gi.repository import SugarExt
 
 from sugar3.graphics import style
 from sugar3.graphics.palette import Palette
@@ -67,9 +67,9 @@ class ObjectPalette(Palette):
         activity_icon.props.xo_color = color
 
         if 'title' in metadata:
-            title = GObject.markup_escape_text(metadata['title'])
+            title = metadata['title']
         else:
-            title = GLib.markup_escape_text(_('Untitled'))
+            title = _('Untitled')
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
@@ -424,10 +424,20 @@ class ClipboardMenu(MenuItem):
                           _('Warning'))
                 return
 
-            clipboard.set_with_data(
-                [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
-                self.__clipboard_get_func_cb,
-                self.__clipboard_clear_func_cb, None)
+            # XXX SL#4307 - until set_with_data bindings are fixed upstream
+            if hasattr(clipboard, 'set_with_data'):
+                clipboard.set_with_data(
+                    [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
+                    self.__clipboard_get_func_cb,
+                    self.__clipboard_clear_func_cb,
+                    None)
+            else:
+                SugarExt.clipboard_set_with_data(
+                    clipboard,
+                    [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
+                    self.__clipboard_get_func_cb,
+                    self.__clipboard_clear_func_cb,
+                    None)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
@@ -524,8 +534,7 @@ class BuddyPalette(Palette):
                           icon_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
-        Palette.__init__(self, primary_text=GLib.markup_escape_text(nick),
-                         icon=buddy_icon)
+        Palette.__init__(self, primary_text=nick, icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.
 

@@ -373,6 +373,14 @@ class FavoritesView(ViewContainer):
 
     def __register_activate_cb(self, icon):
         alert = Alert()
+        alert.props.title = _('Registration')
+        alert.props.msg = _('Please wait, searching for your school server.')
+        self._box.add_alert(alert)
+        GObject.idle_add(self.__register)
+
+    def __register(self):
+        self._box.remove_alert()
+        alert = Alert()
         try:
             schoolserver.register_laptop()
         except RegisterError, e:
@@ -388,6 +396,7 @@ class FavoritesView(ViewContainer):
 
         self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
+        return False
 
     def __register_alert_response_cb(self, alert, response_id):
         self._box.remove_alert()
@@ -560,8 +569,7 @@ class FavoritePalette(ActivityPalette):
                                pixel_size=style.STANDARD_ICON_SIZE)
 
         if journal_entries:
-            title = journal_entries[0]['title']
-            self.props.secondary_text = GLib.markup_escape_text(title)
+            self.props.secondary_text = journal_entries[0]['title']
 
             menu_items = []
             for entry in journal_entries:
@@ -612,6 +620,9 @@ class CurrentActivityIcon(CanvasIcon):
         if self._home_activity is not None:
             self.props.file_name = self._home_activity.get_icon_path()
             self.props.xo_color = self._home_activity.get_icon_color()
+
+            if self._home_activity.is_journal():
+                self.get_window().set_cursor(None)
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 

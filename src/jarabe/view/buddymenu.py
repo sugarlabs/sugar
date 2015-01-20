@@ -21,7 +21,6 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gio
-from gi.repository import GLib
 import dbus
 
 from sugar3.graphics.palette import Palette
@@ -43,9 +42,7 @@ class BuddyMenu(Palette):
                           xo_color=buddy.get_color(),
                           pixel_size=style.STANDARD_ICON_SIZE)
         nick = buddy.get_nick()
-        Palette.__init__(self, None,
-                         primary_text=GLib.markup_escape_text(nick),
-                         icon=buddy_icon)
+        Palette.__init__(self, None, primary_text=nick, icon=buddy_icon)
         self.menu_box = Gtk.VBox()
         self.set_content(self.menu_box)
         self.menu_box.show_all()
@@ -177,7 +174,7 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity_model)
 
     def __buddy_notify_nick_cb(self, buddy, pspec):
-        self.set_primary_text(GLib.markup_escape_text(buddy.props.nick))
+        self.set_primary_text(buddy.props.nick)
 
     def _make_friend_cb(self, menuitem):
         friends.get_model().make_friend(self._buddy)

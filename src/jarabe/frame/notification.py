@@ -101,7 +101,7 @@ class NotificationBox(Gtk.VBox):
 
         summary_label = Gtk.Label()
         summary_label.set_max_width_chars(style.MENU_WIDTH_CHARS)
-        summary_label.set_ellipsize(Pango.EllipsizeMode.END)
+        summary_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         summary_label.set_alignment(0, 0.5)
         summary_label.set_markup('<b>%s</b>' % summary)
         summary_label.show()
@@ -112,7 +112,7 @@ class NotificationBox(Gtk.VBox):
         if hasattr(body_label, 'set_lines'):
             body_label.set_max_width_chars(style.MENU_WIDTH_CHARS)
             body_label.set_line_wrap(True)
-            body_label.set_ellipsize(Pango.EllipsizeMode.END)
+            body_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
             body_label.set_lines(self.LINES)
             body_label.set_justify(Gtk.Justification.FILL)
         else:

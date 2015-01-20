@@ -111,6 +111,8 @@ def setup_view_help(activity):
 
     if url_and_title:
         viewhelp = ViewHelp(url_and_title[1], url_and_title[0], window_xid)
+        activity.push_shell_window(viewhelp)
+        viewhelp.connect('hide', activity.pop_shell_window)
         viewhelp.show()
     else:
         _logger.error('Help content is not available for the activity')
@@ -146,6 +148,8 @@ class ViewHelp(Gtk.Window):
 
         webview = WebKit.WebView()
         webview.set_full_content_zoom(True)
+        webview.connect("resource-request-starting",
+                        self._resource_request_starting_cb)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.add(webview)
@@ -158,6 +162,18 @@ class ViewHelp(Gtk.Window):
         language = self._get_current_language()
         view_file = self._get_help_file(language, help_file)
         webview.load_uri('file://' + view_file)
+
+    def _resource_request_starting_cb(self, webview, web_frame, web_resource,
+                                      request, response):
+        uri = web_resource.get_uri()
+        if uri.find('_images') > -1:
+            if uri.find('/%s/_images/' % self._get_current_language()) > -1:
+                new_uri = uri.replace('/html/%s/_images/' %
+                                      self._get_current_language,
+                                      '/images/')
+            else:
+                new_uri = uri.replace('/html/_images/', '/images/')
+            request.set_uri(new_uri)
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
@@ -185,20 +201,6 @@ class ViewHelp(Gtk.Window):
         if not os.path.isfile(path):
             path = os.path.join(activity_path, 'html', help_file)
 
-        # verify if the images and _static dir exists
-        # Help have only one directory for images and static content,
-        # and need links in other languages directories
-        # the links are created by the Help activity or the viewer
-        # in the first run.
-        html_path = path[:path.rfind('/')]
-        images_path = os.path.join(html_path, '_images')
-        if not os.path.exists(images_path):
-            os.symlink(os.path.join(activity_path, 'images'),
-                       images_path)
-        static_path = os.path.join(html_path, '_static')
-        if not os.path.exists(static_path):
-            os.symlink(os.path.join(activity_path, 'html', '_static'),
-                       static_path)
         return path
 
 

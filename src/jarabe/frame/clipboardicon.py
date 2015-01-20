@@ -19,6 +19,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import SugarExt
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon
@@ -90,10 +91,23 @@ class ClipboardIcon(RadioToolButton):
         targets = self._get_targets()
         if targets:
             x_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-            if not x_clipboard.set_with_data(targets,
-                                             self._clipboard_data_get_cb,
-                                             self._clipboard_clear_cb,
-                                             targets):
+
+            # XXX SL#4307 - until set_with_data bindings are fixed upstream
+            if hasattr(x_clipboard, 'set_with_data'):
+                stored = x_clipboard.set_with_data(
+                    targets,
+                    self._clipboard_data_get_cb,
+                    self._clipboard_clear_cb,
+                    targets)
+            else:
+                stored = SugarExt.clipboard_set_with_data(
+                    x_clipboard,
+                    targets,
+                    self._clipboard_data_get_cb,
+                    self._clipboard_clear_cb,
+                    targets)
+
+            if not stored:
                 logging.error('GtkClipboard.set_with_data failed!')
             else:
                 self.owns_clipboard = True
