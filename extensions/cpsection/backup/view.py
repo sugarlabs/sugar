@@ -227,7 +227,7 @@ class OperationPanel(Gtk.Grid):
             if operation == OPERATION_BACKUP:
                 message = _('Select where you want create your backup')
             if operation == OPERATION_RESTORE:
-                message = _('Select where you want retrive your restore')
+                message = _('Select where you want retrieve your restore')
             combo_options = []
             for backend in self._view.manager.get_backends():
                 option = {}
