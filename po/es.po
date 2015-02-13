@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-20 15:46+0000\n"
-"PO-Revision-Date: 2015-01-20 16:05+0000\n"
-"Last-Translator: Gonzalo <godiard@gmail.com>\n"
+"POT-Creation-Date: 2015-02-12 23:38+0000\n"
+"PO-Revision-Date: 2015-02-13 00:00+0000\n"
+"Last-Translator: Martin <tch@sugarlabs.org>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.5.1.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
-"X-POOTLE-MTIME: 1421769903.000000\n"
+"X-POOTLE-MTIME: 1423785628.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -478,8 +478,8 @@ msgstr "Una descripción del hardware disponible al usuario."
 #: ../data/org.sugarlabs.gschema.xml.h:98 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
-"Este texto es mosttrado en Mis ajustes, en la sección Acerca de mi "
-"computadora"
+"Este texto es mostrado en mis ajustes, en la sección acerca de mi "
+"computadora."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -620,7 +620,7 @@ msgstr "Fecha y hora"
 
 #: ../extensions/cpsection/datetime/model.py:100
 msgid "Error: timezone does not exist."
-msgstr "Error, la zona horaria no existe."
+msgstr "Error: la zona horaria no existe."
 
 #: ../extensions/cpsection/frame/__init__.py:21
 msgid "Frame"
@@ -2342,8 +2342,8 @@ msgid "Select where you want create your backup"
 msgstr "Seleccione donde desea realizar la copia de seguridad"
 
 #: ../extensions/cpsection/backup/view.py:230
-msgid "Select where you want retrive your restore"
-msgstr "Seleccione de donde restaurar  la copia de seguridad"
+msgid "Select where you want retrieve your restore"
+msgstr "Seleccione de donde restaurar la copia de seguridad"
 
 #: ../extensions/cpsection/backup/view.py:270
 msgid "Retry"
@@ -2385,6 +2385,9 @@ msgstr "Restauración realizado con éxito."
 #: ../src/jarabe/frame/notification.py:63
 msgid "Clear notifications"
 msgstr "Limpiar las notificaciones"
+
+#~ msgid "Select where you want retrive your restore"
+#~ msgstr "Seleccione de donde restaurar  la copia de seguridad"
 
 #~ msgid "Gender must be male or female."
 #~ msgstr "El género debe ser masculino o femenino."
