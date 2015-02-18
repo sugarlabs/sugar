@@ -15,7 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-
+import os
 import dbus
 
 
@@ -23,23 +23,26 @@ _HARDWARE_MANAGER_INTERFACE = 'org.freedesktop.ohm.Keystore'
 _HARDWARE_MANAGER_SERVICE = 'org.freedesktop.ohm'
 _HARDWARE_MANAGER_OBJECT_PATH = '/org/freedesktop/ohm/Keystore'
 
-_ohm_service = None
+POWERD_FLAG_DIR = '/etc/powerd/flags'
+
+
+def using_powerd():
+    return os.access(POWERD_FLAG_DIR, os.W_OK)
 
 
 def _get_ohm():
-    global _ohm_service
-    if _ohm_service is None:
-        bus = dbus.SystemBus()
-        proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
-                               _HARDWARE_MANAGER_OBJECT_PATH,
-                               follow_name_owner_changes=True)
-        _ohm_service = dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
-
-    return _ohm_service
+    bus = dbus.SystemBus()
+    proxy = bus.get_object(_HARDWARE_MANAGER_SERVICE,
+                           _HARDWARE_MANAGER_OBJECT_PATH,
+                           follow_name_owner_changes=True)
+    return dbus.Interface(proxy, _HARDWARE_MANAGER_INTERFACE)
 
 
-def set_dcon_freeze(frozen):
+def unfreeze():
+    if not using_powerd():
+        return
+
     try:
-        _get_ohm().SetKey('display.dcon_freeze', frozen)
+        _get_ohm().SetKey('display.dcon_freeze', 0)
     except dbus.DBusException:
-        logging.error('Cannot unfreeze the DCON')
+        pass
