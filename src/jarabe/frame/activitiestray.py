@@ -745,7 +745,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 box.append_item(inner_box, vertical_padding=0)
                 inner_box.show()
 
-                text = _('The other participant canceled the file transfer')
+                text = _('The other participant cancelled the file transfer')
                 label = Gtk.Label(label=text)
                 inner_box.add(label)
                 label.show()
