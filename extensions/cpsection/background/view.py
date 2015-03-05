@@ -122,7 +122,7 @@ class Background(SectionView):
                 pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
                     file_path, style.XLARGE_ICON_SIZE,
                     style.XLARGE_ICON_SIZE)
-            except gi._glib._glib.GError:
+            except GObject.GError:
                 pass
             else:
                 self._store.append([pixbuf, file_path])
