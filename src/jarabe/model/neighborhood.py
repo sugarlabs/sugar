@@ -417,7 +417,7 @@ class _Account(GObject.GObject):
             error_handler=self.__set_current_activity_error_cb)
 
     def __set_current_activity_cb(self):
-        logging.warning('_Account.__set_current_activity_cb')
+        logging.debug('_Account.__set_current_activity_cb')
 
     def __set_current_activity_error_cb(self, error):
         logging.debug('_Account.__set_current_activity__error_cb %r', error)
