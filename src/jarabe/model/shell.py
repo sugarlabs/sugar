@@ -739,7 +739,7 @@ class ShellModel(GObject.GObject):
             del self._launch_timers[activity_id]
 
         timer = GObject.timeout_add_seconds(90, self._check_activity_launched,
-                                    activity_id)
+                                            activity_id)
         self._launch_timers[activity_id] = timer
 
     def notify_launch_failed(self, activity_id):
