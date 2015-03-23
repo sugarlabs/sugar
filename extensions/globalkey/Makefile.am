@@ -5,4 +5,5 @@ sugar_PYTHON = 		\
 	screenshot.py	\
 	speech.py	\
 	viewsource.py	\
-	viewhelp.py
+	viewhelp.py		\
+	viewsocial.py

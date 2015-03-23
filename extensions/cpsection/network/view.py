@@ -41,8 +41,11 @@ class Network(SectionView):
         self.restart_alerts = alerts
         self._jabber_sid = 0
         self._jabber_valid = True
+        self._social_sid = 0
+        self._social_valid = True
         self._radio_valid = True
         self._jabber_change_handler = None
+        self._social_change_handler = None
         self._radio_change_handler = None
         self._wireless_configuration_reset_handler = None
 
@@ -52,6 +55,7 @@ class Network(SectionView):
 
         self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._jabber_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        self._social_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -163,6 +167,31 @@ class Network(SectionView):
         box_mesh.pack_start(box_server, False, True, 0)
         box_server.show()
 
+        box_social = Gtk.VBox()
+        socialserver_info = Gtk.Label(_("The server is where the discussion"
+                                  " forum is hosted. You will be able to lauch"
+                                  " Social Help directly to this forum."))
+        socialserver_info.set_alignment(0, 0)
+        socialserver_info.set_line_wrap(True)
+        box_mesh.pack_start(socialserver_info, False, True, 0)
+        socialserver_info.show()
+
+        box_socialserver = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_socialserver = Gtk.Label(label=_('Social Help Server:'))
+        label_socialserver.set_alignment(1, 0.5)
+        label_socialserver.modify_fg(Gtk.StateType.NORMAL,
+                               style.COLOR_SELECTION_GREY.get_gdk_color())
+        box_socialserver.pack_start(label_socialserver, False, True, 0)
+        group.add_widget(label_socialserver)
+        label_socialserver.show()
+        self._socialserver_entry = Gtk.Entry()
+        self._socialserver_entry.set_alignment(0)
+        self._socialserver_entry.set_size_request(int(Gdk.Screen.width() / 3), -1)
+        box_socialserver.pack_start(self._socialserver_entry, False, True, 0)
+        self._socialserver_entry.show()
+        box_mesh.pack_start(box_socialserver, False, True, 0)
+        box_socialserver.show()
+
         self._jabber_alert = InlineAlert()
         label_jabber_error = Gtk.Label()
         group.add_widget(label_jabber_error)
@@ -175,6 +204,18 @@ class Network(SectionView):
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_alert.show()
 
+        self._social_alert = InlineAlert()
+        label_social_error = Gtk.Label()
+        group.add_widget(label_social_error)
+        self._social_alert_box.pack_start(label_social_error, False, True, 0)
+        label_social_error.show()
+        self._social_alert_box.pack_start(self._social_alert, False, True, 0)
+        box_mesh.pack_end(self._social_alert_box, False, True, 0)
+        self._social_alert_box.show()
+        if 'social' in self.restart_alerts:
+            self._social_alert.props.msg = self.restart_msg
+            self._social_alert.show()
+
         workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
 
@@ -182,9 +223,10 @@ class Network(SectionView):
 
     def setup(self):
         self._entry.set_text(self._model.get_jabber())
+        self._socialserver_entry.set_text(self._model.get_social())
         try:
             radio_state = self._model.get_radio()
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_alert.show()
         else:
@@ -197,6 +239,8 @@ class Network(SectionView):
             'toggled', self.__radio_toggled_cb)
         self._jabber_change_handler = self._entry.connect(
             'changed', self.__jabber_changed_cb)
+        self._social_change_handler = self._socialserver_entry.connect(
+            'changed', self.__social_changed_cb)
         self._wireless_configuration_reset_handler =  \
             self._clear_wireless_button.connect(
                 'clicked', self.__wireless_configuration_reset_cb)
@@ -204,12 +248,14 @@ class Network(SectionView):
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
         self._entry.disconnect(self._jabber_change_handler)
+        self._socialserver_entry.disconnect(self._social_change_handler)
         self._model.undo()
         self._jabber_alert.hide()
+        self._social_alert.hide()
         self._radio_alert.hide()
 
     def _validate(self):
-        if self._jabber_valid and self._radio_valid:
+        if self._jabber_valid and self._radio_valid and self._social_valid:
             self.props.is_valid = True
         else:
             self.props.is_valid = False
@@ -218,7 +264,7 @@ class Network(SectionView):
         radio_state = widget.get_active()
         try:
             self._model.set_radio(radio_state)
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._radio_alert.props.msg = detail
             self._radio_valid = False
         else:
@@ -242,7 +288,7 @@ class Network(SectionView):
             return
         try:
             self._model.set_jabber(widget.get_text())
-        except self._model.ReadError, detail:
+        except self._model.ReadError as detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False
             self._jabber_alert.show()
@@ -250,6 +296,31 @@ class Network(SectionView):
         else:
             self._jabber_valid = True
             self._jabber_alert.hide()
+
+        self._validate()
+        return False
+
+    def __social_changed_cb(self, widget, data=None):
+        if self._social_sid:
+            GObject.source_remove(self._social_sid)
+        self._social_sid = GObject.timeout_add(_APPLY_TIMEOUT,
+                                               self.__social_timeout_cb,
+                                               widget)
+
+    def __social_timeout_cb(self, widget):
+        self._social_sid = 0
+        if widget.get_text() == self._model.get_social:
+            return
+        try:
+            self._model.set_social(widget.get_text())
+        except self._model.ReadError as detail:
+            self._social_alert.props.msg = detail
+            self._social_valid = False
+            self._social_alert.show()
+            self.restart_alerts.append('social')
+        else:
+            self._social_valid = True
+            self._social_alert.hide()
 
         self._validate()
         return False
