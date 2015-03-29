@@ -17,7 +17,6 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
 from gettext import gettext as _
 
 from sugar3.graphics import style
@@ -29,8 +28,6 @@ from jarabe.controlpanel.inlinealert import InlineAlert
 CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
-
-_APPLY_TIMEOUT = 3000
 
 
 class Network(SectionView):
@@ -45,6 +42,7 @@ class Network(SectionView):
         self._jabber_change_handler = None
         self._radio_change_handler = None
         self._wireless_configuration_reset_handler = None
+        self._start_jabber = self._model.get_jabber()
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -181,7 +179,7 @@ class Network(SectionView):
         self.setup()
 
     def setup(self):
-        self._entry.set_text(self._model.get_jabber())
+        self._entry.set_text(self._start_jabber)
         try:
             radio_state = self._model.get_radio()
         except self._model.ReadError, detail:
@@ -195,16 +193,15 @@ class Network(SectionView):
         self.needs_restart = False
         self._radio_change_handler = self._button.connect(
             'toggled', self.__radio_toggled_cb)
-        self._jabber_change_handler = self._entry.connect(
-            'changed', self.__jabber_changed_cb)
         self._wireless_configuration_reset_handler =  \
             self._clear_wireless_button.connect(
                 'clicked', self.__wireless_configuration_reset_cb)
 
+    def apply(self):
+        self.apply_jabber(self._entry.get_text())
+
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
-        self._entry.disconnect(self._jabber_change_handler)
-        self._model.undo()
         self._jabber_alert.hide()
         self._radio_alert.hide()
 
@@ -229,19 +226,11 @@ class Network(SectionView):
         self._validate()
         return False
 
-    def __jabber_changed_cb(self, widget, data=None):
-        if self._jabber_sid:
-            GObject.source_remove(self._jabber_sid)
-        self._jabber_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-                                               self.__jabber_timeout_cb,
-                                               widget)
-
-    def __jabber_timeout_cb(self, widget):
-        self._jabber_sid = 0
-        if widget.get_text() == self._model.get_jabber:
+    def apply_jabber(self, jabber):
+        if jabber == self._model.get_jabber:
             return
         try:
-            self._model.set_jabber(widget.get_text())
+            self._model.set_jabber(jabber)
         except self._model.ReadError, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False

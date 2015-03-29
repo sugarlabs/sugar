@@ -323,6 +323,9 @@ class ControlPanel(Gtk.Window):
         self._show_main_view()
 
     def __accept_clicked_cb(self, widget):
+        if hasattr(self._section_view, "apply"):
+            self._section_view.apply()
+
         if self._section_view.needs_restart:
             self._section_toolbar.accept_button.set_sensitive(False)
             self._section_toolbar.cancel_button.set_sensitive(False)
