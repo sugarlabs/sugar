@@ -7,7 +7,7 @@ DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.6
 Vcs-Git: git://git.debian.org/git/collab-maint/sugar
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/sugar.git
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: sucrose-0.98
