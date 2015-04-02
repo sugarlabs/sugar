@@ -1,83 +1,11 @@
-Building this package for Debian
---------------------------------
+CDBS+git-buildpackage
+---------------------
 
-This source package need no special handling for normal package builds.
+This source package uses CDBS and git-buildpackage.  NMUs need not (but
+are encouraged to) make special use of these tools.  In particular, the
+debian/control.in file can be completely ignored.
 
-
-Developing this package for Debian
-----------------------------------
-
-The source of this package is developed using git and the helper tool
-git-buildpackage, with all official releases tagged and signed and
-binary diffs of tarballs stored using pristine-tar.  This is documented
-below /usr/share/doc/git-buildpackage/manual-html/ .
-
-Upstream development is tracked by fetching upstream Git and importing
-release tags into the "upstream" branch before git-buildpackage imports.
-
-A custom build target shows current upstream and packaging versions:
-
-    debian/rules print-version
-
-Current upstream tarball can be prepared using this other build target:
-
-    debian/rules get-orig-source
-
-To switch to newer upstream source, first add a dummy changelog entry
-and comment out DEB_UPSTREAM_TARBALL_MD5 before getting the source:
-
-    dch -v ${new_upstream_version}-1 "Dummy changelog entry"
-    sed -i -e 's/^\(DEB_UPSTREAM_TARBALL_MD5\b\)/#\1/' debian/rules
-    debian/rules get-orig-source
-
-Store new md5sum to help ensure identical source is received later.
-
-Before injecting a newer upstream tarball, use below commands to sync
-with upstream Git, to adopt upstream commit messages while minimizing
-size of our Git.
-
-    git remote add upstream-repo git://upstream.example.com/project.git
-    git fetch --tags upstream-repo
-    git checkout upstream
-    git merge upstream-release-tag
-    git checkout master
-
-NB! Use first line above only initially - skip it on later updates.
-
-If upstream do not provide tags corresponding to tarball releases then
-use something like the following instead:
-
-    git remote add upstream-repo git://upstream.example.com/project.git
-    git fetch upstream-repo
-    git log --pretty="format:%h %s" upstream-repo/master..upstream
-    git checkout upstream
-    git pull . newest-refspec-older-than-release-from-above-git-log
-    git checkout master
-
-To do a package release from upstream Git snapshot, first look at
-upstream development for a good place to release, and tag by its date,
-replacing "~" with "." to mimic git-buildpackage logic (replace
-timestamp and commit hash below with real ones based on chosen commit).
-
-    git log --abbrev-commit upstream-repo/master
-    git tag -s -m "Upstream snapshot" upstream/0.2.git20080130 61279f8
-    dch -r -v "0.2~git20080130-1" "New upstream Git snapshot."
-
-Setting DEB_MAINTAINER_MODE=1 enables additional build routines helpful
-during development of the package, but unfit for normal builds.  This
-typically includes the CDBS feature of auto-updating debian/control with
-CDBS-related build-dependencies, which is forbidden by Debian Policy as
-build environment must not change during automated builds.
+More info here: http://wiki.debian.org/CDBS+git-buildpackage
 
 
-Maintaining packaging build routines
-------------------------------------
-
-This source package wraps debhelper commands and other tedious parts of
-the build routines using the CDBS framework.  Please refer to the actual
-makefile snippets included from debian/rules for details on their
-purpose and ways to override defaults - or read the CDBS manual at
-in/usr/share/doc/cdbs/cdbs-doc.pdf.gz .
-
-
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 29 Mar 2009 16:02:47 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 18 Feb 2013 12:55:37 +0100
