@@ -6,7 +6,7 @@ Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>, Santi
 DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.6
-Vcs-Git: git://git.debian.org/git/collab-maint/sugar
+Vcs-Git: git://git.debian.org/collab-maint/sugar
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
