@@ -69,8 +69,25 @@ Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
 License: GAP~gettext
 
 Files: debian/*
-Copyright: 2007-2010,2012, Jonas Smedegaard <dr@jones.dk>
-License: GPL-2+
+Copyright: 2007-2010,2012,2015, Jonas Smedegaard <dr@jones.dk>
+License: GPL-3+
+
+License: GPL-3+
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 3 of the License, or (at your
+ option) any later version.
+ .
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ General Public License for more details.
+Comment:
+ On Debian systems the 'GNU General Public License' version 3 is located
+ in '/usr/share/common-licenses/GPL-3'.
+ .
+ You should have received a copy of the 'GNU General Public License'
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 License: GPL-2+
  This program is free software; you can redistribute it and/or modify it
@@ -85,9 +102,6 @@ License: GPL-2+
 Comment:
  On Debian systems the 'GNU General Public License' version 2 is located
  in '/usr/share/common-licenses/GPL-2'.
- .
- You should have received a copy of the 'GNU General Public License'
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 License: LGPL-2.1+
  This program is free software; you can redistribute it and/or modify it
