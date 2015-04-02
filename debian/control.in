@@ -2,7 +2,9 @@ Source: sugar-0.98
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
-Uploaders: Jonas Smedegaard <dr@jones.dk>, Luke Faraone <luke@faraone.cc>, Santiago Ruano Rincón <santiago@debian.org>
+Uploaders: Jonas Smedegaard <dr@jones.dk>,
+ Luke Faraone <luke@faraone.cc>,
+ Santiago Ruano Rincón <santiago@debian.org>
 DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.6
@@ -12,10 +14,12 @@ Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: sucrose-0.98
 Architecture: all
-Depends: ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
 Description: Sugar graphical shell - Sucrose 0.98
@@ -30,10 +34,14 @@ Description: Sugar graphical shell - Sucrose 0.98
 
 Package: sugar-session-0.98
 Architecture: all
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
@@ -48,10 +56,14 @@ Description: Sugar graphical shell - window manager
 
 Package: sugar-emulator-0.98
 Architecture: all
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
@@ -67,10 +79,14 @@ Description: Sugar graphical shell - emulator
 
 Package: sugar-tools-0.98
 Architecture: all
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
@@ -91,10 +107,14 @@ Description: Sugar graphical shell - window manager
 Package: python-jarabe-0.98
 Section: python
 Architecture: all
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, ${cdbs:Depends}
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
 Recommends: ${cdbs:Recommends}
 Suggests: ${cdbs:Suggests}
-Provides: ${python:Provides}, ${cdbs:Provides}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
