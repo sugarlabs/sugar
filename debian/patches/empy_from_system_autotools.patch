@@ -7,7 +7,7 @@ Forwarded: not-needed
 Last-Update: 2009-11-05
 --- a/data/Makefile.in
 +++ b/data/Makefile.in
-@@ -773,11 +773,11 @@
+@@ -808,11 +808,11 @@
  
  
  sugar-72.gtkrc: gtkrc.em

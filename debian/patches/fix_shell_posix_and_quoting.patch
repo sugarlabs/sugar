@@ -1,5 +1,3 @@
-diff --git a/bin/sugar-emulator b/bin/sugar-emulator
-index 308aac7..991593e 100755
 --- a/bin/sugar-emulator
 +++ b/bin/sugar-emulator
 @@ -1,6 +1,6 @@
@@ -10,8 +8,6 @@ index 308aac7..991593e 100755
  	echo Refusing to run as root.
  	exit 3
  fi
-diff --git a/bin/sugar.in b/bin/sugar.in
-index 2df0ab8..33a652f 100644
 --- a/bin/sugar.in
 +++ b/bin/sugar.in
 @@ -1,6 +1,6 @@
@@ -22,7 +18,7 @@ index 2df0ab8..33a652f 100644
  	echo Refusing to run as root.
  	exit 3
  fi
-@@ -60,7 +60,7 @@ export LANG="${LANG:-en_US.utf8}"
+@@ -60,7 +60,7 @@
  export LANGUAGE="${LANGUAGE:-${LANG}}"
  
  # Set Sugar's telepathy accounts directory
@@ -31,7 +27,7 @@ index 2df0ab8..33a652f 100644
  
  # Source language settings and debug definitions
  if [ -f ~/.i18n ]; then
-@@ -71,6 +71,6 @@ if [ -f ~/.sugar/debug ]; then
+@@ -71,6 +71,6 @@
  fi
  
  echo Xcursor.theme: sugar | xrdb -merge
