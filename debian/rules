@@ -16,11 +16,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# These need to be declared/run before CDBS includes
 pkgbranch = $(lastword $(subst -,$(space),$(DEB_SOURCE_PACKAGE)))
-
 DEB_BUILDDIR = build
 DEB_PYTHON2_MODULE_PACKAGES = python-jarabe-$(pkgbranch)
 DEB_PYTHON2_MODULE_PACKAGES += $(foreach pkg,session emulator tools,sugar-$(pkg)-$(pkgbranch))
+debian/control:: debian/control.in
+DEB_PHONY_RULES += debian/control.in
+debian/control.in::
+	sed -e 's/__BRANCH__/$(pkgbranch)/g' <debian/control.in.in >debian/control.in
+
 include /usr/share/cdbs/1/rules/upstream-tarball.mk
 include /usr/share/cdbs/1/rules/utils.mk
 include /usr/share/cdbs/1/class/python-autotools.mk
@@ -38,7 +43,7 @@ DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
 
 # Generate (and cleanup) files containing variables static per build
-infiles = $(filter-out debian/control.in, $(wildcard debian/*.in))
+infiles = $(filter-out debian/control.in%, $(wildcard debian/*.in))
 outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
 DEB_PHONY_RULES += $(outfiles)
 pre-build:: $(outfiles)

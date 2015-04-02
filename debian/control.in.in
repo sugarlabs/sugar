@@ -1,0 +1,133 @@
+Source: sugar-__BRANCH__
+Section: x11
+Priority: optional
+Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
+Uploaders: Jonas Smedegaard <dr@jones.dk>,
+ Luke Faraone <luke@faraone.cc>,
+ Santiago Ruano Rincón <santiago@debian.org>
+DM-Upload-Allowed: yes
+Build-Depends: @cdbs@
+Standards-Version: 3.9.6
+Vcs-Git: git://git.debian.org/collab-maint/sugar
+Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
+Homepage: http://wiki.sugarlabs.org/go/Sugar
+
+Package: sucrose-__BRANCH__
+Architecture: all
+Depends: ${cdbs:Depends},
+ ${misc:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar graphical shell - Sucrose __BRANCH__
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package depends on all packages which make up Sucrose, the
+ official base Sugar environment.
+
+Package: sugar-session-__BRANCH__
+Architecture: all
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Breaks: ${cdbs:Breaks}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar graphical shell - window manager
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package contains the integrated session and window manager Sugar.
+
+Package: sugar-emulator-__BRANCH__
+Architecture: all
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Breaks: ${cdbs:Breaks}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar graphical shell - emulator
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package contains a wrapper script to run Sugar in a Xephyr window,
+ making it possible to run it from inside another Desktop environment.
+
+Package: sugar-tools-__BRANCH__
+Architecture: all
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Breaks: ${cdbs:Breaks}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar graphical shell - window manager
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package contains the following helper utilities for Sugar:
+  - sugar-activity
+  - sugar-control-panel
+  - sugar-install-bundle
+  - sugar-launch
+  - sugar-ui-check
+
+Package: python-jarabe-__BRANCH__
+Section: python
+Architecture: all
+Depends: ${cdbs:Depends},
+ ${misc:Depends},
+ ${python:Depends},
+ ${shlibs:Depends}
+Recommends: ${cdbs:Recommends}
+Suggests: ${cdbs:Suggests}
+Provides: ${cdbs:Provides},
+ ${python:Provides}
+Breaks: ${cdbs:Breaks}
+Conflicts: ${cdbs:Conflicts}
+Replaces: ${cdbs:Replaces}
+Description: Sugar graphical shell - library
+ Sugar is a graphical user interface aimed at children.
+ .
+ Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
+ Sugar has since grown into a more widely usable low-ressource desktop
+ environment for kids.
+ .
+ This package contains Jarabe, the Sugar Graphical "Shell" Interface
+ providing the shell-level operations for Sugar.  It interacts heavily
+ with the Sugar UI libraries.
+ .
+ This is a "graphical" shell, the name does not refer to a command-line
+ "shell" interface.
