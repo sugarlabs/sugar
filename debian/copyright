@@ -4,7 +4,7 @@ Upstream-Contact: Sugarlabs <sugar-devel@lists.sugarlabs.org>
  http://lists.sugarlabs.org/listinfo/sugar-devel
  irc://irc.freenode.net/sugar
 Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar
- git://git.sugarlabs.org/sugar/mainline.git
+ git://github.com/sugarlabs/sugar
 
 Files: *
 Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
