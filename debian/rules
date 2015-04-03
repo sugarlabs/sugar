@@ -117,15 +117,15 @@ jarabe_cp_cli_exec = x11-xserver-utils, lsb-release, ethtool, tzdata
 jarabe_audio = alsa-utils
 jarabe_fs = xdg-user-dirs
 tools_debug = gdb
-CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar3, sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-gstreamer-1.0, python-cairo
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch), x11-xserver-utils
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
-CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
+CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
+CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0
