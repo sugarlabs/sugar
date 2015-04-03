@@ -30,12 +30,12 @@ Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
 License: GPL-2+
 
 Files: */Makefile.in
-Copyright: 1994-2008, Free Software Foundation, Inc.
+Copyright: 1994-2012, Free Software Foundation, Inc.
 License: GAP~Makefile.in
 
 Files: missing
  py-compile
-Copyright: 1996-1997, 1999-2006, 2008-2009, Free Software Foundation, Inc.
+Copyright: 1996-2012, Free Software Foundation, Inc.
 License: GPL-2+ with Autoconf exception
  As a special exception to the GNU General Public License, if you
  distribute this file as part of a program that contains a
@@ -43,7 +43,7 @@ License: GPL-2+ with Autoconf exception
  the same distribution terms that you use for the rest of that program.
 
 Files: aclocal.m4
-Copyright: 1995-2009, Free Software Foundation, Inc
+Copyright: 1996-2012, Free Software Foundation, Inc
   2001-2004, Red Hat, Inc
 License: GAP
 
@@ -56,7 +56,7 @@ Copyright: 1994, X Consortium
 License: X11
 
 Files: configure
-Copyright: 1992-1996, 1998-2009, Free Software Foundation, Inc.
+Copyright: 1992-1996, 1998-2012, Free Software Foundation, Inc.
 License: GAP~configure
 
 Files: po/Makefile.in.in
