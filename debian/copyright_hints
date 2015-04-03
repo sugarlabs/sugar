@@ -40,6 +40,7 @@ Files: AUTHORS
  debian/compat
  debian/control
  debian/control.in
+ debian/control.in.in
  debian/gbp.conf
  debian/patches/empy_from_system.patch
  debian/patches/empy_from_system_autotools.patch
@@ -398,11 +399,7 @@ Files: COPYING
  data/GPLv2
 Copyright: 1989, 1991 Free Software Foundation, Inc.
   <year> <name of author>
-  HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-  HOLDERS AND/OR OTHER PARTIES
   disclaimer" for the program, if
-  holder saying it may be distributed
-  holder who places the Program under this License
   interest in the program
   law:
   the software, and
@@ -472,11 +469,6 @@ Copyright: 1995-2002, Free Software Foundation, Inc
   2004, Scott James Remnant <scott@netsplit.com>
   2004-2012, Free Software Foundation, Inc
   2006-2012, Free Software Foundation, Inc
-License: GPL-2+
- FIXME
-
-Files: debian/rules
-Copyright: 2007-2010, 2012 Jonas Smedegaard <dr@jones.dk>
 License: GPL-2+
  FIXME
 
@@ -593,6 +585,11 @@ Copyright: 2010, Walter Bender, Sugar Labs
 License: GPL-2+
  FIXME
 
+Files: debian/rules
+Copyright: 2007-2010, 2012, 2015, Jonas Smedegaard <dr@jones.dk>
+License: GPL-3+
+ FIXME
+
 Files: src/jarabe/util/telepathy/connection_watcher.py
 Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
@@ -642,36 +639,6 @@ Files: po/cs.po
 Copyright: Jm√no"
   YEAR THE PACKAGE'S HOLDER
   povolen√≠:"
-License: UNKNOWN
- FIXME
-
-Files: po/fr.po
-Copyright: 2007, the Package Owner
-  Personnel (PIN) :"
-  [ args ...
-  afficher les informations sur cette cl√ \n"
-  correspondante"
-  de chiffrement sans fil est requise pour\n"
-  de d√verrouillage personnelle (PUK) du r√seau GSM "
-  depuis %s"
-  d√finir la valeur actuelle de cette cl√ \n"
-  et apportent de nouvelles fonctionnalit√s."
-  et licence"
-  incorrect. Utiliser 0/1."
-  je ne parle pas '%s'."
-  la d√connexion."
-  le transfert du fichier"
-  obtenir la valeur actuelle associ√e √† cette cl√ \n"
-  pour d√marrer l'entr√e"
-  pour reprendre l'entr√e"
-  retir√."
-  sans fil :"
-  supprim√e ou a disparu."
-  sur le serveur de l'√cole."
-  tactile"
-  trouv√es : %s module: %r"
-  une erreur inattendue."
-  √† le modifier et/ou √† en distribuer des copies "
 License: UNKNOWN
  FIXME
 
@@ -802,6 +769,19 @@ License: UNKNOWN
 
 Files: po/ig.po
 Copyright: YEAR THE PACKAGE'S HOLDER, 2006
+License: UNKNOWN
+ FIXME
+
+Files: po/fr.po
+Copyright: 2007, the Package Owner
+  [ args ...
+  incorrect. Utiliser marche/arr√™t."
+  logicielle"
+  sans fil :"
+  supprim√e ou a disparu."
+  sur le serveur de l'√cole."
+  tactile"
+  √† le modifier et/ou √† en distribuer des copies "
 License: UNKNOWN
  FIXME
 

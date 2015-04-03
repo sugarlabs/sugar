@@ -98,11 +98,9 @@ Description: Sugar graphical shell - window manager
  environment for kids.
  .
  This package contains the following helper utilities for Sugar:
-  - sugar-activity
   - sugar-control-panel
   - sugar-install-bundle
   - sugar-launch
-  - sugar-ui-check
 
 Package: python-jarabe-0.98
 Section: python
