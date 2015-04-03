@@ -10,13 +10,13 @@ Files: *
 Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
   2006-2007, Owen Williams
   2006-2008, Red Hat, Inc
-  2006-2012, One Laptop Per Child Association Inc
+  2006-2013, One Laptop Per Child Association Inc
   2007, Eduardo Silva <edsiper@gmail.com>
   2008-2009, Tomeu Vizoso
   2008, Benjamin Berg <benjamin@sipsolutions.net>
   2008, Martin Dengler
   2008, Red Hat, Inc
-  2009-2010, Sugar Labs
+  2009-2013, Sugar Labs
   2009-2011, Walter Bender
   2009, Aleksey Lim
   2009, James Zaki
@@ -27,6 +27,7 @@ Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
   2010, Daniel Castelo
   2010, Plan Ceibal
   2010, Software for Education, Entertainment and Training
+  2011, Raul Gutierrez Segales
 License: GPL-2+
 
 Files: */Makefile.in
