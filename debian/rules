@@ -189,3 +189,10 @@ CDBS_REPLACES_python-jarabe-$(pkgbranch) += , sugar-journal-activity
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS += , python-empy
+
+# Ensure proper hash-bang in Python script (Python Policy 0.9 §3.1)
+#  * cdbs_expand_pythonruntime only in cdbs 0.5, but fallback is sensible
+binary-fixup/sugar-session-$(pkgbranch)::
+	egrep -r -l -Z '^#! ?/usr/bin/(env )?python[[:print:]]*$$' \
+		debian/$(cdbs_curpkg)/usr/bin/* \
+		| xargs -r -0 perl -pi -e 's,^#! ?/usr/bin/(env )?python[[:print:]]*$$,#!/usr/bin/python$(cdbs_expand_pythonruntime),'
