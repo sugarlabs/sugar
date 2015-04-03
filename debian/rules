@@ -79,9 +79,6 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,browse chat 
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
-#  * python-wnck needed by python-jarabe (several places) and commands
-#    sugar-ui-check and sugar-session. Fallback unneeded since
-#    python-wnck 2.24.0-2: can be dropped after Squeeze+1
 #  * python-telepathy versioning needed for use of
 #    CONNECTION_INTERFACE_REQUESTS ABI
 #  * python-gst0.10 and gstreamer0.10-espeak needed in
@@ -121,7 +118,7 @@ jarabe_fs = xdg-user-dirs
 tools_debug = gdb
 CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-wnck-3.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch), x11-xserver-utils
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
@@ -129,7 +126,7 @@ CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, python-hippocanvas, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, python-gtksourceview2, python-xapian, python-gst0.10
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
@@ -137,7 +134,7 @@ CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , python-xklavier
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec)
 CDBS_RECOMMENDS_sugar-emulator-$(pkgbranch) += , $(emulator_exec_try)
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
-CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , python-wnck | python-gnome2-desktop (<= 2.24.0-1)
+CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , gir1.2-wnck-3.0
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exec), dbus
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_audio), $(jarabe_fs)
