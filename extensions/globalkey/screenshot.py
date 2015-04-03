@@ -18,14 +18,17 @@
 import os
 import tempfile
 from gettext import gettext as _
+import StringIO
+import cairo
 
-import gtk
-import gconf
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GConf
 import dbus
 
-from sugar.datastore import datastore
-from sugar.graphics import style
-from sugar import env
+from sugar3.datastore import datastore
+from sugar3.graphics import style
+from sugar3 import env
 from jarabe.model import shell
 
 BOUND_KEYS = ['<alt>1', 'Print']
@@ -36,18 +39,18 @@ def handle_key_press(key):
     fd, file_path = tempfile.mkstemp(dir=tmp_dir)
     os.close(fd)
 
-    window = gtk.gdk.get_default_root_window()
-    width, height = window.get_size()
-    x_orig, y_orig = window.get_origin()
+    window = Gdk.get_default_root_window()
+    width, height = window.get_width(), window.get_height()
 
-    screenshot = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, has_alpha=False,
-                                    bits_per_sample=8, width=width,
-                                    height=height)
-    screenshot.get_from_drawable(window, window.get_colormap(), x_orig,
-                                    y_orig, 0, 0, width, height)
-    screenshot.save(file_path, 'png')
+    screenshot_surface = Gdk.Window.create_similar_surface(
+        window, cairo.CONTENT_COLOR, width, height)
 
-    client = gconf.client_get_default()
+    cr = cairo.Context(screenshot_surface)
+    Gdk.cairo_set_source_window(cr, window, 0, 0)
+    cr.paint()
+    screenshot_surface.write_to_png(file_path)
+
+    client = GConf.Client.get_default()
     color = client.get_string('/desktop/sugar/user/color')
 
     content_title = None
@@ -78,7 +81,7 @@ def handle_key_press(key):
         jobject.metadata['title'] = title
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
-        jobject.metadata['preview'] = _get_preview_data(screenshot)
+        jobject.metadata['preview'] = _get_preview_data(screenshot_surface)
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = 'image/png'
         jobject.file_path = file_path
@@ -88,14 +91,31 @@ def handle_key_press(key):
         del jobject
 
 
-def _get_preview_data(screenshot):
-    preview = screenshot.scale_simple(style.zoom(300), style.zoom(225),
-                                      gtk.gdk.INTERP_BILINEAR)
-    preview_data = []
+def _get_preview_data(screenshot_surface):
+    screenshot_width = screenshot_surface.get_width()
+    screenshot_height = screenshot_surface.get_height()
 
-    def save_func(buf, data):
-        data.append(buf)
+    preview_width, preview_height = style.zoom(300), style.zoom(225)
+    preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                         preview_width, preview_height)
+    cr = cairo.Context(preview_surface)
 
-    preview.save_to_callback(save_func, 'png', user_data=preview_data)
+    scale_w = preview_width * 1.0 / screenshot_width
+    scale_h = preview_height * 1.0 / screenshot_height
+    scale = min(scale_w, scale_h)
 
-    return dbus.ByteArray(''.join(preview_data))
+    translate_x = int((preview_width - (screenshot_width * scale)) / 2)
+    translate_y = int((preview_height - (screenshot_height * scale)) / 2)
+
+    cr.translate(translate_x, translate_y)
+    cr.scale(scale, scale)
+
+    cr.set_source_rgba(1, 1, 1, 0)
+    cr.set_operator(cairo.OPERATOR_SOURCE)
+    cr.paint()
+    cr.set_source_surface(screenshot_surface)
+    cr.paint()
+
+    preview_str = StringIO.StringIO()
+    preview_surface.write_to_png(preview_str)
+    return dbus.ByteArray(preview_str.getvalue())

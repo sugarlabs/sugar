@@ -22,23 +22,25 @@ import sys
 import logging
 from gettext import gettext as _
 
-import gobject
-import pango
-import gtk
-import gtksourceview2
+from gi.repository import GObject
+from gi.repository import Pango
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkX11
+from gi.repository import GtkSource
 import dbus
-import gconf
+from gi.repository import GConf
 
-from sugar.graphics import style
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.toolbutton import ToolButton
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.bundle.activitybundle import ActivityBundle
-from sugar.datastore import datastore
-from sugar.env import get_user_activities_path
-from sugar import mime
+from sugar3.graphics import style
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.datastore import datastore
+from sugar3.env import get_user_activities_path
+from sugar3 import mime
 
 from jarabe.view import customizebundle
 
@@ -46,7 +48,7 @@ _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
                        '.xo', '.tar', '.bz2', '.zip', '.gz')
 _EXCLUDE_NAMES = ['.deps', '.libs']
 
-_SOURCE_FONT = pango.FontDescription('Monospace %d' % style.FONT_SIZE)
+_SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
@@ -107,22 +109,23 @@ def setup_view_source(activity):
     view_source.show()
 
 
-class ViewSource(gtk.Window):
+class ViewSource(Gtk.Window):
     __gtype_name__ = 'SugarViewSource'
 
     def __init__(self, window_xid, bundle_path, document_path,
                  sugar_toolkit_path, title):
-        gtk.Window.__init__(self)
+        Gtk.Window.__init__(self)
 
         _logger.debug('ViewSource paths: %r %r %r', bundle_path,
                       document_path, sugar_toolkit_path)
 
         self.set_decorated(False)
-        self.set_position(gtk.WIN_POS_CENTER_ALWAYS)
+        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)
+        self.set_has_resize_grip(False)
 
-        width = gtk.gdk.screen_width() - style.GRID_CELL_SIZE * 2
-        height = gtk.gdk.screen_height() - style.GRID_CELL_SIZE * 2
+        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
+        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
         self.set_size_request(width, height)
 
         self._parent_window_xid = window_xid
@@ -132,19 +135,19 @@ class ViewSource(gtk.Window):
         self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        vbox = gtk.VBox()
+        vbox = Gtk.VBox()
         self.add(vbox)
         vbox.show()
 
         toolbar = Toolbar(title, bundle_path, document_path,
                           sugar_toolkit_path)
-        vbox.pack_start(toolbar, expand=False)
+        vbox.pack_start(toolbar, False, True, 0)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
         toolbar.show()
 
-        pane = gtk.HPaned()
-        vbox.pack_start(pane)
+        pane = Gtk.HPaned()
+        vbox.pack_start(pane, True, True, 0)
         pane.show()
 
         self._selected_bundle_file = None
@@ -162,7 +165,7 @@ class ViewSource(gtk.Window):
 
         # Split the tree pane into two vertical panes, one of which
         # will be hidden
-        tree_panes = gtk.VPaned()
+        tree_panes = Gtk.VPaned()
         tree_panes.show()
 
         self._bundle_source_viewer = FileViewer(bundle_path, file_name)
@@ -190,18 +193,21 @@ class ViewSource(gtk.Window):
             self._select_source(document_path)
 
     def _calculate_char_width(self, char_count):
-        widget = gtk.Label('')
+        widget = Gtk.Label(label='')
         context = widget.get_pango_context()
         pango_font = context.load_font(_SOURCE_FONT)
         metrics = pango_font.get_metrics()
-        return pango.PIXELS(metrics.get_approximate_char_width()) * char_count
+        return Pango.PIXELS(metrics.get_approximate_char_width()) * char_count
 
     def __realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        self.window.set_accept_focus(True)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+        window = self.get_window()
+        window.set_accept_focus(True)
 
-        parent = gtk.gdk.window_foreign_new(self._parent_window_xid)
-        self.window.set_transient_for(parent)
+        display = Gdk.Display.get_default()
+        parent = GdkX11.X11Window.foreign_new_for_display( \
+            display, self._parent_window_xid)
+        window.set_transient_for(parent)
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
@@ -235,7 +241,7 @@ class ViewSource(gtk.Window):
             os.unlink(document_path)
 
     def __key_press_event_cb(self, window, event):
-        keyname = gtk.gdk.keyval_name(event.keyval)
+        keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
             self.destroy()
 
@@ -262,10 +268,10 @@ class DocumentButton(RadioToolButton):
 
         self.props.tooltip = _('Instance Source')
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = client.get_string('/desktop/sugar/user/color')
         icon = Icon(file=file_name,
-                    icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                    icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                     xo_color=XoColor(self._color))
         self.set_icon_widget(icon)
         icon.show()
@@ -273,13 +279,13 @@ class DocumentButton(RadioToolButton):
         if bundle:
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate',
-                        icon_size=gtk.ICON_SIZE_MENU,
+                        icon_size=Gtk.IconSize.MENU,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__copy_to_home_cb)
         else:
             menu_item = MenuItem(_('Keep'))
             icon = Icon(icon_name='document-save',
-                        icon_size=gtk.ICON_SIZE_MENU,
+                        icon_size=Gtk.IconSize.MENU,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
@@ -331,17 +337,17 @@ class DocumentButton(RadioToolButton):
         self._jobject.destroy()
 
 
-class Toolbar(gtk.Toolbar):
+class Toolbar(Gtk.Toolbar):
     __gtype_name__ = 'SugarViewSourceToolbar'
 
     __gsignals__ = {
-        'stop-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, ([])),
-        'source-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'stop-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'source-selected': (GObject.SignalFlags.RUN_FIRST, None,
                             ([str])),
     }
 
     def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
-        gtk.Toolbar.__init__(self)
+        Gtk.Toolbar.__init__(self)
 
         document_button = None
         self.bundle_path = bundle_path
@@ -364,7 +370,7 @@ class Toolbar(gtk.Toolbar):
             activity_button = DocumentButton(file_name, bundle_path, title,
                                              bundle=True)
             icon = Icon(file=file_name,
-                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
@@ -381,7 +387,7 @@ class Toolbar(gtk.Toolbar):
         if sugar_toolkit_path is not None:
             sugar_button = RadioToolButton()
             icon = Icon(icon_name='computer-xo',
-                        icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR,
+                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             sugar_button.set_icon_widget(icon)
@@ -399,7 +405,7 @@ class Toolbar(gtk.Toolbar):
 
         self.activity_title_text = _('View source: %s') % title
         self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
-        self.label = gtk.Label()
+        self.label = Gtk.Label()
         self.label.set_markup('<b>%s</b>' % self.activity_title_text)
         self.label.set_alignment(0, 0.5)
         self._add_widget(self.label)
@@ -413,7 +419,7 @@ class Toolbar(gtk.Toolbar):
         stop.show()
 
     def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         if expand:
             separator.set_expand(True)
@@ -423,7 +429,7 @@ class Toolbar(gtk.Toolbar):
         separator.show()
 
     def _add_widget(self, widget, expand=False):
-        tool_item = gtk.ToolItem()
+        tool_item = Gtk.ToolItem()
         tool_item.set_expand(expand)
 
         tool_item.add(widget)
@@ -444,26 +450,27 @@ class Toolbar(gtk.Toolbar):
             self.label.set_markup('<b>%s</b>' % self.activity_title_text)
 
 
-class FileViewer(gtk.ScrolledWindow):
+class FileViewer(Gtk.ScrolledWindow):
     __gtype_name__ = 'SugarFileViewer'
 
     __gsignals__ = {
-        'file-selected': (gobject.SIGNAL_RUN_FIRST,
-                           gobject.TYPE_NONE,
+        'file-selected': (GObject.SignalFlags.RUN_FIRST,
+                           None,
                            ([str])),
     }
 
     def __init__(self, path, initial_filename):
-        gtk.ScrolledWindow.__init__(self)
+        Gtk.ScrolledWindow.__init__(self)
 
-        self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
-        self.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
+        self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
+        self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.set_size_request(style.GRID_CELL_SIZE * 3, -1)
 
         self._path = None
         self._initial_filename = initial_filename
 
-        self._tree_view = gtk.TreeView()
+        self._tree_view = Gtk.TreeView()
+        self._tree_view.connect('cursor-changed', self.__cursor_changed_cb)
         self.add(self._tree_view)
         self._tree_view.show()
 
@@ -471,8 +478,8 @@ class FileViewer(gtk.ScrolledWindow):
         selection = self._tree_view.get_selection()
         selection.connect('changed', self.__selection_changed_cb)
 
-        cell = gtk.CellRendererText()
-        column = gtk.TreeViewColumn()
+        cell = Gtk.CellRendererText()
+        column = Gtk.TreeViewColumn()
         column.pack_start(cell, True)
         column.add_attribute(cell, 'text', 0)
         self._tree_view.append_column(column)
@@ -486,7 +493,7 @@ class FileViewer(gtk.ScrolledWindow):
             return
 
         self._path = path
-        self._tree_view.set_model(gtk.TreeStore(str, str))
+        self._tree_view.set_model(Gtk.TreeStore(str, str))
         self._model = self._tree_view.get_model()
         self._add_dir_to_model(path)
 
@@ -513,20 +520,33 @@ class FileViewer(gtk.ScrolledWindow):
             file_path = model.get_value(tree_iter, 1)
         self.emit('file-selected', file_path)
 
+    def __cursor_changed_cb(self, treeview):
+        selection = treeview.get_selection()
+        store, iter_ = selection.get_selected()
+        if iter_ is None:
+            # Nothing selected. This happens at startup
+            return
+        if store.iter_has_child(iter_):
+            path = store.get_path(iter_)
+            if treeview.row_expanded(path):
+                treeview.collapse_row(path)
+            else:
+                treeview.expand_row(path, False)
 
-class SourceDisplay(gtk.ScrolledWindow):
+
+class SourceDisplay(Gtk.ScrolledWindow):
     __gtype_name__ = 'SugarSourceDisplay'
 
     def __init__(self):
-        gtk.ScrolledWindow.__init__(self)
+        Gtk.ScrolledWindow.__init__(self)
 
-        self.props.hscrollbar_policy = gtk.POLICY_AUTOMATIC
-        self.props.vscrollbar_policy = gtk.POLICY_AUTOMATIC
+        self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
+        self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
 
-        self._buffer = gtksourceview2.Buffer()
+        self._buffer = GtkSource.Buffer()
         self._buffer.set_highlight_syntax(True)
 
-        self._source_view = gtksourceview2.View(self._buffer)
+        self._source_view = GtkSource.View(buffer=self._buffer)
         self._source_view.set_editable(False)
         self._source_view.set_cursor_visible(True)
         self._source_view.set_show_line_numbers(True)
@@ -549,7 +569,7 @@ class SourceDisplay(gtk.ScrolledWindow):
         mime_type = mime.get_for_file(self._file_path)
         _logger.debug('Detected mime type: %r', mime_type)
 
-        language_manager = gtksourceview2.language_manager_get_default()
+        language_manager = GtkSource.LanguageManager.get_default()
         detected_language = None
         for language_id in language_manager.get_language_ids():
             language = language_manager.get_language(language_id)

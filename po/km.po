@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 21:17+0200\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-06-20 17:12+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: km\n"
@@ -33,7 +33,7 @@ msgstr ""
 #: ../extensions/cpsection/aboutme/model.py:78
 #, python-format
 msgid "stroke:   %s"
-msgstr ""
+msgstr "គូស៖  %s"
 
 #: ../extensions/cpsection/aboutme/model.py:80
 #, python-format
@@ -43,7 +43,7 @@ msgstr ""
 #: ../extensions/cpsection/aboutme/model.py:82
 #, python-format
 msgid "fill:     %s"
-msgstr ""
+msgstr "លាបពេញ៖  %s"
 
 #: ../extensions/cpsection/aboutme/model.py:94
 msgid "Error in specified color modifiers."
@@ -121,7 +121,7 @@ msgstr "ថ្ងៃនិងម៉ោង"
 msgid "Error timezone does not exist."
 msgstr "មានបញ្ហា ។ ដំបន់​ម៉ោង​នេះ​អត់​មាន​ទេ"
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "ម៉ោងប្រចំតំបន់"
 
@@ -170,7 +170,7 @@ msgstr "ម៉ូដែល​ក្ដារចុច"
 
 #: ../extensions/cpsection/keyboard/view.py:250
 msgid "Key(s) to change layout"
-msgstr ""
+msgstr "កន្លែងចុចសម្រាប់ប្ដូររបៀបរៀប"
 
 #: ../extensions/cpsection/keyboard/view.py:319
 msgid "Keyboard Layout(s)"
@@ -200,6 +200,8 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
+"បន្ថែមភាសានានាតាមរបៀបដែលអ្នកចូលចិត្ត បេីការបកប្រែមួយគ្មានទេ "
+"នោះភាសាបន្ទាប់នឹងត្រូវប្រេីជំវិញ"
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
@@ -210,6 +212,8 @@ msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
 msgstr ""
+"អ្នកត្រូវផ្ដល់នូវព័ត៌មានទាំងអស់នេះដេីមបីឲអ្នកអាចទាក់ទងនឹងបណ្ដាញឥតខ្សែ (3G) "
+"បាន"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:77
 msgid "Username:"
@@ -225,11 +229,11 @@ msgstr "លេខ"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:95
 msgid "Access Point Name (APN):"
-msgstr ""
+msgstr "នាមនៃកន្លែងចូលទាក់ទង (APN) ៖"
 
 #: ../extensions/cpsection/modemconfiguration/view.py:101
 msgid "Personal Identity Number (PIN):"
-msgstr ""
+msgstr "លេខសំគាល់ខ្លួន (PIN) ៖"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:29
@@ -247,7 +251,7 @@ msgstr "មាន​បញ្ហានៅ​ក្នុង​វិទ្យុ
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
 msgstr ""
-"​មាន​​បញ្ហា​នៅ​​ក្នុង​ការ​កំណត់​​នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
+"មាន​​បញ្ហា​នៅ​​ក្នុង​ការ​កំណត់​​នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
 
 #: ../extensions/cpsection/network/view.py:61
 msgid "Wireless"
@@ -297,26 +301,13 @@ msgstr ""
 "កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ស្វ័យប្រវត្ត pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ "
 "បិត/បើក"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr ""
-"កំហុស​នៅ​ក្នុង​ប្រព័ន្ធ​ឆ្លាស់ pm នៃ​ភាព​មិន​ត្រូវ​គ្នា​ដល់​ការ​ប្រើ បិត/បើក"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "ការគ្រប់គ្រងថាមពល"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "ការ​គ្រប់គ្រង​ថាមពល​ស្វ័យប្រវត្ត (ដើម្បី​ប្រើប្រាស់​ថ្ម​បាន​យូរ)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-#, fuzzy
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"ការគ្រប់គ្រង​ថាមពល​ឆ្លាស់ (ផ្ដាច់​ប្រព័ន្ធ​វិទ្យុ​ឥត​ខ្សែ "
-"ដើម្បី​​ប្រើប្រាស់​​ថ្ម​​បាន​​យូរ)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -354,7 +345,7 @@ msgstr "ប្រព័ន្ធ​របស់​អ្នក​ទាន់ស
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
+msgstr[0] "អ្នកអាចដំឡេីងប្រូក្រាមដែលទាន់សម័យ %s បាន"
 
 #: ../extensions/cpsection/updater/view.py:159
 msgid "Checking for updates..."
@@ -368,11 +359,11 @@ msgstr "ដំឡើង​បច្ចុប្បន្នភាព"
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] ""
+msgstr[0] "ប្រូក្រាមដែលទាន់សម័យ %s បានដំឡេីងហេីយ"
 
 #: ../extensions/cpsection/updater/view.py:255
 msgid "Install selected"
-msgstr ""
+msgstr "ដំឡេីងប្រូក្រាមដែលបានជ្រេីសរេីស"
 
 #: ../extensions/cpsection/updater/view.py:276
 #, python-format
@@ -382,7 +373,7 @@ msgstr "ទំហំ​ទាញយក ៖ %s"
 #: ../extensions/cpsection/updater/view.py:364
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
-msgstr ""
+msgstr "ពីកំណែ %(current)s ទៅជា %(new)s (ទំហំ ៖ %(size)s)"
 
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:382
@@ -469,7 +460,7 @@ msgstr "ត​ភ្ជាប់​ហើយ"
 
 #: ../extensions/deviceicon/network.py:119
 msgid "No wireless connection"
-msgstr ""
+msgstr "គ្មានការទាក់ទងឥតខ្សែទេ"
 
 #: ../extensions/deviceicon/network.py:133
 msgid "Channel"
@@ -485,7 +476,7 @@ msgstr "ល្បឿន"
 
 #: ../extensions/deviceicon/network.py:202
 msgid "Wireless modem"
-msgstr ""
+msgstr "ឧបករណ៍ភ្ជាប់ប្រព័ន្ធកុំព្យូទ័រឥតខ្សែ"
 
 #: ../extensions/deviceicon/network.py:270
 msgid "Please wait..."
@@ -513,7 +504,7 @@ msgstr "បោះបង់"
 
 #: ../extensions/deviceicon/network.py:322
 msgid "Try connection again"
-msgstr ""
+msgstr "សាកល្បងភ្ជាប់ម្ដងទៀត"
 
 #: ../extensions/deviceicon/network.py:325
 #, python-format
@@ -529,7 +520,7 @@ msgstr "ការ​ផ្តល់​យោ​បល់ ៖ %s"
 #: ../extensions/deviceicon/network.py:338
 #, python-format
 msgid "Connected for %s"
-msgstr ""
+msgstr "តភ្ជាប់ហេីយសម្រាប់ %s"
 
 #: ../extensions/deviceicon/network.py:344
 #: ../extensions/deviceicon/network.py:345
@@ -539,19 +530,19 @@ msgstr "%d គីឡូបៃ"
 
 #: ../extensions/deviceicon/network.py:350
 msgid "Check your PIN/PUK configuration."
-msgstr ""
+msgstr "ពិនិត្យមេីលសណ្ឋាន PIN/PUK របស់អ្នក"
 
 #: ../extensions/deviceicon/network.py:353
 msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
+msgstr "ពិនិត្យមេីលសណ្ឋាននៃនាមកន្លែងចូលភ្ជាប់ (APN) របស់អ្នក"
 
 #: ../extensions/deviceicon/network.py:357
 msgid "Check the Number configuration."
-msgstr ""
+msgstr "ពិនិត្យមេីលសណ្ឋានលេខ"
 
 #: ../extensions/deviceicon/network.py:359
 msgid "Check your configuration."
-msgstr ""
+msgstr "ពិនិត្យមេីលសណ្ឋានរបស់អ្នក"
 
 #: ../extensions/deviceicon/network.py:597
 msgid "Mesh Network"
@@ -564,11 +555,11 @@ msgstr "បណ្ដាញត %s"
 
 #: ../extensions/deviceicon/network.py:757
 msgid "No GSM connection available."
-msgstr ""
+msgstr "ការតភ្ជាប់ GSM គ្មានទេ"
 
 #: ../extensions/deviceicon/network.py:758
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "បង្កេីតការតភ្ជាប់មួយឡេីងតាមក្ដាឧបករណ៍"
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
@@ -610,15 +601,15 @@ msgstr "ស្ងាត់"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "ម្រាមដៃ"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "ដែក​ចារ"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "ទ្រនាប់ស្ទាបរបស់ខ្ញុំ"
 
 #: ../extensions/globalkey/screenshot.py:59
 msgid "Mesh"
@@ -646,27 +637,25 @@ msgstr "រូបថត​អេក្រង់"
 #: ../extensions/globalkey/screenshot.py:74
 #, python-format
 msgid "Screenshot of \"%s\""
-msgstr ""
+msgstr "រូបថតអេក្រង់អំពី «%s»"
 
 #: ../data/sugar.schemas.in.h:1
 msgid ""
 "\"disabled\" to ask nick on initialization; \"system\" to reuse UNIX account "
 "long name."
 msgstr ""
+"ជ្រើសរើស «កុំប្រើ» ដើម្បីឲកុំព្យូទ័រសួរឈ្មោះក្រៅនៅពេលដែលកុំព្យូទ័រចាប់ផ្ដើម "
+"ជ្រើសរើស «ប្រព័ន្ធ» ដើម្បីប្រើឈ្មោះវេងយូនិកជាឈ្មោះក្រៅ"
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "កន្លែង​ចំលង​ទុក"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "ទីសំគាល់នៃកញ្ចប់របស់សកម្មភាផដែលបានការពារ"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 #, fuzzy
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
@@ -677,245 +666,249 @@ msgstr ""
 "ដែល​ជា​ការ​កំណត់​សំគាល់​រាង​និង​ផ្ទៃ​ពណ៌​ដើម្បី​កំណត់​ពណ៌ rgb ឧទាហរណ៍ "
 "#AC៣២FF,#៩A៥២០០"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "ពន្យារកាច់ជ្រុង"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
-msgstr ""
+msgstr "អក្សរពុម្ពមួយឈុតៗដែលត្រូវរេីសដោយស្វ័យប្រវត្តិ"
+
+#: ../data/sugar.schemas.in.h:8
+msgid "Default font size"
+msgstr "ទំហំអក្សរដែលត្រូវរេីសដោយស្វ័យប្រវត្តិ"
 
 #: ../data/sugar.schemas.in.h:9
-msgid "Default font size"
-msgstr ""
+msgid "Default nick"
+msgstr "ឈ្មោះក្រៅដាក់ដោយចៃដន្យ"
 
 #: ../data/sugar.schemas.in.h:10
-msgid "Default nick"
-msgstr ""
+msgid "Delay for the activation of the frame using the corners."
+msgstr "ការពន្យារពេលនឹងធ្វើឲស៊ុំមានសកម្មភាពដោយប្រើកាច់ជ្រុង"
 
 #: ../data/sugar.schemas.in.h:11
-msgid "Delay for the activation of the frame using the corners."
-msgstr ""
+msgid "Delay for the activation of the frame using the edges."
+msgstr "ការពន្យារពេលនឹងធ្វើឲស៊ុំមានសកម្មភាពដោយប្រើគែម"
 
 #: ../data/sugar.schemas.in.h:12
-msgid "Delay for the activation of the frame using the edges."
-msgstr ""
+msgid "Edge Delay"
+msgstr "ការពន្យារពេលគែម"
 
 #: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
+#, fuzzy
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
+"ការគ្រប់គ្រង​ថាមពល​ឆ្លាស់ (ផ្ដាច់​ប្រព័ន្ធ​វិទ្យុ​ឥត​ខ្សែ "
+"ដើម្បី​​ប្រើប្រាស់​​ថ្ម​​បាន​​យូរ)"
 
 #: ../data/sugar.schemas.in.h:14
-msgid "Edge Delay"
-msgstr ""
+msgid "Favorites Layout"
+msgstr "របៀបរៀបវត្ថុដែលអ្នកចូលចិត្តជាងគេ"
+
+#: ../data/sugar.schemas.in.h:15
+msgid "Favorites resume mode"
+msgstr "របៀបចាប់ផ្ដើមវត្ថុដែលអ្នកចូលចិត្តជាងគេឡើងវិញ"
 
 #: ../data/sugar.schemas.in.h:16
-msgid "Favorites Layout"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:17
-msgid "Favorites resume mode"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:18
 #, fuzzy
 msgid "Font face that is used throughout the desktop."
 msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 #, fuzzy
 msgid "Font size that is used throughout the desktop."
 msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "ម៉ាស៊ីនបម្រើ Jabber"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "ប្លង់​ក្ដារ​ចុច ៖"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "ម៉ូដែល​ក្ដារចុច"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "ថាមពល​ស្វ័យប្រវត្ត"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "ថាមពល​ឆ្លាស់"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "កំណត់​មិន​ឲ្យ​ឧបករណ៍​សំឡេង​ឮ"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "ត្រូវបានបិទសំឡេង"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "ម៉ោង​តំបន់​ត្រូវ​បាន​កំណត់​នៅ​ក្នុង​ប្រពន្ធ"
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "អភ័យដ្ឋាន​ដែល​ជា​ទីកន្លែង​រក្សា​ឯកសារ​ទុក"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "ពណ៌អ្នកប្រើ"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "ឈ្មោះអ្នកប្រើ"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "ឈ្មោះ​អ្នក​ប្រើ​ដែល​ត្រូវ​បាន​ប្រើ​ពាស​ពេញ​លើ​ផ្ទៃ​តុ"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "ទំហំកំរិត"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "ទំហំ​កម្រិត​​សម្រាប់​ប្រើ​លើ​ឧបករណ៍​សំឡេង"
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1266,7 +1259,8 @@ msgid "Next"
 msgstr "ថតទៅ​មុខ"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "គ្មាន​ចំណង​ជើង"
@@ -1375,7 +1369,7 @@ msgstr "អ្វី​ទាំង​អស់"
 #: ../src/jarabe/journal/palettes.py:93
 #, fuzzy
 msgid "Copy to"
-msgstr "​ចម្លង​ទៅ"
+msgstr "ចម្លង​ទៅ"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274

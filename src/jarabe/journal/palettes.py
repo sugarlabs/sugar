@@ -18,24 +18,27 @@ from gettext import gettext as _
 import logging
 import os
 
-import gobject
-import gtk
-import gconf
-import gio
-import glib
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GConf
+from gi.repository import Gio
+from gi.repository import GLib
 
-from sugar.graphics import style
-from sugar.graphics.palette import Palette
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.icon import Icon
-from sugar.graphics.xocolor import XoColor
-from sugar import mime
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import Alert
+from sugar3 import mime
 
 from jarabe.model import friends
 from jarabe.model import filetransfer
 from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
+from jarabe.journal import journalwindow
 
 
 class ObjectPalette(Palette):
@@ -43,9 +46,9 @@ class ObjectPalette(Palette):
     __gtype_name__ = 'ObjectPalette'
 
     __gsignals__ = {
-        'detail-clicked': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -53,15 +56,15 @@ class ObjectPalette(Palette):
 
         self._metadata = metadata
 
-        activity_icon = Icon(icon_size=gtk.ICON_SIZE_LARGE_TOOLBAR)
+        activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
         activity_icon.props.file = misc.get_icon_name(metadata)
         color = misc.get_icon_color(metadata)
         activity_icon.props.xo_color = color
 
         if 'title' in metadata:
-            title = gobject.markup_escape_text(metadata['title'])
+            title = GObject.markup_escape_text(metadata['title'])
         else:
-            title = glib.markup_escape_text(_('Untitled'))
+            title = GLib.markup_escape_text(_('Untitled'))
 
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
@@ -92,7 +95,7 @@ class ObjectPalette(Palette):
 
         menu_item = MenuItem(_('Copy to'))
         icon = Icon(icon_name='edit-copy', xo_color=color,
-                    icon_size=gtk.ICON_SIZE_MENU)
+                    icon_size=Gtk.IconSize.MENU)
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
@@ -103,7 +106,7 @@ class ObjectPalette(Palette):
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate', xo_color=color,
-                        icon_size=gtk.ICON_SIZE_MENU)
+                        icon_size=Gtk.IconSize.MENU)
             menu_item.set_image(icon)
             menu_item.connect('activate', self.__duplicate_activate_cb)
             self.menu.append(menu_item)
@@ -142,7 +145,25 @@ class ObjectPalette(Palette):
                       _('Error'))
 
     def __erase_activate_cb(self, menu_item):
-        model.delete(self._metadata['uid'])
+        alert = Alert()
+        erase_string = _('Erase')
+        alert.props.title = erase_string
+        alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
+            % self._metadata['title']
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
+        icon.show()
+        ok_icon = Icon(icon_name='dialog-ok')
+        alert.add_button(Gtk.ResponseType.OK, erase_string, ok_icon)
+        ok_icon.show()
+        alert.connect('response', self.__erase_alert_response_cb)
+        journalwindow.get_journal_window().add_alert(alert)
+        alert.show()
+
+    def __erase_alert_response_cb(self, alert, response_id):
+        journalwindow.get_journal_window().remove_alert(alert)
+        if response_id is Gtk.ResponseType.OK:
+            model.delete(self._metadata['uid'])
 
     def __detail_activate_cb(self, menu_item):
         self.emit('detail-clicked', self._metadata['uid'])
@@ -172,39 +193,50 @@ class ObjectPalette(Palette):
                                     mime_type)
 
 
-class CopyMenu(gtk.Menu):
+class CopyMenu(Gtk.Menu):
     __gtype_name__ = 'JournalCopyMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
     def __init__(self, metadata):
-        gobject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         self._metadata = metadata
 
         clipboard_menu = ClipboardMenu(self._metadata)
         clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=gtk.ICON_SIZE_MENU))
+                                      icon_size=Gtk.IconSize.MENU))
         clipboard_menu.connect('volume-error', self.__volume_error_cb)
         self.append(clipboard_menu)
         clipboard_menu.show()
 
         if self._metadata['mountpoint'] != '/':
-            client = gconf.client_get_default()
+            client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
             journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=gtk.ICON_SIZE_MENU))
+                                        icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             self.append(journal_menu)
             journal_menu.show()
 
-        volume_monitor = gio.volume_monitor_get()
-        icon_theme = gtk.icon_theme_get_default()
+        documents_path = model.get_documents_path()
+        if documents_path is not None and not \
+                self._metadata['uid'].startswith(documents_path):
+            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+                                        documents_path)
+            documents_menu.set_image(Icon(icon_name='user-documents',
+                                          icon_size=Gtk.IconSize.MENU))
+            documents_menu.connect('volume-error', self.__volume_error_cb)
+            self.append(documents_menu)
+            documents_menu.show()
+
+        volume_monitor = Gio.VolumeMonitor.get()
+        icon_theme = Gtk.IconTheme.get_default()
         for mount in volume_monitor.get_mounts():
             if self._metadata['mountpoint'] == mount.get_root().get_path():
                 continue
@@ -213,7 +245,7 @@ class CopyMenu(gtk.Menu):
             for name in mount.get_icon().props.names:
                 if icon_theme.has_icon(name):
                     volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=gtk.ICON_SIZE_MENU))
+                                               icon_size=Gtk.IconSize.MENU))
                     break
             volume_menu.connect('volume-error', self.__volume_error_cb)
             self.append(volume_menu)
@@ -227,7 +259,7 @@ class VolumeMenu(MenuItem):
     __gtype_name__ = 'JournalVolumeMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -259,7 +291,7 @@ class ClipboardMenu(MenuItem):
     __gtype_name__ = 'JournalClipboardMenu'
 
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -279,10 +311,10 @@ class ClipboardMenu(MenuItem):
                       _('Warning'))
             return
 
-        clipboard = gtk.Clipboard()
-        clipboard.set_with_data([('text/uri-list', 0, 0)],
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard.set_with_data([Gtk.TargetEntry.new('text/uri-list', 0, 0)],
                                 self.__clipboard_get_func_cb,
-                                self.__clipboard_clear_func_cb)
+                                self.__clipboard_clear_func_cb, None)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
@@ -295,16 +327,16 @@ class ClipboardMenu(MenuItem):
         self._temp_file_path = None
 
 
-class FriendsMenu(gtk.Menu):
+class FriendsMenu(Gtk.Menu):
     __gtype_name__ = 'JournalFriendsMenu'
 
     __gsignals__ = {
-        'friend-selected': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'friend-selected': (GObject.SignalFlags.RUN_FIRST, None,
                             ([object])),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         if filetransfer.file_transfer_available():
             friends_model = friends.get_model()
@@ -333,18 +365,18 @@ class FriendsMenu(gtk.Menu):
         self.emit('friend-selected', friend)
 
 
-class StartWithMenu(gtk.Menu):
+class StartWithMenu(Gtk.Menu):
     __gtype_name__ = 'JournalStartWithMenu'
 
     def __init__(self, metadata):
-        gobject.GObject.__init__(self)
+        Gtk.Menu.__init__(self)
 
         self._metadata = metadata
 
         for activity_info in misc.get_activities(metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=gtk.ICON_SIZE_MENU))
+                                     icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self.__item_activate_cb,
                               activity_info.get_bundle_id())
             self.append(menu_item)
@@ -377,7 +409,7 @@ class BuddyPalette(Palette):
                           icon_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
-        Palette.__init__(self, primary_text=glib.markup_escape_text(nick),
+        Palette.__init__(self, primary_text=GLib.markup_escape_text(nick),
                          icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.

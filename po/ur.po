@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-09 19:10+0200\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-05-19 22:44+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ur\n"
@@ -130,7 +130,7 @@ msgid "Error timezone does not exist."
 msgstr "نقص، ٹائم زون موجود نہیں ہے۔"
 
 # ٹائم زون
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "ٹائم زون"
 
@@ -300,8 +300,9 @@ msgid "Turn off the wireless radio to save battery life"
 msgstr "وائرلیس ریڈیو کو بند کر دیں، بیٹری کی زندگی بچانے کے لئے۔"
 
 #: ../extensions/cpsection/network/view.py:82
+#, fuzzy
 msgid "Radio"
-msgstr ""
+msgstr "ریڈیو"
 
 # نیٹ ورک کی تاریخ کو ضائع کر دیا جائے، اگر آپ کو نیٹ ورک کے ساتھ منسلک کرنےمیں پریشانی یے۔
 #: ../extensions/cpsection/network/view.py:98
@@ -342,25 +343,13 @@ msgstr "پاور"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "خودکار pm برہان میں نقص، آن/آف استعمال کریں۔"
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "ایکسٹریم pm برہان میں نقص، آن/آف استعمال کریں۔"
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "پاور کنٹرول"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "آٹو ميٹک پاور کنٹرول(بیٹری کا دورانيہ ذيادہ کرنے کے ليے)"
-
-# انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی کو بڑھاتا ہے)
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی "
-"کو بڑھاتا ہے)"
 
 # سافٹ ویئر اپ ڈیٹ
 #: ../extensions/cpsection/updater/__init__.py:21
@@ -401,10 +390,11 @@ msgstr "آپ کا سافٹ ویئر اپ ڈیٹ ہے"
 
 #: ../extensions/cpsection/updater/view.py:141
 #, python-format
+#, python-format, fuzzy
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
+msgstr[1] "آپ %sاپ ڈيٹ انسٹال کر سکتے ہو"
 
 # اپ ڈیٹس کے لئے جانچ کی جا رہی...
 #: ../extensions/cpsection/updater/view.py:159
@@ -647,8 +637,9 @@ msgid "Create a connection in the control panel."
 msgstr "کنٹرول پینل میں ایک کنکشن بنائیں."
 
 #: ../extensions/deviceicon/speech.py:52
+#, fuzzy
 msgid "Speech"
-msgstr ""
+msgstr "گفتگو"
 
 #: ../extensions/deviceicon/speech.py:77
 #: ../extensions/deviceicon/speech.py:138
@@ -666,8 +657,9 @@ msgid "Pitch"
 msgstr "سطح"
 
 #: ../extensions/deviceicon/speech.py:106
+#, fuzzy
 msgid "Rate"
-msgstr ""
+msgstr "شرح"
 
 #: ../extensions/deviceicon/speech.py:133
 msgid "Pause playback"
@@ -691,12 +683,12 @@ msgid "finger"
 msgstr "انگلی کریں"
 
 # اسٹاہلس
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "اسٹاہلس"
 
 # میرا ٹچ پیڈ
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "میرا ٹچ پیڈ"
 
@@ -738,23 +730,18 @@ msgstr ""
 "ابتدا پر نک پوچھنے کو \"غیر فعال کر دیا گیا\"،  UNIX \"نظام\" اکاؤنٹ کے تہت طویل "
 "نام کو دوبارہ استعمال کرنے کے لئے."
 
-# اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں.
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr "اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں."
-
 # بیک اپ URL
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "بیک اپ URL"
 
 # محفوظ سرگرمیوں کی پوٹلی کی شناخت
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "محفوظ سرگرمیوں کی پوٹلی کی شناخت"
 
 # XO آئکن  کے لئے رنگ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے.  سٹرنگ سٹروک رنگ اور بھرنے کے رنگ پر مشتمل ہے، فارمیٹ ہے RGB رنگوں کا .مثال کے طور پر : # AC32FF، 9A5200 #
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -765,128 +752,131 @@ msgstr ""
 "AC32FF، 9A5200 #"
 
 # کارنر کی تاخیر
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "کارنر کی تاخیر"
 
 # پہلے سے مقرر شدہ فانٹ کا چہرہ
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "پہلے سے مقرر شدہ فانٹ کا چہرہ"
 
 # پہلے سے مقرر شدہ فونٹ سائز
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "پہلے سے مقرر شدہ فونٹ سائز"
 
 # پہلے سے طے شدہ نک
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "پہلے سے طے شدہ نک"
 
 # کونے کونے کا استعمال کرتے ہوئے فریم کی ایکٹیویشن کے لئے تاخیر.
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "کونے کونے کا استعمال کرتے ہوئے فریم کی ایکٹیویشن کے لئے تاخیر."
 
 # کناروں کو استعمال کرتے ہوئے فریم کی ایکٹیویشن کے لئے تاخیر.
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "کناروں کو استعمال کرتے ہوئے فریم کی ایکٹیویشن کے لئے تاخیر."
 
-# ترجمہ کی تلاش کے لئے ڈائرکٹری
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "ترجمہ کی تلاش کے لئے ڈائرکٹری"
-
 # ایج تاخیر
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "ایج تاخیر"
 
+# انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی کو بڑھاتا ہے)
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"انتہائی پاور مینجمنٹ (وائرلیس ریڈیو کو غیر فعال کر دیتے ہیں، بیٹری کی زندگی "
+"کو بڑھاتا ہے)"
+
 # پسنديدہ خاکہ
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "پسنديدہ خاکہ"
 
 # پسنديدہ موڈ کو دوبارہ شروع کرنے کے لٰے
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "پسنديدہ موڈ کو دوبارہ شروع کرنے کے لٰے"
 
 # فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے"
 
 # فونٹ سائزجو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے.
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "فونٹ سائزجو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے."
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 #, fuzzy
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک APNGSM نیٹ ورک APN"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 #, fuzzy
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک PIN"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 #, fuzzy
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک PUK"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 #, fuzzy
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک تک رسائی کے نقطہ نام کی ترتیب"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 #, fuzzy
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک نمبر"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 #, fuzzy
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک پاس ورڈ"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 #, fuzzy
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک پاس ورڈ کی ترتیب"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 #, fuzzy
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک کی ذاتی شناختی نمبر کی ترتیب"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:26
 #, fuzzy
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک کی ذاتی کھولنے کی کلید کی ترتیب"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:27
 #, fuzzy
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک ٹیلی فون نمبر کی ترتیب"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:28
 #, fuzzy
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک صارف کا نام"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 #, fuzzy
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "GSM نیٹ ورک صارف کا نام کی ترتیب"
 
 # اگر یہ سچ ہے تو شوگر ہمیں جیبر سرور کے دیگر صارفین کے لئے تلاش کرنا آسان بنا دے گا.
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -895,147 +885,147 @@ msgstr ""
 "دے گا."
 
 # اگر یہ سچ ہے تو، شوگر  "لاگ آؤٹ" کا اختیار دے گا.
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "اگر یہ سچ ہے تو، شوگر  \"لاگ آؤٹ\" کا اختیار دے گا."
 
 # اگر یہ سچ ہے تو، شوگر "Restart" کا اختیار دے گا.
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "اگر یہ سچ ہے تو، شوگر \"Restart\" کا اختیار دے گا."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr ""
 
 # کی بورڈ ترتیب
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 #, fuzzy
 msgid "Keyboard layouts"
 msgstr "کی بورڈ ترتیب"
 
 # کی بورڈ ماڈل
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 #, fuzzy
 msgid "Keyboard model"
 msgstr "کی بورڈ ماڈل"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr ""
 
 # فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 #, fuzzy
 msgid "User name that is used throughout the desktop."
 msgstr "فونٹ جو ڈیسک ٹاپ بھر میں استعمال کیا جاتا ہے"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr ""
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1113,8 +1103,9 @@ msgstr "ٹھیک ہے"
 
 #: ../src/jarabe/desktop/activitieslist.py:231
 #, python-format
+#, python-format, fuzzy
 msgid "Version %s"
-msgstr ""
+msgstr "ورژن %s"
 
 #: ../src/jarabe/desktop/activitieslist.py:357
 msgid "Confirm erase"
@@ -1164,8 +1155,9 @@ msgstr "پليٹ"
 
 #. TRANS: label for the spiral layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:402
+#, fuzzy
 msgid "Spiral"
-msgstr ""
+msgstr "سپائرل"
 
 #. TRANS: label for the box layout in the favorites view
 #: ../src/jarabe/desktop/favoriteslayout.py:472
@@ -1244,12 +1236,14 @@ msgid "Authentication Type:"
 msgstr "اجاذت دينے کی قسم:"
 
 #: ../src/jarabe/desktop/keydialog.py:223
+#, fuzzy
 msgid "WPA & WPA2 Personal"
-msgstr ""
+msgstr "WPA & WPA2 ذاتی"
 
 #: ../src/jarabe/desktop/keydialog.py:232
+#, fuzzy
 msgid "Wireless Security:"
-msgstr ""
+msgstr "وائیرلیس سیکورٹی"
 
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
@@ -1287,21 +1281,18 @@ msgstr ""
 msgid "Decline"
 msgstr "منظور نہیں ہوا"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:523
 #, python-format
 #, python-format, fuzzy
 msgid "%dB"
 msgstr "%dB"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:525
 #, python-format
 #, python-format, fuzzy
 msgid "%dKB"
 msgstr "%dKB"
 
-# %d KB
 #: ../src/jarabe/frame/activitiestray.py:527
 #, python-format
 #, fuzzy
@@ -1326,8 +1317,9 @@ msgstr ""
 #: ../src/jarabe/frame/activitiestray.py:627
 #: ../src/jarabe/frame/activitiestray.py:640
 #: ../src/jarabe/frame/activitiestray.py:758
+#, fuzzy
 msgid "Dismiss"
-msgstr ""
+msgstr "برخاست کریں"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
@@ -1396,7 +1388,8 @@ msgid "Next"
 msgstr "آگے"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr ""
@@ -1413,13 +1406,15 @@ msgstr ""
 #: ../src/jarabe/journal/expandedentry.py:264
 #: ../src/jarabe/journal/listmodel.py:150
 #: ../src/jarabe/journal/listmodel.py:158
+#, fuzzy
 msgid "Unknown"
-msgstr ""
+msgstr "نامعلوم"
 
 #: ../src/jarabe/journal/expandedentry.py:265
 #, python-format
+#, python-format, fuzzy
 msgid "Date: %s"
-msgstr ""
+msgstr "تاریخ: %s"
 
 #: ../src/jarabe/journal/expandedentry.py:266
 #, python-format
@@ -1440,8 +1435,9 @@ msgid "Description:"
 msgstr ""
 
 #: ../src/jarabe/journal/expandedentry.py:348
+#, fuzzy
 msgid "Tags:"
-msgstr ""
+msgstr "ٹیگ:"
 
 #: ../src/jarabe/journal/journalactivity.py:115
 #: ../src/jarabe/journal/journaltoolbox.py:468
@@ -1451,16 +1447,18 @@ msgid "Journal"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:72
+#, fuzzy
 msgid "Search"
-msgstr ""
+msgstr "تلاش کریں"
 
 #: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Anytime"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:141
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "آج"
 
 #: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Since yesterday"
@@ -1494,13 +1492,15 @@ msgid "My class"
 msgstr ""
 
 #: ../src/jarabe/journal/journaltoolbox.py:301
+#, fuzzy
 msgid "Anything"
-msgstr ""
+msgstr "کوئی شے"
 
 #: ../src/jarabe/journal/journaltoolbox.py:396
 #: ../src/jarabe/journal/palettes.py:93
+#, fuzzy
 msgid "Copy to"
-msgstr ""
+msgstr "نقل کریں بطرف"
 
 #: ../src/jarabe/journal/journaltoolbox.py:404
 #: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
@@ -1610,8 +1610,9 @@ msgid "Send to"
 msgstr ""
 
 #: ../src/jarabe/journal/palettes.py:121
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "تفاصیل نظارہ"
 
 #: ../src/jarabe/journal/palettes.py:160
 msgid "Entries without a file cannot be sent."
@@ -1639,8 +1640,9 @@ msgid "No activity to resume entry"
 msgstr ""
 
 #: ../src/jarabe/journal/volumestoolbar.py:209
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "دستاویزات"
 
 #: ../src/jarabe/journal/volumestoolbar.py:391
 #: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
@@ -1852,8 +1854,9 @@ msgid "Restart"
 msgstr "دوبارہ چلائيں"
 
 #: ../src/jarabe/view/buddymenu.py:101
+#, fuzzy
 msgid "Logout"
-msgstr ""
+msgstr "لاگ آوٹ کریں"
 
 #: ../src/jarabe/view/buddymenu.py:106
 msgid "My Settings"
@@ -1879,8 +1882,9 @@ msgstr ""
 
 #. TODO: share-with, keep
 #: ../src/jarabe/view/palettes.py:91
+#, fuzzy
 msgid "View Source"
-msgstr ""
+msgstr "نظارہ ماخذ"
 
 #: ../src/jarabe/view/palettes.py:102
 msgid "Stop"
@@ -1919,17 +1923,30 @@ msgstr ""
 
 #: ../src/jarabe/view/viewsource.py:400
 #, python-format
+#, python-format, fuzzy
 msgid "View source: %s"
-msgstr ""
+msgstr "نظارہ ماخذ: %s"
 
 #: ../src/jarabe/view/viewsource.py:401
 #, python-format
+#, python-format, fuzzy
 msgid "View source: %r"
-msgstr ""
+msgstr "نظارہ ماخذ: %r"
 
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr ""
+
+# اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں.
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "اضافی ڈائرکٹری جس میں اپ ڈیٹ  ترجمے ہوسکتے ہیں."
+
+# ترجمہ کی تلاش کے لئے ڈائرکٹری
+#~ msgid "Directory to search for translations"
+#~ msgstr "ترجمہ کی تلاش کے لئے ڈائرکٹری"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "ایکسٹریم pm برہان میں نقص، آن/آف استعمال کریں۔"
 
 # GSM نیٹ ورک صارف کا نام کی ترتیب
 #~ msgid "GSM network username configuration"

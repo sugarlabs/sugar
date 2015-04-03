@@ -19,7 +19,7 @@ import os
 from gettext import gettext as _
 import logging
 
-import gconf
+from gi.repository import GConf
 import dbus
 
 OHM_SERVICE_NAME = 'org.freedesktop.ohm'
@@ -51,7 +51,7 @@ def get_automatic_pm():
         return not os.access(POWERD_INHIBIT_FLAG, os.R_OK)
 
     # ohmd
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     return client.get_bool('/desktop/sugar/power/automatic')
 
 
@@ -89,6 +89,6 @@ def set_automatic_pm(enabled):
     else:
         raise ValueError(_('Error in automatic pm argument, use on/off.'))
 
-    client = gconf.client_get_default()
+    client = GConf.Client.get_default()
     client.set_bool('/desktop/sugar/power/automatic', enabled)
     return

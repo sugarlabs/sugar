@@ -14,29 +14,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar.graphics import style
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.view.pulsingicon import PulsingIcon
 
 
-class NotificationIcon(gtk.EventBox):
+class NotificationIcon(Gtk.EventBox):
     __gtype_name__ = 'SugarNotificationIcon'
 
     __gproperties__ = {
-        'xo-color': (object, None, None, gobject.PARAM_READWRITE),
-        'icon-name': (str, None, None, None, gobject.PARAM_READWRITE),
-        'icon-filename': (str, None, None, None, gobject.PARAM_READWRITE),
+        'xo-color': (object, None, None, GObject.PARAM_READWRITE),
+        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
+        'icon-filename': (str, None, None, None, GObject.PARAM_READWRITE),
     }
 
     _PULSE_TIMEOUT = 3
 
     def __init__(self, **kwargs):
         self._icon = PulsingIcon(pixel_size=style.STANDARD_ICON_SIZE)
-        gobject.GObject.__init__(self, **kwargs)
+        Gtk.EventBox.__init__(self, **kwargs)
         self.props.visible_window = False
 
         self._icon.props.pulse_color = \
@@ -46,7 +47,7 @@ class NotificationIcon(gtk.EventBox):
         self.add(self._icon)
         self._icon.show()
 
-        gobject.timeout_add_seconds(self._PULSE_TIMEOUT,
+        GObject.timeout_add_seconds(self._PULSE_TIMEOUT,
                                     self.__stop_pulsing_cb)
 
         self.set_size_request(style.GRID_CELL_SIZE, style.GRID_CELL_SIZE)
@@ -83,20 +84,20 @@ class NotificationIcon(gtk.EventBox):
     palette = property(_get_palette, _set_palette)
 
 
-class NotificationWindow(gtk.Window):
+class NotificationWindow(Gtk.Window):
     __gtype_name__ = 'SugarNotificationWindow'
 
     def __init__(self, **kwargs):
 
-        gtk.Window.__init__(self, **kwargs)
+        Gtk.Window.__init__(self, **kwargs)
 
         self.set_decorated(False)
         self.set_resizable(False)
         self.connect('realize', self._realize_cb)
 
     def _realize_cb(self, widget):
-        self.window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
-        self.window.set_accept_focus(False)
+        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
+        self.get_window().set_accept_focus(False)
 
-        color = gtk.gdk.color_parse(style.COLOR_TOOLBAR_GREY.get_html())
-        self.modify_bg(gtk.STATE_NORMAL, color)
+        color = Gdk.color_parse(style.COLOR_TOOLBAR_GREY.get_html())
+        self.modify_bg(Gtk.StateType.NORMAL, color)

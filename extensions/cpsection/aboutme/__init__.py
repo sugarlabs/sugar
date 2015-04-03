@@ -15,12 +15,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import XoColor
 
 CLASS = 'AboutMe'
 ICON = 'module-about_me'
 TITLE = _('About Me')
-client = gconf.client_get_default()
+client = GConf.Client.get_default()
 COLOR = XoColor(client.get_string('/desktop/sugar/user/color'))

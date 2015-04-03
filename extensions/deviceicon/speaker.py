@@ -15,18 +15,20 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
-import gconf
+from gi.repository import GConf
 
-import glib
-import gobject
-import gtk
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
 
-from sugar.graphics import style
-from sugar.graphics.icon import get_icon_state, Icon
-from sugar.graphics.menuitem import MenuItem
-from sugar.graphics.tray import TrayIcon
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3.graphics.icon import get_icon_state, Icon
+from sugar3.graphics.tray import TrayIcon
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import sound
@@ -39,26 +41,24 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
+        self.palette_invoker.props.toggle_palette = True
 
         self._model = DeviceModel()
         self._model.connect('notify::level', self.__speaker_status_changed_cb)
         self._model.connect('notify::muted', self.__speaker_status_changed_cb)
 
-        self.connect('expose-event', self.__expose_event_cb)
-
-        self._icon_widget.connect('button-release-event',
-                                  self.__button_release_event_cb)
+        self.connect('draw', self.__draw_cb)
 
         self._update_info()
 
     def create_palette(self):
-        label = glib.markup_escape_text(_('My Speakers'))
+        label = GLib.markup_escape_text(_('My Speakers'))
         palette = SpeakerPalette(label, model=self._model)
         palette.set_group_id('frame')
         return palette
@@ -77,14 +77,7 @@ class DeviceView(TrayIcon):
                                                    step=-1)
         self.icon.props.xo_color = xo_color
 
-    def __button_release_event_cb(self, widget, event):
-        if event.button != 1:
-            return False
-
-        self.palette_invoker.notify_right_click()
-        return True
-
-    def __expose_event_cb(self, *args):
+    def __draw_cb(self, *args):
         self._update_info()
 
     def __speaker_status_changed_cb(self, pspec_, param_):
@@ -98,28 +91,35 @@ class SpeakerPalette(Palette):
 
         self._model = model
 
-        vbox = gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
+
+        self._mute_item = PaletteMenuItem('')
+        self._mute_icon = Icon(icon_size=Gtk.IconSize.MENU)
+        self._mute_item.set_image(self._mute_icon)
+        box.append_item(self._mute_item)
+        self._mute_item.show()
+        self._mute_item.connect('activate', self.__mute_activate_cb)
+
+        separator = PaletteMenuItemSeparator()
+        box.append_item(separator)
+        separator.show()
 
         vol_step = sound.VOLUME_STEP
-        self._adjustment = gtk.Adjustment(value=self._model.props.level,
+        self._adjustment = Gtk.Adjustment(value=self._model.props.level,
                                           lower=0,
                                           upper=100 + vol_step,
                                           step_incr=vol_step,
                                           page_incr=vol_step,
                                           page_size=vol_step)
-        self._hscale = gtk.HScale(self._adjustment)
-        self._hscale.set_digits(0)
-        self._hscale.set_draw_value(False)
-        vbox.add(self._hscale)
-        self._hscale.show()
 
-        self._mute_item = MenuItem('')
-        self._mute_icon = Icon(icon_size=gtk.ICON_SIZE_MENU)
-        self._mute_item.set_image(self._mute_icon)
-        self.menu.append(self._mute_item)
-        self._mute_item.show()
+        hscale = Gtk.HScale()
+        hscale.props.draw_value = False
+        hscale.set_adjustment(self._adjustment)
+        hscale.set_digits(0)
+        box.append_item(hscale, vertical_padding=0)
+        hscale.show()
 
         self._adjustment_handler_id = \
             self._adjustment.connect('value_changed',
@@ -128,8 +128,6 @@ class SpeakerPalette(Palette):
         self._model_notify_level_handler_id = \
             self._model.connect('notify::level', self.__level_changed_cb)
         self._model.connect('notify::muted', self.__muted_changed_cb)
-
-        self._mute_item.connect('activate', self.__mute_activate_cb)
 
         self.connect('popup', self.__popup_cb)
 
@@ -140,24 +138,25 @@ class SpeakerPalette(Palette):
         else:
             mute_item_text = _('Mute')
             mute_item_icon_name = 'dialog-cancel'
-        self._mute_item.get_child().set_text(mute_item_text)
+        self._mute_item.set_label(mute_item_text)
         self._mute_icon.props.icon_name = mute_item_icon_name
+        self._mute_icon.show()
 
     def _update_level(self):
-        if self._adjustment.value != self._model.props.level:
+        if self._adjustment.props.value != self._model.props.level:
             self._adjustment.handler_block(self._adjustment_handler_id)
             try:
-                self._adjustment.value = self._model.props.level
+                self._adjustment.props.value = self._model.props.level
             finally:
                 self._adjustment.handler_unblock(self._adjustment_handler_id)
 
     def __adjustment_changed_cb(self, adj_):
         self._model.handler_block(self._model_notify_level_handler_id)
         try:
-            self._model.props.level = self._adjustment.value
+            self._model.props.level = self._adjustment.props.value
         finally:
             self._model.handler_unblock(self._model_notify_level_handler_id)
-        self._model.props.muted = self._adjustment.value == 0
+        self._model.props.muted = self._adjustment.props.value == 0
 
     def __level_changed_cb(self, pspec_, param_):
         self._update_level()
@@ -173,14 +172,14 @@ class SpeakerPalette(Palette):
         self._update_muted()
 
 
-class DeviceModel(gobject.GObject):
+class DeviceModel(GObject.GObject):
     __gproperties__ = {
-        'level': (int, None, None, 0, 100, 0, gobject.PARAM_READWRITE),
-        'muted': (bool, None, None, False, gobject.PARAM_READWRITE),
+        'level': (int, None, None, 0, 100, 0, GObject.PARAM_READWRITE),
+        'muted': (bool, None, None, False, GObject.PARAM_READWRITE),
     }
 
     def __init__(self):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
         sound.muted_changed.connect(self.__muted_changed_cb)
         sound.volume_changed.connect(self.__volume_changed_cb)

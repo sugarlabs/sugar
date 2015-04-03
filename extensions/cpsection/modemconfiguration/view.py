@@ -17,10 +17,10 @@
 from gettext import gettext as _
 import logging
 
-import gtk
-import gobject
+from gi.repository import Gtk
+from gi.repository import GObject
 
-from sugar.graphics import style
+from sugar3.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
 
@@ -28,28 +28,29 @@ from jarabe.controlpanel.sectionview import SectionView
 APPLY_TIMEOUT = 1000
 
 
-class EntryWithLabel(gtk.HBox):
+class EntryWithLabel(Gtk.HBox):
     __gtype_name__ = 'SugarEntryWithLabel'
 
     def __init__(self, label_text):
-        gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
+        Gtk.HBox.__init__(self, spacing=style.DEFAULT_SPACING)
 
-        self.label = gtk.Label(label_text)
-        self.label.modify_fg(gtk.STATE_NORMAL,
+        self.label = Gtk.Label(label=label_text)
+        self.label.modify_fg(Gtk.StateType.NORMAL,
                         style.COLOR_SELECTION_GREY.get_gdk_color())
         self.label.set_alignment(1, 0.5)
-        self.pack_start(self.label, expand=False)
+        self.pack_start(self.label, False, True, 0)
         self.label.show()
 
-        self._entry = gtk.Entry(25)
+        self._entry = Gtk.Entry()
+        self._entry.set_max_length(25)
         self._entry.set_width_chars(25)
-        self.pack_start(self._entry, expand=False)
+        self.pack_start(self._entry, False, True, 0)
         self._entry.show()
 
     def get_entry(self):
         return self._entry
 
-    entry = gobject.property(type=object, getter=get_entry)
+    entry = GObject.property(type=object, getter=get_entry)
 
 
 class ModemConfiguration(SectionView):
@@ -62,46 +63,45 @@ class ModemConfiguration(SectionView):
 
         self.set_border_width(style.DEFAULT_SPACING)
         self.set_spacing(style.DEFAULT_SPACING)
-        self._group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
+        self._group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
         explanation = _('You will need to provide the following information'
                         ' to set up a mobile broadband connection to a'
                         ' cellular (3G) network.')
-        self._text = gtk.Label(explanation)
-        self._text.set_width_chars(100)
+        self._text = Gtk.Label(label=explanation)
         self._text.set_line_wrap(True)
         self._text.set_alignment(0, 0)
-        self.pack_start(self._text, False)
+        self.pack_start(self._text, False, False, 0)
         self._text.show()
 
         self._username_entry = EntryWithLabel(_('Username:'))
         self._username_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._username_entry.label)
-        self.pack_start(self._username_entry, expand=False)
+        self.pack_start(self._username_entry, False, True, 0)
         self._username_entry.show()
 
         self._password_entry = EntryWithLabel(_('Password:'))
         self._password_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._password_entry.label)
-        self.pack_start(self._password_entry, expand=False)
+        self.pack_start(self._password_entry, False, True, 0)
         self._password_entry.show()
 
         self._number_entry = EntryWithLabel(_('Number:'))
         self._number_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._number_entry.label)
-        self.pack_start(self._number_entry, expand=False)
+        self.pack_start(self._number_entry, False, True, 0)
         self._number_entry.show()
 
         self._apn_entry = EntryWithLabel(_('Access Point Name (APN):'))
         self._apn_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._apn_entry.label)
-        self.pack_start(self._apn_entry, expand=False)
+        self.pack_start(self._apn_entry, False, True, 0)
         self._apn_entry.show()
 
         self._pin_entry = EntryWithLabel(_('Personal Identity Number (PIN):'))
         self._pin_entry.entry.connect('changed', self.__entry_changed_cb)
         self._group.add_widget(self._pin_entry.label)
-        self.pack_start(self._pin_entry, expand=False)
+        self.pack_start(self._pin_entry, False, True, 0)
         self._pin_entry.show()
 
         self.setup()
@@ -129,8 +129,8 @@ class ModemConfiguration(SectionView):
 
     def __entry_changed_cb(self, widget, data=None):
         if self._timeout_sid:
-            gobject.source_remove(self._timeout_sid)
-        self._timeout_sid = gobject.timeout_add(APPLY_TIMEOUT,
+            GObject.source_remove(self._timeout_sid)
+        self._timeout_sid = GObject.timeout_add(APPLY_TIMEOUT,
                                                 self.__timeout_cb)
 
     def __timeout_cb(self):

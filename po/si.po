@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sugar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 00:33-0400\n"
-"PO-Revision-Date: 2012-04-23 08:50+0200\n"
-"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
+"POT-Creation-Date: 2012-06-06 00:33-0400\n"
+"PO-Revision-Date: 2012-06-20 00:07+0200\n"
+"Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: Sinhala <si@li.org>\n"
 "Language: si\n"
 "MIME-Version: 1.0\n"
@@ -120,7 +120,7 @@ msgstr "දිනය සහ වේලාව"
 msgid "Error timezone does not exist."
 msgstr "දෝෂයකි වේලාකලාපය නොපවතී."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:56
+#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "වේලා කලාපය"
 
@@ -296,24 +296,13 @@ msgstr "ශක්තිය"
 msgid "Error in automatic pm argument, use on/off."
 msgstr "ස්වයංක්‍රීය pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
 
-#: ../extensions/cpsection/power/model.py:120
-msgid "Error in extreme pm argument, use on/off."
-msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."
-
-#: ../extensions/cpsection/power/view.py:48
+#: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "බල කළමණාකරණය"
 
-#: ../extensions/cpsection/power/view.py:58 ../data/sugar.schemas.in.h:3
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
 msgid "Automatic power management (increases battery life)"
 msgstr "ස්වයංක්‍රීය බල කළමණාකරණය (බැටරි ආයු කාලය වැඩි කරයි)"
-
-#: ../extensions/cpsection/power/view.py:86 ../data/sugar.schemas.in.h:15
-msgid ""
-"Extreme power management (disables wireless radio, increases battery life)"
-msgstr ""
-"උපරිම බල කළමණාකරණය ( රැහැන් රහිත රේඩියෝව අක්‍රිය කරයි, බැටරි ආයු කාලය වැඩි "
-"කරයි)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
 msgid "Software update"
@@ -610,11 +599,11 @@ msgstr "නිශ්ශබ්ද කරන්න"
 msgid "finger"
 msgstr "ඇගිල්ල"
 
-#: ../extensions/deviceicon/touchpad.py:39
+#: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
 msgstr "පන්හිඳ"
 
-#: ../extensions/deviceicon/touchpad.py:68
+#: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
 msgstr "මගේ ස්පර්ශ පුවරුව"
 
@@ -654,19 +643,15 @@ msgstr ""
 "ආරම්භයේදී විකට නාමය ඇසීමට \"අක්‍රිය කර ඇත\"; UNIX ගිණුම් දීර්ඝ නාමය නැවත "
 "භාවිතා කිරීමට \"පද්ධතිය\"."
 
-#: ../data/sugar.schemas.in.h:2
-msgid "Additional directories which can contain updated translations."
-msgstr "යාවත්කාල කල පරිවර්තන අඩංගු විය හැකි අමතර නාමාවලි."
-
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:3
 msgid "Backup URL"
 msgstr "උපස්ථ URL"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:4
 msgid "Bundle IDs of protected activities"
 msgstr "ආකර්ෂා කල ක්‍රියාකාරකම් ID එකට එක් කරන්න"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:5
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -675,104 +660,107 @@ msgstr ""
 "වැඩතලය පුරා භාවිතා වන XO අයිකනය සඳහා වර්ණය. වර්ණය ඉරි වර්ණයෙන් සහ පිරවුම් "
 "වර්ණයෙන් තැනී ඇත, ආකෘතිය rgb වර්ණ ආකෘතිය වේ. උදාහරණ: #AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:6
 msgid "Corner Delay"
 msgstr "මුළු ප්‍රමාදය"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:7
 msgid "Default font face"
 msgstr "පෙරනිමි ෆොන්ට වර්ගය"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:8
 msgid "Default font size"
 msgstr "පෙරනිමි ෆොන්ට ප්‍රමාණය"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:9
 msgid "Default nick"
 msgstr "පෙරනිමි විකට නම"
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:10
 msgid "Delay for the activation of the frame using the corners."
 msgstr "මුළු භාවිත කර රාමුව සක්‍රිය කිරීමේ ප්‍රමාදය."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:11
 msgid "Delay for the activation of the frame using the edges."
 msgstr "දාර භාවිත කර රාමුව සක්‍රිය කිරීමේ ප්‍රමාදය."
 
-#: ../data/sugar.schemas.in.h:13
-msgid "Directory to search for translations"
-msgstr "පරිවර්ථන සඳහා සෙවීමට නාමාවලිය"
-
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:12
 msgid "Edge Delay"
 msgstr "දාර ප්‍රමාදය"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:13
+msgid ""
+"Extreme power management (disables wireless radio, increases battery life)"
+msgstr ""
+"උපරිම බල කළමණාකරණය ( රැහැන් රහිත රේඩියෝව අක්‍රිය කරයි, බැටරි ආයු කාලය වැඩි "
+"කරයි)"
+
+#: ../data/sugar.schemas.in.h:14
 msgid "Favorites Layout"
 msgstr "ප්‍රියතම වින්‍යාසය"
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:15
 msgid "Favorites resume mode"
 msgstr "ප්‍රියතම නැවත ඇරඹුම් ආකාරය"
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:16
 msgid "Font face that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන ෆොන්ට නාමය."
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:17
 msgid "Font size that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන ෆොන්ට ප්‍රමාණය."
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:18
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල APN (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:19
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල PIN (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:20
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල PUK (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:21
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල ප්‍රවේශන ස්ථාන නාමය සකසන්න (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:22
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල අංකය (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල මුරපදය (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල මුරපදය සකසන්න (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:25
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
-msgstr "GSM ජාල පුද්ගලික හැඳිනුම් අංකය සකසන්න (DEPRECATED/UNUSED) "
+msgstr "GSM ජාල පුද්ගලික හැඳිනුම් අංකය සකසන්න (DEPRECATED/UNUSED)"
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ජාල පුද්ගලික යතුර සැකසීම (DEPRECATED/UNUSED)"
+
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
+msgstr "GSM ජාල දුරකතන අංකය සැකසීම (DEPRECATED/UNUSED)"
 
 #: ../data/sugar.schemas.in.h:28
-msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:29
-msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:30
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල පරිශීලක නාමය (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "GSM ජාල පරිශීලක නාමය සකසන්න (DEPRECATED/UNUSED)"
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -780,15 +768,15 @@ msgstr ""
 "සත්‍ය නම්, Jabber සේවාදායයේ අනෙකුත් පරිශීලකයන් සඳහා Suger අපව සෙවිමට හැකි "
 "කරයි."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:31
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "TRUE නම්, Sugar \"පරිශීලක ඉවත් වීම\" විකල්පයක් පෙන්වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:32
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "TRUE නම්, Sugar \"නැවත ආරම්භ කරන්න\" විකල්පයක් පෙන්වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:33
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -798,128 +786,128 @@ msgstr ""
 "ආරම්භ කරන අවස්ථාවේ එක \"දන්නා\" ජාල නොදකීනම්, එය ස්වයංව Ad-hoc ජාලයකට සම්බන්ධ "
 "වනු ඇත."
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:34
 msgid "Jabber Server"
 msgstr "Jabber සේවාදායකය"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:35
 msgid "Keyboard layouts"
 msgstr "යතුරුපුවරු පිරිසැලසුම්"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:36
 msgid "Keyboard model"
 msgstr "යතුරුපුවරු වර්ගය"
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:37
 msgid "Keyboard options"
 msgstr "යතුරු පුවරු විකල්ප"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:38
 msgid "Layout of the favorites view."
 msgstr "ප්‍රියතම දැක්ම සඳහා වින්‍යාසය."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:39
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "යතුරු පුවරු ලැයිස්තු පිරිසැලසුම්. සෑම ප්‍රවේශයක්ම පිරිසැලසුම් (විචල) ආකාරයේ "
 "විය යුතුය"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:40
 msgid "List of keyboard options."
 msgstr "යතුරු පුවරු විකල්ප ලැයිස්තුව."
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:41
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාවේ තාරතා අඟය"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:42
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාවේ භාවිත කළ තාරතා අඟය"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:43
 msgid "Power Automatic"
 msgstr "බලය ස්වයංක්‍රීය"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:44
 msgid "Power Extreme"
 msgstr "බලය උපරිම"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:45
 msgid "Publish to Gadget"
 msgstr "ගැජට්ටුවේ පළකරන්න"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:46
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "ශුගර් කියවුම් සේවාව සඳහා අනුපාත අඟය"
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:47
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "ශුගර් තුළ කියවුම් සේවාව සඳහා භාවිත කළ අනුපාත අඟය"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:48
 msgid "Setting for muting the sound device."
 msgstr "ශබ්ද උපාංගහ නිහඬ‍කිරීමට සැකසුම."
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:49
 msgid "Show Log out"
 msgstr "පරිශීලක ඉවත් වීම පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:50
 msgid "Show Restart"
 msgstr "නැවත ආරම්භ කිරීම පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:51
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Sugar Ad-hoc ජාල පෙන්වන්න"
 
-#: ../data/sugar.schemas.in.h:54
+#: ../data/sugar.schemas.in.h:52
 msgid "Sound Muted"
 msgstr "ශබ්දය නිහඬය"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:53
 msgid "The keyboard model to be used"
 msgstr "භාවිතා කිරීමට යතුරු පුවරු වර්ගය"
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:55
 msgid "Timezone setting for the system."
 msgstr "පද්ධතිය සඳහා වේලාකලාප සැකසුම්."
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:56
 msgid "URL of the jabber server to use."
 msgstr "Jabber සේවාදායකය භාවිතය සඳහා වන URLය."
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:57
 msgid "URL where the backup is saved to."
 msgstr "උපස්ථය සුරකිය යුතු ස්ථානයේ URLය."
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:58
 msgid "User Color"
 msgstr "පරිශීලක වර්ණය"
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:59
 msgid "User Name"
 msgstr "පරිශීලක නමය"
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:60
 msgid "User name that is used throughout the desktop."
 msgstr "වැඩතලය පුරා භාවිත වන පරිශීලක නම."
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:61
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "පරිශීලකයින්ට ලැයිස්තු දසුන හරහා මෙම ක්‍රියාකාරකම් මැකීමට අවසර නොදෙනු ඇත."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:62
 msgid "Volume Level"
 msgstr "ශබ්ද මට්ටම"
 
-#: ../data/sugar.schemas.in.h:65
+#: ../data/sugar.schemas.in.h:63
 msgid "Volume level for the sound device."
 msgstr "ශබ්ද උපාංගය සඳහා ශබ්ද මට්ටම."
 
-#: ../data/sugar.schemas.in.h:66
+#: ../data/sugar.schemas.in.h:64
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -1134,6 +1122,8 @@ msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"රැහැන් රහිත '%s' ජාලය සඳහා අවශ්‍ය වන \n"
+"සංඛේතාංකන යතුර."
 
 #: ../src/jarabe/desktop/keydialog.py:140
 msgid "Key Type:"
@@ -1226,7 +1216,7 @@ msgstr "නිෂ්ප්‍රභ කරනවා"
 
 #: ../src/jarabe/frame/activitiestray.py:644
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "අනෙක් පාර්ශවය විසින් ගොනු හුවමාරුව අවංගු කරන ලදි"
 
 #: ../src/jarabe/frame/activitiestray.py:692
 #, python-format
@@ -1235,7 +1225,6 @@ msgid "Transfer to %s"
 msgstr "%s ට හුවමාරු කරන්න"
 
 #: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "ඉවත් කරන්න"
@@ -1291,7 +1280,8 @@ msgid "Next"
 msgstr "ඊළඟ"
 
 #: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/palettes.py:64
+#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
+#: ../src/jarabe/journal/palettes.py:64
 #: ../src/jarabe/journal/volumestoolbar.py:130
 msgid "Untitled"
 msgstr "ශීර්ෂ පාඨ නොමැති"
@@ -1448,11 +1438,11 @@ msgstr "ඔබගේ ජර්නලය හිස්ය"
 
 #: ../src/jarabe/journal/listview.py:320
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "ඔබේ ලේඛන බහලුව හිස්ව ඇත"
 
 #: ../src/jarabe/journal/listview.py:322
 msgid "The device is empty"
-msgstr ""
+msgstr "මෙවලම හිස්ව ඇත"
 
 #: ../src/jarabe/journal/listview.py:324
 msgid "No matching entries"
@@ -1719,19 +1709,19 @@ msgstr "මෙවලමේ වාහකයා/සබැඳිය වෙනස්
 
 #: ../src/jarabe/model/network.py:297
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "මෙවලමට සබතාවයක් ඇතැයි අනුමාන කර ඇත."
 
 #: ../src/jarabe/model/network.py:299
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "ඉල්ලීම්කරු දැන් සිටී"
 
 #: ../src/jarabe/model/network.py:301
 msgid "The modem could not be found."
-msgstr ""
+msgstr "මොඩමය සොයාගත නොහැක."
 
 #: ../src/jarabe/model/network.py:303
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "Bluetooth සබඳතාවය අසමත් විය හෝ කල් ඉක්මවා ඇත."
 
 #: ../src/jarabe/model/network.py:305
 msgid "Unused."
@@ -1831,3 +1821,12 @@ msgstr "මූලය පෙන්වන්න: %r"
 #: ../src/jarabe/util/emulator.py:40
 msgid "Sugar in a window"
 msgstr "Sugar කවුළුවක"
+
+#~ msgid "Additional directories which can contain updated translations."
+#~ msgstr "යාවත්කාල කල පරිවර්තන අඩංගු විය හැකි අමතර නාමාවලි."
+
+#~ msgid "Directory to search for translations"
+#~ msgstr "පරිවර්ථන සඳහා සෙවීමට නාමාවලිය"
+
+#~ msgid "Error in extreme pm argument, use on/off."
+#~ msgstr "ආන්තික pm විස්තාරකයේ දෝෂයකි, සක්‍රීයයි/අක්‍රීයයි භාවිතා කරන්න."

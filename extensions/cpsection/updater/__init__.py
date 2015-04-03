@@ -18,5 +18,5 @@ from gettext import gettext as _
 
 CLASS = 'ActivityUpdater'
 ICON = 'module-updater'
-TITLE = _('Software update')
+TITLE = _('Software Update')
 KEYWORDS = ['software', 'activity', 'update']

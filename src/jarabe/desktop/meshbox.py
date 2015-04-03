@@ -21,26 +21,28 @@ from gettext import gettext as _
 import logging
 
 import dbus
-import hippo
-import glib
-import gobject
-import gtk
-import gconf
+from gi.repository import GLib
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import GConf
 
-from sugar.graphics.icon import CanvasIcon, Icon
-from sugar.graphics import style
-from sugar.graphics import palette
-from sugar.graphics import iconentry
-from sugar.graphics.menuitem import MenuItem
+from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import CanvasIcon
+from sugar3.graphics import style
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 
 from jarabe.model import neighborhood
 from jarabe.model.buddy import get_owner_instance
 from jarabe.view.buddyicon import BuddyIcon
 from jarabe.desktop.snowflakelayout import SnowflakeLayout
-from jarabe.desktop.spreadlayout import SpreadLayout
 from jarabe.desktop.networkviews import WirelessNetworkView
 from jarabe.desktop.networkviews import OlpcMeshView
 from jarabe.desktop.networkviews import SugarAdhocView
+from jarabe.desktop.viewcontainer import ViewContainer
+from jarabe.desktop.favoriteslayout import SpreadLayout
+from jarabe.util.normalize import normalize_string
 from jarabe.model import network
 from jarabe.model.network import AccessPoint
 from jarabe.model.olpcmesh import OlpcMeshManager
@@ -48,10 +50,6 @@ from jarabe.model.adhoc import get_adhoc_manager_instance
 from jarabe.journal import misc
 
 
-_AP_ICON_NAME = 'network-wireless'
-_OLPC_MESH_ICON_NAME = 'network-mesh'
-
-_AUTOSEARCH_TIMEOUT = 1000
 _FILTERED_ALPHA = 0.33
 
 
@@ -59,47 +57,55 @@ class _ActivityIcon(CanvasIcon):
     def __init__(self, model, file_name, xo_color,
                  size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, file_name=file_name,
-                            xo_color=xo_color,
-                            size=size)
+                            xo_color=xo_color, pixel_size=size)
+
         self._model = model
-        self.connect('activated', self._clicked_cb)
+        self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
-        primary_text = glib.markup_escape_text(self._model.bundle.get_name())
-        secondary_text = glib.markup_escape_text(self._model.get_name())
-        p_icon = Icon(file=self._model.bundle.get_icon(),
-                      xo_color=self._model.get_color())
-        p_icon.props.icon_size = gtk.ICON_SIZE_LARGE_TOOLBAR
-        p = palette.Palette(None,
-                            primary_text=primary_text,
-                            secondary_text=secondary_text,
-                            icon=p_icon)
+        primary_text = GLib.markup_escape_text(self._model.bundle.get_name())
+        secondary_text = GLib.markup_escape_text(self._model.get_name())
+        palette_icon = Icon(file=self._model.bundle.get_icon(),
+                            xo_color=self._model.get_color())
+        palette_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
+        palette = Palette(None,
+                          primary_text=primary_text,
+                          secondary_text=secondary_text,
+                          icon=palette_icon)
 
         private = self._model.props.private
         joined = get_owner_instance() in self._model.props.buddies
 
+        menu_box = PaletteMenuBox()
+
         if joined:
-            item = MenuItem(_('Resume'), 'activity-start')
-            item.connect('activate', self._clicked_cb)
-            item.show()
-            p.menu.append(item)
+            item = PaletteMenuItem(_('Resume'))
+            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            item.set_image(icon)
+            item.connect('activate', self.__palette_item_clicked_cb)
+            menu_box.append_item(item)
         elif not private:
-            item = MenuItem(_('Join'), 'activity-start')
-            item.connect('activate', self._clicked_cb)
-            item.show()
-            p.menu.append(item)
+            item = PaletteMenuItem(_('Join'))
+            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            item.set_image(icon)
+            item.connect('activate', self.__palette_item_clicked_cb)
+            menu_box.append_item(item)
 
-        return p
+        palette.set_content(menu_box)
+        menu_box.show_all()
 
-    def _clicked_cb(self, item):
+        self.connect_to_palette_pop_events(palette)
+        return palette
+
+    def __palette_item_clicked_cb(self, item):
         bundle = self._model.get_bundle()
         misc.launch(bundle, activity_id=self._model.activity_id,
                     color=self._model.get_color())
 
 
-class ActivityView(hippo.CanvasBox):
+class ActivityView(SnowflakeLayout):
     def __init__(self, model):
-        hippo.CanvasBox.__init__(self)
+        SnowflakeLayout.__init__(self)
 
         self._model = model
         self._model.connect('current-buddy-added', self.__buddy_added_cb)
@@ -107,11 +113,9 @@ class ActivityView(hippo.CanvasBox):
 
         self._icons = {}
 
-        self._layout = SnowflakeLayout()
-        self.set_layout(self._layout)
-
         self._icon = self._create_icon()
-        self._layout.add(self._icon, center=True)
+        self._icon.show()
+        self.add_icon(self._icon, center=True)
 
         self._icon.palette_invoker.cache_palette = False
 
@@ -134,11 +138,13 @@ class ActivityView(hippo.CanvasBox):
     def _add_buddy(self, buddy):
         icon = BuddyIcon(buddy, style.STANDARD_ICON_SIZE)
         self._icons[buddy.props.key] = icon
-        self._layout.add(icon)
+        self.add_icon(icon)
+        icon.show()
 
     def __buddy_removed_cb(self, activity, buddy):
         icon = self._icons[buddy.props.key]
         del self._icons[buddy.props.key]
+        self.remove(icon)
         icon.destroy()
 
     def set_filter(self, query):
@@ -154,84 +160,16 @@ class ActivityView(hippo.CanvasBox):
                 icon.set_filter(query)
 
 
-class MeshToolbar(gtk.Toolbar):
-    __gtype_name__ = 'MeshToolbar'
-
+class DeviceObserver(GObject.GObject):
     __gsignals__ = {
-        'query-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([str])),
-    }
-
-    def __init__(self):
-        gtk.Toolbar.__init__(self)
-
-        self._query = None
-        self._autosearch_timer = None
-
-        self._add_separator()
-
-        tool_item = gtk.ToolItem()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-        self.search_entry = iconentry.IconEntry()
-        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'system-search')
-        self.search_entry.add_clear_button()
-        self.search_entry.set_width_chars(25)
-        self.search_entry.connect('activate', self._entry_activated_cb)
-        self.search_entry.connect('changed', self._entry_changed_cb)
-        tool_item.add(self.search_entry)
-        self.search_entry.show()
-
-        self._add_separator(expand=True)
-
-    def _add_separator(self, expand=False):
-        separator = gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.GRID_CELL_SIZE,
-                                       style.GRID_CELL_SIZE)
-        self.insert(separator, -1)
-        separator.show()
-
-    def _entry_activated_cb(self, entry):
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        new_query = entry.props.text
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
-
-    def _entry_changed_cb(self, entry):
-        if not entry.props.text:
-            entry.activate()
-            return
-
-        if self._autosearch_timer:
-            gobject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = gobject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self._autosearch_timer_cb)
-
-    def _autosearch_timer_cb(self):
-        logging.debug('_autosearch_timer_cb')
-        self._autosearch_timer = None
-        self.search_entry.activate()
-        return False
-
-
-class DeviceObserver(gobject.GObject):
-    __gsignals__ = {
-        'access-point-added': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                               ([gobject.TYPE_PYOBJECT])),
-        'access-point-removed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                                 ([gobject.TYPE_PYOBJECT])),
+        'access-point-added': (GObject.SignalFlags.RUN_FIRST, None,
+                               ([GObject.TYPE_PYOBJECT])),
+        'access-point-removed': (GObject.SignalFlags.RUN_FIRST, None,
+                                 ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, device):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
         self._bus = dbus.SystemBus()
         self.device = device
 
@@ -265,14 +203,16 @@ class DeviceObserver(gobject.GObject):
         self.emit('access-point-removed', access_point_o)
 
     def disconnect(self):
-        self._bus.remove_signal_receiver(self.__access_point_added_cb,
-                                         signal_name='AccessPointAdded',
-                                         path=self.device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
-        self._bus.remove_signal_receiver(self.__access_point_removed_cb,
-                                         signal_name='AccessPointRemoved',
-                                         path=self.device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__access_point_added_cb,
+            signal_name='AccessPointAdded',
+            path=self.device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__access_point_removed_cb,
+            signal_name='AccessPointRemoved',
+            path=self.device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
 
 
 class NetworkManagerObserver(object):
@@ -286,7 +226,7 @@ class NetworkManagerObserver(object):
         self._netmgr = None
         self._olpc_mesh_device_o = None
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         self._have_adhoc_networks = client.get_bool(self._SHOW_ADHOC_GCONF_KEY)
 
     def listen(self):
@@ -319,14 +259,16 @@ class NetworkManagerObserver(object):
         # of a good way to. NM could really use some love here.
 
         netmgr_props = dbus.Interface(self._netmgr, dbus.PROPERTIES_IFACE)
-        active_connections_o = netmgr_props.Get(network.NM_IFACE, 'ActiveConnections')
+        active_connections_o = netmgr_props.Get(network.NM_IFACE,
+                                                'ActiveConnections')
 
         for conn_o in active_connections_o:
             obj = self._bus.get_object(network.NM_IFACE, conn_o)
             props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
             state = props.Get(network.NM_ACTIVE_CONN_IFACE, 'State')
             if state == network.NM_ACTIVE_CONNECTION_STATE_ACTIVATING:
-                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE, 'SpecificObject')
+                ap_o = props.Get(network.NM_ACTIVE_CONN_IFACE,
+                                 'SpecificObject')
                 found = False
                 if ap_o != '/':
                     for net in self._box.wireless_networks.values():
@@ -334,8 +276,9 @@ class NetworkManagerObserver(object):
                             found = True
                             net.create_keydialog(kwargs['response'])
                 if not found:
-                    raise Exception('Could not determine AP for specific object'
-                                    ' %s' % conn_o)
+                    raise Exception(
+                        'Could not determine AP for specific object'
+                        ' %s' % conn_o)
 
     def __get_devices_reply_cb(self, devices_o):
         for dev_o in devices_o:
@@ -401,13 +344,18 @@ class NetworkManagerObserver(object):
                         self._box.add_adhoc_networks(device)
 
 
-class MeshBox(gtk.VBox):
+class MeshBox(ViewContainer):
     __gtype_name__ = 'SugarMeshBox'
 
-    def __init__(self):
+    def __init__(self, toolbar):
         logging.debug('STARTUP: Loading the mesh view')
 
-        gobject.GObject.__init__(self)
+        layout = SpreadLayout()
+
+        # Round off icon size to an even number to ensure that the icon
+        owner_icon = BuddyIcon(get_owner_instance(),
+                               style.STANDARD_ICON_SIZE & ~1)
+        ViewContainer.__init__(self, layout, owner_icon)
 
         self.wireless_networks = {}
         self._adhoc_manager = None
@@ -420,23 +368,10 @@ class MeshBox(gtk.VBox):
         self._buddy_to_activity = {}
         self._suspended = True
         self._query = ''
-        self._owner_icon = None
 
-        self._toolbar = MeshToolbar()
-        self._toolbar.connect('query-changed', self._toolbar_query_changed_cb)
-        self.pack_start(self._toolbar, expand=False)
-        self._toolbar.show()
-
-        canvas = hippo.Canvas()
-        self.add(canvas)
-        canvas.show()
-
-        self._layout_box = hippo.CanvasBox( \
-                background_color=style.COLOR_WHITE.get_int())
-        canvas.set_root(self._layout_box)
-
-        self._layout = SpreadLayout()
-        self._layout_box.set_layout(self._layout)
+        toolbar.connect('query-changed', self._toolbar_query_changed_cb)
+        toolbar.search_entry.connect('icon-press',
+                                     self.__clear_icon_pressed_cb)
 
         for buddy_model in self._model.get_buddies():
             self._add_buddy(buddy_model)
@@ -452,18 +387,6 @@ class MeshBox(gtk.VBox):
 
         netmgr_observer = NetworkManagerObserver(self)
         netmgr_observer.listen()
-
-    def do_size_allocate(self, allocation):
-        width = allocation.width
-        height = allocation.height
-
-        min_w_, icon_width = self._owner_icon.get_width_request()
-        min_h_, icon_height = self._owner_icon.get_height_request(icon_width)
-        x = (width - icon_width) / 2
-        y = (height - icon_height) / 2 - style.GRID_CELL_SIZE
-        self._layout.move(self._owner_icon, x, y)
-
-        gtk.VBox.do_size_allocate(self, allocation)
 
     def _buddy_added_cb(self, model, buddy_model):
         self._add_buddy(buddy_model)
@@ -482,10 +405,11 @@ class MeshBox(gtk.VBox):
                             self.__buddy_notify_current_activity_cb)
         if buddy_model.props.current_activity is not None:
             return
-        icon = BuddyIcon(buddy_model)
         if buddy_model.is_owner():
-            self._owner_icon = icon
-        self._layout.add(icon)
+            return
+        icon = BuddyIcon(buddy_model)
+        self.add(icon)
+        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -495,9 +419,8 @@ class MeshBox(gtk.VBox):
     def _remove_buddy(self, buddy_model):
         logging.debug('MeshBox._remove_buddy')
         icon = self._buddies[buddy_model.props.key]
-        self._layout.remove(icon)
+        self.remove(icon)
         del self._buddies[buddy_model.props.key]
-        icon.destroy()
 
     def __buddy_notify_current_activity_cb(self, buddy_model, pspec):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
@@ -510,7 +433,8 @@ class MeshBox(gtk.VBox):
 
     def _add_activity(self, activity_model):
         icon = ActivityView(activity_model)
-        self._layout.add(icon)
+        self.add(icon)
+        icon.show()
 
         if hasattr(icon, 'set_filter'):
             icon.set_filter(self._query)
@@ -519,9 +443,8 @@ class MeshBox(gtk.VBox):
 
     def _remove_activity(self, activity_model):
         icon = self._activities[activity_model.activity_id]
-        self._layout.remove(icon)
+        self.remove(icon)
         del self._activities[activity_model.activity_id]
-        icon.destroy()
 
     # add AP to its corresponding network icon on the desktop,
     # creating one if it doesn't already exist
@@ -533,7 +456,8 @@ class MeshBox(gtk.VBox):
             # this is a new network
             icon = WirelessNetworkView(ap)
             self.wireless_networks[hash_value] = icon
-            self._layout.add(icon)
+            self.add(icon)
+            icon.show()
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
@@ -541,7 +465,7 @@ class MeshBox(gtk.VBox):
         # remove a network if it has no APs left
         if net.num_aps() == 0:
             net.disconnect()
-            self._layout.remove(net)
+            self.remove(net)
             del self.wireless_networks[hash_value]
 
     def _ap_props_changed_cb(self, ap, old_hash_value):
@@ -619,18 +543,20 @@ class MeshBox(gtk.VBox):
 
     def remove_adhoc_networks(self):
         for icon in self._adhoc_networks:
-            self._layout.remove(icon)
+            self.remove(icon)
         self._adhoc_networks = []
         self._adhoc_manager.stop_listening()
 
     def _add_adhoc_network_icon(self, channel):
         icon = SugarAdhocView(channel)
-        self._layout.add(icon)
+        self.add(icon)
+        icon.show()
         self._adhoc_networks.append(icon)
 
     def _add_olpc_mesh_icon(self, mesh_mgr, channel):
         icon = OlpcMeshView(mesh_mgr, channel)
-        self._layout.add(icon)
+        self.add(icon)
+        icon.show()
         self._mesh.append(icon)
 
     def enable_olpc_mesh(self, mesh_device):
@@ -648,13 +574,13 @@ class MeshBox(gtk.VBox):
             logging.debug('removing OLPC mesh IBSS')
             net.remove_all_aps()
             net.disconnect()
-            self._layout.remove(net)
+            self.remove(net)
             del self.wireless_networks[hash_value]
 
     def disable_olpc_mesh(self, mesh_device):
         for icon in self._mesh:
             icon.disconnect()
-            self._layout.remove(icon)
+            self.remove(icon)
         self._mesh = []
 
     def suspend(self):
@@ -670,10 +596,10 @@ class MeshBox(gtk.VBox):
                 net.props.paused = False
 
     def _toolbar_query_changed_cb(self, toolbar, query):
-        self._query = query.lower()
-        for icon in self._layout_box.get_children():
+        self._query = normalize_string(query.decode('utf-8'))
+        for icon in self.get_children():
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(self._query)
 
-    def focus_search_entry(self):
-        self._toolbar.search_entry.grab_focus()
+    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
+        self.grab_focus()

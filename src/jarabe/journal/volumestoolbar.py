@@ -19,21 +19,22 @@ import os
 import statvfs
 from gettext import gettext as _
 
-import gobject
-import gio
-import glib
-import gtk
-import gconf
+from gi.repository import GObject
+from gi.repository import Gio
+from gi.repository import GLib
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GConf
 import cPickle
 import xapian
 import simplejson
 import tempfile
 import shutil
 
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.graphics.palette import Palette
-from sugar.graphics.xocolor import XoColor
-from sugar import env
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics.palette import Palette
+from sugar3.graphics.xocolor import XoColor
+from sugar3 import env
 
 from jarabe.journal import model
 from jarabe.view.palettes import VolumePalette
@@ -159,18 +160,18 @@ def _convert_entry(root, document):
                       os.path.join(root, filename), metadata)
 
 
-class VolumesToolbar(gtk.Toolbar):
+class VolumesToolbar(Gtk.Toolbar):
     __gtype_name__ = 'VolumesToolbar'
 
     __gsignals__ = {
-        'volume-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-changed': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
     def __init__(self):
-        gtk.Toolbar.__init__(self)
+        Gtk.Toolbar.__init__(self)
         self._mount_added_hid = None
         self._mount_removed_hid = None
 
@@ -182,17 +183,17 @@ class VolumesToolbar(gtk.Toolbar):
 
         self.connect('destroy', self.__destroy_cb)
 
-        gobject.idle_add(self._set_up_volumes)
+        GObject.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
-        volume_monitor = gio.volume_monitor_get()
+        volume_monitor = Gio.VolumeMonitor.get()
         volume_monitor.disconnect(self._mount_added_hid)
         volume_monitor.disconnect(self._mount_removed_hid)
 
     def _set_up_volumes(self):
         self._set_up_documents_button()
 
-        volume_monitor = gio.volume_monitor_get()
+        volume_monitor = Gio.VolumeMonitor.get()
         self._mount_added_hid = volume_monitor.connect('mount-added',
                                                        self.__mount_added_cb)
         self._mount_removed_hid = volume_monitor.connect('mount-removed',
@@ -206,7 +207,7 @@ class VolumesToolbar(gtk.Toolbar):
         if documents_path is not None:
             button = DocumentsButton(documents_path)
             button.props.group = self._volume_buttons[0]
-            label = glib.markup_escape_text(_('Documents'))
+            label = GLib.markup_escape_text(_('Documents'))
             button.set_palette(Palette(label))
             button.connect('toggled', self._button_toggled_cb)
             button.show()
@@ -228,7 +229,7 @@ class VolumesToolbar(gtk.Toolbar):
         if os.path.exists(os.path.join(mount.get_root().get_path(),
                                        _JOURNAL_0_METADATA_DIR)):
             logging.debug('Convert DS-0 Journal entries: starting conversion')
-            gobject.idle_add(_convert_entries, mount.get_root().get_path())
+            GObject.idle_add(_convert_entries, mount.get_root().get_path())
 
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
@@ -249,13 +250,6 @@ class VolumesToolbar(gtk.Toolbar):
     def _button_toggled_cb(self, button):
         if button.props.active:
             self.emit('volume-changed', button.mount_point)
-
-    def _unmount_activated_cb(self, menu_item, mount):
-        logging.debug('VolumesToolbar._unmount_activated_cb: %r', mount)
-        mount.unmount(self.__unmount_cb)
-
-    def __unmount_cb(self, source, result):
-        logging.debug('__unmount_cb %r %r', source, result)
 
     def _get_button_for_mount(self, mount):
         mount_point = mount.get_root().get_path()
@@ -281,7 +275,7 @@ class VolumesToolbar(gtk.Toolbar):
 
 class BaseButton(RadioToolButton):
     __gsignals__ = {
-        'volume-error': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
+        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
     }
 
@@ -290,14 +284,14 @@ class BaseButton(RadioToolButton):
 
         self.mount_point = mount_point
 
-        self.drag_dest_set(gtk.DEST_DEFAULT_ALL,
-                           [('journal-object-id', 0, 0)],
-                           gtk.gdk.ACTION_COPY)
+        self.drag_dest_set(Gtk.DestDefaults.ALL,
+                           [Gtk.TargetEntry.new('journal-object-id', 0, 0)],
+                           Gdk.DragAction.COPY)
         self.connect('drag-data-received', self._drag_data_received_cb)
 
     def _drag_data_received_cb(self, widget, drag_context, x, y,
                                selection_data, info, timestamp):
-        object_id = selection_data.data
+        object_id = selection_data.get_data()
         metadata = model.get(object_id)
         file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
@@ -323,20 +317,20 @@ class VolumeButton(BaseButton):
         BaseButton.__init__(self, mount_point)
 
         icon_name = None
-        icon_theme = gtk.icon_theme_get_default()
+        icon_theme = Gtk.IconTheme.get_default()
         for icon_name in mount.get_icon().props.names:
             icon_info = icon_theme.lookup_icon(icon_name,
-                                               gtk.ICON_SIZE_LARGE_TOOLBAR, 0)
+                                               Gtk.IconSize.LARGE_TOOLBAR, 0)
             if icon_info is not None:
                 break
 
         if icon_name is None:
             icon_name = 'drive'
 
-        self.props.named_icon = icon_name
+        self.props.icon_name = icon_name
 
         # TODO: retrieve the colors from the owner of the device
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
 
@@ -351,9 +345,9 @@ class JournalButton(BaseButton):
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
 
-        self.props.named_icon = 'activity-journal'
+        self.props.icon_name = 'activity-journal'
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color
 
@@ -365,16 +359,16 @@ class JournalButton(BaseButton):
 class JournalButtonPalette(Palette):
 
     def __init__(self, mount):
-        Palette.__init__(self, glib.markup_escape_text(_('Journal')))
-        vbox = gtk.VBox()
+        Palette.__init__(self, GLib.markup_escape_text(_('Journal')))
+        vbox = Gtk.VBox()
         self.set_content(vbox)
         vbox.show()
 
-        self._progress_bar = gtk.ProgressBar()
+        self._progress_bar = Gtk.ProgressBar()
         vbox.add(self._progress_bar)
         self._progress_bar.show()
 
-        self._free_space_label = gtk.Label()
+        self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
         vbox.add(self._free_space_label)
         self._free_space_label.show()
@@ -397,8 +391,8 @@ class DocumentsButton(BaseButton):
     def __init__(self, documents_path):
         BaseButton.__init__(self, mount_point=documents_path)
 
-        self.props.named_icon = 'user-documents'
+        self.props.icon_name = 'user-documents'
 
-        client = gconf.client_get_default()
+        client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
         self.props.xo_color = color

@@ -1,11 +1,11 @@
-AC_INIT([Sugar],[0.96.1],[],[sugar])
+AC_INIT([Sugar],[0.98.8],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.96.1"
+SUCROSE_VERSION="0.98.8"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
@@ -14,7 +14,7 @@ AM_MAINTAINER_MODE
 
 AM_PATH_PYTHON
 
-PKG_CHECK_MODULES(SHELL, pygtk-2.0 gtk+-2.0 gconf-2.0)
+PKG_CHECK_MODULES(SHELL, gtk+-3.0 gconf-2.0)
 
 # Setup GETTEXT
 #

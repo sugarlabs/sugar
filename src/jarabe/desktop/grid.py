@@ -17,10 +17,11 @@
 
 import random
 
-import gobject
-import gtk
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
 
-from sugar import _sugarext
+from gi.repository import SugarExt
 
 
 _PLACE_TRIALS = 20
@@ -29,37 +30,40 @@ _REFRESH_RATE = 200
 _MAX_COLLISIONS_PER_REFRESH = 20
 
 
-class Grid(_sugarext.Grid):
+class Grid(SugarExt.Grid):
     __gsignals__ = {
-        'child-changed': (gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE,
-                          ([gobject.TYPE_PYOBJECT])),
+        'child-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([GObject.TYPE_PYOBJECT])),
     }
 
     def __init__(self, width, height):
-        gobject.GObject.__init__(self)
+        GObject.GObject.__init__(self)
 
-        self.width = width
-        self.height = height
         self._children = []
         self._child_rects = {}
         self._locked_children = set()
         self._collisions = []
         self._collisions_sid = 0
 
-        self.setup(self.width, self.height)
+        self.setup(width, height)
 
     def add(self, child, width, height, x=None, y=None, locked=False):
         if x is not None and y is not None:
-            rect = gtk.gdk.Rectangle(x, y, width, height)
+            rect = Gdk.Rectangle()
+            rect.x = x
+            rect.y = y
+            rect.width = width
+            rect.height = height
             weight = self.compute_weight(rect)
         else:
             trials = _PLACE_TRIALS
             weight = _MAX_WEIGHT
             while trials > 0 and weight:
-                x = int(random.random() * (self.width - width))
-                y = int(random.random() * (self.height - height))
-
-                rect = gtk.gdk.Rectangle(x, y, width, height)
+                rect = Gdk.Rectangle()
+                rect.x = int(random.random() * (self.width - width))
+                rect.y = int(random.random() * (self.height - height))
+                rect.width = width
+                rect.height = height
                 new_weight = self.compute_weight(rect)
                 if weight > new_weight:
                     weight = new_weight
@@ -74,6 +78,9 @@ class Grid(_sugarext.Grid):
 
         if weight > 0:
             self._detect_collisions(child)
+
+    def is_in_grid(self, child):
+        return child in self._children
 
     def remove(self, child):
         self._children.remove(child)
@@ -107,39 +114,45 @@ class Grid(_sugarext.Grid):
 
         new_rects = []
 
+        def _create_rectangle(x, y, width, height):
+            rect = Gdk.Rectangle()
+            rect.x, rect.y = x, y
+            rect.width, rect.height = width, height
+            return rect
+
         # Get rects right, left, bottom and top
         if (rect.x + rect.width < self.width - 1):
-            new_rects.append(gtk.gdk.Rectangle(rect.x + 1, rect.y,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y,
                                                rect.width, rect.height))
 
         if (rect.x - 1 > 0):
-            new_rects.append(gtk.gdk.Rectangle(rect.x - 1, rect.y,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y,
                                                rect.width, rect.height))
 
         if (rect.y + rect.height < self.height - 1):
-            new_rects.append(gtk.gdk.Rectangle(rect.x, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x, rect.y + 1,
                                                rect.width, rect.height))
 
         if (rect.y - 1 > 0):
-            new_rects.append(gtk.gdk.Rectangle(rect.x, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x, rect.y - 1,
                                                rect.width, rect.height))
 
         # Get diagonal rects
         if rect.x + rect.width < self.width - 1 and \
                 rect.y + rect.height < self.height - 1:
-            new_rects.append(gtk.gdk.Rectangle(rect.x + 1, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y + 1,
                                                rect.width, rect.height))
 
         if rect.x - 1 > 0 and rect.y + rect.height < self.height - 1:
-            new_rects.append(gtk.gdk.Rectangle(rect.x - 1, rect.y + 1,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y + 1,
                                                rect.width, rect.height))
 
         if rect.x + rect.width < self.width - 1 and rect.y - 1 > 0:
-            new_rects.append(gtk.gdk.Rectangle(rect.x + 1, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x + 1, rect.y - 1,
                                                rect.width, rect.height))
 
         if rect.x - 1 > 0 and rect.y - 1 > 0:
-            new_rects.append(gtk.gdk.Rectangle(rect.x - 1, rect.y - 1,
+            new_rects.append(_create_rectangle(rect.x - 1, rect.y - 1,
                                                rect.width, rect.height))
 
         random.shuffle(new_rects)
@@ -185,11 +198,12 @@ class Grid(_sugarext.Grid):
         collision_found = False
         child_rect = self._child_rects[child]
         for c in self._children:
-            intersection = child_rect.intersect(self._child_rects[c])
+            intersects_, intersection = Gdk.rectangle_intersect(
+                child_rect, self._child_rects[c])
             if c != child and intersection.width > 0:
+                collision_found = True
                 if (c not in self._locked_children and
                     c not in self._collisions):
-                    collision_found = True
                     self._collisions.append(c)
 
         if collision_found:
@@ -197,8 +211,8 @@ class Grid(_sugarext.Grid):
                 self._collisions.append(child)
 
         if self._collisions and not self._collisions_sid:
-            self._collisions_sid = gobject.timeout_add(_REFRESH_RATE,
-                    self.__solve_collisions_cb, priority=gobject.PRIORITY_LOW)
+            self._collisions_sid = GObject.timeout_add(_REFRESH_RATE,
+                    self.__solve_collisions_cb, priority=GObject.PRIORITY_LOW)
 
     def get_child_rect(self, child):
         return self._child_rects[child]
