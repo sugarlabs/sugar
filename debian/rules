@@ -118,7 +118,7 @@ tools_debug = gdb
 CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar-$(pkgbranch), python-sugar-toolkit-$(pkgbranch), sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-wnck-3.0
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0
+CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch), x11-xserver-utils
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
