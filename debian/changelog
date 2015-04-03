@@ -1,4 +1,4 @@
-sugar-0.98 (0.98.8-2) UNRELEASED; urgency=medium
+sugar-0.98 (0.98.8-2) unstable; urgency=medium
 
   * Track xz compressed upstream tarballs (favored over bzip2).
   * Update copyright info:
@@ -32,7 +32,7 @@ sugar-0.98 (0.98.8-2) UNRELEASED; urgency=medium
   * Avoid env in hash-bang of python script, as recommended by Python
     Policy.
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 03 Apr 2015 23:40:51 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 03 Apr 2015 23:47:36 +0200
 
 sugar-0.98 (0.98.8-1) unstable; urgency=low
 
