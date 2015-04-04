@@ -136,7 +136,12 @@ class WirelessPalette(Palette):
         self._set_channel(channel)
 
     def _set_channel(self, channel):
-        self._channel_label.set_text('%s: %d' % (_('Channel'), channel))
+        if channel == 0:
+            self._channel_label.set_text('%s: %s' % (_('Channel'),
+                                                     _('Unknown')))
+        else:
+            self._channel_label.set_text('%s: %d' % (_('Channel'),
+                                                     channel))
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
