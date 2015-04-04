@@ -1,3 +1,9 @@
+sugar-0.102 (0.100.1-2) UNRELEASED; urgency=medium
+
+  * Bump major version.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2015 01:33:17 +0200
+
 sugar-0.100 (0.100.1-1) experimental; urgency=medium
 
   [ upstream ]

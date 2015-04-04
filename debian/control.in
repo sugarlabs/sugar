@@ -1,4 +1,4 @@
-Source: sugar-0.100
+Source: sugar-0.102
 Section: x11
 Priority: optional
 Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
@@ -12,7 +12,7 @@ Vcs-Git: git://git.debian.org/collab-maint/sugar
 Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
-Package: sucrose-0.100
+Package: sucrose-0.102
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends}
@@ -22,7 +22,7 @@ Provides: ${cdbs:Provides},
  ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - Sucrose 0.100
+Description: Sugar graphical shell - Sucrose 0.102
  Sugar is a graphical user interface aimed at children.
  .
  Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
@@ -32,7 +32,7 @@ Description: Sugar graphical shell - Sucrose 0.100
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
 
-Package: sugar-session-0.100
+Package: sugar-session-0.102
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends},
@@ -54,7 +54,7 @@ Description: Sugar graphical shell - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-tools-0.100
+Package: sugar-tools-0.102
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends},
@@ -79,7 +79,7 @@ Description: Sugar graphical shell - window manager
   - sugar-install-bundle
   - sugar-launch
 
-Package: python-jarabe-0.100
+Package: python-jarabe-0.102
 Section: python
 Architecture: all
 Depends: ${cdbs:Depends},

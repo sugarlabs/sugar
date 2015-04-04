@@ -692,9 +692,9 @@ License: LGPL-2.1+
 Files: po/ar.po
 Copyright: %(current)s إلى %(new)s (الحجم %(size)s)"
   YEAR THE PACKAGE'S HOLDER
-  الاتصال (APN):"
   المحدد، استخدم on/off."
-  تحكم سكر: key=%s ليس متاحا كخيار"
+  بتخطيطات لوح� المفاتيح، كل على الشكل ‪layout(variant)‬"
+  عند البدء، أو \"system\" (النظام) "
 License: UNKNOWN
  FIXME
 
@@ -741,35 +741,15 @@ License: UNKNOWN
  FIXME
 
 Files: po/fr.po
-Copyright: 2007, the Package Owner
-  Personnel (PIN) :"
+Copyright: Personnel (PIN) :"
   [ args ...
   afficher les informations sur cette cl� \n"
-  correspondante"
   de chiffrement sans fil est requise pour\n"
   de d�verrouillage personnelle (PUK) du r�seau GSM "
-  depuis %s"
   d�finir la valeur actuelle de cette cl� \n"
-  et apportent de nouvelles fonctionnalit�s."
-  et licence"
-  incorrect. Utiliser 0/1."
-  incorrect. Utiliser marche/arrêt."
-  install�e"
-  install�es"
   je ne parle pas '%s'."
-  la d�connexion."
-  le transfert du fichier"
-  logicielle"
-  obtenir la valeur actuelle associ�e à cette cl� \n"
-  pour d�marrer l'entr�e"
-  pour reprendre l'entr�e"
-  retir�."
-  supprim�e ou a disparu."
   sur le serveur de l'�cole."
-  tactile"
   trouv�es : %s module: %r"
-  une erreur inattendue."
-  à le modifier et/ou à en distribuer des copies "
 License: UNKNOWN
  FIXME
 
