@@ -163,9 +163,12 @@ CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar
 # Needed for our packaging
 CDBS_BUILD_DEPENDS += , python-empy
 
-# Ensure proper hash-bang in Python script (Python Policy 0.9 §3.1)
-#  * cdbs_expand_pythonruntime only in cdbs 0.5, but fallback is sensible
+# Ensure optimal hash-bang + dependency for scripts (see Python Policy)
+#  * TODO: drop cdbs_python_binary fallback when cdbs 0.5 is stable
+CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, python
+CDBS_DEPENDS_sugar-tools-$(pkgbranch) +=, python
 binary-fixup/sugar-session-$(pkgbranch)::
+$(patsubst %,binary-fixup/sugar-%-$(pkgbranch),session tools)::
 	egrep -r -l -Z '^#! ?/usr/bin/(env )?python[[:print:]]*$$' \
 		debian/$(cdbs_curpkg)/usr/bin/* \
-		| xargs -r -0 perl -pi -e 's,^#! ?/usr/bin/(env )?python[[:print:]]*$$,#!/usr/bin/python$(cdbs_expand_pythonruntime),'
+		| xargs -r -0 perl -pi -e 's,^#! ?/usr/bin/(env )?python[[:print:]]*$$,#!/usr/bin/$(strip $(or $(cdbs_curpythonruntime),$(cdbs_python_binary))),'
