@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Copyright (C) 2007, Red Hat, Inc.
 #
@@ -19,30 +19,36 @@
 import os
 import sys
 import dbus
-from optparse import OptionParser
+import argparse
 
-from sugar.activity import activityfactory
-from sugar.bundle.activitybundle import ActivityBundle
+from dbus.mainloop.glib import DBusGMainLoop
+DBusGMainLoop(set_as_default=True)
 
-usage = "usage: %prog [options] activity"
-parser = OptionParser(usage)
-parser.add_option("-d", "--debug", action="store_true", dest="debug",
-                  help="launch activity inside gdb")
-(options, args) = parser.parse_args()
+from sugar3.activity import activityfactory
+from sugar3.bundle.activitybundle import ActivityBundle
 
-if len(args) == 0:
-    print 'You need to specify the activity bundle_id.'
-    sys.exit(1)
+parser = argparse.ArgumentParser("Launch a sugar activity")
+parser.add_argument("bundle_id",
+                    help="the bundle id of the activity")
+parser.add_argument("-d", "--debug", action="store_true",
+                    help="launch activity inside gdb")
+parser.add_argument("-u", "--uri",
+                    help='URI to load')
 
+args = parser.parse_args()
+print args.bundle_id
 bus = dbus.SessionBus()
 proxy = bus.get_object('org.laptop.Shell', '/org/laptop/Shell')
-path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args[0])
+path = dbus.Interface(proxy, 'org.laptop.Shell').GetBundlePath(args.bundle_id)
 if not path:
-    print 'Cannot find %s bundle.' % args[0]
+    print 'Cannot find %s bundle.' % args.bundle_id
     sys.exit(1)
 
 activity = ActivityBundle(path)
 cmd_args = activityfactory.get_command(activity)
+
+if args.uri:
+    cmd_args.extend(["--uri", args.uri])
 
 def _which(exec_file):
     if 'PATH' in os.environ:
@@ -56,6 +62,7 @@ def _which(exec_file):
             return fullname
 
     return None
+
 
 def _get_interpreter(exec_file):
     if os.path.exists(exec_file):
@@ -78,7 +85,7 @@ def _get_interpreter(exec_file):
 
     return exec_file
 
-if options.debug:
+if args.debug:
     act_args = cmd_args
     cmd_args = ['gdb', '--args']
     cmd_args.extend(_get_interpreter(act_args.pop(0)))
@@ -86,4 +93,3 @@ if options.debug:
 
 os.chdir(str(activity.get_path()))
 os.execvpe(cmd_args[0], cmd_args, activityfactory.get_environment(activity))
-

@@ -380,5 +380,53 @@
       </locale>
     </schema>
 
+    <schema>
+      <key>/schemas/desktop/sugar/update/backend</key>
+      <applyto>/desktop/sugar/update/backend</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default>aslo.AsloUpdater</default>
+      <locale name="C">
+        <short>Activity update backend.</short>
+        <long>Activity update backend module, followed by a period, followed by the class name.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/update/microformat_update_url</key>
+      <applyto>/desktop/sugar/update/microformat_update_url</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>Microformat update URL.</short>
+        <long>URL used by the microformat update backend for activity update information.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/update/auto_update_frequency</key>
+      <applyto>/desktop/sugar/update/auto_update_frequency</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Automatic update frequency.</short>
+        <long>Frequency of automatic activity updates, measured in days. 0 means disabled.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/update/last_activity_update</key>
+      <applyto>/desktop/sugar/update/last_activity_update</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>Timestamp of last activity update.</short>
+        <long>A unix timestamp (seconds since epoch) of the last successful activity update.</long>
+      </locale>
+    </schema>
+
   </schemalist>
 </gconfschemafile>

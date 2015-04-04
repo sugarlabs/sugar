@@ -20,7 +20,6 @@ from gettext import gettext as _
 from gi.repository import GConf
 
 from sugar3.graphics.tray import TrayIcon
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.xocolor import XoColor
 

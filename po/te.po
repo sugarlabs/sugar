@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-19 00:34-0400\n"
+"POT-Creation-Date: 2013-06-21 00:34-0400\n"
 "PO-Revision-Date: 2012-11-25 00:59+0200\n"
 "Last-Translator: Chris <cjl@laptop.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgstr "నిర్ధేశించి చెప్పిన రంగుల�
 msgid "Error in specified colors."
 msgstr "నిర్ధేశించి చెప్పిన రంగులలో పొరబాటు జరిగింది"
 
-#: ../extensions/cpsection/aboutme/view.py:216
+#: ../extensions/cpsection/aboutme/view.py:212
 #, fuzzy
 msgid "Click to change your color:"
 msgstr "రంగు మార్చడానికి నొక్కు"
@@ -62,7 +62,7 @@ msgstr "రంగు మార్చడానికి నొక్కు"
 msgid "About my Computer"
 msgstr "నా కంప్యూటర్ గురించి"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:43
+#: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
 msgstr "అలభ్యం"
 
@@ -115,6 +115,18 @@ msgstr ""
 msgid "Full license:"
 msgstr "పూర్తి లైసెన్స్:"
 
+#: ../extensions/cpsection/background/__init__.py:21
+msgid "Background"
+msgstr ""
+
+#: ../extensions/cpsection/background/view.py:39
+msgid "Select a background:"
+msgstr ""
+
+#: ../extensions/cpsection/background/view.py:46
+msgid "Clear background"
+msgstr ""
+
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
 msgstr "తేదీ & కాలము"
@@ -123,7 +135,7 @@ msgstr "తేదీ & కాలము"
 msgid "Error timezone does not exist."
 msgstr "పొరబాటు. కాలమండలమే లేదు."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:54
 msgid "Timezone"
 msgstr "కాలమానం"
 
@@ -163,19 +175,19 @@ msgid "Edge"
 msgstr "అంచు"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
-#: ../extensions/cpsection/keyboard/view.py:32
+#: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
 msgstr "కీబోర్డు"
 
-#: ../extensions/cpsection/keyboard/view.py:190
+#: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
 msgstr "కీబోర్డు నమూనా"
 
-#: ../extensions/cpsection/keyboard/view.py:250
+#: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
 msgstr ""
 
-#: ../extensions/cpsection/keyboard/view.py:319
+#: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
 msgstr "కీబోర్డు లేఅవుట్ (s)"
 
@@ -261,35 +273,35 @@ msgstr "రేడియొ నిర్దేసించడంలో పొర�
 msgid "Wireless"
 msgstr "నిస్తం​త్రి"
 
-#: ../extensions/cpsection/network/view.py:76
+#: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
 msgstr "బ్యాటరీ జీవితం సేవ్ చెయ్యడానికి వైర్లెస్ రేడియో ఆఫ్ చెయ్యండి"
 
-#: ../extensions/cpsection/network/view.py:89
+#: ../extensions/cpsection/network/view.py:90
 #, fuzzy
 msgid "Radio"
 msgstr "రేడియే"
 
-#: ../extensions/cpsection/network/view.py:105
+#: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr "మీరు నెట్వర్కు అనుసంధానం సమస్య ఉంటే నెట్వర్క్ చరిత్ర తొలగించండి"
 
-#: ../extensions/cpsection/network/view.py:114
+#: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
 msgstr "నెట్వర్క్ చరిత్ర తొలగించండి"
 
-#: ../extensions/cpsection/network/view.py:129
+#: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
 msgstr "సహకారంతో"
 
-#: ../extensions/cpsection/network/view.py:137
+#: ../extensions/cpsection/network/view.py:139
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
 "network."
 msgstr ""
 
-#: ../extensions/cpsection/network/view.py:147
+#: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
 msgstr "శెర్వరు:"
 
@@ -310,7 +322,7 @@ msgid "Automatic power management (increases battery life)"
 msgstr "దానంతట అదే విద్యుత్తు నిర్వహణ(బేటరీ ఆయువు పెంచుతుంది)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:63
+#: ../src/jarabe/desktop/homebox.py:62
 #, fuzzy
 msgid "Software Update"
 msgstr "సాఫ్ట్వేర్ నవీకరణ"
@@ -323,113 +335,124 @@ msgstr ""
 "సాఫ్ట్వేర్ నవీకరణలు దోషాలను సవరిస్తుంది, భద్రతా వలయాలను తొలగించేందుకు, మరియు "
 "కొత్త ఫీచర్లను అందిస్తాయి."
 
-#: ../extensions/cpsection/updater/view.py:125
+#: ../extensions/cpsection/updater/view.py:129
 #, python-format
 msgid "Checking %s..."
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:127
+#: ../extensions/cpsection/updater/view.py:131
 #, python-format
 msgid "Downloading %s..."
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:133
 #, python-format
 msgid "Updating %s..."
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:139
+#: ../extensions/cpsection/updater/view.py:143
 msgid "Your software is up-to-date"
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:141
+#: ../extensions/cpsection/updater/view.py:145
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../extensions/cpsection/updater/view.py:159
+#: ../extensions/cpsection/updater/view.py:163
 msgid "Checking for updates..."
 msgstr "అప్డేట్ల కోసం తనిఖీ చేస్తోంది ..."
 
-#: ../extensions/cpsection/updater/view.py:164
+#: ../extensions/cpsection/updater/view.py:168
 msgid "Installing updates..."
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:173
+#: ../extensions/cpsection/updater/view.py:177
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../extensions/cpsection/updater/view.py:256
+#: ../extensions/cpsection/updater/view.py:261
 msgid "Install selected"
 msgstr "ఎంపిక చేసిన ఇన్స్టాల్ చేయండి"
 
-#: ../extensions/cpsection/updater/view.py:277
+#: ../extensions/cpsection/updater/view.py:282
 #, python-format
 msgid "Download size: %s"
 msgstr ""
 
-#: ../extensions/cpsection/updater/view.py:365
+#: ../extensions/cpsection/updater/view.py:370
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr ""
 
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:383
+#: ../extensions/cpsection/updater/view.py:388
 #, fuzzy
 msgid "None"
 msgstr "పూర్తి అయినది"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:386
+#: ../extensions/cpsection/updater/view.py:391
 msgid "1 KB"
 msgstr ""
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:389
+#: ../extensions/cpsection/updater/view.py:394
 #, python-format
 msgid "%.0f KB"
 msgstr ""
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:392
+#: ../extensions/cpsection/updater/view.py:397
 #, python-format
 msgid "%.1f MB"
 msgstr ""
 
-#: ../extensions/deviceicon/battery.py:70
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Configure your Web Services"
+msgstr ""
+
+#: ../extensions/cpsection/webaccount/view.py:42
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+
+#: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "నా బేటరీ"
 
-#: ../extensions/deviceicon/battery.py:151
+#: ../extensions/deviceicon/battery.py:153
 #, fuzzy
 msgid "Removed"
 msgstr "తీసివేయి"
 
-#: ../extensions/deviceicon/battery.py:154
+#: ../extensions/deviceicon/battery.py:156
 msgid "Charging"
 msgstr "చార్జి అవుతుంది"
 
-#: ../extensions/deviceicon/battery.py:157
+#: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
 msgstr "చాలా తక్కువ చార్జీ మిగిలిఉంది"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:164
+#: ../extensions/deviceicon/battery.py:166
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d మిగిలిఉంది"
 
-#: ../extensions/deviceicon/battery.py:167
+#: ../extensions/deviceicon/battery.py:169
 msgid "Charged"
 msgstr "చార్జీ అయింది"
 
-#: ../extensions/deviceicon/frame.py:57
+#: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
 msgstr ""
 
@@ -438,10 +461,10 @@ msgstr ""
 msgid "IP address: %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:80
-#: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:130
-#: ../src/jarabe/desktop/networkviews.py:499
+#: ../extensions/deviceicon/network.py:82
+#: ../extensions/deviceicon/network.py:298
+#: ../src/jarabe/desktop/networkviews.py:135
+#: ../src/jarabe/desktop/networkviews.py:509
 #, fuzzy
 msgid "Disconnect"
 msgstr "వేరుచేయబడింది"
@@ -450,164 +473,165 @@ msgstr "వేరుచేయబడింది"
 # priority over the normal wireless device.  NM doesn't have a "disconnect"
 # method for a device either (for various reasons) so this doesn't
 # have a good mapping
-#: ../extensions/deviceicon/network.py:105
-#: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:241
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../extensions/deviceicon/network.py:107
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:251
+#: ../src/jarabe/desktop/networkviews.py:551
+#: ../src/jarabe/desktop/networkviews.py:693
 #, fuzzy
 msgid "Connecting..."
 msgstr "వేరుచేయి . . ."
 
 # TODO: show the channel number
-#: ../extensions/deviceicon/network.py:110
-#: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:248
-#: ../src/jarabe/desktop/networkviews.py:545
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:180
+#: ../src/jarabe/desktop/networkviews.py:258
+#: ../src/jarabe/desktop/networkviews.py:557
+#: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
 msgstr "తగిలించబడినది"
 
-#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:137
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "ప్రసారమార్గం"
 
-#: ../extensions/deviceicon/network.py:152
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:181
+#: ../extensions/deviceicon/network.py:183
 msgid "Speed"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:206
+#: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:274
+#: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:126
-#: ../src/jarabe/desktop/networkviews.py:494
-#: ../src/jarabe/desktop/networkviews.py:630
+#: ../extensions/deviceicon/network.py:281
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:503
+#: ../src/jarabe/desktop/networkviews.py:644
 msgid "Connect"
 msgstr "తగిలించు"
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
 msgstr "వేరుచేయబడింది"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
-#: ../src/jarabe/frame/activitiestray.py:606
-#: ../src/jarabe/frame/activitiestray.py:708
-#: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:427
-#: ../src/jarabe/journal/palettes.py:153
+#: ../src/jarabe/desktop/homebox.py:67 ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/frame/activitiestray.py:625
+#: ../src/jarabe/frame/activitiestray.py:746
+#: ../src/jarabe/frame/activitiestray.py:778
+#: ../src/jarabe/journal/expandedentry.py:160
+#: ../src/jarabe/journal/journaltoolbox.py:475
+#: ../src/jarabe/journal/palettes.py:154
 msgid "Cancel"
 msgstr "రద్దు చేయి"
 
-#: ../extensions/deviceicon/network.py:326
+#: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:335
 #, python-format
 msgid "Suggestion: %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:342
+#: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:348
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:351
 #, python-format
 msgid "%d KB"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:354
+#: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your Access Point Name (APN) configuration"
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:363
 msgid "Check the Number configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:363
+#: ../extensions/deviceicon/network.py:365
 msgid "Check your configuration."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:607
+#: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
 msgstr "మెష్ వల"
 
-#: ../extensions/deviceicon/network.py:652
+#: ../extensions/deviceicon/network.py:668
 #, python-format
 #, fuzzy
 msgid "Mesh Network %s"
 msgstr "మెష్ వల %s"
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
 msgstr ""
 
-#: ../extensions/deviceicon/network.py:784
+#: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:53
+#: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:81
+#: ../extensions/deviceicon/speech.py:76
+#: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
-#: ../extensions/deviceicon/speech.py:160
 msgid "Say selected text"
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:88
+#: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:98
+#: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:112
+#: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
 msgstr ""
 
-#: ../extensions/deviceicon/speech.py:150
+#: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
 msgstr ""
 
-#: ../extensions/deviceicon/speaker.py:62
+#: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "నా స్పీకరులు"
 
-#: ../extensions/deviceicon/speaker.py:142
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
 msgstr "పలికించు"
 
-#: ../extensions/deviceicon/speaker.py:145
+#: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
 msgstr "నిశ్శబ్దంగా ఉంచు"
 
@@ -623,37 +647,37 @@ msgstr ""
 msgid "My touchpad"
 msgstr ""
 
-#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
 msgstr "విషయాలను చూపు"
 
-#: ../extensions/globalkey/screenshot.py:62
+#: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
 msgstr "మెష్ వల"
 
-#: ../extensions/globalkey/screenshot.py:64
-#: ../src/jarabe/desktop/homewindow.py:219
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/desktop/homewindow.py:221
+#: ../src/jarabe/frame/zoomtoolbar.py:53
 msgid "Group"
 msgstr "గుంపు"
 
-#: ../extensions/globalkey/screenshot.py:66
-#: ../src/jarabe/desktop/homewindow.py:212
+#: ../extensions/globalkey/screenshot.py:65
+#: ../src/jarabe/desktop/homewindow.py:214
 #: ../src/jarabe/desktop/viewtoolbar.py:62
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "ఇల్లు"
 
-#: ../extensions/globalkey/screenshot.py:72
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../extensions/globalkey/screenshot.py:71
+#: ../src/jarabe/frame/zoomtoolbar.py:62
 msgid "Activity"
 msgstr "వ్యాపకం"
 
-#: ../extensions/globalkey/screenshot.py:75
+#: ../extensions/globalkey/screenshot.py:74
 msgid "Screenshot"
 msgstr "తెరముద్ర"
 
-#: ../extensions/globalkey/screenshot.py:77
+#: ../extensions/globalkey/screenshot.py:76
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr ""
@@ -965,32 +989,32 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "మీ మార్పులు పనిచేయడానికి సుగరును తిరిగి మొదలు పెట్టండి.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
-#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
-#: ../src/jarabe/journal/volumestoolbar.py:301
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:182
+#: ../src/jarabe/journal/palettes.py:282 ../src/jarabe/journal/palettes.py:315
+#: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "గమనిక"
 
-#: ../src/jarabe/controlpanel/gui.py:299
+#: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "మార్పులు తిరిగి మొదలుపెట్తినతర్వాతే పనిచేస్తాయి"
 
-#: ../src/jarabe/controlpanel/gui.py:302
+#: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
 msgstr "మార్పులు రద్దుచేయి"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:333 ../src/jarabe/desktop/homebox.py:69
 msgid "Later"
 msgstr "తరవాత"
 
-#: ../src/jarabe/controlpanel/gui.py:311
+#: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
 msgstr "ఇప్పుడు మరలామొదలుపెట్టు"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
 #: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:88
 #, python-format
 msgid "Search in %s"
 msgstr ""
@@ -999,35 +1023,35 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
 msgstr "పూర్తి అయినది"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:337
-#: ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/desktop/favoritesview.py:366
+#: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "సరి"
 
-#: ../src/jarabe/desktop/activitieslist.py:243
+#: ../src/jarabe/desktop/activitieslist.py:253
 #, python-format
 msgid "Version %s"
 msgstr ""
 
-#: ../src/jarabe/desktop/activitieslist.py:344
-#: ../src/jarabe/journal/listview.py:411
+#: ../src/jarabe/desktop/activitieslist.py:354
+#: ../src/jarabe/journal/listview.py:427
 msgid "Clear search"
 msgstr ""
 
-#: ../src/jarabe/desktop/activitieslist.py:417
+#: ../src/jarabe/desktop/activitieslist.py:427
 msgid "No matching activities"
 msgstr ""
 
-#: ../src/jarabe/desktop/activitieslist.py:453
+#: ../src/jarabe/desktop/activitieslist.py:463
 msgid "Confirm erase"
 msgstr "చెరిపివేయుట నిర్ద్దారణ చేయి"
 
-#: ../src/jarabe/desktop/activitieslist.py:455
+#: ../src/jarabe/desktop/activitieslist.py:465
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "చెరిపివేయుట నిర్ద్దారణ చేయుట: %s శాశ్వతంగా చెరిపివేయబడుట ఇష్టమేనా?"
@@ -1036,141 +1060,142 @@ msgstr "చెరిపివేయుట నిర్ద్దారణ చే�
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:284
+#: ../src/jarabe/desktop/activitieslist.py:469
+#: ../src/jarabe/frame/clipboardmenu.py:65
+#: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "ఉంచు"
 
-#: ../src/jarabe/desktop/activitieslist.py:462
-#: ../src/jarabe/desktop/activitieslist.py:516
-#: ../src/jarabe/journal/journaltoolbox.py:393
-#: ../src/jarabe/journal/journaltoolbox.py:422
-#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
+#: ../src/jarabe/desktop/activitieslist.py:472
+#: ../src/jarabe/desktop/activitieslist.py:529
+#: ../src/jarabe/journal/expandedentry.py:154
+#: ../src/jarabe/journal/journaltoolbox.py:438
+#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/palettes.py:130 ../src/jarabe/journal/palettes.py:149
 msgid "Erase"
 msgstr "చెరిపివేయి"
 
-#: ../src/jarabe/desktop/activitieslist.py:532
+#: ../src/jarabe/desktop/activitieslist.py:544
 msgid "Remove favorite"
 msgstr "ఇష్టమైనదానిని తొలగించు"
 
-#: ../src/jarabe/desktop/activitieslist.py:536
+#: ../src/jarabe/desktop/activitieslist.py:548
 msgid "Make favorite"
 msgstr "ఇష్టమైనదానిగా తయారుచేయి"
 
 # TRANS: label for the freeform layout in the favorites view
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:200
+#: ../src/jarabe/desktop/favoriteslayout.py:199
 msgid "Freeform"
 msgstr "కలగలుపుగా"
 
 # TRANS: label for the ring layout in the favorites view
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:296
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "వ్రుత్తము"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:450
+#: ../src/jarabe/desktop/favoriteslayout.py:459
 msgid "Spiral"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:518
+#: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
 msgstr ""
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:561
+#: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
 msgstr ""
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:357
 msgid "Registration Failed"
 msgstr "రిజిస్టరుచేయడం విఫలమైంది"
 
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/desktop/favoritesview.py:360
 msgid "Registration Successful"
 msgstr "రిజిస్టరుచేయడం విజయవంతమైంది"
 
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:361
 msgid "You are now registered with your school server."
 msgstr "ఇప్పుడు మీరు బడి సెర్వరుతో రిజిస్టరుచేయబడిఉన్నారు"
 
-#: ../src/jarabe/desktop/favoritesview.py:611
+#: ../src/jarabe/desktop/favoritesview.py:645
 msgid "Register"
 msgstr "దాఖలు చేయి"
 
-#: ../src/jarabe/desktop/favoritesview.py:613
-#: ../src/jarabe/desktop/favoritesview.py:629
+#: ../src/jarabe/desktop/favoritesview.py:648
+#: ../src/jarabe/desktop/favoritesview.py:664
 msgid "Register again"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:64
+#: ../src/jarabe/desktop/homebox.py:63
 msgid "Update your activities to ensure compatibility with your new software"
 msgstr ""
 
-#: ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/desktop/homebox.py:72
 msgid "Check now"
 msgstr ""
 
-#: ../src/jarabe/desktop/homewindow.py:226
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/desktop/homewindow.py:228
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
 msgstr "చుట్టుపక్కలవారు"
 
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:146
+#: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
 msgstr "తాళం రకము:"
 
-#: ../src/jarabe/desktop/keydialog.py:166
+#: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "దృడపరచుకొనే రకము:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
 msgstr ""
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
 msgstr ""
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:79
-#: ../src/jarabe/journal/journaltoolbox.py:506
-#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:586
+#: ../src/jarabe/journal/palettes.py:75 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "పునరారంభించు"
 
-#: ../src/jarabe/desktop/meshbox.py:84
-#: ../src/jarabe/frame/activitiestray.py:182
+#: ../src/jarabe/desktop/meshbox.py:89
+#: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
 msgstr "కలువు"
 
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr ""
 
-#: ../src/jarabe/desktop/networkviews.py:627
+#: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
 #, fuzzy
 msgid "Mesh Network %d"
 msgstr "మెష్ వల %d"
 
-#: ../src/jarabe/desktop/schoolserver.py:143
+#: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
 msgstr ""
 
-#: ../src/jarabe/desktop/schoolserver.py:150
+#: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
 msgstr ""
 
@@ -1190,68 +1215,68 @@ msgstr "ఇష్టమైనవి చూచుటకు"
 msgid "<Ctrl>1"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:578
+#: ../src/jarabe/frame/activitiestray.py:195
+#: ../src/jarabe/frame/activitiestray.py:593
 msgid "Decline"
 msgstr "నిరస్కరించు"
 
-#: ../src/jarabe/frame/activitiestray.py:526
+#: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
 msgid "%dB"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:528
+#: ../src/jarabe/frame/activitiestray.py:536
 #, python-format
 msgid "%dKB"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:530
+#: ../src/jarabe/frame/activitiestray.py:538
 #, python-format
 msgid "%dMB"
 msgstr ""
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:548
+#: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
 msgid "%s of %s"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:562
+#: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
 msgid "Transfer from %s"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:573
+#: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:630
-#: ../src/jarabe/frame/activitiestray.py:643
-#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/frame/activitiestray.py:653
+#: ../src/jarabe/frame/activitiestray.py:666
+#: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:647
+#: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
 msgstr ""
 
-#: ../src/jarabe/frame/activitiestray.py:695
+#: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 msgid "Transfer to %s"
 msgstr ""
 
-#: ../src/jarabe/frame/clipboardmenu.py:56
+#: ../src/jarabe/frame/clipboardmenu.py:54
 #, fuzzy
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "తీసివేయి"
 
-#: ../src/jarabe/frame/clipboardmenu.py:62
-#: ../src/jarabe/frame/clipboardmenu.py:85
+#: ../src/jarabe/frame/clipboardmenu.py:60
+#: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
 msgstr "తెరువు"
 
-#: ../src/jarabe/frame/clipboardmenu.py:90
+#: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
 msgstr "తో తెరువు"
 
@@ -1260,217 +1285,236 @@ msgstr "తో తెరువు"
 msgid "%s clipping"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
 msgstr ""
 
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
 msgstr ""
 
-#: ../src/jarabe/intro/window.py:105
+#: ../src/jarabe/intro/window.py:106
 msgid "Name:"
 msgstr "పేరు"
 
-#: ../src/jarabe/intro/window.py:135
+#: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
 msgstr "రంగు మార్చడానికి నొక్కు"
 
-#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:94
 msgid "Back"
 msgstr "వెనుకకు"
 
-#: ../src/jarabe/intro/window.py:213
+#: ../src/jarabe/intro/window.py:214
 msgid "Next"
 msgstr "తర్వాత"
 
-#: ../src/jarabe/journal/expandedentry.py:145
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
-#: ../src/jarabe/journal/palettes.py:66
+#: ../src/jarabe/journal/expandedentry.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:472
+#: ../src/jarabe/journal/palettes.py:151
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr ""
+
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:705
+#: ../src/jarabe/journal/palettes.py:68
 #: ../src/jarabe/journal/volumestoolbar.py:131
 msgid "Untitled"
 msgstr "పేరు లేని"
 
-#: ../src/jarabe/journal/expandedentry.py:259
+#: ../src/jarabe/journal/expandedentry.py:407
 msgid "No preview"
 msgstr "రిహార్సు లేదు"
 
-#: ../src/jarabe/journal/expandedentry.py:273
+#: ../src/jarabe/journal/expandedentry.py:421
 #, python-format
 msgid "Kind: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:274
+#: ../src/jarabe/journal/expandedentry.py:421
 #: ../src/jarabe/journal/listmodel.py:151
 #: ../src/jarabe/journal/listmodel.py:159
 msgid "Unknown"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:275
+#: ../src/jarabe/journal/expandedentry.py:422
 #, python-format
 msgid "Date: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:276
+#: ../src/jarabe/journal/expandedentry.py:423
 #, python-format
 msgid "Size: %s"
 msgstr ""
 
-#: ../src/jarabe/journal/expandedentry.py:299
+#: ../src/jarabe/journal/expandedentry.py:450
 #: ../src/jarabe/journal/misc.py:108
 msgid "No date"
 msgstr "తేదీలేదు"
 
-#: ../src/jarabe/journal/expandedentry.py:308
+#: ../src/jarabe/journal/expandedentry.py:459
 msgid "Participants:"
 msgstr "పాల్గొనేవాళ్ళు:"
 
-#: ../src/jarabe/journal/expandedentry.py:349
+#: ../src/jarabe/journal/expandedentry.py:497
 msgid "Description:"
 msgstr "వివరణ:"
 
-#: ../src/jarabe/journal/expandedentry.py:352
+#: ../src/jarabe/journal/expandedentry.py:503
 msgid "Tags:"
 msgstr "గుర్తింపు చీటీ:"
 
-#: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:465
-#: ../src/jarabe/journal/palettes.py:218
-#: ../src/jarabe/journal/volumestoolbar.py:362
+#: ../src/jarabe/journal/expandedentry.py:508
+msgid "Comments:"
+msgstr ""
+
+#: ../src/jarabe/journal/journalactivity.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:88
+#: ../src/jarabe/journal/journaltoolbox.py:513
+#: ../src/jarabe/journal/palettes.py:219
+#: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "పద్దు"
 
-#: ../src/jarabe/journal/journaltoolbox.py:128
+#: ../src/jarabe/journal/journaltoolbox.py:97
+msgid "Favorite entries"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:133
 msgid "Anytime"
 msgstr "ఎప్పటిదైనా"
 
-#: ../src/jarabe/journal/journaltoolbox.py:130
+#: ../src/jarabe/journal/journaltoolbox.py:135
 msgid "Today"
 msgstr "ఈరోజు"
 
-#: ../src/jarabe/journal/journaltoolbox.py:132
+#: ../src/jarabe/journal/journaltoolbox.py:137
 msgid "Since yesterday"
 msgstr "నిన్నటినుంచి"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
+#: ../src/jarabe/journal/journaltoolbox.py:139
 msgid "Past week"
 msgstr "గత వారం నుంచి"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:136
+#: ../src/jarabe/journal/journaltoolbox.py:141
 msgid "Past month"
 msgstr "గత నెల నుంచు"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:138
+#: ../src/jarabe/journal/journaltoolbox.py:143
 msgid "Past year"
 msgstr "గత సంవత్సరం నుంచి"
 
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:150
 msgid "Anyone"
 msgstr "ఎవరైనా"
 
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:152
 msgid "My friends"
 msgstr "నా స్నేహితులు"
 
-#: ../src/jarabe/journal/journaltoolbox.py:148
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My class"
 msgstr "నా తరగతి"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:290
+#: ../src/jarabe/journal/journaltoolbox.py:325
 msgid "Anything"
 msgstr "ఏదైనా"
 
-#: ../src/jarabe/journal/journaltoolbox.py:376
-#: ../src/jarabe/journal/palettes.py:95
+#: ../src/jarabe/journal/journaltoolbox.py:414
+#: ../src/jarabe/journal/palettes.py:97
 msgid "Copy to"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:384
-#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
+#: ../src/jarabe/journal/journaltoolbox.py:422
+#: ../src/jarabe/journal/palettes.py:108 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:417
-#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
-#: ../src/jarabe/journal/volumestoolbar.py:309
+#: ../src/jarabe/journal/journaltoolbox.py:428
+msgid "Refresh"
+msgstr ""
+
+#: ../src/jarabe/journal/journaltoolbox.py:465
+#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:290
+#: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:418
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
-#: ../src/jarabe/journal/volumestoolbar.py:310
+#: ../src/jarabe/journal/journaltoolbox.py:466
+#: ../src/jarabe/journal/palettes.py:145 ../src/jarabe/journal/palettes.py:291
+#: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:424
-#: ../src/jarabe/journal/palettes.py:150
-#, python-format
-msgid "Do you want to permanently erase \"%s\"?"
+#: ../src/jarabe/journal/journaltoolbox.py:524
+#: ../src/jarabe/journal/palettes.py:230
+#: ../src/jarabe/journal/volumestoolbar.py:211
+msgid "Documents"
 msgstr ""
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/journaltoolbox.py:589
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Start"
 msgstr "మొదలుపెట్టు"
 
-#: ../src/jarabe/journal/journaltoolbox.py:537
+#: ../src/jarabe/journal/journaltoolbox.py:617
 msgid "Sort by date modified"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:618
 msgid "Sort by date created"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:619
 msgid "Sort by size"
 msgstr ""
 
-#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/journaltoolbox.py:628
 msgid "Sort view"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/listview.py:339
 msgid "Your Journal is empty"
 msgstr "నీ పద్దు ఖాళీగా ఉంది"
 
-#: ../src/jarabe/journal/listview.py:326
+#: ../src/jarabe/journal/listview.py:342
 msgid "Your documents folder is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:328
+#: ../src/jarabe/journal/listview.py:344
 msgid "The device is empty"
 msgstr ""
 
-#: ../src/jarabe/journal/listview.py:330
+#: ../src/jarabe/journal/listview.py:346
 #, fuzzy
 msgid "No matching entries"
 msgstr "సరిజత లేదు"
 
-#: ../src/jarabe/journal/misc.py:273
+#: ../src/jarabe/journal/misc.py:275
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr ""
 
-#: ../src/jarabe/journal/misc.py:274
+#: ../src/jarabe/journal/misc.py:276
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr ""
@@ -1479,11 +1523,11 @@ msgstr ""
 msgid "Your Journal is full"
 msgstr "నీ పద్దు ఖాళీగా ఉంది"
 
-#: ../src/jarabe/journal/modalalert.py:69
+#: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 
-#: ../src/jarabe/journal/modalalert.py:83
+#: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
 msgstr ""
 
@@ -1492,341 +1536,338 @@ msgid "Choose an object"
 msgstr "ఒక విషయాన్ని ఎంచుకో"
 
 #: ../src/jarabe/journal/objectchooser.py:156
-#: ../src/jarabe/view/viewsource.py:414
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr ""
+
+#: ../src/jarabe/journal/objectchooser.py:164
+#: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "ముగించు"
 
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/palettes.py:76
 msgid "Resume with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:77
+#: ../src/jarabe/journal/palettes.py:79
 msgid "Start with"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
+#: ../src/jarabe/journal/palettes.py:92 ../src/jarabe/journal/palettes.py:393
 msgid "No activity to start entry"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:114
+#: ../src/jarabe/journal/palettes.py:116
 msgid "Send to"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:123
+#: ../src/jarabe/journal/palettes.py:125
 msgid "View Details"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:180
+#: ../src/jarabe/journal/palettes.py:181
 msgid "Entries without a file cannot be sent."
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
-#: ../src/jarabe/journal/volumestoolbar.py:300
+#: ../src/jarabe/journal/palettes.py:281 ../src/jarabe/journal/palettes.py:314
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:287
+#: ../src/jarabe/journal/palettes.py:303
 msgid "Clipboard"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:342
+#: ../src/jarabe/journal/palettes.py:358
 msgid "No friends present"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:347
+#: ../src/jarabe/journal/palettes.py:363
 msgid "No valid connection found"
 msgstr ""
 
-#: ../src/jarabe/journal/palettes.py:375
+#: ../src/jarabe/journal/palettes.py:391
 msgid "No activity to resume entry"
 msgstr ""
 
-#: ../src/jarabe/journal/volumestoolbar.py:210
-msgid "Documents"
-msgstr ""
-
-#: ../src/jarabe/journal/volumestoolbar.py:385
-#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
+#: ../src/jarabe/journal/volumestoolbar.py:386
+#: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB ఖాళీ"
 
-#: ../src/jarabe/model/network.py:211
+#: ../src/jarabe/model/network.py:212
 msgid "The reason for the device state change is unknown."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:213
+#: ../src/jarabe/model/network.py:214
 msgid "The state change is normal."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:215
+#: ../src/jarabe/model/network.py:216
 msgid "The device is now managed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:217
+#: ../src/jarabe/model/network.py:218
 msgid "The device is no longer managed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:219
+#: ../src/jarabe/model/network.py:220
 msgid "The device could not be readied for configuration."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:221
+#: ../src/jarabe/model/network.py:222
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:225
 msgid "The IP configuration is no longer valid."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:227
 msgid "Secrets were required, but not provided."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:229
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:231
+#: ../src/jarabe/model/network.py:232
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:233
+#: ../src/jarabe/model/network.py:234
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:235
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:237
+#: ../src/jarabe/model/network.py:238
 msgid "The PPP service failed to start within the allowed time."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:239
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service disconnected unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:241
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:243
+#: ../src/jarabe/model/network.py:244
 msgid "The DHCP service failed to start within the allowed time."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service reported an unexpected error."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:249
+#: ../src/jarabe/model/network.py:250
 msgid "The shared connection service failed to start."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:251
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:254
+#: ../src/jarabe/model/network.py:255
 msgid "The AutoIP service failed to start."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:256
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service reported an unexpected error."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:258
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:260
+#: ../src/jarabe/model/network.py:261
 msgid "Dialing failed because the line was busy."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:262
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because there was no dial tone."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:264
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no carrier."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:266
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing timed out."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:268
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:270
+#: ../src/jarabe/model/network.py:271
 msgid "Modem initialization failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:272
+#: ../src/jarabe/model/network.py:273
 msgid "Failed to select the specified GSM APN"
 msgstr ""
 
-#: ../src/jarabe/model/network.py:274
+#: ../src/jarabe/model/network.py:275
 msgid "Not searching for networks."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:276
+#: ../src/jarabe/model/network.py:277
 msgid "Network registration was denied."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:278
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration timed out."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:280
+#: ../src/jarabe/model/network.py:281
 msgid "Failed to register with the requested GSM network."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:282
+#: ../src/jarabe/model/network.py:283
 msgid "PIN check failed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:284
+#: ../src/jarabe/model/network.py:285
 msgid "Necessary firmware for the device may be missing."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:286
+#: ../src/jarabe/model/network.py:287
 msgid "The device was removed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:288
+#: ../src/jarabe/model/network.py:289
 msgid "NetworkManager went to sleep."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:290
+#: ../src/jarabe/model/network.py:291
 msgid "The device's active connection was removed or disappeared."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:293
+#: ../src/jarabe/model/network.py:294
 msgid "A user or client requested the disconnection."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:295
+#: ../src/jarabe/model/network.py:296
 msgid "The device's carrier/link changed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:297
+#: ../src/jarabe/model/network.py:298
 msgid "The device's existing connection was assumed."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:299
+#: ../src/jarabe/model/network.py:300
 msgid "The supplicant is now available."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:301
+#: ../src/jarabe/model/network.py:302
 msgid "The modem could not be found."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:303
+#: ../src/jarabe/model/network.py:304
 msgid "The Bluetooth connection failed or timed out."
 msgstr ""
 
-#: ../src/jarabe/model/network.py:305
+#: ../src/jarabe/model/network.py:306
 msgid "Unused."
 msgstr ""
 
-#: ../src/jarabe/view/buddymenu.py:67
+#: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
 msgstr "స్నేహం తీసివేయి"
 
-#: ../src/jarabe/view/buddymenu.py:70
+#: ../src/jarabe/view/buddymenu.py:75
 msgid "Make friend"
 msgstr "స్నేహం చేయి"
 
-#: ../src/jarabe/view/buddymenu.py:87
+#: ../src/jarabe/view/buddymenu.py:91
 msgid "Shutdown"
 msgstr "ఫూర్తిగా ఆపు"
 
-#: ../src/jarabe/view/buddymenu.py:95
+#: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
 msgstr "తిరిగి మొదలుపెట్టు"
 
-#: ../src/jarabe/view/buddymenu.py:101
+#: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
 msgstr ""
 
-#: ../src/jarabe/view/buddymenu.py:106
+#: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
 msgstr ""
 
-#: ../src/jarabe/view/buddymenu.py:142
+#: ../src/jarabe/view/buddymenu.py:149
 #, python-format
 msgid "Invite to %s"
 msgstr "%s కు పిలువు"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
 msgstr ""
 
-#: ../src/jarabe/view/palettes.py:50
+#: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
 msgstr "మొదలవుతుంది..."
 
-#: ../src/jarabe/view/palettes.py:60
+#: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
 msgstr ""
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:93
+#: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
 msgstr ""
 
-#: ../src/jarabe/view/palettes.py:104
+#: ../src/jarabe/view/palettes.py:110
 msgid "Stop"
 msgstr "ఆపు"
 
-#: ../src/jarabe/view/palettes.py:141
+#: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
 msgstr ""
 
-#: ../src/jarabe/view/palettes.py:223
+#: ../src/jarabe/view/palettes.py:241
 #, fuzzy
 msgctxt "Volume"
 msgid "Remove"
 msgstr "తీసివేయి"
 
-#: ../src/jarabe/view/viewsource.py:267
+#: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:316
+#: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:378
+#: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:397
+#: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:404
+#: ../src/jarabe/view/viewsource.py:408
 #, python-format
 msgid "View source: %s"
 msgstr ""
 
-#: ../src/jarabe/view/viewsource.py:405
+#: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
-msgstr ""
-
-#: ../src/jarabe/util/emulator.py:41
-msgid "Sugar in a window"
 msgstr ""
 
 #~ msgid "Search"

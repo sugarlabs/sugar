@@ -18,8 +18,6 @@
 import os
 import logging
 
-import dbus
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 from gi.repository import SugarExt
@@ -57,13 +55,14 @@ _actions_table = {
     '<alt><shift>Tab': 'previous_window',
     '<alt>Escape': 'close_window',
     'XF86WebCam': 'open_search',
-# the following are intended for emulator users
     '<alt><shift>f': 'frame',
-    '<alt><shift>q': 'quit_emulator',
     'XF86Search': 'open_search',
-    '<alt><shift>o': 'open_search'
+    '<alt><shift>o': 'open_search',
+    '<alt><shift>q': 'logout'
 }
 
+# These keys will not be trigger a action if a modal dialog is opened
+_non_modal_action_keys = ('F1', 'F2', 'F3', 'F4', 'F5', 'F6')
 
 _instance = None
 
@@ -121,7 +120,7 @@ class KeyHandler(object):
         if active_activity.is_journal():
             return
 
-        active_activity.get_window().close()
+        active_activity.stop()
 
     def handle_zoom_mesh(self, event_time):
         shell.get_model().set_zoom_level(ShellModel.ZOOM_MESH, event_time)
@@ -156,8 +155,9 @@ class KeyHandler(object):
     def handle_frame(self, event_time):
         self._frame.notify_key_press()
 
-    def handle_quit_emulator(self, event_time):
-        session.get_session_manager().shutdown()
+    def handle_logout(self, event_time):
+        if "SUGAR_DEVELOPER" in os.environ:
+            session.get_session_manager().logout()
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
@@ -169,6 +169,14 @@ class KeyHandler(object):
             self._key_pressed = key
             self._keycode_pressed = keycode
             self._keystate_pressed = state
+
+            # avoid switch to the Journal or change views if a modal dialog
+            # is opened http://bugs.sugarlabs.org/ticket/4601
+            if key in _non_modal_action_keys and \
+                    shell.get_model().has_modal():
+                logging.debug(
+                    'Key %s action stopped due to modal dialog open', key)
+                return
 
             action = _actions_table[key]
             if self._tabbing_handler.is_tabbing():
@@ -210,8 +218,4 @@ class KeyHandler(object):
 
 def setup(frame):
     global _instance
-
-    if _instance:
-        del _instance
-
     _instance = KeyHandler(frame)

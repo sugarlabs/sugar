@@ -40,22 +40,25 @@ class FrameContainer(Gtk.Bin):
         box.show()
 
     def is_vertical(self):
-        return self._position in (Gtk.PositionType.LEFT, Gtk.PositionType.RIGHT)
+        return self._position in (Gtk.PositionType.LEFT,
+                                  Gtk.PositionType.RIGHT)
 
     def do_draw(self, cr):
         # Draw the inner border as a rectangle
         r, g, b, a = style.COLOR_BUTTON_GREY.get_rgba()
-        cr.set_source_rgba (r, g, b, a)
+        cr.set_source_rgba(r, g, b, a)
 
         allocation = self.get_allocation()
         if self.is_vertical():
-            x = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.LEFT else 0
+            x = style.GRID_CELL_SIZE \
+                if self._position == Gtk.PositionType.LEFT else 0
             y = style.GRID_CELL_SIZE
             width = style.LINE_WIDTH
             height = allocation.height - (style.GRID_CELL_SIZE * 2)
         else:
             x = style.GRID_CELL_SIZE
-            y = style.GRID_CELL_SIZE if self._position == Gtk.PositionType.TOP else 0
+            y = style.GRID_CELL_SIZE \
+                if self._position == Gtk.PositionType.TOP else 0
             height = style.LINE_WIDTH
             width = allocation.width - (style.GRID_CELL_SIZE * 2)
 
@@ -133,8 +136,9 @@ class FrameWindow(Gtk.Window):
                                                padding=0)
 
     def _update_size(self):
-        if self._position == Gtk.PositionType.TOP or self._position == Gtk.PositionType.BOTTOM:
-            self.resize(Gdk.Screen.width(), self.size)
+        if self._position == Gtk.PositionType.TOP \
+                or self._position == Gtk.PositionType.BOTTOM:
+                self.resize(Gdk.Screen.width(), self.size)
         else:
             self.resize(self.size, Gdk.Screen.height())
 

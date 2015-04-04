@@ -30,6 +30,7 @@ from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
+from jarabe.model import shell
 
 POWERD_FLAG_DIR = '/etc/powerd/flags'
 
@@ -42,14 +43,8 @@ class ControlPanel(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self)
 
-        self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
-            style.GRID_CELL_SIZE - 3))
-
+        self._calculate_max_columns()
         self.set_border_width(style.LINE_WIDTH)
-        offset = style.GRID_CELL_SIZE
-        width = Gdk.Screen.width() - offset * 2
-        height = Gdk.Screen.height() - offset * 2
-        self.set_size_request(width, height)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
@@ -88,14 +83,33 @@ class ControlPanel(Gtk.Window):
         self._setup_main()
         self._setup_section()
         self._show_main_view()
+        Gdk.Screen.get_default().connect(
+            'size-changed', self.__size_changed_cb)
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
+        # the modal windows counter is updated to disable hot keys - SL#4601
+        shell.get_model().push_modal()
+
+    def __size_changed_cb(self, event):
+        self._calculate_max_columns()
 
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
         self._main_view.get_child().grab_focus()
+
+    def _calculate_max_columns(self):
+        self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
+                                         style.GRID_CELL_SIZE - 3))
+        offset = style.GRID_CELL_SIZE
+        width = Gdk.Screen.width() - offset * 2
+        height = Gdk.Screen.height() - offset * 2
+        self.set_size_request(width, height)
+        if hasattr(self, '_table'):
+            for child in self._table.get_children():
+                child.destroy()
+            self._setup_options()
 
     def _set_canvas(self, canvas):
         if self._canvas:
@@ -129,7 +143,8 @@ class ControlPanel(Gtk.Window):
                                         Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
         child = self._scrolledwindow.get_child()
-        child.modify_bg(Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
+        child.modify_bg(
+            Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
 
         self._setup_options()
         self._main_toolbar.connect('stop-clicked',
@@ -140,10 +155,6 @@ class ControlPanel(Gtk.Window):
     def _setup_options(self):
         if not os.access(POWERD_FLAG_DIR, os.W_OK):
             del self._options['power']
-
-        try:
-            from gi.repository import Xkl
-        except ImportError:
             del self._options['keyboard']
 
         # If the screen width only supports two columns, start
@@ -166,7 +177,7 @@ class ControlPanel(Gtk.Window):
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
             sectionicon.connect('button_press_event',
-                               self.__select_option_cb, option)
+                                self.__select_option_cb, option)
             sectionicon.show()
 
             if option == 'aboutme':
@@ -220,9 +231,9 @@ class ControlPanel(Gtk.Window):
     def _setup_section(self):
         self._section_toolbar = SectionToolbar()
         self._section_toolbar.connect('cancel-clicked',
-                                     self.__cancel_clicked_cb)
+                                      self.__cancel_clicked_cb)
         self._section_toolbar.connect('accept-clicked',
-                                     self.__accept_clicked_cb)
+                                      self.__accept_clicked_cb)
 
     def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
@@ -316,7 +327,8 @@ class ControlPanel(Gtk.Window):
             alert.props.msg = _('Changes require restart')
 
             icon = Icon(icon_name='dialog-cancel')
-            alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel changes'), icon)
+            alert.add_button(Gtk.ResponseType.CANCEL,
+                             _('Cancel changes'), icon)
             icon.show()
 
             if self._current_option != 'aboutme':
@@ -358,6 +370,7 @@ class ControlPanel(Gtk.Window):
         self._update(query)
 
     def __stop_clicked_cb(self, widget):
+        shell.get_model().pop_modal()
         self.destroy()
 
     def __close_request_cb(self, widget, event=None):

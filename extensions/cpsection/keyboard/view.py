@@ -31,7 +31,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 
 from jarabe.controlpanel.sectionview import SectionView
-from jarabe.config import data_path 
+from jarabe.config import data_path
 
 CLASS = 'Language'
 ICON = 'module-keyboard'
@@ -41,7 +41,7 @@ _APPLY_TIMEOUT = 500
 
 _iso_639_1_to_2 = {}
 
-#TODO: This cpsection adds checks for xklavier in bin/sugar-session and
+# TODO: This cpsection adds checks for xklavier in bin/sugar-session and
 #      src/jarabe/controlpanel/gui.py. We should get rid of these checks
 #      once python-xklavier has been packaged for all major distributions
 #      For more information, see: http://dev.sugarlabs.org/ticket/407
@@ -76,7 +76,7 @@ class LayoutCombo(Gtk.HBox):
     __gsignals__ = {
         'selection-changed': (GObject.SignalFlags.RUN_LAST, None,
                               (GObject.TYPE_STRING, GObject.TYPE_INT)),
-        }
+    }
 
     def __init__(self, keyboard_manager, n):
         GObject.GObject.__init__(self)

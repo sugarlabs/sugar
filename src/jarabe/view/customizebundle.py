@@ -79,16 +79,16 @@ def generate_bundle(nick, new_basename):
             os.remove(path)
 
     config = bundlebuilder.Config(source_dir=os.path.join(
-            user_activities_path, new_basename),
-            dist_name='%s-1.xo' % (new_activity_name))
+        user_activities_path, new_basename),
+        dist_name='%s-1.xo' % (new_activity_name))
     bundlebuilder.cmd_dist_xo(config, None)
 
     dsobject = datastore.create()
     dsobject.metadata['title'] = '%s-1.xo' % (new_activity_name)
     dsobject.metadata['mime_type'] = 'application/vnd.olpc-sugar'
     dsobject.set_file_path(os.path.join(
-            user_activities_path, new_basename, 'dist',
-            '%s-1.xo' % (new_activity_name)))
+        user_activities_path, new_basename, 'dist',
+        '%s-1.xo' % (new_activity_name)))
     datastore.write(dsobject)
     dsobject.destroy()
 
@@ -163,7 +163,7 @@ def _create_custom_icon(new_basename, icon_name):
         return
 
     badge_fd = open(os.path.join(badge_path, 'sugar', 'scalable',
-                                BADGE_SUBPATH), 'r')
+                                 BADGE_SUBPATH), 'r')
     badge_payload = _extract_svg_payload(badge_fd)
     badge_fd.close()
 

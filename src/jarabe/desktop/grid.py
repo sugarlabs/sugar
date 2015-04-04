@@ -18,7 +18,6 @@
 import random
 
 from gi.repository import GObject
-from gi.repository import Gtk
 from gi.repository import Gdk
 
 from gi.repository import SugarExt
@@ -203,7 +202,7 @@ class Grid(SugarExt.Grid):
             if c != child and intersection.width > 0:
                 collision_found = True
                 if (c not in self._locked_children and
-                    c not in self._collisions):
+                        c not in self._collisions):
                     self._collisions.append(c)
 
         if collision_found:
@@ -211,8 +210,10 @@ class Grid(SugarExt.Grid):
                 self._collisions.append(child)
 
         if self._collisions and not self._collisions_sid:
-            self._collisions_sid = GObject.timeout_add(_REFRESH_RATE,
-                    self.__solve_collisions_cb, priority=GObject.PRIORITY_LOW)
+            self._collisions_sid = \
+                GObject.timeout_add(_REFRESH_RATE,
+                                    self.__solve_collisions_cb,
+                                    priority=GObject.PRIORITY_LOW)
 
     def get_child_rect(self, child):
         return self._child_rects[child]

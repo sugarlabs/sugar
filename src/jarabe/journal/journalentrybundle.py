@@ -18,7 +18,7 @@ import os
 import tempfile
 import shutil
 
-import simplejson
+import json
 import dbus
 
 from sugar3.bundle.bundle import Bundle, MalformedBundleException
@@ -38,10 +38,16 @@ class JournalEntryBundle(Bundle):
     _unzipped_extension = None
     _infodir = None
 
-    def __init__(self, path):
+    def __init__(self, path, uid=None):
+        """
+        Instantiate a Journal Entry Bundle from the given path to a xoj file.
+        If provided, the specified uid will be used as the uid of the journal
+        entry if/when this bundle is later installed.
+        """
         Bundle.__init__(self, path)
+        self._uid = uid
 
-    def install(self, uid=''):
+    def install(self):
         if 'SUGAR_ACTIVITY_ROOT' in os.environ:
             install_dir = os.path.join(os.environ['SUGAR_ACTIVITY_ROOT'],
                                        'data')
@@ -52,7 +58,7 @@ class JournalEntryBundle(Bundle):
         self._unzip(install_dir)
         try:
             metadata = self._read_metadata(bundle_dir)
-            metadata['uid'] = uid
+            metadata['uid'] = self._uid if self._uid else temp_uid
 
             preview = self._read_preview(temp_uid, bundle_dir)
             if preview is not None:
@@ -70,13 +76,13 @@ class JournalEntryBundle(Bundle):
         metadata_path = os.path.join(bundle_dir, '_metadata.json')
         if not os.path.exists(metadata_path):
             raise MalformedBundleException(
-                    'Bundle must contain the file "_metadata.json"')
+                'Bundle must contain the file "_metadata.json"')
         f = open(metadata_path, 'r')
         try:
             json_data = f.read()
         finally:
             f.close()
-        return simplejson.loads(json_data)
+        return json.loads(json_data)
 
     def _read_preview(self, uid, bundle_dir):
         preview_path = os.path.join(bundle_dir, 'preview', uid)
@@ -88,7 +94,3 @@ class JournalEntryBundle(Bundle):
         finally:
             f.close()
         return preview_data
-
-    def is_installed(self):
-        # These bundles can be reinstalled as many times as desired.
-        return False

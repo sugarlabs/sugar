@@ -70,13 +70,13 @@ class SpeechManager(GObject.GObject):
         return self._is_playing
 
     is_playing = GObject.property(type=bool, getter=get_is_playing,
-            setter=None, default=False)
+                                  setter=None, default=False)
 
     def get_is_paused(self):
         return self._is_paused
 
     is_paused = GObject.property(type=bool, getter=get_is_paused,
-            setter=None, default=False)
+                                 setter=None, default=False)
 
     def get_pitch(self):
         return self._pitch
@@ -117,14 +117,14 @@ class SpeechManager(GObject.GObject):
         client.set_int('/desktop/sugar/speech/pitch', self._pitch)
         client.set_int('/desktop/sugar/speech/rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
-                self._pitch, self._rate)
+                      self._pitch, self._rate)
 
     def restore(self):
         client = GConf.Client.get_default()
         self._pitch = client.get_int('/desktop/sugar/speech/pitch')
         self._rate = client.get_int('/desktop/sugar/speech/rate')
         logging.debug('loading speech configuration pitch %s rate %s',
-                self._pitch, self._rate)
+                      self._pitch, self._rate)
 
 
 class _GstSpeechPlayer(GObject.GObject):
@@ -219,9 +219,9 @@ class _GstSpeechPlayer(GObject.GObject):
             language_location = 'es_la'
 
         best = voices.get(language_location) or voices.get(language) \
-                or 'default'
+            or 'default'
         logging.debug('Best voice for LANG %s seems to be %s',
-                locale, best)
+                      locale, best)
         return best
 
 

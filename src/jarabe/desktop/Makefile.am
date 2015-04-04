@@ -8,6 +8,7 @@ sugar_PYTHON =			\
 	grid.py			\
 	groupbox.py		\
 	homebox.py		\
+	homebackgroundbox.py	\
 	homewindow.py		\
         keydialog.py		\
 	meshbox.py		\

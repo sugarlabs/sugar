@@ -1,24 +1,25 @@
-AC_INIT([Sugar],[0.98.8],[],[sugar])
+AC_INIT([Sugar],[0.100.1],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.98.8"
+SUCROSE_VERSION="0.99.0"
 AC_SUBST(SUCROSE_VERSION)
 
-AM_INIT_AUTOMAKE([1.9 foreign dist-bzip2 no-dist-gzip])
+AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
 
 AM_MAINTAINER_MODE
 
+PYTHON=python2
 AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0 gconf-2.0)
 
 # Setup GETTEXT
 #
-ALL_LINGUAS="af am ar aym bg bi bn_IN bn ca cs da de dz el en es fa_AF fa ff fil fr gu ha he hi ht hu id ig is it ja km ko kos mg mi mk ml mn mr ms mvo nb ne nl pa pap pl ps pt_BR pt quz ro ru rw sd si sk sl sq sv sw ta te th tr tvl tzo ug ur vi wa yo zh_CN zh_TW"
+ALL_LINGUAS="af am ar ayc bg bi bn_IN bn ca cs da de dz el en es fa_AF fa ff fil fr gu ha he hi ht hu id ig is it ja km ko kos mg mi mk ml mn mr ms mvo nb ne nl pa pap pl ps pt_BR pt quz ro ru rw sd si sk sl sq sv sw ta te th tr tvl tzo ug ur vi wa yo zh_CN zh_TW"
 
 GETTEXT_PACKAGE=sugar
 AC_PROG_INTLTOOL([0.33])
@@ -48,9 +49,9 @@ bin/Makefile
 bin/sugar
 data/icons/Makefile
 data/Makefile
-data/sugar-emulator.desktop
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
+extensions/cpsection/background/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile
@@ -59,10 +60,12 @@ extensions/cpsection/modemconfiguration/Makefile
 extensions/cpsection/Makefile
 extensions/cpsection/network/Makefile
 extensions/cpsection/power/Makefile
-extensions/cpsection/updater/backends/Makefile
 extensions/cpsection/updater/Makefile
+extensions/cpsection/webaccount/services/Makefile
+extensions/cpsection/webaccount/Makefile
 extensions/deviceicon/Makefile
 extensions/globalkey/Makefile
+extensions/webservice/Makefile
 extensions/Makefile
 Makefile
 po/Makefile.in
@@ -74,9 +77,11 @@ src/jarabe/intro/Makefile
 src/jarabe/journal/Makefile
 src/jarabe/Makefile
 src/jarabe/model/Makefile
+src/jarabe/model/update/Makefile
 src/jarabe/util/Makefile
 src/jarabe/util/telepathy/Makefile
 src/jarabe/view/Makefile
+src/jarabe/webservice/Makefile
 src/Makefile
 ])
 

@@ -76,8 +76,8 @@ class AdHocManager(GObject.GObject):
     def start_listening(self, device):
         self._listening_called += 1
         if self._listening_called > 1:
-            raise RuntimeError('The start listening method can' \
-                                   ' only be called once.')
+            raise RuntimeError('The start listening method can'
+                               ' only be called once.')
 
         self._device = device
         props = dbus.Interface(device, dbus.PROPERTIES_IFACE)
@@ -95,14 +95,16 @@ class AdHocManager(GObject.GObject):
 
     def stop_listening(self):
         self._listening_called = 0
-        self._bus.remove_signal_receiver(self.__device_state_changed_cb,
-                                         signal_name='StateChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=network.NM_DEVICE_IFACE)
-        self._bus.remove_signal_receiver(self.__wireless_properties_changed_cb,
-                                         signal_name='PropertiesChanged',
-                                         path=self._device.object_path,
-                                         dbus_interface=network.NM_WIRELESS_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__device_state_changed_cb,
+            signal_name='StateChanged',
+            path=self._device.object_path,
+            dbus_interface=network.NM_DEVICE_IFACE)
+        self._bus.remove_signal_receiver(
+            self.__wireless_properties_changed_cb,
+            signal_name='PropertiesChanged',
+            path=self._device.object_path,
+            dbus_interface=network.NM_WIRELESS_IFACE)
 
     def __device_state_changed_cb(self, new_state, old_state, reason):
         self._device_state = new_state
@@ -208,9 +210,9 @@ class AdHocManager(GObject.GObject):
         netmgr = dbus.Interface(obj, network.NM_IFACE)
 
         netmgr_props = dbus.Interface(netmgr, dbus.PROPERTIES_IFACE)
-        netmgr_props.Get(network.NM_IFACE, 'ActiveConnections', \
-                reply_handler=self.__get_active_connections_reply_cb,
-                error_handler=self.__get_active_connections_error_cb)
+        netmgr_props.Get(network.NM_IFACE, 'ActiveConnections',
+                         reply_handler=self.__get_active_connections_reply_cb,
+                         error_handler=self.__get_active_connections_error_cb)
 
     def __get_active_connections_reply_cb(self, active_connections_o):
         for connection_o in active_connections_o:
@@ -221,7 +223,8 @@ class AdHocManager(GObject.GObject):
                 access_point_o = props.Get(network.NM_ACTIVE_CONN_IFACE,
                                            'SpecificObject')
                 if access_point_o != '/':
-                    obj = self._bus.get_object(network.NM_SERVICE, network.NM_PATH)
+                    obj = self._bus.get_object(
+                        network.NM_SERVICE, network.NM_PATH)
                     netmgr = dbus.Interface(obj, network.NM_IFACE)
                     netmgr.DeactivateConnection(connection_o)
 

@@ -137,12 +137,14 @@ class OlpcMeshManager(object):
 
     def _maybe_schedule_idle_check(self):
         if self._mesh_device_state == network.NM_DEVICE_STATE_DISCONNECTED \
-                and self._eth_device_state == network.NM_DEVICE_STATE_DISCONNECTED:
+                and \
+                self._eth_device_state == network.NM_DEVICE_STATE_DISCONNECTED:
             self._start_automesh_timer()
 
     def _idle_check(self):
         if self._mesh_device_state == network.NM_DEVICE_STATE_DISCONNECTED \
-                and self._eth_device_state == network.NM_DEVICE_STATE_DISCONNECTED:
+                and \
+                self._eth_device_state == network.NM_DEVICE_STATE_DISCONNECTED:
             logging.debug('starting automesh due to inactivity')
             self._start_automesh()
         return False

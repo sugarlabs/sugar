@@ -66,10 +66,11 @@ class ModalAlert(Gtk.Window):
         self._vbox.pack_start(self._title, expand=False, fill=False, padding=0)
         self._title.show()
 
-        self._message = Gtk.Label(label=_('Please delete some old Journal'
-                                    ' entries to make space for new ones.'))
+        self._message = Gtk.Label(
+            label=_('Please delete some old Journal'
+                    ' entries to make space for new ones.'))
         self._message.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_WHITE.get_gdk_color())
+                                style.COLOR_WHITE.get_gdk_color())
         self._vbox.pack_start(self._message, expand=False,
                               fill=False, padding=0)
         self._message.show()

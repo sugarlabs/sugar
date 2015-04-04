@@ -104,7 +104,7 @@ def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
             fill_modifier = 'medium'
 
     color = _COLORS[stroke][stroke_modifier] + ',' \
-            + _COLORS[fill][fill_modifier]
+        + _COLORS[fill][fill_modifier]
 
     client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/user/color', color)

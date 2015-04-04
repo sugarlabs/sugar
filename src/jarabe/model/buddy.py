@@ -109,9 +109,9 @@ class OwnerBuddyModel(BaseBuddyModel):
 
         bus = dbus.SessionBus()
         bus.add_signal_receiver(
-                self.__name_owner_changed_cb,
-                signal_name='NameOwnerChanged',
-                dbus_interface='org.freedesktop.DBus')
+            self.__name_owner_changed_cb,
+            signal_name='NameOwnerChanged',
+            dbus_interface='org.freedesktop.DBus')
 
         bus_object = bus.get_object(dbus.BUS_DAEMON_NAME, dbus.BUS_DAEMON_PATH)
         for service in bus_object.ListNames(

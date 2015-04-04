@@ -14,13 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-# pylint: disable=C0301
+# flake8: noqa
 
-prefix = '@prefix@'
 data_path = '@prefix@/share/sugar/data'
-shell_path = '@prefix@/share/sugar/shell'
 locale_path = '@prefix@/share/locale'
 ext_path = '@prefix@/share/sugar/extensions'
-activities_path = "@prefix@/share/sugar/activities"
 version = '@SUCROSE_VERSION@'
-

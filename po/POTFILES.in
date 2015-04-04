@@ -4,6 +4,8 @@ extensions/cpsection/aboutme/view.py
 extensions/cpsection/aboutcomputer/__init__.py
 extensions/cpsection/aboutcomputer/model.py
 extensions/cpsection/aboutcomputer/view.py
+extensions/cpsection/background/__init__.py
+extensions/cpsection/background/view.py
 extensions/cpsection/datetime/__init__.py
 extensions/cpsection/datetime/model.py
 extensions/cpsection/datetime/view.py
@@ -17,6 +19,7 @@ extensions/cpsection/language/model.py
 extensions/cpsection/language/view.py
 extensions/cpsection/modemconfiguration/__init__.py
 extensions/cpsection/modemconfiguration/view.py
+extensions/cpsection/modemconfiguration/model.py
 extensions/cpsection/network/__init__.py
 extensions/cpsection/network/model.py
 extensions/cpsection/network/view.py
@@ -25,6 +28,8 @@ extensions/cpsection/power/model.py
 extensions/cpsection/power/view.py
 extensions/cpsection/updater/__init__.py
 extensions/cpsection/updater/view.py
+extensions/cpsection/webaccount/__init__.py
+extensions/cpsection/webaccount/view.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/frame.py
 extensions/deviceicon/network.py
@@ -66,11 +71,11 @@ src/jarabe/journal/modalalert.py
 src/jarabe/journal/objectchooser.py
 src/jarabe/journal/palettes.py
 src/jarabe/journal/volumestoolbar.py
+src/jarabe/journal/iconmodel.py
+src/jarabe/journal/iconview.py
 src/jarabe/model/network.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
 src/jarabe/view/viewsource.py
-src/jarabe/util/emulator.py
-

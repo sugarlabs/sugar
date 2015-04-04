@@ -27,7 +27,7 @@ from gi.repository import Gdk
 from gi.repository import GConf
 import cPickle
 import xapian
-import simplejson
+import json
 import tempfile
 import shutil
 
@@ -37,6 +37,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3 import env
 
 from jarabe.journal import model
+from jarabe.journal.misc import get_mount_icon_name
 from jarabe.view.palettes import VolumePalette
 
 
@@ -74,7 +75,7 @@ def _convert_entries(root):
                                                 'index'))
     except xapian.DatabaseError:
         logging.exception('Convert DS-0 Journal entries: error reading db: %s',
-                      os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
+                          os.path.join(root, _JOURNAL_0_METADATA_DIR, 'index'))
         return
 
     metadata_dir_path = os.path.join(root, model.JOURNAL_METADATA_DIR)
@@ -151,7 +152,7 @@ def _convert_entry(root, document):
                                  metadata_fname)
     if not os.path.exists(metadata_path):
         (fh, fn) = tempfile.mkstemp(dir=root)
-        os.write(fh, simplejson.dumps(metadata))
+        os.write(fh, json.dumps(metadata))
         os.close(fh)
         os.rename(fn, metadata_path)
 
@@ -183,7 +184,7 @@ class VolumesToolbar(Gtk.Toolbar):
 
         self.connect('destroy', self.__destroy_cb)
 
-        GObject.idle_add(self._set_up_volumes)
+        GLib.idle_add(self._set_up_volumes)
 
     def __destroy_cb(self, widget):
         volume_monitor = Gio.VolumeMonitor.get()
@@ -196,7 +197,8 @@ class VolumesToolbar(Gtk.Toolbar):
         volume_monitor = Gio.VolumeMonitor.get()
         self._mount_added_hid = volume_monitor.connect('mount-added',
                                                        self.__mount_added_cb)
-        self._mount_removed_hid = volume_monitor.connect('mount-removed',
+        self._mount_removed_hid = volume_monitor.connect(
+            'mount-removed',
             self.__mount_removed_cb)
 
         for mount in volume_monitor.get_mounts():
@@ -229,7 +231,7 @@ class VolumesToolbar(Gtk.Toolbar):
         if os.path.exists(os.path.join(mount.get_root().get_path(),
                                        _JOURNAL_0_METADATA_DIR)):
             logging.debug('Convert DS-0 Journal entries: starting conversion')
-            GObject.idle_add(_convert_entries, mount.get_root().get_path())
+            GLib.idle_add(_convert_entries, mount.get_root().get_path())
 
         button = VolumeButton(mount)
         button.props.group = self._volume_buttons[0]
@@ -316,19 +318,8 @@ class VolumeButton(BaseButton):
         mount_point = mount.get_root().get_path()
         BaseButton.__init__(self, mount_point)
 
-        icon_name = None
-        icon_theme = Gtk.IconTheme.get_default()
-        for icon_name in mount.get_icon().props.names:
-            icon_info = icon_theme.lookup_icon(icon_name,
-                                               Gtk.IconSize.LARGE_TOOLBAR, 0)
-            if icon_info is not None:
-                break
-
-        if icon_name is None:
-            icon_name = 'drive'
-
-        self.props.icon_name = icon_name
-
+        self.props.icon_name = get_mount_icon_name(mount,
+                                                   Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
         client = GConf.Client.get_default()
         color = XoColor(client.get_string('/desktop/sugar/user/color'))
@@ -336,8 +327,8 @@ class VolumeButton(BaseButton):
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
-        #palette.props.invoker = FrameWidgetInvoker(self)
-        #palette.set_group_id('frame')
+        # palette.props.invoker = FrameWidgetInvoker(self)
+        # palette.set_group_id('frame')
         return palette
 
 
@@ -383,7 +374,7 @@ class JournalButtonPalette(Palette):
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
-                {'free_space': free_space / (1024 * 1024)}
+            {'free_space': free_space / (1024 * 1024)}
 
 
 class DocumentsButton(BaseButton):

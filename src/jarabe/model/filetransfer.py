@@ -24,8 +24,8 @@ from gi.repository import GLib
 import dbus
 from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS, CHANNEL
 from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
-                                SOCKET_ADDRESS_TYPE_UNIX,           \
-                                SOCKET_ACCESS_CONTROL_LOCALHOST
+    SOCKET_ADDRESS_TYPE_UNIX,           \
+    SOCKET_ACCESS_CONTROL_LOCALHOST
 from telepathy.client import Connection, Channel
 
 from sugar3.presence import presenceservice
@@ -52,7 +52,7 @@ FT_REASON_REMOTE_ERROR = 6
 
 # FIXME: use constants from tp-python once the spec is undrafted
 CHANNEL_TYPE_FILE_TRANSFER = \
-        'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
+    'org.freedesktop.Telepathy.Channel.Type.FileTransfer'
 
 new_file_transfer = dispatch.Signal()
 
@@ -137,11 +137,11 @@ class BaseFileTransfer(GObject.GObject):
     def set_channel(self, channel):
         self.channel = channel
         self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
-                'FileTransferStateChanged', self.__state_changed_cb)
+            'FileTransferStateChanged', self.__state_changed_cb)
         self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
-                'TransferredBytesChanged', self.__transferred_bytes_changed_cb)
+            'TransferredBytesChanged', self.__transferred_bytes_changed_cb)
         self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
-                'InitialOffsetDefined', self.__initial_offset_defined_cb)
+            'InitialOffsetDefined', self.__initial_offset_defined_cb)
 
         channel_properties = self.channel[dbus.PROPERTIES_IFACE]
 
@@ -165,8 +165,10 @@ class BaseFileTransfer(GObject.GObject):
     def _get_transferred_bytes(self):
         return self._transferred_bytes
 
-    transferred_bytes = GObject.property(type=int, default=0,
-            getter=_get_transferred_bytes, setter=_set_transferred_bytes)
+    transferred_bytes = GObject.property(type=int,
+                                         default=0,
+                                         getter=_get_transferred_bytes,
+                                         setter=_set_transferred_bytes)
 
     def __initial_offset_defined_cb(self, offset):
         logging.debug('__initial_offset_defined_cb %r', offset)
@@ -205,14 +207,18 @@ class IncomingFileTransfer(BaseFileTransfer):
 
     def accept(self, destination_path):
         if os.path.exists(destination_path):
-            raise ValueError('Destination path already exists: %r' % \
+            raise ValueError('Destination path already exists: %r' %
                              destination_path)
 
         self.destination_path = destination_path
 
         channel_ft = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
-        self._socket_address = channel_ft.AcceptFile(SOCKET_ADDRESS_TYPE_UNIX,
-                SOCKET_ACCESS_CONTROL_LOCALHOST, '', 0, byte_arrays=True)
+        self._socket_address = channel_ft.AcceptFile(
+            SOCKET_ADDRESS_TYPE_UNIX,
+            SOCKET_ACCESS_CONTROL_LOCALHOST,
+            '',
+            0,
+            byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('__notify_state_cb %r', self.props.state)
@@ -274,8 +280,8 @@ class OutgoingFileTransfer(BaseFileTransfer):
 
         channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
         self._socket_address = channel_file_transfer.ProvideFile(
-                SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
-                byte_arrays=True)
+            SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
+            byte_arrays=True)
 
     def __notify_state_cb(self, file_transfer, pspec):
         logging.debug('__notify_state_cb %r', self.props.state)
@@ -314,8 +320,9 @@ def _new_channels_cb(connection, channels):
 
 def _monitor_connection(connection):
     logging.debug('connection added %r', connection)
-    connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal('NewChannels',
-            lambda channels: _new_channels_cb(connection, channels))
+    connection[CONNECTION_INTERFACE_REQUESTS].connect_to_signal(
+        'NewChannels',
+        lambda channels: _new_channels_cb(connection, channels))
 
 
 def _connection_added_cb(conn_watcher, connection):

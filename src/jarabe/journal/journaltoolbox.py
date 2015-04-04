@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+from gettext import ngettext
 import logging
 from datetime import datetime, timedelta
 import os
@@ -23,7 +24,6 @@ from gi.repository import GConf
 import time
 
 from gi.repository import GObject
-from gi.repository import Gio
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette
@@ -40,13 +40,17 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics import iconentry
 from sugar3 import mime
+from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
+from sugar3.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
+from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
 
 from jarabe.model import bundleregistry
 from jarabe.journal import misc
 from jarabe.journal import model
-from jarabe.journal.palettes import ClipboardMenu
-from jarabe.journal.palettes import VolumeMenu
+from jarabe.journal.palettes import CopyMenuBuilder
+from jarabe.journal.palettes import BatchOperator
 from jarabe.journal import journalwindow
+from jarabe.webservice import accountsmanager
 
 
 _AUTOSEARCH_TIMEOUT = 1000
@@ -70,16 +74,18 @@ class MainToolbox(ToolbarBox):
     __gsignals__ = {
         'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
-        }
+    }
 
     def __init__(self):
         ToolbarBox.__init__(self)
 
         self._mount_point = None
+        self._filter_type = None
+        self._what_filter = None
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'system-search')
+                                             'entry-search')
         text = _('Search in %s') % _('Journal')
         self.search_entry.set_placeholder_text(text)
         self.search_entry.connect('activate', self._search_entry_activated_cb)
@@ -89,6 +95,7 @@ class MainToolbox(ToolbarBox):
         self._add_widget(self.search_entry, expand=True)
 
         self._favorite_button = ToggleToolButton('emblem-favorite')
+        self._favorite_button.set_tooltip(_('Favorite entries'))
         self._favorite_button.connect('toggled',
                                       self.__favorite_button_toggled_cb)
         self.toolbar.insert(self._favorite_button, -1)
@@ -96,7 +103,7 @@ class MainToolbox(ToolbarBox):
 
         self._what_search_combo = ComboBox()
         self._what_combo_changed_sid = self._what_search_combo.connect(
-                'changed', self._combo_changed_cb)
+            'changed', self._combo_changed_cb)
         tool_item = ToolComboBox(self._what_search_combo)
         self.toolbar.insert(tool_item, -1)
         tool_item.show()
@@ -113,10 +120,10 @@ class MainToolbox(ToolbarBox):
         self._sorting_button.show()
 
         # TODO: enable it when the DS supports saving the buddies.
-        #self._with_search_combo = self._get_with_search_combo()
-        #tool_item = ToolComboBox(self._with_search_combo)
-        #self.insert(tool_item, -1)
-        #tool_item.show()
+        # self._with_search_combo = self._get_with_search_combo()
+        # tool_item = ToolComboBox(self._with_search_combo)
+        # self.insert(tool_item, -1)
+        # tool_item.show()
 
         self._query = self._build_query()
 
@@ -128,7 +135,7 @@ class MainToolbox(ToolbarBox):
         when_search.append_separator()
         when_search.append_item(_ACTION_TODAY, _('Today'))
         when_search.append_item(_ACTION_SINCE_YESTERDAY,
-                                      _('Since yesterday'))
+                                _('Since yesterday'))
         # TRANS: Filter entries modified during the last 7 days.
         when_search.append_item(_ACTION_PAST_WEEK, _('Past week'))
         # TRANS: Filter entries modified during the last 30 days.
@@ -175,12 +182,37 @@ class MainToolbox(ToolbarBox):
 
         if self._what_search_combo.props.value:
             value = self._what_search_combo.props.value
-            generic_type = mime.get_generic_type(value)
-            if generic_type:
-                mime_types = generic_type.mime_types
-                query['mime_type'] = mime_types
-            else:
-                query['activity'] = self._what_search_combo.props.value
+            filter_type = self._filter_type
+            if self._filter_type is None:
+                # for backward compatibility, try to guess the filter
+                generic_type = mime.get_generic_type(value)
+                if generic_type:
+                    filter_type = FILTER_TYPE_GENERIC_MIME
+                else:
+                    filter_type = FILTER_TYPE_ACTIVITY
+                logging.error('DEPRECATED: sety the filter_type parameter')
+
+            if filter_type == FILTER_TYPE_GENERIC_MIME:
+                generic_type = mime.get_generic_type(value)
+                if generic_type:
+                    mime_types = generic_type.mime_types
+                    query['mime_type'] = mime_types
+                else:
+                    logging.error('filter_type="generic_mime", '
+                                  'but "%s" is not a generic mime' % value)
+
+            elif filter_type == FILTER_TYPE_ACTIVITY:
+                query['activity'] = value
+
+            elif self._filter_type == FILTER_TYPE_MIME_BY_ACTIVITY:
+                registry = bundleregistry.get_registry()
+                bundle = \
+                    registry.get_bundle(value)
+                if bundle is not None:
+                    query['mime_type'] = bundle.get_mime_types()
+                else:
+                    logging.error('Trying to filter using activity mimetype '
+                                  'but bundle id is wrong %s' % value)
 
         if self._when_search_combo.props.value:
             date_from, date_to = self._get_date_range()
@@ -225,6 +257,10 @@ class MainToolbox(ToolbarBox):
         self._update_if_needed()
 
     def _update_if_needed(self):
+        # check if the what_search combo should be visible
+        self._what_search_combo.set_visible(
+            self._filter_type != FILTER_TYPE_MIME_BY_ACTIVITY)
+
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
@@ -233,10 +269,7 @@ class MainToolbox(ToolbarBox):
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
             GObject.source_remove(self._autosearch_timer)
-        new_query = self._build_query()
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
+        self._update_if_needed()
 
     def _search_entry_changed_cb(self, search_entry):
         if not search_entry.props.text:
@@ -256,10 +289,7 @@ class MainToolbox(ToolbarBox):
 
     def set_mount_point(self, mount_point):
         self._mount_point = mount_point
-        new_query = self._build_query()
-        if self._query != new_query:
-            self._query = new_query
-            self.emit('query-changed', self._query)
+        self._update_if_needed()
 
     def set_what_filter(self, what_filter):
         combo_model = self._what_search_combo.get_model()
@@ -273,6 +303,17 @@ class MainToolbox(ToolbarBox):
             logging.warning('what_filter %r not known', what_filter)
         else:
             self._what_search_combo.set_active(what_filter_index)
+
+    def update_filters(self, mount_point, what_filter, filter_type=None):
+        self._mount_point = mount_point
+        self._filter_type = filter_type
+        self._what_filter = what_filter
+        self.set_what_filter(what_filter)
+        self._update_if_needed()
+
+    def set_filter_type(self, filter_type):
+        self._filter_type = filter_type
+        self._update_if_needed()
 
     def refresh_filters(self):
         current_value = self._what_search_combo.props.value
@@ -297,7 +338,7 @@ class MainToolbox(ToolbarBox):
                     generic_type.type_id, generic_type.name, generic_type.icon)
                 if generic_type.type_id == current_value:
                     current_value_index = \
-                            len(self._what_search_combo.get_model()) - 1
+                        len(self._what_search_combo.get_model()) - 1
 
                 self._what_search_combo.set_active(current_value_index)
 
@@ -315,9 +356,10 @@ class MainToolbox(ToolbarBox):
                 # try activity-provided icon
                 if os.path.exists(activity_info.get_icon()):
                     try:
-                        self._what_search_combo.append_item(service_name,
-                                activity_info.get_name(),
-                                file_name=activity_info.get_icon())
+                        self._what_search_combo.append_item(
+                            service_name,
+                            activity_info.get_name(),
+                            file_name=activity_info.get_icon())
                     except GObject.GError, exception:
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -328,20 +370,24 @@ class MainToolbox(ToolbarBox):
                         continue
 
                 # fall back to generic icon
-                self._what_search_combo.append_item(service_name,
-                        activity_info.get_name(),
-                        icon_name='application-octet-stream')
+                self._what_search_combo.append_item(
+                    service_name,
+                    activity_info.get_name(),
+                    icon_name='application-octet-stream')
 
         finally:
             self._what_search_combo.handler_unblock(
-                    self._what_combo_changed_sid)
+                self._what_combo_changed_sid)
 
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
     def clear_query(self):
         self.search_entry.props.text = ''
-        self._what_search_combo.set_active(0)
+        if self._what_filter is None:
+            self._what_search_combo.set_active(0)
+        else:
+            self.set_what_filter(self._what_filter)
         self._when_search_combo.set_active(0)
         self._favorite_button.props.active = False
 
@@ -350,13 +396,14 @@ class DetailToolbox(ToolbarBox):
     __gsignals__ = {
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
-        }
+    }
 
-    def __init__(self):
+    def __init__(self, journalactivity):
         ToolbarBox.__init__(self)
-
+        self._journalactivity = journalactivity
         self._metadata = None
         self._temp_file_path = None
+        self._refresh = None
 
         self._resume = ToolButton('activity-start')
         self._resume.connect('clicked', self._resume_clicked_cb)
@@ -381,6 +428,13 @@ class DetailToolbox(ToolbarBox):
         self._duplicate.connect('clicked', self._duplicate_clicked_cb)
         self.toolbar.insert(self._duplicate, -1)
 
+        if accountsmanager.has_configured_accounts():
+            self._refresh = ToolButton('entry-refresh')
+            self._refresh.set_tooltip(_('Refresh'))
+            self._refresh.connect('clicked', self._refresh_clicked_cb)
+            self.toolbar.insert(self._refresh, -1)
+            self._refresh.show()
+
         separator = Gtk.SeparatorToolItem()
         self.toolbar.insert(separator, -1)
         separator.show()
@@ -395,6 +449,7 @@ class DetailToolbox(ToolbarBox):
         self._metadata = metadata
         self._refresh_copy_palette()
         self._refresh_duplicate_palette()
+        self._refresh_refresh_palette()
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
@@ -403,8 +458,10 @@ class DetailToolbox(ToolbarBox):
     def _copy_clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
 
+    def _refresh_clicked_cb(self, button):
+        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+
     def _duplicate_clicked_cb(self, button):
-        file_path = model.get_file(self._metadata['uid'])
         try:
             model.copy(self._metadata, '/')
         except IOError, e:
@@ -444,54 +501,16 @@ class DetailToolbox(ToolbarBox):
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
 
+        # Use the menu defined in CopyMenu
         for menu_item in palette.menu.get_children():
             palette.menu.remove(menu_item)
             menu_item.destroy()
 
-        clipboard_menu = ClipboardMenu(self._metadata)
-        clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=Gtk.IconSize.MENU))
-        clipboard_menu.connect('volume-error', self.__volume_error_cb)
-        palette.menu.append(clipboard_menu)
-        clipboard_menu.show()
+        CopyMenuBuilder(self._journalactivity, self.__get_uid_list_cb,
+                        self.__volume_error_cb, palette.menu)
 
-        if self._metadata['mountpoint'] != '/':
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
-            journal_menu.set_image(Icon(icon_name='activity-journal',
-                                        xo_color=color,
-                                        icon_size=Gtk.IconSize.MENU))
-            journal_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(journal_menu)
-            journal_menu.show()
-
-        documents_path = model.get_documents_path()
-        if documents_path is not None and not \
-                self._metadata['uid'].startswith(documents_path):
-            documents_menu = VolumeMenu(self._metadata, _('Documents'),
-                                        documents_path)
-            documents_menu.set_image(Icon(icon_name='user-documents',
-                                          icon_size=Gtk.IconSize.MENU))
-            documents_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(documents_menu)
-            documents_menu.show()
-
-        volume_monitor = Gio.VolumeMonitor.get()
-        icon_theme = Gtk.IconTheme.get_default()
-        for mount in volume_monitor.get_mounts():
-            if self._metadata['mountpoint'] == mount.get_root().get_path():
-                continue
-            volume_menu = VolumeMenu(self._metadata, mount.get_name(),
-                                     mount.get_root().get_path())
-            for name in mount.get_icon().props.names:
-                if icon_theme.has_icon(name):
-                    volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=Gtk.IconSize.MENU))
-                    break
-            volume_menu.connect('volume-error', self.__volume_error_cb)
-            palette.menu.append(volume_menu)
-            volume_menu.show()
+    def __get_uid_list_cb(self):
+        return [self._metadata['uid']]
 
     def _refresh_duplicate_palette(self):
         color = misc.get_icon_color(self._metadata)
@@ -503,6 +522,25 @@ class DetailToolbox(ToolbarBox):
             icon.show()
         else:
             self._duplicate.hide()
+
+    def _refresh_refresh_palette(self):
+        if self._refresh is None:
+            return
+
+        color = misc.get_icon_color(self._metadata)
+        self._refresh.get_icon_widget().props.xo_color = color
+
+        palette = self._refresh.get_palette()
+        for menu_item in palette.menu.get_children():
+            palette.menu.remove(menu_item)
+
+        for account in accountsmanager.get_configured_accounts():
+            if hasattr(account, 'get_shared_journal_entry'):
+                entry = account.get_shared_journal_entry()
+                if hasattr(entry, 'get_refresh_menu'):
+                    menu = entry.get_refresh_menu()
+                    palette.menu.append(menu)
+                    menu.set_metadata(self._metadata)
 
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
@@ -524,9 +562,9 @@ class DetailToolbox(ToolbarBox):
         for activity_info in misc.get_activities(self._metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                        icon_size=Gtk.IconSize.MENU))
+                                     icon_size=Gtk.IconSize.MENU))
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
-                                activity_info.get_bundle_id())
+                              activity_info.get_bundle_id())
             palette.menu.append(menu_item)
             menu_item.show()
 
@@ -576,7 +614,7 @@ class SortingButton(ToolButton):
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
         self._property = property_
-        #FIXME: Implement sorting order
+        # FIXME: Implement sorting order
         self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
@@ -584,3 +622,144 @@ class SortingButton(ToolButton):
 
     def get_current_sort(self):
         return (self._property, self._order)
+
+
+class EditToolbox(ToolbarBox):
+
+    def __init__(self, journalactivity):
+        ToolbarBox.__init__(self)
+        self._journalactivity = journalactivity
+        self.toolbar.add(SelectNoneButton(journalactivity))
+        self.toolbar.add(SelectAllButton(journalactivity))
+
+        self.toolbar.add(Gtk.SeparatorToolItem())
+
+        self.batch_copy_button = BatchCopyButton(journalactivity)
+        self.toolbar.add(self.batch_copy_button)
+        self.toolbar.add(BatchEraseButton(journalactivity))
+
+        self.toolbar.add(Gtk.SeparatorToolItem())
+
+        self._multi_select_info_widget = MultiSelectEntriesInfoWidget()
+        self.toolbar.add(self._multi_select_info_widget)
+
+        self.show_all()
+        self.toolbar.show_all()
+
+    def display_selected_entries_status(self):
+        info_widget = self._multi_select_info_widget
+        GObject.idle_add(info_widget.display_selected_entries)
+
+    def set_total_number_of_entries(self, total):
+        self._multi_select_info_widget.set_total_number_of_entries(total)
+
+    def set_selected_entries(self, selected):
+        self._multi_select_info_widget.set_selected_entries(selected)
+
+
+class SelectNoneButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        ToolButton.__init__(self, 'select-none')
+        self.props.tooltip = _('Deselect all')
+        self._journalactivity = journalactivity
+
+        self.connect('clicked', self.__do_deselect_all)
+
+    def __do_deselect_all(self, widget_clicked):
+        self._journalactivity.get_list_view().select_none()
+
+
+class SelectAllButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        ToolButton.__init__(self, 'select-all')
+        self.props.tooltip = _('Select all')
+        self._journalactivity = journalactivity
+
+        self.connect('clicked', self.__do_select_all)
+
+    def __do_select_all(self, widget_clicked):
+        self._journalactivity.get_list_view().select_all()
+
+
+class BatchEraseButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        self._journalactivity = journalactivity
+        ToolButton.__init__(self, 'edit-delete')
+        self.connect('clicked', self.__button_cliecked_cb)
+        self.props.tooltip = _('Erase')
+
+    def __button_cliecked_cb(self, button):
+        self._model = self._journalactivity.get_list_view().get_model()
+        selected_uids = self._model.get_selected_items()
+        BatchOperator(
+            self._journalactivity, selected_uids, _('Erase'),
+            self._get_confirmation_alert_message(len(selected_uids)),
+            self._operate)
+
+    def _get_confirmation_alert_message(self, entries_len):
+        return ngettext('Do you want to erase %d entry?',
+                        'Do you want to erase %d entries?',
+                        entries_len) % (entries_len)
+
+    def _operate(self, metadata):
+        model.delete(metadata['uid'])
+        self._model.set_selected(metadata['uid'], False)
+
+
+class BatchCopyButton(ToolButton):
+
+    def __init__(self, journalactivity):
+        self._journalactivity = journalactivity
+        ToolButton.__init__(self, 'edit-copy')
+        self.props.tooltip = _('Copy')
+        self.connect('clicked', self.__clicked_cb)
+
+        self.menu_builder = CopyMenuBuilder(
+            self._journalactivity, self.__get_uid_list_cb,
+            self._journalactivity.volume_error_cb,
+            self.get_palette().menu, add_clipboard_menu=False,
+            add_webservices_menu=False)
+
+    def update_mount_point(self):
+        self.menu_builder.update_mount_point()
+
+    def __clicked_cb(self, button):
+        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+
+    def __get_uid_list_cb(self):
+        model = self._journalactivity.get_list_view().get_model()
+        return model.get_selected_items()
+
+
+class MultiSelectEntriesInfoWidget(Gtk.ToolItem):
+
+    def __init__(self):
+        Gtk.ToolItem.__init__(self)
+
+        self._box = Gtk.VBox()
+        self._selected_entries = 0
+        self._total = 0
+
+        self._label = Gtk.Label()
+        self._box.pack_start(self._label, True, True, 0)
+
+        self.add(self._box)
+
+        self.show_all()
+        self._box.show_all()
+
+    def set_total_number_of_entries(self, total):
+        self._total = total
+
+    def set_selected_entries(self, selected_entries):
+        self._selected_entries = selected_entries
+
+    def display_selected_entries(self):
+        # TRANS: Do not translate %(selected)d and %(total)d.
+        message = _('Selected %(selected)d of %(total)d') % {
+            'selected': self._selected_entries, 'total': self._total}
+        self._label.set_text(message)
+        self._label.show()

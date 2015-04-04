@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from sugar3.graphics import style
-from sugar3.graphics.palette import Palette
 from sugar3.graphics.icon import CanvasIcon
 
 from jarabe.view.buddymenu import BuddyMenu
@@ -70,5 +69,5 @@ class BuddyIcon(CanvasIcon):
         normalized_name = normalize_string(
             self._buddy.get_nick().decode('utf-8'))
         self._filtered = (normalized_name.find(query) == -1) \
-                and not self._buddy.is_owner()
+            and not self._buddy.is_owner()
         self._update_color()

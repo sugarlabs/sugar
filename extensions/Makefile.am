@@ -1,1 +1,1 @@
-SUBDIRS = cpsection deviceicon globalkey
+SUBDIRS = cpsection deviceicon globalkey webservice

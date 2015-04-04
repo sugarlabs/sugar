@@ -34,7 +34,8 @@ class DetailView(Gtk.VBox):
         'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self, journalactivity, **kwargs):
+        self._journalactivity = journalactivity
         self._metadata = None
         self._expanded_entry = None
 
@@ -58,7 +59,7 @@ class DetailView(Gtk.VBox):
 
     def _update_view(self):
         if self._expanded_entry is None:
-            self._expanded_entry = ExpandedEntry()
+            self._expanded_entry = ExpandedEntry(self._journalactivity)
             self.pack_start(self._expanded_entry, True, True, 0)
         self._expanded_entry.set_metadata(self._metadata)
         self.show_all()
@@ -76,7 +77,7 @@ class DetailView(Gtk.VBox):
         self._update_view()
 
     metadata = GObject.property(
-            type=object, getter=get_metadata, setter=set_metadata)
+        type=object, getter=get_metadata, setter=set_metadata)
 
 
 class BackBar(Gtk.EventBox):

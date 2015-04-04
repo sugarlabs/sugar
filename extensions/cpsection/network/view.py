@@ -73,7 +73,8 @@ class Network(SectionView):
         box_wireless.set_border_width(style.DEFAULT_SPACING * 2)
         box_wireless.set_spacing(style.DEFAULT_SPACING)
 
-        radio_info = Gtk.Label(label=_('Turn off the wireless radio to save battery'
+        radio_info = Gtk.Label(label=
+                               _('Turn off the wireless radio to save battery'
                                  ' life'))
         radio_info.set_alignment(0, 0)
         radio_info.set_line_wrap(True)
@@ -103,7 +104,7 @@ class Network(SectionView):
             self._radio_alert.show()
 
         history_info = Gtk.Label(label=_('Discard network history if you have'
-                                   ' trouble connecting to the network'))
+                                         ' trouble connecting to the network'))
         history_info.set_alignment(0, 0)
         history_info.set_line_wrap(True)
         history_info.show()
@@ -112,7 +113,8 @@ class Network(SectionView):
         box_clear_history = Gtk.HBox(spacing=style.DEFAULT_SPACING)
         self._clear_history_button = Gtk.Button()
         self._clear_history_button.set_label(_('Discard network history'))
-        box_clear_history.pack_start(self._clear_history_button, False, True, 0)
+        box_clear_history.pack_start(
+            self._clear_history_button, False, True, 0)
         if not self._model.have_networks():
             self._clear_history_button.set_sensitive(False)
         self._clear_history_button.show()
@@ -189,13 +191,13 @@ class Network(SectionView):
         self._jabber_valid = True
         self._radio_valid = True
         self.needs_restart = False
-        self._radio_change_handler = self._button.connect( \
-                'toggled', self.__radio_toggled_cb)
-        self._jabber_change_handler = self._entry.connect( \
-                'changed', self.__jabber_changed_cb)
+        self._radio_change_handler = self._button.connect(
+            'toggled', self.__radio_toggled_cb)
+        self._jabber_change_handler = self._entry.connect(
+            'changed', self.__jabber_changed_cb)
         self._network_configuration_reset_handler =  \
-                self._clear_history_button.connect( \
-                        'clicked', self.__network_configuration_reset_cb)
+            self._clear_history_button.connect(
+                'clicked', self.__network_configuration_reset_cb)
 
     def undo(self):
         self._button.disconnect(self._radio_change_handler)

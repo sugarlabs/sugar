@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gettext import gettext as _
+from gettext import ngettext
 import logging
 import os
 
@@ -39,6 +40,7 @@ from jarabe.model import mimeregistry
 from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
+from jarabe.webservice import accountsmanager
 
 
 class ObjectPalette(Palette):
@@ -52,8 +54,9 @@ class ObjectPalette(Palette):
                          ([str, str])),
     }
 
-    def __init__(self, metadata, detail=False):
+    def __init__(self, journalactivity, metadata, detail=False):
 
+        self._journalactivity = journalactivity
         self._metadata = metadata
 
         activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
@@ -99,7 +102,7 @@ class ObjectPalette(Palette):
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
-        copy_menu = CopyMenu(metadata)
+        copy_menu = CopyMenu(self._journalactivity, self.__get_uid_list_cb)
         copy_menu.connect('volume-error', self.__volume_error_cb)
         menu_item.set_submenu(copy_menu)
 
@@ -120,7 +123,7 @@ class ObjectPalette(Palette):
         friends_menu.connect('friend-selected', self.__friend_selected_cb)
         menu_item.set_submenu(friends_menu)
 
-        if detail == True:
+        if detail is True:
             menu_item = MenuItem(_('View Details'), 'go-right')
             menu_item.connect('activate', self.__detail_activate_cb)
             self.menu.append(menu_item)
@@ -131,11 +134,13 @@ class ObjectPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
+    def __get_uid_list_cb(self):
+        return [self._metadata['uid']]
+
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata)
 
     def __duplicate_activate_cb(self, menu_item):
-        file_path = model.get_file(self._metadata['uid'])
         try:
             model.copy(self._metadata, '/')
         except IOError, e:
@@ -201,58 +206,119 @@ class CopyMenu(Gtk.Menu):
                          ([str, str])),
     }
 
-    def __init__(self, metadata):
+    def __init__(self, journalactivity, get_uid_list_cb):
         Gtk.Menu.__init__(self)
 
-        self._metadata = metadata
+        CopyMenuBuilder(journalactivity, get_uid_list_cb,
+                        self.__volume_error_cb, self)
 
-        clipboard_menu = ClipboardMenu(self._metadata)
-        clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                      icon_size=Gtk.IconSize.MENU))
-        clipboard_menu.connect('volume-error', self.__volume_error_cb)
-        self.append(clipboard_menu)
-        clipboard_menu.show()
+    def __volume_error_cb(self, menu_item, message, severity):
+        self.emit('volume-error', message, severity)
 
-        if self._metadata['mountpoint'] != '/':
+
+class CopyMenuBuilder():
+
+    def __init__(self, journalactivity, get_uid_list_cb, __volume_error_cb,
+                 menu, add_clipboard_menu=True, add_webservices_menu=True):
+
+        self._journalactivity = journalactivity
+        self._get_uid_list_cb = get_uid_list_cb
+        self.__volume_error_cb = __volume_error_cb
+        self._menu = menu
+        self._add_clipboard_menu = add_clipboard_menu
+        self._add_webservices_menu = add_webservices_menu
+
+        self._mount_added_hid = None
+        self._mount_removed_hid = None
+        self._create_menu_items()
+
+    def _create_menu_items(self):
+        if self._add_clipboard_menu:
+            clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
+            clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
+                                          icon_size=Gtk.IconSize.MENU))
+            clipboard_menu.connect('volume-error', self.__volume_error_cb)
+            self._menu.append(clipboard_menu)
+            clipboard_menu.show()
+
+        if self._journalactivity.get_mount_point() != '/':
             client = GConf.Client.get_default()
             color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            journal_menu = VolumeMenu(self._metadata, _('Journal'), '/')
+            journal_menu = VolumeMenu(self._journalactivity,
+                                      self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
                                         icon_size=Gtk.IconSize.MENU))
             journal_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(journal_menu)
+            self._menu.append(journal_menu)
             journal_menu.show()
 
         documents_path = model.get_documents_path()
-        if documents_path is not None and not \
-                self._metadata['uid'].startswith(documents_path):
-            documents_menu = VolumeMenu(self._metadata, _('Documents'),
+        if documents_path is not None and \
+                self._journalactivity.get_mount_point() != documents_path:
+            documents_menu = VolumeMenu(self._journalactivity,
+                                        self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
                                           icon_size=Gtk.IconSize.MENU))
             documents_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(documents_menu)
+            self._menu.append(documents_menu)
             documents_menu.show()
 
         volume_monitor = Gio.VolumeMonitor.get()
-        icon_theme = Gtk.IconTheme.get_default()
+        self._volumes = {}
         for mount in volume_monitor.get_mounts():
-            if self._metadata['mountpoint'] == mount.get_root().get_path():
-                continue
-            volume_menu = VolumeMenu(self._metadata, mount.get_name(),
-                                   mount.get_root().get_path())
-            for name in mount.get_icon().props.names:
-                if icon_theme.has_icon(name):
-                    volume_menu.set_image(Icon(icon_name=name,
-                                               icon_size=Gtk.IconSize.MENU))
-                    break
-            volume_menu.connect('volume-error', self.__volume_error_cb)
-            self.append(volume_menu)
-            volume_menu.show()
+            self._add_mount(mount)
 
-    def __volume_error_cb(self, menu_item, message, severity):
-        self.emit('volume-error', message, severity)
+        self._mount_added_hid = volume_monitor.connect('mount-added',
+                                                       self.__mount_added_cb)
+        self._mount_removed_hid = volume_monitor.connect(
+            'mount-removed',
+            self.__mount_removed_cb)
+
+        if self._add_webservices_menu:
+            for account in accountsmanager.get_configured_accounts():
+                if hasattr(account, 'get_shared_journal_entry'):
+                    entry = account.get_shared_journal_entry()
+                    if hasattr(entry, 'get_share_menu'):
+                        self._menu.append(entry.get_share_menu(
+                                          self._get_uid_list_cb))
+
+    def update_mount_point(self):
+        for menu_item in self._menu.get_children():
+            if isinstance(menu_item, MenuItem):
+                self._menu.remove(menu_item)
+        self._create_menu_items()
+
+    def __mount_added_cb(self, volume_monitor, mount):
+        self._add_mount(mount)
+
+    def _add_mount(self, mount):
+        mount_path = mount.get_root().get_path()
+        if mount_path in self._volumes:
+            return
+        if self._journalactivity.get_mount_point() == mount_path:
+            return
+        volume_menu = VolumeMenu(self._journalactivity,
+                                 self._get_uid_list_cb, mount.get_name(),
+                                 mount.get_root().get_path())
+        icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
+        volume_menu.set_image(Icon(icon_size=Gtk.IconSize.MENU,
+                                   icon_name=icon_name))
+        volume_menu.connect('volume-error', self.__volume_error_cb)
+        self._menu.append(volume_menu)
+        self._volumes[mount.get_root().get_path()] = volume_menu
+        volume_menu.show()
+
+    def __mount_removed_cb(self, volume_monitor, mount):
+        volume_menu = self._volumes[mount.get_root().get_path()]
+        self._menu.remove(volume_menu)
+        del self._volumes[mount.get_root().get_path()]
+
+    def __destroy_cb(self, widget):
+        volume_monitor = Gio.VolumeMonitor.get()
+        volume_monitor.disconnect(self._mount_added_hid)
+        volume_monitor.disconnect(self._mount_removed_hid)
 
 
 class VolumeMenu(MenuItem):
@@ -263,28 +329,56 @@ class VolumeMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, metadata, label, mount_point):
+    def __init__(self, journalactivity, get_uid_list_cb, label, mount_point):
         MenuItem.__init__(self, label)
-        self._metadata = metadata
-        self.connect('activate', self.__copy_to_volume_cb, mount_point)
+        self._get_uid_list_cb = get_uid_list_cb
+        self._journalactivity = journalactivity
+        self._mount_point = mount_point
+        self.connect('activate', self.__copy_to_volume_cb)
 
-    def __copy_to_volume_cb(self, menu_item, mount_point):
-        file_path = model.get_file(self._metadata['uid'])
+    def __copy_to_volume_cb(self, menu_item):
+        uid_list = self._get_uid_list_cb()
+        if len(uid_list) == 1:
+            uid = uid_list[0]
+            file_path = model.get_file(uid)
 
+            if not file_path or not os.path.exists(file_path):
+                logging.warn('Entries without a file cannot be copied.')
+                self.emit('volume-error',
+                          _('Entries without a file cannot be copied.'),
+                          _('Warning'))
+                return
+
+            try:
+                metadata = model.get(uid)
+                model.copy(metadata, self._mount_point)
+            except IOError, e:
+                logging.exception('Error while copying the entry. %s',
+                                  e.strerror)
+                self.emit('volume-error',
+                          _('Error while copying the entry. %s') % e.strerror,
+                          _('Error'))
+        else:
+            BatchOperator(
+                self._journalactivity, uid_list, _('Copy'),
+                self._get_confirmation_alert_message(len(uid_list)),
+                self._perform_copy)
+
+    def _get_confirmation_alert_message(self, entries_len):
+        return ngettext('Do you want to copy %d entry?',
+                        'Do you want to copy %d entries?',
+                        entries_len) % (entries_len)
+
+    def _perform_copy(self, metadata):
+        file_path = model.get_file(metadata['uid'])
         if not file_path or not os.path.exists(file_path):
             logging.warn('Entries without a file cannot be copied.')
-            self.emit('volume-error',
-                      _('Entries without a file cannot be copied.'),
-                      _('Warning'))
             return
-
         try:
-            model.copy(self._metadata, mount_point)
+            model.copy(metadata, self._mount_point)
         except IOError, e:
-            logging.exception('Error while copying the entry. %s', e.strerror)
-            self.emit('volume-error',
-                      _('Error while copying the entry. %s') % e.strerror,
-                      _('Error'))
+            logging.exception('Error while copying the entry. %s',
+                              e.strerror)
 
 
 class ClipboardMenu(MenuItem):
@@ -295,32 +389,37 @@ class ClipboardMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, metadata):
+    def __init__(self, get_uid_list_cb):
         MenuItem.__init__(self, _('Clipboard'))
 
         self._temp_file_path = None
-        self._metadata = metadata
+        self._get_uid_list_cb = get_uid_list_cb
         self.connect('activate', self.__copy_to_clipboard_cb)
 
     def __copy_to_clipboard_cb(self, menu_item):
-        file_path = model.get_file(self._metadata['uid'])
-        if not file_path or not os.path.exists(file_path):
-            logging.warn('Entries without a file cannot be copied.')
-            self.emit('volume-error',
-                      _('Entries without a file cannot be copied.'),
-                      _('Warning'))
-            return
-
         clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
-        clipboard.set_with_data([Gtk.TargetEntry.new('text/uri-list', 0, 0)],
-                                self.__clipboard_get_func_cb,
-                                self.__clipboard_clear_func_cb, None)
+        uid_list = self._get_uid_list_cb()
+        if len(uid_list) == 1:
+            uid = uid_list[0]
+            file_path = model.get_file(uid)
+            if not file_path or not os.path.exists(file_path):
+                logging.warn('Entries without a file cannot be copied.')
+                self.emit('volume-error',
+                          _('Entries without a file cannot be copied.'),
+                          _('Warning'))
+                return
+
+            clipboard.set_with_data(
+                [Gtk.TargetEntry.new('text/uri-list', 0, 0)],
+                self.__clipboard_get_func_cb,
+                self.__clipboard_clear_func_cb, None)
 
     def __clipboard_get_func_cb(self, clipboard, selection_data, info, data):
         # Get hold of a reference so the temp file doesn't get deleted
-        self._temp_file_path = model.get_file(self._metadata['uid'])
-        logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
-        selection_data.set_uris(['file://' + self._temp_file_path])
+        for uid in self._uid_list:
+            self._temp_file_path = model.get_file(uid)
+            logging.debug('__clipboard_get_func_cb %r', self._temp_file_path)
+            selection_data.set_uris(['file://' + self._temp_file_path])
 
     def __clipboard_clear_func_cb(self, clipboard, data):
         # Release and delete the temp file
@@ -413,3 +512,109 @@ class BuddyPalette(Palette):
                          icon=buddy_icon)
 
         # TODO: Support actions on buddies, like make friend, invite, etc.
+
+
+class BatchOperator(GObject.GObject):
+    """
+    This class implements the course of actions that happens when clicking
+    upon an BatchOperation  (eg. Batch-Copy-Toolbar-button;
+                             Batch-Copy-To-Journal-button;
+                             Batch-Copy-To-Documents-button;
+                             Batch-Copy-To-Mounted-Drive-button;
+                             Batch-Copy-To-Clipboard-button;
+                             Batch-Erase-Button;
+    """
+
+    def __init__(self, journalactivity,
+                 uid_list,
+                 alert_title, alert_message,
+                 operation_cb):
+        GObject.GObject.__init__(self)
+
+        self._journalactivity = journalactivity
+
+        self._uid_list = uid_list[:]
+        self._alert_title = alert_title
+        self._alert_message = alert_message
+        self._operation_cb = operation_cb
+
+        self._show_confirmation_alert()
+
+    def _show_confirmation_alert(self):
+        self._journalactivity.freeze_ui()
+        GObject.idle_add(self.__show_confirmation_alert_internal)
+
+    def __show_confirmation_alert_internal(self):
+        # Show a alert requesting confirmation before run the batch operation
+        self._confirmation_alert = Alert()
+        self._confirmation_alert.props.title = self._alert_title
+        self._confirmation_alert.props.msg = self._alert_message
+
+        stop_icon = Icon(icon_name='dialog-cancel')
+        self._confirmation_alert.add_button(Gtk.ResponseType.CANCEL,
+                                            _('Stop'), stop_icon)
+        stop_icon.show()
+
+        ok_icon = Icon(icon_name='dialog-ok')
+        self._confirmation_alert.add_button(Gtk.ResponseType.OK,
+                                            _('Continue'), ok_icon)
+        ok_icon.show()
+
+        self._journalactivity.add_alert(self._confirmation_alert)
+        self._confirmation_alert.connect('response',
+                                         self.__confirmation_response_cb)
+        self._confirmation_alert.show()
+
+    def __confirmation_response_cb(self, alert, response):
+        if response == Gtk.ResponseType.CANCEL:
+            self._journalactivity.unfreeze_ui()
+            self._journalactivity.remove_alert(alert)
+            # this is only in the case the operation already started
+            # and the user want stop it.
+            self._stop_batch_operation()
+        else:
+            GObject.idle_add(self._prepare_batch_execution)
+
+    def _prepare_batch_execution(self):
+        self._object_index = 0
+        # Next, proceed with the objects
+        self._operate_by_uid()
+
+    def _operate_by_uid(self):
+        GObject.idle_add(self._operate_by_uid_internal)
+
+    def _operate_by_uid_internal(self):
+        # If there is still some uid left, proceed with the operation.
+        # Else, proceed to post-operations.
+        if self._object_index < len(self._uid_list):
+            uid = self._uid_list[self._object_index]
+            metadata = model.get(uid)
+            title = None
+            if 'title' in metadata:
+                title = metadata['title']
+            if title is None or title == '':
+                title = _('Untitled')
+            alert_message = _('%(index)d of %(total)d : %(object_title)s') % {
+                'index': self._object_index + 1,
+                'total': len(self._uid_list),
+                'object_title': title}
+
+            self._confirmation_alert.props.msg = alert_message
+            GObject.idle_add(self._operate_per_metadata, metadata)
+        else:
+            self._finish_batch_execution()
+
+    def _operate_per_metadata(self, metadata):
+        self._operation_cb(metadata)
+
+        # process the next
+        self._object_index = self._object_index + 1
+        GObject.idle_add(self._operate_by_uid_internal)
+
+    def _stop_batch_execution(self):
+        self._object_index = len(self._uid_list)
+
+    def _finish_batch_execution(self):
+        self._journalactivity.unfreeze_ui()
+        self._journalactivity.remove_alert(self._confirmation_alert)
+        self._journalactivity.update_selected_items_ui()
