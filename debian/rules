@@ -82,7 +82,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * python-telepathy versioning needed for use of
 #    CONNECTION_INTERFACE_REQUESTS ABI
 #  * gstreamer0.10-espeak needed in jarabe.model.speech
-#  * metacity needed by commands sugar and sugar-session
+#  * metacity needed in jarabe.main
 #  * xserver-xephyr and x11-utils (xdpyinfo) needed in
 #    src/jarabe/util/emulator.py
 #  * lsb-release (lsb_release), tzdata and ethtool needed in extension
@@ -108,6 +108,7 @@ session_font = fonts-dejavu-core
 emulator_exec = xserver-xephyr, x11-utils
 emulator_exec_try = gnome-keyring
 jarabe_initprofile = openssh-client
+jarabe_wm = metacity
 jarabe_nm = avahi-autoipd
 jarabe_cp_cli_exec = lsb-release, ethtool, tzdata
 jarabe_audio = alsa-utils
@@ -117,7 +118,7 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar3, sugar-artwork-$(pkgbran
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-gstreamer-1.0, python-cairo, gir1.2-xkl-1.0
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , metacity (>= 1:2.27.1), dbus-x11, python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, dbus-x11, python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
@@ -125,6 +126,7 @@ CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0
+CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) +=, gir1.2-maliit-1.0
