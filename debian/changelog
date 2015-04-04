@@ -1,3 +1,9 @@
+sugar-0.100 (0.98.8-3) UNRELEASED; urgency=medium
+
+  * Bump major version.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Apr 2015 09:15:39 +0200
+
 sugar-0.98 (0.98.8-2) unstable; urgency=medium
 
   * Track xz compressed upstream tarballs (favored over bzip2).
