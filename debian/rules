@@ -106,7 +106,6 @@ session_pm = upower, consolekit
 sesion_keyboard = maliit-keyboard
 session_font = fonts-dejavu-core
 emulator_exec = xserver-xephyr, x11-utils
-emulator_exec_try = gnome-keyring
 jarabe_initprofile = openssh-client
 jarabe_wm = metacity
 jarabe_nm = avahi-autoipd
@@ -131,7 +130,6 @@ CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) +=, gir1.2-maliit-1.0
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
-CDBS_RECOMMENDS_sugar-emulator-$(pkgbranch) += , $(emulator_exec_try)
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , gir1.2-wnck-3.0
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exec), dbus
@@ -145,7 +143,7 @@ CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), $(emulato
 CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , gir1.2-maliit-1.0, $(sesion_keyboard)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(sesion_keyboard), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug), $(emulator_exec_try)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(sesion_keyboard), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed)
 
 # TODO: recommend when packaged officially for Debian
