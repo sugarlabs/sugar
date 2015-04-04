@@ -80,7 +80,8 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) AUTHORS COPYING \
 	install-sh missing py-compile
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/intltool.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -214,9 +215,11 @@ GCONFTOOL = @GCONFTOOL@
 GCONF_SCHEMA_CONFIG_SOURCE = @GCONF_SCHEMA_CONFIG_SOURCE@
 GCONF_SCHEMA_FILE_DIR = @GCONF_SCHEMA_FILE_DIR@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GREP = @GREP@
+GSETTINGS_DISABLE_SCHEMAS_COMPILE = @GSETTINGS_DISABLE_SCHEMAS_COMPILE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -291,6 +294,7 @@ datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+gsettingsschemadir = @gsettingsschemadir@
 host_alias = @host_alias@
 htmldir = @htmldir@
 includedir = @includedir@
@@ -781,10 +785,20 @@ uninstall-am:
 	pdf-am ps ps-am tags tags-am uninstall uninstall-am
 
 
+check-po:
+	@for i in $(top_srcdir)/po/*.po ; do \
+		if ! grep -q ^`basename $$i | \
+		sed 's,.po,,'`$$ $(top_srcdir)/po/LINGUAS ; then \
+			echo '***' `basename $$i | \
+			sed 's,.po,,'` missing from po/LINGUAS '***' ; \
+			exit 1; \
+		fi; \
+	done;
+
 lint:
 	flake8 $(top_srcdir)
 
-test: lint
+test: lint check-po
 	PYTHONPATH=$(pkgdatadir)/extensions:$(PYTHONPATH) \
 	python -m sugar3.test.discover $(top_srcdir)/tests
 

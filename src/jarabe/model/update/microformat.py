@@ -25,6 +25,8 @@ http://wiki.sugarlabs.org/go/Activity_Team/Activity_Microformat
 import os
 import locale
 import logging
+from tempfile import NamedTemporaryFile
+
 from StringIO import StringIO
 from ConfigParser import ConfigParser
 from zipfile import ZipFile
@@ -33,7 +35,7 @@ from HTMLParser import HTMLParser
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.bundle.bundleversion import NormalizedVersion, InvalidVersionError
 
@@ -43,7 +45,8 @@ from jarabe.model.update import BundleUpdate
 from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('microformat')
-_MICROFORMAT_URL_KEY = "/desktop/sugar/update/microformat_update_url"
+_MICROFORMAT_URL_PATH = 'org.sugarlabs.update'
+_MICROFORMAT_URL_KEY = 'microformat-update-url'
 
 
 class _UpdateHTMLParser(HTMLParser):
@@ -117,7 +120,10 @@ class _UpdateHTMLParser(HTMLParser):
             self.group_desc = data.strip()
 
         if self.in_activity_id > 0:
-            self.last_id = data.strip()
+            if self.last_id is None:
+                self.last_id = data.strip()
+            else:
+                self.last_id = self.last_id + data.strip()
 
         if self.in_activity_version > 0:
             try:
@@ -168,15 +174,23 @@ class MicroformatUpdater(object):
        b) If we don't have the activity installed, use MetadataLookup
           to lookup activity name and size.
     """
+    def __init__(self):
+        self._icon_temp_files = []
+
     def _query(self):
-        url = GConf.Client.get_default().get_string(_MICROFORMAT_URL_KEY)
+        self.clean()
+        settings = Gio.Settings(_MICROFORMAT_URL_PATH)
+        url = settings.get_string(_MICROFORMAT_URL_KEY)
         _logger.debug("Query %s %r", url, url)
         if url == "":
             self._completion_cb([])
             return
 
         self._parser = _UpdateHTMLParser(url)
-        downloader = Downloader(url)
+        # wiki.laptop.org have agresive cache, we set max-age=600
+        # to be sure the page is no older than 10 minutes
+        request_headers = {'Cache-Control': 'max-age=600'}
+        downloader = Downloader(url, request_headers=request_headers)
         downloader.connect('got-chunk', self._got_chunk_cb)
         downloader.connect('complete', self._complete_cb)
         downloader.download_chunked()
@@ -188,7 +202,7 @@ class MicroformatUpdater(object):
     def _complete_cb(self, downloader, result):
         if isinstance(result, Exception):
             _logger.warning("Failed to read update info: %s", result)
-            self._completion_cb([])
+            self._error_cb(result)
             return
 
         self._parser.close()
@@ -256,8 +270,12 @@ class MicroformatUpdater(object):
 
         GLib.idle_add(self._check_next_update)
 
-    def _name_lookup_complete(self, lookup, result, size):
+    def _name_lookup_complete(self, lookup, result, size, icon_file_name):
         _logger.debug("Name lookup result: %r", result)
+        if icon_file_name is not None:
+            self._icon_temp_files.append(icon_file_name)
+            logging.debug('Adding temporary file %s to list', icon_file_name)
+
         if size is None:
             # if the size lookup failed, assume this update is bad
             self._check_next_update()
@@ -271,13 +289,17 @@ class MicroformatUpdater(object):
             self._bundle_update.name = result
 
         self._bundle_update.size = size
+        if icon_file_name is not None:
+            self._bundle_update.icon_file_name = icon_file_name
+
         self._updates.append(self._bundle_update)
         self._check_next_update()
 
     def fetch_update_info(self, installed_bundles, auto, progress_cb,
-                          completion_cb):
+                          completion_cb, error_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
+        self._error_cb = error_cb
         self._cancelling = False
         self._updates = []
         self._bundles_to_check = []
@@ -288,6 +310,15 @@ class MicroformatUpdater(object):
     def cancel(self):
         self._cancelling = True
 
+    def clean(self):
+        for filename in self._icon_temp_files:
+            logging.debug('Removing temporary file %s', filename)
+            try:
+                os.unlink(filename)
+            except OSError:
+                pass
+        self._icon_temp_files = []
+
 
 class MetadataLookup(GObject.GObject):
     """
@@ -297,12 +328,13 @@ class MetadataLookup(GObject.GObject):
     and there is no local source of the activity's name.
     """
     __gsignals__ = {
-        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int)),
+        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int, str)),
     }
 
     def __init__(self, url):
         GObject.GObject.__init__(self)
         self._url = url
+        self._icon_file_name = None
         self._size = None
 
     def run(self):
@@ -347,10 +379,26 @@ class MetadataLookup(GObject.GObject):
         # case of a content bundle, that name is expected to be already
         # localized according to the content.
         name = self._locale_data_lookup()
+        icon_path = None
         if not name and have_activity_info:
-            name = self._activity_info_lookup()
+            name = self._activity_info_lookup('name')
         if not name and have_library_info:
-            name = self._library_info_lookup()
+            name = self._library_info_lookup('name')
+
+        # get icondata
+        if have_activity_info:
+            icon_name = self._activity_info_lookup('icon')
+        if not name and have_library_info:
+            icon_name = self._library_info_lookup('icon')
+        icon_path = os.path.join(self._prefix, 'activity',
+                                 '%s.svg' % icon_name)
+        if icon_path is not None and icon_path in self._namelist:
+            icon_data = self._zf.read(icon_path)
+            # save the icon to a temporary file
+            with NamedTemporaryFile(mode='w', suffix='.svg',
+                                    delete=False) as iconfile:
+                iconfile.write(icon_data)
+                self._icon_file_name = iconfile.name
         return name
 
     def _locale_data_lookup(self):
@@ -368,17 +416,24 @@ class MetadataLookup(GObject.GObject):
             return cp.get('Activity', 'name')
         return None
 
-    def _activity_info_lookup(self):
+    def _activity_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'activity', 'activity.info')
         cp = ConfigParser()
         cp.readfp(StringIO(self._zf.read(filename)))
-        return cp.get('Activity', 'name')
+        if cp.has_option('Activity', parameter):
+            return cp.get('Activity', parameter)
+        else:
+            return ''
 
-    def _library_info_lookup(self):
+    def _library_info_lookup(self, parameter):
         filename = os.path.join(self._prefix, 'library', 'library.info')
         cp = ConfigParser()
         cp.readfp(StringIO(self._zf.read(filename)))
-        return cp.get('Library', 'name')
+        if cp.has_option('Library', parameter):
+            return cp.get('Library', parameter)
+        else:
+            return ''
 
     def _complete(self, result):
-        GLib.idle_add(self.emit, 'complete', result, self._size)
+        GLib.idle_add(self.emit, 'complete', result, self._size,
+                      self._icon_file_name)

@@ -17,17 +17,22 @@
 import os
 import logging
 
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import Gst
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 
+from sugar3 import power
 
 DEFAULT_PITCH = 0
 
 
 DEFAULT_RATE = 0
+
+
+_SAVE_TIMEOUT = 500
+
 
 _speech_manager = None
 
@@ -59,6 +64,7 @@ class SpeechManager(GObject.GObject):
         self._rate = DEFAULT_RATE
         self._is_playing = False
         self._is_paused = False
+        self._save_timeout_id = -1
         self.restore()
 
     def _update_state(self, player, signal):
@@ -86,11 +92,15 @@ class SpeechManager(GObject.GObject):
 
     def set_pitch(self, pitch):
         self._pitch = pitch
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def set_rate(self, rate):
         self._rate = rate
-        self.save()
+        if self._save_timeout_id != -1:
+            GObject.source_remove(self._save_timeout_id)
+        self._save_timeout_id = GObject.timeout_add(_SAVE_TIMEOUT, self.save)
 
     def say_text(self, text):
         if text:
@@ -113,16 +123,24 @@ class SpeechManager(GObject.GObject):
         self.say_text(text)
 
     def save(self):
+        self._save_timeout_id = -1
+        # DEPRECATED
+        from gi.repository import GConf
         client = GConf.Client.get_default()
         client.set_int('/desktop/sugar/speech/pitch', self._pitch)
         client.set_int('/desktop/sugar/speech/rate', self._rate)
+
+        settings = Gio.Settings('org.sugarlabs.speech')
+        settings.set_int('pitch', self._pitch)
+        settings.set_int('rate', self._rate)
         logging.debug('saving speech configuration pitch %s rate %s',
                       self._pitch, self._rate)
+        return False
 
     def restore(self):
-        client = GConf.Client.get_default()
-        self._pitch = client.get_int('/desktop/sugar/speech/pitch')
-        self._rate = client.get_int('/desktop/sugar/speech/rate')
+        settings = Gio.Settings('org.sugarlabs.speech')
+        self._pitch = settings.get_int('pitch')
+        self._rate = settings.get_int('rate')
         logging.debug('loading speech configuration pitch %s rate %s',
                       self._pitch, self._rate)
 
@@ -144,6 +162,7 @@ class _GstSpeechPlayer(GObject.GObject):
             logging.debug('Trying to restart not initialized sound device')
             return
 
+        power.get_power_manager().inhibit_suspend()
         self._pipeline.set_state(Gst.State.PLAYING)
         self.emit('play')
 
@@ -152,6 +171,7 @@ class _GstSpeechPlayer(GObject.GObject):
             return
 
         self._pipeline.set_state(Gst.State.PAUSED)
+        power.get_power_manager().restore_suspend()
         self.emit('pause')
 
     def stop_sound_device(self):
@@ -159,6 +179,7 @@ class _GstSpeechPlayer(GObject.GObject):
             return
 
         self._pipeline.set_state(Gst.State.NULL)
+        power.get_power_manager().restore_suspend()
         self.emit('stop')
 
     def make_pipeline(self, command):
@@ -173,11 +194,10 @@ class _GstSpeechPlayer(GObject.GObject):
         bus.connect('message', self.__pipe_message_cb)
 
     def __pipe_message_cb(self, bus, message):
-        if message.type == Gst.MessageType.EOS:
+        if message.type in (Gst.MessageType.EOS, Gst.MessageType.ERROR):
             self._pipeline.set_state(Gst.State.NULL)
-            self.emit('stop')
-        elif message.type == Gst.MessageType.ERROR:
-            self._pipeline.set_state(Gst.State.NULL)
+            self._pipeline = None
+            power.get_power_manager().restore_suspend()
             self.emit('stop')
 
     def speak(self, pitch, rate, voice_name, text):

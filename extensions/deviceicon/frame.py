@@ -17,11 +17,9 @@
 import logging
 from gettext import gettext as _
 
-from gi.repository import GConf
-
+from sugar3 import profile
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 import jarabe.frame
@@ -43,8 +41,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 103
 
     def __init__(self):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 

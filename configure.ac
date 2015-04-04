@@ -1,11 +1,11 @@
-AC_INIT([Sugar],[0.100.2],[],[sugar])
+AC_INIT([Sugar],[0.102.0],[],[sugar])
 
 AC_PREREQ([2.59])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([configure.ac])
 
-SUCROSE_VERSION="0.100.0"
+SUCROSE_VERSION="0.102.0"
 AC_SUBST(SUCROSE_VERSION)
 
 AM_INIT_AUTOMAKE([1.9 foreign dist-xz no-dist-gzip])
@@ -17,14 +17,9 @@ AM_PATH_PYTHON
 
 PKG_CHECK_MODULES(SHELL, gtk+-3.0 gconf-2.0)
 
-# Setup GETTEXT
-#
-ALL_LINGUAS="af am ar ayc bg bi bn_IN bn ca cs da de dz el en es fa_AF fa ff fil fr gu ha he hi ht hu id ig is it ja km ko kos mg mi mk ml mn mr ms mvo nb ne nl pa pap pl ps pt_BR pt quz ro ru rw sd si sk sl sq sv sw ta te th tr tvl tzo ug ur vi wa yo zh_CN zh_TW"
-
+IT_PROG_INTLTOOL([0.35.0])
 GETTEXT_PACKAGE=sugar
-AC_PROG_INTLTOOL([0.33])
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Gettext package])
+AC_SUBST([GETTEXT_PACKAGE])
 AM_GLIB_GNU_GETTEXT
 
 AC_ARG_ENABLE(update-mimedb,
@@ -42,6 +37,7 @@ if test "$GCONFTOOL" = no; then
 fi
 
 AM_GCONF_SOURCE_2
+GLIB_GSETTINGS
 
 
 AC_CONFIG_FILES([
@@ -52,6 +48,8 @@ data/Makefile
 extensions/cpsection/aboutcomputer/Makefile
 extensions/cpsection/aboutme/Makefile
 extensions/cpsection/background/Makefile
+extensions/cpsection/backup/Makefile
+extensions/cpsection/backup/backends/Makefile
 extensions/cpsection/datetime/Makefile
 extensions/cpsection/frame/Makefile
 extensions/cpsection/keyboard/Makefile

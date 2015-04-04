@@ -19,10 +19,11 @@ import os
 import logging
 
 from gi.repository import Gdk
-
 from gi.repository import SugarExt
 
-from jarabe.model import sound
+from sugar3.test import uitree
+
+from jarabe.model.sound import sound
 from jarabe.model import shell
 from jarabe.model import session
 from jarabe.view.tabbinghandler import TabbingHandler
@@ -58,7 +59,8 @@ _actions_table = {
     '<alt><shift>f': 'frame',
     'XF86Search': 'open_search',
     '<alt><shift>o': 'open_search',
-    '<alt><shift>q': 'logout'
+    '<alt><shift>q': 'logout',
+    '<alt><shift>d': 'dump_ui_tree'
 }
 
 # These keys will not be trigger a action if a modal dialog is opened
@@ -162,6 +164,9 @@ class KeyHandler(object):
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
 
+    def handle_dump_ui_tree(self, event_time):
+        print uitree.get_root().dump()
+
     def _key_pressed_cb(self, grabber, keycode, state, event_time):
         key = grabber.get_key(keycode, state)
         logging.debug('_key_pressed_cb: %i %i %s', keycode, state, key)
@@ -182,7 +187,7 @@ class KeyHandler(object):
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
-                if not action in ['next_window', 'previous_window']:
+                if action not in ['next_window', 'previous_window']:
                     self._tabbing_handler.stop(event_time)
                     return True
 

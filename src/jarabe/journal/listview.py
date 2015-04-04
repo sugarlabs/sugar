@@ -22,18 +22,18 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
-from sugar3.graphics.xocolor import XoColor
 from sugar3 import util
+from sugar3 import profile
 
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
 from jarabe.journal import model
 from jarabe.journal import misc
+from jarabe.journal import journalwindow
 
 
 UPDATE_INTERVAL = 300
@@ -163,7 +163,7 @@ class BaseListView(Gtk.Bin):
             self.tree_view.append_column(column)
 
         cell_favorite = CellRendererFavorite(self.tree_view)
-        cell_favorite.connect('clicked', self.__favorite_clicked_cb)
+        cell_favorite.connect('clicked', self._favorite_clicked_cb)
 
         column = Gtk.TreeViewColumn()
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
@@ -290,13 +290,11 @@ class BaseListView(Gtk.Bin):
                                tree_iter, data):
         favorite = tree_model[tree_iter][ListModel.COLUMN_FAVORITE]
         if favorite:
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
-            cell.props.xo_color = color
+            cell.props.xo_color = profile.get_color()
         else:
             cell.props.xo_color = None
 
-    def __favorite_clicked_cb(self, cell, path):
+    def _favorite_clicked_cb(self, cell, path):
         row = self._model[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         if not model.is_editable(metadata):
@@ -477,7 +475,7 @@ class BaseListView(Gtk.Bin):
             button = Gtk.Button(label=_('Clear search'))
             button.connect('clicked', self.__clear_button_clicked_cb)
             button.props.image = Icon(icon_name='dialog-cancel',
-                                      icon_size=Gtk.IconSize.BUTTON)
+                                      pixel_size=style.SMALL_ICON_SIZE)
             button_box.pack_start(button, expand=True, fill=False, padding=0)
 
         background_box.show_all()
@@ -651,7 +649,8 @@ class ListView(BaseListView):
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
-        misc.resume(metadata)
+        misc.resume(metadata,
+                    alert_window=journalwindow.get_journal_window())
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         row = self._model[path]
@@ -677,8 +676,7 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-        client = GConf.Client.get_default()
-        prelit_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        prelit_color = profile.get_color()
         self.props.prelit_stroke_color = prelit_color.get_stroke_color()
         self.props.prelit_fill_color = prelit_color.get_fill_color()
 

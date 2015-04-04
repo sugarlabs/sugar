@@ -20,17 +20,14 @@ import logging
 import subprocess
 from gettext import gettext as _
 import errno
+import time
 
-import dbus
+from gi.repository import Gio
+from gi.repository import NMClient
+from gi.repository import NetworkManager
 
 from jarabe import config
 
-
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
-_NM_DEVICE_IFACE = 'org.freedesktop.NetworkManager.Device'
-_NM_DEVICE_TYPE_WIFI = 2
 
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
@@ -122,30 +119,41 @@ def get_firmware_number():
     return firmware_no
 
 
+def get_hardware_model():
+    settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
+    return settings.get_string('hardware-model')
+
+
+def get_secondary_licenses():
+    licenses = []
+    # Check if there are more licenses to display
+    licenses_path = config.licenses_path
+    if os.path.isdir(licenses_path):
+        for file_name in os.listdir(licenses_path):
+            try:
+                file_path = os.path.join(licenses_path, file_name)
+                with open(file_path) as f:
+                    licenses.append(f.read())
+            except IOError:
+                logging.error('Error trying open %s', file_path)
+    return licenses
+
+
 def print_firmware_number():
     print get_firmware_number()
 
 
 def _get_wireless_interfaces():
     try:
-        bus = dbus.SystemBus()
-        manager_object = bus.get_object(_NM_SERVICE, _NM_PATH)
-        network_manager = dbus.Interface(manager_object, _NM_IFACE)
-    except dbus.DBusException:
-        _logger.warning('Cannot connect to NetworkManager, falling back to'
-                        ' static list of devices')
+        network_manager = NMClient.Client()
+    except:
         return ['wlan0', 'eth0']
 
     interfaces = []
-    for device_path in network_manager.GetDevices():
-        device_object = bus.get_object(_NM_SERVICE, device_path)
-        properties = dbus.Interface(device_object,
-                                    'org.freedesktop.DBus.Properties')
-        device_type = properties.Get(_NM_DEVICE_IFACE, 'DeviceType')
-        if device_type != _NM_DEVICE_TYPE_WIFI:
+    for device in network_manager.get_devices():
+        if device.get_device_type() is not NetworkManager.DeviceType.WIFI:
             continue
-
-        interfaces.append(properties.Get(_NM_DEVICE_IFACE, 'Interface'))
+        interfaces.append(device.get_iface())
 
     return interfaces
 
@@ -225,3 +233,22 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def days_from_last_update():
+
+    last_update_seconds = -1
+    # Get the number of seconds of the last update date.
+    try:
+        flag_file = '/var/lib/misc/last_os_update.stamp'
+        if os.path.exists(flag_file):
+            last_update_seconds = int(os.stat(flag_file).st_mtime)
+    except IOError:
+        _logger.error('couldn''t get last modification time')
+
+    if last_update_seconds == -1:
+        return -1
+
+    now = time.time()
+    days_from_last_update = (now - last_update_seconds) / (24 * 60 * 60)
+    return int(days_from_last_update)

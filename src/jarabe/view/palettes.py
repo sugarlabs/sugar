@@ -19,12 +19,12 @@ import statvfs
 from gettext import gettext as _
 import logging
 
-from gi.repository import GConf
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
 
 from sugar3 import env
+from sugar3 import profile
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
@@ -36,6 +36,8 @@ from sugar3.activity.i18n import pgettext
 
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
+from jarabe.view.viewhelp import setup_view_help
+from jarabe.view.viewhelp import get_help_url_and_title
 from jarabe.journal import misc
 
 
@@ -96,12 +98,34 @@ class CurrentActivityPalette(BasePalette):
         menu_item = PaletteMenuItem(_('Resume'), 'activity-start')
         menu_item.connect('activate', self.__resume_activate_cb)
         self.menu_box.append_item(menu_item)
+        menu_item.show()
 
         # TODO: share-with, keep
 
         menu_item = PaletteMenuItem(_('View Source'), 'view-source')
         menu_item.connect('activate', self.__view_source__cb)
+        menu_item.set_accelerator('Shift+Alt+V')
         self.menu_box.append_item(menu_item)
+        menu_item.show()
+
+        help_url_and_title = get_help_url_and_title(self._home_activity)
+        if help_url_and_title:
+            menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
+            menu_item.connect('activate', self.__view_help__cb)
+            menu_item.set_accelerator('Shift+Alt+H')
+            self.menu_box.append_item(menu_item)
+            menu_item.show()
+
+        # avoid circular importing reference
+        from jarabe.frame.notification import NotificationBox
+
+        menu_item = NotificationBox(self._home_activity.get_activity_id())
+        self.menu_box.append_item(menu_item, 0, 0)
+
+        separator = PaletteMenuItemSeparator()
+        menu_item.add(separator)
+        menu_item.reorder_child(separator, 0)
+        separator.show()
 
         separator = PaletteMenuItemSeparator()
         self.menu_box.append_item(separator)
@@ -110,9 +134,10 @@ class CurrentActivityPalette(BasePalette):
         menu_item = PaletteMenuItem(_('Stop'), 'activity-stop')
         menu_item.connect('activate', self.__stop_activate_cb)
         self.menu_box.append_item(menu_item)
+        menu_item.show()
 
         self.set_content(self.menu_box)
-        self.menu_box.show_all()
+        self.menu_box.show()
 
     def __resume_activate_cb(self, menu_item):
         self._home_activity.get_window().activate(Gtk.get_current_event_time())
@@ -126,6 +151,10 @@ class CurrentActivityPalette(BasePalette):
                 Gtk.get_current_event_time())
         self.emit('done')
 
+    def __view_help__cb(self, menu_item):
+        setup_view_help(self._home_activity)
+        self.emit('done')
+
     def __stop_activate_cb(self, menu_item):
         self._home_activity.stop()
         self.emit('done')
@@ -137,11 +166,10 @@ class ActivityPalette(Palette):
     def __init__(self, activity_info):
         self._activity_info = activity_info
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
         activity_icon = Icon(file=activity_info.get_icon(),
                              xo_color=color,
-                             icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                             pixel_size=style.STANDARD_ICON_SIZE)
 
         name = activity_info.get_name()
         Palette.__init__(self, primary_text=GLib.markup_escape_text(name),
@@ -183,7 +211,7 @@ class JournalPalette(BasePalette):
 
         menu_item = PaletteMenuItem(_('Show contents'))
         icon = Icon(file=self._home_activity.get_icon_path(),
-                    icon_size=Gtk.IconSize.MENU,
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=self._home_activity.get_icon_color())
         menu_item.set_image(icon)
         icon.show()
@@ -240,7 +268,7 @@ class VolumePalette(Palette):
 
         menu_item = PaletteMenuItem(pgettext('Volume', 'Remove'))
 
-        icon = Icon(icon_name='media-eject', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='media-eject', pixel_size=style.SMALL_ICON_SIZE)
         menu_item.set_image(icon)
         icon.show()
 

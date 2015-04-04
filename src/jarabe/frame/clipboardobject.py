@@ -68,7 +68,7 @@ class ClipboardObject(object):
                     icon_theme.lookup_icon(icon_name,
                                            Gtk.IconSize.LARGE_TOOLBAR, 0))
                 if icon_info is not None:
-                    icon_info.free()
+                    del icon_info
                     return icon_name
 
         return 'application-octet-stream'

@@ -1,0 +1,69 @@
+[org.sugarlabs]
+backup-url = /desktop/sugar/backup_url
+maximum-number-of-open-activities = /desktop/sugar/maximum_number_of_open_activities
+protected-activities = /desktop/sugar/protected_activities
+show-logout = /desktop/sugar/show_logout
+show-register = /desktop/sugar/show_register
+show-restart = /desktop/sugar/show_restart
+show-shutdown = /desktop/sugar/show_shutdown
+
+[org.sugarlabs.user]
+nick = /desktop/sugar/user/nick
+default-nick = /desktop/sugar/user/default_nick
+color = /desktop/sugar/user/color
+
+[org.sugarlabs.user.background]
+image-path = /desktop/sugar/user/background/image-path
+alpha-level = /desktop/sugar/user/background/alpha-level
+
+[org.sugarlabs.sound]
+volume = /desktop/sugar/sound/volume
+mute = /desktop/sugar/sound/mute
+
+[org.sugarlabs.date]
+timezone = /desktop/sugar/date/timezone
+
+[org.sugarlabs.frame]
+edge-delay = /desktop/sugar/frame/edge_delay
+corner-delay = /desktop/sugar/frame/corner_delay
+
+[org.sugarlabs.collaboration]
+jabber-server = /desktop/sugar/collaboration/jabber_server
+publish-gadget = /desktop/sugar/collaboration/publish_gadget
+
+[org.sugarlabs.power]
+automatic = /desktop/sugar/power/automatic
+extreme = /desktop/sugar/power/extreme
+
+[org.sugarlabs.peripherals.keyboard]
+layouts = /desktop/sugar/peripherals/keyboard/layouts
+options = /desktop/sugar/peripherals/keyboard/options
+model = /desktop/sugar/peripherals/keyboard/model
+
+[org.sugarlabs.font]
+default-face = /desktop/sugar/font/default_face
+default-size = /desktop/sugar/font/default_size
+
+[org.sugarlabs.network]
+adhoc = /desktop/sugar/network/adhoc
+
+[org.sugarlabs.network.gsm]
+username = /desktop/sugar/network/gsm/username
+password = /desktop/sugar/network/gsm/password
+number = /desktop/sugar/network/gsm/number
+apn = /desktop/sugar/network/gsm/apn
+pin = /desktop/sugar/network/gsm/pin
+puk = /desktop/sugar/network/gsm/puk
+
+[org.sugarlabs.speech]
+pitch = /desktop/sugar/speech/pitch
+rate = /desktop/sugar/speech/rate
+
+[org.sugarlabs.update]
+backend = /desktop/sugar/update/backend
+microformat-update-url = /desktop/sugar/update/microformat_update_url
+auto-update-frequency = /desktop/sugar/update/auto_update_frequency
+last-activity-update = /desktop/sugar/update/last_activity_update
+
+[org.sugarlabs.extensions.aboutcomputer]
+hardware-model = /desktop/desktop/sugar/extensions/aboutcomputer/hardware_model

@@ -1,3 +1,4 @@
+data/org.sugarlabs.gschema.xml
 extensions/cpsection/aboutme/__init__.py
 extensions/cpsection/aboutme/model.py
 extensions/cpsection/aboutme/view.py
@@ -30,11 +31,11 @@ extensions/cpsection/updater/__init__.py
 extensions/cpsection/updater/view.py
 extensions/cpsection/webaccount/__init__.py
 extensions/cpsection/webaccount/view.py
+extensions/deviceicon/audio.py
 extensions/deviceicon/battery.py
 extensions/deviceicon/frame.py
 extensions/deviceicon/network.py
 extensions/deviceicon/speech.py
-extensions/deviceicon/speaker.py
 extensions/deviceicon/touchpad.py
 extensions/deviceicon/volume.py
 extensions/globalkey/screenshot.py
@@ -59,6 +60,7 @@ src/jarabe/frame/clipboardobject.py
 src/jarabe/frame/devicestray.py
 src/jarabe/frame/zoomtoolbar.py
 src/jarabe/intro/window.py
+src/jarabe/intro/agepicker.py
 src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py
@@ -74,8 +76,14 @@ src/jarabe/journal/volumestoolbar.py
 src/jarabe/journal/iconmodel.py
 src/jarabe/journal/iconview.py
 src/jarabe/model/network.py
+src/jarabe/view/alerts.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
 src/jarabe/view/launcher.py
 src/jarabe/view/palettes.py
+src/jarabe/view/viewhelp.py
 src/jarabe/view/viewsource.py
+extensions/cpsection/backup/__init__.py
+extensions/cpsection/backup/backends/volume.py
+extensions/cpsection/backup/view.py
+src/jarabe/frame/notification.py

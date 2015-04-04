@@ -29,7 +29,7 @@ from gi.repository import Gdk
 from gi.repository import GdkX11
 from gi.repository import GtkSource
 import dbus
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
@@ -37,7 +37,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.activitybundle import get_bundle_instance
 from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 from sugar3 import mime
@@ -48,6 +48,9 @@ _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
                        '.xo', '.tar', '.bz2', '.zip', '.gz')
 _EXCLUDE_NAMES = ['.deps', '.libs']
 
+_IMPORT_TYPES = {'sugar3': 3, 'from gi.repository import Gtk': 3,
+                 'sugar.': 2, 'import pygtk': 2, 'pygtk.require': 2}
+
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
@@ -55,16 +58,31 @@ map_activity_to_window = {}
 
 
 def _is_web_activity(bundle_path):
-    activity_bundle = ActivityBundle(bundle_path)
+    activity_bundle = get_bundle_instance(bundle_path)
     return activity_bundle.get_command() == 'sugar-activity-web'
 
 
-def _is_gtk3_activity(bundle_path):
-    # FIXME, find a way to check if the activity is GTK3 or GTK2.
+def _is_gtk3_activity(bundle_path, bundle_id):
+    setup_py_path = os.path.join(bundle_path, 'setup.py')
+    main_filename = '/'.join(bundle_id.split('.')[-1]) + '.py'
+    main_file_path = os.path.join(bundle_path, main_filename)
+    all_files = os.listdir(bundle_path)
+    try_paths = [setup_py_path, main_file_path] + all_files
+
+    for path in try_paths:
+        if os.path.isfile(path):
+            with open(path) as f:
+                text = f.read()
+                for sign in _IMPORT_TYPES:
+                    if sign in text:
+                        version = _IMPORT_TYPES[sign]
+                        return version == 3
+
+    # Fallback to assuming GTK3
     return True
 
 
-def _get_toolkit_path(bundle_path):
+def _get_toolkit_path(bundle_path, bundle_id):
     sugar_toolkit_path = None
 
     if _is_web_activity(bundle_path):
@@ -74,7 +92,7 @@ def _get_toolkit_path(bundle_path):
         else:
             return None
 
-    if _is_gtk3_activity(bundle_path):
+    if _is_gtk3_activity(bundle_path, bundle_id):
         sugar_module = 'sugar3'
     else:
         sugar_module = 'sugar'
@@ -109,6 +127,7 @@ def setup_view_source(activity):
         return
 
     bundle_path = activity.get_bundle_path()
+    bundle_id = activity.get_bundle_id()
 
     if window_xid in map_activity_to_window:
         _logger.debug('Viewsource window already open for %s %s', window_xid,
@@ -132,7 +151,7 @@ def setup_view_source(activity):
         _logger.debug('Activity without bundle_path nor document_path')
         return
 
-    sugar_toolkit_path = _get_toolkit_path(bundle_path)
+    sugar_toolkit_path = _get_toolkit_path(bundle_path, bundle_id)
 
     if sugar_toolkit_path is None:
         _logger.error("Path to toolkit not found.")
@@ -188,7 +207,7 @@ class ViewSource(Gtk.Window):
         self._selected_sugar_file = None
         file_name = ''
 
-        activity_bundle = ActivityBundle(bundle_path)
+        activity_bundle = get_bundle_instance(bundle_path)
         command = activity_bundle.get_command()
 
         if _is_web_activity(bundle_path):
@@ -326,10 +345,10 @@ class DocumentButton(RadioToolButton):
 
         self.props.tooltip = _('Instance Source')
 
-        client = GConf.Client.get_default()
-        self._color = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        self._color = settings.get_string('color')
         icon = Icon(file=file_name,
-                    icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                    pixel_size=style.STANDARD_ICON_SIZE,
                     xo_color=XoColor(self._color))
         self.set_icon_widget(icon)
         icon.show()
@@ -337,13 +356,13 @@ class DocumentButton(RadioToolButton):
         if bundle:
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate',
-                        icon_size=Gtk.IconSize.MENU,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__copy_to_home_cb)
         else:
             menu_item = MenuItem(_('Keep'))
             icon = Icon(icon_name='document-save',
-                        icon_size=Gtk.IconSize.MENU,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
@@ -413,7 +432,7 @@ class Toolbar(Gtk.Toolbar):
 
         self._add_separator()
 
-        activity_bundle = ActivityBundle(bundle_path)
+        activity_bundle = get_bundle_instance(bundle_path)
         file_name = activity_bundle.get_icon()
 
         if document_path is not None and os.path.exists(document_path):
@@ -428,7 +447,7 @@ class Toolbar(Gtk.Toolbar):
             activity_button = DocumentButton(file_name, bundle_path, title,
                                              bundle=True)
             icon = Icon(file=file_name,
-                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                        pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             activity_button.set_icon_widget(icon)
@@ -445,7 +464,7 @@ class Toolbar(Gtk.Toolbar):
         if sugar_toolkit_path is not None:
             sugar_button = RadioToolButton()
             icon = Icon(icon_name='computer-xo',
-                        icon_size=Gtk.IconSize.LARGE_TOOLBAR,
+                        pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
                         stroke_color=style.COLOR_WHITE.get_svg())
             sugar_button.set_icon_widget(icon)

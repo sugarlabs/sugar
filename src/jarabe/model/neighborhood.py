@@ -19,7 +19,7 @@ from functools import partial
 from hashlib import sha1
 
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 import dbus
 from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import ACCOUNT, \
@@ -196,7 +196,16 @@ class _Account(GObject.GObject):
         self._buddies_per_activity = {}
         self._activities_per_buddy = {}
 
+        self._home_changed_hid = None
+
         self._start_listening()
+
+    def _close_connection(self):
+        self._connection = None
+        if self._home_changed_hid is not None:
+            model = shell.get_model()
+            model.disconnect(self._home_changed_hid)
+            self._home_changed_hid = None
 
     def _start_listening(self):
         bus = dbus.Bus()
@@ -249,7 +258,7 @@ class _Account(GObject.GObject):
             return
         if properties['Connection'] == '/':
             self._check_registration_error()
-            self._connection = None
+            self._close_connection()
         elif self._connection is None:
             self._prepare_connection(properties['Connection'])
 
@@ -286,10 +295,8 @@ class _Account(GObject.GObject):
             self._connection[PROPERTIES_IFACE].Get(
                 CONNECTION,
                 'SelfHandle',
-                reply_handler=
-                self.__get_self_handle_cb,
-                error_handler=
-                partial(
+                reply_handler=self.__get_self_handle_cb,
+                error_handler=partial(
                     self.__error_handler_cb,
                     'Connection.GetSelfHandle'))
             self.emit('connected')
@@ -309,7 +316,7 @@ class _Account(GObject.GObject):
             self.emit('disconnected')
 
         if status == CONNECTION_STATUS_DISCONNECTED:
-            self._connection = None
+            self._close_connection()
 
     def __get_self_handle_cb(self, self_handle):
         self._self_handle = self_handle
@@ -347,9 +354,12 @@ class _Account(GObject.GObject):
 
             connection.connect_to_signal('CurrentActivityChanged',
                                          self.__current_activity_changed_cb)
-            home_model = shell.get_model()
-            home_model.connect('active-activity-changed',
-                               self.__active_activity_changed_cb)
+
+            if self._home_changed_hid is None:
+                home_model = shell.get_model()
+                self._home_changed_hid = home_model.connect(
+                    'active-activity-changed',
+                    self.__active_activity_changed_cb)
         else:
             logging.warning('Connection %s does not support OLPC buddy '
                             'properties', self._connection.object_path)
@@ -467,7 +477,7 @@ class _Account(GObject.GObject):
     def _update_buddy_activities(self, buddy_handle, activities):
         logging.debug('_Account._update_buddy_activities')
 
-        if not buddy_handle in self._activities_per_buddy:
+        if buddy_handle not in self._activities_per_buddy:
             self._activities_per_buddy[buddy_handle] = set()
 
         for activity_id, room_handle in activities:
@@ -510,7 +520,7 @@ class _Account(GObject.GObject):
                         error_handler=partial(self.__error_handler_cb,
                                               'BuddyInfo.GetCurrentActivity'))
 
-            if not activity_id in self._buddies_per_activity:
+            if activity_id not in self._buddies_per_activity:
                 self._buddies_per_activity[activity_id] = set()
             self._buddies_per_activity[activity_id].add(buddy_handle)
             if activity_id not in self._activities_per_buddy[buddy_handle]:
@@ -523,7 +533,7 @@ class _Account(GObject.GObject):
         current_activity_ids = \
             [activity_id for activity_id, room_handle in activities]
         for activity_id in self._activities_per_buddy[buddy_handle].copy():
-            if not activity_id in current_activity_ids:
+            if activity_id not in current_activity_ids:
                 self._remove_buddy_from_activity(buddy_handle, activity_id)
 
     def __get_properties_cb(self, room_handle, properties):
@@ -669,7 +679,7 @@ class _Account(GObject.GObject):
     def disable(self):
         logging.debug('_Account.disable %s', self.object_path)
         self._set_enabled(False)
-        self._connection = None
+        self._close_connection()
 
     def _set_enabled(self, value):
         bus = dbus.Bus()
@@ -705,15 +715,13 @@ class Neighborhood(GObject.GObject):
         self._server_account = None
         self._shell_model = shell.get_model()
 
-        client = GConf.Client.get_default()
-        client.add_dir('/desktop/sugar/collaboration',
-                       GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add('/desktop/sugar/collaboration/jabber_server',
-                          self.__jabber_server_changed_cb, None)
-        client.add_dir(
-            '/desktop/sugar/user/nick', GConf.ClientPreloadType.PRELOAD_NONE)
-        client.notify_add(
-            '/desktop/sugar/user/nick', self.__nick_changed_cb, None)
+        self._settings_collaboration = \
+            Gio.Settings('org.sugarlabs.collaboration')
+        self._settings_collaboration.connect(
+            'changed::jabber-server', self.__jabber_server_changed_cb)
+        self._settings_user = Gio.Settings('org.sugarlabs.user')
+        self._settings_user.connect(
+            'changed::nick', self.__nick_changed_cb)
 
         bus = dbus.Bus()
         obj = bus.get_object(ACCOUNT_MANAGER_SERVICE, ACCOUNT_MANAGER_PATH)
@@ -780,8 +788,7 @@ class Neighborhood(GObject.GObject):
 
         logging.debug('Still dont have a Salut account, creating one')
 
-        client = GConf.Client.get_default()
-        nick = client.get_string('/desktop/sugar/user/nick')
+        nick = self._settings_user.get_string('nick')
 
         params = {
             'nickname': nick,
@@ -815,10 +822,8 @@ class Neighborhood(GObject.GObject):
 
         logging.debug('Still dont have a Gabble account, creating one')
 
-        client = GConf.Client.get_default()
-        nick = client.get_string('/desktop/sugar/user/nick')
-        server = client.get_string('/desktop/sugar/collaboration'
-                                   '/jabber_server')
+        nick = self._settings_user.get_string('nick')
+        server = self._settings_collaboration.get_string('jabber-server')
         key_hash = get_profile().privkey_hash
 
         params = {
@@ -849,20 +854,17 @@ class Neighborhood(GObject.GObject):
 
     def _get_jabber_account_id(self):
         public_key_hash = sha1(get_profile().pubkey).hexdigest()
-        client = GConf.Client.get_default()
-        server = client.get_string('/desktop/sugar/collaboration'
-                                   '/jabber_server')
+        server = self._settings_collaboration.get_string('jabber-server')
         return '%s@%s' % (public_key_hash, server)
 
-    def __jabber_server_changed_cb(self, client, timestamp, entry, *extra):
+    def __jabber_server_changed_cb(self, settings, key):
         logging.debug('__jabber_server_changed_cb')
 
         bus = dbus.Bus()
         account = bus.get_object(ACCOUNT_MANAGER_SERVICE,
                                  self._server_account.object_path)
 
-        server = client.get_string(
-            '/desktop/sugar/collaboration/jabber_server')
+        server = settings.get_string('jabber-server')
         account_id = self._get_jabber_account_id()
         params_needing_reconnect = account.UpdateParameters(
             {'server': server,
@@ -874,10 +876,10 @@ class Neighborhood(GObject.GObject):
 
         self._update_jid()
 
-    def __nick_changed_cb(self, client, timestamp, entry, *extra):
+    def __nick_changed_cb(self, settings, key):
         logging.debug('__nick_changed_cb')
 
-        nick = client.get_string('/desktop/sugar/user/nick')
+        nick = settings.get_string('nick')
 
         bus = dbus.Bus()
         server_obj = bus.get_object(ACCOUNT_MANAGER_SERVICE,

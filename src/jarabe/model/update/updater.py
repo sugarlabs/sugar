@@ -22,7 +22,7 @@ import importlib
 
 from gi.repository import GObject
 from gi.repository import GLib
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.bundle.helpers import bundle_from_archive
 
@@ -31,9 +31,10 @@ from jarabe.util.downloader import Downloader
 
 _logger = logging.getLogger('Updater')
 _instance = None
-_LAST_UPDATE_KEY = '/desktop/sugar/update/last_activity_update'
-_UPDATE_FREQUENCY_KEY = '/desktop/sugar/update/auto_update_frequency'
-_UPDATE_BACKEND_KEY = '/desktop/sugar/update/backend'
+_UPDATE_KEYS_PATH = 'org.sugarlabs.update'
+_LAST_UPDATE_KEY = 'last-activity-update'
+_UPDATE_FREQUENCY_KEY = 'auto-update-frequency'
+_UPDATE_BACKEND_KEY = 'backend'
 _URGENT_TRIGGER_FILE = os.path.expanduser('~/.sugar-update')
 
 STATE_IDLE = 0
@@ -57,6 +58,8 @@ class Updater(GObject.GObject):
         'progress': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      (int, str, float)),
+        'error': (GObject.SignalFlags.RUN_FIRST,
+                  None, (str,)),
         'finished': (GObject.SignalFlags.RUN_FIRST,
                      None,
                      (object, object, bool))
@@ -65,8 +68,8 @@ class Updater(GObject.GObject):
     def __init__(self):
         GObject.GObject.__init__(self)
 
-        client = GConf.Client.get_default()
-        backend = client.get_string(_UPDATE_BACKEND_KEY)
+        settings = Gio.Settings(_UPDATE_KEYS_PATH)
+        backend = settings.get_string(_UPDATE_BACKEND_KEY)
         module_name, class_name = backend.rsplit('.', 1)
         _logger.debug("Use backend %s.%s", module_name, class_name)
         module = importlib.import_module("jarabe.model.update." + module_name)
@@ -104,7 +107,8 @@ class Updater(GObject.GObject):
         bundles = list(bundleregistry.get_registry())
         self._model.fetch_update_info(bundles, auto,
                                       self._backend_progress_cb,
-                                      self._backend_finished_cb)
+                                      self._backend_finished_cb,
+                                      self._backend_error_cb)
 
     def _backend_progress_cb(self, bundle_name, progress):
         self.emit('progress', self._state, bundle_name, progress)
@@ -121,6 +125,12 @@ class Updater(GObject.GObject):
             self.update(None)
         else:
             self.emit('updates-available', self._updates)
+
+    def _backend_error_cb(self, error):
+        _logger.debug("_backend_error_cb %s", error)
+        self._finished(True)
+        self._state = STATE_CHECKED
+        self.emit('error', error)
 
     def update(self, bundle_ids):
         if self._state != STATE_CHECKED:
@@ -226,8 +236,8 @@ class Updater(GObject.GObject):
         self.emit('finished', self._bundles_updated, self._bundles_failed,
                   cancelled)
         if not cancelled and len(self._bundles_failed) == 0:
-            client = GConf.Client.get_default()
-            client.set_int(_LAST_UPDATE_KEY, time.time())
+            settings = Gio.Settings(_UPDATE_KEYS_PATH)
+            settings.set_int(_LAST_UPDATE_KEY, time.time())
             try:
                 os.unlink(_URGENT_TRIGGER_FILE)
             except OSError:
@@ -255,6 +265,9 @@ class Updater(GObject.GObject):
             except OSError:
                 pass
 
+    def clean(self):
+        self._model.clean()
+
 
 def get_instance():
     global _instance
@@ -275,8 +288,8 @@ def _check_periodic_update():
     if check_urgent_update():
         return True
 
-    client = GConf.Client.get_default()
-    update_frequency = client.get_int(_UPDATE_FREQUENCY_KEY)
+    settings = Gio.Settings(_UPDATE_KEYS_PATH)
+    update_frequency = settings.get_int(_UPDATE_FREQUENCY_KEY)
     if update_frequency == 0:
         # automatic update disabled
         return False
@@ -284,7 +297,7 @@ def _check_periodic_update():
     # convert update frequency from days to seconds
     update_frequency *= 24 * 60 * 60
 
-    last_update = client.get_int(_LAST_UPDATE_KEY)
+    last_update = settings.get_int(_LAST_UPDATE_KEY)
     now = time.time()
     _logger.debug("_check_periodic_update %r %r", last_update, now)
     if now - last_update > update_frequency:

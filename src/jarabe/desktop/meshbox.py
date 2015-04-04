@@ -23,8 +23,7 @@ import logging
 import dbus
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
@@ -55,19 +54,20 @@ _FILTERED_ALPHA = 0.33
 
 class _ActivityIcon(CanvasIcon):
     def __init__(self, model, file_name, xo_color,
-                 size=style.STANDARD_ICON_SIZE):
+                 size=style.STANDARD_ICON_SIZE, is_joinable=None):
         CanvasIcon.__init__(self, file_name=file_name,
                             xo_color=xo_color, pixel_size=size)
 
         self._model = model
+        self._is_joinable = is_joinable
         self.palette_invoker.props.toggle_palette = True
 
     def create_palette(self):
         primary_text = GLib.markup_escape_text(self._model.bundle.get_name())
         secondary_text = GLib.markup_escape_text(self._model.get_name())
         palette_icon = Icon(file=self._model.bundle.get_icon(),
+                            pixel_size=style.STANDARD_ICON_SIZE,
                             xo_color=self._model.get_color())
-        palette_icon.props.icon_size = Gtk.IconSize.LARGE_TOOLBAR
         palette = Palette(None,
                           primary_text=primary_text,
                           secondary_text=secondary_text,
@@ -75,20 +75,21 @@ class _ActivityIcon(CanvasIcon):
 
         private = self._model.props.private
         joined = get_owner_instance() in self._model.props.buddies
+        is_joinable = self._is_joinable is None or self._is_joinable()
 
         menu_box = PaletteMenuBox()
 
         if joined:
             item = PaletteMenuItem(_('Resume'))
             icon = Icon(
-                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+                pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
-        elif not private:
+        elif not private and is_joinable:
             item = PaletteMenuItem(_('Join'))
             icon = Icon(
-                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+                pixel_size=style.SMALL_ICON_SIZE, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
@@ -124,11 +125,16 @@ class ActivityView(SnowflakeLayout):
         for buddy in self._model.props.current_buddies:
             self._add_buddy(buddy)
 
+    def _is_joinable(self):
+        max_participants = self._model.bundle.get_max_participants()
+        return max_participants is 0 or len(self._icons) < max_participants
+
     def _create_icon(self):
         icon = _ActivityIcon(self._model,
                              file_name=self._model.bundle.get_icon(),
                              xo_color=self._model.get_color(),
-                             size=style.STANDARD_ICON_SIZE)
+                             size=style.STANDARD_ICON_SIZE,
+                             is_joinable=self._is_joinable)
         return icon
 
     def has_buddy_icon(self, key):
@@ -219,7 +225,8 @@ class DeviceObserver(GObject.GObject):
 
 class NetworkManagerObserver(object):
 
-    _SHOW_ADHOC_GCONF_KEY = '/desktop/sugar/network/adhoc'
+    _SHOW_ADHOC_CONF_DIR = 'org.sugarlabs.network'
+    _SHOW_ADHOC_CONF_KEY = 'adhoc'
 
     def __init__(self, box):
         self._box = box
@@ -228,8 +235,9 @@ class NetworkManagerObserver(object):
         self._netmgr = None
         self._olpc_mesh_device_o = None
 
-        client = GConf.Client.get_default()
-        self._have_adhoc_networks = client.get_bool(self._SHOW_ADHOC_GCONF_KEY)
+        settings = Gio.Settings(self._SHOW_ADHOC_CONF_DIR)
+        self._have_adhoc_networks = \
+            settings.get_boolean(self._SHOW_ADHOC_CONF_KEY)
 
     def listen(self):
         try:
@@ -428,7 +436,7 @@ class MeshBox(ViewContainer):
         logging.debug('MeshBox.__buddy_notify_current_activity_cb %s',
                       buddy_model.props.current_activity)
         if buddy_model.props.current_activity is None:
-            if not buddy_model.props.key in self._buddies:
+            if buddy_model.props.key not in self._buddies:
                 self._add_buddy(buddy_model)
         elif buddy_model.props.key in self._buddies:
             self._remove_buddy(buddy_model)

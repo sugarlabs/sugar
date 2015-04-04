@@ -18,15 +18,14 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import GConf
 
+from sugar3 import profile
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import speech
@@ -40,8 +39,7 @@ class SpeechDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 150
 
     def __init__(self):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._color = profile.get_color()
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.props.toggle_palette = True
@@ -73,7 +71,8 @@ class SpeechPalette(Palette):
         self._pause_icon = Icon(icon_name='player_pause')
         self._play_pause_menu = PaletteMenuItem(
             icon_name='player_play',
-            text_label=_('Say selected text'))
+            text_label=_('Say selected text'),
+            accelerator='Shift+Alt+S')
         self._play_pause_menu.set_image(self._play_icon)
         self._play_pause_menu.connect('activate', self.__play_activated_cb)
         box.append_item(self._play_pause_menu)
