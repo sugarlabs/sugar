@@ -313,23 +313,44 @@ def get_error_by_reason(reason):
 
 def frequency_to_channel(frequency):
     """Returns the channel matching a given radio channel frequency. If a
-    frequency is not in the dictionary channel 1 will be returned.
+    frequency is not in the dictionary channel 0 will be returned.
 
     Keyword arguments:
     frequency -- The radio channel frequency in MHz.
 
-    Return: Channel
+    Return: Channel represented by the frequency or 0
 
     """
-    ftoc = {2412: 1, 2417: 2, 2422: 3, 2427: 4,
-            2432: 5, 2437: 6, 2442: 7, 2447: 8,
-            2452: 9, 2457: 10, 2462: 11, 2467: 12,
-            2472: 13}
-    if frequency not in ftoc:
+
+    bg_table = {2412: 1, 2417: 2, 2422: 3, 2427: 4,
+                2432: 5, 2437: 6, 2442: 7, 2447: 8,
+                2452: 9, 2457: 10, 2462: 11, 2467: 12,
+                2472: 13, 14: 2484}
+
+    a_table = {5035: 7, 5040: 8, 5045: 9, 5055: 11,
+               5060: 12, 5080: 16, 5170: 34,
+               5180: 36, 5190: 38, 5200: 40,
+               5210: 42, 5220: 44, 5230: 46,
+               5240: 48, 5250: 50, 5260: 52,
+               5280: 56, 5290: 58, 5300: 60,
+               5320: 64, 5500: 100, 5520: 104,
+               5540: 108, 5560: 112, 5580: 116,
+               5600: 120, 5620: 124, 5640: 128,
+               5660: 132, 5680: 136, 5700: 140,
+               5745: 149, 5760: 152, 5765: 153,
+               5785: 157, 5800: 160, 5805: 161,
+               5825: 165, 4915: 183, 4920: 184,
+               4925: 185, 4935: 187, 4945: 188,
+               4960: 192, 4980: 196}
+    if frequency not in bg_table and frequency not in a_table:
         logging.warning('The frequency %s can not be mapped to a channel, '
-                        'defaulting to channel 1.', frequency)
-        return 1
-    return ftoc[frequency]
+                        'returning 0.', frequency)
+        return 0
+
+    if frequency > 4900:
+        return a_table[frequency]
+    else:
+        return bg_table[frequency]
 
 
 def is_sugar_adhoc_network(ssid):
