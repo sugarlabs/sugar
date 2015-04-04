@@ -154,6 +154,8 @@ CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar-session
 CDBS_PROVIDES_sugar-tools-$(pkgbranch) = sugar-tools
 CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar-tools
 CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar-tools
+CDBS_BREAKS_sugar-session-$(pkgbranch) = sugar-emulator
+CDBS_BREAKS_python-jarabe-$(pkgbranch) = sugar-emulator
 
 # Provide virtual unversioned sugar package
 CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar
