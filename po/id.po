@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-19 00:34-0400\n"
-"PO-Revision-Date: 2012-12-03 05:37+0200\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
+"PO-Revision-Date: 2013-08-03 06:24+0200\n"
 "Last-Translator: andika <andika@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
@@ -53,15 +53,15 @@ msgstr "Kesalahan dalam pengubah warna tertentu."
 msgid "Error in specified colors."
 msgstr "Kesalahan dalam warna tertentu."
 
-#: ../extensions/cpsection/aboutme/view.py:216
+#: ../extensions/cpsection/aboutme/view.py:212
 msgid "Click to change your color:"
-msgstr "Klik untuk mengubah warna anda:"
+msgstr "Klik untuk mengubah warna Anda:"
 
 #: ../extensions/cpsection/aboutcomputer/__init__.py:21
 msgid "About my Computer"
 msgstr "Tentang komputer saya"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:43
+#: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
 msgstr "Tidak tersedia"
 
@@ -71,15 +71,15 @@ msgstr "Identitas"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
-msgstr "Nomer Seri:"
+msgstr "Nomor Seri:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
-msgstr "Piranti lunak"
+msgstr "Perangkat Lunak"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
-msgstr "Bikinan:"
+msgstr "Build:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
@@ -115,6 +115,18 @@ msgstr ""
 msgid "Full license:"
 msgstr "Lisensi selengkapnya:"
 
+#: ../extensions/cpsection/background/__init__.py:21
+msgid "Background"
+msgstr "Latar Belakang"
+
+#: ../extensions/cpsection/background/view.py:39
+msgid "Select a background:"
+msgstr "Pilih latar belakang:"
+
+#: ../extensions/cpsection/background/view.py:46
+msgid "Clear background"
+msgstr "Hapus latar belakang"
+
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
 msgstr "Tanggal & Waktu"
@@ -123,7 +135,7 @@ msgstr "Tanggal & Waktu"
 msgid "Error timezone does not exist."
 msgstr "Ada kesalahan: Zona waktu tidak tersedia."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
 msgstr "Zona waktu"
 
@@ -159,24 +171,24 @@ msgstr "Pojok"
 
 #: ../extensions/cpsection/frame/view.py:114
 msgid "Edge"
-msgstr "Sisi"
+msgstr "Tepi"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
-#: ../extensions/cpsection/keyboard/view.py:32
+#: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
 msgstr "Papan Ketik"
 
-#: ../extensions/cpsection/keyboard/view.py:190
+#: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
 msgstr "Model Papan Ketik"
 
-#: ../extensions/cpsection/keyboard/view.py:250
+#: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
-msgstr "Kunci untuk mengubah tatanan"
+msgstr "Tombol untuk mengubah tata letak"
 
-#: ../extensions/cpsection/keyboard/view.py:319
+#: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Tatanan Papan Ketik"
+msgstr "Tata Letak Papan Ketik"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -202,14 +214,14 @@ msgid ""
 "Add languages in the order you prefer. If a translation is not available, "
 "the next in the list will be used."
 msgstr ""
-"Tambahkan bahasa-bahasa dalam perintah yang anda perkenan. Jika terjemahan "
-"tidak tersedia, maka masukan pada baris berikutnya yang akan digunakan."
+"Tambahkan bahasa-bahasa dalam urutan yang Anda sukai. Jika terjemahan tidak "
+"tersedia, maka masukan pada baris berikutnya yang akan digunakan."
 
 #: ../extensions/cpsection/modemconfiguration/__init__.py:21
 msgid "Modem Configuration"
 msgstr "Konfigurasi Modem"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:68
+#: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -217,25 +229,47 @@ msgstr ""
 "Anda perlu menyediakan informasi berikut untuk menyiapkan koneksi pita lebar "
 "bergerak ke jaringan seluler (3G)."
 
-#: ../extensions/cpsection/modemconfiguration/view.py:77
+#: ../extensions/cpsection/modemconfiguration/view.py:117
+msgid "Country:"
+msgstr "Negara:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Provider:"
+msgstr "Penyedia:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:119
+msgid "Plan:"
+msgstr "Layanan:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
 msgstr "Nama Pengguna:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:83
+#: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
 msgstr "Kata Sandi:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:89
+#: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
 msgstr "Nomor:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:95
+#: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
 msgstr "Access Point Name (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
 msgstr "Personal Identity Number (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr "Layanan #%s"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr "Operator %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
 #: ../extensions/cpsection/network/view.py:30
@@ -258,29 +292,29 @@ msgstr "Kesalahan dalam argumen yang ditentukan menggunakan 0/1."
 msgid "Wireless"
 msgstr "Nirkabel"
 
-#: ../extensions/cpsection/network/view.py:76
+#: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
 msgstr "Matikan perangkat nirkabel untuk menghemat daya baterai"
 
-#: ../extensions/cpsection/network/view.py:89
+#: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
 msgstr "Radio"
 
-#: ../extensions/cpsection/network/view.py:105
+#: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Bersihkan sejarah jaringan jika Anda mengalami kesulitan untuk menghubungkan "
 "jaringan"
 
-#: ../extensions/cpsection/network/view.py:114
+#: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
 msgstr "Bersihkan sejarah jaringan"
 
-#: ../extensions/cpsection/network/view.py:129
+#: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
 msgstr "Kerja Sama"
 
-#: ../extensions/cpsection/network/view.py:137
+#: ../extensions/cpsection/network/view.py:139
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -290,7 +324,7 @@ msgstr ""
 "akan dapat saling bertemu, bahkan ketika mereka tidak berada pada jaringan "
 "yang sama."
 
-#: ../extensions/cpsection/network/view.py:147
+#: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
 msgstr "Server:"
 
@@ -306,16 +340,15 @@ msgstr "Kesalahan ditemui ketika mengotomatisasi argumen md. gunakan on/off."
 msgid "Power management"
 msgstr "Manajemen daya"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
 msgstr "Manajemen daya otomatis (meningkatkan ketahanan baterai)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-#: ../src/jarabe/desktop/homebox.py:63
 msgid "Software Update"
 msgstr "Pembaruan Perangkat Lunak"
 
-#: ../extensions/cpsection/updater/view.py:63
+#: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
@@ -323,109 +356,135 @@ msgstr ""
 "Pembaruan perangkat lunak ditujukan untuk memperbaiki kesalahan, "
 "menghilangkan kelemahan keamanan, dan menyediakan beberapa fitur baru."
 
-#: ../extensions/cpsection/updater/view.py:125
+#: ../extensions/cpsection/updater/view.py:79
+msgid "Update in progress..."
+msgstr "Sedang memutakhirkan..."
+
+#: ../extensions/cpsection/updater/view.py:106
+msgid "Checking for updates..."
+msgstr "Memeriksa pembaruan..."
+
+#: ../extensions/cpsection/updater/view.py:108
+msgid "Installing updates..."
+msgstr "Memasangkan pembaruan..."
+
+#: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
 msgstr "Memeriksa %s..."
 
-#: ../extensions/cpsection/updater/view.py:127
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Looking for updates..."
+msgstr "Mencari pemutakhiran..."
+
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
 msgstr "Mengunduh %s..."
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
 msgstr "Memperbaharui %s..."
 
-#: ../extensions/cpsection/updater/view.py:139
+#: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
 msgstr "Perangkat lunak Anda mutakhir"
 
-#: ../extensions/cpsection/updater/view.py:141
+#: ../extensions/cpsection/updater/view.py:155
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "Anda dapat memasang %s pembaruan"
 
-#: ../extensions/cpsection/updater/view.py:159
-msgid "Checking for updates..."
-msgstr "Memeriksa pembaruan..."
-
-#: ../extensions/cpsection/updater/view.py:164
-msgid "Installing updates..."
-msgstr "Memasangkan pembaruan..."
-
-#: ../extensions/cpsection/updater/view.py:173
+#: ../extensions/cpsection/updater/view.py:184
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
 msgstr[0] "%s pembaruan sudah dipasang"
 
-#: ../extensions/cpsection/updater/view.py:256
+#: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
 msgstr "Pasangkan yang dipilih"
 
-#: ../extensions/cpsection/updater/view.py:277
+#: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
 msgstr "Ukuran unduhan: %s"
 
-#: ../extensions/cpsection/updater/view.py:365
+#: ../extensions/cpsection/updater/view.py:373
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "Dari versi %(current)s ke %(new)s (Ukuran: %(size)s)"
 
+#: ../extensions/cpsection/updater/view.py:380
+#, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr "Versi %(version)s (Ukuran: %(size)s)"
+
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:383
+#: ../extensions/cpsection/updater/view.py:397
 msgid "None"
 msgstr "Tidak ada"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:386
+#: ../extensions/cpsection/updater/view.py:400
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:389
+#: ../extensions/cpsection/updater/view.py:403
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:392
+#: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: ../extensions/deviceicon/battery.py:70
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Configure your Web Services"
+msgstr "Tata Layanan Web Anda"
+
+#: ../extensions/cpsection/webaccount/view.py:42
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+"Tak ada layanan web yang terpasang.\n"
+"Silakan kunjungi %s untuk rinciannya."
+
+#: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "Bateraiku"
 
-#: ../extensions/deviceicon/battery.py:151
+#: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
 msgstr "Dihapus"
 
-#: ../extensions/deviceicon/battery.py:154
+#: ../extensions/deviceicon/battery.py:156
 msgid "Charging"
 msgstr "Mengisi"
 
-#: ../extensions/deviceicon/battery.py:157
+#: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
 msgstr "Daya yang tersedia sangat sedikit"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:164
+#: ../extensions/deviceicon/battery.py:166
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
 msgstr "%(hour)d:%(min).2d tersisa"
 
-#: ../extensions/deviceicon/battery.py:167
+#: ../extensions/deviceicon/battery.py:169
 msgid "Charged"
 msgstr "Terisi"
 
-#: ../extensions/deviceicon/frame.py:57
+#: ../extensions/deviceicon/frame.py:56
 msgid "Show my keyboard"
 msgstr "Tampilkan papan tik saya"
 
@@ -434,168 +493,169 @@ msgstr "Tampilkan papan tik saya"
 msgid "IP address: %s"
 msgstr "Alamat IP: %s"
 
-#: ../extensions/deviceicon/network.py:80
-#: ../extensions/deviceicon/network.py:296
-#: ../src/jarabe/desktop/networkviews.py:130
-#: ../src/jarabe/desktop/networkviews.py:499
+#: ../extensions/deviceicon/network.py:82
+#: ../extensions/deviceicon/network.py:298
+#: ../src/jarabe/desktop/networkviews.py:135
+#: ../src/jarabe/desktop/networkviews.py:509
 msgid "Disconnect"
 msgstr "Putuskan"
 
-#: ../extensions/deviceicon/network.py:105
-#: ../extensions/deviceicon/network.py:288
-#: ../src/jarabe/desktop/networkviews.py:241
-#: ../src/jarabe/desktop/networkviews.py:539
-#: ../src/jarabe/desktop/networkviews.py:674
+#: ../extensions/deviceicon/network.py:107
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:251
+#: ../src/jarabe/desktop/networkviews.py:551
+#: ../src/jarabe/desktop/networkviews.py:693
 msgid "Connecting..."
 msgstr "Menghubungkan..."
 
-#: ../extensions/deviceicon/network.py:110
-#: ../extensions/deviceicon/network.py:178
-#: ../src/jarabe/desktop/networkviews.py:248
-#: ../src/jarabe/desktop/networkviews.py:545
-#: ../src/jarabe/desktop/networkviews.py:680
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:180
+#: ../src/jarabe/desktop/networkviews.py:258
+#: ../src/jarabe/desktop/networkviews.py:557
+#: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
 msgstr "Terhubung"
 
-#: ../extensions/deviceicon/network.py:123
+#: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
 msgstr "Tak ada koneksi nirkabel"
 
-#: ../extensions/deviceicon/network.py:137
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../extensions/deviceicon/network.py:152
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr "Jaringan Kabel"
 
-#: ../extensions/deviceicon/network.py:181
+#: ../extensions/deviceicon/network.py:183
 msgid "Speed"
 msgstr "Kecepatan"
 
-#: ../extensions/deviceicon/network.py:206
+#: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
 msgstr "Modem nirkabel"
 
-#: ../extensions/deviceicon/network.py:274
+#: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
 msgstr "Silakan tunggu..."
 
-#: ../extensions/deviceicon/network.py:279
-#: ../src/jarabe/desktop/networkviews.py:126
-#: ../src/jarabe/desktop/networkviews.py:494
-#: ../src/jarabe/desktop/networkviews.py:630
+#: ../extensions/deviceicon/network.py:281
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:503
+#: ../src/jarabe/desktop/networkviews.py:644
 msgid "Connect"
 msgstr "Koneksikan"
 
-#: ../extensions/deviceicon/network.py:280
+#: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
 msgstr "Terputus"
 
-#: ../extensions/deviceicon/network.py:287
+#: ../extensions/deviceicon/network.py:289
 #: ../src/jarabe/controlpanel/toolbar.py:121
-#: ../src/jarabe/desktop/homebox.py:68 ../src/jarabe/desktop/keydialog.py:97
-#: ../src/jarabe/frame/activitiestray.py:606
-#: ../src/jarabe/frame/activitiestray.py:708
-#: ../src/jarabe/frame/activitiestray.py:736
-#: ../src/jarabe/journal/journaltoolbox.py:427
-#: ../src/jarabe/journal/palettes.py:153
+#: ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/frame/activitiestray.py:625
+#: ../src/jarabe/frame/activitiestray.py:746
+#: ../src/jarabe/frame/activitiestray.py:778
+#: ../src/jarabe/journal/expandedentry.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:480
+#: ../src/jarabe/journal/palettes.py:159
 msgid "Cancel"
 msgstr "Batal"
 
-#: ../extensions/deviceicon/network.py:326
+#: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
 msgstr "Cobalah menyambung lagi"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
 msgstr "Kesalahan: %s"
 
-#: ../extensions/deviceicon/network.py:333
+#: ../extensions/deviceicon/network.py:335
 #, python-format
 msgid "Suggestion: %s"
 msgstr "Saran: %s"
 
-#: ../extensions/deviceicon/network.py:342
+#: ../extensions/deviceicon/network.py:344
 #, python-format
 msgid "Connected for %s"
 msgstr "Terhubung selama %s"
 
-#: ../extensions/deviceicon/network.py:348
-#: ../extensions/deviceicon/network.py:349
+#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:351
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:354
+#: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
 msgstr "Periksa konfigurasi PIN/PUK Anda."
 
-#: ../extensions/deviceicon/network.py:357
+#: ../extensions/deviceicon/network.py:359
 msgid "Check your Access Point Name (APN) configuration"
 msgstr "Periksa konfigurasi Access Point Name (APN) Anda."
 
-#: ../extensions/deviceicon/network.py:361
+#: ../extensions/deviceicon/network.py:363
 msgid "Check the Number configuration."
 msgstr "Periksa konfigurasi Nomor."
 
-#: ../extensions/deviceicon/network.py:363
+#: ../extensions/deviceicon/network.py:365
 msgid "Check your configuration."
 msgstr "Periksa konfigurasi Anda."
 
-#: ../extensions/deviceicon/network.py:607
+#: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
 msgstr "Jaringan Mesh"
 
-#: ../extensions/deviceicon/network.py:652
+#: ../extensions/deviceicon/network.py:668
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Jaringan Mesh %s"
 
-#: ../extensions/deviceicon/network.py:783
+#: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
 msgstr "Koneksi GSM tak tersedia."
 
-#: ../extensions/deviceicon/network.py:784
+#: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
 msgstr "Buatlah koneksi dalam panel kendali."
 
-#: ../extensions/deviceicon/speech.py:53
+#: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
 msgstr "Bicara"
 
-#: ../extensions/deviceicon/speech.py:81
+#: ../extensions/deviceicon/speech.py:76
+#: ../extensions/deviceicon/speech.py:150
 #: ../extensions/deviceicon/speech.py:155
-#: ../extensions/deviceicon/speech.py:160
 msgid "Say selected text"
 msgstr "Ucapkan teks yang dipilih"
 
-#: ../extensions/deviceicon/speech.py:88
+#: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
 msgstr "Berhenti memutar"
 
-#: ../extensions/deviceicon/speech.py:98
+#: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
 msgstr "Pitch"
 
-#: ../extensions/deviceicon/speech.py:112
+#: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
 msgstr "Laju"
 
-#: ../extensions/deviceicon/speech.py:150
+#: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
 msgstr "Jeda memutar"
 
-#: ../extensions/deviceicon/speaker.py:62
+#: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "Speakerku"
 
-#: ../extensions/deviceicon/speaker.py:142
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
 msgstr "Bersuara"
 
-#: ../extensions/deviceicon/speaker.py:145
+#: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
 msgstr "Bisu"
 
@@ -611,37 +671,37 @@ msgstr "stylus"
 msgid "My touchpad"
 msgstr "Touchpadku"
 
-#: ../extensions/deviceicon/volume.py:74 ../src/jarabe/view/palettes.py:171
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
 msgid "Show contents"
 msgstr "Lihat isinya"
 
-#: ../extensions/globalkey/screenshot.py:62
+#: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
 msgstr "Bertaut"
 
-#: ../extensions/globalkey/screenshot.py:64
-#: ../src/jarabe/desktop/homewindow.py:219
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/desktop/homewindow.py:221
+#: ../src/jarabe/frame/zoomtoolbar.py:53
 msgid "Group"
 msgstr "Kelompok"
 
-#: ../extensions/globalkey/screenshot.py:66
-#: ../src/jarabe/desktop/homewindow.py:212
-#: ../src/jarabe/desktop/viewtoolbar.py:62
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../extensions/globalkey/screenshot.py:65
+#: ../src/jarabe/desktop/homewindow.py:214
+#: ../src/jarabe/desktop/viewtoolbar.py:73
+#: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "Rumah"
 
-#: ../extensions/globalkey/screenshot.py:72
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../extensions/globalkey/screenshot.py:71
+#: ../src/jarabe/frame/zoomtoolbar.py:62
 msgid "Activity"
 msgstr "Aktivitas"
 
-#: ../extensions/globalkey/screenshot.py:75
+#: ../extensions/globalkey/screenshot.py:74
 msgid "Screenshot"
 msgstr "Cuplikan layar"
 
-#: ../extensions/globalkey/screenshot.py:77
+#: ../extensions/globalkey/screenshot.py:76
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "Cuplikan layar dari \"%s\""
@@ -654,15 +714,39 @@ msgstr ""
 "\"disabled\" untuk menanyakan nick saat inisialisasi; \"system\" untuk memakai "
 "ulang nama panjang akun UNIX."
 
+#: ../data/sugar.schemas.in.h:2
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr ""
+"Suatu penanda waktu unix (detik sejak epos) dari pemutakhiran aktivitas "
+"terakhir yang sukses."
+
 #: ../data/sugar.schemas.in.h:3
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr ""
+"Modul backend pemutakhiran aktivitas, diikuti dengan titik, diikuti dengan "
+"nama kelas."
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Activity update backend."
+msgstr "Backend pemutakhiran aktivitas."
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Automatic update frequency."
+msgstr "Frekuensi pemutakhiran otomatis."
+
+#: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
 msgstr "URL Cadangan"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
 msgstr "ID bundel dari aktivitas yang terlindungi"
 
-#: ../data/sugar.schemas.in.h:5
+#: ../data/sugar.schemas.in.h:9
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
@@ -672,108 +756,115 @@ msgstr ""
 "dari warna garis dan isi, menggunakan format warna rgb. Contoh: "
 "#AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
 msgstr "Waktu Tunda Pojok"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
 msgstr "Muka fonta bawaan"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
 msgstr "Ukuran fonta bawaan"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
 msgstr "Nick bawaan"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Waktu tunda untuk aktivasi bingkai yang menggunakan pojok."
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:15
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Waktu tunda untuk aktivasi frame menggunakan sisi-sisinya."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
 msgstr "Waktu Tunda Sisi"
 
-#: ../data/sugar.schemas.in.h:13
+#: ../data/sugar.schemas.in.h:17
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
 "Manajemen daya ekstrim (matikan radio nirkabel, meningkatkan masa pakai "
 "baterai)"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:18
 msgid "Favorites Layout"
 msgstr "Tata Letak Favorit"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
 msgstr "Mode melanjutkan favorit"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
 msgstr "Muka fonta yang dipakai pada seluruh desktop."
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
 msgstr "Ukuran fonta yang dipakai pada seluruh desktop."
 
-#: ../data/sugar.schemas.in.h:18
+#: ../data/sugar.schemas.in.h:22
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
+msgstr ""
+"Frekuensi dari pemutakhiran aktivitas otomatis, diukur dalam hari. 0 berarti "
+"dimatikan."
+
+#: ../data/sugar.schemas.in.h:23
 msgid "GSM network APN (DEPRECATED/UNUSED)"
 msgstr "APN jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:19
+#: ../data/sugar.schemas.in.h:24
 msgid "GSM network PIN (DEPRECATED/UNUSED)"
 msgstr "PIN jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:20
+#: ../data/sugar.schemas.in.h:25
 msgid "GSM network PUK (DEPRECATED/UNUSED)"
 msgstr "PUK jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:21
+#: ../data/sugar.schemas.in.h:26
 msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
 msgstr "Konfigurasi access point name jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:22
+#: ../data/sugar.schemas.in.h:27
 msgid "GSM network number (DEPRECATED/UNUSED)"
 msgstr "Nomor jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:23
+#: ../data/sugar.schemas.in.h:28
 msgid "GSM network password (DEPRECATED/UNUSED)"
 msgstr "Sandi jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:24
+#: ../data/sugar.schemas.in.h:29
 msgid "GSM network password configuration (DEPRECATED/UNUSED)"
 msgstr "Konfigurasi sandi jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:25
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
 "Konfigurasi personal identification number jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr "Konfigurasi personal unlock key jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
 msgstr "Konfigurasi nomor telepon jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
 msgstr "Nama pengguna jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
 msgstr "Konfigurasi nama pengguna jaringan GSM (USANG/TAK DIPAKAI)"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -781,15 +872,15 @@ msgstr ""
 "Jika berisi TRUE, Sugar akan membuat kita dapat ditemukan oleh pengguna lain "
 "di server Jabber."
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Log out\" option."
 msgstr "Jika berisi TRUE, Sugar akan menampilkan pilihan \"Keluar\"."
 
-#: ../data/sugar.schemas.in.h:32
+#: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
 msgstr "Jika berisi TRUE, Sugar akan menampilkan pilihan \"Start ulang\"."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:38
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
@@ -799,129 +890,144 @@ msgstr ""
 "dan 11. Bila Sugar tak melihat jaringan yang \"dikenal\" saat mulai, ia akan "
 "otomatis menyambung ke jaringan Ad-hoc."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
 msgstr "Server Jabber"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:40
 msgid "Keyboard layouts"
 msgstr "Tata letak papan ketik"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:41
 msgid "Keyboard model"
 msgstr "Model papan ketik"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
 msgstr "Opsi papan ketik"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
 msgstr "Tata letak tilikan favorit."
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:44
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Daftar tata letak papan ketik. Tiap masukan harus dalam bentuk tata "
 "letak(varian)"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
 msgstr "Daftar opsi papan ketik."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:46
+msgid "Microformat update URL."
+msgstr "URL pemutakhiran format mikro."
+
+#: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
 msgstr "Nilai pitch bagi layanan bicara sugar"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
 msgstr "Nilai pitch yang dipakai oleh layanan bicara dalam Sugar"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
 msgstr "Daya Otomatis"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
 msgstr "Daya Ekstrim"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
 msgstr "Publikasikan ke Gadget"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
 msgstr "Nilai laju bagi layanan bicara sugar"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
 msgstr "Nilai laju yang dipakai oleh layanan bicara dalam Sugar"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
 msgstr "Setelan untuk membisukan perangkat suara."
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
 msgstr "Perlihatkan \"Keluar\""
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
 msgstr "Tampilkan Start ulang"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
 msgstr "Tampilkan jaringan Ad-hoc Sugar"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
 msgstr "Suara Dibisukan"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
 msgstr "Model papan ketik yang akan digunakan"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:60
+msgid "Timestamp of last activity update."
+msgstr "Penanda waktu dari pemutakhiran aktivitas terakhir."
+
+#: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
 msgstr "Setelan zona waktu untuk sistem."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
 msgstr "URL dari server jabber yang akan digunakan."
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:64
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr ""
+"URL yang dipakai oleh backend pemutakhiran format mikro bagi informasi "
+"pemutakhiran aktivitas."
+
+#: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
 msgstr "URL dimana cadangan akan disimpankan."
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:66
 msgid "User Color"
 msgstr "Warna Pengguna"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:67
 msgid "User Name"
 msgstr "Nama Pengguna"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
 msgstr "Nama pengguna yang akan digunakan melalui destop."
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:69
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
 "Pengguna tak akan diijinkan menghapus aktivitas-aktivitas ini melalui "
 "tilikan daftar."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
 msgstr "Tingkat Volume"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
 msgstr "Tingkat volume dari perangkat suara."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -978,32 +1084,32 @@ msgstr ""
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Untuk menerapkan perubahan Anda mesti memulai ulang Sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:298 ../src/jarabe/journal/palettes.py:181
-#: ../src/jarabe/journal/palettes.py:266 ../src/jarabe/journal/palettes.py:299
-#: ../src/jarabe/journal/volumestoolbar.py:301
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
+#: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
+#: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "Peringatan"
 
-#: ../src/jarabe/controlpanel/gui.py:299
+#: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "Perubahan membutuhkan pemulain ulang"
 
-#: ../src/jarabe/controlpanel/gui.py:302
+#: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
 msgstr "Batalkan perubahan"
 
-#: ../src/jarabe/controlpanel/gui.py:307 ../src/jarabe/desktop/homebox.py:70
+#: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
 msgstr "Nanti"
 
-#: ../src/jarabe/controlpanel/gui.py:311
+#: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
 msgstr "Mulai ulang sekarang"
 
 #: ../src/jarabe/controlpanel/toolbar.py:56
-#: ../src/jarabe/desktop/viewtoolbar.py:100
-#: ../src/jarabe/journal/journaltoolbox.py:82
+#: ../src/jarabe/desktop/viewtoolbar.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:89
 #, python-format
 msgid "Search in %s"
 msgstr "Cari di %s"
@@ -1012,125 +1118,118 @@ msgstr "Cari di %s"
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:210
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
 msgstr "Selesai"
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
-#: ../src/jarabe/desktop/favoritesview.py:337
-#: ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/desktop/favoritesview.py:374
+#: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:243
+#: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format
 msgid "Version %s"
 msgstr "Versi %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:344
-#: ../src/jarabe/journal/listview.py:411
+#: ../src/jarabe/desktop/activitieslist.py:385
+#: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
 msgid "Clear search"
 msgstr "Bersihkan pencarian"
 
-#: ../src/jarabe/desktop/activitieslist.py:417
+#: ../src/jarabe/desktop/activitieslist.py:469
 msgid "No matching activities"
 msgstr "Tak ada aktivitas yang cocok"
 
-#: ../src/jarabe/desktop/activitieslist.py:453
+#: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
 msgstr "Konfirmasikan penghapusan"
 
-#: ../src/jarabe/desktop/activitieslist.py:455
+#: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr ""
 "Konfirmasikan penghapusan: Apakah anda yakin untuk secara permanen "
 "menghapuskan %s?"
 
-#: ../src/jarabe/desktop/activitieslist.py:459
-#: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:284
+#: ../src/jarabe/desktop/activitieslist.py:511
+#: ../src/jarabe/frame/clipboardmenu.py:65
+#: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "Simpan"
 
-#: ../src/jarabe/desktop/activitieslist.py:462
-#: ../src/jarabe/desktop/activitieslist.py:516
-#: ../src/jarabe/journal/journaltoolbox.py:393
-#: ../src/jarabe/journal/journaltoolbox.py:422
-#: ../src/jarabe/journal/palettes.py:128 ../src/jarabe/journal/palettes.py:148
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:578
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:443
+#: ../src/jarabe/journal/journaltoolbox.py:475
+#: ../src/jarabe/journal/journaltoolbox.py:689
+#: ../src/jarabe/journal/journaltoolbox.py:695
+#: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
 msgstr "Hapus"
 
-#: ../src/jarabe/desktop/activitieslist.py:532
+#: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
 msgstr "Hilangkan kesukaan"
 
-#: ../src/jarabe/desktop/activitieslist.py:536
+#: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
 msgstr "Buat jadi kesukaan"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:200
+#: ../src/jarabe/desktop/favoriteslayout.py:199
 msgid "Freeform"
 msgstr "Freeform"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:296
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "Melingkar"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:450
+#: ../src/jarabe/desktop/favoriteslayout.py:459
 msgid "Spiral"
 msgstr "Spiral"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:518
+#: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
 msgstr "Kotak"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:561
+#: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
 msgstr "Segi tiga"
 
-#: ../src/jarabe/desktop/favoritesview.py:328
+#: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
 msgstr "Pendaftaran Gagal"
 
-#: ../src/jarabe/desktop/favoritesview.py:331
+#: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
 msgstr "Pendaftaran Berhasil"
 
-#: ../src/jarabe/desktop/favoritesview.py:332
+#: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
 msgstr "Sekarang anda terdaftar di server sekolah anda."
 
-#: ../src/jarabe/desktop/favoritesview.py:611
+#: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
 msgstr "Daftarkan"
 
-#: ../src/jarabe/desktop/favoritesview.py:613
-#: ../src/jarabe/desktop/favoritesview.py:629
+#: ../src/jarabe/desktop/favoritesview.py:656
+#: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
 msgstr "Mendaftar lagi"
 
-#: ../src/jarabe/desktop/homebox.py:64
-msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
-"Perbarui aktivitas anda untuk memastikan kompatibilitasnya dengan perangkat "
-"lunak baru anda"
-
-#: ../src/jarabe/desktop/homebox.py:73
-msgid "Check now"
-msgstr "Periksa sekarang"
-
-#: ../src/jarabe/desktop/homewindow.py:226
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/desktop/homewindow.py:228
+#: ../src/jarabe/frame/zoomtoolbar.py:49
 msgid "Neighborhood"
 msgstr "Lingkungan sekitar"
 
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
@@ -1139,131 +1238,133 @@ msgstr ""
 "Kunci enkripsi nirkabel diperlukan bagi\n"
 "jaringan nirkabel '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:146
+#: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
 msgstr "Jenis Kunci:"
 
-#: ../src/jarabe/desktop/keydialog.py:166
+#: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "Jenis Otentikasi:"
 
-#: ../src/jarabe/desktop/keydialog.py:229
+#: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Pribadi"
 
-#: ../src/jarabe/desktop/keydialog.py:238
+#: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
 msgstr "Keamanan Nirkabel:"
 
 #. TRANS: Action label for resuming an activity.
-#: ../src/jarabe/desktop/meshbox.py:79
-#: ../src/jarabe/journal/journaltoolbox.py:506
-#: ../src/jarabe/journal/palettes.py:73 ../src/jarabe/view/palettes.py:86
+#: ../src/jarabe/desktop/meshbox.py:82
+#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Kembali"
 
-#: ../src/jarabe/desktop/meshbox.py:84
-#: ../src/jarabe/frame/activitiestray.py:182
+#: ../src/jarabe/desktop/meshbox.py:89
+#: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
 msgstr "Bergabung"
 
-#: ../src/jarabe/desktop/networkviews.py:490
+#: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
 msgstr "Jaringan Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:627
+#: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Jaringan Mesh %d"
 
-#: ../src/jarabe/desktop/schoolserver.py:143
+#: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
 msgstr "Tidak dapat terhubung ke server."
 
-#: ../src/jarabe/desktop/schoolserver.py:150
+#: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
 msgstr "Servernya tidak dapat menyelesaikan permintaan anda."
 
-#: ../src/jarabe/desktop/viewtoolbar.py:80
+#: ../src/jarabe/desktop/viewtoolbar.py:95
 msgid "List view"
 msgstr "Tampilan daftar"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:81
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
+#: ../src/jarabe/desktop/viewtoolbar.py:97
+#: ../src/jarabe/desktop/viewtoolbar.py:195
+#: ../src/jarabe/desktop/viewtoolbar.py:209
+#, python-format
+#, python-format,
+msgid "<Ctrl>%d"
+msgstr "<Ctrl>%d"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:149
-msgid "Favorites view"
-msgstr "Tampilan kesukaan"
+#: ../src/jarabe/desktop/viewtoolbar.py:208
+#, python-format
+#, python-format,
+msgid "Favorites view %d"
+msgstr "Tampilan favorit %d"
 
-#: ../src/jarabe/desktop/viewtoolbar.py:150
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
-
-#: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:578
+#: ../src/jarabe/frame/activitiestray.py:195
+#: ../src/jarabe/frame/activitiestray.py:593
 msgid "Decline"
 msgstr "Tolak"
 
-#: ../src/jarabe/frame/activitiestray.py:526
+#: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:528
+#: ../src/jarabe/frame/activitiestray.py:536
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:530
+#: ../src/jarabe/frame/activitiestray.py:538
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:548
+#: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
 msgid "%s of %s"
 msgstr "%s dari %s"
 
-#: ../src/jarabe/frame/activitiestray.py:562
+#: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "Transfer dari %s"
 
-#: ../src/jarabe/frame/activitiestray.py:573
+#: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
 msgstr "Terima"
 
-#: ../src/jarabe/frame/activitiestray.py:630
-#: ../src/jarabe/frame/activitiestray.py:643
-#: ../src/jarabe/frame/activitiestray.py:761
+#: ../src/jarabe/frame/activitiestray.py:653
+#: ../src/jarabe/frame/activitiestray.py:666
+#: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
 msgstr "Bubar"
 
-#: ../src/jarabe/frame/activitiestray.py:647
+#: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
 msgstr "Partisipan lain membatalkan transfer berkas"
 
-#: ../src/jarabe/frame/activitiestray.py:695
+#: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
 msgstr "Transfer ke %s"
 
-#: ../src/jarabe/frame/clipboardmenu.py:56
+#: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "Hapus"
 
-#: ../src/jarabe/frame/clipboardmenu.py:62
-#: ../src/jarabe/frame/clipboardmenu.py:85
+#: ../src/jarabe/frame/clipboardmenu.py:60
+#: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
 msgstr "Buka"
 
-#: ../src/jarabe/frame/clipboardmenu.py:90
+#: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
 msgstr "Buka dengan"
 
@@ -1272,211 +1373,249 @@ msgstr "Buka dengan"
 msgid "%s clipping"
 msgstr "Kliping %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:48
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:50
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:52
+#: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:54
+#: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:105
+#: ../src/jarabe/intro/window.py:106
 msgid "Name:"
 msgstr "Nama:"
 
-#: ../src/jarabe/intro/window.py:135
+#: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
 msgstr "Klik untuk mengubah warna:"
 
-#: ../src/jarabe/intro/window.py:199 ../src/jarabe/journal/detailview.py:94
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
 msgstr "Kembali"
 
-#: ../src/jarabe/intro/window.py:213
+#: ../src/jarabe/intro/window.py:214
 msgid "Next"
 msgstr "Selanjutnya"
 
-#: ../src/jarabe/journal/expandedentry.py:145
-#: ../src/jarabe/journal/listmodel.py:145 ../src/jarabe/journal/model.py:703
-#: ../src/jarabe/journal/palettes.py:66
-#: ../src/jarabe/journal/volumestoolbar.py:131
-msgid "Untitled"
-msgstr "Tak bernama"
-
-#: ../src/jarabe/journal/expandedentry.py:259
-msgid "No preview"
-msgstr "Tidak ada penampakan"
-
-#: ../src/jarabe/journal/expandedentry.py:273
-#, python-format
-msgid "Kind: %s"
-msgstr "Jenis: %s"
-
-#: ../src/jarabe/journal/expandedentry.py:274
-#: ../src/jarabe/journal/listmodel.py:151
-#: ../src/jarabe/journal/listmodel.py:159
-msgid "Unknown"
-msgstr "Tidak diketahui"
-
-#: ../src/jarabe/journal/expandedentry.py:275
-#, python-format
-msgid "Date: %s"
-msgstr "Tanggal: %s"
-
-#: ../src/jarabe/journal/expandedentry.py:276
-#, python-format
-msgid "Size: %s"
-msgstr "Ukuran: %s"
-
-#: ../src/jarabe/journal/expandedentry.py:299
-#: ../src/jarabe/journal/misc.py:108
-msgid "No date"
-msgstr "Tidak bertanggal"
-
-#: ../src/jarabe/journal/expandedentry.py:308
-msgid "Participants:"
-msgstr "Para Peserta:"
-
-#: ../src/jarabe/journal/expandedentry.py:349
-msgid "Description:"
-msgstr "Keterangan:"
-
-#: ../src/jarabe/journal/expandedentry.py:352
-msgid "Tags:"
-msgstr "Penanda:"
-
-#: ../src/jarabe/journal/journalactivity.py:120
-#: ../src/jarabe/journal/journaltoolbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:465
-#: ../src/jarabe/journal/palettes.py:218
-#: ../src/jarabe/journal/volumestoolbar.py:362
-msgid "Journal"
-msgstr "Catatan"
-
-#: ../src/jarabe/journal/journaltoolbox.py:128
-msgid "Anytime"
-msgstr "Setiap saat"
-
-#: ../src/jarabe/journal/journaltoolbox.py:130
-msgid "Today"
-msgstr "Hari ini"
-
-#: ../src/jarabe/journal/journaltoolbox.py:132
-msgid "Since yesterday"
-msgstr "Sejak kemarin"
-
-#. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:134
-msgid "Past week"
-msgstr "Minggu yang lalu"
-
-#. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:136
-msgid "Past month"
-msgstr "Bulan yang lalu"
-
-#. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:138
-msgid "Past year"
-msgstr "Tahun yang lalu"
-
-#: ../src/jarabe/journal/journaltoolbox.py:145
-msgid "Anyone"
-msgstr "Setiap orang"
-
-#: ../src/jarabe/journal/journaltoolbox.py:147
-msgid "My friends"
-msgstr "Teman-teman ku"
-
-#: ../src/jarabe/journal/journaltoolbox.py:148
-msgid "My class"
-msgstr "Kelas ku"
-
-#: ../src/jarabe/journal/journaltoolbox.py:290
-msgid "Anything"
-msgstr "Apa saja"
-
-#: ../src/jarabe/journal/journaltoolbox.py:376
-#: ../src/jarabe/journal/palettes.py:95
-msgid "Copy to"
-msgstr "Salin ke"
-
-#: ../src/jarabe/journal/journaltoolbox.py:384
-#: ../src/jarabe/journal/palettes.py:106 ../src/jarabe/view/viewsource.py:278
-msgid "Duplicate"
-msgstr "Duplikat"
-
-#: ../src/jarabe/journal/journaltoolbox.py:417
-#: ../src/jarabe/journal/palettes.py:143 ../src/jarabe/journal/palettes.py:274
-#: ../src/jarabe/journal/volumestoolbar.py:309
-#, python-format
-msgid "Error while copying the entry. %s"
-msgstr "Galat saat menyalin entri. %s"
-
-#: ../src/jarabe/journal/journaltoolbox.py:418
-#: ../src/jarabe/journal/palettes.py:144 ../src/jarabe/journal/palettes.py:275
-#: ../src/jarabe/journal/volumestoolbar.py:310
-msgid "Error"
-msgstr "Kesalahan"
-
-#: ../src/jarabe/journal/journaltoolbox.py:424
-#: ../src/jarabe/journal/palettes.py:150
+#: ../src/jarabe/journal/expandedentry.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:477
+#: ../src/jarabe/journal/palettes.py:156
 #, python-format
 msgid "Do you want to permanently erase \"%s\"?"
 msgstr "Apakah Anda hendak menghapus \"%s\" secara permanen?"
 
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
+#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/journal/palettes.py:597
+#: ../src/jarabe/journal/volumestoolbar.py:131
+#: ../src/jarabe/journal/iconmodel.py:110
+msgid "Untitled"
+msgstr "Tak bernama"
+
+#: ../src/jarabe/journal/expandedentry.py:367
+msgid "No preview"
+msgstr "Tidak ada penampakan"
+
+#: ../src/jarabe/journal/expandedentry.py:382
+#, python-format
+msgid "Kind: %s"
+msgstr "Jenis: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/listmodel.py:165
+#: ../src/jarabe/journal/listmodel.py:173
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#: ../src/jarabe/journal/expandedentry.py:383
+#, python-format
+msgid "Date: %s"
+msgstr "Tanggal: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:384
+#, python-format
+msgid "Size: %s"
+msgstr "Ukuran: %s"
+
+#: ../src/jarabe/journal/expandedentry.py:411
+#: ../src/jarabe/journal/misc.py:109
+msgid "No date"
+msgstr "Tidak bertanggal"
+
+#: ../src/jarabe/journal/expandedentry.py:420
+msgid "Participants:"
+msgstr "Para Peserta:"
+
+#: ../src/jarabe/journal/expandedentry.py:458
+msgid "Description:"
+msgstr "Keterangan:"
+
+#: ../src/jarabe/journal/expandedentry.py:464
+msgid "Tags:"
+msgstr "Penanda:"
+
+#: ../src/jarabe/journal/expandedentry.py:469
+msgid "Comments:"
+msgstr "Komentar:"
+
+#: ../src/jarabe/journal/journalactivity.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:89
+#: ../src/jarabe/journal/palettes.py:248
+#: ../src/jarabe/journal/volumestoolbar.py:363
+msgid "Journal"
+msgstr "Catatan"
+
+#: ../src/jarabe/journal/journaltoolbox.py:98
+msgid "Favorite entries"
+msgstr "Entri favorit"
+
+#: ../src/jarabe/journal/journaltoolbox.py:134
+msgid "Anytime"
+msgstr "Setiap saat"
+
+#: ../src/jarabe/journal/journaltoolbox.py:136
+msgid "Today"
+msgstr "Hari ini"
+
+#: ../src/jarabe/journal/journaltoolbox.py:138
+msgid "Since yesterday"
+msgstr "Sejak kemarin"
+
+#. TRANS: Filter entries modified during the last 7 days.
+#: ../src/jarabe/journal/journaltoolbox.py:140
+msgid "Past week"
+msgstr "Minggu yang lalu"
+
+#. TRANS: Filter entries modified during the last 30 days.
+#: ../src/jarabe/journal/journaltoolbox.py:142
+msgid "Past month"
+msgstr "Bulan yang lalu"
+
+#. TRANS: Filter entries modified during the last 356 days.
+#: ../src/jarabe/journal/journaltoolbox.py:144
+msgid "Past year"
+msgstr "Tahun yang lalu"
+
+#: ../src/jarabe/journal/journaltoolbox.py:151
+msgid "Anyone"
+msgstr "Setiap orang"
+
+#: ../src/jarabe/journal/journaltoolbox.py:153
+msgid "My friends"
+msgstr "Teman-teman ku"
+
+#: ../src/jarabe/journal/journaltoolbox.py:154
+msgid "My class"
+msgstr "Kelas ku"
+
+#: ../src/jarabe/journal/journaltoolbox.py:327
+msgid "Anything"
+msgstr "Apa saja"
+
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:99
+msgid "Copy to"
+msgstr "Salin ke"
+
+#: ../src/jarabe/journal/journaltoolbox.py:427
+#: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: ../src/jarabe/journal/journaltoolbox.py:433
+msgid "Refresh"
+msgstr "Segarkan"
+
+#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
+#: ../src/jarabe/journal/volumestoolbar.py:310
+#, python-format
+msgid "Error while copying the entry. %s"
+msgstr "Galat saat menyalin entri. %s"
+
+#: ../src/jarabe/journal/journaltoolbox.py:471
+#: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
+#: ../src/jarabe/journal/volumestoolbar.py:311
+msgid "Error"
+msgstr "Kesalahan"
+
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:76
+#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/palettes.py:80
 msgid "Start"
 msgstr "Mulai"
 
-#: ../src/jarabe/journal/journaltoolbox.py:537
+#: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
 msgstr "Urutkan menurut tanggal diubah"
 
-#: ../src/jarabe/journal/journaltoolbox.py:538
+#: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
 msgstr "Urutkan menurut tanggal dibuat"
 
-#: ../src/jarabe/journal/journaltoolbox.py:539
+#: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
 msgstr "Urutkan menurut ukuran"
 
-#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
 msgstr "Urutkan tilikan"
 
-#: ../src/jarabe/journal/listview.py:323
+#: ../src/jarabe/journal/journaltoolbox.py:661
+msgid "Deselect all"
+msgstr "Lepas semua pilihan"
+
+#: ../src/jarabe/journal/journaltoolbox.py:674
+msgid "Select all"
+msgstr "Pilih semua"
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+#, python-format
+msgid "Do you want to erase %d entry?"
+msgid_plural "Do you want to erase %d entries?"
+msgstr[0] "Apakah Anda ingin menghapus %d entri?"
+
+#: ../src/jarabe/journal/journaltoolbox.py:714
+#: ../src/jarabe/journal/palettes.py:364
+msgid "Copy"
+msgstr "Salin"
+
+#. TRANS: Do not translate %(selected)d and %(total)d.
+#: ../src/jarabe/journal/journaltoolbox.py:759
+#, python-format
+msgid "Selected %(selected)d of %(total)d"
+msgstr "Dipilih %(selected)d dari %(total)d"
+
+#: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "Jurnal Anda kosong"
 
-#: ../src/jarabe/journal/listview.py:326
+#: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
 msgstr "Folder dokumen Anda kosong"
 
-#: ../src/jarabe/journal/listview.py:328
+#: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
 msgstr "Perangkat kosong"
 
-#: ../src/jarabe/journal/listview.py:330
+#: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
 msgstr "Tidak ada masukan yang cocok"
 
-#: ../src/jarabe/journal/misc.py:273
+#: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
 msgstr "Aktivitas Versi %s yang Lebih Lama"
 
-#: ../src/jarabe/journal/misc.py:274
+#: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
 msgstr "Apakah Anda ingin menuruntingkatkan ke versi %s"
@@ -1485,359 +1624,390 @@ msgstr "Apakah Anda ingin menuruntingkatkan ke versi %s"
 msgid "Your Journal is full"
 msgstr "Jurnal Anda penuh"
 
-#: ../src/jarabe/journal/modalalert.py:69
+#: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 "Silahkan hapus beberapa masukan lama pada jurnal agar yang baru mendapatkan "
 "tempat."
 
-#: ../src/jarabe/journal/modalalert.py:83
+#: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
 msgstr "Perlihatkan Jurnal"
 
-#: ../src/jarabe/journal/objectchooser.py:151
+#: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
 msgstr "Pilih sebuah objek"
 
-#: ../src/jarabe/journal/objectchooser.py:156
-#: ../src/jarabe/view/viewsource.py:414
+#: ../src/jarabe/journal/objectchooser.py:175
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr "Pilih sebuah objek untuk dibuka dengan aktivitas %s"
+
+#: ../src/jarabe/journal/objectchooser.py:183
+#: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "Tutup"
 
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Resume with"
 msgstr "Kembali dengan"
 
-#: ../src/jarabe/journal/palettes.py:77
+#: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
 msgstr "Mulai dengan"
 
-#: ../src/jarabe/journal/palettes.py:90 ../src/jarabe/journal/palettes.py:377
+#: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
 msgstr "Tidak ada aktivitas untuk memulai masukan"
 
-#: ../src/jarabe/journal/palettes.py:114
+#: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
 msgstr "Kirimkan ke"
 
-#: ../src/jarabe/journal/palettes.py:123
+#: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
 msgstr "Selengkapnya"
 
-#: ../src/jarabe/journal/palettes.py:180
+#: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
 msgstr "Entri tanpa suatu berkas tak dapat dikirim."
 
-#: ../src/jarabe/journal/palettes.py:265 ../src/jarabe/journal/palettes.py:298
-#: ../src/jarabe/journal/volumestoolbar.py:300
-msgid "Entries without a file cannot be copied."
-msgstr "Entri tanpa suatu berkas tak dapat disalin."
-
-#: ../src/jarabe/journal/palettes.py:287
-msgid "Clipboard"
-msgstr "Papan Klip"
-
-#: ../src/jarabe/journal/palettes.py:342
-msgid "No friends present"
-msgstr "Tidak ada teman-teman"
-
-#: ../src/jarabe/journal/palettes.py:347
-msgid "No valid connection found"
-msgstr "Tidak ada koneksi untuk ditemukan"
-
-#: ../src/jarabe/journal/palettes.py:375
-msgid "No activity to resume entry"
-msgstr "Tidak ada aktivitas untuk mengembalikan masukan"
-
-#: ../src/jarabe/journal/volumestoolbar.py:210
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:211
 msgid "Documents"
 msgstr "Dokumen"
 
-#: ../src/jarabe/journal/volumestoolbar.py:385
-#: ../src/jarabe/view/palettes.py:207 ../src/jarabe/view/palettes.py:269
+#: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
+#: ../src/jarabe/journal/volumestoolbar.py:301
+msgid "Entries without a file cannot be copied."
+msgstr "Entri tanpa suatu berkas tak dapat disalin."
+
+#: ../src/jarabe/journal/palettes.py:369
+#, python-format, 
+msgid "Do you want to copy %d entry?"
+msgid_plural "Do you want to copy %d entries?"
+msgstr[0] "Apakah Anda ingin menyalin %d entri?"
+
+#: ../src/jarabe/journal/palettes.py:394
+msgid "Clipboard"
+msgstr "Papan Klip"
+
+#: ../src/jarabe/journal/palettes.py:454
+msgid "No friends present"
+msgstr "Tidak ada teman-teman"
+
+#: ../src/jarabe/journal/palettes.py:459
+msgid "No valid connection found"
+msgstr "Tidak ada koneksi untuk ditemukan"
+
+#: ../src/jarabe/journal/palettes.py:487
+msgid "No activity to resume entry"
+msgstr "Tidak ada aktivitas untuk mengembalikan masukan"
+
+#: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
+msgid "Stop"
+msgstr "Hentikan"
+
+#: ../src/jarabe/journal/palettes.py:561
+msgid "Continue"
+msgstr "Lanjutkan"
+
+#: ../src/jarabe/journal/palettes.py:598
+#, python-format
+msgid "%(index)d of %(total)d : %(object_title)s"
+msgstr "%(index)d dari %(total)d : %(object_title)s"
+
+#: ../src/jarabe/journal/volumestoolbar.py:386
+#: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Tersedia"
 
-#: ../src/jarabe/model/network.py:211
+#: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
 msgstr "Alasan perubahan keadaan perangkat tak diketahui."
 
-#: ../src/jarabe/model/network.py:213
+#: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
 msgstr "Perubahan keadaan adalah normal."
 
-#: ../src/jarabe/model/network.py:215
+#: ../src/jarabe/model/network.py:218
 msgid "The device is now managed."
 msgstr "Perangkat kini dikelola."
 
-#: ../src/jarabe/model/network.py:217
+#: ../src/jarabe/model/network.py:220
 msgid "The device is no longer managed."
 msgstr "Perangkat tak dikelola lagi."
 
-#: ../src/jarabe/model/network.py:219
+#: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
 msgstr "Perangkat tak dapat dibuat siap untuk konfigurasi."
 
-#: ../src/jarabe/model/network.py:221
+#: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
 "Konfigurasi IP tak dapat dipesan (alamat tak tersedia, waktu habis, dsb)."
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
 msgstr "Konfigurasi IP tak berlaku lagi."
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
 msgstr "Rahasia diperlukan, tapi tak diberikan."
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr "802.1X supplicant terputus dari access point atau server otentikasi."
 
-#: ../src/jarabe/model/network.py:231
+#: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
 msgstr "Konfigurasi dari 802.1X supplicant gagal."
 
-#: ../src/jarabe/model/network.py:233
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant quit or failed unexpectedly."
 msgstr "802.1X supplicant keluar atau gagal tak disangka-sangka."
 
-#: ../src/jarabe/model/network.py:235
+#: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
 msgstr "802.1X supplicant makan waktu terlalu lama untuk mengotentikasi."
 
-#: ../src/jarabe/model/network.py:237
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
 msgstr "Layanan PPP gagal mulai dalam waktu yang disediakan."
 
-#: ../src/jarabe/model/network.py:239
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
 msgstr "Layanan PPP terputus tak diduga."
 
-#: ../src/jarabe/model/network.py:241
+#: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
 msgstr "Layanan PPP keluar atau gagal tak terduga."
 
-#: ../src/jarabe/model/network.py:243
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
 msgstr "Layanan DHCP gagal mulai dalam waktu yang disediakan."
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
 msgstr "Layanan DHCP melaporkan galat yang tak diharapkan."
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
 msgstr "Layanan DHCP keluar atau gagal tak terduga."
 
-#: ../src/jarabe/model/network.py:249
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
 msgstr "Layanan koneksi bersama gagal mulai."
 
-#: ../src/jarabe/model/network.py:251
+#: ../src/jarabe/model/network.py:254
 msgid "The shared connection service quit or failed unexpectedly."
 msgstr "Layanan koneksi bersama keluar atau gagal tak terduga."
 
-#: ../src/jarabe/model/network.py:254
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
 msgstr "Layanan AutoIP gagal mulai."
 
-#: ../src/jarabe/model/network.py:256
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
 msgstr "Layanan AutoIP melaporkan galat yang tak diharapkan."
 
-#: ../src/jarabe/model/network.py:258
+#: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
 msgstr "Layanan AutoIP keluar atau gagal tak terduga."
 
-#: ../src/jarabe/model/network.py:260
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
 msgstr "Pemanggilan telepon gagal karena jalur sibuk."
 
-#: ../src/jarabe/model/network.py:262
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
 msgstr "Pemanggilan telepon gagal karena tidak ada nada sambung."
 
-#: ../src/jarabe/model/network.py:264
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
 msgstr "Pemanggilan telepon gagal karena tidak ada carrier."
 
-#: ../src/jarabe/model/network.py:266
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
 msgstr "Pemanggilan telepon kehabisan waktu."
 
-#: ../src/jarabe/model/network.py:268
+#: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
 msgstr "Pemanggilan telepon gagal."
 
-#: ../src/jarabe/model/network.py:270
+#: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
 msgstr "Inisialisasi modem gagal."
 
-#: ../src/jarabe/model/network.py:272
+#: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
 msgstr "Gagal memilih APN GSM yang dinyatakan"
 
-#: ../src/jarabe/model/network.py:274
+#: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
 msgstr "Tak sedang mencari jaringan."
 
-#: ../src/jarabe/model/network.py:276
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
 msgstr "Registrasi jaringan ditolak."
 
-#: ../src/jarabe/model/network.py:278
+#: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
 msgstr "Registrasi jaringan kehabisan waktu."
 
-#: ../src/jarabe/model/network.py:280
+#: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
 msgstr "Gagal mendaftar ke jaringan GSM yang diminta."
 
-#: ../src/jarabe/model/network.py:282
+#: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
 msgstr "Pemeriksaan PIN gagal."
 
-#: ../src/jarabe/model/network.py:284
+#: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
 msgstr "Firmware yang diperlukan bagi perangkat mungkin hilang."
 
-#: ../src/jarabe/model/network.py:286
+#: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
 msgstr "Perangkat dilepas."
 
-#: ../src/jarabe/model/network.py:288
+#: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
 msgstr "NetworkManager pergi tidur."
 
-#: ../src/jarabe/model/network.py:290
+#: ../src/jarabe/model/network.py:293
 msgid "The device's active connection was removed or disappeared."
 msgstr "Koneksi aktif perangkat dihapus atau menghilang."
 
-#: ../src/jarabe/model/network.py:293
+#: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
 msgstr "Suatu pengguna atau klien meminta pemutusan."
 
-#: ../src/jarabe/model/network.py:295
+#: ../src/jarabe/model/network.py:298
 msgid "The device's carrier/link changed."
 msgstr "Carrier/link perangkat berubah."
 
-#: ../src/jarabe/model/network.py:297
+#: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
 msgstr "Sambungan perangkat yang telah ada diasumsikan."
 
-#: ../src/jarabe/model/network.py:299
+#: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
 msgstr "Supplicant kini tersedia."
 
-#: ../src/jarabe/model/network.py:301
+#: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
 msgstr "Modem tak dapat ditemukan."
 
-#: ../src/jarabe/model/network.py:303
+#: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
 msgstr "Koneksi Bluetooth gagal atau habis waktu."
 
-#: ../src/jarabe/model/network.py:305
+#: ../src/jarabe/model/network.py:308
 msgid "Unused."
 msgstr "Tak dipakai."
 
-#: ../src/jarabe/view/buddymenu.py:67
+#: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
 msgstr "Hapuskan teman"
 
-#: ../src/jarabe/view/buddymenu.py:70
+#: ../src/jarabe/view/buddymenu.py:75
 msgid "Make friend"
 msgstr "Jadikan teman"
 
-#: ../src/jarabe/view/buddymenu.py:87
+#: ../src/jarabe/view/buddymenu.py:91
 msgid "Shutdown"
 msgstr "Matikan"
 
-#: ../src/jarabe/view/buddymenu.py:95
+#: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
 msgstr "Start ulang"
 
-#: ../src/jarabe/view/buddymenu.py:101
+#: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
 msgstr "Keluar"
 
-#: ../src/jarabe/view/buddymenu.py:106
+#: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
 msgstr "Setelan ku"
 
-#: ../src/jarabe/view/buddymenu.py:142
+#: ../src/jarabe/view/buddymenu.py:149
 #, python-format
 msgid "Invite to %s"
 msgstr "Undang ke %s"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:144
 #, python-format
 #, python-format,
 msgid "<b>%s</b> failed to start."
 msgstr "<b>%s</b> gagal mulai."
 
-#: ../src/jarabe/view/palettes.py:50
+#: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
 msgstr "Memulai..."
 
-#: ../src/jarabe/view/palettes.py:60
+#: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
 msgstr "Aktivitas gagal mulai"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:93
+#: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
 msgstr "Lihat Sumbernya"
 
-#: ../src/jarabe/view/palettes.py:104
-msgid "Stop"
-msgstr "Hentikan"
-
-#: ../src/jarabe/view/palettes.py:141
+#: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
 msgstr "Mulai yang baru"
 
-#: ../src/jarabe/view/palettes.py:223
+#: ../src/jarabe/view/palettes.py:241
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Hapus"
 
-#: ../src/jarabe/view/viewsource.py:267
+#: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
 msgstr "Sumber Instansi"
 
-#: ../src/jarabe/view/viewsource.py:316
+#: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
 msgstr "Sumber"
 
-#: ../src/jarabe/view/viewsource.py:378
+#: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
 msgstr "Sumber Paket Aktivitas"
 
-#: ../src/jarabe/view/viewsource.py:397
+#: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
 msgstr "Sumber Toolkit Sugar"
 
-#: ../src/jarabe/view/viewsource.py:404
+#: ../src/jarabe/view/viewsource.py:408
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "Lihat sumber: %s"
 
-#: ../src/jarabe/view/viewsource.py:405
+#: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
 msgstr "Lihat sumber: %r"
 
-#: ../src/jarabe/util/emulator.py:41
-msgid "Sugar in a window"
-msgstr "Sugar dalam suatu jendela"
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr ""
+#~ "Perbarui aktivitas anda untuk memastikan kompatibilitasnya dengan perangkat "
+#~ "lunak baru anda"
+
+#~ msgid "Check now"
+#~ msgstr "Periksa sekarang"
+
+#~ msgid "Sugar in a window"
+#~ msgstr "Sugar dalam suatu jendela"
 
 #~ msgid "Software update"
 #~ msgstr "Pembaruan perangkat lunak"

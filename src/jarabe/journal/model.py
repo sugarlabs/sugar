@@ -25,13 +25,15 @@ import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
 from operator import itemgetter
-import simplejson
+import json
 from gettext import gettext as _
 
-from gi.repository import GObject
 import dbus
 from gi.repository import Gio
 from gi.repository import GConf
+from gi.repository import GLib
+
+from gi.repository import SugarExt
 
 from sugar3 import dispatch
 from sugar3 import mime
@@ -45,7 +47,8 @@ DS_DBUS_PATH = '/org/laptop/sugar/DataStore'
 # Properties the journal cares about.
 PROPERTIES = ['activity', 'activity_id', 'buddies', 'bundle_id',
               'creation_time', 'filesize', 'icon-color', 'keep', 'mime_type',
-              'mountpoint', 'mtime', 'progress', 'timestamp', 'title', 'uid']
+              'mountpoint', 'mtime', 'progress', 'timestamp', 'title', 'uid',
+              'preview']
 
 MIN_PAGES_TO_CACHE = 3
 MAX_PAGES_TO_CACHE = 5
@@ -130,7 +133,7 @@ class BaseResultSet(object):
             remaining_forward_entries = 0
         else:
             remaining_forward_entries = self._offset + len(self._cache) - \
-                                        self._position
+                self._position
 
         if self._position > self._offset + len(self._cache):
             remaining_backwards_entries = 0
@@ -145,7 +148,7 @@ class BaseResultSet(object):
             limit = self._page_size * MIN_PAGES_TO_CACHE
             offset = max(0, self._position - limit / 2)
             logging.debug('remaking cache, offset: %r limit: %r', offset,
-                limit)
+                          limit)
             query = self._query.copy()
             query['limit'] = limit
             query['offset'] = offset
@@ -160,7 +163,7 @@ class BaseResultSet(object):
 
             # Add one page to the end of cache
             logging.debug('appending one more page, offset: %r',
-                last_cached_entry)
+                          last_cached_entry)
             query = self._query.copy()
             query['limit'] = self._page_size
             query['offset'] = last_cached_entry
@@ -184,7 +187,7 @@ class BaseResultSet(object):
             self._offset = max(0, self._offset - limit)
 
             logging.debug('prepending one more page, offset: %r limit: %r',
-                self._offset, limit)
+                          self._offset, limit)
             query = self._query.copy()
             query['limit'] = limit
             query['offset'] = self._offset
@@ -229,6 +232,9 @@ class DatastoreResultSet(BaseResultSet):
 
         return entries, total_count
 
+    def find_ids(self, query):
+        return _get_datastore().find_ids(query)
+
 
 class InplaceResultSet(BaseResultSet):
     """Encapsulates the result of a query on a mount point
@@ -269,7 +275,7 @@ class InplaceResultSet(BaseResultSet):
         self._pending_directories = [self._mount_point]
         self._visited_directories = []
         self._pending_files = []
-        GObject.idle_add(self._scan)
+        GLib.idle_add(self._scan)
 
     def stop(self):
         self._stopped = True
@@ -310,6 +316,18 @@ class InplaceResultSet(BaseResultSet):
         logging.debug('InplaceResultSet.find took %f s.', time.time() - t)
 
         return entries, total_count
+
+    def find_ids(self, query):
+        if self._file_list is None:
+            raise ValueError('Need to call setup() first')
+
+        if self._stopped:
+            raise ValueError('InplaceResultSet already stopped')
+
+        ids = []
+        for file_path, stat, mtime_, size_, metadata in self._file_list:
+            ids.append(file_path)
+        return ids
 
     def _scan(self):
         if self._stopped:
@@ -395,7 +413,7 @@ class InplaceResultSet(BaseResultSet):
 
         if self._mime_types:
             mime_type, uncertain_result_ = \
-                    Gio.content_type_guess(filename=full_path, data=None)
+                Gio.content_type_guess(filename=full_path, data=None)
             if mime_type not in self._mime_types:
                 return
 
@@ -467,7 +485,7 @@ def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
         return None
 
     try:
-        metadata = simplejson.load(open(metadata_path))
+        metadata = json.load(open(metadata_path))
     except (ValueError, EnvironmentError):
         os.unlink(metadata_path)
         if os.path.exists(preview_path):
@@ -638,7 +656,7 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
     """Creates or updates an entry for that id
     """
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
-        update_mtime)
+                  update_mtime)
     if update_mtime:
         metadata['mtime'] = datetime.now().isoformat()
         metadata['timestamp'] = int(time.time())
@@ -646,13 +664,13 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
             object_id = _get_datastore().update(metadata['uid'],
-                                                 dbus.Dictionary(metadata),
-                                                 file_path,
-                                                 transfer_ownership)
+                                                dbus.Dictionary(metadata),
+                                                file_path,
+                                                transfer_ownership)
         else:
             object_id = _get_datastore().create(dbus.Dictionary(metadata),
-                                                 file_path,
-                                                 transfer_ownership)
+                                                file_path,
+                                                transfer_ownership)
     else:
         object_id = _write_entry_on_external_device(metadata, file_path)
 
@@ -720,6 +738,12 @@ def _write_entry_on_external_device(metadata, file_path):
     if not os.path.exists(metadata_dir_path):
         os.mkdir(metadata_dir_path)
 
+    # Set the HIDDEN attrib even when the metadata directory already
+    # exists for backward compatibility.
+    if not SugarExt.fat_set_hidden_attrib(metadata_dir_path):
+        logging.error('Could not set hidden attribute on %s' %
+                      (metadata_dir_path))
+
     preview = None
     if 'preview' in metadata_copy:
         preview = metadata_copy['preview']
@@ -727,7 +751,7 @@ def _write_entry_on_external_device(metadata, file_path):
         metadata_copy.pop('preview', None)
 
     try:
-        metadata_json = simplejson.dumps(metadata_copy)
+        metadata_json = json.dumps(metadata_copy)
     except (UnicodeDecodeError, EnvironmentError):
         logging.error('Could not convert metadata to json.')
     else:

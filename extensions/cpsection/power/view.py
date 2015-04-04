@@ -51,8 +51,8 @@ class Power(SectionView):
         box_pm.set_spacing(style.DEFAULT_SPACING)
 
         box_automatic_pm = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_automatic_pm = Gtk.Label(label=
-            _('Automatic power management (increases battery life)'))
+        label_automatic_pm = Gtk.Label(
+            label=_('Automatic power management (increases battery life)'))
         label_automatic_pm.set_alignment(0, 0.5)
         self._automatic_button = Gtk.CheckButton()
         self._automatic_button.set_alignment(0, 0)
@@ -96,8 +96,8 @@ class Power(SectionView):
 
         self._automatic_pm_valid = True
         self.needs_restart = False
-        self._automatic_pm_change_handler = self._automatic_button.connect( \
-                'toggled', self.__automatic_pm_toggled_cb)
+        self._automatic_pm_change_handler = self._automatic_button.connect(
+            'toggled', self.__automatic_pm_toggled_cb)
 
     def undo(self):
         self._automatic_button.disconnect(self._automatic_pm_change_handler)

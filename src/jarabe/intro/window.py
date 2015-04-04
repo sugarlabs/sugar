@@ -24,6 +24,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import GConf
+from gi.repository import GLib
 
 from sugar3 import env
 from sugar3 import profile
@@ -280,7 +281,7 @@ class IntroWindow(Gtk.Window):
 
     def _done_cb(self, box, name, color):
         self.hide()
-        GObject.idle_add(self._create_profile_cb, name, color)
+        GLib.idle_add(self._create_profile_cb, name, color)
 
     def _create_profile_cb(self, name, color):
         create_profile(name, color)

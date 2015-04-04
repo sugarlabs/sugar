@@ -17,7 +17,7 @@
 from gettext import gettext as _
 import logging
 
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
@@ -27,6 +27,7 @@ from sugar3.graphics import palettegroup
 
 from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
+from jarabe.desktop.homebackgroundbox import HomeBackgroundBox
 from jarabe.desktop.groupbox import GroupBox
 from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.desktop.viewtoolbar import ViewToolbar
@@ -65,7 +66,7 @@ class HomeWindow(Gtk.Window):
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_WHITE.get_gdk_color())
 
-        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK|
+        self.add_events(Gdk.EventMask.VISIBILITY_NOTIFY_MASK |
                         Gdk.EventMask.BUTTON_PRESS_MASK)
         self.connect('visibility-notify-event',
                      self._visibility_notify_event_cb)
@@ -74,7 +75,7 @@ class HomeWindow(Gtk.Window):
         self.connect('key-release-event', self.__key_release_event_cb)
         self.connect('button-press-event', self.__button_pressed_cb)
 
-        self._box = Gtk.VBox()
+        self._box = HomeBackgroundBox()
 
         self._toolbar = ViewToolbar()
         self._box.pack_start(self._toolbar, False, True, 0)
@@ -97,7 +98,7 @@ class HomeWindow(Gtk.Window):
                                      self._transition_completed_cb)
 
         shell.get_model().zoom_level_changed.connect(
-                                     self.__zoom_level_changed_cb)
+            self.__zoom_level_changed_cb)
 
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')
@@ -117,7 +118,8 @@ class HomeWindow(Gtk.Window):
             self._mesh_box.resume()
 
     def _visibility_notify_event_cb(self, window, event):
-        fully_obscured = (event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
+        fully_obscured = (
+            event.get_state() == Gdk.VisibilityState.FULLY_OBSCURED)
         if self._fully_obscured == fully_obscured:
             return
         self._fully_obscured = fully_obscured
@@ -241,7 +243,7 @@ class HomeWindow(Gtk.Window):
 
         old_cursor = self.get_window().get_cursor()
         self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        GObject.idle_add(action_wrapper, old_cursor)
+        GLib.idle_add(action_wrapper, old_cursor)
 
 
 def get_instance():

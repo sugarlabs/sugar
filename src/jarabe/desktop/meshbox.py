@@ -80,13 +80,15 @@ class _ActivityIcon(CanvasIcon):
 
         if joined:
             item = PaletteMenuItem(_('Resume'))
-            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            icon = Icon(
+                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
         elif not private:
             item = PaletteMenuItem(_('Join'))
-            icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
+            icon = Icon(
+                icon_size=Gtk.IconSize.MENU, icon_name='activity-start')
             item.set_image(icon)
             item.connect('activate', self.__palette_item_clicked_cb)
             menu_box.append_item(item)
@@ -149,7 +151,7 @@ class ActivityView(SnowflakeLayout):
 
     def set_filter(self, query):
         text_to_check = self._model.bundle.get_name().lower() + \
-                self._model.bundle.get_bundle_id().lower()
+            self._model.bundle.get_bundle_id().lower()
         self._icon.props.xo_color = self._model.get_color()
         if text_to_check.find(query) == -1:
             self._icon.alpha = _FILTERED_ALPHA
@@ -502,7 +504,7 @@ class MeshBox(ViewContainer):
         # that it is on. so create this as a new network.
         self.wireless_networks[old_hash_value].remove_ap(ap)
         self._remove_net_if_empty(self.wireless_networks[old_hash_value],
-            old_hash_value)
+                                  old_hash_value)
         self._add_ap_to_network(ap)
 
     def add_access_point(self, device, ap_o):

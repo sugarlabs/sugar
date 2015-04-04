@@ -76,8 +76,4 @@ class GestureHandler(object):
 
 def setup(frame):
     global _instance
-
-    if _instance:
-        del _instance
-
     _instance = GestureHandler(frame)

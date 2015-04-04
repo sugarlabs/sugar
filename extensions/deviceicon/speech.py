@@ -19,7 +19,6 @@ from gettext import gettext as _
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GConf
-from gi.repository import GObject
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.tray import TrayIcon
@@ -28,7 +27,6 @@ from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics import style
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import speech

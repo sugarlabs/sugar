@@ -90,7 +90,7 @@ class ClipboardTray(tray.VTray):
         if selection_type == 'text/uri-list':
             uris = selection.get_uris()
             if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list' \
+                raise NotImplementedError('Multiple uris in text/uri-list'
                                           ' still not supported.')
 
             cb_service.add_object_format(object_id,
@@ -173,13 +173,13 @@ class ClipboardTray(tray.VTray):
     def drag_data_received_cb(self, widget, context, x, y, selection,
                               targetType, time):
         logging.debug('ClipboardTray: got data for target %r',
-            selection.get_target())
+                      selection.get_target())
 
         object_id = self._context_map.get_object_id(context)
         try:
             if selection is None:
                 logging.warn('ClipboardTray: empty selection for target %s',
-                    selection.get_target())
+                             selection.get_target())
             else:
                 self._add_selection(object_id, selection)
 

@@ -1,42 +1,17 @@
 #!/bin/sh
 
+sugardatadir=@prefix@/share/sugar/data
+
 if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
 	echo Refusing to run as root.
 	exit 3
 fi
 
-usage() {
-    cat <<EOF
-Usage: sugar [OPTION]..
-
-Start Sugar window manager.
-
-Optional arguments.
-  -d, --display DISPLAY     Display to start sugar
-  -s, --scaling SCALING     Scale Sugar theme
-                            Supported values: 72, 100
-EOF
-    exit 0
-}
-
-while [ $# -ne 0 ] ; do
-    case "$1" in
-      	-d | --display)
-            shift
-            export DISPLAY="$1"
-            ;;
-      	-s | --scaling)
-            shift
-            export SUGAR_SCALING="$1"
-            ;;
-      	-h | --help)
-            usage
-            ;;
-    esac
-    shift
-done
-
 # Set default profile dir
+if test -z "$SUGAR_HOME"; then
+    export SUGAR_HOME=$HOME/.sugar
+fi
+
 if test -z "$SUGAR_PROFILE"; then
     export SUGAR_PROFILE=default
 fi
@@ -45,10 +20,15 @@ if test -z "$SUGAR_SCALING"; then
     export SUGAR_SCALING=72
 fi
 
-export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
+if test -z "$SUGAR_MIME_DEFAULTS"; then
+    export SUGAR_MIME_DEFAULTS="$sugardatadir/mime.defaults"
+fi
 
-# Needed for executing wpa_passphrase
-export PATH="$PATH":/sbin:/usr/sbin
+if test -z "$SUGAR_ACTIVITIES_DEFAULTS"; then
+    export SUGAR_ACTIVITIES_DEFAULTS="$sugardatadir/activities.defaults"
+fi
+
+export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
 
 if ! test -f "$GTK2_RC_FILES"; then
     echo "sugar: ERROR: Gtk theme for scaling $SUGAR_SCALING not available in path $GTK2_RC_FILES"
@@ -66,11 +46,34 @@ export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
 if [ -f ~/.i18n ]; then
         . ~/.i18n
 fi
-if [ -f ~/.sugar/debug ]; then
-        . ~/.sugar/debug
+
+profile_dir=$SUGAR_HOME/$SUGAR_PROFILE
+debug_file_path=$profile_dir/debug
+
+if [ -f $debug_file_path ]; then
+    . $debug_file_path
+else
+mkdir -p $profile_dir
+cat > $debug_file_path << EOF
+# Uncomment the following lines to turn on many sugar debugging
+# log files and features.
+
+#export LM_DEBUG=net
+#export GABBLE_DEBUG=all
+#export GABBLE_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/telepathy-gabble.log
+#export SALUT_DEBUG=all
+#export SALUT_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/telepathy-salut.log
+#export GIBBER_DEBUG=all
+#export WOCKY_DEBUG=all
+#export MC_LOGFILE='$HOME/.sugar/$SUGAR_PROFILE/logs/mission-control.log
+#export MC_DEBUG=all
+#export PRESENCESERVICE_DEBUG=1
+#export SUGAR_LOGGER_LEVEL=debug
+
+# Uncomment the following line to enable core dumps
+
+#ulimit -c unlimited
+EOF
 fi
 
-echo Xcursor.theme: sugar | xrdb -merge
-metacity --no-force-fullscreen -d $DISPLAY &
-
-exec sugar-session
+exec python2 -m jarabe.main

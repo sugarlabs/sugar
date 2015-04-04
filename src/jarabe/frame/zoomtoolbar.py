@@ -34,7 +34,8 @@ class ZoomToolbar(Gtk.Toolbar):
     __gsignals__ = {
         'level-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                           ([]))
-        }
+    }
+
     def __init__(self):
         Gtk.Toolbar.__init__(self)
 
@@ -45,13 +46,22 @@ class ZoomToolbar(Gtk.Toolbar):
         self.set_size_request(4 * style.GRID_CELL_SIZE, -1)
 
         self._mesh_button = self._add_button('zoom-neighborhood',
-                _('Neighborhood'), _('F1'), shell.ShellModel.ZOOM_MESH)
+                                             _('Neighborhood'),
+                                             _('F1'),
+                                             shell.ShellModel.ZOOM_MESH)
         self._groups_button = self._add_button('zoom-groups',
-                _('Group'), _('F2'), shell.ShellModel.ZOOM_GROUP)
+                                               _('Group'),
+                                               _('F2'),
+                                               shell.ShellModel.ZOOM_GROUP)
         self._home_button = self._add_button('zoom-home',
-                _('Home'), _('F3'), shell.ShellModel.ZOOM_HOME)
-        self._activity_button = self._add_button('zoom-activity',
-                _('Activity'), _('F4'), shell.ShellModel.ZOOM_ACTIVITY)
+                                             _('Home'),
+                                             _('F3'),
+                                             shell.ShellModel.ZOOM_HOME)
+        self._activity_button = \
+            self._add_button('zoom-activity',
+                             _('Activity'),
+                             _('F4'),
+                             shell.ShellModel.ZOOM_ACTIVITY)
 
         shell_model = shell.get_model()
         self._set_zoom_level(shell_model.zoom_level)

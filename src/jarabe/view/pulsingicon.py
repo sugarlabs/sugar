@@ -45,7 +45,7 @@ class Pulser(object):
         self._end_scale = end_scale
         self._zoom_steps = zoom_steps
         self._current_scale_step = abs(self._start_scale - self._end_scale) / \
-                self._zoom_steps
+            self._zoom_steps
         self._icon.scale = self._start_scale
 
     def start(self, restart=False):
@@ -55,7 +55,7 @@ class Pulser(object):
             self._pulse_hid = GObject.timeout_add(_INTERVAL, self.__pulse_cb)
         if self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
-                    self._current_scale_step * self._current_zoom_step
+                self._current_scale_step * self._current_zoom_step
 
     def stop(self):
         if self._pulse_hid is not None:
@@ -68,14 +68,14 @@ class Pulser(object):
     def update(self):
         self._icon.xo_color = self._icon.base_color
         self._icon.alpha = _MINIMAL_ALPHA_VALUE + \
-                (1 - _MINIMAL_ALPHA_VALUE) * (math.cos(self._phase) + 1) / 2
+            (1 - _MINIMAL_ALPHA_VALUE) * (math.cos(self._phase) + 1) / 2
 
     def __pulse_cb(self):
         self._phase += _STEP
         if self._current_zoom_step <= self._zoom_steps and \
-            self._start_scale != self._end_scale:
+                self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
-                    self._current_scale_step * self._current_zoom_step
+                self._current_scale_step * self._current_zoom_step
             self._current_zoom_step += 1
         self.update()
         return True
@@ -114,8 +114,8 @@ class PulsingIcon(Icon):
         return self._base_color
 
     def set_zooming(self, start_size=style.SMALL_ICON_SIZE,
-                               end_size=style.XLARGE_ICON_SIZE,
-                               zoom_steps=10):
+                    end_size=style.XLARGE_ICON_SIZE,
+                    zoom_steps=10):
         if start_size > end_size:
             start_scale = 1.0
             end_scale = float(end_size) / start_size

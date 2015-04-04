@@ -41,8 +41,8 @@ class NotificationIcon(Gtk.EventBox):
         self.props.visible_window = False
 
         self._icon.props.pulse_color = \
-                XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                   style.COLOR_TRANSPARENT.get_svg()))
+            XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
+                               style.COLOR_TRANSPARENT.get_svg()))
         self._icon.props.pulsing = True
         self.add(self._icon)
         self._icon.show()

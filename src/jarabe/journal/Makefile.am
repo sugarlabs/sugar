@@ -3,6 +3,8 @@ sugar_PYTHON =				\
 	__init__.py			\
 	detailview.py			\
 	expandedentry.py		\
+	iconview.py			\
+	iconmodel.py			\
 	journalactivity.py		\
 	journalentrybundle.py		\
 	journaltoolbox.py		\

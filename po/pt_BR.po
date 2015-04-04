@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: olpc-sugar-pt_BR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-06 00:33-0400\n"
-"PO-Revision-Date: 2012-03-22 21:15+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"POT-Creation-Date: 2013-07-31 00:33-0400\n"
+"PO-Revision-Date: 2013-09-19 00:37+0200\n"
+"Last-Translator: Alexander Dupuy <alex.dupuy@mac.com>\n"
 "Language-Team: Brazilian Portuguese <fedora-docs-br@redhat.com>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "Erro nos alteradores de cor selecionados."
 msgid "Error in specified colors."
 msgstr "Erro nas cores especificadas."
 
-#: ../extensions/cpsection/aboutme/view.py:235
+#: ../extensions/cpsection/aboutme/view.py:212
 msgid "Click to change your color:"
 msgstr "Clique para mudar a cor:"
 
@@ -61,43 +61,44 @@ msgstr "Clique para mudar a cor:"
 msgid "About my Computer"
 msgstr "Sobre meu Computador"
 
-#: ../extensions/cpsection/aboutcomputer/model.py:43
+#: ../extensions/cpsection/aboutcomputer/model.py:42
 msgid "Not available"
 msgstr "Não disponível"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:59
+#: ../extensions/cpsection/aboutcomputer/view.py:60
 msgid "Identity"
 msgstr "Identidade"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:68
+#: ../extensions/cpsection/aboutcomputer/view.py:69
 msgid "Serial Number:"
 msgstr "Número de Série:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:90
+#: ../extensions/cpsection/aboutcomputer/view.py:91
 msgid "Software"
 msgstr "Software"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:99
+#: ../extensions/cpsection/aboutcomputer/view.py:100
 msgid "Build:"
 msgstr "Construção:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:114
+#: ../extensions/cpsection/aboutcomputer/view.py:115
 msgid "Sugar:"
 msgstr "Sugar:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:129
+#: ../extensions/cpsection/aboutcomputer/view.py:130
 msgid "Firmware:"
 msgstr "Firmware:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:144
+#: ../extensions/cpsection/aboutcomputer/view.py:145
 msgid "Wireless Firmware:"
-msgstr "Firmware sem Fio:"
+msgstr "Firmware da rede sem fio:"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:167
+#: ../extensions/cpsection/aboutcomputer/view.py:168
 msgid "Copyright and License"
 msgstr "Direito Autoral e Licença"
 
-#: ../extensions/cpsection/aboutcomputer/view.py:185
+#. TRANS: The word "Sugar" should not be translated.
+#: ../extensions/cpsection/aboutcomputer/view.py:187
 msgid ""
 "Sugar is the graphical user interface that you are looking at. Sugar is free "
 "software, covered by the GNU General Public License, and you are welcome to "
@@ -109,9 +110,21 @@ msgstr ""
 "convidado(a) para modificá-lo e/ou distribuir copias dele, sob certas "
 "condições descritas na Licença."
 
-#: ../extensions/cpsection/aboutcomputer/view.py:197
+#: ../extensions/cpsection/aboutcomputer/view.py:199
 msgid "Full license:"
-msgstr "Licença Completa:"
+msgstr "Licença completa:"
+
+#: ../extensions/cpsection/background/__init__.py:21
+msgid "Background"
+msgstr "Plano de fundo"
+
+#: ../extensions/cpsection/background/view.py:39
+msgid "Select a background:"
+msgstr "Selecionar plano de fundo:"
+
+#: ../extensions/cpsection/background/view.py:46
+msgid "Clear background"
+msgstr "Limpar plano de fundo"
 
 #: ../extensions/cpsection/datetime/__init__.py:21
 msgid "Date & Time"
@@ -121,7 +134,7 @@ msgstr "Data e Hora"
 msgid "Error timezone does not exist."
 msgstr "Erro: fuso horário não existe."
 
-#: ../extensions/cpsection/datetime/view.py:70 ../data/sugar.schemas.in.h:54
+#: ../extensions/cpsection/datetime/view.py:66 ../data/sugar.schemas.in.h:61
 msgid "Timezone"
 msgstr "Fuso horário"
 
@@ -155,27 +168,27 @@ msgstr "Atraso de Ativação"
 msgid "Corner"
 msgstr "Canto"
 
-#: ../extensions/cpsection/frame/view.py:113
+#: ../extensions/cpsection/frame/view.py:114
 msgid "Edge"
 msgstr "Borda"
 
 #: ../extensions/cpsection/keyboard/__init__.py:21
-#: ../extensions/cpsection/keyboard/view.py:32
+#: ../extensions/cpsection/keyboard/view.py:38
 msgid "Keyboard"
 msgstr "Teclado"
 
 # in Brasil we have keyboard: US-International, abnt, abnt-2 (abnt-associação brasileira de normas técnicas)
-#: ../extensions/cpsection/keyboard/view.py:190
+#: ../extensions/cpsection/keyboard/view.py:240
 msgid "Keyboard Model"
 msgstr "Modelo do Teclado"
 
-#: ../extensions/cpsection/keyboard/view.py:250
+#: ../extensions/cpsection/keyboard/view.py:301
 msgid "Key(s) to change layout"
 msgstr "Teclas(s) para trocar a configuração"
 
-#: ../extensions/cpsection/keyboard/view.py:319
+#: ../extensions/cpsection/keyboard/view.py:369
 msgid "Keyboard Layout(s)"
-msgstr "Disposições de Teclado"
+msgstr "Disposição(ões) de Teclado"
 
 #: ../extensions/cpsection/language/__init__.py:21
 #: ../extensions/cpsection/language/view.py:33
@@ -208,7 +221,7 @@ msgstr ""
 msgid "Modem Configuration"
 msgstr "Configuração do Modem"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:67
+#: ../extensions/cpsection/modemconfiguration/view.py:94
 msgid ""
 "You will need to provide the following information to set up a mobile "
 "broadband connection to a cellular (3G) network."
@@ -216,30 +229,52 @@ msgstr ""
 "Você precisará fornecer as seguintes informações para configurar uma conexão "
 "de banda larga móvel a uma rede (3G) celular."
 
-#: ../extensions/cpsection/modemconfiguration/view.py:77
+#: ../extensions/cpsection/modemconfiguration/view.py:117
+msgid "Country:"
+msgstr "Pais:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:118
+msgid "Provider:"
+msgstr "Fornecedor:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:119
+msgid "Plan:"
+msgstr "Plano:"
+
+#: ../extensions/cpsection/modemconfiguration/view.py:160
 msgid "Username:"
 msgstr "Nome de usuário:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:83
+#: ../extensions/cpsection/modemconfiguration/view.py:167
 msgid "Password:"
 msgstr "Senha:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:89
+#: ../extensions/cpsection/modemconfiguration/view.py:174
 msgid "Number:"
 msgstr "Número:"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:95
+#: ../extensions/cpsection/modemconfiguration/view.py:181
 msgid "Access Point Name (APN):"
-msgstr "Ponto de acesso:"
+msgstr "Ponto de acesso (APN):"
 
-#: ../extensions/cpsection/modemconfiguration/view.py:101
+#: ../extensions/cpsection/modemconfiguration/view.py:188
 msgid "Personal Identity Number (PIN):"
-msgstr "Numero de identificaçao personal:"
+msgstr "Número de Identificação Pessoal (PIN):"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:161
+#, python-format
+msgid "Plan #%s"
+msgstr "Plano #%s"
+
+#: ../extensions/cpsection/modemconfiguration/model.py:291
+#, python-format
+msgid "Provider %s"
+msgstr "Fornecedor %s"
 
 #: ../extensions/cpsection/network/__init__.py:21
-#: ../extensions/cpsection/network/view.py:29
+#: ../extensions/cpsection/network/view.py:30
 msgid "Network"
-msgstr "rede"
+msgstr "Rede"
 
 #: ../extensions/cpsection/network/model.py:73
 msgid "State is unknown."
@@ -247,40 +282,40 @@ msgstr "Estado desconhecido."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "Erro no argumento de rádio especificado, use on/off."
+msgstr "Erro no argumento de rádio especificado, utilize on/off."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr "Erro no argumento de rádio especificado, use ligado / desligado."
+msgstr "Erro no argumento de rádio especificado, utilize 0/1."
 
-#: ../extensions/cpsection/network/view.py:61
+#: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
-msgstr "rede sem fio"
+msgstr "Rede sem fio"
 
-#: ../extensions/cpsection/network/view.py:69
+#: ../extensions/cpsection/network/view.py:77
 msgid "Turn off the wireless radio to save battery life"
 msgstr ""
 "Desligue a placa sem fio para economizar energia e aumentar a durabilidade "
 "da bateria"
 
-#: ../extensions/cpsection/network/view.py:82
+#: ../extensions/cpsection/network/view.py:90
 msgid "Radio"
 msgstr "Radio"
 
-#: ../extensions/cpsection/network/view.py:98
+#: ../extensions/cpsection/network/view.py:106
 msgid "Discard network history if you have trouble connecting to the network"
 msgstr ""
 "Desprezar o histórico da rede se você tem problemas para conectar a rede"
 
-#: ../extensions/cpsection/network/view.py:107
+#: ../extensions/cpsection/network/view.py:115
 msgid "Discard network history"
 msgstr "Desprezar o histórico da rede"
 
-#: ../extensions/cpsection/network/view.py:122
+#: ../extensions/cpsection/network/view.py:131
 msgid "Collaboration"
 msgstr "Colaboração"
 
-#: ../extensions/cpsection/network/view.py:130
+#: ../extensions/cpsection/network/view.py:139
 msgid ""
 "The server is the equivalent of what room you are in; people on the same "
 "server will be able to see each other, even when they aren't on the same "
@@ -290,7 +325,7 @@ msgstr ""
 "servidor são capazes de ver umas às outras, mesmo quando elas não estão na "
 "mesma rede."
 
-#: ../extensions/cpsection/network/view.py:140
+#: ../extensions/cpsection/network/view.py:149
 msgid "Server:"
 msgstr "Servidor:"
 
@@ -300,21 +335,21 @@ msgstr "Energia"
 
 #: ../extensions/cpsection/power/model.py:90
 msgid "Error in automatic pm argument, use on/off."
-msgstr "Erro no argumento automático pm, use ligado / desligado."
+msgstr "Erro no argumento de gestão de energia automática, utilize on/off."
 
 #: ../extensions/cpsection/power/view.py:45
 msgid "Power management"
 msgstr "Gerenciamento de energia"
 
-#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:2
+#: ../extensions/cpsection/power/view.py:55 ../data/sugar.schemas.in.h:5
 msgid "Automatic power management (increases battery life)"
 msgstr "Gerenciamento de energia automático (aumenta a duração da bateria)"
 
 #: ../extensions/cpsection/updater/__init__.py:21
-msgid "Software update"
+msgid "Software Update"
 msgstr "Atualização de software"
 
-#: ../extensions/cpsection/updater/view.py:63
+#: ../extensions/cpsection/updater/view.py:65
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
@@ -322,119 +357,149 @@ msgstr ""
 "Atualização de software corrige erros, elimina vulnerabilidades de "
 "segurança, e fornece novas funcionalidades."
 
-#: ../extensions/cpsection/updater/view.py:125
+#: ../extensions/cpsection/updater/view.py:79
+msgid "Update in progress..."
+msgstr "Atualização em curso..."
+
+#: ../extensions/cpsection/updater/view.py:106
+msgid "Checking for updates..."
+msgstr "Verificando atualizações..."
+
+#: ../extensions/cpsection/updater/view.py:108
+msgid "Installing updates..."
+msgstr "Instalando atualizações..."
+
+#: ../extensions/cpsection/updater/view.py:137
 #, python-format
 msgid "Checking %s..."
 msgstr "Verificando %s..."
 
-#: ../extensions/cpsection/updater/view.py:127
+#: ../extensions/cpsection/updater/view.py:139
+msgid "Looking for updates..."
+msgstr "Procurando por atualizações..."
+
+#: ../extensions/cpsection/updater/view.py:141
 #, python-format
 msgid "Downloading %s..."
 msgstr "Transferindo %s..."
 
-#: ../extensions/cpsection/updater/view.py:129
+#: ../extensions/cpsection/updater/view.py:143
 #, python-format
 msgid "Updating %s..."
 msgstr "Atualizando %s..."
 
-#: ../extensions/cpsection/updater/view.py:139
+#: ../extensions/cpsection/updater/view.py:153
 msgid "Your software is up-to-date"
 msgstr "Seu software está atualizado"
 
-#: ../extensions/cpsection/updater/view.py:141
+#: ../extensions/cpsection/updater/view.py:155
 #, python-format
 msgid "You can install %s update"
 msgid_plural "You can install %s updates"
 msgstr[0] "Você pode instalar %s atualização"
 msgstr[1] "Você pode instalar %s atualizações"
 
-#: ../extensions/cpsection/updater/view.py:159
-msgid "Checking for updates..."
-msgstr "Verificando atualizações..."
-
-#: ../extensions/cpsection/updater/view.py:164
-msgid "Installing updates..."
-msgstr "Instalando atualizações..."
-
-#: ../extensions/cpsection/updater/view.py:173
+#: ../extensions/cpsection/updater/view.py:184
 #, python-format
 msgid "%s update was installed"
 msgid_plural "%s updates were installed"
-msgstr[0] "A atualização %s foi instalada"
-msgstr[1] "As atualizações %s foram instaladas"
+msgstr[0] "%s atualização foi instalada"
+msgstr[1] "%s atualizações foram instaladas"
 
-#: ../extensions/cpsection/updater/view.py:255
+#: ../extensions/cpsection/updater/view.py:266
 msgid "Install selected"
 msgstr "Instalar selecionados"
 
-#: ../extensions/cpsection/updater/view.py:276
+#: ../extensions/cpsection/updater/view.py:284
 #, python-format
 msgid "Download size: %s"
 msgstr "Tamanho da transferência: %s"
 
-#: ../extensions/cpsection/updater/view.py:364
+#: ../extensions/cpsection/updater/view.py:373
 #, python-format
 msgid "From version %(current)s to %(new)s (Size: %(size)s)"
 msgstr "Da versão %(current)s para %(new)s (Tamanho: %(size)s)"
 
+#: ../extensions/cpsection/updater/view.py:380
+#, python-format
+msgid "Version %(version)s (Size: %(size)s)"
+msgstr "Versão %(version)s (Tamanho: %(size)s)"
+
 #. TRANS: download size is 0
-#: ../extensions/cpsection/updater/view.py:382
+#: ../extensions/cpsection/updater/view.py:397
 msgid "None"
 msgstr "Nulo"
 
 #. TRANS: download size of very small updates
-#: ../extensions/cpsection/updater/view.py:385
+#: ../extensions/cpsection/updater/view.py:400
 msgid "1 KB"
 msgstr "1 KB"
 
 #. TRANS: download size of small updates, e.g. '250 KB'
-#: ../extensions/cpsection/updater/view.py:388
+#: ../extensions/cpsection/updater/view.py:403
 #, python-format
 msgid "%.0f KB"
 msgstr "%.0f KB"
 
 #. TRANS: download size of updates, e.g. '2.3 MB'
-#: ../extensions/cpsection/updater/view.py:391
+#: ../extensions/cpsection/updater/view.py:406
 #, python-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
+
+#: ../extensions/cpsection/webaccount/__init__.py:24
+msgid "Configure your Web Services"
+msgstr "Configure os seus serviços de web"
+
+#: ../extensions/cpsection/webaccount/view.py:42
+#, python-format
+msgid ""
+"No web services are installed.\n"
+"Please visit %s for more details."
+msgstr ""
+"Serviços de web não instalados.\n"
+"Por favor visite %s para mais detalhes."
 
 #: ../extensions/deviceicon/battery.py:71
 msgid "My Battery"
 msgstr "Minha bateria"
 
-#: ../extensions/deviceicon/battery.py:147
+#: ../extensions/deviceicon/battery.py:153
 msgid "Removed"
 msgstr "Removido"
 
-#: ../extensions/deviceicon/battery.py:150
+#: ../extensions/deviceicon/battery.py:156
 msgid "Charging"
 msgstr "Carregando"
 
-#: ../extensions/deviceicon/battery.py:153
+#: ../extensions/deviceicon/battery.py:159
 msgid "Very little power remaining"
 msgstr "Resta um pouquinho de energia"
 
 #. TRANS: do not translate %(hour)d:%(min).2d  it is a variable,
 #. only translate the word "remaining"
-#: ../extensions/deviceicon/battery.py:160
+#: ../extensions/deviceicon/battery.py:166
 #, python-format
 msgid "%(hour)d:%(min).2d remaining"
-msgstr "resta %(hour)d:%(min).2d"
+msgstr "%(hour)d:%(min).2d restantes"
 
-#: ../extensions/deviceicon/battery.py:163
+#: ../extensions/deviceicon/battery.py:169
 msgid "Charged"
 msgstr "Carregada"
 
-#: ../extensions/deviceicon/network.py:49
+#: ../extensions/deviceicon/frame.py:56
+msgid "Show my keyboard"
+msgstr "Mostrar o meu teclado"
+
+#: ../extensions/deviceicon/network.py:50
 #, python-format
 msgid "IP address: %s"
 msgstr "Endereço IP: %s"
 
-#: ../extensions/deviceicon/network.py:93
-#: ../extensions/deviceicon/network.py:292
-#: ../src/jarabe/desktop/networkviews.py:129
-#: ../src/jarabe/desktop/networkviews.py:492
+#: ../extensions/deviceicon/network.py:82
+#: ../extensions/deviceicon/network.py:298
+#: ../src/jarabe/desktop/networkviews.py:135
+#: ../src/jarabe/desktop/networkviews.py:509
 msgid "Disconnect"
 msgstr "Desconectar"
 
@@ -444,198 +509,208 @@ msgstr "Desconectar"
 # NM doesn't have a "disconnect"<br />
 # method for a device either (for various reasons) so this doesn't<br />
 # have a good mapping
-#: ../extensions/deviceicon/network.py:101
-#: ../extensions/deviceicon/network.py:284
-#: ../src/jarabe/desktop/networkviews.py:238
-#: ../src/jarabe/desktop/networkviews.py:529
-#: ../src/jarabe/desktop/networkviews.py:663
+#: ../extensions/deviceicon/network.py:107
+#: ../extensions/deviceicon/network.py:290
+#: ../src/jarabe/desktop/networkviews.py:251
+#: ../src/jarabe/desktop/networkviews.py:551
+#: ../src/jarabe/desktop/networkviews.py:693
 msgid "Connecting..."
 msgstr "Conectando..."
 
-#: ../extensions/deviceicon/network.py:106
-#: ../extensions/deviceicon/network.py:174
-#: ../src/jarabe/desktop/networkviews.py:245
-#: ../src/jarabe/desktop/networkviews.py:535
-#: ../src/jarabe/desktop/networkviews.py:669
+#: ../extensions/deviceicon/network.py:112
+#: ../extensions/deviceicon/network.py:180
+#: ../src/jarabe/desktop/networkviews.py:258
+#: ../src/jarabe/desktop/networkviews.py:557
+#: ../src/jarabe/desktop/networkviews.py:699
 msgid "Connected"
 msgstr "Conectado"
 
-#: ../extensions/deviceicon/network.py:119
+#: ../extensions/deviceicon/network.py:125
 msgid "No wireless connection"
-msgstr ""
+msgstr "Sem conexão de rede sem fio"
 
-#: ../extensions/deviceicon/network.py:133
+#: ../extensions/deviceicon/network.py:139
 msgid "Channel"
 msgstr "Canal"
 
-#: ../extensions/deviceicon/network.py:148
+#: ../extensions/deviceicon/network.py:154
 msgid "Wired Network"
 msgstr "Rede por fio"
 
-#: ../extensions/deviceicon/network.py:177
+#: ../extensions/deviceicon/network.py:183
 msgid "Speed"
 msgstr "Velocidade"
 
-#: ../extensions/deviceicon/network.py:202
+#: ../extensions/deviceicon/network.py:208
 msgid "Wireless modem"
-msgstr "Modem wireless"
+msgstr "Modem sem fio"
 
-#: ../extensions/deviceicon/network.py:270
+#: ../extensions/deviceicon/network.py:276
 msgid "Please wait..."
 msgstr "Por favor espere..."
 
-#: ../extensions/deviceicon/network.py:275
-#: ../src/jarabe/desktop/networkviews.py:125
-#: ../src/jarabe/desktop/networkviews.py:488
-#: ../src/jarabe/desktop/networkviews.py:619
+#: ../extensions/deviceicon/network.py:281
+#: ../src/jarabe/desktop/networkviews.py:129
+#: ../src/jarabe/desktop/networkviews.py:503
+#: ../src/jarabe/desktop/networkviews.py:644
 msgid "Connect"
 msgstr "Conectar"
 
-#: ../extensions/deviceicon/network.py:276
+#: ../extensions/deviceicon/network.py:282
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: ../extensions/deviceicon/network.py:283
-#: ../src/jarabe/controlpanel/toolbar.py:119
-#: ../src/jarabe/desktop/homebox.py:71
-#: ../src/jarabe/frame/activitiestray.py:603
-#: ../src/jarabe/frame/activitiestray.py:705
-#: ../src/jarabe/frame/activitiestray.py:733
+#: ../extensions/deviceicon/network.py:289
+#: ../src/jarabe/controlpanel/toolbar.py:121
+#: ../src/jarabe/desktop/keydialog.py:101
+#: ../src/jarabe/frame/activitiestray.py:625
+#: ../src/jarabe/frame/activitiestray.py:746
+#: ../src/jarabe/frame/activitiestray.py:778
+#: ../src/jarabe/journal/expandedentry.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:480
+#: ../src/jarabe/journal/palettes.py:159
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../extensions/deviceicon/network.py:322
+#: ../extensions/deviceicon/network.py:328
 msgid "Try connection again"
-msgstr ""
+msgstr "Tenta ligar novamente"
 
-#: ../extensions/deviceicon/network.py:325
+#: ../extensions/deviceicon/network.py:331
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Erro: %s"
 
-#: ../extensions/deviceicon/network.py:329
+#: ../extensions/deviceicon/network.py:335
 #, python-format
 msgid "Suggestion: %s"
-msgstr ""
-
-#: ../extensions/deviceicon/network.py:338
-#, python-format
-msgid "Connected for %s"
-msgstr ""
+msgstr "Sugestão: %s"
 
 #: ../extensions/deviceicon/network.py:344
-#: ../extensions/deviceicon/network.py:345
+#, python-format
+msgid "Connected for %s"
+msgstr "Ligado por %s"
+
+#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:351
 #, python-format
 msgid "%d KB"
 msgstr "%d KB"
 
-#: ../extensions/deviceicon/network.py:350
+#: ../extensions/deviceicon/network.py:356
 msgid "Check your PIN/PUK configuration."
-msgstr ""
-
-#: ../extensions/deviceicon/network.py:353
-msgid "Check your Access Point Name (APN) configuration"
-msgstr ""
-
-#: ../extensions/deviceicon/network.py:357
-msgid "Check the Number configuration."
-msgstr ""
+msgstr "Verifica a configuração do teu PIN/PUK."
 
 #: ../extensions/deviceicon/network.py:359
-msgid "Check your configuration."
-msgstr ""
+msgid "Check your Access Point Name (APN) configuration"
+msgstr "Verifica a configuração do teu Nome do Ponto de Acesso (APN)"
 
-#: ../extensions/deviceicon/network.py:597
+#: ../extensions/deviceicon/network.py:363
+msgid "Check the Number configuration."
+msgstr "Verifica a configuração do Número."
+
+#: ../extensions/deviceicon/network.py:365
+msgid "Check your configuration."
+msgstr "Verifica a tua configuração."
+
+#: ../extensions/deviceicon/network.py:621
 msgid "Mesh Network"
 msgstr "Rede Mesh"
 
-#: ../extensions/deviceicon/network.py:641
+#: ../extensions/deviceicon/network.py:668
 #, python-format
 msgid "Mesh Network %s"
 msgstr "Rede Mesh %s"
 
-#: ../extensions/deviceicon/network.py:757
+#: ../extensions/deviceicon/network.py:788
 msgid "No GSM connection available."
-msgstr ""
+msgstr "Nenhuma ligação GSM disponível."
 
-#: ../extensions/deviceicon/network.py:758
+#: ../extensions/deviceicon/network.py:789
 msgid "Create a connection in the control panel."
-msgstr ""
+msgstr "Cria uma ligação no painel de controlo."
 
 #: ../extensions/deviceicon/speech.py:52
 msgid "Speech"
-msgstr ""
+msgstr "Fala"
 
-#: ../extensions/deviceicon/speech.py:77
-#: ../extensions/deviceicon/speech.py:138
-#: ../extensions/deviceicon/speech.py:143
+#: ../extensions/deviceicon/speech.py:76
+#: ../extensions/deviceicon/speech.py:150
+#: ../extensions/deviceicon/speech.py:155
 msgid "Say selected text"
-msgstr ""
+msgstr "Dizer texto selecionado"
 
 #: ../extensions/deviceicon/speech.py:83
 msgid "Stop playback"
-msgstr ""
+msgstr "Parar reprodução"
 
-#: ../extensions/deviceicon/speech.py:97
+#: ../extensions/deviceicon/speech.py:92
 msgid "Pitch"
-msgstr ""
+msgstr "Afinação"
 
-#: ../extensions/deviceicon/speech.py:106
+#: ../extensions/deviceicon/speech.py:107
 msgid "Rate"
-msgstr ""
+msgstr "Velocidade"
 
-#: ../extensions/deviceicon/speech.py:133
+#: ../extensions/deviceicon/speech.py:145
 msgid "Pause playback"
-msgstr ""
+msgstr "Pausar reprodução"
 
 #: ../extensions/deviceicon/speaker.py:61
 msgid "My Speakers"
 msgstr "Meus Alto-falantes"
 
-#: ../extensions/deviceicon/speaker.py:138
+#: ../extensions/deviceicon/speaker.py:136
 msgid "Unmute"
 msgstr "Não mudo"
 
-#: ../extensions/deviceicon/speaker.py:141
+#: ../extensions/deviceicon/speaker.py:139
 msgid "Mute"
 msgstr "Mudo"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "finger"
-msgstr ""
+msgstr "dedo"
 
 #: ../extensions/deviceicon/touchpad.py:38
 msgid "stylus"
-msgstr ""
+msgstr "caneta"
 
 #: ../extensions/deviceicon/touchpad.py:64
 msgid "My touchpad"
-msgstr ""
+msgstr "O meu touchpad"
 
-#: ../extensions/globalkey/screenshot.py:59
+#: ../extensions/deviceicon/volume.py:72 ../src/jarabe/view/palettes.py:184
+msgid "Show contents"
+msgstr "Mostrar conteúdos"
+
+#: ../extensions/globalkey/screenshot.py:61
 msgid "Mesh"
 msgstr "Mesh"
 
-#: ../extensions/globalkey/screenshot.py:61
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../extensions/globalkey/screenshot.py:63
+#: ../src/jarabe/desktop/homewindow.py:221
+#: ../src/jarabe/frame/zoomtoolbar.py:53
 msgid "Group"
 msgstr "Grupo"
 
-#: ../extensions/globalkey/screenshot.py:63
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../extensions/globalkey/screenshot.py:65
+#: ../src/jarabe/desktop/homewindow.py:214
+#: ../src/jarabe/desktop/viewtoolbar.py:73
+#: ../src/jarabe/frame/zoomtoolbar.py:57
 msgid "Home"
 msgstr "Casa"
 
-#: ../extensions/globalkey/screenshot.py:69
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../extensions/globalkey/screenshot.py:71
+#: ../src/jarabe/frame/zoomtoolbar.py:62
 msgid "Activity"
 msgstr "Atividade"
 
-#: ../extensions/globalkey/screenshot.py:72
+#: ../extensions/globalkey/screenshot.py:74
 msgid "Screenshot"
 msgstr "Foto da tela"
 
-#: ../extensions/globalkey/screenshot.py:74
+#: ../extensions/globalkey/screenshot.py:76
 #, python-format
 msgid "Screenshot of \"%s\""
 msgstr "Tela capturada de \"%s\""
@@ -648,127 +723,161 @@ msgstr ""
 "\"desativado\" para pedir apelido na inicialização; \"sistema\" para reusar nome "
 "completo da conta UNIX."
 
+#: ../data/sugar.schemas.in.h:2
+msgid ""
+"A unix timestamp (seconds since epoch) of the last successful activity "
+"update."
+msgstr ""
+"Horário UNIX (segundos desde o epoch) da última atualização da atividade bem "
+"sucedida."
+
 #: ../data/sugar.schemas.in.h:3
+msgid ""
+"Activity update backend module, followed by a period, followed by the class "
+"name."
+msgstr ""
+"Módulo backend de atualização de atividades, seguido por um período, seguido "
+"pelo nome da classe."
+
+#: ../data/sugar.schemas.in.h:4
+msgid "Activity update backend."
+msgstr "Backend de atualização de atividades."
+
+#: ../data/sugar.schemas.in.h:6
+msgid "Automatic update frequency."
+msgstr "Freqüência de atualização automática."
+
+#: ../data/sugar.schemas.in.h:7
 msgid "Backup URL"
 msgstr "URL de backup"
 
-#: ../data/sugar.schemas.in.h:4
+#: ../data/sugar.schemas.in.h:8
 msgid "Bundle IDs of protected activities"
-msgstr ""
+msgstr "Bundle IDs de atividades protegidas"
 
-#: ../data/sugar.schemas.in.h:5
-#, fuzzy
+#: ../data/sugar.schemas.in.h:9
 msgid ""
 "Color for the XO icon that is used throughout the desktop. The string is "
 "composed of the stroke color and fill color, format is that of rgb colors. "
 "Example: #AC32FF,#9A5200"
 msgstr ""
-"Cor para o ícone XO que é usado na área de trabalho. A string é composta "
-"pela cor do contorno e preenchimento, no formato de cores rgb. Exemplo: "
+"A cor do ícone XO que é usado na área de trabalho. A string é composta pela "
+"cor de contorno e de preenchimento, no formato de cores RGB. Exemplo: "
 "#AC32FF,#9A5200"
 
-#: ../data/sugar.schemas.in.h:6
+#: ../data/sugar.schemas.in.h:10
 msgid "Corner Delay"
 msgstr "Atraso do Canto"
 
-#: ../data/sugar.schemas.in.h:7
+#: ../data/sugar.schemas.in.h:11
 msgid "Default font face"
 msgstr "Fonte padrão"
 
-#: ../data/sugar.schemas.in.h:8
+#: ../data/sugar.schemas.in.h:12
 msgid "Default font size"
 msgstr "Tamanho padrão da fonte"
 
-#: ../data/sugar.schemas.in.h:9
+#: ../data/sugar.schemas.in.h:13
 msgid "Default nick"
 msgstr "Apelido padrão"
 
-#: ../data/sugar.schemas.in.h:10
+#: ../data/sugar.schemas.in.h:14
 msgid "Delay for the activation of the frame using the corners."
 msgstr "Atraso para ativação da moldura usando os cantos."
 
-#: ../data/sugar.schemas.in.h:11
+#: ../data/sugar.schemas.in.h:15
 msgid "Delay for the activation of the frame using the edges."
 msgstr "Atraso para a ativação da moldura usando bordas."
 
-#: ../data/sugar.schemas.in.h:12
+#: ../data/sugar.schemas.in.h:16
 msgid "Edge Delay"
 msgstr "Atraso da Borda"
 
-#: ../data/sugar.schemas.in.h:13
-#, fuzzy
+#: ../data/sugar.schemas.in.h:17
 msgid ""
 "Extreme power management (disables wireless radio, increases battery life)"
 msgstr ""
-"Gerenciamento de energia extremo (desliga o wireless, aumentando a duração "
-"da bateria)"
+"Gestão extrema de energia (desliga o rádio de rede sem fio, aumenta a "
+"duração da bateria)"
 
-#: ../data/sugar.schemas.in.h:14
+#: ../data/sugar.schemas.in.h:18
 msgid "Favorites Layout"
 msgstr "Disposição dos Favoritos"
 
-#: ../data/sugar.schemas.in.h:15
+#: ../data/sugar.schemas.in.h:19
 msgid "Favorites resume mode"
 msgstr "Modo de resumo dos favoritos"
 
-#: ../data/sugar.schemas.in.h:16
+#: ../data/sugar.schemas.in.h:20
 msgid "Font face that is used throughout the desktop."
 msgstr "Fonte que é utilizada por toda área de trabalho."
 
-#: ../data/sugar.schemas.in.h:17
+#: ../data/sugar.schemas.in.h:21
 msgid "Font size that is used throughout the desktop."
 msgstr "Tamanho da fonte que é utilizada por toda área de trabalho."
 
-#: ../data/sugar.schemas.in.h:18
-msgid "GSM network APN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:19
-msgid "GSM network PIN (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:20
-msgid "GSM network PUK (DEPRECATED/UNUSED)"
-msgstr ""
-
-#: ../data/sugar.schemas.in.h:21
-msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
-msgstr ""
-
 #: ../data/sugar.schemas.in.h:22
-msgid "GSM network number (DEPRECATED/UNUSED)"
+msgid ""
+"Frequency of automatic activity updates, measured in days. 0 means disabled."
 msgstr ""
+"Freqüência de atualização automática de atividades, medido em dias. 0 "
+"significa desativado."
 
 #: ../data/sugar.schemas.in.h:23
-msgid "GSM network password (DEPRECATED/UNUSED)"
-msgstr ""
+msgid "GSM network APN (DEPRECATED/UNUSED)"
+msgstr "APN da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
 #: ../data/sugar.schemas.in.h:24
-msgid "GSM network password configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgid "GSM network PIN (DEPRECATED/UNUSED)"
+msgstr "PIN da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
 #: ../data/sugar.schemas.in.h:25
+msgid "GSM network PUK (DEPRECATED/UNUSED)"
+msgstr "PUK da rede GSM (OBSOLETO/NÃO UTILIZADO)"
+
+#: ../data/sugar.schemas.in.h:26
+msgid "GSM network access point name configuration (DEPRECATED/UNUSED)"
+msgstr ""
+"Configuração do nome do ponto de acesso da rede GSM (OBSOLETO/NÃO UTILIZADO)"
+
+#: ../data/sugar.schemas.in.h:27
+msgid "GSM network number (DEPRECATED/UNUSED)"
+msgstr "Número da rede GSM (OBSOLETO/NÃO UTILIZADO)"
+
+#: ../data/sugar.schemas.in.h:28
+msgid "GSM network password (DEPRECATED/UNUSED)"
+msgstr "Palavra-Passe da rede GSM (OBSOLETO/NÃO UTILIZADO)"
+
+#: ../data/sugar.schemas.in.h:29
+msgid "GSM network password configuration (DEPRECATED/UNUSED)"
+msgstr "Configuração da palavra-passe da rede GSM (OBSOLETO/NÃO UTILIZADO)"
+
+#: ../data/sugar.schemas.in.h:30
 msgid ""
 "GSM network personal identification number configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Configuração do número de identificação pessoal da rede GSM (OBSOLETO/NÃO "
+"UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:26
+#: ../data/sugar.schemas.in.h:31
 msgid "GSM network personal unlock key configuration (DEPRECATED/UNUSED)"
 msgstr ""
+"Configuração da chave pessoal de desbloqueamento da rede GSM (OBSOLETO/NÃO "
+"UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:27
+#: ../data/sugar.schemas.in.h:32
 msgid "GSM network telephone number configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Configuração do número de telefone da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:28
+#: ../data/sugar.schemas.in.h:33
 msgid "GSM network username (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Nome de utilizador da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:29
+#: ../data/sugar.schemas.in.h:34
 msgid "GSM network username configuration (DEPRECATED/UNUSED)"
-msgstr ""
+msgstr "Configuração do nome de utilizador da rede GSM (OBSOLETO/NÃO UTILIZADO)"
 
-#: ../data/sugar.schemas.in.h:30
+#: ../data/sugar.schemas.in.h:35
 msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
@@ -776,143 +885,162 @@ msgstr ""
 "Se VERDADEIRO, o Sugar nos tornará buscáveis por outros usuários do servidor "
 "Jabber."
 
-#: ../data/sugar.schemas.in.h:31
+#: ../data/sugar.schemas.in.h:36
 msgid "If TRUE, Sugar will show a \"Log out\" option."
-msgstr "Se TRUE (verdadeiro), o Sugar mostrará uma opção \"Deslogar\"."
+msgstr "Se VERDADEIRO, o Sugar mostrará uma opção \"Deslogar\"."
 
-#: ../data/sugar.schemas.in.h:32
-#, fuzzy
+#: ../data/sugar.schemas.in.h:37
 msgid "If TRUE, Sugar will show a \"Restart\" option."
-msgstr "Se TRUE (verdadeiro), o Sugar mostrará uma opção \"Deslogar\"."
+msgstr "Se VERDADEIRO, o Sugar mostrará uma opção \"Reiniciar\"."
 
-#: ../data/sugar.schemas.in.h:33
+#: ../data/sugar.schemas.in.h:38
 msgid ""
 "If TRUE, Sugar will show default Ad-hoc networks for channel 1,6 and 11. If "
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
+"Se VERDADEIRO, o Sugar mostrará as redes Ad-hoc por omissão para os canais "
+"1, 6 e 11. Se o Sugar não ver nenhuma rede \"conhecida\" quando iniciar, liga-"
+"se automaticamente a uma rede Ad-hoc."
 
-#: ../data/sugar.schemas.in.h:34
+#: ../data/sugar.schemas.in.h:39
 msgid "Jabber Server"
 msgstr "Servidor Jabber"
 
-#: ../data/sugar.schemas.in.h:35
+#: ../data/sugar.schemas.in.h:40
 msgid "Keyboard layouts"
 msgstr "Disposições de teclado"
 
-#: ../data/sugar.schemas.in.h:36
+#: ../data/sugar.schemas.in.h:41
 msgid "Keyboard model"
 msgstr "Modelo do teclado"
 
-#: ../data/sugar.schemas.in.h:37
+#: ../data/sugar.schemas.in.h:42
 msgid "Keyboard options"
 msgstr "Opções do teclado"
 
-#: ../data/sugar.schemas.in.h:38
+#: ../data/sugar.schemas.in.h:43
 msgid "Layout of the favorites view."
 msgstr "Disposição da visão de favoritos."
 
-#: ../data/sugar.schemas.in.h:39
+#: ../data/sugar.schemas.in.h:44
 msgid ""
 "List of keyboard layouts. Each entry should be in the form layout(variant)"
 msgstr ""
 "Lista de disposições de teclado. Cada entrada deve estar no esquema (forma "
 "variante)"
 
-#: ../data/sugar.schemas.in.h:40
+#: ../data/sugar.schemas.in.h:45
 msgid "List of keyboard options."
 msgstr "Lista de opções do teclado."
 
-#: ../data/sugar.schemas.in.h:41
+#: ../data/sugar.schemas.in.h:46
+msgid "Microformat update URL."
+msgstr "URL de atualização de microformato."
+
+#: ../data/sugar.schemas.in.h:47
 msgid "Pitch value for the speech sugar service"
-msgstr ""
+msgstr "Valor de altura para o serviço de fala do sugar"
 
-#: ../data/sugar.schemas.in.h:42
+#: ../data/sugar.schemas.in.h:48
 msgid "Pitch value used by the speech service in Sugar"
-msgstr ""
+msgstr "Valor de altura utilizado pelo serviço de fala no Sugar"
 
-#: ../data/sugar.schemas.in.h:43
+#: ../data/sugar.schemas.in.h:49
 msgid "Power Automatic"
 msgstr "Gerenciamento de Energia Automático"
 
-#: ../data/sugar.schemas.in.h:44
+#: ../data/sugar.schemas.in.h:50
 msgid "Power Extreme"
 msgstr "Gerenciamento de Energia Extremo"
 
-#: ../data/sugar.schemas.in.h:45
+#: ../data/sugar.schemas.in.h:51
 msgid "Publish to Gadget"
 msgstr "Publicar para Dispositivos"
 
-#: ../data/sugar.schemas.in.h:46
+#: ../data/sugar.schemas.in.h:52
 msgid "Rate value for the speech sugar service"
-msgstr ""
+msgstr "Valor de velocidade para o serviço de fala do Sugar"
 
-#: ../data/sugar.schemas.in.h:47
+#: ../data/sugar.schemas.in.h:53
 msgid "Rate value used by the speech service in Sugar"
-msgstr ""
+msgstr "Valor de velocidade utilizado pelo serviço de fala no Sugar"
 
-#: ../data/sugar.schemas.in.h:48
+#: ../data/sugar.schemas.in.h:54
 msgid "Setting for muting the sound device."
 msgstr "Configurar ou silenciar o dispositivo de som."
 
-#: ../data/sugar.schemas.in.h:49
+#: ../data/sugar.schemas.in.h:55
 msgid "Show Log out"
 msgstr "Motrar Deslogar"
 
-#: ../data/sugar.schemas.in.h:50
+#: ../data/sugar.schemas.in.h:56
 msgid "Show Restart"
-msgstr ""
+msgstr "Mostrar Reiniciar"
 
-#: ../data/sugar.schemas.in.h:51
+#: ../data/sugar.schemas.in.h:57
 msgid "Show Sugar Ad-hoc networks"
-msgstr ""
+msgstr "Mostrar redes ad-hoc no Sugar"
 
-#: ../data/sugar.schemas.in.h:52
+#: ../data/sugar.schemas.in.h:58
 msgid "Sound Muted"
 msgstr "Som mudo"
 
-#: ../data/sugar.schemas.in.h:53
+#: ../data/sugar.schemas.in.h:59
 msgid "The keyboard model to be used"
 msgstr "Modelo de teclado a ser usado"
 
-#: ../data/sugar.schemas.in.h:55
+#: ../data/sugar.schemas.in.h:60
+msgid "Timestamp of last activity update."
+msgstr "Horário da última atualização da atividade."
+
+#: ../data/sugar.schemas.in.h:62
 msgid "Timezone setting for the system."
 msgstr "Configuração de fuso-horário do sistema."
 
-#: ../data/sugar.schemas.in.h:56
+#: ../data/sugar.schemas.in.h:63
 msgid "URL of the jabber server to use."
 msgstr "URL do servidor Jabber para usar."
 
-#: ../data/sugar.schemas.in.h:57
+#: ../data/sugar.schemas.in.h:64
+msgid ""
+"URL used by the microformat update backend for activity update information."
+msgstr ""
+"URL usado pelo servidor de atualização microformat para informações de "
+"atualização de atividade."
+
+#: ../data/sugar.schemas.in.h:65
 msgid "URL where the backup is saved to."
 msgstr "URL onde o backup é salvo."
 
-#: ../data/sugar.schemas.in.h:58
+#: ../data/sugar.schemas.in.h:66
 msgid "User Color"
 msgstr "Cor do Usuário"
 
-#: ../data/sugar.schemas.in.h:59
+#: ../data/sugar.schemas.in.h:67
 msgid "User Name"
 msgstr "Nome do Usuário"
 
-#: ../data/sugar.schemas.in.h:60
+#: ../data/sugar.schemas.in.h:68
 msgid "User name that is used throughout the desktop."
 msgstr "Nome do usuário que é usado por toda área de trabalho."
 
-#: ../data/sugar.schemas.in.h:61
+#: ../data/sugar.schemas.in.h:69
 msgid ""
 "Users will not be allowed to erase these activities through the list view."
 msgstr ""
+"Não será permitido aos utilizadores eliminarem estas atividades na vista de "
+"lista."
 
-#: ../data/sugar.schemas.in.h:62
+#: ../data/sugar.schemas.in.h:70
 msgid "Volume Level"
 msgstr "Nível do volume"
 
-#: ../data/sugar.schemas.in.h:63
+#: ../data/sugar.schemas.in.h:71
 msgid "Volume level for the sound device."
 msgstr "Nível do volume para o dispositivo de som."
 
-#: ../data/sugar.schemas.in.h:64
+#: ../data/sugar.schemas.in.h:72
 msgid ""
 "When in resume mode, clicking on a favorite icon will cause the last entry "
 "for that activity to be resumed."
@@ -959,58 +1087,79 @@ msgstr ""
 "    Opções: \n"
 "    -h           mostrar esta mensagem de ajuda e sair \n"
 "    -l           lista todas as opções disponíveis \n"
-"    -h       chave mostrar informações sobre essa chave \n"
-"    -g       chave pegar o valor atual da chave \n"
-"    -s       chave definir o valor atual da chave \n"
-"    -c       chave limpar o valor atual da chave \n"
+"    -h chave     mostrar informações sobre essa chave \n"
+"    -g chave     pegar o valor atual da chave \n"
+"    -s chave     definir o valor atual da chave \n"
+"    -c chave     limpar o valor atual da chave \n"
 "    "
 
 #: ../src/jarabe/controlpanel/cmd.py:52
 msgid "To apply your changes you have to restart Sugar.\n"
 msgstr "Para terminar suas mudanças você deve reiniciar o Sugar.\n"
 
-#: ../src/jarabe/controlpanel/gui.py:297 ../src/jarabe/journal/palettes.py:161
-#: ../src/jarabe/journal/palettes.py:246 ../src/jarabe/journal/palettes.py:279
-#: ../src/jarabe/journal/volumestoolbar.py:307
+#: ../src/jarabe/controlpanel/gui.py:323 ../src/jarabe/journal/palettes.py:187
+#: ../src/jarabe/journal/palettes.py:350 ../src/jarabe/journal/palettes.py:410
+#: ../src/jarabe/journal/volumestoolbar.py:302
 msgid "Warning"
 msgstr "Aviso"
 
-#: ../src/jarabe/controlpanel/gui.py:298
+#: ../src/jarabe/controlpanel/gui.py:324
 #: ../src/jarabe/controlpanel/sectionview.py:41
 msgid "Changes require restart"
 msgstr "As mudanças exigem um reinício"
 
-#: ../src/jarabe/controlpanel/gui.py:301
+#: ../src/jarabe/controlpanel/gui.py:328
 msgid "Cancel changes"
 msgstr "Cancele as mudanças"
 
-#: ../src/jarabe/controlpanel/gui.py:306 ../src/jarabe/desktop/homebox.py:73
+#: ../src/jarabe/controlpanel/gui.py:333
 msgid "Later"
 msgstr "Posterior"
 
-#: ../src/jarabe/controlpanel/gui.py:310
+#: ../src/jarabe/controlpanel/gui.py:337
 msgid "Restart now"
 msgstr "Reiniciar agora"
 
-#: ../src/jarabe/controlpanel/toolbar.py:63 ../src/jarabe/intro/window.py:208
+#: ../src/jarabe/controlpanel/toolbar.py:56
+#: ../src/jarabe/desktop/viewtoolbar.py:129
+#: ../src/jarabe/journal/journaltoolbox.py:89
+#, python-format
+msgid "Search in %s"
+msgstr "Procurar em %s"
+
+#: ../src/jarabe/controlpanel/toolbar.py:56
+msgid "Settings"
+msgstr "Configurações"
+
+#: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:211
 msgid "Done"
 msgstr "Pronto"
 
-#: ../src/jarabe/controlpanel/toolbar.py:125
-#: ../src/jarabe/desktop/favoritesview.py:347
+#: ../src/jarabe/controlpanel/toolbar.py:127
+#: ../src/jarabe/desktop/favoritesview.py:374
+#: ../src/jarabe/desktop/keydialog.py:105
 msgid "Ok"
 msgstr "Ok"
 
-#: ../src/jarabe/desktop/activitieslist.py:231
+#: ../src/jarabe/desktop/activitieslist.py:282
 #, python-format
 msgid "Version %s"
 msgstr "Versão %s"
 
-#: ../src/jarabe/desktop/activitieslist.py:357
+#: ../src/jarabe/desktop/activitieslist.py:385
+#: ../src/jarabe/journal/listview.py:475 ../src/jarabe/journal/iconview.py:299
+msgid "Clear search"
+msgstr "Limpar busca"
+
+#: ../src/jarabe/desktop/activitieslist.py:469
+msgid "No matching activities"
+msgstr "Sem atividades correspondentes"
+
+#: ../src/jarabe/desktop/activitieslist.py:505
 msgid "Confirm erase"
 msgstr "Confirmar a remoção"
 
-#: ../src/jarabe/desktop/activitieslist.py:359
+#: ../src/jarabe/desktop/activitieslist.py:507
 #, python-format
 msgid "Confirm erase: Do you want to permanently erase %s?"
 msgstr "Confirmar remoção: Você deseja remover %s permanentemente?"
@@ -1019,808 +1168,874 @@ msgstr "Confirmar remoção: Você deseja remover %s permanentemente?"
 # TODO: Implement stopping downloads
 # self._stop_item.connect('activate', self._stop_item_activate_cb)
 # self.append_menu_item(self._stop_item)
-#: ../src/jarabe/desktop/activitieslist.py:363
-#: ../src/jarabe/frame/clipboardmenu.py:67
-#: ../src/jarabe/view/viewsource.py:280
+#: ../src/jarabe/desktop/activitieslist.py:511
+#: ../src/jarabe/frame/clipboardmenu.py:65
+#: ../src/jarabe/view/viewsource.py:288
 msgid "Keep"
 msgstr "Manter"
 
-#: ../src/jarabe/desktop/activitieslist.py:366
-#: ../src/jarabe/desktop/activitieslist.py:420
-#: ../src/jarabe/journal/journaltoolbox.py:413
-#: ../src/jarabe/journal/palettes.py:126
+#: ../src/jarabe/desktop/activitieslist.py:514
+#: ../src/jarabe/desktop/activitieslist.py:578
+#: ../src/jarabe/journal/expandedentry.py:153
+#: ../src/jarabe/journal/journaltoolbox.py:443
+#: ../src/jarabe/journal/journaltoolbox.py:475
+#: ../src/jarabe/journal/journaltoolbox.py:689
+#: ../src/jarabe/journal/journaltoolbox.py:695
+#: ../src/jarabe/journal/palettes.py:132 ../src/jarabe/journal/palettes.py:154
 msgid "Erase"
 msgstr "Apagar"
 
-#: ../src/jarabe/desktop/activitieslist.py:436
+#: ../src/jarabe/desktop/activitieslist.py:594
 msgid "Remove favorite"
 msgstr "Remover favorito"
 
-#: ../src/jarabe/desktop/activitieslist.py:440
+#: ../src/jarabe/desktop/activitieslist.py:598
 msgid "Make favorite"
 msgstr "Tornar favorito"
 
 #. TRANS: label for the freeform layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:127
+#: ../src/jarabe/desktop/favoriteslayout.py:199
 msgid "Freeform"
 msgstr "Forma livre"
 
 #. TRANS: label for the ring layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:215
+#: ../src/jarabe/desktop/favoriteslayout.py:295
 msgid "Ring"
 msgstr "Anel"
 
 #. TRANS: label for the spiral layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:402
+#: ../src/jarabe/desktop/favoriteslayout.py:459
 msgid "Spiral"
 msgstr "Espiral"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:472
+#: ../src/jarabe/desktop/favoriteslayout.py:527
 msgid "Box"
 msgstr "Caixa"
 
 #. TRANS: label for the box layout in the favorites view
-#: ../src/jarabe/desktop/favoriteslayout.py:515
+#: ../src/jarabe/desktop/favoriteslayout.py:570
 msgid "Triangle"
 msgstr "Triângulo"
 
-#: ../src/jarabe/desktop/favoritesview.py:338
+#: ../src/jarabe/desktop/favoritesview.py:365
 msgid "Registration Failed"
 msgstr "Cadastro falhou"
 
-#: ../src/jarabe/desktop/favoritesview.py:341
+#: ../src/jarabe/desktop/favoritesview.py:368
 msgid "Registration Successful"
 msgstr "Cadastrado com sucesso"
 
-#: ../src/jarabe/desktop/favoritesview.py:342
+#: ../src/jarabe/desktop/favoritesview.py:369
 msgid "You are now registered with your school server."
 msgstr "Você está cadastrado no servidor de sua escola agora."
 
-#: ../src/jarabe/desktop/favoritesview.py:644
+#: ../src/jarabe/desktop/favoritesview.py:653
 msgid "Register"
 msgstr "Cadastrar"
 
-#: ../src/jarabe/desktop/favoritesview.py:646
-#: ../src/jarabe/desktop/favoritesview.py:663
+#: ../src/jarabe/desktop/favoritesview.py:656
+#: ../src/jarabe/desktop/favoritesview.py:672
 msgid "Register again"
-msgstr ""
+msgstr "Cadastrar novamente"
 
-#: ../src/jarabe/desktop/homebox.py:66
-msgid "Software Update"
-msgstr "Atualização de software"
+#: ../src/jarabe/desktop/homewindow.py:228
+#: ../src/jarabe/frame/zoomtoolbar.py:49
+msgid "Neighborhood"
+msgstr "Vizinhança"
 
-#: ../src/jarabe/desktop/homebox.py:67
-msgid "Update your activities to ensure compatibility with your new software"
-msgstr ""
-"Atualize suas atividades para assegurar compatibilidade com seu novo "
-"software"
-
-#: ../src/jarabe/desktop/homebox.py:76
-msgid "Check now"
-msgstr "Verificar agora"
-
-#: ../src/jarabe/desktop/homebox.py:197
-msgid "List view"
-msgstr "Visão de lista"
-
-#: ../src/jarabe/desktop/homebox.py:198
-msgid "<Ctrl>2"
-msgstr "<Ctrl>2"
-
-#: ../src/jarabe/desktop/homebox.py:253
-msgid "Favorites view"
-msgstr "Visão de favoritos"
-
-#: ../src/jarabe/desktop/homebox.py:254
-msgid "<Ctrl>1"
-msgstr "<Ctrl>1"
-
-#: ../src/jarabe/desktop/keydialog.py:91
+#: ../src/jarabe/desktop/keydialog.py:94
 #, python-format
 msgid ""
 "A wireless encryption key is required for\n"
 " the wireless network '%s'."
 msgstr ""
+"É necessária uma chave de encriptação para\n"
+"a rede sem fio '%s'."
 
-#: ../src/jarabe/desktop/keydialog.py:140
+#: ../src/jarabe/desktop/keydialog.py:150
 msgid "Key Type:"
 msgstr "Tipo de chave:"
 
-#: ../src/jarabe/desktop/keydialog.py:160
+#: ../src/jarabe/desktop/keydialog.py:170
 msgid "Authentication Type:"
 msgstr "Tipo de Autenticação:"
 
-#: ../src/jarabe/desktop/keydialog.py:223
+#: ../src/jarabe/desktop/keydialog.py:233
 msgid "WPA & WPA2 Personal"
 msgstr "WPA & WPA2 Pessoal"
 
-#: ../src/jarabe/desktop/keydialog.py:232
+#: ../src/jarabe/desktop/keydialog.py:242
 msgid "Wireless Security:"
 msgstr "Segurança do Wireless:"
 
 # TRANS: Action label for resuming an activity.
 #. TRANS: Action label for resuming an activity.
 #: ../src/jarabe/desktop/meshbox.py:82
-#: ../src/jarabe/journal/journaltoolbox.py:509
-#: ../src/jarabe/journal/palettes.py:71 ../src/jarabe/view/palettes.py:84
+#: ../src/jarabe/journal/journaltoolbox.py:548
+#: ../src/jarabe/journal/palettes.py:77 ../src/jarabe/view/palettes.py:96
 msgid "Resume"
 msgstr "Continuar"
 
-#: ../src/jarabe/desktop/meshbox.py:87
-#: ../src/jarabe/frame/activitiestray.py:182
+#: ../src/jarabe/desktop/meshbox.py:89
+#: ../src/jarabe/frame/activitiestray.py:190
 msgid "Join"
 msgstr "Juntar-se"
 
-#: ../src/jarabe/desktop/networkviews.py:484
+#: ../src/jarabe/desktop/networkviews.py:497
 #, python-format
 msgid "Ad-hoc Network %d"
-msgstr ""
+msgstr "Rede Ad-hoc %d"
 
-#: ../src/jarabe/desktop/networkviews.py:616
+#: ../src/jarabe/desktop/networkviews.py:639
 #, python-format
 msgid "Mesh Network %d"
 msgstr "Rede Mesh %d"
 
-#: ../src/jarabe/desktop/schoolserver.py:143
+#: ../src/jarabe/desktop/schoolserver.py:144
 msgid "Cannot connect to the server."
 msgstr "Não consegui conectar com o servidor."
 
-#: ../src/jarabe/desktop/schoolserver.py:150
+#: ../src/jarabe/desktop/schoolserver.py:151
 msgid "The server could not complete the request."
 msgstr "O servidor não completou a requisição."
 
-#: ../src/jarabe/frame/activitiestray.py:187
-#: ../src/jarabe/frame/activitiestray.py:575
+#: ../src/jarabe/desktop/viewtoolbar.py:95
+msgid "List view"
+msgstr "Visão de lista"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:97
+#: ../src/jarabe/desktop/viewtoolbar.py:195
+#: ../src/jarabe/desktop/viewtoolbar.py:209
+#, python-format
+#, python-format,
+msgid "<Ctrl>%d"
+msgstr "<Ctrl>%d"
+
+#: ../src/jarabe/desktop/viewtoolbar.py:208
+#, python-format
+#, python-format,
+msgid "Favorites view %d"
+msgstr "Visão de favoritos %d"
+
+#: ../src/jarabe/frame/activitiestray.py:195
+#: ../src/jarabe/frame/activitiestray.py:593
 msgid "Decline"
 msgstr "Recusar"
 
-#: ../src/jarabe/frame/activitiestray.py:523
+#: ../src/jarabe/frame/activitiestray.py:534
 #, python-format
 msgid "%dB"
 msgstr "%dB"
 
-#: ../src/jarabe/frame/activitiestray.py:525
+#: ../src/jarabe/frame/activitiestray.py:536
 #, python-format
 msgid "%dKB"
 msgstr "%dKB"
 
-#: ../src/jarabe/frame/activitiestray.py:527
+#: ../src/jarabe/frame/activitiestray.py:538
 #, python-format
 msgid "%dMB"
 msgstr "%dMB"
 
 #. TRANS: file transfer, bytes transferred, e.g. 128 of 1024
-#: ../src/jarabe/frame/activitiestray.py:545
+#: ../src/jarabe/frame/activitiestray.py:556
 #, python-format
 msgid "%s of %s"
 msgstr "%s de %s"
 
-#: ../src/jarabe/frame/activitiestray.py:559
+#: ../src/jarabe/frame/activitiestray.py:570
 #, python-format
 #, python-format,
 msgid "Transfer from %s"
 msgstr "Transferência de %s"
 
-#: ../src/jarabe/frame/activitiestray.py:570
+#: ../src/jarabe/frame/activitiestray.py:585
 msgid "Accept"
 msgstr "Aceitar"
 
-#: ../src/jarabe/frame/activitiestray.py:627
-#: ../src/jarabe/frame/activitiestray.py:640
-#: ../src/jarabe/frame/activitiestray.py:758
+#: ../src/jarabe/frame/activitiestray.py:653
+#: ../src/jarabe/frame/activitiestray.py:666
+#: ../src/jarabe/frame/activitiestray.py:807
 msgid "Dismiss"
 msgstr "Dispensar"
 
-#: ../src/jarabe/frame/activitiestray.py:644
+#: ../src/jarabe/frame/activitiestray.py:680
 msgid "The other participant canceled the file transfer"
-msgstr ""
+msgstr "O outro participante cancelou a transferência de ficheiro"
 
-#: ../src/jarabe/frame/activitiestray.py:692
+#: ../src/jarabe/frame/activitiestray.py:730
 #, python-format
 #, python-format,
 msgid "Transfer to %s"
 msgstr "Transferir para %s"
 
-#: ../src/jarabe/frame/clipboardmenu.py:56
-#, fuzzy
+#: ../src/jarabe/frame/clipboardmenu.py:54
 msgctxt "Clipboard"
 msgid "Remove"
 msgstr "Remover"
 
-#: ../src/jarabe/frame/clipboardmenu.py:62
-#: ../src/jarabe/frame/clipboardmenu.py:85
+#: ../src/jarabe/frame/clipboardmenu.py:60
+#: ../src/jarabe/frame/clipboardmenu.py:83
 msgid "Open"
 msgstr "Abrir"
 
-#: ../src/jarabe/frame/clipboardmenu.py:90
+#: ../src/jarabe/frame/clipboardmenu.py:88
 msgid "Open with"
 msgstr "Abrir com"
 
 #: ../src/jarabe/frame/clipboardobject.py:50
 #, python-format
 msgid "%s clipping"
-msgstr "Recorte de %s"
+msgstr "recorte de %s"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:43
-msgid "Neighborhood"
-msgstr "Vizinhança"
-
-#: ../src/jarabe/frame/zoomtoolbar.py:43
+#: ../src/jarabe/frame/zoomtoolbar.py:50
 msgid "F1"
 msgstr "F1"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:45
+#: ../src/jarabe/frame/zoomtoolbar.py:54
 msgid "F2"
 msgstr "F2"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:47
+#: ../src/jarabe/frame/zoomtoolbar.py:58
 msgid "F3"
 msgstr "F3"
 
-#: ../src/jarabe/frame/zoomtoolbar.py:49
+#: ../src/jarabe/frame/zoomtoolbar.py:63
 msgid "F4"
 msgstr "F4"
 
-#: ../src/jarabe/intro/window.py:103
+#: ../src/jarabe/intro/window.py:106
 msgid "Name:"
 msgstr "Nome:"
 
-#: ../src/jarabe/intro/window.py:133
+#: ../src/jarabe/intro/window.py:136
 msgid "Click to change color:"
 msgstr "Clique para mudar a cor:"
 
-#: ../src/jarabe/intro/window.py:197 ../src/jarabe/journal/detailview.py:105
+#: ../src/jarabe/intro/window.py:200 ../src/jarabe/journal/detailview.py:95
 msgid "Back"
 msgstr "Voltar"
 
-#: ../src/jarabe/intro/window.py:211
+#: ../src/jarabe/intro/window.py:214
 msgid "Next"
 msgstr "Próximo"
 
-#: ../src/jarabe/journal/expandedentry.py:156
-#: ../src/jarabe/journal/listmodel.py:144 ../src/jarabe/journal/model.py:700
-#: ../src/jarabe/journal/palettes.py:64
-#: ../src/jarabe/journal/volumestoolbar.py:130
+#: ../src/jarabe/journal/expandedentry.py:155
+#: ../src/jarabe/journal/journaltoolbox.py:477
+#: ../src/jarabe/journal/palettes.py:156
+#, python-format
+msgid "Do you want to permanently erase \"%s\"?"
+msgstr "Você deseja remover \"%s\" permanentemente?"
+
+#: ../src/jarabe/journal/expandedentry.py:296
+#: ../src/jarabe/journal/listmodel.py:159 ../src/jarabe/journal/model.py:721
+#: ../src/jarabe/journal/palettes.py:70 ../src/jarabe/journal/palettes.py:597
+#: ../src/jarabe/journal/volumestoolbar.py:131
+#: ../src/jarabe/journal/iconmodel.py:110
 msgid "Untitled"
 msgstr "Sem título"
 
-#: ../src/jarabe/journal/expandedentry.py:245
+#: ../src/jarabe/journal/expandedentry.py:367
 msgid "No preview"
 msgstr "Sem previsão"
 
-#: ../src/jarabe/journal/expandedentry.py:264
+#: ../src/jarabe/journal/expandedentry.py:382
 #, python-format
 msgid "Kind: %s"
 msgstr "Tipo: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:264
-#: ../src/jarabe/journal/listmodel.py:150
-#: ../src/jarabe/journal/listmodel.py:158
+#: ../src/jarabe/journal/expandedentry.py:382
+#: ../src/jarabe/journal/listmodel.py:165
+#: ../src/jarabe/journal/listmodel.py:173
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#: ../src/jarabe/journal/expandedentry.py:265
+#: ../src/jarabe/journal/expandedentry.py:383
 #, python-format
 msgid "Date: %s"
 msgstr "Data: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:266
+#: ../src/jarabe/journal/expandedentry.py:384
 #, python-format
 msgid "Size: %s"
 msgstr "Tamanho: %s"
 
-#: ../src/jarabe/journal/expandedentry.py:294
-#: ../src/jarabe/journal/misc.py:108
+#: ../src/jarabe/journal/expandedentry.py:411
+#: ../src/jarabe/journal/misc.py:109
 msgid "No date"
 msgstr "Sem data"
 
-#: ../src/jarabe/journal/expandedentry.py:301
+#: ../src/jarabe/journal/expandedentry.py:420
 msgid "Participants:"
 msgstr "Participantes:"
 
-#: ../src/jarabe/journal/expandedentry.py:323
+#: ../src/jarabe/journal/expandedentry.py:458
 msgid "Description:"
 msgstr "Descrição:"
 
-#: ../src/jarabe/journal/expandedentry.py:348
+#: ../src/jarabe/journal/expandedentry.py:464
 msgid "Tags:"
 msgstr "Etiquetas:"
 
-#: ../src/jarabe/journal/journalactivity.py:115
-#: ../src/jarabe/journal/journaltoolbox.py:468
-#: ../src/jarabe/journal/palettes.py:198
-#: ../src/jarabe/journal/volumestoolbar.py:368
+#: ../src/jarabe/journal/expandedentry.py:469
+msgid "Comments:"
+msgstr "Comentários:"
+
+#: ../src/jarabe/journal/journalactivity.py:140
+#: ../src/jarabe/journal/journaltoolbox.py:89
+#: ../src/jarabe/journal/palettes.py:248
+#: ../src/jarabe/journal/volumestoolbar.py:363
 msgid "Journal"
 msgstr "Diário"
 
-#: ../src/jarabe/journal/journaltoolbox.py:72
-msgid "Search"
-msgstr "Buscar"
+#: ../src/jarabe/journal/journaltoolbox.py:98
+msgid "Favorite entries"
+msgstr "Entradas favoritas"
 
-#: ../src/jarabe/journal/journaltoolbox.py:139
+#: ../src/jarabe/journal/journaltoolbox.py:134
 msgid "Anytime"
 msgstr "Em qualquer momento"
 
-#: ../src/jarabe/journal/journaltoolbox.py:141
+#: ../src/jarabe/journal/journaltoolbox.py:136
 msgid "Today"
 msgstr "Hoje"
 
-#: ../src/jarabe/journal/journaltoolbox.py:143
+#: ../src/jarabe/journal/journaltoolbox.py:138
 msgid "Since yesterday"
 msgstr "Desde ontem"
 
 # TRANS: Filter entries modified during the last 7 days.
 #. TRANS: Filter entries modified during the last 7 days.
-#: ../src/jarabe/journal/journaltoolbox.py:145
+#: ../src/jarabe/journal/journaltoolbox.py:140
 msgid "Past week"
 msgstr "Última semana"
 
 # TRANS: Filter entries modified during the last 30 days.
 #. TRANS: Filter entries modified during the last 30 days.
-#: ../src/jarabe/journal/journaltoolbox.py:147
+#: ../src/jarabe/journal/journaltoolbox.py:142
 msgid "Past month"
 msgstr "Último mês"
 
 # TRANS: Filter entries modified during the last 356 days.
 #. TRANS: Filter entries modified during the last 356 days.
-#: ../src/jarabe/journal/journaltoolbox.py:149
+#: ../src/jarabe/journal/journaltoolbox.py:144
 msgid "Past year"
 msgstr "Último ano"
 
-#: ../src/jarabe/journal/journaltoolbox.py:156
+#: ../src/jarabe/journal/journaltoolbox.py:151
 msgid "Anyone"
 msgstr "Qualquer um"
 
-#: ../src/jarabe/journal/journaltoolbox.py:158
+#: ../src/jarabe/journal/journaltoolbox.py:153
 msgid "My friends"
 msgstr "Meus amigos"
 
-#: ../src/jarabe/journal/journaltoolbox.py:159
+#: ../src/jarabe/journal/journaltoolbox.py:154
 msgid "My class"
 msgstr "Minha turma"
 
 # TRANS: Item in a combo box that filters by entry type.
-#: ../src/jarabe/journal/journaltoolbox.py:301
+#: ../src/jarabe/journal/journaltoolbox.py:327
 msgid "Anything"
 msgstr "Qualquer coisa"
 
-#: ../src/jarabe/journal/journaltoolbox.py:396
-#: ../src/jarabe/journal/palettes.py:93
+#: ../src/jarabe/journal/journaltoolbox.py:419
+#: ../src/jarabe/journal/palettes.py:99
 msgid "Copy to"
-msgstr ""
+msgstr "Copiar para"
 
-#: ../src/jarabe/journal/journaltoolbox.py:404
-#: ../src/jarabe/journal/palettes.py:104 ../src/jarabe/view/viewsource.py:274
+#: ../src/jarabe/journal/journaltoolbox.py:427
+#: ../src/jarabe/journal/palettes.py:110 ../src/jarabe/view/viewsource.py:282
 msgid "Duplicate"
-msgstr ""
+msgstr "Duplicar"
 
-#: ../src/jarabe/journal/journaltoolbox.py:437
-#: ../src/jarabe/journal/palettes.py:141 ../src/jarabe/journal/palettes.py:254
-#: ../src/jarabe/journal/volumestoolbar.py:315
+#: ../src/jarabe/journal/journaltoolbox.py:433
+msgid "Refresh"
+msgstr "Refrescar"
+
+#: ../src/jarabe/journal/journaltoolbox.py:470
+#: ../src/jarabe/journal/palettes.py:149 ../src/jarabe/journal/palettes.py:360
+#: ../src/jarabe/journal/volumestoolbar.py:310
 #, python-format
 msgid "Error while copying the entry. %s"
-msgstr ""
+msgstr "Erro ao copiar a entrada. %s"
 
-#: ../src/jarabe/journal/journaltoolbox.py:438
-#: ../src/jarabe/journal/palettes.py:142 ../src/jarabe/journal/palettes.py:255
-#: ../src/jarabe/journal/volumestoolbar.py:316
+#: ../src/jarabe/journal/journaltoolbox.py:471
+#: ../src/jarabe/journal/palettes.py:150 ../src/jarabe/journal/palettes.py:361
+#: ../src/jarabe/journal/volumestoolbar.py:311
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 # TRANS: Action label for starting an entry.
 #. TRANS: Action label for starting an entry.
-#: ../src/jarabe/journal/journaltoolbox.py:512
-#: ../src/jarabe/journal/palettes.py:74
+#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/palettes.py:80
 msgid "Start"
 msgstr "Iniciar"
 
-#: ../src/jarabe/journal/journaltoolbox.py:540
+#: ../src/jarabe/journal/journaltoolbox.py:579
 msgid "Sort by date modified"
-msgstr ""
+msgstr "Ordenar por data de modificação"
 
-#: ../src/jarabe/journal/journaltoolbox.py:541
+#: ../src/jarabe/journal/journaltoolbox.py:580
 msgid "Sort by date created"
-msgstr ""
+msgstr "Ordenar por data de criação"
 
-#: ../src/jarabe/journal/journaltoolbox.py:542
+#: ../src/jarabe/journal/journaltoolbox.py:581
 msgid "Sort by size"
-msgstr ""
+msgstr "Ordenar por tamanho"
 
-#: ../src/jarabe/journal/journaltoolbox.py:551
+#: ../src/jarabe/journal/journaltoolbox.py:590
 msgid "Sort view"
-msgstr ""
+msgstr "Ordenar vista"
 
-#: ../src/jarabe/journal/listview.py:317
+#: ../src/jarabe/journal/journaltoolbox.py:661
+msgid "Deselect all"
+msgstr "Desmarcar todos"
+
+#: ../src/jarabe/journal/journaltoolbox.py:674
+msgid "Select all"
+msgstr "Selecionar todos"
+
+#: ../src/jarabe/journal/journaltoolbox.py:700
+#, python-format
+msgid "Do you want to erase %d entry?"
+msgid_plural "Do you want to erase %d entries?"
+msgstr[0] "Você deseja apagar %d entrada?"
+msgstr[1] "Você deseja apagar %d entradas?"
+
+#: ../src/jarabe/journal/journaltoolbox.py:714
+#: ../src/jarabe/journal/palettes.py:364
+msgid "Copy"
+msgstr "Copiar"
+
+#. TRANS: Do not translate %(selected)d and %(total)d.
+#: ../src/jarabe/journal/journaltoolbox.py:759
+#, python-format
+msgid "Selected %(selected)d of %(total)d"
+msgstr "Selecionada %(selected)d de %(total)d"
+
+#: ../src/jarabe/journal/listview.py:387 ../src/jarabe/journal/iconview.py:211
 msgid "Your Journal is empty"
 msgstr "Seu Diário está vazio"
 
-#: ../src/jarabe/journal/listview.py:320
+#: ../src/jarabe/journal/listview.py:390 ../src/jarabe/journal/iconview.py:214
 msgid "Your documents folder is empty"
-msgstr ""
+msgstr "Sua pasta de documentos está vazia"
 
-#: ../src/jarabe/journal/listview.py:322
+#: ../src/jarabe/journal/listview.py:392 ../src/jarabe/journal/iconview.py:216
 msgid "The device is empty"
-msgstr ""
+msgstr "O dispositivo está vazio"
 
-#: ../src/jarabe/journal/listview.py:324
+#: ../src/jarabe/journal/listview.py:394 ../src/jarabe/journal/iconview.py:218
 msgid "No matching entries"
 msgstr "Nenhuma entrada correspondente"
 
-#: ../src/jarabe/journal/listview.py:398
-msgid "Clear search"
-msgstr "Limpar busca"
-
-#: ../src/jarabe/journal/misc.py:273
+#: ../src/jarabe/journal/misc.py:252
 #, python-format
 msgid "Older Version Of %s Activity"
-msgstr ""
+msgstr "Versão mais antiga da atividade %s"
 
-#: ../src/jarabe/journal/misc.py:274
+#: ../src/jarabe/journal/misc.py:253
 #, python-format
 msgid "Do you want to downgrade to version %s"
-msgstr ""
+msgstr "Você deseja reverter para a versão %s"
 
-#: ../src/jarabe/journal/modalalert.py:64
+#: ../src/jarabe/journal/modalalert.py:65
 msgid "Your Journal is full"
 msgstr "Seu Diário está cheio"
 
-#: ../src/jarabe/journal/modalalert.py:68
+#: ../src/jarabe/journal/modalalert.py:70
 msgid "Please delete some old Journal entries to make space for new ones."
 msgstr ""
 "Por favor, remova algumas entradas antigas do Diário para liberar mais "
 "espaço para as novas."
 
-#: ../src/jarabe/journal/modalalert.py:80
+#: ../src/jarabe/journal/modalalert.py:84
 msgid "Show Journal"
-msgstr "Mostar Diário"
+msgstr "Mostrar Diário"
 
-#: ../src/jarabe/journal/objectchooser.py:146
+#: ../src/jarabe/journal/objectchooser.py:170
 msgid "Choose an object"
 msgstr "Escolher um objeto"
 
-#: ../src/jarabe/journal/objectchooser.py:151
-#: ../src/jarabe/view/viewsource.py:410
+#: ../src/jarabe/journal/objectchooser.py:175
+#, python-format
+msgid "Choose an object to open with %s activity"
+msgstr "Escolhe um objeto para abrir com a atividade %s"
+
+#: ../src/jarabe/journal/objectchooser.py:183
+#: ../src/jarabe/view/viewsource.py:418
 msgid "Close"
 msgstr "Fechar"
 
-#: ../src/jarabe/journal/palettes.py:72
+#: ../src/jarabe/journal/palettes.py:78
 msgid "Resume with"
 msgstr "Continuar com"
 
-#: ../src/jarabe/journal/palettes.py:75
+#: ../src/jarabe/journal/palettes.py:81
 msgid "Start with"
 msgstr "Iniciar com"
 
-#: ../src/jarabe/journal/palettes.py:88 ../src/jarabe/journal/palettes.py:357
+#: ../src/jarabe/journal/palettes.py:94 ../src/jarabe/journal/palettes.py:489
 msgid "No activity to start entry"
 msgstr "Nenhuma atividade para iniciar a entrada"
 
-#: ../src/jarabe/journal/palettes.py:112
+#: ../src/jarabe/journal/palettes.py:118
 msgid "Send to"
 msgstr "Enviar para"
 
-#: ../src/jarabe/journal/palettes.py:121
+#: ../src/jarabe/journal/palettes.py:127
 msgid "View Details"
 msgstr "Ver Detalhes"
 
-#: ../src/jarabe/journal/palettes.py:160
+#: ../src/jarabe/journal/palettes.py:186
 msgid "Entries without a file cannot be sent."
-msgstr ""
+msgstr "Não podem ser enviadas entradas sem ficheiro."
 
-#: ../src/jarabe/journal/palettes.py:245 ../src/jarabe/journal/palettes.py:278
-#: ../src/jarabe/journal/volumestoolbar.py:306
+#: ../src/jarabe/journal/palettes.py:260
+#: ../src/jarabe/journal/volumestoolbar.py:211
+msgid "Documents"
+msgstr "Documentos"
+
+#: ../src/jarabe/journal/palettes.py:349 ../src/jarabe/journal/palettes.py:409
+#: ../src/jarabe/journal/volumestoolbar.py:301
 msgid "Entries without a file cannot be copied."
-msgstr ""
+msgstr "Não podem ser copiadas entradas sem ficheiro."
 
-#: ../src/jarabe/journal/palettes.py:267
+#: ../src/jarabe/journal/palettes.py:369
+#, python-format
+msgid "Do you want to copy %d entry?"
+msgid_plural "Do you want to copy %d entries?"
+msgstr[0] "Você deseja copiar %d entrada?"
+msgstr[1] "Você deseja copiar %d entradas?"
+
+#: ../src/jarabe/journal/palettes.py:394
 msgid "Clipboard"
-msgstr ""
+msgstr "Área de transferência"
 
-#: ../src/jarabe/journal/palettes.py:322
+#: ../src/jarabe/journal/palettes.py:454
 msgid "No friends present"
 msgstr "Nenhum amigo presente"
 
-#: ../src/jarabe/journal/palettes.py:327
+#: ../src/jarabe/journal/palettes.py:459
 msgid "No valid connection found"
 msgstr "Nenhuma conexão válida encontrada"
 
-#: ../src/jarabe/journal/palettes.py:355
+#: ../src/jarabe/journal/palettes.py:487
 msgid "No activity to resume entry"
 msgstr "Nenhuma atividade para continuar a entrada"
 
-#: ../src/jarabe/journal/volumestoolbar.py:209
-msgid "Documents"
-msgstr ""
+#: ../src/jarabe/journal/palettes.py:556 ../src/jarabe/view/palettes.py:110
+msgid "Stop"
+msgstr "Parar"
 
-#: ../src/jarabe/journal/volumestoolbar.py:391
-#: ../src/jarabe/view/palettes.py:202 ../src/jarabe/view/palettes.py:254
+#: ../src/jarabe/journal/palettes.py:561
+msgid "Continue"
+msgstr "Continuar"
+
+#: ../src/jarabe/journal/palettes.py:598
+#, python-format
+msgid "%(index)d of %(total)d : %(object_title)s"
+msgstr "%(index)d de %(total)d : %(object_title)s"
+
+#: ../src/jarabe/journal/volumestoolbar.py:386
+#: ../src/jarabe/view/palettes.py:225 ../src/jarabe/view/palettes.py:292
 #, python-format
 msgid "%(free_space)d MB Free"
 msgstr "%(free_space)d MB Livre"
 
-#: ../src/jarabe/model/network.py:211
+#: ../src/jarabe/model/network.py:214
 msgid "The reason for the device state change is unknown."
-msgstr ""
+msgstr "A razão para a mudança de estado do dispositivo é desconhecida."
 
-#: ../src/jarabe/model/network.py:213
+#: ../src/jarabe/model/network.py:216
 msgid "The state change is normal."
-msgstr ""
+msgstr "A mudança de estado é normal."
 
-#: ../src/jarabe/model/network.py:215
+#: ../src/jarabe/model/network.py:218
 msgid "The device is now managed."
-msgstr ""
+msgstr "O dispositivo é agora gerenciado."
 
-#: ../src/jarabe/model/network.py:217
+#: ../src/jarabe/model/network.py:220
 msgid "The device is no longer managed."
-msgstr ""
+msgstr "O dispositivo não é mais gerenciado."
 
-#: ../src/jarabe/model/network.py:219
+#: ../src/jarabe/model/network.py:222
 msgid "The device could not be readied for configuration."
-msgstr ""
+msgstr "O dispositivo não pôde ser preparado para configuração."
 
-#: ../src/jarabe/model/network.py:221
+#: ../src/jarabe/model/network.py:224
 msgid ""
 "IP configuration could not be reserved (no available address, timeout, etc)."
 msgstr ""
+"A configuração IP não pôde ser reservada (sem endereços disponíveis, tempo "
+"limite de espera ultrapassado, etc)."
 
-#: ../src/jarabe/model/network.py:224
+#: ../src/jarabe/model/network.py:227
 msgid "The IP configuration is no longer valid."
-msgstr ""
+msgstr "A configuração IP deixou de ser válida."
 
-#: ../src/jarabe/model/network.py:226
+#: ../src/jarabe/model/network.py:229
 msgid "Secrets were required, but not provided."
-msgstr ""
+msgstr "Foram necessários segredos que não foram fornecidos."
 
-#: ../src/jarabe/model/network.py:228
+#: ../src/jarabe/model/network.py:231
 msgid ""
 "The 802.1X supplicant disconnected from the access point or authentication "
 "server."
 msgstr ""
+"O suplicante 802.1X desligou-se do ponto de acesso ou do servidor de "
+"autenticação."
 
-#: ../src/jarabe/model/network.py:231
+#: ../src/jarabe/model/network.py:234
 msgid "Configuration of the 802.1X supplicant failed."
-msgstr ""
+msgstr "A configuração do suplicante 802.1X falhou."
 
-#: ../src/jarabe/model/network.py:233
+#: ../src/jarabe/model/network.py:236
 msgid "The 802.1X supplicant quit or failed unexpectedly."
-msgstr ""
+msgstr "O suplicante 802.1x terminou ou falhou inesperadamente."
 
-#: ../src/jarabe/model/network.py:235
+#: ../src/jarabe/model/network.py:238
 msgid "The 802.1X supplicant took too long to authenticate."
-msgstr ""
+msgstr "O suplicante 802.1X demorou muito tempo para autenticar."
 
-#: ../src/jarabe/model/network.py:237
+#: ../src/jarabe/model/network.py:240
 msgid "The PPP service failed to start within the allowed time."
-msgstr ""
+msgstr "Não foi possível iniciar o serviço PPP dentro do tempo concedido."
 
-#: ../src/jarabe/model/network.py:239
+#: ../src/jarabe/model/network.py:242
 msgid "The PPP service disconnected unexpectedly."
-msgstr ""
+msgstr "O serviço PPP desligou-se inesperadamente."
 
-#: ../src/jarabe/model/network.py:241
+#: ../src/jarabe/model/network.py:244
 msgid "The PPP service quit or failed unexpectedly."
-msgstr ""
+msgstr "O serviço PPP terminou ou falhou inesperadamente."
 
-#: ../src/jarabe/model/network.py:243
+#: ../src/jarabe/model/network.py:246
 msgid "The DHCP service failed to start within the allowed time."
-msgstr ""
+msgstr "Não foi possível iniciar o serviço DHCP dentro do tempo concedido."
 
-#: ../src/jarabe/model/network.py:245
+#: ../src/jarabe/model/network.py:248
 msgid "The DHCP service reported an unexpected error."
-msgstr ""
+msgstr "O serviço DHCP relatou um erro inesperado."
 
-#: ../src/jarabe/model/network.py:247
+#: ../src/jarabe/model/network.py:250
 msgid "The DHCP service quit or failed unexpectedly."
-msgstr ""
+msgstr "O serviço DHCP terminou ou falhou inesperadamente."
 
-#: ../src/jarabe/model/network.py:249
+#: ../src/jarabe/model/network.py:252
 msgid "The shared connection service failed to start."
-msgstr ""
-
-#: ../src/jarabe/model/network.py:251
-msgid "The shared connection service quit or failed unexpectedly."
-msgstr ""
+msgstr "Não foi possível iniciar o serviço de ligação partilhada."
 
 #: ../src/jarabe/model/network.py:254
+msgid "The shared connection service quit or failed unexpectedly."
+msgstr "O serviço de ligação partilhada terminou ou falhou inesperadamente."
+
+#: ../src/jarabe/model/network.py:257
 msgid "The AutoIP service failed to start."
-msgstr ""
+msgstr "Não foi possível iniciar o serviço AutoIP."
 
-#: ../src/jarabe/model/network.py:256
+#: ../src/jarabe/model/network.py:259
 msgid "The AutoIP service reported an unexpected error."
-msgstr ""
+msgstr "O serviço AutoIP relatou um erro inesperado."
 
-#: ../src/jarabe/model/network.py:258
+#: ../src/jarabe/model/network.py:261
 msgid "The AutoIP service quit or failed unexpectedly."
-msgstr ""
+msgstr "O serviço AutoIP terminou ou falhou inesperadamente."
 
-#: ../src/jarabe/model/network.py:260
+#: ../src/jarabe/model/network.py:263
 msgid "Dialing failed because the line was busy."
-msgstr ""
+msgstr "A marcação do número falhou porque a linha estava ocupada."
 
-#: ../src/jarabe/model/network.py:262
+#: ../src/jarabe/model/network.py:265
 msgid "Dialing failed because there was no dial tone."
-msgstr ""
+msgstr "A marcação do número falhou porque não havia sinal de linha."
 
-#: ../src/jarabe/model/network.py:264
+#: ../src/jarabe/model/network.py:267
 msgid "Dialing failed because there was no carrier."
-msgstr ""
+msgstr "A marcação do número falhou porque não havia portadora."
 
-#: ../src/jarabe/model/network.py:266
+#: ../src/jarabe/model/network.py:269
 msgid "Dialing timed out."
-msgstr ""
+msgstr "A marcação do número expirou o limite de tempo."
 
-#: ../src/jarabe/model/network.py:268
+#: ../src/jarabe/model/network.py:271
 msgid "Dialing failed."
-msgstr ""
+msgstr "A marcação do número falhou."
 
-#: ../src/jarabe/model/network.py:270
+#: ../src/jarabe/model/network.py:273
 msgid "Modem initialization failed."
-msgstr ""
+msgstr "A inicialização do modem falhou."
 
-#: ../src/jarabe/model/network.py:272
+#: ../src/jarabe/model/network.py:275
 msgid "Failed to select the specified GSM APN"
-msgstr ""
+msgstr "Não foi possível selecionar o APN GSM especificado"
 
-#: ../src/jarabe/model/network.py:274
+#: ../src/jarabe/model/network.py:277
 msgid "Not searching for networks."
-msgstr ""
+msgstr "Não procurando por redes."
 
-#: ../src/jarabe/model/network.py:276
+#: ../src/jarabe/model/network.py:279
 msgid "Network registration was denied."
-msgstr ""
+msgstr "O registro de rede foi negado."
 
-#: ../src/jarabe/model/network.py:278
+#: ../src/jarabe/model/network.py:281
 msgid "Network registration timed out."
-msgstr ""
+msgstr "O registo de rede expirou o limite de tempo."
 
-#: ../src/jarabe/model/network.py:280
+#: ../src/jarabe/model/network.py:283
 msgid "Failed to register with the requested GSM network."
-msgstr ""
+msgstr "Não foi possível registrar com a rede GSM pedida."
 
-#: ../src/jarabe/model/network.py:282
+#: ../src/jarabe/model/network.py:285
 msgid "PIN check failed."
-msgstr ""
+msgstr "A verificação do PIN falhou."
 
-#: ../src/jarabe/model/network.py:284
+#: ../src/jarabe/model/network.py:287
 msgid "Necessary firmware for the device may be missing."
-msgstr ""
+msgstr "Pode estar a faltar o firmware necessário para o dispositivo."
 
-#: ../src/jarabe/model/network.py:286
+#: ../src/jarabe/model/network.py:289
 msgid "The device was removed."
-msgstr ""
+msgstr "O dispositivo foi removido."
 
-#: ../src/jarabe/model/network.py:288
+#: ../src/jarabe/model/network.py:291
 msgid "NetworkManager went to sleep."
-msgstr ""
-
-#: ../src/jarabe/model/network.py:290
-msgid "The device's active connection was removed or disappeared."
-msgstr ""
+msgstr "O NetworkManager adormeceu."
 
 #: ../src/jarabe/model/network.py:293
+msgid "The device's active connection was removed or disappeared."
+msgstr "A ligação ativa do dispositivo foi removida ou desapareceu."
+
+#: ../src/jarabe/model/network.py:296
 msgid "A user or client requested the disconnection."
-msgstr ""
+msgstr "Um utilizador ou cliente pediu a desconexão."
 
-#: ../src/jarabe/model/network.py:295
+#: ../src/jarabe/model/network.py:298
 msgid "The device's carrier/link changed."
-msgstr ""
+msgstr "A portadora/ligação do dispositivo mudou."
 
-#: ../src/jarabe/model/network.py:297
+#: ../src/jarabe/model/network.py:300
 msgid "The device's existing connection was assumed."
-msgstr ""
+msgstr "A ligação existente do dispositivo foi assumida."
 
-#: ../src/jarabe/model/network.py:299
+#: ../src/jarabe/model/network.py:302
 msgid "The supplicant is now available."
-msgstr ""
+msgstr "O suplicante está agora disponível."
 
-#: ../src/jarabe/model/network.py:301
+#: ../src/jarabe/model/network.py:304
 msgid "The modem could not be found."
-msgstr ""
+msgstr "O modem não pôde ser encontrado."
 
-#: ../src/jarabe/model/network.py:303
+#: ../src/jarabe/model/network.py:306
 msgid "The Bluetooth connection failed or timed out."
-msgstr ""
+msgstr "A ligação Bluetooth falhou ou expirou."
 
-#: ../src/jarabe/model/network.py:305
+#: ../src/jarabe/model/network.py:308
 msgid "Unused."
-msgstr ""
+msgstr "Não utilizado."
 
-#: ../src/jarabe/view/buddymenu.py:67
+#: ../src/jarabe/view/buddymenu.py:72
 msgid "Remove friend"
 msgstr "Remover amigo"
 
-#: ../src/jarabe/view/buddymenu.py:70
+#: ../src/jarabe/view/buddymenu.py:75
 msgid "Make friend"
 msgstr "Fazer amigo"
 
-#: ../src/jarabe/view/buddymenu.py:87
+#: ../src/jarabe/view/buddymenu.py:91
 msgid "Shutdown"
 msgstr "Desligar"
 
-#: ../src/jarabe/view/buddymenu.py:95
+#: ../src/jarabe/view/buddymenu.py:98
 msgid "Restart"
-msgstr ""
+msgstr "Reiniciar"
 
-#: ../src/jarabe/view/buddymenu.py:101
+#: ../src/jarabe/view/buddymenu.py:104
 msgid "Logout"
 msgstr "Encerrar"
 
-#: ../src/jarabe/view/buddymenu.py:106
+#: ../src/jarabe/view/buddymenu.py:109
 msgid "My Settings"
 msgstr "Minhas configurações"
 
-#: ../src/jarabe/view/buddymenu.py:142
+#: ../src/jarabe/view/buddymenu.py:149
 #, python-format
 msgid "Invite to %s"
 msgstr "Convidar para %s"
 
-#: ../src/jarabe/view/launcher.py:145
+#: ../src/jarabe/view/launcher.py:144
 #, python-format
 msgid "<b>%s</b> failed to start."
-msgstr ""
+msgstr "Não foi possível iniciar <b>%s</b>."
 
-#: ../src/jarabe/view/palettes.py:48
+#: ../src/jarabe/view/palettes.py:51
 msgid "Starting..."
 msgstr "Iniciando..."
 
-#: ../src/jarabe/view/palettes.py:58
+#: ../src/jarabe/view/palettes.py:61
 msgid "Activity failed to start"
-msgstr ""
+msgstr "Não foi possível iniciar a atividade"
 
 #. TODO: share-with, keep
-#: ../src/jarabe/view/palettes.py:91
+#: ../src/jarabe/view/palettes.py:102
 msgid "View Source"
 msgstr "Ver fonte"
 
-#: ../src/jarabe/view/palettes.py:102
-msgid "Stop"
-msgstr "Parar"
-
-#: ../src/jarabe/view/palettes.py:139
+#: ../src/jarabe/view/palettes.py:153
 msgid "Start new"
 msgstr "Iniciar novo"
 
-#: ../src/jarabe/view/palettes.py:180
-msgid "Show contents"
-msgstr "Mostar conteúdos"
-
-#: ../src/jarabe/view/palettes.py:229
-#, fuzzy
+#: ../src/jarabe/view/palettes.py:241
 msgctxt "Volume"
 msgid "Remove"
 msgstr "Remover"
 
-#: ../src/jarabe/view/viewsource.py:263
+#: ../src/jarabe/view/viewsource.py:271
 msgid "Instance Source"
 msgstr "Instância de Fonte"
 
-#: ../src/jarabe/view/viewsource.py:312
+#: ../src/jarabe/view/viewsource.py:320
 msgid "Source"
 msgstr "Fonte"
 
-#: ../src/jarabe/view/viewsource.py:374
+#: ../src/jarabe/view/viewsource.py:382
 msgid "Activity Bundle Source"
 msgstr "Pacote Fonte da Atividade"
 
-#: ../src/jarabe/view/viewsource.py:393
+#: ../src/jarabe/view/viewsource.py:401
 msgid "Sugar Toolkit Source"
-msgstr ""
+msgstr "Código-fonte do Sugar Toolkit"
 
-#: ../src/jarabe/view/viewsource.py:400
+#: ../src/jarabe/view/viewsource.py:408
 #, python-format
 #, python-format,
 msgid "View source: %s"
 msgstr "Ver fonte: %s"
 
-#: ../src/jarabe/view/viewsource.py:401
+#: ../src/jarabe/view/viewsource.py:409
 #, python-format
 msgid "View source: %r"
 msgstr "Ver fonte: %r"
 
-#: ../src/jarabe/util/emulator.py:40
-msgid "Sugar in a window"
-msgstr ""
+#~ msgid "<Ctrl>1"
+#~ msgstr "<Ctrl>1"
+
+#~ msgid "Update your activities to ensure compatibility with your new software"
+#~ msgstr ""
+#~ "Atualize suas atividades para assegurar compatibilidade com seu novo "
+#~ "software"
+
+#~ msgid "Check now"
+#~ msgstr "Verificar agora"
+
+#~ msgid "Software update"
+#~ msgstr "Atualização de software"
+
+#~ msgid "Search"
+#~ msgstr "Buscar"
 
 #~ msgid "Error in extreme pm argument, use on/off."
 #~ msgstr "Erro no argumento pm extremo, usar ligar/desligar."

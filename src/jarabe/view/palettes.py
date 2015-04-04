@@ -29,7 +29,6 @@ from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3.graphics.xocolor import XoColor
@@ -47,8 +46,8 @@ class BasePalette(Palette):
         self._notify_launch_hid = None
 
         if home_activity.props.launch_status == shell.Activity.LAUNCHING:
-            self._notify_launch_hid = home_activity.connect( \
-                    'notify::launch-status', self.__notify_launch_status_cb)
+            self._notify_launch_hid = home_activity.connect(
+                'notify::launch-status', self.__notify_launch_status_cb)
             self.set_primary_text(GLib.markup_escape_text(_('Starting...')))
         elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
             self._on_failed_launch()
@@ -123,12 +122,12 @@ class CurrentActivityPalette(BasePalette):
         setup_view_source(self._home_activity)
         shell_model = shell.get_model()
         if self._home_activity is not shell_model.get_active_activity():
-            self._home_activity.get_window().activate( \
+            self._home_activity.get_window().activate(
                 Gtk.get_current_event_time())
         self.emit('done')
 
     def __stop_activate_cb(self, menu_item):
-        self._home_activity.get_window().close(1)
+        self._home_activity.stop()
         self.emit('done')
 
 
@@ -224,7 +223,7 @@ class JournalPalette(BasePalette):
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
-                {'free_space': free_space / (1024 * 1024)}
+            {'free_space': free_space / (1024 * 1024)}
 
 
 class VolumePalette(Palette):
@@ -271,7 +270,7 @@ class VolumePalette(Palette):
 
     def __unmount_activate_cb(self, menu_item):
         flags = 0
-        mount_operation = Gtk.MountOperation( \
+        mount_operation = Gtk.MountOperation(
             parent=self.content_box.get_toplevel())
         cancellable = None
         user_data = None
@@ -291,4 +290,4 @@ class VolumePalette(Palette):
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
         self._free_space_label.props.label = _('%(free_space)d MB Free') % \
-                {'free_space': free_space / (1024 * 1024)}
+            {'free_space': free_space / (1024 * 1024)}

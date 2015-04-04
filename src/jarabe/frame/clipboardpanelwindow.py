@@ -114,7 +114,7 @@ class ClipboardPanelWindow(FrameWindow):
     def _add_selection(self, key, selection):
         if not selection.get_data():
             logging.warning('no data for selection target %s.',
-                    selection.get_data_type())
+                            selection.get_data_type())
             return
 
         selection_type = str(selection.get_data_type())
@@ -125,11 +125,11 @@ class ClipboardPanelWindow(FrameWindow):
             uris = selection.get_uris()
 
             if len(uris) > 1:
-                raise NotImplementedError('Multiple uris in text/uri-list' \
+                raise NotImplementedError('Multiple uris in text/uri-list'
                                           ' still not supported.')
             uri = uris[0]
             scheme, netloc_, path_, parameters_, query_, fragment_ = \
-                    urlparse(uri)
+                urlparse(uri)
             on_disk = (scheme == 'file')
 
             cb_service.add_object_format(key,

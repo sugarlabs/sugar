@@ -1,12 +1,15 @@
+SUBDIRS = update
 sugardir = $(pythondir)/jarabe/model
 sugar_PYTHON =			\
 	adhoc.py		\
 	__init__.py		\
 	buddy.py		\
 	bundleregistry.py	\
+	desktop.py		\
 	filetransfer.py		\
 	friends.py		\
 	invites.py		\
+	keyboard.py		\
 	olpcmesh.py		\
 	mimeregistry.py		\
 	neighborhood.py		\

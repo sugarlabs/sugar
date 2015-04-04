@@ -54,6 +54,40 @@ _logger = logging.getLogger('ViewSource')
 map_activity_to_window = {}
 
 
+def _is_web_activity(bundle_path):
+    activity_bundle = ActivityBundle(bundle_path)
+    return activity_bundle.get_command() == 'sugar-activity-web'
+
+
+def _is_gtk3_activity(bundle_path):
+    # FIXME, find a way to check if the activity is GTK3 or GTK2.
+    return True
+
+
+def _get_toolkit_path(bundle_path):
+    sugar_toolkit_path = None
+
+    if _is_web_activity(bundle_path):
+        sugar_web_path = os.path.join(bundle_path, 'lib', 'sugar-web')
+        if os.path.exists(sugar_web_path):
+            return sugar_web_path
+        else:
+            return None
+
+    if _is_gtk3_activity(bundle_path):
+        sugar_module = 'sugar3'
+    else:
+        sugar_module = 'sugar'
+
+    for path in sys.path:
+        if path.endswith('site-packages'):
+            sugar_toolkit_path = os.path.join(path, sugar_module)
+            if os.path.exists(sugar_toolkit_path):
+                return sugar_toolkit_path
+
+    return None
+
+
 def setup_view_source(activity):
     service = activity.get_service()
     if service is not None:
@@ -61,8 +95,9 @@ def setup_view_source(activity):
             service.HandleViewSource()
             return
         except dbus.DBusException, e:
-            expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
-                    'org.freedesktop.DBus.Python.NotImplementedError']
+            expected_exceptions = [
+                'org.freedesktop.DBus.Error.UnknownMethod',
+                'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occured in HandleViewSource():')
         except Exception:
@@ -77,7 +112,7 @@ def setup_view_source(activity):
 
     if window_xid in map_activity_to_window:
         _logger.debug('Viewsource window already open for %s %s', window_xid,
-            bundle_path)
+                      bundle_path)
         return
 
     document_path = None
@@ -85,8 +120,9 @@ def setup_view_source(activity):
         try:
             document_path = service.GetDocumentPath()
         except dbus.DBusException, e:
-            expected_exceptions = ['org.freedesktop.DBus.Error.UnknownMethod',
-                    'org.freedesktop.DBus.Python.NotImplementedError']
+            expected_exceptions = [
+                'org.freedesktop.DBus.Error.UnknownMethod',
+                'org.freedesktop.DBus.Python.NotImplementedError']
             if e.get_dbus_name() not in expected_exceptions:
                 logging.exception('Exception occured in GetDocumentPath():')
         except Exception:
@@ -96,12 +132,10 @@ def setup_view_source(activity):
         _logger.debug('Activity without bundle_path nor document_path')
         return
 
-    sugar_toolkit_path = None
-    for path in sys.path:
-        if path.endswith('site-packages'):
-            if os.path.exists(os.path.join(path, 'sugar')):
-                sugar_toolkit_path = os.path.join(path, 'sugar')
-                break
+    sugar_toolkit_path = _get_toolkit_path(bundle_path)
+
+    if sugar_toolkit_path is None:
+        _logger.error("Path to toolkit not found.")
 
     view_source = ViewSource(window_xid, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
@@ -156,12 +190,19 @@ class ViewSource(Gtk.Window):
 
         activity_bundle = ActivityBundle(bundle_path)
         command = activity_bundle.get_command()
-        if len(command.split(' ')) > 1:
+
+        if _is_web_activity(bundle_path):
+            file_name = 'index.html'
+
+        elif len(command.split(' ')) > 1:
             name = command.split(' ')[1].split('.')[-1]
             tmppath = command.split(' ')[1].replace('.', '/')
             file_name = tmppath[0:-(len(name) + 1)] + '.py'
-            path = os.path.join(activity_bundle.get_path(), file_name)
-            self._selected_bundle_file = path
+
+        if file_name:
+            path = os.path.join(bundle_path, file_name)
+            if os.path.exists(path):
+                self._selected_bundle_file = path
 
         # Split the tree pane into two vertical panes, one of which
         # will be hidden
@@ -174,13 +215,25 @@ class ViewSource(Gtk.Window):
         tree_panes.add1(self._bundle_source_viewer)
         self._bundle_source_viewer.show()
 
-        file_name = 'env.py'
-        self._selected_sugar_file = os.path.join(sugar_toolkit_path, file_name)
-        self._sugar_source_viewer = FileViewer(sugar_toolkit_path, file_name)
-        self._sugar_source_viewer.connect('file-selected',
-                                          self.__file_selected_cb)
-        tree_panes.add2(self._sugar_source_viewer)
-        self._sugar_source_viewer.hide()
+        self._sugar_source_viewer = None
+
+        if sugar_toolkit_path is not None:
+            if _is_web_activity(bundle_path):
+                file_name = 'env.js'
+            else:
+                file_name = 'env.py'
+
+            self._selected_sugar_file = os.path.join(sugar_toolkit_path,
+                                                     file_name)
+
+            self._sugar_source_viewer = FileViewer(sugar_toolkit_path,
+                                                   file_name)
+
+            self._sugar_source_viewer.connect('file-selected',
+                                              self.__file_selected_cb)
+
+            tree_panes.add2(self._sugar_source_viewer)
+            self._sugar_source_viewer.hide()
 
         pane.add1(tree_panes)
 
@@ -205,7 +258,7 @@ class ViewSource(Gtk.Window):
         window.set_accept_focus(True)
 
         display = Gdk.Display.get_default()
-        parent = GdkX11.X11Window.foreign_new_for_display( \
+        parent = GdkX11.X11Window.foreign_new_for_display(
             display, self._parent_window_xid)
         window.set_transient_for(parent)
 
@@ -220,7 +273,10 @@ class ViewSource(Gtk.Window):
             _logger.debug('_select_source called with file: %r', path)
             self._source_display.file_path = path
             self._bundle_source_viewer.hide()
-            self._sugar_source_viewer.hide()
+
+            if self._sugar_source_viewer is not None:
+                self._sugar_source_viewer.hide()
+
         elif path == self._sugar_toolkit_path:
             _logger.debug('_select_source called with sugar toolkit path: %r',
                           path)
@@ -233,7 +289,9 @@ class ViewSource(Gtk.Window):
             self._bundle_source_viewer.set_path(path)
             self._source_display.file_path = self._selected_bundle_file
             self._bundle_source_viewer.show()
-            self._sugar_source_viewer.hide()
+
+            if self._sugar_source_viewer is not None:
+                self._sugar_source_viewer.hide()
 
     def __destroy_cb(self, window, document_path):
         del map_activity_to_window[self._parent_window_xid]
@@ -455,8 +513,8 @@ class FileViewer(Gtk.ScrolledWindow):
 
     __gsignals__ = {
         'file-selected': (GObject.SignalFlags.RUN_FIRST,
-                           None,
-                           ([str])),
+                          None,
+                          ([str])),
     }
 
     def __init__(self, path, initial_filename):
@@ -552,7 +610,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self._source_view.set_show_line_numbers(True)
         self._source_view.set_show_right_margin(True)
         self._source_view.set_right_margin_position(80)
-        #self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
+        # self._source_view.set_highlight_current_line(True) #FIXME: Ugly color
         self._source_view.modify_font(_SOURCE_FONT)
         self.add(self._source_view)
         self._source_view.show()
@@ -579,7 +637,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         if detected_language is not None:
             _logger.debug('Detected language: %r',
-                    detected_language.get_name())
+                          detected_language.get_name())
 
         self._buffer.set_language(detected_language)
         self._buffer.set_text(open(self._file_path, 'r').read())

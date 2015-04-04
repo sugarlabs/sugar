@@ -68,10 +68,13 @@ class BaseListView(Gtk.Bin):
 
     __gsignals__ = {
         'clear-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'selection-changed': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
     }
 
-    def __init__(self):
+    def __init__(self, journalactivity, enable_multi_operations=False):
         self._query = {}
+        self._journalactivity = journalactivity
+        self._enable_multi_operations = enable_multi_operations
         self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
@@ -102,20 +105,28 @@ class BaseListView(Gtk.Bin):
         self.sort_column = None
         self._add_columns()
 
+        self.enable_drag_and_copy()
+
+        # Auto-update stuff
+        self._fully_obscured = True
+        self._updates_disabled = False
+        self._dirty = False
+        self._refresh_idle_handler = None
+        self._update_dates_timer = None
+        self._backup_selected = None
+
+        model.created.connect(self.__model_created_cb)
+        model.updated.connect(self.__model_updated_cb)
+        model.deleted.connect(self.__model_deleted_cb)
+
+    def enable_drag_and_copy(self):
         self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
                                                 [('text/uri-list', 0, 0),
                                                  ('journal-object-id', 0, 0)],
                                                 Gdk.DragAction.COPY)
 
-        # Auto-update stuff
-        self._fully_obscured = True
-        self._dirty = False
-        self._refresh_idle_handler = None
-        self._update_dates_timer = None
-
-        model.created.connect(self.__model_created_cb)
-        model.updated.connect(self.__model_updated_cb)
-        model.deleted.connect(self.__model_deleted_cb)
+    def disable_drag_and_copy(self):
+        self.tree_view.unset_rows_drag_source()
 
     def __model_created_cb(self, sender, signal, object_id):
         if self._is_new_item_visible(object_id):
@@ -137,6 +148,20 @@ class BaseListView(Gtk.Bin):
             return object_id.startswith(self._query['mountpoints'][0])
 
     def _add_columns(self):
+        if self._enable_multi_operations:
+            cell_select = Gtk.CellRendererToggle()
+            cell_select.connect('toggled', self.__cell_select_toggled_cb)
+            cell_select.props.activatable = True
+            cell_select.props.xpad = style.DEFAULT_PADDING
+            cell_select.props.indicator_size = style.zoom(26)
+
+            column = Gtk.TreeViewColumn()
+            column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+            column.props.fixed_width = style.GRID_CELL_SIZE
+            column.pack_start(cell_select, True)
+            column.set_cell_data_func(cell_select, self.__select_set_data_cb)
+            self.tree_view.append_column(column)
+
         cell_favorite = CellRendererFavorite(self.tree_view)
         cell_favorite.connect('clicked', self.__favorite_clicked_cb)
 
@@ -147,7 +172,8 @@ class BaseListView(Gtk.Bin):
         column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.tree_view.append_column(column)
 
-        self.cell_icon = CellRendererActivityIcon(self.tree_view)
+        self.cell_icon = CellRendererActivityIcon(self._journalactivity,
+                                                  self.tree_view)
 
         column = Gtk.TreeViewColumn()
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
@@ -172,7 +198,6 @@ class BaseListView(Gtk.Bin):
                                          ListModel.COLUMN_TITLE)
         self.tree_view.append_column(self._title_column)
 
-
         for column_index in [ListModel.COLUMN_BUDDY_1,
                              ListModel.COLUMN_BUDDY_2,
                              ListModel.COLUMN_BUDDY_3]:
@@ -193,7 +218,7 @@ class BaseListView(Gtk.Bin):
         cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
         buddies_column.pack_start(cell_progress, True)
         buddies_column.add_attribute(cell_progress, 'value',
-                ListModel.COLUMN_PROGRESS)
+                                     ListModel.COLUMN_PROGRESS)
         buddies_column.set_cell_data_func(cell_progress,
                                           self.__progress_data_cb)
 
@@ -233,7 +258,8 @@ class BaseListView(Gtk.Bin):
         self.get_child().size_allocate(allocation)
 
     def do_size_request(self, requisition):
-        requisition.width, requisition.height = self.get_child().size_request()
+        requisition.width, requisition.height = \
+            self.get_child().size_request()
 
     def __destroy_cb(self, widget):
         if self._model is not None:
@@ -281,6 +307,19 @@ class BaseListView(Gtk.Bin):
             metadata['keep'] = '1'
         model.write(metadata, update_mtime=False)
 
+    def __select_set_data_cb(self, column, cell, tree_model, tree_iter,
+                             data):
+        uid = tree_model[tree_iter][ListModel.COLUMN_UID]
+        if uid is None:
+            return
+        cell.props.active = self._model.is_selected(uid)
+
+    def __cell_select_toggled_cb(self, cell, path):
+        tree_iter = self._model.get_iter(path)
+        uid = self._model[tree_iter][ListModel.COLUMN_UID]
+        self._model.set_selected(uid, not cell.get_active())
+        self.emit('selection-changed', len(self._model.get_selected_items()))
+
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
         if 'order_by' not in query_dict:
@@ -289,17 +328,22 @@ class BaseListView(Gtk.Bin):
             property_ = query_dict['order_by'][0][1:]
             cell_text = self.sort_column.get_cells()[0]
             self.sort_column.set_attributes(cell_text,
-                text=getattr(ListModel, 'COLUMN_' + property_.upper(),
-                             ListModel.COLUMN_TIMESTAMP))
+                                            text=getattr(
+                                                ListModel, 'COLUMN_' +
+                                                property_.upper(),
+                                                ListModel.COLUMN_TIMESTAMP))
         self._query = query_dict
+        self.refresh(new_query=True)
 
-        self.refresh()
-
-    def refresh(self):
+    def refresh(self, new_query=False):
         logging.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
 
         if self._model is not None:
+            if new_query:
+                self._backup_selected = None
+            else:
+                self._backup_selected = self._model.get_selected_items()
             self._model.stop()
         self._dirty = False
 
@@ -319,6 +363,11 @@ class BaseListView(Gtk.Bin):
         if x11_window is not None:
             # prevent glitches while later vadjustment setting, see #1235
             self.tree_view.get_bin_window().hide()
+
+        # if the selection was preserved, restore it
+        if self._backup_selected is not None:
+            tree_model.restore_selection(self._backup_selected)
+            self.emit('selection-changed', len(self._backup_selected))
 
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
@@ -413,8 +462,8 @@ class BaseListView(Gtk.Bin):
 
         label = Gtk.Label()
         color = style.COLOR_BUTTON_GREY.get_html()
-        label.set_markup('<span weight="bold" color="%s">%s</span>' % ( \
-                color, GLib.markup_escape_text(message)))
+        label.set_markup('<span weight="bold" color="%s">%s</span>' % (
+            color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
 
         if show_clear_query:
@@ -467,9 +516,17 @@ class BaseListView(Gtk.Bin):
                 path = tree_model.get_path(next_iter)
 
     def _set_dirty(self):
-        if self._fully_obscured:
+        if self._fully_obscured or self._updates_disabled:
             self._dirty = True
         else:
+            self.refresh()
+
+    def disable_updates(self):
+        self._updates_disabled = True
+
+    def enable_updates(self):
+        self._updates_disabled = False
+        if self._dirty:
             self.refresh()
 
     def set_is_visible(self, visible):
@@ -484,8 +541,8 @@ class BaseListView(Gtk.Bin):
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
-                        GObject.timeout_add_seconds(UPDATE_INTERVAL,
-                                            self.__update_dates_timer_cb)
+                    GObject.timeout_add_seconds(UPDATE_INTERVAL,
+                                                self.__update_dates_timer_cb)
         else:
             self._fully_obscured = True
             if self._update_dates_timer is not None:
@@ -496,6 +553,19 @@ class BaseListView(Gtk.Bin):
     def __update_dates_timer_cb(self):
         self.update_dates()
         return True
+
+    def get_model(self):
+        return self._model
+
+    def select_all(self):
+        self.get_model().select_all()
+        self.tree_view.queue_draw()
+        self.emit('selection-changed', len(self._model.get_selected_items()))
+
+    def select_none(self):
+        self.get_model().select_none()
+        self.tree_view.queue_draw()
+        self.emit('selection-changed', len(self._model.get_selected_items()))
 
 
 class ListView(BaseListView):
@@ -512,13 +582,13 @@ class ListView(BaseListView):
                                 ([])),
     }
 
-    def __init__(self):
-        BaseListView.__init__(self)
+    def __init__(self, journalactivity, enable_multi_operations=False):
+        BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
         self.tree_view.connect('button-release-event',
-                self.__button_release_event_cb)
+                               self.__button_release_event_cb)
 
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
@@ -632,10 +702,11 @@ class CellRendererActivityIcon(CellRendererIcon):
         'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
                            ([str])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([str, str])),
+                         ([str, str])),
     }
 
-    def __init__(self, tree_view):
+    def __init__(self, journalactivity, tree_view):
+        self._journalactivity = journalactivity
         self._show_palette = True
 
         CellRendererIcon.__init__(self, tree_view)
@@ -654,7 +725,7 @@ class CellRendererActivityIcon(CellRendererIcon):
         tree_model = self.tree_view.get_model()
         metadata = tree_model.get_metadata(self.props.palette_invoker.path)
 
-        palette = ObjectPalette(metadata, detail=True)
+        palette = ObjectPalette(self._journalactivity, metadata, detail=True)
         palette.connect('detail-clicked',
                         self.__detail_clicked_cb)
         palette.connect('volume-error',
@@ -697,8 +768,10 @@ class CellRendererBuddy(CellRendererIcon):
 
         # if row[self._model_column_index] is not None:
         #     nick, xo_color = row[self._model_column_index]
-        if row.model.do_get_value(row.iter, self._model_column_index) is not None:
-            nick, xo_color = row.model.do_get_value(row.iter, self._model_column_index)
+        if row.model.do_get_value(row.iter, self._model_column_index) \
+                is not None:
+            nick, xo_color = row.model.do_get_value(
+                row.iter, self._model_column_index)
             return BuddyPalette((nick, xo_color.to_string()))
         else:
             return None

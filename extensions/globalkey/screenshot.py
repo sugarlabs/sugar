@@ -21,7 +21,6 @@ from gettext import gettext as _
 import StringIO
 import cairo
 
-from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GConf
 import dbus
@@ -66,9 +65,9 @@ def handle_key_press(key):
         content_title = _('Home')
     elif zoom_level == shell_model.ZOOM_ACTIVITY:
         activity = shell_model.get_active_activity()
-        if activity != None:
+        if activity is not None:
             content_title = activity.get_title()
-            if content_title == None:
+            if content_title is None:
                 content_title = _('Activity')
 
     if content_title is None:

@@ -1,5 +1,8 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2008-2013 Sugar Labs
+# Copyright (C) 2013 Daniel Francis
+# Copyright (C) 2013 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +20,6 @@
 
 import logging
 from gettext import gettext as _
-import math
 
 from gi.repository import GObject
 from gi.repository import GConf
@@ -29,7 +31,6 @@ from gi.repository import GdkPixbuf
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
-from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.alert import Alert
@@ -46,6 +47,7 @@ from jarabe.view.buddymenu import BuddyMenu
 from jarabe.model.buddy import get_owner_instance
 from jarabe.model import shell
 from jarabe.model import bundleregistry
+from jarabe.model import desktop
 from jarabe.journal import misc
 
 from jarabe.desktop import schoolserver
@@ -54,16 +56,17 @@ from jarabe.desktop import favoriteslayout
 from jarabe.desktop.viewcontainer import ViewContainer
 from jarabe.util.normalize import normalize_string
 
-
 _logger = logging.getLogger('FavoritesView')
 
 _ICON_DND_TARGET = ('activity-icon', Gtk.TargetFlags.SAME_WIDGET, 0)
 
 LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
-        #favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
-        #favoriteslayout.TriangleLayout.key: favoriteslayout.TriangleLayout,
-        #favoriteslayout.SunflowerLayout.key: favoriteslayout.SunflowerLayout,
-        favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
+              # favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
+              # favoriteslayout.TriangleLayout.key:
+              # favoriteslayout.TriangleLayout,
+              # favoriteslayout.SunflowerLayout.key:
+              # favoriteslayout.SunflowerLayout,
+              favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
 about the layout can be accessed with fields of the class."""
@@ -74,9 +77,10 @@ _favorites_settings = None
 class FavoritesBox(Gtk.VBox):
     __gtype_name__ = 'SugarFavoritesBox'
 
-    def __init__(self):
+    def __init__(self, favorite_view):
         Gtk.VBox.__init__(self)
 
+        self.favorite_view = favorite_view
         self._view = FavoritesView(self)
         self.pack_start(self._view, True, True, 0)
         self._view.show()
@@ -144,21 +148,22 @@ class FavoritesView(ViewContainer):
         self._alert = None
         self._resume_mode = True
 
-        GObject.idle_add(self.__connect_to_bundle_registry_cb)
+        GLib.idle_add(self.__connect_to_bundle_registry_cb)
 
-        favorites_settings = get_settings()
+        favorites_settings = get_settings(self._box.favorite_view)
         favorites_settings.changed.connect(self.__settings_changed_cb)
         self._set_layout(favorites_settings.layout)
 
     def __settings_changed_cb(self, **kwargs):
-        favorites_settings = get_settings()
+        favorites_settings = get_settings(self._box.favorite_view)
         layout_set = self._set_layout(favorites_settings.layout)
         if layout_set:
             self.set_layout(self._layout)
             registry = bundleregistry.get_registry()
             for info in registry:
                 if registry.is_bundle_favorite(info.get_bundle_id(),
-                                               info.get_activity_version()):
+                                               info.get_activity_version(),
+                                               self._box.favorite_view):
                     self._add_activity(info)
 
     def _set_layout(self, layout):
@@ -238,10 +243,10 @@ class FavoritesView(ViewContainer):
             self._dragging = True
             target_entry = Gtk.TargetEntry.new(*_ICON_DND_TARGET)
             target_list = Gtk.TargetList.new([target_entry])
-            context_ = widget.drag_begin(target_list,
-                                         Gdk.DragAction.MOVE,
-                                         1,
-                                         event)
+            widget.drag_begin(target_list,
+                              Gdk.DragAction.MOVE,
+                              1,
+                              event)
         return False
 
     def __drag_begin_cb(self, widget, context):
@@ -290,7 +295,8 @@ class FavoritesView(ViewContainer):
 
         for info in registry:
             if registry.is_bundle_favorite(info.get_bundle_id(),
-                                           info.get_activity_version()):
+                                           info.get_activity_version(),
+                                           self._box.favorite_view):
                 self._add_activity(info)
 
         registry.connect('bundle-added', self.__activity_added_cb)
@@ -302,19 +308,20 @@ class FavoritesView(ViewContainer):
             return
         icon = ActivityIcon(activity_info)
         icon.props.pixel_size = style.STANDARD_ICON_SIZE
-        #icon.set_resume_mode(self._resume_mode)
+        # icon.set_resume_mode(self._resume_mode)
         self.add(icon)
         icon.show()
 
     def __activity_added_cb(self, activity_registry, activity_info):
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                activity_info.get_activity_version()):
+                                       activity_info.get_activity_version(),
+                                       self._box.favorite_view):
             self._add_activity(activity_info)
 
     def __activity_removed_cb(self, activity_registry, activity_info):
         icon = self._find_activity_icon(activity_info.get_bundle_id(),
-                activity_info.get_activity_version())
+                                        activity_info.get_activity_version())
         if icon is not None:
             self.remove(icon)
 
@@ -329,13 +336,14 @@ class FavoritesView(ViewContainer):
         if activity_info.get_bundle_id() == 'org.laptop.JournalActivity':
             return
         icon = self._find_activity_icon(activity_info.get_bundle_id(),
-                activity_info.get_activity_version())
+                                        activity_info.get_activity_version())
         if icon is not None:
             self.remove(icon)
 
         registry = bundleregistry.get_registry()
         if registry.is_bundle_favorite(activity_info.get_bundle_id(),
-                                       activity_info.get_activity_version()):
+                                       activity_info.get_activity_version(),
+                                       self._box.favorite_view):
             self._add_activity(activity_info)
 
     def set_filter(self, query):
@@ -358,7 +366,7 @@ class FavoritesView(ViewContainer):
             alert.props.msg = '%s' % e
         else:
             alert.props.title = _('Registration Successful')
-            alert.props.msg = _('You are now registered ' \
+            alert.props.msg = _('You are now registered '
                                 'with your school server.')
             self._owner_icon.set_registered()
 
@@ -444,7 +452,7 @@ class ActivityIcon(CanvasIcon):
         self.palette = None
         if not self._resume_mode or not self._journal_entries:
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                          style.COLOR_TRANSPARENT.get_svg()))
+                                          style.COLOR_WHITE.get_svg()))
         else:
             xo_color = misc.get_icon_color(self._journal_entries[0])
         self.props.xo_color = xo_color
@@ -527,7 +535,7 @@ class FavoritePalette(ActivityPalette):
 
         if not journal_entries:
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
-                                          style.COLOR_TRANSPARENT.get_svg()))
+                                          style.COLOR_WHITE.get_svg()))
         else:
             xo_color = misc.get_icon_color(journal_entries[0])
 
@@ -585,8 +593,10 @@ class CurrentActivityIcon(CanvasIcon):
         window.activate(Gtk.get_current_event_time())
 
     def _update(self):
-        self.props.file_name = self._home_activity.get_icon_path()
-        self.props.xo_color = self._home_activity.get_icon_color()
+        if self._home_activity is not None:
+            self.props.file_name = self._home_activity.get_icon_path()
+            self.props.xo_color = self._home_activity.get_icon_color()
+
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
@@ -672,9 +682,18 @@ class FavoritesSetting(object):
 
     _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
 
-    def __init__(self):
+    def __init__(self, favorite_view):
         client = GConf.Client.get_default()
-        self._layout = client.get_string(self._FAVORITES_KEY)
+        # Special-case 0 for backward compatibility
+        if favorite_view == 0:
+            self._client_string = self._FAVORITES_KEY
+        else:
+            self._client_string = '%s_%d' % (self._FAVORITES_KEY,
+                                             favorite_view)
+
+        self._layout = client.get_string(self._client_string)
+        if self._layout is None:
+            self._layout = favoriteslayout.RingLayout.key
         logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
@@ -690,15 +709,23 @@ class FavoritesSetting(object):
             self._layout = layout
 
             client = GConf.Client.get_default()
-            client.set_string(self._FAVORITES_KEY, layout)
+            client.set_string(self._client_string, layout)
 
             self.changed.send(self)
 
     layout = property(get_layout, set_layout)
 
 
-def get_settings():
+def get_settings(favorite_view=0):
     global _favorites_settings
+
+    number_of_views = desktop.get_number_of_views()
     if _favorites_settings is None:
-        _favorites_settings = FavoritesSetting()
-    return _favorites_settings
+        _favorites_settings = []
+        for i in range(number_of_views):
+            _favorites_settings.append(FavoritesSetting(i))
+    elif len(_favorites_settings) < number_of_views:
+        for i in range(number_of_views - len(_favorites_settings)):
+            _favorites_settings.append(
+                FavoritesSetting(len(_favorites_settings)))
+    return _favorites_settings[favorite_view]

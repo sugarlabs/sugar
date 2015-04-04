@@ -97,9 +97,9 @@ class Frame(object):
 
         notification_service = notifications.get_service()
         notification_service.notification_received.connect(
-                self.__notification_received_cb)
+            self.__notification_received_cb)
         notification_service.notification_cancelled.connect(
-                self.__notification_cancelled_cb)
+            self.__notification_cancelled_cb)
 
     def is_visible(self):
         return self.current_position != 0.0
@@ -243,7 +243,7 @@ class Frame(object):
         self._notif_by_icon[icon] = window
 
         GObject.timeout_add(duration,
-                        lambda: self.remove_notification(icon))
+                            lambda: self.remove_notification(icon))
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:

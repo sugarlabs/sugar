@@ -23,9 +23,7 @@ from gi.repository import Gdk
 
 import dbus
 
-from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-
 from jarabe.model import network
 
 
@@ -92,18 +90,12 @@ class KeyDialog(Gtk.Dialog):
 
         display_name = network.ssid_to_display_name(ssid)
         label = Gtk.Label(label=_("A wireless encryption key is required for\n"
-                            " the wireless network '%s'.") % (display_name, ))
+                                  " the wireless network '%s'.")
+                          % (display_name, ))
         self.vbox.pack_start(label, True, True, 0)
 
-        button = Gtk.Button()
-        button.set_image(Icon(icon_name='dialog-cancel'))
-        button.set_label(_('Cancel'))
-        self.add_action_widget(button, Gtk.ResponseType.CANCEL)
-        button = Gtk.Button()
-        button.set_image(Icon(icon_name='dialog-ok'))
-        button.set_label(_('Ok'))
-        self.add_action_widget(button, Gtk.ResponseType.OK)
-
+        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                         Gtk.STOCK_OK, Gtk.ResponseType.OK)
         self.set_default_response(Gtk.ResponseType.OK)
 
     def add_key_entry(self):
@@ -245,30 +237,7 @@ class WPAKeyDialog(KeyDialog):
         self.vbox.pack_start(self.hbox, True, True, 0)
 
     def _get_security(self):
-        ssid = self._ssid
-        key = self._entry.get_text()
-        is_hex = string_is_hex(key)
-
-        real_key = None
-        if len(key) == 64 and is_hex:
-            # Hex key
-            real_key = key
-        elif len(key) >= 8 and len(key) <= 63:
-            # passphrase
-            from subprocess import Popen, PIPE
-            p = Popen(['wpa_passphrase', ssid, key], stdout=PIPE)
-            for line in p.stdout:
-                if line.strip().startswith('psk='):
-                    real_key = line.strip()[4:]
-            if p.wait() != 0:
-                raise RuntimeError('Error hashing passphrase')
-            if real_key and len(real_key) != 64:
-                real_key = None
-
-        if not real_key:
-            raise RuntimeError('Invalid key')
-
-        return real_key
+        return self._entry.get_text()
 
     def print_security(self):
         key = self._get_security()

@@ -17,7 +17,6 @@
 
 import os
 import logging
-import re
 import subprocess
 from gettext import gettext as _
 import errno
@@ -45,7 +44,7 @@ _not_available = _('Not available')
 
 def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
-            % (get_serial_number(), get_build_number(), get_firmware_number())
+        % (get_serial_number(), get_build_number(), get_firmware_number())
     return msg
 
 

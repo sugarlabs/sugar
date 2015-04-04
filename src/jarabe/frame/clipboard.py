@@ -40,9 +40,9 @@ class Clipboard(GObject.GObject):
         'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
                         ([long])),
         'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([long])),
+                            ([long])),
         'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([object])),
+                                 ([object])),
     }
 
     def __init__(self):

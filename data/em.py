@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # $Id: //projects/empy/em.py#146 $ $Date: 2003/10/27 $
 
@@ -81,49 +81,50 @@ INPUT_ERRORS_ENV = 'EMPY_UNICODE_INPUT_ERRORS'
 OUTPUT_ERRORS_ENV = 'EMPY_UNICODE_OUTPUT_ERRORS'
 
 # Interpreter options.
-BANGPATH_OPT = 'processBangpaths' # process bangpaths as comments?
-BUFFERED_OPT = 'bufferedOutput' # fully buffered output?
-RAW_OPT = 'rawErrors' # raw errors?
-EXIT_OPT = 'exitOnError' # exit on error?
-FLATTEN_OPT = 'flatten' # flatten pseudomodule namespace?
-OVERRIDE_OPT = 'override' # override sys.stdout with proxy?
-CALLBACK_OPT = 'noCallbackError' # is no custom callback an error?
+BANGPATH_OPT = 'processBangpaths'  # process bangpaths as comments?
+BUFFERED_OPT = 'bufferedOutput'  # fully buffered output?
+RAW_OPT = 'rawErrors'  # raw errors?
+EXIT_OPT = 'exitOnError'  # exit on error?
+FLATTEN_OPT = 'flatten'  # flatten pseudomodule namespace?
+OVERRIDE_OPT = 'override'  # override sys.stdout with proxy?
+CALLBACK_OPT = 'noCallbackError'  # is no custom callback an error?
 
 # Usage info.
 OPTION_INFO = [
-("-V --version", "Print version and exit"),
-("-h --help", "Print usage and exit"),
-("-H --extended-help", "Print extended usage and exit"),
-("-k --suppress-errors", "Do not exit on errors; go interactive"),
-("-p --prefix=<char>", "Change prefix to something other than @"),
-("   --no-prefix", "Do not do any markup processing at all"),
-("-m --module=<name>", "Change the internal pseudomodule name"),
-("-f --flatten", "Flatten the members of pseudmodule to start"),
-("-r --raw-errors", "Show raw Python errors"),
-("-i --interactive", "Go into interactive mode after processing"),
-("-n --no-override-stdout", "Do not override sys.stdout with proxy"),
-("-o --output=<filename>", "Specify file for output as write"),
-("-a --append=<filename>", "Specify file for output as append"),
-("-b --buffered-output", "Fully buffer output including open"),
-("   --binary", "Treat the file as a binary"),
-("   --chunk-size=<chunk>", "Use this chunk size for reading binaries"),
-("-P --preprocess=<filename>", "Interpret EmPy file before main processing"),
-("-I --import=<modules>", "Import Python modules before processing"),
-("-D --define=<definition>", "Execute Python assignment statement"),
-("-E --execute=<statement>", "Execute Python statement before processing"),
-("-F --execute-file=<filename>", "Execute Python file before processing"),
-("   --pause-at-end", "Prompt at the ending of processing"),
-("   --relative-path", "Add path of EmPy script to sys.path"),
-("   --no-callback-error", "Custom markup without callback is error"),
-("   --no-bangpath-processing", "Suppress bangpaths as comments"),
-("-u --unicode", "Enable Unicode subsystem (Python 2+ only)"),
-("   --unicode-encoding=<e>", "Set both input and output encodings"),
-("   --unicode-input-encoding=<e>", "Set input encoding"),
-("   --unicode-output-encoding=<e>", "Set output encoding"),
-("   --unicode-errors=<E>", "Set both input and output error handler"),
-("   --unicode-input-errors=<E>", "Set input error handler"),
-("   --unicode-output-errors=<E>", "Set output error handler"),
-]
+    ("-V --version", "Print version and exit"),
+    ("-h --help", "Print usage and exit"),
+    ("-H --extended-help", "Print extended usage and exit"),
+    ("-k --suppress-errors", "Do not exit on errors; go interactive"),
+    ("-p --prefix=<char>", "Change prefix to something other than @"),
+    ("   --no-prefix", "Do not do any markup processing at all"),
+    ("-m --module=<name>", "Change the internal pseudomodule name"),
+    ("-f --flatten", "Flatten the members of pseudmodule to start"),
+    ("-r --raw-errors", "Show raw Python errors"),
+    ("-i --interactive", "Go into interactive mode after processing"),
+    ("-n --no-override-stdout", "Do not override sys.stdout with proxy"),
+    ("-o --output=<filename>", "Specify file for output as write"),
+    ("-a --append=<filename>", "Specify file for output as append"),
+    ("-b --buffered-output", "Fully buffer output including open"),
+    ("   --binary", "Treat the file as a binary"),
+    ("   --chunk-size=<chunk>", "Use this chunk size for reading binaries"),
+    ("-P --preprocess=<filename>",
+     "Interpret EmPy file before main processing"),
+    ("-I --import=<modules>", "Import Python modules before processing"),
+    ("-D --define=<definition>", "Execute Python assignment statement"),
+    ("-E --execute=<statement>", "Execute Python statement before processing"),
+    ("-F --execute-file=<filename>", "Execute Python file before processing"),
+    ("   --pause-at-end", "Prompt at the ending of processing"),
+    ("   --relative-path", "Add path of EmPy script to sys.path"),
+    ("   --no-callback-error", "Custom markup without callback is error"),
+    ("   --no-bangpath-processing", "Suppress bangpaths as comments"),
+    ("-u --unicode", "Enable Unicode subsystem (Python 2+ only)"),
+    ("   --unicode-encoding=<e>", "Set both input and output encodings"),
+    ("   --unicode-input-encoding=<e>", "Set input encoding"),
+    ("   --unicode-output-encoding=<e>", "Set output encoding"),
+    ("   --unicode-errors=<E>", "Set both input and output error handler"),
+    ("   --unicode-input-errors=<E>", "Set input error handler"),
+    ("   --unicode-output-errors=<E>", "Set output error handler"),
+    ]
 
 USAGE_NOTES = """\
 Notes: Whitespace immediately inside parentheses of @(...) are
@@ -134,166 +135,177 @@ means `@(x).'.  A #! at the start of a file is treated as a @#
 comment."""
 
 MARKUP_INFO = [
-("@# ... NL", "Comment; remove everything up to newline"),
-("@? NAME NL", "Set the current context name"),
-("@! INTEGER NL", "Set the current context line number"),
-("@ WHITESPACE", "Remove following whitespace; line continuation"),
-("@\\ ESCAPE_CODE", "A C-style escape sequence"),
-("@@", "Literal @; @ is escaped (duplicated prefix)"),
-("@), @], @}", "Literal close parenthesis, bracket, brace"),
-("@ STRING_LITERAL", "Replace with string literal contents"),
-("@( EXPRESSION )", "Evaluate expression and substitute with str"),
-("@( TEST [? THEN [! ELSE]] )", "If test is true, evaluate then, otherwise else"),
-("@( TRY $ CATCH )", "Expand try expression, or catch if it raises"),
-("@ SIMPLE_EXPRESSION", "Evaluate simple expression and substitute;\n"
-                        "e.g., @x, @x.y, @f(a, b), @l[i], etc."),
-("@` EXPRESSION `", "Evaluate expression and substitute with repr"),
-("@: EXPRESSION : [DUMMY] :", "Evaluates to @:...:expansion:"),
-("@{ STATEMENTS }", "Statements are executed for side effects"),
-("@[ CONTROL ]", "Control markups: if E; elif E; for N in E;\n"
-                 "while E; try; except E, N; finally; continue;\n"
-                 "break; end X"),
-("@%% KEY WHITESPACE VALUE NL", "Significator form of __KEY__ = VALUE"),
-("@< CONTENTS >", "Custom markup; meaning provided by user"),
-]
+    ("@# ... NL", "Comment; remove everything up to newline"),
+    ("@? NAME NL", "Set the current context name"),
+    ("@! INTEGER NL", "Set the current context line number"),
+    ("@ WHITESPACE", "Remove following whitespace; line continuation"),
+    ("@\\ ESCAPE_CODE", "A C-style escape sequence"),
+    ("@@", "Literal @; @ is escaped (duplicated prefix)"),
+    ("@), @], @}", "Literal close parenthesis, bracket, brace"),
+    ("@ STRING_LITERAL", "Replace with string literal contents"),
+    ("@( EXPRESSION )", "Evaluate expression and substitute with str"),
+    ("@( TEST [? THEN [! ELSE]] )",
+     "If test is true, evaluate then, otherwise else"),
+    ("@( TRY $ CATCH )", "Expand try expression, or catch if it raises"),
+    ("@ SIMPLE_EXPRESSION", "Evaluate simple expression and substitute;\n"
+     "e.g., @x, @x.y, @f(a, b), @l[i], etc."),
+    ("@` EXPRESSION `", "Evaluate expression and substitute with repr"),
+    ("@: EXPRESSION : [DUMMY] :", "Evaluates to @:...:expansion:"),
+    ("@{ STATEMENTS }", "Statements are executed for side effects"),
+    ("@[ CONTROL ]", "Control markups: if E; elif E; for N in E;\n"
+     "while E; try; except E, N; finally; continue;\n"
+     "break; end X"),
+    ("@%% KEY WHITESPACE VALUE NL", "Significator form of __KEY__ = VALUE"),
+    ("@< CONTENTS >", "Custom markup; meaning provided by user"),
+    ]
 
 ESCAPE_INFO = [
-("@\\0", "NUL, null"),
-("@\\a", "BEL, bell"),
-("@\\b", "BS, backspace"),
-("@\\dDDD", "three-digit decimal code DDD"),
-("@\\e", "ESC, escape"),
-("@\\f", "FF, form feed"),
-("@\\h", "DEL, delete"),
-("@\\n", "LF, linefeed, newline"),
-("@\\N{NAME}", "Unicode character named NAME"),
-("@\\oOOO", "three-digit octal code OOO"),
-("@\\qQQQQ", "four-digit quaternary code QQQQ"),
-("@\\r", "CR, carriage return"),
-("@\\s", "SP, space"),
-("@\\t", "HT, horizontal tab"),
-("@\\uHHHH", "16-bit hexadecimal Unicode HHHH"),
-("@\\UHHHHHHHH", "32-bit hexadecimal Unicode HHHHHHHH"),
-("@\\v", "VT, vertical tab"),
-("@\\xHH", "two-digit hexadecimal code HH"),
-("@\\z", "EOT, end of transmission"),
-]
+    ("@\\0", "NUL, null"),
+    ("@\\a", "BEL, bell"),
+    ("@\\b", "BS, backspace"),
+    ("@\\dDDD", "three-digit decimal code DDD"),
+    ("@\\e", "ESC, escape"),
+    ("@\\f", "FF, form feed"),
+    ("@\\h", "DEL, delete"),
+    ("@\\n", "LF, linefeed, newline"),
+    ("@\\N{NAME}", "Unicode character named NAME"),
+    ("@\\oOOO", "three-digit octal code OOO"),
+    ("@\\qQQQQ", "four-digit quaternary code QQQQ"),
+    ("@\\r", "CR, carriage return"),
+    ("@\\s", "SP, space"),
+    ("@\\t", "HT, horizontal tab"),
+    ("@\\uHHHH", "16-bit hexadecimal Unicode HHHH"),
+    ("@\\UHHHHHHHH", "32-bit hexadecimal Unicode HHHHHHHH"),
+    ("@\\v", "VT, vertical tab"),
+    ("@\\xHH", "two-digit hexadecimal code HH"),
+    ("@\\z", "EOT, end of transmission"),
+    ]
 
 PSEUDOMODULE_INFO = [
-("VERSION", "String representing EmPy version"),
-("SIGNIFICATOR_RE_STRING", "Regular expression matching significators"),
-("SIGNIFICATOR_RE_SUFFIX", "The above stub, lacking the prefix"),
-("interpreter", "Currently-executing interpreter instance"),
-("argv", "The EmPy script name and command line arguments"),
-("args", "The command line arguments only"),
-("identify()", "Identify top context as name, line"),
-("setContextName(name)", "Set the name of the current context"),
-("setContextLine(line)", "Set the line number of the current context"),
-("atExit(callable)", "Invoke no-argument function at shutdown"),
-("getGlobals()", "Retrieve this interpreter's globals"),
-("setGlobals(dict)", "Set this interpreter's globals"),
-("updateGlobals(dict)", "Merge dictionary into interpreter's globals"),
-("clearGlobals()", "Start globals over anew"),
-("saveGlobals([deep])", "Save a copy of the globals"),
-("restoreGlobals([pop])", "Restore the most recently saved globals"),
-("defined(name, [loc])", "Find if the name is defined"),
-("evaluate(expression, [loc])", "Evaluate the expression"),
-("serialize(expression, [loc])", "Evaluate and serialize the expression"),
-("execute(statements, [loc])", "Execute the statements"),
-("single(source, [loc])", "Execute the 'single' object"),
-("atomic(name, value, [loc])", "Perform an atomic assignment"),
-("assign(name, value, [loc])", "Perform an arbitrary assignment"),
-("significate(key, [value])", "Significate the given key, value pair"),
-("include(file, [loc])", "Include filename or file-like object"),
-("expand(string, [loc])", "Explicitly expand string and return"),
-("string(data, [name], [loc])", "Process string-like object"),
-("quote(string)", "Quote prefixes in provided string and return"),
-("flatten([keys])", "Flatten module contents into globals namespace"),
-("getPrefix()", "Get current prefix"),
-("setPrefix(char)", "Set new prefix"),
-("stopDiverting()", "Stop diverting; data sent directly to output"),
-("createDiversion(name)", "Create a diversion but do not divert to it"),
-("retrieveDiversion(name)", "Retrieve the actual named diversion object"),
-("startDiversion(name)", "Start diverting to given diversion"),
-("playDiversion(name)", "Recall diversion and then eliminate it"),
-("replayDiversion(name)", "Recall diversion but retain it"),
-("purgeDiversion(name)", "Erase diversion"),
-("playAllDiversions()", "Stop diverting and play all diversions in order"),
-("replayAllDiversions()", "Stop diverting and replay all diversions"),
-("purgeAllDiversions()", "Stop diverting and purge all diversions"),
-("getFilter()", "Get current filter"),
-("resetFilter()", "Reset filter; no filtering"),
-("nullFilter()", "Install null filter"),
-("setFilter(shortcut)", "Install new filter or filter chain"),
-("attachFilter(shortcut)", "Attach single filter to end of current chain"),
-("areHooksEnabled()", "Return whether or not hooks are enabled"),
-("enableHooks()", "Enable hooks (default)"),
-("disableHooks()", "Disable hook invocation"),
-("getHooks()", "Get all the hooks"),
-("clearHooks()", "Clear all hooks"),
-("addHook(hook, [i])", "Register the hook (optionally insert)"),
-("removeHook(hook)", "Remove an already-registered hook from name"),
-("invokeHook(name_, ...)", "Manually invoke hook"),
-("getCallback()", "Get interpreter callback"),
-("registerCallback(callback)", "Register callback with interpreter"),
-("deregisterCallback()", "Deregister callback from interpreter"),
-("invokeCallback(contents)", "Invoke the callback directly"),
-("Interpreter", "The interpreter class"),
-]
+    ("VERSION", "String representing EmPy version"),
+    ("SIGNIFICATOR_RE_STRING", "Regular expression matching significators"),
+    ("SIGNIFICATOR_RE_SUFFIX", "The above stub, lacking the prefix"),
+    ("interpreter", "Currently-executing interpreter instance"),
+    ("argv", "The EmPy script name and command line arguments"),
+    ("args", "The command line arguments only"),
+    ("identify()", "Identify top context as name, line"),
+    ("setContextName(name)", "Set the name of the current context"),
+    ("setContextLine(line)", "Set the line number of the current context"),
+    ("atExit(callable)", "Invoke no-argument function at shutdown"),
+    ("getGlobals()", "Retrieve this interpreter's globals"),
+    ("setGlobals(dict)", "Set this interpreter's globals"),
+    ("updateGlobals(dict)", "Merge dictionary into interpreter's globals"),
+    ("clearGlobals()", "Start globals over anew"),
+    ("saveGlobals([deep])", "Save a copy of the globals"),
+    ("restoreGlobals([pop])", "Restore the most recently saved globals"),
+    ("defined(name, [loc])", "Find if the name is defined"),
+    ("evaluate(expression, [loc])", "Evaluate the expression"),
+    ("serialize(expression, [loc])", "Evaluate and serialize the expression"),
+    ("execute(statements, [loc])", "Execute the statements"),
+    ("single(source, [loc])", "Execute the 'single' object"),
+    ("atomic(name, value, [loc])", "Perform an atomic assignment"),
+    ("assign(name, value, [loc])", "Perform an arbitrary assignment"),
+    ("significate(key, [value])", "Significate the given key, value pair"),
+    ("include(file, [loc])", "Include filename or file-like object"),
+    ("expand(string, [loc])", "Explicitly expand string and return"),
+    ("string(data, [name], [loc])", "Process string-like object"),
+    ("quote(string)", "Quote prefixes in provided string and return"),
+    ("flatten([keys])", "Flatten module contents into globals namespace"),
+    ("getPrefix()", "Get current prefix"),
+    ("setPrefix(char)", "Set new prefix"),
+    ("stopDiverting()", "Stop diverting; data sent directly to output"),
+    ("createDiversion(name)", "Create a diversion but do not divert to it"),
+    ("retrieveDiversion(name)", "Retrieve the actual named diversion object"),
+    ("startDiversion(name)", "Start diverting to given diversion"),
+    ("playDiversion(name)", "Recall diversion and then eliminate it"),
+    ("replayDiversion(name)", "Recall diversion but retain it"),
+    ("purgeDiversion(name)", "Erase diversion"),
+    ("playAllDiversions()", "Stop diverting and play all diversions in order"),
+    ("replayAllDiversions()", "Stop diverting and replay all diversions"),
+    ("purgeAllDiversions()", "Stop diverting and purge all diversions"),
+    ("getFilter()", "Get current filter"),
+    ("resetFilter()", "Reset filter; no filtering"),
+    ("nullFilter()", "Install null filter"),
+    ("setFilter(shortcut)", "Install new filter or filter chain"),
+    ("attachFilter(shortcut)", "Attach single filter to end of current chain"),
+    ("areHooksEnabled()", "Return whether or not hooks are enabled"),
+    ("enableHooks()", "Enable hooks (default)"),
+    ("disableHooks()", "Disable hook invocation"),
+    ("getHooks()", "Get all the hooks"),
+    ("clearHooks()", "Clear all hooks"),
+    ("addHook(hook, [i])", "Register the hook (optionally insert)"),
+    ("removeHook(hook)", "Remove an already-registered hook from name"),
+    ("invokeHook(name_, ...)", "Manually invoke hook"),
+    ("getCallback()", "Get interpreter callback"),
+    ("registerCallback(callback)", "Register callback with interpreter"),
+    ("deregisterCallback()", "Deregister callback from interpreter"),
+    ("invokeCallback(contents)", "Invoke the callback directly"),
+    ("Interpreter", "The interpreter class"),
+    ]
 
 ENVIRONMENT_INFO = [
-(OPTIONS_ENV, "Specified options will be included"),
-(PREFIX_ENV, "Specify the default prefix: -p <value>"),
-(PSEUDO_ENV, "Specify name of pseudomodule: -m <value>"),
-(FLATTEN_ENV, "Flatten empy pseudomodule if defined: -f"),
-(RAW_ENV, "Show raw errors if defined: -r"),
-(INTERACTIVE_ENV, "Enter interactive mode if defined: -i"),
-(BUFFERED_ENV, "Fully buffered output if defined: -b"),
-(NO_OVERRIDE_ENV, "Do not override sys.stdout if defined: -n"),
-(UNICODE_ENV, "Enable Unicode subsystem: -n"),
-(INPUT_ENCODING_ENV, "Unicode input encoding"),
-(OUTPUT_ENCODING_ENV, "Unicode output encoding"),
-(INPUT_ERRORS_ENV, "Unicode input error handler"),
-(OUTPUT_ERRORS_ENV, "Unicode output error handler"),
-]
+    (OPTIONS_ENV, "Specified options will be included"),
+    (PREFIX_ENV, "Specify the default prefix: -p <value>"),
+    (PSEUDO_ENV, "Specify name of pseudomodule: -m <value>"),
+    (FLATTEN_ENV, "Flatten empy pseudomodule if defined: -f"),
+    (RAW_ENV, "Show raw errors if defined: -r"),
+    (INTERACTIVE_ENV, "Enter interactive mode if defined: -i"),
+    (BUFFERED_ENV, "Fully buffered output if defined: -b"),
+    (NO_OVERRIDE_ENV, "Do not override sys.stdout if defined: -n"),
+    (UNICODE_ENV, "Enable Unicode subsystem: -n"),
+    (INPUT_ENCODING_ENV, "Unicode input encoding"),
+    (OUTPUT_ENCODING_ENV, "Unicode output encoding"),
+    (INPUT_ERRORS_ENV, "Unicode input error handler"),
+    (OUTPUT_ERRORS_ENV, "Unicode output error handler"),
+    ]
+
 
 class Error(Exception):
     """The base class for all EmPy errors."""
     pass
 
-EmpyError = EmPyError = Error # DEPRECATED
+EmpyError = EmPyError = Error  # DEPRECATED
+
 
 class DiversionError(Error):
     """An error related to diversions."""
     pass
 
+
 class FilterError(Error):
     """An error related to filters."""
     pass
+
 
 class StackUnderflowError(Error):
     """A stack underflow."""
     pass
 
+
 class SubsystemError(Error):
     """An error associated with the Unicode subsystem."""
     pass
+
 
 class FlowError(Error):
     """An exception related to control flow."""
     pass
 
+
 class ContinueFlow(FlowError):
     """A continue control flow."""
     pass
+
 
 class BreakFlow(FlowError):
     """A break control flow."""
     pass
 
+
 class ParseError(Error):
     """A parse error occurred."""
     pass
+
 
 class TransientParseError(ParseError):
     """A parse error occurred which may be resolved by feeding more data.
@@ -305,7 +317,7 @@ class MetaError(Exception):
 
     """A wrapper around a real Python exception for including a copy of
     the context."""
-    
+
     def __init__(self, contexts, exc):
         Exception.__init__(self, exc)
         self.contexts = contexts
@@ -313,7 +325,7 @@ class MetaError(Exception):
 
     def __str__(self):
         backtrace = map(lambda x: str(x), self.contexts)
-        return "%s: %s (%s)" % (self.exc.__class__, self.exc, \
+        return "%s: %s (%s)" % (self.exc.__class__, self.exc,
                                 (string.join(backtrace, ', ')))
 
 
@@ -328,14 +340,9 @@ class Subsystem:
         self.outputEncoding = None
         self.errors = None
 
-    def initialize(self, inputEncoding=None, outputEncoding=None, \
+    def initialize(self, inputEncoding=None, outputEncoding=None,
                    inputErrors=None, outputErrors=None):
         self.useUnicode = True
-        try:
-            unicode
-            import codecs
-        except (NameError, ImportError):
-            raise SubsystemError, "Unicode subsystem unavailable"
         defaultEncoding = sys.getdefaultencoding()
         if inputEncoding is None:
             inputEncoding = defaultEncoding
@@ -352,7 +359,7 @@ class Subsystem:
 
     def assertUnicode(self):
         if not self.useUnicode:
-            raise SubsystemError, "Unicode subsystem unavailable"
+            raise SubsystemError("Unicode subsystem unavailable")
 
     def open(self, name, mode=None):
         if self.useUnicode:
@@ -381,7 +388,7 @@ theSubsystem = Subsystem()
 
 
 class Stack:
-    
+
     """A simple stack that behaves as a sequence (with 0 being the top
     of the stack, not the bottom)."""
 
@@ -395,15 +402,15 @@ class Stack:
         try:
             return self.data[-1]
         except IndexError:
-            raise StackUnderflowError, "stack is empty for top"
-        
+            raise StackUnderflowError("stack is empty for top")
+
     def pop(self):
         """Pop the top element off the stack and return it."""
         try:
             return self.data.pop()
         except IndexError:
-            raise StackUnderflowError, "stack is empty for pop"
-        
+            raise StackUnderflowError("stack is empty for pop")
+
     def push(self, object):
         """Push an element onto the top of the stack."""
         self.data.append(object)
@@ -420,18 +427,23 @@ class Stack:
         """Create a duplicate of this stack."""
         return self.__class__(self.data[:])
 
-    def __nonzero__(self): return len(self.data) != 0
-    def __len__(self): return len(self.data)
-    def __getitem__(self, index): return self.data[-(index + 1)]
+    def __nonzero__(self):
+        return len(self.data) != 0
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        return self.data[-(index + 1)]
 
     def __repr__(self):
         return '<%s instance at 0x%x [%s]>' % \
-               (self.__class__, id(self), \
+               (self.__class__, id(self),
                 string.join(map(repr, self.data), ', '))
 
 
 class AbstractFile:
-    
+
     """An abstracted file that, when buffered, will totally buffer the
     file, including even the file open."""
 
@@ -522,10 +534,10 @@ class Diversion:
 
 
 class Stream:
-    
+
     """A wrapper around an (output) file object which supports
     diversions and filtering."""
-    
+
     def __init__(self, file):
         self.file = file
         self.currentDiversion = None
@@ -538,7 +550,7 @@ class Stream:
             self.filter.write(data)
         else:
             self.diversions[self.currentDiversion].write(data)
-    
+
     def writelines(self, lines):
         for line in lines:
             self.write(line)
@@ -558,15 +570,15 @@ class Stream:
         independently."""
         if shortcut == 0:
             return NullFilter()
-        elif type(shortcut) is types.FunctionType or \
-             type(shortcut) is types.BuiltinFunctionType or \
-             type(shortcut) is types.BuiltinMethodType or \
-             type(shortcut) is types.LambdaType:
+        elif isinstance(shortcut, types.FunctionType) or \
+            isinstance(shortcut, types.BuiltinFunctionType) or \
+            isinstance(shortcut, types.BuiltinMethodType) or \
+                isinstance(shortcut, types.LambdaType):
             return FunctionFilter(shortcut)
-        elif type(shortcut) is types.StringType:
+        elif isinstance(shortcut, types.StringType):
             return StringFilter(filter)
-        elif type(shortcut) is types.DictType:
-            raise NotImplementedError, "mapping filters not yet supported"
+        elif isinstance(shortcut, types.DictType):
+            raise NotImplementedError("mapping filters not yet supported")
         else:
             # Presume it's a plain old filter.
             return shortcut
@@ -640,43 +652,43 @@ class Stream:
         """Create a diversion if one does not already exist, but do not
         divert to it yet."""
         if name is None:
-            raise DiversionError, "diversion name must be non-None"
-        if not self.diversions.has_key(name):
+            raise DiversionError("diversion name must be non-None")
+        if name not in self.diversions:
             self.diversions[name] = Diversion()
 
     def retrieve(self, name):
         """Retrieve the given diversion."""
         if name is None:
-            raise DiversionError, "diversion name must be non-None"
-        if self.diversions.has_key(name):
+            raise DiversionError("diversion name must be non-None")
+        if name in self.diversions:
             return self.diversions[name]
         else:
-            raise DiversionError, "nonexistent diversion: %s" % name
+            raise DiversionError("nonexistent diversion: %s" % name)
 
     def divert(self, name):
         """Start diverting."""
         if name is None:
-            raise DiversionError, "diversion name must be non-None"
+            raise DiversionError("diversion name must be non-None")
         self.create(name)
         self.currentDiversion = name
 
     def undivert(self, name, purgeAfterwards=False):
         """Undivert a particular diversion."""
         if name is None:
-            raise DiversionError, "diversion name must be non-None"
-        if self.diversions.has_key(name):
+            raise DiversionError("diversion name must be non-None")
+        if name in self.diversions:
             diversion = self.diversions[name]
             self.filter.write(diversion.asString())
             if purgeAfterwards:
                 self.purge(name)
         else:
-            raise DiversionError, "nonexistent diversion: %s" % name
+            raise DiversionError("nonexistent diversion: %s" % name)
 
     def purge(self, name):
         """Purge the specified diversion."""
         if name is None:
-            raise DiversionError, "diversion name must be non-None"
-        if self.diversions.has_key(name):
+            raise DiversionError("diversion name must be non-None")
+        if name in self.diversions:
             del self.diversions[name]
             if self.currentDiversion == name:
                 self.currentDiversion = None
@@ -684,14 +696,13 @@ class Stream:
     def undivertAll(self, purgeAfterwards=True):
         """Undivert all pending diversions."""
         if self.diversions:
-            self.revert() # revert before undiverting!
-            names = self.diversions.keys()
-            names.sort()
+            self.revert()  # revert before undiverting!
+            names = sorted(self.diversions.keys())
             for name in names:
                 self.undivert(name)
                 if purgeAfterwards:
                     self.purge(name)
-            
+
     def purgeAll(self):
         """Eliminate all existing diversions."""
         if self.diversions:
@@ -704,11 +715,20 @@ class NullFile:
     """A simple class that supports all the file-like object methods
     but simply does nothing at all."""
 
-    def __init__(self): pass
-    def write(self, data): pass
-    def writelines(self, lines): pass
-    def flush(self): pass
-    def close(self): pass
+    def __init__(self):
+        pass
+
+    def write(self, data):
+        pass
+
+    def writelines(self, lines):
+        pass
+
+    def flush(self):
+        pass
+
+    def close(self):
+        pass
 
 
 class UncloseableFile:
@@ -723,7 +743,7 @@ class UncloseableFile:
         self.delegate.write(data)
 
     def writelines(self, lines):
-        self.delegate.writelines(data)
+        self.delegate.writelines(lines)
 
     def flush(self):
         self.delegate.flush()
@@ -777,7 +797,8 @@ class ProxyFile:
             self.bottom = None
         current.close()
 
-    def _testProxy(self): pass
+    def _testProxy(self):
+        pass
 
 
 class Filter:
@@ -827,7 +848,7 @@ class Filter:
     def detach(self):
         """Detach a filter from its sink."""
         self.flush()
-        self._flush() # do a guaranteed flush to just to be safe
+        self._flush()  # do a guaranteed flush to just to be safe
         self.sink = None
 
     def last(self):
@@ -838,17 +859,20 @@ class Filter:
             this = this.next()
         return last
 
+
 class NullFilter(Filter):
 
     """A filter that never sends any output to its sink."""
 
-    def write(self, data): pass
+    def write(self, data):
+        pass
+
 
 class FunctionFilter(Filter):
 
     """A filter that works simply by pumping its input through a
     function which maps strings into strings."""
-    
+
     def __init__(self, function):
         Filter.__init__(self)
         self.function = function
@@ -856,19 +880,21 @@ class FunctionFilter(Filter):
     def write(self, data):
         self.sink.write(self.function(data))
 
+
 class StringFilter(Filter):
 
     """A filter that takes a translation string (256 characters) and
     filters any incoming data through it."""
 
     def __init__(self, table):
-        if not (type(table) == types.StringType and len(table) == 256):
-            raise FilterError, "table must be 256-character string"
+        if not (isinstance(table, types.StringType) and len(table) == 256):
+            raise FilterError("table must be 256-character string")
         Filter.__init__(self)
         self.table = table
 
     def write(self, data):
         self.sink.write(string.translate(data, self.table))
+
 
 class BufferedFilter(Filter):
 
@@ -889,6 +915,7 @@ class BufferedFilter(Filter):
             self.sink.write(self.buffer)
         self._flush()
 
+
 class SizeBufferedFilter(BufferedFilter):
 
     """A size-buffered filter only in fixed size chunks (excepting the
@@ -905,6 +932,7 @@ class SizeBufferedFilter(BufferedFilter):
                 self.buffer[:self.bufferSize], self.buffer[self.bufferSize:]
             self.sink.write(chunk)
 
+
 class LineBufferedFilter(BufferedFilter):
 
     """A line-buffered filter only lets data through when it sees
@@ -920,6 +948,7 @@ class LineBufferedFilter(BufferedFilter):
             self.sink.write(chunk + '\n')
         self.buffer = chunks[-1]
 
+
 class MaximallyBufferedFilter(BufferedFilter):
 
     """A maximally-buffered filter only lets its data through on the final
@@ -928,7 +957,8 @@ class MaximallyBufferedFilter(BufferedFilter):
     def __init__(self):
         BufferedFilter.__init__(self)
 
-    def flush(self): pass
+    def flush(self):
+        pass
 
     def close(self):
         if self.buffer:
@@ -937,7 +967,7 @@ class MaximallyBufferedFilter(BufferedFilter):
 
 
 class Context:
-    
+
     """An interpreter context, which encapsulates a name, an input
     file object, and a parser object."""
 
@@ -977,7 +1007,7 @@ class Hook:
 
     def deregister(self, interpreter):
         if interpreter is not self.interpreter:
-            raise Error, "hook not associated with this interpreter"
+            raise Error("hook not associated with this interpreter")
         self.interpreter = None
 
     def push(self):
@@ -986,73 +1016,147 @@ class Hook:
     def pop(self):
         self.interpreter.pop()
 
-    def null(self): pass
+    def null(self):
+        pass
 
-    def atStartup(self): pass
-    def atReady(self): pass
-    def atFinalize(self): pass
-    def atShutdown(self): pass
-    def atParse(self, scanner, locals): pass
-    def atToken(self, token): pass
-    def atHandle(self, meta): pass
-    def atInteract(self): pass
+    def atStartup(self):
+        pass
 
-    def beforeInclude(self, name, file, locals): pass
-    def afterInclude(self): pass
+    def atReady(self):
+        pass
 
-    def beforeExpand(self, string, locals): pass
-    def afterExpand(self, result): pass
+    def atFinalize(self):
+        pass
 
-    def beforeFile(self, name, file, locals): pass
-    def afterFile(self): pass
+    def atShutdown(self):
+        pass
 
-    def beforeBinary(self, name, file, chunkSize, locals): pass
-    def afterBinary(self): pass
+    def atParse(self, scanner, locals):
+        pass
 
-    def beforeString(self, name, string, locals): pass
-    def afterString(self): pass
+    def atToken(self, token):
+        pass
 
-    def beforeQuote(self, string): pass
-    def afterQuote(self, result): pass
+    def atHandle(self, meta):
+        pass
 
-    def beforeEscape(self, string, more): pass
-    def afterEscape(self, result): pass
+    def atInteract(self):
+        pass
 
-    def beforeControl(self, type, rest, locals): pass
-    def afterControl(self): pass
+    def beforeInclude(self, name, file, locals):
+        pass
 
-    def beforeSignificate(self, key, value, locals): pass
-    def afterSignificate(self): pass
+    def afterInclude(self):
+        pass
 
-    def beforeAtomic(self, name, value, locals): pass
-    def afterAtomic(self): pass
+    def beforeExpand(self, string, locals):
+        pass
 
-    def beforeMulti(self, name, values, locals): pass
-    def afterMulti(self): pass
+    def afterExpand(self, result):
+        pass
 
-    def beforeImport(self, name, locals): pass
-    def afterImport(self): pass
+    def beforeFile(self, name, file, locals):
+        pass
 
-    def beforeClause(self, catch, locals): pass
-    def afterClause(self, exception, variable): pass
+    def afterFile(self):
+        pass
 
-    def beforeSerialize(self, expression, locals): pass
-    def afterSerialize(self): pass
+    def beforeBinary(self, name, file, chunkSize, locals):
+        pass
 
-    def beforeDefined(self, name, locals): pass
-    def afterDefined(self, result): pass
+    def afterBinary(self):
+        pass
 
-    def beforeLiteral(self, text): pass
-    def afterLiteral(self): pass
+    def beforeString(self, name, string, locals):
+        pass
 
-    def beforeEvaluate(self, expression, locals): pass
-    def afterEvaluate(self, result): pass
+    def afterString(self):
+        pass
 
-    def beforeExecute(self, statements, locals): pass
-    def afterExecute(self): pass
+    def beforeQuote(self, string):
+        pass
 
-    def beforeSingle(self, source, locals): pass
-    def afterSingle(self): pass
+    def afterQuote(self, result):
+        pass
+
+    def beforeEscape(self, string, more):
+        pass
+
+    def afterEscape(self, result):
+        pass
+
+    def beforeControl(self, type, rest, locals):
+        pass
+
+    def afterControl(self):
+        pass
+
+    def beforeSignificate(self, key, value, locals):
+        pass
+
+    def afterSignificate(self):
+        pass
+
+    def beforeAtomic(self, name, value, locals):
+        pass
+
+    def afterAtomic(self):
+        pass
+
+    def beforeMulti(self, name, values, locals):
+        pass
+
+    def afterMulti(self):
+        pass
+
+    def beforeImport(self, name, locals):
+        pass
+
+    def afterImport(self):
+        pass
+
+    def beforeClause(self, catch, locals):
+        pass
+
+    def afterClause(self, exception, variable):
+        pass
+
+    def beforeSerialize(self, expression, locals):
+        pass
+
+    def afterSerialize(self):
+        pass
+
+    def beforeDefined(self, name, locals):
+        pass
+
+    def afterDefined(self, result):
+        pass
+
+    def beforeLiteral(self, text):
+        pass
+
+    def afterLiteral(self):
+        pass
+
+    def beforeEvaluate(self, expression, locals):
+        pass
+
+    def afterEvaluate(self, result):
+        pass
+
+    def beforeExecute(self, statements, locals):
+        pass
+
+    def afterExecute(self):
+        pass
+
+    def beforeSingle(self, source, locals):
+        pass
+
+    def afterSingle(self):
+        pass
+
 
 class VerboseHook(Hook):
 
@@ -1074,15 +1178,15 @@ class VerboseHook(Hook):
                 self.name = name
 
             def __call__(self, **keywords):
-                self.hook.output.write("%s%s: %s\n" % \
-                                       (' ' * self.hook.indent, \
+                self.hook.output.write("%s%s: %s\n" %
+                                       (' ' * self.hook.indent,
                                         self.name, repr(keywords)))
 
         for attribute in dir(Hook):
             if attribute[:1] != '_' and \
-                   attribute not in self.EXEMPT_ATTRIBUTES:
+                    attribute not in self.EXEMPT_ATTRIBUTES:
                 self.__dict__[attribute] = FakeMethod(self, attribute)
-        
+
 
 class Token:
 
@@ -1094,7 +1198,9 @@ class Token:
     def string(self):
         raise NotImplementedError
 
-    def __str__(self): return self.string()
+    def __str__(self):
+        return self.string()
+
 
 class NullToken(Token):
     """A chunk of data not containing markups."""
@@ -1106,6 +1212,7 @@ class NullToken(Token):
 
     def string(self):
         return self.data
+
 
 class ExpansionToken(Token):
     """A token that involves an expansion."""
@@ -1119,10 +1226,12 @@ class ExpansionToken(Token):
     def run(self, interpreter, locals):
         pass
 
+
 class WhitespaceToken(ExpansionToken):
     """A whitespace markup."""
     def string(self):
         return '%s%s' % (self.prefix, self.first)
+
 
 class LiteralToken(ExpansionToken):
     """A literal markup."""
@@ -1132,6 +1241,7 @@ class LiteralToken(ExpansionToken):
     def string(self):
         return '%s%s' % (self.prefix, self.first)
 
+
 class PrefixToken(ExpansionToken):
     """A prefix markup."""
     def run(self, interpreter, locals):
@@ -1139,7 +1249,8 @@ class PrefixToken(ExpansionToken):
 
     def string(self):
         return self.prefix * 2
-        
+
+
 class CommentToken(ExpansionToken):
     """A comment markup."""
     def scan(self, scanner):
@@ -1147,10 +1258,11 @@ class CommentToken(ExpansionToken):
         if loc >= 0:
             self.comment = scanner.chop(loc, 1)
         else:
-            raise TransientParseError, "comment expects newline"
+            raise TransientParseError("comment expects newline")
 
     def string(self):
         return '%s#%s\n' % (self.prefix, self.comment)
+
 
 class ContextNameToken(ExpansionToken):
     """A context name change markup."""
@@ -1159,11 +1271,12 @@ class ContextNameToken(ExpansionToken):
         if loc >= 0:
             self.name = string.strip(scanner.chop(loc, 1))
         else:
-            raise TransientParseError, "context name expects newline"
+            raise TransientParseError("context name expects newline")
 
     def run(self, interpreter, locals):
         context = interpreter.context()
         context.name = self.name
+
 
 class ContextLineToken(ExpansionToken):
     """A context line change markup."""
@@ -1173,14 +1286,15 @@ class ContextLineToken(ExpansionToken):
             try:
                 self.line = int(scanner.chop(loc, 1))
             except ValueError:
-                raise ParseError, "context line requires integer"
+                raise ParseError("context line requires integer")
         else:
-            raise TransientParseError, "context line expects newline"
+            raise TransientParseError("context line expects newline")
 
     def run(self, interpreter, locals):
         context = interpreter.context()
         context.line = self.line
         context.pause = True
+
 
 class EscapeToken(ExpansionToken):
     """An escape markup."""
@@ -1188,84 +1302,85 @@ class EscapeToken(ExpansionToken):
         try:
             code = scanner.chop(1)
             result = None
-            if code in '()[]{}\'\"\\': # literals
+            if code in '()[]{}\'\"\\':  # literals
                 result = code
-            elif code == '0': # NUL
+            elif code == '0':  # NUL
                 result = '\x00'
-            elif code == 'a': # BEL
+            elif code == 'a':  # BEL
                 result = '\x07'
-            elif code == 'b': # BS
+            elif code == 'b':  # BS
                 result = '\x08'
-            elif code == 'd': # decimal code
+            elif code == 'd':  # decimal code
                 decimalCode = scanner.chop(3)
                 result = chr(string.atoi(decimalCode, 10))
-            elif code == 'e': # ESC
+            elif code == 'e':  # ESC
                 result = '\x1b'
-            elif code == 'f': # FF
+            elif code == 'f':  # FF
                 result = '\x0c'
-            elif code == 'h': # DEL
+            elif code == 'h':  # DEL
                 result = '\x7f'
-            elif code == 'n': # LF (newline)
+            elif code == 'n':  # LF (newline)
                 result = '\x0a'
-            elif code == 'N': # Unicode character name
+            elif code == 'N':  # Unicode character name
                 theSubsystem.assertUnicode()
                 import unicodedata
                 if scanner.chop(1) != '{':
-                    raise ParseError, r"Unicode name escape should be \N{...}"
+                    raise ParseError(r"Unicode name escape should be \N{...}")
                 i = scanner.find('}')
                 name = scanner.chop(i, 1)
                 try:
                     result = unicodedata.lookup(name)
                 except KeyError:
-                    raise SubsystemError, \
-                          "unknown Unicode character name: %s" % name
-            elif code == 'o': # octal code
+                    raise SubsystemError(
+                        "unknown Unicode character name: %s" % name)
+            elif code == 'o':  # octal code
                 octalCode = scanner.chop(3)
                 result = chr(string.atoi(octalCode, 8))
-            elif code == 'q': # quaternary code
+            elif code == 'q':  # quaternary code
                 quaternaryCode = scanner.chop(4)
                 result = chr(string.atoi(quaternaryCode, 4))
-            elif code == 'r': # CR
+            elif code == 'r':  # CR
                 result = '\x0d'
-            elif code in 's ': # SP
+            elif code in 's ':  # SP
                 result = ' '
-            elif code == 't': # HT
+            elif code == 't':  # HT
                 result = '\x09'
-            elif code in 'u': # Unicode 16-bit hex literal
+            elif code in 'u':  # Unicode 16-bit hex literal
                 theSubsystem.assertUnicode()
                 hexCode = scanner.chop(4)
                 result = unichr(string.atoi(hexCode, 16))
-            elif code in 'U': # Unicode 32-bit hex literal
+            elif code in 'U':  # Unicode 32-bit hex literal
                 theSubsystem.assertUnicode()
                 hexCode = scanner.chop(8)
                 result = unichr(string.atoi(hexCode, 16))
-            elif code == 'v': # VT
+            elif code == 'v':  # VT
                 result = '\x0b'
-            elif code == 'x': # hexadecimal code
+            elif code == 'x':  # hexadecimal code
                 hexCode = scanner.chop(2)
                 result = chr(string.atoi(hexCode, 16))
-            elif code == 'z': # EOT
+            elif code == 'z':  # EOT
                 result = '\x04'
-            elif code == '^': # control character
+            elif code == '^':  # control character
                 controlCode = string.upper(scanner.chop(1))
                 if controlCode >= '@' and controlCode <= '`':
                     result = chr(ord(controlCode) - ord('@'))
                 elif controlCode == '?':
                     result = '\x7f'
                 else:
-                    raise ParseError, "invalid escape control code"
+                    raise ParseError("invalid escape control code")
             else:
-                raise ParseError, "unrecognized escape code"
+                raise ParseError("unrecognized escape code")
             assert result is not None
             self.code = result
         except ValueError:
-            raise ParseError, "invalid numeric escape code"
+            raise ParseError("invalid numeric escape code")
 
     def run(self, interpreter, locals):
         interpreter.write(self.code)
 
     def string(self):
         return '%s\\x%02x' % (self.prefix, ord(self.code))
+
 
 class SignificatorToken(ExpansionToken):
     """A significator markup."""
@@ -1274,9 +1389,9 @@ class SignificatorToken(ExpansionToken):
         if loc >= 0:
             line = scanner.chop(loc, 1)
             if not line:
-                raise ParseError, "significator must have nonblank key"
+                raise ParseError("significator must have nonblank key")
             if line[0] in ' \t\v\n':
-                raise ParseError, "no whitespace between % and key"
+                raise ParseError("no whitespace between % and key")
             # Work around a subtle CPython-Jython difference by stripping
             # the string before splitting it: 'a '.split(None, 1) has two
             # elements in Jython 2.1).
@@ -1288,7 +1403,7 @@ class SignificatorToken(ExpansionToken):
                 fields.append(None)
             self.key, self.valueCode = fields
         else:
-            raise TransientParseError, "significator expects newline"
+            raise TransientParseError("significator expects newline")
 
     def run(self, interpreter, locals):
         value = self.valueCode
@@ -1301,6 +1416,7 @@ class SignificatorToken(ExpansionToken):
             return '%s%%%s\n' % (self.prefix, self.key)
         else:
             return '%s%%%s %s\n' % (self.prefix, self.key, self.valueCode)
+
 
 class ExpressionToken(ExpansionToken):
     """An expression markup."""
@@ -1316,7 +1432,7 @@ class ExpressionToken(ExpansionToken):
                 j = scanner.next('!', i, q, True)
             except ParseError:
                 try:
-                    j = scanner.next(':', i, q, True) # DEPRECATED
+                    j = scanner.next(':', i, q, True)  # DEPRECATED
                 except ParseError:
                     j = q
         except ParseError:
@@ -1359,6 +1475,7 @@ class ExpressionToken(ExpansionToken):
             result = result + '$' + self.exceptCode
         return '%s(%s)' % (self.prefix, result)
 
+
 class StringLiteralToken(ExpansionToken):
     """A string token markup."""
     def scan(self, scanner):
@@ -1373,6 +1490,7 @@ class StringLiteralToken(ExpansionToken):
     def string(self):
         return '%s%s' % (self.prefix, self.literal)
 
+
 class SimpleExpressionToken(ExpansionToken):
     """A simple expression markup."""
     def scan(self, scanner):
@@ -1385,6 +1503,7 @@ class SimpleExpressionToken(ExpansionToken):
     def string(self):
         return '%s%s' % (self.prefix, self.code)
 
+
 class ReprToken(ExpansionToken):
     """A repr markup."""
     def scan(self, scanner):
@@ -1396,7 +1515,8 @@ class ReprToken(ExpansionToken):
 
     def string(self):
         return '%s`%s`' % (self.prefix, self.code)
-    
+
+
 class InPlaceToken(ExpansionToken):
     """An in-place markup."""
     def scan(self, scanner):
@@ -1414,6 +1534,7 @@ class InPlaceToken(ExpansionToken):
     def string(self):
         return '%s:%s::' % (self.prefix, self.code)
 
+
 class StatementToken(ExpansionToken):
     """A statement markup."""
     def scan(self, scanner):
@@ -1425,6 +1546,7 @@ class StatementToken(ExpansionToken):
 
     def string(self):
         return '%s{%s}' % (self.prefix, self.code)
+
 
 class CustomToken(ExpansionToken):
     """A custom markup."""
@@ -1438,6 +1560,7 @@ class CustomToken(ExpansionToken):
     def string(self):
         return '%s<%s>' % (self.prefix, self.contents)
 
+
 class ControlToken(ExpansionToken):
 
     """A control token."""
@@ -1449,7 +1572,7 @@ class ControlToken(ExpansionToken):
     END_TYPES = ['end']
 
     IN_RE = re.compile(r"\bin\b")
-    
+
     def scan(self, scanner):
         scanner.acquire()
         i = scanner.complex('[', ']', 0)
@@ -1462,7 +1585,7 @@ class ControlToken(ExpansionToken):
             self.rest = None
         self.subtokens = []
         if self.type in self.GREEDY_TYPES and self.rest is None:
-            raise ParseError, "control '%s' needs arguments" % self.type
+            raise ParseError("control '%s' needs arguments" % self.type)
         if self.type in self.PRIMARY_TYPES:
             self.subscan(scanner, self.type)
             self.kind = 'primary'
@@ -1473,7 +1596,7 @@ class ControlToken(ExpansionToken):
         elif self.type in self.END_TYPES:
             self.kind = 'end'
         else:
-            raise ParseError, "unknown control markup: '%s'" % self.type
+            raise ParseError("unknown control markup: '%s'" % self.type)
         scanner.release()
 
     def subscan(self, scanner, primary):
@@ -1481,13 +1604,13 @@ class ControlToken(ExpansionToken):
         while True:
             token = scanner.one()
             if token is None:
-                raise TransientParseError, \
-                      "control '%s' needs more tokens" % primary
+                raise TransientParseError(
+                    "control '%s' needs more tokens" % primary)
             if isinstance(token, ControlToken) and \
-                   token.type in self.END_TYPES:
+                    token.type in self.END_TYPES:
                 if token.rest != primary:
-                    raise ParseError, \
-                          "control must end with 'end %s'" % primary
+                    raise ParseError(
+                        "control must end with 'end %s'" % primary)
                 break
             self.subtokens.append(token)
 
@@ -1498,7 +1621,7 @@ class ControlToken(ExpansionToken):
         represent the list of the only secondary markup types which
         are allowed."""
         if allowed is None:
-            allowed = SECONDARY_TYPES
+            allowed = self.SECONDARY_TYPES
         result = []
         latest = []
         result.append((self, latest))
@@ -1506,8 +1629,8 @@ class ControlToken(ExpansionToken):
             if isinstance(subtoken, ControlToken) and \
                subtoken.kind == 'secondary':
                 if subtoken.type not in allowed:
-                    raise ParseError, \
-                          "control unexpected secondary: '%s'" % subtoken.type
+                    raise ParseError(
+                        "control unexpected secondary: '%s'" % subtoken.type)
                 latest = []
                 result.append((subtoken, latest))
             else:
@@ -1515,7 +1638,7 @@ class ControlToken(ExpansionToken):
         return result
 
     def run(self, interpreter, locals):
-        interpreter.invoke('beforeControl', type=self.type, rest=self.rest, \
+        interpreter.invoke('beforeControl', type=self.type, rest=self.rest,
                            locals=locals)
         if self.type == 'if':
             info = self.build(['elif', 'else'])
@@ -1524,8 +1647,9 @@ class ControlToken(ExpansionToken):
                 elseTokens = info.pop()[1]
             for secondary, subtokens in info:
                 if secondary.type not in ('if', 'elif'):
-                    raise ParseError, \
-                          "control 'if' unexpected secondary: '%s'" % secondary.type
+                    raise ParseError(
+                        "control 'if' unexpected secondary: '%s'"
+                        % secondary.type)
                 if interpreter.evaluate(secondary.rest, locals):
                     self.subrun(subtokens, interpreter, locals)
                     break
@@ -1535,14 +1659,14 @@ class ControlToken(ExpansionToken):
         elif self.type == 'for':
             sides = self.IN_RE.split(self.rest, 1)
             if len(sides) != 2:
-                raise ParseError, "control expected 'for x in seq'"
+                raise ParseError("control expected 'for x in seq'")
             iterator, sequenceCode = sides
             info = self.build(['else'])
             elseTokens = None
             if info[-1][0].type == 'else':
                 elseTokens = info.pop()[1]
             if len(info) != 1:
-                raise ParseError, "control 'for' expects at most one 'else'"
+                raise ParseError("control 'for' expects at most one 'else'")
             sequence = interpreter.evaluate(sequenceCode, locals)
             for element in sequence:
                 try:
@@ -1562,7 +1686,7 @@ class ControlToken(ExpansionToken):
             if info[-1][0].type == 'else':
                 elseTokens = info.pop()[1]
             if len(info) != 1:
-                raise ParseError, "control 'while' expects at most one 'else'"
+                raise ParseError("control 'while' expects at most one 'else'")
             atLeastOnce = False
             while True:
                 try:
@@ -1579,18 +1703,18 @@ class ControlToken(ExpansionToken):
         elif self.type == 'try':
             info = self.build(['except', 'finally'])
             if len(info) == 1:
-                raise ParseError, "control 'try' needs 'except' or 'finally'"
+                raise ParseError("control 'try' needs 'except' or 'finally'")
             type = info[-1][0].type
             if type == 'except':
                 for secondary, _tokens in info[1:]:
                     if secondary.type != 'except':
-                        raise ParseError, \
-                              "control 'try' cannot have 'except' and 'finally'"
+                        raise ParseError(
+                            "control 'try' cannot have 'except' and 'finally'")
             else:
                 assert type == 'finally'
                 if len(info) != 2:
-                    raise ParseError, \
-                          "control 'try' can only have one 'finally'"
+                    raise ParseError(
+                        "control 'try' can only have one 'finally'")
             if type == 'except':
                 try:
                     self.subrun(info[0][1], interpreter, locals)
@@ -1598,7 +1722,8 @@ class ControlToken(ExpansionToken):
                     raise
                 except Exception, e:
                     for secondary, tokens in info[1:]:
-                        exception, variable = interpreter.clause(secondary.rest)
+                        exception, variable = interpreter.clause(
+                            secondary.rest)
                         if variable is not None:
                             interpreter.assign(variable, e)
                         if isinstance(e, exception):
@@ -1612,9 +1737,9 @@ class ControlToken(ExpansionToken):
                 finally:
                     self.subrun(info[1][1], interpreter, locals)
         elif self.type == 'continue':
-            raise ContinueFlow, "control 'continue' without 'for', 'while'"
+            raise ContinueFlow("control 'continue' without 'for', 'while'")
         elif self.type == 'break':
-            raise BreakFlow, "control 'break' without 'for', 'while'"
+            raise BreakFlow("control 'break' without 'for', 'while'")
         elif self.type == 'def':
             signature = self.rest
             definition = self.substring()
@@ -1624,10 +1749,10 @@ class ControlToken(ExpansionToken):
                    (signature, definition, interpreter.pseudo, definition)
             interpreter.execute(code, locals)
         elif self.type == 'end':
-            raise ParseError, "control 'end' requires primary markup"
+            raise ParseError("control 'end' requires primary markup")
         else:
-            raise ParseError, \
-                  "control '%s' cannot be at this level" % self.type
+            raise ParseError(
+                "control '%s' cannot be at this level" % self.type)
         interpreter.invoke('afterControl')
 
     def subrun(self, tokens, interpreter, locals):
@@ -1641,7 +1766,7 @@ class ControlToken(ExpansionToken):
     def string(self):
         if self.kind == 'primary':
             return '%s[%s]%s%s[end %s]' % \
-                   (self.prefix, self.contents, self.substring(), \
+                   (self.prefix, self.contents, self.substring(),
                     self.prefix, self.type)
         else:
             return '%s[%s]' % (self.prefix, self.contents)
@@ -1680,9 +1805,14 @@ class Scanner:
         self.buffer = data
         self.lock = 0
 
-    def __nonzero__(self): return self.pointer < len(self.buffer)
-    def __len__(self): return len(self.buffer) - self.pointer
-    def __getitem__(self, index): return self.buffer[self.pointer + index]
+    def __nonzero__(self):
+        return self.pointer < len(self.buffer)
+
+    def __len__(self):
+        return len(self.buffer) - self.pointer
+
+    def __getitem__(self, index):
+        return self.buffer[self.pointer + index]
 
     def __getslice__(self, start, stop):
         if stop > len(self):
@@ -1696,7 +1826,7 @@ class Scanner:
     def retreat(self, count=1):
         self.pointer = self.pointer - count
         if self.pointer < 0:
-            raise ParseError, "can't retreat back over synced out chars"
+            raise ParseError("can't retreat back over synced out chars")
 
     def set(self, data):
         """Start the scanner digesting a new batch of data; start the pointer
@@ -1716,7 +1846,7 @@ class Scanner:
             assert slop == 0
             count = len(self)
         if count > len(self):
-            raise TransientParseError, "not enough data to read"
+            raise TransientParseError("not enough data to read")
         result = self[:count]
         self.advance(count + slop)
         return result
@@ -1749,7 +1879,7 @@ class Scanner:
         """Read count chars starting from i; raise a transient error if
         there aren't enough characters remaining."""
         if len(self) < i + count:
-            raise TransientParseError, "need more data to read"
+            raise TransientParseError("need more data to read")
         else:
             return self[i:i + count]
 
@@ -1764,7 +1894,7 @@ class Scanner:
                     if self[i] == quote:
                         return quote
                 else:
-                    raise TransientParseError, "need to scan for rest of quote"
+                    raise TransientParseError("need to scan for rest of quote")
             if self[i + 1] == self[i + 2] == quote:
                 quote = quote * 3
         if quote is not None:
@@ -1797,7 +1927,7 @@ class Scanner:
                 return i
             i = i + 1
         else:
-            raise TransientParseError, "expecting other than %s" % char
+            raise TransientParseError("expecting other than %s" % char)
 
     def next(self, target, start=0, end=None, mandatory=False):
         """Scan for the next occurrence of one of the characters in
@@ -1827,9 +1957,9 @@ class Scanner:
                 i = i + 1
         else:
             if mandatory:
-                raise ParseError, "expecting %s, not found" % target
+                raise ParseError("expecting %s, not found" % target)
             else:
-                raise TransientParseError, "expecting ending character"
+                raise TransientParseError("expecting ending character")
 
     def quote(self, start=0, end=None, mandatory=False):
         """Scan for the end of the next quote."""
@@ -1851,9 +1981,9 @@ class Scanner:
                 i = i + 1
         else:
             if mandatory:
-                raise ParseError, "expecting end of string literal"
+                raise ParseError("expecting end of string literal")
             else:
-                raise TransientParseError, "expecting end of string literal"
+                raise TransientParseError("expecting end of string literal")
 
     def nested(self, enter, exit, start=0, end=None):
         """Scan from i for an ending sequence, respecting entries and exits
@@ -1872,7 +2002,7 @@ class Scanner:
                     return i
             i = i + 1
         else:
-            raise TransientParseError, "expecting end of complex expression"
+            raise TransientParseError("expecting end of complex expression")
 
     def complex(self, enter, exit, start=0, end=None, skip=None):
         """Scan from i for an ending sequence, respecting quotes,
@@ -1907,7 +2037,7 @@ class Scanner:
                 last = c
                 i = i + 1
         else:
-            raise TransientParseError, "expecting end of complex expression"
+            raise TransientParseError("expecting end of complex expression")
 
     def word(self, start=0):
         """Scan from i for a simple word."""
@@ -1918,7 +2048,7 @@ class Scanner:
                 return i
             i = i + 1
         else:
-            raise TransientParseError, "expecting end of word"
+            raise TransientParseError("expecting end of word")
 
     def phrase(self, start=0):
         """Scan from i for a phrase (e.g., 'word', 'f(a, b, c)', 'a[i]', or
@@ -1928,13 +2058,13 @@ class Scanner:
         while i < len(self) and self[i] in '([{':
             enter = self[i]
             if enter == '{':
-                raise ParseError, "curly braces can't open simple expressions"
+                raise ParseError("curly braces can't open simple expressions")
             exit = ENDING_CHARS[enter]
             i = self.complex(enter, exit, i + 1) + 1
         return i
-    
+
     def simple(self, start=0):
-        """Scan from i for a simple expression, which consists of one 
+        """Scan from i for a simple expression, which consists of one
         more phrases separated by dots."""
         i = self.phrase(start)
         length = len(self)
@@ -1972,7 +2102,7 @@ class Scanner:
                 elif first in firsts:
                     break
             else:
-                raise ParseError, "unknown markup: %s%s" % (self.prefix, first)
+                raise ParseError("unknown markup: %s%s" % (self.prefix, first))
             token = factory(self.prefix, first)
             try:
                 token.scan(self)
@@ -1990,7 +2120,7 @@ class Scanner:
 
 
 class Interpreter:
-    
+
     """An interpreter can process chunks of EmPy code."""
 
     # Constants.
@@ -2001,21 +2131,21 @@ class Interpreter:
 
     # Types.
 
-    Interpreter = None # define this below to prevent a circular reference
-    Hook = Hook # DEPRECATED
-    Filter = Filter # DEPRECATED
-    NullFilter = NullFilter # DEPRECATED
-    FunctionFilter = FunctionFilter # DEPRECATED
-    StringFilter = StringFilter # DEPRECATED
-    BufferedFilter = BufferedFilter # DEPRECATED
-    SizeBufferedFilter = SizeBufferedFilter # DEPRECATED
-    LineBufferedFilter = LineBufferedFilter # DEPRECATED
-    MaximallyBufferedFilter = MaximallyBufferedFilter # DEPRECATED
+    Interpreter = None  # define this below to prevent a circular reference
+    Hook = Hook  # DEPRECATED
+    Filter = Filter  # DEPRECATED
+    NullFilter = NullFilter  # DEPRECATED
+    FunctionFilter = FunctionFilter  # DEPRECATED
+    StringFilter = StringFilter  # DEPRECATED
+    BufferedFilter = BufferedFilter  # DEPRECATED
+    SizeBufferedFilter = SizeBufferedFilter  # DEPRECATED
+    LineBufferedFilter = LineBufferedFilter  # DEPRECATED
+    MaximallyBufferedFilter = MaximallyBufferedFilter  # DEPRECATED
 
     # Tables.
 
-    ESCAPE_CODES = {0x00: '0', 0x07: 'a', 0x08: 'b', 0x1b: 'e', 0x0c: 'f', \
-                    0x7f: 'h', 0x0a: 'n', 0x0d: 'r', 0x09: 't', 0x0b: 'v', \
+    ESCAPE_CODES = {0x00: '0', 0x07: 'a', 0x08: 'b', 0x1b: 'e', 0x0c: 'f',
+                    0x7f: 'h', 0x0a: 'n', 0x0d: 'r', 0x09: 't', 0x0b: 'v',
                     0x04: 'z'}
 
     ASSIGN_TOKEN_RE = re.compile(r"[_a-zA-Z][_a-zA-Z0-9]*|\(|\)|,")
@@ -2028,13 +2158,13 @@ class Interpreter:
                        OVERRIDE_OPT: True,
                        CALLBACK_OPT: False}
 
-    _wasProxyInstalled = False # was a proxy installed?
+    _wasProxyInstalled = False  # was a proxy installed?
 
     # Construction, initialization, destruction.
 
-    def __init__(self, output=None, argv=None, prefix=DEFAULT_PREFIX, \
+    def __init__(self, output=None, argv=None, prefix=DEFAULT_PREFIX,
                  pseudo=None, options=None, globals=None, hooks=None):
-        self.interpreter = self # DEPRECATED
+        self.interpreter = self  # DEPRECATED
         # Set up the stream.
         if output is None:
             output = UncloseableFile(sys.__stdout__)
@@ -2051,7 +2181,8 @@ class Interpreter:
             options = {}
         self.options = options
         # Initialize any hooks.
-        self.hooksEnabled = None # special sentinel meaning "false until added"
+        # special sentinel meaning "false until added"
+        self.hooksEnabled = None
         self.hooks = []
         if hooks is None:
             hooks = []
@@ -2101,16 +2232,16 @@ class Interpreter:
             self.globals = {}
         # Make sure that there is no collision between two interpreters'
         # globals.
-        if self.globals.has_key(self.pseudo):
+        if self.pseudo in self.globals:
             if self.globals[self.pseudo] is not self:
-                raise Error, "interpreter globals collision"
+                raise Error("interpreter globals collision")
         self.globals[self.pseudo] = self
 
     def unfix(self):
         """Remove the pseudomodule (if present) from the globals."""
         UNWANTED_KEYS = [self.pseudo, '__builtins__']
         for unwantedKey in UNWANTED_KEYS:
-            if self.globals.has_key(unwantedKey):
+            if unwantedKey in self.globals:
                 del self.globals[unwantedKey]
 
     def update(self, other):
@@ -2201,7 +2332,7 @@ class Interpreter:
 
     def include(self, fileOrFilename, locals=None):
         """Do an include pass on a file or filename."""
-        if type(fileOrFilename) is types.StringType:
+        if isinstance(fileOrFilename, types.StringType):
             # Either it's a string representing a filename ...
             filename = fileOrFilename
             name = filename
@@ -2256,8 +2387,8 @@ class Interpreter:
         for char in data:
             if char < ' ' or char > '~':
                 charOrd = ord(char)
-                if Interpreter.ESCAPE_CODES.has_key(charOrd):
-                    result.append(self.prefix + '\\' + \
+                if charOrd in Interpreter.ESCAPE_CODES:
+                    result.append(self.prefix + '\\' +
                                   Interpreter.ESCAPE_CODES[charOrd])
                 else:
                     result.append(self.prefix + '\\x%02x' % charOrd)
@@ -2358,7 +2489,7 @@ class Interpreter:
             chunkSize = DEFAULT_CHUNK_SIZE
         context = Context(name, units='bytes')
         self.contexts.push(context)
-        self.invoke('beforeBinary', name=name, file=file, \
+        self.invoke('beforeBinary', name=name, file=file,
                     chunkSize=chunkSize, locals=locals)
         scanner = Scanner(self.prefix)
         done = False
@@ -2422,7 +2553,7 @@ class Interpreter:
         for garbage in self.ASSIGN_TOKEN_RE.split(name):
             garbage = string.strip(garbage)
             if garbage:
-                raise ParseError, "unexpected assignment token: '%s'" % garbage
+                raise ParseError("unexpected assignment token: '%s'" % garbage)
         tokens = self.ASSIGN_TOKEN_RE.findall(name)
         # While processing, put a None token at the start of any list in which
         # commas actually appear.
@@ -2432,9 +2563,9 @@ class Interpreter:
             elif token == ')':
                 top = stack.pop()
                 if len(top) == 1:
-                    top = top[0] # no None token means that it's not a 1-tuple
+                    top = top[0]  # no None token means that it's not a 1-tuple
                 elif top[0] is None:
-                    del top[0] # remove the None token for real tuples
+                    del top[0]  # remove the None token for real tuples
                 stack[-1].append(top)
             elif token == ',':
                 if len(stack[-1]) == 1:
@@ -2473,12 +2604,12 @@ class Interpreter:
         try:
             values = tuple(values)
         except TypeError:
-            raise TypeError, "unpack non-sequence"
+            raise TypeError("unpack non-sequence")
         if len(names) != len(values):
-            raise ValueError, "unpack tuple of wrong size"
+            raise ValueError("unpack tuple of wrong size")
         for i in range(len(names)):
             name = names[i]
-            if type(name) is types.StringType:
+            if isinstance(name, types.StringType):
                 self.atomic(name, values[i], locals)
             else:
                 self.multi(name, values[i], locals)
@@ -2489,7 +2620,7 @@ class Interpreter:
         left = self.tokenize(name)
         # The return value of tokenize can either be a string or a list of
         # (lists of) strings.
-        if type(left) is types.StringType:
+        if isinstance(left, types.StringType):
             self.atomic(left, value, locals)
         else:
             self.multi(left, value, locals)
@@ -2532,13 +2663,13 @@ class Interpreter:
     def defined(self, name, locals=None):
         """Return a Boolean indicating whether or not the name is
         defined either in the locals or the globals."""
-        self.invoke('beforeDefined', name=name, local=local)
+        self.invoke('beforeDefined', name=name, locals=locals)
         if locals is not None:
-            if locals.has_key(name):
+            if name in locals:
                 result = True
             else:
                 result = False
-        elif self.globals.has_key(name):
+        elif name in self.globals:
             result = True
         else:
             result = False
@@ -2554,11 +2685,13 @@ class Interpreter:
 
     def evaluate(self, expression, locals=None):
         """Evaluate an expression."""
-        if expression in ('1', 'True'): return True
-        if expression in ('0', 'False'): return False
+        if expression in ('1', 'True'):
+            return True
+        if expression in ('0', 'False'):
+            return False
         self.push()
         try:
-            self.invoke('beforeEvaluate', \
+            self.invoke('beforeEvaluate',
                         expression=expression, locals=locals)
             if locals is not None:
                 result = eval(expression, self.globals, locals)
@@ -2573,7 +2706,7 @@ class Interpreter:
         """Execute a statement."""
         # If there are any carriage returns (as opposed to linefeeds/newlines)
         # in the statements code, then remove them.  Even on DOS/Windows
-        # platforms, 
+        # platforms,
         if string.find(statements, '\r') >= 0:
             statements = string.replace(statements, '\r', '')
         # If there are no newlines in the statements code, then strip any
@@ -2582,7 +2715,7 @@ class Interpreter:
             statements = string.strip(statements)
         self.push()
         try:
-            self.invoke('beforeExecute', \
+            self.invoke('beforeExecute',
                         statements=statements, locals=locals)
             if locals is not None:
                 exec statements in self.globals, locals
@@ -2597,7 +2730,7 @@ class Interpreter:
         entered into the Python interactive interpreter."""
         self.push()
         try:
-            self.invoke('beforeSingle', \
+            self.invoke('beforeSingle',
                         source=source, locals=locals)
             code = compile(source, '<single>', 'single')
             if locals is not None:
@@ -2688,7 +2821,7 @@ class Interpreter:
             # installed it before ...
             if Interpreter._wasProxyInstalled:
                 # ... and if so, we have a proxy problem.
-                raise Error, "interpreter stdout proxy lost"
+                raise Error("interpreter stdout proxy lost")
             else:
                 # Otherwise, install the proxy and set the flag.
                 sys.stdout = ProxyFile(sys.stdout)
@@ -2723,14 +2856,14 @@ class Interpreter:
         """Set the name of the topmost context."""
         context = self.context()
         context.name = name
-        
+
     def setContextLine(self, line):
         """Set the name of the topmost context."""
         context = self.context()
         context.line = line
 
-    setName = setContextName # DEPRECATED
-    setLine = setContextLine # DEPRECATED
+    setName = setContextName  # DEPRECATED
+    setLine = setContextLine  # DEPRECATED
 
     # Globals manipulation.
 
@@ -2758,7 +2891,7 @@ class Interpreter:
     def restoreGlobals(self, destructive=True):
         """Restore the most recently saved copy of the globals."""
         self.restore(destructive)
-        
+
     # Hook support.
 
     def areHooksEnabled(self):
@@ -2814,7 +2947,7 @@ class Interpreter:
         """Invoke the callback."""
         if self.callback is None:
             if self.options.get(CALLBACK_OPT, False):
-                raise Error, "custom markup invoked with no defined callback"
+                raise Error("custom markup invoked with no defined callback")
         else:
             self.callback(contents)
 
@@ -2893,10 +3026,9 @@ class Interpreter:
 
     def getAllDiversions(self):
         """Get the names of all existing diversions."""
-        names = self.stream().diversions.keys()
-        names.sort()
+        names = sorted(self.stream().diversions.keys())
         return names
-    
+
     # Filter.
 
     def resetFilter(self):
@@ -2948,16 +3080,19 @@ class Processor:
         self.factory = factory
         self.documents = {}
 
-    def identifier(self, pathname, filename): return filename
+    def identifier(self, pathname, filename):
+        return filename
 
     def clear(self):
         self.documents = {}
 
     def scan(self, basename, extensions=DEFAULT_EMPY_EXTENSIONS):
-        if type(extensions) is types.StringType:
+        if isinstance(extensions, types.StringType):
             extensions = (extensions,)
+
         def _noCriteria(x):
             return True
+
         def _extensionsCriteria(pathname, extensions=extensions):
             if extensions:
                 for extension in extensions:
@@ -3010,8 +3145,8 @@ class Processor:
             document.significators[key] = value
 
 
-def expand(_data, _globals=None, \
-           _argv=None, _prefix=DEFAULT_PREFIX, _pseudo=None, _options=None, \
+def expand(_data, _globals=None,
+           _argv=None, _prefix=DEFAULT_PREFIX, _pseudo=None, _options=None,
            **_locals):
     """Do an atomic expansion of the given source data, creating and
     shutting down an interpreter dedicated to the task.  The sys.stdout
@@ -3022,8 +3157,8 @@ def expand(_data, _globals=None, \
         # dictionary at all.
         _locals = None
     output = NullFile()
-    interpreter = Interpreter(output, argv=_argv, prefix=_prefix, \
-                              pseudo=_pseudo, options=_options, \
+    interpreter = Interpreter(output, argv=_argv, prefix=_prefix,
+                              pseudo=_pseudo, options=_options,
                               globals=_globals)
     if interpreter.options.get(OVERRIDE_OPT, True):
         oldStdout = sys.stdout
@@ -3032,23 +3167,25 @@ def expand(_data, _globals=None, \
     finally:
         interpreter.shutdown()
         if _globals is not None:
-            interpreter.unfix() # remove pseudomodule to prevent clashes
+            interpreter.unfix()  # remove pseudomodule to prevent clashes
         if interpreter.options.get(OVERRIDE_OPT, True):
             sys.stdout = oldStdout
     return result
+
 
 def environment(name, default=None):
     """Get data from the current environment.  If the default is True
     or False, then presume that we're only interested in the existence
     or non-existence of the environment variable."""
-    if os.environ.has_key(name):
+    if name in os.environ:
         # Do the True/False test by value for future compatibility.
-        if default == False or default == True:
+        if default is False or default is True:
             return True
         else:
             return os.environ[name]
     else:
         return default
+
 
 def info(table):
     DEFAULT_LEFT = 28
@@ -3068,9 +3205,11 @@ def info(table):
         else:
             sys.stderr.write(FORMAT % (left, right))
 
+
 def usage(verbose=True):
     """Print usage information."""
     programName = sys.argv[0]
+
     def warn(line=''):
         sys.stderr.write("%s\n" % line)
     warn("""\
@@ -3087,7 +3226,7 @@ Welcome to EmPy version %s.""" % (programName, __version__))
         warn("Valid escape sequences are:")
         info(ESCAPE_INFO)
         warn()
-        warn("The %s pseudomodule contains the following attributes:" % \
+        warn("The %s pseudomodule contains the following attributes:" %
              DEFAULT_PSEUDOMODULE_NAME)
         info(PSEUDOMODULE_INFO)
         warn()
@@ -3098,6 +3237,7 @@ Welcome to EmPy version %s.""" % (programName, __version__))
     else:
         warn()
         warn("Type %s -H for more extensive help." % programName)
+
 
 def invoke(args):
     """Run a standalone instance of an EmPy interpeter."""
@@ -3114,7 +3254,7 @@ def invoke(args):
     _pseudo = environment(PSEUDO_ENV, None)
     _interactive = environment(INTERACTIVE_ENV, False)
     _extraArguments = environment(OPTIONS_ENV)
-    _binary = -1 # negative for not, 0 for default size, positive for size
+    _binary = -1  # negative for not, 0 for default size, positive for size
     _unicode = environment(UNICODE_ENV, False)
     _unicodeInputEncoding = environment(INPUT_ENCODING_ENV, None)
     _unicodeOutputEncoding = environment(OUTPUT_ENCODING_ENV, None)
@@ -3127,7 +3267,43 @@ def invoke(args):
         _extraArguments = string.split(_extraArguments)
         args = _extraArguments + args
     # Parse the arguments.
-    pairs, remainder = getopt.getopt(args, 'VhHvkp:m:frino:a:buBP:I:D:E:F:', ['version', 'help', 'extended-help', 'verbose', 'null-hook', 'suppress-errors', 'prefix=', 'no-prefix', 'module=', 'flatten', 'raw-errors', 'interactive', 'no-override-stdout', 'binary', 'chunk-size=', 'output=' 'append=', 'preprocess=', 'import=', 'define=', 'execute=', 'execute-file=', 'buffered-output', 'pause-at-end', 'relative-path', 'no-callback-error', 'no-bangpath-processing', 'unicode', 'unicode-encoding=', 'unicode-input-encoding=', 'unicode-output-encoding=', 'unicode-errors=', 'unicode-input-errors=', 'unicode-output-errors='])
+    pairs, remainder = getopt.getopt(
+        args,
+        'VhHvkp:m:frino:a:buBP:I:D:E:F:',
+        ['version',
+         'help',
+         'extended-help',
+         'verbose',
+         'null-hook',
+         'suppress-errors',
+         'prefix=',
+         'no-prefix',
+         'module=',
+         'flatten',
+         'raw-errors',
+         'interactive',
+         'no-override-stdout',
+         'binary',
+         'chunk-size=',
+         'output='
+         'append=',
+         'preprocess=',
+         'import=',
+         'define=',
+         'execute=',
+         'execute-file=',
+         'buffered-output',
+         'pause-at-end',
+         'relative-path',
+         'no-callback-error',
+         'no-bangpath-processing',
+         'unicode',
+         'unicode-encoding=',
+         'unicode-input-encoding=',
+         'unicode-output-encoding=',
+         'unicode-errors=',
+         'unicode-input-errors=',
+         'unicode-output-errors='])
     for option, argument in pairs:
         if option in ('-V', '--version'):
             sys.stderr.write("%s version %s\n" % (__program__, __version__))
@@ -3144,7 +3320,7 @@ def invoke(args):
             _hooks.append(Hook())
         elif option in ('-k', '--suppress-errors'):
             _options[EXIT_OPT] = False
-            _interactive = True # suppress errors implies interactive mode
+            _interactive = True  # suppress errors implies interactive mode
         elif option in ('-m', '--module'):
             _pseudo = argument
         elif option in ('-f', '--flatten'):
@@ -3165,7 +3341,7 @@ def invoke(args):
             _output = argument, 'a', _options[BUFFERED_OPT]
         elif option in ('-b', '--buffered-output'):
             _options[BUFFERED_OPT] = True
-        elif option in ('-B',): # DEPRECATED
+        elif option in ('-B',):  # DEPRECATED
             _options[BUFFERED_OPT] = True
         elif option in ('--binary',):
             _binary = 0
@@ -3209,8 +3385,8 @@ def invoke(args):
     if _unicode or \
        _unicodeInputEncoding or _unicodeOutputEncoding or \
        _unicodeInputErrors or _unicodeOutputErrors:
-        theSubsystem.initialize(_unicodeInputEncoding, \
-                                _unicodeOutputEncoding, \
+        theSubsystem.initialize(_unicodeInputEncoding,
+                                _unicodeOutputEncoding,
                                 _unicodeInputErrors, _unicodeOutputErrors)
     # Now initialize the output file if something has already been selected.
     if _output is not None:
@@ -3221,16 +3397,16 @@ def invoke(args):
     filename, arguments = remainder[0], remainder[1:]
     # Set up the interpreter.
     if _options[BUFFERED_OPT] and _output is None:
-        raise ValueError, "-b only makes sense with -o or -a arguments"
+        raise ValueError("-b only makes sense with -o or -a arguments")
     if _prefix == 'None':
         _prefix = None
-    if _prefix and type(_prefix) is types.StringType and len(_prefix) != 1:
-        raise Error, "prefix must be single-character string"
-    interpreter = Interpreter(output=_output, \
-                              argv=remainder, \
-                              prefix=_prefix, \
-                              pseudo=_pseudo, \
-                              options=_options, \
+    if _prefix and isinstance(_prefix, types.StringType) and len(_prefix) != 1:
+        raise Error("prefix must be single-character string")
+    interpreter = Interpreter(output=_output,
+                              argv=remainder,
+                              prefix=_prefix,
+                              pseudo=_pseudo,
+                              options=_options,
                               hooks=_hooks)
     try:
         # Execute command-line statements.
@@ -3296,7 +3472,9 @@ def invoke(args):
         except EOFError:
             pass
 
+
 def main():
     invoke(sys.argv[1:])
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    main()

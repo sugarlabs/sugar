@@ -29,6 +29,7 @@ from sugar3.graphics.icon import get_icon_file_name
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3 import mime
+from sugar3.bundle.bundle import ZipExtractException, RegistrationException
 from sugar3.bundle.activitybundle import ActivityBundle
 from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
@@ -55,6 +56,17 @@ def _get_icon_for_mime(mime_type):
         file_name = get_icon_file_name(icon_name)
         if file_name is not None:
             return file_name
+
+
+def get_mount_icon_name(mount, size):
+    icon = mount.get_icon()
+    if isinstance(icon, Gio.ThemedIcon):
+        icon_theme = Gtk.IconTheme.get_default()
+        for icon_name in icon.props.names:
+            if icon_theme.lookup_icon(icon_name, size, 0) is not None:
+                return icon_name
+    logging.error('Cannot find icon name for %s, %s', icon, mount)
+    return 'drive'
 
 
 def get_icon_name(metadata):
@@ -129,7 +141,7 @@ def get_bundle(metadata):
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
-            return JournalEntryBundle(file_path)
+            return JournalEntryBundle(file_path, metadata['uid'])
         else:
             return None
     except Exception:
@@ -167,80 +179,45 @@ def get_activities(metadata):
     return activities
 
 
-def resume(metadata, bundle_id=None):
+def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
     registry = bundleregistry.get_registry()
 
-    if is_activity_bundle(metadata) and bundle_id is None:
+    ds_bundle, downgrade_required = \
+        handle_bundle_installation(metadata, force_bundle_downgrade)
 
-        logging.debug('Creating activity bundle')
+    if ds_bundle is not None and downgrade_required:
+        # A bundle is being resumed but we didn't install it as that would
+        # require a downgrade.
+        _downgrade_option_alert(ds_bundle, metadata)
+        return
 
-        file_path = model.get_file(metadata['uid'])
-        bundle = ActivityBundle(file_path)
-        if not registry.is_installed(bundle):
-            logging.debug('Installing activity bundle')
-            try:
-                registry.install(bundle)
-            except AlreadyInstalledException:
-                _downgrade_option_alert(bundle)
-                return
-        else:
-            logging.debug('Upgrading activity bundle')
-            registry.upgrade(bundle)
+    # Are we launching a bundle?
+    if ds_bundle is not None and bundle_id is None:
+        activity_bundle = registry.get_bundle(ds_bundle.get_bundle_id())
+        if activity_bundle is not None:
+            launch(activity_bundle)
+        return
 
-        _launch_bundle(bundle)
+    # Otherwise we are launching a regular journal entry
+    activity_id = metadata.get('activity_id', '')
 
-    elif is_content_bundle(metadata) and bundle_id is None:
-
-        logging.debug('Creating content bundle')
-
-        file_path = model.get_file(metadata['uid'])
-        bundle = ContentBundle(file_path)
-        if not bundle.is_installed():
-            logging.debug('Installing content bundle')
-            bundle.install()
-
-        activities = _get_activities_for_mime('text/html')
-        if len(activities) == 0:
-            logging.warning('No activity can open HTML content bundles')
+    if bundle_id is None:
+        activities = get_activities(metadata)
+        if not activities:
+            logging.warning('No activity can open this object, %s.',
+                            metadata.get('mime_type', None))
             return
+        bundle_id = activities[0].get_bundle_id()
 
-        uri = bundle.get_start_uri()
-        logging.debug('activityfactory.creating with uri %s', uri)
+    bundle = registry.get_bundle(bundle_id)
 
-        activity_bundle = registry.get_bundle(activities[0].get_bundle_id())
-        launch(activity_bundle, uri=uri)
+    if metadata.get('mountpoint', '/') == '/':
+        object_id = metadata['uid']
     else:
-        activity_id = metadata.get('activity_id', '')
+        object_id = model.copy(metadata, '/')
 
-        if bundle_id is None:
-            activities = get_activities(metadata)
-            if not activities:
-                logging.warning('No activity can open this object, %s.',
-                        metadata.get('mime_type', None))
-                return
-            bundle_id = activities[0].get_bundle_id()
-
-        bundle = registry.get_bundle(bundle_id)
-
-        if metadata.get('mountpoint', '/') == '/':
-            object_id = metadata['uid']
-        else:
-            object_id = model.copy(metadata, '/')
-
-        launch(bundle, activity_id=activity_id, object_id=object_id,
-                color=get_icon_color(metadata))
-
-
-def _launch_bundle(bundle):
-    registry = bundleregistry.get_registry()
-    logging.debug('activityfactory.creating bundle with id %r',
-                       bundle.get_bundle_id())
-    installed_bundle = registry.get_bundle(bundle.get_bundle_id())
-    if installed_bundle:
-        launch(installed_bundle)
-    else:
-        logging.error('Bundle %r is not installed.',
-                    bundle.get_bundle_id())
+    launch(bundle, activity_id=activity_id, object_id=object_id,
+           color=get_icon_color(metadata))
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
@@ -249,7 +226,18 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         activity_id = activityfactory.create_activity_id()
 
     logging.debug('launch bundle_id=%s activity_id=%s object_id=%s uri=%s',
-            bundle.get_bundle_id(), activity_id, object_id, uri)
+                  bundle.get_bundle_id(), activity_id, object_id, uri)
+
+    if isinstance(bundle, ContentBundle):
+        # Content bundles are a special case: we treat them as launching
+        # Browse with a specific URI.
+        uri = bundle.get_start_uri()
+        activities = _get_activities_for_mime('text/html')
+        if len(activities) == 0:
+            logging.error("No browser available for content bundle")
+            return
+        bundle = activities[0]
+        logging.debug('Launching content bundle with uri %s', uri)
 
     shell_model = shell.get_model()
     activity = shell_model.get_activity_by_id(activity_id)
@@ -264,28 +252,26 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
     activity_handle = ActivityHandle(activity_id=activity_id,
-            object_id=object_id, uri=uri, invited=invited)
+                                     object_id=object_id,
+                                     uri=uri,
+                                     invited=invited)
     activityfactory.create(bundle, activity_handle)
 
 
-def _downgrade_option_alert(bundle):
+def _downgrade_option_alert(bundle, metadata):
     alert = ConfirmationAlert()
     alert.props.title = _('Older Version Of %s Activity') % (bundle.get_name())
     alert.props.msg = _('Do you want to downgrade to version %s') % \
-                        bundle.get_activity_version()
-    alert.connect('response', _downgrade_alert_response_cb, bundle)
+        bundle.get_activity_version()
+    alert.connect('response', _downgrade_alert_response_cb, metadata)
     journalwindow.get_journal_window().add_alert(alert)
     alert.show()
 
 
-def _downgrade_alert_response_cb(alert, response_id, bundle):
+def _downgrade_alert_response_cb(alert, response_id, metadata):
+    journalwindow.get_journal_window().remove_alert(alert)
     if response_id is Gtk.ResponseType.OK:
-        journalwindow.get_journal_window().remove_alert(alert)
-        registry = bundleregistry.get_registry()
-        registry.install(bundle, force_downgrade=True)
-        _launch_bundle(bundle)
-    elif response_id is Gtk.ResponseType.CANCEL:
-        journalwindow.get_journal_window().remove_alert(alert)
+        resume(metadata, force_bundle_downgrade=True)
 
 
 def is_activity_bundle(metadata):
@@ -303,7 +289,49 @@ def is_journal_bundle(metadata):
 
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
-            is_journal_bundle(metadata)
+        is_journal_bundle(metadata)
+
+
+def handle_bundle_installation(metadata, force_downgrade=False):
+    """
+    Check metadata for a journal entry. If the metadata corresponds to a
+    bundle, make sure that it is installed, and return the corresponding
+    Bundle object.
+
+    Installation sometimes requires a downgrade. Downgrades will not happen
+    unless force_downgrade is set to True.
+
+    Returns a tuple of two items:
+    1. The corresponding Bundle object for the journal entry, or None if
+       installation failed.
+    2. A flag that indicates whether bundle installation was aborted due to
+       a downgrade being required, and force_downgrade was False
+    """
+    if metadata.get('progress', '').isdigit():
+        if int(metadata['progress']) < 100:
+            return None, False
+
+    bundle = get_bundle(metadata)
+    if bundle is None:
+        return None, False
+
+    registry = bundleregistry.get_registry()
+    try:
+        installed = registry.install(bundle, force_downgrade)
+    except AlreadyInstalledException:
+        return bundle, True
+    except (ZipExtractException, RegistrationException):
+        logging.exception('Could not install bundle %s', bundle.get_path())
+        return None, False
+
+    # If we just installed a bundle, update the datastore accordingly.
+    # We do not do this for JournalEntryBundles because the JEB code transforms
+    # its own datastore entry and writes appropriate metadata.
+    if installed and not isinstance(bundle, JournalEntryBundle):
+        metadata['bundle_id'] = bundle.get_bundle_id()
+        model.write(metadata)
+
+    return bundle, False
 
 
 def get_icon_color(metadata):

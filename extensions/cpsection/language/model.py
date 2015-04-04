@@ -45,7 +45,7 @@ def read_all_languages():
             if locale.endswith('utf8') and len(lang):
                 locales.append((lang, territory, locale))
 
-    #FIXME: This is a temporary workaround for locales that are essential to
+    # FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
     locales.append(('Kreyol', 'Haiti', 'ht_HT.utf8'))
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
@@ -64,7 +64,7 @@ def _initialize():
     set_languages.__doc__ += '\n'
     for lang in languages:
         set_languages.__doc__ += '%s \n' % (lang[0].replace(' ', '_') + '/' +
-                                           lang[1].replace(' ', '_'))
+                                            lang[1].replace(' ', '_'))
 
 
 def _write_i18n(lang_env, language_env):
@@ -107,7 +107,7 @@ def get_languages():
             lang = line[5:].replace('"', '')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
-    if langlist == None:
+    if langlist is None:
         return [lang]
     else:
         return langlist

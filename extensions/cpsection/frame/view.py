@@ -152,9 +152,9 @@ class Frame(SectionView):
         self._edge_delay_is_valid = True
         self.needs_restart = False
         self._corner_delay_change_handler = self._corner_delay_slider.connect(
-                'value-changed', self.__corner_delay_changed_cb)
+            'value-changed', self.__corner_delay_changed_cb)
         self._edge_delay_change_handler = self._edge_delay_slider.connect(
-                'value-changed', self.__edge_delay_changed_cb)
+            'value-changed', self.__edge_delay_changed_cb)
 
     def undo(self):
         self._corner_delay_slider.disconnect(self._corner_delay_change_handler)
@@ -172,8 +172,8 @@ class Frame(SectionView):
     def __corner_delay_changed_cb(self, scale, data=None):
         if self._corner_delay_sid:
             GObject.source_remove(self._corner_delay_sid)
-        self._corner_delay_sid = GObject.timeout_add( \
-                self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
+        self._corner_delay_sid = GObject.timeout_add(
+            self._APPLY_TIMEOUT, self.__corner_delay_timeout_cb, scale)
 
     def __corner_delay_timeout_cb(self, scale):
         self._corner_delay_sid = 0
@@ -205,8 +205,8 @@ class Frame(SectionView):
     def __edge_delay_changed_cb(self, scale, data=None):
         if self._edge_delay_sid:
             GObject.source_remove(self._edge_delay_sid)
-        self._edge_delay_sid = GObject.timeout_add( \
-                self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
+        self._edge_delay_sid = GObject.timeout_add(
+            self._APPLY_TIMEOUT, self.__edge_delay_timeout_cb, scale)
 
     def __edge_delay_timeout_cb(self, scale):
         self._edge_delay_sid = 0

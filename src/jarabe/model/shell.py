@@ -24,6 +24,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
+from gi.repository import GLib
 import dbus
 
 from sugar3 import dispatch
@@ -49,6 +50,12 @@ class Activity(GObject.GObject):
     """
 
     __gtype_name__ = 'SugarHomeActivity'
+
+    __gsignals__ = {
+        'pause': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'resume': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'stop': (GObject.SignalFlags.RUN_LAST, GObject.TYPE_BOOLEAN, ([])),
+    }
 
     LAUNCHING = 0
     LAUNCH_FAILED = 1
@@ -91,25 +98,41 @@ class Activity(GObject.GObject):
         if not self._service:
             bus = dbus.SessionBus()
             self._name_owner_changed_handler = bus.add_signal_receiver(
-                    self._name_owner_changed_cb,
-                    signal_name='NameOwnerChanged',
-                    dbus_interface='org.freedesktop.DBus')
+                self._name_owner_changed_cb,
+                signal_name='NameOwnerChanged',
+                dbus_interface='org.freedesktop.DBus')
 
-        self._launch_completed_hid = get_model().connect('launch-completed',
-                self.__launch_completed_cb)
+        self._launch_completed_hid = \
+            get_model().connect('launch-completed',
+                                self.__launch_completed_cb)
         self._launch_failed_hid = get_model().connect('launch-failed',
-                self.__launch_failed_cb)
+                                                      self.__launch_failed_cb)
 
     def get_launch_status(self):
         return self._launch_status
 
     launch_status = GObject.property(getter=get_launch_status)
 
-    def add_window(self, window):
+    def add_window(self, window, is_main_window=False):
         """Add a window to the windows stack."""
         if not window:
             raise ValueError('window must be valid')
         self._windows.append(window)
+
+        if is_main_window:
+            window.connect('state-changed', self._state_changed_cb)
+
+    def stop(self):
+        # For web activities the Apisocket will connect to the 'stop'
+        # signal, thus preventing the window close.  Then, on the
+        # 'activity.close' method, it will call close_window()
+        # directly.
+        close_window = not self.emit('stop')
+        if close_window:
+            self.close_window()
+
+    def close_window(self):
+        self.get_window().close(GLib.get_current_time())
 
     def remove_window_by_xid(self, xid):
         """Remove a window from the windows stack."""
@@ -271,14 +294,14 @@ class Activity(GObject.GObject):
     def _name_owner_changed_cb(self, name, old, new):
         if name == self._get_service_name():
             if old and not new:
-                logging.debug('Activity._name_owner_changed_cb: ' \
-                        'activity %s went away', name)
+                logging.debug('Activity._name_owner_changed_cb: '
+                              'activity %s went away', name)
                 self._name_owner_changed_handler.remove()
                 self._name_owner_changed_handler = None
                 self._service = None
             elif not old and new:
-                logging.debug('Activity._name_owner_changed_cb: ' \
-                        'activity %s started up', name)
+                logging.debug('Activity._name_owner_changed_cb: '
+                              'activity %s started up', name)
                 self._retrieve_service()
                 self.set_active(True)
 
@@ -310,6 +333,13 @@ class Activity(GObject.GObject):
     def __launch_failed_cb(self, model, home_activity):
         if home_activity is self:
             self._set_launch_status(Activity.LAUNCH_FAILED)
+
+    def _state_changed_cb(self, main_window, changed_mask, new_state):
+        if changed_mask & Wnck.WindowState.MINIMIZED:
+            if new_state & Wnck.WindowState.MINIMIZED:
+                self.emit('pause')
+            else:
+                self.emit('resume')
 
 
 class ShellModel(GObject.GObject):
@@ -370,6 +400,7 @@ class ShellModel(GObject.GObject):
         self._active_activity = None
         self._tabbing_activity = None
         self._launchers = {}
+        self._modal_dialogs_counter = 0
 
         self._screen.toggle_showing_desktop(True)
 
@@ -547,18 +578,27 @@ class ShellModel(GObject.GObject):
 
                 window.maximize()
 
-            if not home_activity:
+            def is_main_window(window, home_activity):
+                # Check if window is the 'main' app window, not the
+                # launcher window.
+                return window.get_window_type() != \
+                    Wnck.WindowType.SPLASHSCREEN and \
+                    home_activity.get_launch_status() == Activity.LAUNCHING
+
+            if home_activity is None:
                 logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
                                          color, window)
+
                 self._add_activity(home_activity)
+
             else:
                 logging.debug('window registered for %s', activity_id)
-                home_activity.add_window(window)
+                home_activity.add_window(window, is_main_window(window,
+                                                                home_activity))
 
-            if window.get_window_type() != Wnck.WindowType.SPLASHSCREEN \
-                    and home_activity.get_launch_status() == Activity.LAUNCHING:
+            if is_main_window(window, home_activity):
                 self.emit('launch-completed', home_activity)
                 startup_time = time.time() - home_activity.get_launch_time()
                 logging.debug('%s launched in %f seconds.',
@@ -630,7 +670,7 @@ class ShellModel(GObject.GObject):
         registry = get_registry()
         activity_info = registry.get_bundle(service_name)
         if not activity_info:
-            raise ValueError("Activity service name '%s'" \
+            raise ValueError("Activity service name '%s'"
                              " was not found in the bundle registry."
                              % service_name)
         color = self._shared_activities.get(activity_id, None)
@@ -650,7 +690,7 @@ class ShellModel(GObject.GObject):
         home_activity = self.get_activity_by_id(activity_id)
         if home_activity:
             logging.debug('Activity %s (%s) launch failed', activity_id,
-                home_activity.get_type())
+                          home_activity.get_type())
             if self.get_launcher(activity_id) is not None:
                 self.emit('launch-failed', home_activity)
             else:
@@ -658,7 +698,7 @@ class ShellModel(GObject.GObject):
                 self._remove_activity(home_activity)
         else:
             logging.error('Model for activity id %s does not exist.',
-                activity_id)
+                          activity_id)
 
     def _check_activity_launched(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
@@ -669,9 +709,18 @@ class ShellModel(GObject.GObject):
 
         if self.get_launcher(activity_id) is not None:
             logging.debug('Activity %s still launching, assuming it failed.',
-                activity_id)
+                          activity_id)
             self.notify_launch_failed(activity_id)
         return False
+
+    def push_modal(self):
+        self._modal_dialogs_counter += 1
+
+    def pop_modal(self):
+        self._modal_dialogs_counter -= 1
+
+    def has_modal(self):
+        return self._modal_dialogs_counter > 0
 
 
 def get_model():

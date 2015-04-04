@@ -92,9 +92,9 @@ class ClipboardIcon(RadioToolButton):
         if targets:
             x_clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
             if not x_clipboard.set_with_data(targets,
-                                           self._clipboard_data_get_cb,
-                                           self._clipboard_clear_cb,
-                                           targets):
+                                             self._clipboard_data_get_cb,
+                                             self._clipboard_clear_cb,
+                                             targets):
                 logging.error('GtkClipboard.set_with_data failed!')
             else:
                 self.owns_clipboard = True
@@ -103,7 +103,7 @@ class ClipboardIcon(RadioToolButton):
         selection_target = selection.get_target()
         entries_targets = [entry.target for entry in targets]
         if not str(selection_target) in entries_targets:
-            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s' \
+            logging.warning('ClipboardIcon._clipboard_data_get_cb: asked %s'
                             ' but only have %r.', selection_target,
                             entries_targets)
             return
@@ -152,8 +152,8 @@ class ClipboardIcon(RadioToolButton):
         self._notif_icon = NotificationIcon()
         self._notif_icon.props.icon_name = self._icon.props.icon_name
         self._notif_icon.props.xo_color = \
-                XoColor('%s,%s' % (self._icon.props.stroke_color,
-                                   self._icon.props.fill_color))
+            XoColor('%s,%s' % (self._icon.props.stroke_color,
+                               self._icon.props.fill_color))
         frame = jarabe.frame.get_view()
         frame.add_notification(self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
 
@@ -175,5 +175,5 @@ class ClipboardIcon(RadioToolButton):
         targets = []
         for format_type in self._cb_object.get_formats().keys():
             targets.append(Gtk.TargetEntry.new(format_type,
-                    Gtk.TargetFlags.SAME_APP, 0))
+                                               Gtk.TargetFlags.SAME_APP, 0))
         return targets
