@@ -16,18 +16,23 @@ Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
   2008, Benjamin Berg <benjamin@sipsolutions.net>
   2008, Martin Dengler
   2008, Red Hat, Inc
-  2009-2013, Sugar Labs
-  2009-2011, Walter Bender
+  2008-2013, Sugar Labs
+  2009-2011,2013, Walter Bender
   2009, Aleksey Lim
   2009, James Zaki
   2009, Martin Abente
   2009, Paraguay Educa
   2009, Simon Schampijer
+  2010, Andrés Ambrois
   2010, Collabora Ltd. <http://www.collabora.co.uk/>
   2010, Daniel Castelo
   2010, Plan Ceibal
   2010, Software for Education, Entertainment and Training
-  2011, Raul Gutierrez Segales
+  2011,2013, Raul Gutierrez Segales
+  2012, Ajay Garg
+  2013, Daniel Francis
+  2013, Gonzalo Odiard
+  2013, Miguel González
 License: GPL-2+
 
 Files: */Makefile.in
@@ -47,6 +52,12 @@ Files: aclocal.m4
 Copyright: 1996-2013, Free Software Foundation, Inc
   2001-2004, Red Hat, Inc
 License: GAP
+
+Files: src/jarabe/webservice/account.py
+ src/jarabe/webservice/accountsmanager.py
+Copyright: 2013, Raul Gutierrez Segales
+  2013, Walter Bender
+License: LGPL-2+~Lesser
 
 Files: src/jarabe/util/telepathy/connection_watcher.py
 Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
@@ -99,6 +110,26 @@ License: GPL-2+
 Comment:
  On Debian systems the 'GNU General Public License' version 2 is located
  in '/usr/share/common-licenses/GPL-2'.
+
+License: LGPL-2+~Lesser
+ This library is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+Comment:
+ It is assumed that it is really the GNU _Library_ Public License.
+ .
+ On Debian systems the 'GNU Lesser General Public License' version 2
+ is located in '/usr/share/common-licenses/LGPL-2'.
+ .
+ You should have received a copy of the 'GNU Library General Public
+ License' along with this program.  If not, see
+ <http://www.gnu.org/licenses/>.
 
 License: LGPL-2.1+
  This program is free software; you can redistribute it and/or modify it
