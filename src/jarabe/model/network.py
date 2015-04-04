@@ -27,7 +27,7 @@ import dbus
 import dbus.service
 from gi.repository import GObject
 import ConfigParser
-from gi.repository import GConf
+from gi.repository import Gio
 import ctypes
 
 from sugar3 import dispatch
@@ -68,6 +68,7 @@ NM_DEVICE_STATE_ACTIVATED = 100
 NM_DEVICE_STATE_DEACTIVATING = 110
 NM_DEVICE_STATE_FAILED = 120
 
+NM_CONNECTION_TYPE_802_11_OLPC_MESH = '802-11-olpc-mesh'
 NM_CONNECTION_TYPE_802_11_WIRELESS = '802-11-wireless'
 NM_CONNECTION_TYPE_GSM = 'gsm'
 
@@ -186,12 +187,13 @@ NM_AGENT_MANAGER_ERR_NO_SECRETS = \
 
 GSM_CONNECTION_ID = 'Sugar Modem Connection'
 GSM_BAUD_RATE = 115200
-GSM_USERNAME_PATH = '/desktop/sugar/network/gsm/username'
-GSM_PASSWORD_PATH = '/desktop/sugar/network/gsm/password'
-GSM_NUMBER_PATH = '/desktop/sugar/network/gsm/number'
-GSM_APN_PATH = '/desktop/sugar/network/gsm/apn'
-GSM_PIN_PATH = '/desktop/sugar/network/gsm/pin'
-GSM_PUK_PATH = '/desktop/sugar/network/gsm/puk'
+GSM_KEYS_PATH = 'org.sugarlabs.network.gsm'
+GSM_USERNAME_KEY = 'username'
+GSM_PASSWORD_KEY = 'password'
+GSM_NUMBER_KEY = 'number'
+GSM_APN_KEY = 'apn'
+GSM_PIN_KEY = 'pin'
+GSM_PUK_KEY = 'puk'
 
 ADHOC_CONNECTION_ID_PREFIX = 'Sugar Ad-hoc Network '
 MESH_CONNECTION_ID_PREFIX = 'OLPC Mesh Network '
@@ -831,16 +833,6 @@ class Connection(GObject.GObject):
     def get_path(self):
         return self._connection.object_path
 
-    def is_sugar_internal_connection(self):
-        """Returns True if this connection is a 'special' Sugar connection,
-        i.e. one that has been created by Sugar internals and should not be
-        visible to the user or deleted by connection-clearing code."""
-        connection_id = self.get_id()
-        return connection_id == GSM_CONNECTION_ID \
-            or connection_id.startswith(ADHOC_CONNECTION_ID_PREFIX) \
-            or connection_id.startswith(MESH_CONNECTION_ID_PREFIX) \
-            or connection_id.startswith(XS_MESH_CONNECTION_ID_PREFIX)
-
 
 class Connections(object):
     def __init__(self):
@@ -867,21 +859,6 @@ class Connections(object):
     def _connection_removed_cb(self, connection):
         connection.disconnect_by_func(self._connection_removed_cb)
         self._connections.remove(connection)
-
-    def clear(self):
-        """Remove all connections except Sugar-internal ones."""
-
-        # copy the list, to avoid problems with removing elements of a list
-        # while looping over it
-        connections = list(self._connections)
-        for connection in connections:
-            if connection.is_sugar_internal_connection():
-                continue
-            try:
-                connection.delete()
-            except dbus.DBusException:
-                logging.debug("Could not remove connection %s",
-                              connection.get_id())
 
 
 def get_connections():
@@ -1030,23 +1007,23 @@ def _migrate_old_gsm_connection():
         # don't attempt migration if a NM-level connection already exists
         return
 
-    client = GConf.Client.get_default()
+    settings = Gio.Settings(GSM_KEYS_PATH)
 
-    username = client.get_string(GSM_USERNAME_PATH) or ''
-    password = client.get_string(GSM_PASSWORD_PATH) or ''
-    number = client.get_string(GSM_NUMBER_PATH) or ''
-    apn = client.get_string(GSM_APN_PATH) or ''
-    pin = client.get_string(GSM_PIN_PATH) or ''
+    username = settings.get_string(GSM_USERNAME_KEY) or ''
+    password = settings.get_string(GSM_PASSWORD_KEY) or ''
+    number = settings.get_string(GSM_NUMBER_KEY) or ''
+    apn = settings.get_string(GSM_APN_KEY) or ''
+    pin = settings.get_string(GSM_PIN_KEY) or ''
 
     if apn or number:
         logging.info("Migrating old GSM connection details")
         try:
             create_gsm_connection(username, password, number, apn, pin)
             # remove old connection
-            for setting in (GSM_USERNAME_PATH, GSM_PASSWORD_PATH,
-                            GSM_NUMBER_PATH, GSM_APN_PATH, GSM_PIN_PATH,
-                            GSM_PUK_PATH):
-                client.set_string(setting, '')
+            for setting in (GSM_USERNAME_KEY, GSM_PASSWORD_KEY,
+                            GSM_NUMBER_KEY, GSM_APN_KEY, GSM_PIN_KEY,
+                            GSM_PUK_KEY):
+                settings.set_string(setting, '')
         except Exception:
             logging.exception('Error adding gsm connection to NMSettings.')
 

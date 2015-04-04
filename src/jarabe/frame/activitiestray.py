@@ -22,10 +22,10 @@ import tempfile
 import os
 
 from gi.repository import GObject
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -41,15 +41,18 @@ from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.datastore import datastore
 from sugar3 import mime
 from sugar3 import env
+from sugar3 import profile
 
 from jarabe.model import shell
 from jarabe.model import invites
 from jarabe.model import bundleregistry
 from jarabe.model import filetransfer
+from jarabe.model import notifications
 from jarabe.view.palettes import JournalPalette, CurrentActivityPalette
-from jarabe.view.pulsingicon import PulsingIcon
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
+from jarabe.frame.notification import NotificationButton
+from jarabe.frame.notification import NotificationPulsingIcon
 import jarabe.frame
 
 
@@ -63,7 +66,7 @@ class ActivityButton(RadioToolButton):
         self._home_activity = home_activity
         self._notify_launch_hid = None
 
-        self._icon = PulsingIcon()
+        self._icon = NotificationPulsingIcon()
         self._icon.props.base_color = home_activity.get_icon_color()
         self._icon.props.pulse_color = \
             XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
@@ -71,7 +74,15 @@ class ActivityButton(RadioToolButton):
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
-            self._icon.props.icon_name = 'image-missing'
+            # Let's see if the X11 window can give us an icon.
+            window = home_activity.get_window()
+
+            if not window.get_icon_is_fallback():
+                pixbuf = window.get_icon()
+                self._icon.pixbuf = pixbuf
+            else:
+                self._icon.props.icon_name = 'image-missing'
+
         self.set_icon_widget(self._icon)
         self._icon.show()
 
@@ -106,6 +117,12 @@ class ActivityButton(RadioToolButton):
             self._on_failed_launch()
         else:
             self._icon.props.pulsing = False
+
+    def show_badge(self):
+        self._icon.show_badge()
+
+    def hide_badge(self):
+        self._icon.hide_badge()
 
 
 class InviteButton(ToolButton):
@@ -221,6 +238,7 @@ class ActivitiesTray(HTray):
         HTray.__init__(self)
 
         self._buttons = {}
+        self._buttons_by_name = {}
         self._invite_to_item = {}
         self._freeze_button_clicks = False
 
@@ -241,6 +259,47 @@ class ActivitiesTray(HTray):
 
         filetransfer.new_file_transfer.connect(self.__new_file_transfer_cb)
 
+        service = notifications.get_service()
+        service.notification_received.connect(self.__notification_received_cb)
+        service.buffer_cleared.connect(self.__buffer_cleared_cb)
+
+    def __notification_received_cb(self, **kwargs):
+        logging.debug('ActivitiesTray.__notification_received_cb')
+
+        name = kwargs.get('app_name')
+
+        button = self._buttons_by_name.get(name, None)
+        if button is None:
+            hints = kwargs.get('hints')
+            icon = NotificationPulsingIcon(
+                hints.get('x-sugar-icon-file-name', ''),
+                hints.get('x-sugar-icon-name', ''),
+                hints.get('x-sugar-icon-colors', ''))
+
+            button = NotificationButton(name)
+            button.set_icon(icon)
+            button.show()
+
+            self.add_item(button)
+            self._buttons_by_name[name] = button
+
+        if hasattr(button, 'show_badge'):
+            button.show_badge()
+
+    def __buffer_cleared_cb(self, **kwargs):
+        logging.debug('ActivitiesTray.__buffer_cleared_cb')
+
+        name = kwargs.get('app_name', None)
+
+        button = self._buttons_by_name.get(name, None)
+        if isinstance(button, NotificationButton):
+            self.remove_item(button)
+            del self._buttons_by_name[name]
+            return
+
+        if hasattr(button, 'hide_badge'):
+            button.hide_badge()
+
     def __activity_added_cb(self, home_model, home_activity):
         logging.debug('__activity_added_cb: %r', home_activity)
         if self.get_children():
@@ -251,6 +310,7 @@ class ActivitiesTray(HTray):
         button = ActivityButton(home_activity, group)
         self.add_item(button)
         self._buttons[home_activity] = button
+        self._buttons_by_name[home_activity.get_activity_id()] = button
         button.connect('clicked', self.__activity_clicked_cb, home_activity)
         button.show()
 
@@ -259,6 +319,7 @@ class ActivitiesTray(HTray):
         button = self._buttons[home_activity]
         self.remove_item(button)
         del self._buttons[home_activity]
+        del self._buttons_by_name[home_activity.get_activity_id()]
 
     def _activate_activity(self, home_activity):
         button = self._buttons[home_activity]
@@ -476,8 +537,7 @@ class OutgoingTransferButton(BaseTransferButton):
                 self.notif_icon.props.icon_name = icon_name
                 break
 
-        client = GConf.Client.get_default()
-        icon_color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        icon_color = profile.get_color()
         self.props.icon_widget.props.xo_color = icon_color
         self.notif_icon.props.xo_color = icon_color
 
@@ -586,7 +646,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         logging.debug('_update state: %r', self.file_transfer.props.state)
         if self.file_transfer.props.state == filetransfer.FT_STATE_PENDING:
             menu_item = PaletteMenuItem(_('Accept'))
-            icon = Icon(icon_name='dialog-ok', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-ok',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__accept_activate_cb)
@@ -594,7 +655,8 @@ class IncomingTransferPalette(BaseTransferPalette):
             menu_item.show()
 
             menu_item = PaletteMenuItem(_('Decline'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__decline_activate_cb)
@@ -611,7 +673,10 @@ class IncomingTransferPalette(BaseTransferPalette):
             inner_box.show()
 
             if self.file_transfer.description:
-                label = Gtk.Label(label=self.file_transfer.description)
+                text = self.file_transfer.description.replace('\n', ' ')
+                label = Gtk.Label(label=text)
+                label.set_max_width_chars(style.MENU_WIDTH_CHARS)
+                label.set_ellipsize(Pango.EllipsizeMode.END)
                 inner_box.add(label)
                 label.show()
 
@@ -626,7 +691,8 @@ class IncomingTransferPalette(BaseTransferPalette):
         elif self.file_transfer.props.state in \
                 [filetransfer.FT_STATE_ACCEPTED, filetransfer.FT_STATE_OPEN]:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -654,7 +720,8 @@ class IncomingTransferPalette(BaseTransferPalette):
 
         elif self.file_transfer.props.state == filetransfer.FT_STATE_COMPLETED:
             menu_item = PaletteMenuItem(_('Dismiss'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)
@@ -668,7 +735,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                     filetransfer.FT_REASON_REMOTE_STOPPED:
                 menu_item = PaletteMenuItem(_('Dismiss'))
                 icon = Icon(icon_name='dialog-cancel',
-                            icon_size=Gtk.IconSize.MENU)
+                            pixel_size=style.SMALL_ICON_SIZE)
                 menu_item.set_image(icon)
                 icon.show()
                 menu_item.connect('activate', self.__dismiss_activate_cb)
@@ -747,7 +814,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         box.show()
         if new_state == filetransfer.FT_STATE_PENDING:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -779,7 +847,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         elif new_state in [filetransfer.FT_STATE_ACCEPTED,
                            filetransfer.FT_STATE_OPEN]:
             menu_item = PaletteMenuItem(_('Cancel'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__cancel_activate_cb)
@@ -808,7 +877,8 @@ class OutgoingTransferPalette(BaseTransferPalette):
         elif new_state in [filetransfer.FT_STATE_COMPLETED,
                            filetransfer.FT_STATE_CANCELLED]:
             menu_item = PaletteMenuItem(_('Dismiss'))
-            icon = Icon(icon_name='dialog-cancel', icon_size=Gtk.IconSize.MENU)
+            icon = Icon(icon_name='dialog-cancel',
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             icon.show()
             menu_item.connect('activate', self.__dismiss_activate_cb)

@@ -39,9 +39,14 @@ class ActivityUpdater(SectionView):
         SectionView.__init__(self)
 
         self._model = updater.get_instance()
-        self._model.connect('progress', self.__progress_cb)
-        self._model.connect('updates-available', self.__updates_available_cb)
-        self._model.connect('finished', self.__finished_cb)
+        self._id_progresss = self._model.connect('progress',
+                                                 self.__progress_cb)
+        self._id_updates = self._model.connect('updates-available',
+                                               self.__updates_available_cb)
+        self._id_error = self._model.connect('error',
+                                             self.__error_cb)
+        self._id_finished = self._model.connect('finished',
+                                                self.__finished_cb)
 
         self.set_spacing(style.DEFAULT_SPACING)
         self.set_border_width(style.DEFAULT_SPACING * 2)
@@ -57,15 +62,15 @@ class ActivityUpdater(SectionView):
         self.pack_start(separator, False, True, 0)
         separator.show()
 
-        bottom_label = Gtk.Label()
-        bottom_label.set_line_wrap(True)
-        bottom_label.set_justify(Gtk.Justification.LEFT)
-        bottom_label.props.xalign = 0
-        bottom_label.set_markup(
+        self._bottom_label = Gtk.Label()
+        self._bottom_label.set_line_wrap(True)
+        self._bottom_label.set_justify(Gtk.Justification.LEFT)
+        self._bottom_label.props.xalign = 0
+        self._bottom_label.set_markup(
             _('Software updates correct errors, eliminate security '
               'vulnerabilities, and provide new features.'))
-        self.pack_start(bottom_label, False, True, 0)
-        bottom_label.show()
+        self.pack_start(self._bottom_label, False, True, 0)
+        self._bottom_label.show()
 
         self._update_box = None
         self._progress_pane = None
@@ -77,6 +82,14 @@ class ActivityUpdater(SectionView):
                        updater.STATE_UPDATING):
             self._switch_to_progress_pane()
             self._progress_pane.set_message(_('Update in progress...'))
+        self.connect('destroy', self.__destroy_cb)
+
+    def __destroy_cb(self, widget):
+        self._model.disconnect(self._id_progresss)
+        self._model.disconnect(self._id_updates)
+        self._model.disconnect(self._id_error)
+        self._model.disconnect(self._id_finished)
+        self._model.clean()
 
     def _switch_to_update_box(self, updates):
         if self._update_box in self.get_children():
@@ -164,6 +177,15 @@ class ActivityUpdater(SectionView):
             self._clear_center()
         else:
             self._switch_to_update_box(updates)
+
+    def __error_cb(self, model, updates):
+        logging.debug('ActivityUpdater.__error_cb')
+        top_message = _('Can\'t connect to the activity server')
+        self._top_label.set_markup('<big>%s</big>' % top_message)
+        self._bottom_label.set_markup(
+            _('Verify your connection to internet and try again, '
+              'or try again later'))
+        self._clear_center()
 
     def __refresh_button_clicked_cb(self, button):
         self._refresh()
@@ -264,8 +286,9 @@ class UpdateBox(Gtk.VBox):
         self.refresh_button.show()
 
         self.install_button = Gtk.Button(_('Install selected'))
-        self.install_button.props.image = Icon(icon_name='emblem-downloads',
-                                               icon_size=Gtk.IconSize.BUTTON)
+        self.install_button.props.image = Icon(
+            icon_name='emblem-downloads',
+            pixel_size=style.SMALL_ICON_SIZE)
         bottom_box.pack_start(self.install_button, False, True, 0)
         self.install_button.show()
 
@@ -368,6 +391,9 @@ class UpdateListModel(Gtk.ListStore):
             row[self.SELECTED] = True
             if installed:
                 row[self.ICON_FILE_NAME] = installed.get_icon()
+            else:
+                if bundle_update.icon_file_name is not None:
+                    row[self.ICON_FILE_NAME] = bundle_update.icon_file_name
 
             if installed:
                 details = _('From version %(current)s to %(new)s (Size: '

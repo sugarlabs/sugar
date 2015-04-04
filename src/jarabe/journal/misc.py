@@ -1,4 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,25 +18,28 @@
 import logging
 import time
 import os
+import hashlib
 from gettext import gettext as _
 
 from gi.repository import Gio
-from gi.repository import GConf
 from gi.repository import Gtk
 
 from sugar3.activity import activityfactory
 from sugar3.activity.activityhandle import ActivityHandle
 from sugar3.graphics.icon import get_icon_file_name
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.xocolor import colors
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3 import mime
 from sugar3.bundle.bundle import ZipExtractException, RegistrationException
-from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.bundle.activitybundle import ActivityBundle, get_bundle_instance
 from sugar3.bundle.bundle import AlreadyInstalledException
 from sugar3.bundle.contentbundle import ContentBundle
 from sugar3 import util
+from sugar3 import profile
 
 from jarabe.view import launcher
+from jarabe.view import alerts
 from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
@@ -85,7 +89,7 @@ def get_icon_name(metadata):
         file_path = model.get_file(metadata['uid'])
         if file_path is not None and os.path.exists(file_path):
             try:
-                bundle = ActivityBundle(file_path)
+                bundle = get_bundle_instance(file_path)
                 file_name = bundle.get_icon()
             except Exception:
                 logging.exception('Could not read bundle')
@@ -127,7 +131,7 @@ def get_bundle(metadata):
             if not os.path.exists(file_path):
                 logging.warning('Invalid path: %r', file_path)
                 return None
-            return ActivityBundle(file_path)
+            return get_bundle_instance(file_path)
 
         elif is_content_bundle(metadata):
             file_path = model.get_file(metadata['uid'])
@@ -179,7 +183,29 @@ def get_activities(metadata):
     return activities
 
 
-def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
+def get_bundle_id_from_metadata(metadata):
+    activities = get_activities(metadata)
+    if not activities:
+        logging.warning('No activity can open this object, %s.',
+                        metadata.get('mime_type', None))
+        return None
+    return activities[0].get_bundle_id()
+
+
+def resume(metadata, bundle_id=None, alert_window=None,
+           force_bundle_downgrade=False):
+
+    # These are set later, and used in the following functions.
+    bundle = None
+    activity_id = None
+
+    def launch_activity(object_id):
+        launch(bundle, activity_id=activity_id, object_id=object_id,
+               color=get_icon_color(metadata), alert_window=alert_window)
+
+    def ready_callback(metadata, source, destination):
+        launch_activity(destination)
+
     registry = bundleregistry.get_registry()
 
     ds_bundle, downgrade_required = \
@@ -213,15 +239,16 @@ def resume(metadata, bundle_id=None, force_bundle_downgrade=False):
 
     if metadata.get('mountpoint', '/') == '/':
         object_id = metadata['uid']
+        launch_activity(object_id)
     else:
-        object_id = model.copy(metadata, '/')
-
-    launch(bundle, activity_id=activity_id, object_id=object_id,
-           color=get_icon_color(metadata))
+        model.copy(metadata, '/', ready_callback=ready_callback)
 
 
 def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
-           invited=False):
+           invited=False, alert_window=None):
+
+    bundle_id = bundle.get_bundle_id()
+
     if activity_id is None or not activity_id:
         activity_id = activityfactory.create_activity_id()
 
@@ -246,9 +273,25 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         activity.get_window().activate(Gtk.get_current_event_time())
         return
 
+    if not shell_model.can_launch_activity():
+        if alert_window is None:
+            from jarabe.desktop import homewindow
+            alert_window = homewindow.get_instance()
+        if alert_window is not None:
+            alerts.show_max_open_activities_alert(alert_window)
+        return
+
+    if not shell_model.can_launch_activity_instance(bundle):
+        if alert_window is None:
+            from jarabe.desktop import homewindow
+            alert_window = homewindow.get_instance()
+        if alert_window is not None:
+            alerts.show_multiple_instance_alert(
+                alert_window, shell_model.get_name_from_bundle_id(bundle_id))
+        return
+
     if color is None:
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
     launcher.add_launcher(activity_id, bundle.get_icon(), color)
     activity_handle = ActivityHandle(activity_id=activity_id,
@@ -290,6 +333,10 @@ def is_journal_bundle(metadata):
 def is_bundle(metadata):
     return is_activity_bundle(metadata) or is_content_bundle(metadata) or \
         is_journal_bundle(metadata)
+
+
+def can_resume(metadata):
+    return get_activities(metadata) or is_bundle(metadata)
 
 
 def handle_bundle_installation(metadata, force_downgrade=False):
@@ -335,8 +382,29 @@ def handle_bundle_installation(metadata, force_downgrade=False):
 
 
 def get_icon_color(metadata):
-    if metadata is None or not 'icon-color' in metadata:
-        client = GConf.Client.get_default()
-        return XoColor(client.get_string('/desktop/sugar/user/color'))
+    if metadata is None or 'icon-color' not in metadata:
+        return profile.get_color()
     else:
         return XoColor(metadata['icon-color'])
+
+
+def get_mount_color(mount):
+    sha_hash = hashlib.sha1()
+    path = mount.get_root().get_path()
+    uuid = mount.get_uuid()
+
+    if uuid:
+        sha_hash.update(uuid)
+    elif path is None:
+        sha_hash.update(str(time.time()))
+    else:
+        mount_name = os.path.basename(path)
+        sha_hash.update(mount_name)
+
+    digest = hash(sha_hash.digest())
+    index = digest % len(colors)
+
+    color = XoColor('%s,%s' %
+                    (colors[index][0],
+                     colors[index][1]))
+    return color

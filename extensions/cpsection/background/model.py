@@ -16,11 +16,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
-from gi.repository import GConf
+from gi.repository import Gio
 
 from jarabe.journal.model import get_documents_path
-from jarabe.desktop.homebackgroundbox import BACKGROUND_IMAGE_PATH_STRING
-from jarabe.desktop.homebackgroundbox import BACKGROUND_ALPHA_LEVEL_STRING
+from jarabe.desktop.homebackgroundbox import BACKGROUND_DIR
+from jarabe.desktop.homebackgroundbox import BACKGROUND_IMAGE_PATH_KEY
+from jarabe.desktop.homebackgroundbox import BACKGROUND_ALPHA_LEVEL_KEY
 from jarabe.desktop.homebackgroundbox import DEFAULT_BACKGROUND_ALPHA_LEVEL
 
 import os
@@ -30,29 +31,29 @@ BACKGROUNDS_DIRS = (os.path.join('/usr', 'share', 'backgrounds'),
 
 
 def set_background_image_path(file_path):
-    client = GConf.Client.get_default()
+    settings = Gio.Settings(BACKGROUND_DIR)
     if file_path is None:
-        client.set_string(BACKGROUND_IMAGE_PATH_STRING, '')
+        settings.set_string(BACKGROUND_IMAGE_PATH_KEY, '')
     else:
-        client.set_string(BACKGROUND_IMAGE_PATH_STRING, str(file_path))
+        settings.set_string(BACKGROUND_IMAGE_PATH_KEY, str(file_path))
     return 1
 
 
 def get_background_image_path():
-    client = GConf.Client.get_default()
-    return client.get_string(BACKGROUND_IMAGE_PATH_STRING)
+    settings = Gio.Settings(BACKGROUND_DIR)
+    return settings.get_string(BACKGROUND_IMAGE_PATH_KEY)
 
 PREVIOUS_BACKGROUND_IMAGE_PATH = get_background_image_path()
 
 
 def set_background_alpha_level(alpha_level):
-    client = GConf.Client.get_default()
-    client.set_string(BACKGROUND_ALPHA_LEVEL_STRING, str(alpha_level))
+    settings = Gio.Settings(BACKGROUND_DIR)
+    settings.set_string(BACKGROUND_ALPHA_LEVEL_KEY, str(alpha_level))
 
 
 def get_background_alpha_level():
-    client = GConf.Client.get_default()
-    alpha = client.get_string(BACKGROUND_ALPHA_LEVEL_STRING)
+    settings = Gio.Settings(BACKGROUND_DIR)
+    alpha = settings.get_string(BACKGROUND_ALPHA_LEVEL_KEY)
     if alpha is None:
         alpha = DEFAULT_BACKGROUND_ALPHA_LEVEL
     else:

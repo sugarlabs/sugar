@@ -18,13 +18,11 @@
 import logging
 
 from gi.repository import GObject
-from gi.repository import GConf
 import dbus
 from telepathy.client import Connection
 from telepathy.interfaces import CONNECTION
 
-from sugar3.graphics.xocolor import XoColor
-from sugar3.profile import get_profile
+from sugar3 import profile
 
 from jarabe.util.telepathy import connection_watcher
 
@@ -97,12 +95,10 @@ class OwnerBuddyModel(BaseBuddyModel):
     def __init__(self):
         BaseBuddyModel.__init__(self)
 
-        client = GConf.Client.get_default()
-        self.props.nick = client.get_string('/desktop/sugar/user/nick')
-        color = client.get_string('/desktop/sugar/user/color')
-        self.props.color = XoColor(color)
+        self.props.nick = profile.get_nick_name()
+        self.props.color = profile.get_color()
 
-        self.props.key = get_profile().pubkey
+        self.props.key = profile.get_profile().pubkey
 
         self.connect('notify::nick', self.__property_changed_cb)
         self.connect('notify::color', self.__property_changed_cb)

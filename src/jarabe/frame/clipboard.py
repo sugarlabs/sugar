@@ -36,9 +36,9 @@ class Clipboard(GObject.GObject):
 
     __gsignals__ = {
         'object-added': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([object])),
+                         ([object])),
         'object-deleted': (GObject.SignalFlags.RUN_FIRST, None,
-                        ([long])),
+                           ([long])),
         'object-selected': (GObject.SignalFlags.RUN_FIRST, None,
                             ([long])),
         'object-state-changed': (GObject.SignalFlags.RUN_FIRST, None,

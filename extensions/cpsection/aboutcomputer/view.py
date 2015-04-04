@@ -18,7 +18,7 @@
 
 from gettext import gettext as _
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Pango
 from gi.repository import Gdk
 
 from sugar3.graphics import style
@@ -52,6 +52,22 @@ class AboutComputer(SectionView):
         self._setup_software()
         self._setup_copyright()
 
+    def create_information_box(self, label_text, value_text):
+        box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label = Gtk.Label(label=label_text)
+        label.set_alignment(1, 0)
+        label.modify_fg(Gtk.StateType.NORMAL,
+                        style.COLOR_SELECTION_GREY.get_gdk_color())
+        box.pack_start(label, False, True, 0)
+        self._group.add_widget(label)
+        label.show()
+        value = Gtk.Label(label=value_text)
+        value.set_alignment(0, 0)
+        box.pack_start(value, False, True, 0)
+        value.show()
+        box.show()
+        return box
+
     def _setup_identity(self):
         separator_identity = Gtk.HSeparator()
         self._vbox.pack_start(separator_identity, False, True, 0)
@@ -65,20 +81,16 @@ class AboutComputer(SectionView):
         vbox_identity.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_identity.set_spacing(style.DEFAULT_SPACING)
 
-        box_identity = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_serial = Gtk.Label(label=_('Serial Number:'))
-        label_serial.set_alignment(1, 0)
-        label_serial.modify_fg(Gtk.StateType.NORMAL,
-                               style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_identity.pack_start(label_serial, False, True, 0)
-        self._group.add_widget(label_serial)
-        label_serial.show()
-        label_serial_no = Gtk.Label(label=self._model.get_serial_number())
-        label_serial_no.set_alignment(0, 0)
-        box_identity.pack_start(label_serial_no, False, True, 0)
-        label_serial_no.show()
-        vbox_identity.pack_start(box_identity, False, True, 0)
-        box_identity.show()
+        hardware_model = self._model.get_hardware_model()
+        if hardware_model:
+            vbox_identity.pack_start(
+                self.create_information_box(_('Model:'), hardware_model),
+                False, True, 0)
+
+        vbox_identity.pack_start(
+            self.create_information_box(_('Serial Number:'),
+                                        self._model.get_serial_number()),
+            False, True, 0)
 
         self._vbox.pack_start(vbox_identity, False, True, 0)
         vbox_identity.show()
@@ -96,66 +108,36 @@ class AboutComputer(SectionView):
         box_software.set_border_width(style.DEFAULT_SPACING * 2)
         box_software.set_spacing(style.DEFAULT_SPACING)
 
-        box_build = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_build = Gtk.Label(label=_('Build:'))
-        label_build.set_alignment(1, 0)
-        label_build.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_build.pack_start(label_build, False, True, 0)
-        self._group.add_widget(label_build)
-        label_build.show()
-        label_build_no = Gtk.Label(label=self._model.get_build_number())
-        label_build_no.set_alignment(0, 0)
-        box_build.pack_start(label_build_no, False, True, 0)
-        label_build_no.show()
-        box_software.pack_start(box_build, False, True, 0)
-        box_build.show()
+        box_software.pack_start(
+            self.create_information_box(_('Build:'),
+                                        self._model.get_build_number()),
+            False, True, 0)
 
-        box_sugar = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_sugar = Gtk.Label(label=_('Sugar:'))
-        label_sugar.set_alignment(1, 0)
-        label_sugar.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_sugar.pack_start(label_sugar, False, True, 0)
-        self._group.add_widget(label_sugar)
-        label_sugar.show()
-        label_sugar_ver = Gtk.Label(label=config.version)
-        label_sugar_ver.set_alignment(0, 0)
-        box_sugar.pack_start(label_sugar_ver, False, True, 0)
-        label_sugar_ver.show()
-        box_software.pack_start(box_sugar, False, True, 0)
-        box_sugar.show()
+        box_software.pack_start(
+            self.create_information_box(_('Sugar:'),
+                                        config.version),
+            False, True, 0)
 
-        box_firmware = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_firmware = Gtk.Label(label=_('Firmware:'))
-        label_firmware.set_alignment(1, 0)
-        label_firmware.modify_fg(Gtk.StateType.NORMAL,
-                                 style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_firmware.pack_start(label_firmware, False, True, 0)
-        self._group.add_widget(label_firmware)
-        label_firmware.show()
-        label_firmware_no = Gtk.Label(label=self._model.get_firmware_number())
-        label_firmware_no.set_alignment(0, 0)
-        box_firmware.pack_start(label_firmware_no, False, True, 0)
-        label_firmware_no.show()
-        box_software.pack_start(box_firmware, False, True, 0)
-        box_firmware.show()
+        box_software.pack_start(
+            self.create_information_box(_('Firmware:'),
+                                        self._model.get_firmware_number()),
+            False, True, 0)
 
-        box_wireless_fw = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_wireless_fw = Gtk.Label(label=_('Wireless Firmware:'))
-        label_wireless_fw.set_alignment(1, 0)
-        label_wireless_fw.modify_fg(Gtk.StateType.NORMAL,
-                                    style.COLOR_SELECTION_GREY.get_gdk_color())
-        box_wireless_fw.pack_start(label_wireless_fw, False, True, 0)
-        self._group.add_widget(label_wireless_fw)
-        label_wireless_fw.show()
-        wireless_fw_no = self._model.get_wireless_firmware()
-        label_wireless_fw_no = Gtk.Label(label=wireless_fw_no)
-        label_wireless_fw_no.set_alignment(0, 0)
-        box_wireless_fw.pack_start(label_wireless_fw_no, False, True, 0)
-        label_wireless_fw_no.show()
-        box_software.pack_start(box_wireless_fw, False, True, 0)
-        box_wireless_fw.show()
+        box_software.pack_start(
+            self.create_information_box(_('Wireless Firmware:'),
+                                        self._model.get_wireless_firmware()),
+            False, True, 0)
+
+        days_from_last_update = self._model.days_from_last_update()
+        if days_from_last_update >= 0:
+            if days_from_last_update > 0:
+                msg = _('%d days ago') % days_from_last_update
+            else:
+                msg = _('Today')
+
+            box_software.pack_start(
+                self.create_information_box(_('Last system update:'), msg),
+                False, True, 0)
 
         self._vbox.pack_start(box_software, False, True, 0)
         box_software.show()
@@ -199,7 +181,20 @@ class AboutComputer(SectionView):
         expander = Gtk.Expander(label=_('Full license:'))
         expander.connect('notify::expanded', self.license_expander_cb)
         expander.show()
-        vbox_copyright.pack_start(expander, True, True, 0)
+        vbox_copyright.pack_start(expander, False, True, 0)
+
+        # display secondary licenses, if any
+        for license_text in self._model.get_secondary_licenses():
+            label_license = Gtk.Label(label=license_text)
+            label_license.set_alignment(0, 0)
+            label_license.set_line_wrap(True)
+            label_license.set_size_request(Gdk.Screen.width() / 2, -1)
+            label_license.show()
+
+            separator = Gtk.HSeparator()
+            vbox_copyright.pack_start(separator, False, True, 0)
+            separator.show()
+            vbox_copyright.pack_start(label_license, False, True, 0)
 
         self._vbox.pack_start(vbox_copyright, True, True, 0)
         vbox_copyright.show()
@@ -211,6 +206,8 @@ class AboutComputer(SectionView):
             view_license = Gtk.TextView()
             view_license.set_editable(False)
             view_license.get_buffer().set_text(self._model.get_license())
+            fd = Pango.FontDescription('Monospace')
+            view_license.modify_font(fd)
             view_license.show()
             expander.add(view_license)
         else:

@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +23,6 @@ import os
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 from gi.repository import Gio
 from gi.repository import GLib
 
@@ -33,6 +33,7 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3 import mime
+from sugar3 import profile
 
 from jarabe.model import friends
 from jarabe.model import filetransfer
@@ -41,6 +42,7 @@ from jarabe.journal import misc
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
+from jarabe.journal.misc import get_mount_color
 
 
 class ObjectPalette(Palette):
@@ -59,7 +61,7 @@ class ObjectPalette(Palette):
         self._journalactivity = journalactivity
         self._metadata = metadata
 
-        activity_icon = Icon(icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+        activity_icon = Icon(pixel_size=style.STANDARD_ICON_SIZE)
         activity_icon.props.file = misc.get_icon_name(metadata)
         color = misc.get_icon_color(metadata)
         activity_icon.props.xo_color = color
@@ -72,7 +74,11 @@ class ObjectPalette(Palette):
         Palette.__init__(self, primary_text=title,
                          icon=activity_icon)
 
-        if misc.get_activities(metadata) or misc.is_bundle(metadata):
+        description = metadata.get('description', '')
+        if description:
+            self.set_secondary_text(description)
+
+        if misc.can_resume(metadata):
             if metadata.get('activity_id', ''):
                 resume_label = _('Resume')
                 resume_with_label = _('Resume with')
@@ -98,7 +104,7 @@ class ObjectPalette(Palette):
 
         menu_item = MenuItem(_('Copy to'))
         icon = Icon(icon_name='edit-copy', xo_color=color,
-                    icon_size=Gtk.IconSize.MENU)
+                    pixel_size=style.SMALL_ICON_SIZE)
         menu_item.set_image(icon)
         self.menu.append(menu_item)
         menu_item.show()
@@ -109,7 +115,7 @@ class ObjectPalette(Palette):
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate', xo_color=color,
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             menu_item.set_image(icon)
             menu_item.connect('activate', self.__duplicate_activate_cb)
             self.menu.append(menu_item)
@@ -138,7 +144,8 @@ class ObjectPalette(Palette):
         return [self._metadata['uid']]
 
     def __start_activate_cb(self, menu_item):
-        misc.resume(self._metadata)
+        misc.resume(self._metadata,
+                    alert_window=journalwindow.get_journal_window())
 
     def __duplicate_activate_cb(self, menu_item):
         try:
@@ -242,19 +249,18 @@ class CopyMenuBuilder():
         if self._add_clipboard_menu:
             clipboard_menu = ClipboardMenu(self._get_uid_list_cb)
             clipboard_menu.set_image(Icon(icon_name='toolbar-edit',
-                                          icon_size=Gtk.IconSize.MENU))
+                                          pixel_size=style.SMALL_ICON_SIZE))
             clipboard_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(clipboard_menu)
             clipboard_menu.show()
 
         if self._journalactivity.get_mount_point() != '/':
-            client = GConf.Client.get_default()
-            color = XoColor(client.get_string('/desktop/sugar/user/color'))
+            color = profile.get_color()
             journal_menu = VolumeMenu(self._journalactivity,
                                       self._get_uid_list_cb, _('Journal'), '/')
             journal_menu.set_image(Icon(icon_name='activity-journal',
                                         xo_color=color,
-                                        icon_size=Gtk.IconSize.MENU))
+                                        pixel_size=style.SMALL_ICON_SIZE))
             journal_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(journal_menu)
             journal_menu.show()
@@ -266,7 +272,7 @@ class CopyMenuBuilder():
                                         self._get_uid_list_cb, _('Documents'),
                                         documents_path)
             documents_menu.set_image(Icon(icon_name='user-documents',
-                                          icon_size=Gtk.IconSize.MENU))
+                                          pixel_size=style.SMALL_ICON_SIZE))
             documents_menu.connect('volume-error', self.__volume_error_cb)
             self._menu.append(documents_menu)
             documents_menu.show()
@@ -309,8 +315,11 @@ class CopyMenuBuilder():
                                  self._get_uid_list_cb, mount.get_name(),
                                  mount.get_root().get_path())
         icon_name = misc.get_mount_icon_name(mount, Gtk.IconSize.MENU)
-        volume_menu.set_image(Icon(icon_size=Gtk.IconSize.MENU,
-                                   icon_name=icon_name))
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                    icon_name=icon_name,
+                    xo_color=get_mount_color(mount))
+
+        volume_menu.set_image(icon)
         volume_menu.connect('volume-error', self.__volume_error_cb)
         self._menu.append(volume_menu)
         self._volumes[mount.get_root().get_path()] = volume_menu
@@ -481,7 +490,7 @@ class StartWithMenu(Gtk.Menu):
         for activity_info in misc.get_activities(metadata):
             menu_item = MenuItem(activity_info.get_name())
             menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=Gtk.IconSize.MENU))
+                                     pixel_size=style.SMALL_ICON_SIZE))
             menu_item.connect('activate', self.__item_activate_cb,
                               activity_info.get_bundle_id())
             self.append(menu_item)
@@ -502,7 +511,8 @@ class StartWithMenu(Gtk.Menu):
         if mime_type:
             mime_registry = mimeregistry.get_registry()
             mime_registry.set_default_activity(mime_type, service_name)
-        misc.resume(self._metadata, service_name)
+        misc.resume(self._metadata, bundle_id=service_name,
+                    alert_window=journalwindow.get_journal_window())
 
 
 class BuddyPalette(Palette):
@@ -577,7 +587,7 @@ class BatchOperator(GObject.GObject):
             self._journalactivity.remove_alert(alert)
             # this is only in the case the operation already started
             # and the user want stop it.
-            self._stop_batch_operation()
+            self._stop_batch_execution()
         else:
             GObject.idle_add(self._prepare_batch_execution)
 

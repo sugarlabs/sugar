@@ -1,4 +1,5 @@
 # Copyright (C) 2008 One Laptop Per Child
+# Copyright (C) 2014 Sugar Labs, Frederick Grose
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,14 +20,11 @@ import logging
 
 import dbus
 from gettext import gettext as _
-from gi.repository import GConf
+from gi.repository import Gio
+from gi.repository import NMClient
 
 from jarabe.model import network
 
-
-_NM_SERVICE = 'org.freedesktop.NetworkManager'
-_NM_PATH = '/org/freedesktop/NetworkManager'
-_NM_IFACE = 'org.freedesktop.NetworkManager'
 
 KEYWORDS = ['network', 'jabber', 'radio', 'server']
 
@@ -40,8 +38,8 @@ class ReadError(Exception):
 
 
 def get_jabber():
-    client = GConf.Client.get_default()
-    return client.get_string('/desktop/sugar/collaboration/jabber_server')
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    return settings.get_string('jabber-server')
 
 
 def print_jabber():
@@ -52,6 +50,11 @@ def set_jabber(server):
     """Set the jabber server
     server : e.g. 'olpc.collabora.co.uk'
     """
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings.set_string('jabber-server', server)
+
+    # DEPRECATED
+    from gi.repository import GConf
     client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/collaboration/jabber_server', server)
 
@@ -60,16 +63,9 @@ def set_jabber(server):
 
 def get_radio():
     try:
-        bus = dbus.SystemBus()
-        obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-        nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-    except dbus.DBusException:
-        raise ReadError('%s service not available' % _NM_SERVICE)
-
-    state = nm_props.Get(_NM_IFACE, 'WirelessEnabled')
-    if state in (0, 1):
-        return state
-    else:
+        nm_client = NMClient.Client()
+        return nm_client.wireless_get_enabled()
+    except:
         raise ReadError(_('State is unknown.'))
 
 
@@ -81,59 +77,89 @@ def set_radio(state):
     """Turn Radio 'on' or 'off'
     state : 'on/off'
     """
-    if state == 'on' or state == 1:
-        try:
-            bus = dbus.SystemBus()
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', True)
-    elif state == 'off' or state == 0:
-        try:
-            bus = dbus.SystemBus()
-            obj = bus.get_object(_NM_SERVICE, _NM_PATH)
-            nm_props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
-        except dbus.DBusException:
-            raise ReadError('%s service not available' % _NM_SERVICE)
-        nm_props.Set(_NM_IFACE, 'WirelessEnabled', False)
-    else:
+    try:
+        state = state or state == 'on' or state == 1
+        nm_client = NMClient.Client()
+        nm_client.wireless_set_enabled(state)
+    except:
         raise ValueError(_('Error in specified radio argument use on/off.'))
-
-    return 0
 
 
 def clear_registration():
     """Clear the registration with the schoolserver
     """
+    settings = Gio.Settings('org.sugarlabs')
+    settings.set_string('backup-url', '')
+
+    # DEPRECATED
+    from gi.repository import GConf
     client = GConf.Client.get_default()
     client.set_string('/desktop/sugar/backup_url', '')
     return 1
 
 
-def clear_networks():
-    """Clear saved passwords and network configurations.
+wifi_whitelist = ('Sugar Ad-hoc Network 1',
+                  'Sugar Ad-hoc Network 6',
+                  'Sugar Ad-hoc Network 11')
+mesh_whitelist = ('OLPC Mesh Network 1',
+                  'OLPC Mesh Network 6',
+                  'OLPC Mesh Network 11',
+                  'OLPC XS Mesh Network 1',
+                  'OLPC XS Mesh Network 6',
+                  'OLPC XS Mesh Network 11')
+
+
+def is_wireless(connection):
+    """Check for wireless connection not whitelisted by Sugar.
+    """
+    wifi_settings = connection.get_settings(
+        network.NM_CONNECTION_TYPE_802_11_WIRELESS)
+    if wifi_settings:
+        return not (wifi_settings['mode'] == 'adhoc' and
+                    connection.get_id() in wifi_whitelist)
+
+    mesh_settings = connection.get_settings(
+        network.NM_CONNECTION_TYPE_802_11_OLPC_MESH)
+    if mesh_settings:
+        return not connection.get_id() in mesh_whitelist
+
+
+def clear_wireless_networks():
+    """Remove all wireless connections except Sugar-internal ones.
     """
     try:
         connections = network.get_connections()
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
-        return
-    connections.clear()
+    else:
+        wireless_connections = \
+            (connection for connection in
+             connections.get_list() if is_wireless(connection))
+
+        for connection in wireless_connections:
+            try:
+                connection.delete()
+            except dbus.DBusException:
+                logging.debug("Could not remove connection %s",
+                              connection.get_id())
 
 
-def have_networks():
+def have_wireless_networks():
+    """Check that there are non-Sugar-internal wireless connections.
+    """
     try:
         connections = network.get_connections()
-        return len(connections.get_list()) > 0
     except dbus.DBusException:
         logging.debug('NetworkManager not available')
         return False
+    else:
+        return any(is_wireless(connection)
+                   for connection in connections.get_list())
 
 
 def get_publish_information():
-    client = GConf.Client.get_default()
-    publish = client.get_bool('/desktop/sugar/collaboration/publish_gadget')
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    publish = settings.get_boolean('publish-gadget')
     return publish
 
 
@@ -151,6 +177,6 @@ def set_publish_information(value):
     except:
         raise ValueError(_('Error in specified argument use 0/1.'))
 
-    client = GConf.Client.get_default()
-    client.set_bool('/desktop/sugar/collaboration/publish_gadget', value)
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    settings.set_boolean('publish-gadget', value)
     return 0

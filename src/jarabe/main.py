@@ -40,7 +40,6 @@ DBusGMainLoop(set_as_default=True)
 
 from gi.repository import Gio
 from gi.repository import GLib
-from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gst
 from gi.repository import Wnck
@@ -60,10 +59,10 @@ from jarabe.view import launcher
 from jarabe.model import keyboard
 from jarabe.desktop import homewindow
 from jarabe import config
-from jarabe.model import sound
+from jarabe.model.sound import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
-from jarabe.intro.window import create_profile
+from jarabe.intro.window import create_profile_with_nickname
 from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
@@ -215,6 +214,109 @@ def cleanup_temporary_files():
         print 'temporary files cleanup failed: %s' % e
 
 
+def _migrate_journal_mimeregistry():
+    from gi.repository import GConf
+    client = GConf.Client.get_default()
+
+    # Now this isn't good
+    # keys in /desktop/sugar/journal/defaults are mime types
+    # which are of the sort text/plain
+    # so, GConf is thinking test is a directory and the key is plain
+    # while the key should be 'text/plain'
+
+    gconf_defaults_dir = '/desktop/sugar/journal/defaults'
+
+    entries = client.all_entries(gconf_defaults_dir)
+    for directory in client.all_dirs(gconf_defaults_dir):
+        entries.extend(client.all_entries(directory))
+
+    prefix = gconf_defaults_dir + '/'
+    prefix_length = len(prefix)
+
+    gconf_defaults = {}
+    for entry in entries:
+        key = entry.get_key()
+        key = key[prefix_length:]
+
+        # entry.get_value().get_string() causes sugar to crash later
+        # not on the call, but after some random time
+        # was impossible to debug (almost impossible)
+        value = entry.value.get_string()
+        gconf_defaults[key] = value
+
+    variant = GLib.Variant('a{ss}', gconf_defaults)
+
+    settings = Gio.Settings('org.sugarlabs.journal')
+    settings.set_value('mime-registry', variant)
+
+
+def _migrate_homeviews_settings():
+    from gi.repository import GConf
+    client = GConf.Client.get_default()
+
+    # Merge several keys into one... yay!
+    options = client.get('/desktop/sugar/desktop/view-icons')
+    gconf_view_icons = []
+    if options:
+        gconf_view_icons = [gval.get_string() for gval in options.get_list()]
+
+    # assume view-icons is the leading key
+    number_of_views = len(gconf_view_icons)
+
+    layouts = []
+    prefix = '/desktop/sugar/desktop/favorites_layout'
+
+    entries = client.all_entries('/desktop/sugar/desktop')
+    for entry in entries:
+        key = entry.get_key()
+        if key.startswith(prefix):
+            # entry.get_value().get_string() causes sugar to crash later
+            # not on the call, but after some random time
+            # was impossible to debug (almost impossible)
+            value = entry.value.get_string()
+            layouts.append((key, value))
+
+    layouts.sort()
+    gconf_layouts = [layout[1] for layout in layouts][:number_of_views]
+
+    while len(gconf_layouts) < number_of_views:
+        gconf_layouts.append('ring-layout')
+
+    options = client.get('/desktop/sugar/desktop/favorite-icons')
+    gconf_fav_icons = []
+    if options:
+        gconf_fav_icons = [gval.get_string() for gval in options.get_list()]
+        gconf_fav_icons = gconf_fav_icons[:number_of_views]
+
+    while len(gconf_fav_icons) < number_of_views:
+        gconf_fav_icons.append('emblem-favorite')
+
+    homeviews = []
+    for i, view_icon in enumerate(gconf_view_icons):
+        homeviews.append({'view-icon': view_icon, 'layout': gconf_layouts[i],
+                          'favorite-icon': gconf_fav_icons[i]})
+
+    variant = GLib.Variant('aa{ss}', homeviews)
+    settings = Gio.Settings('org.sugarlabs.desktop')
+    settings.set_value('homeviews', variant)
+
+
+def _migrate_gconf_to_gsettings():
+    try:
+        subprocess.call('gsettings-data-convert')
+    except subprocess.CalledProcessError:
+        logging.error('Unable to convert data.')
+
+    settings = Gio.Settings('org.sugarlabs')
+    migrated = settings.get_boolean('gsettings-migrated')
+
+    if not migrated:
+        _migrate_journal_mimeregistry()
+        _migrate_homeviews_settings()
+
+        settings.set_boolean('gsettings-migrated', True)
+
+
 def setup_locale():
     # NOTE: This needs to happen early because some modules register
     # translatable strings in the module scope.
@@ -222,16 +324,17 @@ def setup_locale():
     gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
     gettext.textdomain('sugar')
 
-    client = GConf.Client.get_default()
-    timezone = client.get_string('/desktop/sugar/date/timezone')
+    settings = Gio.Settings('org.sugarlabs.date')
+    timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
 
 def setup_fonts():
-    client = GConf.Client.get_default()
-    face = client.get_string('/desktop/sugar/font/default_face')
-    size = client.get_float('/desktop/sugar/font/default_size')
+    settings = Gio.Settings('org.sugarlabs.font')
+    face = settings.get_string('default-face')
+    size = settings.get_double('default-size')
+
     settings = Gtk.Settings.get_default()
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
@@ -261,7 +364,7 @@ def _check_profile():
 
     profile_name = os.environ.get("SUGAR_PROFILE_NAME", None)
     if profile_name is not None:
-        create_profile(profile_name)
+        create_profile_with_nickname(profile_name)
         return True
 
     return False
@@ -273,6 +376,8 @@ def main():
     GLib.threads_init()
 
     Gst.init(sys.argv)
+
+    _migrate_gconf_to_gsettings()
 
     cleanup_temporary_files()
 

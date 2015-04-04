@@ -19,7 +19,7 @@ import tempfile
 import urlparse
 import os
 import logging
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 
 from gi.repository import Gtk
@@ -27,10 +27,11 @@ from gi.repository import Gtk
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
 from sugar3.datastore import datastore
 from sugar3 import mime
 from sugar3 import env
+from sugar3 import profile
 from sugar3.activity.i18n import pgettext
 
 from jarabe.frame import clipboard
@@ -63,9 +64,9 @@ class ClipboardMenu(Palette):
         self._open_item.show()
 
         self._journal_item = MenuItem(_('Keep'))
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        icon = Icon(icon_name='document-save', icon_size=Gtk.IconSize.MENU,
+        color = profile.get_color()
+        icon = Icon(icon_name='document-save',
+                    pixel_size=style.SMALL_ICON_SIZE,
                     xo_color=color)
         self._journal_item.set_image(icon)
 
@@ -225,8 +226,8 @@ class ClipboardMenu(Palette):
         jobject.metadata['keep'] = '0'
         jobject.metadata['buddies'] = ''
         jobject.metadata['preview'] = ''
-        client = GConf.Client.get_default()
-        color = client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = settings.get_string('color')
         jobject.metadata['icon-color'] = color
         jobject.metadata['mime_type'] = mime_type
         jobject.file_path = file_path

@@ -20,9 +20,9 @@ import struct
 import time
 
 import dbus
-from gi.repository import GConf
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Gio
 from gwebsockets.server import Server
 from gwebsockets.server import Message
 
@@ -60,8 +60,8 @@ class ActivityAPI(API):
             self._session_manager_shutdown_cb)
 
     def get_xo_color(self, request):
-        gconf_client = GConf.Client.get_default()
-        color_string = gconf_client.get_string('/desktop/sugar/user/color')
+        settings = Gio.Settings('org.sugarlabs.user')
+        color_string = settings.get_string('color')
 
         self._client.send_result(request, [color_string.split(",")])
 

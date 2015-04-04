@@ -17,12 +17,12 @@
 import logging
 from gettext import gettext as _
 
-from gi.repository import GConf
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 import dbus
 
+from sugar3 import profile
 from sugar3.graphics import style
 from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics.tray import TrayIcon
@@ -60,8 +60,7 @@ class DeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 102
 
     def __init__(self, battery):
-        client = GConf.Client.get_default()
-        self._color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        self._color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
 
@@ -89,8 +88,7 @@ class DeviceView(TrayIcon):
         elif self._model.props.charging:
             status = _STATUS_CHARGING
             name += '-charging'
-            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                          style.COLOR_WHITE.get_svg()))
+
         elif self._model.props.discharging:
             status = _STATUS_DISCHARGING
             if current_level <= _WARN_MIN_PERCENTAGE:

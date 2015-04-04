@@ -21,7 +21,6 @@ import json
 
 from gi.repository import GObject
 import dbus
-from gi.repository import GConf
 from telepathy.interfaces import CHANNEL, \
     CHANNEL_DISPATCHER, \
     CHANNEL_DISPATCH_OPERATION, \
@@ -31,6 +30,7 @@ from telepathy.interfaces import CHANNEL, \
 from telepathy.constants import HANDLE_TYPE_ROOM
 
 from sugar3.graphics.xocolor import XoColor
+from sugar3 import profile
 
 from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
@@ -126,8 +126,7 @@ class PrivateInvite(BaseInvite):
         self._private_channel = private_channel
 
     def get_color(self):
-        client = GConf.Client.get_default()
-        return XoColor(client.get_string('/desktop/sugar/user/color'))
+        return profile.get_color()
 
     def join(self):
         logging.error('PrivateInvite.join handler %r', self._handler)
@@ -241,11 +240,10 @@ class Invites(GObject.GObject):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
-        dispatch_operation.HandleWith(handler,
-                                      reply_handler=
-                                      self.__handle_with_reply_cb,
-                                      error_handler=
-                                      self.__handle_with_reply_cb)
+        dispatch_operation.HandleWith(
+            handler,
+            reply_handler=self.__handle_with_reply_cb,
+            error_handler=self.__handle_with_reply_cb)
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:

@@ -1,4 +1,5 @@
 # Copyright (C) 2007, 2011, One Laptop Per Child
+# Copyright (C) 2014, Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +25,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GConf
 import cPickle
 import xapian
 import json
@@ -33,11 +33,13 @@ import shutil
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
 from sugar3 import env
+from sugar3 import profile
 
 from jarabe.journal import model
 from jarabe.journal.misc import get_mount_icon_name
+from jarabe.journal.misc import get_mount_color
 from jarabe.view.palettes import VolumePalette
 
 
@@ -321,9 +323,7 @@ class VolumeButton(BaseButton):
         self.props.icon_name = get_mount_icon_name(mount,
                                                    Gtk.IconSize.LARGE_TOOLBAR)
         # TODO: retrieve the colors from the owner of the device
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = get_mount_color(self._mount)
 
     def create_palette(self):
         palette = VolumePalette(self._mount)
@@ -337,10 +337,7 @@ class JournalButton(BaseButton):
         BaseButton.__init__(self, mount_point='/')
 
         self.props.icon_name = 'activity-journal'
-
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = profile.get_color()
 
     def create_palette(self):
         palette = JournalButtonPalette(self)
@@ -351,17 +348,20 @@ class JournalButtonPalette(Palette):
 
     def __init__(self, mount):
         Palette.__init__(self, GLib.markup_escape_text(_('Journal')))
-        vbox = Gtk.VBox()
-        self.set_content(vbox)
-        vbox.show()
+
+        grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL,
+                        margin=style.DEFAULT_SPACING,
+                        row_spacing=style.DEFAULT_SPACING)
+        self.set_content(grid)
+        grid.show()
 
         self._progress_bar = Gtk.ProgressBar()
-        vbox.add(self._progress_bar)
+        grid.add(self._progress_bar)
         self._progress_bar.show()
 
         self._free_space_label = Gtk.Label()
         self._free_space_label.set_alignment(0.5, 0.5)
-        vbox.add(self._free_space_label)
+        grid.add(self._free_space_label)
         self._free_space_label.show()
 
         self.connect('popup', self.__popup_cb)
@@ -383,7 +383,4 @@ class DocumentsButton(BaseButton):
         BaseButton.__init__(self, mount_point=documents_path)
 
         self.props.icon_name = 'user-documents'
-
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
-        self.props.xo_color = color
+        self.props.xo_color = profile.get_color()

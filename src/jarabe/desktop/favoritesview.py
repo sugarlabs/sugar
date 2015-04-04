@@ -22,7 +22,7 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -107,6 +107,9 @@ class FavoritesBox(Gtk.VBox):
     def remove_alert(self):
         self.remove(self._alert)
         self._alert = None
+
+    def _get_selected(self, query):
+        return self._view._get_selected(query)
 
 
 class FavoritesView(ViewContainer):
@@ -357,6 +360,17 @@ class FavoritesView(ViewContainer):
                 else:
                     icon.alpha = 0.33
 
+    def _get_selected(self, query):
+        query = query.strip()
+        selected = []
+        for icon in self.get_children():
+            if icon not in [self._owner_icon, self._activity_icon]:
+                activity_name = icon.get_activity_name().decode('utf-8')
+                normalized_name = normalize_string(activity_name)
+                if normalized_name.find(query) > -1:
+                    selected.append(icon)
+        return selected
+
     def __register_activate_cb(self, icon):
         alert = Alert()
         try:
@@ -368,7 +382,6 @@ class FavoritesView(ViewContainer):
             alert.props.title = _('Registration Successful')
             alert.props.msg = _('You are now registered '
                                 'with your school server.')
-            self._owner_icon.set_registered()
 
         ok_icon = Icon(icon_name='dialog-ok')
         alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
@@ -497,6 +510,9 @@ class ActivityIcon(CanvasIcon):
         else:
             misc.launch(self._activity_info)
 
+    def run_activity(self):
+        self._activate()
+
     def get_bundle_id(self):
         return self._activity_info.get_bundle_id()
     bundle_id = property(get_bundle_id, None)
@@ -541,7 +557,7 @@ class FavoritePalette(ActivityPalette):
 
         self.props.icon = Icon(file=activity_info.get_icon(),
                                xo_color=xo_color,
-                               icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                               pixel_size=style.STANDARD_ICON_SIZE)
 
         if journal_entries:
             title = journal_entries[0]['title']
@@ -604,11 +620,14 @@ class CurrentActivityIcon(CanvasIcon):
             self.palette = None
 
     def create_palette(self):
-        if self._home_activity.is_journal():
-            palette = JournalPalette(self._home_activity)
+        if self._home_activity is not None:
+            if self._home_activity.is_journal():
+                palette = JournalPalette(self._home_activity)
+            else:
+                palette = CurrentActivityPalette(self._home_activity)
+            self.connect_to_palette_pop_events(palette)
         else:
-            palette = CurrentActivityPalette(self._home_activity)
-        self.connect_to_palette_pop_events(palette)
+            palette = None
         return palette
 
     def __active_activity_changed_cb(self, home_model, home_activity):
@@ -627,11 +646,6 @@ class OwnerIcon(BuddyIcon):
     def __init__(self, size):
         BuddyIcon.__init__(self, buddy=get_owner_instance(), pixel_size=size)
 
-        self.palette_invoker.cache_palette = True
-
-        self._palette_enabled = False
-        self._register_menu = None
-
         # This is a workaround to skip the callback for
         # enter-notify-event in the parent class the first time.
         def __enter_notify_event_cb(icon, event):
@@ -642,25 +656,21 @@ class OwnerIcon(BuddyIcon):
                                               __enter_notify_event_cb)
 
     def create_palette(self):
-        if not self._palette_enabled:
-            self._palette_enabled = True
-            return
-
         palette = BuddyMenu(get_owner_instance())
 
-        client = GConf.Client.get_default()
-        backup_url = client.get_string('/desktop/sugar/backup_url')
+        settings = Gio.Settings('org.sugarlabs')
+        if settings.get_boolean('show-register'):
+            backup_url = settings.get_string('backup-url')
 
-        if not backup_url:
-            self._register_menu = PaletteMenuItem(_('Register'),
-                                                  'media-record')
-        else:
-            self._register_menu = PaletteMenuItem(_('Register again'),
-                                                  'media-record')
+            if not backup_url:
+                text = _('Register')
+            else:
+                text = _('Register again')
 
-        self._register_menu.connect('activate', self.__register_activate_cb)
-        palette.menu_box.pack_end(self._register_menu, True, True, 0)
-        self._register_menu.show()
+            register_menu = PaletteMenuItem(text, 'media-record')
+            register_menu.connect('activate', self.__register_activate_cb)
+            palette.menu_box.pack_end(register_menu, True, True, 0)
+            register_menu.show()
 
         self.connect_to_palette_pop_events(palette)
 
@@ -669,31 +679,20 @@ class OwnerIcon(BuddyIcon):
     def __register_activate_cb(self, menuitem):
         self.emit('register-activate')
 
-    def set_registered(self):
-        self.palette.menu_box.remove(self._register_menu)
-        self._register_menu = PaletteMenuItem(_('Register again'),
-                                              'media-record')
-        self._register_menu.connect('activate', self.__register_activate_cb)
-        self.palette.menu_box.pack_end(self._register_menu, True, True, 0)
-        self._register_menu.show()
-
 
 class FavoritesSetting(object):
 
-    _FAVORITES_KEY = '/desktop/sugar/desktop/favorites_layout'
+    _DESKTOP_DIR = 'org.sugarlabs.desktop'
+    _HOMEVIEWS_KEY = 'homeviews'
 
     def __init__(self, favorite_view):
-        client = GConf.Client.get_default()
-        # Special-case 0 for backward compatibility
-        if favorite_view == 0:
-            self._client_string = self._FAVORITES_KEY
-        else:
-            self._client_string = '%s_%d' % (self._FAVORITES_KEY,
-                                             favorite_view)
+        self._favorite_view = int(favorite_view)
 
-        self._layout = client.get_string(self._client_string)
-        if self._layout is None:
-            self._layout = favoriteslayout.RingLayout.key
+        settings = Gio.Settings(self._DESKTOP_DIR)
+        homeviews = settings.get_value(self._HOMEVIEWS_KEY).unpack()
+
+        self._layout = homeviews[self._favorite_view]['layout']
+
         logging.debug('FavoritesSetting layout %r', self._layout)
 
         self._mode = None
@@ -708,8 +707,13 @@ class FavoritesSetting(object):
         if layout != self._layout:
             self._layout = layout
 
-            client = GConf.Client.get_default()
-            client.set_string(self._client_string, layout)
+            settings = Gio.Settings(self._DESKTOP_DIR)
+            homeviews = settings.get_value(self._HOMEVIEWS_KEY).unpack()
+
+            homeviews[self._favorite_view]['layout'] = layout
+
+            variant = GLib.Variant('aa{ss}', homeviews)
+            settings.set_value(self._HOMEVIEWS_KEY, variant)
 
             self.changed.send(self)
 

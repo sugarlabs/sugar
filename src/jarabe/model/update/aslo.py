@@ -182,9 +182,10 @@ class AsloUpdater(object):
         self._checker.check(bundle)
 
     def fetch_update_info(self, installed_bundles, auto, progress_cb,
-                          completion_cb):
+                          completion_cb, error_cb):
         self._completion_cb = completion_cb
         self._progress_cb = progress_cb
+        self._error_cb = error_cb
         self._cancelling = False
         self._updates = []
         self._bundles_to_check = installed_bundles
@@ -193,3 +194,6 @@ class AsloUpdater(object):
 
     def cancel(self):
         self._cancelling = True
+
+    def clean(self):
+        pass

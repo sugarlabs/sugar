@@ -17,7 +17,6 @@
 
 import logging
 
-from gi.repository import GConf
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -25,6 +24,7 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import style
+from sugar3 import profile
 
 from jarabe.frame import clipboard
 from jarabe.frame.clipboardmenu import ClipboardMenu
@@ -50,8 +50,7 @@ class ClipboardIcon(RadioToolButton):
         self._current_percent = None
 
         self._icon = Icon()
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
         self._icon.props.xo_color = color
         self.set_icon_widget(self._icon)
         self._icon.show()

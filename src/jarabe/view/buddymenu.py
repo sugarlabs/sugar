@@ -20,19 +20,19 @@ import logging
 from gettext import gettext as _
 
 from gi.repository import Gtk
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 import dbus
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
-import jarabe.desktop.homewindow
 
 
 class BuddyMenu(Palette):
@@ -41,7 +41,7 @@ class BuddyMenu(Palette):
 
         buddy_icon = Icon(icon_name='computer-xo',
                           xo_color=buddy.get_color(),
-                          icon_size=Gtk.IconSize.LARGE_TOOLBAR)
+                          pixel_size=style.STANDARD_ICON_SIZE)
         nick = buddy.get_nick()
         Palette.__init__(self, None,
                          primary_text=GLib.markup_escape_text(nick),
@@ -89,11 +89,11 @@ class BuddyMenu(Palette):
         self._update_invite_menu(activity)
 
     def _add_my_items(self):
-        client = GConf.Client.get_default()
+        settings = Gio.Settings('org.sugarlabs')
 
-        show_shutdown = client.get_bool('/desktop/sugar/show_shutdown')
-        show_restart = client.get_bool('/desktop/sugar/show_restart')
-        show_logout = client.get_bool('/desktop/sugar/show_logout')
+        show_shutdown = settings.get_boolean('show-shutdown')
+        show_restart = settings.get_boolean('show-restart')
+        show_logout = settings.get_boolean('show-logout')
 
         if "SUGAR_SHOW_SHUTDOWN" in os.environ:
             show_shutdown = os.environ["SUGAR_SHOW_SHUTDOWN"] == "yes"
@@ -127,6 +127,8 @@ class BuddyMenu(Palette):
         item.show()
 
     def _quit(self, action):
+        import jarabe.desktop.homewindow
+
         home_window = jarabe.desktop.homewindow.get_instance()
         home_window.busy_during_delayed_action(action)
 
@@ -164,7 +166,7 @@ class BuddyMenu(Palette):
             self._invite_menu.set_label(_('Invite to %s') % title)
 
             icon = Icon(file=activity.get_icon_path(),
-                        icon_size=Gtk.IconSize.SMALL_TOOLBAR)
+                        pixel_size=style.SMALL_ICON_SIZE)
             icon.props.xo_color = activity.get_icon_color()
             self._invite_menu.set_image(icon)
             icon.show()

@@ -20,7 +20,6 @@ import errno
 import subprocess
 from datetime import datetime
 import time
-import shutil
 import tempfile
 from stat import S_IFLNK, S_IFMT, S_IFDIR, S_IFREG
 import re
@@ -30,7 +29,6 @@ from gettext import gettext as _
 
 import dbus
 from gi.repository import Gio
-from gi.repository import GConf
 from gi.repository import GLib
 
 from gi.repository import SugarExt
@@ -266,6 +264,10 @@ class InplaceResultSet(BaseResultSet):
             self._date_start = None
             self._date_end = None
 
+        self._only_favorites = int(query.get('keep', '0')) == 1
+
+        self._filter_by_activity = query.get('activity', '')
+
         self._mime_types = query.get('mime_type', [])
 
         self._sort = query.get('order_by', ['+timestamp'])[0]
@@ -381,7 +383,7 @@ class InplaceResultSet(BaseResultSet):
 
         if S_IFMT(stat.st_mode) == S_IFDIR:
             id_tuple = stat.st_ino, stat.st_dev
-            if not id_tuple in self._visited_directories:
+            if id_tuple not in self._visited_directories:
                 self._visited_directories.append(id_tuple)
                 self._pending_directories.append(full_path)
             return
@@ -403,6 +405,26 @@ class InplaceResultSet(BaseResultSet):
                     add_to_list = True
                     break
             if not add_to_list:
+                return
+
+        if self._only_favorites:
+            if not metadata:
+                metadata = _get_file_metadata(full_path, stat,
+                                              fetch_preview=False)
+            if 'keep' not in metadata:
+                return
+            try:
+                if int(metadata['keep']) == 0:
+                    return
+            except ValueError:
+                return
+
+        if self._filter_by_activity:
+            if not metadata:
+                metadata = _get_file_metadata(full_path, stat,
+                                              fetch_preview=False)
+            if 'activity' not in metadata or \
+                    metadata['activity'] != self._filter_by_activity:
                 return
 
         if self._date_start is not None and stat.st_mtime < self._date_start:
@@ -447,9 +469,7 @@ def _get_file_metadata(path, stat, fetch_preview=True):
     metadata based on the file properties.
 
     """
-    filename = os.path.basename(path)
-    dir_path = os.path.dirname(path)
-    metadata = _get_file_metadata_from_json(dir_path, filename, fetch_preview)
+    metadata = _get_file_metadata_from_json(path, fetch_preview)
     if metadata:
         if 'filesize' not in metadata:
             metadata['filesize'] = stat.st_size
@@ -468,17 +488,26 @@ def _get_file_metadata(path, stat, fetch_preview=True):
             'description': path}
 
 
-def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
+def _get_file_metadata_from_json(path, fetch_preview):
     """Read the metadata from the json file and the preview
     stored on the external device.
 
     If the metadata is corrupted we do remove it and the preview as well.
 
     """
+    filename = os.path.basename(path)
+    dir_path = os.path.dirname(path)
+
     metadata = None
-    metadata_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+    mount_point = _get_mount_point(path)
+    subdir = ''
+    # check if the file is a subdirectory
+    if mount_point != dir_path:
+        subdir = os.path.relpath(dir_path, mount_point)
+
+    metadata_path = os.path.join(mount_point, JOURNAL_METADATA_DIR, subdir,
                                  filename + '.metadata')
-    preview_path = os.path.join(dir_path, JOURNAL_METADATA_DIR,
+    preview_path = os.path.join(mount_point, JOURNAL_METADATA_DIR, subdir,
                                 filename + '.preview')
 
     if not os.path.exists(metadata_path):
@@ -494,7 +523,7 @@ def _get_file_metadata_from_json(dir_path, filename, fetch_preview):
                       'external device.', filename)
         return None
     else:
-        metadata['uid'] = os.path.join(dir_path, filename)
+        metadata['uid'] = path
 
     if not fetch_preview:
         if 'preview' in metadata:
@@ -553,8 +582,11 @@ def find(query_, page_size):
 
 def _get_mount_point(path):
     dir_path = os.path.dirname(path)
+    documents_path = get_documents_path()
     while dir_path:
-        if os.path.ismount(dir_path):
+        if dir_path == documents_path:
+            return documents_path
+        elif os.path.ismount(dir_path):
             return dir_path
         else:
             dir_path = dir_path.rsplit(os.sep, 1)[0]
@@ -621,10 +653,18 @@ def delete(object_id):
         os.unlink(object_id)
         dir_path = os.path.dirname(object_id)
         filename = os.path.basename(object_id)
-        old_files = [os.path.join(dir_path, JOURNAL_METADATA_DIR,
-                                  filename + '.metadata'),
-                     os.path.join(dir_path, JOURNAL_METADATA_DIR,
-                                  filename + '.preview')]
+
+        mount_point = _get_mount_point(object_id)
+        subdir = ''
+        # check if the file is a subdirectory
+        if mount_point != dir_path:
+            subdir = os.path.relpath(dir_path, mount_point)
+
+        metadata_path = os.path.join(mount_point, JOURNAL_METADATA_DIR,
+                                     subdir)
+
+        old_files = [os.path.join(metadata_path, filename + '.metadata'),
+                     os.path.join(metadata_path, filename + '.preview')]
         for old_file in old_files:
             if os.path.exists(old_file):
                 try:
@@ -632,16 +672,21 @@ def delete(object_id):
                 except EnvironmentError:
                     logging.error('Could not remove metadata=%s '
                                   'for file=%s', old_file, filename)
+        try:
+            os.rmdir(metadata_path)
+        except:
+            # if can't remove is because there are other metadata
+            pass
         deleted.send(None, object_id=object_id)
 
 
-def copy(metadata, mount_point):
+def copy(metadata, mount_point, ready_callback=None):
     """Copies an object to another mount point
     """
     metadata = get(metadata['uid'])
-    if mount_point == '/' and metadata['icon-color'] == '#000000,#ffffff':
-        client = GConf.Client.get_default()
-        metadata['icon-color'] = client.get_string('/desktop/sugar/user/color')
+    if mount_point == '/' and metadata.get('icon-color') == '#000000,#ffffff':
+        settings = Gio.Settings('org.sugarlabs.user')
+        metadata['icon-color'] = settings.get_string('color')
     file_path = get_file(metadata['uid'])
     if file_path is None:
         file_path = ''
@@ -649,12 +694,25 @@ def copy(metadata, mount_point):
     metadata['mountpoint'] = mount_point
     del metadata['uid']
 
-    return write(metadata, file_path, transfer_ownership=False)
+    write(metadata, file_path, transfer_ownership=False,
+          ready_callback=ready_callback)
 
 
-def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
+def write(metadata, file_path='', update_mtime=True, transfer_ownership=True,
+          ready_callback=None):
     """Creates or updates an entry for that id
     """
+    def created_reply_handler(object_id):
+        if ready_callback:
+            ready_callback(metadata, file_path, object_id)
+
+    def updated_reply_handler():
+        if ready_callback:
+            ready_callback(metadata, file_path, metadata['uid'])
+
+    def error_handler(error):
+        logging.error('Could not create/update datastore entry')
+
     logging.debug('model.write %r %r %r', metadata.get('uid', ''), file_path,
                   update_mtime)
     if update_mtime:
@@ -663,18 +721,21 @@ def write(metadata, file_path='', update_mtime=True, transfer_ownership=True):
 
     if metadata.get('mountpoint', '/') == '/':
         if metadata.get('uid', ''):
-            object_id = _get_datastore().update(metadata['uid'],
-                                                dbus.Dictionary(metadata),
-                                                file_path,
-                                                transfer_ownership)
+            _get_datastore().update(metadata['uid'],
+                                    dbus.Dictionary(metadata),
+                                    file_path,
+                                    transfer_ownership,
+                                    reply_handler=updated_reply_handler,
+                                    error_handler=error_handler)
         else:
-            object_id = _get_datastore().create(dbus.Dictionary(metadata),
-                                                file_path,
-                                                transfer_ownership)
+            _get_datastore().create(dbus.Dictionary(metadata),
+                                    file_path,
+                                    transfer_ownership,
+                                    reply_handler=created_reply_handler,
+                                    error_handler=error_handler)
     else:
-        object_id = _write_entry_on_external_device(metadata, file_path)
-
-    return object_id
+        _write_entry_on_external_device(
+            metadata, file_path, ready_callback=ready_callback)
 
 
 def _rename_entry_on_external_device(file_path, destination_path,
@@ -697,7 +758,7 @@ def _rename_entry_on_external_device(file_path, destination_path,
                                   'for file=%s', ofile, old_fname)
 
 
-def _write_entry_on_external_device(metadata, file_path):
+def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
     """Create and update an entry copied from the
     DS to an external storage device.
 
@@ -710,6 +771,18 @@ def _write_entry_on_external_device(metadata, file_path):
     handled failsafe.
 
     """
+    def _ready_cb():
+        if ready_callback:
+            ready_callback(metadata, file_path, destination_path)
+
+    def _updated_cb(*args):
+        updated.send(None, object_id=destination_path)
+        _ready_cb()
+
+    def _splice_cb(*args):
+        created.send(None, object_id=destination_path)
+        _ready_cb()
+
     if 'uid' in metadata and os.path.exists(metadata['uid']):
         file_path = metadata['uid']
 
@@ -719,14 +792,33 @@ def _write_entry_on_external_device(metadata, file_path):
 
     if not metadata.get('title'):
         metadata['title'] = _('Untitled')
-    file_name = get_file_name(metadata['title'], metadata['mime_type'])
 
-    destination_path = os.path.join(metadata['mountpoint'], file_name)
-    if destination_path != file_path:
-        file_name = get_unique_file_name(metadata['mountpoint'], file_name)
+    original_file_name = os.path.basename(file_path)
+    original_dir_name = os.path.dirname(file_path)
+    # if is a file in the exernal device or Documents
+    # and the title is equal to the file name don't change it
+    if original_file_name == metadata['title'] and \
+            original_dir_name.startswith(metadata['mountpoint']):
+        destination_path = file_path
+        file_name = original_file_name
+    else:
+        file_name = metadata['title']
+        # only change the extension if the title don't have a good extension
+        clean_name, extension = os.path.splitext(file_name)
+        extension = extension.replace('.', '').lower()
+        mime_extensions = mime.get_extensions_by_mimetype(
+            metadata['mime_type'])
+        if extension not in mime_extensions:
+            file_name = get_file_name(metadata['title'],
+                                      metadata['mime_type'])
+
         destination_path = os.path.join(metadata['mountpoint'], file_name)
-        clean_name, extension_ = os.path.splitext(file_name)
-        metadata['title'] = clean_name
+        if destination_path != file_path:
+            file_name = get_unique_file_name(metadata['mountpoint'],
+                                             file_name)
+            destination_path = os.path.join(metadata['mountpoint'],
+                                            file_name)
+            metadata['title'] = file_name
 
     metadata_copy = metadata.copy()
     metadata_copy.pop('mountpoint', None)
@@ -735,8 +827,13 @@ def _write_entry_on_external_device(metadata, file_path):
 
     metadata_dir_path = os.path.join(metadata['mountpoint'],
                                      JOURNAL_METADATA_DIR)
+    # check if the file is in a subdirectory in Documents or device
+    if original_dir_name.startswith(metadata['mountpoint']) and \
+            original_dir_name != metadata['mountpoint']:
+        subdir = os.path.relpath(original_dir_name, metadata['mountpoint'])
+        metadata_dir_path = os.path.join(metadata_dir_path, subdir)
     if not os.path.exists(metadata_dir_path):
-        os.mkdir(metadata_dir_path)
+        os.makedirs(metadata_dir_path)
 
     # Set the HIDDEN attrib even when the metadata directory already
     # exists for backward compatibility; but don't set it in ~/Documents
@@ -768,15 +865,21 @@ def _write_entry_on_external_device(metadata, file_path):
             os.rename(fn, os.path.join(metadata_dir_path, preview_fname))
 
     if not os.path.dirname(destination_path) == os.path.dirname(file_path):
-        shutil.copy(file_path, destination_path)
+        input_stream = Gio.File.new_for_path(file_path).read(None)
+        output_stream = Gio.File.new_for_path(destination_path)\
+            .append_to(Gio.FileCreateFlags.PRIVATE |
+                       Gio.FileCreateFlags.REPLACE_DESTINATION, None)
+
+        # TODO: use Gio.File.copy_async, when implemented
+        output_stream.splice_async(
+            input_stream,
+            Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+            Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+            GLib.PRIORITY_LOW, None, _splice_cb, None)
     else:
         _rename_entry_on_external_device(file_path, destination_path,
                                          metadata_dir_path)
-
-    object_id = destination_path
-    created.send(None, object_id=object_id)
-
-    return object_id
+        _updated_cb()
 
 
 def get_file_name(title, mime_type):
@@ -824,6 +927,9 @@ def is_editable(metadata):
         return os.access(metadata['mountpoint'], os.W_OK)
 
 
+_documents_path = None
+
+
 def get_documents_path():
     """Gets the path of the DOCUMENTS folder
 
@@ -833,14 +939,18 @@ def get_documents_path():
 
     Returns: Path to $HOME/DOCUMENTS or None if an error occurs
     """
+    global _documents_path
+    if _documents_path is not None:
+        return _documents_path
+
     try:
         pipe = subprocess.Popen(['xdg-user-dir', 'DOCUMENTS'],
                                 stdout=subprocess.PIPE)
         documents_path = os.path.normpath(pipe.communicate()[0].strip())
         if os.path.exists(documents_path) and \
                 os.environ.get('HOME') != documents_path:
-            return documents_path
+            _documents_path = documents_path
     except OSError, exception:
         if exception.errno != errno.ENOENT:
             logging.exception('Could not run xdg-user-dir')
-    return None
+    return _documents_path

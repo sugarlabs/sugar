@@ -216,6 +216,18 @@
     </schema>
 
     <schema>
+      <key>/schemas/desktop/sugar/show_register</key>
+      <applyto>/desktop/sugar/show_register</applyto>
+      <owner>sugar</owner>
+      <type>bool</type>
+      <default>true</default>
+      <locale name="C">
+        <short>Show Register</short>
+        <long>If TRUE, Sugar will show a "Register" option in the buddy palette.</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/desktop/sugar/peripherals/keyboard/layouts</key>
       <applyto>/desktop/sugar/peripherals/keyboard/layouts</applyto>
       <owner>sugar</owner>
@@ -437,6 +449,30 @@
       <locale name="C">
         <short>Timestamp of last activity update.</short>
         <long>A unix timestamp (seconds since epoch) of the last successful activity update.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/extensions/aboutcomputer/hardware_model</key>
+      <applyto>/desktop/desktop/sugar/extensions/aboutcomputer/hardware_model</applyto>
+      <owner>sugar</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short>A description of the hardware available to the user.</short>
+        <long>This string is displayed in the control panel, about computer section.</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/desktop/sugar/maximum_number_of_open_activities</key>
+      <applyto>/desktop/sugar/maximum_number_of_open_activities</applyto>
+      <owner>sugar</owner>
+      <type>int</type>
+      <default>0</default>
+      <locale name="C">
+        <short>A limit to the number of simultaneously open activities.</short>
+        <long>This int is used to set a limit to the number of open activities. By default (0), there is no limit.</long>
       </locale>
     </schema>
 

@@ -28,7 +28,6 @@ import time
 from gi.repository import Gtk
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import GConf
 import dbus
 
 from sugar3.graphics.icon import get_icon_state
@@ -80,7 +79,8 @@ class WirelessPalette(Palette):
         self._info = Gtk.VBox()
 
         self._disconnect_item = PaletteMenuItem(_('Disconnect'))
-        icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name='media-eject')
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                    icon_name='media-eject')
         self._disconnect_item.set_image(icon)
         self._disconnect_item.connect('activate',
                                       self.__disconnect_activate_cb)
@@ -233,7 +233,8 @@ class GsmPalette(Palette):
         self.info_box.pack_start(self.error_description_label, True, True, 0)
 
         self.connection_info_box = Gtk.HBox()
-        icon = Icon(icon_name='data-upload', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='data-upload',
+                    pixel_size=style.SMALL_ICON_SIZE)
         self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
 
@@ -244,7 +245,8 @@ class GsmPalette(Palette):
         self._data_label_up.show()
         label_alignment.show()
 
-        icon = Icon(icon_name='data-download', icon_size=Gtk.IconSize.MENU)
+        icon = Icon(icon_name='data-download',
+                    pixel_size=style.SMALL_ICON_SIZE)
         self.connection_info_box.pack_start(icon, True, True, 0)
         icon.show()
         self._data_label_down = Gtk.Label()
@@ -287,7 +289,7 @@ class GsmPalette(Palette):
             label = GLib.markup_escape_text(_('Disconnected'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-ok',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTING:
@@ -295,7 +297,7 @@ class GsmPalette(Palette):
             label = GLib.markup_escape_text(_('Connecting...'))
             self.props.secondary_text = label
             icon = Icon(icon_name='dialog-cancel',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_CONNECTED:
@@ -303,7 +305,7 @@ class GsmPalette(Palette):
             self._toggle_state_item.set_label(_('Disconnect'))
             self.update_connection_time()
             icon = Icon(icon_name='media-eject',
-                        icon_size=Gtk.IconSize.MENU)
+                        pixel_size=style.SMALL_ICON_SIZE)
             self._toggle_state_item.set_image(icon)
 
         elif self._current_state == _GSM_STATE_FAILED:
@@ -724,8 +726,7 @@ class WiredDeviceView(TrayIcon):
     FRAME_POSITION_RELATIVE = 301
 
     def __init__(self, speed, address):
-        client = GConf.Client.get_default()
-        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
 
@@ -747,8 +748,7 @@ class GsmDeviceView(TrayIcon):
 
         self._connection_timestamp = 0
 
-        client = GConf.Client.get_default()
-        color = xocolor.XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
 
         TrayIcon.__init__(self, icon_name=self._ICON_NAME, xo_color=color)
 

@@ -18,7 +18,7 @@
 import logging
 import time
 
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import Wnck
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -28,7 +28,7 @@ from gi.repository import GLib
 import dbus
 
 from sugar3 import dispatch
-from sugar3.graphics.xocolor import XoColor
+from sugar3 import profile
 from gi.repository import SugarExt
 
 from jarabe.model.bundleregistry import get_registry
@@ -85,9 +85,7 @@ class Activity(GObject.GObject):
         if color is not None:
             self._color = color
         else:
-            client = GConf.Client.get_default()
-            color = client.get_string('/desktop/sugar/user/color')
-            self._color = XoColor(color)
+            self._color = profile.get_color()
 
         if window is not None:
             self.add_window(window)
@@ -157,7 +155,7 @@ class Activity(GObject.GObject):
         if self._windows:
             return self._windows[0].get_name()
         else:
-            return ''
+            return None
 
     def get_icon_path(self):
         """Retrieve the activity's icon (file) name"""
@@ -192,6 +190,13 @@ class Activity(GObject.GObject):
         sugar3.util.unique_id
         """
         return self._activity_id
+
+    def get_bundle_id(self):
+        """ Returns the activity's bundle id"""
+        if self._activity_info is None:
+            return None
+        else:
+            return self._activity_info.get_bundle_id()
 
     def get_xid(self):
         """Retrieve the X-windows ID of our root window"""
@@ -404,6 +409,10 @@ class ShellModel(GObject.GObject):
 
         self._screen.toggle_showing_desktop(True)
 
+        settings = Gio.Settings('org.sugarlabs')
+        self._maximum_open_activities = settings.get_int(
+            'maximum-number-of-open-activities')
+
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
 
@@ -585,7 +594,10 @@ class ShellModel(GObject.GObject):
                     Wnck.WindowType.SPLASHSCREEN and \
                     home_activity.get_launch_status() == Activity.LAUNCHING
 
-            if home_activity is None:
+            if home_activity is None and \
+                    window.get_window_type() == Wnck.WindowType.NORMAL:
+                # This is a special case for the Journal
+                # We check if is not a splash screen to avoid #4767
                 logging.debug('first window registered for %s', activity_id)
                 color = self._shared_activities.get(activity_id, None)
                 home_activity = Activity(activity_info, activity_id,
@@ -645,6 +657,28 @@ class ShellModel(GObject.GObject):
             self._set_active_activity(act)
 
         self._update_zoom_level(window)
+
+    def get_name_from_bundle_id(self, bundle_id):
+        for activity in self._get_activities_with_window():
+            if activity.get_bundle_id() == bundle_id:
+                return activity.get_activity_name()
+        return ''
+
+    def can_launch_activity_instance(self, bundle):
+        if bundle.get_single_instance():
+            bundle_id = bundle.get_bundle_id()
+            for activity in self._get_activities_with_window():
+                if activity.get_bundle_id() == bundle_id:
+                    return False
+        return True
+
+    def can_launch_activity(self):
+        activities = self._get_activities_with_window()
+        if self._maximum_open_activities > 0 and \
+           len(activities) > self._maximum_open_activities:
+            return False
+        else:
+            return True
 
     def _add_activity(self, home_activity):
         self._activities.append(home_activity)

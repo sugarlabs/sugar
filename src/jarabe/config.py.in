@@ -19,4 +19,5 @@
 data_path = '@prefix@/share/sugar/data'
 locale_path = '@prefix@/share/locale'
 ext_path = '@prefix@/share/sugar/extensions'
+licenses_path = '@prefix@/share/sugar/licenses'
 version = '@SUCROSE_VERSION@'

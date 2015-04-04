@@ -19,11 +19,14 @@ import os.path
 import logging
 from gettext import gettext as _
 import pwd
+import time
+import math
+import commands
 
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 from gi.repository import GLib
 
 from sugar3 import env
@@ -32,16 +35,64 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 
+from jarabe.intro import agepicker
 from jarabe.intro import colorpicker
+from jarabe.intro import genderpicker
+
+_SECONDS_PER_YEAR = 365 * 24 * 60 * 60.
 
 
-def create_profile(name, color=None):
-    if not color:
-        color = XoColor()
+def calculate_birth_timestamp(age):
+    age_in_seconds = age * _SECONDS_PER_YEAR
+    birth_timestamp = int(time.time() - age_in_seconds)
+    return birth_timestamp
 
+
+def calculate_age(birth_timestamp):
+    age_in_seconds = time.time() - birth_timestamp
+    # Round to nearest int
+    age = int(math.floor(age_in_seconds / _SECONDS_PER_YEAR) + 0.5)
+    return age
+
+
+def create_profile_with_nickname(nickname):
+    user_profile = UserProfile()
+    user_profile.nickname = nickname
+    create_profile(user_profile)
+
+
+def create_profile(user_profile):
+    settings = Gio.Settings('org.sugarlabs.user')
+
+    settings.set_string('nick', user_profile.nickname)
+
+    colors = user_profile.colors
+    if colors is None:
+        colors = XoColor()
+    settings.set_string('color', colors.to_string())
+
+    if user_profile.gender is not None:
+        settings.set_string('gender', user_profile.gender)
+    else:
+        settings.set_string('gender', '')
+
+    settings.set_int('birth-timestamp',
+                     calculate_birth_timestamp(user_profile.age))
+    # settings.sync()
+
+    # DEPRECATED
+    from gi.repository import GConf
     client = GConf.Client.get_default()
-    client.set_string('/desktop/sugar/user/nick', name)
-    client.set_string('/desktop/sugar/user/color', color.to_string())
+
+    client.set_string('/desktop/sugar/user/nick', user_profile.nickname)
+
+    client.set_string('/desktop/sugar/user/color', colors.to_string())
+
+    if user_profile.gender is not None:
+        client.set_string('/desktop/sugar/user/gender', user_profile.gender)
+
+    client.set_int('/desktop/sugar/user/birth_timestamp',
+                   calculate_birth_timestamp(user_profile.age))
     client.suggest_sync()
 
     if profile.get_pubkey() and profile.get_profile().privkey_hash:
@@ -49,7 +100,6 @@ def create_profile(name, color=None):
         return
 
     # Generate keypair
-    import commands
     keypath = os.path.join(env.get_profile_path(), 'owner.key')
     if os.path.exists(keypath):
         os.rename(keypath, keypath + '.broken')
@@ -100,17 +150,22 @@ class _NamePage(_Page):
         alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
         self.pack_start(alignment, expand=True, fill=True, padding=0)
 
-        hbox = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        alignment.add(hbox)
+        grid = Gtk.Grid()
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        alignment.add(grid)
 
         label = Gtk.Label(label=_('Name:'))
-        hbox.pack_start(label, False, True, 0)
+        grid.attach(label, 0, 0, 1, 1)
+        label.show()
 
         self._entry = Gtk.Entry()
         self._entry.connect('notify::text', self._text_changed_cb)
         self._entry.set_size_request(style.zoom(300), -1)
         self._entry.set_max_length(45)
-        hbox.pack_start(self._entry, False, True, 0)
+        grid.attach(self._entry, 0, 1, 1, 1)
+
+        grid.show()
+        alignment.show()
 
     def _text_changed_cb(self, entry, pspec):
         valid = len(entry.props.text.strip()) > 0
@@ -130,14 +185,23 @@ class _ColorPage(_Page):
     def __init__(self):
         _Page.__init__(self)
 
-        vbox = Gtk.VBox(spacing=style.DEFAULT_SPACING)
-        self.pack_start(vbox, expand=True, fill=False, padding=0)
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True, padding=0)
 
-        self._label = Gtk.Label(label=_('Click to change color:'))
-        vbox.pack_start(self._label, True, True, 0)
+        grid = Gtk.Grid()
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        alignment.add(grid)
+
+        label = Gtk.Label(label=_('Click to change color:'))
+        grid.attach(label, 0, 0, 1, 1)
+        label.show()
 
         self._cp = colorpicker.ColorPicker()
-        vbox.pack_start(self._cp, True, True, 0)
+        grid.attach(self._cp, 0, 1, 1, 1)
+        self._cp.show()
+
+        grid.show()
+        alignment.show()
 
         self._color = self._cp.get_color()
         self.set_valid(True)
@@ -146,17 +210,83 @@ class _ColorPage(_Page):
         return self._cp.get_color()
 
 
+class _GenderPage(_Page):
+    def __init__(self):
+        _Page.__init__(self)
+
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True, padding=0)
+
+        grid = Gtk.Grid()
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        alignment.add(grid)
+
+        label = Gtk.Label(label=_('Select gender:'))
+        grid.attach(label, 0, 0, 1, 1)
+        label.show()
+
+        self._gp = genderpicker.GenderPicker()
+        grid.attach(self._gp, 0, 1, 1, 1)
+        self._gp.show()
+
+        grid.show()
+        alignment.show()
+
+        self._gender = self._gp.get_gender()
+        self.set_valid(True)
+
+    def get_gender(self):
+        return self._gp.get_gender()
+
+    def update_color(self, color):
+        self._gp.update_color(color)
+
+
+class _AgePage(_Page):
+    def __init__(self, gender):
+        _Page.__init__(self)
+
+        alignment = Gtk.Alignment.new(0.5, 0.5, 0, 0)
+        self.pack_start(alignment, expand=True, fill=True, padding=0)
+
+        grid = Gtk.Grid()
+        grid.set_column_spacing(style.DEFAULT_SPACING)
+        alignment.add(grid)
+
+        label = Gtk.Label(label=_('Select age:'))
+        grid.attach(label, 0, 0, 1, 1)
+        label.show()
+
+        self._ap = agepicker.AgePicker(gender)
+        grid.attach(self._ap, 0, 1, 1, 1)
+        self._ap.show()
+
+        grid.show()
+        alignment.show()
+
+        self._age = self._ap.get_age()
+        self.set_valid(True)
+
+    def update_gender(self, gender):
+        self._ap.update_gender(gender)
+
+    def update_color(self, color):
+        self._ap.update_color(color)
+
+    def get_age(self):
+        return self._ap.get_age()
+
+
 class _IntroBox(Gtk.VBox):
-    __gsignals__ = {
-        'done': (GObject.SignalFlags.RUN_FIRST, None,
-                 ([GObject.TYPE_PYOBJECT, GObject.TYPE_PYOBJECT])),
-    }
+    done_signal = GObject.Signal('done', arg_types=([object]))
 
     PAGE_NAME = 0
     PAGE_COLOR = 1
+    PAGE_GENDER = 2
+    PAGE_AGE = 3
 
-    PAGE_FIRST = PAGE_NAME
-    PAGE_LAST = PAGE_COLOR
+    PAGE_FIRST = min(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
+    PAGE_LAST = max(PAGE_NAME, PAGE_COLOR, PAGE_GENDER, PAGE_AGE)
 
     def __init__(self):
         Gtk.VBox.__init__(self)
@@ -165,11 +295,13 @@ class _IntroBox(Gtk.VBox):
         self._page = self.PAGE_NAME
         self._name_page = _NamePage(self)
         self._color_page = _ColorPage()
+        self._gender_page = _GenderPage()
+        self._age_page = _AgePage(None)
         self._current_page = None
         self._next_button = None
 
-        client = GConf.Client.get_default()
-        default_nick = client.get_string('/desktop/sugar/user/default_nick')
+        settings = Gio.Settings('org.sugarlabs.user')
+        default_nick = settings.get_string('default-nick')
         if default_nick != 'disabled':
             self._page = self.PAGE_COLOR
             if default_nick == 'system':
@@ -184,15 +316,35 @@ class _IntroBox(Gtk.VBox):
         for child in self.get_children():
             self.remove(child)
 
-        if self._page == self.PAGE_NAME:
+        def _setup_name_page(self):
             self._current_page = self._name_page
-        elif self._page == self.PAGE_COLOR:
+
+        def _setup_color_page(self):
             self._current_page = self._color_page
 
+        def _setup_gender_page(self):
+            if self._color_page.get_color() is not None:
+                self._gender_page.update_color(self._color_page.get_color())
+            self._current_page = self._gender_page
+
+        def _setup_age_page(self):
+            if self._gender_page.get_gender() is not None:
+                self._age_page.update_gender(self._gender_page.get_gender())
+            if self._color_page.get_color() is not None:
+                self._age_page.update_color(self._color_page.get_color())
+            self._current_page = self._age_page
+
+        setup_methods = {
+            self.PAGE_NAME: _setup_name_page,
+            self.PAGE_COLOR: _setup_color_page,
+            self.PAGE_GENDER: _setup_gender_page,
+            self.PAGE_AGE: _setup_age_page
+            }
+
+        setup_methods[self._page](self)
         self.pack_start(self._current_page, True, True, 0)
 
         button_box = Gtk.HButtonBox()
-
         if self._page == self.PAGE_FIRST:
             button_box.set_layout(Gtk.ButtonBoxStyle.END)
         else:
@@ -253,10 +405,22 @@ class _IntroBox(Gtk.VBox):
         self.done()
 
     def done(self):
-        name = self._name_page.get_name()
-        color = self._color_page.get_color()
+        user_profile = UserProfile()
+        user_profile.nickname = self._name_page.get_name()
+        user_profile.colors = self._color_page.get_color()
+        user_profile.gender = self._gender_page.get_gender()
+        user_profile.age = self._age_page.get_age()
 
-        self.emit('done', name, color)
+        self.done_signal.emit(user_profile)
+
+
+class UserProfile():
+
+    def __init__(self):
+        self.nickname = None
+        self.colors = None
+        self.gender = None
+        self.age = 12
 
 
 class IntroWindow(Gtk.Window):
@@ -279,12 +443,12 @@ class IntroWindow(Gtk.Window):
         self._intro_box.show()
         self.connect('key-press-event', self.__key_press_cb)
 
-    def _done_cb(self, box, name, color):
+    def _done_cb(self, box, user_profile):
         self.hide()
-        GLib.idle_add(self._create_profile_cb, name, color)
+        GLib.idle_add(self._create_profile_cb, user_profile)
 
-    def _create_profile_cb(self, name, color):
-        create_profile(name, color)
+    def _create_profile_cb(self, user_profile):
+        create_profile(user_profile)
         self.emit("done")
 
         return False

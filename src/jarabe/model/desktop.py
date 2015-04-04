@@ -16,18 +16,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import GObject
-from gi.repository import GConf
+from gi.repository import Gio
 
 _desktop_view_instance = None
 
-_VIEW_ICONS = ['view-radial']
-_FAVORITE_ICONS = ['emblem-favorite']
-
-_VIEW_DIR = '/desktop/sugar/desktop'
-_VIEW_ENTRY = 'view_icons'
-_FAVORITE_ENTRY = 'favorite_icons'
-_VIEW_KEY = '%s/%s' % (_VIEW_DIR, _VIEW_ENTRY)
-_FAVORITE_KEY = '%s/%s' % (_VIEW_DIR, _FAVORITE_ENTRY)
+_DESKTOP_CONF_DIR = 'org.sugarlabs.desktop'
+_HOMEVIEWS_KEY = 'homeviews'
 
 
 class DesktopViewModel(GObject.GObject):
@@ -44,12 +38,10 @@ class DesktopViewModel(GObject.GObject):
         self._view_icons = None
         self._favorite_icons = None
 
+        self._settings = Gio.Settings(_DESKTOP_CONF_DIR)
         self._ensure_view_icons()
-
-        client = GConf.Client.get_default()
-        client.add_dir(_VIEW_KEY, GConf.ClientPreloadType.PRELOAD_NONE)
-        self._gconf_id = client.notify_add(_VIEW_KEY, self.__gconf_changed_cb,
-                                           None)
+        self._settings.connect(
+            'changed::%s' % _HOMEVIEWS_KEY, self.__conf_changed_cb)
 
     def get_view_icons(self):
         return self._view_icons
@@ -67,41 +59,22 @@ class DesktopViewModel(GObject.GObject):
     favorite_icons = GObject.property(type=object, getter=get_favorite_icons)
 
     def _ensure_view_icons(self, update=False):
-        if self._view_icons is not None and not update:
+        if self._view_icons and not update:
             return
 
-        client = GConf.Client.get_default()
+        homeviews = self._settings.get_value(_HOMEVIEWS_KEY).unpack()
+        if not homeviews:
+            # there should always be atleast one homeview
+            self._settings.reset(_HOMEVIEWS_KEY)
+            homeviews = self._settings.get_value(_HOMEVIEWS_KEY).unpack()
 
-        options = client.get(_VIEW_KEY)
-        self._view_icons = []
-        if options is not None:
-            for gval in options.get_list():
-                self._view_icons.append(gval.get_string())
-
-        if self._view_icons is None or self._view_icons == []:
-            self._view_icons = _VIEW_ICONS[:]
-
-        self._number_of_views = len(self._view_icons)
-
-        options = client.get(_FAVORITE_KEY)
-        if options is not None:
-            self._favorite_icons = []
-            for gval in options.get_list():
-                self._favorite_icons.append(gval.get_string())
-        else:
-            self._favorite_icons = _FAVORITE_ICONS[:]
-
-        if len(self._favorite_icons) < self._number_of_views:
-            for i in range(self._number_of_views - len(self._favorite_icons)):
-                self._favorite_icons.append(_FAVORITE_ICONS[0])
+        self._number_of_views = len(homeviews)
+        self._view_icons = [view['view-icon'] for view in homeviews]
+        self._favorite_icons = [view['favorite-icon'] for view in homeviews]
 
         self.emit('desktop-view-icons-changed')
 
-    def __del__(self):
-        client = GConf.Client.get_default()
-        client.notify_remove(self._gconf_id)
-
-    def __gconf_changed_cb(self, client, timestamp, entry, *extra):
+    def __conf_changed_cb(self, settings, key):
         self._ensure_view_icons(update=True)
 
 

@@ -1,5 +1,5 @@
 # Copyright (C) 2007, One Laptop Per Child
-# Copyright (C) 2009, Walter Bender
+# Copyright (C) 2009,14 Walter Bender
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,26 +20,28 @@ from gettext import ngettext
 import logging
 from datetime import datetime, timedelta
 import os
-from gi.repository import GConf
 import time
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import Pango
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolcombobox import ToolComboBox
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toggletoolbutton import ToggleToolButton
-from sugar3.graphics.combobox import ComboBox
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.palette import ToolInvoker
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
+from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import iconentry
+from sugar3.graphics import style
 from sugar3 import mime
+from sugar3 import profile
 from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
 from sugar3.graphics.objectchooser import FILTER_TYPE_GENERIC_MIME
 from sugar3.graphics.objectchooser import FILTER_TYPE_ACTIVITY
@@ -68,20 +70,22 @@ _ACTION_EVERYBODY = 0
 _ACTION_MY_FRIENDS = 1
 _ACTION_MY_CLASS = 2
 
+_WHITE = style.COLOR_WHITE.get_html()
+_LABEL_MAX_WIDTH = 18
+_MAXIMUM_PALETTE_COLUMNS = 4
+
 
 class MainToolbox(ToolbarBox):
 
-    __gsignals__ = {
-        'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
-                          ([object])),
-    }
+    query_changed_signal = GObject.Signal('query-changed',
+                                          arg_types=([object]))
 
     def __init__(self):
         ToolbarBox.__init__(self)
-
         self._mount_point = None
         self._filter_type = None
         self._what_filter = None
+        self._when_filter = None
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -101,17 +105,18 @@ class MainToolbox(ToolbarBox):
         self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
-        self._what_search_combo = ComboBox()
-        self._what_combo_changed_sid = self._what_search_combo.connect(
-            'changed', self._combo_changed_cb)
-        tool_item = ToolComboBox(self._what_search_combo)
-        self.toolbar.insert(tool_item, -1)
-        tool_item.show()
+        self._what_widget_contents = None
+        self._what_widget = Gtk.ToolItem()
+        self._what_search_button = FilterToolItem(
+            'view-type', _('Anything'), self._what_widget)
+        self._what_widget.show()
+        self.toolbar.insert(self._what_search_button, -1)
+        self._what_search_button.show()
 
-        self._when_search_combo = self._get_when_search_combo()
-        tool_item = ToolComboBox(self._when_search_combo)
-        self.toolbar.insert(tool_item, -1)
-        tool_item.show()
+        self._when_search_button = FilterToolItem(
+            'view-created', _('Anytime'), self._get_when_search_items())
+        self.toolbar.insert(self._when_search_button, -1)
+        self._when_search_button.show()
 
         self._sorting_button = SortingButton()
         self.toolbar.insert(self._sorting_button, -1)
@@ -119,47 +124,92 @@ class MainToolbox(ToolbarBox):
                                      self.__sort_changed_cb)
         self._sorting_button.show()
 
+        '''
         # TODO: enable it when the DS supports saving the buddies.
-        # self._with_search_combo = self._get_with_search_combo()
-        # tool_item = ToolComboBox(self._with_search_combo)
-        # self.insert(tool_item, -1)
-        # tool_item.show()
+        self._with_widget = Gtk.ToolItem()
+        self._with_search_button = FilterToolItem(
+            'view-who', _('Anyone'), self._with_widget)
+        self._with_widget.show()
+        self.toolbar.insert(self._with_search_button, -1)
+        self._with_search_button.show()
+        self._get_with_search_items()
+        '''
 
         self._query = self._build_query()
 
         self.refresh_filters()
 
-    def _get_when_search_combo(self):
-        when_search = ComboBox()
-        when_search.append_item(_ACTION_ANYTIME, _('Anytime'))
-        when_search.append_separator()
-        when_search.append_item(_ACTION_TODAY, _('Today'))
-        when_search.append_item(_ACTION_SINCE_YESTERDAY,
-                                _('Since yesterday'))
-        # TRANS: Filter entries modified during the last 7 days.
-        when_search.append_item(_ACTION_PAST_WEEK, _('Past week'))
-        # TRANS: Filter entries modified during the last 30 days.
-        when_search.append_item(_ACTION_PAST_MONTH, _('Past month'))
-        # TRANS: Filter entries modified during the last 356 days.
-        when_search.append_item(_ACTION_PAST_YEAR, _('Past year'))
-        when_search.set_active(0)
-        when_search.connect('changed', self._combo_changed_cb)
-        return when_search
+        self.connect('size_allocate', self.__size_allocate_cb)
 
-    def _get_with_search_combo(self):
-        with_search = ComboBox()
-        with_search.append_item(_ACTION_EVERYBODY, _('Anyone'))
-        with_search.append_separator()
-        with_search.append_item(_ACTION_MY_FRIENDS, _('My friends'))
-        with_search.append_item(_ACTION_MY_CLASS, _('My class'))
-        with_search.append_separator()
+    def __size_allocate_cb(self, widget, allocation):
+        GObject.idle_add(self._update_buttons, allocation.width)
 
+    def _update_buttons(self, toolbar_width):
+        # Show the label next to the button icon if there is room on
+        # the toolbar.
+        important = toolbar_width > 13 * style.GRID_CELL_SIZE
+
+        if not important:
+            self.search_entry.set_size_request(
+                toolbar_width - style.GRID_CELL_SIZE * 7, 0)
+
+        self._what_search_button.set_is_important(important)
+        self._when_search_button.set_is_important(important)
+        # self._with_search_button.set_is_important(important)
+
+        return False
+
+    def _get_when_search_items(self):
+        when_list = []
+        when_list.append({'label': _('Anytime'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_ANYTIME})
+        when_list.append({'separator': True})
+        when_list.append({'label': _('Today'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_TODAY})
+        when_list.append({'label': _('Since yesterday'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_SINCE_YESTERDAY})
+        when_list.append({'label': _('Past week'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_PAST_WEEK})
+        when_list.append({'label': _('Past month'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_PAST_MONTH})
+        when_list.append({'label': _('Past year'),
+                          'callback': self._when_palette_cb,
+                          'id': _ACTION_PAST_YEAR})
+
+        return set_palette_list(when_list)
+
+    '''
+    def _get_with_search_items(self):
+        with_list = []
+        with_list.append({'label':_('Anyone'),
+                          'callback': self._with_palette_cb,
+                          'id': _ACTION_EVERYBODY})
+        with_list.append({'separator': True})
+        with_list.append({'label':_('My friends'),
+                          'callback': self._with_palette_cb,
+                          'id': _ACTION_MY_FRIENDS})
+        with_list.append({'label':_('My class'),
+                          'callback': self._with_palette_cb,
+                          'id': _ACTION_MY_CLASS})
+        with_list.append({'separator': True})
         # TODO: Ask the model for buddies.
-        with_search.append_item(3, 'Dan', 'theme:xo')
+        for i, buddy in enumerate(model.get_buddies()):
+            nick, color = buddy
+            with_list.append({'label': nick,
+                              'callback': self._with_palette_cb,
+                              'icon': 'computer-xo',
+                              'xocolors': XOColor(color),
+                              'id': i + _ACTION_MY_CLASS + 1})
 
-        with_search.set_active(0)
-        with_search.connect('changed', self._combo_changed_cb)
-        return with_search
+        widget = set_palette_list(with_list)
+        self._with_widget.add(widget)
+        widget.show()
+    '''
 
     def _add_widget(self, widget, expand=False):
         tool_item = Gtk.ToolItem()
@@ -180,17 +230,9 @@ class MainToolbox(ToolbarBox):
         if self._favorite_button.props.active:
             query['keep'] = 1
 
-        if self._what_search_combo.props.value:
-            value = self._what_search_combo.props.value
+        if self._what_filter:
             filter_type = self._filter_type
-            if self._filter_type is None:
-                # for backward compatibility, try to guess the filter
-                generic_type = mime.get_generic_type(value)
-                if generic_type:
-                    filter_type = FILTER_TYPE_GENERIC_MIME
-                else:
-                    filter_type = FILTER_TYPE_ACTIVITY
-                logging.error('DEPRECATED: sety the filter_type parameter')
+            value = self._what_filter
 
             if filter_type == FILTER_TYPE_GENERIC_MIME:
                 generic_type = mime.get_generic_type(value)
@@ -214,7 +256,7 @@ class MainToolbox(ToolbarBox):
                     logging.error('Trying to filter using activity mimetype '
                                   'but bundle id is wrong %s' % value)
 
-        if self._when_search_combo.props.value:
+        if self._when_filter:
             date_from, date_to = self._get_date_range()
             query['timestamp'] = {'start': date_from, 'end': date_to}
 
@@ -236,35 +278,29 @@ class MainToolbox(ToolbarBox):
     def _get_date_range(self):
         today_start = datetime.today().replace(hour=0, minute=0, second=0)
         right_now = datetime.today()
-        if self._when_search_combo.props.value == _ACTION_TODAY:
+
+        if self._when_filter == _ACTION_TODAY:
             date_range = (today_start, right_now)
-        elif self._when_search_combo.props.value == _ACTION_SINCE_YESTERDAY:
+        elif self._when_filter == _ACTION_SINCE_YESTERDAY:
             date_range = (today_start - timedelta(1), right_now)
-        elif self._when_search_combo.props.value == _ACTION_PAST_WEEK:
+        elif self._when_filter == _ACTION_PAST_WEEK:
             date_range = (today_start - timedelta(7), right_now)
-        elif self._when_search_combo.props.value == _ACTION_PAST_MONTH:
+        elif self._when_filter == _ACTION_PAST_MONTH:
             date_range = (today_start - timedelta(30), right_now)
-        elif self._when_search_combo.props.value == _ACTION_PAST_YEAR:
+        elif self._when_filter == _ACTION_PAST_YEAR:
             date_range = (today_start - timedelta(356), right_now)
 
         return (time.mktime(date_range[0].timetuple()),
                 time.mktime(date_range[1].timetuple()))
 
-    def _combo_changed_cb(self, combo):
-        self._update_if_needed()
-
     def __sort_changed_cb(self, button):
         self._update_if_needed()
 
     def _update_if_needed(self):
-        # check if the what_search combo should be visible
-        self._what_search_combo.set_visible(
-            self._filter_type != FILTER_TYPE_MIME_BY_ACTIVITY)
-
         new_query = self._build_query()
         if self._query != new_query:
             self._query = new_query
-            self.emit('query-changed', self._query)
+            self.query_changed_signal.emit(self._query)
 
     def _search_entry_activated_cb(self, search_entry):
         if self._autosearch_timer:
@@ -292,17 +328,23 @@ class MainToolbox(ToolbarBox):
         self._update_if_needed()
 
     def set_what_filter(self, what_filter):
-        combo_model = self._what_search_combo.get_model()
-        what_filter_index = -1
-        for i in range(0, len(combo_model) - 1):
-            if combo_model[i][0] == what_filter:
-                what_filter_index = i
-                break
+        for item in self._what_list:
+            if 'id' in item and item['id'] == what_filter:
+                self._what_search_button.set_widget_label(item['label'])
 
-        if what_filter_index == -1:
-            logging.warning('what_filter %r not known', what_filter)
-        else:
-            self._what_search_combo.set_active(what_filter_index)
+                if item['id'] == 0:
+                    self._what_search_button.set_widget_icon(
+                        icon_name='view-type')
+                elif 'icon' in item:
+                    self._what_search_button.set_widget_icon(
+                        icon_name=item['icon'])
+                    self._filter_type = FILTER_TYPE_GENERIC_MIME
+                elif 'file' in item:
+                    self._what_search_button.set_widget_icon(
+                        file_name=item['file'])
+                    self._filter_type = FILTER_TYPE_ACTIVITY
+                self._what_filter = what_filter
+                break
 
     def update_filters(self, mount_point, what_filter, filter_type=None):
         self._mount_point = mount_point
@@ -315,16 +357,46 @@ class MainToolbox(ToolbarBox):
         self._filter_type = filter_type
         self._update_if_needed()
 
-    def refresh_filters(self):
-        current_value = self._what_search_combo.props.value
-        current_value_index = 0
+    def _what_palette_cb(self, widget, event, item):
+        self._what_search_button.set_widget_label(item['label'])
 
-        self._what_search_combo.handler_block(self._what_combo_changed_sid)
+        if item['id'] == 0:
+            self._what_search_button.set_widget_icon(icon_name='view-type')
+        elif 'icon' in item:
+            self._what_search_button.set_widget_icon(icon_name=item['icon'])
+            self._filter_type = FILTER_TYPE_GENERIC_MIME
+        elif 'file' in item:
+            self._what_search_button.set_widget_icon(file_name=item['file'])
+            self._filter_type = FILTER_TYPE_ACTIVITY
+
+        self._what_filter = item['id']
+
+        new_query = self._build_query()
+        if self._query != new_query:
+            self._query = new_query
+            self.query_changed_signal.emit(self._query)
+
+    def _when_palette_cb(self, widget, event, item):
+        self._when_search_button.set_widget_label(item['label'])
+
+        self._when_filter = item['id']
+
+        new_query = self._build_query()
+        if self._query != new_query:
+            self._query = new_query
+            self.query_changed_signal.emit(self._query)
+
+    def refresh_filters(self):
+        # refresh_what_filters
+        self._what_list = []
+        what_list_activities = []
+
         try:
-            self._what_search_combo.remove_all()
-            # TRANS: Item in a combo box that filters by entry type.
-            self._what_search_combo.append_item(_ACTION_ANYTHING,
-                                                _('Anything'))
+            # TRANS: Item on a palette that filters by entry type.
+            self._what_list.append({'label': _('Anything'),
+                                    'icon': 'application-octet-stream',
+                                    'callback': self._what_palette_cb,
+                                    'id': _ACTION_ANYTHING})
 
             registry = bundleregistry.get_registry()
             appended_separator = False
@@ -332,64 +404,79 @@ class MainToolbox(ToolbarBox):
             types = mime.get_all_generic_types()
             for generic_type in types:
                 if not appended_separator:
-                    self._what_search_combo.append_separator()
+                    self._what_list.append({'separator': True})
                     appended_separator = True
-                self._what_search_combo.append_item(
-                    generic_type.type_id, generic_type.name, generic_type.icon)
-                if generic_type.type_id == current_value:
-                    current_value_index = \
-                        len(self._what_search_combo.get_model()) - 1
+                self._what_list.append({'label': generic_type.name,
+                                        'icon': generic_type.icon,
+                                        'callback': self._what_palette_cb,
+                                        'id': generic_type.type_id})
 
-                self._what_search_combo.set_active(current_value_index)
+            self._what_list.append({'separator': True})
 
-            self._what_search_combo.append_separator()
-
-            for service_name in model.get_unique_values('activity'):
-                activity_info = registry.get_bundle(service_name)
+            for bundle_id in model.get_unique_values('activity'):
+                activity_info = registry.get_bundle(bundle_id)
                 if activity_info is None:
                     continue
-
-                if service_name == current_value:
-                    combo_model = self._what_search_combo.get_model()
-                    current_value_index = len(combo_model)
 
                 # try activity-provided icon
                 if os.path.exists(activity_info.get_icon()):
                     try:
-                        self._what_search_combo.append_item(
-                            service_name,
-                            activity_info.get_name(),
-                            file_name=activity_info.get_icon())
+                        what_list_activities.append(
+                            {'label': activity_info.get_name(),
+                             'file': activity_info.get_icon(),
+                             'callback': self._what_palette_cb,
+                             'id': bundle_id})
                     except GObject.GError, exception:
+                        # fall back to generic icon
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
                                         ' invalid icon: %s',
                                         activity_info.get_name(),
-                                        str(service_name), exception)
-                    else:
-                        continue
-
-                # fall back to generic icon
-                self._what_search_combo.append_item(
-                    service_name,
-                    activity_info.get_name(),
-                    icon_name='application-octet-stream')
-
+                                        str(bundle_id), exception)
+                        what_list_activities.append(
+                            {'label': activity_info.get_name(),
+                             'icon': 'application-octet-stream',
+                             'callback': self._what_palette_cb,
+                             'id': bundle_id})
         finally:
-            self._what_search_combo.handler_unblock(
-                self._what_combo_changed_sid)
+            def _cmp(a, b):
+                if a['label'] < b['label']:
+                    return -1
+                else:
+                    return 1
+
+            for item in sorted(what_list_activities, _cmp):
+                self._what_list.append(item)
+
+            if self._what_widget_contents is not None:
+                self._what_widget.remove(self._what_widget_contents)
+            self._what_widget_contents = set_palette_list(self._what_list)
+            self._what_widget.add(self._what_widget_contents)
+            self._what_widget_contents.show()
 
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
     def clear_query(self):
         self.search_entry.props.text = ''
-        if self._what_filter is None:
-            self._what_search_combo.set_active(0)
-        else:
-            self.set_what_filter(self._what_filter)
-        self._when_search_combo.set_active(0)
+
+        self._what_search_button.set_widget_icon(icon_name='view-type')
+        self._what_search_button.set_widget_label(_('Anything'))
+        self._what_filter = None
+
+        self._when_search_button.set_widget_icon(icon_name='view-created')
+        self._when_search_button.set_widget_label(_('Anytime'))
+        self._when_filter = None
+
+        '''
+        self._with_search_button.set_widget_icon(icon_name='view-who')
+        self._with_search_button.set_widget_label(_('Anyone'))
+        self._with_filter = None
+        '''
+
         self._favorite_button.props.active = False
+
+        self._update_if_needed()
 
 
 class DetailToolbox(ToolbarBox):
@@ -409,9 +496,9 @@ class DetailToolbox(ToolbarBox):
         self._resume.connect('clicked', self._resume_clicked_cb)
         self.toolbar.insert(self._resume, -1)
         self._resume.show()
+        self._resume_menu = None
 
-        client = GConf.Client.get_default()
-        color = XoColor(client.get_string('/desktop/sugar/user/color'))
+        color = profile.get_color()
         self._copy = ToolButton()
         icon = Icon(icon_name='edit-copy', xo_color=color)
         self._copy.set_icon_widget(icon)
@@ -453,7 +540,12 @@ class DetailToolbox(ToolbarBox):
         self._refresh_resume_palette()
 
     def _resume_clicked_cb(self, button):
-        misc.resume(self._metadata)
+        if not misc.can_resume(self._metadata):
+            palette = self._resume.get_palette()
+            palette.popup(immediate=True)
+
+        misc.resume(self._metadata,
+                    alert_window=journalwindow.get_journal_window())
 
     def _copy_clicked_cb(self, button):
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
@@ -496,7 +588,8 @@ class DetailToolbox(ToolbarBox):
             model.delete(self._metadata['uid'])
 
     def _resume_menu_item_activate_cb(self, menu_item, service_name):
-        misc.resume(self._metadata, service_name)
+        misc.resume(self._metadata, service_name,
+                    alert_window=journalwindow.get_journal_window())
 
     def _refresh_copy_palette(self):
         palette = self._copy.get_palette()
@@ -555,18 +648,23 @@ class DetailToolbox(ToolbarBox):
 
         palette = self._resume.get_palette()
 
-        for menu_item in palette.menu.get_children():
-            palette.menu.remove(menu_item)
-            menu_item.destroy()
+        if self._resume_menu is not None:
+            self._resume_menu.destroy()
+
+        self._resume_menu = PaletteMenuBox()
+        palette.set_content(self._resume_menu)
+        self._resume_menu.show()
 
         for activity_info in misc.get_activities(self._metadata):
-            menu_item = MenuItem(activity_info.get_name())
-            menu_item.set_image(Icon(file=activity_info.get_icon(),
-                                     icon_size=Gtk.IconSize.MENU))
+            menu_item = PaletteMenuItem(file_name=activity_info.get_icon(),
+                                        text_label=activity_info.get_name())
             menu_item.connect('activate', self._resume_menu_item_activate_cb,
                               activity_info.get_bundle_id())
-            palette.menu.append(menu_item)
+            self._resume_menu.append_item(menu_item)
             menu_item.show()
+
+        if not misc.can_resume(self._metadata):
+            self._resume.set_tooltip(_('No activity to start entry'))
 
 
 class SortingButton(ToolButton):
@@ -602,7 +700,8 @@ class SortingButton(ToolButton):
 
         for property_, icon, label in self._SORT_OPTIONS:
             button = PaletteMenuItem(label)
-            button_icon = Icon(icon_size=Gtk.IconSize.MENU, icon_name=icon)
+            button_icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
+                               icon_name=icon)
             button.set_image(button_icon)
             button_icon.show()
             button.connect('activate',
@@ -716,17 +815,23 @@ class BatchCopyButton(ToolButton):
         ToolButton.__init__(self, 'edit-copy')
         self.props.tooltip = _('Copy')
         self.connect('clicked', self.__clicked_cb)
+        self._menu_builder = None
 
-        self.menu_builder = CopyMenuBuilder(
+    def _refresh_menu_options(self):
+        if self._menu_builder is not None:
+            return
+        self._menu_builder = CopyMenuBuilder(
             self._journalactivity, self.__get_uid_list_cb,
             self._journalactivity.volume_error_cb,
             self.get_palette().menu, add_clipboard_menu=False,
             add_webservices_menu=False)
 
     def update_mount_point(self):
-        self.menu_builder.update_mount_point()
+        if self._menu_builder is not None:
+            self._menu_builder.update_mount_point()
 
     def __clicked_cb(self, button):
+        self._refresh_menu_options()
         button.palette.popup(immediate=True, state=Palette.SECONDARY)
 
     def __get_uid_list_cb(self):
@@ -763,3 +868,175 @@ class MultiSelectEntriesInfoWidget(Gtk.ToolItem):
             'selected': self._selected_entries, 'total': self._total}
         self._label.set_text(message)
         self._label.show()
+
+
+class FilterToolItem(Gtk.ToolButton):
+
+    __gsignals__ = {
+        'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
+
+    def __init__(self, default_icon, default_label, palette_content):
+        self._palette_invoker = ToolInvoker()
+        Gtk.ToolButton.__init__(self)
+        self._label = default_label
+
+        self.set_is_important(False)
+        self.set_size_request(style.GRID_CELL_SIZE, -1)
+
+        self._label_widget = Gtk.Label()
+        self._label_widget.set_alignment(0.0, 0.5)
+        self._label_widget.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        self._label_widget.set_max_width_chars(_LABEL_MAX_WIDTH)
+        self._label_widget.set_use_markup(True)
+        self._label_widget.set_markup(default_label)
+        self.set_label_widget(self._label_widget)
+        self._label_widget.show()
+
+        self.set_widget_icon(icon_name=default_icon)
+
+        self._hide_tooltip_on_click = True
+        self._palette_invoker.attach_tool(self)
+        self._palette_invoker.props.toggle_palette = True
+        self._palette_invoker.props.lock_palette = True
+
+        self.palette = Palette(_('Select filter'))
+        self.palette.set_invoker(self._palette_invoker)
+
+        self.props.palette.set_content(palette_content)
+
+    def set_widget_icon(self, icon_name=None, file_name=None):
+        if file_name is not None:
+            icon = Icon(file=file_name,
+                        icon_size=style.SMALL_ICON_SIZE,
+                        xo_color=XoColor('white'))
+        else:
+            icon = Icon(icon_name=icon_name,
+                        icon_size=style.SMALL_ICON_SIZE,
+                        xo_color=XoColor('white'))
+        self.set_icon_widget(icon)
+        icon.show()
+
+    def set_widget_label(self, label=None):
+        # FIXME: Ellipsis is not working on these labels.
+        if label is None:
+            label = self._label
+        if len(label) > _LABEL_MAX_WIDTH:
+            label = label[0:7] + '...' + label[-7:]
+        self._label_widget.set_markup(label)
+        self._label = label
+
+    def __destroy_cb(self, icon):
+        if self._palette_invoker is not None:
+            self._palette_invoker.detach()
+
+    def create_palette(self):
+        return None
+
+    def get_palette(self):
+        return self._palette_invoker.palette
+
+    def set_palette(self, palette):
+        self._palette_invoker.palette = palette
+
+    palette = GObject.property(
+        type=object, setter=set_palette, getter=get_palette)
+
+    def get_palette_invoker(self):
+        return self._palette_invoker
+
+    def set_palette_invoker(self, palette_invoker):
+        self._palette_invoker.detach()
+        self._palette_invoker = palette_invoker
+
+    palette_invoker = GObject.property(
+        type=object, setter=set_palette_invoker, getter=get_palette_invoker)
+
+    def do_draw(self, cr):
+        if self.palette and self.palette.is_up():
+            allocation = self.get_allocation()
+            # draw a black background, has been done by the engine before
+            cr.set_source_rgb(0, 0, 0)
+            cr.rectangle(0, 0, allocation.width, allocation.height)
+            cr.paint()
+
+        Gtk.ToolButton.do_draw(self, cr)
+
+        if self.palette and self.palette.is_up():
+            invoker = self.palette.props.invoker
+            invoker.draw_rectangle(cr, self.palette)
+
+        return False
+
+
+def set_palette_list(palette_list):
+    if 'icon' in palette_list[0]:
+        _menu_item = PaletteMenuItem(icon_name=palette_list[0]['icon'],
+                                     text_label=palette_list[0]['label'])
+    else:
+        _menu_item = PaletteMenuItem(text_label=palette_list[0]['label'])
+    req2 = _menu_item.get_preferred_size()[1]
+    menuitem_width = req2.width
+    menuitem_height = req2.height
+
+    palette_width = Gdk.Screen.width() - style.GRID_CELL_SIZE
+    palette_height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 3
+
+    nx = min(_MAXIMUM_PALETTE_COLUMNS, int(palette_width / menuitem_width))
+    ny = min(int(palette_height / menuitem_height), len(palette_list) + 1)
+    if ny >= len(palette_list):
+        nx = 1
+        ny = len(palette_list)
+
+    grid = Gtk.Grid()
+    grid.set_row_spacing(style.DEFAULT_PADDING)
+    grid.set_column_spacing(0)
+    grid.set_border_width(0)
+    grid.show()
+
+    x = 0
+    y = 0
+    xo_color = XoColor('white')
+
+    for item in palette_list:
+        if 'separator' in item:
+            menu_item = PaletteMenuItemSeparator()
+        elif 'icon' in item:
+            menu_item = PaletteMenuItem(icon_name=item['icon'],
+                                        text_label=item['label'],
+                                        xo_color=xo_color)
+        elif 'file' in item:
+            menu_item = PaletteMenuItem(file_name=item['file'],
+                                        text_label=item['label'],
+                                        xo_color=xo_color)
+        else:
+            menu_item = PaletteMenuItem()
+            menu_item.set_label(item['label'])
+
+        menu_item.set_size_request(style.GRID_CELL_SIZE * 3, -1)
+
+        if 'separator' in item:
+            y += 1
+            grid.attach(menu_item, 0, y, nx, 1)
+            x = 0
+            y += 1
+        else:
+            menu_item.connect('button-release-event', item['callback'], item)
+            grid.attach(menu_item, x, y, 1, 1)
+            x += 1
+            if x == nx:
+                x = 0
+                y += 1
+
+        menu_item.show()
+
+    if palette_height < (y * menuitem_height + style.GRID_CELL_SIZE):
+        # if the grid is bigger than the palette, put in a scrolledwindow
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.NEVER,
+                                   Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_size_request(nx * menuitem_width,
+                                         (ny + 1) * menuitem_height)
+        scrolled_window.add_with_viewport(grid)
+        return scrolled_window
+    else:
+        return grid
