@@ -20,7 +20,7 @@
 pkgbranch = $(lastword $(subst -,$(space),$(DEB_SOURCE_PACKAGE)))
 DEB_BUILDDIR = build
 DEB_PYTHON2_MODULE_PACKAGES = python-jarabe-$(pkgbranch)
-DEB_PYTHON2_MODULE_PACKAGES += $(foreach pkg,session emulator tools,sugar-$(pkg)-$(pkgbranch))
+DEB_PYTHON2_MODULE_PACKAGES += $(foreach pkg,session tools,sugar-$(pkg)-$(pkgbranch))
 debian/control:: debian/control.in
 DEB_PHONY_RULES += debian/control.in
 debian/control.in::
@@ -83,8 +83,6 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #    CONNECTION_INTERFACE_REQUESTS ABI
 #  * gstreamer0.10-espeak needed in jarabe.model.speech
 #  * metacity needed in jarabe.main
-#  * xserver-xephyr and x11-utils (xdpyinfo) needed in
-#    src/jarabe/util/emulator.py
 #  * lsb-release (lsb_release), tzdata and ethtool needed in extension
 #    ControlPanel
 #  * avahi-autoipd needed in jarabe/desktop/meshbox.py to establish
@@ -105,7 +103,6 @@ session_gio = gvfs
 session_pm = upower, consolekit
 sesion_keyboard = maliit-keyboard
 session_font = fonts-dejavu-core
-emulator_exec = xserver-xephyr, x11-utils
 jarabe_initprofile = openssh-client
 jarabe_wm = metacity
 jarabe_nm = avahi-autoipd
@@ -118,15 +115,13 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, pyt
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-gstreamer-1.0, python-cairo, gir1.2-xkl-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, dbus-x11, python-carquinyol-$(pkgbranch)
-CDBS_DEPENDS_sugar-emulator-$(pkgbranch) = sugar-session-$(pkgbranch), python-jarabe-$(pkgbranch)
-CDBS_DEPENDS_sugar-emulator-$(pkgbranch) += , dbus-x11, $(emulator_exec)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar-toolkit-$(pkgbranch), python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy (>= 0.15.9), python-simplejson, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-tools-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) +=, gir1.2-maliit-1.0
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
@@ -138,9 +133,9 @@ CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm), $(j
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_expand_activities_relaxed,true)
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(sesion_keyboard)
 CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = sugar-session-$(pkgbranch), $(tools_debug)
-CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), $(emulator_exec), olpc-powerd
+CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), olpc-powerd
 
-CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-emulator-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , gir1.2-maliit-1.0, $(sesion_keyboard)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(sesion_keyboard), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
@@ -156,9 +151,6 @@ CDBS_REPLACES_python-jarabe-$(pkgbranch) = python-jarabe
 CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar-session
 CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar-session
 CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar-session
-CDBS_PROVIDES_sugar-emulator-$(pkgbranch) = sugar-emulator
-CDBS_CONFLICTS_sugar-emulator-$(pkgbranch) = sugar-emulator
-CDBS_REPLACES_sugar-emulator-$(pkgbranch) = sugar-emulator
 CDBS_PROVIDES_sugar-tools-$(pkgbranch) = sugar-tools
 CDBS_CONFLICTS_sugar-tools-$(pkgbranch) = sugar-tools
 CDBS_REPLACES_sugar-tools-$(pkgbranch) = sugar-tools
