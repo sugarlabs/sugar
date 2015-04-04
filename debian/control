@@ -66,29 +66,6 @@ Description: Sugar graphical shell - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-emulator-0.100
-Architecture: all
-Depends: ${cdbs:Depends},
- ${misc:Depends},
- ${python:Depends},
- ${shlibs:Depends}
-Recommends: ${cdbs:Recommends}
-Suggests: ${cdbs:Suggests}
-Provides: ${cdbs:Provides},
- ${python:Provides}
-Breaks: ${cdbs:Breaks}
-Conflicts: ${cdbs:Conflicts}
-Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - emulator
- Sugar is a graphical user interface aimed at children.
- .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
- .
- This package contains a wrapper script to run Sugar in a Xephyr window,
- making it possible to run it from inside another Desktop environment.
-
 Package: sugar-tools-0.100
 Architecture: all
 Depends: ${cdbs:Depends},

@@ -1,8 +1,34 @@
-sugar-0.100 (0.98.8-3) UNRELEASED; urgency=medium
+sugar-0.100 (0.100.1-1) experimental; urgency=medium
 
-  * Bump major version.
+  [ upstream ]
+  * New release(s).
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Apr 2015 09:15:39 +0200
+  [ Jonas Smedegaard ]
+  * Bump major version in source and binary package names.
+  * Update copyright info:
+    + Extend coverage for autotools.
+    + Extend coverage for upstream authors.
+  * Update package relations:
+    + Stop depend on x11-xserver-utils or (explicitly) on wpasupplicant.
+    + Have python-jarabe-* and sugar-session-* depend on gir1.2-xkl-1.0
+      (not sucrose-* depend on or sugar-session-* recommending it).
+    + Have python-jarabe-* depend on metacity (not sugar-session-*), and
+      relax to depend unversioned: Needed version satisfied even in
+      oldstable.
+    + Drop ancient transitional breaks+replaces.
+    + Fix stop depend on gnome-keyring: Unused since sugar-0.98.
+    + Drop binary package sugar-emulator-*, and have python-jarabe-* and
+      sugar-session-* break virtual package sugar-emulator.
+    + Stop install no longer shipped script sugar-session
+    + Have sugar-tools-* depend on python-sugar3 (not
+      python-sugar-toolkit-*).
+  * Update, improve and unfuzz patches.
+  * Stop install no longer shipped icon.
+  * Fix hash-bang massaging to support future CDBS 0.5, and also cover
+    sugar-tools-* (not only sugar-session-*).
+    Have sugar-session-* and sugar-tools-* explicitly depend on python.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Apr 2015 15:47:22 +0200
 
 sugar-0.98 (0.98.8-2) unstable; urgency=medium
 
