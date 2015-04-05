@@ -63,7 +63,9 @@ class _UpdateHTMLParser(HTMLParser):
     def _clear_info(self):
         self.in_activity_id = self.in_activity_url = 0
         self.in_activity_version = 0
+        self.in_activity_optional = 0
         self.last_id = self.last_version = self.last_url = None
+        self.last_optional = False
 
     def handle_starttag(self, tag, attrs):
         classes = ' '.join([val for attr, val in attrs if attr == 'class'])\
@@ -105,6 +107,12 @@ class _UpdateHTMLParser(HTMLParser):
         else:
             self.in_activity_url += 1
 
+        if self.in_activity_optional == 0:
+            if 'olpc-activity-optional' in classes:
+                self.in_activity_optional = 1
+        else:
+            self.in_activity_optional += 1
+
         # an href inside activity_url is the droid we are looking for.
         if self.in_activity_url > 0:
             for a, v in attrs:
@@ -131,6 +139,10 @@ class _UpdateHTMLParser(HTMLParser):
             except InvalidVersionError:
                 pass
 
+        if self.in_activity_optional > 0:
+            # a value 1 means that this activity is optional
+            self.last_optional = data.strip() == '1'
+
     def handle_endtag(self, tag):
         if self.in_group_name > 0:
             self.in_group_name -= 1
@@ -143,6 +155,9 @@ class _UpdateHTMLParser(HTMLParser):
 
         if self.in_activity_version > 0:
             self.in_activity_version -= 1
+
+        if self.in_activity_optional > 0:
+            self.in_activity_optional -= 1
 
         if self.in_activity_url > 0:
             self.in_activity_url -= 1
@@ -161,7 +176,8 @@ class _UpdateHTMLParser(HTMLParser):
             if self.last_id in self.results:
                 if self.last_version < self.results[self.last_id][0]:
                     return  # already found a better version
-            self.results[self.last_id] = (self.last_version, self.last_url)
+            self.results[self.last_id] = (self.last_version, self.last_url,
+                                          self.last_optional)
 
 
 class MicroformatUpdater(object):
@@ -216,13 +232,19 @@ class MicroformatUpdater(object):
         registry = bundleregistry.get_registry()
         self._bundles_to_check = []
         for bundle_id, data in self._parser.results.iteritems():
+            # filter optional activities for automatic updates
+            if self._auto and data[2] is True:
+                logging.debug('filtered optional activity %s', bundle_id)
+                continue
+
             bundle = registry.get_bundle(bundle_id)
             if bundle:
                 if data[0] <= NormalizedVersion(bundle.get_activity_version()):
                     continue
 
             name = bundle.get_name() if bundle else None
-            bundle_update = BundleUpdate(bundle_id, name, data[0], data[1], 0)
+            bundle_update = BundleUpdate(bundle_id, name, data[0], data[1], 0,
+                                         optional=data[2])
             self._bundles_to_check.append(bundle_update)
         self._total_bundles_to_check = len(self._bundles_to_check)
         _logger.debug("%d results after filter", self._total_bundles_to_check)
@@ -328,7 +350,8 @@ class MetadataLookup(GObject.GObject):
     and there is no local source of the activity's name.
     """
     __gsignals__ = {
-        'complete': (GObject.SignalFlags.RUN_FIRST, None, (object, int, str)),
+        'complete': (GObject.SignalFlags.RUN_FIRST,
+                     None, (object, object, object)),
     }
 
     def __init__(self, url):

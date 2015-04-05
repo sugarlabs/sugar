@@ -186,7 +186,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.append_column(column)
 
         self.cell_title = Gtk.CellRendererText()
-        self.cell_title.props.ellipsize = Pango.EllipsizeMode.MIDDLE
+        self.cell_title.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
         self.cell_title.props.ellipsize_set = True
 
         self._title_column = Gtk.TreeViewColumn()
@@ -336,7 +336,12 @@ class BaseListView(Gtk.Bin):
     def refresh(self, new_query=False):
         logging.debug('ListView.refresh query %r', self._query)
         self._stop_progress_bar()
+        window = self.get_toplevel().get_window()
+        if window is not None:
+            window.set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        GObject.idle_add(self._do_refresh, new_query)
 
+    def _do_refresh(self, new_query=False):
         if self._model is not None:
             if new_query:
                 self._backup_selected = None
@@ -349,6 +354,9 @@ class BaseListView(Gtk.Bin):
         self._model.connect('ready', self.__model_ready_cb)
         self._model.connect('progress', self.__model_progress_cb)
         self._model.setup()
+        window = self.get_toplevel().get_window()
+        if window is not None:
+            window.set_cursor(None)
 
     def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()
@@ -390,9 +398,12 @@ class BaseListView(Gtk.Bin):
                     self._show_message(_('The device is empty'))
             else:
                 self._show_message(_('No matching entries'),
-                                   show_clear_query=True)
+                                   show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
+
+    def _can_clear_query(self):
+        return True
 
     def __map_cb(self, widget):
         logging.debug('ListView.__map_cb %r', self._scroll_position)

@@ -80,12 +80,14 @@ class MainToolbox(ToolbarBox):
     query_changed_signal = GObject.Signal('query-changed',
                                           arg_types=([object]))
 
-    def __init__(self):
+    def __init__(self, default_what_filter=None, default_filter_type=None):
         ToolbarBox.__init__(self)
         self._mount_point = None
-        self._filter_type = None
-        self._what_filter = None
+        self._filter_type = default_filter_type
+        self._what_filter = default_what_filter
         self._when_filter = None
+        self._default_what_filter = default_what_filter
+        self._default_filter_type = default_filter_type
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
@@ -342,7 +344,10 @@ class MainToolbox(ToolbarBox):
                 elif 'file' in item:
                     self._what_search_button.set_widget_icon(
                         file_name=item['file'])
-                    self._filter_type = FILTER_TYPE_ACTIVITY
+                    if self._default_filter_type is not None:
+                        self._filter_type = self._default_filter_type
+                    else:
+                        self._filter_type = FILTER_TYPE_ACTIVITY
                 self._what_filter = what_filter
                 break
 
@@ -367,7 +372,10 @@ class MainToolbox(ToolbarBox):
             self._filter_type = FILTER_TYPE_GENERIC_MIME
         elif 'file' in item:
             self._what_search_button.set_widget_icon(file_name=item['file'])
-            self._filter_type = FILTER_TYPE_ACTIVITY
+            if self._default_filter_type is not None:
+                self._filter_type = self._default_filter_type
+            else:
+                self._filter_type = FILTER_TYPE_ACTIVITY
 
         self._what_filter = item['id']
 
@@ -457,12 +465,20 @@ class MainToolbox(ToolbarBox):
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
+    def is_filter_changed(self):
+        return not (self._filter_type == self._default_filter_type and
+                    self._what_filter == self._default_what_filter and
+                    self._when_filter is None and
+                    self._favorite_button.props.active is False and
+                    self.search_entry.props.text == '')
+
     def clear_query(self):
         self.search_entry.props.text = ''
+        self._filter_type = self._default_filter_type
 
         self._what_search_button.set_widget_icon(icon_name='view-type')
         self._what_search_button.set_widget_label(_('Anything'))
-        self._what_filter = None
+        self.set_what_filter(self._default_what_filter)
 
         self._when_search_button.set_widget_icon(icon_name='view-created')
         self._when_search_button.set_widget_label(_('Anytime'))
@@ -885,7 +901,7 @@ class FilterToolItem(Gtk.ToolButton):
 
         self._label_widget = Gtk.Label()
         self._label_widget.set_alignment(0.0, 0.5)
-        self._label_widget.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        self._label_widget.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         self._label_widget.set_max_width_chars(_LABEL_MAX_WIDTH)
         self._label_widget.set_use_markup(True)
         self._label_widget.set_markup(default_label)
