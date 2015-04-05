@@ -12,6 +12,7 @@ Files: AUTHORS
  configure.ac
  data/Makefile.am
  data/activities.defaults
+ data/group-labels.defaults
  data/gtkrc.em
  data/icons/Makefile.am
  data/icons/module-about_me.svg
@@ -632,7 +633,7 @@ License: GPL-2+
 
 Files: aclocal.m4
 Copyright: 1995-2002, Free Software Foundation, Inc
-  1995-2003, 2005-2006, 2008-2013, Free Software Foundation
+  1995-2003, 2005-2006, 2008-2014, Free Software Foundation
   1996-2013, Free Software Foundation, Inc
   1997-2013, Free Software Foundation, Inc
   1999-2013, Free Software Foundation, Inc
@@ -651,6 +652,14 @@ Files: extensions/cpsection/aboutme/view.py
 Copyright: 2008, OLPC
   2010-14, Sugar Labs
   2010-14, Walter Bender
+  2014, Ignacio Rodriguez
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/view/viewsource.py
+Copyright: 2008, One Laptop Per Child
+  2009, Tomeu Vizoso, Simon Schampijer
+  2011, Walter Bender
   2014, Ignacio Rodriguez
 License: GPL-2+
  FIXME
@@ -721,13 +730,6 @@ Copyright: 2008, One Laptop Per Child
 License: GPL-2+
  FIXME
 
-Files: src/jarabe/view/viewsource.py
-Copyright: 2008, One Laptop Per Child
-  2009, Tomeu Vizoso, Simon Schampijer
-  2011, Walter Bender
-License: GPL-2+
- FIXME
-
 Files: src/jarabe/journal/journaltoolbox.py
 Copyright: 2007, One Laptop Per Child
   2009,14 Walter Bender
@@ -764,6 +766,11 @@ License: GPL-2+
 
 Files: extensions/cpsection/modemconfiguration/__init__.py
 Copyright: 2009, Paraguay Educa, Martin Abente
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/model/update/new_aslo.py
+Copyright: 2014, Sam Parkinson
 License: GPL-2+
  FIXME
 
@@ -850,35 +857,6 @@ Copyright: Jm�no"
 License: UNKNOWN
  FIXME
 
-Files: po/fr.po
-Copyright: 2007, the Package Owner
-  Personnel (PIN) :"
-  [ args ...
-  afficher les informations sur cette cl� \n"
-  correspondante"
-  de chiffrement sans fil est requise pour\n"
-  de d�verrouillage personnelle (PUK) du r�seau GSM "
-  depuis %s"
-  d�finir la valeur actuelle de cette cl� \n"
-  et apportent de nouvelles fonctionnalit�s."
-  incorrect. Utiliser 0/1."
-  install�es"
-  je ne parle pas '%s'."
-  la d�connexion."
-  le transfert du fichier"
-  pour d�marrer l'entr�e"
-  pour reprendre l'entr�e"
-  retir�."
-  sans fil :"
-  supprim�e ou a disparu."
-  sur le serveur de l'�cole."
-  tactile"
-  trouv�es : %s module: %r"
-  une erreur inattendue."
-  à le modifier et/ou à en distribuer des copies "
-License: UNKNOWN
- FIXME
-
 Files: po/Makefile.in.in
 Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
   2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
@@ -944,6 +922,7 @@ License: UNKNOWN
 Files: po/es.po
 Copyright: YEAR THE PACKAGE'S HOLDER
   desconectado del punto de acceso o del server de "
+  migrada de GConf a GSettings"
   quitado."
   rechazada."
 License: UNKNOWN
@@ -982,6 +961,12 @@ License: UNKNOWN
 Files: po/pbs.po
 Copyright: YEAR THE PACKAGE'S HOLDER
   ma namajep ne nikji "
+License: UNKNOWN
+ FIXME
+
+Files: po/ig.po
+Copyright: YEAR THE PACKAGE'S HOLDER
+  na License"
 License: UNKNOWN
  FIXME
 
@@ -1028,20 +1013,20 @@ Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
-Files: po/ar.po
-Copyright: YEAR THE PACKAGE'S HOLDER
-  تحكم سكر: key=%s ليس متاحا كخيار"
-License: UNKNOWN
- FIXME
-
-Files: po/ig.po
-Copyright: YEAR THE PACKAGE'S HOLDER, 2006
+Files: po/fr.po
+Copyright: [ args ...
 License: UNKNOWN
  FIXME
 
 Files: data/ISO-639-2_utf-8.txt
 Copyright: du Nord
   du Sud
+License: UNKNOWN
+ FIXME
+
+Files: po/ar.po
+Copyright: تحكم سكر: key=%s ليس متاحا كخيار"
+  عند البدء، أو \"system\" (النظام) "
 License: UNKNOWN
  FIXME
 

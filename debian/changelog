@@ -1,4 +1,4 @@
-sugar-0.104 (0.102.0-1) UNRELEASED; urgency=medium
+sugar-0.104 (0.104.1-1) experimental; urgency=medium
 
   [ upstream ]
   * New release(s).
@@ -14,7 +14,7 @@ sugar-0.104 (0.102.0-1) UNRELEASED; urgency=medium
   * Update copyright info:
     + Extend coverage for upstream authors and autotools.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2015 03:08:40 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2015 03:32:58 +0200
 
 sugar-0.100 (0.100.1-1) experimental; urgency=medium
 
