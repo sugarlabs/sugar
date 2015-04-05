@@ -1,8 +1,20 @@
-sugar-0.102 (0.100.1-2) UNRELEASED; urgency=medium
+sugar-0.102 (0.102.0-1) UNRELEASED; urgency=medium
 
-  * Bump major version.
+  [ upstream ]
+  * New release(s).
 
- -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2015 01:33:17 +0200
+  [ Jonas Smedegaard ]
+  * Bump major version in source and binary package names.
+  * Update package relations:
+    + Have sugar-session-* depend on gir1.2-networkmanager-1.0 and
+      gir1.2-nmgtk-1.0.
+    + Have python-jarabe-* depend on and recommend gir1.2-webkit2-3.0 or
+      gir1.2-webkit2-4.0, and recommend (but not depend on)
+      gir1.2-webkit-3.0 as fallback.
+  * Update copyright info:
+    + Extend coverage for upstream authors and autotools.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sun, 05 Apr 2015 03:08:40 +0200
 
 sugar-0.100 (0.100.1-1) experimental; urgency=medium
 
