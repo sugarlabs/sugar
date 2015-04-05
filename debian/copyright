@@ -37,6 +37,7 @@ Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
   2014, Emil Dudev
   2014, Frederick Grose
   2014, Ignacio Rodriguez
+  2014, Sam Parkinson
 License: GPL-2+
 
 Files: */Makefile.in
@@ -53,7 +54,7 @@ License: GPL-2+ with Autoconf exception
  the same distribution terms that you use for the rest of that program.
 
 Files: aclocal.m4
-Copyright: 1996-2013, Free Software Foundation, Inc
+Copyright: 1996-2014, Free Software Foundation, Inc
   2001-2004, Red Hat, Inc
 License: GAP
 
