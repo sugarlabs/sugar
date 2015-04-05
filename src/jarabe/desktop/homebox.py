@@ -59,6 +59,7 @@ class HomeBox(Gtk.VBox):
 
         self._set_view(self._favorites_views_indicies[0])
         self._query = ''
+        self._resume_mode = True
 
     def __desktop_view_icons_changed_cb(self, model):
         number_of_views = desktop.get_number_of_views()
@@ -87,8 +88,24 @@ class HomeBox(Gtk.VBox):
         self._list_view.set_filter(self._query)
         for i in range(desktop.get_number_of_views()):
             self._favorites_boxes[i].set_filter(self._query)
-            toolbar.search_entry._icon_selected.append(
-                self._favorites_boxes[i]._get_selected(self._query))
+        toolbar.search_entry._icon_selected = \
+            self._list_view.get_activities_selected()
+
+        # verify if one off the selected names is a perfect match
+        # this is needed by th case of activities with names contained
+        # in other activities like 'Paint' and 'MusicPainter'
+        for activity in self._list_view.get_activities_selected():
+            if activity['name'].upper() == query.upper():
+                toolbar.search_entry._icon_selected = [activity]
+                break
+
+        # Don't change the selection if the entry has been autocompleted
+        if len(toolbar.search_entry._icon_selected) == 1 \
+           and not toolbar.search_entry.get_text() == activity['name']:
+            pos = toolbar.search_entry.get_position()
+            toolbar.search_entry.set_text(
+                toolbar.search_entry._icon_selected[0]['name'])
+            toolbar.search_entry.select_region(pos, -1)
 
     def __toolbar_view_changed_cb(self, toolbar, view):
         self._set_view(view)
@@ -96,11 +113,11 @@ class HomeBox(Gtk.VBox):
     def __search_entry_key_press_event_cb(self, entry, event):
         # wherever a single item is selected in a desktop view,
         # launch the activity on pressing return
-        if event.keyval == Gdk.KEY_Return and entry._icon_selected:
-            for icons in entry._icon_selected:
-                if len(icons) == 1:
-                    icons[0].run_activity()
+        if event.keyval == Gdk.KEY_Return and len(entry._icon_selected) == 1:
+            self._list_view.run_activity(entry._icon_selected[0]['bundle_id'],
+                                         self._resume_mode)
             entry._icon_selected = []
+            self.set_resume_mode(True)
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()
@@ -162,6 +179,7 @@ class HomeBox(Gtk.VBox):
         return False
 
     def set_resume_mode(self, resume_mode, favorite_view=0):
+        self._resume_mode = resume_mode
         self._favorites_boxes[favorite_view].set_resume_mode(resume_mode)
         if resume_mode and self._query != '':
             self._list_view.set_filter(self._query)

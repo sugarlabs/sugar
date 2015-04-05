@@ -51,7 +51,7 @@ class InlineAlert(Gtk.HBox):
 
         self._msg_label = Gtk.Label()
         self._msg_label.set_max_width_chars(50)
-        self._msg_label.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        self._msg_label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
         self._msg_label.set_alignment(0, 0.5)
         self._msg_label.modify_fg(Gtk.StateType.NORMAL,
                                   style.COLOR_SELECTION_GREY.get_gdk_color())

@@ -23,7 +23,6 @@ import os
 
 from gi.repository import GObject
 from gi.repository import Gio
-from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -223,7 +222,7 @@ class InvitePalette(Palette):
         else:
             name = bundle_id
 
-        self.set_primary_text(GLib.markup_escape_text(name))
+        self.set_primary_text(name)
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()
@@ -566,7 +565,7 @@ class BaseTransferPalette(Palette):
     }
 
     def __init__(self, file_transfer):
-        Palette.__init__(self, GLib.markup_escape_text(file_transfer.title))
+        Palette.__init__(self, file_transfer.title)
 
         self.file_transfer = file_transfer
 
@@ -630,8 +629,7 @@ class IncomingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(self.file_transfer.buddy.props.nick)
-        label = GLib.markup_escape_text(_('Transfer from %s') % (nick,))
-        self.props.secondary_text = label
+        self.props.secondary_text = _('Transfer from %s') % (nick,)
 
         self._update()
 
@@ -676,7 +674,7 @@ class IncomingTransferPalette(BaseTransferPalette):
                 text = self.file_transfer.description.replace('\n', ' ')
                 label = Gtk.Label(label=text)
                 label.set_max_width_chars(style.MENU_WIDTH_CHARS)
-                label.set_ellipsize(Pango.EllipsizeMode.END)
+                label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
                 inner_box.add(label)
                 label.show()
 
@@ -797,8 +795,7 @@ class OutgoingTransferPalette(BaseTransferPalette):
         self.file_transfer.connect('notify::state', self.__notify_state_cb)
 
         nick = str(file_transfer.buddy.props.nick)
-        label = GLib.markup_escape_text(_('Transfer to %s') % (nick,))
-        self.props.secondary_text = label
+        self.props.secondary_text = _('Transfer to %s') % (nick,)
 
         self._update()
 

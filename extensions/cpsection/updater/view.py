@@ -388,7 +388,7 @@ class UpdateListModel(Gtk.ListStore):
             installed = registry.get_bundle(bundle_update.bundle_id)
             row = [None] * 5
             row[self.BUNDLE_ID] = bundle_update.bundle_id
-            row[self.SELECTED] = True
+            row[self.SELECTED] = not bundle_update.optional
             if installed:
                 row[self.ICON_FILE_NAME] = installed.get_icon()
             else:
