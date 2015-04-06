@@ -1,3 +1,9 @@
+sugar-0.104 (0.104.1-2) experimental; urgency=medium
+
+  * Fix install GConf→GSettings schemas.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 06 Apr 2015 10:39:04 +0200
+
 sugar-0.104 (0.104.1-1) experimental; urgency=medium
 
   [ upstream ]
