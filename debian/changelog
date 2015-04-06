@@ -1,3 +1,16 @@
+sugar-0.104 (0.104.1-3) experimental; urgency=medium
+
+  * Update package relations:
+    + Fix relax to only suggest Maliit keyboard: Not yet mature.
+    + Fix stop depend on python-simplejson: Unused since sugar-0.100.
+    + Fix have python-jarabe-* depend on gir1.2-soup-2.4.
+    + Fix depend on python-gwebsockets.
+    + Fix have python-jarabe-* depend only on gir1.2-webkit-3.0 (not
+      gir1.2-webkit2-*).
+    Thanks to Sebastian Silva.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 06 Apr 2015 15:35:09 +0200
+
 sugar-0.104 (0.104.1-2) experimental; urgency=medium
 
   * Fix install GConf→GSettings schemas.
