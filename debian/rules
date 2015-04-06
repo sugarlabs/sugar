@@ -98,10 +98,11 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * upower needed in extensions/deviceicon/battery.py
 #  * xdg-user-dir needed in
 #    jarabe/journal/model.get_documents_path()
+#  * TODO: Tighten to recommend / depend on Maliit when maturing
 session_nm = network-manager, modemmanager
 session_gio = gvfs
 session_pm = upower, consolekit
-sesion_keyboard = maliit-keyboard
+session_keyboard = gir1.2-maliit-1.0, maliit-keyboard
 session_font = fonts-dejavu-core
 jarabe_initprofile = openssh-client
 jarabe_wm = metacity
@@ -126,7 +127,6 @@ CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm), $(jarabe_help)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) = sugar-tools-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) +=, gir1.2-maliit-1.0
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
 CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , gir1.2-wnck-3.0
@@ -134,15 +134,14 @@ CDBS_RECOMMENDS_sugar-tools-$(pkgbranch) += , $(session_nm), $(jarabe_cp_cli_exe
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) += , $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_audio), $(jarabe_fs), $(jarabe_help_modern)
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_expand_activities_relaxed,true)
-CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(sesion_keyboard)
+CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard)
 CDBS_SUGGESTS_sugar-tools-$(pkgbranch) = sugar-session-$(pkgbranch), $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), olpc-powerd
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), sugar-tools-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , gir1.2-maliit-1.0, $(sesion_keyboard)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(sesion_keyboard), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
-CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
+CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed), $(session_keyboard)
 
 # TODO: recommend when packaged officially for Debian
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) += , gstreamer0.10-espeak
