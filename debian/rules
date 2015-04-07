@@ -79,8 +79,6 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,browse chat 
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
-#  * python-telepathy versioning needed for use of
-#    CONNECTION_INTERFACE_REQUESTS ABI
 #  * gstreamer0.10-espeak needed in jarabe.model.speech
 #  * metacity needed in jarabe.main
 #  * lsb-release (lsb_release), tzdata and ethtool needed in extension
@@ -120,7 +118,7 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-networkmanager-1.0, gir1.2-nm
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, dbus-x11, python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sugar-tools-$(pkgbranch) = python-sugar3, python-jarabe-$(pkgbranch)
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3, python-gwebsockets
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy (>= 0.15.9), gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
+CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0, gir1.2-soup-2.4
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm), $(jarabe_help)
