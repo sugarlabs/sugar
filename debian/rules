@@ -88,8 +88,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #    NM_802_11_MODE_ADHOC
 #  * openssh-client (ssh-keygen) needed in
 #    intro.intro.IntroWindow()
-#  * olpc-powerd (/etc/powerd/flags) needed in
-#    jarabe/intro/window.create_profile() and jarabe.controlpanel.ControlPanel()
+#  * olpc-powerd (/etc/powerd/flags) needed in extensions.cpsection.power.model
 #  * alsa-utils needed by jarabe/model/sound.py to properly initialize
 #    underlying audio channels (Sugar can only control main volume)
 #  * gdb needed by command sugar-launch
@@ -128,8 +127,8 @@ CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(session_nm), $(session_gio), $
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) +=, dbus-x11, $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_audio), $(jarabe_fs), consolekit | systemd
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_expand_activities_relaxed,true)
-CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard), $(tools_debug)
-CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), olpc-powerd
+CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard), $(tools_debug), olpc-powerd
+CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = dbus-x11, sugar-session-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
