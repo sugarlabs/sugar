@@ -78,6 +78,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,browse chat 
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
+#  * dbus-x11 (bus.get_object) used in sugar-launch, exensions/* and jarabe.*
 #  * python-carquinyol-* (org.laptop.sugar.DataStore) used in
 #    jarabe.apisocket and jarabe.journal.model
 #  * metacity needed in jarabe.main
@@ -115,13 +116,12 @@ CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, pyt
 CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-pango-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, python-cairo, gir1.2-xkl-1.0
 CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-networkmanager-1.0, gir1.2-nmgtk-1.0
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, dbus-x11
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3, python-gwebsockets
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0, gir1.2-soup-2.4
 CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm), $(jarabe_help)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) =, python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_sugar-session-$(pkgbranch) =, dbus-x11, python-carquinyol-$(pkgbranch)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(jarabe_initprofile), $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
@@ -130,7 +130,7 @@ CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard), $(tools_debug)
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch), olpc-powerd
 
-CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_sucrose-$(pkgbranch) = dbus-x11, sugar-session-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed), $(session_keyboard)
