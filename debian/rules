@@ -89,8 +89,6 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * openssh-client (ssh-keygen) needed in
 #    intro.intro.IntroWindow()
 #  * olpc-powerd (/etc/powerd/flags) needed in extensions.cpsection.power.model
-#  * alsa-utils needed by jarabe/model/sound.py to properly initialize
-#    underlying audio channels (Sugar can only control main volume)
 #  * gdb needed by command sugar-launch
 #  * gvfs needed for GIO removable media support
 #  * upower needed in extensions/deviceicon/battery.py
@@ -107,7 +105,6 @@ jarabe_initprofile = openssh-client
 jarabe_wm = metacity
 jarabe_nm = avahi-autoipd
 jarabe_cp_cli_exec = lsb-release, ethtool, tzdata
-jarabe_audio = alsa-utils
 jarabe_fs = xdg-user-dirs
 jarabe_help = gir1.2-webkit-3.0
 tools_debug = gdb
@@ -125,14 +122,14 @@ CDBS_RECOMMENDS_sugar-session-$(pkgbranch) =, dbus-x11, python-carquinyol-$(pkgb
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
 CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
 CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
-CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) +=, dbus-x11, $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_audio), $(jarabe_fs), consolekit | systemd
+CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) +=, dbus-x11, $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_fs), consolekit | systemd
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_expand_activities_relaxed,true)
 CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard), $(tools_debug), olpc-powerd
 CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
 
 CDBS_DEPENDS_sucrose-$(pkgbranch) = dbus-x11, sugar-session-$(pkgbranch), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
+CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_fs), $(tools_debug)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed), $(session_keyboard)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
