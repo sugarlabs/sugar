@@ -157,7 +157,7 @@ CDBS_BREAKS_sugar-session-$(pkgbranch) = sugar-emulator
 CDBS_BREAKS_python-jarabe-$(pkgbranch) = sugar-emulator
 
 # Provide virtual unversioned sugar package
-CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar
+CDBS_PROVIDES_sugar-session-$(pkgbranch) +=, sugar
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS += , python-empy
