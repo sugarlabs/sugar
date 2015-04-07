@@ -78,7 +78,6 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,browse chat 
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
-#  * gstreamer0.10-espeak needed in jarabe.model.speech
 #  * metacity needed in jarabe.main
 #  * lsb-release (lsb_release), tzdata and ethtool needed in extension
 #    ControlPanel
@@ -132,9 +131,6 @@ CDBS_DEPENDS_sucrose-$(pkgbranch) = sugar-session-$(pkgbranch), python-carquinyo
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
 CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_audio), $(jarabe_fs), $(tools_debug)
 CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed), $(session_keyboard)
-
-# TODO: recommend when packaged officially for Debian
-CDBS_SUGGESTS_python-jarabe-$(pkgbranch) += , gstreamer0.10-espeak
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
 CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
