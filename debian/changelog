@@ -1,3 +1,32 @@
+sugar-0.104 (0.104.1-4) experimental; urgency=medium
+
+  * Drop binary package sugar-tools-*: Merge with sugar-session-*.
+  * Update package relations:
+    + Fix have sugar-session-* provide virtual sugar-session (broken
+      since 0.90.2-2).
+    + Fix stop depend on gstreamer0.10-espeak: moved to python-sugar3.
+    + Fix stop have sugar-session-* depend on gir1.2-wnck-3.0
+      gir1.2-sugarext-1.0 gir1.2-gstreamer-1.0: All uses moved to
+      python-jarabe-*.
+    + Fix relax sugar-session-* to recommend (not depend on)
+      python-carquinyol-*: Bogusly changed in fix for bug#678720.
+    + Fix python-jarabe-* to recommend x11-dbus.
+    + Fix stop have sugar-session-* recommend openssh-client: ssh-keygen
+      invoked only in python-jarabe-* since 0.96.
+    + Fix have python-jarabe-* (not sugar-session-*) recommend
+      consolekit.
+    + Fix have sugar-session-* (not python-jarabe-*) suggest
+      olpc-powerd.
+    + Relax to depend unversioned on python-telepathy: Needed version
+      satisfied even in oldstable.
+    + Relax sugar-session-* to recommend (not depend on) x11-dbus, and
+      have sucrose-* depend on it.
+    + Have python-jarabe-* recommend (and sucrose-* depend on) systemd
+      as fallback for consolekit.
+    + Stop recommend alsa-utils: Audio handling moved to python-sugar3.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 08 Apr 2015 01:50:50 +0200
+
 sugar-0.104 (0.104.1-3) experimental; urgency=medium
 
   * Update package relations:
