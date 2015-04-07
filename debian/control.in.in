@@ -54,31 +54,6 @@ Description: Sugar graphical shell - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: sugar-tools-__BRANCH__
-Architecture: all
-Depends: ${cdbs:Depends},
- ${misc:Depends},
- ${python:Depends},
- ${shlibs:Depends}
-Recommends: ${cdbs:Recommends}
-Suggests: ${cdbs:Suggests}
-Provides: ${cdbs:Provides},
- ${python:Provides}
-Breaks: ${cdbs:Breaks}
-Conflicts: ${cdbs:Conflicts}
-Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - window manager
- Sugar is a graphical user interface aimed at children.
- .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
- .
- This package contains the following helper utilities for Sugar:
-  - sugar-control-panel
-  - sugar-install-bundle
-  - sugar-launch
-
 Package: python-jarabe-__BRANCH__
 Section: python
 Architecture: all
