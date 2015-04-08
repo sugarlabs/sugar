@@ -17,9 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # These need to be declared/run before CDBS includes
+pkg-jarabe = python-jarabe-$(pkgbranch)
+pkg-session = sugar-session-$(pkgbranch)
+pkg-sucrose = sucrose-$(pkgbranch)
 pkgbranch = $(lastword $(subst -,$(space),$(DEB_SOURCE_PACKAGE)))
 DEB_BUILDDIR = build
-DEB_PYTHON2_MODULE_PACKAGES = python-jarabe-$(pkgbranch) sugar-session-$(pkgbranch)
+DEB_PYTHON2_MODULE_PACKAGES = $(pkg-jarabe) $(pkg-session)
 debian/control:: debian/control.in
 DEB_PHONY_RULES += debian/control.in
 debian/control.in::
@@ -52,12 +55,12 @@ clean::
 	rm -f $(outfiles)
 
 # Register GConf schemas
-post-install/sugar-session-$(pkgbranch)::
+post-install/$(pkg-session)::
 	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
 	mv $(DEB_DESTDIR)/etc/gconf/schemas/sugar.schemas $(DEB_DESTDIR)/usr/share/gconf/schemas/
 	rmdir $(DEB_DESTDIR)/etc/gconf/schemas
 	rmdir $(DEB_DESTDIR)/etc/gconf
-binary-install/sugar-session-$(pkgbranch)::
+binary-install/$(pkg-session)::
 	dh_gconf -p$(cdbs_curpkg)
 
 # Needed by upstream build process
@@ -108,56 +111,56 @@ jarabe_cp_cli_exec = lsb-release, ethtool, tzdata
 jarabe_fs = xdg-user-dirs
 jarabe_help = gir1.2-webkit-3.0
 tools_debug = gdb
-CDBS_DEPENDS_sugar-session-$(pkgbranch) = python-sugar3, sugar-artwork-$(pkgbranch), python-jarabe-$(pkgbranch)
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
-CDBS_DEPENDS_sugar-session-$(pkgbranch) += , gir1.2-pango-1.0
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-gconf-2.0, python-cairo, gir1.2-xkl-1.0
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, gir1.2-networkmanager-1.0, gir1.2-nmgtk-1.0
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) = python-sugar3, python-gwebsockets
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0, gir1.2-soup-2.4
-CDBS_DEPENDS_python-jarabe-$(pkgbranch) +=, $(jarabe_wm), $(jarabe_help)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) =, dbus-x11, python-carquinyol-$(pkgbranch)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(call session_expand_activities,true)
-CDBS_RECOMMENDS_sugar-session-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
-CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) = python-carquinyol-$(pkgbranch)
-CDBS_RECOMMENDS_python-jarabe-$(pkgbranch) +=, dbus-x11, $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_fs), consolekit | systemd
-CDBS_SUGGESTS_sugar-session-$(pkgbranch) = sucrose-$(pkgbranch), $(call session_expand_activities_relaxed,true)
-CDBS_SUGGESTS_sugar-session-$(pkgbranch) +=, $(session_keyboard), $(tools_debug), olpc-powerd
-CDBS_SUGGESTS_python-jarabe-$(pkgbranch) = sugar-session-$(pkgbranch)
+CDBS_DEPENDS_$(pkg-session) = python-sugar3, sugar-artwork-$(pkgbranch), $(pkg-jarabe)
+CDBS_DEPENDS_$(pkg-session) +=, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-dbus
+CDBS_DEPENDS_$(pkg-session) += , gir1.2-pango-1.0
+CDBS_DEPENDS_$(pkg-session) +=, gir1.2-gconf-2.0, python-cairo, gir1.2-xkl-1.0
+CDBS_DEPENDS_$(pkg-session) +=, gir1.2-networkmanager-1.0, gir1.2-nmgtk-1.0
+CDBS_DEPENDS_$(pkg-jarabe) = python-sugar3, python-gwebsockets
+CDBS_DEPENDS_$(pkg-jarabe) +=, gir1.2-gdkpixbuf-2.0, gir1.2-glib-2.0, gir1.2-gtk-3.0, python-cairo, python-dbus, python-telepathy, gir1.2-gtksource-3.0, python-xapian, gir1.2-gstreamer-1.0
+CDBS_DEPENDS_$(pkg-jarabe) += , gir1.2-wnck-3.0, gir1.2-sugarext-1.0, gir1.2-pango-1.0
+CDBS_DEPENDS_$(pkg-jarabe) +=, gir1.2-gconf-2.0, gir1.2-xkl-1.0, gir1.2-soup-2.4
+CDBS_DEPENDS_$(pkg-jarabe) +=, $(jarabe_wm), $(jarabe_help)
+CDBS_RECOMMENDS_$(pkg-session) =, dbus-x11, python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_$(pkg-session) += , $(call session_expand_activities,true)
+CDBS_RECOMMENDS_$(pkg-session) += , $(session_nm), $(session_gio), $(session_pm), $(jarabe_cp_cli_exec), $(session_font)
+CDBS_RECOMMENDS_$(pkg-jarabe) = python-carquinyol-$(pkgbranch)
+CDBS_RECOMMENDS_$(pkg-jarabe) +=, dbus-x11, $(session_nm), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_fs), consolekit | systemd
+CDBS_SUGGESTS_$(pkg-session) = $(pkg-sucrose), $(call session_expand_activities_relaxed,true)
+CDBS_SUGGESTS_$(pkg-session) +=, $(session_keyboard), $(tools_debug), olpc-powerd
+CDBS_SUGGESTS_$(pkg-jarabe) = $(pkg-session)
 
-CDBS_DEPENDS_sucrose-$(pkgbranch) = dbus-x11, sugar-session-$(pkgbranch), python-carquinyol-$(pkgbranch)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(call session_expand_activities)
-CDBS_DEPENDS_sucrose-$(pkgbranch) += , $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_fs), $(tools_debug)
-CDBS_SUGGESTS_sucrose-$(pkgbranch) = $(call session_expand_activities_relaxed), $(session_keyboard)
+CDBS_DEPENDS_$(pkg-sucrose) = dbus-x11, $(pkg-session), python-carquinyol-$(pkgbranch)
+CDBS_DEPENDS_$(pkg-sucrose) += , $(call session_expand_activities)
+CDBS_DEPENDS_$(pkg-sucrose) += , $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_fs), $(tools_debug)
+CDBS_SUGGESTS_$(pkg-sucrose) = $(call session_expand_activities_relaxed), $(session_keyboard)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
-CDBS_PROVIDES_python-jarabe-$(pkgbranch) = python-jarabe
-CDBS_CONFLICTS_python-jarabe-$(pkgbranch) = python-jarabe
-CDBS_REPLACES_python-jarabe-$(pkgbranch) = python-jarabe
-CDBS_PROVIDES_sugar-session-$(pkgbranch) = sugar-session
-CDBS_CONFLICTS_sugar-session-$(pkgbranch) = sugar-session
-CDBS_REPLACES_sugar-session-$(pkgbranch) = sugar-session
+CDBS_PROVIDES_$(pkg-jarabe) = python-jarabe
+CDBS_CONFLICTS_$(pkg-jarabe) = python-jarabe
+CDBS_REPLACES_$(pkg-jarabe) = python-jarabe
+CDBS_PROVIDES_$(pkg-session) = sugar-session
+CDBS_CONFLICTS_$(pkg-session) = sugar-session
+CDBS_REPLACES_$(pkg-session) = sugar-session
 
-CDBS_BREAKS_sugar-session-$(pkgbranch) = sugar-emulator
-CDBS_BREAKS_python-jarabe-$(pkgbranch) = sugar-emulator
+CDBS_BREAKS_$(pkg-session) = sugar-emulator
+CDBS_BREAKS_$(pkg-jarabe) = sugar-emulator
 
 # Provide virtual unversioned sugar package
-CDBS_PROVIDES_sugar-session-$(pkgbranch) +=, sugar
+CDBS_PROVIDES_$(pkg-session) +=, sugar
 
 # Needed for our packaging
 CDBS_BUILD_DEPENDS += , python-empy
 
 # Transitional hints: sugar-tools-* merged into sugar-session-*
 # TODO: drop when no sugar-tools-* are in stable
-CDBS_REPLACES_sugar-session-$(pkgbranch) +=, sugar-tools
-CDBS_BREAKS_sugar-session-$(pkgbranch) +=, sugar-tools
+CDBS_REPLACES_$(pkg-session) +=, sugar-tools
+CDBS_BREAKS_$(pkg-session) +=, sugar-tools
 
 # Ensure optimal hash-bang + dependency for scripts (see Python Policy)
 #  * TODO: drop cdbs_python_binary fallback when cdbs 0.5 is stable
-CDBS_DEPENDS_sugar-session-$(pkgbranch) +=, python
-binary-fixup/sugar-session-$(pkgbranch)::
+CDBS_DEPENDS_$(pkg-session) +=, python
+binary-fixup/$(pkg-session)::
 	egrep -r -l -Z '^#! ?/usr/bin/(env )?python[[:print:]]*$$' \
 		debian/$(cdbs_curpkg)/usr/bin/* \
 		| xargs -r -0 perl -pi -e 's,^#! ?/usr/bin/(env )?python[[:print:]]*$$,#!/usr/bin/$(strip $(or $(cdbs_curpythonruntime),$(cdbs_python_binary))),'
