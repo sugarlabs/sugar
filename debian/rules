@@ -33,40 +33,22 @@ include /usr/share/cdbs/1/rules/utils.mk
 include /usr/share/cdbs/1/class/python-autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 
-# Suppress unneeded auto-resolved build-dependency on python-dev
-CDBS_BUILD_DEPENDS_class_python-autotools_python = python$(cdbs_python_nondefault_version)
-
-CDBS_BUILD_DEPENDS +=, libgtk-3-dev
+comma = ,
 
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 
-DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
+# Suppress unneeded auto-resolved build-dependency on python-dev
+CDBS_BUILD_DEPENDS_class_python-autotools_python = python$(cdbs_python_nondefault_version)
 
-# Generate (and cleanup) files containing variables static per build
-infiles = $(filter-out debian/control.in%, $(wildcard debian/*.in))
-outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
-DEB_PHONY_RULES += $(outfiles)
-pre-build:: $(outfiles)
-$(outfiles):
-	sed 's/__VER__/$(pkgbranch)/' <$(subst $(pkgbranch),__VER__,$@).in >$@
-clean::
-	rm -f $(outfiles)
-
-# Register GConf schemas
-post-install/$(pkg-session)::
-	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
-	mv $(DEB_DESTDIR)/etc/gconf/schemas/sugar.schemas $(DEB_DESTDIR)/usr/share/gconf/schemas/
-	rmdir $(DEB_DESTDIR)/etc/gconf/schemas
-	rmdir $(DEB_DESTDIR)/etc/gconf
-binary-install/$(pkg-session)::
-	dh_gconf -p$(cdbs_curpkg)
+CDBS_BUILD_DEPENDS +=, libgtk-3-dev
 
 # Needed by upstream build process
 CDBS_BUILD_DEPENDS += , libglib2.0-dev, python-gtk2-dev, libgconf2-dev, gettext, intltool, shared-mime-info
 
-comma = ,
+# Needed for our packaging
+CDBS_BUILD_DEPENDS += , python-empy
 
 # $(1): activity stems
 # $(2): default branch (optional)
@@ -149,13 +131,31 @@ CDBS_BREAKS_$(pkg-jarabe) = sugar-emulator
 # Provide virtual unversioned sugar package
 CDBS_PROVIDES_$(pkg-session) +=, sugar
 
-# Needed for our packaging
-CDBS_BUILD_DEPENDS += , python-empy
-
 # Transitional hints: sugar-tools-* merged into sugar-session-*
 # TODO: drop when no sugar-tools-* are in stable
 CDBS_REPLACES_$(pkg-session) +=, sugar-tools
 CDBS_BREAKS_$(pkg-session) +=, sugar-tools
+
+DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
+
+# Generate (and cleanup) files containing variables static per build
+infiles = $(filter-out debian/control.in%, $(wildcard debian/*.in))
+outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
+DEB_PHONY_RULES += $(outfiles)
+pre-build:: $(outfiles)
+$(outfiles):
+	sed 's/__VER__/$(pkgbranch)/' <$(subst $(pkgbranch),__VER__,$@).in >$@
+clean::
+	rm -f $(outfiles)
+
+# Register GConf schemas
+post-install/$(pkg-session)::
+	mkdir -p $(DEB_DESTDIR)/usr/share/gconf/schemas/
+	mv $(DEB_DESTDIR)/etc/gconf/schemas/sugar.schemas $(DEB_DESTDIR)/usr/share/gconf/schemas/
+	rmdir $(DEB_DESTDIR)/etc/gconf/schemas
+	rmdir $(DEB_DESTDIR)/etc/gconf
+binary-install/$(pkg-session)::
+	dh_gconf -p$(cdbs_curpkg)
 
 # Ensure optimal hash-bang + dependency for scripts (see Python Policy)
 #  * TODO: drop cdbs_python_binary fallback when cdbs 0.5 is stable
