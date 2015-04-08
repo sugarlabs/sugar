@@ -114,7 +114,7 @@ CDBS_SUGGESTS_$(pkg-jarabe) = $(pkg-session)
 
 CDBS_DEPENDS_$(pkg-sucrose) = dbus-x11, $(pkg-session), python-carquinyol-$(pkgbranch)
 CDBS_DEPENDS_$(pkg-sucrose) += , $(call session_expand_activities)
-CDBS_DEPENDS_$(pkg-sucrose) += , $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_fs), $(tools_debug)
+CDBS_RECOMMENDS_$(pkg-sucrose) +=, $(session_nm), $(session_gio), $(session_pm), consolekit | systemd, $(session_font), $(jarabe_nm), $(jarabe_initprofile), $(jarabe_cp_cli_exec), $(jarabe_fs), $(tools_debug), olpc-powerd
 CDBS_SUGGESTS_$(pkg-sucrose) = $(call session_expand_activities_relaxed), $(session_keyboard)
 
 # Ensure only one variant is installed at a time (Debian Policy 7.6.2)
