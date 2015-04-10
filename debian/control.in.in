@@ -13,6 +13,7 @@ Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: sucrose-__BRANCH__
+Section: metapackages
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends}
