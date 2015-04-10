@@ -1,3 +1,15 @@
+sugar-0.104 (0.104.1-5) experimental; urgency=medium
+
+  * Update package relations:
+    + Fix have only python-jarabe-* (not also sugar-session-*) recommend
+      python-carquinyol-*.
+    + Relax sucrose-* to recommend (not depend on) non-Sucrose helper
+      packages.
+    + Have sucrose-* recommend olpc-powerd.
+  * Mark sucrose-* as metapackage.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 10 Apr 2015 10:04:45 +0200
+
 sugar-0.104 (0.104.1-4) experimental; urgency=medium
 
   * Drop binary package sugar-tools-*: Merge with sugar-session-*.

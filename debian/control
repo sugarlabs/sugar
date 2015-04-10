@@ -25,6 +25,7 @@ Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: sucrose-0.104
+Section: metapackages
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends}
