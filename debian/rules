@@ -55,10 +55,10 @@ bdeps +=, python-empy
 sugar_expand_activities = $(foreach stem,$(1),$(comma) $(patsubst %,sugar-$(stem)-activity-%$(if $(3), | ),$(2))$(if $(if $(2),,true)$(3),sugar-$(stem)-activity))
 
 # Fructose activities
+session_expand_activities += $(call sugar_expand_activities,browse chat,,$(1))
 # Fructose activities not avilable in Debian main for this Sugar branch
-session_expand_activities_relaxed += $(call sugar_expand_activities,pippy turtleart,,$(1))
-session_expand_activities_relaxed += $(call sugar_expand_activities,calculate etoys,,$(1))
-session_expand_activities_relaxed += $(call sugar_expand_activities,browse chat log write,0.86,$(1))
+session_expand_activities_relaxed += $(call sugar_expand_activities,pippy turtleart calculate etoys,,$(1))
+session_expand_activities_relaxed += $(call sugar_expand_activities,log write,0.86,$(1))
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
