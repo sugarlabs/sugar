@@ -14,4 +14,5 @@ sugar_PYTHON =				\
 	service.py			\
 	tabbinghandler.py		\
 	viewsource.py			\
+	viewsocialhelp.py		\
 	viewhelp.py

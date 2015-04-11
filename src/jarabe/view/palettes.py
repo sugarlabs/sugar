@@ -38,6 +38,7 @@ from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
 from jarabe.view.viewhelp import setup_view_help
 from jarabe.view.viewhelp import get_help_url_and_title
+from jarabe.view.viewsocialhelp import setup_view_social_help
 from jarabe.journal import misc
 
 
@@ -116,6 +117,13 @@ class CurrentActivityPalette(BasePalette):
             self.menu_box.append_item(menu_item)
             menu_item.show()
 
+        menu_item = PaletteMenuItem(_('View Social Help'),
+                                    'toolbar-social-help')
+        menu_item.connect('activate', self.__view_social_help__cb)
+        menu_item.set_accelerator('Shift+Alt+S')
+        self.menu_box.append_item(menu_item)
+        menu_item.show()
+
         # avoid circular importing reference
         from jarabe.frame.notification import NotificationBox
 
@@ -153,6 +161,10 @@ class CurrentActivityPalette(BasePalette):
 
     def __view_help__cb(self, menu_item):
         setup_view_help(self._home_activity)
+        self.emit('done')
+
+    def __view_social_help__cb(self, menu_item):
+        setup_view_social_help(self._home_activity)
         self.emit('done')
 
     def __stop_activate_cb(self, menu_item):
