@@ -22,7 +22,8 @@ import json
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
-from gi.repository import WebKit
+from gi.repository import WebKit2
+from gi.repository import Gio
 from gi.repository import GdkX11
 
 from sugar3 import env
@@ -146,34 +147,27 @@ class ViewHelp(Gtk.Window):
         toolbar.show()
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
 
-        webview = WebKit.WebView()
-        webview.set_full_content_zoom(True)
-        webview.connect("resource-request-starting",
-                        self._resource_request_starting_cb)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.add(webview)
-        scrolled_window.show()
-
-        box.pack_start(scrolled_window, True, True, 0)
-
+        webview = WebKit2.WebView()
+        box.pack_start(webview, True, True, 0)
         webview.show()
+
+        context = WebKit2.WebContext.get_default()
+        context.register_uri_scheme('help', self.__app_scheme_cb, None)
 
         language = self._get_current_language()
         view_file = self._get_help_file(language, help_file)
-        webview.load_uri('file://' + view_file)
+        webview.load_uri('help://' + view_file)
 
-    def _resource_request_starting_cb(self, webview, web_frame, web_resource,
-                                      request, response):
-        uri = web_resource.get_uri()
+    def __app_scheme_cb(self, request, user_data):
+        uri = request.get_path()
         if uri.find('_images') > -1:
             if uri.find('/%s/_images/' % self._get_current_language()) > -1:
-                new_uri = uri.replace('/html/%s/_images/' %
-                                      self._get_current_language,
-                                      '/images/')
+                uri = uri.replace('/html/%s/_images/' %
+                                  self._get_current_language, '/images/')
             else:
-                new_uri = uri.replace('/html/_images/', '/images/')
-            request.set_uri(new_uri)
+                uri = uri.replace('/html/_images/', '/images/')
+        request.finish(Gio.File.new_for_path(uri).read(None),
+                       -1, Gio.content_type_guess(uri, None)[0])
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
