@@ -120,7 +120,7 @@ class CurrentActivityPalette(BasePalette):
         menu_item = PaletteMenuItem(_('View Social Help'),
                                     'toolbar-social-help')
         menu_item.connect('activate', self.__view_social_help__cb)
-        menu_item.set_accelerator('Shift+Alt+S')
+        menu_item.set_accelerator('Shift+Alt+C')
         self.menu_box.append_item(menu_item)
         menu_item.show()
 
