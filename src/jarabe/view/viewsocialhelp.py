@@ -101,10 +101,11 @@ class ViewSocialHelp(Gtk.Window):
             WebKit2.CookiePersistentStorage.SQLITE)
 
         overlay.add(webview)
-
         webview.show()
-        webview.load_uri('https://use-socialhelp.sugarlabs.org/goto/'
-                         + bundle_id)
+
+        settings = Gio.Settings('org.sugarlabs.collaboration')
+        server = settings.get_string('social-help-server')
+        webview.load_uri('{}/goto/{}'.format(server, bundle_id))
 
     def __load_status_changed_cb(self, web_view, load_event):
         if load_event == WebKit2.LoadEvent.FINISHED:
