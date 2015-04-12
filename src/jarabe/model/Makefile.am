@@ -4,7 +4,6 @@ sugar_PYTHON =			\
 	adhoc.py		\
 	__init__.py		\
 	buddy.py		\
-        bundlelauncher.py	\
 	bundleregistry.py	\
 	desktop.py		\
 	filetransfer.py		\

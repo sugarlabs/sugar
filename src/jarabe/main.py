@@ -67,7 +67,6 @@ from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
 from jarabe import testrunner
-from jarabe.model import bundlelauncher
 
 
 _metacity_process = None
@@ -108,8 +107,6 @@ def setup_journal_cb():
 def setup_notification_service_cb():
     notifications.init()
 
-def setup_bundlelauncher_service_cb():
-    bundlelauncher.init()
 
 def setup_file_transfer_cb():
     filetransfer.init()
@@ -139,7 +136,6 @@ def _complete_desktop_startup():
     GLib.idle_add(setup_gesturehandler_cb)
     GLib.idle_add(setup_journal_cb)
     GLib.idle_add(setup_notification_service_cb)
-    GLib.idle_add(setup_bundlelauncher_service_cb)
     GLib.idle_add(setup_file_transfer_cb)
     GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
