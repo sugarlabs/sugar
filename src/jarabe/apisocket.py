@@ -27,6 +27,7 @@ from gwebsockets.server import Server
 from gwebsockets.server import Message
 
 from sugar3 import env
+from sugar3.cordova.cordovaSocket import call_cordova
 
 from jarabe.model import shell
 from jarabe.model import session
@@ -101,6 +102,17 @@ class ActivityAPI(API):
 
         chooser.destroy()
 
+    
+    def cordova(self, request):
+        plugin_name, service_name, args = request['params']
+        call_cordova(plugin_name, service_name, args, self, request)
+
+    def send_result(self, request, obj):
+        self._client.send_result(request, obj)
+
+    def send_error(self, request, obj):
+        self._client.send_error(request, obj)
+    
 
 class DatastoreAPI(API):
     def __init__(self, client):
