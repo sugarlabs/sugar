@@ -224,11 +224,11 @@ class ControlPanel(Gtk.Window):
             found = False
             for key in self._options[option]['keywords']:
                 if query.lower() in key.lower():
-                    self._options[option]['button'].set_sensitive(True)
+                    self._options[option]['button'].set_enabled_style(True)
                     found = True
                     break
             if not found:
-                self._options[option]['button'].set_sensitive(False)
+                self._options[option]['button'].set_enabled_style(False)
 
     def _setup_section(self):
         self._section_toolbar = SectionToolbar()
@@ -486,3 +486,11 @@ class _SectionIcon(Gtk.EventBox):
             return self._xo_color
         elif pspec.name == 'title':
             return self._title
+
+    def set_enabled_style(self, enabled):
+        ctx = self.get_style_context()
+        # GTK CSS does not support :not() selectors
+        if enabled:
+            ctx.remove_class('disabled')
+        else:
+            ctx.add_class('disabled')
