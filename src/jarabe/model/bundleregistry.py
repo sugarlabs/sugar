@@ -85,6 +85,10 @@ class BundleRegistry(GObject.GObject):
         self._lock = Lock()
         self._bundles = []
 
+        # Keep a list of any outdated bundles, as they might be requested
+        # after uninstalling a $HOME activity
+        self._outdated_bundles = []
+
         # hold a reference to the monitors so they don't get disposed
         self._gio_monitors = []
 
@@ -295,14 +299,17 @@ class BundleRegistry(GObject.GObject):
             if NormalizedVersion(installed.get_activity_version()) == \
                     NormalizedVersion(bundle.get_activity_version()):
                 logging.debug("Bundle already known")
+                self._outdated_bundles.append(bundle)
                 return installed
             if not force_downgrade and \
                     NormalizedVersion(installed.get_activity_version()) >= \
                     NormalizedVersion(bundle.get_activity_version()):
                 logging.debug('Skip old version for %s', bundle_id)
+                self._outdated_bundles.append(bundle)
                 return None
             else:
                 logging.debug('Upgrade %s', bundle_id)
+                self._outdated_bundles.append(installed)
                 self.remove_bundle(installed.get_path(), emit_signals)
 
         if set_favorite:
@@ -318,15 +325,20 @@ class BundleRegistry(GObject.GObject):
 
     def remove_bundle(self, bundle_path, emit_signals=True):
         removed = None
+        outdated = False
         self._lock.acquire()
-        for bundle in self._bundles:
+        for bundle in self._bundles + self._outdated_bundles:
             if bundle.get_path() == bundle_path:
-                self._bundles.remove(bundle)
+                if bundle in self._bundles:
+                    self._bundles.remove(bundle)
+                else:
+                    self._outdated_bundles.remove(bundle)
+                    outdated = True
                 removed = bundle
                 break
         self._lock.release()
 
-        if emit_signals and removed is not None:
+        if emit_signals and not outdated and removed is not None:
             self.emit('bundle-removed', removed)
         return removed is not None
 
@@ -547,6 +559,16 @@ class BundleRegistry(GObject.GObject):
         install_path = act.get_path()
         bundle.uninstall(force, delete_profile)
         self.remove_bundle(install_path)
+
+        old_bundles = [old_bundle for old_bundle in self._outdated_bundles
+                       if old_bundle.get_bundle_id() == bundle.get_bundle_id()
+                       and old_bundle.get_path() != act.get_path()]
+        if old_bundles:
+            old_bundles.sort(
+                key=lambda b: NormalizedVersion(b.get_activity_version()))
+            old_bundles.reverse()
+            old_bundle = old_bundles[0]
+            self.add_bundle(old_bundle.get_path())
 
 
 class _InstallQueue(object):
