@@ -110,8 +110,8 @@ suggests-session-only +=, $(call session_expand_activities_relaxed,true)
 suggests-jarabe-only = $(pkg-session)
 
 # Tighten relations in Sucrose metapackage:
-#  * Depend on Sucrose
-#  * Recommend non-Sucrose helper parts
+#  * Depend on Fructose
+#  * Recommend non-Sugar helper parts
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
 depends-sucrose +=, $(recommends-jarabe), $(recommends-session)
