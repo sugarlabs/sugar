@@ -1,15 +1,15 @@
 Source: sugar-__BRANCH__
 Section: x11
 Priority: optional
-Maintainer: Debian OLPC <debian-olpc-devel@lists.alioth.debian.org>
+Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>,
  Luke Faraone <luke@faraone.cc>,
  Santiago Ruano Rincón <santiago@debian.org>
 DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.6
-Vcs-Git: git://git.debian.org/collab-maint/sugar
-Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/sugar.git
+Vcs-Git: git://anonscm.debian.org/pkg-sugar/sugar
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-sugar/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
 Package: sucrose-__BRANCH__
