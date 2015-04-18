@@ -5,7 +5,7 @@ sugar-0.104 (0.104.1-7) experimental; urgency=medium
       python-sugar-toolkit-* python-sugar-*, with non-branch fallbacks.
   * Move packaging to Debian Sugar Team.
 
- -- Jonas Smedegaard <dr@jones.dk>  Sat, 18 Apr 2015 17:17:13 +0200
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 18 Apr 2015 17:46:51 +0200
 
 sugar-0.104 (0.104.1-6) experimental; urgency=medium
 
