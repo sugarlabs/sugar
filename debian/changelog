@@ -1,3 +1,12 @@
+sugar-0.104 (0.104.1-7) experimental; urgency=medium
+
+  * Update pacakge relations:
+    + Have sucrose-* recommend deprecated Glucose parts
+      python-sugar-toolkit-* python-sugar-*, with non-branch fallbacks.
+  * Move packaging to Debian Sugar Team.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 18 Apr 2015 17:17:13 +0200
+
 sugar-0.104 (0.104.1-6) experimental; urgency=medium
 
   * Tighten relation with Browse and Chat activities: Now working with

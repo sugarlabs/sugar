@@ -814,18 +814,6 @@ Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
  FIXME
 
-Files: po/ar.po
-Copyright: %(current)s إلى %(new)s (الحجم %(size)s)"
-  YEAR THE PACKAGE'S HOLDER
-  الاتصال (APN)"
-  الاتصال (APN):"
-  المحدد، استخدم on/off."
-  بتخطيطات لوح� المفاتيح، كل على الشكل ‪layout(variant)‬"
-  تحكم سكر: key=%s ليس متاحا كخيار"
-  عند البدء، أو \"system\" (النظام) "
-License: UNKNOWN
- FIXME
-
 Files: po/zh_CN.po
 Copyright: %(selected)d
   YEAR THE PACKAGE'S HOLDER
@@ -865,6 +853,22 @@ Files: po/cs.po
 Copyright: Jm�no"
   YEAR THE PACKAGE'S HOLDER
   povolení:"
+License: UNKNOWN
+ FIXME
+
+Files: po/fr.po
+Copyright: Personnel (PIN) :"
+  [ args ...
+  de chiffrement sans fil est requise pour\n"
+  de d�verrouillage personnelle (PUK) du r�seau GSM "
+  et apportent de nouvelles fonctionnalit�s."
+  je ne parle pas '%s'."
+  le transfert du fichier"
+  pour d�marrer l'entr�e"
+  supprim�e ou a disparu."
+  tactile"
+  trouv�es : %s module: %r"
+  à le modifier et/ou à en distribuer des copies "
 License: UNKNOWN
  FIXME
 
@@ -1024,19 +1028,14 @@ Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
-Files: po/fr.po
-Copyright: [ args ...
-  d�finir la valeur actuelle de cette cl� \n"
-  incorrect. Utiliser 0/1."
-  logicielle"
-  pour d�marrer l'entr�e"
-  pour reprendre l'entr�e"
-License: UNKNOWN
- FIXME
-
 Files: data/ISO-639-2_utf-8.txt
 Copyright: du Nord
   du Sud
+License: UNKNOWN
+ FIXME
+
+Files: po/ar.po
+Copyright: بتخطيطات لوح� المفاتيح، كل على الشكل ‪layout(variant)‬"
 License: UNKNOWN
  FIXME
 
