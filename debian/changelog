@@ -1,6 +1,6 @@
 sugar-0.104 (0.104.1-7) experimental; urgency=medium
 
-  * Update pacakge relations:
+  * Update package relations:
     + Have sucrose-* recommend deprecated Glucose parts
       python-sugar-toolkit-* python-sugar-*, with non-branch fallbacks.
   * Move packaging to Debian Sugar Team.
