@@ -35,6 +35,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3.datastore import datastore
 
 from jarabe.model import bundleregistry
@@ -453,6 +454,8 @@ class ActivitiesList(Gtk.VBox):
         self._tree_view.connect('erase-activated', self.__erase_activated_cb)
         self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
+        scrolling_detector = ScrollingDetector(self._scrolled_window)
+        scrolling_detector.connect_treeview(self._tree_view)
 
         self._alert = None
         self._clear_message_box = None
