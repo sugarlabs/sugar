@@ -26,6 +26,7 @@ from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
+from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3 import util
 from sugar3 import profile
 
@@ -104,6 +105,8 @@ class BaseListView(Gtk.Bin):
         self._title_column = None
         self.sort_column = None
         self._add_columns()
+        scrolling_detector = ScrollingDetector(self._scrolled_window)
+        scrolling_detector.connect_treeview(self.tree_view)
 
         self.enable_drag_and_copy()
 
