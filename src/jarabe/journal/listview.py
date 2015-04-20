@@ -174,7 +174,7 @@ class BaseListView(Gtk.Bin):
         self.sort_column = None
         self._add_columns()
         scrolling_detector = ScrollingDetector(self._scrolled_window)
-        scrolling_detector.connect_treeview(self.tree_view)
+        self.tree_view.connect_to_scroller(scrolling_detector)
 
         self.enable_drag_and_copy()
 
