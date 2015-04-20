@@ -36,6 +36,7 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.scrollingdetector import ScrollingDetector
+from sugar3.graphics.palettewindow import TreeViewInvoker
 from sugar3.datastore import datastore
 
 from jarabe.model import bundleregistry
@@ -234,6 +235,16 @@ class ActivitiesTreeView(Gtk.TreeView):
 
     def __get_last_activity_error_handler_cb(self, entries, total_count):
         pass
+
+    def connect_to_scroller(self, scrolled):
+        scrolled.connect('scroll-start', self._scroll_start_cb)
+        scrolled.connect('scroll-end', self._scroll_end_cb)
+
+    def _scroll_start_cb(self, event):
+        self._invoker.detach()
+
+    def _scroll_end_cb(self, event):
+        self._invoker.attach_treeview(self)
 
 
 class ListModel(Gtk.TreeModelSort):
@@ -452,7 +463,7 @@ class ActivitiesList(Gtk.VBox):
         self._scrolled_window.add(self._tree_view)
         self._tree_view.show()
         scrolling_detector = ScrollingDetector(self._scrolled_window)
-        scrolling_detector.connect_treeview(self._tree_view)
+        self._tree_view.connect_to_scroller(scrolling_detector)
 
         self._alert = None
         self._clear_message_box = None
