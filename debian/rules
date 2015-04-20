@@ -101,7 +101,7 @@ depends-jarabe +=, metacity
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
 recommends-session +=, mobile-broadband-provider-info
-recommends-session-only = $(call session_expand_activities,true)
+recommends-session +=, $(call session_expand_activities,true)
 recommends-jarabe = python-carquinyol-$(pkgbranch)
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
@@ -119,7 +119,7 @@ suggests-jarabe-only = $(pkg-session)
 #  * Recommend deprecated Glucose parts
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
-depends-sucrose +=, $(recommends-jarabe), $(recommends-session)
+depends-sucrose +=, python-carquinyol-$(pkgbranch)
 depends-sucrose +=, $(call session_expand_activities)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
 recommends-sucrose +=, python-sugar-toolkit-0.98 | python-sugar-toolkit
@@ -133,7 +133,6 @@ CDBS_DEPENDS_$(pkg-session) = $(depends-session)
 CDBS_DEPENDS_$(pkg-jarabe) = $(depends-jarabe)
 CDBS_DEPENDS_$(pkg-sucrose) = $(depends-sucrose)
 CDBS_RECOMMENDS_$(pkg-session) = $(recommends-session)
-CDBS_RECOMMENDS_$(pkg-session) +=, $(recommends-session-only)
 CDBS_RECOMMENDS_$(pkg-jarabe) = $(recommends-jarabe)
 CDBS_RECOMMENDS_$(pkg-sucrose) = $(recommends-sucrose)
 CDBS_SUGGESTS_$(pkg-session) = $(suggests-session)
