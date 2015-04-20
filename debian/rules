@@ -80,6 +80,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * openssh-client (ssh-keygen) used in jarabe
 #  * olpc-powerd (/etc/powerd/flags) needed in extensions
 #  * gdb used in bin/sugar-launch
+#  * gconf2 (gsettings-data-convert) used in jarabe.main
 #  * gvfs needed for GIO removable media support
 #  * xdg-user-dirs (xdg-user-dir) used in jarabe
 #  * fonts-dejavu-core (Sans Serif) used in data/sugar.schemas
@@ -103,7 +104,7 @@ recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
 recommends-session +=, mobile-broadband-provider-info
 recommends-session +=, $(call session_expand_activities,true)
 recommends-jarabe = python-carquinyol-$(pkgbranch)
-recommends-jarabe +=, dbus-x11, network-manager, modemmanager
+recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
 recommends-jarabe +=, consolekit | systemd
 suggests-session = gdb, olpc-powerd
