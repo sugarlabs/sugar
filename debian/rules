@@ -83,6 +83,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * gvfs needed for GIO removable media support
 #  * xdg-user-dirs (xdg-user-dir) used in jarabe
 #  * fonts-dejavu-core (Sans Serif) used in data/sugar.schemas
+#  * mobile-broadband-provider-info used in extensions
 #  * TODO: Tighten to recommend / depend on Maliit when mature
 python-depends-session = sugar3 jarabe-$(pkgbranch) dbus cairo
 gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
@@ -99,6 +100,7 @@ depends-jarabe +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-jarabe))
 depends-jarabe +=, metacity
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
+recommends-session +=, mobile-broadband-provider-info
 recommends-session-only = $(call session_expand_activities,true)
 recommends-jarabe = python-carquinyol-$(pkgbranch)
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager
