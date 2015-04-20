@@ -29,6 +29,7 @@ from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3 import util
 from sugar3 import profile
+from sugar3.graphics.palettewindow import TreeViewInvoker
 
 from jarabe.journal.listmodel import ListModel
 from jarabe.journal.palettes import ObjectPalette, BuddyPalette
@@ -43,13 +44,60 @@ UPDATE_INTERVAL = 300
 class TreeView(Gtk.TreeView):
     __gtype_name__ = 'JournalTreeView'
 
-    def __init__(self):
+    def __init__(self, journalactivity):
         Gtk.TreeView.__init__(self)
+
+        self._journalactivity = journalactivity
+        self.icon_activity_column = None
+        self.buddies_columns = []
+
+        self._invoker = TreeViewInvoker()
+        self._invoker.attach_treeview(self)
+
         self.set_headers_visible(False)
         self.set_enable_search(False)
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                         Gdk.EventMask.TOUCH_MASK |
                         Gdk.EventMask.BUTTON_RELEASE_MASK)
+
+    def connect_to_scroller(self, scrolled):
+        scrolled.connect('scroll-start', self._scroll_start_cb)
+        scrolled.connect('scroll-end', self._scroll_end_cb)
+
+    def _scroll_start_cb(self, event):
+        self._invoker.detach()
+
+    def _scroll_end_cb(self, event):
+        self._invoker.attach_treeview(self)
+
+    def create_palette(self, path, column):
+        if self._journalactivity.get_list_view().is_dragging():
+            return None
+
+        palette = None
+
+        if column == self.icon_activity_column:
+            metadata = self.get_model().get_metadata(path)
+
+            palette = ObjectPalette(self._journalactivity, metadata,
+                                    detail=True)
+            palette.connect('detail-clicked', self.__detail_clicked_cb)
+            palette.connect('volume-error', self.__volume_error_cb)
+
+        elif column in self.buddies_columns:
+            buddycellrenderer = column.get_cells()[0]
+            if buddycellrenderer.nick is not None:
+                palette = BuddyPalette(
+                    (buddycellrenderer.nick,
+                     buddycellrenderer.props.xo_color.to_string()))
+
+        return palette
+
+    def __detail_clicked_cb(self, palette, uid):
+        self.emit('detail-clicked', uid)
+
+    def __volume_error_cb(self, palette, message, severity):
+        self.emit('volume-error', message, severity)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can
@@ -62,6 +110,9 @@ class TreeView(Gtk.TreeView):
         finally:
             if tree_model is not None:
                 tree_model.view_is_resizing = False
+
+    def __del__(self):
+        self._invoker.detach()
 
 
 class BaseListView(Gtk.Bin):
@@ -93,7 +144,7 @@ class BaseListView(Gtk.Bin):
         self.add(self._scrolled_window)
         self._scrolled_window.show()
 
-        self.tree_view = TreeView()
+        self.tree_view = TreeView(self._journalactivity)
         selection = self.tree_view.get_selection()
         selection.set_mode(Gtk.SelectionMode.NONE)
         self.tree_view.props.fixed_height_mode = True
@@ -165,7 +216,7 @@ class BaseListView(Gtk.Bin):
             column.set_cell_data_func(cell_select, self.__select_set_data_cb)
             self.tree_view.append_column(column)
 
-        cell_favorite = CellRendererFavorite(self.tree_view)
+        cell_favorite = CellRendererFavorite()
         cell_favorite.connect('clicked', self._favorite_clicked_cb)
 
         column = Gtk.TreeViewColumn()
@@ -175,10 +226,10 @@ class BaseListView(Gtk.Bin):
         column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
         self.tree_view.append_column(column)
 
-        self.cell_icon = CellRendererActivityIcon(self._journalactivity,
-                                                  self.tree_view)
+        self.cell_icon = CellRendererActivityIcon()
 
         column = Gtk.TreeViewColumn()
+        self.tree_view.icon_activity_column = column
         column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
         column.props.fixed_width = self.cell_icon.props.width
         column.pack_start(self.cell_icon, True)
@@ -187,6 +238,7 @@ class BaseListView(Gtk.Bin):
         column.add_attribute(self.cell_icon, 'xo-color',
                              ListModel.COLUMN_ICON_COLOR)
         self.tree_view.append_column(column)
+        self.icon_activity_column = column
 
         self.cell_title = Gtk.CellRendererText()
         self.cell_title.props.ellipsize = style.ELLIPSIZE_MODE_DEFAULT
@@ -209,13 +261,13 @@ class BaseListView(Gtk.Bin):
             buddies_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
             self.tree_view.append_column(buddies_column)
 
-            cell_icon = CellRendererBuddy(self.tree_view,
-                                          column_index=column_index)
+            cell_icon = CellRendererBuddy(column_index=column_index)
             buddies_column.pack_start(cell_icon, True)
             buddies_column.props.fixed_width += cell_icon.props.width
             buddies_column.add_attribute(cell_icon, 'buddy', column_index)
             buddies_column.set_cell_data_func(cell_icon,
                                               self.__buddies_set_data_cb)
+            self.tree_view.buddies_columns.append(buddies_column)
 
         cell_progress = Gtk.CellRendererProgress()
         cell_progress.props.ypad = style.GRID_CELL_SIZE / 4
@@ -274,6 +326,7 @@ class BaseListView(Gtk.Bin):
         if buddy is None:
             cell.props.visible = False
             return
+        logging.error('__buddies_set_data_cb %s', buddy)
         # FIXME workaround for pygobject bug, see
         # https://bugzilla.gnome.org/show_bug.cgi?id=689277
         #
@@ -611,7 +664,7 @@ class ListView(BaseListView):
         self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
         self.cell_icon.connect('volume-error', self.__volume_error_cb)
 
-        cell_detail = CellRendererDetail(self.tree_view)
+        cell_detail = CellRendererDetail()
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
 
         column = Gtk.TreeViewColumn()
@@ -682,8 +735,8 @@ class ListView(BaseListView):
 class CellRendererFavorite(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererFavorite'
 
-    def __init__(self, tree_view):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
@@ -698,8 +751,8 @@ class CellRendererFavorite(CellRendererIcon):
 class CellRendererDetail(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererDetail'
 
-    def __init__(self, tree_view):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
@@ -722,35 +775,13 @@ class CellRendererActivityIcon(CellRendererIcon):
                          ([str, str])),
     }
 
-    def __init__(self, journalactivity, tree_view):
-        self._journalactivity = journalactivity
-        self._show_palette = True
-
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.GRID_CELL_SIZE
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-
-        self.tree_view = tree_view
-
-    def create_palette(self):
-        if not self._show_palette:
-            return None
-
-        if self._journalactivity.get_list_view().is_dragging():
-            return None
-
-        tree_model = self.tree_view.get_model()
-        metadata = tree_model.get_metadata(self.props.palette_invoker.path)
-
-        palette = ObjectPalette(self._journalactivity, metadata, detail=True)
-        palette.connect('detail-clicked',
-                        self.__detail_clicked_cb)
-        palette.connect('volume-error',
-                        self.__volume_error_cb)
-        return palette
 
     def __detail_clicked_cb(self, palette, uid):
         self.emit('detail-clicked', uid)
@@ -758,49 +789,27 @@ class CellRendererActivityIcon(CellRendererIcon):
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
 
-    def set_show_palette(self, show_palette):
-        self._show_palette = show_palette
-
-    show_palette = GObject.property(type=bool, default=True,
-                                    setter=set_show_palette)
-
 
 class CellRendererBuddy(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererBuddy'
 
-    def __init__(self, tree_view, column_index):
-        CellRendererIcon.__init__(self, tree_view)
+    def __init__(self, column_index):
+        CellRendererIcon.__init__(self)
 
         self.props.width = style.STANDARD_ICON_SIZE
         self.props.height = style.STANDARD_ICON_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
-        self.tree_view = tree_view
         self._model_column_index = column_index
-
-    def create_palette(self):
-        tree_model = self.tree_view.get_model()
-        row = tree_model[self.props.palette_invoker.path]
-
-        # FIXME workaround for pygobject bug, see
-        # https://bugzilla.gnome.org/show_bug.cgi?id=689277
-
-        # if row[self._model_column_index] is not None:
-        #     nick, xo_color = row[self._model_column_index]
-        if row.model.do_get_value(row.iter, self._model_column_index) \
-                is not None:
-            nick, xo_color = row.model.do_get_value(
-                row.iter, self._model_column_index)
-            return BuddyPalette((nick, xo_color.to_string()))
-        else:
-            return None
+        self.nick = None
 
     def set_buddy(self, buddy):
         if buddy is None:
             self.props.icon_name = None
+            self.nick = None
         else:
-            nick_, xo_color = buddy
+            self.nick, xo_color = buddy
             self.props.icon_name = 'computer-xo'
             self.props.xo_color = xo_color
 

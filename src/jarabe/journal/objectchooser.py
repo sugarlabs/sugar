@@ -209,7 +209,6 @@ class ChooserListView(BaseListView):
         BaseListView.__init__(self, None)
         self._toolbar = toolbar
 
-        self.cell_icon.props.show_palette = False
         self.tree_view.props.hover_selection = True
 
         self.tree_view.connect('button-release-event',
@@ -222,6 +221,10 @@ class ChooserListView(BaseListView):
         self.emit('entry-activated', entry)
 
     def _favorite_clicked_cb(self, cell, path):
+        pass
+
+    def create_palette(self, x, y):
+        # We don't want show the palette in the object chooser
         pass
 
     def __button_release_event_cb(self, tree_view, event):
