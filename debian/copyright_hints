@@ -814,6 +814,11 @@ Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
  FIXME
 
+Files: po/ar.po
+Copyright: 
+License: UNKNOWN
+ FIXME
+
 Files: po/zh_CN.po
 Copyright: %(selected)d
   YEAR THE PACKAGE'S HOLDER
@@ -857,17 +862,34 @@ License: UNKNOWN
  FIXME
 
 Files: po/fr.po
-Copyright: Personnel (PIN) :"
+Copyright: 2007, the Package Owner
+  Personnel (PIN) :"
   [ args ...
+  afficher les informations sur cette clÃ \n"
+  correspondante"
   de chiffrement sans fil est requise pour\n"
   de dÃverrouillage personnelle (PUK) du rÃseau GSM "
+  depuis %s"
+  dÃfinir la valeur actuelle de cette clÃ \n"
   et apportent de nouvelles fonctionnalitÃs."
-  je ne parle pas '%s'."
+  et licence"
+  incorrect. Utiliser 0/1."
+  incorrect. Utiliser marche/arrÃªt."
+  installÃe"
+  installÃes"
+  la dÃconnexion."
   le transfert du fichier"
+  logicielle"
+  obtenir la valeur actuelle associÃe Ã  cette clÃ \n"
   pour dÃmarrer l'entrÃe"
+  pour reprendre l'entrÃe"
+  retirÃ."
+  sans fil :"
   supprimÃe ou a disparu."
+  sur le serveur de l'Ãcole."
   tactile"
   trouvÃes : %s module: %r"
+  une erreur inattendue."
   Ã  le modifier et/ou Ã  en distribuer des copies "
 License: UNKNOWN
  FIXME
@@ -1031,11 +1053,6 @@ License: UNKNOWN
 Files: data/ISO-639-2_utf-8.txt
 Copyright: du Nord
   du Sud
-License: UNKNOWN
- FIXME
-
-Files: po/ar.po
-Copyright: Ø¨ØªØ®Ø·ÙŠØ·Ø§Øª Ù„ÙˆØ­Ø Ø§Ù„Ù…ÙØ§ØªÙŠØ­ØŒ ÙƒÙ„ Ø¹Ù„Ù‰ Ø§Ù„Ø´ÙƒÙ„ â€ªlayout(variant)â€¬"
 License: UNKNOWN
  FIXME
 

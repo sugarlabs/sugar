@@ -1,3 +1,16 @@
+sugar-0.104 (0.104.1-9) unstable; urgency=medium
+
+  * Update package relations:
+    + Have sucrose-* recommend suggestions of python-sugar3.
+    + Have sugar-session-* recommend mobile-broadband-provider-info.
+    + Fix avoid sucrose-* depend on non-Sucrose helper packages already
+      recommended by other Sucrose packages (as intended in 0.104.1-5).
+    + Fix have python-jarabe-* recommend gconf2.
+    + Fix stop have sucrose-* recommend subversion: Unused in
+      sugar-toolkit* since ~2008.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 20 Apr 2015 20:44:27 +0200
+
 sugar-0.104 (0.104.1-8) unstable; urgency=medium
 
   * Update package relations:
