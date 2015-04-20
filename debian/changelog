@@ -1,3 +1,12 @@
+sugar-0.104 (0.104.1-8) unstable; urgency=medium
+
+  * Update package relations:
+    + Have sugar-session-* recommend (and sucrose-* depend on)
+      sugar-*-themes (not sugar-artwork-*).
+    + Have sucrose-* recommend deprecated gtk2-engines-sugar-*.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 20 Apr 2015 12:33:25 +0200
+
 sugar-0.104 (0.104.1-7) experimental; urgency=medium
 
   * Update package relations:
