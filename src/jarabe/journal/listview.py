@@ -680,8 +680,6 @@ class ListView(BaseListView):
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
 
         self.cell_icon.connect('clicked', self.__icon_clicked_cb)
-        self.cell_icon.connect('detail-clicked', self.__detail_clicked_cb)
-        self.cell_icon.connect('volume-error', self.__volume_error_cb)
 
         cell_detail = CellRendererDetail()
         cell_detail.connect('clicked', self.__detail_cell_clicked_cb)
@@ -725,12 +723,6 @@ class ListView(BaseListView):
     def __detail_cell_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         self.emit('detail-clicked', row[ListModel.COLUMN_UID])
-
-    def __detail_clicked_cb(self, cell, uid):
-        self.emit('detail-clicked', uid)
-
-    def __volume_error_cb(self, cell, message, severity):
-        self.emit('volume-error', message, severity)
 
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
@@ -787,13 +779,6 @@ class CellRendererDetail(CellRendererIcon):
 class CellRendererActivityIcon(CellRendererIcon):
     __gtype_name__ = 'JournalCellRendererActivityIcon'
 
-    __gsignals__ = {
-        'detail-clicked': (GObject.SignalFlags.RUN_FIRST, None,
-                           ([str])),
-        'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
-                         ([str, str])),
-    }
-
     def __init__(self):
         CellRendererIcon.__init__(self)
 
@@ -801,12 +786,6 @@ class CellRendererActivityIcon(CellRendererIcon):
         self.props.height = style.GRID_CELL_SIZE
         self.props.size = style.STANDARD_ICON_SIZE
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-
-    def __detail_clicked_cb(self, palette, uid):
-        self.emit('detail-clicked', uid)
-
-    def __volume_error_cb(self, palette, message, severity):
-        self.emit('volume-error', message, severity)
 
 
 class CellRendererBuddy(CellRendererIcon):
