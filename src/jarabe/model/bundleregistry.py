@@ -548,6 +548,45 @@ class BundleRegistry(GObject.GObject):
         bundle.uninstall(force, delete_profile)
         self.remove_bundle(install_path)
 
+        alt_bundles = self.get_system_bundles(act.get_bundle_id())
+        if alt_bundles:
+            alt_bundles.sort(
+                key=lambda b: NormalizedVersion(b.get_activity_version()))
+            alt_bundles.reverse()
+            new_bundle = alt_bundles[0]
+            self.add_bundle(new_bundle.get_path())
+
+    def get_system_bundles(self, bundle_id):
+        """
+        Searches for system bundles (eg. those in /usr/share/sugar/activities)
+        with a given bundle id.
+
+        Prams:
+            * bundle_id (string):  the bundle id to look for
+
+        Returns a list of ActivityBundle or ContentBundle objects, or an empty
+        list if there are none found.
+        """
+        bundles = []
+        for root in GLib.get_system_data_dirs():
+            root = os.path.join(root, 'sugar', 'activities')
+
+            try:
+                dir_list = os.listdir(root)
+            except OSError:
+                logging.debug('Can not find GLib system dir %s', root)
+                continue
+
+            for activity_dir in dir_list:
+                try:
+                    bundle = bundle_from_dir(os.path.join(root, activity_dir))
+                except MalformedBundleException:
+                    continue
+
+                if bundle.get_bundle_id() == bundle_id:
+                    bundles.append(bundle)
+        return bundles
+
 
 class _InstallQueue(object):
     """
