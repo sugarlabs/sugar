@@ -52,6 +52,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class WirelessNetworkView(EventPulsingIcon):
+
     def __init__(self, initial_ap):
         EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
                                   cache=True)
@@ -450,6 +451,7 @@ class WirelessNetworkView(EventPulsingIcon):
 
 
 class SugarAdhocView(EventPulsingIcon):
+
     """To mimic the mesh behavior on devices where mesh hardware is
     not available we support the creation of an Ad-hoc network on
     three channels 1, 6, 11. This is the class for an icon
@@ -481,8 +483,8 @@ class SugarAdhocView(EventPulsingIcon):
                                          style.COLOR_TRANSPARENT.get_svg()))
         self.props.pulse_color = pulse_color
         self._state_color = XoColor('%s,%s' %
-                                   (profile.get_color().get_stroke_color(),
-                                    style.COLOR_TRANSPARENT.get_svg()))
+                                    (profile.get_color().get_stroke_color(),
+                                     style.COLOR_TRANSPARENT.get_svg()))
         self.props.base_color = self._state_color
         self.palette_invoker.props.toggle_palette = True
         self._palette = self._create_palette()
@@ -595,6 +597,7 @@ class SugarAdhocView(EventPulsingIcon):
 
 
 class OlpcMeshView(EventPulsingIcon):
+
     def __init__(self, mesh_mgr, channel):
         EventPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
                                   pixel_size=style.STANDARD_ICON_SIZE,

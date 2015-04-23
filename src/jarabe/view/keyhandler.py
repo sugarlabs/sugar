@@ -70,6 +70,7 @@ _instance = None
 
 
 class KeyHandler(object):
+
     def __init__(self, frame):
         self._frame = frame
         self._key_pressed = None
@@ -187,7 +188,7 @@ class KeyHandler(object):
             if self._tabbing_handler.is_tabbing():
                 # Only accept window tabbing events, everything else
                 # cancels the tabbing operation.
-                if not action in ['next_window', 'previous_window']:
+                if action not in ['next_window', 'previous_window']:
                     self._tabbing_handler.stop(event_time)
                     return True
 

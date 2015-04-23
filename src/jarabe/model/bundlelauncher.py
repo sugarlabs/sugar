@@ -24,7 +24,7 @@ from jarabe.model import bundleregistry
 
 _DBUS_SERVICE = 'org.sugarlabs.BundleLauncher'
 _DBUS_INTERFACE = 'org.sugarlabs.BundleLauncher'
-_DBUS_PATH ='/org/sugarlabs/BundleLauncher'
+_DBUS_PATH = '/org/sugarlabs/BundleLauncher'
 
 _service_instance = None
 
@@ -89,6 +89,7 @@ def _get_activities_for_mime(mime_type):
 
 
 class BundleLauncherDBusService(dbus.service.Object):
+
     def __init__(self):
         session_bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE,

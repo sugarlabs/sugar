@@ -45,7 +45,9 @@ _instance = None
 
 
 class BaseInvite(object):
+
     """Invitation to shared activity or private 1-1 Telepathy channel"""
+
     def __init__(self, dispatch_operation_path, handle, handler):
         self.dispatch_operation_path = dispatch_operation_path
         self._handle = handle
@@ -79,7 +81,9 @@ class BaseInvite(object):
 
 
 class ActivityInvite(BaseInvite):
+
     """Invitation to a shared activity."""
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  activity_properties):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
@@ -119,6 +123,7 @@ class ActivityInvite(BaseInvite):
 
 
 class PrivateInvite(BaseInvite):
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  private_channel):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
@@ -240,11 +245,10 @@ class Invites(GObject.GObject):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
-        dispatch_operation.HandleWith(handler,
-                                      reply_handler=
-                                      self.__handle_with_reply_cb,
-                                      error_handler=
-                                      self.__handle_with_reply_cb)
+        dispatch_operation.HandleWith(
+            handler,
+            reply_handler=self.__handle_with_reply_cb,
+            error_handler=self.__handle_with_reply_cb)
 
     def __handle_with_reply_cb(self, error=None):
         if error is not None:

@@ -42,13 +42,15 @@ from jarabe.journal import journalwindow
 
 
 class Separator(Gtk.VBox):
+
     def __init__(self, orientation):
-        Gtk.VBox.__init__(self,
-                          background_color=
-                          style.COLOR_PANEL_GREY.get_gdk_color())
+        Gtk.VBox.__init__(
+            self,
+            background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
+
     def __init__(self, buddies):
         Gtk.Alignment.__init__(self)
         self.set(0, 0, 0, 0)
@@ -65,6 +67,7 @@ class BuddyList(Gtk.Alignment):
 
 
 class TextView(Gtk.TextView):
+
     def __init__(self):
         Gtk.TextView.__init__(self)
         text_buffer = Gtk.TextBuffer()
@@ -189,6 +192,7 @@ class CommentsView(Gtk.TreeView):
 
 
 class CellRendererCommentIcon(CellRendererIcon):
+
     def __init__(self, tree_view):
         CellRendererIcon.__init__(self, tree_view)
 
@@ -201,6 +205,7 @@ class CellRendererCommentIcon(CellRendererIcon):
 
 
 class ExpandedEntry(Gtk.EventBox):
+
     def __init__(self, journalactivity):
         self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)

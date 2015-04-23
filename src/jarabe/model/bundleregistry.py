@@ -60,6 +60,7 @@ _instance = None
 
 
 class BundleRegistry(GObject.GObject):
+
     """Tracks the available activity bundles"""
 
     __gsignals__ = {
@@ -364,7 +365,7 @@ class BundleRegistry(GObject.GObject):
                         bundle.get_activity_version() == version:
                     return bundle
         raise ValueError('No bundle %r with version %r exists.' %
-                        (bundle_id, version))
+                         (bundle_id, version))
 
     def set_bundle_favorite(self, bundle_id, version, favorite,
                             favorite_view=0):
@@ -377,7 +378,7 @@ class BundleRegistry(GObject.GObject):
     def _set_bundle_favorite(self, bundle_id, version, favorite,
                              favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        if favorite and not key in self._favorite_bundles[favorite_view]:
+        if favorite and key not in self._favorite_bundles[favorite_view]:
             self._favorite_bundles[favorite_view][key] = None
         elif not favorite and key in self._favorite_bundles[favorite_view]:
             del self._favorite_bundles[favorite_view][key]
@@ -550,6 +551,7 @@ class BundleRegistry(GObject.GObject):
 
 
 class _InstallQueue(object):
+
     """
     A class to represent a queue of bundles to be installed, and to handle
     execution of each task in the queue. Only for internal bundleregistry use.
@@ -563,6 +565,7 @@ class _InstallQueue(object):
     done, the thread enqueues a callback in the main thread (via the GLib
     main loop).
     """
+
     def __init__(self, registry):
         self._lock = Lock()
         self._queue = []
@@ -626,16 +629,18 @@ class _InstallQueue(object):
 
         try:
             task.queue_callback(bundle.install())
-        except Exception, e:
+        except Exception as e:
             logging.debug("InstallThread install failed: %r", e)
             task.queue_callback(e)
 
 
 class _InstallTask(object):
+
     """
     Simple class to represent a bundle installation/upgrade task.
     Only for use internal to InstallQueue.
     """
+
     def __init__(self, bundle, force_downgrade, callback, user_data):
         self.bundle = bundle
         self.callback = callback

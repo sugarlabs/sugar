@@ -55,6 +55,7 @@ def get_background_alpha_level():
 
 
 class HomeBackgroundBox(Gtk.VBox):
+
     def __init__(self):
         Gtk.VBox.__init__(self)
         self._background_pixbuf = None
@@ -95,5 +96,5 @@ class HomeBackgroundBox(Gtk.VBox):
                     background_image_path)
             except Exception as e:
                 logging.exception('Failed to update background image %s: %s' %
-                                 (background_image_path, str(e)))
+                                  (background_image_path, str(e)))
                 self._background_pixbuf = None

@@ -379,7 +379,7 @@ def handle_bundle_installation(metadata, force_downgrade=False):
 
 
 def get_icon_color(metadata):
-    if metadata is None or not 'icon-color' in metadata:
+    if metadata is None or 'icon-color' not in metadata:
         return profile.get_color()
     else:
         return XoColor(metadata['icon-color'])
