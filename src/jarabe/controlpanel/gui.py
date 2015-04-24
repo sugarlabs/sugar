@@ -22,9 +22,11 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 
+from sugar3 import profile
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3.graphics.alert import Alert
+from sugar3.graphics.xocolor import XoColor
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -33,6 +35,14 @@ from jarabe import config
 from jarabe.model import shell
 
 _logger = logging.getLogger('ControlPanel')
+
+
+KEY_RIGHT = 65361
+KEY_UP = 65362
+KEY_LEFT = 65363
+KEY_DOWN = 65364
+KEY_INTRO = 65293
+KEY_SCAPE = 65307
 
 
 class ControlPanel(Gtk.Window):
@@ -49,7 +59,6 @@ class ControlPanel(Gtk.Window):
         self.set_modal(True)
 
         self.set_can_focus(True)
-        self.connect('key-press-event', self.__key_press_event_cb)
 
         self._toolbar = None
         self._canvas = None
@@ -59,6 +68,10 @@ class ControlPanel(Gtk.Window):
         self._section_view = None
         self._section_toolbar = None
         self._main_toolbar = None
+        self._selected_icon = None
+        self._section_icons = {}
+        self._last_column = 0
+        self._last_row = 0
 
         self._vbox = Gtk.VBox()
         self._hbox = Gtk.HBox()
@@ -75,6 +88,7 @@ class ControlPanel(Gtk.Window):
         self._vbox.show()
 
         self.connect('realize', self.__realize_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
 
         self._options = self._get_options()
         self._current_option = None
@@ -170,24 +184,87 @@ class ControlPanel(Gtk.Window):
                                        title=self._options[option]['title'],
                                        xo_color=self._options[option]['color'],
                                        pixel_size=style.GRID_CELL_SIZE)
+            sectionicon.__option = self._options[option]['title']
+            sectionicon.__option_dict = option
             sectionicon.connect('button_press_event',
                                 self.__select_option_cb, option)
             sectionicon.show()
 
             if option == 'aboutme':
                 self._table.attach(sectionicon, 0, 1, 0, 1)
+                self._section_icons[0, 0] = sectionicon
+
             elif option == 'aboutcomputer':
                 self._table.attach(sectionicon, 1, 2, 0, 1)
+                self._section_icons[1, 0] = sectionicon
+
             else:
                 self._table.attach(sectionicon,
                                    column, column + 1,
                                    row, row + 1)
+
+                self._section_icons[column, row] = sectionicon
+
                 column += 1
                 if column == self._max_columns:
                     column = 0
                     row += 1
 
+                self._last_row = row
+                self._last_column = self._max_columns
+
             self._options[option]['button'] = sectionicon
+
+    def _move_selected_item(self, key):
+        if not self._selected_icon:
+            self._selected_icon = (0, 0)
+
+        select = self._selected_icon
+
+        if key == KEY_UP:
+            if select[1] > 0:
+                select = (select[0], select[1] - 1)
+
+        elif key == KEY_DOWN:
+            if select[1] < self._last_row:
+                select = (select[0], select[1] + 1)
+
+        elif key == KEY_RIGHT:
+            if select[0] > 0:
+                select = (select[0] - 1, select[1])
+
+        if key == KEY_LEFT:
+            if select[0] < self._last_column - 1:
+                select = (select[0] + 1, select[1])
+
+        if select in self._section_icons.keys():
+            self.select_icon(select)
+
+    def select_icon(self, coordinates):
+        exceptions1 = ['About my Computer', 'Frame', 'Date & Time', 'Language',
+                       'Network', 'Power', 'Software Update']
+        exceptions2 = ['About me', 'Background']
+
+        old_box = self._section_icons[self._selected_icon]
+        old_icon = old_box.get_children()[0].get_children()[0]
+        new_box = self._section_icons[coordinates]
+        new_icon = new_box.get_children()[0].get_children()[0]
+
+        if old_box.__option in exceptions1:
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                          style.COLOR_WHITE.get_svg()))
+
+        elif old_box.__option in exceptions2:
+            xo_color = XoColor('%s,%s' % (style.COLOR_BLACK.get_svg(),
+                                          style.COLOR_WHITE.get_svg()))
+
+        else:
+            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
+                                          style.COLOR_TRANSPARENT.get_svg()))
+
+        self._selected_icon = coordinates
+        old_icon.set_xo_color(xo_color)
+        new_icon.set_xo_color(profile.get_color())
 
     def _show_main_view(self):
         if self._section_view is not None:
@@ -206,15 +283,36 @@ class ControlPanel(Gtk.Window):
         entry.connect('icon-press', self.__clear_icon_pressed_cb)
         self.grab_focus()
 
-    def __key_press_event_cb(self, window, event):
+    def __key_press_event_cb(self, window, event, move=True):
         # if the user clicked out of the window - fix SL #3188
+        key = event.keyval
+
         if not self.is_active():
             self.present()
 
-        entry = self._main_toolbar.get_entry()
-        if not entry.has_focus():
-            entry.grab_focus()
-        return False
+        if key not in [KEY_RIGHT, KEY_UP, KEY_LEFT, KEY_DOWN, KEY_INTRO,
+                       KEY_SCAPE]:
+            entry = self._main_toolbar.get_entry()
+            if not entry.has_focus():
+                entry.grab_focus()
+            return False
+
+        else:
+            if key == KEY_INTRO:
+                if not self._selected_icon:
+                    self.select_icon(self._table.get_children()[0])
+
+                if self._section_icons[self._selected_icon].get_sensitive():
+                    self.__select_option_cb(
+                        None, None,
+                        self._section_icons[self._selected_icon].__option_dict)
+
+            elif key == KEY_SCAPE:
+                self.go_back()
+
+            else:
+                if move:
+                    self._move_selected_item(key)
 
     def __clear_icon_pressed_cb(self, entry, icon_pos, event):
         self.grab_focus()
@@ -236,6 +334,15 @@ class ControlPanel(Gtk.Window):
                                       self.__cancel_clicked_cb)
         self._section_toolbar.connect('accept-clicked',
                                       self.__accept_clicked_cb)
+
+    def go_back(self):
+        children = self.get_children()[0].get_children()
+
+        if self._section_toolbar in children:
+            self._show_main_view()
+
+        elif self._main_toolbar in children:
+            self.destroy()
 
     def show_section_view(self, option):
         self._set_toolbar(self._section_toolbar)
