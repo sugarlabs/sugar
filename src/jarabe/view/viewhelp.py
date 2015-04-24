@@ -26,6 +26,7 @@ from gi.repository import Gdk
 from gi.repository import WebKit
 from gi.repository import GdkX11
 from gi.repository import SoupGNOME
+from gi.repository import Gio
 
 from sugar3 import env
 from sugar3.graphics import style
@@ -175,8 +176,12 @@ class ViewHelp(Gtk.Window):
         language = self._get_current_language()
         if has_help:
             self._help_url = 'file://' + self._get_help_file(language, url)
-        self._social_help_url = 'https://use-socialhelp.sugarlabs.org/goto/{}' \
-                                .format(activity.get_bundle_id())
+
+        settings = Gio.Settings('org.sugarlabs.collaboration')
+        social_help_server = settings.get_string('social-help-server')
+        self._social_help_url = '{}/goto/{}'.format(social_help_server,
+                                                    activity.get_bundle_id())
+
         self._webview.load_uri(self._help_url if self._mode == _MODE_HELP
                                else self._social_help_url)
 
