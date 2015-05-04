@@ -31,8 +31,6 @@ from jarabe.model.network import get_wireless_interfaces
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
 _DMI_DIRECTORY = '/sys/class/dmi/id'
-_SN = 'serial-number'
-_MODEL = 'openprom/model'
 
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
@@ -49,11 +47,7 @@ def print_aboutcomputer():
 
 
 def get_serial_number():
-    serial_no = None
-    if os.path.exists(os.path.join(_OFW_TREE, _SN)):
-        serial_no = _read_file(os.path.join(_OFW_TREE, _SN))
-    elif os.path.exists(os.path.join(_PROC_TREE, _SN)):
-        serial_no = _read_file(os.path.join(_PROC_TREE, _SN))
+    serial_no = _read_device_tree('serial-number')
     if serial_no is None:
         serial_no = _not_available
     return serial_no
@@ -92,35 +86,33 @@ def print_build_number():
     print get_build_number()
 
 
-def _parse_firmware_number(firmware_no):
-    if firmware_no is None:
-        firmware_no = _not_available
-    else:
+def get_firmware_number():
+    firmware_no = _read_device_tree('openprom/model')
+    if firmware_no is not None:
         # try to extract Open Firmware version from OLPC style version
         # string, e.g. "CL2   Q4B11  Q4B"
         if firmware_no.startswith('CL'):
             firmware_no = firmware_no[6:13]
-    return firmware_no
+        ec_name = _read_device_tree('ec-name')
+        if ec_name:
+            firmware_no = '%(firmware)s with %(ec)s' % {
+                'firmware': firmware_no, 'ec': ec_name}
 
-
-def get_firmware_number():
-    firmware_no = None
-    if os.path.exists(os.path.join(_OFW_TREE, _MODEL)):
-        firmware_no = _read_file(os.path.join(_OFW_TREE, _MODEL))
-        firmware_no = _parse_firmware_number(firmware_no)
-    elif os.path.exists(os.path.join(_PROC_TREE, _MODEL)):
-        firmware_no = _read_file(os.path.join(_PROC_TREE, _MODEL))
-        firmware_no = _parse_firmware_number(firmware_no)
     elif os.path.exists(os.path.join(_DMI_DIRECTORY, 'bios_version')):
         firmware_no = _read_file(os.path.join(_DMI_DIRECTORY, 'bios_version'))
-        if firmware_no is None:
-            firmware_no = _not_available
+    if firmware_no is None:
+        firmware_no = _not_available
     return firmware_no
 
 
 def get_hardware_model():
     settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
-    return settings.get_string('hardware-model')
+    model = settings.get_string('hardware-model')
+    if not model:
+        model = _read_device_tree('mfg-data/MN')
+        sku = _read_device_tree('mfg-data/sk')
+        if sku:
+            model = '%s (SKU%s)' % (model, sku)
 
 
 def get_secondary_licenses():
@@ -237,6 +229,16 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def _read_device_tree(path):
+    value = _read_file(os.path.join(_PROC_TREE, path))
+    if value:
+        return value.strip('\x00')
+    value = _read_file(os.path.join(_OFW_TREE, path))
+    if value:
+        return value.strip('\x00')
+    return value
 
 
 def days_from_last_update():
