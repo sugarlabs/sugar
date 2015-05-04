@@ -163,14 +163,27 @@ def get_wireless_firmware():
             continue
 
         try:
-            version = ([line for line in output
-                        if line.startswith('firmware')][0].split()[1])
+            for line in output:
+                if line.startswith('firmware'):
+                    version = line.split()[1]
+                if line.startswith('driver'):
+                    driver = line.split()[1]
         except IndexError:
             _logger.exception('Error parsing ethtool output for %r',
                               interface)
             continue
 
-        firmware_info[interface] = version
+        card = None
+        if driver == 'mwifiex':
+            card = 'mv8787, IEEE 802.11n 5GHz'
+        if driver == 'libertas':
+            card = 'mv8686, IEEE 802.11g 2.4GHz'
+
+        if card:
+            firmware_info[interface] = '%s \n(%s, %s)' % (version, driver,
+                                                          card)
+        else:
+            firmware_info[interface] = '%s \n(%s)' % (version, driver)
 
     if not firmware_info:
         return _not_available
@@ -178,9 +191,9 @@ def get_wireless_firmware():
     if len(firmware_info) == 1:
         return firmware_info.values()[0]
 
-    return ', '.join(['%(interface)s: %(version)s' %
-                      {'interface': interface, 'version': version}
-                      for interface, version in firmware_info.items()])
+    return ', '.join(['%(interface)s: %(info)s' %
+                      {'interface': interface, 'info': info}
+                      for interface, info in firmware_info.items()])
 
 
 def print_wireless_firmware():
