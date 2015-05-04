@@ -203,6 +203,7 @@ _network_manager = None
 _nm_settings = None
 _secret_agent = None
 _connections = None
+_interfaces = None
 
 _nm_device_state_reason_description = None
 
@@ -859,6 +860,24 @@ class Connections(object):
     def _connection_removed_cb(self, connection):
         connection.disconnect_by_func(self._connection_removed_cb)
         self._connections.remove(connection)
+
+
+def get_wireless_interfaces():
+    global _interfaces
+    if _interfaces is None:
+
+        _interfaces = []
+        bus = dbus.SystemBus()
+        for device_path in get_manager().GetDevices():
+            device_object = bus.get_object(NM_SERVICE, device_path)
+            properties = dbus.Interface(device_object,
+                                        'org.freedesktop.DBus.Properties')
+            device_type = properties.Get(NM_DEVICE_IFACE, 'DeviceType')
+            if device_type != NM_DEVICE_TYPE_WIFI:
+                continue
+
+            _interfaces.append(properties.Get(NM_DEVICE_IFACE, 'Interface'))
+    return _interfaces
 
 
 def get_connections():
