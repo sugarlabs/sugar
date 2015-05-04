@@ -23,10 +23,9 @@ import errno
 import time
 
 from gi.repository import Gio
-from gi.repository import NMClient
-from gi.repository import NetworkManager
 
 from jarabe import config
+from jarabe.model.network import get_wireless_interfaces
 
 
 _OFW_TREE = '/ofw'
@@ -143,26 +142,18 @@ def print_firmware_number():
     print get_firmware_number()
 
 
-def _get_wireless_interfaces():
-    try:
-        network_manager = NMClient.Client()
-    except:
-        return ['wlan0', 'eth0']
-
-    interfaces = []
-    for device in network_manager.get_devices():
-        if device.get_device_type() is not NetworkManager.DeviceType.WIFI:
-            continue
-        interfaces.append(device.get_iface())
-
-    return interfaces
-
-
 def get_wireless_firmware():
     environment = os.environ.copy()
     environment['PATH'] = '%s:/usr/sbin' % (environment['PATH'], )
     firmware_info = {}
-    for interface in _get_wireless_interfaces():
+
+    wireless_interfaces = get_wireless_interfaces()
+    if not wireless_interfaces:
+        _logger.warning('Cannot connect to NetworkManager, falling back to'
+                        ' static list of devices')
+        wireless_interfaces = ['wlan0', 'eth0']
+
+    for interface in get_wireless_interfaces():
         try:
             output = subprocess.Popen(['ethtool', '-i', interface],
                                       stdout=subprocess.PIPE,
