@@ -42,10 +42,6 @@ def get_social_help():
     return settings.get_string('social-help-server')
 
 
-def print_social_help():
-    print get_social()
-
-
 def set_social_help(server):
     """
     Set the social-help server

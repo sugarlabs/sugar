@@ -19,7 +19,6 @@ from gettext import gettext as _
 import logging
 import os
 import json
-import time
 
 from gi.repository import Gtk
 from gi.repository import GObject
