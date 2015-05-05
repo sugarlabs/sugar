@@ -176,8 +176,7 @@ def get_wireless_firmware():
                 card = 'mv8686, IEEE 802.11g 2.4GHz'
 
         if card:
-            firmware_info[interface] = '%s (%s, %s)' % (version, driver,
-                                                          card)
+            firmware_info[interface] = '%s (%s, %s)' % (version, driver, card)
         else:
             firmware_info[interface] = '%s (%s)' % (version, driver)
 
