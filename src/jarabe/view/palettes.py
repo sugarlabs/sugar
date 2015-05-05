@@ -37,7 +37,7 @@ from sugar3.activity.i18n import pgettext
 from jarabe.model import shell
 from jarabe.view.viewsource import setup_view_source
 from jarabe.view.viewhelp import setup_view_help
-from jarabe.view.viewhelp import get_help_url_and_title
+from jarabe.view.viewhelp import should_show_view_help
 from jarabe.journal import misc
 
 
@@ -108,11 +108,12 @@ class CurrentActivityPalette(BasePalette):
         self.menu_box.append_item(menu_item)
         menu_item.show()
 
-        menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
-        menu_item.connect('activate', self.__view_help__cb)
-        menu_item.set_accelerator('Shift+Alt+H')
-        self.menu_box.append_item(menu_item)
-        menu_item.show()
+        if should_show_view_help(self._home_activity):
+            menu_item = PaletteMenuItem(_('View Help'), 'toolbar-help')
+            menu_item.connect('activate', self.__view_help__cb)
+            menu_item.set_accelerator('Shift+Alt+H')
+            self.menu_box.append_item(menu_item)
+            menu_item.show()
 
         # avoid circular importing reference
         from jarabe.frame.notification import NotificationBox

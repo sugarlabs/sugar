@@ -52,12 +52,12 @@ def set_social_help(server):
 
     e.g. 'https://use-socialhelp.sugarlabs.org'
     """
-    if server:
-        settings = Gio.Settings('org.sugarlabs.collaboration')
-        server.rstrip('/')
-        if '://' not in server:
-            server = 'http://' + server
-        settings.set_string('social-help-server', server)
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    server = server.strip().rstrip('/')
+    # Don't add http:// to a null input
+    if server and '://' not in server:
+        server = 'http://' + server
+    settings.set_string('social-help-server', server)
 
 
 def get_jabber():

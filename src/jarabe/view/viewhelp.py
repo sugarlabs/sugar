@@ -108,6 +108,16 @@ def get_help_url_and_title(activity):
     return None, title
 
 
+def get_social_help_server():
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    return settings.get_string('social-help-server')
+
+
+def should_show_view_help(activity):
+    url, title = get_help_url_and_title(activity)
+    return bool(get_social_help_server()) or url is not None
+
+
 def setup_view_help(activity):
     if shell.get_model().has_modal():
         return
@@ -118,6 +128,9 @@ def setup_view_help(activity):
     else:
         # get activity name and window id
         window_xid = activity.get_xid()
+
+    if not should_show_view_help(activity):
+        return
 
     viewhelp = ViewHelp(activity, window_xid)
     activity.push_shell_window(viewhelp)
@@ -180,11 +193,8 @@ class ViewHelp(Gtk.Window):
         language = self._get_current_language()
         if has_local_help:
             self._help_url = 'file://' + self._get_help_file(language, url)
-
-        settings = Gio.Settings('org.sugarlabs.collaboration')
-        social_help_server = settings.get_string('social-help-server')
-        self._social_help_url = '{}/goto/{}'.format(social_help_server,
-                                                    activity.get_bundle_id())
+        self._social_help_url = '{}/goto/{}'.format(
+            get_social_help_server(), activity.get_bundle_id())
 
         self._webview.connect(
             'notify::load-status', self.__load_status_changed_cb)
@@ -273,7 +283,7 @@ class Toolbar(Gtk.Toolbar):
 
         self._add_separator(False)
 
-        if has_local_help:
+        if has_local_help and get_social_help_server():
             help_button = RadioToolButton()
             icon = Icon(icon_name='toolbar-help',
                         pixel_size=style.STANDARD_ICON_SIZE,
