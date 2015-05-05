@@ -170,7 +170,10 @@ def get_wireless_firmware():
         if driver == 'mwifiex':
             card = 'mv8787, IEEE 802.11n 5GHz'
         if driver == 'libertas':
-            card = 'mv8686 usb8388, IEEE 802.11g 2.4GHz'
+            if version.startswith('5.'):
+                card = 'usb8388, IEEE 802.11g 2.4GHz'
+            else:
+                card = 'mv8686, IEEE 802.11g 2.4GHz'
 
         if card:
             firmware_info[interface] = '%s \n(%s, %s)' % (version, driver,
