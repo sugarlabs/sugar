@@ -207,6 +207,16 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
+        if (event.keyval == Gdk.KEY_Escape) or \
+           ((event.keyval == Gdk.KEY_q or event.keyval == Gdk.KEY_Q) and \
+           (event.state & Gdk.ModifierType.CONTROL_MASK)):
+            if self._toolbar == self._main_toolbar:
+                self.__stop_clicked_cb(None)
+                self.destroy()
+            else:
+                self.__cancel_clicked_cb(None)
+            return True
+
         # if the user clicked out of the window - fix SL #3188
         if not self.is_active():
             self.present()
