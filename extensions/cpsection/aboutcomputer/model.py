@@ -75,6 +75,7 @@ def get_build_number():
                 raise
         else:
             build_no, stderr_ = popen.communicate()
+            build_no = build_no.strip()
 
     if build_no is None or not build_no:
         build_no = _not_available
