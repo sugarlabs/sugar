@@ -173,6 +173,34 @@ class Network(SectionView):
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_alert.show()
 
+        social_help_info = Gtk.Label(
+            _('Social Help is a forum that lets you connect with developers'
+              ' and discuss Sugar Activities.  Changing servers means'
+              ' discussions will happen in a different place with'
+              ' different people.'))
+        social_help_info.set_alignment(0, 0)
+        social_help_info.set_line_wrap(True)
+        box_mesh.pack_start(social_help_info, False, True, 0)
+        social_help_info.show()
+
+        social_help_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        social_help_label = Gtk.Label(label=_('Social Help Server:'))
+        social_help_label.set_alignment(1, 0.5)
+        social_help_label.modify_fg(Gtk.StateType.NORMAL,
+                                    style.COLOR_SELECTION_GREY.get_gdk_color())
+        social_help_box.pack_start(social_help_label, False, True, 0)
+        group.add_widget(social_help_label)
+        social_help_label.show()
+
+        self._social_help_entry = Gtk.Entry()
+        self._social_help_entry.set_alignment(0)
+        self._social_help_entry.set_size_request(
+            int(Gdk.Screen.width() / 3), -1)
+        social_help_box.pack_start(self._social_help_entry, False, True, 0)
+        self._social_help_entry.show()
+        box_mesh.pack_start(social_help_box, False, True, 0)
+        social_help_box.show()
+
         workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
 
@@ -180,6 +208,8 @@ class Network(SectionView):
 
     def setup(self):
         self._entry.set_text(self._start_jabber)
+        self._social_help_entry.set_text(self._model.get_social_help())
+
         try:
             radio_state = self._model.get_radio()
         except self._model.ReadError, detail:
@@ -199,6 +229,7 @@ class Network(SectionView):
 
     def apply(self):
         self.apply_jabber(self._entry.get_text())
+        self._model.set_social_help(self._social_help_entry.get_text())
 
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
