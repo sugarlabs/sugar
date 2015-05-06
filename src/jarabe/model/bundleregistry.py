@@ -31,6 +31,7 @@ from sugar3.bundle.bundleversion import NormalizedVersion
 from sugar3.bundle.bundle import MalformedBundleException, \
     AlreadyInstalledException, RegistrationException
 from sugar3 import env
+from sugar3.mime import get_mime_parents
 
 from jarabe.model import desktop
 from jarabe.model import mimeregistry
@@ -330,7 +331,7 @@ class BundleRegistry(GObject.GObject):
             self.emit('bundle-removed', removed)
         return removed is not None
 
-    def get_activities_for_type(self, mime_type):
+    def get_activities_for_type(self, mime_type, with_parents=False):
         result = []
 
         mime = mimeregistry.get_registry()
@@ -351,6 +352,12 @@ class BundleRegistry(GObject.GObject):
 
         if default_bundle is not None:
             result.insert(0, default_bundle)
+
+        if with_parents:
+            for parent_mime in get_mime_parents(mime_type):
+                for activity in registry.get_activities_for_type(parent_mime):
+                    if activity not in result:
+                        result.append(activity)
 
         return result
 
