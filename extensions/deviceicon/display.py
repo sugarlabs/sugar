@@ -18,6 +18,7 @@
 from gettext import gettext as _
 import math
 
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -81,6 +82,8 @@ class DeviceView(TrayIcon):
 
 class BrightnessManagerWidget(Gtk.VBox):
 
+    TIMEOUT_DELAY = 500
+
     def __init__(self, text, icon_name):
         Gtk.VBox.__init__(self)
         self._progress_bar = None
@@ -125,6 +128,7 @@ class BrightnessManagerWidget(Gtk.VBox):
                 page_size=1)
             self._adjustment = adjustment
 
+            self._adjustment_timeout_id = None
             self._adjustment_hid = \
                 self._adjustment.connect('value_changed', self.__adjusted_cb)
 
@@ -157,8 +161,16 @@ class BrightnessManagerWidget(Gtk.VBox):
                 / self._model.get_max_brightness()
 
     def __adjusted_cb(self, device, data=None):
+        if self._adjustment_timeout_id is not None:
+            GLib.source_remove(self._adjustment_timeout_id)
+        self._adjustment_timeout_id = GLib.timeout_add(
+            self.TIMEOUT_DELAY,  self._adjust_brightness)
+
+    def _adjust_brightness(self):
         value = self._adjustment.props.value
         self._model.set_brightness(int(value))
+        self._adjustment_timeout_id = None
+        return False
 
 
 class DisplayPalette(Palette):
