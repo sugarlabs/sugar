@@ -116,6 +116,8 @@ class BrightnessManagerWidget(Gtk.VBox):
                               style.DEFAULT_SPACING)
 
         self._model = brightness.get_instance()
+        self._model_changed_hid = \
+            self._model.changed_signal.connect(self.__brightness_changed_cb)
 
         # if sugar-backlight-helper finds the device
         if self._model.get_path():
@@ -150,15 +152,20 @@ class BrightnessManagerWidget(Gtk.VBox):
         alignment.show()
         self.add(alignment)
 
-    def update(self):
+    def __brightness_changed_cb(self, model, value):
+        self.update(value)
+
+    def update(self, value=None):
+        if value is None:
+            value = self._model.get_brightness()
+
         if self._adjustment:
             self._adjustment.handler_block(self._adjustment_hid)
-            self._adjustment.props.value = self._model.get_brightness()
+            self._adjustment.props.value = value
             self._adjustment.handler_unblock(self._adjustment_hid)
         else:
             self._progress_bar.props.fraction = \
-                float(self._model.get_brightness()) \
-                / self._model.get_max_brightness()
+                float(value) / self._model.get_max_brightness()
 
     def __adjusted_cb(self, device, data=None):
         if self._adjustment_timeout_id is not None:
@@ -167,8 +174,9 @@ class BrightnessManagerWidget(Gtk.VBox):
             self.TIMEOUT_DELAY,  self._adjust_brightness)
 
     def _adjust_brightness(self):
-        value = self._adjustment.props.value
-        self._model.set_brightness(int(value))
+        self._model.handler_block(self._model_changed_hid)
+        self._model.set_brightness(int(self._adjustment.props.value))
+        self._model.handler_unblock(self._model_changed_hid)
         self._adjustment_timeout_id = None
         return False
 
