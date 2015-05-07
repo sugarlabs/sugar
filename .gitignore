@@ -57,3 +57,4 @@ data/sugar.gtkrc
 data/sugar.xml
 data/sugar-xo.gtkrc
 data/sugar-emulator.desktop
+data/org.sugar.brightness.policy
