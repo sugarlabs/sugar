@@ -1,0 +1,17 @@
+#!/bin/sh
+
+device=/var/run/sugar-backlight
+
+case "$1" in
+    "--set-brightness")
+        echo "$2" > $device/brightness
+        ;;
+    "--get-brightness")
+        read value < $device/brightness
+        echo "$value"
+        ;;
+    "--get-max-brightness")
+        read value < $device/max_brightness
+        echo "$value"
+        ;;
+esac
