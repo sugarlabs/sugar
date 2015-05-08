@@ -5,6 +5,7 @@ sugar_PYTHON =			\
 	__init__.py		\
 	buddy.py		\
 	bundleregistry.py	\
+	brightness.py		\
 	desktop.py		\
 	filetransfer.py		\
 	friends.py		\
@@ -17,6 +18,7 @@ sugar_PYTHON =			\
         notifications.py        \
 	shell.py		\
 	screen.py		\
+	screenshot.py		\
         session.py		\
 	sound.py		\
 	speech.py		\

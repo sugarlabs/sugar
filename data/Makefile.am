@@ -66,5 +66,11 @@ gsettings_SCHEMAS = org.sugarlabs.gschema.xml
 convertdir = $(datarootdir)/GConf/gsettings
 convert_DATA = sugar-schemas.convert
 
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA)
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
+org.sugar.brightness.policy: org.sugar.brightness.policy.in
+	sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+
+polkit_policydir = $(datadir)/polkit-1/actions
+polkit_policy_DATA = org.sugar.brightness.policy
+
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA) $(polkit_policy_DATA)
+CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA) $(polkit_policy_DATA)
