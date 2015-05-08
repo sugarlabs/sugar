@@ -33,6 +33,7 @@ def get_instance():
 
 class Brightness(GObject.GObject):
 
+    MONITOR_RATE = 1000
     TIMEOUT_DELAY = 1000
     changed_signal = GObject.Signal('changed', arg_types=([int]))
 
@@ -42,6 +43,10 @@ class Brightness(GObject.GObject):
         self._helper_path = None
         self._max_brightness = None
         self._save_timeout_id = None
+        self._monitor = None
+        self._monitor_timeout_id = None
+        self._monitor_changed_hid = None
+        self._start_monitoring()
         self._restore()
 
     def _save(self, value):
@@ -53,6 +58,16 @@ class Brightness(GObject.GObject):
         value = settings.get_int('brightness')
         if value != -1:
             self.set_brightness(value)
+
+    def _start_monitoring(self):
+        if not self.get_path():
+            return
+
+        self._monitor = Gio.File.new_for_path(self.get_path()) \
+            .monitor_file(Gio.FileMonitorFlags.WATCH_HARD_LINKS, None)
+        self._monitor.set_rate_limit(self.MONITOR_RATE)
+        self._monitor_changed_hid = \
+            self._monitor.connect('changed', self.__monitor_changed_cb)
 
     def _get_helper(self):
         if self._helper_path is None and 'PATH' in os.environ:
@@ -74,14 +89,32 @@ class Brightness(GObject.GObject):
         cmd = 'pkexec %s --%s %d' % (self._get_helper(), option, value)
         result, output, error, status = GLib.spawn_command_line_sync(cmd)
 
+    def __monitor_changed_cb(self, monitor, child, other_file, event):
+        if event == Gio.FileMonitorEvent.CHANGED:
+            self.changed_signal.emit(self.get_brightness())
+
+    def __monitor_timeout_cb(self):
+        self._monitor_timeout_id = None
+        self._monitor.handler_unblock(self._monitor_changed_hid)
+        return False
+
     def __save_timeout_cb(self, value):
         self._save_timeout_id = None
         self._save(value)
         return False
 
     def set_brightness(self, value):
+        # do not monitor the external change we are about to trigger
+        self._monitor.handler_block(self._monitor_changed_hid)
+
         self._helper_write('set-brightness', value)
         self.changed_signal.emit(value)
+
+        # do monitor again only after the rate has passed
+        if self._monitor_timeout_id is not None:
+            GLib.source_remove(self._monitor_timeout_id)
+        self._monitor_timeout_id = GLib.timeout_add(
+            self.MONITOR_RATE * 2, self.__monitor_timeout_cb)
 
         # do not store every change while is still changing
         if self._save_timeout_id is not None:
