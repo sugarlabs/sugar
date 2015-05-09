@@ -105,7 +105,8 @@ class Brightness(GObject.GObject):
 
     def set_brightness(self, value):
         # do not monitor the external change we are about to trigger
-        self._monitor.handler_block(self._monitor_changed_hid)
+        if self._monitor_timeout_id is None:
+            self._monitor.handler_block(self._monitor_changed_hid)
 
         self._helper_write('set-brightness', value)
         self.changed_signal.emit(value)
