@@ -38,4 +38,8 @@ def handle_key_press(key):
         if new_value < 0:
             new_value = 0
 
+    # don't write to the device unnecessarily
+    if new_value == value:
+        return
+
     model.set_brightness(new_value)
