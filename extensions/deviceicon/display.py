@@ -186,13 +186,6 @@ class DisplayPalette(Palette):
     def __init__(self):
         Palette.__init__(self, label=_('My Display'))
 
-        self._brightness_manager = BrightnessManagerWidget(_('Brightness'),
-                                                           'brightness-100')
-        self._brightness_manager.show()
-
-        separator = PaletteMenuItemSeparator()
-        separator.show()
-
         self._screenshot = PaletteMenuItem(_('Take a screenshot'))
         icon = Icon(icon_name='camera-external',
                     pixel_size=style.SMALL_ICON_SIZE)
@@ -202,16 +195,32 @@ class DisplayPalette(Palette):
         self._screenshot.show()
 
         self._box = PaletteMenuBox()
-        self._box.append_item(self._brightness_manager, 0, 0)
-        self._box.append_item(separator, 0, 0)
+
+        self._brightness_manager = None
+        # only add this widget if device available
+        if brightness.get_instance().get_path():
+            self._add_brightness_manager()
+
         self._box.append_item(self._screenshot, 0, 0)
         self._box.show()
 
         self.set_content(self._box)
         self.connect('popup', self.__popup_cb)
 
+    def _add_brightness_manager(self):
+        self._brightness_manager = BrightnessManagerWidget(_('Brightness'),
+                                                           'brightness-100')
+        self._brightness_manager.show()
+
+        separator = PaletteMenuItemSeparator()
+        separator.show()
+
+        self._box.append_item(self._brightness_manager, 0, 0)
+        self._box.append_item(separator, 0, 0)
+
     def __popup_cb(self, palette):
-        self._brightness_manager.update()
+        if self._brightness_manager is not None:
+            self._brightness_manager.update()
 
     def __screenshot_cb(self, palette):
         frame_ = frame.get_view()
@@ -227,5 +236,4 @@ class DisplayPalette(Palette):
 
 
 def setup(tray):
-    if brightness.get_instance().get_path():
-        tray.add_device(DeviceView(_('Display')))
+    tray.add_device(DeviceView(_('Display')))
