@@ -37,8 +37,6 @@ from jarabe.model import brightness
 from jarabe.model.screenshot import take_screenshot
 from jarabe import frame
 
-_ICON_NAME = 'brightness'
-
 
 class DeviceView(TrayIcon):
 
@@ -48,15 +46,17 @@ class DeviceView(TrayIcon):
         self._color = profile.get_color()
         self._label = label
 
-        TrayIcon.__init__(self, icon_name=_ICON_NAME, xo_color=self._color)
+        TrayIcon.__init__(self, icon_name='brightness-100',
+                          xo_color=self._color)
 
         self.set_palette_invoker(FrameWidgetInvoker(self))
         self.palette_invoker.props.toggle_palette = True
 
-        self._model = brightness.get_instance()
-        self._model.changed_signal.connect(self.__brightness_changed_cb)
-
-        self._update_output_info()
+        model = brightness.get_instance()
+        if model.get_path():
+            self._model = model
+            self._model.changed_signal.connect(self.__brightness_changed_cb)
+            self._update_output_info()
 
     def create_palette(self):
         palette = DisplayPalette()
