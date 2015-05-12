@@ -125,7 +125,7 @@ class Brightness(GObject.GObject):
 
     def get_path(self):
         if self._path is None:
-            self._path = str(self._helper_read('get-path'))
+            self._path = self._helper_read('get-path')
         return self._path
 
     def get_brightness(self):
