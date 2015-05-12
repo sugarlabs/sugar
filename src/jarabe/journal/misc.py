@@ -160,7 +160,7 @@ def get_bundle(metadata):
         return None
 
 
-def _get_activities_for_mime(mime_type):
+def get_activities_for_mime(mime_type):
     registry = bundleregistry.get_registry()
     result = registry.get_activities_for_type(mime_type)
     if not result:
@@ -182,7 +182,7 @@ def get_activities(metadata):
 
     mime_type = metadata.get('mime_type', '')
     if mime_type:
-        activities_info = _get_activities_for_mime(mime_type)
+        activities_info = get_activities_for_mime(mime_type)
         for activity_info in activities_info:
             if activity_info not in activities:
                 activities.append(activity_info)
@@ -266,7 +266,7 @@ def launch(bundle, activity_id=None, object_id=None, uri=None, color=None,
         # Content bundles are a special case: we treat them as launching
         # Browse with a specific URI.
         uri = bundle.get_start_uri()
-        activities = _get_activities_for_mime('text/html')
+        activities = get_activities_for_mime('text/html')
         if len(activities) == 0:
             logging.error("No browser available for content bundle")
             return
