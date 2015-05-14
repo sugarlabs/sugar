@@ -344,7 +344,7 @@ class UpdateList(Gtk.TreeView):
                                     UpdateListModel.SELECTED)
         self.append_column(toggle_column)
 
-        icon_renderer = CellRendererIcon(self)
+        icon_renderer = CellRendererIcon()
         icon_renderer.props.width = style.STANDARD_ICON_SIZE
         icon_renderer.props.height = style.STANDARD_ICON_SIZE
         icon_renderer.props.size = style.STANDARD_ICON_SIZE
