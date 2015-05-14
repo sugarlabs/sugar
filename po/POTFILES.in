@@ -33,6 +33,7 @@ extensions/cpsection/webaccount/__init__.py
 extensions/cpsection/webaccount/view.py
 extensions/deviceicon/audio.py
 extensions/deviceicon/battery.py
+extensions/deviceicon/display.py
 extensions/deviceicon/frame.py
 extensions/deviceicon/network.py
 extensions/deviceicon/speech.py
@@ -76,6 +77,7 @@ src/jarabe/journal/volumestoolbar.py
 src/jarabe/journal/iconmodel.py
 src/jarabe/journal/iconview.py
 src/jarabe/model/network.py
+src/jarabe/model/screenshot.py
 src/jarabe/view/alerts.py
 src/jarabe/view/buddymenu.py
 src/jarabe/view/keyhandler.py
