@@ -1,0 +1,68 @@
+#!/usr/bin/env python2
+
+# Copyright (C) 2015 Martin Abente Lahaye <tch@sugarlabs.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+import os
+import sys
+from functools import cmp_to_key
+
+from gi.repository import GUdev
+
+
+class SugarBacklightSetup:
+
+    SUGAR_LINK = '/var/run/sugar-backlight'
+
+    def __init__(self):
+        self._path = None
+        self._get_best_backlight()
+        self._create_link()
+
+    def _get_best_backlight(self):
+        client = GUdev.Client()
+        devices = client.query_by_subsystem('backlight')
+
+        if not devices:
+            raise LookupError('No backlight devices present')
+
+        devices.sort(key=cmp_to_key(SugarBacklightSetup._sort_criteria))
+        self._path = devices[0].get_sysfs_path()
+
+    @staticmethod
+    def _sort_criteria(ldevice, rdevice):
+        if ldevice.get_sysfs_attr('type') == 'firmware':
+            return 1
+        if ldevice.get_sysfs_attr('type') == 'platform' and \
+           rdevice.get_sysfs_attr('type') == 'raw':
+            return 1
+        return -1
+
+    def _create_link(self):
+        if os.path.exists(self.SUGAR_LINK):
+            os.unlink(self.SUGAR_LINK)
+        os.symlink(self._path, self.SUGAR_LINK)
+
+
+def _main():
+    try:
+        SugarBacklightSetup()
+    except Exception as err:
+        print 'Could not create device link: %s' % str(err)
+        sys.exit(1)
+
+if __name__ == '__main__':
+    _main()

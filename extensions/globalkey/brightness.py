@@ -1,5 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
-# Copyright (C) 2009 Simon Schampijer, James Zaki
+# Copyright (C) 2015 Martin Abente Lahaye <tch@sugarlabs.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,10 +14,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from jarabe.model.screenshot import take_screenshot
+from jarabe.model import brightness
 
-BOUND_KEYS = ['<alt>1', 'Print']
+BOUND_KEYS = ['XF86MonBrightnessUp', 'XF86MonBrightnessDown']
 
 
 def handle_key_press(key):
-    take_screenshot()
+    model = brightness.get_instance()
+    if not model.get_path():
+        return
+
+    value = model.get_brightness()
+    if key == 'XF86MonBrightnessUp':
+        new_value = value + model.get_step_amount()
+        if new_value > model.get_max_brightness():
+            new_value = model.get_max_brightness()
+    else:
+        new_value = value - model.get_step_amount()
+        if new_value < 0:
+            new_value = 0
+
+    # don't write to the device unnecessarily
+    if new_value == value:
+        return
+
+    model.set_brightness(new_value)
