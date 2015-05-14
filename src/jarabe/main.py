@@ -74,9 +74,9 @@ _window_manager_started = False
 _starting_desktop = False
 
 
-def unfreeze_dcon_cb():
-    logging.debug('STARTUP: unfreeze_dcon_cb')
-    screen.set_dcon_freeze(0)
+def unfreeze_screen_cb():
+    logging.debug('STARTUP: unfreeze_screen_cb')
+    screen.unfreeze()
 
 
 def setup_frame_cb():
@@ -393,7 +393,7 @@ def main():
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
-    GLib.idle_add(unfreeze_dcon_cb)
+    GLib.idle_add(unfreeze_screen_cb)
 
     GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
