@@ -120,6 +120,13 @@
             <description>Setting for muting the sound device.</description>
         </key>
     </schema>
+    <schema id="org.sugarlabs.screen" path="/org/sugarlabs/screen/">
+        <key name="brightness" type="i">
+            <default>-1</default>
+            <summary>Brightness Level</summary>
+            <description>Brightness level for the computer screen.</description>
+        </key>
+    </schema>
     <schema id="org.sugarlabs.date" path="/org/sugarlabs/date/">
         <key name="timezone" type="s">
             <default>''</default>
