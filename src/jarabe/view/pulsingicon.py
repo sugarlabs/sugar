@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import math
+import time
 
 from gi.repository import GObject
 
@@ -24,7 +25,7 @@ from sugar3.graphics.icon import CanvasIcon
 
 
 _INTERVAL = 100
-_STEP = math.pi / 10  # must be a fraction of pi, for clean caching
+_STEP = math.pi  # must be a fraction of pi, for clean caching
 _MINIMAL_ALPHA_VALUE = 0.33
 
 
@@ -38,6 +39,7 @@ class Pulser(object):
         self._zoom_steps = 1
         self._current_zoom_step = 1
         self._current_scale_step = 1
+        self._prev_time = 0
 
     def set_zooming(self, start_scale, end_scale, zoom_steps):
         """ Set start and end scale and number of steps in zoom animation """
@@ -49,17 +51,26 @@ class Pulser(object):
         self._icon.scale = self._start_scale
 
     def start(self, restart=False):
+        self._prev_time = time.time()
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
-            self._pulse_hid = GObject.timeout_add(_INTERVAL, self.__pulse_cb)
+            if hasattr(self._icon, 'add_tick_callback'):
+                self._pulse_hid = self._icon.add_tick_callback(
+                    self.__pulse_cb, None)
+            else:
+                self._pulse_hid = GObject.timeout_add(_INTERVAL,
+                                                      self.__pulse_cb)
         if self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
                 self._current_scale_step * self._current_zoom_step
 
     def stop(self):
         if self._pulse_hid is not None:
-            GObject.source_remove(self._pulse_hid)
+            if hasattr(self._icon, 'add_tick_callback'):
+                self._icon.remove_tick_callback(self._pulse_hid)
+            else:
+                GObject.source_remove(self._pulse_hid)
             self._pulse_hid = None
         self._icon.xo_color = self._icon.get_base_color()
         self._phase = 0
@@ -70,13 +81,17 @@ class Pulser(object):
         self._icon.alpha = _MINIMAL_ALPHA_VALUE + \
             (1 - _MINIMAL_ALPHA_VALUE) * (math.cos(self._phase) + 1) / 2
 
-    def __pulse_cb(self):
-        self._phase += _STEP
+    def __pulse_cb(self, *args):
+        t = time.time()
+        diff = (t - self._prev_time)
+        self._phase += _STEP * diff
+        self._prev_time = t
+
         if self._current_zoom_step <= self._zoom_steps and \
                 self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
                 self._current_scale_step * self._current_zoom_step
-            self._current_zoom_step += 1
+            self._current_zoom_step += diff * 10  # 10 steps per seccond
         self.update()
         return True
 
