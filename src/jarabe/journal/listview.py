@@ -754,9 +754,6 @@ class CellRendererFavorite(CellRendererIcon):
         self.props.size = style.SMALL_ICON_SIZE
         self.props.icon_name = 'emblem-favorite'
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
-        prelit_color = profile.get_color()
-        self.props.prelit_stroke_color = prelit_color.get_stroke_color()
-        self.props.prelit_fill_color = prelit_color.get_fill_color()
 
 
 class CellRendererDetail(CellRendererIcon):

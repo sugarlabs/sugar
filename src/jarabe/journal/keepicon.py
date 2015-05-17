@@ -33,8 +33,6 @@ class KeepIcon(Gtk.ToggleButton):
                           pixel_size=style.SMALL_ICON_SIZE)
         self.set_image(self._icon)
         self.connect('toggled', self.__toggled_cb)
-        self.connect('leave-notify-event', self.__leave_notify_event_cb)
-        self.connect('enter-notify-event', self.__enter_notify_event_cb)
         self.connect('button-press-event', self.__button_press_event_cb)
         self.connect('button-release-event', self.__button_release_event_cb)
 
@@ -61,14 +59,5 @@ class KeepIcon(Gtk.ToggleButton):
         if self.get_active():
             self._icon.props.xo_color = self._xo_color
         else:
-            self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
-            self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
-
-    def __enter_notify_event_cb(self, icon, event):
-        if not self.get_active():
-            self._icon.props.xo_color = self._xo_color
-
-    def __leave_notify_event_cb(self, icon, event):
-        if not self.get_active():
             self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
