@@ -93,7 +93,7 @@ def get_firmware_number():
         # try to extract Open Firmware version from OLPC style version
         # string, e.g. "CL2   Q4B11  Q4B"
         if firmware_no.startswith('CL'):
-            firmware_no = firmware_no[6:13]
+            firmware_no = firmware_no[6:13].strip()
         ec_name = _read_device_tree('ec-name')
         if ec_name:
             firmware_no = '%(firmware)s with %(ec)s' % {
