@@ -163,6 +163,7 @@ class ViewHelp(Gtk.Window):
         self.set_size_request(width, height)
 
         self.connect('realize', self.__realize_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
 
         toolbar = Toolbar(title, has_local_help)
         box.pack_start(toolbar, False, False, 0)
@@ -214,6 +215,10 @@ class ViewHelp(Gtk.Window):
     def __stop_clicked_cb(self, widget):
         self.destroy()
         shell.get_model().pop_modal()
+
+    def __key_press_event_cb(self, window, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.__stop_clicked_cb(None)
 
     def __mode_changed_cb(self, toolbar, mode):
         if self._mode == _MODE_HELP:
