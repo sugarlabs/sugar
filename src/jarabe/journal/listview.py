@@ -432,16 +432,8 @@ class BaseListView(Gtk.Bin):
             window.set_cursor(None)
 
     def __model_ready_cb(self, tree_model):
-        self._stop_progress_bar()
-
         self._scroll_position = self.tree_view.props.vadjustment.props.value
         logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
-
-        x11_window = self.tree_view.get_window()
-
-        if x11_window is not None:
-            # prevent glitches while later vadjustment setting, see #1235
-            self.tree_view.get_bin_window().hide()
 
         # if the selection was preserved, restore it
         if self._backup_selected is not None:
@@ -452,12 +444,8 @@ class BaseListView(Gtk.Bin):
         # and it needs to be ready.
         self.tree_view.set_model(self._model)
 
-        self.tree_view.props.vadjustment.props.value = self._scroll_position
-        self.tree_view.props.vadjustment.value_changed()
-
-        if x11_window is not None:
-            # prevent glitches while later vadjustment setting, see #1235
-            self.tree_view.get_bin_window().show()
+        # Must be called *after* the tree view is drawn, see #4852
+        GObject.idle_add(self.__set_vadjustment_cb)
 
         if len(tree_model) == 0:
             documents_path = model.get_documents_path()
@@ -474,6 +462,20 @@ class BaseListView(Gtk.Bin):
                                    show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
+
+    def __set_vadjustment_cb(self):
+        x11_window = self.tree_view.get_window()
+        if x11_window is not None:
+            # prevent glitches while later vadjustment setting, see #1235
+            self.tree_view.get_bin_window().hide()
+
+        self.tree_view.props.vadjustment.props.value = self._scroll_position
+        self.tree_view.props.vadjustment.value_changed()
+        self._stop_progress_bar()
+
+        if x11_window is not None:
+            # prevent glitches while later vadjustment setting, see #1235
+            self.tree_view.get_bin_window().show()
 
     def _can_clear_query(self):
         return True
