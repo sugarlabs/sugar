@@ -34,6 +34,9 @@ import shutil
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+# Disable overlay scrolling - before GTK is loaded
+os.environ['GTK_OVERLAY_SCROLLING'] = '0'
+
 import gettext
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
