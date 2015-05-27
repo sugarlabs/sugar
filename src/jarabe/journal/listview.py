@@ -236,12 +236,13 @@ class BaseListView(Gtk.Bin):
         cell_favorite = CellRendererFavorite()
         cell_favorite.connect('clicked', self._favorite_clicked_cb)
 
-        column = Gtk.TreeViewColumn()
-        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
-        column.props.fixed_width = cell_favorite.props.width
-        column.pack_start(cell_favorite, True)
-        column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
-        self.tree_view.append_column(column)
+        self._fav_column = Gtk.TreeViewColumn()
+        self._fav_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+        self._fav_column.props.fixed_width = cell_favorite.props.width
+        self._fav_column.pack_start(cell_favorite, True)
+        self._fav_column.set_cell_data_func(
+            cell_favorite, self.__favorite_set_data_cb)
+        self.tree_view.append_column(self._fav_column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -369,14 +370,20 @@ class BaseListView(Gtk.Bin):
 
     def _favorite_clicked_cb(self, cell, path):
         row = self._model[path]
+        iterator = self._model.get_iter(path)
         metadata = model.get(row[ListModel.COLUMN_UID])
         if not model.is_editable(metadata):
             return
         if metadata.get('keep', 0) == '1':
             metadata['keep'] = '0'
+            self._model[iterator][ListModel.COLUMN_FAVORITE] = '0'
         else:
             metadata['keep'] = '1'
-        model.write(metadata, update_mtime=False)
+            self._model[iterator][ListModel.COLUMN_FAVORITE] = '1'
+
+        cell_rect = self.tree_view.get_cell_area(path, self._fav_column)
+        self.tree_view.queue_draw_area(cell_rect.x, cell_rect.y,
+                                       cell_rect.width, cell_rect.height)
 
     def __select_set_data_cb(self, column, cell, tree_model, tree_iter,
                              data):
@@ -426,7 +433,7 @@ class BaseListView(Gtk.Bin):
         self._model = ListModel(self._query)
         self._model.connect('ready', self.__model_ready_cb)
         self._model.connect('progress', self.__model_progress_cb)
-        self._model.setup()
+        self._model.setup(self.__model_updated_cb)
         window = self.get_toplevel().get_window()
         if window is not None:
             window.set_cursor(None)
@@ -731,11 +738,8 @@ class ListView(BaseListView):
                     alert_window=journalwindow.get_journal_window())
 
     def __cell_title_edited_cb(self, cell, path, new_text):
-        row = self._model[path]
-        metadata = model.get(row[ListModel.COLUMN_UID])
-        metadata['title'] = new_text
-        model.write(metadata, update_mtime=False)
-        self.cell_title.props.editable = False
+        iterator = self._model.get_iter(path)
+        self._model[iterator][ListModel.COLUMN_TITLE] = new_text
         self.emit('title-edit-finished')
 
     def __editing_canceled_cb(self, cell):
