@@ -92,8 +92,15 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
 
+        # HACK: Store some changes as patches so we do not need to regenerate
+        # the model and stuff up the scroll position
+        self._patches = {}
+
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
+
+    def add_patch(self, metadata):
+        self._patches[metadata['uid']] = metadata
 
     def get_all_ids(self):
         return self._all_ids
@@ -141,6 +148,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._result_set.seek(index)
         metadata = self._result_set.read()
+        metadata.update(self._patches.get(metadata['uid'], {}))
 
         self._last_requested_index = index
         self._cached_row = []

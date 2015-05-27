@@ -236,12 +236,13 @@ class BaseListView(Gtk.Bin):
         cell_favorite = CellRendererFavorite()
         cell_favorite.connect('clicked', self._favorite_clicked_cb)
 
-        column = Gtk.TreeViewColumn()
-        column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
-        column.props.fixed_width = cell_favorite.props.width
-        column.pack_start(cell_favorite, True)
-        column.set_cell_data_func(cell_favorite, self.__favorite_set_data_cb)
-        self.tree_view.append_column(column)
+        self._fav_column = Gtk.TreeViewColumn()
+        self._fav_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
+        self._fav_column.props.fixed_width = cell_favorite.props.width
+        self._fav_column.pack_start(cell_favorite, True)
+        self._fav_column.set_cell_data_func(
+            cell_favorite, self.__favorite_set_data_cb)
+        self.tree_view.append_column(self._fav_column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -376,7 +377,19 @@ class BaseListView(Gtk.Bin):
             metadata['keep'] = '0'
         else:
             metadata['keep'] = '1'
-        model.write(metadata, update_mtime=False)
+        model.updated.disconnect(self.__model_updated_cb)
+        model.write(metadata, update_mtime=False,
+                    ready_callback=self.__reconect_updates_cb)
+
+        self._model.add_patch(metadata)
+        cell_rect = self.tree_view.get_cell_area(path, self._fav_column)
+        x, y = self.tree_view.convert_tree_to_widget_coords(
+            cell_rect.x, cell_rect.y)
+        self.tree_view.queue_draw_area(x, y, cell_rect.width, cell_rect.height)
+
+    def __reconect_updates_cb(self, metadata, filepath, uid):
+        logging.error('__reconect_updates_cb')
+        model.updated.connect(self.__model_updated_cb)
 
     def __select_set_data_cb(self, column, cell, tree_model, tree_iter,
                              data):
