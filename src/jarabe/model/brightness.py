@@ -70,8 +70,12 @@ class Brightness(GObject.GObject):
         if not self.get_path():
             return
 
+        try:
+            flags = Gio.FileMonitorFlags.WATCH_HARD_LINKS
+        except:
+            flags = 0
         self._monitor = Gio.File.new_for_path(self.get_path()) \
-            .monitor_file(Gio.FileMonitorFlags.WATCH_HARD_LINKS, None)
+            .monitor_file(flags, None)
         self._monitor.set_rate_limit(self._MONITOR_RATE)
         self._monitor_changed_hid = \
             self._monitor.connect('changed', self.__monitor_changed_cb)
