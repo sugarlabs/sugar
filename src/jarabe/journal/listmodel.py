@@ -99,6 +99,12 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
 
+    def new_query(self, query):
+        self._updated_entries = {}
+        self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        self._result_set.ready.connect(self.__result_set_ready_cb)
+        self._result_set.progress.connect(self.__result_set_progress_cb)
+
     def get_all_ids(self):
         return self._all_ids
 
