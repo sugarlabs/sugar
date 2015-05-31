@@ -362,6 +362,11 @@ def _start_intro(start_on_age_page=False):
     window.show()
 
 
+def _start_first_run_tasks():
+    # Generate audio and video mimes from GStreamer
+    from sugar3 import mime  # NOQA
+
+
 def _check_profile():
     if intro.check_profile():
         return True
@@ -407,8 +412,10 @@ def main():
 
     if not _check_profile():
         _start_intro()
+        _start_first_run_tasks()
     elif not _check_group_label():
         _start_intro(start_on_age_page=True)
+        _start_first_run_tasks()
     else:
         _begin_desktop_startup()
 
