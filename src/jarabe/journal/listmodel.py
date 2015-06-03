@@ -255,7 +255,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         target_name = target_atom.name()
         if target_name == 'text/uri-list':
             # Get hold of a reference so the temp file doesn't get deleted
-            self._temp_drag_file_path = model.get_file(uid)
+            self._temp_drag_file_path = model.get_file(uid) or ''
             logging.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(target_atom, 8, self._temp_drag_file_path)
             return True
