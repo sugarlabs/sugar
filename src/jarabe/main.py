@@ -71,6 +71,7 @@ from jarabe import frame
 from jarabe.view.service import UIService
 from jarabe import apisocket
 from jarabe import testrunner
+from jarabe.model import brightness
 
 
 _metacity_process = None
@@ -402,6 +403,7 @@ def main():
     GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
     keyboard.setup()
+    brightness.get_instance()
 
     sys.path.append(config.ext_path)
 
