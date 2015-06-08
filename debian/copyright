@@ -7,46 +7,59 @@ Source: http://download.sugarlabs.org/sources/sucrose/glucose/sugar
  git://github.com/sugarlabs/sugar
 
 Files: *
-Copyright: 2002-2003, Erik Max Francis <max@alcyone.com>
-  2006-2007, Owen Williams
-  2006-2008, Red Hat, Inc
-  2006-2013, One Laptop Per Child Association Inc
-  2007, Eduardo Silva <edsiper@gmail.com>
-  2008-2009, Tomeu Vizoso
-  2008, Benjamin Berg <benjamin@sipsolutions.net>
-  2008, Martin Dengler
-  2008, Red Hat, Inc
-  2008-2014, Sugar Labs
-  2009-2011,2013-2014, Walter Bender
-  2009, Aleksey Lim
-  2009, James Zaki
-  2009,2013-2014, Martin Abente Lahaye <tch@sugarlabs.org>
-  2009, Paraguay Educa
-  2009, Simon Schampijer
-  2010, Andrés Ambrois
-  2010, Collabora Ltd. <http://www.collabora.co.uk/>
-  2010, Daniel Castelo
-  2010, Plan Ceibal
-  2010, Software for Education, Entertainment and Training
-  2011,2013, Raul Gutierrez Segales
-  2012, Ajay Garg
-  2013, Daniel Francis
-  2013-2014, Gonzalo Odiard
-  2013, Kalpa Welivitigoda
-  2013, Miguel González
-  2014, Emil Dudev
-  2014, Frederick Grose
-  2014, Ignacio Rodriguez
-  2014, Sam Parkinson
+Copyright:
+  © 2002-2003, Erik Max Francis <max@alcyone.com>
+  © 2006-2007, Owen Williams
+  © 2006-2008, Red Hat, Inc
+  © 2006-2013, One Laptop Per Child Association Inc
+  © 2007, Eduardo Silva <edsiper@gmail.com>
+  © 2008-2009, Tomeu Vizoso
+  © 2008, Benjamin Berg <benjamin@sipsolutions.net>
+  © 2008, Martin Dengler
+  © 2008, Red Hat, Inc
+  © 2008-2014, Sugar Labs
+  © 2009-2011,2013-2014, Walter Bender
+  © 2009, Aleksey Lim
+  © 2009, James Zaki
+  © 2009,2013-2014, Martin Abente Lahaye <tch@sugarlabs.org>
+  © 2009, Paraguay Educa
+  © 2009, Simon Schampijer
+  © 2010, Andrés Ambrois
+  © 2010, Collabora Ltd. <http://www.collabora.co.uk/>
+  © 2010, Daniel Castelo
+  © 2010, Plan Ceibal
+  © 2010, Software for Education, Entertainment and Training
+  © 2011,2013, Raul Gutierrez Segales
+  © 2012, Ajay Garg
+  © 2013, Daniel Francis
+  © 2013-2014, Gonzalo Odiard
+  © 2013, Kalpa Welivitigoda
+  © 2013, Miguel González
+  © 2014, Emil Dudev
+  © 2014, Frederick Grose
+  © 2014, Ignacio Rodriguez
+  © 2014, Sam Parkinson
+License-Grant:
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
 License: GPL-2+
 
 Files: */Makefile.in
-Copyright: 1994-2013, Free Software Foundation, Inc.
+Copyright:
+  © 1994-2013, Free Software Foundation, Inc.
 License: GAP~Makefile.in
 
 Files: missing
  py-compile
-Copyright: 1996-2013, Free Software Foundation, Inc.
+Copyright:
+  © 1996-2013, Free Software Foundation, Inc.
+License-Grant:
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
 License: GPL-2+ with Autoconf exception
  As a special exception to the GNU General Public License, if you
  distribute this file as part of a program that contains a
@@ -54,30 +67,52 @@ License: GPL-2+ with Autoconf exception
  the same distribution terms that you use for the rest of that program.
 
 Files: aclocal.m4
-Copyright: 1996-2014, Free Software Foundation, Inc
-  2001-2004, Red Hat, Inc
+Copyright:
+  © 1996-2014, Free Software Foundation, Inc
+  © 2001-2004, Red Hat, Inc
 License: GAP
 
 Files: extensions/cpsection/backup/backupmanager.py
  extensions/cpsection/backup/view.py
  src/jarabe/webservice/account.py
  src/jarabe/webservice/accountsmanager.py
-Copyright: 2013, Gonzalo Odiard
-  2013, SugarLabs
-  2013, Raul Gutierrez Segales
-  2013, Walter Bender
-License: LGPL-2+~Lesser
+Copyright:
+  © 2013, Gonzalo Odiard
+  © 2013, SugarLabs
+  © 2013, Raul Gutierrez Segales
+  © 2013, Walter Bender
+License-Grant:
+ This library is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+License: LGPL-2+
+Comment:
+ It is assumed that it is really the GNU _Library_ Public License.
 
 Files: src/jarabe/util/telepathy/connection_watcher.py
-Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
+Copyright:
+  © 2008, Collabora Ltd. <http://www.collabora.co.uk/>
+License-Grant:
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
 License: LGPL-2.1+
 
 Files: install-sh
-Copyright: 1994, X Consortium
+Copyright:
+  © 1994, X Consortium
 License: X11
 
 Files: m4/intltool.m4
-Copyright: 2001, Eazel, Inc
+Copyright:
+  © 2001, Eazel, Inc
+License-Grant:
+ This program is free software; you can redistribute it and/or modify it
+ under the terms of the GNU General Public License as published by the
+ Free Software Foundation; either version 2 of the License, or (at your
+ option) any later version.
 License: GPL-2+ with Autoconf exception
  As a special exception to the GNU General Public License, if you
  distribute this file as part of a program that contains a configuration
@@ -85,86 +120,37 @@ License: GPL-2+ with Autoconf exception
  distribution terms that you use for the rest of that program.
 
 Files: configure
-Copyright: 1992-1996, 1998-2012, Free Software Foundation, Inc.
+Copyright:
+  © 1992-1996, 1998-2012, Free Software Foundation, Inc.
 License: GAP~configure
 
 Files: po/Makefile.in.in
-Copyright: 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
-  2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
+Copyright:
+  © 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
+  © 2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
 License: GAP~gettext
 
 Files: debian/*
-Copyright: 2007-2010,2012,2015, Jonas Smedegaard <dr@jones.dk>
-License: GPL-3+
-
-License: GPL-3+
+Copyright:
+  © 2007-2010,2012,2015, Jonas Smedegaard <dr@jones.dk>
+License-Grant:
  This program is free software; you can redistribute it and/or modify it
  under the terms of the GNU General Public License as published by the
  Free Software Foundation; either version 3 of the License, or (at your
  option) any later version.
- .
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
-Comment:
- On Debian systems the 'GNU General Public License' version 3 is located
- in '/usr/share/common-licenses/GPL-3'.
- .
- You should have received a copy of the 'GNU General Public License'
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+License: GPL-3+
+
+License: GPL-3+
+License-Reference: /usr/share/common-licenses/GPL-3
 
 License: GPL-2+
- This program is free software; you can redistribute it and/or modify it
- under the terms of the GNU General Public License as published by the
- Free Software Foundation; either version 2 of the License, or (at your
- option) any later version.
- .
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
-Comment:
- On Debian systems the 'GNU General Public License' version 2 is located
- in '/usr/share/common-licenses/GPL-2'.
+License-Reference: /usr/share/common-licenses/GPL-2
 
-License: LGPL-2+~Lesser
- This library is free software; you can redistribute it and/or modify it
- under the terms of the GNU Lesser General Public License as published
- by the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
- .
- This library is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-Comment:
- It is assumed that it is really the GNU _Library_ Public License.
- .
- On Debian systems the 'GNU Lesser General Public License' version 2
- is located in '/usr/share/common-licenses/LGPL-2'.
- .
- You should have received a copy of the 'GNU Library General Public
- License' along with this program.  If not, see
- <http://www.gnu.org/licenses/>.
+License: LGPL-2+
+License-Reference: /usr/share/common-licenses/LGPL-2
 
 License: LGPL-2.1+
- This program is free software; you can redistribute it and/or modify it
- under the terms of the GNU Lesser General Public License as published
- by the Free Software Foundation; either version 2.1 of the License, or
- (at your option) any later version.
- .
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-Comment:
- On Debian systems the 'GNU Lesser General Public License' version 2.1
- is located in '/usr/share/common-licenses/LGPL-2.1'.
- .
- You should have received a copy of the 'GNU Lesser General Public
- License' along with this program.  If not, see
- <http://www.gnu.org/licenses/>.
+License-Reference: /usr/share/common-licenses/LGPL-2.1
 
 License: GAP
  This file is free software; the Free Software Foundation gives
