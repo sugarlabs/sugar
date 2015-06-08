@@ -1,3 +1,19 @@
+sugar-0.104 (0.104.1-10) unstable; urgency=medium
+
+  * Update package relations:
+    + Have sugar-session-* recommend (and sucrose-* depend on)
+      sugar-log-activity (not suggest branch-sufficed one).
+  * Modernize short and long descriptions.
+  * Update copyright info:
+    + Use License-Grant and License-Reference fields.
+      Thanks to Ben Finney.
+  * Add lintian overrides regarding license in License-Reference field.
+    See bug#786450.
+  * Modernize git-buildpackage config: Avoid "git-" prefix.
+  * Drop obsolete DM-Upload-Allowed field from control file.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 12 Jun 2015 12:46:10 -0500
+
 sugar-0.104 (0.104.1-9) unstable; urgency=medium
 
   * Update package relations:

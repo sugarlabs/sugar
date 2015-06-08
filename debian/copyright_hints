@@ -49,6 +49,7 @@ Files: AUTHORS
  debian/patches/series
  debian/python-jarabe-__VER__.install.in
  debian/source/format
+ debian/source/lintian-overrides
  debian/sugar-session-__VER__.install.in
  debian/sugar-session-__VER__.menu.in
  debian/sugar.desktop
@@ -814,11 +815,6 @@ Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
 License: LGPL-2.1+
  FIXME
 
-Files: po/ar.po
-Copyright: 
-License: UNKNOWN
- FIXME
-
 Files: po/zh_CN.po
 Copyright: %(selected)d
   YEAR THE PACKAGE'S HOLDER
@@ -858,39 +854,6 @@ Files: po/cs.po
 Copyright: Jm√no"
   YEAR THE PACKAGE'S HOLDER
   povolen√≠:"
-License: UNKNOWN
- FIXME
-
-Files: po/fr.po
-Copyright: 2007, the Package Owner
-  Personnel (PIN) :"
-  [ args ...
-  afficher les informations sur cette cl√ \n"
-  correspondante"
-  de chiffrement sans fil est requise pour\n"
-  de d√verrouillage personnelle (PUK) du r√seau GSM "
-  depuis %s"
-  d√finir la valeur actuelle de cette cl√ \n"
-  et apportent de nouvelles fonctionnalit√s."
-  et licence"
-  incorrect. Utiliser 0/1."
-  incorrect. Utiliser marche/arr√™t."
-  install√e"
-  install√es"
-  la d√connexion."
-  le transfert du fichier"
-  logicielle"
-  obtenir la valeur actuelle associ√e √† cette cl√ \n"
-  pour d√marrer l'entr√e"
-  pour reprendre l'entr√e"
-  retir√."
-  sans fil :"
-  supprim√e ou a disparu."
-  sur le serveur de l'√cole."
-  tactile"
-  trouv√es : %s module: %r"
-  une erreur inattendue."
-  √† le modifier et/ou √† en distribuer des copies "
 License: UNKNOWN
  FIXME
 
@@ -1050,9 +1013,47 @@ Copyright: YEAR THE PACKAGE'S HOLDER
 License: UNKNOWN
  FIXME
 
+Files: po/fr.po
+Copyright: [ args ...
+  afficher les informations sur cette cl√ \n"
+  correspondante"
+  de chiffrement sans fil est requise pour\n"
+  de d√verrouillage personnelle (PUK) du r√seau GSM "
+  depuis %s"
+  d√finir la valeur actuelle de cette cl√ \n"
+  et apportent de nouvelles fonctionnalit√s."
+  et licence"
+  incorrect. Utiliser 0/1."
+  incorrect. Utiliser marche/arr√™t."
+  install√e"
+  install√es"
+  je ne parle pas '%s'."
+  la d√connexion."
+  le transfert du fichier"
+  logicielle"
+  obtenir la valeur actuelle associ√e √† cette cl√ \n"
+  pour d√marrer l'entr√e"
+  pour reprendre l'entr√e"
+  retir√."
+  sans fil :"
+  supprim√e ou a disparu."
+  sur le serveur de l'√cole."
+  tactile"
+  trouv√es : %s module: %r"
+  une erreur inattendue."
+  √† le modifier et/ou √† en distribuer des copies "
+License: UNKNOWN
+ FIXME
+
 Files: data/ISO-639-2_utf-8.txt
 Copyright: du Nord
   du Sud
+License: UNKNOWN
+ FIXME
+
+Files: po/ar.po
+Copyright: ÿ™ÿ≠ŸÉŸÖ ÿ≥ŸÉÿ±: key=%s ŸÑŸäÿ≥ ŸÖÿ™ÿßÿ≠ÿß ŸÉÿÆŸäÿßÿ±"
+  ÿπŸÜÿØ ÿßŸÑÿ®ÿØÿ°ÿå ÿ£Ÿà \"system\" (ÿßŸÑŸÜÿ∏ÿßŸÖ) "
 License: UNKNOWN
  FIXME
 

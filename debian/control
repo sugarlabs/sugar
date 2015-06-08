@@ -5,7 +5,6 @@ Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>,
  Luke Faraone <luke@faraone.cc>,
  Santiago Ruano Rincón <santiago@debian.org>
-DM-Upload-Allowed: yes
 Build-Depends: cdbs (>= 0.4.97~),
  devscripts,
  python,
@@ -35,12 +34,11 @@ Provides: ${cdbs:Provides},
  ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - Sucrose 0.104
- Sugar is a graphical user interface aimed at children.
- .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
+Description: Sugar Learning Platform - Sucrose 0.104
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
  .
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
@@ -58,12 +56,11 @@ Provides: ${cdbs:Provides},
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - window manager
- Sugar is a graphical user interface aimed at children.
- .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
+Description: Sugar Learning Platform - window manager
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
  .
  This package contains the integrated session and window manager Sugar.
 
@@ -81,16 +78,16 @@ Provides: ${cdbs:Provides},
 Breaks: ${cdbs:Breaks}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar graphical shell - library
- Sugar is a graphical user interface aimed at children.
+Description: Sugar Learning Platform - graphical shell
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
  .
- Originating as integral part of the OLPC "XO" a.k.a. the $100 laptop,
- Sugar has since grown into a more widely usable low-ressource desktop
- environment for kids.
+ "Jarabe" is Spanish for "Jelly" - a sugary layer spread on the surface.
  .
- This package contains Jarabe, the Sugar Graphical "Shell" Interface
- providing the shell-level operations for Sugar.  It interacts heavily
- with the Sugar UI libraries.
+ This package contains the parts of Sugar Learning Platform immediately
+ visible to the user - the views, the journal, and the control panel.
  .
- This is a "graphical" shell, the name does not refer to a command-line
+ This is a graphical shell, the name does not refer to a command-line
  "shell" interface.
