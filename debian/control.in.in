@@ -5,7 +5,6 @@ Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
 Uploaders: Jonas Smedegaard <dr@jones.dk>,
  Luke Faraone <luke@faraone.cc>,
  Santiago Ruano Rincón <santiago@debian.org>
-DM-Upload-Allowed: yes
 Build-Depends: @cdbs@
 Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/pkg-sugar/sugar
