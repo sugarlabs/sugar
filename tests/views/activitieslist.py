@@ -51,8 +51,6 @@ class MockActivityInfo:
         return True
 
 
-os.environ["SUGAR_ACTIVITIES_DEFAULTS"] = \
-    os.path.join(base_dir, "data", "activities.defaults")
 os.environ["SUGAR_MIME_DEFAULTS"] = \
     os.path.join(base_dir, "data", "mime.defaults")
 

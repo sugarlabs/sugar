@@ -29,8 +29,6 @@ tests_dir = os.getcwd()
 data_dir = os.path.join(tests_dir, "data")
 base_dir = os.path.dirname(tests_dir)
 
-os.environ["SUGAR_ACTIVITIES_DEFAULTS"] = \
-    os.path.join(base_dir, "data", "activities.defaults")
 os.environ["SUGAR_MIME_DEFAULTS"] = \
     os.path.join(base_dir, "data", "mime.defaults")
 

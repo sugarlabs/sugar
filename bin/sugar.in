@@ -28,10 +28,6 @@ if test -z "$SUGAR_MIME_DEFAULTS"; then
     export SUGAR_MIME_DEFAULTS="$sugardatadir/mime.defaults"
 fi
 
-if test -z "$SUGAR_ACTIVITIES_DEFAULTS"; then
-    export SUGAR_ACTIVITIES_DEFAULTS="$sugardatadir/activities.defaults"
-fi
-
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
 
 if ! test -f "$GTK2_RC_FILES"; then

@@ -10,7 +10,6 @@ sugar-100.gtkrc: gtkrc.em
 
 sugardir = $(pkgdatadir)/data
 sugar_DATA =			\
-	activities.defaults	\
 	group-labels.defaults	\
 	ISO-639-2_utf-8.txt	\
 	kbdconfig		\
