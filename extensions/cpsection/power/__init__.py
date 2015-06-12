@@ -22,4 +22,4 @@ if os.access(POWERD_FLAG_DIR, os.W_OK):
     CLASS = 'Power'
 ICON = 'module-power'
 TITLE = _('Power')
-KEYWORDS = ['automatic', 'extreme', 'power', 'suspend', 'battery']
+KEYWORDS = ['automatic', 'power', 'suspend', 'battery']
