@@ -15,8 +15,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 from gettext import gettext as _
+import os
 
-CLASS = 'Power'
+POWERD_FLAG_DIR = '/etc/powerd/flags'
+if os.access(POWERD_FLAG_DIR, os.W_OK):
+    CLASS = 'Power'
 ICON = 'module-power'
 TITLE = _('Power')
-KEYWORDS = ['automatic', 'extreme', 'power', 'suspend', 'battery']
+KEYWORDS = ['automatic', 'power', 'suspend', 'battery']

@@ -318,7 +318,7 @@ class ControlPanel(Gtk.Window):
                             keywords.append(item)
                         options[item]['keywords'] = keywords
                     else:
-                        _logger.error('no CLASS attribute in %r', item)
+                        _logger.debug('no CLASS attribute in %r', item)
                 except Exception:
                     logging.exception('Exception while loading extension:')
 
