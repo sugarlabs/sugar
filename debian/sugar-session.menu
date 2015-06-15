@@ -1,0 +1,2 @@
+?package(sugar-session):needs="wm" section="Window Managers" \
+  title="Sugar" command="/usr/bin/sugar"

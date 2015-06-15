@@ -18,15 +18,11 @@
 
 # These need to be declared/run before CDBS includes
 pkgbranch = $(basename $(DEB_UPSTREAM_VERSION))
-pkg-jarabe = python-jarabe-$(pkgbranch)
-pkg-session = sugar-session-$(pkgbranch)
-pkg-sucrose = sucrose-$(pkgbranch)
+pkg-jarabe = python-jarabe
+pkg-session = sugar-session
+pkg-sucrose = sucrose
 DEB_BUILDDIR = build
 DEB_PYTHON2_MODULE_PACKAGES = $(pkg-jarabe) $(pkg-session)
-debian/control:: debian/control.in
-DEB_PHONY_RULES += debian/control.in
-debian/control.in::
-	sed -e 's/__BRANCH__/$(pkgbranch)/g' <debian/control.in.in >debian/control.in
 
 include /usr/share/cdbs/1/rules/upstream-tarball.mk
 include /usr/share/cdbs/1/rules/utils.mk
@@ -52,7 +48,7 @@ clean::
 		debian/gbp.conf
 endif
 
-DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
+DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 
@@ -102,7 +98,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * fonts-dejavu-core (Sans Serif) used in data/sugar.schemas
 #  * mobile-broadband-provider-info used in extensions
 #  * TODO: Tighten to recommend / depend on Maliit when mature
-python-depends-session = sugar3 jarabe-$(pkgbranch) dbus cairo
+python-depends-session = sugar3 jarabe dbus cairo
 gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
 gir-depends-session += networkmanager-1.0 nmgtk-1.0
 depends-session = $(patsubst %,$(comma) python-%,$(python-depends-session))
@@ -157,14 +153,6 @@ CDBS_SUGGESTS_$(pkg-session) +=, $(suggests-session-only)
 CDBS_SUGGESTS_$(pkg-jarabe) = $(suggests-jarabe-only)
 CDBS_SUGGESTS_$(pkg-sucrose) = $(suggests-sucrose)
 
-# Ensure only one variant is installed at a time (Debian Policy 7.6.2)
-CDBS_PROVIDES_$(pkg-jarabe) = python-jarabe
-CDBS_CONFLICTS_$(pkg-jarabe) = python-jarabe
-CDBS_REPLACES_$(pkg-jarabe) = python-jarabe
-CDBS_PROVIDES_$(pkg-session) = sugar-session
-CDBS_CONFLICTS_$(pkg-session) = sugar-session
-CDBS_REPLACES_$(pkg-session) = sugar-session
-
 CDBS_BREAKS_$(pkg-session) = sugar-emulator
 CDBS_BREAKS_$(pkg-jarabe) = sugar-emulator
 
@@ -181,16 +169,6 @@ CDBS_REPLACES_$(pkg-session) +=, sugar-tools
 CDBS_BREAKS_$(pkg-session) +=, sugar-tools
 
 DEB_PYTHON_PRIVATE_MODULES_DIRS = /usr/share/sugar
-
-# Generate (and cleanup) files containing variables static per build
-infiles = $(filter-out debian/control.in%, $(wildcard debian/*.in))
-outfiles = $(subst __VER__,$(pkgbranch),$(basename $(infiles)))
-DEB_PHONY_RULES += $(outfiles)
-pre-build:: $(outfiles)
-$(outfiles):
-	sed 's/__VER__/$(pkgbranch)/' <$(subst $(pkgbranch),__VER__,$@).in >$@
-clean::
-	rm -f $(outfiles)
 
 # Register GConf schemas
 post-install/$(pkg-session)::
