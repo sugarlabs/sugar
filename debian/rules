@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # These need to be declared/run before CDBS includes
-pkgbranch = $(lastword $(subst -,$(space),$(DEB_SOURCE_PACKAGE)))
+pkgbranch = $(basename $(DEB_UPSTREAM_VERSION))
 pkg-jarabe = python-jarabe-$(pkgbranch)
 pkg-session = sugar-session-$(pkgbranch)
 pkg-sucrose = sucrose-$(pkgbranch)
