@@ -35,6 +35,23 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 
 comma = ,
 
+# Adapt packaging in maintainer mode when targeting experimental branch:
+#  * Switch git packaging branch
+#  * Track any release (else only current branch)
+ifneq (,$(DEB_MAINTAINER_MODE))
+experimental := $(strip $(if \
+	$(shell dpkg-parsechangelog \
+		| grep -x 'Distribution: \(experimental\|UNRELEASED\)'),\
+	yes))
+watch-limit = $(if $(experimental),,$(pkgbranch)\\.)
+debian-branch = $(if $(experimental),master,master-$(pkgbranch))
+clean::
+	perl -i -pe 's/\([\d.\\]*\.\*\)/($(watch-limit).*)/' \
+		debian/watch
+	perl -i -pe 's/^debian-branch *= *\K.*/$(debian-branch)/' \
+		debian/gbp.conf
+endif
+
 DEB_UPSTREAM_PACKAGE = $(DEB_SOURCE_PACKAGE:%-$(pkgbranch)=%)
 DEB_UPSTREAM_URL = http://download.sugarlabs.org/sources/sucrose/glucose/$(DEB_UPSTREAM_PACKAGE)
 DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
