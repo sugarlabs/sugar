@@ -17,10 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # These need to be declared/run before CDBS includes
-pkgbranch = $(basename $(DEB_UPSTREAM_VERSION))
 pkg-jarabe = python-jarabe
 pkg-session = sugar-session
-pkg-sucrose = sucrose
 DEB_BUILDDIR = build
 DEB_PYTHON2_MODULE_PACKAGES = $(pkg-jarabe) $(pkg-session)
 
@@ -30,6 +28,8 @@ include /usr/share/cdbs/1/class/python-autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 
 comma = ,
+pkgbranch = $(basename $(DEB_UPSTREAM_VERSION))
+pkg-sucrose = sucrose
 
 # Adapt packaging in maintainer mode when targeting experimental branch:
 #  * Switch git packaging branch
