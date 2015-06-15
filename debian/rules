@@ -75,6 +75,7 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,write,0.86,$
 session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
 
 # Needed (always/often/sometimes) at runtime
+#  * Glucose (at least current branch)
 #  * network-manager (NM_SERVICE) used in extensions and jarabe
 #    + modemmanager (NM_DEVICE_TYPE_MODEM) used in extensions and jarabe
 #    + avahi-autoipd (NM_802_11_MODE_ADHOC) used in jarabe
@@ -103,7 +104,7 @@ gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
 gir-depends-session += networkmanager-1.0 nmgtk-1.0
 depends-session = $(patsubst %,$(comma) python-%,$(python-depends-session))
 depends-session +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-session))
-depends-session +=, sugar-$(pkgbranch)-themes
+depends-session +=, sugar-themes (>= $(pkgbranch))
 python-depends-jarabe = sugar3 gwebsockets cairo dbus telepathy xapian
 gir-depends-jarabe = gdkpixbuf-2.0 glib-2.0 gtk-3.0 gtksource-3.0
 gir-depends-jarabe += gstreamer-1.0 wnck-3.0 sugarext-1.0 pango-1.0
@@ -115,7 +116,7 @@ recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
 recommends-session +=, mobile-broadband-provider-info
 recommends-session +=, $(call session_expand_activities,true)
-recommends-jarabe = python-carquinyol-$(pkgbranch)
+recommends-jarabe = python-carquinyol (>= $(pkgbranch))
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
 recommends-jarabe +=, consolekit | systemd
@@ -127,17 +128,18 @@ suggests-session-only +=, $(call session_expand_activities_relaxed,true)
 suggests-jarabe-only = $(pkg-session)
 
 # Tighten relations in Sucrose metapackage:
+#  * Depend on Glucose (at least current branch)
 #  * Depend on Fructose
 #  * Recommend non-Sugar helper parts
 #  * Recommend deprecated Glucose parts
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
-depends-sucrose +=, python-carquinyol-$(pkgbranch)
+depends-sucrose +=, python-carquinyol (>= $(pkgbranch))
 depends-sucrose +=, $(call session_expand_activities)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
-recommends-sucrose +=, python-sugar-toolkit-0.98 | python-sugar-toolkit
-recommends-sucrose +=, python-sugar-0.98 | python-sugar
-recommends-sucrose +=, gtk2-engines-sugar-$(pkgbranch)
+recommends-sucrose +=, python-sugar-toolkit
+recommends-sucrose +=, python-sugar
+recommends-sucrose +=, gtk2-engines-sugar (>= $(pkgbranch))
 suggests-sucrose = $(suggests-session-weak)
 suggests-sucrose +=, $(call session_expand_activities_relaxed)
 
