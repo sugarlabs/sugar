@@ -150,18 +150,17 @@ Files: AUTHORS
  debian/compat
  debian/control
  debian/control.in
- debian/control.in.in
  debian/gbp.conf
  debian/patches/empy_from_system.patch
  debian/patches/empy_from_system_autotools.patch
  debian/patches/fix_shell_posix_and_quoting.patch
  debian/patches/fix_tz_config_path.patch
  debian/patches/series
- debian/python-jarabe-__VER__.install.in
+ debian/python-jarabe.install
  debian/source/format
  debian/source/lintian-overrides
- debian/sugar-session-__VER__.install.in
- debian/sugar-session-__VER__.menu.in
+ debian/sugar-session.install
+ debian/sugar-session.menu
  debian/sugar.desktop
  debian/watch
  extensions/Makefile.am

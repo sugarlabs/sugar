@@ -1,4 +1,4 @@
-Source: sugar-0.104
+Source: sugar
 Section: x11
 Priority: optional
 Maintainer: Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>
@@ -23,7 +23,7 @@ Vcs-Git: git://anonscm.debian.org/pkg-sugar/sugar
 Vcs-Browser: https://anonscm.debian.org/cgit/pkg-sugar/sugar.git
 Homepage: http://wiki.sugarlabs.org/go/Sugar
 
-Package: sucrose-0.104
+Package: sucrose
 Section: metapackages
 Architecture: all
 Depends: ${cdbs:Depends},
@@ -34,7 +34,7 @@ Provides: ${cdbs:Provides},
  ${python:Provides}
 Conflicts: ${cdbs:Conflicts}
 Replaces: ${cdbs:Replaces}
-Description: Sugar Learning Platform - Sucrose 0.104
+Description: Sugar Learning Platform - Sucrose
  Sugar Learning Platform promotes collaborative learning through Sugar
  Activities that encourage critical thinking, the heart of a quality
  education.  Designed from the ground up especially for children, Sugar
@@ -43,7 +43,7 @@ Description: Sugar Learning Platform - Sucrose 0.104
  This package depends on all packages which make up Sucrose, the
  official base Sugar environment.
 
-Package: sugar-session-0.104
+Package: sugar-session
 Architecture: all
 Depends: ${cdbs:Depends},
  ${misc:Depends},
@@ -64,7 +64,7 @@ Description: Sugar Learning Platform - window manager
  .
  This package contains the integrated session and window manager Sugar.
 
-Package: python-jarabe-0.104
+Package: python-jarabe
 Section: python
 Architecture: all
 Depends: ${cdbs:Depends},

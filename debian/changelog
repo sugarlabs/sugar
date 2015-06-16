@@ -1,3 +1,12 @@
+sugar (0.104.1-12) UNRELEASED; urgency=medium
+
+  * Drop branch from source and binary package.
+  * Update package relations:
+    + Recommend/depend on unbranched but at least current branch of
+      Glucose parts (i.e. core libraries).
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 15 Jun 2015 08:42:31 -0500
+
 sugar-0.104 (0.104.1-11) unstable; urgency=medium
 
   * Adapt packaging in maintainer mode when targeting experimental:
