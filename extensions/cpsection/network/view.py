@@ -17,7 +17,6 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GObject
 from gettext import gettext as _
 
 from sugar3.graphics import style
@@ -29,8 +28,6 @@ from jarabe.controlpanel.inlinealert import InlineAlert
 CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
-
-_APPLY_TIMEOUT = 3000
 
 
 class Network(SectionView):
@@ -45,6 +42,7 @@ class Network(SectionView):
         self._jabber_change_handler = None
         self._radio_change_handler = None
         self._wireless_configuration_reset_handler = None
+        self._start_jabber = self._model.get_jabber()
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -175,13 +173,43 @@ class Network(SectionView):
             self._jabber_alert.props.msg = self.restart_msg
             self._jabber_alert.show()
 
+        social_help_info = Gtk.Label(
+            _('Social Help is a forum that lets you connect with developers'
+              ' and discuss Sugar Activities.  Changing servers means'
+              ' discussions will happen in a different place with'
+              ' different people.'))
+        social_help_info.set_alignment(0, 0)
+        social_help_info.set_line_wrap(True)
+        box_mesh.pack_start(social_help_info, False, True, 0)
+        social_help_info.show()
+
+        social_help_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        social_help_label = Gtk.Label(label=_('Social Help Server:'))
+        social_help_label.set_alignment(1, 0.5)
+        social_help_label.modify_fg(Gtk.StateType.NORMAL,
+                                    style.COLOR_SELECTION_GREY.get_gdk_color())
+        social_help_box.pack_start(social_help_label, False, True, 0)
+        group.add_widget(social_help_label)
+        social_help_label.show()
+
+        self._social_help_entry = Gtk.Entry()
+        self._social_help_entry.set_alignment(0)
+        self._social_help_entry.set_size_request(
+            int(Gdk.Screen.width() / 3), -1)
+        social_help_box.pack_start(self._social_help_entry, False, True, 0)
+        self._social_help_entry.show()
+        box_mesh.pack_start(social_help_box, False, True, 0)
+        social_help_box.show()
+
         workspace.pack_start(box_mesh, False, True, 0)
         box_mesh.show()
 
         self.setup()
 
     def setup(self):
-        self._entry.set_text(self._model.get_jabber())
+        self._entry.set_text(self._start_jabber)
+        self._social_help_entry.set_text(self._model.get_social_help())
+
         try:
             radio_state = self._model.get_radio()
         except self._model.ReadError, detail:
@@ -195,16 +223,16 @@ class Network(SectionView):
         self.needs_restart = False
         self._radio_change_handler = self._button.connect(
             'toggled', self.__radio_toggled_cb)
-        self._jabber_change_handler = self._entry.connect(
-            'changed', self.__jabber_changed_cb)
         self._wireless_configuration_reset_handler =  \
             self._clear_wireless_button.connect(
                 'clicked', self.__wireless_configuration_reset_cb)
 
+    def apply(self):
+        self.apply_jabber(self._entry.get_text())
+        self._model.set_social_help(self._social_help_entry.get_text())
+
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
-        self._entry.disconnect(self._jabber_change_handler)
-        self._model.undo()
         self._jabber_alert.hide()
         self._radio_alert.hide()
 
@@ -229,19 +257,11 @@ class Network(SectionView):
         self._validate()
         return False
 
-    def __jabber_changed_cb(self, widget, data=None):
-        if self._jabber_sid:
-            GObject.source_remove(self._jabber_sid)
-        self._jabber_sid = GObject.timeout_add(_APPLY_TIMEOUT,
-                                               self.__jabber_timeout_cb,
-                                               widget)
-
-    def __jabber_timeout_cb(self, widget):
-        self._jabber_sid = 0
-        if widget.get_text() == self._model.get_jabber:
+    def apply_jabber(self, jabber):
+        if jabber == self._model.get_jabber:
             return
         try:
-            self._model.set_jabber(widget.get_text())
+            self._model.set_jabber(jabber)
         except self._model.ReadError, detail:
             self._jabber_alert.props.msg = detail
             self._jabber_valid = False

@@ -429,6 +429,8 @@ class ShellModel(GObject.GObject):
         self._maximum_open_activities = settings.get_int(
             'maximum-number-of-open-activities')
 
+        self._launch_timers = {}
+
     def get_launcher(self, activity_id):
         return self._launchers.get(str(activity_id))
 
@@ -732,10 +734,13 @@ class ShellModel(GObject.GObject):
 
         self.emit('launch-started', home_activity)
 
-        # FIXME: better learn about finishing processes by receiving a signal.
-        # Now just check whether an activity has a window after ~90sec
-        GObject.timeout_add_seconds(90, self._check_activity_launched,
-                                    activity_id)
+        if activity_id in self._launch_timers:
+            GObject.source_remove(self._launch_timers[activity_id])
+            del self._launch_timers[activity_id]
+
+        timer = GObject.timeout_add_seconds(90, self._check_activity_launched,
+                                            activity_id)
+        self._launch_timers[activity_id] = timer
 
     def notify_launch_failed(self, activity_id):
         home_activity = self.get_activity_by_id(activity_id)
@@ -752,6 +757,7 @@ class ShellModel(GObject.GObject):
                           activity_id)
 
     def _check_activity_launched(self, activity_id):
+        del self._launch_timers[activity_id]
         home_activity = self.get_activity_by_id(activity_id)
 
         if not home_activity:

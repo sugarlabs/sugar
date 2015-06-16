@@ -119,6 +119,7 @@ def get_languages():
             langlist = lang.split(':')
         elif line.startswith('LANG='):
             lang = line[5:].replace('"', '')
+            lang = lang.strip()
             if lang.endswith('UTF-8'):
                 lang = lang.replace('UTF-8', 'utf8')
 
