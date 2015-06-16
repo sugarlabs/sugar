@@ -98,10 +98,11 @@ session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imag
 #  * xdg-user-dirs (xdg-user-dir) used in jarabe
 #  * fonts-dejavu-core (Sans Serif) used in data/sugar.schemas
 #  * mobile-broadband-provider-info used in extensions
+#  * policykit-1 (pkexec) used in jarabe.model.brightness
 #  * TODO: Tighten to recommend / depend on Maliit when mature
 python-depends-session = sugar3 jarabe dbus cairo
 gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
-gir-depends-session += networkmanager-1.0 nmgtk-1.0
+gir-depends-session += nmgtk-1.0 gudev-1.0
 depends-session = $(patsubst %,$(comma) python-%,$(python-depends-session))
 depends-session +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-session))
 depends-session +=, sugar-themes (>= $(pkgbranch))
@@ -111,7 +112,7 @@ gir-depends-jarabe += gstreamer-1.0 wnck-3.0 sugarext-1.0 pango-1.0
 gir-depends-jarabe += gconf-2.0 xkl-1.0 soup-2.4 webkit-3.0
 depends-jarabe = $(patsubst %,$(comma) python-%,$(python-depends-jarabe))
 depends-jarabe +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-jarabe))
-depends-jarabe +=, metacity
+depends-jarabe +=, metacity, policykit-1
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
 recommends-session +=, mobile-broadband-provider-info
