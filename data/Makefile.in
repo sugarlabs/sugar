@@ -141,10 +141,12 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(convertdir)" "$(DESTDIR)$(mimedir)" \
-	"$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(schemadir)" \
-	"$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"
-DATA = $(convert_DATA) $(mime_DATA) $(nmservice_DATA) $(schema_DATA) \
-	$(sugar_DATA) $(xsessions_DATA)
+	"$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(polkit_policydir)" \
+	"$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" \
+	"$(DESTDIR)$(xsessionsdir)"
+DATA = $(convert_DATA) $(mime_DATA) $(nmservice_DATA) \
+	$(polkit_policy_DATA) $(schema_DATA) $(sugar_DATA) \
+	$(xsessions_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -366,8 +368,11 @@ schema_DATA = $(schema_in_files:.schemas.in=.schemas)
 gsettings_SCHEMAS = org.sugarlabs.gschema.xml
 convertdir = $(datarootdir)/GConf/gsettings
 convert_DATA = sugar-schemas.convert
-EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA)
-CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA)
+polkit_policydir = $(datadir)/polkit-1/actions
+polkit_in_files = org.sugar.brightness.policy.in
+polkit_policy_DATA = $(polkit_in_files:.policy.in=.policy)
+EXTRA_DIST = $(sugar_DATA) $(xsessions_DATA) $(nmservice_DATA) $(mime_xml_in_files) em.py gtkrc.em $(schema_in_files) $(icon_DATA) $(gsettings_SCHEMAS) $(convert_DATA) $(polkit_in_files)
+CLEANFILES = $(GTKRC_FILES) $(mime_xml_files) $(schema_DATA) $(polkit_policy_DATA)
 all: all-recursive
 
 .SUFFIXES:
@@ -464,6 +469,27 @@ uninstall-nmserviceDATA:
 	@list='$(nmservice_DATA)'; test -n "$(nmservicedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(nmservicedir)'; $(am__uninstall_files_from_dir)
+install-polkit_policyDATA: $(polkit_policy_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(polkit_policy_DATA)'; test -n "$(polkit_policydir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(polkit_policydir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(polkit_policydir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(polkit_policydir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(polkit_policydir)" || exit $$?; \
+	done
+
+uninstall-polkit_policyDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(polkit_policy_DATA)'; test -n "$(polkit_policydir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(polkit_policydir)'; $(am__uninstall_files_from_dir)
 install-schemaDATA: $(schema_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(schema_DATA)'; test -n "$(schemadir)" || list=; \
@@ -687,7 +713,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(convertdir)" "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
+	for dir in "$(DESTDIR)$(convertdir)" "$(DESTDIR)$(mimedir)" "$(DESTDIR)$(nmservicedir)" "$(DESTDIR)$(polkit_policydir)" "$(DESTDIR)$(schemadir)" "$(DESTDIR)$(sugardir)" "$(DESTDIR)$(xsessionsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -742,8 +768,9 @@ info: info-recursive
 info-am:
 
 install-data-am: install-convertDATA install-data-local \
-	install-mimeDATA install-nmserviceDATA install-schemaDATA \
-	install-sugarDATA install-xsessionsDATA
+	install-mimeDATA install-nmserviceDATA \
+	install-polkit_policyDATA install-schemaDATA install-sugarDATA \
+	install-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-recursive
@@ -789,8 +816,9 @@ ps: ps-recursive
 ps-am:
 
 uninstall-am: uninstall-convertDATA uninstall-mimeDATA \
-	uninstall-nmserviceDATA uninstall-schemaDATA \
-	uninstall-sugarDATA uninstall-xsessionsDATA
+	uninstall-nmserviceDATA uninstall-polkit_policyDATA \
+	uninstall-schemaDATA uninstall-sugarDATA \
+	uninstall-xsessionsDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) uninstall-hook
 .MAKE: $(am__recursive_targets) install-am install-data-am \
@@ -805,13 +833,14 @@ uninstall-am: uninstall-convertDATA uninstall-mimeDATA \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-mimeDATA install-nmserviceDATA install-pdf \
-	install-pdf-am install-ps install-ps-am install-schemaDATA \
-	install-strip install-sugarDATA install-xsessionsDATA \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-convertDATA uninstall-hook \
-	uninstall-mimeDATA uninstall-nmserviceDATA \
+	install-pdf-am install-polkit_policyDATA install-ps \
+	install-ps-am install-schemaDATA install-strip \
+	install-sugarDATA install-xsessionsDATA installcheck \
+	installcheck-am installdirs installdirs-am maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-convertDATA uninstall-hook uninstall-mimeDATA \
+	uninstall-nmserviceDATA uninstall-polkit_policyDATA \
 	uninstall-schemaDATA uninstall-sugarDATA \
 	uninstall-xsessionsDATA
 
@@ -840,6 +869,9 @@ uninstall-hook:
 install-data-local: $(schema_DATA)
 @GCONF_SCHEMAS_INSTALL_TRUE@	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule sugar.schemas 2>&1 > /dev/null
 @GSETTINGS_RULES@
+
+org.sugar.brightness.policy: org.sugar.brightness.policy.in
+	sed -e "s|\@bindir\@|$(bindir)|g" $< > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -120,6 +120,13 @@
             <description>Setting for muting the sound device.</description>
         </key>
     </schema>
+    <schema id="org.sugarlabs.screen" path="/org/sugarlabs/screen/">
+        <key name="brightness" type="i">
+            <default>-1</default>
+            <summary>Brightness Level</summary>
+            <description>Brightness level for the computer screen.</description>
+        </key>
+    </schema>
     <schema id="org.sugarlabs.date" path="/org/sugarlabs/date/">
         <key name="timezone" type="s">
             <default>''</default>
@@ -156,6 +163,11 @@
             <default>true</default>
             <summary>Publish to Gadget</summary>
             <description>If TRUE, Sugar will make us searchable for the other users of the Jabber server.</description>
+        </key>
+        <key name="social-help-server" type="s">
+            <default>'https://use-socialhelp.sugarlabs.org'</default>
+            <summary>Social Help Server</summary>
+            <description>URL of the social help server to use with protocol.</description>
         </key>
     </schema>
     <schema id="org.sugarlabs.power" path="/org/sugarlabs/power/">

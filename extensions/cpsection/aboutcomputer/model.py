@@ -23,17 +23,14 @@ import errno
 import time
 
 from gi.repository import Gio
-from gi.repository import NMClient
-from gi.repository import NetworkManager
 
 from jarabe import config
+from jarabe.model.network import get_wireless_interfaces
 
 
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
 _DMI_DIRECTORY = '/sys/class/dmi/id'
-_SN = 'serial-number'
-_MODEL = 'openprom/model'
 
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
@@ -50,11 +47,7 @@ def print_aboutcomputer():
 
 
 def get_serial_number():
-    serial_no = None
-    if os.path.exists(os.path.join(_OFW_TREE, _SN)):
-        serial_no = _read_file(os.path.join(_OFW_TREE, _SN))
-    elif os.path.exists(os.path.join(_PROC_TREE, _SN)):
-        serial_no = _read_file(os.path.join(_PROC_TREE, _SN))
+    serial_no = _read_device_tree('serial-number')
     if serial_no is None:
         serial_no = _not_available
     return serial_no
@@ -82,6 +75,7 @@ def get_build_number():
                 raise
         else:
             build_no, stderr_ = popen.communicate()
+            build_no = build_no.strip()
 
     if build_no is None or not build_no:
         build_no = _not_available
@@ -93,35 +87,33 @@ def print_build_number():
     print get_build_number()
 
 
-def _parse_firmware_number(firmware_no):
-    if firmware_no is None:
-        firmware_no = _not_available
-    else:
+def get_firmware_number():
+    firmware_no = _read_device_tree('openprom/model')
+    if firmware_no is not None:
         # try to extract Open Firmware version from OLPC style version
         # string, e.g. "CL2   Q4B11  Q4B"
         if firmware_no.startswith('CL'):
-            firmware_no = firmware_no[6:13]
-    return firmware_no
+            firmware_no = firmware_no[6:13].strip()
+        ec_name = _read_device_tree('ec-name')
+        if ec_name:
+            firmware_no = '%(firmware)s with %(ec)s' % {
+                'firmware': firmware_no, 'ec': ec_name}
 
-
-def get_firmware_number():
-    firmware_no = None
-    if os.path.exists(os.path.join(_OFW_TREE, _MODEL)):
-        firmware_no = _read_file(os.path.join(_OFW_TREE, _MODEL))
-        firmware_no = _parse_firmware_number(firmware_no)
-    elif os.path.exists(os.path.join(_PROC_TREE, _MODEL)):
-        firmware_no = _read_file(os.path.join(_PROC_TREE, _MODEL))
-        firmware_no = _parse_firmware_number(firmware_no)
     elif os.path.exists(os.path.join(_DMI_DIRECTORY, 'bios_version')):
         firmware_no = _read_file(os.path.join(_DMI_DIRECTORY, 'bios_version'))
-        if firmware_no is None:
-            firmware_no = _not_available
+    if firmware_no is None:
+        firmware_no = _not_available
     return firmware_no
 
 
 def get_hardware_model():
     settings = Gio.Settings('org.sugarlabs.extensions.aboutcomputer')
-    return settings.get_string('hardware-model')
+    model = settings.get_string('hardware-model')
+    if not model:
+        model = _read_device_tree('mfg-data/MN')
+        sku = _read_device_tree('mfg-data/sk')
+        if sku:
+            model = '%s (SKU%s)' % (model, sku)
 
 
 def get_secondary_licenses():
@@ -143,26 +135,18 @@ def print_firmware_number():
     print get_firmware_number()
 
 
-def _get_wireless_interfaces():
-    try:
-        network_manager = NMClient.Client()
-    except:
-        return ['wlan0', 'eth0']
-
-    interfaces = []
-    for device in network_manager.get_devices():
-        if device.get_device_type() is not NetworkManager.DeviceType.WIFI:
-            continue
-        interfaces.append(device.get_iface())
-
-    return interfaces
-
-
 def get_wireless_firmware():
     environment = os.environ.copy()
     environment['PATH'] = '%s:/usr/sbin' % (environment['PATH'], )
     firmware_info = {}
-    for interface in _get_wireless_interfaces():
+
+    wireless_interfaces = get_wireless_interfaces()
+    if not wireless_interfaces:
+        _logger.warning('Cannot connect to NetworkManager, falling back to'
+                        ' static list of devices')
+        wireless_interfaces = ['wlan0', 'eth0']
+
+    for interface in get_wireless_interfaces():
         try:
             output = subprocess.Popen(['ethtool', '-i', interface],
                                       stdout=subprocess.PIPE,
@@ -172,14 +156,29 @@ def get_wireless_firmware():
             continue
 
         try:
-            version = ([line for line in output
-                        if line.startswith('firmware')][0].split()[1])
+            for line in output:
+                if line.startswith('firmware'):
+                    version = line.split()[1]
+                if line.startswith('driver'):
+                    driver = line.split()[1]
         except IndexError:
             _logger.exception('Error parsing ethtool output for %r',
                               interface)
             continue
 
-        firmware_info[interface] = version
+        card = None
+        if driver == 'mwifiex':
+            card = 'mv8787, IEEE 802.11n 5GHz'
+        if driver == 'libertas':
+            if version.startswith('5.'):
+                card = 'usb8388, IEEE 802.11g 2.4GHz'
+            else:
+                card = 'mv8686, IEEE 802.11g 2.4GHz'
+
+        if card:
+            firmware_info[interface] = '%s (%s, %s)' % (version, driver, card)
+        else:
+            firmware_info[interface] = '%s (%s)' % (version, driver)
 
     if not firmware_info:
         return _not_available
@@ -187,9 +186,9 @@ def get_wireless_firmware():
     if len(firmware_info) == 1:
         return firmware_info.values()[0]
 
-    return ', '.join(['%(interface)s: %(version)s' %
-                      {'interface': interface, 'version': version}
-                      for interface, version in firmware_info.items()])
+    return ', '.join(['%(interface)s: %(info)s' %
+                      {'interface': interface, 'info': info}
+                      for interface, info in firmware_info.items()])
 
 
 def print_wireless_firmware():
@@ -233,6 +232,16 @@ def get_license():
     except IOError:
         license_text = _not_available
     return license_text
+
+
+def _read_device_tree(path):
+    value = _read_file(os.path.join(_PROC_TREE, path))
+    if value:
+        return value.strip('\x00')
+    value = _read_file(os.path.join(_OFW_TREE, path))
+    if value:
+        return value.strip('\x00')
+    return value
 
 
 def days_from_last_update():
