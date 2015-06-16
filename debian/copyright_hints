@@ -116,6 +116,7 @@ License: UNKNOWN
 Files: AUTHORS
  Makefile.am
  bin/Makefile.am
+ bin/sugar-backlight-helper
  bin/sugar-install-bundle
  bin/sugar.in
  configure.ac
@@ -139,6 +140,7 @@ Files: AUTHORS
  data/kbdconfig
  data/mime.defaults
  data/nm-user-settings.conf
+ data/org.sugar.brightness.policy.in
  data/org.sugarlabs.gschema.xml
  data/sugar-100.gtkrc
  data/sugar-72.gtkrc
@@ -390,6 +392,13 @@ Copyright: 2012, Agustin Zubiaga <aguz@sugarlabs.org>
 License: GPL-2+
  FIXME
 
+Files: bin/sugar-backlight-setup
+ extensions/globalkey/brightness.py
+ src/jarabe/model/brightness.py
+Copyright: 2015, Martin Abente Lahaye <tch@sugarlabs.org>
+License: GPL-2+
+ FIXME
+
 Files: src/jarabe/desktop/grid.py
  src/jarabe/frame/clipboardicon.py
  src/jarabe/journal/journalactivity.py
@@ -451,12 +460,6 @@ Copyright: 2013, Gonzalo Odiard
 License: GPL-2+
  FIXME
 
-Files: extensions/globalkey/viewhelp.py
- src/jarabe/view/viewhelp.py
-Copyright: 2013, Kalpa Welivitigoda
-License: GPL-2+
- FIXME
-
 Files: extensions/cpsection/backup/backends/backend_tools.py
  extensions/cpsection/backup/backends/volume.py
 Copyright: 2013, Martin Abente Lahaye - tch@sugarlabs.org
@@ -467,6 +470,13 @@ Files: extensions/cpsection/keyboard/model.py
  extensions/cpsection/keyboard/view.py
 Copyright: 2009, OLPC
   2013, Sugar Labs
+License: GPL-2+
+ FIXME
+
+Files: extensions/globalkey/screenshot.py
+ src/jarabe/model/screenshot.py
+Copyright: 2008, One Laptop Per Child
+  2009, Simon Schampijer, James Zaki
 License: GPL-2+
  FIXME
 
@@ -544,7 +554,7 @@ License: Expat
  FIXME
 
 Files: extensions/cpsection/aboutcomputer/view.py
-Copyright: 2006-2013, One Laptop per Child Association Inc,' \
+Copyright: 2006-2015, One Laptop per Child Association Inc,' \
   2008, OLPC
   2009, Simon Schampijer
   = Gtk.HSeparator()
@@ -685,6 +695,23 @@ Copyright: 2008, One Laptop Per Child
 License: GPL-2+
  FIXME
 
+Files: extensions/globalkey/viewhelp.py
+Copyright: 2013, Kalpa Welivitigoda
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/view/viewhelp.py
+Copyright: 2013, Kalpa Welivitigoda
+  2015, Sam Parkinson
+License: GPL-2+
+ FIXME
+
+Files: extensions/deviceicon/display.py
+Copyright: 2014, Sam Parkinson
+  2015, Martin Abente Lahaye
+License: GPL-2+
+ FIXME
+
 Files: extensions/cpsection/modemconfiguration/model.py
 Copyright: 2009, Paraguay Educa, Martin Abente
   2013, Miguel González
@@ -717,12 +744,6 @@ Copyright: 2010, Tomeu Vizoso
   2011, Raul Gutierrez Segales
   2011, Walter Bender
   2011-2012, One Laptop Per Child
-License: GPL-2+
- FIXME
-
-Files: extensions/globalkey/screenshot.py
-Copyright: 2008, One Laptop Per Child
-  2009, Simon Schampijer, James Zaki
 License: GPL-2+
  FIXME
 
@@ -797,6 +818,11 @@ License: GPL-2+
 
 Files: src/jarabe/journal/journalwindow.py
 Copyright: 2010, Software for Education, Entertainment and Training
+License: GPL-2+
+ FIXME
+
+Files: src/jarabe/journal/bundlelauncher.py
+Copyright: 2014, Sugarlabs (Manuel Quinones)
 License: GPL-2+
  FIXME
 

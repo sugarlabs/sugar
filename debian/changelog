@@ -1,11 +1,21 @@
-sugar (0.104.1-12) UNRELEASED; urgency=medium
+sugar (0.105.2-1) experimental; urgency=medium
 
+  [ upstream ]
+  * New release(s).
+
+  [ Jonas Smedegaard ]
   * Drop branch from source and binary package.
   * Update package relations:
     + Recommend/depend on unbranched but at least current branch of
       Glucose parts (i.e. core libraries).
+    + Stop have sugar-session depend on gir1.2-networkmanager-1.0: No
+      longer needed.
+    + Have python-jarabe depend on policykit-1: Needed for new
+      brightness helper tools.
+  * Update copyright info:
+    + Extend coverage for main upstream authors.
 
- -- Jonas Smedegaard <dr@jones.dk>  Mon, 15 Jun 2015 08:42:31 -0500
+ -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 15:16:45 -0500
 
 sugar-0.104 (0.104.1-11) unstable; urgency=medium
 
