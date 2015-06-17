@@ -201,12 +201,25 @@ class BundleRegistry(GObject.GObject):
             self._write_favorites_file(i)
 
     def _scan_new_favorites(self):
+        hidden_activities = []
+        path = os.environ.get('SUGAR_ACTIVITIES_HIDDEN', None)
+
+        try:
+            with open(path) as file:
+                for line in file.readlines():
+                    bundle_id = line.strip()
+                    if bundle_id:
+                        hidden_activities.append(bundle_id)
+        except IOError:
+            logging.error('Error when loading hidden activities %s', path)
+
         for bundle in self:
             bundle_id = bundle.get_bundle_id()
             key = self._get_favorite_key(
                 bundle_id, bundle.get_activity_version())
             if key not in self._favorite_bundles[_DEFAULT_VIEW]:
-                self._favorite_bundles[_DEFAULT_VIEW][key] = {'favorite': True}
+                self._favorite_bundles[_DEFAULT_VIEW][key] = \
+                    {'favorite': bundle_id not in hidden_activities}
         self._write_favorites_file(_DEFAULT_VIEW)
 
     def get_bundle(self, bundle_id):
