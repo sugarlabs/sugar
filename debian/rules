@@ -163,6 +163,9 @@ CDBS_BREAKS_$(pkg-jarabe) = sugar-emulator
 # Provide virtual x-session-manager package to avoid pulling in gnome-session
 CDBS_PROVIDES_$(pkg-session) +=, sugar, x-session-manager
 
+# Provide virtual notification-daemon package
+CDBS_PROVIDES_$(pkg-jarabe) +=, notification-daemon
+
 # Transitional hints: sugar-tools-* merged into sugar-session-*
 # TODO: drop when no sugar-tools-* are in stable
 CDBS_REPLACES_$(pkg-session) +=, sugar-tools
