@@ -159,8 +159,9 @@ CDBS_SUGGESTS_$(pkg-sucrose) = $(suggests-sucrose)
 CDBS_BREAKS_$(pkg-session) = sugar-emulator
 CDBS_BREAKS_$(pkg-jarabe) = sugar-emulator
 
-# Provide virtual unversioned sugar package
-CDBS_PROVIDES_$(pkg-session) +=, sugar
+# Provide virtual sugar package to ease install
+# Provide virtual x-session-manager package to avoid pulling in gnome-session
+CDBS_PROVIDES_$(pkg-session) +=, sugar, x-session-manager
 
 # Transitional hints: sugar-tools-* merged into sugar-session-*
 # TODO: drop when no sugar-tools-* are in stable
