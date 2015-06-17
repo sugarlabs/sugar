@@ -1,3 +1,11 @@
+sugar (0.105.2-2) experimental; urgency=medium
+
+  * Update package relations:
+    + Have sugar-session provide virtual x-session-manager.
+    + Have python-jarabe provide virtual notification-daemon.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 17 Jun 2015 13:16:06 -0500
+
 sugar (0.105.2-1) experimental; urgency=medium
 
   [ upstream ]
