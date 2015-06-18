@@ -113,6 +113,9 @@ class BundleRegistry(GObject.GObject):
         except Exception:
             logging.exception('Error while loading favorite_activities.')
 
+        self._hidden_activities = []
+        self._load_hidden_activities()
+
         self._convert_old_favorites()
         self._scan_new_favorites()
 
@@ -189,6 +192,17 @@ class BundleRegistry(GObject.GObject):
 
                 self._favorite_bundles[i] = favorite_bundles
 
+    def _load_hidden_activities(self):
+        path = os.environ.get('SUGAR_ACTIVITIES_HIDDEN', None)
+        try:
+            with open(path) as file:
+                for line in file.readlines():
+                    bundle_id = line.strip()
+                    if bundle_id:
+                        self._hidden_activities.append(bundle_id)
+        except IOError:
+            logging.error('Error when loading hidden activities %s', path)
+
     def _convert_old_favorites(self):
         for i in range(desktop.get_number_of_views()):
             for key in self._favorite_bundles[i].keys():
@@ -201,25 +215,13 @@ class BundleRegistry(GObject.GObject):
             self._write_favorites_file(i)
 
     def _scan_new_favorites(self):
-        hidden_activities = []
-        path = os.environ.get('SUGAR_ACTIVITIES_HIDDEN', None)
-
-        try:
-            with open(path) as file:
-                for line in file.readlines():
-                    bundle_id = line.strip()
-                    if bundle_id:
-                        hidden_activities.append(bundle_id)
-        except IOError:
-            logging.error('Error when loading hidden activities %s', path)
-
         for bundle in self:
             bundle_id = bundle.get_bundle_id()
             key = self._get_favorite_key(
                 bundle_id, bundle.get_activity_version())
             if key not in self._favorite_bundles[_DEFAULT_VIEW]:
                 self._favorite_bundles[_DEFAULT_VIEW][key] = \
-                    {'favorite': bundle_id not in hidden_activities}
+                    {'favorite': bundle_id not in self._hidden_activities}
         self._write_favorites_file(_DEFAULT_VIEW)
 
     def get_bundle(self, bundle_id):
@@ -303,9 +305,11 @@ class BundleRegistry(GObject.GObject):
                 self.remove_bundle(installed.get_path(), emit_signals)
 
         if set_favorite:
+            favorite = not self.is_bundle_hidden(
+                bundle.get_bundle_id(), bundle.get_activity_version())
             self._set_bundle_favorite(bundle.get_bundle_id(),
                                       bundle.get_activity_version(),
-                                      True)
+                                      favorite)
 
         with self._lock:
             self._bundles.append(bundle)
@@ -388,6 +392,14 @@ class BundleRegistry(GObject.GObject):
         if key not in self._favorite_bundles[favorite_view]:
             return False
         return self._favorite_bundles[favorite_view][key]['favorite']
+
+    def is_bundle_hidden(self, bundle_id, version):
+        key = self._get_favorite_key(bundle_id, version)
+        if key in self._favorite_bundles[_DEFAULT_VIEW]:
+            data = self._favorite_bundles[_DEFAULT_VIEW][key]
+            return data['favorite'] is False
+        else:
+            return bundle_id in self._hidden_activities
 
     def is_activity_protected(self, bundle_id):
         return bundle_id in self._protected_activities
