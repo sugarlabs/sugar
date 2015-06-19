@@ -132,6 +132,9 @@ class Activity(GObject.GObject):
         """
         self._shell_windows.remove(window)
 
+    def has_shell_window(self):
+        return bool(self._shell_windows)
+
     def stop(self):
         # For web activities the Apisocket will connect to the 'stop'
         # signal, thus preventing the window close.  Then, on the
