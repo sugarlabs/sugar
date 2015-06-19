@@ -118,7 +118,7 @@ def should_show_view_help(activity):
 
 
 def setup_view_help(activity):
-    if shell.get_model().has_modal():
+    if activity.have_shell_window():
         return
     # check whether the execution was from an activity
     bundle_path = activity.get_bundle_path()
