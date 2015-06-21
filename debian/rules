@@ -62,17 +62,15 @@ bdeps +=, gettext, intltool, shared-mime-info
 # Needed for our packaging
 bdeps +=, python-empy
 
-# $(1): activity stems
-# $(2): default branch (optional)
-# $(3): fallback flag (if non-empty unversioned fallback is added)
-sugar_expand_activities = $(foreach stem,$(1),$(comma) $(patsubst %,sugar-$(stem)-activity-%$(if $(3), | ),$(2))$(if $(if $(2),,true)$(3),sugar-$(stem)-activity))
-
-# Fructose activities
-session_expand_activities += $(call sugar_expand_activities,browse chat log,,$(1))
-# Fructose activities not avilable in Debian main for this Sugar branch
-session_expand_activities_relaxed += $(call sugar_expand_activities,pippy turtleart calculate etoys,,$(1))
-session_expand_activities_relaxed += $(call sugar_expand_activities,write,0.86,$(1))
-session_expand_activities_relaxed += $(call sugar_expand_activities,jukebox imageviewer,$(pkgbranch),$(1))
+# Core activities
+# https://wiki.sugarlabs.org/go/Development_Team/Release/Modules#Fructose
+fructose = chat browse read calculate log write terminal pippy etoys
+fructose += imageviewer jukebox turtleart
+# Core activities not in Debian main
+fructose-relax = read etoys turtleart imageviewer
+pkg-fructose = $(patsubst %,sugar-%-activity,$(filter-out $(fructose-relax),$(fructose)))
+pkg-fructose-relaxed = $(patsubst %,sugar-%-activity,$(fructose-relax))
+pkg-honey = $(patsubst %,sugar-%-activity,$(honey))
 
 # Needed (always/often/sometimes) at runtime
 #  * Glucose (at least current branch)
@@ -116,7 +114,7 @@ depends-jarabe +=, metacity, policykit-1
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
 recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
 recommends-session +=, mobile-broadband-provider-info
-recommends-session +=, $(call session_expand_activities,true)
+recommends-session +=, $(pkg-fructose)
 recommends-jarabe = python-carquinyol (>= $(pkgbranch))
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
@@ -125,7 +123,7 @@ suggests-session = gdb, olpc-powerd
 suggests-toolkit = git, ipython
 suggests-session-weak = gir1.2-maliit-1.0, maliit-keyboard
 suggests-session-only = $(suggests-session-weak), $(pkg-sucrose)
-suggests-session-only +=, $(call session_expand_activities_relaxed,true)
+suggests-session-only +=, $(pkg-fructose-relaxed)
 suggests-jarabe-only = $(pkg-session)
 
 # Tighten relations in Sucrose metapackage:
@@ -136,13 +134,13 @@ suggests-jarabe-only = $(pkg-session)
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
 depends-sucrose +=, python-carquinyol (>= $(pkgbranch))
-depends-sucrose +=, $(call session_expand_activities)
+depends-sucrose +=, $(pkg-fructose)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
 recommends-sucrose +=, python-sugar-toolkit
 recommends-sucrose +=, python-sugar
 recommends-sucrose +=, gtk2-engines-sugar (>= $(pkgbranch))
 suggests-sucrose = $(suggests-session-weak)
-suggests-sucrose +=, $(call session_expand_activities_relaxed)
+suggests-sucrose +=, $(pkg-fructose-relaxed)
 
 CDBS_BUILD_DEPENDS +=, $(bdeps)
 CDBS_DEPENDS_$(pkg-session) = $(depends-session)
