@@ -62,6 +62,7 @@ def read_all_languages():
     # FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
+    locales.append(('Guarani', 'Paraguay', 'gn.utf8'))
 
     locales.sort()
     return locales
