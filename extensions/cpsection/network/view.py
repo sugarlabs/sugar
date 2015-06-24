@@ -37,7 +37,6 @@ class Network(SectionView):
         self._model = model
         self.restart_alerts = alerts
         self._jabber_sid = 0
-        self._jabber_valid = True
         self._radio_valid = True
         self._jabber_change_handler = None
         self._radio_change_handler = None
@@ -49,7 +48,6 @@ class Network(SectionView):
         group = Gtk.SizeGroup(Gtk.SizeGroupMode.HORIZONTAL)
 
         self._radio_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        self._jabber_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
 
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
@@ -161,18 +159,6 @@ class Network(SectionView):
         box_mesh.pack_start(box_server, False, True, 0)
         box_server.show()
 
-        self._jabber_alert = InlineAlert()
-        label_jabber_error = Gtk.Label()
-        group.add_widget(label_jabber_error)
-        self._jabber_alert_box.pack_start(label_jabber_error, False, True, 0)
-        label_jabber_error.show()
-        self._jabber_alert_box.pack_start(self._jabber_alert, False, True, 0)
-        box_mesh.pack_end(self._jabber_alert_box, False, True, 0)
-        self._jabber_alert_box.show()
-        if 'jabber' in self.restart_alerts:
-            self._jabber_alert.props.msg = self.restart_msg
-            self._jabber_alert.show()
-
         social_help_info = Gtk.Label(
             _('Social Help is a forum that lets you connect with developers'
               ' and discuss Sugar Activities.  Changing servers means'
@@ -218,7 +204,6 @@ class Network(SectionView):
         else:
             self._button.set_active(radio_state)
 
-        self._jabber_valid = True
         self._radio_valid = True
         self.needs_restart = False
         self._radio_change_handler = self._button.connect(
@@ -228,16 +213,15 @@ class Network(SectionView):
                 'clicked', self.__wireless_configuration_reset_cb)
 
     def apply(self):
-        self.apply_jabber(self._entry.get_text())
+        self._apply_jabber(self._entry.get_text())
         self._model.set_social_help(self._social_help_entry.get_text())
 
     def undo(self):
         self._button.disconnect(self._radio_change_handler)
-        self._jabber_alert.hide()
         self._radio_alert.hide()
 
     def _validate(self):
-        if self._jabber_valid and self._radio_valid:
+        if self._radio_valid:
             self.props.is_valid = True
         else:
             self.props.is_valid = False
@@ -257,22 +241,10 @@ class Network(SectionView):
         self._validate()
         return False
 
-    def apply_jabber(self, jabber):
-        if jabber == self._model.get_jabber:
+    def _apply_jabber(self, jabber):
+        if jabber == self._model.get_jabber():
             return
-        try:
-            self._model.set_jabber(jabber)
-        except self._model.ReadError, detail:
-            self._jabber_alert.props.msg = detail
-            self._jabber_valid = False
-            self._jabber_alert.show()
-            self.restart_alerts.append('jabber')
-        else:
-            self._jabber_valid = True
-            self._jabber_alert.hide()
-
-        self._validate()
-        return False
+        self._model.set_jabber(jabber)
 
     def __wireless_configuration_reset_cb(self, widget):
         # FIXME: takes effect immediately, not after CP is closed with
