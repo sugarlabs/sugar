@@ -163,6 +163,7 @@ class ViewHelp(Gtk.Window):
         self.set_size_request(width, height)
 
         self.connect('realize', self.__realize_cb)
+        self.connect('hide', self.__hide_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
 
         toolbar = Toolbar(title, has_local_help)
@@ -214,7 +215,6 @@ class ViewHelp(Gtk.Window):
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
-        shell.get_model().pop_modal()
 
     def __key_press_event_cb(self, window, event):
         if event.keyval == Gdk.KEY_Escape:
@@ -259,6 +259,9 @@ class ViewHelp(Gtk.Window):
             display, self.parent_window_xid)
         window.set_transient_for(parent)
         shell.get_model().push_modal()
+
+    def __hide_cb(self, widget):
+        shell.get_model().pop_modal()
 
     def _get_current_language(self):
         locale = os.environ.get('LANG')
