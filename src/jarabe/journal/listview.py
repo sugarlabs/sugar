@@ -671,10 +671,16 @@ class ListView(BaseListView):
     def __init__(self, journalactivity, enable_multi_operations=False):
         BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
+        self._drag_coords = None
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
+        self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
+
+        # We need the mouse position before the drag starts, therefore
+        # this must be running all of the time
+        self.connect('motion-notify-event', self.__motion_notify_event)
 
         self.cell_title.connect('edited', self.__cell_title_edited_cb)
         self.cell_title.connect('editing-canceled', self.__editing_canceled_cb)
@@ -695,6 +701,23 @@ class ListView(BaseListView):
 
     def __drag_begin_cb(self, widget, drag_context):
         self._is_dragging = True
+
+    def __motion_notify_event(self, widget, event):
+        if not self._is_dragging:
+            self._drag_coords = (event.x, event.y)
+
+    def __drag_data_get_cb(self, widget, context, selection, info, time):
+        # HACK:  Gtk.TreeDragSource does not work for us on Gtk 3.16+, so
+        #        use our drag source code instead
+        if self._drag_coords is None:
+            logging.warning('ListView drag-data-get without self._drag_coords')
+            return
+        x, y = self.tree_view. convert_widget_to_bin_window_coords(
+            *self._drag_coords)
+        path, colum, cell_x, cell_y = self.tree_view.get_path_at_pos(x, y)
+
+        model = self.tree_view.get_model()
+        model.do_drag_data_get(path, selection)
 
     def __button_release_event_cb(self, tree_view, event):
         try:
