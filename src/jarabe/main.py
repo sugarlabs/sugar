@@ -39,6 +39,13 @@ os.environ['GTK_OVERLAY_SCROLLING'] = '0'
 os.environ['LIBOVERLAY_SCROLLBAR'] = '0'
 
 import gettext
+from jarabe import config
+# NOTE: This needs to happen early because some modules register
+# translatable strings in the module scope.
+gettext.bindtextdomain('sugar', config.locale_path)
+gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
+gettext.textdomain('sugar')
+
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
@@ -62,7 +69,6 @@ from jarabe.model import filetransfer
 from jarabe.view import launcher
 from jarabe.model import keyboard
 from jarabe.desktop import homewindow
-from jarabe import config
 from jarabe.model.sound import sound
 from jarabe import intro
 from jarabe.intro.window import IntroWindow
@@ -323,12 +329,6 @@ def _migrate_gconf_to_gsettings():
 
 
 def setup_locale():
-    # NOTE: This needs to happen early because some modules register
-    # translatable strings in the module scope.
-    gettext.bindtextdomain('sugar', config.locale_path)
-    gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
-    gettext.textdomain('sugar')
-
     settings = Gio.Settings('org.sugarlabs.date')
     timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
