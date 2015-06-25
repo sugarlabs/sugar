@@ -238,7 +238,7 @@ class Network(SectionView):
 
     def __jabber_timeout_cb(self, widget):
         self._jabber_sid = 0
-        if widget.get_text() == self._model.get_jabber:
+        if widget.get_text() == self._model.get_jabber():
             return
         try:
             self._model.set_jabber(widget.get_text())
