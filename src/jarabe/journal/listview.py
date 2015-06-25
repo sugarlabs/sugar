@@ -673,6 +673,7 @@ class ListView(BaseListView):
         self._is_dragging = False
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
+        self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
         self.tree_view.connect('button-release-event',
                                self.__button_release_event_cb)
 
@@ -695,6 +696,13 @@ class ListView(BaseListView):
 
     def __drag_begin_cb(self, widget, drag_context):
         self._is_dragging = True
+
+    def __drag_data_get_cb(self, widget, context, selection, info, time):
+        # HACK:  Gtk.TreeDragSource does not work for us on Gtk 3.16+, so
+        #        use our drag source code instead
+        path, _column = self.tree_view.get_cursor()
+        model = self.tree_view.get_model()
+        model.do_drag_data_get(path, selection)
 
     def __button_release_event_cb(self, tree_view, event):
         try:
