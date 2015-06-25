@@ -131,7 +131,7 @@ def setup_view_source(activity):
     bundle_id = activity.get_bundle_id()
 
     if activity.has_shell_window():
-        _logger.debug('Viewsource window already open for %s %s', window_xid,
+        _logger.debug('A window is already open for %s %s', window_xid,
                       bundle_path)
         return
 
