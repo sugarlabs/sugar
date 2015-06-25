@@ -692,12 +692,6 @@ class SortingButton(ToolButton):
                                   ([])),
     }
 
-    _SORT_OPTIONS = [
-        ('timestamp', 'view-lastedit', _('Sort by date modified')),
-        ('creation_time', 'view-created', _('Sort by date created')),
-        ('filesize', 'view-size', _('Sort by size')),
-    ]
-
     def __init__(self):
         ToolButton.__init__(self)
 
@@ -714,7 +708,13 @@ class SortingButton(ToolButton):
         self.props.palette.set_content(menu_box)
         menu_box.show()
 
-        for property_, icon, label in self._SORT_OPTIONS:
+        sort_options = [
+            ('timestamp', 'view-lastedit', _('Sort by date modified')),
+            ('creation_time', 'view-created', _('Sort by date created')),
+            ('filesize', 'view-size', _('Sort by size')),
+        ]
+
+        for property_, icon, label in sort_options:
             button = PaletteMenuItem(label)
             button_icon = Icon(pixel_size=style.SMALL_ICON_SIZE,
                                icon_name=icon)
