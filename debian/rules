@@ -68,9 +68,8 @@ fructose = chat browse read calculate log write terminal pippy etoys
 fructose += imageviewer jukebox turtleart
 # Core activities not in Debian main
 fructose-relax = read etoys turtleart imageviewer
-pkg-fructose = $(patsubst %,sugar-%-activity,$(filter-out $(fructose-relax),$(fructose)))
-pkg-fructose-relaxed = $(patsubst %,sugar-%-activity,$(fructose-relax))
-pkg-honey = $(patsubst %,sugar-%-activity,$(honey))
+pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,$(filter-out $(fructose-relax),$(fructose)))
+pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,$(fructose-relax))
 
 # Needed (always/often/sometimes) at runtime
 #  * Glucose (at least current branch)
