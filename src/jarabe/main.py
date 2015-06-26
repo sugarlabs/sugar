@@ -85,22 +85,22 @@ _window_manager_started = False
 _starting_desktop = False
 
 
-def unfreeze_screen_cb():
+def _unfreeze_screen_cb():
     logging.debug('STARTUP: unfreeze_screen_cb')
     screen.unfreeze()
 
 
-def setup_frame_cb():
+def _setup_frame_cb():
     logging.debug('STARTUP: setup_frame_cb')
     frame.get_view()
 
 
-def setup_keyhandler_cb():
+def _setup_keyhandler_cb():
     logging.debug('STARTUP: setup_keyhandler_cb')
     keyhandler.setup(frame.get_view())
 
 
-def setup_gesturehandler_cb():
+def _setup_gesturehandler_cb():
     logging.debug('STARTUP: setup_gesturehandler_cb')
     gesturehandler.setup(frame.get_view())
 
@@ -110,20 +110,20 @@ def setup_cursortracker_cb():
     cursortracker.setup()
 
 
-def setup_journal_cb():
+def _setup_journal_cb():
     logging.debug('STARTUP: setup_journal_cb')
     journalactivity.start()
 
 
-def setup_notification_service_cb():
+def _setup_notification_service_cb():
     notifications.init()
 
 
-def setup_file_transfer_cb():
+def _setup_file_transfer_cb():
     filetransfer.init()
 
 
-def setup_window_manager():
+def _setup_window_manager():
     logging.debug('STARTUP: window_manager')
 
     if subprocess.call('metacity-message disable-keybindings',
@@ -142,12 +142,12 @@ def __window_manager_changed_cb(screen):
 def _complete_desktop_startup():
     launcher.setup()
 
-    GLib.idle_add(setup_frame_cb)
-    GLib.idle_add(setup_keyhandler_cb)
-    GLib.idle_add(setup_gesturehandler_cb)
-    GLib.idle_add(setup_journal_cb)
-    GLib.idle_add(setup_notification_service_cb)
-    GLib.idle_add(setup_file_transfer_cb)
+    GLib.idle_add(_setup_frame_cb)
+    GLib.idle_add(_setup_keyhandler_cb)
+    GLib.idle_add(_setup_gesturehandler_cb)
+    GLib.idle_add(_setup_journal_cb)
+    GLib.idle_add(_setup_notification_service_cb)
+    GLib.idle_add(_setup_file_transfer_cb)
     GLib.timeout_add_seconds(600, updater.startup_periodic_update)
 
     apisocket.start()
@@ -162,7 +162,7 @@ def _check_for_window_manager(screen):
 
     screen.disconnect_by_func(__window_manager_changed_cb)
 
-    setup_window_manager()
+    _setup_window_manager()
 
     global _window_manager_started
     _window_manager_started = True
@@ -213,7 +213,7 @@ def __intro_window_done_cb(window):
         _complete_desktop_startup()
 
 
-def cleanup_temporary_files():
+def _cleanup_temporary_files():
     try:
         # Remove temporary files. See http://bugs.sugarlabs.org/ticket/1876
         data_dir = os.path.join(env.get_profile_path(), 'data')
@@ -328,14 +328,14 @@ def _migrate_gconf_to_gsettings():
         settings.set_boolean('gsettings-migrated', True)
 
 
-def setup_timezone():
+def _setup_timezone():
     settings = Gio.Settings('org.sugarlabs.date')
     timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
         os.environ['TZ'] = timezone
 
 
-def setup_fonts():
+def _setup_fonts():
     settings = Gio.Settings('org.sugarlabs.font')
     face = settings.get_string('default-face')
     size = settings.get_double('default-size')
@@ -344,7 +344,7 @@ def setup_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 
-def setup_theme():
+def _setup_theme():
     settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
     if 'SUGAR_SCALING' in os.environ:
@@ -388,17 +388,17 @@ def main():
 
     _migrate_gconf_to_gsettings()
 
-    cleanup_temporary_files()
+    _cleanup_temporary_files()
 
     _start_window_manager()
 
-    setup_timezone()
-    setup_fonts()
-    setup_theme()
+    _setup_timezone()
+    _setup_fonts()
+    _setup_theme()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
-    GLib.idle_add(unfreeze_screen_cb)
+    GLib.idle_add(_unfreeze_screen_cb)
 
     GLib.idle_add(setup_cursortracker_cb)
     sound.restore()
