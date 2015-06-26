@@ -1,8 +1,12 @@
+sugar (0.105.2-3) UNRELEASED; urgency=medium
+
+  (0.104.1-13 changes partly re-applied)
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 26 Jun 2015 12:23:04 -0500
+
 sugar (0.105.2-2) experimental; urgency=medium
 
-  * Update package relations:
-    + Have sugar-session provide virtual x-session-manager.
-    + Have python-jarabe provide virtual notification-daemon.
+  (0.104.1-12 changes re-applied)
 
  -- Jonas Smedegaard <dr@jones.dk>  Wed, 17 Jun 2015 13:16:06 -0500
 
@@ -12,18 +16,35 @@ sugar (0.105.2-1) experimental; urgency=medium
   * New release(s).
 
   [ Jonas Smedegaard ]
-  * Drop branch from source and binary package.
   * Update package relations:
-    + Recommend/depend on unbranched but at least current branch of
-      Glucose parts (i.e. core libraries).
     + Stop have sugar-session depend on gir1.2-networkmanager-1.0: No
       longer needed.
     + Have python-jarabe depend on policykit-1: Needed for new
       brightness helper tools.
   * Update copyright info:
     + Extend coverage for main upstream authors.
+  (0.104.1-13 changes partly re-applied)
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 15:16:45 -0500
+
+sugar (0.104.1-13) unstable; urgency=medium
+
+  * Drop branch from source and binary package.
+  * Update package relations:
+    + Recommend/depend on Glucose parts (i.e. core libraries) unbranched
+      but at least current branch.
+    + Suggest/recommend/depend on Fructose (i.e. core activities)
+      unbranched.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Fri, 26 Jun 2015 10:51:25 -0500
+
+sugar-0.104 (0.104.1-12) unstable; urgency=medium
+
+  * Update package relations:
+    + Have sugar-session provide virtual x-session-manager.
+    + Have python-jarabe provide virtual notification-daemon.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Wed, 17 Jun 2015 18:44:10 -0500
 
 sugar-0.104 (0.104.1-11) unstable; urgency=medium
 
