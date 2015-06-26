@@ -75,16 +75,14 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     _PAGE_SIZE = 10
 
-    def __init__(self, query):
+    def __init__(self):
         GObject.GObject.__init__(self)
 
+        self._result_set = None
         self._last_requested_index = None
         self._cached_row = None
-        self._query = query
         self._all_ids = []
-        t = time.time()
-        self._result_set = model.find(query, ListModel._PAGE_SIZE)
-        logging.debug('init resultset: %r', time.time() - t)
+        self._query = None
         self._temp_drag_file_path = None
         self._selected = []
 
@@ -92,8 +90,19 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
 
+    def set_query(self, query, clear_selection=True):
+        self._query = query
+
+        if clear_selection:
+            self.select_none()
+
+        t = time.time()
+        self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        logging.debug('init resultset: %r', time.time() - t)
+
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
+        self._result_set.setup()
 
     def get_all_ids(self):
         return self._all_ids
@@ -107,11 +116,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_progress_cb(self, **kwargs):
         self.emit('progress')
 
-    def setup(self):
-        self._result_set.setup()
-
     def stop(self):
-        self._result_set.stop()
+        if self._result_set is not None:
+            self._result_set.stop()
 
     def get_metadata(self, path):
         return model.get(self[path][ListModel.COLUMN_UID])
