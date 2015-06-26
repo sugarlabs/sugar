@@ -328,7 +328,7 @@ def _migrate_gconf_to_gsettings():
         settings.set_boolean('gsettings-migrated', True)
 
 
-def setup_locale():
+def setup_timezone():
     settings = Gio.Settings('org.sugarlabs.date')
     timezone = settings.get_string('timezone')
     if timezone is not None and timezone:
@@ -392,7 +392,7 @@ def main():
 
     _start_window_manager()
 
-    setup_locale()
+    setup_timezone()
     setup_fonts()
     setup_theme()
 
