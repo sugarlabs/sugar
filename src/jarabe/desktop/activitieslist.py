@@ -24,7 +24,6 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
 
