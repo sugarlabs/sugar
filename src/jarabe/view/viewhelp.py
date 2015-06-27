@@ -131,6 +131,9 @@ def setup_view_help(activity):
     if not should_show_view_help(activity):
         return
 
+    if shell.get_model().has_modal():
+        return
+
     viewhelp = ViewHelp(activity, window_xid)
     activity.push_shell_window(viewhelp)
     viewhelp.connect('hide', activity.pop_shell_window)
