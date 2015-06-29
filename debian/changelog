@@ -1,3 +1,17 @@
+sugar (0.104.1-14) UNRELEASED; urgency=medium
+
+  * Update package relations:
+    + Relax to suggest/recommend (not recommend/depend on) Calculate
+      activity: Uses deprecated Glucose parts.
+    + Have sucrose recommend ttf-dejavu-extra: Suggested by
+      sugar-toolkit-gtk3.
+    + Have sucrose recommend suggestions of Fructose parts.
+  * Relax watch file to cover any compression suffix.
+  * Bump debhelper compatibility level to 9.
+  * Add lintian override regarding debhelper 9.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 29 Jun 2015 10:39:45 -0500
+
 sugar (0.104.1-13) unstable; urgency=medium
 
   * Drop branch from source and binary package.
