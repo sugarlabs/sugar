@@ -70,9 +70,12 @@ fructose += imageviewer jukebox turtleart
 fructose-relax = read etoys turtleart
 # Core activities using deprecated Glucose parts
 fructose-deprecate = calculate
-pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,$(filter-out $(fructose-relax) $(fructose-deprecate),$(fructose)))
-pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,$(fructose-relax))
-pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,$(fructose-deprecate))
+pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,\
+ $(filter-out $(fructose-relax) $(fructose-deprecate),$(fructose)))
+pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,\
+ $(fructose-relax))
+pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,\
+ $(fructose-deprecate))
 
 # Needed (always/often/sometimes) at runtime
 #  * Glucose (at least current branch)
