@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: olpc-sugar\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-06-04 21:18+0000\n"
-"PO-Revision-Date: 2015-06-22 22:21+0000\n"
+"PO-Revision-Date: 2015-06-30 14:37+0000\n"
 "Last-Translator: Martin <tch@sugarlabs.org>\n"
 "Language-Team: Fedora Spanish <fedora-trans-es@redhat.com>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Pootle 2.5.1.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Poedit-Basepath: .\n"
-"X-POOTLE-MTIME: 1435011689.000000\n"
+"X-POOTLE-MTIME: 1435675034.000000\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -255,7 +255,7 @@ msgid ""
 "If TRUE, Sugar will make us searchable for the other users of the Jabber "
 "server."
 msgstr ""
-"Si es TRUE, Azúcar habilitará que otros usuarios nos busquen en el servidor "
+"Si es TRUE, Sugar habilitará que otros usuarios nos busquen en el servidor "
 "Jabber."
 
 #: ../data/org.sugarlabs.gschema.xml.h:53
@@ -332,7 +332,7 @@ msgstr "Tamaño de letra que se utiliza en todo el escritorio."
 
 #: ../data/org.sugarlabs.gschema.xml.h:69 ../data/sugar.schemas.in.h:61
 msgid "Show Sugar Ad-hoc networks"
-msgstr "Mostrar redes específicas de Azúcar"
+msgstr "Mostrar redes específicas de Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:70 ../data/sugar.schemas.in.h:62
 msgid ""
@@ -340,8 +340,8 @@ msgid ""
 "Sugar sees no \"known\" network when it starts, it does autoconnect to an Ad-"
 "hoc network."
 msgstr ""
-"Sí es TRUE, Azúcar mostrara las redes ad-hoc predefinidas para canales 1,6, "
-"y 11. Sí Azúcar no ve redes conocidas cuando inicia, se conectará "
+"Sí es TRUE, Sugar mostrará las redes ad-hoc predefinidas para canales 1,6, y "
+"11. Sí Sugar no ve redes conocidas cuando inicia, se conectará "
 "automáticamente a una red ad-hoc."
 
 #: ../data/org.sugarlabs.gschema.xml.h:71
@@ -419,11 +419,11 @@ msgstr "TODO: Agegar descripcion"
 
 #: ../data/org.sugarlabs.gschema.xml.h:87 ../data/sugar.schemas.in.h:65
 msgid "Pitch value for the speech sugar service"
-msgstr "Registro del Tono Vocal para el Servicio de Lenguaje Azucar/Sugar"
+msgstr "Registro del Tono Vocal para el Servicio de Lenguaje Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:88 ../data/sugar.schemas.in.h:66
 msgid "Pitch value used by the speech service in Sugar"
-msgstr "Registro del Tono Vocal usado por el Servicio de Lenguaje Azucar/Sugar"
+msgstr "Registro del Tono Vocal usado por el Servicio de Lenguaje Sugar"
 
 #: ../data/org.sugarlabs.gschema.xml.h:89 ../data/sugar.schemas.in.h:67
 msgid "Rate value for the speech sugar service"
@@ -494,8 +494,8 @@ msgstr "Una descripción del hardware disponible al usuario."
 #: ../data/org.sugarlabs.gschema.xml.h:102 ../data/sugar.schemas.in.h:78
 msgid "This string is displayed in the control panel, about computer section."
 msgstr ""
-"Este texto es mostrado en Mis ajustes, en la sección \"Acerca de mi "
-"computadora\"."
+"Este texto es mostrado en Mis ajustes, en la sección Acerca de mi "
+"computadora."
 
 #: ../extensions/cpsection/aboutme/__init__.py:23
 msgid "About Me"
@@ -573,7 +573,7 @@ msgstr "Ensamble:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:117
 msgid "Sugar:"
-msgstr "Azúcar:"
+msgstr "Sugar:"
 
 #: ../extensions/cpsection/aboutcomputer/view.py:122
 msgid "Firmware:"
@@ -609,7 +609,7 @@ msgid ""
 "change it and/or distribute copies of it under certain conditions described "
 "therein."
 msgstr ""
-"Azúcar, es la interfaz gráfica del usuario que esta mirando. Azucar es "
+"Sugar, es la interfaz gráfica del usuario que esta mirando. Sugar es "
 "software libre, se encuentra bajo la licencia \"GNU Licencia Publica "
 "General\", y esta invitado para cambiar y/o distribuir copias de ésta, bajo "
 "ciertas condiciones que se describen en ella."
