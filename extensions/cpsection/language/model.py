@@ -110,6 +110,7 @@ def get_languages():
     fd.close()
 
     langlist = None
+    lang = _default_lang
 
     for line in lines:
         if line.startswith('LANGUAGE='):
