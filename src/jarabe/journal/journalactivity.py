@@ -44,7 +44,7 @@ from jarabe.journal.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
-from jarabe.journal.bundlelauncher import launch_bundle
+from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
 
 from jarabe.model import session
 
@@ -69,6 +69,27 @@ class JournalActivityDBusService(dbus.service.Object):
                                         allow_replacement=False)
         logging.debug('bus_name: %r', bus_name)
         dbus.service.Object.__init__(self, bus_name, J_DBUS_PATH)
+
+    @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
+                         out_signature='s')
+    def GetBundlePath(self, bundle_id, object_id):
+        '''
+        Get bundle path given object_id and/or bundle_id.
+        This is used in the toolkit to provide the bundle information
+        to other activities using activity.get_bundle()
+        '''
+        # Convert dbus empty strings to None, is the only way to pass
+        # optional parameters with dbus.
+        if bundle_id == "":
+            bundle_id = None
+        if object_id == "":
+            object_id = None
+
+        bundle = get_bundle(bundle_id, object_id)
+        if bundle is None:
+            return ''
+        else:
+            return bundle.get_path()
 
     @dbus.service.method(J_DBUS_INTERFACE, in_signature='ss',
                          out_signature='b')
