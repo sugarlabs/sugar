@@ -1,4 +1,4 @@
-sugar (0.104.1-14) UNRELEASED; urgency=medium
+sugar (0.104.1-14) unstable; urgency=medium
 
   * Update package relations:
     + Relax to suggest/recommend (not recommend/depend on) Calculate
@@ -9,8 +9,11 @@ sugar (0.104.1-14) UNRELEASED; urgency=medium
   * Relax watch file to cover any compression suffix.
   * Bump debhelper compatibility level to 9.
   * Add lintian override regarding debhelper 9.
+  * Fix track only current branch.
+  * Update copyright info: Merge same-licensed Files sections.
+  * Fix rename locale aym→ay: ISO 639-1 favored over ISO 639-2.
 
- -- Jonas Smedegaard <dr@jones.dk>  Mon, 29 Jun 2015 10:39:45 -0500
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Jul 2015 11:47:51 -0500
 
 sugar (0.104.1-13) unstable; urgency=medium
 
