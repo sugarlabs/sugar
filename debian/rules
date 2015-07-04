@@ -55,6 +55,10 @@ DEB_UPSTREAM_TARBALL_EXTENSION = tar.xz
 # Suppress unneeded auto-resolved build-dependency on python-dev
 CDBS_BUILD_DEPENDS_class_python-autotools_python = python
 
+# Build-depend unversioned on debhelper
+#  TODO: Drop when adopted in cdbs
+CDBS_BUILD_DEPENDS_rules_debhelper_v9 = debhelper
+
 # Needed by upstream build process
 bdeps = libgtk-3-dev, libglib2.0-dev, python-gtk2-dev, libgconf2-dev
 bdeps +=, gettext, intltool, shared-mime-info
@@ -68,8 +72,14 @@ fructose = chat browse read calculate log write terminal pippy etoys
 fructose += imageviewer jukebox turtleart
 # Core activities not in Debian main
 fructose-relax = read etoys turtleart
-pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,$(filter-out $(fructose-relax),$(fructose)))
-pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,$(fructose-relax))
+# Core activities using deprecated Glucose parts
+fructose-deprecate = calculate
+pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,\
+ $(filter-out $(fructose-relax) $(fructose-deprecate),$(fructose)))
+pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,\
+ $(fructose-relax))
+pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,\
+ $(fructose-deprecate))
 
 # Needed (always/often/sometimes) at runtime
 #  * Glucose (at least current branch)
@@ -77,7 +87,7 @@ pkg-fructose-relaxed = $(patsubst %,$(comma) sugar-%-activity,$(fructose-relax))
 #    + modemmanager (NM_DEVICE_TYPE_MODEM) used in extensions and jarabe
 #    + avahi-autoipd (NM_802_11_MODE_ADHOC) used in jarabe
 #  * dbus-x11 (bus.get_object) used in bin/sugar-launch, exensions and jarabe
-#    + python-carquinyol-* (org.laptop.sugar.DataStore) used in jarabe
+#    + python-carquinyol (org.laptop.sugar.DataStore) used in jarabe
 #    + upower (org.freedesktop.UPower) used in extensions
 #    + consolekit (org.freedesktop.ConsoleKit)
 #      or systemd (org.freedesktop.login1) used in jarabe
@@ -119,25 +129,32 @@ recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
 recommends-jarabe +=, consolekit | systemd
 suggests-session = gdb, olpc-powerd
-suggests-toolkit = git, ipython
+suggests-toolkit = git, ipython, ttf-dejavu-extra
+suggests-fructose = python-elements, csound, gstreamer1.0-plugins-bad
+suggests-fructose +=, gstreamer1.0-plugins-ugly, gstreamer1.0-libav
+suggests-fructose +=, python-gst0.10, gstreamer0.10-plugins-base
+suggests-fructose +=, gstreamer0.10-plugins-good
 suggests-session-weak = gir1.2-maliit-1.0, maliit-keyboard
 suggests-session-only = $(suggests-session-weak), $(pkg-sucrose)
 suggests-session-only +=, $(pkg-fructose-relaxed)
+suggests-session-only +=, $(pkg-fructose-deprecated)
 suggests-jarabe-only = $(pkg-session)
 
 # Tighten relations in Sucrose metapackage:
 #  * Depend on Glucose (at least current branch)
 #  * Depend on Fructose
 #  * Recommend non-Sugar helper parts
-#  * Recommend deprecated Glucose parts
+#  * Recommend deprecated Glucose and Fructose parts
 #  * Re-suggest weak parts (contrib/non-free/missing)
 depends-sucrose = $(pkg-session)
 depends-sucrose +=, python-carquinyol (>= $(pkgbranch))
 depends-sucrose +=, $(pkg-fructose)
 recommends-sucrose = $(suggests-session), $(suggests-toolkit)
+recommends-sucrose +=, $(suggests-fructose)
 recommends-sucrose +=, python-sugar-toolkit
 recommends-sucrose +=, python-sugar
 recommends-sucrose +=, gtk2-engines-sugar (>= $(pkgbranch))
+recommends-sucrose +=, $(pkg-fructose-deprecated)
 suggests-sucrose = $(suggests-session-weak)
 suggests-sucrose +=, $(pkg-fructose-relaxed)
 
@@ -163,7 +180,7 @@ CDBS_PROVIDES_$(pkg-session) +=, sugar, x-session-manager
 # Provide virtual notification-daemon package
 CDBS_PROVIDES_$(pkg-jarabe) +=, notification-daemon
 
-# Transitional hints: sugar-tools-* merged into sugar-session-*
+# Transitional hints: sugar-tools-* merged into sugar-session
 # TODO: drop when no sugar-tools-* are in stable
 CDBS_REPLACES_$(pkg-session) +=, sugar-tools
 CDBS_BREAKS_$(pkg-session) +=, sugar-tools
@@ -178,6 +195,11 @@ post-install/$(pkg-session)::
 	rmdir $(DEB_DESTDIR)/etc/gconf
 binary-install/$(pkg-session)::
 	dh_gconf -p$(cdbs_curpkg)
+
+# Fix favor ISO 639-1 when differing from ISO 639-2
+binary-post-install/$(pkg-session)::
+	mv debian/$(cdbs_curpkg)/usr/share/locale/aym \
+		debian/$(cdbs_curpkg)/usr/share/locale/ay
 
 # Ensure optimal hash-bang + dependency for scripts (see Python Policy)
 #  * TODO: drop cdbs_python_binary fallback when cdbs 0.5 is stable

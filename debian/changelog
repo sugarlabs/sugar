@@ -27,6 +27,23 @@ sugar (0.105.2-1) experimental; urgency=medium
 
  -- Jonas Smedegaard <dr@jones.dk>  Tue, 16 Jun 2015 15:16:45 -0500
 
+sugar (0.104.1-14) unstable; urgency=medium
+
+  * Update package relations:
+    + Relax to suggest/recommend (not recommend/depend on) Calculate
+      activity: Uses deprecated Glucose parts.
+    + Have sucrose recommend ttf-dejavu-extra: Suggested by
+      sugar-toolkit-gtk3.
+    + Have sucrose recommend suggestions of Fructose parts.
+  * Relax watch file to cover any compression suffix.
+  * Bump debhelper compatibility level to 9.
+  * Add lintian override regarding debhelper 9.
+  * Fix track only current branch.
+  * Update copyright info: Merge same-licensed Files sections.
+  * Fix rename locale aym→ay: ISO 639-1 favored over ISO 639-2.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Jul 2015 11:47:51 -0500
+
 sugar (0.104.1-13) unstable; urgency=medium
 
   * Drop branch from source and binary package.
