@@ -16,7 +16,6 @@
 
 from gi.repository import Gtk
 from gi.repository import GObject
-from gi.repository import Pango
 
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
