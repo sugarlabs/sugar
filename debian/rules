@@ -195,6 +195,11 @@ post-install/$(pkg-session)::
 binary-install/$(pkg-session)::
 	dh_gconf -p$(cdbs_curpkg)
 
+# Fix favor ISO 639-1 when differing from ISO 639-2
+binary-post-install/$(pkg-session)::
+	mv debian/$(cdbs_curpkg)/usr/share/locale/aym \
+		debian/$(cdbs_curpkg)/usr/share/locale/ay
+
 # Ensure optimal hash-bang + dependency for scripts (see Python Policy)
 #  * TODO: drop cdbs_python_binary fallback when cdbs 0.5 is stable
 CDBS_DEPENDS_$(pkg-session) +=, python
