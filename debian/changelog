@@ -1,9 +1,13 @@
-sugar (0.105.2-3) UNRELEASED; urgency=medium
+sugar (0.105.3-1) experimental; urgency=medium
 
+  [ upstream ]
+  * New release.
+
+  [ Jonas Smedegaard ]
   (0.104.1-13 changes partly re-applied)
   (0.104.1-14 changes re-applied)
 
- -- Jonas Smedegaard <dr@jones.dk>  Fri, 26 Jun 2015 12:23:04 -0500
+ -- Jonas Smedegaard <dr@jones.dk>  Sat, 04 Jul 2015 15:19:44 -0500
 
 sugar (0.105.2-2) experimental; urgency=medium
 
