@@ -56,7 +56,6 @@ _IMPORT_TYPES = {'sugar3': 3, 'from gi.repository import Gtk': 3,
 _SOURCE_FONT = Pango.FontDescription('Monospace %d' % style.FONT_SIZE)
 
 _logger = logging.getLogger('ViewSource')
-map_activity_to_window = {}
 
 
 def _is_web_activity(bundle_path):
@@ -131,8 +130,8 @@ def setup_view_source(activity):
     bundle_path = activity.get_bundle_path()
     bundle_id = activity.get_bundle_id()
 
-    if window_xid in map_activity_to_window:
-        _logger.debug('Viewsource window already open for %s %s', window_xid,
+    if activity.has_shell_window():
+        _logger.debug('A window is already open for %s %s', window_xid,
                       bundle_path)
         return
 
@@ -160,8 +159,6 @@ def setup_view_source(activity):
 
     view_source = ViewSource(window_xid, bundle_path, document_path,
                              sugar_toolkit_path, activity.get_title())
-    map_activity_to_window[window_xid] = view_source
-
     activity.push_shell_window(view_source)
     view_source.connect('hide', activity.pop_shell_window)
     view_source.show()
@@ -318,7 +315,6 @@ class ViewSource(Gtk.Window):
                 self._sugar_source_viewer.hide()
 
     def __destroy_cb(self, window, document_path):
-        del map_activity_to_window[self._parent_window_xid]
         if document_path is not None and os.path.exists(document_path):
             os.unlink(document_path)
 

@@ -287,6 +287,11 @@ class BundleRegistry(GObject.GObject):
             logging.exception('Error loading bundle %r', bundle_path)
             return None
 
+        # None is a valid return value from bundle_from_dir helper.
+        if bundle is None:
+            logging.error('No bundle in %r', bundle_path)
+            return None
+
         bundle_id = bundle.get_bundle_id()
         logging.debug('STARTUP: Adding bundle %s', bundle_id)
         installed = self.get_bundle(bundle_id)

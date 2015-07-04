@@ -132,6 +132,9 @@ class Activity(GObject.GObject):
         """
         self._shell_windows.remove(window)
 
+    def has_shell_window(self):
+        return bool(self._shell_windows)
+
     def stop(self):
         # For web activities the Apisocket will connect to the 'stop'
         # signal, thus preventing the window close.  Then, on the
@@ -459,12 +462,6 @@ class ShellModel(GObject.GObject):
         old_level = self.zoom_level
         if old_level == new_level:
             return
-
-        if old_level != self.ZOOM_ACTIVITY:
-            screen = Gdk.Screen.get_default()
-            active_window_type = screen.get_active_window().get_type_hint()
-            if active_window_type != Gdk.WindowTypeHint.DESKTOP:
-                return
 
         self._zoom_level = new_level
         if new_level is not self.ZOOM_ACTIVITY:

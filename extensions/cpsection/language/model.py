@@ -37,7 +37,7 @@ def read_all_languages():
 
     for line in lines:
         if line.find('locale:') != -1:
-            locale = line.split()[1]
+            locale_str = line.split()[1]
         elif line.find('title |') != -1:
             title = line.lstrip('title |')
         elif line.find('language |') != -1:
@@ -56,12 +56,13 @@ def read_all_languages():
                         territory = territory[:-1]
                 else:
                     territory = title.split()[-1]
-            if locale.endswith('utf8') and len(lang):
-                locales.append((lang, territory, locale))
+            if locale_str.endswith('utf8') and len(lang):
+                locales.append((lang, territory, locale_str))
 
     # FIXME: This is a temporary workaround for locales that are essential to
     # OLPC, but are not in Glibc yet.
     locales.append(('Dari', 'Afghanistan', 'fa_AF.utf8'))
+    locales.append(('Guarani', 'Paraguay', 'gn.utf8'))
 
     locales.sort()
     return locales
@@ -160,11 +161,11 @@ def set_languages(languages):
         return 1
     else:
         langs = read_all_languages()
-        for lang, territory, locale in langs:
+        for lang, territory, locale_str in langs:
             code = lang.replace(' ', '_') + '/' \
                 + territory.replace(' ', '_')
             if code == languages:
-                set_languages_list([locale])
+                set_languages_list([locale_str])
                 return 1
         print (_("Sorry I do not speak \'%s\'.") % languages)
 

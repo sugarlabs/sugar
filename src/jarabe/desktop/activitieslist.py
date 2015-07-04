@@ -24,7 +24,6 @@ from gettext import gettext as _
 
 from gi.repository import GLib
 from gi.repository import GObject
-from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -70,17 +69,13 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._model.set_visible_func(self.__model_visible_cb)
         self.set_model(self._model)
 
-        column = Gtk.TreeViewColumn()
-
-        cell_favorites = []
         for i in range(desktop.get_number_of_views()):
-            cell_favorites.append(CellRendererFavorite(i))
-            cell_favorites[i].connect('clicked', self.__favorite_clicked_cb)
-            column.pack_start(cell_favorites[i], True)
-            column.set_cell_data_func(cell_favorites[i],
-                                      self.__favorite_set_data_cb)
-
-        self.append_column(column)
+            column = Gtk.TreeViewColumn()
+            cell = CellRendererFavorite(i)
+            cell.connect('clicked', self.__favorite_clicked_cb)
+            column.pack_start(cell, True)
+            column.set_cell_data_func(cell, self.__favorite_set_data_cb)
+            self.append_column(column)
 
         cell_icon = CellRendererActivityIcon()
         cell_icon.connect('clicked', self.__icon_clicked_cb)
