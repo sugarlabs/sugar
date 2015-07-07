@@ -56,6 +56,10 @@ class ClipboardIcon(RadioToolButton):
         self.set_icon_widget(self._icon)
         self._icon.show()
 
+        # Stop Gtk from displaying a label and expanding the size of
+        # the button.
+        self.props.label_widget = Gtk.Box()
+
         cb_service = clipboard.get_instance()
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
