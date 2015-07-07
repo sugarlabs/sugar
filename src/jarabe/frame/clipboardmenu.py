@@ -24,6 +24,9 @@ from gi.repository import Gio
 from gi.repository import Gtk
 
 from sugar3.graphics.palette import Palette
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
+from sugar3.graphics.modal import SelectorModal
 from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
@@ -33,6 +36,7 @@ from sugar3 import env
 from sugar3 import profile
 from sugar3.activity.i18n import pgettext
 
+import jarabe.frame
 from jarabe.frame import clipboard
 from jarabe.journal import misc
 from jarabe.model import bundleregistry
@@ -42,6 +46,9 @@ class ClipboardMenu(Palette):
 
     def __init__(self, cb_object):
         Palette.__init__(self, text_maxlen=100)
+        box = PaletteMenuBox()
+        self.set_content(box)
+        box.show()
 
         self._cb_object = cb_object
 
@@ -51,62 +58,36 @@ class ClipboardMenu(Palette):
         cb_service.connect('object-state-changed',
                            self._object_state_changed_cb)
 
-        self._remove_item = MenuItem(pgettext('Clipboard', 'Remove'),
-                                     'list-remove')
+        self._remove_item = PaletteMenuItem(pgettext('Clipboard', 'Remove'),
+                                            'list-remove')
         self._remove_item.connect('activate', self._remove_item_activate_cb)
-        self.menu.append(self._remove_item)
+        box.append_item(self._remove_item)
         self._remove_item.show()
 
-        self._open_item = MenuItem(_('Open'), 'zoom-activity')
+        self._open_item = PaletteMenuItem(_('Open'), 'zoom-activity')
         self._open_item.connect('activate', self._open_item_activate_cb)
-        self.menu.append(self._open_item)
+        box.append_item(self._open_item)
         self._open_item.show()
 
-        self._journal_item = MenuItem(_('Keep'))
         color = profile.get_color()
-        icon = Icon(icon_name='document-save',
-                    pixel_size=style.SMALL_ICON_SIZE,
-                    xo_color=color)
-        self._journal_item.set_image(icon)
-
+        self._journal_item = PaletteMenuItem(_('Keep'), 'document-save',
+                                             xo_color=color)
         self._journal_item.connect('activate', self._journal_item_activate_cb)
-        self.menu.append(self._journal_item)
+        box.append_item(self._journal_item)
         self._journal_item.show()
 
         self._update()
 
-    def _update_open_submenu(self):
+    def _update_open(self):
         activities = self._get_activities()
         logging.debug('_update_open_submenu: %r', activities)
-        child = self._open_item.get_child()
+
         if activities is None or len(activities) <= 1:
-            child.set_text(_('Open'))
-            if self._open_item.get_submenu() is not None:
-                self._open_item.set_submenu(None)
-            return
-
-        child.set_text(_('Open with'))
-        submenu = self._open_item.get_submenu()
-        if submenu is None:
-            submenu = Gtk.Menu()
-            self._open_item.set_submenu(submenu)
-            submenu.show()
+            self._open_item.set_label(_('Open'))
+            self._open_item.set_has_modal(False)
         else:
-            for item in submenu.get_children():
-                submenu.remove(item)
-
-        for service_name in activities:
-            registry = bundleregistry.get_registry()
-            activity_info = registry.get_bundle(service_name)
-
-            if not activity_info:
-                logging.warning('Activity %s is unknown.', service_name)
-
-            item = Gtk.MenuItem(activity_info.get_name())
-            item.connect('activate', self._open_submenu_item_activate_cb,
-                         service_name)
-            submenu.append(item)
-            item.show()
+            self._open_item.set_label(_('Open with'))
+            self._open_item.set_has_modal(True)
 
     def _update_items_visibility(self):
         activities = self._get_activities()
@@ -134,7 +115,7 @@ class ClipboardMenu(Palette):
         registry = bundleregistry.get_registry()
         activities = registry.get_activities_for_type(mime_type)
         if activities:
-            return [info.get_bundle_id() for info in activities]
+            return activities
         else:
             return ''
 
@@ -149,25 +130,43 @@ class ClipboardMenu(Palette):
         if preview:
             self.props.secondary_text = preview
         self._update_items_visibility()
-        self._update_open_submenu()
+        self._update_open()
 
     def _open_item_activate_cb(self, menu_item):
         logging.debug('_open_item_activate_cb')
         percent = self._cb_object.get_percent()
-        if percent < 100 or menu_item.get_submenu() is not None:
-            return
-        jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, self._get_activities()[0])
-        jobject.destroy()
-
-    def _open_submenu_item_activate_cb(self, menu_item, service_name):
-        logging.debug('_open_submenu_item_activate_cb')
-        percent = self._cb_object.get_percent()
         if percent < 100:
             return
+
+        activities = self._get_activities()
+        if len(activities) == 1:
+            jobject = self._copy_to_journal()
+            misc.resume(jobject.metadata,
+                        self._get_activities()[0].get_bundle_id())
+            jobject.destroy()
+        else:
+            modal = SelectorModal()
+            # TRANS:  <i>%s</i> will be replaces with the object name
+            modal.props.title = \
+                _('Open <i>%s</i> with') % self._cb_object.get_name()
+            for activity in activities:
+                modal.model.add_item(activity.get_name(),
+                                     icon_file=activity.get_icon(),
+                                     data=activity.get_bundle_id())
+
+            modal.item_selected_signal.connect(self.__modal_item_selected_cb)
+            modal.cancel_clicked_signal.connect(self.__modal_cancel_cb)
+            jarabe.frame.get_view().hide()
+            modal.show()
+
+    def __modal_item_selected_cb(self, modal, bundle_id):
         jobject = self._copy_to_journal()
-        misc.resume(jobject.metadata, service_name)
+        misc.resume(jobject.metadata, bundle_id)
         jobject.destroy()
+
+    def __modal_cancel_cb(self, modal):
+        jarabe.frame.get_view().show()
+        self.popup()
 
     def _remove_item_activate_cb(self, menu_item):
         cb_service = clipboard.get_instance()
