@@ -1,3 +1,10 @@
+sugar (0.106.0-1) unstable; urgency=medium
+
+  [ upstream ]
+  * New release.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 06 Jul 2015 21:01:49 -0500
+
 sugar (0.105.3-1) experimental; urgency=medium
 
   [ upstream ]
