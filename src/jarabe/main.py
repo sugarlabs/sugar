@@ -46,6 +46,9 @@ gettext.bindtextdomain('sugar', config.locale_path)
 gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
 gettext.textdomain('sugar')
 
+# publish sugar version in the environment
+os.environ['SUGAR_VERSION'] = config.version
+
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
