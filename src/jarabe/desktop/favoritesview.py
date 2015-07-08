@@ -622,13 +622,23 @@ class CurrentActivityIcon(CanvasIcon):
             self.props.xo_color = self._home_activity.get_icon_color()
 
             if self._home_activity.is_journal():
-                self.get_window().set_cursor(None)
+                if self.get_window():
+                    self.get_window().set_cursor(None)
+                else:
+                    # the window is not visible yet, try again in one second
+                    GLib.timeout_add_seconds(1, self._reset_cursor)
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
         if self.palette is not None:
             self.palette.destroy()
             self.palette = None
+
+    def _reset_cursor(self):
+        if self.get_window():
+            self.get_window().set_cursor(None)
+            return False
+        return True
 
     def create_palette(self):
         if self._home_activity is not None:
