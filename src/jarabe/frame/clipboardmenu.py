@@ -64,6 +64,10 @@ class ClipboardMenu(Palette):
         box.append_item(self._remove_item)
         self._remove_item.show()
 
+        self._resume_item = PaletteMenuItem(_('Resume'), 'activity-start')
+        self._resume_item.connect('activate', self.__resume_item_activate_cb)
+        box.append_item(self._resume_item)
+
         self._open_item = PaletteMenuItem(_('Open'), 'zoom-activity')
         self._open_item.connect('activate', self._open_item_activate_cb)
         box.append_item(self._open_item)
@@ -81,6 +85,14 @@ class ClipboardMenu(Palette):
     def _update_open(self):
         activities = self._get_activities()
         logging.debug('_update_open_submenu: %r', activities)
+
+        if self._cb_object.can_resume():
+            self._resume_item.show()
+            self._open_item.hide()
+            return
+        else:
+            self._resume_item.hide()
+            self._open_item.show()
 
         if activities is None or len(activities) <= 1:
             self._open_item.set_label(_('Open'))
@@ -131,6 +143,9 @@ class ClipboardMenu(Palette):
             self.props.secondary_text = preview
         self._update_items_visibility()
         self._update_open()
+
+    def __resume_item_activate_cb(self, menu_item):
+        self._cb_object.resume()
 
     def _open_item_activate_cb(self, menu_item):
         logging.debug('_open_item_activate_cb')
