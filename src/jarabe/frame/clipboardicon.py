@@ -19,6 +19,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import SugarExt
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
@@ -132,9 +133,9 @@ class ClipboardIcon(RadioToolButton):
             return
 
         if cb_object.get_icon():
-            self._icon.props.icon_name = cb_object.get_icon()
+            self._icon.props.file = cb_object.get_icon()
             if self._notif_icon:
-                self._notif_icon.props.icon_name = self._icon.props.icon_name
+                self._notif_icon.props.icon_filename = self._icon.props.file
         else:
             self._icon.props.icon_name = 'application-octet-stream'
 
@@ -163,7 +164,7 @@ class ClipboardIcon(RadioToolButton):
 
     def show_notification(self):
         self._notif_icon = NotificationIcon()
-        self._notif_icon.props.icon_name = self._icon.props.icon_name
+        self._notif_icon.props.icon_filename = self._icon.props.file
         self._notif_icon.props.xo_color = \
             XoColor('%s,%s' % (self._icon.props.stroke_color,
                                self._icon.props.fill_color))
@@ -172,9 +173,9 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
-        icon_theme = Gtk.IconTheme.get_default()
-        pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
-                                      style.STANDARD_ICON_SIZE, 0)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            self._icon.props.file,
+            style.STANDARD_ICON_SIZE, style.STANDARD_ICON_SIZE)
         Gtk.drag_set_icon_pixbuf(context, pixbuf, hot_x=pixbuf.props.width / 2,
                                  hot_y=pixbuf.props.height / 2)
 

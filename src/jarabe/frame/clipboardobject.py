@@ -23,6 +23,10 @@ from gi.repository import Gtk
 from gettext import gettext as _
 from sugar3 import mime
 from sugar3.bundle.activitybundle import ActivityBundle
+from sugar3.graphics.icon import get_icon_file_name
+import jarabe.journal.model as journalmodel
+import jarabe.journal.misc as journalmisc
+from jarabe.model import bundleregistry
 
 
 class ClipboardObject(object):
@@ -43,6 +47,10 @@ class ClipboardObject(object):
     def get_name(self):
         name = self._name
         if not name:
+            metadata = self._get_journal_object()
+            if metadata is not None:
+                return metadata.get('title')
+
             mime_type = mime.get_mime_description(self.get_mime_type())
 
             if not mime_type:
@@ -52,12 +60,17 @@ class ClipboardObject(object):
         return name
 
     def get_icon(self):
+        metadata = self._get_journal_object()
+        if metadata is not None:
+            # It actually returns the icon file
+            return journalmisc.get_icon_name(metadata)
+
         mime_type = self.get_mime_type()
 
         generic_types = mime.get_all_generic_types()
         for generic_type in generic_types:
             if mime_type in generic_type.mime_types:
-                return generic_type.icon
+                return get_icon_file_name(generic_type.icon)
 
         icons = Gio.content_type_get_icon(mime_type)
         icon_name = None
@@ -69,15 +82,37 @@ class ClipboardObject(object):
                                            Gtk.IconSize.LARGE_TOOLBAR, 0))
                 if icon_info is not None:
                     del icon_info
-                    return icon_name
+                    return get_icon_file_name(icon_name)
 
-        return 'application-octet-stream'
+        return get_icon_file_name('application-octet-stream')
 
     def get_preview(self):
+        metadata = self._get_journal_object()
+        if metadata is not None:
+            bundle_id = metadata.get('activity') or metadata.get('bundle_id')
+            if bundle_id is not None:
+                activity = bundleregistry.get_registry().get_bundle(bundle_id)
+                if activity is not None:
+                    return _('%s Activity') % activity.get_name()
+
         for mime_type in ['UTF8_STRING']:
             if mime_type in self._formats:
                 return self._formats[mime_type].get_data()
         return ''
+
+    def can_resume(self):
+        return self._get_journal_object is not None
+
+    def resume(self):
+        metadata = self._get_journal_object()
+        if metadata is not None:
+            journalmisc.resume(metadata)
+
+    def _get_journal_object(self):
+        if 'journal-object-id' in self._formats:
+            uid = self._formats['journal-object-id'].get_data()
+            return journalmodel.get(uid)
+        return None
 
     def is_bundle(self):
         # A bundle will have only one format.
