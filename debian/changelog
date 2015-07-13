@@ -1,3 +1,10 @@
+sugar (0.106.0-2) unstable; urgency=medium
+
+  * Recommend/depend on (not suggest/recommend) Read activity: Available
+    and up-to-date in testing.
+
+ -- Jonas Smedegaard <dr@jones.dk>  Mon, 13 Jul 2015 13:42:56 +0200
+
 sugar (0.106.0-1) unstable; urgency=medium
 
   [ upstream ]
