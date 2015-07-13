@@ -71,7 +71,7 @@ bdeps +=, python-empy
 fructose = chat browse read calculate log write terminal pippy etoys
 fructose += imageviewer jukebox turtleart
 # Core activities not in Debian main
-fructose-relax = read etoys turtleart
+fructose-relax = etoys turtleart
 # Core activities using deprecated Glucose parts
 fructose-deprecate = calculate
 pkg-fructose = $(patsubst %,$(comma) sugar-%-activity,\
