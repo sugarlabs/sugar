@@ -64,6 +64,7 @@ class NotificationService(dbus.service.Object):
                        '<app_icon>', summary, body, actions, '<hints>',
                        expire_timeout])
 
+        replaces_id = int(replaces_id)  # Keep everything as python ints
         if replaces_id > 0:
             notification_id = replaces_id
         else:
@@ -75,16 +76,28 @@ class NotificationService(dbus.service.Object):
 
         if app_name not in self._buffer:
             self._buffer[app_name] = []
-        self._buffer[app_name].append({'app_name': app_name,
-                                       'replaces_id': replaces_id,
-                                       'app_icon': app_icon,
-                                       'summary': summary,
-                                       'body': body,
-                                       'actions': actions,
-                                       'hints': hints,
-                                       'expire_timeout': expire_timeout})
+
+        notification = {'notification_id': notification_id,
+                        'app_name': app_name,
+                        'replaces_id': replaces_id,
+                        'app_icon': app_icon,
+                        'summary': summary,
+                        'body': body,
+                        'actions': actions,
+                        'hints': hints,
+                        'expire_timeout': expire_timeout}
+        if replaces_id > 0:
+            for i, n in enumerate(self._buffer[app_name]):
+                if n['notification_id'] == replaces_id:
+                    self._buffer[app_name][i] = n
+                    break
+            else:
+                self._buffer[app_name].append(notification)
+        else:
+            self._buffer[app_name].append(notification)
 
         self.notification_received.send(self,
+                                        notification_id=notification_id,
                                         app_name=app_name,
                                         replaces_id=replaces_id,
                                         app_icon=app_icon,
