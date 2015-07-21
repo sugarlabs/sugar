@@ -83,13 +83,11 @@ def _initialize():
 def _write_i18n(lang_env, language_env):
     path = os.path.join(os.environ.get('HOME'), '.i18n')
     if not os.access(path, os.W_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
-    else:
-        fd = open(path, 'w')
+        # set the default values
+        lang_env = _default_lang
+        language_env = _default_lang
+
+    with open(path, 'w') as fd:
         fd.write('LANG="%s"\n' % lang_env)
         fd.write('LANGUAGE="%s"\n' % language_env)
         fd.close()
@@ -98,16 +96,12 @@ def _write_i18n(lang_env, language_env):
 def get_languages():
     path = os.path.join(os.environ.get('HOME', ''), '.i18n')
     if not os.access(path, os.R_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
+        _write_i18n(_default_lang, _default_lang)
         return [_default_lang]
 
-    fd = open(path, 'r')
-    lines = fd.readlines()
-    fd.close()
+    with open(path, 'r') as fd:
+        lines = fd.readlines()
+        fd.close()
 
     langlist = None
     lang = _default_lang
