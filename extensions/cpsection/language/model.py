@@ -81,9 +81,26 @@ def _initialize():
 
 def _write_i18n(lang_env, language_env):
     path = os.path.join(os.environ.get('HOME', ''), '.i18n')
+    # try avoid writing the file if the values didn't changed
+    line1 = None
+    line2 = None
+    try:
+        with open(path) as fd:
+            line1 = fd.readline()
+            line2 = fd.readline()
+            fd.close()
+    except:
+        pass
+
+    new_line1 = 'LANG="%s"\n' % lang_env
+    new_line2 = 'LANGUAGE="%s"\n' % language_env
+
+    if line1 == new_line1 and line2 == new_line2:
+        return
+
     with open(path, 'w') as fd:
-        fd.write('LANG="%s"\n' % lang_env)
-        fd.write('LANGUAGE="%s"\n' % language_env)
+        fd.write(new_line1)
+        fd.write(new_line2)
         fd.flush()
         # be sure all is flushed
         os.fsync(fd)
