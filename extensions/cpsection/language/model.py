@@ -25,7 +25,6 @@ import locale
 from gettext import gettext as _
 import subprocess
 
-
 _default_lang = '%s.%s' % locale.getdefaultlocale()
 _standard_msg = _('Could not access ~/.i18n. Create standard settings.')
 
@@ -81,49 +80,50 @@ def _initialize():
 
 
 def _write_i18n(lang_env, language_env):
-    path = os.path.join(os.environ.get('HOME'), '.i18n')
-    if not os.access(path, os.W_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
-    else:
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % lang_env)
-        fd.write('LANGUAGE="%s"\n' % language_env)
+    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
+    # try avoid writing the file if the values didn't changed
+    line1 = None
+    line2 = None
+    try:
+        with open(path) as fd:
+            line1 = fd.readline()
+            line2 = fd.readline()
+            fd.close()
+    except:
+        pass
+
+    new_line1 = 'LANG="%s"\n' % lang_env
+    new_line2 = 'LANGUAGE="%s"\n' % language_env
+
+    if line1 == new_line1 and line2 == new_line2:
+        return
+
+    with open(path, 'w') as fd:
+        fd.write(new_line1)
+        fd.write(new_line2)
+        fd.flush()
+        # be sure all is flushed
+        os.fsync(fd)
         fd.close()
 
 
 def get_languages():
-    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
-    if not os.access(path, os.R_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
-        return [_default_lang]
-
-    fd = open(path, 'r')
-    lines = fd.readlines()
-    fd.close()
-
+    # read the env variables set in bin/sugar
     langlist = None
     lang = _default_lang
 
-    for line in lines:
-        if line.startswith('LANGUAGE='):
-            lang = line[9:].replace('"', '')
-            lang = lang.strip()
-            if lang.endswith('UTF-8'):
-                lang = lang.replace('UTF-8', 'utf8')
-            langlist = lang.split(':')
-        elif line.startswith('LANG='):
-            lang = line[5:].replace('"', '')
-            lang = lang.strip()
-            if lang.endswith('UTF-8'):
-                lang = lang.replace('UTF-8', 'utf8')
+    if 'LANGUAGE' in os.environ:
+        lang = os.environ['LANGUAGE']
+        lang = lang.strip()
+        if lang.endswith('UTF-8'):
+            lang = lang.replace('UTF-8', 'utf8')
+        langlist = lang.split(':')
+
+    if 'LANG' in os.environ:
+        lang = os.environ['LANG']
+        lang = lang.strip()
+        if lang.endswith('UTF-8'):
+            lang = lang.replace('UTF-8', 'utf8')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist is None:
