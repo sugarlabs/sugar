@@ -325,8 +325,7 @@ class ExpandedEntry(Gtk.EventBox):
 
     def _create_icon(self):
         icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
-        icon.connect_after('button-release-event',
-                           self._icon_button_release_event_cb)
+        icon.connect_after('activate', self.__icon_activate_cb)
 
         if misc.is_activity_bundle(self._metadata):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
@@ -538,8 +537,7 @@ class ExpandedEntry(Gtk.EventBox):
             self._metadata['keep'] = '0'
         self._update_entry(needs_update=True)
 
-    def _icon_button_release_event_cb(self, button, event):
-        logging.debug('_icon_button_release_event_cb')
+    def __icon_activate_cb(self, button):
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
         return True
