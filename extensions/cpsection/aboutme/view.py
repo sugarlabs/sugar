@@ -128,7 +128,7 @@ class ColorPicker(EventIcon):
         self._picker = picker
         self._color = None
 
-        self.connect('button_press_event', self.__pressed_cb, picker)
+        self.connect('activate', self.__activate_cb, picker)
 
     def set_color(self, color):
         if self._picker == _PREVIOUS_FILL_COLOR:
@@ -145,7 +145,7 @@ class ColorPicker(EventIcon):
 
     color = GObject.property(type=object, setter=set_color)
 
-    def __pressed_cb(self, button, event, picker):
+    def __activate_cb(self, button, picker):
         if picker != _CURRENT_COLOR:
             self.color_changed_signal.emit(self._color)
 

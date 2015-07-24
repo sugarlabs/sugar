@@ -173,7 +173,7 @@ class Picker(Gtk.Grid):
         self.hide()
 
     def connect(self, callback, arg):
-        self._button.connect('button-press-event', callback, arg)
+        self._button.connect('activate', callback, arg)
 
     def set_color(self, color):
         self._button.xo_color = color
@@ -214,7 +214,7 @@ class AgePicker(Gtk.Grid):
             self._pickers.append(
                 Picker(self._group_labels.ICONS[i][gender_index],
                        _(self._group_labels.LABELS[i])))
-            self._pickers[i].connect(self._button_press_cb, i)
+            self._pickers[i].connect(self._button_activate_cb, i)
 
         self._fixed = Gtk.Fixed()
         fixed_size = width - 4 * style.GRID_CELL_SIZE
@@ -284,9 +284,8 @@ class AgePicker(Gtk.Grid):
         self._set_age(self._group_labels.AGES[age_index])
         self._pickers[age_index].set_color(self._color)
 
-    def _button_press_cb(self, widget, event, age_index):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._do_selected(age_index)
+    def _button_activate_cb(self, widget, age_index):
+        self._do_selected(age_index)
 
     def get_age(self):
         if self._page is None:
