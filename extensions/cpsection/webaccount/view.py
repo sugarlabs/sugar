@@ -90,19 +90,12 @@ class WebServicesConfig(SectionView):
         y = 0
         for service in services:
             service_grid = Gtk.Grid()
-            background_box = Gtk.EventBox()
-            background_box.modify_bg(Gtk.StateType.NORMAL,
-                                     style.COLOR_WHITE.get_gdk_color())
             icon = CanvasIcon(icon_name=service.get_icon_name())
-            background_box.add(icon)
             icon.show()
+            service_grid.attach(icon, x, y, 1, 1)
 
-            service_grid.attach(background_box, x, y, 1, 1)
-            background_box.show()
-
-            background_box.connect('button_press_event',
-                                   service.config_service_cb,
-                                   self._service_config_box)
+            icon.connect('activate', service.config_service_cb, None,
+                         self._service_config_box)
 
             label = Gtk.Label()
             label.set_justify(Gtk.Justification.CENTER)
