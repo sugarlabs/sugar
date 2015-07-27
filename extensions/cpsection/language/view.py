@@ -370,11 +370,19 @@ class Language(SectionView):
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
-        self._model.set_languages_list(codes)
-        self.restart_alerts.append('lang')
-        self.needs_restart = True
-        self._lang_alert.props.msg = self.restart_msg
-        self._lang_alert.show()
+        try:
+            self._model.set_languages_list(codes)
+            self.restart_alerts.append('lang')
+            self.needs_restart = True
+            self._lang_alert.props.msg = self.restart_msg
+            self._lang_alert.show()
+        except IOError as e:
+            logging.exception('Error writing i18n config %s', e)
+            self.undo()
+            self._lang_alert.props.msg = gettext.gettext(
+                'Error writting language configuration (%s)') % e
+            self._lang_alert.show()
+            self.props.is_valid = False
         return False
 
 

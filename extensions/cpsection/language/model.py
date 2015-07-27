@@ -20,7 +20,6 @@
 # Parts of the code were reused.
 #
 
-import logging
 import os
 import locale
 from gettext import gettext as _
@@ -104,17 +103,14 @@ def _write_i18n(lang_env, language_env):
     if lang_line == new_lang_line and language_line == new_language_line:
         return
 
-    try:
-        with open(path, 'w') as fd:
-            fd.write(new_lang_line)
-            fd.write(new_language_line)
-            for line in other_lines:
-                fd.write(line)
-            fd.flush()
-            # be sure all is flushed
-            os.fsync(fd)
-    except:
-        logging.exception('Error writing .i18n file')
+    with open(path, 'w') as fd:
+        fd.write(new_lang_line)
+        fd.write(new_language_line)
+        for line in other_lines:
+            fd.write(line)
+        fd.flush()
+        # be sure all is flushed
+        os.fsync(fd)
 
 
 def get_languages():
