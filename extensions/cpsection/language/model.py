@@ -113,23 +113,25 @@ def _write_i18n(lang_env, language_env):
         os.fsync(fd)
 
 
+def _get_from_env(name):
+    lang = os.environ[name]
+    lang = lang.strip()
+    if lang.endswith('UTF-8'):
+        lang = lang.replace('UTF-8', 'utf8')
+    return lang
+
+
 def get_languages():
     # read the env variables set in bin/sugar
     langlist = None
     lang = _default_lang
 
     if 'LANGUAGE' in os.environ:
-        lang = os.environ['LANGUAGE']
-        lang = lang.strip()
-        if lang.endswith('UTF-8'):
-            lang = lang.replace('UTF-8', 'utf8')
+        lang = _get_from_env('LANGUAGE')
         langlist = lang.split(':')
 
     if 'LANG' in os.environ:
-        lang = os.environ['LANG']
-        lang = lang.strip()
-        if lang.endswith('UTF-8'):
-            lang = lang.replace('UTF-8', 'utf8')
+        lang = _get_from_env('LANG')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist is None:
