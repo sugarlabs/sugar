@@ -806,11 +806,10 @@ def _write_entry_on_external_device(metadata, file_path, ready_callback=None):
         # only change the extension if the title don't have a good extension
         clean_name, extension = os.path.splitext(file_name)
         extension = extension.replace('.', '').lower()
-        mime_extensions = mime.get_extensions_by_mimetype(
-            metadata['mime_type'])
+        mime_type = metadata.get('mime_type', None)
+        mime_extensions = mime.get_extensions_by_mimetype(mime_type)
         if extension not in mime_extensions:
-            file_name = get_file_name(metadata['title'],
-                                      metadata['mime_type'])
+            file_name = get_file_name(metadata['title'], mime_type)
 
         destination_path = os.path.join(metadata['mountpoint'], file_name)
         if destination_path != file_path:
