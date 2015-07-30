@@ -26,7 +26,19 @@ from sugar3.graphics import style
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from jarabe.controlpanel.sectionview import SectionView
 
+from jarabe.journal.model import get_documents_path
+from jarabe.model.desktop import set_background_image_path
+from jarabe.model.desktop import set_background_alpha_level
+from jarabe.model.desktop import get_background_image_path
+from jarabe.model.desktop import get_background_alpha_level
+
 from gettext import gettext as _
+
+
+BACKGROUNDS_DIRS = (os.path.join('/usr', 'share', 'backgrounds'),
+                    get_documents_path())
+PREVIOUS_BACKGROUND_IMAGE_PATH = get_background_image_path()
+PREVIOUS_BACKGROUND_ALPHA_LEVEL = get_background_alpha_level()
 
 
 class Background(SectionView):
@@ -34,7 +46,6 @@ class Background(SectionView):
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)
 
-        self._model = model
         self._images_loaded = False
 
         self.connect('realize', self.__realize_cb)
@@ -75,7 +86,7 @@ class Background(SectionView):
         scrolled_window.add(self._icon_view)
         self._icon_view.show()
 
-        alpha = self._model.get_background_alpha_level()
+        alpha = get_background_alpha_level()
 
         alpha_box = Gtk.HBox()
         alpha_buttons = []
@@ -103,7 +114,7 @@ class Background(SectionView):
         self._paths_list = []
 
         file_paths = []
-        for directory in self._model.BACKGROUNDS_DIRS:
+        for directory in BACKGROUNDS_DIRS:
             if directory is not None and os.path.exists(directory):
                 for root, dirs, files in os.walk(directory):
                     for file_ in files:
@@ -145,7 +156,7 @@ class Background(SectionView):
         self.get_window().set_cursor(None)
 
     def _set_alpha_cb(self, widget, value):
-        self._model.set_background_alpha_level(value)
+        set_background_alpha_level(value)
 
     def _get_selected_path(self, widget):
         try:
@@ -165,20 +176,21 @@ class Background(SectionView):
         image_path, _iter = selected
         iter_ = self._store.get_iter(widget.get_selected_items()[0])
         image_path = self._store.get(iter_, 1)[0]
-        self._model.set_background_image_path(image_path)
+        set_background_image_path(image_path)
 
     def _select_background(self):
-        background = self._model.get_background_image_path()
+        background = get_background_image_path()
         if background in self._paths_list:
             self._icon_view.select_path(
                 Gtk.TreePath.new_from_string(
                     '%s' % self._paths_list.index(background)))
 
     def _clear_clicked_cb(self, widget, event=None):
-        self._model.set_background_image_path(None)
+        set_background_image_path(None)
 
     def setup(self):
         self.show_all()
 
     def undo(self):
-        self._model.undo()
+        set_background_image_path(PREVIOUS_BACKGROUND_IMAGE_PATH)
+        set_background_alpha_level(PREVIOUS_BACKGROUND_ALPHA_LEVEL)
