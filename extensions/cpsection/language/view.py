@@ -120,14 +120,14 @@ class Language(SectionView):
                               xpadding=1, ypadding=1)
         label.show()
 
-        self._country_codes.append(locale_code)
         locale_language = None
         locale_country = None
 
-        for language, country, code in self._available_locales:
-            if code == locale_code:
-                locale_language = language
-                locale_country = country
+        if locale_code is not None:
+            for language, country, code in self._available_locales:
+                if code == locale_code:
+                    locale_language = language
+                    locale_country = country
 
         language_palette = []
         key_list = self._language_dict.keys()
@@ -152,6 +152,13 @@ class Language(SectionView):
                 locale_country = self._country_dict[locale_language][0]
         new_country_button = FilterToolItem(
             'go-down', 'go-up', locale_country, new_country_widget)
+
+        if locale_code is None:
+            # check the locale code acordinig to the default values selected
+            for language, country, code in self._available_locales:
+                if language == locale_language and country == locale_country:
+                    locale_code = code
+        self._country_codes.append(locale_code)
 
         self._language_buttons.append(new_language_button)
         self._attach_to_table(
@@ -363,11 +370,19 @@ class Language(SectionView):
 
     def __lang_timeout_cb(self, codes):
         self._lang_sid = 0
-        self._model.set_languages_list(codes)
-        self.restart_alerts.append('lang')
-        self.needs_restart = True
-        self._lang_alert.props.msg = self.restart_msg
-        self._lang_alert.show()
+        try:
+            self._model.set_languages_list(codes)
+            self.restart_alerts.append('lang')
+            self.needs_restart = True
+            self._lang_alert.props.msg = self.restart_msg
+            self._lang_alert.show()
+        except IOError as e:
+            logging.exception('Error writing i18n config %s', e)
+            self.undo()
+            self._lang_alert.props.msg = gettext.gettext(
+                'Error writting language configuration (%s)') % e
+            self._lang_alert.show()
+            self.props.is_valid = False
         return False
 
 

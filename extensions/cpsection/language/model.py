@@ -25,7 +25,6 @@ import locale
 from gettext import gettext as _
 import subprocess
 
-
 _default_lang = '%s.%s' % locale.getdefaultlocale()
 _standard_msg = _('Could not access ~/.i18n. Create standard settings.')
 
@@ -81,49 +80,58 @@ def _initialize():
 
 
 def _write_i18n(lang_env, language_env):
-    path = os.path.join(os.environ.get('HOME'), '.i18n')
-    if not os.access(path, os.W_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
-    else:
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % lang_env)
-        fd.write('LANGUAGE="%s"\n' % language_env)
-        fd.close()
+    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
+    # try avoid writing the file if the values didn't changed
+    lang_line = None
+    language_line = None
+    other_lines = []
+    try:
+        with open(path) as fd:
+            for line in fd:
+                if line.startswith('LANG='):
+                    lang_line = line
+                elif line.startswith('LANGUAGE='):
+                    language_line = line
+                else:
+                    other_lines.append(line)
+    except:
+        pass
+
+    new_lang_line = 'LANG="%s"\n' % lang_env
+    new_language_line = 'LANGUAGE="%s"\n' % language_env
+
+    if lang_line == new_lang_line and language_line == new_language_line:
+        return
+
+    with open(path, 'w') as fd:
+        fd.write(new_lang_line)
+        fd.write(new_language_line)
+        for line in other_lines:
+            fd.write(line)
+        fd.flush()
+        # be sure all is flushed
+        os.fsync(fd)
+
+
+def _get_from_env(name):
+    lang = os.environ[name]
+    lang = lang.strip()
+    if lang.endswith('UTF-8'):
+        lang = lang.replace('UTF-8', 'utf8')
+    return lang
 
 
 def get_languages():
-    path = os.path.join(os.environ.get('HOME', ''), '.i18n')
-    if not os.access(path, os.R_OK):
-        print _standard_msg
-        fd = open(path, 'w')
-        fd.write('LANG="%s"\n' % _default_lang)
-        fd.write('LANGUAGE="%s"\n' % _default_lang)
-        fd.close()
-        return [_default_lang]
-
-    fd = open(path, 'r')
-    lines = fd.readlines()
-    fd.close()
-
+    # read the env variables set in bin/sugar
     langlist = None
     lang = _default_lang
 
-    for line in lines:
-        if line.startswith('LANGUAGE='):
-            lang = line[9:].replace('"', '')
-            lang = lang.strip()
-            if lang.endswith('UTF-8'):
-                lang = lang.replace('UTF-8', 'utf8')
-            langlist = lang.split(':')
-        elif line.startswith('LANG='):
-            lang = line[5:].replace('"', '')
-            lang = lang.strip()
-            if lang.endswith('UTF-8'):
-                lang = lang.replace('UTF-8', 'utf8')
+    if 'LANGUAGE' in os.environ:
+        lang = _get_from_env('LANGUAGE')
+        langlist = lang.split(':')
+
+    if 'LANG' in os.environ:
+        lang = _get_from_env('LANG')
 
     # There might be cases where .i18n may not contain a LANGUAGE field
     if langlist is None:
