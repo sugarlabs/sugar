@@ -75,16 +75,15 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     _PAGE_SIZE = 10
 
-    def __init__(self, query):
+    def __init__(self, updated_callback):
         GObject.GObject.__init__(self)
 
+        self._updated_callback = updated_callback
+        self._result_set = None
         self._last_requested_index = None
         self._cached_row = None
-        self._query = query
+        self._query = None
         self._all_ids = []
-        t = time.time()
-        self._result_set = model.find(query, ListModel._PAGE_SIZE)
-        logging.debug('init resultset: %r', time.time() - t)
         self._temp_drag_file_path = None
         self._selected = []
 
@@ -96,8 +95,17 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # to regenerate the model and stuff up the scroll position
         self._updated_entries = {}
 
+    def set_query(self, query):
+        self._query = query
+        self._updated_entries = {}
+
+        t = time.time()
+        self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        logging.debug('init resultset: %r', time.time() - t)
+
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
+        self._result_set.setup()
 
     def get_all_ids(self):
         return self._all_ids
@@ -111,12 +119,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_progress_cb(self, **kwargs):
         self.emit('progress')
 
-    def setup(self, updated_callback=None):
-        self._result_set.setup()
-        self._updated_callback = updated_callback
-
     def stop(self):
-        self._result_set.stop()
+        if self._result_set is not None:
+            self._result_set.stop()
 
     def get_metadata(self, path):
         return model.get(self[path][ListModel.COLUMN_UID])
@@ -141,16 +146,15 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             metadata['keep'] = value
         if column == ListModel.COLUMN_TITLE:
             metadata['title'] = value
+
         self._updated_entries[metadata['uid']] = metadata
-        if self._updated_callback is not None:
-            model.updated.disconnect(self._updated_callback)
+        model.updated.disconnect(self._updated_callback)
         model.write(metadata, update_mtime=False,
                     ready_callback=self.__reconect_updates_cb)
 
     def __reconect_updates_cb(self, metadata, filepath, uid):
-        logging.error('__reconect_updates_cb')
-        if self._updated_callback is not None:
-            model.updated.connect(self._updated_callback)
+        logging.debug('__reconect_updates_cb')
+        model.updated.connect(self._updated_callback)
 
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:

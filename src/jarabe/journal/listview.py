@@ -142,10 +142,8 @@ class BaseListView(Gtk.Bin):
         self._query = {}
         self._journalactivity = journalactivity
         self._enable_multi_operations = enable_multi_operations
-        self._model = None
         self._progress_bar = None
         self._last_progress_bar_pulse = None
-        self._scroll_position = 0.
 
         Gtk.Bin.__init__(self)
 
@@ -184,11 +182,15 @@ class BaseListView(Gtk.Bin):
         self._dirty = False
         self._refresh_idle_handler = None
         self._update_dates_timer = None
-        self._backup_selected = None
 
         model.created.connect(self.__model_created_cb)
         model.updated.connect(self.__model_updated_cb)
         model.deleted.connect(self.__model_deleted_cb)
+
+        self._model = ListModel(self.__model_updated_cb)
+        self._model.connect('ready', self.__model_ready_cb)
+        self._model.connect('progress', self.__model_progress_cb)
+        self._do_refresh()
 
     def enable_drag_and_copy(self):
         self.tree_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
@@ -335,8 +337,7 @@ class BaseListView(Gtk.Bin):
             self.get_child().size_request()
 
     def __destroy_cb(self, widget):
-        if self._model is not None:
-            self._model.stop()
+        self._model.stop()
 
     def __buddies_set_data_cb(self, column, cell, tree_model,
                               tree_iter, data):
@@ -422,18 +423,17 @@ class BaseListView(Gtk.Bin):
         GObject.idle_add(self._do_refresh, new_query)
 
     def _do_refresh(self, new_query=False):
-        if self._model is not None:
-            if new_query:
-                self._backup_selected = None
-            else:
-                self._backup_selected = self._model.get_selected_items()
-            self._model.stop()
         self._dirty = False
 
-        self._model = ListModel(self._query)
-        self._model.connect('ready', self.__model_ready_cb)
-        self._model.connect('progress', self.__model_progress_cb)
-        self._model.setup(self.__model_updated_cb)
+        if new_query:
+            # Do a full refresh that accounts for changed model
+            # length and resets the scroll position
+            self._model = ListModel(self.__model_updated_cb)
+            self._model.connect('ready', self.__model_ready_cb)
+            self._model.connect('progress', self.__model_progress_cb)
+        self._model.stop()
+        self._model.set_query(self._query)
+
         window = self.get_toplevel().get_window()
         if window is not None:
             window.set_cursor(None)
@@ -441,30 +441,10 @@ class BaseListView(Gtk.Bin):
     def __model_ready_cb(self, tree_model):
         self._stop_progress_bar()
 
-        self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__model_ready_cb %r', self._scroll_position)
-
-        x11_window = self.tree_view.get_window()
-
-        if x11_window is not None:
-            # prevent glitches while later vadjustment setting, see #1235
-            self.tree_view.get_bin_window().hide()
-
-        # if the selection was preserved, restore it
-        if self._backup_selected is not None:
-            tree_model.restore_selection(self._backup_selected)
-            self.emit('selection-changed', len(self._backup_selected))
-
         # Cannot set it up earlier because will try to access the model
         # and it needs to be ready.
         self.tree_view.set_model(self._model)
-
-        self.tree_view.props.vadjustment.props.value = self._scroll_position
-        self.tree_view.props.vadjustment.value_changed()
-
-        if x11_window is not None:
-            # prevent glitches while later vadjustment setting, see #1235
-            self.tree_view.get_bin_window().show()
+        self.tree_view.queue_draw()
 
         if len(tree_model) == 0:
             documents_path = model.get_documents_path()
@@ -486,14 +466,11 @@ class BaseListView(Gtk.Bin):
         return True
 
     def __map_cb(self, widget):
-        logging.debug('ListView.__map_cb %r', self._scroll_position)
-        self.tree_view.props.vadjustment.props.value = self._scroll_position
-        self.tree_view.props.vadjustment.value_changed()
+        logging.debug('ListView.__map_cb')
         self.set_is_visible(True)
 
     def __unmap_cb(self, widget):
-        self._scroll_position = self.tree_view.props.vadjustment.props.value
-        logging.debug('ListView.__unmap_cb %r', self._scroll_position)
+        logging.debug('ListView.__unmap_cb')
         self.set_is_visible(False)
 
     def _is_query_empty(self):
@@ -628,7 +605,8 @@ class BaseListView(Gtk.Bin):
         if visible:
             self._fully_obscured = False
             if self._dirty:
-                self.refresh()
+                # Force a proper reset as the model length may have changed
+                self.refresh(new_query=True)
             if self._update_dates_timer is None:
                 logging.debug('Adding date updating timer')
                 self._update_dates_timer = \
