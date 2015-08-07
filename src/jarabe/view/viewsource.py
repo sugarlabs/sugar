@@ -36,8 +36,9 @@ from gi.repository import Gio
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.bundle.activitybundle import get_bundle_instance
 from sugar3.datastore import datastore
@@ -354,22 +355,20 @@ class DocumentButton(RadioToolButton):
         self.set_icon_widget(icon)
         icon.show()
 
+        box = PaletteMenuBox()
+        self.props.palette.set_content(box)
+        box.show()
+
         if bundle:
-            menu_item = MenuItem(_('Duplicate'))
-            icon = Icon(icon_name='edit-duplicate',
-                        pixel_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor(self._color))
+            menu_item = PaletteMenuItem(_('Duplicate'), 'edit-duplicate',
+                                        xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__copy_to_home_cb)
         else:
-            menu_item = MenuItem(_('Keep'))
-            icon = Icon(icon_name='document-save',
-                        pixel_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor(self._color))
+            menu_item = PaletteMenuItem(_('Keep'), 'document-save',
+                                        xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
-        menu_item.set_image(icon)
-
-        self.props.palette.menu.append(menu_item)
+        box.append_item(menu_item)
         menu_item.show()
 
     def __copy_to_home_cb(self, menu_item):
