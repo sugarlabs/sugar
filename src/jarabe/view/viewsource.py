@@ -36,6 +36,7 @@ from gi.repository import Gio
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
@@ -191,19 +192,19 @@ class ViewSource(Gtk.Window):
         self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        vbox = Gtk.VBox()
-        self.add(vbox)
-        vbox.show()
+        self._vbox = Gtk.VBox()
+        self.add(self._vbox)
+        self._vbox.show()
 
         toolbar = Toolbar(title, bundle_path, document_path,
-                          sugar_toolkit_path)
-        vbox.pack_start(toolbar, False, True, 0)
+                          sugar_toolkit_path, self)
+        self._vbox.pack_start(toolbar, False, True, 0)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
         toolbar.show()
 
         pane = Gtk.HPaned()
-        vbox.pack_start(pane, True, True, 0)
+        self._vbox.pack_start(pane, True, True, 0)
         pane.show()
 
         self._selected_bundle_file = None
@@ -266,6 +267,14 @@ class ViewSource(Gtk.Window):
 
         if document_path is not None:
             self._select_source(document_path)
+
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 1)
+        alert.show()
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
 
     def _calculate_char_width(self, char_count):
         widget = Gtk.Label(label='')
@@ -338,12 +347,13 @@ class ViewSource(Gtk.Window):
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
-    def __init__(self, file_name, document_path, title, bundle=False):
+    def __init__(self, file_name, document_path, title, window, bundle=False):
         RadioToolButton.__init__(self)
 
         self._document_path = document_path
         self._title = title
         self._jobject = None
+        self._window = window
 
         self.props.tooltip = _('Instance Source')
 
@@ -383,8 +393,18 @@ class DocumentButton(RadioToolButton):
                             os.path.join(user_activities_path, new_basename),
                             symlinks=True)
             customizebundle.generate_bundle(nick, new_basename)
+            alert = NotifyAlert()
+            alert.props.title = _('Activity duplicated')
         else:
-            _logger.debug('%s already exists', new_basename)
+            alert = NotifyAlert()
+            alert.props.title = _('Duplicated activity already exsists')
+            alert.props.msg = \
+                _('Delete your copy before duplicating the activity again')
+        alert.connect('response', self.__alert_response_cb)
+        self._window.add_alert(alert)
+
+    def __alert_response_cb(self, alert, response_id):
+        self._window.remove_alert(alert)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
@@ -423,7 +443,8 @@ class Toolbar(Gtk.Toolbar):
                             ([str])),
     }
 
-    def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
+    def __init__(self, title, bundle_path, document_path, sugar_toolkit_path,
+                 window):
         Gtk.Toolbar.__init__(self)
 
         document_button = None
@@ -436,7 +457,8 @@ class Toolbar(Gtk.Toolbar):
         file_name = activity_bundle.get_icon()
 
         if document_path is not None and os.path.exists(document_path):
-            document_button = DocumentButton(file_name, document_path, title)
+            document_button = DocumentButton(
+                file_name, document_path, title, window)
             document_button.connect('toggled', self.__button_toggled_cb,
                                     document_path)
             self.insert(document_button, -1)
@@ -445,7 +467,7 @@ class Toolbar(Gtk.Toolbar):
 
         if bundle_path is not None and os.path.exists(bundle_path):
             activity_button = DocumentButton(file_name, bundle_path, title,
-                                             bundle=True)
+                                             window, bundle=True)
             icon = Icon(file=file_name,
                         pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
