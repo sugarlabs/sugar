@@ -296,8 +296,15 @@ def file_transfer_available():
     conn_watcher = connection_watcher.get_instance()
     for connection in conn_watcher.get_connections():
 
-        properties_iface = connection[dbus.PROPERTIES_IFACE]
-        properties = properties_iface.GetAll(CONNECTION_INTERFACE_REQUESTS)
+        try:
+            properties_iface = connection[
+                dbus.PROPERTIES_IFACE]
+            properties = properties_iface.GetAll(
+                CONNECTION_INTERFACE_REQUESTS)
+        except dbus.DBusException as e:
+            logging.exception(e)
+            continue
+
         classes = properties['RequestableChannelClasses']
         for prop, allowed_prop in classes:
 
