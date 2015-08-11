@@ -210,7 +210,7 @@ class ViewHelp(Gtk.Window):
         if uri.startswith('file://') and uri.find('_images') > -1:
             if uri.find('/%s/_images/' % self._get_current_language()) > -1:
                 new_uri = uri.replace('/html/%s/_images/' %
-                                      self._get_current_language,
+                                      self._get_current_language(),
                                       '/images/')
             else:
                 new_uri = uri.replace('/html/_images/', '/images/')
