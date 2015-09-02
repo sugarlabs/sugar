@@ -75,16 +75,15 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     _PAGE_SIZE = 10
 
-    def __init__(self, query):
+    def __init__(self, updated_callback):
         GObject.GObject.__init__(self)
 
+        self._updated_callback = updated_callback
+        self._result_set = None
         self._last_requested_index = None
         self._cached_row = None
-        self._query = query
+        self._query = None
         self._all_ids = []
-        t = time.time()
-        self._result_set = model.find(query, ListModel._PAGE_SIZE)
-        logging.debug('init resultset: %r', time.time() - t)
         self._temp_drag_file_path = None
         self._selected = []
 
@@ -92,8 +91,21 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
 
+        # Store the changes originated in the treeview so we do not need
+        # to regenerate the model and stuff up the scroll position
+        self._updated_entries = {}
+
+    def set_query(self, query):
+        self._query = query
+        self._updated_entries = {}
+
+        t = time.time()
+        self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        logging.debug('init resultset: %r', time.time() - t)
+
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
+        self._result_set.setup()
 
     def get_all_ids(self):
         return self._all_ids
@@ -107,11 +119,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_progress_cb(self, **kwargs):
         self.emit('progress')
 
-    def setup(self):
-        self._result_set.setup()
-
     def stop(self):
-        self._result_set.stop()
+        if self._result_set is not None:
+            self._result_set.stop()
 
     def get_metadata(self, path):
         return model.get(self[path][ListModel.COLUMN_UID])
@@ -128,6 +138,24 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         else:
             return 0
 
+    def set_value(self, iterator, column, value):
+        index = iterator.user_data
+        self._result_set.seek(index)
+        metadata = self._result_set.read()
+        if column == ListModel.COLUMN_FAVORITE:
+            metadata['keep'] = value
+        if column == ListModel.COLUMN_TITLE:
+            metadata['title'] = value
+
+        self._updated_entries[metadata['uid']] = metadata
+        model.updated.disconnect(self._updated_callback)
+        model.write(metadata, update_mtime=False,
+                    ready_callback=self.__reconect_updates_cb)
+
+    def __reconect_updates_cb(self, metadata, filepath, uid):
+        logging.debug('__reconect_updates_cb')
+        model.updated.connect(self._updated_callback)
+
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
             return None
@@ -141,6 +169,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._result_set.seek(index)
         metadata = self._result_set.read()
+        metadata.update(self._updated_entries.get(metadata['uid'], {}))
 
         self._last_requested_index = index
         self._cached_row = []
