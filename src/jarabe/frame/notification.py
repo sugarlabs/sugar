@@ -248,7 +248,7 @@ class NotificationIcon(Gtk.EventBox):
 
     _PULSE_TIMEOUT = 3
 
-    def __init__(self, **kwargs):
+    def __init__(self, pulse=True, **kwargs):
         self._icon = NotificationPulsingIcon()
         self._icon.props.pixel_size = style.STANDARD_ICON_SIZE
 
@@ -258,7 +258,7 @@ class NotificationIcon(Gtk.EventBox):
         self._icon.props.pulse_color = \
             XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                style.COLOR_TRANSPARENT.get_svg()))
-        self._icon.props.pulsing = True
+        self._icon.props.pulsing = pulse
         self.add(self._icon)
         self._icon.show()
 

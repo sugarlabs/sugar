@@ -19,9 +19,14 @@ import os
 import logging
 
 from gi.repository import Gdk
+from gi.repository import Gtk
+from gi.repository import GObject
 from gi.repository import SugarExt
 
 from sugar3.test import uitree
+from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics import style
+from sugar3 import profile
 
 from jarabe.model.sound import sound
 from jarabe.model import shell
@@ -30,11 +35,13 @@ from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
+from jarabe.frame.notification import NotificationIcon, NotificationWindow
 
 
 _VOLUME_STEP = sound.VOLUME_STEP
 _VOLUME_MAX = 100
 _TABBING_MODIFIER = Gdk.ModifierType.MOD1_MASK
+_VOLUME_NOTIFICATION_DURATION = 2000
 
 
 _actions_table = {
@@ -75,6 +82,7 @@ class KeyHandler(object):
         self._key_pressed = None
         self._keycode_pressed = 0
         self._keystate_pressed = 0
+        self._notification = ChangeNotification()
 
         self._key_grabber = SugarExt.KeyGrabber()
         self._key_grabber.connect('key-pressed',
@@ -110,6 +118,13 @@ class KeyHandler(object):
 
         sound.set_volume(volume)
         sound.set_muted(volume == 0)
+
+        icon_number = int(volume / 33) * 33
+        if icon_number == 99:
+            icon_number = 100
+        icon_name = 'speaker{}-{:03d}'.format(
+            '-muted' if sound.get_muted() else '', icon_number)
+        self._notification.show_icon(icon_name, sound.get_muted())
 
     def handle_previous_window(self, event_time):
         self._tabbing_handler.previous_activity(event_time)
@@ -219,6 +234,42 @@ class KeyHandler(object):
 
             return True
         return False
+
+
+class ChangeNotification(NotificationWindow):
+    def __init__(self):
+        self._timeout = None
+
+        NotificationWindow.__init__(self)
+
+        screen = Gdk.Screen.get_default()
+        self.move(screen.get_width() - style.GRID_CELL_SIZE,
+                  screen.get_height() - style.GRID_CELL_SIZE)
+
+        self._icon = NotificationIcon(pulse=False)
+        self.add(self._icon)
+        self._icon.show()
+
+    def show_icon(self, icon_name, monochrome):
+        if self._timeout is not None:
+            GObject.source_remove(self._timeout)
+
+        self._icon.props.icon_name = icon_name
+
+        if monochrome:
+            self._icon.props.xo_color = XoColor(
+                '%s,%s' % (style.COLOR_WHITE.get_svg(),
+                           style.COLOR_WHITE.get_svg()))
+        else:
+            self._icon.props.xo_color = profile.get_color()
+
+        self.show()
+        self._timeout = GObject.timeout_add(_VOLUME_NOTIFICATION_DURATION,
+                                            self.__timeout_finished_cb)
+
+    def __timeout_finished_cb(self):
+        self._timeout = None
+        self.hide()
 
 
 def setup(frame):
