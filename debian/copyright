@@ -50,6 +50,10 @@ License: GPL-2+
 Files: */Makefile.in
 Copyright:
   © 1994-2013, Free Software Foundation, Inc.
+License-Grant:
+ This Makefile.in is free software; the Free Software Foundation gives
+ unlimited permission to copy and/or distribute it, with or without
+ modifications, as long as this notice is preserved.
 License: GAP~Makefile.in
 
 Files: m4/intltool.m4
@@ -111,12 +115,20 @@ License: X11
 Files: configure
 Copyright:
   © 1992-1996, 1998-2012, Free Software Foundation, Inc.
-License: GAP~configure
+License-Grant:
+ This configure script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it.
+License: GAP
 
 Files: po/Makefile.in.in
 Copyright:
   © 1995-1997, Ulrich Drepper <drepper@gnu.ai.mit.edu>
   © 2004-2008, Rodney Dawes <dobey.pwns@gmail.com>
+License-Grant:
+ This file may be copied and used freely without restrictions.  It may
+ be used in projects which are not available under a GNU Public License,
+ but which still want to provide support for the GNU gettext
+ functionality.
 License: GAP~gettext
 
 Files: debian/*
@@ -150,26 +162,6 @@ License: GAP
  WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
  implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  PURPOSE.
-
-License: GAP~Makefile.in
- This Makefile.in is free software; the Free Software Foundation gives
- unlimited permission to copy and/or distribute it, with or without
- modifications, as long as this notice is preserved.
- .
- This program is distributed in the hope that it will be useful, but
- WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
- implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- PURPOSE.
-
-License: GAP~configure
- This configure script is free software; the Free Software Foundation
- gives unlimited permission to copy, distribute and modify it.
-
-License: GAP~gettext
- This file may be copied and used freely without restrictions.  It may
- be used in projects which are not available under a GNU Public License,
- but which still want to provide support for the GNU gettext
- functionality.
 
 License: X11
  Permission is hereby granted, free of charge, to any person obtaining a
