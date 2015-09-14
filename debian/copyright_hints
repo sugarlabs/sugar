@@ -357,7 +357,7 @@ Files: src/jarabe/desktop/friendview.py
  src/jarabe/view/buddymenu.py
  src/jarabe/view/service.py
 Copyright: 2006-2007, Red Hat, Inc
-  2010, Collabora Ltd. <http://www.collabora.co.uk/>
+  2010, Collabora Ltd. <http:www.collabora.co.uk/>
 License: GPL-2+
  FIXME
 
@@ -437,7 +437,7 @@ License: GPL-2+
 
 Files: src/jarabe/model/neighborhood.py
  src/jarabe/model/telepathyclient.py
-Copyright: 2010, Collabora Ltd. <http://www.collabora.co.uk/>
+Copyright: 2010, Collabora Ltd. <http:www.collabora.co.uk/>
 License: GPL-2+
  FIXME
 
@@ -593,7 +593,7 @@ Copyright: 2006-2007, Red Hat, Inc
   2008-2013, Sugar Labs
   2009, Tomeu Vizoso, Simon Schampijer
   2009-2012, One Laptop per Child
-  2010, Collabora Ltd. <http://www.collabora.co.uk/>
+  2010, Collabora Ltd. <http:www.collabora.co.uk/>
   2013, Daniel Francis
   2013, Walter Bender
 License: GPL-2+
@@ -602,7 +602,7 @@ License: GPL-2+
 Files: src/jarabe/frame/activitiestray.py
 Copyright: 2006-2007, Red Hat, Inc
   2008, One Laptop Per Child
-  2010, Collabora Ltd. <http://www.collabora.co.uk/>
+  2010, Collabora Ltd. <http:www.collabora.co.uk/>
 License: GPL-2+
  FIXME
 
@@ -610,7 +610,7 @@ Files: src/jarabe/desktop/meshbox.py
 Copyright: 2006-2007, Red Hat, Inc
   2009, Tomeu Vizoso, Simon Schampijer
   2009-2010, One Laptop per Child
-  2010, Collabora Ltd. <http://www.collabora.co.uk/>
+  2010, Collabora Ltd. <http:www.collabora.co.uk/>
 License: GPL-2+
  FIXME
 
@@ -858,7 +858,7 @@ License: LGPL-2+
  FIXME
 
 Files: src/jarabe/util/telepathy/connection_watcher.py
-Copyright: 2008, Collabora Ltd. <http://www.collabora.co.uk/>
+Copyright: 2008, Collabora Ltd. <http:www.collabora.co.uk/>
 License: LGPL-2.1+
  FIXME
 
