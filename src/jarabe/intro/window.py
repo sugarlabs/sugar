@@ -385,8 +385,9 @@ class _IntroBox(Gtk.VBox):
         if self._current_page.props.valid:
             if self._page == self.PAGE_LAST:
                 self.done()
-            self._page += 1
-            self._setup_page()
+            else:
+                self._page += 1
+                self._setup_page()
 
     def _done_activated_cb(self, widget):
         self.done()
