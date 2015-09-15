@@ -41,6 +41,9 @@ class Frame(SectionView):
         self._edge_delay_sid = 0
         self._edge_delay_is_valid = True
         self._edge_delay_change_handler = None
+        self._trigger_size_sid = 0
+        self._trigger_size_is_valid = True
+        self._trigger_size_change_handler = None
         self.restart_alerts = alerts
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
@@ -67,6 +70,10 @@ class Frame(SectionView):
         self._edge_delay_slider = None
         self._edge_delay_alert = None
         self._setup_edge()
+
+        self._trigger_size_slider = None
+        self._trigger_size_alert = None
+        self._setup_trigger()
 
         self.pack_start(self._box_sliders, False, True, 0)
         self._box_sliders.show()
@@ -145,26 +152,69 @@ class Frame(SectionView):
             self._edge_delay_alert.props.msg = self.restart_msg
             self._edge_delay_alert.show()
 
+    def _setup_trigger(self):
+        box_trigger = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        label_trigger = Gtk.Label(label=_('Trigger Size'))
+        label_trigger.set_alignment(1, 0.75)
+        label_trigger.modify_fg(Gtk.StateType.NORMAL,
+                                style.COLOR_SELECTION_GREY.get_gdk_color())
+        box_trigger.pack_start(label_trigger, False, True, 0)
+        self._group.add_widget(label_trigger)
+        label_trigger.show()
+
+        adj = Gtk.Adjustment(value=1, lower=1, upper=style.GRID_CELL_SIZE,
+                             step_incr=1, page_incr=1, page_size=0)
+        self._trigger_size_slider = Gtk.HScale()
+        self._trigger_size_slider.set_adjustment(adj)
+        self._trigger_size_slider.set_digits(0)
+        self._trigger_size_slider.connect('format-value',
+                                          self.__trigger_size_format_cb)
+        box_trigger.pack_start(self._trigger_size_slider, True, True, 0)
+        self._trigger_size_slider.show()
+        self._box_sliders.pack_start(box_trigger, False, True, 0)
+        box_trigger.show()
+
+        self._trigger_size_alert = InlineAlert()
+        label_trigger_error = Gtk.Label()
+        self._group.add_widget(label_trigger_error)
+
+        trigger_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
+        trigger_alert_box.pack_start(label_trigger_error, False, True, 0)
+        label_trigger_error.show()
+        trigger_alert_box.pack_start(self._trigger_size_alert, False, True, 0)
+        self._box_sliders.pack_start(trigger_alert_box, False, True, 0)
+        trigger_alert_box.show()
+        if 'trigger_size' in self.restart_alerts:
+            self._trigger_size_alert.props.msg = self.restart_msg
+            self._trigger_size_alert.show()
+
     def setup(self):
         self._corner_delay_slider.set_value(self._model.get_corner_delay())
         self._edge_delay_slider.set_value(self._model.get_edge_delay())
+        self._trigger_size_slider.set_value(self._model.get_trigger_size())
         self._corner_delay_is_valid = True
         self._edge_delay_is_valid = True
+        self._trigger_size_is_valid = True
         self.needs_restart = False
         self._corner_delay_change_handler = self._corner_delay_slider.connect(
             'value-changed', self.__corner_delay_changed_cb)
         self._edge_delay_change_handler = self._edge_delay_slider.connect(
             'value-changed', self.__edge_delay_changed_cb)
+        self._trigger_size_change_handler = self._trigger_size_slider.connect(
+            'value-changed', self.__trigger_size_changed_cb)
 
     def undo(self):
         self._corner_delay_slider.disconnect(self._corner_delay_change_handler)
         self._edge_delay_slider.disconnect(self._edge_delay_change_handler)
+        self._trigger_size_slider.disconnect(self._trigger_size_change_handler)
         self._model.undo()
         self._corner_delay_alert.hide()
         self._edge_delay_alert.hide()
+        self._trigger_size_alert.hide()
 
     def _validate(self):
-        if self._edge_delay_is_valid and self._corner_delay_is_valid:
+        if self._edge_delay_is_valid and self._corner_delay_is_valid \
+           and self._trigger_size_is_valid:
             self.props.is_valid = True
         else:
             self.props.is_valid = False
@@ -192,6 +242,8 @@ class Frame(SectionView):
 
         self._validate()
         self._corner_delay_alert.show()
+        # This may effect the trigger slider label
+        self._trigger_size_slider.queue_draw()
         return False
 
     def __corner_delay_format_cb(self, scale, value):
@@ -225,6 +277,8 @@ class Frame(SectionView):
 
         self._validate()
         self._edge_delay_alert.show()
+        # This may effect the trigger slider label
+        self._trigger_size_slider.queue_draw()
         return False
 
     def __edge_delay_format_cb(self, scale, value):
@@ -234,3 +288,45 @@ class Frame(SectionView):
             return _instantaneous
         else:
             return _seconds_label % (value / _MAX_DELAY)
+
+    def __trigger_size_changed_cb(self, scale, data=None):
+        if self._trigger_size_sid:
+            GObject.source_remove(self._trigger_size_sid)
+        self._trigger_size_sid = GObject.timeout_add(
+            self._APPLY_TIMEOUT, self.__trigger_size_timeout_cb, scale)
+
+    def __trigger_size_timeout_cb(self, scale):
+        self._trigger_size_sid = 0
+        if scale.get_value() == self._model.get_trigger_size():
+            return
+        try:
+            self._model.set_trigger_size(scale.get_value())
+        except ValueError, detail:
+            self._trigger_size_alert.props.msg = detail
+            self._trigger_size_is_valid = False
+        else:
+            self._trigger_size_alert.props.msg = self.restart_msg
+            self._trigger_size_is_valid = True
+            self.needs_restart = True
+            self.restart_alerts.append('trigger_size')
+
+        self._validate()
+        self._trigger_size_alert.show()
+        return False
+
+    def __trigger_size_format_cb(self, scale, value):
+        value = int(value)
+        if value == style.GRID_CELL_SIZE:
+            return _('toolbar size')
+        elif value == 1:
+            corner = self._model.get_corner_delay() < _MAX_DELAY
+            edge = self._model.get_edge_delay() < _MAX_DELAY
+            if corner and edge:
+                return _('exact corner or edge')
+            elif corner:
+                return _('exact corner')
+            else:
+                return _('exact edge')
+        else:
+            # TRANS: px as in pixels
+            return _('{}px').format(value)
