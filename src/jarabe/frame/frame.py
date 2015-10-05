@@ -102,7 +102,7 @@ class Frame(object):
             self.__notification_cancelled_cb)
 
     def is_visible(self):
-        return self.current_position != 0.0
+        return self.current_position > 0.05
 
     visible = property(is_visible, None)
 
@@ -114,7 +114,7 @@ class Frame(object):
             self._animator.stop()
 
         palettegroup.popdown_all()
-        self._animator = animator.Animator(0.5)
+        self._animator = animator.Animator(0.5, widget=self._top_panel)
         self._animator.add(_Animation(self, 0.0))
         self._animator.start()
 
@@ -124,7 +124,7 @@ class Frame(object):
         if self._animator:
             self._animator.stop()
 
-        self._animator = animator.Animator(0.5)
+        self._animator = animator.Animator(0.5, widget=self._top_panel)
         self._animator.add(_Animation(self, 1.0))
         self._animator.start()
 
