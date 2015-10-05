@@ -14,6 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import logging
 from gi.repository import GObject
 
 from sugar3.graphics import style
@@ -55,7 +56,7 @@ class TransitionBox(ViewContainer):
                                 pixel_size=style.XLARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, self._owner_icon)
 
-        self._animator = animator.Animator(0.3)
+        self._animator = animator.Animator(0.3, widget=self)
         self._animator.connect('completed', self._animation_completed_cb)
 
     def _animation_completed_cb(self, anim):
