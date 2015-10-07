@@ -1,7 +1,7 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
-# Copyright (C) 2014 Ignacio Rodriguez
+# Copyright (C) 2014-15 Ignacio Rodriguez
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -371,6 +371,17 @@ class DocumentButton(RadioToolButton):
         box.append_item(menu_item)
         menu_item.show()
 
+    def __set_busy_cursor(self, busy):
+        cursor = None
+
+        if busy:
+            cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+        else:
+            cursor = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
+
+        gdk_window = self.get_root_window()
+        gdk_window.set_cursor(cursor)
+
     def __copy_to_home_cb(self, menu_item):
         """Make a local copy of the activity bundle in user_activities_path"""
         user_activities_path = get_user_activities_path()
@@ -379,10 +390,20 @@ class DocumentButton(RadioToolButton):
             nick, os.path.basename(self._document_path))
         if not os.path.exists(os.path.join(user_activities_path,
                                            new_basename)):
-            shutil.copytree(self._document_path,
-                            os.path.join(user_activities_path, new_basename),
-                            symlinks=True)
-            customizebundle.generate_bundle(nick, new_basename)
+            self.__set_busy_cursor(True)
+
+            def async_copy_activity_tree():
+                try:
+                    shutil.copytree(self._document_path,
+                                    os.path.join(
+                                        user_activities_path,
+                                        new_basename),
+                                    symlinks=True)
+                    customizebundle.generate_bundle(nick, new_basename)
+                finally:
+                    self.__set_busy_cursor(False)
+
+            GObject.idle_add(async_copy_activity_tree)
         else:
             _logger.debug('%s already exists', new_basename)
 
