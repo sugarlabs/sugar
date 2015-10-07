@@ -78,8 +78,10 @@ def generate_bundle(nick, new_basename):
                                            'dist', '*')):
             os.remove(path)
 
-    config = bundlebuilder.Config(source_dir=os.path.join(
-        user_activities_path, new_basename),
+    source_dir = os.path.join(user_activities_path, new_basename)
+    config = bundlebuilder.Config(
+        source_dir=source_dir,
+        dist_dir=os.path.join(source_dir, 'dist'),
         dist_name='%s-1' % (new_activity_name))
     bundlebuilder.cmd_dist_xo(config, None)
 
