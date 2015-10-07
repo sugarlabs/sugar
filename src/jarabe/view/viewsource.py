@@ -36,6 +36,8 @@ from gi.repository import Gio
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.palettemenu import PaletteMenuBox
@@ -187,6 +189,7 @@ class ViewSource(Gtk.Window):
 
         self._parent_window_xid = window_xid
         self._sugar_toolkit_path = sugar_toolkit_path
+        self._gdk_window = self.get_root_window()
 
         self.connect('realize', self.__realize_cb)
         self.connect('destroy', self.__destroy_cb, document_path)
@@ -328,6 +331,8 @@ class ViewSource(Gtk.Window):
         if document_path is not None and os.path.exists(document_path):
             os.unlink(document_path)
 
+        self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
+
     def __key_press_event_cb(self, window, event):
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
@@ -347,12 +352,14 @@ class ViewSource(Gtk.Window):
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
-    def __init__(self, file_name, document_path, title, bundle=False):
+    def __init__(self, file_name, document_path, activity_name, title,
+                 bundle=False):
         RadioToolButton.__init__(self)
 
         self._document_path = document_path
         self._title = title
         self._jobject = None
+        self._activity_name = activity_name
 
         self.props.tooltip = _('Instance Source')
 
@@ -371,7 +378,7 @@ class DocumentButton(RadioToolButton):
         if bundle:
             menu_item = PaletteMenuItem(_('Duplicate'), 'edit-duplicate',
                                         xo_color=XoColor(self._color))
-            menu_item.connect('activate', self.__copy_to_home_cb)
+            menu_item.connect('activate', self.__show_duplicate_alert)
         else:
             menu_item = PaletteMenuItem(_('Keep'), 'document-save',
                                         xo_color=XoColor(self._color))
@@ -379,6 +386,29 @@ class DocumentButton(RadioToolButton):
 
         box.append_item(menu_item)
         menu_item.show()
+
+    def __show_duplicate_alert(self, menu_item):
+        alert = ConfirmationAlert()
+        alert.props.title = _('Do you want to duplicate %s Activity?') % \
+            self._activity_name
+        alert.props.msg = _('This may take a few minutes')
+        alert.connect('response', self.__duplicate_alert_response_cb)
+        self.get_toplevel().add_alert(alert)
+
+    def __duplicate_alert_response_cb(self, alert, response_id):
+        self.get_toplevel().remove_alert(alert)
+
+        if response_id == Gtk.ResponseType.OK:
+            self.__set_busy_cursor(True)
+
+            def internal_callback(new_alert):
+                self.__copy_to_home_cb(None, new_alert)
+
+            new_alert = Alert()
+            new_alert.props.title = _("Duplicating activity...")
+
+            self.get_toplevel().add_alert(new_alert)
+            GObject.idle_add(internal_callback, new_alert)
 
     def __set_busy_cursor(self, busy):
         cursor = None
@@ -391,7 +421,7 @@ class DocumentButton(RadioToolButton):
         gdk_window = self.get_root_window()
         gdk_window.set_cursor(cursor)
 
-    def __copy_to_home_cb(self, menu_item):
+    def __copy_to_home_cb(self, menu_item, copy_alert=None):
         """Make a local copy of the activity bundle in user_activities_path"""
         user_activities_path = get_user_activities_path()
         nick = customizebundle.generate_unique_id()
@@ -409,8 +439,13 @@ class DocumentButton(RadioToolButton):
                                         new_basename),
                                     symlinks=True)
                     customizebundle.generate_bundle(nick, new_basename)
-                    alert = NotifyAlert()
-                    alert.props.title = _('Activity duplicated')
+
+                    if copy_alert:
+                        self.get_toplevel().remove_alert(copy_alert)
+
+                    alert = NotifyAlert(10)
+                    alert.props.title = _('Duplicated')
+                    alert.props.msg = _('The activity has been duplicated')
                     alert.connect('response', self.__alert_response_cb)
                     self.get_toplevel().add_alert(alert)
                 finally:
@@ -418,8 +453,13 @@ class DocumentButton(RadioToolButton):
 
             GObject.idle_add(async_copy_activity_tree)
         else:
-            alert = NotifyAlert()
-            alert.props.title = _('Duplicated activity already exsists')
+            if copy_alert:
+                self.get_toplevel().remove_alert(copy_alert)
+
+            self.__set_busy_cursor(False)
+
+            alert = NotifyAlert(10)
+            alert.props.title = _('Duplicated activity already exists')
             alert.props.msg = _('Delete your copy before trying to duplicate'
                                 ' the activity again')
 
@@ -477,9 +517,11 @@ class Toolbar(Gtk.Toolbar):
 
         activity_bundle = get_bundle_instance(bundle_path)
         file_name = activity_bundle.get_icon()
+        activity_name = activity_bundle.get_name()
 
         if document_path is not None and os.path.exists(document_path):
-            document_button = DocumentButton(file_name, document_path, title)
+            document_button = DocumentButton(file_name, document_path,
+                                             activity_name, title)
             document_button.connect('toggled', self.__button_toggled_cb,
                                     document_path)
             self.insert(document_button, -1)
@@ -487,8 +529,8 @@ class Toolbar(Gtk.Toolbar):
             self._add_separator()
 
         if bundle_path is not None and os.path.exists(bundle_path):
-            activity_button = DocumentButton(file_name, bundle_path, title,
-                                             bundle=True)
+            activity_button = DocumentButton(file_name, bundle_path,
+                                             activity_name, title, bundle=True)
             icon = Icon(file=file_name,
                         pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
