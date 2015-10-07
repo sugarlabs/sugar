@@ -92,10 +92,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
 
-        # Store the changes originated in the treeview so we do not need
-        # to regenerate the model and stuff up the scroll position
-        self._updated_entries = {}
-
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
 
@@ -111,9 +107,8 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_progress_cb(self, **kwargs):
         self.emit('progress')
 
-    def setup(self, updated_callback=None):
+    def setup(self):
         self._result_set.setup()
-        self._updated_callback = updated_callback
 
     def stop(self):
         self._result_set.stop()
@@ -133,25 +128,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         else:
             return 0
 
-    def set_value(self, iterator, column, value):
-        index = iterator.user_data
-        self._result_set.seek(index)
-        metadata = self._result_set.read()
-        if column == ListModel.COLUMN_FAVORITE:
-            metadata['keep'] = value
-        if column == ListModel.COLUMN_TITLE:
-            metadata['title'] = value
-        self._updated_entries[metadata['uid']] = metadata
-        if self._updated_callback is not None:
-            model.updated.disconnect(self._updated_callback)
-        model.write(metadata, update_mtime=False,
-                    ready_callback=self.__reconect_updates_cb)
-
-    def __reconect_updates_cb(self, metadata, filepath, uid):
-        logging.error('__reconect_updates_cb')
-        if self._updated_callback is not None:
-            model.updated.connect(self._updated_callback)
-
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
             return None
@@ -165,7 +141,6 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._result_set.seek(index)
         metadata = self._result_set.read()
-        metadata.update(self._updated_entries.get(metadata['uid'], {}))
 
         self._last_requested_index = index
         self._cached_row = []
