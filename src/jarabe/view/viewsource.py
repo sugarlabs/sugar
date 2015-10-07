@@ -36,6 +36,7 @@ from gi.repository import Gio
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
+from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
@@ -191,19 +192,19 @@ class ViewSource(Gtk.Window):
         self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        vbox = Gtk.VBox()
-        self.add(vbox)
-        vbox.show()
+        self._vbox = Gtk.VBox()
+        self.add(self._vbox)
+        self._vbox.show()
 
         toolbar = Toolbar(title, bundle_path, document_path,
                           sugar_toolkit_path)
-        vbox.pack_start(toolbar, False, True, 0)
+        self._vbox.pack_start(toolbar, False, True, 0)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
         toolbar.show()
 
         pane = Gtk.HPaned()
-        vbox.pack_start(pane, True, True, 0)
+        self._vbox.pack_start(pane, True, True, 0)
         pane.show()
 
         self._selected_bundle_file = None
@@ -266,6 +267,14 @@ class ViewSource(Gtk.Window):
 
         if document_path is not None:
             self._select_source(document_path)
+
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 1)
+        alert.show()
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
 
     def _calculate_char_width(self, char_count):
         widget = Gtk.Label(label='')
@@ -400,12 +409,25 @@ class DocumentButton(RadioToolButton):
                                         new_basename),
                                     symlinks=True)
                     customizebundle.generate_bundle(nick, new_basename)
+                    alert = NotifyAlert()
+                    alert.props.title = _('Activity duplicated')
+                    alert.connect('response', self.__alert_response_cb)
+                    self.get_toplevel().add_alert(alert)
                 finally:
                     self.__set_busy_cursor(False)
 
             GObject.idle_add(async_copy_activity_tree)
         else:
-            _logger.debug('%s already exists', new_basename)
+            alert = NotifyAlert()
+            alert.props.title = _('Duplicated activity already exsists')
+            alert.props.msg = _('Delete your copy before trying to duplicate'
+                                ' the activity again')
+
+            alert.connect('response', self.__alert_response_cb)
+            self.get_toplevel().add_alert(alert)
+
+    def __alert_response_cb(self, alert, response_id):
+        self.get_toplevel().remove_alert(alert)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
