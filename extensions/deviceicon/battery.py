@@ -28,7 +28,6 @@ from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -83,8 +82,6 @@ class DeviceView(TrayIcon):
         if not self._model.props.present:
             status = _STATUS_NOT_PRESENT
             badge_name = None
-            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                          style.COLOR_WHITE.get_svg()))
         elif self._model.props.charging:
             status = _STATUS_CHARGING
             name += '-charging'
@@ -96,8 +93,11 @@ class DeviceView(TrayIcon):
         else:
             status = _STATUS_FULLY_CHARGED
 
-        self.icon.props.icon_name = get_icon_state(name, current_level,
-                                                   step=-5)
+        if status == _STATUS_NOT_PRESENT:
+            self.icon.props.icon_name = "battery-removed"
+        else:
+            self.icon.props.icon_name = get_icon_state(name, current_level,
+                                                       step=-5)
         self.icon.props.xo_color = xo_color
         self.icon.props.badge_name = badge_name
 
