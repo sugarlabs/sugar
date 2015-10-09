@@ -287,6 +287,7 @@ class JournalActivity(JournalWindow):
 
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
+            self._main_toolbox.clear_query()
             self.show_main_view()
 
     def __detail_clicked_cb(self, list_view, object_id):
