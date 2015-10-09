@@ -33,6 +33,7 @@ from sugar3.graphics import style
 from sugar3.graphics.icon import Icon, CellRendererIcon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.scrollingdetector import ScrollingDetector
 from sugar3.graphics.palettewindow import TreeViewInvoker
@@ -534,7 +535,11 @@ class ActivitiesList(Gtk.VBox):
         self.pack_start(alert, False, True, 0)
         self.reorder_child(alert, 0)
 
-    def remove_alert(self):
+    def remove_alert(self, alert=None):
+        if alert:
+            if not self._alert == alert:
+                return
+
         self.remove(self._alert)
         self._alert = None
 
@@ -563,15 +568,43 @@ class ActivitiesList(Gtk.VBox):
                                                 bundle_id):
         self.remove_alert()
         if response_id == Gtk.ResponseType.OK:
-            registry = bundleregistry.get_registry()
-            bundle = registry.get_bundle(bundle_id)
-            registry.uninstall(bundle, delete_profile=True)
+            erasing_alert = Alert()
+            erasing_alert.props.title = _("Erasing activity...")
+            self.add_alert(erasing_alert)
+
+            def internal_callback():
+                registry = bundleregistry.get_registry()
+                bundle = registry.get_bundle(bundle_id)
+                registry.uninstall(bundle, delete_profile=True)
+                self.__set_busy_cursor(False)
+                self.remove_alert()
+
+                alert = NotifyAlert(5)
+                alert.props.title = _('Erased')
+                alert.props.msg = _('The activity has been erased')
+                alert.connect('response', self.__erased_notify_response)
+                self.add_alert(alert)
+
+            self.__set_busy_cursor(True)
+            GObject.idle_add(internal_callback)
 
     def get_activities_selected(self):
         return self._tree_view.get_activities_selected()
 
     def run_activity(self, bundle_id, resume_mode):
         self._tree_view.run_activity(bundle_id, resume_mode)
+
+    def __set_busy_cursor(self, busy):
+        if busy:
+            cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+        else:
+            cursor = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
+
+        gdk_window = self.get_root_window()
+        gdk_window.set_cursor(cursor)
+
+    def __erased_notify_response(self, alert, response):
+        self.remove_alert(alert)
 
 
 class ActivityListPalette(ActivityPalette):
