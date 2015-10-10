@@ -23,5 +23,4 @@ path = bundle.install()
 # by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
 os.utime(path, None)
 
-
 print "%s: '%s' installed." % (sys.argv[0], sys.argv[1])
