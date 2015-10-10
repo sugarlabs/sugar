@@ -136,7 +136,8 @@ class BundleRegistry(GObject.GObject):
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
-        if event_type == Gio.FileMonitorEvent.CREATED:
+        if event_type == Gio.FileMonitorEvent.CREATED or \
+           event_type == Gio.FileMonitorEvent.ATTRIBUTE_CHANGED:
             self.add_bundle(one_file.get_path(), set_favorite=True)
         elif event_type == Gio.FileMonitorEvent.DELETED:
             self.remove_bundle(one_file.get_path())
