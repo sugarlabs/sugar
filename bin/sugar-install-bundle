@@ -16,15 +16,11 @@ if len(sys.argv) != 2:
     cmd_help()
     sys.exit(2)
 
-if 'SUGAR_PROFILE' in os.environ:
-    # We are in sugar, so use the bundle registry so the correct signals
-    # are sent to the activity list
-    from jarabe.model.bundleregistry import get_registry
-    registry = get_registry()
-    bundle = ActivityBundle(sys.argv[1])
-    registry.install(bundle, force_downgrade=True)
-else:
-    bundle = ActivityBundle(sys.argv[1])
-    bundle.install()
+bundle = ActivityBundle(sys.argv[1])
+path = bundle.install()
+
+# make absolute sure that the BundleRegistry is aware of thia.
+os.utime(path, None)
+
 
 print "%s: '%s' installed." % (sys.argv[0], sys.argv[1])
