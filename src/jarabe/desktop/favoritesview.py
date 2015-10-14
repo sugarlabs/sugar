@@ -620,11 +620,8 @@ class CurrentActivityIcon(CanvasIcon):
             self.props.xo_color = self._home_activity.get_icon_color()
 
             if self._home_activity.is_journal():
-                if self.get_window():
-                    self.get_window().set_cursor(None)
-                else:
-                    # the window is not visible yet, try again in one second
-                    GLib.timeout_add_seconds(1, self._reset_cursor)
+                if self._unbusy():
+                    GLib.timeout_add(333, self._unbusy)
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
@@ -632,9 +629,10 @@ class CurrentActivityIcon(CanvasIcon):
             self.palette.destroy()
             self.palette = None
 
-    def _reset_cursor(self):
+    def _unbusy(self):
         if self.get_window():
-            self.get_window().set_cursor(None)
+            import jarabe.desktop.homewindow
+            jarabe.desktop.homewindow.get_instance().unbusy()
             return False
         return True
 

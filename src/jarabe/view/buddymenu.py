@@ -21,17 +21,20 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gio
+from gi.repository import GObject
 import dbus
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.alert import Alert
 from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
+import jarabe.desktop.homewindow
 
 
 class BuddyMenu(Palette):
@@ -124,10 +127,36 @@ class BuddyMenu(Palette):
         item.show()
 
     def _quit(self, action):
-        import jarabe.desktop.homewindow
+        jarabe.desktop.homewindow.get_instance().busy()
+        action()
+        GObject.timeout_add_seconds(3, self.__quit_timeout_cb)
 
-        home_window = jarabe.desktop.homewindow.get_instance()
-        home_window.busy_during_delayed_action(action)
+    def __quit_timeout_cb(self):
+        jarabe.desktop.homewindow.get_instance().unbusy()
+        alert = Alert()
+        alert.props.title = _('Warning')
+        alert.props.msg = _('An activity is not responding.')
+
+        icon = Icon(icon_name='dialog-ok')
+        alert.add_button(Gtk.ResponseType.ACCEPT, _('Lose unsaved work'), icon)
+        icon.show()
+
+        icon = Icon(icon_name='dialog-cancel')
+        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
+        icon.show()
+
+        alert.connect('response', self.__quit_accept_cb)
+
+        jarabe.desktop.homewindow.get_instance().add_alert(alert)
+        alert.show()
+
+    def __quit_accept_cb(self, alert, response_id):
+        jarabe.desktop.homewindow.get_instance().remove_alert(alert)
+        if response_id is Gtk.ResponseType.ACCEPT:
+            jarabe.desktop.homewindow.get_instance().busy()
+            get_session_manager().shutdown_completed()
+        if response_id is Gtk.ResponseType.CANCEL:
+            get_session_manager().cancel_shutdown()
 
     def __logout_activate_cb(self, menu_item):
         self._quit(get_session_manager().logout)
