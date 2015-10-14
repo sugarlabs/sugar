@@ -27,7 +27,7 @@ import dbus
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import TimeoutAlert
 from sugar3.graphics import style
 
 from jarabe.model import shell
@@ -133,18 +133,9 @@ class BuddyMenu(Palette):
 
     def __quit_timeout_cb(self):
         jarabe.desktop.homewindow.get_instance().unbusy()
-        alert = Alert()
-        alert.props.title = _('Warning')
-        alert.props.msg = _('An activity is not responding.')
-
-        icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.ACCEPT, _('Lose unsaved work'), icon)
-        icon.show()
-
-        icon = Icon(icon_name='dialog-cancel')
-        alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
-        icon.show()
-
+        alert = TimeoutAlert(30)
+        alert.props.title = _('An activity is not responding.')
+        alert.props.msg = _('You may lose unsaved work if you continue.')
         alert.connect('response', self.__quit_accept_cb)
 
         jarabe.desktop.homewindow.get_instance().add_alert(alert)
@@ -152,11 +143,11 @@ class BuddyMenu(Palette):
 
     def __quit_accept_cb(self, alert, response_id):
         jarabe.desktop.homewindow.get_instance().remove_alert(alert)
-        if response_id is Gtk.ResponseType.ACCEPT:
-            jarabe.desktop.homewindow.get_instance().busy()
-            get_session_manager().shutdown_completed()
         if response_id is Gtk.ResponseType.CANCEL:
             get_session_manager().cancel_shutdown()
+        else:
+            jarabe.desktop.homewindow.get_instance().busy()
+            get_session_manager().shutdown_completed()
 
     def __logout_activate_cb(self, menu_item):
         self._quit(get_session_manager().logout)
