@@ -84,6 +84,8 @@ class ControlPanel(Gtk.Window):
         Gdk.Screen.get_default().connect(
             'size-changed', self.__size_changed_cb)
 
+        self._busy_count = 0
+
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
@@ -92,6 +94,21 @@ class ControlPanel(Gtk.Window):
 
     def __size_changed_cb(self, event):
         self._calculate_max_columns()
+
+    def busy(self):
+        if self._busy_count == 0:
+            self._old_cursor = self.get_window().get_cursor()
+            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        self._busy_count += 1
+
+    def unbusy(self):
+        self._busy_count -= 1
+        if self._busy_count == 0:
+            self._set_cursor(self._old_cursor)
+
+    def _set_cursor(self, cursor):
+        self.get_window().set_cursor(cursor)
+        Gdk.flush()
 
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
@@ -267,14 +284,14 @@ class ControlPanel(Gtk.Window):
         model = ModelWrapper(mod)
 
         try:
-            self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            self.busy()
             self._section_view = view_class(model,
                                             self._options[option]['alerts'])
 
             self._set_canvas(self._section_view)
             self._section_view.show()
         finally:
-            self.get_window().set_cursor(None)
+            self.unbusy()
 
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
