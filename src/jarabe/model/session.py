@@ -64,8 +64,15 @@ class SessionManager(GObject.GObject):
         self.shutdown_signal.emit()
         self.session.initiate_shutdown()
 
+    def cancel_shutdown(self):
+        self.session.cancel_shutdown()
+        self._shutdown_tries = 0
+        self._logout_mode = None
+
     def __shutdown_completed_cb(self, session):
-        GObject.timeout_add_seconds(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
+        if self._logout_mode is not None:
+            if self._try_shutdown():
+                GObject.timeout_add(self.SHUTDOWN_TIMEOUT, self._try_shutdown)
 
     def _try_shutdown(self):
         if len(self._shell_model) > 0:
