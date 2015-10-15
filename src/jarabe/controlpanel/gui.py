@@ -24,7 +24,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, TimeoutAlert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -399,8 +399,31 @@ class ControlPanel(Gtk.Window):
                 self._section_view.restart_alerts
             self._show_main_view()
         elif response_id is Gtk.ResponseType.APPLY:
-            session_manager = get_session_manager()
-            session_manager.logout()
+            self.busy()
+            self._section_toolbar.accept_button.set_sensitive(False)
+            self._section_toolbar.cancel_button.set_sensitive(False)
+            get_session_manager().logout()
+            GObject.timeout_add_seconds(4, self.__quit_timeout_cb)
+
+    def __quit_timeout_cb(self):
+        self.unbusy()
+        alert = TimeoutAlert(30)
+        alert.props.title = _('An activity is not responding.')
+        alert.props.msg = _('You may lose unsaved work if you continue.')
+        alert.connect('response', self.__quit_accept_cb)
+
+        self.add_alert(alert)
+        alert.show()
+
+    def __quit_accept_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        if response_id is Gtk.ResponseType.CANCEL:
+            get_session_manager().cancel_shutdown()
+            self._section_toolbar.accept_button.set_sensitive(True)
+            self._section_toolbar.cancel_button.set_sensitive(True)
+        else:
+            self.busy()
+            get_session_manager().shutdown_completed()
 
     def __select_option_cb(self, button, event, option):
         self.show_section_view(option)
