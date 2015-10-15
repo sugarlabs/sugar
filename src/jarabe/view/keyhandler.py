@@ -160,6 +160,7 @@ class KeyHandler(object):
     def handle_logout(self, event_time):
         if "SUGAR_DEVELOPER" in os.environ:
             session.get_session_manager().logout()
+            # FIXME: deal more cleanly with no response to save yourself
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()

@@ -109,6 +109,7 @@ class HomeWindow(Gtk.Window):
         self._alerts.append(alert)
         if len(self._alerts) == 1:
             self._display_alert(alert)
+            # FIXME: alerts displayed here are lost on view switch
 
     def remove_alert(self, alert):
         if alert in self._alerts:
