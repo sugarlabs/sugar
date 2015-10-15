@@ -110,6 +110,13 @@ class ControlPanel(Gtk.Window):
         self.get_window().set_cursor(cursor)
         Gdk.flush()
 
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 2)
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
+
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
         self._main_view.get_child().grab_focus()
@@ -373,15 +380,14 @@ class ControlPanel(Gtk.Window):
             alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
             icon.show()
 
-            self._vbox.pack_start(alert, False, False, 0)
-            self._vbox.reorder_child(alert, 2)
+            self.add_alert(alert)
             alert.connect('response', self.__response_cb)
             alert.show()
         else:
             self._show_main_view()
 
     def __response_cb(self, alert, response_id):
-        self._vbox.remove(alert)
+        self.remove_alert(alert)
         self._section_toolbar.accept_button.set_sensitive(True)
         self._section_toolbar.cancel_button.set_sensitive(True)
         if response_id is Gtk.ResponseType.CANCEL:
