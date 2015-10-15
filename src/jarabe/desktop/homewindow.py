@@ -62,8 +62,8 @@ class HomeWindow(Gtk.Window):
                               screen.get_height())
 
         self.realize()
-        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        Gdk.flush()
+        self._busy_count = 0
+        self.busy()
 
         self.set_type_hint(Gdk.WindowTypeHint.DESKTOP)
         self.modify_bg(Gtk.StateType.NORMAL,
@@ -263,18 +263,20 @@ class HomeWindow(Gtk.Window):
     def get_home_box(self):
         return self._home_box
 
-    def busy_during_delayed_action(self, action):
-        """Use busy cursor during execution of action, scheduled via idle_add.
-        """
-        def action_wrapper(old_cursor):
-            try:
-                action()
-            finally:
-                self.get_window().set_cursor(old_cursor)
+    def busy(self):
+        if self._busy_count == 0:
+            self._old_cursor = self.get_window().get_cursor()
+            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        self._busy_count += 1
 
-        old_cursor = self.get_window().get_cursor()
-        self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        GLib.idle_add(action_wrapper, old_cursor)
+    def unbusy(self):
+        self._busy_count -= 1
+        if self._busy_count == 0:
+            self._set_cursor(self._old_cursor)
+
+    def _set_cursor(self, cursor):
+        self.get_window().set_cursor(cursor)
+        Gdk.flush()
 
 
 def get_instance():
