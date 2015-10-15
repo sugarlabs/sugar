@@ -32,7 +32,6 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import Icon, get_icon_file_name
 from sugar3.graphics.palette import Palette
-from sugar3.graphics.menuitem import MenuItem
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
@@ -202,14 +201,18 @@ class InvitePalette(Palette):
 
         self._invite = invite
 
-        menu_item = MenuItem(_('Join'), icon_name='dialog-ok')
+        self.menu_box = PaletteMenuBox()
+        self.set_content(self.menu_box)
+        self.menu_box.show()
+
+        menu_item = PaletteMenuItem(_('Join'), icon_name='dialog-ok')
         menu_item.connect('activate', self.__join_activate_cb)
-        self.menu.append(menu_item)
+        self.menu_box.append_item(menu_item)
         menu_item.show()
 
-        menu_item = MenuItem(_('Decline'), icon_name='dialog-cancel')
+        menu_item = PaletteMenuItem(_('Decline'), icon_name='dialog-cancel')
         menu_item.connect('activate', self.__decline_activate_cb)
-        self.menu.append(menu_item)
+        self.menu_box.append_item(menu_item)
         menu_item.show()
 
         bundle_id = invite.get_bundle_id()
