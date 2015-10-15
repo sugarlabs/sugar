@@ -41,6 +41,7 @@ class BackupView(SectionView):
     def __init__(self, model, alerts=None):
         SectionView.__init__(self)
         self.needs_restart = False
+        self.props.is_deferrable = False
 
         # add the initial panel
         self.set_canvas(SelectBackupRestorePanel(self))

@@ -347,7 +347,7 @@ class ControlPanel(Gtk.Window):
                                  _('Cancel changes'), icon)
                 icon.show()
 
-            if self._current_option not in ('aboutme', 'backup'):
+            if self._section_view.props.is_deferrable:
                 icon = Icon(icon_name='dialog-ok')
                 alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
                 icon.show()

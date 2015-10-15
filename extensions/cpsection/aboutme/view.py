@@ -160,6 +160,7 @@ class AboutMe(SectionView):
 
         self._model = model
         self.restart_alerts = alerts if alerts else set()
+        self.props.is_deferrable = False
         self._nick_sid = 0
         self._color_valid = True
         self._nick_valid = True
