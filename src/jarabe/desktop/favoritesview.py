@@ -33,7 +33,7 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, ErrorAlert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory
 from sugar3 import dispatch
@@ -380,7 +380,7 @@ class FavoritesView(ViewContainer):
 
     def __register(self):
         self._box.remove_alert()
-        alert = Alert()
+        alert = ErrorAlert()
         try:
             schoolserver.register_laptop()
         except RegisterError, e:
@@ -391,11 +391,8 @@ class FavoritesView(ViewContainer):
             alert.props.msg = _('You are now registered '
                                 'with your school server.')
 
-        ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
-
-        self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
+        self._box.add_alert(alert)
         return False
 
     def __register_alert_response_cb(self, alert, response_id):
