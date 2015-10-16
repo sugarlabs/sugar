@@ -24,7 +24,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, TimeoutAlert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -84,6 +84,8 @@ class ControlPanel(Gtk.Window):
         Gdk.Screen.get_default().connect(
             'size-changed', self.__size_changed_cb)
 
+        self._busy_count = 0
+
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
@@ -92,6 +94,28 @@ class ControlPanel(Gtk.Window):
 
     def __size_changed_cb(self, event):
         self._calculate_max_columns()
+
+    def busy(self):
+        if self._busy_count == 0:
+            self._old_cursor = self.get_window().get_cursor()
+            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        self._busy_count += 1
+
+    def unbusy(self):
+        self._busy_count -= 1
+        if self._busy_count == 0:
+            self._set_cursor(self._old_cursor)
+
+    def _set_cursor(self, cursor):
+        self.get_window().set_cursor(cursor)
+        Gdk.flush()
+
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 2)
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
 
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
@@ -267,14 +291,14 @@ class ControlPanel(Gtk.Window):
         model = ModelWrapper(mod)
 
         try:
-            self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            self.busy()
             self._section_view = view_class(model,
                                             self._options[option]['alerts'])
 
             self._set_canvas(self._section_view)
             self._section_view.show()
         finally:
-            self.get_window().set_cursor(None)
+            self.unbusy()
 
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
@@ -356,15 +380,14 @@ class ControlPanel(Gtk.Window):
             alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
             icon.show()
 
-            self._vbox.pack_start(alert, False, False, 0)
-            self._vbox.reorder_child(alert, 2)
+            self.add_alert(alert)
             alert.connect('response', self.__response_cb)
             alert.show()
         else:
             self._show_main_view()
 
     def __response_cb(self, alert, response_id):
-        self._vbox.remove(alert)
+        self.remove_alert(alert)
         self._section_toolbar.accept_button.set_sensitive(True)
         self._section_toolbar.cancel_button.set_sensitive(True)
         if response_id is Gtk.ResponseType.CANCEL:
@@ -376,8 +399,31 @@ class ControlPanel(Gtk.Window):
                 self._section_view.restart_alerts
             self._show_main_view()
         elif response_id is Gtk.ResponseType.APPLY:
-            session_manager = get_session_manager()
-            session_manager.logout()
+            self.busy()
+            self._section_toolbar.accept_button.set_sensitive(False)
+            self._section_toolbar.cancel_button.set_sensitive(False)
+            get_session_manager().logout()
+            GObject.timeout_add_seconds(4, self.__quit_timeout_cb)
+
+    def __quit_timeout_cb(self):
+        self.unbusy()
+        alert = TimeoutAlert(30)
+        alert.props.title = _('An activity is not responding.')
+        alert.props.msg = _('You may lose unsaved work if you continue.')
+        alert.connect('response', self.__quit_accept_cb)
+
+        self.add_alert(alert)
+        alert.show()
+
+    def __quit_accept_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        if response_id is Gtk.ResponseType.CANCEL:
+            get_session_manager().cancel_shutdown()
+            self._section_toolbar.accept_button.set_sensitive(True)
+            self._section_toolbar.cancel_button.set_sensitive(True)
+        else:
+            self.busy()
+            get_session_manager().shutdown_completed()
 
     def __select_option_cb(self, button, event, option):
         self.show_section_view(option)
