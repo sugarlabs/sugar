@@ -84,7 +84,7 @@ class HomeWindow(Gtk.Window):
         self._box.pack_start(self._toolbar, False, True, 0)
         self._toolbar.show()
 
-        self._alerts = []
+        self._alert = None
 
         self._home_box = HomeBox(self._toolbar)
         self._box.pack_start(self._home_box, True, True, 0)
@@ -106,23 +106,22 @@ class HomeWindow(Gtk.Window):
             self.__zoom_level_changed_cb)
 
     def add_alert(self, alert):
-        self._alerts.append(alert)
-        if len(self._alerts) == 1:
-            self._display_alert(alert)
-            # FIXME: alerts displayed here are lost on view switch
+        self._alert = alert
+        self._show_alert()
 
     def remove_alert(self, alert):
-        if alert in self._alerts:
-            self._alerts.remove(alert)
-            # if the alert is the visible one on top of the queue
-            if alert.get_parent() is not None:
-                self._box.remove(alert)
-                if len(self._alerts) >= 1:
-                    self._display_alert(self._alerts[0])
+        if alert == self._alert:
+            self._box.remove(self._alert)
+            self._alert = None
 
-    def _display_alert(self, alert):
-        self._box.pack_start(alert, False, False, 0)
-        self._box.reorder_child(alert, 1)
+    def _show_alert(self):
+        if self._alert:
+            self._box.pack_start(self._alert, False, False, 0)
+            self._box.reorder_child(self._alert, 1)
+
+    def _hide_alert(self):
+        if self._alert:
+            self._box.remove(self._alert)
 
     def _deactivate_view(self, level):
         group = palettegroup.get_group('default')
@@ -182,7 +181,7 @@ class HomeWindow(Gtk.Window):
         return False
 
     def __button_pressed_cb(self, widget, event):
-        current_box = self._box.get_children()[1]
+        current_box = self._box.get_children()[-1]
         current_box.grab_focus()
         return False
 
@@ -204,6 +203,7 @@ class HomeWindow(Gtk.Window):
 
         if old_level != ShellModel.ZOOM_ACTIVITY and \
            new_level != ShellModel.ZOOM_ACTIVITY:
+            self._hide_alert()
             children = self._box.get_children()
             if len(children) >= 2:
                 self._box.remove(children[1])
@@ -235,6 +235,7 @@ class HomeWindow(Gtk.Window):
         if level == ShellModel.ZOOM_ACTIVITY:
             return
 
+        self._hide_alert()
         children = self._box.get_children()
         if len(children) >= 2:
             self._box.remove(children[1])
@@ -260,6 +261,7 @@ class HomeWindow(Gtk.Window):
             self._toolbar.set_placeholder_text_for_view(_('Neighborhood'))
             self._mesh_box.grab_focus()
             self._toolbar.hide_view_buttons()
+        self._show_alert()
 
     def get_home_box(self):
         return self._home_box
