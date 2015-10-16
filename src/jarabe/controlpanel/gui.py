@@ -111,7 +111,8 @@ class ControlPanel(Gtk.Window):
 
     def _set_canvas(self, canvas):
         if self._canvas:
-            self._main_view.remove(self._canvas)
+            if self._canvas in self._main_view:
+                self._main_view.remove(self._canvas)
         if canvas:
             self._main_view.add(canvas)
         self._canvas = canvas
