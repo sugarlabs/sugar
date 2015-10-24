@@ -69,12 +69,12 @@ cat > $debug_file_path << EOF
 #export SALUT_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/telepathy-salut.log
 #export GIBBER_DEBUG=all
 #export WOCKY_DEBUG=all
-#export MC_LOGFILE='$HOME/.sugar/$SUGAR_PROFILE/logs/mission-control.log
+#export MC_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/mission-control.log
 #export MC_DEBUG=all
 #export PRESENCESERVICE_DEBUG=1
 #export SUGAR_LOGGER_LEVEL=debug
 
-# Uncomment the following line to enable core dumps
+# Uncomment the following line to enable core dumps.
 
 #ulimit -c unlimited
 EOF
