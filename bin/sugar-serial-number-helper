@@ -1,0 +1,6 @@
+#!/bin/sh
+
+device=/sys/class/dmi/id
+
+read value < $device/product_serial
+echo "$value"
