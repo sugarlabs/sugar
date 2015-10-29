@@ -1,4 +1,5 @@
 python_scripts =		\
+	sugar-serial-number-helper	\
 	sugar-backlight-helper	\
 	sugar-backlight-setup	\
 	sugar-control-panel	\
