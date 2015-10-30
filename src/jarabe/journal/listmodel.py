@@ -79,6 +79,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         GObject.GObject.__init__(self)
 
         self._last_requested_index = None
+        self._temp_drag_file_uid = None
         self._cached_row = None
         self._query = query
         self._all_ids = []
@@ -279,8 +280,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         target_atom = selection.get_target()
         target_name = target_atom.name()
         if target_name == 'text/uri-list':
-            # Get hold of a reference so the temp file doesn't get deleted
-            self._temp_drag_file_path = model.get_file(uid)
+            # Only get a new temp path if we have a new file, the frame
+            # requests a path many times and if we give it a new path it
+            # ends up with a broken path
+            if uid != self._temp_drag_file_uid:
+                # Get hold of a reference so the temp file doesn't get deleted
+                self._temp_drag_file_path = model.get_file(uid)
+                self._temp_drag_file_uid = uid
             logging.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(target_atom, 8, self._temp_drag_file_path)
             return True
