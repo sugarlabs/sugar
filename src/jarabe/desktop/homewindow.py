@@ -21,6 +21,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
+from gi.repository import SugarGestures
 
 from sugar3.graphics import style
 from sugar3.graphics import palettegroup
@@ -39,6 +40,9 @@ _HOME_PAGE = 0
 _GROUP_PAGE = 1
 _MESH_PAGE = 2
 _TRANSITION_PAGE = 3
+
+_ZOOM_OUT = 0.5
+_ZOOM_IN = 2
 
 _instance = None
 
@@ -104,6 +108,37 @@ class HomeWindow(Gtk.Window):
 
         shell.get_model().zoom_level_changed.connect(
             self.__zoom_level_changed_cb)
+
+        self._zoom_controller = SugarGestures.ZoomController()
+        self._zoom_controller.attach(
+            self, SugarGestures.EventControllerFlags.NONE)
+        self._zoom_controller.connect('began', self.__zoom_began_cb)
+        self._zoom_controller.connect(
+            'scale-changed', self.__zoom_scale_changed_cb)
+
+    def __zoom_began_cb(self, emitter):
+        self._zoom_from_level = shell.get_model().zoom_level
+
+    def __zoom_scale_changed_cb(self, emitter, zoom):
+        level = self._zoom_from_level
+        if self._zoom_from_level == ShellModel.ZOOM_MESH:
+            if zoom > _ZOOM_IN:
+                level = ShellModel.ZOOM_GROUP
+            if zoom > _ZOOM_IN*2:
+                level = ShellModel.ZOOM_HOME
+        elif self._zoom_from_level == ShellModel.ZOOM_GROUP:
+            if zoom > _ZOOM_IN:
+                level = ShellModel.ZOOM_HOME
+            elif zoom < _ZOOM_OUT:
+                level = ShellModel.ZOOM_MESH
+        elif self._zoom_from_level == ShellModel.ZOOM_HOME:
+            if zoom < _ZOOM_OUT:
+                level = ShellModel.ZOOM_GROUP
+            if zoom < _ZOOM_OUT/2:
+                level = ShellModel.ZOOM_MESH
+
+        if level != shell.get_model().zoom_level:
+            shell.get_model().set_zoom_level(level)
 
     def add_alert(self, alert):
         self._alerts.append(alert)
