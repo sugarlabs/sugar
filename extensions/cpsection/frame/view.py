@@ -234,3 +234,11 @@ class Frame(SectionView):
             return _instantaneous
         else:
             return _seconds_label % (value / _MAX_DELAY)
+
+    def apply(self):
+        if self._corner_delay_sid:
+            GObject.source_remove(self._corner_delay_sid)
+            self.__corner_delay_timeout_cb(self._corner_delay_slider)
+        if self._edge_delay_sid:
+            GObject.source_remove(self._edge_delay_sid)
+            self.__edge_delay_timeout_cb(self._edge_delay_slider)
