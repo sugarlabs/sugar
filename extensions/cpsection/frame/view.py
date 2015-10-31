@@ -178,7 +178,7 @@ class Frame(SectionView):
     def __corner_delay_timeout_cb(self, scale):
         self._corner_delay_sid = 0
         if scale.get_value() == self._model.get_corner_delay():
-            return
+            return False
         try:
             self._model.set_corner_delay(scale.get_value())
         except ValueError, detail:
@@ -211,7 +211,7 @@ class Frame(SectionView):
     def __edge_delay_timeout_cb(self, scale):
         self._edge_delay_sid = 0
         if scale.get_value() == self._model.get_edge_delay():
-            return
+            return False
         try:
             self._model.set_edge_delay(scale.get_value())
         except ValueError, detail:
