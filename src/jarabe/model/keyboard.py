@@ -17,6 +17,8 @@
 
 import logging
 
+import gi
+gi.require_version('Xkl', '1.0')
 from gi.repository import Gio
 from gi.repository import GdkX11
 from gi.repository import Xkl
