@@ -18,6 +18,7 @@
 import os
 import logging
 
+from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import SugarExt
 
@@ -159,7 +160,9 @@ class KeyHandler(object):
 
     def handle_logout(self, event_time):
         if "SUGAR_DEVELOPER" in os.environ:
-            session.get_session_manager().logout()
+            session_manager = session.get_session_manager()
+            session_manager.logout()
+            GObject.timeout_add_seconds(3, session_manager.shutdown_completed)
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()

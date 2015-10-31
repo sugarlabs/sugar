@@ -33,7 +33,7 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.icon import CanvasIcon
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, ErrorAlert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.activity import activityfactory
 from sugar3 import dispatch
@@ -380,7 +380,7 @@ class FavoritesView(ViewContainer):
 
     def __register(self):
         self._box.remove_alert()
-        alert = Alert()
+        alert = ErrorAlert()
         try:
             schoolserver.register_laptop()
         except RegisterError, e:
@@ -391,11 +391,8 @@ class FavoritesView(ViewContainer):
             alert.props.msg = _('You are now registered '
                                 'with your school server.')
 
-        ok_icon = Icon(icon_name='dialog-ok')
-        alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
-
-        self._box.add_alert(alert)
         alert.connect('response', self.__register_alert_response_cb)
+        self._box.add_alert(alert)
         return False
 
     def __register_alert_response_cb(self, alert, response_id):
@@ -620,11 +617,8 @@ class CurrentActivityIcon(CanvasIcon):
             self.props.xo_color = self._home_activity.get_icon_color()
 
             if self._home_activity.is_journal():
-                if self.get_window():
-                    self.get_window().set_cursor(None)
-                else:
-                    # the window is not visible yet, try again in one second
-                    GLib.timeout_add_seconds(1, self._reset_cursor)
+                if self._unbusy():
+                    GLib.timeout_add(100, self._unbusy)
 
         self.props.pixel_size = style.STANDARD_ICON_SIZE
 
@@ -632,9 +626,10 @@ class CurrentActivityIcon(CanvasIcon):
             self.palette.destroy()
             self.palette = None
 
-    def _reset_cursor(self):
+    def _unbusy(self):
         if self.get_window():
-            self.get_window().set_cursor(None)
+            import jarabe.desktop.homewindow
+            jarabe.desktop.homewindow.get_instance().unbusy()
             return False
         return True
 
