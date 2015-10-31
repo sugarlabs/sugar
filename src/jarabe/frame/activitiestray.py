@@ -524,6 +524,7 @@ class OutgoingTransferButton(BaseTransferButton):
     """
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
+        file_transfer.connect('notify::state', self.__notify_state_cb)
 
         icons = Gio.content_type_get_icon(file_transfer.mime_type).props.names
         icons.append('application-octet-stream')
@@ -542,6 +543,13 @@ class OutgoingTransferButton(BaseTransferButton):
         frame = jarabe.frame.get_view()
         frame.add_notification(self.notif_icon,
                                Gtk.CornerType.TOP_LEFT)
+
+    def __notify_state_cb(self, file_transfer, pspec):
+        logging.debug('_update state: %r %r', file_transfer.props.state,
+                      file_transfer.reason_last_change)
+        if file_transfer.props.state in [filetransfer.FT_STATE_CANCELLED,
+                                         filetransfer.FT_STATE_COMPLETED]:
+            self.remove()
 
     def create_palette(self):
         palette = OutgoingTransferPalette(self.file_transfer)
@@ -867,19 +875,6 @@ class OutgoingTransferPalette(BaseTransferPalette):
             self.progress_label = Gtk.Label(label='')
             inner_box.add(self.progress_label)
             self.progress_label.show()
-
-            self.update_progress()
-
-        elif new_state in [filetransfer.FT_STATE_COMPLETED,
-                           filetransfer.FT_STATE_CANCELLED]:
-            menu_item = PaletteMenuItem(_('Dismiss'))
-            icon = Icon(icon_name='dialog-cancel',
-                        pixel_size=style.SMALL_ICON_SIZE)
-            menu_item.set_image(icon)
-            icon.show()
-            menu_item.connect('activate', self.__dismiss_activate_cb)
-            box.append_item(menu_item)
-            menu_item.show()
 
             self.update_progress()
 
