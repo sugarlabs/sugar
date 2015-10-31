@@ -67,3 +67,32 @@ def set_edge_delay(delay):
     settings = Gio.Settings('org.sugarlabs.frame')
     settings.set_int('edge-delay', int(delay))
     return 0
+
+
+def get_trigger_size():
+    settings = Gio.Settings('org.sugarlabs.frame')
+    edge_delay = settings.get_int('edge-delay')
+    return edge_delay
+
+
+def print_trigger_size():
+    print '{}px'.format(get_trigger_size())
+
+
+def set_trigger_size(size):
+    """
+    Set the size of the frame trigger area, in px from the corner/edge.
+
+    exactly on the edge: 1
+    """
+    try:
+        int(size)
+    except ValueError:
+        raise ValueError(_('Value must be an integer.'))
+
+    if int(size) < 1:
+        raise ValueError(_('Value must be more than 1.'))
+
+    settings = Gio.Settings('org.sugarlabs.frame')
+    settings.set_int('trigger-size', int(size))
+    return 0
