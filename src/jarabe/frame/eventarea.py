@@ -20,6 +20,8 @@ from gi.repository import GObject
 from gi.repository import Wnck
 from gi.repository import Gio
 
+from sugar3.graphics import style
+
 
 _MAX_DELAY = 1000
 
@@ -39,44 +41,49 @@ class EventArea(GObject.GObject):
         settings = Gio.Settings('org.sugarlabs.frame')
         self._edge_delay = settings.get_int('edge-delay')
         self._corner_delay = settings.get_int('corner-delay')
+        self._size = settings.get_int('trigger-size')
 
-        right = Gdk.Screen.width() - 1
-        bottom = Gdk.Screen.height() - 1
-        width = Gdk.Screen.width() - 2
-        height = Gdk.Screen.height() - 2
+        if self._size > style.GRID_CELL_SIZE:
+            # This should never happen and will block the user
+            self._size = style.GRID_CELL_SIZE
+
+        right = Gdk.Screen.width() - self._size
+        bottom = Gdk.Screen.height() - self._size
+        width = Gdk.Screen.width() - self._size * 2
+        height = Gdk.Screen.height() - self._size * 2
 
         if self._edge_delay != _MAX_DELAY:
-            invisible = self._create_invisible(1, 0, width, 1,
-                                               self._edge_delay)
+            invisible = self._create_invisible(
+                self._size, 0, width, self._size, self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(1, bottom, width, 1,
-                                               self._edge_delay)
+            invisible = self._create_invisible(
+                self._size, bottom, width, self._size, self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(0, 1, 1, height,
-                                               self._edge_delay)
+            invisible = self._create_invisible(
+                0, self._size, self._size, height, self._edge_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, 1, 1, height,
-                                               self._edge_delay)
+            invisible = self._create_invisible(
+                right, self._size, self._size, height, self._edge_delay)
             self._windows.append(invisible)
 
         if self._corner_delay != _MAX_DELAY:
-            invisible = self._create_invisible(0, 0, 1, 1,
-                                               self._corner_delay)
+            invisible = self._create_invisible(
+                0, 0, self._size, self._size, self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, 0, 1, 1,
-                                               self._corner_delay)
+            invisible = self._create_invisible(
+                right, 0, self._size, self._size, self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(0, bottom, 1, 1,
-                                               self._corner_delay)
+            invisible = self._create_invisible(
+                0, bottom, self._size, self._size, self._corner_delay)
             self._windows.append(invisible)
 
-            invisible = self._create_invisible(right, bottom, 1, 1,
-                                               self._corner_delay)
+            invisible = self._create_invisible(
+                right, bottom, self._size, self._size, self._corner_delay)
             self._windows.append(invisible)
 
         screen = Wnck.Screen.get_default()

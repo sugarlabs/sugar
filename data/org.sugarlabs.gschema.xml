@@ -152,6 +152,11 @@
             <summary>Corner Delay</summary>
             <description>Delay for the activation of the frame using the corners.</description>
         </key>
+        <key name="trigger-size" type="i">
+            <default>1</default>
+            <summary>Trigger Size</summary>
+            <description>Size of the frame trigger area, in px from the corner/edge.</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.collaboration" path="/org/sugarlabs/collaboration/">
         <key name="jabber-server" type="s">
