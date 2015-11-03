@@ -2,7 +2,7 @@
 
 sugardatadir=@prefix@/share/sugar/data
 
-if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
+if [ "$(id -u)" -eq 0 ] || [ "$(id -ru)" -eq 0 ] ; then
 	echo Refusing to run as root.
 	exit 3
 fi
@@ -44,7 +44,7 @@ export LANG="${LANG:-en_US.utf8}"
 export LANGUAGE="${LANGUAGE:-${LANG}}"
 
 # Set Sugar's telepathy accounts directory
-export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
+export MC_ACCOUNT_DIR="$HOME/.sugar/$SUGAR_PROFILE/accounts"
 
 # Source language settings and debug definitions
 if [ -f ~/.i18n ]; then
@@ -54,11 +54,11 @@ fi
 profile_dir=$SUGAR_HOME/$SUGAR_PROFILE
 debug_file_path=$profile_dir/debug
 
-if [ -f $debug_file_path ]; then
-    . $debug_file_path
+if [ -f "$debug_file_path" ]; then
+    . "$debug_file_path"
 else
-mkdir -p $profile_dir
-cat > $debug_file_path << EOF
+mkdir -p "$profile_dir"
+cat > "$debug_file_path" << EOF
 # Uncomment the following lines to turn on many sugar debugging
 # log files and features.
 
