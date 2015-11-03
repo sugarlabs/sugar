@@ -706,17 +706,22 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
 
-        self._box = Gtk.Box()
-        self.add(self._box)
-        self._box.show()
-
         self._file_path = None
+
+    def _replace(self, child):
+        self._remove_children()
+        self.add(child)
+
+    def _replace_with_viewport(self, child):
+        self._remove_children()
+        self.add_with_viewport(child)
+
+    def _remove_children(self):
+        for child in self.get_children():
+            self.remove(child)
 
     def _set_file_path(self, file_path):
         self._file_path = file_path
-
-        for child in self._box.get_children():
-            self._box.remove(child)
 
         if self._file_path is None:
             self._show_no_file()
@@ -765,16 +770,16 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         source_buffer.set_language(detected_language)
         text = open(self._file_path, 'r').read()
-        works = True
         try:
             text.encode()
             source_buffer.set_text(text)
-            self._box.pack_start(source_view, True, True, 0)
-            self._box.show_all()
         except UnicodeDecodeError:
-            works = False
+            return False
 
-        return works
+        source_view.show()
+        self._replace(source_view)
+
+        return True
 
     def _get_file_path(self):
         return self._file_path
@@ -790,16 +795,14 @@ class SourceDisplay(Gtk.ScrolledWindow):
             pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
             image.set_from_pixbuf(pixbuf)
             media_box.add(image)
-            image.show()
 
         if icon:
             h = Gdk.Screen.width() / 3
             icon = Icon(icon_name=icon, pixel_size=h)
             media_box.add(icon)
-            icon.show()
 
-        self._box.pack_start(media_box, True, True, 0)
-        self._box.show_all()
+        media_box.show_all()
+        self._replace_with_viewport(media_box)
 
     def _show_no_file(self):
         nofile_label = Gtk.Label()
@@ -809,5 +812,5 @@ class SourceDisplay(Gtk.ScrolledWindow):
         nofile_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
 
         nofile_box.add(nofile_label)
-        self._box.pack_start(nofile_box, True, True, 0)
-        self._box.show_all()
+        nofile_box.show_all()
+        self._replace_with_viewport(nofile_box)
