@@ -23,7 +23,6 @@ import errno
 import time
 
 from gi.repository import Gio
-from gi.repository import GLib
 
 from jarabe import config
 from jarabe.model.network import get_wireless_interfaces
@@ -36,7 +35,6 @@ _DMI_DIRECTORY = '/sys/class/dmi/id'
 _logger = logging.getLogger('ControlPanel - AboutComputer')
 _not_available = _('Not available')
 
-_serial_no = None
 
 def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
@@ -48,38 +46,11 @@ def print_aboutcomputer():
     print get_aboutcomputer()
 
 
-def _get_serial_number():
-    serial_no = _read_device_tree('serial-number')
-    if serial_no is not None:
-        return serial_no
-
-    def _helper():
-        binary = 'sugar-serial-number-helper'
-        for path in os.environ['PATH'].split(os.pathsep):
-            binary_path = os.path.join(path, binary)
-            if os.path.exists(binary_path):
-                return binary_path
-        return None
-
-    helper = _helper()
-    if helper is None:
-        return _not_available
-
-    cmd = 'pkexec %s' % helper
-    result, output, error, status = GLib.spawn_command_line_sync(cmd)
-    if status != 0:
-        return _not_available
-
-    return output.rstrip('\0\n')
-
-
 def get_serial_number():
-    global _serial_no
-
-    if _serial_no is None:
-        _serial_no = _get_serial_number()
-
-    return _serial_no
+    serial_no = _read_device_tree('serial-number')
+    if serial_no is None:
+        serial_no = _not_available
+    return serial_no
 
 
 def print_serial_number():
