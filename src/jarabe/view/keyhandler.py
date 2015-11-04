@@ -31,6 +31,7 @@ from jarabe.view.tabbinghandler import TabbingHandler
 from jarabe.model.shell import ShellModel
 from jarabe import config
 from jarabe.journal import journalactivity
+from jarabe.controlpanel.gui import ControlPanel
 
 
 _VOLUME_STEP = sound.VOLUME_STEP
@@ -59,6 +60,7 @@ _actions_table = {
     'XF86WebCam': 'open_search',
     '<alt><shift>f': 'frame',
     'XF86Search': 'open_search',
+    '<alt><shift>m': 'open_controlpanel',
     '<alt><shift>o': 'open_search',
     '<alt><shift>q': 'logout',
     '<alt><shift>d': 'dump_ui_tree'
@@ -166,6 +168,12 @@ class KeyHandler(object):
 
     def handle_open_search(self, event_time):
         journalactivity.get_journal().show_journal()
+
+    def handle_open_controlpanel(self, event_time):
+        if shell.get_model().has_modal():
+            return
+        panel = ControlPanel()
+        panel.show()
 
     def handle_dump_ui_tree(self, event_time):
         print uitree.get_root().dump()
