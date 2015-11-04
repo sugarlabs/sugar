@@ -9,19 +9,19 @@ DBusGMainLoop(set_as_default=True)
 
 
 def cmd_help():
-    print 'Usage: sugar-install-bundle [ bundlename ] \n\n\
-    Install an activity bundle (.xo). \n'
+    print 'Usage: sugar-install-bundle activitybundle.xo [...] \n\n\
+    Install activity bundles\n'
 
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     cmd_help()
     sys.exit(2)
 
-bundle = ActivityBundle(sys.argv[1])
-path = bundle.install()
+for name in sys.argv[1:]:
+    bundle = ActivityBundle(name)
+    path = bundle.install()
 
-# make sure that the BundleRegistry will add this bundle
-# by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
-os.utime(path, None)
+    # make sure that the BundleRegistry will add this bundle
+    # by triggering a GFileMonitor ATTRIBUTE_CHANGED event.
+    os.utime(path, None)
 
-
-print "%s: '%s' installed." % (sys.argv[0], sys.argv[1])
+    print "%s: '%s' installed." % (sys.argv[0], name)
