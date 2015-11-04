@@ -53,7 +53,7 @@ class Brightness(GObject.GObject):
         self._restore()
 
     def _setup(self):
-        cmd = 'pkexec %s' % self._find_binary('sugar-backlight-setup')
+        cmd = 'pkexec sugar-backlight-setup'
         GLib.spawn_command_line_sync(cmd)
 
     def _save(self, value):
@@ -77,27 +77,15 @@ class Brightness(GObject.GObject):
         self._monitor_changed_hid = \
             self._monitor.connect('changed', self.__monitor_changed_cb)
 
-    def _get_helper(self):
-        if self._helper_path is None:
-            self._helper_path = self._find_binary('sugar-backlight-helper')
-        return self._helper_path
-
-    def _find_binary(self, binary):
-        for path in os.environ['PATH'].split(os.pathsep):
-            binary_path = os.path.join(path, binary)
-            if os.path.exists(binary_path):
-                return binary_path
-        return None
-
     def _helper_read(self, option):
-        cmd = '%s --%s' % (self._get_helper(), option)
+        cmd = 'sugar-backlight-helper --%s' % option
         result, output, error, status = GLib.spawn_command_line_sync(cmd)
         if status != 0:
             return None
         return output.rstrip('\0\n')
 
     def _helper_write(self, option, value):
-        cmd = 'pkexec %s --%s %d' % (self._get_helper(), option, value)
+        cmd = 'pkexec sugar-backlight-helper --%s %d' % (option, value)
         GLib.spawn_command_line_sync(cmd)
 
     def __monitor_changed_cb(self, monitor, child, other_file, event):
