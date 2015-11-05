@@ -27,6 +27,8 @@ import jarabe.frame
 _ICON_NAME = 'module-keyboard'
 _HAS_MALIIT = False
 
+import gi
+gi.require_version('Maliit', '1.0')
 try:
     from gi.repository import Maliit
 except ImportError:
