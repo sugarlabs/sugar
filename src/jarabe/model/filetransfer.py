@@ -22,7 +22,10 @@ from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 import dbus
-from telepathy.interfaces import CONNECTION_INTERFACE_REQUESTS, CHANNEL
+from telepathy.interfaces import \
+    CONNECTION_INTERFACE_REQUESTS, \
+    CHANNEL, \
+    CHANNEL_DISPATCHER
 from telepathy.constants import CONNECTION_HANDLE_TYPE_CONTACT,     \
     SOCKET_ADDRESS_TYPE_UNIX,           \
     SOCKET_ACCESS_CONTROL_LOCALHOST
@@ -32,6 +35,7 @@ from sugar3.presence import presenceservice
 from sugar3 import dispatch
 
 from jarabe.util.telepathy import connection_watcher
+from jarabe.model import telepathyclient
 from jarabe.model import neighborhood
 
 
@@ -277,6 +281,20 @@ def _connection_removed_cb(conn_watcher, connection):
     logging.debug('connection removed %r', connection)
 
 
+def _got_dispatch_operation_cb(**kwargs):
+    dispatch_operation_path = kwargs['dispatch_operation_path']
+    channel_path, channel_properties = kwargs['channels'][0]
+    channel_type = channel_properties[CHANNEL + '.ChannelType']
+    handle_type = channel_properties[CHANNEL + '.TargetHandleType']
+
+    if handle_type == CONNECTION_HANDLE_TYPE_CONTACT and \
+       channel_type == CHANNEL_TYPE_FILE_TRANSFER:
+        # We must claim our file transfers so that empathy doesn't get it
+        bus = dbus.Bus()
+        operation = bus.get_object(CHANNEL_DISPATCHER, dispatch_operation_path)
+        operation.Claim()
+
+
 def init():
     conn_watcher = connection_watcher.get_instance()
     conn_watcher.connect('connection-added', _connection_added_cb)
@@ -284,6 +302,9 @@ def init():
 
     for connection in conn_watcher.get_connections():
         _monitor_connection(connection)
+
+    client_handler = telepathyclient.get_instance()
+    client_handler.got_dispatch_operation.connect(_got_dispatch_operation_cb)
 
 
 def start_transfer(buddy, file_name, title, description, mime_type):
