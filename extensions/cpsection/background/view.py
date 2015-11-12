@@ -36,6 +36,7 @@ class Background(SectionView):
 
         self._model = model
         self._images_loaded = False
+        self._append_to_store_sid = None
 
         self.connect('realize', self.__realize_cb)
         self.connect('unrealize', self.__unrealize_cb)
@@ -127,13 +128,20 @@ class Background(SectionView):
                 self._store.append([pixbuf, file_path])
                 self._paths_list.append(file_path)
 
-            GObject.idle_add(self._append_to_store, file_paths)
+            self._append_to_store_sid = GObject.idle_add(self._append_to_store,
+                                                         file_paths)
         else:
             self._select_background()
             self._images_loaded = True
             window = self.get_window()
             if window is not None:
                 window.set_cursor(None)
+            self._append_to_store_sid = None
+
+    def _cancel_append_to_store(self):
+        if self._append_to_store_sid is not None:
+            GObject.source_remove(self._append_to_store_sid)
+            self._append_to_store_sid = None
 
     def __realize_cb(self, widget):
         if self._images_loaded:
@@ -180,5 +188,9 @@ class Background(SectionView):
     def setup(self):
         self.show_all()
 
+    def apply(self):
+        self._cancel_append_to_store()
+
     def undo(self):
         self._model.undo()
+        self._cancel_append_to_store()
