@@ -85,8 +85,7 @@ class Background(SectionView):
             [0.8, 'network-wireless-020'],
             [0.6, 'network-wireless-040'],
             [0.4, 'network-wireless-060'],
-            [0.2, 'network-wireless-080'],
-             ]
+            [0.2, 'network-wireless-080']]
         for value, icon_name in alpha_icons:
             if len(alpha_buttons) > 0:
                 button = RadioToolButton(group=alpha_buttons[0])
