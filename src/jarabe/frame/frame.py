@@ -54,17 +54,6 @@ class _Animation(animator.Animation):
         self._frame.move(current)
 
 
-class _KeyListener(object):
-    def __init__(self, frame):
-        self._frame = frame
-
-    def key_press(self):
-        if self._frame.visible:
-            self._frame.hide()
-        else:
-            self._frame.show()
-
-
 class Frame(object):
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
@@ -76,6 +65,7 @@ class Frame(object):
         self._top_panel = None
         self._bottom_panel = None
 
+        self._wanted = False
         self.current_position = 0.0
         self._animator = None
 
@@ -91,8 +81,6 @@ class Frame(object):
         screen = Gdk.Screen.get_default()
         screen.connect('size-changed', self._size_changed_cb)
 
-        self._key_listener = _KeyListener(self)
-
         self._notif_by_icon = {}
 
         notification_service = notifications.get_service()
@@ -106,9 +94,17 @@ class Frame(object):
 
     visible = property(is_visible, None)
 
+    def toggle(self):
+        if not self._wanted:
+            self.show()
+        else:
+            self.hide()
+
     def hide(self):
-        if not self.visible:
+        if not self._wanted:
             return
+
+        self._wanted = False
 
         if self._animator:
             self._animator.stop()
@@ -119,8 +115,11 @@ class Frame(object):
         self._animator.start()
 
     def show(self):
-        if self.visible:
+        if self._wanted:
             return
+
+        self._wanted = True
+
         if self._animator:
             self._animator.stop()
 
@@ -207,13 +206,10 @@ class Frame(object):
         self._update_position()
 
     def _enter_corner_cb(self, event_area):
-        if self.visible:
-            self.hide()
-        else:
-            self.show()
+        self.toggle()
 
     def notify_key_press(self):
-        self._key_listener.key_press()
+        self.toggle()
 
     def add_notification(self, icon, corner=Gtk.CornerType.TOP_LEFT,
                          duration=_NOTIFICATION_DURATION):

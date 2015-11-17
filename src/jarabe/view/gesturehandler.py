@@ -68,10 +68,7 @@ class GestureHandler(object):
         self._controller.append(swipe)
 
     def __swipe_ended_cb(self, controller, event_direction):
-        if self._frame.is_visible():
-            self._frame.hide()
-        else:
-            self._frame.show()
+        self._frame.toggle()
 
 
 def setup(frame):
