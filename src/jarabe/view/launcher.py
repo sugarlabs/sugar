@@ -47,6 +47,11 @@ class LaunchWindow(Gtk.Window):
         header.show()
         canvas.pack_start(header, False, True, 0)
 
+        box = Gtk.HBox()
+        box.set_size_request(Gdk.Screen.width() / 5, -1)
+        box.show()
+        canvas.pack_start(box, True, True, 0)
+
         self._activity_id = activity_id
 
         self._activity_icon = PulsingIcon(file=icon_path,
@@ -56,7 +61,7 @@ class LaunchWindow(Gtk.Window):
                                         style.XLARGE_ICON_SIZE, 10)
         self._activity_icon.set_pulsing(True)
         self._activity_icon.show()
-        canvas.pack_start(self._activity_icon, True, True, 0)
+        box.pack_start(self._activity_icon, True, False, 0)
 
         footer = Gtk.VBox(spacing=style.DEFAULT_SPACING)
         footer.set_size_request(-1, bar_size)
