@@ -21,6 +21,7 @@ from dbus import PROPERTIES_IFACE
 from telepathy.interfaces import CLIENT, \
     CHANNEL, \
     CHANNEL_TYPE_TEXT, \
+    CHANNEL_TYPE_FILE_TRANSFER, \
     CLIENT_APPROVER, \
     CLIENT_HANDLER, \
     CLIENT_INTERFACE_REQUESTS
@@ -82,8 +83,14 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
         filter_dict = dbus.Dictionary(text_invitation, signature='sv')
         filters.append(filter_dict)
 
-        logging.debug('__get_filters_approver_cb %r', filters)
+        ft_invitation = {
+            CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
+            CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+        }
+        filter_dict = dbus.Dictionary(ft_invitation, signature='sv')
+        filters.append(filter_dict)
 
+        logging.debug('__get_filters_approver_cb %r', filters)
         return filters
 
     @dbus.service.method(dbus_interface=CLIENT_HANDLER,
