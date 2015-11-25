@@ -55,6 +55,7 @@ class ActivitiesTreeView(Gtk.TreeView):
 
     def __init__(self):
         Gtk.TreeView.__init__(self)
+        self.set_can_focus(False)
 
         self._query = ''
 
@@ -442,6 +443,7 @@ class ActivitiesList(Gtk.VBox):
         Gtk.VBox.__init__(self)
 
         self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_can_focus(False)
         self._scrolled_window.set_policy(Gtk.PolicyType.NEVER,
                                          Gtk.PolicyType.AUTOMATIC)
         self._scrolled_window.set_shadow_type(Gtk.ShadowType.NONE)
