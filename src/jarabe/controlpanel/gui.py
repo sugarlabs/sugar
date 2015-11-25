@@ -162,6 +162,7 @@ class ControlPanel(Gtk.Window):
         self._table.set_border_width(style.GRID_CELL_SIZE)
 
         self._scrolledwindow = Gtk.ScrolledWindow()
+        self._scrolledwindow.set_can_focus(False)
         self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
                                         Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
