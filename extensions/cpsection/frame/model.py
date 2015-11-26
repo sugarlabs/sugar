@@ -71,8 +71,8 @@ def set_edge_delay(delay):
 
 def get_trigger_size():
     settings = Gio.Settings('org.sugarlabs.frame')
-    edge_delay = settings.get_int('edge-delay')
-    return edge_delay
+    trigger_size = settings.get_int('trigger-size')
+    return trigger_size
 
 
 def print_trigger_size():
