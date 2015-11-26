@@ -29,7 +29,6 @@ from jarabe.desktop.meshbox import MeshBox
 from jarabe.desktop.homebox import HomeBox
 from jarabe.desktop.homebackgroundbox import HomeBackgroundBox
 from jarabe.desktop.groupbox import GroupBox
-from jarabe.desktop.transitionbox import TransitionBox
 from jarabe.desktop.viewtoolbar import ViewToolbar
 from jarabe.model.shell import ShellModel
 from jarabe.model import shell
@@ -38,7 +37,6 @@ from jarabe.model import shell
 _HOME_PAGE = 0
 _GROUP_PAGE = 1
 _MESH_PAGE = 2
-_TRANSITION_PAGE = 3
 
 _instance = None
 
@@ -94,13 +92,9 @@ class HomeWindow(Gtk.Window):
 
         self._group_box = GroupBox(self._toolbar)
         self._mesh_box = MeshBox(self._toolbar)
-        self._transition_box = TransitionBox()
 
         self.add(self._box)
         self._box.show()
-
-        self._transition_box.connect('completed',
-                                     self._transition_completed_cb)
 
         shell.get_model().zoom_level_changed.connect(
             self.__zoom_level_changed_cb)
@@ -207,29 +201,9 @@ class HomeWindow(Gtk.Window):
             children = self._box.get_children()
             if len(children) >= 2:
                 self._box.remove(children[1])
-            self._box.pack_start(self._transition_box, True, True, 0)
-            self._transition_box.show()
-
-            if new_level == ShellModel.ZOOM_HOME:
-                end_size = style.XLARGE_ICON_SIZE
-            elif new_level == ShellModel.ZOOM_GROUP:
-                end_size = style.LARGE_ICON_SIZE
-            elif new_level == ShellModel.ZOOM_MESH:
-                end_size = style.STANDARD_ICON_SIZE
-
-            if old_level == ShellModel.ZOOM_HOME:
-                start_size = style.XLARGE_ICON_SIZE
-            elif old_level == ShellModel.ZOOM_GROUP:
-                start_size = style.LARGE_ICON_SIZE
-            elif old_level == ShellModel.ZOOM_MESH:
-                start_size = style.STANDARD_ICON_SIZE
-
-            self._transition_box.start_transition(start_size, end_size)
+            self._update_view(shell.get_model().zoom_level)
         else:
             self._update_view(new_level)
-
-    def _transition_completed_cb(self, transition_box):
-        self._update_view(shell.get_model().zoom_level)
 
     def _update_view(self, level):
         if level == ShellModel.ZOOM_ACTIVITY:
