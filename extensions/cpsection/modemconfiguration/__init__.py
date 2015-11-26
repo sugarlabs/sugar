@@ -18,4 +18,4 @@ from gettext import gettext as _
 
 CLASS = 'ModemConfiguration'
 ICON = 'module-modemconfiguration'
-TITLE = _('Modem Configuration')
+TITLE = _('Modem')

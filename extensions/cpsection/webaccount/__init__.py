@@ -21,4 +21,4 @@ __path__ = extend_path(__path__, __name__)
 
 CLASS = 'WebServicesConfig'
 ICON = 'module-webaccount'
-TITLE = _('Configure your Web Services')
+TITLE = _('Web Services')
