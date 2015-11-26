@@ -365,6 +365,7 @@ class MeshBox(ViewContainer):
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.STANDARD_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
+        self.set_can_focus(False)
 
         self.wireless_networks = {}
         self._adhoc_manager = None
