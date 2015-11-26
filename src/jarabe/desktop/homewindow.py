@@ -18,6 +18,7 @@ from gettext import gettext as _
 import logging
 
 from gi.repository import GLib
+from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
@@ -105,6 +106,8 @@ class HomeWindow(Gtk.Window):
         shell.get_model().zoom_level_changed.connect(
             self.__zoom_level_changed_cb)
 
+        self._alt_timeout_sid = None
+
     def add_alert(self, alert):
         self._alert = alert
         self._show_alert()
@@ -150,39 +153,42 @@ class HomeWindow(Gtk.Window):
         if fully_obscured:
             self._deactivate_view(shell.get_model().zoom_level)
         else:
-            display = Gdk.Display.get_default()
-            screen_, x_, y_, modmask = display.get_pointer()
-            if modmask & Gdk.ModifierType.MOD1_MASK:
-                self._home_box.set_resume_mode(False)
-            else:
-                self._home_box.set_resume_mode(True)
-
             self._activate_view(shell.get_model().zoom_level)
 
-    def __key_press_event_cb(self, window, event):
+    def __is_alt(self, event):
         # When shift is on, <ALT> becomes <META>
         shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
-        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
-           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift:
+        return event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
+           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift
+
+    def __key_press_event_cb(self, window, event):
+        if self.__is_alt(event) and not self._alt_timeout_sid:
             self._home_box.set_resume_mode(False)
-        else:
-            if not self._toolbar.search_entry.has_focus():
-                self._toolbar.search_entry.grab_focus()
+            self._alt_timeout_sid = GObject.timeout_add(100,
+                                                        self.__alt_timeout_cb)
 
         return False
 
     def __key_release_event_cb(self, window, event):
-        # When shift is on, <ALT> becomes <META>
-        shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
-        if event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
-           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift:
+        if self.__is_alt(event) and self._alt_timeout_sid:
             self._home_box.set_resume_mode(True)
+            GObject.source_remove(self._alt_timeout_sid)
+            self._alt_timeout_sid = None
 
         return False
 
-    def __button_pressed_cb(self, widget, event):
-        current_box = self._box.get_children()[-1]
-        current_box.grab_focus()
+    def __alt_timeout_cb(self):
+        display = Gdk.Display.get_default()
+        screen_, x_, y_, modmask = display.get_pointer()
+        if modmask & Gdk.ModifierType.MOD1_MASK:
+            return True
+
+        self._home_box.set_resume_mode(True)
+
+        if self._alt_timeout_sid:
+            GObject.source_remove(self._alt_timeout_sid)
+            self._alt_timeout_sid = None
+
         return False
 
     def __map_event_cb(self, window, event):
