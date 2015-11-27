@@ -85,6 +85,7 @@ class ControlPanel(Gtk.Window):
             'size-changed', self.__size_changed_cb)
 
         self._busy_count = 0
+        self._selected = []
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
@@ -231,6 +232,11 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
+        if event.keyval == Gdk.KEY_Return:
+            if len(self._selected) == 1:
+                self.show_section_view(self._selected[0])
+                return True
+
         if event.keyval == Gdk.KEY_Escape:
             if self._toolbar == self._main_toolbar:
                 self.__stop_clicked_cb(None)
@@ -252,11 +258,13 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def _update(self, query):
+        self._selected = []
         for option in self._options:
             found = False
             for key in self._options[option]['keywords']:
                 if query.lower() in key.lower():
                     self._options[option]['button'].set_sensitive(True)
+                    self._selected.append(option)
                     found = True
                     break
             if not found:
