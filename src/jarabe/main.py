@@ -181,7 +181,7 @@ def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
+    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen', '--no-composite'])
 
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
