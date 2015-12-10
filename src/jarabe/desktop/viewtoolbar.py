@@ -205,7 +205,7 @@ class FavoritesButton(RadioToolButton):
     def __init__(self, favorite_view):
         RadioToolButton.__init__(self)
 
-        self.props.tooltip = _('Favorites view %d' % (favorite_view + 1))
+        self.props.tooltip = desktop.get_view_labels()[favorite_view]
         self.props.accelerator = _('<Ctrl>%d' % (favorite_view + 1))
         self.props.group = None
         self.props.icon_name = desktop.get_view_icons()[favorite_view]
