@@ -172,6 +172,9 @@ class KeyHandler(object):
     def handle_open_controlpanel(self, event_time):
         if shell.get_model().has_modal():
             return
+
+        self._frame.hide()
+
         panel = ControlPanel()
         panel.show()
 
