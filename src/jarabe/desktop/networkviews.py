@@ -117,7 +117,7 @@ class WirelessNetworkView(EventPulsingIcon):
     def _create_palette(self):
         icon_name = get_icon_state(_AP_ICON_NAME, self._strength)
         self._palette_icon = Icon(icon_name=icon_name,
-                                  icon_size=style.STANDARD_ICON_SIZE,
+                                  pixel_size=style.STANDARD_ICON_SIZE,
                                   badge_name=self.props.badge_name)
 
         p = palette.Palette(primary_text=self._display_name,
@@ -491,7 +491,7 @@ class SugarAdhocView(EventPulsingIcon):
     def _create_palette(self):
         self._palette_icon = Icon(
             icon_name=self._ICON_NAME + str(self._channel),
-            icon_size=style.STANDARD_ICON_SIZE)
+            pixel_size=style.STANDARD_ICON_SIZE)
 
         palette_ = palette.Palette(_('Ad-hoc Network %d') % (self._channel, ),
                                    icon=self._palette_icon)
