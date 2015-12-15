@@ -19,6 +19,7 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
+from gi.repository import Gio
 
 from sugar3.graphics import animator
 from sugar3.graphics import style
@@ -60,6 +61,7 @@ class Frame(object):
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 
+        self.settings = Gio.Settings('org.sugarlabs.frame')
         self._palette_group = palettegroup.get_group('frame')
 
         self._left_panel = None
@@ -71,7 +73,7 @@ class Frame(object):
         self.current_position = 0.0
         self._animator = None
 
-        self._event_area = EventArea()
+        self._event_area = EventArea(self.settings)
         self._event_area.connect('enter', self._enter_corner_cb)
         self._event_area.show()
 

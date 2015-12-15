@@ -32,13 +32,12 @@ class EventArea(GObject.GObject):
         'leave': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
-    def __init__(self):
+    def __init__(self, settings):
         GObject.GObject.__init__(self)
 
         self._windows = []
         self._hover = False
         self._sids = {}
-        settings = Gio.Settings('org.sugarlabs.frame')
         self._edge_delay = settings.get_int('edge-delay')
         self._corner_delay = settings.get_int('corner-delay')
         self._size = settings.get_int('trigger-size')
