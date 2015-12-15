@@ -25,6 +25,9 @@ from sugar3.graphics import style
 
 _MAX_DELAY = 1000
 
+_CORNERS = ['nw', 'ne', 'se', 'sw']
+_EDGES = ['n', 'e', 's', 'w']
+_BOXES = _CORNERS + _EDGES
 
 class EventArea(GObject.GObject):
     __gsignals__ = {
@@ -35,80 +38,66 @@ class EventArea(GObject.GObject):
     def __init__(self, settings):
         GObject.GObject.__init__(self)
 
-        self._windows = []
         self._hover = False
         self._sids = {}
-        self._edge_delay = settings.get_int('edge-delay')
-        self._corner_delay = settings.get_int('corner-delay')
-        self._size = settings.get_int('trigger-size')
 
-        if self._size > style.GRID_CELL_SIZE:
-            # This should never happen and will block the user
-            self._size = style.GRID_CELL_SIZE
+        self._boxes = {}
+        self._tags = {}
+        for tag in _BOXES:
+            box = self._box(tag)
+            self._tags[box] = tag
+            self._boxes[tag] = box
 
-        right = Gdk.Screen.width() - self._size
-        bottom = Gdk.Screen.height() - self._size
-        width = Gdk.Screen.width() - self._size * 2
-        height = Gdk.Screen.height() - self._size * 2
-
-        if self._edge_delay != _MAX_DELAY:
-            invisible = self._create_invisible(
-                self._size, 0, width, self._size, self._edge_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                self._size, bottom, width, self._size, self._edge_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                0, self._size, self._size, height, self._edge_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                right, self._size, self._size, height, self._edge_delay)
-            self._windows.append(invisible)
-
-        if self._corner_delay != _MAX_DELAY:
-            invisible = self._create_invisible(
-                0, 0, self._size, self._size, self._corner_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                right, 0, self._size, self._size, self._corner_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                0, bottom, self._size, self._size, self._corner_delay)
-            self._windows.append(invisible)
-
-            invisible = self._create_invisible(
-                right, bottom, self._size, self._size, self._corner_delay)
-            self._windows.append(invisible)
+        settings.connect('changed', self._settings_changed_cb)
+        self._settings_changed_cb(settings, None)
 
         screen = Wnck.Screen.get_default()
         screen.connect('window-stacking-changed',
                        self._window_stacking_changed_cb)
 
-    def _create_invisible(self, x, y, width, height, delay):
-        invisible = Gtk.Invisible()
-        if delay >= 0:
-            invisible.connect('enter-notify-event', self._enter_notify_cb,
-                              delay)
-            invisible.connect('leave-notify-event', self._leave_notify_cb)
+    def _box(self, tag):
+        box = Gtk.Invisible()
+        box.connect('enter-notify-event', self._enter_notify_cb)
+        box.connect('leave-notify-event', self._leave_notify_cb)
+        box.drag_dest_set(0, [], 0)
+        box.connect('drag_motion', self._drag_motion_cb)
+        box.connect('drag_leave', self._drag_leave_cb)
+        box.realize()
+        return box
 
-        invisible.drag_dest_set(0, [], 0)
-        invisible.connect('drag_motion', self._drag_motion_cb)
-        invisible.connect('drag_leave', self._drag_leave_cb)
+    def _settings_changed_cb(self, settings, key):
+        self._edge_delay = min(settings.get_int('edge-delay'), _MAX_DELAY)
+        self._corner_delay = min(settings.get_int('corner-delay'), _MAX_DELAY)
+        ts = min(settings.get_int('trigger-size'), style.GRID_CELL_SIZE)
+        sw = Gdk.Screen.width()
+        sh = Gdk.Screen.height()
 
-        invisible.realize()
-        # pylint: disable=E1101
-        x11_window = invisible.get_window()
-        x11_window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
+        if self._edge_delay == _MAX_DELAY:
+            self._hide(_EDGES)
+        else:
+            self._move('n', ts, -1, sw - ts * 2, ts + 1)
+            self._move('e', -1, ts, ts + 1, sh - ts * 2)
+            self._move('s', ts, sh - ts, sw - ts * 2, ts + 1)
+            self._move('w', sw - ts, ts, ts + 1, sh - ts * 2)
+
+        if self._corner_delay == _MAX_DELAY:
+            self._hide(_CORNERS)
+        else:
+            self._move('nw', -1, -1, ts + 1, ts + 1)
+            self._move('ne', sw - ts, -1, ts + 1, ts + 1)
+            self._move('se', sw - ts, sh - ts, ts + 1, ts + 1)
+            self._move('sw', -1, sh - ts, ts + 1, ts + 1)
+
+    def _hide(self, tags):
+        for tag in tags:
+            self._move(tag, -20, -20, 1, 1)
+
+    def _move(self, tag, x, y, width, height):
+        window = self._boxes[tag].get_window()
+        window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
                               Gdk.EventMask.ENTER_NOTIFY_MASK |
                               Gdk.EventMask.LEAVE_NOTIFY_MASK)
-        x11_window.move_resize(x, y, width, height)
-
-        return invisible
+        window.move_resize(x, y, width, height)
 
     def _notify_enter(self):
         if not self._hover:
@@ -120,12 +109,21 @@ class EventArea(GObject.GObject):
             self._hover = False
             self.emit('leave')
 
-    def _enter_notify_cb(self, widget, event, delay):
-        if widget in self._sids:
-            GObject.source_remove(self._sids[widget])
-        self._sids[widget] = GObject.timeout_add(delay,
-                                                 self.__delay_cb,
-                                                 widget)
+    def _enter_notify_cb(self, widget, event):
+        if self._sids:
+            GObject.source_remove(widget.sid)
+            del self._sids[widget]
+
+        delay = None
+        if self._tags[widget] in _CORNERS:
+            delay = self._corner_delay
+        if self._tags[widget] in _EDGES:
+            delay = self._edge_delay
+
+        if delay is not None:
+            self._sids[widget] = GObject.timeout_add(delay,
+                                                     self.__delay_cb,
+                                                     widget)
 
     def __delay_cb(self, widget):
         del self._sids[widget]
@@ -148,13 +146,13 @@ class EventArea(GObject.GObject):
         return True
 
     def show(self):
-        for window in self._windows:
-            window.show()
+        for box in self._boxes.itervalues():
+            box.show()
 
     def hide(self):
-        for window in self._windows:
-            window.hide()
+        for box in self._boxes.itervalues():
+            box.hide()
 
     def _window_stacking_changed_cb(self, screen):
-        for window in self._windows:
-            window.get_window().raise_()
+        for box in self._boxes.itervalues():
+            box.get_window().raise_()
