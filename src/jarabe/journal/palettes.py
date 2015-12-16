@@ -531,7 +531,7 @@ class BuddyPalette(Palette):
 
         nick, colors = buddy
         buddy_icon = Icon(icon_name='computer-xo',
-                          icon_size=style.STANDARD_ICON_SIZE,
+                          pixel_size=style.STANDARD_ICON_SIZE,
                           xo_color=XoColor(colors))
 
         Palette.__init__(self, primary_text=nick, icon=buddy_icon)

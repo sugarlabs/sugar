@@ -922,11 +922,11 @@ class FilterToolItem(Gtk.ToolButton):
     def set_widget_icon(self, icon_name=None, file_name=None):
         if file_name is not None:
             icon = Icon(file=file_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         else:
             icon = Icon(icon_name=icon_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         self.set_icon_widget(icon)
         icon.show()
