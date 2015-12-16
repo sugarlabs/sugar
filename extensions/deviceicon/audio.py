@@ -102,7 +102,7 @@ class AudioManagerWidget(Gtk.VBox):
         self._ok_icon = Icon(icon_name='dialog-ok')
         self._cancel_icon = Icon(icon_name='dialog-cancel')
 
-        icon = Icon(icon_size=Gtk.IconSize.MENU)
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         icon.props.icon_name = icon_name
         icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
                                       style.COLOR_BUTTON_GREY.get_svg()))
