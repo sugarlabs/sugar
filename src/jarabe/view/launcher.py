@@ -17,6 +17,7 @@
 import logging
 from gettext import gettext as _
 
+from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 
@@ -25,6 +26,9 @@ from sugar3.graphics import style
 
 from jarabe.model import shell
 from jarabe.view.pulsingicon import PulsingIcon
+
+
+_INTERVAL = 100
 
 
 class LaunchWindow(Gtk.Window):
@@ -55,7 +59,8 @@ class LaunchWindow(Gtk.Window):
         self._activity_id = activity_id
 
         self._activity_icon = PulsingIcon(file=icon_path,
-                                          pixel_size=style.XLARGE_ICON_SIZE)
+                                          pixel_size=style.XLARGE_ICON_SIZE,
+                                          interval=_INTERVAL)
         self._activity_icon.set_base_color(icon_color)
         self._activity_icon.set_zooming(style.SMALL_ICON_SIZE,
                                         style.XLARGE_ICON_SIZE, 10)
@@ -116,6 +121,11 @@ class LaunchWindow(Gtk.Window):
 
 
 def setup():
+    global _INTERVAL
+
+    settings = Gio.Settings('org.sugarlabs.desktop')
+    _INTERVAL = settings.get_int('launcher-interval')
+
     model = shell.get_model()
     model.connect('launch-started', __launch_started_cb)
     model.connect('launch-failed', __launch_failed_cb)

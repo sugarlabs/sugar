@@ -140,6 +140,11 @@
             <summary>Home views</summary>
             <description>List of home views, including the view icon, the favorite icon and the layout</description>
         </key>
+        <key name="launcher-interval" type="i">
+            <default>100</default>
+            <summary>Launcher animation interval</summary>
+            <description>Delay in milliseconds between animation updates for launcher pulsing icon.</description>
+        </key>
     </schema>
     <schema id="org.sugarlabs.frame" path="/org/sugarlabs/frame/">
         <key name="edge-delay" type="i">

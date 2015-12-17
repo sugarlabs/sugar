@@ -29,9 +29,10 @@ _MINIMAL_ALPHA_VALUE = 0.33
 
 
 class Pulser(object):
-    def __init__(self, icon):
+    def __init__(self, icon, interval=_INTERVAL):
         self._pulse_hid = None
         self._icon = icon
+        self._interval = interval
         self._phase = 0
         self._start_scale = 1.0
         self._end_scale = 1.0
@@ -52,7 +53,8 @@ class Pulser(object):
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
-            self._pulse_hid = GObject.timeout_add(_INTERVAL, self.__pulse_cb)
+            self._pulse_hid = GObject.timeout_add(self._interval,
+                                                  self.__pulse_cb)
         if self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
                 self._current_scale_step * self._current_zoom_step
@@ -84,8 +86,8 @@ class Pulser(object):
 class PulsingIcon(Icon):
     __gtype_name__ = 'SugarPulsingIcon'
 
-    def __init__(self, **kwargs):
-        self._pulser = Pulser(self)
+    def __init__(self, interval=_INTERVAL, **kwargs):
+        self._pulser = Pulser(self, interval)
         self._base_color = None
         self._pulse_color = None
         self._paused = False
@@ -174,8 +176,8 @@ class PulsingIcon(Icon):
 class EventPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarEventPulsingIcon'
 
-    def __init__(self, **kwargs):
-        self._pulser = Pulser(self)
+    def __init__(self, interval=_INTERVAL, **kwargs):
+        self._pulser = Pulser(self, interval)
         self._base_color = None
         self._pulse_color = None
         self._paused = False
