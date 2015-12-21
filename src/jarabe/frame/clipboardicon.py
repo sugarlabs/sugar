@@ -20,6 +20,7 @@ import logging
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import SugarExt
+from gi.repository import GObject
 
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics.icon import Icon
@@ -75,6 +76,9 @@ class ClipboardIcon(RadioToolButton):
 
     def _drag_data_get_cb(self, widget, context, selection, target_type,
                           event_time):
+        frame = jarabe.frame.get_view()
+        self._timeout_id = GObject.timeout_add(
+            jarabe.frame.frame.NOTIFICATION_DURATION, lambda: frame.remove_notification(self._notif_icon))
         target_atom = selection.get_target()
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)
@@ -168,10 +172,17 @@ class ClipboardIcon(RadioToolButton):
             XoColor('%s,%s' % (self._icon.props.stroke_color,
                                self._icon.props.fill_color))
         frame = jarabe.frame.get_view()
-        frame.add_notification(self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
+        self._timeout_id = frame.add_notification(
+            self._notif_icon, Gtk.CornerType.BOTTOM_LEFT)
+        self._notif_icon.connect('drag_data_get', self._drag_data_get_cb)
+        self._notif_icon.connect('drag-begin', self._drag_begin_cb)
+        self._notif_icon.drag_source_set(Gdk.ModifierType.BUTTON1_MASK,
+                                         self._get_targets(),
+                                         Gdk.DragAction.COPY)
 
     def _drag_begin_cb(self, widget, context):
         # TODO: We should get the pixbuf from the icon, with colors, etc.
+        GObject.source_remove(self._timeout_id)
         icon_theme = Gtk.IconTheme.get_default()
         pixbuf = icon_theme.load_icon(self._icon.props.icon_name,
                                       style.STANDARD_ICON_SIZE, 0)
