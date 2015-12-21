@@ -41,10 +41,11 @@ TOP_LEFT = 1
 BOTTOM_RIGHT = 2
 BOTTOM_LEFT = 3
 
-_NOTIFICATION_DURATION = 5000
+NOTIFICATION_DURATION = 5000
 
 
 class _Animation(animator.Animation):
+
     def __init__(self, frame, end):
         start = frame.current_position
         animator.Animation.__init__(self, start, end)
@@ -55,6 +56,7 @@ class _Animation(animator.Animation):
 
 
 class Frame(object):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the frame')
 
@@ -211,8 +213,13 @@ class Frame(object):
     def notify_key_press(self):
         self.toggle()
 
+    '''
+    The function adds a notification and returns the id of the timeout
+    signal after which the notification will dissapear.
+    '''
+
     def add_notification(self, icon, corner=Gtk.CornerType.TOP_LEFT,
-                         duration=_NOTIFICATION_DURATION):
+                         duration=NOTIFICATION_DURATION):
 
         if not isinstance(icon, NotificationIcon):
             raise TypeError('icon must be a NotificationIcon.')
@@ -238,8 +245,9 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        GObject.timeout_add(duration,
-                            lambda: self.remove_notification(icon))
+        timeout_id = GObject.timeout_add(duration,
+                                         lambda: self.remove_notification(icon))
+        return timeout_id
 
     def remove_notification(self, icon):
         if icon not in self._notif_by_icon:
