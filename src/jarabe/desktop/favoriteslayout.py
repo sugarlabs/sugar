@@ -172,7 +172,15 @@ class SpreadLayout(ViewLayout):
         for child in children:
             if not self._grid.is_in_grid(child):
                 width, height = self._get_child_grid_size(child)
-                self._grid.add(child, width, height, None, None, locked=False)
+                x = y = None
+                if hasattr(child, "get_buddy"):
+                    md5hash = hashlib.md5(child.get_buddy().get_key())
+                    digest = abs(hash(md5hash.digest()))
+                    w = (self._width - (width * 3)) / 4
+                    h = (self._height - (height * 3)) / 4
+                    x = ((digest & 0xFFFFFFFF) % w) * ((digest >> 126) + 1)
+                    y = ((digest >> 32) % h) * (((digest >> 124) & 0b11) + 1)
+                self._grid.add(child, width, height, x, y, locked=False)
 
             requisition = child.get_preferred_size()[0]
             rect = self._grid.get_child_rect(child)
