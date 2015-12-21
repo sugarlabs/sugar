@@ -447,6 +447,9 @@ class WirelessNetworkView(EventPulsingIcon):
             path=self._device.object_path,
             dbus_interface=network.NM_WIRELESS_IFACE)
 
+    def get_positioning_data(self):
+        return str(self.get_first_ap().network_hash())
+
 
 class SugarAdhocView(EventPulsingIcon):
     """To mimic the mesh behavior on devices where mesh hardware is
@@ -591,6 +594,9 @@ class SugarAdhocView(EventPulsingIcon):
         self._filtered = name.lower().find(query) == -1
         self._update_color()
 
+    def get_positioning_data(self):
+        return str(type(self)) + str(self._channel)
+
 
 class OlpcMeshView(EventPulsingIcon):
     def __init__(self, mesh_mgr, channel):
@@ -732,3 +738,6 @@ class OlpcMeshView(EventPulsingIcon):
             signal_name='PropertiesChanged',
             path=device_object_path,
             dbus_interface=network.NM_OLPC_MESH_IFACE)
+
+    def get_positioning_data(self):
+        return str(type(self)) + str(self._channel)
