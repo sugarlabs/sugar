@@ -166,6 +166,9 @@ class ActivityView(SnowflakeLayout):
             if hasattr(icon, 'set_filter'):
                 icon.set_filter(query)
 
+    def get_positioning_data(self):
+        return str(self._model.activity_id)
+
 
 class DeviceObserver(GObject.GObject):
     __gsignals__ = {

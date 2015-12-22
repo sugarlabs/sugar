@@ -71,3 +71,6 @@ class BuddyIcon(CanvasIcon):
         self._filtered = (normalized_name.find(query) == -1) \
             and not self._buddy.is_owner()
         self._update_color()
+
+    def get_positioning_data(self):
+        return self._buddy.get_key()
