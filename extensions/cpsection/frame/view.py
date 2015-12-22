@@ -21,7 +21,6 @@ from gettext import gettext as _
 from sugar3.graphics import style
 
 from jarabe.controlpanel.sectionview import SectionView
-from jarabe.controlpanel.inlinealert import InlineAlert
 
 
 _never = _('never')
@@ -36,13 +35,10 @@ class Frame(SectionView):
 
         self._model = model
         self._corner_delay_sid = 0
-        self._corner_delay_is_valid = True
         self._corner_delay_change_handler = None
         self._edge_delay_sid = 0
-        self._edge_delay_is_valid = True
         self._edge_delay_change_handler = None
         self._trigger_size_sid = 0
-        self._trigger_size_is_valid = True
         self._trigger_size_change_handler = None
         self.restart_alerts = alerts
 
@@ -52,31 +48,35 @@ class Frame(SectionView):
 
         separator = Gtk.HSeparator()
         self.pack_start(separator, False, True, 0)
-        separator.show()
 
-        label_activation = Gtk.Label(label=_('Activation Delay'))
-        label_activation.set_alignment(0, 0)
-        self.pack_start(label_activation, False, True, 0)
-        label_activation.show()
+        label = Gtk.Label(label=_('Activation Delay'))
+        label.set_alignment(0, 0)
+        self.pack_start(label, False, True, 0)
 
-        self._box_sliders = Gtk.VBox()
-        self._box_sliders.set_border_width(style.DEFAULT_SPACING * 2)
-        self._box_sliders.set_spacing(style.DEFAULT_SPACING)
+        box = Gtk.VBox()
+        box.set_border_width(style.DEFAULT_SPACING * 2)
+        box.set_spacing(style.DEFAULT_SPACING)
 
-        self._corner_delay_slider = None
-        self._corner_delay_alert = None
-        self._setup_corner()
+        box.pack_start(self._setup_corner(), False, True, 0)
+        box.pack_start(self._setup_edge(), False, True, 0)
 
-        self._edge_delay_slider = None
-        self._edge_delay_alert = None
-        self._setup_edge()
+        self.pack_start(box, False, True, 0)
 
-        self._trigger_size_slider = None
-        self._trigger_size_alert = None
-        self._setup_trigger()
+        separator = Gtk.HSeparator()
+        self.pack_start(separator, False, True, 0)
 
-        self.pack_start(self._box_sliders, False, True, 0)
-        self._box_sliders.show()
+        label = Gtk.Label(label=_('Activation Area'))
+        label.set_alignment(0, 0)
+        self.pack_start(label, False, True, 0)
+
+        box = Gtk.VBox()
+        box.set_border_width(style.DEFAULT_SPACING * 2)
+        box.set_spacing(style.DEFAULT_SPACING)
+
+        box.pack_start(self._setup_trigger(), False, True, 0)
+
+        self.pack_start(box, False, True, 0)
+        self.show_all()
 
         self.setup()
 
@@ -88,7 +88,6 @@ class Frame(SectionView):
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         box_delay.pack_start(label_delay, False, True, 0)
         self._group.add_widget(label_delay)
-        label_delay.show()
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
@@ -98,23 +97,7 @@ class Frame(SectionView):
         self._corner_delay_slider.connect('format-value',
                                           self.__corner_delay_format_cb)
         box_delay.pack_start(self._corner_delay_slider, True, True, 0)
-        self._corner_delay_slider.show()
-        self._box_sliders.pack_start(box_delay, False, True, 0)
-        box_delay.show()
-
-        self._corner_delay_alert = InlineAlert()
-        label_delay_error = Gtk.Label()
-        self._group.add_widget(label_delay_error)
-
-        delay_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        delay_alert_box.pack_start(label_delay_error, False, True, 0)
-        label_delay_error.show()
-        delay_alert_box.pack_start(self._corner_delay_alert, False, True, 0)
-        self._box_sliders.pack_start(delay_alert_box, False, True, 0)
-        delay_alert_box.show()
-        if 'corner_delay' in self.restart_alerts:
-            self._corner_delay_alert.props.msg = self.restart_msg
-            self._corner_delay_alert.show()
+        return box_delay
 
     def _setup_edge(self):
         box_delay = Gtk.HBox(spacing=style.DEFAULT_SPACING)
@@ -124,7 +107,6 @@ class Frame(SectionView):
                               style.COLOR_SELECTION_GREY.get_gdk_color())
         box_delay.pack_start(label_delay, False, True, 0)
         self._group.add_widget(label_delay)
-        label_delay.show()
 
         adj = Gtk.Adjustment(value=100, lower=0, upper=_MAX_DELAY,
                              step_incr=100, page_incr=100, page_size=0)
@@ -134,33 +116,16 @@ class Frame(SectionView):
         self._edge_delay_slider.connect('format-value',
                                         self.__edge_delay_format_cb)
         box_delay.pack_start(self._edge_delay_slider, True, True, 0)
-        self._edge_delay_slider.show()
-        self._box_sliders.pack_start(box_delay, False, True, 0)
-        box_delay.show()
-
-        self._edge_delay_alert = InlineAlert()
-        label_delay_error = Gtk.Label()
-        self._group.add_widget(label_delay_error)
-
-        delay_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        delay_alert_box.pack_start(label_delay_error, False, True, 0)
-        label_delay_error.show()
-        delay_alert_box.pack_start(self._edge_delay_alert, False, True, 0)
-        self._box_sliders.pack_start(delay_alert_box, False, True, 0)
-        delay_alert_box.show()
-        if 'edge_delay' in self.restart_alerts:
-            self._edge_delay_alert.props.msg = self.restart_msg
-            self._edge_delay_alert.show()
+        return box_delay
 
     def _setup_trigger(self):
         box_trigger = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        label_trigger = Gtk.Label(label=_('Trigger Size'))
+        label_trigger = Gtk.Label(label=_('Size'))
         label_trigger.set_alignment(1, 0.75)
         label_trigger.modify_fg(Gtk.StateType.NORMAL,
                                 style.COLOR_SELECTION_GREY.get_gdk_color())
         box_trigger.pack_start(label_trigger, False, True, 0)
         self._group.add_widget(label_trigger)
-        label_trigger.show()
 
         adj = Gtk.Adjustment(value=1, lower=1, upper=style.GRID_CELL_SIZE,
                              step_incr=1, page_incr=1, page_size=0)
@@ -170,31 +135,12 @@ class Frame(SectionView):
         self._trigger_size_slider.connect('format-value',
                                           self.__trigger_size_format_cb)
         box_trigger.pack_start(self._trigger_size_slider, True, True, 0)
-        self._trigger_size_slider.show()
-        self._box_sliders.pack_start(box_trigger, False, True, 0)
-        box_trigger.show()
-
-        self._trigger_size_alert = InlineAlert()
-        label_trigger_error = Gtk.Label()
-        self._group.add_widget(label_trigger_error)
-
-        trigger_alert_box = Gtk.HBox(spacing=style.DEFAULT_SPACING)
-        trigger_alert_box.pack_start(label_trigger_error, False, True, 0)
-        label_trigger_error.show()
-        trigger_alert_box.pack_start(self._trigger_size_alert, False, True, 0)
-        self._box_sliders.pack_start(trigger_alert_box, False, True, 0)
-        trigger_alert_box.show()
-        if 'trigger_size' in self.restart_alerts:
-            self._trigger_size_alert.props.msg = self.restart_msg
-            self._trigger_size_alert.show()
+        return box_trigger
 
     def setup(self):
         self._corner_delay_slider.set_value(self._model.get_corner_delay())
         self._edge_delay_slider.set_value(self._model.get_edge_delay())
         self._trigger_size_slider.set_value(self._model.get_trigger_size())
-        self._corner_delay_is_valid = True
-        self._edge_delay_is_valid = True
-        self._trigger_size_is_valid = True
         self.needs_restart = False
         self._corner_delay_change_handler = self._corner_delay_slider.connect(
             'value-changed', self.__corner_delay_changed_cb)
@@ -208,16 +154,6 @@ class Frame(SectionView):
         self._edge_delay_slider.disconnect(self._edge_delay_change_handler)
         self._trigger_size_slider.disconnect(self._trigger_size_change_handler)
         self._model.undo()
-        self._corner_delay_alert.hide()
-        self._edge_delay_alert.hide()
-        self._trigger_size_alert.hide()
-
-    def _validate(self):
-        if self._edge_delay_is_valid and self._corner_delay_is_valid \
-           and self._trigger_size_is_valid:
-            self.props.is_valid = True
-        else:
-            self.props.is_valid = False
 
     def __corner_delay_changed_cb(self, scale, data=None):
         if self._corner_delay_sid:
@@ -229,20 +165,8 @@ class Frame(SectionView):
         self._corner_delay_sid = 0
         if scale.get_value() == self._model.get_corner_delay():
             return False
-        try:
-            self._model.set_corner_delay(scale.get_value())
-        except ValueError, detail:
-            self._corner_delay_alert.props.msg = detail
-            self._corner_delay_is_valid = False
-        else:
-            self._corner_delay_alert.props.msg = self.restart_msg
-            self._corner_delay_is_valid = True
-            self.needs_restart = True
-            self.restart_alerts.append('corner_delay')
+        self._model.set_corner_delay(scale.get_value())
 
-        self._validate()
-        self._corner_delay_alert.show()
-        # This may effect the trigger slider label
         self._trigger_size_slider.queue_draw()
         return False
 
@@ -264,20 +188,8 @@ class Frame(SectionView):
         self._edge_delay_sid = 0
         if scale.get_value() == self._model.get_edge_delay():
             return False
-        try:
-            self._model.set_edge_delay(scale.get_value())
-        except ValueError, detail:
-            self._edge_delay_alert.props.msg = detail
-            self._edge_delay_is_valid = False
-        else:
-            self._edge_delay_alert.props.msg = self.restart_msg
-            self._edge_delay_is_valid = True
-            self.needs_restart = True
-            self.restart_alerts.append('edge_delay')
+        self._model.set_edge_delay(scale.get_value())
 
-        self._validate()
-        self._edge_delay_alert.show()
-        # This may effect the trigger slider label
         self._trigger_size_slider.queue_draw()
         return False
 
@@ -299,19 +211,8 @@ class Frame(SectionView):
         self._trigger_size_sid = 0
         if scale.get_value() == self._model.get_trigger_size():
             return
-        try:
-            self._model.set_trigger_size(scale.get_value())
-        except ValueError, detail:
-            self._trigger_size_alert.props.msg = detail
-            self._trigger_size_is_valid = False
-        else:
-            self._trigger_size_alert.props.msg = self.restart_msg
-            self._trigger_size_is_valid = True
-            self.needs_restart = True
-            self.restart_alerts.append('trigger_size')
+        self._model.set_trigger_size(scale.get_value())
 
-        self._validate()
-        self._trigger_size_alert.show()
         return False
 
     def __trigger_size_format_cb(self, scale, value):
@@ -325,8 +226,10 @@ class Frame(SectionView):
                 return _('exact corner or edge')
             elif corner:
                 return _('exact corner')
-            else:
+            elif edge:
                 return _('exact edge')
+            else:
+                return _('ignored')
         else:
             # TRANS: px as in pixels
             return _('{}px').format(value)

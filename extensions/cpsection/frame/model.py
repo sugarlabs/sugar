@@ -18,10 +18,13 @@
 from gettext import gettext as _
 from gi.repository import Gio
 
+from jarabe.frame import get_view
+
+frame = get_view()
+
 
 def get_corner_delay():
-    settings = Gio.Settings('org.sugarlabs.frame')
-    corner_delay = settings.get_int('corner-delay')
+    corner_delay = frame.settings.get_int('corner-delay')
     return corner_delay
 
 
@@ -35,18 +38,12 @@ def set_corner_delay(delay):
     delay: 100 (100 milliseconds)
     never: 1000 (disable activation)
     """
-    try:
-        int(delay)
-    except ValueError:
-        raise ValueError(_('Value must be an integer.'))
-    settings = Gio.Settings('org.sugarlabs.frame')
-    settings.set_int('corner-delay', int(delay))
+    frame.settings.set_int('corner-delay', int(delay))
     return 0
 
 
 def get_edge_delay():
-    settings = Gio.Settings('org.sugarlabs.frame')
-    edge_delay = settings.get_int('edge-delay')
+    edge_delay = frame.settings.get_int('edge-delay')
     return edge_delay
 
 
@@ -60,19 +57,13 @@ def set_edge_delay(delay):
     delay: 100 (100 milliseconds)
     never: 1000 (disable activation)
     """
-    try:
-        int(delay)
-    except ValueError:
-        raise ValueError(_('Value must be an integer.'))
-    settings = Gio.Settings('org.sugarlabs.frame')
-    settings.set_int('edge-delay', int(delay))
+    frame.settings.set_int('edge-delay', int(delay))
     return 0
 
 
 def get_trigger_size():
-    settings = Gio.Settings('org.sugarlabs.frame')
-    edge_delay = settings.get_int('edge-delay')
-    return edge_delay
+    trigger_size = frame.settings.get_int('trigger-size')
+    return trigger_size
 
 
 def print_trigger_size():
@@ -85,14 +76,5 @@ def set_trigger_size(size):
 
     exactly on the edge: 1
     """
-    try:
-        int(size)
-    except ValueError:
-        raise ValueError(_('Value must be an integer.'))
-
-    if int(size) < 1:
-        raise ValueError(_('Value must be more than 1.'))
-
-    settings = Gio.Settings('org.sugarlabs.frame')
-    settings.set_int('trigger-size', int(size))
+    frame.settings.set_int('trigger-size', int(size))
     return 0
