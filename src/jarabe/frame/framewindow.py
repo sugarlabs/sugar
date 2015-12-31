@@ -156,3 +156,5 @@ class FrameWindow(Gtk.Window):
 
     def _size_changed_cb(self, screen):
         self._update_size()
+if hasattr(FrameWindow, 'set_css_name'):
+    FrameWindow.set_css_name('framewindow')

@@ -449,6 +449,8 @@ class IntroWindow(Gtk.Window):
             self._intro_box.back()
             return True
         return False
+if hasattr(IntroWindow, 'set_css_name'):
+    IntroWindow.set_css_name('introwindow')
 
 
 if __name__ == '__main__':
