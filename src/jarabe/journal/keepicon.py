@@ -61,3 +61,5 @@ class KeepIcon(Gtk.ToggleButton):
         else:
             self._icon.props.stroke_color = style.COLOR_BUTTON_GREY.get_svg()
             self._icon.props.fill_color = style.COLOR_TRANSPARENT.get_svg()
+if hasattr(KeepIcon, 'set_css_name'):
+    KeepIcon.set_css_name('canvasicon')

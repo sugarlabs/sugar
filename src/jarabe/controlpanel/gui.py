@@ -481,6 +481,8 @@ class ModelWrapper(object):
                     method(self._options[key])
                 except Exception, detail:
                     _logger.debug('Error undo option: %s', detail)
+if hasattr(ControlPanel, 'set_css_name'):
+    ControlPanel.set_css_name('controlpanel')
 
 
 class _SectionIcon(Gtk.EventBox):
