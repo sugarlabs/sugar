@@ -23,6 +23,8 @@ from gi.repository import Gdk
 from gi.repository import GObject
 import gettext
 
+from icu import Locale
+
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 
@@ -50,6 +52,7 @@ class Language(SectionView):
         self._labels = []
         self._language_dict = {}
         self._country_dict = {}
+        self._locale_code_dict = {}
         self._language_buttons = []
         self._country_buttons = []
         self._language_widgets = []
@@ -66,6 +69,7 @@ class Language(SectionView):
             if language not in self._language_dict:
                 self._language_dict[language] = _translate_language(language)
                 self._country_dict[language] = [[code, country]]
+                self._locale_code_dict[language] = code[:2]
             else:
                 self._country_dict[language].append([code, country])
 
@@ -132,16 +136,20 @@ class Language(SectionView):
         language_palette = []
         key_list = self._language_dict.keys()
         for language_key in sorted(key_list):
+            locale = Locale(self._locale_code_dict[language_key])
+            name = locale.getDisplayName(locale).title()
             language_palette.append(
-                {'label': self._language_dict[language_key],
+                {'label': name,
                  'index': len(self._language_buttons),
                  'callback': self._language_changed})
 
         new_language_widget = set_palette_list(language_palette)
         if locale_language is None:
             locale_language = 'English'
+        locale = Locale(self._locale_code_dict[locale_language])
+        name = locale.getDisplayName(locale).title()
         new_language_button = FilterToolItem(
-            'go-down', 'go-up', locale_language, new_language_widget)
+            'go-down', 'go-up', name, new_language_widget)
         country_list = self._build_country_list(locale_language)
 
         new_country_widget = set_palette_list(country_list)
@@ -311,7 +319,9 @@ class Language(SectionView):
         i = item['index']
 
         for language_key in self._language_dict.keys():
-            if self._language_dict[language_key] == item['label']:
+            locale = Locale(self._locale_code_dict[language_key])
+            name = locale.getDisplayName(locale).title()
+            if name == item['label']:
                 new_country_list = \
                     self._build_country_list(language_key, idx=i)
                 break
