@@ -143,6 +143,7 @@ class ViewToolbar(Gtk.Toolbar):
     def _entry_activated_cb(self, entry):
         if self._autosearch_timer:
             GObject.source_remove(self._autosearch_timer)
+            self._autosearch_timer = None
         new_query = entry.props.text
         if self._query != new_query:
             self._query = new_query
