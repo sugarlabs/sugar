@@ -695,6 +695,7 @@ class SortingButton(ToolButton):
         ToolButton.__init__(self)
 
         self._property = 'timestamp'
+        self.order_type='ascending'
         self._order = Gtk.SortType.ASCENDING
 
         self.props.tooltip = _('Sort view')
@@ -719,6 +720,7 @@ class SortingButton(ToolButton):
                                icon_name=icon)
             button.set_image(button_icon)
             button_icon.show()
+            
             button.connect('activate',
                            self.__sort_type_changed_cb,
                            property_,
@@ -727,9 +729,20 @@ class SortingButton(ToolButton):
             menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
+        if(self._property == property_):
+              if(self.order_type=='ascending'):
+                   self.order_type='descending'
+              else:
+                   self.order_type='ascending'
+        else:
+             self.order_type='ascending'
+
         self._property = property_
-        # FIXME: Implement sorting order
-        self._order = Gtk.SortType.ASCENDING
+       
+        if(self.order_type=='ascending'):
+                   self._order = Gtk.SortType.ASCENDING
+        else:
+                   self._order=Gtk.SortType.DESCENDING
         self.emit('sort-property-changed')
 
         self.props.icon_name = icon_name
