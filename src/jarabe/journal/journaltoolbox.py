@@ -693,16 +693,13 @@ class SortingButton(ToolButton):
 
     def __init__(self):
         ToolButton.__init__(self)
-
         self._property = 'timestamp'
+        self.order_type='ascending'
         self._order = Gtk.SortType.ASCENDING
-
         self.props.tooltip = _('Sort view')
         self.props.icon_name = 'view-lastedit'
-
         self.props.hide_tooltip_on_click = False
         self.palette_invoker.props.toggle_palette = True
-
         menu_box = PaletteMenuBox()
         self.props.palette.set_content(menu_box)
         menu_box.show()
@@ -719,23 +716,51 @@ class SortingButton(ToolButton):
                                icon_name=icon)
             button.set_image(button_icon)
             button_icon.show()
+            
             button.connect('activate',
                            self.__sort_type_changed_cb,
                            property_,
                            icon)
             button.show()
             menu_box.append_item(button)
+        button = Gtk.ToggleButton('Reverse Order')
+        button.set_active(False)
+        button.connect('toggled',
+                       self.reverse_order)
+        button.show()
+        menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
-        self._property = property_
-        # FIXME: Implement sorting order
-        self._order = Gtk.SortType.ASCENDING
-        self.emit('sort-property-changed')
+        if(self._property == property_):
+              if(self.order_type=='ascending'):
+                   self.order_type='descending'
+              else:
+                   self.order_type='ascending'
+        else:
+             self.order_type='ascending'
 
+        self._property = property_
+<<<<<<< HEAD
+       
+        if(self.order_type=='ascending'):
+                   self._order = Gtk.SortType.ASCENDING
+        else:
+                   self._order=Gtk.SortType.DESCENDING
+=======
+        self._order = Gtk.SortType.ASCENDING
+>>>>>>> Implemented toggled sorting order
+        self.emit('sort-property-changed')
         self.props.icon_name = icon_name
 
     def get_current_sort(self):
         return (self._property, self._order)
+
+    def reverse_order(self, button):
+        if button.get_active():
+            self._order = Gtk.SortType.DESCENDING
+        else:
+            self._order = Gtk.SortType.ASCENDING
+        self.emit('sort-property-changed')
 
 
 class EditToolbox(ToolbarBox):
