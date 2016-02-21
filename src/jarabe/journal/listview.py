@@ -747,7 +747,9 @@ class ListView(BaseListView):
 
     def __cell_title_edited_cb(self, cell, path, new_text):
         iterator = self._model.get_iter(path)
-        self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+        if not new_text.isspace() and not new_text == '':
+            self._model[iterator][ListModel.COLUMN_TITLE] = new_text
+
         self.emit('title-edit-finished')
 
     def __editing_canceled_cb(self, cell):
