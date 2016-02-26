@@ -160,8 +160,12 @@ class ObjectPalette(Palette):
         alert = Alert()
         erase_string = _('Erase')
         alert.props.title = erase_string
+        _erase_title = self._metadata['title']
+        if len(self._metadata['title']) > 25:
+            _erase_title = self._metadata['title'][:15] + '...'
+
         alert.props.msg = _('Do you want to permanently erase \"%s\"?') \
-            % self._metadata['title']
+            % _erase_title
         icon = Icon(icon_name='dialog-cancel')
         alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
         icon.show()
