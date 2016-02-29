@@ -39,6 +39,7 @@ class GroupBox(ViewContainer):
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.LARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
+        self.set_can_focus(False)
 
         self._query = ''
         toolbar.connect('query-changed', self._toolbar_query_changed_cb)

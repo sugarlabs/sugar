@@ -127,6 +127,7 @@ class FavoritesView(ViewContainer):
         ViewContainer.__init__(self, layout=self._layout,
                                owner_icon=owner_icon,
                                activity_icon=current_activity)
+        self.set_can_focus(False)
 
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK |
                         Gdk.EventMask.POINTER_MOTION_HINT_MASK)

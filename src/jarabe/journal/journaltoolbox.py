@@ -727,9 +727,15 @@ class SortingButton(ToolButton):
             menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
+        if self._property == property_:
+            if self._order == Gtk.SortType.ASCENDING:
+                self._order = Gtk.SortType.DESCENDING
+            else:
+                self._order = Gtk.SortType.ASCENDING
+        else:
+            self._order = Gtk.SortType.ASCENDING
+
         self._property = property_
-        # FIXME: Implement sorting order
-        self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
         self.props.icon_name = icon_name

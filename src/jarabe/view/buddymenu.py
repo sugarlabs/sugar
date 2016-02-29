@@ -29,6 +29,7 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.alert import TimeoutAlert
 from sugar3.graphics import style
+from sugar3.bundle.activitybundle import ActivityBundle
 
 from jarabe.model import shell
 from jarabe.model import friends
@@ -174,9 +175,11 @@ class BuddyMenu(Palette):
             buddy_activity_id = buddy_activity.activity_id
         else:
             buddy_activity_id = None
-
+        if activity is not None:
+            bundle_activity = ActivityBundle(activity.get_bundle_path())
         if activity is None or activity.is_journal() or \
-           activity.get_activity_id() == buddy_activity_id:
+           activity.get_activity_id() == buddy_activity_id or \
+           bundle_activity.get_max_participants() <= 1:
             self._invite_menu.hide()
         else:
             title = activity.get_title()
@@ -220,3 +223,4 @@ class BuddyMenu(Palette):
                     raise
         else:
             logging.error('Invite failed, activity service not ')
+
