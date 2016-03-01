@@ -26,23 +26,23 @@ gtk.Button
 
 sugar.Icon
 
-* Svg Only.
+* SVG Only.
 * It should support xo colors easily.
 * Rollovers with a focus mark.
 
 sugar.IconButton
 
 * Support for SVG and png.
-* Icons should be grey scale. But might be coloured with the XO colors (svg only)
+* Icons should be grey scale. But might be coloured with the XO colors (SVG only)
 * Size of the button is 75 pixels, size of the icon canvas is 55 and suggested icon size is around 45.
 * States, defaults:
     Hover : Black
     Pressed : Rounded rectangle 61 pixels, 10 pixels of radius, filled in selection grey
     Focused : Rounded rectangle 61 pixels, 10 pixels of radius, stroked in white 2.25 points
     Inactive. Fallbacks if no inactive icon is specified.
-        Svg: Remove the fill and render the stroke in button grey
+        SVG: Remove the fill and render the stroke in button grey
         Png: just do some effect on the pixbuf, which also work for grey icons
-* You can set an icon for each states which replace the default except for the Hover state of buttons which has rollover.
+* You can set an icon for each state which replaces the default except for the Hover state of buttons which has rollover.
 * "palette" boolean property. If true show an arrow active immediately on click (but also on hover)
 
 sugar.ToolButton (support for rollovers)
@@ -64,7 +64,7 @@ sugar.ToolIconButton
 
 gtk.CheckButton
 
-* Match the visual design, shoul be possible with just theme changes
+* Match the visual design, should be possible with just theme changes
 
 gtk.RadioButton
 
@@ -103,7 +103,7 @@ sugar.SearchEntry
     The spinner goes away.
     We *don't* clear the entry but we select the text.
 * Search can either be incremental or on activation. For incremental there is no Accept button. start_spinning and stop_spinning to control the spin icon. start would only spin for an amount of time decided by the widget itself (and documented).
-* The suggestions list is provided by the application. Need to figure out which api to use, either model or signal based.
+* The suggestions list is provided by the application. Need to figure out which API to use, either model or signal based.
 * Default implementation of suggestions which automatically save the latest searches.
 
 sugar.DateSelector
@@ -174,7 +174,7 @@ gtk.Notebook
 * Switching tabs with the little arrows should page
 
 Palettes in ToolIconButton, IconButton
-* Inmediately on rollover, show the black background.
+* Immediately on rollover, show the black background.
 * After a very short delay, show the primary state (name of the action and key shortcut).
 * After a bigger delay, show the popup secondary state.
 * Could be animated.
@@ -188,7 +188,7 @@ Palettes in ToolIconButton, IconButton
 
 Toolbox
 * When an activity opens, the activity tab should be opened and the focus on the activity title.
-* We must provide an activity tab in the toolbox and would be good to also provide an standard Edit tab.
+* We must provide an activity tab in the toolbox and would be good to also provide a standard Edit tab.
 
 Grab key
 * We probably will need the grab mode.
