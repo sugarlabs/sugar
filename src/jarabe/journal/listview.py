@@ -97,11 +97,23 @@ class TreeView(Gtk.TreeView):
             palette.connect('volume-error', self.__volume_error_cb)
 
         elif column in self.buddies_columns:
-            buddycellrenderer = column.get_cells()[0]
-            if buddycellrenderer.nick is not None:
-                palette = BuddyPalette(
-                    (buddycellrenderer.nick,
-                     buddycellrenderer.props.xo_color.to_string()))
+            tree_model = self.get_model()
+            iterator = tree_model.get_iter(path)
+
+            for column_index in [ListModel.COLUMN_BUDDY_1,
+                                 ListModel.COLUMN_BUDDY_2,
+                                 ListModel.COLUMN_BUDDY_3]:
+                if column == self.buddies_columns[column_index
+                                                  - ListModel.COLUMN_BUDDY_1]:
+                    buddy_value = tree_model.do_get_value(
+                        iterator,
+                        column_index
+                    )
+                    if buddy_value is not None:
+                        nick, xo_color = buddy_value
+                        palette = BuddyPalette(
+                            (nick,
+                             xo_color.to_string()))
 
         return palette
 
