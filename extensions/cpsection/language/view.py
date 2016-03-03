@@ -380,7 +380,7 @@ class Language(SectionView):
             logging.exception('Error writing i18n config %s', e)
             self.undo()
             self._lang_alert.props.msg = gettext.gettext(
-                'Error writting language configuration (%s)') % e
+                'Error writing language configuration (%s)') % e
             self._lang_alert.show()
             self.props.is_valid = False
         return False
