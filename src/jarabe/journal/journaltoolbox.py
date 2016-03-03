@@ -987,6 +987,8 @@ class FilterToolItem(Gtk.ToolButton):
             invoker.draw_rectangle(cr, self.palette)
 
         return False
+if hasattr(FilterToolItem, 'set_css_name'):
+    FilterToolItem.set_css_name('filtertoolbutton')
 
 
 def set_palette_list(palette_list):
