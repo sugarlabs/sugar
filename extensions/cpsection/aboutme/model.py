@@ -80,14 +80,14 @@ def print_color():
                 fill_tuple = (color, hue)
 
     if stroke_tuple is not None:
-        print _('stroke:   color=%s hue=%s') % (stroke_tuple[0],
+        print ('stroke:   color=%s hue=%s') % (stroke_tuple[0],
                                                 stroke_tuple[1])
     else:
-        print _('stroke:   %s') % (tmp[0])
+        print ('stroke:   %s') % (tmp[0])
     if fill_tuple is not None:
-        print _('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
+        print ('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
     else:
-        print _('fill:     %s') % (tmp[1])
+        print ('fill:     %s') % (tmp[1])
 
 
 def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):
