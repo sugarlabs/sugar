@@ -137,7 +137,7 @@ class EventArea(GObject.GObject):
         self._notify_leave()
 
     def _drag_motion_cb(self, widget, drag_context, x, y, timestamp):
-        drag_context.drag_status(0, timestamp)
+        Gdk.drag_status(drag_context, 0, timestamp)
         self._notify_enter()
         return True
 
