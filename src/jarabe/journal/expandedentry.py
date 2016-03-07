@@ -512,7 +512,19 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
         old_title = self._metadata.get('title', None)
         new_title = self._title.get_text()
-        if old_title != new_title:
+        if new_title == '' or new_title.isspace():
+            alert = Alert()
+            alert.props.title = _('Empty title')
+            alert.props.msg = _('The title cannot be empty')
+            ok_icon = Icon(icon_name='dialog-ok')
+            alert.add_button(Gtk.ResponseType.OK, _('Ok'), ok_icon)
+            ok_icon.show()
+            alert.connect('response', self._title_alert_response_cb)
+            journalwindow.get_journal_window().add_alert(alert)
+            alert.show()
+            new_title = self._title.set_text(old_title)
+
+        elif old_title != new_title:
             self._icon.palette.props.primary_text = new_title
             self._metadata['title'] = new_title
             self._metadata['title_set_by_user'] = '1'
@@ -539,6 +551,9 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
             self._write_entry()
 
         self._update_title_sid = None
+
+    def _title_alert_response_cb(self, alert, response_id):
+        journalwindow.get_journal_window().remove_alert(alert)
 
     def _write_entry(self):
         if self._metadata.get('mountpoint', '/') == '/':
