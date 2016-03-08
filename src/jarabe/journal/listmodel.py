@@ -146,10 +146,10 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if self._updated_callback is not None:
             model.updated.disconnect(self._updated_callback)
         model.write(metadata, update_mtime=False,
-                    ready_callback=self.__reconect_updates_cb)
+                    ready_callback=self.__reconnect_updates_cb)
 
-    def __reconect_updates_cb(self, metadata, filepath, uid):
-        logging.error('__reconect_updates_cb')
+    def __reconnect_updates_cb(self, metadata, filepath, uid):
+        logging.error('__reconnect_updates_cb')
         if self._updated_callback is not None:
             model.updated.connect(self._updated_callback)
 
