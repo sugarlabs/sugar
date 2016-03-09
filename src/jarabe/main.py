@@ -347,6 +347,51 @@ def setup_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 
+def setup_proxy():
+    env_variables = ['http_proxy',
+                     'HTTP_PROXY',
+                     'https_proxy',
+                     'HTTPS_PROXY',
+                     'ftp_proxy',
+                     'FTP_PROXY',
+                     'socks_proxy',
+                     'SOCKS_PROXY']
+    g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
+    if g_mode == 'manual':
+        schemas = ['org.sugarlabs.system.proxy.http',
+                   'org.sugarlabs.system.proxy.https',
+                   'org.sugarlabs.system.proxy.ftp',
+                   'org.sugarlabs.system.proxy.socks']
+        counter = 0
+        for schema in schemas:
+            setting_schema = Gio.Settings(schema)
+
+            if ((env_variables[counter] == 'http_proxy' or
+                    env_variables[counter] == 'HTTP_PROXY') and
+                    setting_schema.get_boolean('use-authentication')):
+                text_to_set = "%s://%s:%s@%s:%s/" % (
+                    env_variables[counter][:-6],
+                    setting_schema.get_string('authentication-user'),
+                    setting_schema.get_string('authentication-password'),
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+            else:
+                text_to_set = "%s://%s:%s/" % (
+                    env_variables[counter][:-6],
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+
+            os.environ[env_variables[counter]] = text_to_set
+            os.environ[env_variables[counter + 1]] = text_to_set
+            counter = counter + 2
+        os.environ['no_proxy'] = ",".join(Gio.Settings(
+            'org.sugarlabs.system.proxy').get_strv('ignore-hosts'))
+
+    elif g_mode == 'none':
+        for each_env_variable in env_variables:
+            os.environ[each_env_variable] = ''
+
+
 def setup_theme():
     settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
@@ -399,6 +444,7 @@ def main():
     setup_timezone()
     setup_fonts()
     setup_theme()
+    setup_proxy()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen

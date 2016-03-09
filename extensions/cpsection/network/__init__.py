@@ -19,4 +19,4 @@ from gettext import gettext as _
 CLASS = 'Network'
 ICON = 'module-network'
 TITLE = _('Network')
-KEYWORDS = ['network', 'jabber', 'radio', 'server']
+KEYWORDS = ['network', 'jabber', 'radio', 'server', 'proxy']

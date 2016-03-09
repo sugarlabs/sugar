@@ -24,6 +24,9 @@ class SectionView(Gtk.VBox):
 
     __gsignals__ = {
         'request-close': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'add-alert': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'set-toolbar-sensitivity': (GObject.SignalFlags.RUN_FIRST, None,
+                                    (GObject.TYPE_BOOLEAN,)),
     }
 
     __gproperties__ = {
@@ -43,6 +46,7 @@ class SectionView(Gtk.VBox):
         self.needs_restart = False
         self.restart_alerts = []
         self.restart_msg = _('Changes require restart')
+        self.show_restart_alert = True
 
     def do_set_property(self, pspec, value):
         if pspec.name == 'is-valid':

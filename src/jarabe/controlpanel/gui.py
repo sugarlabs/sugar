@@ -315,6 +315,10 @@ class ControlPanel(Gtk.Window):
                                    self.__cancellable_section_cb)
         self._section_view.connect('request-close',
                                    self.__close_request_cb)
+        self._section_view.connect('add-alert',
+                                   self.__create_restart_alert_cb)
+        self._section_view.connect('set-toolbar-sensitivity',
+                                   self.__set_toolbar_sensitivity_cb)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_WHITE.get_gdk_color())
 
@@ -368,32 +372,39 @@ class ControlPanel(Gtk.Window):
             self._section_view.apply()
 
         if self._section_view.needs_restart:
-            self._section_toolbar.accept_button.set_sensitive(False)
-            self._section_toolbar.cancel_button.set_sensitive(False)
-            alert = Alert()
-            alert.props.title = _('Warning')
-            alert.props.msg = _('Changes require restart')
-
-            if self._section_view.props.is_cancellable:
-                icon = Icon(icon_name='dialog-cancel')
-                alert.add_button(Gtk.ResponseType.CANCEL,
-                                 _('Cancel changes'), icon)
-                icon.show()
-
-            if self._section_view.props.is_deferrable:
-                icon = Icon(icon_name='dialog-ok')
-                alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
-                icon.show()
-
-            icon = Icon(icon_name='system-restart')
-            alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
-            icon.show()
-
-            self.add_alert(alert)
-            alert.connect('response', self.__response_cb)
-            alert.show()
+            self.__set_toolbar_sensitivity_cb(False)
+            if self._section_view.show_restart_alert:
+                self.__create_restart_alert_cb()
         else:
             self._show_main_view()
+
+    def __set_toolbar_sensitivity_cb(self, value=True, widget=None, event=None):
+        self._section_toolbar.accept_button.set_sensitive(value)
+        self._section_toolbar.cancel_button.set_sensitive(value)
+
+    def __create_restart_alert_cb(self, widget=None, event=None):
+        alert = Alert()
+        alert.props.title = _('Warning')
+        alert.props.msg = self._section_view.restart_msg
+
+        if self._section_view.props.is_cancellable:
+            icon = Icon(icon_name='dialog-cancel')
+            alert.add_button(Gtk.ResponseType.CANCEL,
+                             _('Cancel changes'), icon)
+            icon.show()
+
+        if self._section_view.props.is_deferrable:
+            icon = Icon(icon_name='dialog-ok')
+            alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
+            icon.show()
+
+        icon = Icon(icon_name='system-restart')
+        alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
+        icon.show()
+
+        self.add_alert(alert)
+        alert.connect('response', self.__response_cb)
+        alert.show()
 
     def __response_cb(self, alert, response_id):
         self.remove_alert(alert)
