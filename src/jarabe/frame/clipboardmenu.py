@@ -178,13 +178,19 @@ class ClipboardMenu(Palette):
         jobject = self._copy_to_journal()
         jobject.destroy()
 
-    def _write_to_temp_file(self, data):
+    def _write_to_temp_file(self, data, is_pixbuf):
         tmp_dir = os.path.join(env.get_profile_path(), 'data')
         f, file_path = tempfile.mkstemp(dir=tmp_dir)
+
         try:
-            os.write(f, data)
+            if not is_pixbuf:
+                os.write(f, data)
+            else:
+                options = {}
+                data.savev(file_path, 'bmp', options.keys(), options.values())
         finally:
-            os.close(f)
+            if not is_pixbuf:
+                os.close(f)
         return file_path
 
     def _copy_to_journal(self):
@@ -201,7 +207,7 @@ class ClipboardMenu(Palette):
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format_.get_data())
+                file_path = self._write_to_temp_file(format_.get_data(), False)
                 transfer_ownership = True
                 mime_type = 'text/uri-list'
         else:
@@ -211,7 +217,10 @@ class ClipboardMenu(Palette):
                 transfer_ownership = False
                 mime_type = mime.get_for_file(file_path)
             else:
-                file_path = self._write_to_temp_file(format_.get_data())
+                if most_significant_mime_type == 'image/x-MS-bmp':
+                    file_path = self._write_to_temp_file(format_.get_data(), True)
+                else:
+                    file_path = self._write_to_temp_file(format_.get_data(), False)
                 transfer_ownership = True
                 sniffed_mime_type = mime.get_for_file(file_path)
                 if sniffed_mime_type == 'application/octet-stream':
