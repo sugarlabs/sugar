@@ -372,7 +372,7 @@ class ControlPanel(Gtk.Window):
             self._section_toolbar.cancel_button.set_sensitive(False)
             alert = Alert()
             alert.props.title = _('Warning')
-            alert.props.msg = _('Changes require restart')
+            alert.props.msg = self._section_view.restart_msg
 
             if self._section_view.props.is_cancellable:
                 icon = Icon(icon_name='dialog-cancel')
