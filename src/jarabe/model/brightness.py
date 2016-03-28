@@ -104,17 +104,19 @@ class Brightness(GObject.GObject):
 
     def set_brightness(self, value):
         # do not monitor the external change we are about to trigger
-        if self._monitor_timeout_id is None:
-            self._monitor.handler_block(self._monitor_changed_hid)
+        if self._monitor is not None:
+            if self._monitor_timeout_id is None:
+                self._monitor.handler_block(self._monitor_changed_hid)
 
         self._helper_write('set-brightness', value)
         self.changed_signal.emit(value)
 
         # do monitor again only after the rate has passed
-        if self._monitor_timeout_id is not None:
-            GLib.source_remove(self._monitor_timeout_id)
-        self._monitor_timeout_id = GLib.timeout_add(
-            self._MONITOR_RATE * 2, self.__monitor_timeout_cb)
+        if self._monitor is not None:
+            if self._monitor_timeout_id is not None:
+                GLib.source_remove(self._monitor_timeout_id)
+            self._monitor_timeout_id = GLib.timeout_add(
+                self._MONITOR_RATE * 2, self.__monitor_timeout_cb)
 
         # do not store every change while is still changing
         if self._save_timeout_id is not None:
