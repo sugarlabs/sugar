@@ -1,5 +1,4 @@
-# Copyright (C) 2008 One Laptop Per Child
-# Copyright (C) 2009 Simon Schampijer, James Zaki
+# Copyright (C) 2006-2007, Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,28 +13,3 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-from jarabe.model.screenshot import take_screenshot
-from jarabe.controlpanel.gui import ControlPanel
-
-import StringIO
-import cairo
-import os
-
-from sugar3.graphics import style
-
-from gi.repository import Gdk
-from gi.repository import Gio
-
-BOUND_KEYS = ['<alt>1', 'Print']
-
-
-def handle_key_press(key):
-
-    #buf = _get_screenshot()
-    #print type(buf)
-    #activity_title = take_screenshot()
-    panel = ControlPanel()
-    #panel.show()
-
-    #take_screenshot()

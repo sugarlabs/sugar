@@ -15,22 +15,33 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import dbus
+import cairo
 import logging
+import StringIO
+import tempfile
 from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 
+from sugar3 import env
+
+from sugar3.datastore import datastore
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3.graphics.alert import Alert, TimeoutAlert
+from sugar3.graphics import iconentry
+
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
 from jarabe.controlpanel.toolbar import SectionToolbar
 from jarabe import config
 from jarabe.model import shell
+
 
 _logger = logging.getLogger('ControlPanel')
 
@@ -41,7 +52,10 @@ class ControlPanel(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self)
 
-        self._calculate_max_columns()
+        self.modify_bg(Gtk.StateType.NORMAL,
+                                  style.COLOR_BLACK.get_gdk_color())
+
+        self._set_screensize()
         self.set_border_width(style.LINE_WIDTH)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
@@ -74,72 +88,105 @@ class ControlPanel(Gtk.Window):
         self.add(self._vbox)
         self._vbox.show()
 
-        self.connect('realize', self.__realize_cb)
 
-        self._options = self._get_options()
-        self._current_option = None
+
+        #self.connect('realize', self.__realize_cb)
+
+        #self._options = self._get_options()
+        #self._current_option = None
         self._setup_main()
-        self._setup_section()
+        #self._setup_section()
         self._show_main_view()
-        Gdk.Screen.get_default().connect(
-            'size-changed', self.__size_changed_cb)
+        #Gdk.Screen.get_default().connect(
+        #    'size-changed', self.__size_changed_cb)
 
-        self._busy_count = 0
-        self._selected = []
+        #uf = _get_screenshot()
+        #self._main_view.add(buf)
 
-    def __realize_cb(self, widget):
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.get_window().set_accept_focus(True)
-        # the modal windows counter is updated to disable hot keys - SL#4601
-        shell.get_model().push_modal()
+        #tmp_dir = os.path.join(env.get_profile_path(), 'data')
+        #fd, file_path = tempfile.mkstemp(dir=tmp_dir)
+        #os.close(fd)
 
-    def __size_changed_cb(self, event):
-        self._calculate_max_columns()
 
-    def busy(self):
-        if self._busy_count == 0:
-            self._old_cursor = self.get_window().get_cursor()
-            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
-        self._busy_count += 1
 
-    def unbusy(self):
-        self._busy_count -= 1
-        if self._busy_count == 0:
-            self._set_cursor(self._old_cursor)
+        #Image capture
+        preview_image, activity_title = generate_thumbnail()
+        self._main_view.add(preview_image)
+        preview_image.show()
+
+        self.screenshot_surface, self.file_path = take_screenshot()
+
+
+
+
+
+
+
+        #self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+        #                                     'entry-search')
+        #self.search_entry.add_clear_button()
+        #self.search_entry.connect('activate', self.__search_entry_activate_cb)
+        #self.search_entry.connect('changed', self.__search_entry_changed_cb)
+
+        self._vbox = Gtk.VBox()
+        self._hbox.pack_start(self._vbox, True, True, 0)
+        self._vbox.show()
+
+        #Name label
+        name_label = Gtk.Label()
+        name_label.set_alignment(0.5,1)
+        name_label.set_use_markup(True)
+        name_label.set_markup("<b>"+_('Name')+"</b>")
+        name_label.modify_bg(Gtk.StateType.NORMAL,
+                                  style.COLOR_BLACK.get_gdk_color())
+        name_label.modify_fg(Gtk.StateType.NORMAL, Gdk.color_parse("yellow"))
+
+        self._vbox.pack_start(name_label, True, True, 0)
+
+        name_label.show()
+
+
+
+        # Name entry
+
+        self._name_view = Gtk.EventBox()
+        self._name_view.modify_bg(Gtk.StateType.NORMAL,
+                                  style.COLOR_BLACK.get_gdk_color())
+        self._name_view.show()
+
+
+
+
+        self._search_entry = Gtk.Entry()
+        #self.search_entry.set_alignment(0)
+        halign = Gtk.Alignment.new(0.5, 0, 0, 0)
+        halign.add(self._name_view)
+        halign.show()
+
+        self._vbox.pack_start(halign, True, True, 0)
+        self._name_view.add(self._search_entry)
+        self._search_entry.show()
+        self._search_entry.set_text(_(activity_title))
+
+        #self._search_entry.grab_focus()
+
+        self.show()
+
+
 
     def _set_cursor(self, cursor):
         self.get_window().set_cursor(cursor)
         Gdk.flush()
 
-    def add_alert(self, alert):
-        self._vbox.pack_start(alert, False, False, 0)
-        self._vbox.reorder_child(alert, 2)
-
-    def remove_alert(self, alert):
-        self._vbox.remove(alert)
-
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
         self._main_view.get_child().grab_focus()
 
-    def _calculate_max_columns(self):
-        self._max_columns = int(0.285 * (float(Gdk.Screen.width()) /
-                                         style.GRID_CELL_SIZE - 3))
-        offset = style.GRID_CELL_SIZE
-        width = Gdk.Screen.width() - offset * 2
-        height = Gdk.Screen.height() - offset * 2
+    def _set_screensize(self):
+        width = Gdk.Screen.width() / 4#- offset * 2
+        height = Gdk.Screen.height() / 4#- offset * 2
         self.set_size_request(width, height)
-        if hasattr(self, '_table'):
-            for child in self._table.get_children():
-                child.destroy()
-            self._setup_options()
 
-    def _set_canvas(self, canvas):
-        if self._canvas in self._main_view:
-            self._main_view.remove(self._canvas)
-        if canvas:
-            self._main_view.add(canvas)
-        self._canvas = canvas
 
     def _set_toolbar(self, toolbar):
         if self._toolbar:
@@ -155,399 +202,174 @@ class ControlPanel(Gtk.Window):
 
     def _setup_main(self):
         self._main_toolbar = MainToolbar()
-
-        self._table = Gtk.Table()
-        self._table.set_col_spacings(style.GRID_CELL_SIZE)
-        self._table.set_row_spacings(style.GRID_CELL_SIZE)
-        self._table.set_border_width(style.GRID_CELL_SIZE)
-
-        self._scrolledwindow = Gtk.ScrolledWindow()
-        self._scrolledwindow.set_can_focus(False)
-        self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                        Gtk.PolicyType.AUTOMATIC)
-        self._scrolledwindow.add_with_viewport(self._table)
-        child = self._scrolledwindow.get_child()
-        child.modify_bg(
-            Gtk.StateType.NORMAL, style.COLOR_BLACK.get_gdk_color())
-
-        self._setup_options()
         self._main_toolbar.connect('stop-clicked',
                                    self.__stop_clicked_cb)
-        self._main_toolbar.connect('search-changed',
-                                   self.__search_changed_cb)
-
-    def _setup_options(self):
-        # If the screen width only supports two columns, start
-        # placing from the second row.
-        if self._max_columns == 2:
-            row = 1
-            column = 0
-        else:
-            # About Me and About my computer are hardcoded below to use the
-            # first two slots so we need to leave them free.
-            row = 0
-            column = 2
-
-        options = self._options.keys()
-        options.sort()
-
-        for option in options:
-            sectionicon = _SectionIcon(icon_name=self._options[option]['icon'],
-                                       title=self._options[option]['title'],
-                                       xo_color=self._options[option]['color'],
-                                       pixel_size=style.GRID_CELL_SIZE)
-            sectionicon.connect('button_press_event',
-                                self.__select_option_cb, option)
-            sectionicon.show()
-
-            if option == 'aboutme':
-                self._table.attach(sectionicon, 0, 1, 0, 1)
-            elif option == 'aboutcomputer':
-                self._table.attach(sectionicon, 1, 2, 0, 1)
-            else:
-                self._table.attach(sectionicon,
-                                   column, column + 1,
-                                   row, row + 1)
-                column += 1
-                if column == self._max_columns:
-                    column = 0
-                    row += 1
-
-            self._options[option]['button'] = sectionicon
 
     def _show_main_view(self):
-        if self._section_view is not None:
-            self._section_view.destroy()
-            self._section_view = None
-
         self._set_toolbar(self._main_toolbar)
         self._main_toolbar.show()
-        self._set_canvas(self._scrolledwindow)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
-        self._table.show()
-        self._scrolledwindow.show()
-        entry = self._main_toolbar.get_entry()
-        entry.set_text('')
-        entry.connect('icon-press', self.__clear_icon_pressed_cb)
-        self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
         if event.keyval == Gdk.KEY_Return:
-            if len(self._selected) == 1:
-                self.show_section_view(self._selected[0])
-                return True
+            
+            self.save_screenshot()
+            print 'enter'
+            return True
 
         if event.keyval == Gdk.KEY_Escape:
             if self._toolbar == self._main_toolbar:
                 self.__stop_clicked_cb(None)
                 self.destroy()
-            else:
-                self.__cancel_clicked_cb(None)
             return True
 
         # if the user clicked out of the window - fix SL #3188
         if not self.is_active():
             self.present()
-
-        entry = self._main_toolbar.get_entry()
-        if not entry.has_focus():
-            entry.grab_focus()
         return False
 
-    def __clear_icon_pressed_cb(self, entry, icon_pos, event):
-        self.grab_focus()
-
-    def _update(self, query):
-        self._selected = []
-        for option in self._options:
-            found = False
-            for key in self._options[option]['keywords']:
-                if query.lower() in key.lower():
-                    self._options[option]['button'].set_sensitive(True)
-                    self._selected.append(option)
-                    found = True
-                    break
-            if not found:
-                self._options[option]['button'].set_sensitive(False)
-
-    def _setup_section(self):
-        self._section_toolbar = SectionToolbar()
-        self._section_toolbar.connect('cancel-clicked',
-                                      self.__cancel_clicked_cb)
-        self._section_toolbar.connect('accept-clicked',
-                                      self.__accept_clicked_cb)
-
-    def show_section_view(self, option):
-        self._set_toolbar(self._section_toolbar)
-
-        icon = self._section_toolbar.get_icon()
-        icon.set_from_icon_name(self._options[option]['icon'],
-                                Gtk.IconSize.LARGE_TOOLBAR)
-        icon.props.xo_color = self._options[option]['color']
-        title = self._section_toolbar.get_title()
-        title.set_text(self._options[option]['title'])
-        self._section_toolbar.show()
-
-        self._current_option = option
-
-        mod = __import__('.'.join(('cpsection', option, 'view')),
-                         globals(), locals(), ['view'])
-        view_class = getattr(mod, self._options[option]['view'], None)
-
-        mod = __import__('.'.join(('cpsection', option, 'model')),
-                         globals(), locals(), ['model'])
-        model = ModelWrapper(mod)
-
-        try:
-            self.busy()
-            self._section_view = view_class(model,
-                                            self._options[option]['alerts'])
-
-            self._set_canvas(self._section_view)
-            self._section_view.show()
-        finally:
-            self.unbusy()
-
-        self._section_view.connect('notify::is-valid',
-                                   self.__valid_section_cb)
-        self._section_view.connect('notify::is-cancellable',
-                                   self.__cancellable_section_cb)
-        self._section_view.connect('request-close',
-                                   self.__close_request_cb)
-        self._main_view.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_WHITE.get_gdk_color())
-
-    def set_section_view_auto_close(self):
-        """Automatically close the control panel if there is "nothing to do"
-        """
-        self._section_view.auto_close = True
-
-    def _get_options(self):
-        """Get the available option information from the extensions
-        """
-        options = {}
-
-        path = os.path.join(config.ext_path, 'cpsection')
-        folder = os.listdir(path)
-
-        for item in folder:
-            if os.path.isdir(os.path.join(path, item)) and \
-                    os.path.exists(os.path.join(path, item, '__init__.py')):
-                try:
-                    mod = __import__('.'.join(('cpsection', item)),
-                                     globals(), locals(), [item])
-                    view_class = getattr(mod, 'CLASS', None)
-                    if view_class is not None:
-                        options[item] = {}
-                        options[item]['alerts'] = []
-                        options[item]['view'] = view_class
-                        options[item]['icon'] = getattr(mod, 'ICON', item)
-                        options[item]['title'] = getattr(mod, 'TITLE', item)
-                        options[item]['color'] = getattr(mod, 'COLOR', None)
-                        keywords = getattr(mod, 'KEYWORDS', [])
-                        keywords.append(options[item]['title'].lower())
-                        if item not in keywords:
-                            keywords.append(item)
-                        options[item]['keywords'] = keywords
-                    else:
-                        _logger.debug('no CLASS attribute in %r', item)
-                except Exception:
-                    logging.exception('Exception while loading extension:')
-
-        return options
-
-    def __cancel_clicked_cb(self, widget):
-        self._section_view.undo()
-        self._options[self._current_option]['alerts'] = []
-        self._section_toolbar.accept_button.set_sensitive(True)
-        self._show_main_view()
-
-    def __accept_clicked_cb(self, widget):
-        if hasattr(self._section_view, "apply"):
-            self._section_view.apply()
-
-        if self._section_view.needs_restart:
-            self._section_toolbar.accept_button.set_sensitive(False)
-            self._section_toolbar.cancel_button.set_sensitive(False)
-            alert = Alert()
-            alert.props.title = _('Warning')
-            alert.props.msg = self._section_view.restart_msg
-
-            if self._section_view.props.is_cancellable:
-                icon = Icon(icon_name='dialog-cancel')
-                alert.add_button(Gtk.ResponseType.CANCEL,
-                                 _('Cancel changes'), icon)
-                icon.show()
-
-            if self._section_view.props.is_deferrable:
-                icon = Icon(icon_name='dialog-ok')
-                alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
-                icon.show()
-
-            icon = Icon(icon_name='system-restart')
-            alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
-            icon.show()
-
-            self.add_alert(alert)
-            alert.connect('response', self.__response_cb)
-            alert.show()
-        else:
-            self._show_main_view()
-
-    def __response_cb(self, alert, response_id):
-        self.remove_alert(alert)
-        self._section_toolbar.accept_button.set_sensitive(True)
-        self._section_toolbar.cancel_button.set_sensitive(True)
-        if response_id is Gtk.ResponseType.CANCEL:
-            self._section_view.undo()
-            self._section_view.setup()
-            self._options[self._current_option]['alerts'] = []
-        elif response_id is Gtk.ResponseType.ACCEPT:
-            self._options[self._current_option]['alerts'] = \
-                self._section_view.restart_alerts
-            self._show_main_view()
-        elif response_id is Gtk.ResponseType.APPLY:
-            self.busy()
-            self._section_toolbar.accept_button.set_sensitive(False)
-            self._section_toolbar.cancel_button.set_sensitive(False)
-            get_session_manager().logout()
-            GObject.timeout_add_seconds(4, self.__quit_timeout_cb)
-
-    def __quit_timeout_cb(self):
-        self.unbusy()
-        alert = TimeoutAlert(30)
-        alert.props.title = _('An activity is not responding.')
-        alert.props.msg = _('You may lose unsaved work if you continue.')
-        alert.connect('response', self.__quit_accept_cb)
-
-        self.add_alert(alert)
-        alert.show()
-
-    def __quit_accept_cb(self, alert, response_id):
-        self.remove_alert(alert)
-        if response_id is Gtk.ResponseType.CANCEL:
-            get_session_manager().cancel_shutdown()
-            self._section_toolbar.accept_button.set_sensitive(True)
-            self._section_toolbar.cancel_button.set_sensitive(True)
-        else:
-            self.busy()
-            get_session_manager().shutdown_completed()
-
-    def __select_option_cb(self, button, event, option):
-        self.show_section_view(option)
-
-    def __search_changed_cb(self, maintoolbar, query):
-        self._update(query)
-
     def __stop_clicked_cb(self, widget):
-        shell.get_model().pop_modal()
         self.destroy()
 
     def __close_request_cb(self, widget, event=None):
         self.destroy()
 
-    def __valid_section_cb(self, section_view, pspec):
-        section_is_valid = section_view.props.is_valid
-        self._section_toolbar.accept_button.set_sensitive(section_is_valid)
 
-    def __cancellable_section_cb(self, section_view, pspec):
-        cancellable = section_view.props.is_cancellable
-        self._section_toolbar.cancel_button.set_sensitive(cancellable)
+    def save_screenshot(self):
 
+        print 'save done'
 
-class ModelWrapper(object):
-    def __init__(self, module):
-        self._module = module
-        self._options = {}
-        self._setup()
+        settings = Gio.Settings('org.sugarlabs.user')
+        color = settings.get_string('color')
 
-    def _setup(self):
-        methods = dir(self._module)
-        for method in methods:
-            if method.startswith('get_') and method[4:] != 'color':
-                try:
-                    self._options[method[4:]] = getattr(self._module, method)()
-                except Exception:
-                    self._options[method[4:]] = None
-
-    def __getattr__(self, name):
-        return getattr(self._module, name)
-
-    def undo(self):
-        for key in self._options.keys():
-            method = getattr(self._module, 'set_' + key, None)
-            if method and self._options[key] is not None:
-                try:
-                    method(self._options[key])
-                except Exception, detail:
-                    _logger.debug('Error undo option: %s', detail)
-if hasattr(ControlPanel, 'set_css_name'):
-    ControlPanel.set_css_name('controlpanel')
+        jobject = datastore.create()
+        try:
+            jobject.metadata['title'] = 'hello'#title
+            jobject.metadata['keep'] = '0'
+            jobject.metadata['buddies'] = ''
+            jobject.metadata['preview'] = _get_preview_data(self.screenshot_surface)
+            jobject.metadata['icon-color'] = color
+            jobject.metadata['mime_type'] = 'image/png'
+            jobject.file_path = self.file_path
+            datastore.write(jobject, transfer_ownership=True)
+        finally:
+            jobject.destroy()
+            del jobject
 
 
-class _SectionIcon(Gtk.EventBox):
-    __gtype_name__ = 'SugarSectionIcon'
 
-    __gproperties__ = {
-        'icon-name': (str, None, None, None, GObject.PARAM_READWRITE),
-        'pixel-size': (object, None, None, GObject.PARAM_READWRITE),
-        'xo-color': (object, None, None, GObject.PARAM_READWRITE),
-        'title': (str, None, None, None, GObject.PARAM_READWRITE),
-    }
+def generate_thumbnail():
+    window = Gdk.get_default_root_window()
+    width, height = window.get_width(), window.get_height()
+    thumb_width, thumb_height = style.zoom(200), style.zoom(160)
 
-    def __init__(self, **kwargs):
-        self._icon_name = None
-        self._pixel_size = style.GRID_CELL_SIZE
-        self._xo_color = None
-        self._title = 'No Title'
+    thumb_surface = Gdk.Window.create_similar_surface(
+        window, cairo.CONTENT_COLOR, thumb_width, thumb_height)
 
-        Gtk.EventBox.__init__(self, **kwargs)
+    cairo_context = cairo.Context(thumb_surface)
+    thumb_scale_w = thumb_width * 1.0 / width
+    thumb_scale_h = thumb_height * 1.0 / height
+    cairo_context.scale(thumb_scale_w, thumb_scale_h)
+    Gdk.cairo_set_source_window(cairo_context, window, 0, 0)
+    cairo_context.paint()
 
-        self._vbox = Gtk.VBox()
-        self._icon = Icon(icon_name=self._icon_name,
-                          pixel_size=self._pixel_size,
-                          xo_color=self._xo_color)
-        self._vbox.pack_start(self._icon, expand=False, fill=False, padding=0)
+    link_width, link_height = style.zoom(200), style.zoom(160)
+    link_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                      link_width, link_height)
 
-        self._label = Gtk.Label(label=self._title)
-        self._label.modify_fg(Gtk.StateType.NORMAL,
-                              style.COLOR_WHITE.get_gdk_color())
-        self._vbox.pack_start(self._label, expand=False, fill=False, padding=0)
+    cairo_context = cairo.Context(link_surface)
+    dest_x = style.zoom(0)
+    dest_y = style.zoom(0)
+    cairo_context.set_source_surface(thumb_surface, dest_x, dest_y)
+    thumb_width, thumb_height = style.zoom(200), style.zoom(160)
+    cairo_context.rectangle(dest_x, dest_y, thumb_width, thumb_height)
+    cairo_context.fill()
 
-        self._vbox.set_spacing(style.DEFAULT_SPACING)
-        self.set_visible_window(False)
-        self.set_app_paintable(True)
-        self.set_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+    bg_width, bg_height = style.zoom(200), style.zoom(160)
+    pixbuf_bg = Gdk.pixbuf_get_from_surface(link_surface, 0, 0,
+                                            bg_width, bg_height)
 
-        self.add(self._vbox)
-        self._vbox.show()
-        self._label.show()
-        self._icon.show()
+    preview_image = Gtk.Image()
+    preview_image.set_from_pixbuf(pixbuf_bg)
 
-    def get_icon(self):
-        return self._icon
+    # Default title fix
+    content_title = None
+    shell_model = shell.get_model()
+    zoom_level = shell_model.zoom_level
 
-    def do_set_property(self, pspec, value):
-        if pspec.name == 'icon-name':
-            if self._icon_name != value:
-                self._icon_name = value
-        elif pspec.name == 'pixel-size':
-            if self._pixel_size != value:
-                self._pixel_size = value
-        elif pspec.name == 'xo-color':
-            if self._xo_color != value:
-                self._xo_color = value
-        elif pspec.name == 'title':
-            if self._title != value:
-                self._title = value
+    # TRANS: Nouns of what a screenshot contains
+    if zoom_level == shell_model.ZOOM_MESH:
+        content_title = _('Mesh')
+    elif zoom_level == shell_model.ZOOM_GROUP:
+        content_title = _('Group')
+    elif zoom_level == shell_model.ZOOM_HOME:
+        content_title = _('Home')
+    elif zoom_level == shell_model.ZOOM_ACTIVITY:
+        activity = shell_model.get_active_activity()
+        if activity is not None:
+            content_title = activity.get_title()
+            if content_title is None:
+                content_title = _('Activity')
 
-    def do_get_property(self, pspec):
-        if pspec.name == 'icon-name':
-            return self._icon_name
-        elif pspec.name == 'pixel-size':
-            return self._pixel_size
-        elif pspec.name == 'xo-color':
-            return self._xo_color
-        elif pspec.name == 'title':
-            return self._title
+    if content_title is None:
+        title = _('Screenshot')
+    else:
+        title = _('Screenshot of \"%s\"') % content_title
+
+
+    return preview_image, title
+
+
+def take_screenshot():
+    tmp_dir = os.path.join(env.get_profile_path(), 'data')
+    fd, file_path = tempfile.mkstemp(dir=tmp_dir)
+    os.close(fd)
+
+    window = Gdk.get_default_root_window()
+    width, height = window.get_width(), window.get_height()
+
+    screenshot_surface = Gdk.Window.create_similar_surface(
+        window, cairo.CONTENT_COLOR, width, height)
+
+    cr = cairo.Context(screenshot_surface)
+    Gdk.cairo_set_source_window(cr, window, 0, 0)
+    cr.paint()
+    screenshot_surface.write_to_png(file_path)
+
+    return screenshot_surface, file_path
+
+
+def _get_preview_data(screenshot_surface):
+    screenshot_width = screenshot_surface.get_width()
+    screenshot_height = screenshot_surface.get_height()
+
+    preview_width, preview_height = style.zoom(300), style.zoom(225)
+    preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
+                                         preview_width, preview_height)
+    cr = cairo.Context(preview_surface)
+
+    scale_w = preview_width * 1.0 / screenshot_width
+    scale_h = preview_height * 1.0 / screenshot_height
+    scale = min(scale_w, scale_h)
+
+    translate_x = int((preview_width - (screenshot_width * scale)) / 2)
+    translate_y = int((preview_height - (screenshot_height * scale)) / 2)
+
+    cr.translate(translate_x, translate_y)
+    cr.scale(scale, scale)
+
+    cr.set_source_rgba(1, 1, 1, 0)
+    cr.set_operator(cairo.OPERATOR_SOURCE)
+    cr.paint()
+    cr.set_source_surface(screenshot_surface)
+    cr.paint()
+
+    preview_str = StringIO.StringIO()
+    preview_surface.write_to_png(preview_str)
+    return dbus.ByteArray(preview_str.getvalue())
+
+
+
+
+

@@ -73,6 +73,11 @@ def take_screenshot():
     else:
         title = _('Screenshot of \"%s\"') % content_title
 
+
+    panel = ControlPanel(title)
+    print 'passed'
+    panel = ControlPanel('hye')
+
     jobject = datastore.create()
     try:
         jobject.metadata['title'] = title

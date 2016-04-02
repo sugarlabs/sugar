@@ -18,7 +18,6 @@ from gi.repository import Gtk
 import gettext
 from gi.repository import GObject
 
-
 _ = lambda msg: gettext.dgettext('sugar', msg)
 
 from sugar3.graphics.icon import Icon
@@ -49,26 +48,28 @@ class MainToolbar(Gtk.Toolbar):
         tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
         tool_item.show()
-
-        message = Gtk.Label()
-        message.set_markup("<b>"+gettext.gettext('Save Screenshot')+"</b>")
-        tool_item.add(message)
-        message.show()
-
+        self._search_entry = iconentry.IconEntry()
+        self._search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                              'entry-search')
+        self._search_entry.add_clear_button()
+        self._search_entry.set_width_chars(25)
+        text = _('Search in %s') % _('Settings')
+        self._search_entry.set_placeholder_text(text)
+        self._search_entry.connect('changed', self.__search_entry_changed_cb)
+        tool_item.add(self._search_entry)
+        self._search_entry.show()
 
         self._add_separator(True)
 
-        self.accept = ToolButton(icon_name='dialog-ok')
-        self.accept.set_tooltip(_('Done'))
-        self.insert(self.accept, -1)
-        self.accept.show()
-
         self.stop = ToolButton(icon_name='dialog-cancel')
-        self.stop.set_tooltip(_('Cancel'))
+        self.stop.set_tooltip(_('Done'))
         self.stop.connect('clicked', self.__stop_clicked_cb)
+        self.stop.show()
         self.insert(self.stop, -1)
         self.stop.show()
 
+    def get_entry(self):
+        return self._search_entry
 
     def _add_separator(self, expand=False):
         separator = Gtk.SeparatorToolItem()
