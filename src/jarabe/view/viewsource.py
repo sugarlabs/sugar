@@ -27,7 +27,6 @@ from gi.repository import GObject
 from gi.repository import Pango
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import GdkX11
 from gi.repository import GtkSource
 from gi.repository import GdkPixbuf
 import dbus
@@ -39,7 +38,6 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.alert import ConfirmationAlert
 from sugar3.graphics.alert import NotifyAlert
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.radiotoolbutton import RadioToolButton
@@ -47,7 +45,7 @@ from sugar3.bundle.activitybundle import get_bundle_instance
 from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 from sugar3 import mime
-
+from sugar3.graphics.popwindow import PopWindow
 from jarabe.view import customizebundle
 
 _EXCLUDE_EXTENSIONS = ('.pyc', '.pyo', '.so', '.o', '.a', '.la', '.mo', '~',
@@ -168,52 +166,32 @@ def setup_view_source(activity):
     view_source.show()
 
 
-class ViewSource(Gtk.Window):
+class ViewSource(PopWindow):
     __gtype_name__ = 'SugarViewSource'
 
     def __init__(self, window_xid, bundle_path, document_path,
                  sugar_toolkit_path, title):
-        Gtk.Window.__init__(self)
+        PopWindow.__init__(self, window_xid=window_xid)
 
         _logger.debug('ViewSource paths: %r %r %r', bundle_path,
                       document_path, sugar_toolkit_path)
-
-        self.set_decorated(False)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_has_resize_grip(False)
-
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
-        self.set_size_request(width, height)
-
         self._parent_window_xid = window_xid
         self._sugar_toolkit_path = sugar_toolkit_path
         self._gdk_window = self.get_root_window()
-
-        self.connect('realize', self.__realize_cb)
+        self.props.size = PopWindow.FULLSCREEN
         self.connect('destroy', self.__destroy_cb, document_path)
-        self.connect('key-press-event', self.__key_press_event_cb)
+        self.build_toolbar(title, bundle_path, document_path,
+                           sugar_toolkit_path)
 
-        self._vbox = Gtk.VBox()
-        self.add(self._vbox)
-        self._vbox.show()
-
-        toolbar = Toolbar(title, bundle_path, document_path,
-                          sugar_toolkit_path)
-        self._vbox.pack_start(toolbar, False, True, 0)
-        toolbar.connect('stop-clicked', self.__stop_clicked_cb)
-        toolbar.connect('source-selected', self.__source_selected_cb)
-        toolbar.show()
-
+        self.get_title_box().props.title = self.activity_title_text
         pane = Gtk.HPaned()
         self._vbox.pack_start(pane, True, True, 0)
         pane.show()
-
+        logging.debug('Checkpoint 1')
         self._selected_bundle_file = None
         self._selected_sugar_file = None
         file_name = ''
-
+        self.show()
         activity_bundle = get_bundle_instance(bundle_path)
         command = activity_bundle.get_command()
 
@@ -271,6 +249,81 @@ class ViewSource(Gtk.Window):
         if document_path is not None:
             self._select_source(document_path)
 
+    def build_toolbar(self, title, bundle_path, document_path,
+                      sugar_toolkit_path):
+        document_button = None
+        self.bundle_path = bundle_path
+        self.sugar_toolkit_path = sugar_toolkit_path
+
+        self._add_separator()
+
+        activity_bundle = get_bundle_instance(bundle_path)
+        file_name = activity_bundle.get_icon()
+        activity_name = activity_bundle.get_name()
+
+        if document_path is not None and os.path.exists(document_path):
+            document_button = DocumentButton(file_name, document_path,
+                                             activity_name, title)
+            document_button.connect('toggled', self.__button_toggled_cb,
+                                    document_path)
+            self.get_title_box().insert(document_button, 0)
+            document_button.show()
+            self._add_separator()
+
+        if bundle_path is not None and os.path.exists(bundle_path):
+            activity_button = DocumentButton(file_name, bundle_path,
+                                             activity_name, title, bundle=True)
+            icon = Icon(file=file_name,
+                        pixel_size=style.STANDARD_ICON_SIZE,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
+            activity_button.set_icon_widget(icon)
+            icon.show()
+            if document_button is not None:
+                activity_button.props.group = document_button
+            activity_button.props.tooltip = _('Activity Bundle Source')
+            activity_button.connect('toggled', self.__button_toggled_cb,
+                                    bundle_path)
+            self.get_title_box().insert(activity_button, 0)
+            activity_button.show()
+            self._add_separator()
+
+        if sugar_toolkit_path is not None:
+            sugar_button = RadioToolButton()
+            icon = Icon(icon_name='computer-xo',
+                        pixel_size=style.STANDARD_ICON_SIZE,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
+            sugar_button.set_icon_widget(icon)
+            icon.show()
+            if document_button is not None:
+                sugar_button.props.group = document_button
+            else:
+                sugar_button.props.group = activity_button
+            sugar_button.props.tooltip = _('Sugar Toolkit Source')
+            sugar_button.connect('toggled', self.__button_toggled_cb,
+                                 sugar_toolkit_path)
+            self.get_title_box().insert(sugar_button, 0)
+            sugar_button.show()
+            self._add_separator()
+
+        self.activity_title_text = _('View source: %s') % title
+        self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
+
+    def _add_separator(self, expand=False):
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        self.get_title_box().insert(separator, 0)
+        separator.show()
+
+    def __button_toggled_cb(self, button, path):
+        if button.props.active:
+            self.__source_selected(path)
+        if path == self.sugar_toolkit_path:
+            self.get_title_box().props.title = self.sugar_toolkit_title_text
+        else:  # Use activity title for either bundle path or document path
+            self.get_title_box().props.title = self.activity_title_text
+
     def add_alert(self, alert):
         self._vbox.pack_start(alert, False, False, 0)
         self._vbox.reorder_child(alert, 1)
@@ -286,20 +339,10 @@ class ViewSource(Gtk.Window):
         metrics = pango_font.get_metrics()
         return Pango.PIXELS(metrics.get_approximate_char_width()) * char_count
 
-    def __realize_cb(self, widget):
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        window = self.get_window()
-        window.set_accept_focus(True)
-
-        display = Gdk.Display.get_default()
-        parent = GdkX11.X11Window.foreign_new_for_display(
-            display, self._parent_window_xid)
-        window.set_transient_for(parent)
-
     def __stop_clicked_cb(self, widget):
         self.destroy()
 
-    def __source_selected_cb(self, widget, path):
+    def __source_selected(self, path):
         self._select_source(path)
 
     def _select_source(self, path):
@@ -332,11 +375,6 @@ class ViewSource(Gtk.Window):
             os.unlink(document_path)
 
         self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
-
-    def __key_press_event_cb(self, window, event):
-        keyname = Gdk.keyval_name(event.keyval)
-        if keyname == 'Escape':
-            self.destroy()
 
     def __file_selected_cb(self, file_viewer, file_path):
         if file_path is not None and os.path.isfile(file_path):
@@ -495,122 +533,6 @@ class DocumentButton(RadioToolButton):
     def __internal_save_error_cb(self, err):
         _logger.debug('Error saving Source object to datastore: %s', err)
         self._jobject.destroy()
-
-
-class Toolbar(Gtk.Toolbar):
-    __gtype_name__ = 'SugarViewSourceToolbar'
-
-    __gsignals__ = {
-        'stop-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'source-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                            ([str])),
-    }
-
-    def __init__(self, title, bundle_path, document_path, sugar_toolkit_path):
-        Gtk.Toolbar.__init__(self)
-
-        document_button = None
-        self.bundle_path = bundle_path
-        self.sugar_toolkit_path = sugar_toolkit_path
-
-        self._add_separator()
-
-        activity_bundle = get_bundle_instance(bundle_path)
-        file_name = activity_bundle.get_icon()
-        activity_name = activity_bundle.get_name()
-
-        if document_path is not None and os.path.exists(document_path):
-            document_button = DocumentButton(file_name, document_path,
-                                             activity_name, title)
-            document_button.connect('toggled', self.__button_toggled_cb,
-                                    document_path)
-            self.insert(document_button, -1)
-            document_button.show()
-            self._add_separator()
-
-        if bundle_path is not None and os.path.exists(bundle_path):
-            activity_button = DocumentButton(file_name, bundle_path,
-                                             activity_name, title, bundle=True)
-            icon = Icon(file=file_name,
-                        pixel_size=style.STANDARD_ICON_SIZE,
-                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
-                        stroke_color=style.COLOR_WHITE.get_svg())
-            activity_button.set_icon_widget(icon)
-            icon.show()
-            if document_button is not None:
-                activity_button.props.group = document_button
-            activity_button.props.tooltip = _('Activity Bundle Source')
-            activity_button.connect('toggled', self.__button_toggled_cb,
-                                    bundle_path)
-            self.insert(activity_button, -1)
-            activity_button.show()
-            self._add_separator()
-
-        if sugar_toolkit_path is not None:
-            sugar_button = RadioToolButton()
-            icon = Icon(icon_name='computer-xo',
-                        pixel_size=style.STANDARD_ICON_SIZE,
-                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
-                        stroke_color=style.COLOR_WHITE.get_svg())
-            sugar_button.set_icon_widget(icon)
-            icon.show()
-            if document_button is not None:
-                sugar_button.props.group = document_button
-            else:
-                sugar_button.props.group = activity_button
-            sugar_button.props.tooltip = _('Sugar Toolkit Source')
-            sugar_button.connect('toggled', self.__button_toggled_cb,
-                                 sugar_toolkit_path)
-            self.insert(sugar_button, -1)
-            sugar_button.show()
-            self._add_separator()
-
-        self.activity_title_text = _('View source: %s') % title
-        self.sugar_toolkit_title_text = _('View source: %r') % 'Sugar Toolkit'
-        self.label = Gtk.Label()
-        self.label.set_markup('<b>%s</b>' % self.activity_title_text)
-        self.label.set_ellipsize(style.ELLIPSIZE_MODE_DEFAULT)
-        self.label.set_alignment(0, 0.5)
-        self._add_widget(self.label, expand=True)
-
-        self._add_separator(False)
-
-        stop = ToolButton(icon_name='dialog-cancel')
-        stop.set_tooltip(_('Close'))
-        stop.connect('clicked', self.__stop_clicked_cb)
-        self.insert(stop, -1)
-        stop.show()
-
-    def _add_separator(self, expand=False):
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.DEFAULT_SPACING, -1)
-        self.insert(separator, -1)
-        separator.show()
-
-    def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
-        tool_item.set_expand(expand)
-
-        tool_item.add(widget)
-        widget.show()
-
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-    def __stop_clicked_cb(self, button):
-        self.emit('stop-clicked')
-
-    def __button_toggled_cb(self, button, path):
-        if button.props.active:
-            self.emit('source-selected', path)
-        if path == self.sugar_toolkit_path:
-            self.label.set_markup('<b>%s</b>' % self.sugar_toolkit_title_text)
-        else:  # Use activity title for either bundle path or document path
-            self.label.set_markup('<b>%s</b>' % self.activity_title_text)
 
 
 class FileViewer(Gtk.ScrolledWindow):

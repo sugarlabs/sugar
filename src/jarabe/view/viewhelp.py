@@ -21,20 +21,17 @@ import os
 import json
 
 from gi.repository import Gtk
-from gi.repository import GObject
-from gi.repository import Gdk
 from gi.repository import WebKit
-from gi.repository import GdkX11
 from gi.repository import SoupGNOME
 from gi.repository import Gio
 
 from sugar3 import env
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import get_icon_file_name
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.bundle.activitybundle import get_bundle_instance
+from sugar3.graphics.popwindow import PopWindow
 from jarabe.model import shell
 
 
@@ -140,7 +137,7 @@ def setup_view_help(activity):
     viewhelp.show()
 
 
-class ViewHelp(Gtk.Window):
+class ViewHelp(PopWindow):
     parent_window_xid = None
 
     def __init__(self, activity, window_xid):
@@ -150,31 +147,10 @@ class ViewHelp(Gtk.Window):
         has_local_help = url is not None
         self._mode = _MODE_HELP if has_local_help else _MODE_SOCIAL_HELP
 
-        Gtk.Window.__init__(self)
-        box = Gtk.Box()
-        box.set_orientation(Gtk.Orientation.VERTICAL)
-        self.add(box)
-        box.show()
+        PopWindow.__init__(self, window_xid=window_xid)
+        self._parent_window_xid = window_xid
 
-        self.set_decorated(False)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_has_resize_grip(False)
-
-        width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 2
-        height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 2
-        self.set_size_request(width, height)
-
-        self.connect('realize', self.__realize_cb)
-        self.connect('hide', self.__hide_cb)
-        self.connect('key-press-event', self.__key_press_event_cb)
-
-        toolbar = Toolbar(title, has_local_help)
-        box.pack_start(toolbar, False, False, 0)
-        toolbar.show()
-        toolbar.connect('stop-clicked', self.__stop_clicked_cb)
-        toolbar.connect('mode-changed', self.__mode_changed_cb)
-
+        self.build_toolbar(title, has_local_help)
         session = WebKit.get_default_session()
         cookie_jar = SoupGNOME.CookieJarSqlite(
             filename=os.path.join(env.get_profile_path(),
@@ -187,12 +163,15 @@ class ViewHelp(Gtk.Window):
         self._webview.connect('resource-request-starting',
                               self._resource_request_starting_cb)
 
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.add(self._webview)
-        scrolled_window.show()
+        self._scroll_window = Gtk.ScrolledWindow()
+        self._scroll_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                       Gtk.PolicyType.AUTOMATIC)
 
-        box.pack_start(scrolled_window, True, True, 0)
+        self._scroll_window.add(self._webview)
+        self._vbox.pack_start(self._scroll_window, True, True, 0)
+        self._scroll_window.show()
         self._webview.show()
+        self.show()
 
         language = self._get_current_language()
         if has_local_help:
@@ -203,6 +182,58 @@ class ViewHelp(Gtk.Window):
         self._webview.connect(
             'notify::load-status', self.__load_status_changed_cb)
         self._load_mode(self._mode)
+
+    def build_toolbar(self, activity_name, has_local_help):
+        self._add_separator(False)
+
+        if has_local_help and get_social_help_server():
+            help_button = RadioToolButton()
+            icon = Icon(icon_name='toolbar-help',
+                        pixel_size=style.STANDARD_ICON_SIZE,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
+            help_button.set_icon_widget(icon)
+            icon.show()
+            help_button.props.tooltip = _('Help Manual')
+            help_button.connect('toggled', self.__button_toggled_cb,
+                                _MODE_HELP)
+            self.get_title_box().insert(help_button, 0)
+            help_button.show()
+            self._add_separator(False)
+
+            social_help_button = RadioToolButton()
+            icon = Icon(icon_name='toolbar-social-help',
+                        pixel_size=style.STANDARD_ICON_SIZE,
+                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
+                        stroke_color=style.COLOR_WHITE.get_svg())
+            social_help_button.set_icon_widget(icon)
+            icon.show()
+            social_help_button.props.tooltip = _('Social Help')
+            social_help_button.props.group = help_button
+            social_help_button.connect('toggled', self.__button_toggled_cb,
+                                       _MODE_SOCIAL_HELP)
+            self.get_title_box().insert(social_help_button, 0)
+            social_help_button.show()
+            self._add_separator(False)
+
+        title = _('Help: %s') % activity_name
+        self.get_title_box().props.title = title
+
+        self._add_separator(False)
+
+    def __button_toggled_cb(self, button, mode):
+        if button.props.active:
+            self.__mode_changed_cb(mode)
+
+    def _add_separator(self, expand=False):
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.DEFAULT_SPACING, -1)
+        self.get_title_box().insert(separator, 0)
+        separator.show()
 
     def _resource_request_starting_cb(self, webview, web_frame, web_resource,
                                       request, response):
@@ -219,11 +250,7 @@ class ViewHelp(Gtk.Window):
     def __stop_clicked_cb(self, widget):
         self.destroy()
 
-    def __key_press_event_cb(self, window, event):
-        if event.keyval == Gdk.KEY_Escape:
-            self.__stop_clicked_cb(None)
-
-    def __mode_changed_cb(self, toolbar, mode):
+    def __mode_changed_cb(self, mode):
         if self._mode == _MODE_HELP:
             self._help_url = self._webview.props.uri
         else:
@@ -253,19 +280,6 @@ class ViewHelp(Gtk.Window):
            and _LOADING_ICON in self._webview.props.uri:
             self._webview.load_uri(self._social_help_url)
 
-    def __realize_cb(self, widget):
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        window = self.get_window()
-        window.set_accept_focus(True)
-        display = Gdk.Display.get_default()
-        parent = GdkX11.X11Window.foreign_new_for_display(
-            display, self.parent_window_xid)
-        window.set_transient_for(parent)
-        shell.get_model().push_modal()
-
-    def __hide_cb(self, widget):
-        shell.get_model().pop_modal()
-
     def _get_current_language(self):
         locale = os.environ.get('LANG')
         return locale.split('.')[0].split('_')[0].lower()
@@ -279,84 +293,3 @@ class ViewHelp(Gtk.Window):
             path = os.path.join(activity_path, 'html', help_file)
 
         return path
-
-
-class Toolbar(Gtk.Toolbar):
-
-    __gsignals__ = {
-        'stop-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'mode-changed': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
-    }
-
-    def __init__(self, activity_name, has_local_help):
-        Gtk.Toolbar.__init__(self)
-
-        self._add_separator(False)
-
-        if has_local_help and get_social_help_server():
-            help_button = RadioToolButton()
-            icon = Icon(icon_name='toolbar-help',
-                        pixel_size=style.STANDARD_ICON_SIZE,
-                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
-                        stroke_color=style.COLOR_WHITE.get_svg())
-            help_button.set_icon_widget(icon)
-            icon.show()
-            help_button.props.tooltip = _('Help Manual')
-            help_button.connect('toggled', self.__button_toggled_cb,
-                                _MODE_HELP)
-            self.insert(help_button, -1)
-            help_button.show()
-            self._add_separator(False)
-
-            social_help_button = RadioToolButton()
-            icon = Icon(icon_name='toolbar-social-help',
-                        pixel_size=style.STANDARD_ICON_SIZE,
-                        fill_color=style.COLOR_TRANSPARENT.get_svg(),
-                        stroke_color=style.COLOR_WHITE.get_svg())
-            social_help_button.set_icon_widget(icon)
-            icon.show()
-            social_help_button.props.tooltip = _('Social Help')
-            social_help_button.props.group = help_button
-            social_help_button.connect('toggled', self.__button_toggled_cb,
-                                       _MODE_SOCIAL_HELP)
-            self.insert(social_help_button, -1)
-            social_help_button.show()
-            self._add_separator(False)
-
-        title = _('Help: %s') % activity_name
-        self._label = Gtk.Label()
-        self._label.set_markup('<b>%s</b>' % title)
-        self._label.set_alignment(0, 0.5)
-        self._add_widget(self._label)
-
-        self._add_separator(True)
-
-        stop = ToolButton(icon_name='dialog-cancel')
-        stop.set_tooltip(_('Close'))
-        stop.connect('clicked', self.__stop_clicked_cb)
-        self.insert(stop, -1)
-        stop.show()
-
-    def __stop_clicked_cb(self, widget):
-        self.emit('stop-clicked')
-
-    def __button_toggled_cb(self, button, mode):
-        if button.props.active:
-            self.emit('mode-changed', mode)
-
-    def _add_widget(self, widget):
-        tool_item = Gtk.ToolItem()
-        tool_item.add(widget)
-        widget.show()
-        self.insert(tool_item, -1)
-        tool_item.show()
-
-    def _add_separator(self, expand=False):
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
-        if expand:
-            separator.set_expand(True)
-        else:
-            separator.set_size_request(style.DEFAULT_SPACING, -1)
-        self.insert(separator, -1)
-        separator.show()
