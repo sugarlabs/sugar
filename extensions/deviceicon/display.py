@@ -34,7 +34,7 @@ from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import brightness
-from jarabe.model.screenshot import take_screenshot
+from jarabe.screenshotpanel.gui import ScreenshotPanel
 from jarabe import frame
 
 
@@ -230,7 +230,7 @@ class DisplayPalette(Palette):
     def __take_screenshot_cb(self, frame_):
         if frame_.is_visible():
             return True
-        take_screenshot()
+        panel = ScreenshotPanel()
         frame_.show()
         return False
 
