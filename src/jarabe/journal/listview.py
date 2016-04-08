@@ -185,10 +185,10 @@ class BaseListView(Gtk.Bin):
         self.cell_icon = None
         self._title_column = None
         self.sort_column = None
-        self._add_columns()
-        scrolling_detector = ScrollingDetector(self._scrolled_window)
-        self.tree_view.connect_to_scroller(scrolling_detector)
+        self._scrolling_detector = ScrollingDetector(self._scrolled_window)
+        self.tree_view.connect_to_scroller(self._scrolling_detector)
 
+        self._add_columns()
         self.enable_drag_and_copy()
 
         # Auto-update stuff
@@ -250,6 +250,7 @@ class BaseListView(Gtk.Bin):
 
         cell_favorite = CellRendererFavorite()
         cell_favorite.connect('clicked', self._favorite_clicked_cb)
+        cell_favorite.connect_to_scroller(self._scrolling_detector)
 
         self._fav_column = Gtk.TreeViewColumn()
         self._fav_column.props.sizing = Gtk.TreeViewColumnSizing.FIXED
@@ -260,6 +261,7 @@ class BaseListView(Gtk.Bin):
         self.tree_view.append_column(self._fav_column)
 
         self.cell_icon = CellRendererActivityIcon()
+        self.cell_icon.connect_to_scroller(self._scrolling_detector)
 
         column = Gtk.TreeViewColumn()
         self.tree_view.icon_activity_column = column

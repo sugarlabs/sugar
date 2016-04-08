@@ -72,18 +72,20 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         for i in range(desktop.get_number_of_views()):
             column = Gtk.TreeViewColumn()
-            cell = CellRendererFavorite(i)
-            cell.connect('clicked', self.__favorite_clicked_cb)
-            column.pack_start(cell, True)
-            column.set_cell_data_func(cell, self.__favorite_set_data_cb)
+            self.cell_favorite = CellRendererFavorite(i)
+            self.cell_favorite.connect('clicked', self.__favorite_clicked_cb)
+            column.pack_start(self.cell_favorite, True)
+            column.set_cell_data_func(self.cell_favorite,
+                                      self.__favorite_set_data_cb)
             self.append_column(column)
 
-        cell_icon = CellRendererActivityIcon()
-        cell_icon.connect('clicked', self.__icon_clicked_cb)
+        self.cell_icon = CellRendererActivityIcon()
+        self.cell_icon.connect('clicked', self.__icon_clicked_cb)
 
         column = Gtk.TreeViewColumn()
-        column.pack_start(cell_icon, True)
-        column.add_attribute(cell_icon, 'file-name', self._model.column_icon)
+        column.pack_start(self.cell_icon, True)
+        column.add_attribute(self.cell_icon, 'file-name',
+                             self._model.column_icon)
         self.append_column(column)
 
         self._icon_column = column
@@ -235,6 +237,8 @@ class ActivitiesTreeView(Gtk.TreeView):
     def connect_to_scroller(self, scrolled):
         scrolled.connect('scroll-start', self._scroll_start_cb)
         scrolled.connect('scroll-end', self._scroll_end_cb)
+        self.cell_icon.connect_to_scroller(scrolled)
+        self.cell_favorite.connect_to_scroller(scrolled)
 
     def _scroll_start_cb(self, event):
         self._invoker.detach()
