@@ -33,6 +33,7 @@ class TimeZone(SectionView):
         self.restart_alerts = alerts
         self._zone_sid = 0
         self._cursor_change_handler = None
+        self._initial_timezone = None
 
         self.set_border_width(style.DEFAULT_SPACING * 2)
         self.set_spacing(style.DEFAULT_SPACING)
@@ -86,9 +87,9 @@ class TimeZone(SectionView):
         self.setup()
 
     def setup(self):
-        zone = self._model.get_timezone()
+        self._initial_timezone = self._model.get_timezone()
         for row in self._store:
-            if zone == row[0]:
+            if self._initial_timezone == row[0]:
                 self._treeview.set_cursor(row.path, self._timezone_column,
                                           False)
                 self._treeview.scroll_to_cell(row.path, self._timezone_column,
@@ -100,6 +101,7 @@ class TimeZone(SectionView):
             'cursor-changed', self.__zone_changed_cd)
 
     def undo(self):
+        self._model.set_timezone(self._initial_timezone)
         self._treeview.disconnect(self._cursor_change_handler)
         self._model.undo()
         self._zone_alert.hide()
