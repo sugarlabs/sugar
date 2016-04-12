@@ -24,6 +24,7 @@ import os
 from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import Gtk
+from gi.repository import Gdk
 
 from sugar3.graphics import style
 from sugar3.graphics.tray import HTray
@@ -50,6 +51,10 @@ from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.frame.notification import NotificationIcon
 from jarabe.frame.notification import NotificationButton
 from jarabe.frame.notification import NotificationPulsingIcon
+from jarabe.frame.clipboardmenu import ClipboardMenu
+from jarabe.frame.clipboardobject import ClipboardObject
+from jarabe.frame.clipboardtray import _ContextMap
+from jarabe.frame.clipboardobject import Format
 import jarabe.frame
 
 
@@ -63,11 +68,23 @@ class ActivityButton(RadioToolButton):
         self._home_activity = home_activity
         self._notify_launch_hid = None
 
+        self._context_map = _ContextMap()
+        self._cb_object = None
         self._icon = NotificationPulsingIcon()
         self._icon.props.base_color = home_activity.get_icon_color()
         self._icon.props.pulse_color = \
             XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                style.COLOR_TOOLBAR_GREY.get_svg()))
+        if self._home_activity.is_journal():
+            self._icon.drag_dest_set(Gtk.DestDefaults.ALL,
+                                     [], Gdk.DragAction.COPY)
+            self._icon.drag_dest_add_text_targets()
+            self._icon.drag_dest_add_image_targets()
+            self._icon.drag_dest_add_uri_targets()
+            self._icon.connect('drag_drop', self.__drag_drop_cb)
+            self._icon.connect('drag_data_received',
+                               self.__journal_drag_data_received_cb)
+
         if home_activity.get_icon_path():
             self._icon.props.file = home_activity.get_icon_path()
         else:
@@ -89,6 +106,49 @@ class ActivityButton(RadioToolButton):
                 'notify::launch-status', self.__notify_launch_status_cb)
         elif home_activity.props.launch_status == shell.Activity.LAUNCH_FAILED:
             self._on_failed_launch()
+
+    def __drag_drop_cb(self, widget, context, x, y, time):
+        context_targets = context.list_targets()
+
+        self._context_map = _ContextMap()
+        self._context_map.add_context(context, 0, len(context_targets))
+
+        self._cb_object = ClipboardObject(0, "")
+
+        for target in context_targets:
+            if str(target) not in ('TIMESTAMP', 'TARGETS', 'MULTIPLE'):
+                widget.drag_get_data(context, target, time)
+
+        Gdk.drop_finish(context, True, Gtk.get_current_event_time())
+        if hasattr(self, "_cb_object") and self._cb_object is not None:
+            cb_menu = ClipboardMenu(self._cb_object)
+            cb_menu._copy_to_journal()
+            self._cb_object = None
+            self._context_map = None
+            logging.debug('Saved to Journal')
+
+        return True
+
+    def __journal_drag_data_received_cb(self, widget, context, x, y, selection,
+                                        targetType, time):
+        data = None
+        if selection.get_pixbuf() is not None:
+            data = selection.get_pixbuf()
+        if len(selection.get_uris()) != 0:
+            data = selection.get_uris()[0]
+        if selection.get_text() is not None:
+            data = selection.get_text()
+        if data is None:
+            data = selection.get_data()
+
+        if (data is not None and hasattr(self, "_cb_object") and
+                self._cb_object is not None):
+            mime_type = selection.get_data_type().name()
+            cb_format = Format(mime_type, data, on_disk=False)
+            self._cb_object.add_format(cb_format)
+
+        logging.debug('ActivityTray: got data for target')
+        Gdk.drop_finish(context, True, Gtk.get_current_event_time())
 
     def create_palette(self):
         if self._home_activity.is_journal():
