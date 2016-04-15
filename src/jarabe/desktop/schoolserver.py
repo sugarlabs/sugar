@@ -25,6 +25,10 @@ import random
 import time
 import uuid
 import sys
+import urllib2
+import re
+import json
+import subprocess
 
 from gi.repository import Gio
 
@@ -33,6 +37,7 @@ from sugar3.profile import get_profile
 from sugar3.profile import get_nick_name
 
 _REGISTER_URL = 'http://schoolserver:8080/'
+_SERVER_DB_URL = 'http://schoolserver:5000/'
 _REGISTER_TIMEOUT = 8
 _OFW_TREE = '/ofw'
 _PROC_TREE = '/proc/device-tree'
@@ -56,7 +61,25 @@ def _generate_serial_number():
     return serial
 
 
-def _store_identifiers(serial_number, uuid_, backup_url):
+def _get_history_for_serial(serial_number):
+    identifier_path = os.path.join(env.get_profile_path(), 'identifiers')
+    if not os.path.exists(identifier_path):
+        os.mkdir(identifier_path)
+
+    file_path = os.path.join(identifier_path, 'server_history')
+    if os.path.exists(file_path):
+        json_file = open(file_path, 'r')
+        data = json.loads(json_file.read())
+        json_file.close()
+        if serial_number in data:
+            return (True, data[serial_number])
+        else:
+            return (False, None)
+    else:
+        return (False, None)
+
+
+def _store_identifiers(serial_number, uuid_, jabber_server, backup_url):
     """  Stores the serial number, uuid and backup_url
     in the identifier folder inside the profile directory
     so that these identifiers can be used for backup. """
@@ -80,8 +103,25 @@ def _store_identifiers(serial_number, uuid_, backup_url):
     if os.path.exists(os.path.join(identifier_path, 'backup_url')):
         os.remove(os.path.join(identifier_path, 'backup_url'))
     backup_url_file = open(os.path.join(identifier_path, 'backup_url'), 'w')
-    backup_url_file.write(backup_url)
+    backup_url_file.write(jabber_server)
     backup_url_file.close()
+
+    file_path = os.path.join(identifier_path, 'server_history')
+    if os.path.exists(file_path):
+        server_history_file = open(file_path, "r")
+        data = json.load(server_history_file)
+        server_history_file.close()
+        data[serial_number] = {}
+        data[serial_number]["uuid"] = uuid_
+        data[serial_number]["backup_url"] = backup_url
+    else:
+        data = {}
+        data[serial_number] = {}
+        data[serial_number]["uuid"] = uuid_
+        data[serial_number]["backup_url"] = backup_url
+    server_history_file = open(file_path, 'w+')
+    server_history_file.write(json.dumps(data))
+    server_history_file.close()
 
 
 class RegisterError(Exception):
@@ -107,9 +147,12 @@ class _TimeoutTransport(xmlrpclib.Transport):
         return _TimeoutHTTP(host, timeout=_REGISTER_TIMEOUT)
 
 
-def register_laptop(url=_REGISTER_URL):
+def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
 
     profile = get_profile()
+    new_registration_required = True
+    backup_url = ''
+    server_html = ''
 
     if _have_ofw_tree():
         sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
@@ -127,39 +170,79 @@ def register_laptop(url=_REGISTER_URL):
 
     settings = Gio.Settings('org.sugarlabs.collaboration')
     jabber_server = settings.get_string('jabber-server')
-    _store_identifiers(sn, uuid_, jabber_server)
 
+    # Check server for registration
     if jabber_server:
+        db_url = 'http://' + jabber_server + ':5000/'
         url = 'http://' + jabber_server + ':8080/'
-
-    if sys.hexversion < 0x2070000:
-        server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
-    else:
-        socket.setdefaulttimeout(_REGISTER_TIMEOUT)
-        server = xmlrpclib.ServerProxy(url)
     try:
-        data = server.register(sn, nick, uuid_, profile.pubkey)
-    except (xmlrpclib.Error, TypeError, socket.error):
-        logging.exception('Registration: cannot connect to server')
-        raise RegisterError(_('Cannot connect to the server.'))
-    finally:
-        socket.setdefaulttimeout(None)
+        response = urllib2.urlopen(db_url)
+        server_html = response.read()
+    except (urllib2.URLError, urllib2.HTTPError):
+        logging.exception('Registration: cannot connect to xs-authserver')
 
-    if data['success'] != 'OK':
-        logging.error('Registration: server could not complete request: %s',
-                      data['error'])
-        raise RegisterError(_('The server could not complete the request.'))
+    if server_html and profile.pubkey in server_html:
+        new_registration_required = False
+        registered_laptops = re.findall(r'{.+}', server_html)
+        for laptop in registered_laptops:
+            if profile.pubkey in laptop:
+                string_for_json = laptop.replace("&#39;", "\"").replace(
+                    " u\"", "\"")
+                data = json.loads(string_for_json)
+                history_found, data_ = _get_history_for_serial(data["serial"])
+                new_registration_required = not history_found
+                if history_found:
+                    uuid_ = data_["uuid"]
+                    sn = data["serial"]
+                    backup_url = data_["backup_url"]
+                    try:
+                        jabber_server = re.search(r'\@(.*)\:',
+                                                  backup_url).group(1)
+                    except AttributeError:
+                        pass
 
-    settings.set_string('jabber-server', data['jabberserver'])
+    if new_registration_required:
+        if sys.hexversion < 0x2070000:
+            server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
+        else:
+            socket.setdefaulttimeout(_REGISTER_TIMEOUT)
+            server = xmlrpclib.ServerProxy(url)
+        try:
+            data = server.register(sn, nick, uuid_, profile.pubkey)
+        except (xmlrpclib.Error, TypeError, socket.error):
+            logging.exception('Registration: cannot connect to server')
+            raise RegisterError(_('Cannot connect to the server.'))
+        finally:
+            socket.setdefaulttimeout(None)
+
+        if data['success'] != 'OK':
+            logging.error('Registration: server could not complete request: %s',
+                          data['error'])
+            raise RegisterError(_('The server could not complete the request.'))
+
+        # Registration Successful, hence we can add the identification of this
+        # server to our known_host file.
+        command = "ssh-keyscan -H -t ecdsa " + jabber_server
+        output = subprocess.check_output(command, shell=True)
+        os.system("mkdir -p ~/.ssh")
+        command = "echo \"%s\" >> ~/.ssh/known_hosts" % output.rstrip('\n')
+        os.system(command)
+
+        jabber_server = data['jabberserver']
+        backup_url = data['backupurl']
+
+    _store_identifiers(sn, uuid_, jabber_server, backup_url)
+    settings.set_string('jabber-server', jabber_server)
     settings = Gio.Settings('org.sugarlabs')
-    settings.set_string('backup-url', data['backupurl'])
+    settings.set_string('backup-url', backup_url)
 
     # DEPRECATED
     from gi.repository import GConf
     client = GConf.Client.get_default()
     client.set_string(
-        '/desktop/sugar/collaboration/jabber_server', data['jabberserver'])
-    client.set_string('/desktop/sugar/backup_url', data['backupurl'])
+        '/desktop/sugar/collaboration/jabber_server', jabber_server)
+    client.set_string('/desktop/sugar/backup_url', backup_url)
+    client.set_string('/desktop/sugar/soas_serial', sn)
 
     return True
 
