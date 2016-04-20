@@ -182,6 +182,11 @@ def _metacity_timeout_cb():
     rc = _metacity_process.poll()
     if rc is None:
         _start_window_manager()
+    else:
+        screen = Wnck.Screen.get_default()
+        screen.connect('window-manager-changed', __window_manager_changed_cb)
+        _check_for_window_manager(screen)
+
     logging.warning('metacity returncode %r' % rc)
     return False
 
@@ -195,10 +200,6 @@ def _start_window_manager():
 
     _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
     GObject.timeout_add(_METACITY_TIMEOUT, _metacity_timeout_cb)
-
-    screen = Wnck.Screen.get_default()
-    screen.connect('window-manager-changed', __window_manager_changed_cb)
-    _check_for_window_manager(screen)
 
 
 def _stop_window_manager():
