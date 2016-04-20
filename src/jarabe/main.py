@@ -87,7 +87,7 @@ from jarabe.model import brightness
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
-_APPLY_TIMEOUT = 2000
+_METACITY_TIMEOUT = 1000
 
 
 def unfreeze_screen_cb():
@@ -179,25 +179,23 @@ def _check_for_window_manager(screen):
 
 def _metacity_timeout_cb():
     global _metacity_process
-    if _metacity_process.poll() != 0:
-        try:
-            _metacity_process.communicate(timeout=15)
-        except TimeoutExpired:
-            pass
+    rc = _metacity_process.poll()
+    if rc is None:
         _start_window_manager()
+    logging.warning('metacity returncode %r' % rc)
     return False
 
 
 def _start_window_manager():
+    logging.warning('_start_window_manager')
     global _metacity_process
 
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'],
-                                         shell=True)
-    GObject.timeout_add(_APPLY_TIMEOUT,
-                        _metacity_timeout_cb)
+    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
+    GObject.timeout_add(_METACITY_TIMEOUT, _metacity_timeout_cb)
+
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
     _check_for_window_manager(screen)
