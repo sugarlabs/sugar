@@ -61,16 +61,31 @@ def _generate_serial_number():
     return serial
 
 
-def _get_history_for_serial(serial_number):
+def _get_identifier_path():
     identifier_path = os.path.join(env.get_profile_path(), 'identifiers')
     if not os.path.exists(identifier_path):
         os.mkdir(identifier_path)
+    return identifier_path
 
+
+def _write_to_file(path, value, mode='w+'):
+    file_handler = open(path, mode)
+    file_handler.write(value)
+    file_handler.close()
+
+
+def _read_from_file(path):
+    file_handler = open(path, 'r')
+    data = file_handler.read()
+    file_handler.close()
+    return data
+
+
+def _get_history_for_serial(serial_number):
+    identifier_path = _get_identifier_path()
     file_path = os.path.join(identifier_path, 'server_history')
     if os.path.exists(file_path):
-        json_file = open(file_path, 'r')
-        data = json.loads(json_file.read())
-        json_file.close()
+        data = json.loads(_read_from_file(file_path))
         if serial_number in data:
             return (True, data[serial_number])
         else:
@@ -84,44 +99,24 @@ def _store_identifiers(serial_number, uuid_, jabber_server, backup_url):
     in the identifier folder inside the profile directory
     so that these identifiers can be used for backup. """
 
-    identifier_path = os.path.join(env.get_profile_path(), 'identifiers')
-    if not os.path.exists(identifier_path):
-        os.mkdir(identifier_path)
+    identifier_path = _get_identifier_path()
 
-    if os.path.exists(os.path.join(identifier_path, 'sn')):
-        os.remove(os.path.join(identifier_path, 'sn'))
-    serial_file = open(os.path.join(identifier_path, 'sn'), 'w')
-    serial_file.write(serial_number)
-    serial_file.close()
-
-    if os.path.exists(os.path.join(identifier_path, 'uuid')):
-        os.remove(os.path.join(identifier_path, 'uuid'))
-    uuid_file = open(os.path.join(identifier_path, 'uuid'), 'w')
-    uuid_file.write(uuid_)
-    uuid_file.close()
-
-    if os.path.exists(os.path.join(identifier_path, 'backup_url')):
-        os.remove(os.path.join(identifier_path, 'backup_url'))
-    backup_url_file = open(os.path.join(identifier_path, 'backup_url'), 'w')
-    backup_url_file.write(jabber_server)
-    backup_url_file.close()
-
+    server_history = None
     file_path = os.path.join(identifier_path, 'server_history')
     if os.path.exists(file_path):
-        server_history_file = open(file_path, "r")
-        data = json.load(server_history_file)
-        server_history_file.close()
-        data[serial_number] = {}
-        data[serial_number]["uuid"] = uuid_
-        data[serial_number]["backup_url"] = backup_url
+        server_history = json.loads(_read_from_file(file_path))
     else:
-        data = {}
-        data[serial_number] = {}
-        data[serial_number]["uuid"] = uuid_
-        data[serial_number]["backup_url"] = backup_url
-    server_history_file = open(file_path, 'w+')
-    server_history_file.write(json.dumps(data))
-    server_history_file.close()
+        server_history = {}
+    server_history[serial_number] = {}
+    server_history[serial_number]["uuid"] = uuid_
+    server_history[serial_number]["backup_url"] = backup_url
+
+    values_to_store = {'sn': serial_number,
+                       'uuid': uuid_,
+                       'backup_url': jabber_server,
+                       'server_history': json.dumps(server_history)}
+    for key in values_to_store:
+        _write_to_file(os.path.join(identifier_path, key), values_to_store[key])
 
 
 class RegisterError(Exception):
@@ -148,12 +143,23 @@ class _TimeoutTransport(xmlrpclib.Transport):
 
 
 def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
+    """  Registers the laptop to schoolserver. The process
+    can be devided into 4 parts.
+    1) Gather sn, uuid, nick, url and db_url.
+    2) If the laptop is pre-registered to this server than get the
+       sn, uuid_, backup_url and jabber_server info of the previous
+       registration.
+    3) Else, do fresh registration to the server and get new backup_url
+       and from the server.
+    4) Store sn, uuid_, backup_url and jabber_server information
+       for the present server at their setting locations.  """
 
     profile = get_profile()
     new_registration_required = True
     backup_url = ''
     server_html = ''
 
+    # Gather data for registration (Part 1)
     if _have_ofw_tree():
         sn = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_SN))
         uuid_ = _read_mfg_data(os.path.join(_OFW_TREE, _MFG_UUID))
@@ -165,9 +171,7 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
         uuid_ = str(uuid.uuid1())
     sn = sn or 'SHF00000000'
     uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
-
     nick = get_nick_name()
-
     settings = Gio.Settings('org.sugarlabs.collaboration')
     jabber_server = settings.get_string('jabber-server')
 
@@ -181,6 +185,7 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
     except (urllib2.URLError, urllib2.HTTPError):
         logging.exception('Registration: cannot connect to xs-authserver')
 
+    # Restore previous registration (Part 2)
     if server_html and profile.pubkey in server_html:
         new_registration_required = False
         registered_laptops = re.findall(r'{.+}', server_html)
@@ -201,6 +206,7 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
                     except AttributeError:
                         pass
 
+    # Do fresh registration (Part 3)
     if new_registration_required:
         if sys.hexversion < 0x2070000:
             server = xmlrpclib.ServerProxy(url, _TimeoutTransport())
@@ -225,12 +231,13 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
         command = "ssh-keyscan -H -t ecdsa " + jabber_server
         output = subprocess.check_output(command, shell=True)
         os.system("mkdir -p ~/.ssh")
-        command = "echo \"%s\" >> ~/.ssh/known_hosts" % output.rstrip('\n')
-        os.system(command)
+        if output:
+            _write_to_file("~/.ssh/known_hosts", output, 'a+')
 
         jabber_server = data['jabberserver']
         backup_url = data['backupurl']
 
+    # Store registration details (Part 4)
     _store_identifiers(sn, uuid_, jabber_server, backup_url)
     settings.set_string('jabber-server', jabber_server)
     settings = Gio.Settings('org.sugarlabs')
@@ -258,7 +265,5 @@ def _have_proc_device_tree():
 def _read_mfg_data(path):
     if not os.path.exists(path):
         return None
-    fh = open(path, 'r')
-    data = fh.read().rstrip('\0\n')
-    fh.close()
+    data = _read_from_file(path).rstrip('\0\n')
     return data
