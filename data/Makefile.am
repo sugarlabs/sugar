@@ -15,7 +15,7 @@ sugar_DATA =			\
 	ISO-639-2_utf-8.txt	\
 	kbdconfig		\
 	mime.defaults		\
-	GPLv2			\
+	GPLv3			\
 	$(GTKRC_FILES)
 
 GTKRC_FILES =		\
