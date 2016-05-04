@@ -140,6 +140,24 @@ class BundleRegistry(GObject.GObject):
             self.add_bundle(one_file.get_path(), set_favorite=True)
         elif event_type == Gio.FileMonitorEvent.DELETED:
             self.remove_bundle(one_file.get_path())
+            for root in GLib.get_system_data_dirs():
+                root = os.path.join(root, 'sugar', 'activities')
+
+                try:
+                    dir_list = os.listdir(root)
+                except OSError:
+                    logging.debug('Can not find GLib system dir %s', root)
+                    continue
+                activity_dir = os.path.basename(one_file.get_path())
+                try:
+                    bundle = bundle_from_dir(os.path.join(root, activity_dir))
+                except MalformedBundleException:
+                    continue
+
+                if bundle is not None:
+                    path = bundle.get_path()
+                    if path is not None:
+                        self.add_bundle(path)
 
     def _load_mime_defaults(self):
         defaults = {}
