@@ -347,6 +347,42 @@ def setup_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 
+def setup_proxy():
+    protos = ['http', 'https', 'ftp', 'socks']
+    env_variables = ['{}_proxy'.format(proto) for proto in protos]
+    schemas = ['org.sugarlabs.system.proxy.{}'.format(proto) for proto in protos]
+
+    g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
+    if g_mode == 'manual':
+        counter = 0
+        for schema in schemas:
+            setting_schema = Gio.Settings(schema)
+
+            if ((env_variables[counter] == 'http_proxy') and
+                    setting_schema.get_boolean('use-authentication')):
+                text_to_set = "%s://%s:%s@%s:%s/" % (
+                    protos[counter],
+                    setting_schema.get_string('authentication-user'),
+                    setting_schema.get_string('authentication-password'),
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+            else:
+                text_to_set = "%s://%s:%s/" % (
+                    protos[counter],
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+
+            os.environ[env_variables[counter]] = text_to_set
+            os.environ[env_variables[counter].upper()] = text_to_set
+            counter += 1
+        os.environ['no_proxy'] = ",".join(Gio.Settings(
+            'org.sugarlabs.system.proxy').get_strv('ignore-hosts'))
+
+    elif g_mode == 'none':
+        for each_env_variable in env_variables:
+            os.environ[each_env_variable] = ''
+
+
 def setup_theme():
     settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
@@ -399,6 +435,7 @@ def main():
     setup_timezone()
     setup_fonts()
     setup_theme()
+    setup_proxy()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen
