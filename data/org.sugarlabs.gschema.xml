@@ -390,23 +390,8 @@
             (something like 192.168.0.0/24).
             </description>
         </key>
-        <key name="use-same-proxy" type="b">
-            <default>true</default>
-            <summary>Unused; ignore</summary>
-            <description>
-            This key is not used, and should not be read or modified.
-            </description>
-        </key>
     </schema>
     <schema id="org.sugarlabs.system.proxy.http" path="/org/sugarlabs/system/proxy/http/">
-        <key name="enabled" type="b">
-            <default>false</default>
-            <summary>Unused; ignore</summary>
-            <description>
-            This key is not used; HTTP proxying is enabled when the host
-            key is non-empty and the port is non-0.
-            </description>
-        </key>
         <key name="host" type="s">
             <default>''</default>
             <summary>HTTP proxy host name</summary>

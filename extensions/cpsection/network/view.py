@@ -622,14 +622,19 @@ class Network(SectionView):
 
     def _ping_servers(self):
         response_to_return = True
+        non_blank_host_name_counter = 0  # To check accidental blank hostnames
         for schema in list(self._proxy_settings.keys()):
                 if (schema != 'org.sugarlabs.system.proxy'):
                     hostname = Gio.Settings.get_string(
                         self._proxy_settings[schema], 'host')
-                    response = os.system("ping -c 1 -W 1 " + hostname)
-                    if (response):
-                        self._proxy_inline_alerts[schema].show()
-                        response_to_return = False
+                    if hostname != '':
+                        non_blank_host_name_counter += 1
+                        response = os.system("ping -c 1 -W 1 " + hostname)
+                        if (response):
+                            self._proxy_inline_alerts[schema].show()
+                            response_to_return = False
+        if non_blank_host_name_counter == 0:
+            response_to_return = False
         return response_to_return
 
     def _verify_settings(self):
