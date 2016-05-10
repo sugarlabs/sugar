@@ -57,6 +57,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Gst
 from gi.repository import Wnck
+from gi.repository import GObject
 
 from sugar3 import env
 
@@ -86,6 +87,7 @@ from jarabe.model import brightness
 _metacity_process = None
 _window_manager_started = False
 _starting_desktop = False
+_METACITY_TIMEOUT = 1000
 
 
 def unfreeze_screen_cb():
@@ -175,17 +177,34 @@ def _check_for_window_manager(screen):
         _complete_desktop_startup()
 
 
+def _metacity_io_cb(fd, condition):
+    # Delay added to prevent cyclic attempt to restart metacity
+    # in event of logout or bug.
+    GObject.timeout_add(_METACITY_TIMEOUT,
+                        _metacity_timeout_cb)
+    return False
+
+
+def _metacity_timeout_cb():
+    logging.warning('Attempting metacity restart')
+    _start_window_manager()
+    return False
+
+
 def _start_window_manager():
+    logging.warning('_start_window_manager')
     global _metacity_process
 
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
+    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'],
+                                         stdout=subprocess.PIPE)
+    GObject.io_add_watch(_metacity_process.stdout, GLib.IO_HUP,
+                         _metacity_io_cb)
 
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
-
     _check_for_window_manager(screen)
 
 
