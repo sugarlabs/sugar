@@ -48,7 +48,7 @@ class MainToolbar(Gtk.Toolbar):
     def __init__(self):
         Gtk.Toolbar.__init__(self)
 
-        self._add_separator()
+        self._add_separator(True)
 
         tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
@@ -61,18 +61,6 @@ class MainToolbar(Gtk.Toolbar):
 
         self._add_separator(True)
 
-        self.stop = ToolButton(icon_name='dialog-cancel')
-        self.stop.set_tooltip(_('Cancel'))
-        self.stop.connect('clicked', self.__stop_clicked_cb)
-        self.insert(self.stop, -1)
-        self.stop.show()
-
-        self.accept = ToolButton(icon_name='dialog-ok')
-        self.accept.set_tooltip(_('Save'))
-        self.accept.connect('clicked', self.__ok_clicked_cb)
-        self.insert(self.accept, -1)
-        self.accept.show()
-
     def _add_separator(self, expand=False):
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -82,9 +70,3 @@ class MainToolbar(Gtk.Toolbar):
             separator.set_size_request(style.DEFAULT_SPACING, -1)
         self.insert(separator, -1)
         separator.show()
-
-    def __stop_clicked_cb(self, button):
-        self.emit('stop-clicked')
-
-    def __ok_clicked_cb(self, button):
-        self.emit('ok-clicked')

@@ -128,7 +128,7 @@ class ScreenshotPanel(Gtk.Window):
 
         # Entry box
         self._search_entry = Gtk.Entry()
-        halign = Gtk.Alignment.new(0.5, 0, 0, 0)
+        halign = Gtk.Alignment.new(0.5, 1, 0, 0)
         halign.add(self._name_view)
         halign.show()
 
@@ -136,8 +136,36 @@ class ScreenshotPanel(Gtk.Window):
         self._name_view.add(self._search_entry)
         self._search_entry.show()
         self._search_entry.set_text(_(activity_title))
+
+        self._buttons_box = Gtk.HButtonBox()
+        self._buttons_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
+        self._buttons_box.set_spacing(style.DEFAULT_SPACING)
+
+        _ok = Gtk.Button()
+        _ok.set_image(Icon(icon_name='dialog-ok'))
+        _ok.set_label(_('Yes'))
+        _ok.connect('clicked', self.__ok_clicked_cb)
+        self._buttons_box.pack_start(_ok, True, True, 0)
+        _ok.show()
+
+        _cancel = Gtk.Button()
+        _cancel.set_image(Icon(icon_name='dialog-cancel'))
+        _cancel.set_label(_('No'))
+        _cancel.connect('clicked', self.__cancel_clicked_cb)
+        self._buttons_box.pack_start(_cancel, True, True, 0)
+        _cancel.show()
+
+        self._vbox.pack_start(self._buttons_box, True, True, 0)
+        self._buttons_box.show()
         self._search_entry.grab_focus()
         self.show()
+
+    def __cancel_clicked_cb(self, widget):
+        self.destroy()
+
+    def __ok_clicked_cb(self, widget):
+        self.save_screenshot(self._search_entry.get_text())
+        self.destroy()
 
     def _set_cursor(self, cursor):
         self.get_window().set_cursor(cursor)
@@ -169,9 +197,6 @@ class ScreenshotPanel(Gtk.Window):
 
     def _setup_main(self):
         self._main_toolbar = MainToolbar()
-        self._main_toolbar.connect('stop-clicked',
-                                   self.__stop_clicked_cb)
-        self._main_toolbar.connect('ok-clicked', self.__ok_clicked_cb)
 
     def _show_main_view(self):
         self._set_toolbar(self._main_toolbar)
@@ -184,13 +209,6 @@ class ScreenshotPanel(Gtk.Window):
         if not self.is_active():
             self.present()
         return False
-
-    def __stop_clicked_cb(self, widget):
-        self.destroy()
-
-    def __ok_clicked_cb(self, widget):
-        self.save_screenshot(self._search_entry.get_text())
-        self.destroy()
 
     def save_screenshot(self, title):
         settings = Gio.Settings('org.sugarlabs.user')
