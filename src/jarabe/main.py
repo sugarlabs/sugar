@@ -177,17 +177,17 @@ def _check_for_window_manager(screen):
         _complete_desktop_startup()
 
 
-def _metacity_timeout_cb():
-    global _metacity_process
-    rc = _metacity_process.poll()
-    if rc is None:
-        _start_window_manager()
-    else:
-        screen = Wnck.Screen.get_default()
-        screen.connect('window-manager-changed', __window_manager_changed_cb)
-        _check_for_window_manager(screen)
+def _metacity_io_cb(fd, condition):
+    # Delay added to prevent cyclic attempt to restart metacity
+    # in event of logout or bug.
+    GObject.timeout_add(_METACITY_TIMEOUT,
+                        _metacity_timeout_cb)
+    return False
 
-    logging.warning('metacity returncode %r' % rc)
+
+def _metacity_timeout_cb():
+    logging.warning('Attempting metacity restart')
+    _start_window_manager()
     return False
 
 
@@ -198,8 +198,14 @@ def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
-    GObject.timeout_add(_METACITY_TIMEOUT, _metacity_timeout_cb)
+    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'],
+                                         stdout=subprocess.PIPE)
+    GObject.io_add_watch(_metacity_process.stdout, GLib.IO_HUP,
+                         _metacity_io_cb)
+
+    screen = Wnck.Screen.get_default()
+    screen.connect('window-manager-changed', __window_manager_changed_cb)
+    _check_for_window_manager(screen)
 
 
 def _stop_window_manager():
