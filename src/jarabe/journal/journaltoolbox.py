@@ -74,70 +74,31 @@ _LABEL_MAX_WIDTH = 18
 _MAXIMUM_PALETTE_COLUMNS = 4
 
 
-class BaseToolbarBox(ToolbarBox):
+class MainToolbox(ToolbarBox):
 
-    def __init__(self):
+    query_changed_signal = GObject.Signal('query-changed',
+                                          arg_types=([object]))
+
+    def __init__(self, default_what_filter=None, default_filter_type=None):
         ToolbarBox.__init__(self)
+        self._mount_point = None
+        self._filter_type = default_filter_type
+        self._what_filter = default_what_filter
+        self._when_filter = None
+        self._projects_view_active = False
+        self._default_what_filter = default_what_filter
+        self._default_filter_type = default_filter_type
+
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'entry-search')
+        text = _('Search in %s') % _('Journal')
+        self.search_entry.set_placeholder_text(text)
         self.search_entry.connect('activate', self._search_entry_activated_cb)
         self.search_entry.connect('changed', self._search_entry_changed_cb)
         self.search_entry.add_clear_button()
         self._autosearch_timer = None
         self._add_widget(self.search_entry, expand=True)
-
-    def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
-        tool_item.set_expand(expand)
-
-        tool_item.add(widget)
-        widget.show()
-
-        self.toolbar.insert(tool_item, -1)
-        tool_item.show()
-
-    def _search_entry_activated_cb(self, search_entry):
-        if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
-        self._update_if_needed()
-
-    def _search_entry_changed_cb(self, search_entry):
-        if not search_entry.props.text:
-            search_entry.activate()
-            return
-
-        if self._autosearch_timer:
-            GObject.source_remove(self._autosearch_timer)
-        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
-                                                     self._autosearch_timer_cb)
-
-    def _autosearch_timer_cb(self):
-        logging.debug('_autosearch_timer_cb')
-        self._autosearch_timer = None
-        self.search_entry.activate()
-        return False
-
-
-class MainToolbox(BaseToolbarBox):
-
-    query_changed_signal = GObject.Signal('query-changed',
-                                          arg_types=([object]))
-
-    projs_view_signal = GObject.Signal('projs-view',
-                                           arg_types=([]))
-
-    def __init__(self, default_what_filter=None, default_filter_type=None):
-        BaseToolbarBox.__init__(self)
-        self._mount_point = None
-        self._filter_type = default_filter_type
-        self._what_filter = default_what_filter
-        self._when_filter = None
-        self._default_what_filter = default_what_filter
-        self._default_filter_type = default_filter_type
-
-        text = _('Search in %s') % _('Journal')
-        self.search_entry.set_placeholder_text(text)
 
         self._favorite_button = ToggleToolButton('emblem-favorite')
         self._favorite_button.set_tooltip(_('Favorite entries'))
@@ -152,13 +113,14 @@ class MainToolbox(BaseToolbarBox):
         self.toolbar.insert(self._proj_list_button, -1)
         self._proj_list_button.show()
 
-        self._what_widget_contents = None
-        self._what_widget = Gtk.ToolItem()
-        self._what_search_button = FilterToolItem(
-            'view-type', _('Anything'), self._what_widget)
-        self._what_widget.show()
-        self.toolbar.insert(self._what_search_button, -1)
-        self._what_search_button.show()
+        if not self._projects_view_active:
+            self._what_widget_contents = None
+            self._what_widget = Gtk.ToolItem()
+            self._what_search_button = FilterToolItem(
+                'view-type', _('Anything'), self._what_widget)
+            self._what_widget.show()
+            self.toolbar.insert(self._what_search_button, -1)
+            self._what_search_button.show()
 
         self._when_search_button = FilterToolItem(
             'view-created', _('Anytime'), self._get_when_search_items())
@@ -187,11 +149,6 @@ class MainToolbox(BaseToolbarBox):
         self.refresh_filters()
 
         self.connect('size_allocate', self.__size_allocate_cb)
-
-    def _proj_list_button_clicked_cb(self, button):
-        logging.debug('Projects clicked')
-        self.projs_view_signal.emit()
-        pass
 
     def __size_allocate_cb(self, widget, allocation):
         GObject.idle_add(self._update_buttons, allocation.width)
@@ -263,6 +220,16 @@ class MainToolbox(BaseToolbarBox):
         widget.show()
     '''
 
+    def _add_widget(self, widget, expand=False):
+        tool_item = Gtk.ToolItem()
+        tool_item.set_expand(expand)
+
+        tool_item.add(widget)
+        widget.show()
+
+        self.toolbar.insert(tool_item, -1)
+        tool_item.show()
+
     def _build_query(self):
         query = {}
 
@@ -272,7 +239,10 @@ class MainToolbox(BaseToolbarBox):
         if self._favorite_button.props.active:
             query['keep'] = 1
 
-        if self._what_filter:
+        if self._projects_view_active:
+            query['activity'] = 'Project'
+
+        elif self._what_filter:
             filter_type = self._filter_type
             value = self._what_filter
 
@@ -315,6 +285,7 @@ class MainToolbox(BaseToolbarBox):
             sign = '-'
         query['order_by'] = [sign + property_]
 
+        logging.debug('[GSoC]query is %r' %query)
         return query
 
     def _get_date_range(self):
@@ -343,6 +314,27 @@ class MainToolbox(BaseToolbarBox):
         if self._query != new_query:
             self._query = new_query
             self.query_changed_signal.emit(self._query)
+
+    def _search_entry_activated_cb(self, search_entry):
+        if self._autosearch_timer:
+            GObject.source_remove(self._autosearch_timer)
+        self._update_if_needed()
+
+    def _search_entry_changed_cb(self, search_entry):
+        if not search_entry.props.text:
+            search_entry.activate()
+            return
+
+        if self._autosearch_timer:
+            GObject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                     self._autosearch_timer_cb)
+
+    def _autosearch_timer_cb(self):
+        logging.debug('_autosearch_timer_cb')
+        self._autosearch_timer = None
+        self.search_entry.activate()
+        return False
 
     def set_mount_point(self, mount_point):
         self._mount_point = mount_point
@@ -481,6 +473,17 @@ class MainToolbox(BaseToolbarBox):
             self._what_widget.add(self._what_widget_contents)
             self._what_widget_contents.show()
 
+    def _proj_list_button_clicked_cb(self, proj_list_button):
+        logging.debug('[GSoC]proj_list_button clicked')
+        self._projects_view_active = not self._projects_view_active
+        if self._projects_view_active:
+            self._what_widget.hide()
+            self._what_search_button.hide()
+        else:
+            self._what_widget.show()
+            self._what_search_button.show()
+        self._update_if_needed()
+
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
@@ -511,16 +514,12 @@ class MainToolbox(BaseToolbarBox):
 
         self._favorite_button.props.active = False
 
+        if self._projects_view_active:
+            self._what_widget.show()
+            self._what_search_button.show()
+            self._projects_view_active = False
+
         self._update_if_needed()
-
-
-class ProjectsToolbox(BaseToolbarBox):
-
-    def __init__(self):
-        BaseToolbarBox.__init__(self)
-
-    def _update_if_needed(self):
-        logging.debug('[GSoC]updating if req')
 
 
 class DetailToolbox(ToolbarBox):

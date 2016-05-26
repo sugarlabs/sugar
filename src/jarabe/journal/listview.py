@@ -417,6 +417,10 @@ class BaseListView(Gtk.Bin):
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
+        if 'activity' in query_dict:
+            if query_dict['activity'] == 'Project':
+                logging.debug('[GSoC] projectsview set in listview')
+                self.set_projects_view_active(True)
         if 'order_by' not in query_dict:
             query_dict['order_by'] = ['+timestamp']
         if query_dict['order_by'] != self._query.get('order_by'):
@@ -494,7 +498,11 @@ class BaseListView(Gtk.Bin):
                 else:
                     self._show_message(_('The device is empty'))
             else:
-                self._show_message(_('No matching entries'),
+                show_message_text = 'No matching entries'
+                if self.get_projects_view_active():
+                    show_message_text = 'No Projects'
+                
+                self._show_message(_(show_message_text),
                                    show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
@@ -574,17 +582,18 @@ class BaseListView(Gtk.Bin):
             color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
 
-        if show_clear_query:
-            button_box = Gtk.HButtonBox()
-            button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
-            box.pack_start(button_box, False, True, 0)
-            button_box.show()
+        if not self.get_projects_view_active():
+            if show_clear_query:
+                button_box = Gtk.HButtonBox()
+                button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
+                box.pack_start(button_box, False, True, 0)
+                button_box.show()
 
-            button = Gtk.Button(label=_('Clear search'))
-            button.connect('clicked', self.__clear_button_clicked_cb)
-            button.props.image = Icon(icon_name='dialog-cancel',
-                                      pixel_size=style.SMALL_ICON_SIZE)
-            button_box.pack_start(button, expand=True, fill=False, padding=0)
+                button = Gtk.Button(label=_('Clear search'))
+                button.connect('clicked', self.__clear_button_clicked_cb)
+                button.props.image = Icon(icon_name='dialog-cancel',
+                                          pixel_size=style.SMALL_ICON_SIZE)
+                button_box.pack_start(button, expand=True, fill=False, padding=0)
 
         background_box.show_all()
 
@@ -695,6 +704,7 @@ class ListView(BaseListView):
     def __init__(self, journalactivity, enable_multi_operations=False):
         BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
+        self._projects_view_active = False
 
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
         self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
@@ -717,6 +727,19 @@ class ListView(BaseListView):
 
     def is_dragging(self):
         return self._is_dragging
+
+    def set_projects_view_active(self, projects_view_active):
+        self._projects_view_active = projects_view_active
+        text = 'Add new entry'
+        if self._projects_view_active:
+            text = 'Add new project'
+        else:
+            text = 'Add new entry'
+
+        self._journalactivity.get_entry().set_placeholder_text(text)
+
+    def get_projects_view_active(self):
+        return self._projects_view_active
 
     def __drag_begin_cb(self, widget, drag_context):
         path, _column = self.tree_view.get_cursor()

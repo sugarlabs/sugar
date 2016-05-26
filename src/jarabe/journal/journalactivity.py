@@ -27,6 +27,8 @@ import statvfs
 import os
 
 from sugar3.graphics.alert import ErrorAlert
+from sugar3.graphics import iconentry
+from sugar3.graphics.toolbutton import ToolButton
 
 from sugar3 import env
 from sugar3.activity import activityfactory
@@ -35,7 +37,6 @@ from gi.repository import SugarExt
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
-from jarabe.journal.journaltoolbox import ProjectsToolbox
 
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
@@ -46,7 +47,6 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
-from jarabe.journal.projectlistview import ProjectListView
 
 from jarabe.model import session
 
@@ -185,7 +185,6 @@ class JournalActivity(JournalWindow):
 
         self._main_view = None
         self._secondary_view = None
-        self._projs_view = None
         self._list_view = None
         self._detail_view = None
         self._main_toolbox = None
@@ -197,7 +196,6 @@ class JournalActivity(JournalWindow):
         self._editing_mode = False
 
         self._setup_main_view()
-        self._setup_projs_view()
         self._setup_secondary_view()
 
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
@@ -248,6 +246,24 @@ class JournalActivity(JournalWindow):
         self._main_toolbox = MainToolbox()
         self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
+
+        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+        add_new_button = ToolButton('emblem-question') # suggest icon for this
+        add_new_button.set_tooltip(_('Projects'))
+        #add_new_button.connect('clicked', add_new_button_clicked_cb)
+        hbox.pack_start(add_new_button, False, True, 0)
+        add_new_button.show()
+
+        self._entry = iconentry.IconEntry()
+        self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                             'activity-journal')
+        text = _('Add new entry')
+        self._entry.set_placeholder_text(text)
+        self._entry.add_clear_button()
+        hbox.pack_start(self._entry, True, True, 0)
+        self._entry.show()
+        hbox.show()
+        self._main_view.pack_start(hbox, False, True, 0)
         self._main_view.set_can_focus(True)
 
         self._list_view = ListView(self, enable_multi_operations=True)
@@ -270,20 +286,13 @@ class JournalActivity(JournalWindow):
         self._main_view.pack_start(self._volumes_toolbar, False, True, 0)
 
         self._main_toolbox.connect('query-changed', self._query_changed_cb)
-        self._main_toolbox.connect('projs_view', self._projs_view_cb)
+
         self._main_toolbox.search_entry.connect('icon-press',
                                                 self.__search_icon_pressed_cb)
         self._main_toolbox.set_mount_point(self._mount_point)
 
-    def _setup_projs_view(self):
-        self._projs_view = Gtk.VBox()
-        self._project_list_view = ProjectListView()
-        self._projs_view.pack_start(self._project_list_view, True, True, 0)
-        self._project_list_view.show()
-
-        self._project_list_view.connect('back-to-main', self.__back_to_main_cb)
-        self._projs_view.set_can_focus(True)
-        logging.debug('Projects View setup')
+    def get_entry(self):
+        return self._entry
 
     def _setup_secondary_view(self):
         self._secondary_view = Gtk.VBox()
@@ -322,20 +331,12 @@ class JournalActivity(JournalWindow):
             len(self.get_list_view().get_model().get_selected_items())
         self.__selection_changed_cb(None, selected_items)
 
-    def __back_to_main_cb(self, proj_list_view):
-        self.show_main_view()
-
     def __go_back_clicked_cb(self, detail_view):
         self.show_main_view()
 
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
         self.show_main_view()
-
-    def _projs_view_cb(self, toolbar):
-        logging.debug('projs_view signal handler')
-        self._show_projs_view()
-        pass
 
     def __search_icon_pressed_cb(self, entry, icon_pos, event):
         self._main_view.grab_focus()
@@ -361,18 +362,6 @@ class JournalActivity(JournalWindow):
         if self.canvas != self._main_view:
             self.set_canvas(self._main_view)
             self._main_view.show()
-
-    def _show_projs_view(self):
-        logging.debug('Showing projects list now')
-        self._main_view_active = False
-        self._toolbox = ProjectsToolbox() #Yet to Create toolbar for project list view
-        self.set_toolbar_box(self._toolbox)
-        self._toolbox.show()
-
-        if self.canvas != self._projs_view:
-            logging.debug('Seting canvas')
-            self.set_canvas(self._projs_view)
-            self._projs_view.show()
 
     def _show_secondary_view(self, object_id):
         self._main_view_active = False
