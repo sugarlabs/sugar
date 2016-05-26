@@ -22,6 +22,7 @@ import uuid
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkX11
+from gi.repository import Gio
 import dbus
 import statvfs
 import os
@@ -31,6 +32,7 @@ from sugar3.graphics import iconentry
 from sugar3.graphics.toolbutton import ToolButton
 
 from sugar3 import env
+from sugar3.datastore import datastore
 from sugar3.activity import activityfactory
 from gi.repository import SugarExt
 
@@ -248,9 +250,9 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
 
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        add_new_button = ToolButton('emblem-question') # suggest icon for this
-        add_new_button.set_tooltip(_('Projects'))
-        #add_new_button.connect('clicked', add_new_button_clicked_cb)
+        add_new_button = ToolButton('list-add') # suggest icon for this
+        add_new_button.set_tooltip(_('Add New'))
+        add_new_button.connect('clicked', self._add_new_button_clicked_cb)
         hbox.pack_start(add_new_button, False, True, 0)
         add_new_button.show()
 
@@ -291,6 +293,9 @@ class JournalActivity(JournalWindow):
                                                 self.__search_icon_pressed_cb)
         self._main_toolbox.set_mount_point(self._mount_point)
 
+    def get_list_view(self):
+        return self._list_view
+
     def get_entry(self):
         return self._entry
 
@@ -305,9 +310,50 @@ class JournalActivity(JournalWindow):
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
+    def _add_new_button_clicked_cb(self, button):
+        # This method only implements Add-New-Project
+        # TODO: Add-New-Entry for other activities
+        if self.get_list_view().get_projects_view_active():
+            self._initialize_journal_object()
+
+    def _initialize_journal_object(self):
+        logging.debug('[GSoC]initializing journal object for project')
+        title = _(self.get_entry().props.text)
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = settings.get_string('color')
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['title_set_by_user'] = '0'
+        jobject.metadata['activity'] = 'Project'
+
+        # TODO: Implement activity_id for projects
+        #jobject.metadata['activity_id'] = self.get_id()
+
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['preview'] = ''
+        #jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        jobject.metadata['icon-color'] = icon_color
+        #jobject.metadata['launch-times'] = str(int(time.time()))
+        #jobject.metadata['spent-times'] = '0'
+
+        jobject.file_path = ''
+
+        # FIXME: We should be able to get an ID synchronously from the DS,
+        # then call async the actual create.
+        # http://bugs.sugarlabs.org/ticket/2169
+        datastore.write(jobject)
+
+        # TODO: list of handle.object_id for every entry to be implemented
+        # Let the list contains first object_id of project itself
+        jobject.metadata['objects']= [jobject.object_id]
+        model.write(jobject.metadata)
+        return jobject
+
+
     def _key_press_event_cb(self, widget, event):
-        if not self._main_toolbox.search_entry.has_focus():
-            self._main_toolbox.search_entry.grab_focus()
+        #if not self._main_toolbox.search_entry.has_focus():
+        #self._main_toolbox.search_entry.grab_focus()
 
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
