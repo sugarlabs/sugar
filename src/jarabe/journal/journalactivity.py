@@ -27,6 +27,7 @@ import dbus
 import statvfs
 import os
 
+from sugar3.graphics import style
 from sugar3.graphics.alert import ErrorAlert
 from sugar3.graphics import iconentry
 from sugar3.graphics.toolbutton import ToolButton
@@ -39,6 +40,7 @@ from gi.repository import SugarExt
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
+from jarabe.journal.expandedentry import TextView, BuddyList 
 
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
@@ -186,6 +188,7 @@ class JournalActivity(JournalWindow):
         self.set_title(_('Journal'))
 
         self._main_view = None
+        self._project_view = None
         self._secondary_view = None
         self._list_view = None
         self._detail_view = None
@@ -199,6 +202,7 @@ class JournalActivity(JournalWindow):
 
         self._setup_main_view()
         self._setup_secondary_view()
+        self._setup_project_view()
 
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self._realized_sid = self.connect('realize', self.__realize_cb)
@@ -278,6 +282,8 @@ class JournalActivity(JournalWindow):
                                 self.__title_edit_finished_cb)
         self._list_view.connect('selection-changed',
                                 self.__selection_changed_cb)
+        self._list_view.connect('project-view-activate',
+                                self.__project_view_activated_cb)
         self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show()
 
@@ -293,11 +299,102 @@ class JournalActivity(JournalWindow):
                                                 self.__search_icon_pressed_cb)
         self._main_toolbox.set_mount_point(self._mount_point)
 
+    def _setup_project_view(self):
+        self._project_view = Gtk.VBox()
+        description_box = TextView()
+        #description_box.size_allocate((10 , 15))
+        self._project_view.pack_start(description_box, True, True, 0)
+        logging.debug('Project view setup')
+        description_box.show()
+        #self._description.show()
+        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+
+        add_buddy_button = ToolButton('list-add') # suggest icon for this
+        add_buddy_button.set_tooltip(_('Add Buddy'))
+        add_buddy_button.connect('clicked',self._add_buddy_button_clicked_cb)
+        hbox.pack_start(add_buddy_button, False, True, 0)
+        add_buddy_button.show()
+        self._project_view.pack_start(hbox, True, True, 0)
+        
+        self._buddy_list = Gtk.VBox()
+        hbox.pack_start(self._buddy_list, True, False, 0)
+
+        hbox.show()
+
+    def _add_buddy_button_clicked_cb(self, button):
+        logging.debug('[GSoC]_add_buddy_button_clicked_cb')
+                
+
+    def _create_buddy_list(self, metadata):
+
+        vbox = Gtk.VBox()
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        text = Gtk.Label()
+        text.set_markup('<span foreground="%s">%s</span>' % (
+            style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
+        halign.add(text)
+        vbox.pack_start(halign, False, False, 0)
+
+        if metadata.get('buddies'):
+            buddies = json.loads(metadata['buddies']).values()
+            vbox.pack_start(BuddyList(buddies), False, False, 0)
+            return vbox
+        else:
+            return vbox
+
+    '''
+    def _create_description(self):
+        widget = TextView()
+        widget.connect('focus-out-event',
+                       self._description_tags_focus_out_event_cb)
+        return self._create_scrollable(widget, label=_('Description:')), widget
+
+    def _description_tags_focus_out_event_cb(self, text_view, event):
+        logging.debug('[GSoC]blah here')
+
+    def _create_scrollable(self, widget, label=None):
+        vbox = Gtk.VBox()
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        if label is not None:
+            logging.debug('[GSoC]create_scrollable')
+            text = Gtk.Label()
+            text.set_markup('<span foreground="%s">%s</span>' % (
+                style.COLOR_BUTTON_GREY.get_html(), label))
+
+            halign = Gtk.Alignment.new(0, 0, 0, 0)
+            halign.add(text)
+            vbox.pack_start(halign, False, False, 0)
+
+        scrolled_window = Gtk.ScrolledWindow()
+        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                   Gtk.PolicyType.AUTOMATIC)
+        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        scrolled_window.add(widget)
+        vbox.pack_start(scrolled_window, True, True, 0)
+
+        return vbox
+    '''
+
     def get_list_view(self):
         return self._list_view
 
     def get_entry(self):
         return self._entry
+
+    def __project_view_activated_cb(self, list_view, metadata):
+        self._main_view_active = False
+        logging.debug('project_view_activate signal handler')
+        for child in self._buddy_list.get_children():
+            self._buddy_list.remove(child)
+            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
+        self._buddy_list.pack_start(self._create_buddy_list(metadata), False, False,
+                                    style.DEFAULT_SPACING)
+
+        self.set_canvas(self._project_view)
+        self._project_view.show()
 
     def _setup_secondary_view(self):
         self._secondary_view = Gtk.VBox()

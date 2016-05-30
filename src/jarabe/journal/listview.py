@@ -699,6 +699,8 @@ class ListView(BaseListView):
                                ([])),
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
                                 ([])),
+        'project-view-activate': (GObject.SignalFlags.RUN_FIRST, None,
+                                ([object])),
     }
 
     def __init__(self, journalactivity, enable_multi_operations=False):
@@ -789,6 +791,11 @@ class ListView(BaseListView):
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
+        logging.debug('[GSoC]__icon_clicked_cb metadata activity is %r' %metadata['activity'])
+        if metadata['activity'] == 'Project':
+             logging.debug('[GSoC]__icon_clicked_cb Project icon clicked!!')
+             self.emit('project-view-activate',metadata)
+             return
         misc.resume(metadata,
                     alert_window=journalwindow.get_journal_window())
 
