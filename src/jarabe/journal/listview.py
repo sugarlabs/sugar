@@ -361,7 +361,6 @@ class BaseListView(Gtk.Bin):
         if buddy is None:
             cell.props.visible = False
             return
-        logging.error('__buddies_set_data_cb %s', buddy)
         # FIXME workaround for pygobject bug, see
         # https://bugzilla.gnome.org/show_bug.cgi?id=689277
         #
