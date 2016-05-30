@@ -70,6 +70,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._model.set_visible_func(self.__model_visible_cb)
         self.set_model(self._model)
 
+        self._favorite_columns = []
         for i in range(desktop.get_number_of_views()):
             column = Gtk.TreeViewColumn()
             self.cell_favorite = CellRendererFavorite(i)
@@ -78,6 +79,8 @@ class ActivitiesTreeView(Gtk.TreeView):
             column.set_cell_data_func(self.cell_favorite,
                                       self.__favorite_set_data_cb)
             self.append_column(column)
+
+            self._favorite_columns.append(column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -142,6 +145,9 @@ class ActivitiesTreeView(Gtk.TreeView):
             self.connect('row-activated', self.__row_activated_cb)
         else:
             self.cell_icon.connect('clicked', self.__icon_clicked_cb)
+            self.connect('button-press-event', self.__button_press_cb)
+            self.connect('button-release-event', self.__button_release_cb)
+            self._row_activated_armed_path = None
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = \
@@ -173,6 +179,43 @@ class ActivitiesTreeView(Gtk.TreeView):
         """
         if col is not treeview.get_column(0):
             self._start_activity(path)
+
+    def __button_to_path(self, event, event_type):
+        if event.window != self.get_bin_window() or \
+           event.button != 1 or \
+           event.type != event_type:
+            return None
+
+        pos = self.get_path_at_pos(int(event.x), int(event.y))
+        if pos is None:
+            return None
+
+        path, column, x_, y_ = pos
+        if column == self._icon_column:
+            return None
+
+        if column in self._favorite_columns:
+            return None
+
+        return path
+
+    def __button_press_cb(self, widget, event):
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        if path is None:
+            return
+
+        self._row_activated_armed_path = path
+
+    def __button_release_cb(self, widget, event):
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
+        if path is None:
+            return
+
+        if self._row_activated_armed_path != path:
+            return
+
+        self._start_activity(path)
+        self._row_activated_armed_path = None
 
     def _start_activity(self, path):
         model = self.get_model()
