@@ -56,9 +56,6 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __init__(self):
         Gtk.TreeView.__init__(self)
         self.set_can_focus(False)
-        self.props.activate_on_single_click = True
-
-        self.connect('row-activated', self.__on_row_activated)
 
         self._query = ''
 
@@ -139,6 +136,13 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._invoker = TreeViewInvoker()
         self._invoker.attach_treeview(self)
 
+        if hasattr(self.props, 'activate_on_single_click'):
+            # Gtk+ 3.8 and later
+            self.props.activate_on_single_click = True
+            self.connect('row-activated', self.__row_activated_cb)
+        else:
+            self.cell_icon.connect('clicked', self.__icon_clicked_cb)
+
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = \
             model[tree_iter][self._model.column_favorites[cell.favorite_view]]
@@ -156,10 +160,18 @@ class ActivitiesTreeView(Gtk.TreeView):
             not row[self._model.column_favorites[cell.favorite_view]],
             cell.favorite_view)
 
-    def __on_row_activated(self, treeview, path, col):
-        # Checks if the 'star' icon is clicked
+    def __icon_clicked_cb(self, cell, path):
+        """
+        A click on activity icon cell is to start an activity.
+        """
+        self._start_activity(path)
+
+    def __row_activated_cb(self, treeview, path, col):
+        """
+        A click on cells other than the favorite toggle is to start an
+        activity.  Gtk+ 3.8 and later.
+        """
         if col is not treeview.get_column(0):
-            model = treeview.get_model()
             self._start_activity(path)
 
     def _start_activity(self, path):
