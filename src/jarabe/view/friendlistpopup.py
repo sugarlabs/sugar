@@ -20,11 +20,14 @@ import logging
 from gi.repository import Gtk
 from gi.repository import GObject
 
+from jarabe.view.friendlistview import FriendListView
+
+from sugar3.graphics import style
 from sugar3.graphics.popwindow import PopWindow
 from sugar3.graphics.toolbutton import ToolButton
 
 class FriendListPopup(PopWindow):
-    __gtype_name__ = 'FriendListPopup'
+    #__gtype_name__ = 'FriendListPopup'
 
     __gsignals__ = {
         'friend-selected': (GObject.SignalFlags.RUN_FIRST, None,
@@ -32,7 +35,8 @@ class FriendListPopup(PopWindow):
     }
 
     def __init__(self):
-        PopWindow.__init__(self, True)
+
+        PopWindow.__init__(self)
         self.view = FriendListView()
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
@@ -55,6 +59,7 @@ class FriendListPopup(PopWindow):
         ok_button.show()
 
     def __send_clicked_cb(self, button):
+        logging.debug('[GSoC]frind-selected')
         model = self.view.get_model()
         selected = model.get_selected()
         self.emit('friend-selected', selected)

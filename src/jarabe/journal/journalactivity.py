@@ -18,6 +18,7 @@
 import logging
 from gettext import gettext as _
 import uuid
+import json
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -51,6 +52,8 @@ from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
+
+from jarabe.view.friendlistpopup import FriendListPopup
 
 from jarabe.model import session
 
@@ -197,7 +200,7 @@ class JournalActivity(JournalWindow):
         self._volumes_toolbar = None
         self._mount_point = '/'
         self._main_view_active = True
-
+        self.project_metadata = None
         self._editing_mode = False
 
         self._setup_main_view()
@@ -314,34 +317,65 @@ class JournalActivity(JournalWindow):
         add_buddy_button.connect('clicked',self._add_buddy_button_clicked_cb)
         hbox.pack_start(add_buddy_button, False, True, 0)
         add_buddy_button.show()
-        self._project_view.pack_start(hbox, True, True, 0)
         
         self._buddy_list = Gtk.VBox()
         hbox.pack_start(self._buddy_list, True, False, 0)
-
+        self._project_view.pack_start(hbox, True, True, 0)
+        
         hbox.show()
 
     def _add_buddy_button_clicked_cb(self, button):
         logging.debug('[GSoC]_add_buddy_button_clicked_cb')
-                
+        pop_up = FriendListPopup()
+        pop_up.connect('friend-selected', self.__friend_selected_cb)
+
+    def __friend_selected_cb(self, xyz, selected):
+        logging.debug('[GSoC]__friend_selected_cb %r' %selected)
+        buddies = []
+        if not self.project_metadata.get('buddies'):
+            self.project_metadata['buddies'] = []
+        for buddy in selected:
+            self.project_metadata['buddies'].append((buddy.nick, buddy.color))
+
+        #datastore._update_ds_entry(self.project_metadata['uid'])
+        #model.write(self.project_metadata['uid'])
+        self._project_buddies(self.project_metadata)
+        logging.debug('[GSoC]friend finally selected')
+
+    def _project_buddies(self, metadata):
+        logging.debug('[GSoC]_project_buddies')
+        for child in self._buddy_list.get_children():
+            self._buddy_list.remove(child)
+            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
+        self._buddy_list.pack_start(self._create_buddy_list(metadata), False, False,
+                                    style.DEFAULT_SPACING)
+        self._buddy_list.show_all()
+        logging.debug('[GSoC]project_buddies ended')                
 
     def _create_buddy_list(self, metadata):
 
         vbox = Gtk.VBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
+        #vbox.props.spacing = style.DEFAULT_SPACING
 
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-            style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
+        #text = Gtk.Label()
+        #text.set_markup('<span foreground="%s">%s</span>' % (
+        #    style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
+        #halign = Gtk.Alignment.new(0, 0, 0, 0)
+        #halign.add(text)
+        #vbox.pack_start(halign, False, False, 0)
 
         if metadata.get('buddies'):
-            buddies = json.loads(metadata['buddies']).values()
+            #buddies = json.loads(metadata['buddies']).values()
+            buddies = metadata['buddies']
+            logging.debug('[GSoC]buddies are %r' %buddies)
+            #for buddy in metadata['buddies']:
+            #    buddies.append((buddy.nick, buddy.color))
             vbox.pack_start(BuddyList(buddies), False, False, 0)
+            logging.debug('[GSoC]created_buddy_list ')
+            vbox.show_all()
             return vbox
         else:
+            vbox.show()
             return vbox
 
     '''
@@ -385,14 +419,10 @@ class JournalActivity(JournalWindow):
         return self._entry
 
     def __project_view_activated_cb(self, list_view, metadata):
+        self.project_metadata = metadata
         self._main_view_active = False
+        self._project_buddies(metadata)
         logging.debug('project_view_activate signal handler')
-        for child in self._buddy_list.get_children():
-            self._buddy_list.remove(child)
-            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(metadata), False, False,
-                                    style.DEFAULT_SPACING)
-
         self.set_canvas(self._project_view)
         self._project_view.show()
 
