@@ -28,32 +28,30 @@ import dbus
 import statvfs
 import os
 
-from sugar3.graphics import style
 from sugar3.graphics.alert import ErrorAlert
 from sugar3.graphics import iconentry
-from sugar3.graphics.toolbutton import ToolButton
 
 from sugar3 import env
 from sugar3.datastore import datastore
 from sugar3.activity import activityfactory
+from sugar3.graphics.toolbutton import ToolButton
 from gi.repository import SugarExt
 
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
-from jarabe.journal.expandedentry import TextView, BuddyList 
+from jarabe.journal.projectview import ProjectView
+
 
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
 from jarabe.journal import misc
-from jarabe.journal.objectchooser import ObjectChooser
+from jarabe.desktop.objectchooser import ObjectChooser
 from jarabe.journal.modalalert import ModalAlert
 from jarabe.journal import model
 from jarabe.journal.journalwindow import JournalWindow
 from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
-
-from jarabe.view.friendlistpopup import FriendListPopup
 
 from jarabe.model import session
 
@@ -251,11 +249,7 @@ class JournalActivity(JournalWindow):
     def can_close(self):
         return False
 
-    def _setup_main_view(self):
-        self._main_toolbox = MainToolbox()
-        self._edit_toolbox = EditToolbox(self)
-        self._main_view = Gtk.VBox()
-
+    def _create_add_new_entry(self):
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         add_new_button = ToolButton('list-add') # suggest icon for this
         add_new_button.set_tooltip(_('Add New'))
@@ -271,8 +265,16 @@ class JournalActivity(JournalWindow):
         self._entry.add_clear_button()
         hbox.pack_start(self._entry, True, True, 0)
         self._entry.show()
-        hbox.show()
-        self._main_view.pack_start(hbox, False, True, 0)
+        return hbox
+
+    def _setup_main_view(self):
+        self._main_toolbox = MainToolbox()
+        self._edit_toolbox = EditToolbox(self)
+        self._main_view = Gtk.VBox()
+
+        add_new_box = self._create_add_new_entry()
+        add_new_box.show_all()
+        self._main_view.pack_start(add_new_box, False, True, 0)
         self._main_view.set_can_focus(True)
 
         self._list_view = ListView(self, enable_multi_operations=True)
@@ -303,114 +305,10 @@ class JournalActivity(JournalWindow):
         self._main_toolbox.set_mount_point(self._mount_point)
 
     def _setup_project_view(self):
-        self._project_view = Gtk.VBox()
-        description_box = TextView()
-        #description_box.size_allocate((10 , 15))
-        self._project_view.pack_start(description_box, True, True, 0)
-        logging.debug('Project view setup')
-        description_box.show()
-        #self._description.show()
-        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-
-        add_buddy_button = ToolButton('list-add') # suggest icon for this
-        add_buddy_button.set_tooltip(_('Add Buddy'))
-        add_buddy_button.connect('clicked',self._add_buddy_button_clicked_cb)
-        hbox.pack_start(add_buddy_button, False, True, 0)
-        add_buddy_button.show()
-        
-        self._buddy_list = Gtk.VBox()
-        hbox.pack_start(self._buddy_list, True, False, 0)
-        self._project_view.pack_start(hbox, True, True, 0)
-        
-        hbox.show()
-
-    def _add_buddy_button_clicked_cb(self, button):
-        logging.debug('[GSoC]_add_buddy_button_clicked_cb')
-        pop_up = FriendListPopup()
-        pop_up.connect('friend-selected', self.__friend_selected_cb)
-
-    def __friend_selected_cb(self, xyz, selected):
-        logging.debug('[GSoC]__friend_selected_cb %r' %selected)
-        buddies = []
-        if not self.project_metadata.get('buddies'):
-            self.project_metadata['buddies'] = []
-        for buddy in selected:
-            self.project_metadata['buddies'].append((buddy.nick, buddy.color))
-
-        #datastore._update_ds_entry(self.project_metadata['uid'])
-        #model.write(self.project_metadata['uid'])
-        self._project_buddies(self.project_metadata)
-        logging.debug('[GSoC]friend finally selected')
-
-    def _project_buddies(self, metadata):
-        logging.debug('[GSoC]_project_buddies')
-        for child in self._buddy_list.get_children():
-            self._buddy_list.remove(child)
-            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(metadata), False, False,
-                                    style.DEFAULT_SPACING)
-        self._buddy_list.show_all()
-        logging.debug('[GSoC]project_buddies ended')                
-
-    def _create_buddy_list(self, metadata):
-
-        vbox = Gtk.VBox()
-        #vbox.props.spacing = style.DEFAULT_SPACING
-
-        #text = Gtk.Label()
-        #text.set_markup('<span foreground="%s">%s</span>' % (
-        #    style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
-        #halign = Gtk.Alignment.new(0, 0, 0, 0)
-        #halign.add(text)
-        #vbox.pack_start(halign, False, False, 0)
-
-        if metadata.get('buddies'):
-            #buddies = json.loads(metadata['buddies']).values()
-            buddies = metadata['buddies']
-            logging.debug('[GSoC]buddies are %r' %buddies)
-            #for buddy in metadata['buddies']:
-            #    buddies.append((buddy.nick, buddy.color))
-            vbox.pack_start(BuddyList(buddies), False, False, 0)
-            logging.debug('[GSoC]created_buddy_list ')
-            vbox.show_all()
-            return vbox
-        else:
-            vbox.show()
-            return vbox
-
-    '''
-    def _create_description(self):
-        widget = TextView()
-        widget.connect('focus-out-event',
-                       self._description_tags_focus_out_event_cb)
-        return self._create_scrollable(widget, label=_('Description:')), widget
-
-    def _description_tags_focus_out_event_cb(self, text_view, event):
-        logging.debug('[GSoC]blah here')
-
-    def _create_scrollable(self, widget, label=None):
-        vbox = Gtk.VBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-
-        if label is not None:
-            logging.debug('[GSoC]create_scrollable')
-            text = Gtk.Label()
-            text.set_markup('<span foreground="%s">%s</span>' % (
-                style.COLOR_BUTTON_GREY.get_html(), label))
-
-            halign = Gtk.Alignment.new(0, 0, 0, 0)
-            halign.add(text)
-            vbox.pack_start(halign, False, False, 0)
-
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
-                                   Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
-        scrolled_window.add(widget)
-        vbox.pack_start(scrolled_window, True, True, 0)
-
-        return vbox
-    '''
+        self._project_view = ProjectView()
+        add_new_box = self._create_add_new_entry()
+        add_new_box.show_all()
+        self._project_view.pack_start(add_new_box, False, True, 0)
 
     def get_list_view(self):
         return self._list_view
@@ -421,10 +319,10 @@ class JournalActivity(JournalWindow):
     def __project_view_activated_cb(self, list_view, metadata):
         self.project_metadata = metadata
         self._main_view_active = False
-        self._project_buddies(metadata)
+        self._project_view._project_buddies(metadata)
         logging.debug('project_view_activate signal handler')
         self.set_canvas(self._project_view)
-        self._project_view.show()
+        self._project_view.show_all()
 
     def _setup_secondary_view(self):
         self._secondary_view = Gtk.VBox()
@@ -442,6 +340,10 @@ class JournalActivity(JournalWindow):
         # TODO: Add-New-Entry for other activities
         if self.get_list_view().get_projects_view_active():
             self._initialize_journal_object()
+        elif self.project_metadata is not None:
+            logging.debug('[GSoC]ObjectChooser here...')
+            chooser = ObjectChooser()
+            chooser.show_all()
 
     def _initialize_journal_object(self):
         logging.debug('[GSoC]initializing journal object for project')
@@ -522,6 +424,7 @@ class JournalActivity(JournalWindow):
 
     def show_main_view(self):
         self._main_view_active = True
+        self.project_metadata = None
         if self._editing_mode:
             self._toolbox = self._edit_toolbox
             self._toolbox.set_total_number_of_entries(
