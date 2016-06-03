@@ -27,15 +27,18 @@ from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.popwindow import PopWindow
+from sugar3.activity import activityfactory
 
 from jarabe.desktop.activitieslist import ActivitiesList
+from jarabe.model import bundleregistry, shell
 
-class ObjectChooser(PopWindow):
+class ActivityChooser(PopWindow):
 
     #__gtype_name__ = 'ObjectChooser'
 
     __gsignals__ = {
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
+        'activity-selected': (GObject.SignalFlags.RUN_FIRST, None, ([object, object])),
     }
 
     def __init__(self):
@@ -51,10 +54,52 @@ class ObjectChooser(PopWindow):
 
         self.get_vbox().pack_start(self._scrolled_window, True, True, 0)
         self._list_view.show()
-        self._list_view._tree_view.connect('row-activated',self.__on_row_activated)
+        self.tree_view = self._list_view._tree_view
+        self.tree_view.disconnect(self.tree_view.hid)
+        self.tree_view.connect('row-activated',self.__on_row_activated)
+
         self.show()
         logging.debug('In the Object Chooser class init ended hehehe')
 
     def __on_row_activated(self, treeview, path, col):
         logging.debug('[GSoC]__on_row_activated overwritten in ObjectChooser')
+        if col is not treeview.get_column(0):
+            model = treeview.get_model()
+        row = model[path]
+
+        registry = bundleregistry.get_registry()
+        bundle_id = row[self.tree_view._model.column_bundle_id]
+        bundle = registry.get_bundle(bundle_id)
+        activity_id = activityfactory.create_activity_id()
+        #title=row[self.tree_view._model.column_title]
+
+        self.emit('activity-selected', bundle_id, activity_id)
+        #self._initialize_journal_object(title=row[self.tree_view._model.column_title], bundle_id=bundle_id, activity_id=activity_id)
+        return True
+
+    def _initialize_journal_object(self, title=None, bundle_id=None, activity_id=None):
+        
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = settings.get_string('color')
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['title_set_by_user'] = '0'
+        jobject.metadata['activity'] = bundle_id
+        jobject.metadata['activity_id'] = activity_id
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['preview'] = ''
+        jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        jobject.metadata['icon-color'] = icon_color
+        jobject.metadata['launch-times'] = str(int(time.time()))
+        jobject.metadata['spent-times'] = '0'
+        jobject.file_path = ''
+
+        # FIXME: We should be able to get an ID synchronously from the DS,
+        # then call async the actual create.
+        # http://bugs.sugarlabs.org/ticket/2169
+        datastore.write(jobject)
+
+        return jobject
+
             
