@@ -417,6 +417,7 @@ class BaseListView(Gtk.Bin):
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
+            
         if 'activity' in query_dict:
             if query_dict['activity'] == 'Project':
                 logging.debug('[GSoC] projectsview set in listview')
@@ -877,3 +878,4 @@ class CellRendererBuddy(CellRendererIcon):
             self.props.xo_color = xo_color
 
     buddy = GObject.property(type=object, setter=set_buddy)
+

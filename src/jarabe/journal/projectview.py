@@ -45,8 +45,6 @@ class ProjectView(Gtk.VBox):
         self.pack_start(hbox, False, True, 0)
         hbox.show()
 
-        
-
     def _add_buddy_button_clicked_cb(self, button):
         logging.debug('[GSoC]_add_buddy_button_clicked_cb')
         pop_up = FriendListPopup()
@@ -140,3 +138,4 @@ class ProjectView(Gtk.VBox):
 
         return vbox
          
+

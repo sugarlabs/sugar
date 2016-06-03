@@ -85,6 +85,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._all_ids = []
         t = time.time()
         self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        
         logging.debug('init resultset: %r', time.time() - t)
         self._temp_drag_file_path = None
         self._selected = []
@@ -317,3 +318,4 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def select_none(self):
         self._selected = []
+
