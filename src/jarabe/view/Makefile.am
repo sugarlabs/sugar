@@ -6,6 +6,9 @@ sugar_PYTHON =				\
 	buddymenu.py			\
 	cursortracker.py		\
 	customizebundle.py		\
+	friendlistmodel.py		\
+	friendlistpopup.py		\
+	friendlistview.py		\
 	gesturehandler.py		\
 	keyhandler.py			\
 	launcher.py			\
