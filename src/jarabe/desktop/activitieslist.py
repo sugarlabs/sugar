@@ -56,9 +56,6 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __init__(self):
         Gtk.TreeView.__init__(self)
         self.set_can_focus(False)
-        self.props.activate_on_single_click = True
-
-        self.connect('row-activated', self.__on_row_activated)
 
         self._query = ''
 
@@ -73,6 +70,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._model.set_visible_func(self.__model_visible_cb)
         self.set_model(self._model)
 
+        self._favorite_columns = []
         for i in range(desktop.get_number_of_views()):
             column = Gtk.TreeViewColumn()
             self.cell_favorite = CellRendererFavorite(i)
@@ -81,6 +79,8 @@ class ActivitiesTreeView(Gtk.TreeView):
             column.set_cell_data_func(self.cell_favorite,
                                       self.__favorite_set_data_cb)
             self.append_column(column)
+
+            self._favorite_columns.append(column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -139,6 +139,16 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._invoker = TreeViewInvoker()
         self._invoker.attach_treeview(self)
 
+        if hasattr(self.props, 'activate_on_single_click'):
+            # Gtk+ 3.8 and later
+            self.props.activate_on_single_click = True
+            self.connect('row-activated', self.__row_activated_cb)
+        else:
+            self.cell_icon.connect('clicked', self.__icon_clicked_cb)
+            self.connect('button-press-event', self.__button_press_cb)
+            self.connect('button-release-event', self.__button_release_cb)
+            self._row_activated_armed_path = None
+
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
         favorite = \
             model[tree_iter][self._model.column_favorites[cell.favorite_view]]
@@ -156,11 +166,56 @@ class ActivitiesTreeView(Gtk.TreeView):
             not row[self._model.column_favorites[cell.favorite_view]],
             cell.favorite_view)
 
-    def __on_row_activated(self, treeview, path, col):
-        # Checks if the 'star' icon is clicked
+    def __icon_clicked_cb(self, cell, path):
+        """
+        A click on activity icon cell is to start an activity.
+        """
+        self._start_activity(path)
+
+    def __row_activated_cb(self, treeview, path, col):
+        """
+        A click on cells other than the favorite toggle is to start an
+        activity.  Gtk+ 3.8 and later.
+        """
         if col is not treeview.get_column(0):
-            model = treeview.get_model()
             self._start_activity(path)
+
+    def __button_to_path(self, event, event_type):
+        if event.window != self.get_bin_window() or \
+           event.button != 1 or \
+           event.type != event_type:
+            return None
+
+        pos = self.get_path_at_pos(int(event.x), int(event.y))
+        if pos is None:
+            return None
+
+        path, column, x_, y_ = pos
+        if column == self._icon_column:
+            return None
+
+        if column in self._favorite_columns:
+            return None
+
+        return path
+
+    def __button_press_cb(self, widget, event):
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        if path is None:
+            return
+
+        self._row_activated_armed_path = path
+
+    def __button_release_cb(self, widget, event):
+        path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
+        if path is None:
+            return
+
+        if self._row_activated_armed_path != path:
+            return
+
+        self._start_activity(path)
+        self._row_activated_armed_path = None
 
     def _start_activity(self, path):
         model = self.get_model()
