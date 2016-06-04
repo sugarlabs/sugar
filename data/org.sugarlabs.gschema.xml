@@ -165,7 +165,7 @@
     </schema>
     <schema id="org.sugarlabs.collaboration" path="/org/sugarlabs/collaboration/">
         <key name="jabber-server" type="s">
-            <default>'jabber.sugarlabs.org'</default>
+            <default>''</default>
             <summary>Jabber Server</summary>
             <description>URL of the jabber server to use.</description>
         </key>
