@@ -4,6 +4,7 @@ python_scripts =		\
 	sugar-backlight-setup	\
 	sugar-control-panel	\
 	sugar-install-bundle	\
+	sugar-erase-bundle	\
 	sugar-launch
 
 bin_SCRIPTS = 			\
