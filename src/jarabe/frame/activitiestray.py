@@ -54,6 +54,7 @@ import jarabe.frame
 
 
 class ActivityButton(RadioToolButton):
+
     def __init__(self, home_activity, group):
         RadioToolButton.__init__(self, group=group)
 
@@ -235,6 +236,7 @@ class InvitePalette(Palette):
 
 
 class ActivitiesTray(HTray):
+
     def __init__(self):
         HTray.__init__(self)
 
@@ -402,6 +404,7 @@ class ActivitiesTray(HTray):
 class BaseTransferButton(ToolButton):
     """Button with a notification attached
     """
+
     def __init__(self, file_transfer):
         ToolButton.__init__(self)
 
@@ -444,6 +447,7 @@ class BaseTransferButton(ToolButton):
 class IncomingTransferButton(BaseTransferButton):
     """UI element representing an ongoing incoming file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 
@@ -525,6 +529,7 @@ class IncomingTransferButton(BaseTransferButton):
 class OutgoingTransferButton(BaseTransferButton):
     """UI element representing an ongoing outgoing file transfer
     """
+
     def __init__(self, file_transfer):
         BaseTransferButton.__init__(self, file_transfer)
 

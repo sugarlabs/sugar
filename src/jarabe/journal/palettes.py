@@ -150,7 +150,7 @@ class ObjectPalette(Palette):
     def __duplicate_activate_cb(self, menu_item):
         try:
             model.copy(self._metadata, '/')
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
@@ -367,7 +367,7 @@ class VolumeMenu(MenuItem):
             try:
                 metadata = model.get(uid)
                 model.copy(metadata, self._mount_point)
-            except IOError, e:
+            except IOError as e:
                 logging.exception('Error while copying the entry. %s',
                                   e.strerror)
                 self.emit('volume-error',
@@ -391,7 +391,7 @@ class VolumeMenu(MenuItem):
             return
         try:
             model.copy(metadata, self._mount_point)
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s',
                               e.strerror)
 
@@ -526,6 +526,7 @@ class StartWithMenu(Gtk.Menu):
 
 
 class BuddyPalette(Palette):
+
     def __init__(self, buddy):
         self._buddy = buddy
 

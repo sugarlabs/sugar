@@ -247,8 +247,8 @@ class Frame(object):
 
         self._notif_by_icon[icon] = window
 
-        timeout_id = GObject.timeout_add(duration,
-                                         lambda: self.remove_notification(icon))
+        timeout_id = GObject.timeout_add(
+            duration, lambda: self.remove_notification(icon))
         return timeout_id
 
     def remove_notification(self, icon):
@@ -288,7 +288,7 @@ class Frame(object):
 
         duration = kwargs.get('expire_timeout', -1)
         if duration == -1:
-            duration = _NOTIFICATION_DURATION
+            duration = NOTIFICATION_DURATION
 
         self.add_notification(icon, Gtk.CornerType.TOP_LEFT, duration)
 

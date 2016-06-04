@@ -35,6 +35,7 @@ _BASE_SCALE = 1000
 
 
 class Layout(object):
+
     def __init__(self):
         pass
 
@@ -46,6 +47,7 @@ class Layout(object):
 
 
 class ViewLayout(Layout):
+
     def __init__(self):
         self._grid = None
         self._width = 0
@@ -156,6 +158,7 @@ class ViewLayout(Layout):
 
 
 class SpreadLayout(ViewLayout):
+
     def __init__(self):
         ViewLayout.__init__(self)
 
@@ -557,8 +560,11 @@ class BoxLayout(RingLayout):
             # mirror around 180
             return cos_d(360 - d)
 
-        cos = lambda r: cos_d(math.degrees(r))
-        sin = lambda r: cos_d(math.degrees(r) - 90)
+        def cos(r):
+            return cos_d(math.degrees(r))
+
+        def sin(r):
+            return cos_d(math.degrees(r) - 90)
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
                                               children_count, width, height,
@@ -617,8 +623,11 @@ class TriangleLayout(RingLayout):
             # mirror around 90
             return sin_d(180 - d)
 
-        cos = lambda r: cos_d(math.degrees(r))
-        sin = lambda r: sin_d(math.degrees(r))
+        def cos(r):
+            return cos_d(math.degrees(r))
+
+        def sin(r):
+            return sin_d(math.degrees(r))
 
         return RingLayout._calculate_position(self, radius, icon_size, index,
                                               children_count, width, height,

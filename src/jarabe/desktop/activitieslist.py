@@ -449,6 +449,7 @@ class CellRendererActivityIcon(CellRendererIcon):
 
 
 class ClearMessageBox(Gtk.EventBox):
+
     def __init__(self, message, button_callback):
         Gtk.EventBox.__init__(self)
 

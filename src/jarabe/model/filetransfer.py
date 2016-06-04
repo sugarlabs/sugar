@@ -136,6 +136,7 @@ class BaseFileTransfer(GObject.GObject):
 
 
 class IncomingFileTransfer(BaseFileTransfer):
+
     def __init__(self, connection, object_path, props):
         BaseFileTransfer.__init__(self, connection)
 
@@ -188,6 +189,7 @@ class IncomingFileTransfer(BaseFileTransfer):
 
 
 class OutgoingFileTransfer(BaseFileTransfer):
+
     def __init__(self, buddy, file_name, title, description, mime_type):
 
         presence_service = presenceservice.get_instance()

@@ -34,12 +34,14 @@ from jarabe.journal.objectchooser import ObjectChooser
 
 
 class StreamMonitor(object):
+
     def __init__(self):
         self.on_data = None
         self.on_close = None
 
 
 class API(object):
+
     def __init__(self, client):
         self._client = client
 
@@ -50,6 +52,7 @@ class API(object):
 
 
 class ActivityAPI(API):
+
     def __init__(self, client):
         API.__init__(self, client)
         self._activity.connect('pause', self._pause_cb)
@@ -103,6 +106,7 @@ class ActivityAPI(API):
 
 
 class DatastoreAPI(API):
+
     def __init__(self, client):
         API.__init__(self, client)
 
@@ -242,6 +246,7 @@ class DatastoreAPI(API):
 
 
 class APIClient(object):
+
     def __init__(self, session):
         self._session = session
 
@@ -276,6 +281,7 @@ class APIClient(object):
 
 
 class APIServer(object):
+
     def __init__(self):
         self._stream_monitors = {}
 

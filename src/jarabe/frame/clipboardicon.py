@@ -78,7 +78,8 @@ class ClipboardIcon(RadioToolButton):
                           event_time):
         frame = jarabe.frame.get_view()
         self._timeout_id = GObject.timeout_add(
-            jarabe.frame.frame.NOTIFICATION_DURATION, lambda: frame.remove_notification(self._notif_icon))
+            jarabe.frame.frame.NOTIFICATION_DURATION,
+            lambda: frame.remove_notification(self._notif_icon))
         target_atom = selection.get_target()
         target_name = target_atom.name()
         logging.debug('_drag_data_get_cb: requested target %s', target_name)

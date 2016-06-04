@@ -171,7 +171,7 @@ class BrightnessManagerWidget(Gtk.VBox):
         if self._adjustment_timeout_id is not None:
             GLib.source_remove(self._adjustment_timeout_id)
         self._adjustment_timeout_id = GLib.timeout_add(
-            self.TIMEOUT_DELAY,  self._adjust_brightness)
+            self.TIMEOUT_DELAY, self._adjust_brightness)
 
     def _adjust_brightness(self):
         self._model.handler_block(self._model_changed_hid)

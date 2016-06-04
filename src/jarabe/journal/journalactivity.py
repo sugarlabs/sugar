@@ -60,6 +60,7 @@ _journal = None
 
 
 class JournalActivityDBusService(dbus.service.Object):
+
     def __init__(self, parent):
         self._parent = parent
         session_bus = dbus.SessionBus()
@@ -175,6 +176,7 @@ class JournalActivityDBusService(dbus.service.Object):
 
 
 class JournalActivity(JournalWindow):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the journal')
         JournalWindow.__init__(self)

@@ -48,7 +48,8 @@ def __setitem__(self, key, value):
     type_ = range.get_child_value(0).get_string()
     v = range.get_child_value(1)
     if type_ == 'type':
-        # v is boxed empty array, type of its elements is the allowed value type
+        # v is boxed empty array,
+        # type of its elements is the allowed value type
         assert v.get_child_value(0).get_type_string().startswith('a')
         type_str = v.get_child_value(0).get_type_string()[1:]
     elif type_ == 'enum':
@@ -65,10 +66,12 @@ def __setitem__(self, key, value):
         type_str = v.get_child_value(0).get_type_string()[1]
 
     if not self.set_value(key, GLib.Variant(type_str, value)):
-        raise ValueError("value '%s' for key '%s' is outside of valid range" % (value, key))
+        raise ValueError("value '%s' for key '%s' is outside of"
+                         " valid range" % (value, key))
 
 
-def bind_with_convert(self, key, widget, prop, flags, key_to_prop, prop_to_key):
+def bind_with_convert(self, key, widget, prop, flags,
+                      key_to_prop, prop_to_key):
     self._ignore_key_changed = False
 
     def key_changed(settings, key):
@@ -509,7 +512,8 @@ class Network(SectionView):
 
         url_box = StringSettingBox(
             _('Configuration URL:'),
-            self._proxy_settings['org.sugarlabs.system.proxy'], 'autoconfig-url',
+            self._proxy_settings['org.sugarlabs.system.proxy'],
+            'autoconfig-url',
             size_group)
 
         automatic_proxy_box.pack_start(url_box, True, True, 0)

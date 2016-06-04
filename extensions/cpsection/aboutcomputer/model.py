@@ -38,6 +38,7 @@ _not_available = _('Not available')
 
 _serial_no = None
 
+
 def get_aboutcomputer():
     msg = 'Serial Number: %s \nBuild Number: %s \nFirmware Number: %s \n' \
         % (get_serial_number(), get_build_number(), get_firmware_number())

@@ -31,8 +31,13 @@ from sugar3.graphics.palettemenu import PaletteMenuItem
 from jarabe.controlpanel.sectionview import SectionView
 from jarabe.controlpanel.inlinealert import InlineAlert
 
-_translate_language = lambda msg: gettext.dgettext('iso_639', msg)
-_translate_country = lambda msg: gettext.dgettext('iso_3166', msg)
+
+def _translate_language(msg):
+    return gettext.dgettext('iso_639', msg)
+
+
+def _translate_country(msg):
+    return gettext.dgettext('iso_3166', msg)
 
 CLASS = 'Language'
 ICON = 'module-language'

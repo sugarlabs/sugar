@@ -369,6 +369,7 @@ def is_sugar_adhoc_network(ssid):
 
 
 class WirelessSecurity(object):
+
     def __init__(self):
         self.key_mgmt = None
         self.proto = None
@@ -439,6 +440,7 @@ class OlpcMesh(object):
 
 
 class ConnectionSettings(object):
+
     def __init__(self):
         self.id = None
         self.uuid = None
@@ -457,6 +459,7 @@ class ConnectionSettings(object):
 
 
 class IP4Config(object):
+
     def __init__(self):
         self.method = None
 
@@ -468,6 +471,7 @@ class IP4Config(object):
 
 
 class Serial(object):
+
     def __init__(self):
         self.baud = None
 
@@ -481,6 +485,7 @@ class Serial(object):
 
 
 class Ppp(object):
+
     def __init__(self):
         pass
 
@@ -490,6 +495,7 @@ class Ppp(object):
 
 
 class Gsm(object):
+
     def __init__(self):
         self.apn = None
         self.number = None
@@ -515,6 +521,7 @@ class Gsm(object):
 
 
 class Settings(object):
+
     def __init__(self, wireless_cfg=None):
         self.connection = ConnectionSettings()
         self.ip4_config = None
@@ -538,6 +545,7 @@ class Settings(object):
 
 
 class SettingsGsm(object):
+
     def __init__(self):
         self.connection = ConnectionSettings()
         self.ip4_config = IP4Config()
@@ -561,6 +569,7 @@ class SecretsResponse(object):
     """Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
     """
+
     def __init__(self, reply_cb, error_cb):
         self._reply_cb = reply_cb
         self._error_cb = error_cb
@@ -588,6 +597,7 @@ def set_connected():
 
 
 class SecretAgent(dbus.service.Object):
+
     def __init__(self):
         self._bus = dbus.SystemBus()
         dbus.service.Object.__init__(self, self._bus, NM_SECRET_AGENT_PATH)
@@ -836,6 +846,7 @@ class Connection(GObject.GObject):
 
 
 class Connections(object):
+
     def __init__(self):
         self._bus = dbus.SystemBus()
         self._connections = []

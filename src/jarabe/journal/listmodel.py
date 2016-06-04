@@ -182,7 +182,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._cached_row.append(xo_color)
 
         title = GObject.markup_escape_text(metadata.get('title',
-                                           _('Untitled')))
+                                                        _('Untitled')))
         self._cached_row.append('<b>%s</b>' % (title, ))
 
         try:
@@ -217,7 +217,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if metadata.get('buddies'):
             try:
                 buddies = json.loads(metadata['buddies']).values()
-            except json.decoder.JSONDecodeError, exception:
+            except json.decoder.JSONDecodeError as exception:
                 logging.warning('Cannot decode buddies for %r: %s',
                                 metadata['uid'], exception)
 
@@ -230,7 +230,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             if buddies:
                 try:
                     nick, color = buddies.pop(0)
-                except (AttributeError, ValueError), exception:
+                except (AttributeError, ValueError) as exception:
                     logging.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:

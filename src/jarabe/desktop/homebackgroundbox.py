@@ -55,6 +55,7 @@ def get_background_alpha_level():
 
 
 class HomeBackgroundBox(Gtk.VBox):
+
     def __init__(self):
         Gtk.VBox.__init__(self)
         self._background_pixbuf = None

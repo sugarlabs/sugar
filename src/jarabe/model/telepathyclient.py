@@ -40,6 +40,7 @@ _instance = None
 
 
 class TelepathyClient(dbus.service.Object, DBusProperties):
+
     def __init__(self):
         self._interfaces = set([CLIENT, CLIENT_HANDLER,
                                 CLIENT_INTERFACE_REQUESTS, PROPERTIES_IFACE,
@@ -124,7 +125,7 @@ class TelepathyClient(dbus.service.Object, DBusProperties):
                 channels=channels,
                 dispatch_operation_path=dispatch_operation_path,
                 properties=properties)
-        except Exception, e:
+        except Exception as e:
             logging.exception(e)
 
 

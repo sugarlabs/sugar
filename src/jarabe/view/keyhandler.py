@@ -73,6 +73,7 @@ _instance = None
 
 
 class KeyHandler(object):
+
     def __init__(self, frame):
         self._frame = frame
         self._key_pressed = None

@@ -42,6 +42,7 @@ from jarabe.journal import misc
 
 
 class BasePalette(Palette):
+
     def __init__(self, home_activity):
         Palette.__init__(self)
 
@@ -192,6 +193,7 @@ class ActivityPalette(Palette):
 
 
 class JournalPalette(BasePalette):
+
     def __init__(self, home_activity):
         self._home_activity = home_activity
         self._progress_bar = None
@@ -253,6 +255,7 @@ class JournalPalette(BasePalette):
 
 
 class VolumePalette(Palette):
+
     def __init__(self, mount):
         Palette.__init__(self, label=mount.get_name())
         self._mount = mount

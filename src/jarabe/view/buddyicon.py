@@ -25,6 +25,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class BuddyIcon(CanvasIcon):
+
     def __init__(self, buddy, pixel_size=style.STANDARD_ICON_SIZE):
         CanvasIcon.__init__(self, icon_name='computer-xo',
                             pixel_size=pixel_size)

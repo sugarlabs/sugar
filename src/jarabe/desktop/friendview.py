@@ -25,6 +25,7 @@ from jarabe.model import bundleregistry
 
 
 class FriendView(Gtk.VBox):
+
     def __init__(self, buddy, **kwargs):
         Gtk.VBox.__init__(self)
 

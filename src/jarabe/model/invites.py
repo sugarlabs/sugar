@@ -46,6 +46,7 @@ _instance = None
 
 class BaseInvite(object):
     """Invitation to shared activity or private 1-1 Telepathy channel"""
+
     def __init__(self, dispatch_operation_path, handle, handler):
         self.dispatch_operation_path = dispatch_operation_path
         self._handle = handle
@@ -80,6 +81,7 @@ class BaseInvite(object):
 
 class ActivityInvite(BaseInvite):
     """Invitation to a shared activity."""
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  activity_properties):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
@@ -119,6 +121,7 @@ class ActivityInvite(BaseInvite):
 
 
 class PrivateInvite(BaseInvite):
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  private_channel):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)

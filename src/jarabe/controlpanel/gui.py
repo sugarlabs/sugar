@@ -378,7 +378,8 @@ class ControlPanel(Gtk.Window):
         else:
             self._show_main_view()
 
-    def __set_toolbar_sensitivity_cb(self, value=True, widget=None, event=None):
+    def __set_toolbar_sensitivity_cb(self, value=True,
+                                     widget=None, event=None):
         self._section_toolbar.accept_button.set_sensitive(value)
         self._section_toolbar.cancel_button.set_sensitive(value)
 
@@ -468,6 +469,7 @@ class ControlPanel(Gtk.Window):
 
 
 class ModelWrapper(object):
+
     def __init__(self, module):
         self._module = module
         self._options = {}
@@ -491,7 +493,7 @@ class ModelWrapper(object):
             if method and self._options[key] is not None:
                 try:
                     method(self._options[key])
-                except Exception, detail:
+                except Exception as detail:
                     _logger.debug('Error undo option: %s', detail)
 if hasattr(ControlPanel, 'set_css_name'):
     ControlPanel.set_css_name('controlpanel')

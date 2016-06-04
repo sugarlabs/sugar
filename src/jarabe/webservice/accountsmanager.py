@@ -88,7 +88,7 @@ def _ensure_module_repository():
         if module is not None and hasattr(module, 'get_account'):
             try:
                 account_module = module.get_account()
-            except Exception, e:
+            except Exception as e:
                 logging.error('%s.get_account() failed: %s' %
                               (service_name, e))
                 traceback.format_exc()
@@ -130,7 +130,7 @@ def _load_module(path, module):
     try:
         module = import_module(_convert_path_to_module_name(path, module),
                                [module])
-    except ImportError, e:
+    except ImportError as e:
         module = None
         logging.debug('ImportError: %s' % (e))
 
@@ -175,7 +175,7 @@ def _extend_icon_theme_search_path(path):
     icon_search_path = icon_theme.get_search_path()
     try:
         icon_path_dirs = os.listdir(path)
-    except OSError, e:
+    except OSError as e:
         icon_path_dirs = []
         logging.warning('listdir: %s: %s' % (path, e))
 

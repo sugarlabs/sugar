@@ -32,6 +32,7 @@ _instance = None
 
 
 class NotificationService(dbus.service.Object):
+
     def __init__(self):
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
@@ -67,7 +68,7 @@ class NotificationService(dbus.service.Object):
         if replaces_id > 0:
             notification_id = replaces_id
         else:
-            if self._notification_counter == sys.maxint:
+            if self._notification_counter == sys.maxsize:
                 self._notification_counter = 1
             else:
                 self._notification_counter += 1

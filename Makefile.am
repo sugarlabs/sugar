@@ -24,7 +24,7 @@ check-po:
 	done;
 
 lint:
-	flake8 $(top_srcdir)
+	flake8 --ignore E402 $(top_srcdir)/src $(top_srcdir)/extensions
 
 test: lint check-po
 	PYTHONPATH=$(pkgdatadir)/extensions:$(PYTHONPATH) \

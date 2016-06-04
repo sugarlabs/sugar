@@ -144,7 +144,7 @@ class BundleRegistry(GObject.GObject):
                 root = os.path.join(root, 'sugar', 'activities')
 
                 try:
-                    dir_list = os.listdir(root)
+                    os.listdir(root)
                 except OSError:
                     logging.debug('Can not find GLib system dir %s', root)
                     continue
@@ -626,6 +626,7 @@ class _InstallQueue(object):
     done, the thread enqueues a callback in the main thread (via the GLib
     main loop).
     """
+
     def __init__(self, registry):
         self._lock = Lock()
         self._queue = []
@@ -689,7 +690,7 @@ class _InstallQueue(object):
 
         try:
             task.queue_callback(bundle.install())
-        except Exception, e:
+        except Exception as e:
             logging.debug("InstallThread install failed: %r", e)
             task.queue_callback(e)
 
@@ -699,6 +700,7 @@ class _InstallTask(object):
     Simple class to represent a bundle installation/upgrade task.
     Only for use internal to InstallQueue.
     """
+
     def __init__(self, bundle, force_downgrade, callback, user_data):
         self.bundle = bundle
         self.callback = callback

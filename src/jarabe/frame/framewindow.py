@@ -138,7 +138,7 @@ class FrameWindow(Gtk.Window):
     def _update_size(self):
         if self._position == Gtk.PositionType.TOP \
                 or self._position == Gtk.PositionType.BOTTOM:
-                self.resize(Gdk.Screen.width(), self.size)
+            self.resize(Gdk.Screen.width(), self.size)
         else:
             self.resize(self.size, Gdk.Screen.height())
 

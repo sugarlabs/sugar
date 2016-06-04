@@ -18,7 +18,9 @@ from gi.repository import Gtk
 import gettext
 from gi.repository import GObject
 
-_ = lambda msg: gettext.dgettext('sugar', msg)
+
+def _(msg):
+    return gettext.dgettext('sugar', msg)
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.toolbutton import ToolButton

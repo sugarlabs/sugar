@@ -121,6 +121,7 @@ class _Page(Gtk.VBox):
 
 
 class _NamePage(_Page):
+
     def __init__(self, intro):
         _Page.__init__(self)
         self._intro = intro
@@ -161,6 +162,7 @@ class _NamePage(_Page):
 
 
 class _ColorPage(_Page):
+
     def __init__(self):
         _Page.__init__(self)
 
@@ -190,6 +192,7 @@ class _ColorPage(_Page):
 
 
 class _GenderPage(_Page):
+
     def __init__(self):
         _Page.__init__(self)
 
@@ -222,6 +225,7 @@ class _GenderPage(_Page):
 
 
 class _AgePage(_Page):
+
     def __init__(self, gender):
         _Page.__init__(self)
 
@@ -323,7 +327,7 @@ class _IntroBox(Gtk.VBox):
             self.PAGE_COLOR: _setup_color_page,
             self.PAGE_GENDER: _setup_gender_page,
             self.PAGE_AGE: _setup_age_page
-            }
+        }
 
         setup_methods[self._page](self)
         self.pack_start(self._current_page, True, True, 0)

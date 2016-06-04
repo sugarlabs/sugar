@@ -119,7 +119,7 @@ def main():
                     if found == 1:
                         try:
                             method()
-                        except Exception, detail:
+                        except Exception as detail:
                             print _(_general_error % detail)
                     else:
                         print _(_same_option_warning % (key, module))
@@ -134,7 +134,7 @@ def main():
                     if found == 1:
                         try:
                             note = method(*args)
-                        except Exception, detail:
+                        except Exception as detail:
                             print _(_general_error % detail)
                         if note == _RESTART:
                             note_restart()
@@ -151,7 +151,7 @@ def main():
                     if found == 1:
                         try:
                             note = method(*args)
-                        except Exception, detail:
+                        except Exception as detail:
                             print _(_general_error % detail)
                         if note == _RESTART:
                             note_restart()

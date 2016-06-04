@@ -92,7 +92,7 @@ def _convert_entries(root):
     for posting_item in database.postlist(''):
         try:
             document = database.get_document(posting_item.docid)
-        except xapian.DocNotFoundError, e:
+        except xapian.DocNotFoundError as e:
             logging.debug('Convert DS-0 Journal entries: error getting '
                           'document %s: %s', posting_item.docid, e)
             continue
@@ -102,7 +102,7 @@ def _convert_entries(root):
 def _convert_entry(root, document):
     try:
         metadata_loaded = cPickle.loads(document.get_data())
-    except cPickle.PickleError, e:
+    except cPickle.PickleError as e:
         logging.debug('Convert DS-0 Journal entries: '
                       'error converting metadata: %s', e)
         return
@@ -306,7 +306,7 @@ class BaseButton(RadioToolButton):
 
         try:
             model.copy(metadata, self.mount_point)
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry. %s', e.strerror)
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % e.strerror,
@@ -314,6 +314,7 @@ class BaseButton(RadioToolButton):
 
 
 class VolumeButton(BaseButton):
+
     def __init__(self, mount):
         self._mount = mount
         mount_point = mount.get_root().get_path()
@@ -332,6 +333,7 @@ class VolumeButton(BaseButton):
 
 
 class JournalButton(BaseButton):
+
     def __init__(self):
         BaseButton.__init__(self, mount_point='/')
 

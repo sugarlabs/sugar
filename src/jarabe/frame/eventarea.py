@@ -18,7 +18,6 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GObject
 from gi.repository import Wnck
-from gi.repository import Gio
 
 from sugar3.graphics import style
 
@@ -28,6 +27,7 @@ _MAX_DELAY = 1000
 _CORNERS = ['nw', 'ne', 'se', 'sw']
 _EDGES = ['n', 'e', 's', 'w']
 _BOXES = _CORNERS + _EDGES
+
 
 class EventArea(GObject.GObject):
     __gsignals__ = {
@@ -95,8 +95,8 @@ class EventArea(GObject.GObject):
     def _move(self, tag, x, y, width, height):
         window = self._boxes[tag].get_window()
         window.set_events(Gdk.EventMask.POINTER_MOTION_MASK |
-                              Gdk.EventMask.ENTER_NOTIFY_MASK |
-                              Gdk.EventMask.LEAVE_NOTIFY_MASK)
+                          Gdk.EventMask.ENTER_NOTIFY_MASK |
+                          Gdk.EventMask.LEAVE_NOTIFY_MASK)
         window.move_resize(x, y, width, height)
 
     def _notify_enter(self):

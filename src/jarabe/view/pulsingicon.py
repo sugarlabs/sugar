@@ -29,6 +29,7 @@ _MINIMAL_ALPHA_VALUE = 0.33
 
 
 class Pulser(object):
+
     def __init__(self, icon, interval=_INTERVAL):
         self._pulse_hid = None
         self._icon = icon

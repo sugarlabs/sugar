@@ -88,8 +88,8 @@ class Clipboard(GObject.GObject):
         if on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
-            logging.debug('Added format of type ' + format_type
-                          + ' with path at ' + new_uri)
+            logging.debug('Added format of type ' + format_type +
+                          ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
             logging.debug('Added in-memory format of type %s.', format_type)
@@ -163,7 +163,7 @@ class Clipboard(GObject.GObject):
         f_, new_file_path = tempfile.mkstemp(ext, root)
         del f_
         shutil.copyfile(path, new_file_path)
-        os.chmod(new_file_path, 0644)
+        os.chmod(new_file_path, 0o644)
 
         return 'file://' + new_file_path
 

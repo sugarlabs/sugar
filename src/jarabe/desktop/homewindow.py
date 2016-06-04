@@ -17,7 +17,6 @@
 from gettext import gettext as _
 import logging
 
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -45,6 +44,7 @@ _instance = None
 
 
 class HomeWindow(Gtk.Window):
+
     def __init__(self):
         logging.debug('STARTUP: Loading the desktop window')
         Gtk.Window.__init__(self)
@@ -157,7 +157,7 @@ class HomeWindow(Gtk.Window):
         # When shift is on, <ALT> becomes <META>
         shift = (event.state & Gdk.ModifierType.SHIFT_MASK) == 1
         return event.keyval in [Gdk.KEY_Alt_L, Gdk.KEY_Alt_R] or \
-           event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift
+            event.keyval in [Gdk.KEY_Meta_L, Gdk.KEY_Meta_R] and shift
 
     def __key_press_event_cb(self, window, event):
         if self.__is_alt(event) and not self._alt_timeout_sid:

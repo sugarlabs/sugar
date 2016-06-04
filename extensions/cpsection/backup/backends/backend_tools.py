@@ -62,9 +62,9 @@ class PreConditionsChoose(Exception):
 class Backend(GObject.GObject):
 
     __gsignals__ = {
-        'started':   (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'progress':  (GObject.SignalFlags.RUN_FIRST, None, ([float])),
-        'finished':  (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'started': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'progress': (GObject.SignalFlags.RUN_FIRST, None, ([float])),
+        'finished': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'cancelled': (GObject.SignalFlags.RUN_FIRST, None, ([]))}
 
     def verify_preconditions(self):

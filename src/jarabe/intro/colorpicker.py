@@ -23,6 +23,7 @@ from sugar3.graphics.xocolor import XoColor
 
 
 class ColorPicker(Gtk.EventBox):
+
     def __init__(self):
         Gtk.EventBox.__init__(self)
         self._xo_color = None

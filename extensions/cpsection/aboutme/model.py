@@ -81,7 +81,7 @@ def print_color():
 
     if stroke_tuple is not None:
         print ('stroke:   color=%s hue=%s') % (stroke_tuple[0],
-                                                stroke_tuple[1])
+                                               stroke_tuple[1])
     else:
         print ('stroke:   %s') % (tmp[0])
     if fill_tuple is not None:

@@ -181,7 +181,8 @@ def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen', '--no-composite'])
+    _metacity_process = subprocess.Popen(
+        ['metacity', '--no-force-fullscreen', '--no-composite'])
 
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
@@ -222,7 +223,7 @@ def cleanup_temporary_files():
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
         os.makedirs(data_dir)
-    except OSError, e:
+    except OSError as e:
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e
@@ -350,7 +351,8 @@ def setup_fonts():
 def setup_proxy():
     protos = ['http', 'https', 'ftp', 'socks']
     env_variables = ['{}_proxy'.format(proto) for proto in protos]
-    schemas = ['org.sugarlabs.system.proxy.{}'.format(proto) for proto in protos]
+    schemas = ['org.sugarlabs.system.proxy.{}'.format(
+        proto) for proto in protos]
 
     g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
     if g_mode == 'manual':

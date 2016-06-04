@@ -107,7 +107,7 @@ class IconModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._cached_row.append(metadata['uid'])
 
         title = GObject.markup_escape_text(metadata.get('title',
-                                           _('Untitled')))
+                                                        _('Untitled')))
         self._cached_row.append(title)
 
         self._cached_row.append(metadata.get('preview', ''))

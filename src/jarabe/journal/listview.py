@@ -103,8 +103,8 @@ class TreeView(Gtk.TreeView):
             for column_index in [ListModel.COLUMN_BUDDY_1,
                                  ListModel.COLUMN_BUDDY_2,
                                  ListModel.COLUMN_BUDDY_3]:
-                if column == self.buddies_columns[column_index
-                                                  - ListModel.COLUMN_BUDDY_1]:
+                if column == self.buddies_columns[column_index -
+                                                  ListModel.COLUMN_BUDDY_1]:
                     buddy_value = tree_model.do_get_value(
                         iterator,
                         column_index

@@ -51,6 +51,7 @@ _FILTERED_ALPHA = 0.33
 
 
 class WirelessNetworkView(EventPulsingIcon):
+
     def __init__(self, initial_ap):
         EventPulsingIcon.__init__(self, pixel_size=style.STANDARD_ICON_SIZE,
                                   cache=True)
@@ -599,6 +600,7 @@ class SugarAdhocView(EventPulsingIcon):
 
 
 class OlpcMeshView(EventPulsingIcon):
+
     def __init__(self, mesh_mgr, channel):
         EventPulsingIcon.__init__(self, icon_name=_OLPC_MESH_ICON_NAME,
                                   pixel_size=style.STANDARD_ICON_SIZE,
