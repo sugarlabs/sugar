@@ -31,12 +31,14 @@ import os
 
 from sugar3.graphics.alert import ErrorAlert
 from sugar3.graphics import iconentry
-
+import sugar3.activity.activityfactory
 from sugar3 import env
 from sugar3.datastore import datastore
 from sugar3.activity import activityfactory
 from sugar3.graphics.toolbutton import ToolButton
 from gi.repository import SugarExt
+
+from jarabe.model.project import Project
 
 from jarabe.journal.journaltoolbox import MainToolbox
 from jarabe.journal.journaltoolbox import DetailToolbox
@@ -365,6 +367,9 @@ class JournalActivity(JournalWindow):
 
     def __project_view_activated_cb(self, list_view, metadata):
         self.project_metadata = metadata
+        project  = Project(self.project_metadata)
+        self._project_view.set_project(project)
+
         self._main_view_active = False
         self.get_list_view().set_projects_view_active(False)
         self._project_view._project_buddies(metadata)
@@ -376,7 +381,7 @@ class JournalActivity(JournalWindow):
 
         query = {}
         query['project_id'] = self.project_metadata['uid']
-        query['mountpoints'] = ['/']
+        #query['mountpoints'] = ['/']
         logging.debug('[GSoC]__project_view_activated_cb %r' %query)
         self._list_view_project.update_with_query(query)
         self._project_view.show_all()
@@ -419,9 +424,8 @@ class JournalActivity(JournalWindow):
             jobject.metadata['title'] = title
             jobject.metadata['title_set_by_user'] = '0'
             jobject.metadata['activity'] = 'Project'
-
             # TODO: Implement activity_id for projects
-            #jobject.metadata['activity_id'] = self.get_id()
+            jobject.metadata['activity_id'] = activityfactory.create_activity_id()
 
             jobject.metadata['keep'] = '0'
             jobject.metadata['preview'] = ''
@@ -451,6 +455,7 @@ class JournalActivity(JournalWindow):
 
             jobject = datastore.create()
             jobject.metadata['title'] = title
+            jobject.metadata['mountpoints'] = ['/']
             jobject.metadata['title_set_by_user'] = '0'
             jobject.metadata['activity'] = bundle_id
             jobject.metadata['activity_id'] = activity_id
