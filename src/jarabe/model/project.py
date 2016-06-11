@@ -39,7 +39,7 @@ N_IFACE_NAME = 'org.freedesktop.Notifications'
 CONN_INTERFACE_ACTIVITY_PROPERTIES = 'org.laptop.Telepathy.ActivityProperties'
 
 
-class Project():
+class Project(GObject.GObject):
 
     __gsignals__ = {
         'shared': (GObject.SignalFlags.RUN_FIRST, None, ([])),
@@ -50,6 +50,7 @@ class Project():
     }
 
     def __init__(self, project_metadata):
+        GObject.GObject.__init__(self)
         self.metadata = project_metadata
         self._id = self.metadata['activity_id']
         self._bundle_id = 'org.sugarlabs.Project'
@@ -74,6 +75,7 @@ class Project():
             pservice = presenceservice.get_instance()
             buddy = pservice.get_buddy(account_path, contact_id)
             if buddy:
+                logging.debug('[GSoC]Project._send_invites %r' %buddy.props.nick)
                 self.shared_activity.invite(
                     buddy, '', self._invite_response_cb)
             else:
@@ -112,15 +114,16 @@ class Project():
         pservice.share_activity(self, private=private)
 
     def __share_cb(self, ps, success, activity, err):
+        logging.debug('Project.__share_cb %r' %success)
         if not success:
             logging.debug('Share of activity %s failed: %s.' %
-                          (self._activity_id, err))
-        return
+                          (self._id, err))
+            return
 
         logging.debug('Share of activity %s successful, PS activity is %r.' %
-                     (self._activity_id, activity))
+                     (self._id, activity))
 
-        activity.props.name = self._jobject.metadata['title']
+        activity.props.name = self.metadata['title']
 
         power_manager = power.get_power_manager()
         if power_manager.suspend_breaks_collaboration():
@@ -131,3 +134,11 @@ class Project():
         self.emit('shared')
         self.__privacy_changed_cb(self.shared_activity, None)
         self._send_invites()
+
+    def __privacy_changed_cb(self, shared_activity, param_spec):
+        logging.debug('__privacy_changed_cb %r' %
+                      shared_activity.props.private)
+        if shared_activity.props.private:
+            self.metadata['share-scope'] = SCOPE_INVITE_ONLY
+        else:
+            self.metadata['share-scope'] = SCOPE_NEIGHBORHOOD
