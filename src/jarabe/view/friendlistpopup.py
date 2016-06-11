@@ -54,7 +54,7 @@ class FriendListPopup(PopWindow):
         self.show()
 
         ok_button = ToolButton(icon_name='document-send')
-        self.get_title_box().add_widget(ok_button, False, -1)
+        self.get_title_box().insert(ok_button, 1)
         ok_button.connect('clicked', self.__send_clicked_cb)
         ok_button.show()
 
