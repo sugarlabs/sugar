@@ -41,6 +41,7 @@ from jarabe.journal import misc
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
     'org.laptop.Telepathy.ActivityProperties'
 
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 _instance = None
 
 
@@ -61,6 +62,7 @@ class BaseInvite(object):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, self.dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
+        logging.debug('BaseInvite._call_handle_with self._handler %r' %self._handler)
         dispatch_operation.HandleWith(self._handler,
                                       reply_handler=self._handle_with_reply_cb,
                                       error_handler=self._handle_with_reply_cb)
@@ -105,6 +107,7 @@ class ActivityInvite(BaseInvite):
         if bundle is None:
             self._call_handle_with()
             return
+        logging.debug('[GSoC]ActivityInvite.join %r'%self.dispatch_operation_path)
 
         bus = dbus.SessionBus()
         bus.add_signal_receiver(self._name_owner_changed_cb,
@@ -116,6 +119,44 @@ class ActivityInvite(BaseInvite):
         activity_id = model.get_activity_by_room(self._handle).activity_id
         misc.launch(bundle, color=self.get_color(), invited=True,
                     activity_id=activity_id)
+
+
+class ProjectInvite(BaseInvite):
+    """Invitation to a shared project."""
+    def __init__(self, dispatch_operation_path, handle, handler,
+                 project_properties):
+        BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
+        if project_properties is not None:
+            self._project_properties = project_properties
+        else:
+            self._project_properties = None
+
+    def get_color(self):
+        color = self._project_properties.get('color', None)
+        # arrives unicode but we connect with byte_arrays=True - SL #4157
+        if color is not None:
+            color = str(color)
+        return XoColor(color)
+
+    def join(self):
+        logging.error('[GSoC]ProjectInvite.join handler start %r', self._handler)
+        registry = bundleregistry.get_registry()
+        bundle_id = self.get_bundle_id()
+        bundle = registry.get_bundle(bundle_id)
+        logging.debug('[GSoC]ProjectInvite.join running %r' %self.dispatch_operation_path)
+        if bundle is None:
+            self._call_handle_with()
+            return
+
+        bus = dbus.SessionBus()
+        bus.add_signal_receiver(self._name_owner_changed_cb,
+                                'NameOwnerChanged',
+                                'org.freedesktop.DBus',
+                                arg0=self._handler)
+
+        model = neighborhood.get_model()
+        activity_id = model.get_activity_by_room(self._handle).activity_id
+        logging.debug('[GSoC]ProjectInvite.join ended %r' %bundle_id)
 
 
 class PrivateInvite(BaseInvite):
@@ -260,8 +301,15 @@ class Invites(GObject.GObject):
             # dispatch operation
             return
 
-        invite = ActivityInvite(dispatch_operation_path, handle, handler,
+        if activity_properties:
+            if activity_properties.get('type', None) == PROJECT_BUNDLE_ID:
+                project_properties = activity_properties
+                invite = ProjectInvite(dispatch_operation_path, handle, handler,
+                                project_properties)
+            else:
+                invite = ActivityInvite(dispatch_operation_path, handle, handler,
                                 activity_properties)
+        logging.debug('[GSoC]_add_invite %r' %invite)
         self._dispatch_operations[dispatch_operation_path] = invite
         self.emit('invite-added', invite)
 
