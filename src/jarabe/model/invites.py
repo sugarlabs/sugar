@@ -36,6 +36,7 @@ from jarabe.model import telepathyclient
 from jarabe.model import bundleregistry
 from jarabe.model import neighborhood
 from jarabe.journal import misc
+from jarabe.journal import journalactivity
 
 
 CONNECTION_INTERFACE_ACTIVITY_PROPERTIES = \
@@ -145,22 +146,17 @@ class ProjectInvite(BaseInvite):
         logging.error('[GSoC]ProjectInvite.join handler start %r', self._handler)
         registry = bundleregistry.get_registry()
         bundle_id = self.get_bundle_id()
-        bundle = registry.get_bundle(bundle_id)
+        #bundle = registry.get_bundle(bundle_id)
         logging.debug('[GSoC]ProjectInvite.join running %r' %self.dispatch_operation_path)
-        if bundle is None:
-            self._call_handle_with()
-            return
-
-        bus = dbus.SessionBus()
-        bus.add_signal_receiver(self._name_owner_changed_cb,
-                                'NameOwnerChanged',
-                                'org.freedesktop.DBus',
-                                arg0=self._handler)
-
-        model = neighborhood.get_model()
-        activity_id = model.get_activity_by_room(self._handle).activity_id
-        logging.debug('[GSoC]ProjectInvite.join ended %r' %bundle_id)
-
+        self._call_handle_with()
+        logging.debug('[GSoC] ProjectInvite.join prop%r'%self._project_properties )
+        title = self._project_properties.get('name',None)
+        activity_id = self._project_properties.get('activity_id',None)
+        logging.debug('[GSoC] ProjectInvite.join prop%r'%title )
+        journalactivity.initialize_journal_object(title=title,
+                                                bundle_id=bundle_id,
+                                                activity_id=activity_id,
+                                                transfer_ownership=True)
 
 class PrivateInvite(BaseInvite):
     def __init__(self, dispatch_operation_path, handle, handler,

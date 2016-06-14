@@ -68,7 +68,7 @@ _SPACE_TRESHOLD = 52428800
 _BUNDLE_ID = 'org.laptop.JournalActivity'
 SCOPE_PRIVATE = 'private'
 _journal = None
-
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 class JournalActivityDBusService(dbus.service.Object):
     def __init__(self, parent):
@@ -402,7 +402,10 @@ class JournalActivity(JournalWindow):
         # TODO: Add-New-Entry for other activities
         if self.get_list_view().get_projects_view_active():
             logging.debug('[GSoC]for project title %r' %self.get_entry().props.text)
-            self._initialize_journal_object()
+            initialize_journal_object(title= self.get_entry().props.text,
+                                      bundle_id=PROJECT_BUNDLE_ID,
+                                      activity_id=None,
+                                      project_metadata=None)
         elif self.project_metadata is not None:
             logging.debug('[GSoC]ObjectChooser here...')
             chooser = ActivityChooser()
@@ -411,69 +414,11 @@ class JournalActivity(JournalWindow):
 
     def __activity_selected_cb(self, widget, bundle_id, activity_id):
         logging.debug('[GSoC]__activity_selectetd_cb')
-        self._initialize_journal_object(bundle_id=bundle_id, activity_id=activity_id)
-
-    def _initialize_journal_object(self, title=None, bundle_id=None, activity_id=None):
-        if self.get_list_view().get_projects_view_active():
-            title = _(self.get_entry().props.text)
-            logging.debug('[GSoC]initializing journal object for project %r' %title)
-            settings = Gio.Settings('org.sugarlabs.user')
-            icon_color = settings.get_string('color')
-
-            jobject = datastore.create()
-            jobject.metadata['title'] = title
-            jobject.metadata['title_set_by_user'] = '0'
-            jobject.metadata['activity'] = 'Project'
-            # TODO: Implement activity_id for projects
-            jobject.metadata['activity_id'] = activityfactory.create_activity_id()
-
-            jobject.metadata['keep'] = '0'
-            jobject.metadata['preview'] = ''
-            #jobject.metadata['share-scope'] = SCOPE_PRIVATE
-            jobject.metadata['icon-color'] = icon_color
-            #jobject.metadata['launch-times'] = str(int(time.time()))
-            #jobject.metadata['spent-times'] = '0'
-
-            jobject.file_path = ''
-
-            # FIXME: We should be able to get an ID synchronously from the DS,
-            # then call async the actual create.
-            # http://bugs.sugarlabs.org/ticket/2169
-            datastore.write(jobject)
-
-            # TODO: list of handle.object_id for every entry to be implemented
-            # Let the list contains first object_id of project itself
-            jobject.metadata['objects']= [jobject.object_id]
-            model.write(jobject.metadata)
-            return jobject
-
-        elif self.project_metadata is not None:
-            title = _(self._entry_project.props.text)
-            logging.debug('[GSoC]_initialize_journal_object')
-            settings = Gio.Settings('org.sugarlabs.user')
-            icon_color = settings.get_string('color')
-
-            jobject = datastore.create()
-            jobject.metadata['title'] = title
-            jobject.metadata['mountpoints'] = ['/']
-            jobject.metadata['title_set_by_user'] = '0'
-            jobject.metadata['activity'] = bundle_id
-            jobject.metadata['activity_id'] = activity_id
-            jobject.metadata['keep'] = '0'
-            jobject.metadata['preview'] = ''
-            jobject.metadata['share-scope'] = SCOPE_PRIVATE
-            jobject.metadata['icon-color'] = icon_color
-            jobject.metadata['launch-times'] = str(int(time.time()))
-            jobject.metadata['spent-times'] = '0'
-            jobject.file_path = ''
-            jobject.metadata['project_id'] = self.project_metadata['uid']
-            # FIXME: We should be able to get an ID synchronously from the DS,
-            # then call async the actual create.
-            # http://bugs.sugarlabs.org/ticket/2169
-            datastore.write(jobject)
-
-            return jobject
-
+        logging.debug('[GSoC]for project title %r' %self._entry_project.props.text)
+        initialize_journal_object(title = _(self._entry_project.props.text),
+                                        bundle_id=bundle_id, 
+                                        activity_id=activity_id,
+                                        project_metadata=self.project_metadata)
 
     def _key_press_event_cb(self, widget, event):
         #if not self._main_toolbox.search_entry.has_focus():
@@ -682,6 +627,68 @@ def get_journal():
     return _journal
 
 
+def initialize_journal_object(title=None, bundle_id=None, 
+                                activity_id=None, project_metadata=None,
+                                transfer_ownership=False):
+    if bundle_id == PROJECT_BUNDLE_ID:
+        logging.debug('[GSoC]initializing journal object for project %r' %[title, transfer_ownership])
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = settings.get_string('color')
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['title_set_by_user'] = '0'
+        jobject.metadata['activity'] = 'Project'
+        if not activity_id:
+            activity_id = activityfactory.create_activity_id()
+        jobject.metadata['activity_id'] = activity_id
+        jobject.metadata['bundle_id'] = PROJECT_BUNDLE_ID
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['preview'] = ''
+        #jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        jobject.metadata['icon-color'] = icon_color
+        #jobject.metadata['launch-times'] = str(int(time.time()))
+        #jobject.metadata['spent-times'] = '0'
+
+        jobject.file_path = ''
+
+        # FIXME: We should be able to get an ID synchronously from the DS,
+        # then call async the actual create.
+        # http://bugs.sugarlabs.org/ticket/2169
+        datastore.write(jobject)
+
+        # TODO: list of handle.object_id for every entry to be implemented
+        # Let the list contains first object_id of project itself
+        jobject.metadata['objects']= [jobject.object_id]
+        model.write(jobject.metadata)
+        return jobject
+
+    elif project_metadata is not None:
+        logging.debug('[GSoC]_initialize_journal_object')
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = settings.get_string('color')
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['mountpoints'] = ['/']
+        jobject.metadata['title_set_by_user'] = '0'
+        jobject.metadata['activity'] = bundle_id
+        jobject.metadata['activity_id'] = activity_id
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['preview'] = ''
+        jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        jobject.metadata['icon-color'] = icon_color
+        jobject.metadata['launch-times'] = str(int(time.time()))
+        jobject.metadata['spent-times'] = '0'
+        jobject.file_path = ''
+        jobject.metadata['project_id'] = project_metadata['uid']
+        # FIXME: We should be able to get an ID synchronously from the DS,
+        # then call async the actual create.
+        # http://bugs.sugarlabs.org/ticket/2169
+        datastore.write(jobject)
+
+        return jobject
+
+
 def start():
     get_journal()
-
