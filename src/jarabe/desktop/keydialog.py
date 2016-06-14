@@ -101,11 +101,19 @@ class KeyDialog(Gtk.Dialog):
         self.set_default_response(Gtk.ResponseType.OK)
 
     def add_key_entry(self):
-        self._entry = Gtk.Entry()
+        self._entry = Gtk.Entry(visibility=False)
         self._entry.connect('changed', self._update_response_sensitivity)
         self._entry.connect('activate', self._entry_activate_cb)
         self.vbox.pack_start(self._entry, True, True, 0)
         self.vbox.set_spacing(6)
+
+        self._show_pass_toggle = Gtk.CheckButton("Show Password")
+        self._show_pass_toggle.props.draw_indicator = True
+        self._show_pass_toggle.props.active = False
+        self._show_pass_toggle.connect("toggled", self._toggle_visibility_cb)
+        self._show_pass_toggle.show()
+        self.vbox.pack_start(self._show_pass_toggle, True, True, 0)
+
         self.vbox.show_all()
 
         self._update_response_sensitivity()
@@ -119,6 +127,9 @@ class KeyDialog(Gtk.Dialog):
 
     def get_response_object(self):
         return self._response
+
+    def __toggle_visibility_cb(self, entry):
+        self._entry.set_visibility(self._show_pass_toggle.get_active())
 
 
 class WEPKeyDialog(KeyDialog):
