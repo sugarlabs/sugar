@@ -39,18 +39,22 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
 from sugar3.graphics.alert import Alert, TimeoutAlert
 from sugar3.graphics import iconentry
+from sugar3.graphics.popwindow import PopWindow
+from sugar3.graphics.toolbutton import ToolButton
 
 
 from jarabe.model.session import get_session_manager
-from jarabe.screenshotpanel.toolbar import MainToolbar
 from jarabe import config
 from jarabe.model import shell
 
 
 _logger = logging.getLogger('ScreenshotPanel')
 
+THUMBNAIL_SIZE = style.zoom(
+    Gdk.Screen.height() / 3), style.zoom(Gdk.Screen.height() / 4.5)
 
-class ScreenshotPanel(Gtk.Window):
+
+class ScreenshotPanel(PopWindow):
     '''
     Generates a pop papel to allow user to save the
     screenshot by the name of his choice
@@ -58,19 +62,22 @@ class ScreenshotPanel(Gtk.Window):
 
     __gtype_name__ = 'ScreenshotPanel'
 
-
     def __init__(self):
-        Gtk.Window.__init__(self)
+        PopWindow.__init__(self)
+        self.props.size = (int(Gdk.Screen.height() / 6),
+                           int(Gdk.Screen.width() / 5))
+        self.get_title_box().props.title = _('Save Screenshot')
+        self._title_box.close_button.connect('clicked', self._close_cb)
+        self.set_keep_above(True)
 
         self.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_BLACK.get_gdk_color())
+                       style.COLOR_BLACK.get_gdk_color())
         self._set_screensize()
+        self.set_keep_above(True)
         self.set_border_width(style.LINE_WIDTH)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
         self.set_resizable(False)
-        self.set_modal(True)
-        self.set_can_focus(True)
 
         self.connect('key-press-event', self.__key_press_event_cb)
 
@@ -83,7 +90,6 @@ class ScreenshotPanel(Gtk.Window):
         self._section_toolbar = None
         self._main_toolbar = None
 
-        self._vbox = Gtk.VBox()
         self._hbox = Gtk.HBox()
         self._vbox.pack_start(self._hbox, True, True, 0)
         self._hbox.show()
@@ -96,7 +102,6 @@ class ScreenshotPanel(Gtk.Window):
 
         self.add(self._vbox)
         self._vbox.show()
-        self._setup_main()
         self._show_main_view()
 
         # Generates the thumbnail
@@ -109,16 +114,8 @@ class ScreenshotPanel(Gtk.Window):
         self._hbox.pack_start(self._vbox, True, True, 0)
         self._vbox.show()
 
-        # Name label
-        name_label = Gtk.Label()
-        name_label.set_alignment(0.5, 1)
-        name_label.set_use_markup(True)
-        name_label.set_markup("<b>"+_('Name')+"</b>")
-        name_label.modify_bg(Gtk.StateType.NORMAL,
-                                  style.COLOR_BLACK.get_gdk_color())
-        name_label.modify_fg(Gtk.StateType.NORMAL, Gdk.color_parse("yellow"))
-        self._vbox.pack_start(name_label, True, True, 0)
-        name_label.show()
+        self._hbox = Gtk.HBox()
+        self._hbox.show()
 
         # Name entry box
         self._name_view = Gtk.EventBox()
@@ -128,14 +125,16 @@ class ScreenshotPanel(Gtk.Window):
 
         # Entry box
         self._search_entry = Gtk.Entry()
-        halign = Gtk.Alignment.new(0.5, 1, 0, 0)
+        halign = Gtk.Alignment.new(0, 1, 0, 0)
         halign.add(self._name_view)
         halign.show()
 
-        self._vbox.pack_start(halign, True, True, 0)
+        self._hbox.pack_start(halign, True, True, 0)
         self._name_view.add(self._search_entry)
         self._search_entry.show()
         self._search_entry.set_text(_(activity_title))
+
+        self._vbox.pack_start(self._hbox, True, True, 0)
 
         self._buttons_box = Gtk.HButtonBox()
         self._buttons_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
@@ -160,6 +159,9 @@ class ScreenshotPanel(Gtk.Window):
         self._search_entry.grab_focus()
         self.show()
 
+    def _close_cb(self):
+        self.destroy()
+
     def __cancel_clicked_cb(self, widget):
         self.destroy()
 
@@ -177,35 +179,23 @@ class ScreenshotPanel(Gtk.Window):
         the screen resolution.
         '''
         width = Gdk.Screen.width() / 4
-        height = Gdk.Screen.height() / 4
+        height = Gdk.Screen.height() / 5
         self.set_size_request(width, height)
 
-    def _set_toolbar(self, toolbar):
-        '''
-        Sets up the toolbar on the popup.
-        '''
-        if self._toolbar:
-            self._vbox.remove(self._toolbar)
-        self._vbox.pack_start(toolbar, False, False, 0)
-        self._vbox.reorder_child(toolbar, 0)
-        self._toolbar = toolbar
-        if not self._separator:
-            self._separator = Gtk.HSeparator()
-            self._vbox.pack_start(self._separator, False, False, 0)
-            self._vbox.reorder_child(self._separator, 1)
-            self._separator.show()
-
-    def _setup_main(self):
-        self._main_toolbar = MainToolbar()
-
     def _show_main_view(self):
-        self._set_toolbar(self._main_toolbar)
-        self._main_toolbar.show()
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_BLACK.get_gdk_color())
 
     def __key_press_event_cb(self, window, event):
         # if the user clicked out of the window - fix SL #3188
+        keyname = Gdk.keyval_name(event.keyval)
+        if keyname == 'Escape':
+            self.destroy()
+
+        if keyname == 'Return':
+            self.save_screenshot(self._search_entry.get_text())
+            self.destroy()
+
         if not self.is_active():
             self.present()
         return False
@@ -219,7 +209,8 @@ class ScreenshotPanel(Gtk.Window):
             jobject.metadata['title'] = title
             jobject.metadata['keep'] = '0'
             jobject.metadata['buddies'] = ''
-            jobject.metadata['preview'] = _get_preview_data(self.screenshot_surface)
+            jobject.metadata['preview'] = _get_preview_data(
+                self.screenshot_surface)
             jobject.metadata['icon-color'] = color
             jobject.metadata['mime_type'] = 'image/png'
             jobject.file_path = self.file_path
@@ -234,9 +225,12 @@ def generate_thumbnail():
     Generates the thumbnail to be displayed
     on the screenshot alert popup
     '''
+    Gdk.Screen.width()
+    Gdk.Screen.height()
+
     window = Gdk.get_default_root_window()
     width, height = window.get_width(), window.get_height()
-    thumb_width, thumb_height = style.zoom(200), style.zoom(160)
+    thumb_width, thumb_height = THUMBNAIL_SIZE
 
     thumb_surface = Gdk.Window.create_similar_surface(
         window, cairo.CONTENT_COLOR, thumb_width, thumb_height)
@@ -248,7 +242,7 @@ def generate_thumbnail():
     Gdk.cairo_set_source_window(cairo_context, window, 0, 0)
     cairo_context.paint()
 
-    link_width, link_height = style.zoom(200), style.zoom(160)
+    link_width, link_height = THUMBNAIL_SIZE
     link_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
                                       link_width, link_height)
 
@@ -256,11 +250,11 @@ def generate_thumbnail():
     dest_x = style.zoom(0)
     dest_y = style.zoom(0)
     cairo_context.set_source_surface(thumb_surface, dest_x, dest_y)
-    thumb_width, thumb_height = style.zoom(200), style.zoom(160)
+    thumb_width, thumb_height = THUMBNAIL_SIZE
     cairo_context.rectangle(dest_x, dest_y, thumb_width, thumb_height)
     cairo_context.fill()
 
-    bg_width, bg_height = style.zoom(200), style.zoom(160)
+    bg_width, bg_height = THUMBNAIL_SIZE
     pixbuf_bg = Gdk.pixbuf_get_from_surface(link_surface, 0, 0,
                                             bg_width, bg_height)
 
@@ -321,7 +315,7 @@ def _get_preview_data(screenshot_surface):
     screenshot_width = screenshot_surface.get_width()
     screenshot_height = screenshot_surface.get_height()
 
-    preview_width, preview_height = style.zoom(300), style.zoom(225)
+    preview_width, preview_height = THUMBNAIL_SIZE
     preview_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32,
                                          preview_width, preview_height)
     cr = cairo.Context(preview_surface)
