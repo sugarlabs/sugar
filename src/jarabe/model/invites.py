@@ -62,8 +62,11 @@ class BaseInvite(object):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, self.dispatch_operation_path)
         dispatch_operation = dbus.Interface(obj, CHANNEL_DISPATCH_OPERATION)
-        logging.debug('BaseInvite._call_handle_with self._handler %r' %self._handler)
-        dispatch_operation.HandleWith(self._handler,
+        logging.debug('BaseInvite._call_handle_with self._handler %r self._handle' %[self._handler, self._handle])
+        if self._handler ==  'org.freedesktop.Telepathy.Client.org.sugarlabs.Project':
+            dispatch_operation.Claim()
+        else:
+            dispatch_operation.HandleWith(self._handler,
                                       reply_handler=self._handle_with_reply_cb,
                                       error_handler=self._handle_with_reply_cb)
 
