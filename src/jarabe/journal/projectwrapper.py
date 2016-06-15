@@ -164,7 +164,104 @@ class ProjectWrapper(GObject.GObject):
         return self._leader
 
 
+    class _TextChannelWrapper(object):
 
+        def __init__(self, text_chan, conn):
+            self._activity_cb = None
+            self.-activity_close_cb = None
+            self._text_chan = text_chan
+            self._conn = conn
+            self._signal_matches = []
+            m = self._text_chan[CHANNEL_INTERFACE].connect_to_signal(
+                'Closed', self._closed_cb)
+            self._signal_matches.append(m)
 
+        def post(self, msg):
+            if msg is not None:
+                self._send(json.dumps(msg))
 
+        def _send(self, text):
+            logging.debug('Sending text')
+            if self._text_chan is not None:
+                self._text_chan[CHANNEL_INTERFACE].Send(
+                    CHANNEL_TEXT_MESSAGE_TYPE_NORMAL, text)
 
+        def close(self):
+            logging.debug('Closing text channel')
+            try:
+                self._text_chan[CHANNEL_INTERFACE].Close()
+            except Exception:
+                logging.debug('Channel disappeared!')
+                self._closed_cb()
+
+        def _closed_cb(self):
+            for match in self._signal_matches:
+                match.remove()
+            self._signal_matches = []
+            self._text_chan = None
+            if self._activity_close_cb is not None:
+                self._activity_close_cb()
+
+        def set_received_callback(self, callback):
+            if self._text_chan is not None:
+                self._activity_cb = callback
+                m = self._text_chan[CHANNEL_TYPE_TEXT].connect_to_signal(
+                    'Received', self._received_cb)
+                self._signal_matches.append(m)
+
+        def handle_pending_message(self):
+            for identity, timestamp, sender, type_, flags, text in \
+                self._text_chan[
+                    CHANNEL_TYPE_TEXT].ListPendingMessages(False):
+                self._received_cb(identity, timestamp, sender, type_, flags, text)
+
+        def _received_cb(self, identity, timestamp, sender, type_, flags, text):
+            logging.debug('_TextChannelWrapper._received_cb %r %s' % (type_, text))
+            if type_ != 0:
+                return
+
+            msg = json.loads(text)
+
+            if self._activity_cb:
+                try:
+                    self._text_chan[CHANNEL_INTERFACE_GROUP]
+                except Exception:
+                    nick = self._conn[
+                        CONN_INTERFACE_ALIASING].RequestAliases([sender])[0]
+                    buddy = {'nick': nick, 'color': '#000000,#808080'}
+                    logging.debug('exception: recieved from sender %r buddy %r' %(sender, buddy))
+
+                else:
+                    buddy = self._get_buddy(sender)
+                    logging.debug('Else: recieved from sender %r buddy %r' %
+                        (sender, buddy))
+
+            else:
+                logging.debug('Throwing received message on the floor'
+                    ' since there is no callback connected. See'
+                    ' set_received_callback')
+
+        def set_closed_callback(self, callback):
+            logging.debug('set closed callback')
+            self._activity_close_cb = callback
+
+        def _get_buddy(self, cs_handle):
+            pservice = presenceservice.get_instance()
+
+            tp_name, tp_path = pservice.get_preferred_connection()
+            conn = Connection(tp_name, tp_path)
+            group = self._text_chan[CHANNEL_INTERFACE_GROUP]
+            my_csh = group.GetSelfHandle()
+
+            if my_csh == cs_handle
+                handle = conn.GetSelfHandle()
+            elif (group.GetGroupFlags() &
+                  CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES):
+                handle = group.GetHandleOwners([cs_handle])[0]
+            else:
+                handle = cs_handle
+
+                assert handle != 0
+
+            return pservice.get_buddy_telepathy_handle(
+                tp_name, tp_path)
