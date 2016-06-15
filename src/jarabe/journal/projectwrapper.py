@@ -53,6 +53,7 @@ from jarabe.journal import journalwindow
 
 ACTION_INIT_REQUEST = '!!ACTION_INIT_REQUEST'
 ACTION_INIT_RESPONSE = '!!ACTION_INIT_RESPONSE'
+ACTIVITY_FT_MIME = 'x-sugar/from-activity'
 
 class ProjectWrapper(GObject.GObject):
 
@@ -65,9 +66,9 @@ class ProjectWrapper(GObject.GObject):
         GObject.GObject.__init__(self)
         self.project = project
         self.shared_project = project.shared_activity
-		self._leader = False
-		self._init_waiting = False
-		self._text_channel = None
+        self._leader = False
+        self._init_waiting = False
+        self._text_channel = None
 
     def _show_alert(self, title):
         alert = Alert()
@@ -93,7 +94,7 @@ class ProjectWrapper(GObject.GObject):
 
         else:
             self._leader = True
-            self.activity.connect('shared', self.__shared_cb)
+            self.project.connect('shared', self.__shared_cb)
 
     def _alert_response_cb(self, alert, response_id, entry):
         journalwindow.get_journal_window().remove_alert(alert)
@@ -117,12 +118,12 @@ class ProjectWrapper(GObject.GObject):
         self.post({'action': ACTION_INIT_REQUEST})
 
     def _setup_text_channel(self):
-       self._text_channel = _TextChannelWrapper(
+        self._text_channel = _TextChannelWrapper(
             self.shared_project.telepathy_text_chan,
             self.shared_project.telepathy_conn)
 
         self._text_channel.set_received_callback(self.__received_cb)
-        self.shared_project.connect('buddy-joined', self.__buddy_joined_cd)
+        self.shared_project.connect('buddy-joined', self.__buddy_joined_cb)
         self.shared_project.connect('buddy-left', self.__buddy_left_cb)
 
     def _listen_for_channels(self):
@@ -143,7 +144,16 @@ class ProjectWrapper(GObject.GObject):
     def __received_cb(self, buddy, msg):
         action = msg.get('action')
         if action == ACTION_INIT_REQUEST and self._leader:
-            #TODO: method
+            data = {"answer": [42.2], "abs": 42}
+            data = json.dumps(data)
+            OutgoingBlobTransfer(
+                buddy,
+                self.shared_project.telepathy_conn,
+                data,
+                self.get_client_name(),
+                ACTION_INIT_RESPONSE,
+                ACTIVITY_FT_MIME)
+            return
 
     def post(self, msg):
         if self._text_channel is not None:
@@ -156,7 +166,7 @@ class ProjectWrapper(GObject.GObject):
     def __buddy_left_cb(self, sender, buddy):
         self.buddy_left.emit(buddy)
 
-   	def get_client_name(self):
+    def get_client_name(self):
         return CLIENT + '.' + self.project.get_bundle_id()
 
     @GObject.property
@@ -164,11 +174,11 @@ class ProjectWrapper(GObject.GObject):
         return self._leader
 
 
-    class _TextChannelWrapper(object):
+class _TextChannelWrapper(object):
 
         def __init__(self, text_chan, conn):
             self._activity_cb = None
-            self.-activity_close_cb = None
+            self.activity_close_cb = None
             self._text_chan = text_chan
             self._conn = conn
             self._signal_matches = []
@@ -253,7 +263,7 @@ class ProjectWrapper(GObject.GObject):
             group = self._text_chan[CHANNEL_INTERFACE_GROUP]
             my_csh = group.GetSelfHandle()
 
-            if my_csh == cs_handle
+            if my_csh == cs_handle:
                 handle = conn.GetSelfHandle()
             elif (group.GetGroupFlags() &
                   CHANNEL_GROUP_FLAG_CHANNEL_SPECIFIC_HANDLES):
@@ -265,3 +275,128 @@ class ProjectWrapper(GObject.GObject):
 
             return pservice.get_buddy_telepathy_handle(
                 tp_name, tp_path)
+
+
+FT_STATE_NONE = 0
+FT_STATE_PENDING = 1
+FT_STATE_ACCEPTED = 2
+FT_STATE_OPEN = 3
+FT_STATE_COMPLETED = 4
+FT_STATE_CANCELLED = 5
+
+FT_REASON_NONE = 0
+FT_REASON_REQUESTED = 1
+FT_REASON_LOCAL_STOPPED = 2
+FT_REASON_REMOTE_STOPPED = 3
+FT_REASON_LOCAL_ERROR = 4
+FT_REASON_LOCAL_ERROR = 5
+FT_REASON_REMOTE_ERROR = 6
+
+
+class OutgoingBlobTransfer(GObject.GObject):
+
+        def __init__(self, buddy, conn, blob, filename, description, mime):
+            GObject.GObject.__init__(self)
+            self._state = FT_STATE_NONE
+            self._transferred_bytes = 0
+            self._socket_address = None
+            self._socket = None
+            self._splicer = None
+            self._conn = conn
+            self._blob = blob
+            self._create_channel(len(self._blob))
+
+            self.channel = None
+            self.buddy = buddy
+            self.filename = filename
+            self.file_size = None
+            self.description = description
+            self.mime_type = mime
+            self.reason_last_change = FT_REASON_NONE
+
+        def _get_input_stream(self):
+            return Gio.MemoryInputStream.new_from_data(self._blob, None)
+
+        def set_channel(self, channel):
+            self.channel = channel
+            self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+                'FileTransferStateChanged', self.__state_changed_cb)
+            self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+                'TransferredBytesChanged', self.__transferred_bytes_changed_cb)
+            self.channel[CHANNEL_TYPE_FILE_TRANSFER].connect_to_signal(
+                'InitialOffsetDefined', self.__initial_offset_defined_cb)
+
+            channel_properties = self.channel[dbus.PROPERTIES_IFACE]
+
+            '''props = channel_properties.GetAll(CHANNEL_TYPE_FILE_TRANSFER)
+            self._state = props['State']
+            self.filename = props['Filename']
+            self.file_size = props['Size']
+            self.description = props['Description']
+            self.mime_type = props['ContentType']'''
+
+        def _create_channel(self, file_size):
+            object_path, properties_ = self._conn.CreateChannel(dbus.Dictionary({
+                CHANNEL + '.ChannelType': CHANNEL_TYPE_FILE_TRANSFER,
+                CHANNEL + '.TargetHandleType': CONNECTION_HANDLE_TYPE_CONTACT,
+                CHANNEL + '.TargetHandle': self.buddy.contact_handle,
+                CHANNEL_TYPE_FILE_TRANSFER + '.Filename': self.filename,
+                CHANNEL_TYPE_FILE_TRANSFER + '.Description': self.description,
+                CHANNEL_TYPE_FILE_TRANSFER + '.Size': file_size,
+                CHANNEL_TYPE_FILE_TRANSFER + '.ContentType': self.mime_type,
+                CHANNEL_TYPE_FILE_TRANSFER + '.InitialOffset': 0}, signature='sv' ))
+
+            self.set_channel(Channel(self._conn.bus_name, object_path))
+
+            channel_file_transfer = self.channel[CHANNEL_TYPE_FILE_TRANSFER]
+            self._socket_address = channel_file_transfer.ProvideFile(
+                SOCKET_ADDRESS_TYPE_UNIX, SOCKET_ACCESS_CONTROL_LOCALHOST, '',
+                byte_arrays=True)
+
+        def __notify_state_cb(self, file_transfer, pspec):
+            if self.props.state == FT_STATE_OPEN:
+                self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                self._socket.connect(self._socket_address)
+                output_stream = Gio.UnixOutputStream.new(
+                    self._socket.fileno(), True)
+                input_stream = self._get_input_stream()
+                output_stream.splice_async(
+                    input_stream,
+                    Gio.OutputStreamSpliceFlags.CLOSE_SOURCE |
+                    Gio.OutputStreamSpliceFlags.CLOSE_TARGET,
+                    GLib.PRIORITY_LOW, None, None, None)
+
+        def __transferred_bytes_changed_cb(self, transferred_bytes):
+            logging.debug('__transferred_bytes_changed_cb %r', transferred_bytes)
+            self.props.transferred_bytes = transferred_bytes
+
+        def _set_transferred_bytes(self, transferred_bytes):
+            self._transferred_bytes = transferred_bytes
+
+        def _get_transferred_bytes(self):
+            return self._transferred_bytes
+
+        transferred_bytes = GObject.Property(type=int,
+                                             default=0,
+                                             getter=_get_transferred_bytes,
+                                             setter=_set_transferred_bytes)
+
+        def __initial_offset_defined_cb(self, offset):
+            logging.debug('__initial_offset_defined_cb %r', offset)
+            self.initial_offset = offset
+
+        def __state_changed_cb(self, state, reason):
+            logging.debug('__state_changed_cb %r %r', state, reason)
+            self.reason_last_change = reason
+            self.props.state = state
+
+        def _set_state(self, state):
+            self._state = state
+
+        def _get_state(self):
+            return self._state
+
+        state = GObject.Property(type=int, getter=_get_state, setter=_set_state)
+
+        def cancel(self):
+            self.channel[CHANNEL].Close()

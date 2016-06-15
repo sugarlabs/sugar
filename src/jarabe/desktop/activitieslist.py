@@ -58,7 +58,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.set_can_focus(False)
         self.props.activate_on_single_click = True
 
-        self.connect('row-activated', self.__on_row_activated)
+        self.hid = self.connect('row-activated', self.__on_row_activated)
 
         self._query = ''
 

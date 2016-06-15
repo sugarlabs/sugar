@@ -23,6 +23,7 @@ from gi.repository import GObject
 from sugar3 import util
 from sugar3 import power
 from sugar3.presence import presenceservice
+from jarabe.journal.projectwrapper import ProjectWrapper
 
 SCOPE_PRIVATE = 'private'
 SCOPE_INVITE_ONLY = 'invite'  # shouldn't be shown in UI, it's implicit
@@ -57,6 +58,9 @@ class Project(GObject.GObject):
 
         self.shared_activity = None
         self._invites_queue = []
+        self._collab = ProjectWrapper(self)
+        self._collab.message.connect(self.__message_cb)
+        self._collab.setup()
 
     def get_id(self):
         return self._id
@@ -67,6 +71,17 @@ class Project(GObject.GObject):
     def _invite_response_cb(self, error):
         if error:
             logging.error('Invite failed: %s', error)
+
+    def __message_cb(self, collab, buddy, msg):
+        action = msg.get('action')
+        text = msg.get('text', 'Lol')
+        logging.debug('Project.__message_cb %r' %text)
+        if action != 'text':
+            return
+
+    def send_event(self, text):
+        logging.debug('Project.send_event %r' %text)
+        self._collab.post(dict(action='text', text=text))
 
     def _send_invites(self):
         while self._invites_queue:
