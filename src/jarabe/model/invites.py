@@ -132,6 +132,7 @@ class ProjectInvite(BaseInvite):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
         if project_properties is not None:
             self._project_properties = project_properties
+            logging.debug('Properties recieved! %r'%project_properties.get('objects',None))
         else:
             self._project_properties = None
 
@@ -156,7 +157,7 @@ class ProjectInvite(BaseInvite):
         journalactivity.initialize_journal_object(title=title,
                                                 bundle_id=bundle_id,
                                                 activity_id=activity_id,
-                                                transfer_ownership=True)
+                                                invited=True)
 
 class PrivateInvite(BaseInvite):
     def __init__(self, dispatch_operation_path, handle, handler,

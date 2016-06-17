@@ -66,6 +66,7 @@ class ProjectWrapper(GObject.GObject):
         GObject.GObject.__init__(self)
         self.project = project
         self.shared_project = project.shared_activity
+        logging.debug('ProjectWrapper.__init__')
         self._leader = False
         self._init_waiting = False
         self._text_channel = None
@@ -77,17 +78,18 @@ class ProjectWrapper(GObject.GObject):
         alert.add_button(Gtk.ResponseType.CANCEL, _('Cancel'), icon)
         icon.show()
 
-        alert.connect('response', self._alert_response_cb, entry)
+        alert.connect('response', self._alert_response_cb)
         journalwindow.get_journal_window().add_alert(alert)
         alert.show()
 
     def setup(self):
+        logging.debug('ProjectWrapper._setup_text_channel')
         if self.shared_project:
-	    self.project.connect("joined", self.__joined_cb)
+            self.project.connect("joined", self.__joined_cb)
 
             if self.project.get_shared():
-	        logging.debug('calling __joined_cb')
-		self.__joined_cb(self)
+                logging.debug('calling __joined_cb')
+                self.__joined_cb(self)
             else:
                 logging.debug('Joining project')
                 self._show_alert('Joining project')			
@@ -96,7 +98,7 @@ class ProjectWrapper(GObject.GObject):
             self._leader = True
             self.project.connect('shared', self.__shared_cb)
 
-    def _alert_response_cb(self, alert, response_id, entry):
+    def _alert_response_cb(self, alert, response_id):
         journalwindow.get_journal_window().remove_alert(alert)
 
     def __shared_cb(self, sender):
@@ -143,6 +145,7 @@ class ProjectWrapper(GObject.GObject):
 
     def __received_cb(self, buddy, msg):
         action = msg.get('action')
+        logging.debug('ProjectWrapper.__received_cb')
         if action == ACTION_INIT_REQUEST and self._leader:
             data = {"answer": [42.2], "abs": 42}
             data = json.dumps(data)
@@ -154,6 +157,14 @@ class ProjectWrapper(GObject.GObject):
                 ACTION_INIT_RESPONSE,
                 ACTIVITY_FT_MIME)
             return
+
+        if buddy:
+            nick = buddy.props.nick
+        else:
+            nick = '???'
+        logging.debug('Received message from %s: %r', nick, msg)
+        self.message.emit(buddy, msg)
+
 
     def post(self, msg):
         if self._text_channel is not None:

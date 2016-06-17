@@ -20,6 +20,7 @@ from gettext import gettext as _
 import uuid
 import json
 import time
+import ast
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -629,9 +630,9 @@ def get_journal():
 
 def initialize_journal_object(title=None, bundle_id=None, 
                                 activity_id=None, project_metadata=None,
-                                transfer_ownership=False):
+                                invited=False):
     if bundle_id == PROJECT_BUNDLE_ID:
-        logging.debug('[GSoC]initializing journal object for project %r' %[title, transfer_ownership])
+        logging.debug('[GSoC]initializing journal object for project %r' %[title, invited])
         settings = Gio.Settings('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
@@ -646,6 +647,8 @@ def initialize_journal_object(title=None, bundle_id=None,
         jobject.metadata['keep'] = '0'
         jobject.metadata['preview'] = ''
         #jobject.metadata['share-scope'] = SCOPE_PRIVATE
+        #jobject.metadata['buddies'] = []
+        #jobject.metadata['buddies'].append()
         jobject.metadata['icon-color'] = icon_color
         #jobject.metadata['launch-times'] = str(int(time.time()))
         #jobject.metadata['spent-times'] = '0'
@@ -659,8 +662,19 @@ def initialize_journal_object(title=None, bundle_id=None,
 
         # TODO: list of handle.object_id for every entry to be implemented
         # Let the list contains first object_id of project itself
-        jobject.metadata['objects']= [jobject.object_id]
+        #jobject.metadata['objects']= []
+        x =  '"' + str([(jobject.metadata['activity_id'].decode()).encode()]) + '"'
+        logging.debug('x is %r' %x)
+        #logging.debug('x %r'%x.replace("\'",'"'))
+        tmp  = '{"Objects": ' + x +' }'
+        logging.debug('tmp %r'%tmp)
+        #tmp1 = tmp.replace("\'", '"')
+        #logging.debug('tmp1 %r'%tmp1)
+        jobject.metadata['objects'] = tmp
         model.write(jobject.metadata)
+        logging.debug('_initialize_journal_object objects in project %r %r %r'%(tmp, jobject.metadata['objects'], jobject.metadata['uid']))
+        if invited:
+            get_journal()._list_view.emit('project-view-activate', jobject.metadata)
         return jobject
 
     elif project_metadata is not None:
@@ -686,7 +700,25 @@ def initialize_journal_object(title=None, bundle_id=None,
         # then call async the actual create.
         # http://bugs.sugarlabs.org/ticket/2169
         datastore.write(jobject)
+        logging.debug('Show me the project_metadata before %r' %(project_metadata['objects']))
+        id_str = json.loads(project_metadata['objects']).values()
+        logging.debug('id_str is %r'%id_str)
+        activity_id = activity_id 
+        objects = []
+        ids = None
+        for ids in id_str:
+            logging.debug('ids is %r'%ids)
+            objects = ast.literal_eval(ids)
+            
+        objects.append(str(activity_id))
+        logging.debug('objects now is %r'%objects)
+        tmp  = '{"Objects": ' + '"' + str(objects) + '"' +' }'
+        logging.debug('tmp new is %r'%tmp)
 
+        project_metadata['objects'] = tmp
+        #logging.debug('Show me the project_metadata %r' % (objects))
+        model.write(project_metadata)
+        logging.debug('Show me the project_metadata now %r' %(project_metadata['objects']))
         return jobject
 
 

@@ -45,7 +45,7 @@ class ProjectView(Gtk.VBox):
         description_box, self._description = self._create_description()
         
         self.pack_start(description_box, False, True, 0)
-        logging.debug('Project view setup')
+        logging.debug('Project view setup activities')
         
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
 

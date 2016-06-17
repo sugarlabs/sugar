@@ -55,12 +55,9 @@ class Project(GObject.GObject):
         self.metadata = project_metadata
         self._id = self.metadata['activity_id']
         self._bundle_id = 'org.sugarlabs.Project'
-
+        logging.debug('Project.__init__ activities %r' %project_metadata['objects'])
         self.shared_activity = None
         self._invites_queue = []
-        self._collab = ProjectWrapper(self)
-        self._collab.message.connect(self.__message_cb)
-        self._collab.setup()
 
     def get_id(self):
         return self._id
@@ -93,9 +90,12 @@ class Project(GObject.GObject):
                 logging.debug('[GSoC]Project._send_invites %r' %buddy.props.nick)
                 self.shared_activity.invite(
                     buddy, '', self._invite_response_cb)
+
             else:
                 logging.error('Cannot invite %s %s, no such buddy',
                               account_path, contact_id)
+        #self._collab.setup()
+        #self._collab.message.connect(self.__message_cb)
 
 
     def invite(self, account_path, contact_id):
@@ -128,6 +128,10 @@ class Project(GObject.GObject):
         pservice.connect('activity-shared', self.__share_cb)
         pservice.share_activity(self, private=private)
 
+    def get_shared(self):
+        if self.shared_activity:
+            return True
+
     def __share_cb(self, ps, success, activity, err):
         logging.debug('Project.__share_cb %r' %success)
         if not success:
@@ -144,6 +148,9 @@ class Project(GObject.GObject):
         if power_manager.suspend_breaks_collaboration():
             power_manager.inhibit_suspend()
         self.shared_activity = activity
+        self._collab = ProjectWrapper(self)
+        #self._collab.message.connect(self.__message_cb)
+        #self._collab.setup()
         self.shared_activity.connect('notify::private',
                                      self.__privacy_changed_cb)
         self.emit('shared')
