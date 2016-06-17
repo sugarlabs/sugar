@@ -176,13 +176,15 @@ class BuddyMenu(Palette):
             buddy_activity_id = buddy_activity.activity_id
         else:
             buddy_activity_id = None
-        if activity is not None:
-            bundle_activity = ActivityBundle(activity.get_bundle_path())
-        if activity is None or activity.is_journal() or \
-           activity.get_activity_id() == buddy_activity_id or \
-           bundle_activity.get_max_participants() <= 1:
-            self._invite_menu.hide()
-        else:
+
+        self._invite_menu.hide()
+        if activity is None or \
+           activity.is_journal() or \
+           activity.get_activity_id() == buddy_activity_id:
+            return
+
+        bundle_activity = ActivityBundle(activity.get_bundle_path())
+        if bundle_activity.get_max_participants() > 1:
             title = activity.get_title()
             self._invite_menu.set_label(_('Invite to %s') % title)
 
