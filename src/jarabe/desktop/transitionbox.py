@@ -56,7 +56,7 @@ class TransitionBox(ViewContainer):
                                 pixel_size=style.XLARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, self._owner_icon)
 
-        self._animator = animator.Animator(0.3)
+        self._animator = animator.Animator(0.3, widget=self)
         self._animator.connect('completed', self._animation_completed_cb)
 
     def _animation_completed_cb(self, anim):
