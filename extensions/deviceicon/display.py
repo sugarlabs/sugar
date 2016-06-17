@@ -34,7 +34,7 @@ from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 from jarabe.model import brightness
-from jarabe.screenshotpanel.gui import ScreenshotPanel
+from jarabe.gui import ScreenshotPanel
 from jarabe import frame
 
 
@@ -92,7 +92,7 @@ class BrightnessManagerWidget(Gtk.VBox):
         icon = Icon(pixel_size=style.SMALL_ICON_SIZE)
         icon.props.icon_name = icon_name
         icon.props.xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                      style.COLOR_BUTTON_GREY.get_svg()))
+                                                 style.COLOR_BUTTON_GREY.get_svg()))
         icon.show()
 
         label = Gtk.Label(text)

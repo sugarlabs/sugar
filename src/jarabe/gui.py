@@ -64,16 +64,16 @@ class ScreenshotPanel(PopWindow):
 
     def __init__(self):
         PopWindow.__init__(self)
-        self.props.size = (int(Gdk.Screen.height() / 6),
-                           int(Gdk.Screen.width() / 5))
+
+        self._set_screensize()
+        # self.props.size = ((height / 6),
+        #                   (width / 5))
         self.get_title_box().props.title = _('Save Screenshot')
         self._title_box.close_button.connect('clicked', self._close_cb)
         self.set_keep_above(True)
 
         self.modify_bg(Gtk.StateType.NORMAL,
                        style.COLOR_BLACK.get_gdk_color())
-        self._set_screensize()
-        self.set_keep_above(True)
         self.set_border_width(style.LINE_WIDTH)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_decorated(False)
@@ -105,10 +105,11 @@ class ScreenshotPanel(PopWindow):
         self._show_main_view()
 
         # Generates the thumbnail
-        preview_image, activity_title = generate_thumbnail()
+        self.screenshot_surface, self.file_path = take_screenshot()
+        preview_image, activity_title = generate_thumbnail(
+            self.screenshot_surface)
         self._main_view.add(preview_image)
         preview_image.show()
-        self.screenshot_surface, self.file_path = take_screenshot()
 
         self._vbox = Gtk.VBox()
         self._hbox.pack_start(self._vbox, True, True, 0)
@@ -220,22 +221,17 @@ class ScreenshotPanel(PopWindow):
             del jobject
 
 
-def generate_thumbnail():
+def generate_thumbnail(screenshot_surface):
     '''
     Generates the thumbnail to be displayed
     on the screenshot alert popup
     '''
-    Gdk.Screen.width()
-    Gdk.Screen.height()
 
     window = Gdk.get_default_root_window()
     width, height = window.get_width(), window.get_height()
     thumb_width, thumb_height = THUMBNAIL_SIZE
 
-    thumb_surface = Gdk.Window.create_similar_surface(
-        window, cairo.CONTENT_COLOR, thumb_width, thumb_height)
-
-    cairo_context = cairo.Context(thumb_surface)
+    cairo_context = cairo.Context(screenshot_surface)
     thumb_scale_w = thumb_width * 1.0 / width
     thumb_scale_h = thumb_height * 1.0 / height
     cairo_context.scale(thumb_scale_w, thumb_scale_h)
@@ -249,7 +245,7 @@ def generate_thumbnail():
     cairo_context = cairo.Context(link_surface)
     dest_x = style.zoom(0)
     dest_y = style.zoom(0)
-    cairo_context.set_source_surface(thumb_surface, dest_x, dest_y)
+    cairo_context.set_source_surface(screenshot_surface, dest_x, dest_y)
     thumb_width, thumb_height = THUMBNAIL_SIZE
     cairo_context.rectangle(dest_x, dest_y, thumb_width, thumb_height)
     cairo_context.fill()
