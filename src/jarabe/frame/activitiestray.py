@@ -221,11 +221,14 @@ class InvitePalette(Palette):
         registry = bundleregistry.get_registry()
         self._bundle = registry.get_bundle(bundle_id)
         if self._bundle:
-            name = self._bundle.get_name()
+            activity_name = self._bundle.get_name()
         else:
-            name = bundle_id
+            activity_name = bundle_id
+        self.set_primary_text(activity_name)
 
-        self.set_primary_text(name)
+        title = self._invite.get_activity_title()
+        if title is not None:
+            self.set_secondary_text(title)
 
     def __join_activate_cb(self, menu_item):
         self._invite.join()

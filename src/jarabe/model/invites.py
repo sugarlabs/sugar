@@ -58,6 +58,9 @@ class BaseInvite(object):
         else:
             return None
 
+    def get_activity_title(self):
+        return None
+
     def _call_handle_with(self):
         bus = dbus.Bus()
         obj = bus.get_object(CHANNEL_DISPATCHER, self.dispatch_operation_path)
@@ -97,6 +100,9 @@ class ActivityInvite(BaseInvite):
         if color is not None:
             color = str(color)
         return XoColor(color)
+
+    def get_activity_title(self):
+        return self._activity_properties.get('name')
 
     def join(self):
         logging.error('ActivityInvite.join handler %r', self._handler)
