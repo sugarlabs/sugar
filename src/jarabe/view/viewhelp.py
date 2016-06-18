@@ -169,11 +169,11 @@ class ViewHelp(Gtk.Window):
         self.connect('hide', self.__hide_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        toolbar = Toolbar(title, has_local_help)
-        box.pack_start(toolbar, False, False, 0)
-        toolbar.show()
-        toolbar.connect('stop-clicked', self.__stop_clicked_cb)
-        toolbar.connect('mode-changed', self.__mode_changed_cb)
+        self._toolbar = Toolbar(title, has_local_help)
+        box.pack_start(self._toolbar, False, False, 0)
+        self._toolbar.show()
+        self._toolbar.connect('stop-clicked', self.__stop_clicked_cb)
+        self._toolbar.connect('mode-changed', self.__mode_changed_cb)
 
         session = WebKit.get_default_session()
         cookie_jar = SoupGNOME.CookieJarSqlite(
@@ -186,6 +186,7 @@ class ViewHelp(Gtk.Window):
         self._webview.set_full_content_zoom(True)
         self._webview.connect('resource-request-starting',
                               self._resource_request_starting_cb)
+        self._toolbar.bind_webview(self._webview)
 
         scrolled_window = Gtk.ScrolledWindow()
         scrolled_window.add(self._webview)
@@ -197,8 +198,13 @@ class ViewHelp(Gtk.Window):
         language = self._get_current_language()
         if has_local_help:
             self._help_url = 'file://' + self._get_help_file(language, url)
-        self._social_help_url = '{}/goto/{}'.format(
+            self._help_state = ([self._help_url], 0)
+        else:
+            self._help_state = None
+
+        social_help_url = '{}/goto/{}'.format(
             get_social_help_server(), activity.get_bundle_id())
+        self._social_help_state = ([social_help_url], 0)
 
         self._webview.connect(
             'notify::load-status', self.__load_status_changed_cb)
@@ -224,17 +230,17 @@ class ViewHelp(Gtk.Window):
             self.__stop_clicked_cb(None)
 
     def __mode_changed_cb(self, toolbar, mode):
-        if self._mode == _MODE_HELP:
-            self._help_url = self._webview.props.uri
+        if mode == _MODE_HELP:
+            self._social_help_state = self._save_state()
         else:
-            self._social_help_url = self._webview.props.uri
+            self._help_state = self._save_state()
 
         self._mode = mode
         self._load_mode(self._mode)
 
     def _load_mode(self, mode):
         if mode == _MODE_HELP:
-            self._webview.load_uri(self._help_url)
+            self._load_state(self._help_state)
         else:
             # Loading any content for the social help page can take a
             # very long time (eg. the site is behind a redirector).
@@ -246,12 +252,49 @@ class ViewHelp(Gtk.Window):
                 self._webview.load_uri('file://' + path)
                 # Social help is loaded after the icon is loaded
             else:
-                self._webview.load_uri(self._social_help_url)
+                self._load_state(self._social_help_state)
+
+    def _save_state(self):
+        back_forward_list = self._webview.get_back_forward_list()
+        items_list = self._items_history_as_list(back_forward_list)
+        curr = back_forward_list.get_current_item()
+
+        return ([item.get_uri() for item in items_list],
+                items_list.index(curr))
+
+    def _load_state(self, state):
+        history, index = state
+
+        back_forward_list = self._webview.get_back_forward_list()
+        back_forward_list.clear()
+        for i, uri in enumerate(history):
+            history_item = WebKit.WebHistoryItem.new_with_data(uri, '')
+            back_forward_list.add_item(history_item)
+            if i == index:
+                self._webview.go_to_back_forward_item(history_item)
+
+        self._toolbar.update_back_forward()
+
+    def _items_history_as_list(self, history):
+        back_items = []
+        for n in reversed(range(1, history.get_back_length() + 1)):
+            item = history.get_nth_item(n * -1)
+            back_items.append(item)
+
+        current_item = [history.get_current_item()]
+
+        forward_items = []
+        for n in range(1, history.get_forward_length() + 1):
+            item = history.get_nth_item(n)
+            forward_items.append(item)
+
+        all_items = back_items + current_item + forward_items
+        return all_items
 
     def __load_status_changed_cb(self, *args):
         if self._webview.props.load_status == WebKit.LoadStatus.FINISHED \
            and _LOADING_ICON in self._webview.props.uri:
-            self._webview.load_uri(self._social_help_url)
+                self._load_state(self._social_help_state)
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
@@ -290,6 +333,7 @@ class Toolbar(Gtk.Toolbar):
 
     def __init__(self, activity_name, has_local_help):
         Gtk.Toolbar.__init__(self)
+        self._webview = None
 
         self._add_separator(False)
 
@@ -317,11 +361,22 @@ class Toolbar(Gtk.Toolbar):
             icon.show()
             social_help_button.props.tooltip = _('Social Help')
             social_help_button.props.group = help_button
-            social_help_button.connect('toggled', self.__button_toggled_cb,
-                                       _MODE_SOCIAL_HELP)
+            social_help_button.connect(
+                'toggled', self.__button_toggled_cb, _MODE_SOCIAL_HELP)
             self.insert(social_help_button, -1)
             social_help_button.show()
             self._add_separator(False)
+
+        self._back_button = ToolButton(icon_name='go-previous-paired')
+        self._back_button.props.tooltip = _('Back')
+        self._back_button.connect('clicked', self.__back_clicked_cb)
+        self.insert(self._back_button, -1)
+        self._back_button.show()
+        self._forward_button = ToolButton(icon_name='go-next-paired')
+        self._forward_button.props.tooltip = _('Forward')
+        self._forward_button.connect('clicked', self.__forward_clicked_cb)
+        self.insert(self._forward_button, -1)
+        self._forward_button.show()
 
         title = _('Help: %s') % activity_name
         self._label = Gtk.Label()
@@ -360,3 +415,21 @@ class Toolbar(Gtk.Toolbar):
             separator.set_size_request(style.DEFAULT_SPACING, -1)
         self.insert(separator, -1)
         separator.show()
+
+    def bind_webview(self, webview):
+        self._webview = webview
+        self._webview.connect('notify::uri', self.__uri_changed_cb)
+        self.__uri_changed_cb(None, None)
+
+    def __uri_changed_cb(self, widget, param):
+        self.update_back_forward()
+
+    def update_back_forward(self):
+        self._back_button.props.sensitive = self._webview.can_go_back()
+        self._forward_button.props.sensitive = self._webview.can_go_forward()
+
+    def __back_clicked_cb(self, button):
+        self._webview.go_back()
+
+    def __forward_clicked_cb(self, button):
+        self._webview.go_forward()
