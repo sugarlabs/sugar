@@ -25,12 +25,12 @@ import random
 import time
 import uuid
 import sys
-import urllib2
 import re
 import json
 import subprocess
 
 from gi.repository import Gio
+from gi.repository import Soup
 
 from sugar3 import env
 from sugar3.profile import get_profile
@@ -142,7 +142,7 @@ class _TimeoutTransport(xmlrpclib.Transport):
         return _TimeoutHTTP(host, timeout=_REGISTER_TIMEOUT)
 
 
-def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
+def _soup_data_callback(session, msg, custom_args):
     """  Registers the laptop to schoolserver. The process
     can be devided into 4 parts.
     1) Gather sn, uuid, nick, url and db_url.
@@ -154,6 +154,7 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
     4) Store sn, uuid_, backup_url and jabber_server information
        for the present server at their setting locations.  """
 
+    url, db_url, jabber_server = custom_args
     profile = get_profile()
     new_registration_required = True
     backup_url = ''
@@ -173,16 +174,10 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
     uuid_ = uuid_ or '00000000-0000-0000-0000-000000000000'
     nick = get_nick_name()
     settings = Gio.Settings('org.sugarlabs.collaboration')
-    jabber_server = settings.get_string('jabber-server')
 
-    # Check server for registration
-    if jabber_server:
-        db_url = 'http://' + jabber_server + ':5000/'
-        url = 'http://' + jabber_server + ':8080/'
-    try:
-        response = urllib2.urlopen(db_url)
-        server_html = response.read()
-    except (urllib2.URLError, urllib2.HTTPError):
+    if (msg.props.status_code > 100):
+        server_html = msg.props.response_body.flatten().get_data()
+    else:
         logging.exception('Registration: cannot connect to xs-authserver')
 
     # Restore previous registration (Part 2)
@@ -250,7 +245,21 @@ def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
         '/desktop/sugar/collaboration/jabber_server', jabber_server)
     client.set_string('/desktop/sugar/backup_url', backup_url)
     client.set_string('/desktop/sugar/soas_serial', sn)
+    return True
 
+
+def register_laptop(url=_REGISTER_URL, db_url=_SERVER_DB_URL):
+    settings = Gio.Settings('org.sugarlabs.collaboration')
+    jabber_server = settings.get_string('jabber-server')
+
+    # Check server for registration
+    if jabber_server:
+        db_url = 'http://' + jabber_server + ':5000/'
+        url = 'http://' + jabber_server + ':8080/'
+    custom_args = (url, db_url, jabber_server)
+    session = Soup.Session()
+    msg = Soup.Message.new('GET', db_url)
+    session.queue_message(msg, _soup_data_callback, custom_args)
     return True
 
 
