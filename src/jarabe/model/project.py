@@ -148,7 +148,7 @@ class Project(GObject.GObject):
         if power_manager.suspend_breaks_collaboration():
             power_manager.inhibit_suspend()
         self.shared_activity = activity
-        self._collab = ProjectWrapper(self)
+        #self._collab = ProjectWrapper(self)
         #self._collab.message.connect(self.__message_cb)
         #self._collab.setup()
         self.shared_activity.connect('notify::private',

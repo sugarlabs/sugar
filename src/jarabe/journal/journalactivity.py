@@ -630,12 +630,15 @@ def get_journal():
 
 def initialize_journal_object(title=None, bundle_id=None, 
                                 activity_id=None, project_metadata=None,
-                                invited=False):
-    if bundle_id == PROJECT_BUNDLE_ID:
-        logging.debug('[GSoC]initializing journal object for project %r' %[title, invited])
+                                icon_color=None,invited=False):
+
+    if not icon_color:
         settings = Gio.Settings('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
+    if bundle_id == PROJECT_BUNDLE_ID:
+        logging.debug('[GSoC]initializing journal object for project %r' %[title, invited])
+        
         jobject = datastore.create()
         jobject.metadata['title'] = title
         jobject.metadata['title_set_by_user'] = '0'
@@ -663,7 +666,8 @@ def initialize_journal_object(title=None, bundle_id=None,
         # TODO: list of handle.object_id for every entry to be implemented
         # Let the list contains first object_id of project itself
         #jobject.metadata['objects']= []
-        x =  '"' + str([(jobject.metadata['activity_id'].decode()).encode()]) + '"'
+        x =  '"' + str([[(jobject.metadata['activity_id'].decode()).encode(), PROJECT_BUNDLE_ID, \
+            title.decode().encode() ]]) + '"'
         logging.debug('x is %r' %x)
         #logging.debug('x %r'%x.replace("\'",'"'))
         tmp  = '{"Objects": ' + x +' }'
@@ -679,9 +683,7 @@ def initialize_journal_object(title=None, bundle_id=None,
 
     elif project_metadata is not None:
         logging.debug('[GSoC]_initialize_journal_object')
-        settings = Gio.Settings('org.sugarlabs.user')
-        icon_color = settings.get_string('color')
-
+        
         jobject = datastore.create()
         jobject.metadata['title'] = title
         jobject.metadata['mountpoints'] = ['/']
@@ -709,8 +711,9 @@ def initialize_journal_object(title=None, bundle_id=None,
         for ids in id_str:
             logging.debug('ids is %r'%ids)
             objects = ast.literal_eval(ids)
-            
-        objects.append(str(activity_id))
+
+        x =  [activity_id, bundle_id, title] 
+        objects.append((x))
         logging.debug('objects now is %r'%objects)
         tmp  = '{"Objects": ' + '"' + str(objects) + '"' +' }'
         logging.debug('tmp new is %r'%tmp)

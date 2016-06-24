@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import ast
 import logging
 from functools import partial
 import json
@@ -148,15 +149,34 @@ class ProjectInvite(BaseInvite):
         registry = bundleregistry.get_registry()
         bundle_id = self.get_bundle_id()
         #bundle = registry.get_bundle(bundle_id)
+        objects_received = self._project_properties.get('objects', None)
+        list_of_objects = None
+        if objects_received:
+            id_str = json.loads(objects_received).values()
+            list_of_objects = ast.literal_eval(id_str[0].decode().encode())
+            logging.debug('id_str %r' %list_of_objects)
+        
         logging.debug('[GSoC]ProjectInvite.join running %r' %self.dispatch_operation_path)
         self._call_handle_with()
         logging.debug('[GSoC] ProjectInvite.join prop%r'%self._project_properties )
         title = self._project_properties.get('name',None)
         activity_id = self._project_properties.get('activity_id',None)
         logging.debug('[GSoC] ProjectInvite.join prop%r'%title )
-        journalactivity.initialize_journal_object(title=title,
+        jobject = journalactivity.initialize_journal_object(title=title,
                                                 bundle_id=bundle_id,
                                                 activity_id=activity_id,
+                                                invited=True,)
+
+        list_of_objects = list_of_objects[1:]
+        for obj in list_of_objects:
+            logging.debug('obj %r' %obj)
+            activity_id, bundle_id, title = obj
+            if bundle_id is not PROJECT_BUNDLE_ID:
+                logging.debug('title %r bundle_id %r'%(title, bundle_id))
+                journalactivity.initialize_journal_object(title=title,
+                                                bundle_id=bundle_id,
+                                                activity_id=activity_id,
+                                                project_metadata=jobject.metadata,
                                                 invited=True)
 
 class PrivateInvite(BaseInvite):
@@ -212,7 +232,7 @@ class Invites(GObject.GObject):
 
         if handle_type == HANDLE_TYPE_ROOM and \
            channel_type == CHANNEL_TYPE_TEXT:
-            logging.debug('May be an activity, checking its properties')
+            logging.debug('May be an activity, checking its properties %r'%properties)
             connection_path = properties[CHANNEL_DISPATCH_OPERATION +
                                          '.Connection']
             connection_name = connection_path.replace('/', '.')[1:]
@@ -241,6 +261,10 @@ class Invites(GObject.GObject):
     def __get_properties_cb(self, handle, dispatch_operation_path, properties):
         logging.debug('__get_properties_cb %r', properties)
         handler = '%s.%s' % (CLIENT, properties['type'])
+        objects_received = properties.get('objects', None)
+        if objects_received:
+            id_str = json.loads(objects_received).values()
+            logging.debug('id_str %r' %ast.literal_eval(id_str[0].decode().encode()))
         self._add_invite(dispatch_operation_path, handle, handler, properties)
 
     def __error_handler_cb(self, handle, channel_properties,
