@@ -25,6 +25,7 @@ from gi.repository import Gtk
 from jarabe.view.friendlistpopup import FriendListPopup
 from jarabe.journal.expandedentry import TextView, BuddyList 
 from jarabe.journal.listview import ListView
+from jarabe.journal import model
 
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
@@ -36,19 +37,22 @@ _SERVICE_INTERFACE = 'org.laptop.Activity'
 class ProjectView(Gtk.VBox):
 
     def __init__(self, **kwargs):
-    	self.project_metadata = None
+
+        self.project_metadata = None
         self._service = None
         self._activity_id = None
         self._project = None
 
-    	Gtk.VBox.__init__(self)
-        description_box, self._description = self._create_description()
-        
-        self.pack_start(description_box, False, True, 0)
-        logging.debug('Project view setup activities')
-        
-        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+        Gtk.VBox.__init__(self)
 
+        self._title = self._create_title()
+        description_box, self._description = self._create_description()
+        title_box, self._title = self._create_title()
+        
+        self.pack_start(title_box, False, True , 0)
+        self.pack_start(description_box, False, True, 0)
+
+        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         self._buddy_list = Gtk.VBox()
         hbox.pack_start(self._buddy_list, True, False, 0)
         self.pack_start(hbox, False, True, 0)
@@ -56,11 +60,35 @@ class ProjectView(Gtk.VBox):
 
     def set_project(self, project):
         self._project = project
+        self.project_metadata = project.metadata
+
+        description = project.metadata.get('description', '')
+        self._description.get_buffer().set_text(description)
+        self._title.set_text(project.metadata.get('title', ''))
+
 
     def _add_buddy_button_clicked_cb(self, button):
         logging.debug('[GSoC]_add_buddy_button_clicked_cb')
         pop_up = FriendListPopup()
         pop_up.connect('friend-selected', self.__friend_selected_cb)
+
+    def _create_title(self):
+        vbox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
+        vbox.props.spacing = style.DEFAULT_SPACING
+
+        text = Gtk.Label()
+        text.set_markup('<span foreground="%s">%s</span>' % (
+            style.COLOR_BUTTON_GREY.get_html(), _('Title')))
+        halign = Gtk.Alignment.new(0, 0, 0, 0)
+        halign.add(text)
+        vbox.pack_start(halign, False, False, 0)
+        entry = Gtk.Entry()
+        entry.connect('focus-out-event', self._title_focus_out_event_cb)
+        vbox.pack_start(entry, True, True, 0)
+        return vbox, entry
+
+    def _title_focus_out_event_cb(self,entry, event):
+        self._update_entry()
 
     def __friend_selected_cb(self, xyz, selected):
         logging.debug('[GSoC]__friend_selected_cb %r' %selected)
@@ -146,7 +174,25 @@ class ProjectView(Gtk.VBox):
         return self._create_scrollable(widget, label=_('Description:')), widget
 
     def _description_tags_focus_out_event_cb(self, text_view, event):
-        logging.debug('[GSoC]blah here')
+        self._update_entry()
+
+    def _update_entry(self):
+        #updating description
+        bounds = self._description.get_buffer().get_bounds()
+        old_description = self.project_metadata.get('description', None)
+        new_description = self._description.get_buffer().get_text(
+            bounds[0], bounds[1], include_hidden_chars=False)
+
+        if old_description != new_description:
+            self.project_metadata['description'] = new_description
+            model.write(self.project_metadata)
+
+        new_title = self._title.get_text()
+        old_title = self.project_metadata.get('title','')
+
+        if old_title != new_title:
+            self.project_metadata['title'] = new_title
+            model.write(self.project_metadata)
 
     def _create_scrollable(self, widget, label=None):
         vbox = Gtk.VBox()
