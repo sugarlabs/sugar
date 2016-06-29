@@ -84,6 +84,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._all_ids = []
         t = time.time()
         self._result_set = model.find(query, ListModel._PAGE_SIZE)
+        
         logging.debug('init resultset: %r', time.time() - t)
         self._temp_drag_file_path = None
         self._selected = []
@@ -172,7 +173,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._cached_row.append(metadata['uid'])
         self._cached_row.append(metadata.get('keep', '0') == '1')
         self._cached_row.append(misc.get_icon_name(metadata))
-
+        
         if misc.is_activity_bundle(metadata):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
                                           style.COLOR_TRANSPARENT.get_svg()))
@@ -237,7 +238,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
                     continue
 
             self._cached_row.append(None)
-
+        logging.debug('[GSoC]do_get_value method %r' %self._cached_row[column])
         return self._cached_row[column]
 
     def do_iter_nth_child(self, parent_iter, n):
@@ -316,3 +317,4 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
     def select_none(self):
         self._selected = []
+
