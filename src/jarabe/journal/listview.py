@@ -40,6 +40,7 @@ from jarabe.journal import journalwindow
 
 
 UPDATE_INTERVAL = 300
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 
 class TreeView(Gtk.TreeView):
@@ -419,7 +420,7 @@ class BaseListView(Gtk.Bin):
         logging.debug('ListView.update_with_query')
             
         if 'activity' in query_dict:
-            if query_dict['activity'] == 'Project':
+            if query_dict['activity'] == PROJECT_BUNDLE_ID:
                 logging.debug('[GSoC] projectsview set in listview')
                 self.set_projects_view_active(True)
         if 'order_by' not in query_dict:
@@ -793,7 +794,7 @@ class ListView(BaseListView):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
         logging.debug('[GSoC]__icon_clicked_cb metadata activity is %r' %metadata['activity'])
-        if metadata['activity'] == 'Project':
+        if metadata['activity'] == PROJECT_BUNDLE_ID:
              logging.debug('[GSoC]__icon_clicked_cb Project icon clicked!!')
              self.emit('project-view-activate',metadata)
              return

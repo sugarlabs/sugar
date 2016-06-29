@@ -240,7 +240,7 @@ class MainToolbox(ToolbarBox):
             query['keep'] = 1
 
         if self._projects_view_active:
-            query['activity'] = 'Project'
+            query['activity'] = 'org.sugarlabs.Project'
 
         elif self._what_filter:
             filter_type = self._filter_type

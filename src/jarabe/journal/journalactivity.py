@@ -371,6 +371,7 @@ class JournalActivity(JournalWindow):
         project  = Project(self.project_metadata)
         self._project_view.set_project(project)
 
+        self._project_view.connect('go-back-clicked', self.__go_back_clicked_cb)
         self._main_view_active = False
         self.get_list_view().set_projects_view_active(False)
         self._project_view._project_buddies(metadata)
@@ -408,7 +409,6 @@ class JournalActivity(JournalWindow):
                                       activity_id=None,
                                       project_metadata=None)
         elif self.project_metadata is not None:
-            logging.debug('[GSoC]ObjectChooser here...')
             chooser = ActivityChooser()
             chooser.connect('activity-selected',self.__activity_selected_cb)
             chooser.show_all()
@@ -642,11 +642,10 @@ def initialize_journal_object(title=None, bundle_id=None,
         jobject = datastore.create()
         jobject.metadata['title'] = title
         jobject.metadata['title_set_by_user'] = '0'
-        jobject.metadata['activity'] = 'Project'
+        jobject.metadata['activity'] = PROJECT_BUNDLE_ID
         if not activity_id:
             activity_id = activityfactory.create_activity_id()
         jobject.metadata['activity_id'] = activity_id
-        jobject.metadata['bundle_id'] = PROJECT_BUNDLE_ID
         jobject.metadata['keep'] = '0'
         jobject.metadata['preview'] = ''
         #jobject.metadata['share-scope'] = SCOPE_PRIVATE

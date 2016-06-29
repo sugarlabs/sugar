@@ -23,7 +23,8 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from jarabe.view.friendlistpopup import FriendListPopup
-from jarabe.journal.expandedentry import TextView, BuddyList 
+from jarabe.journal.expandedentry import TextView, BuddyList
+from jarabe.journal.detailview import BackBar
 from jarabe.journal.listview import ListView
 from jarabe.journal import model
 
@@ -36,6 +37,10 @@ _SERVICE_INTERFACE = 'org.laptop.Activity'
 
 class ProjectView(Gtk.VBox):
 
+    __gsignals__ = {
+        'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+    }
+
     def __init__(self, **kwargs):
 
         self.project_metadata = None
@@ -45,7 +50,11 @@ class ProjectView(Gtk.VBox):
 
         Gtk.VBox.__init__(self)
 
-        self._title = self._create_title()
+        back_bar = BackBar()
+        back_bar.connect('button-release-event',
+                         self.__back_bar_release_event_cb)
+        self.pack_start(back_bar, False, True, 0)
+        titlebox, self._title = self._create_title()
         description_box, self._description = self._create_description()
         title_box, self._title = self._create_title()
         
@@ -57,6 +66,10 @@ class ProjectView(Gtk.VBox):
         hbox.pack_start(self._buddy_list, True, False, 0)
         self.pack_start(hbox, False, True, 0)
         hbox.show()
+
+    def __back_bar_release_event_cb(self, back_bar, event):
+        self.emit('go-back-clicked')
+        return False
 
     def set_project(self, project):
         self._project = project
