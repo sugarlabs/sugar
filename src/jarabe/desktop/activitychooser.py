@@ -54,14 +54,23 @@ class ActivityChooser(PopWindow):
 
         self.get_vbox().pack_start(self._scrolled_window, True, True, 0)
         self._list_view.show()
+        
         self.tree_view = self._list_view._tree_view
-        self.tree_view.disconnect(self.tree_view.hid)
-        self.tree_view.connect('row-activated',self.__on_row_activated)
+        if self.tree_view.row_activated_handler:
+            self.tree_view.disconnect(self.tree_view.row_activated_handler)
+        if self.tree_view.button_press_handler:
+            self.tree_view.disconnect(self.tree_view.button_press_handler)
+        if self.tree_view.button_reslease_handler:
+            self.tree_view.disconnect(self.tree_view.button_reslease_handler)
+        if self.tree_view.icon_clicked_handler:
+            self.tree_view.disconnect(self.tree_view.icon_clicked_handler)
+
+        self.tree_view.connect('row-activated',self.__row_activated_cb)
 
         self.show()
         logging.debug('In the Object Chooser class init ended hehehe')
 
-    def __on_row_activated(self, treeview, path, col):
+    def __row_activated_cb(self, treeview, path, col):
         logging.debug('[GSoC]__on_row_activated overwritten in ObjectChooser')
         if col is not treeview.get_column(0):
             model = treeview.get_model()
@@ -75,31 +84,4 @@ class ActivityChooser(PopWindow):
 
         self.emit('activity-selected', bundle_id, activity_id)
         #self._initialize_journal_object(title=row[self.tree_view._model.column_title], bundle_id=bundle_id, activity_id=activity_id)
-        return True
-
-    def _initialize_journal_object(self, title=None, bundle_id=None, activity_id=None):
-        
-        settings = Gio.Settings('org.sugarlabs.user')
-        icon_color = settings.get_string('color')
-
-        jobject = datastore.create()
-        jobject.metadata['title'] = title
-        jobject.metadata['title_set_by_user'] = '0'
-        jobject.metadata['activity'] = bundle_id
-        jobject.metadata['activity_id'] = activity_id
-        jobject.metadata['keep'] = '0'
-        jobject.metadata['preview'] = ''
-        jobject.metadata['share-scope'] = SCOPE_PRIVATE
-        jobject.metadata['icon-color'] = icon_color
-        jobject.metadata['launch-times'] = str(int(time.time()))
-        jobject.metadata['spent-times'] = '0'
-        jobject.file_path = ''
-
-        # FIXME: We should be able to get an ID synchronously from the DS,
-        # then call async the actual create.
-        # http://bugs.sugarlabs.org/ticket/2169
-        datastore.write(jobject)
-
-        return jobject
-
-            
+        return True           

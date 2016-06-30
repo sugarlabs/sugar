@@ -620,6 +620,12 @@ class JournalActivity(JournalWindow):
     def unfreeze_ui(self):
         self._set_widgets_sensitive_state(True)
 
+    def initialize_journal_object(self, title=None, bundle_id=None, 
+                                activity_id=None, project_metadata=None,
+                                icon_color=None,invited=False):
+        initialize_journal_object(title=title, bundle_id=bundle_id, 
+                                activity_id=activity_id, project_metadata=project_metadata,
+                                icon_color=icon_color,invited=invited)
 
 def get_journal():
     global _journal
@@ -637,6 +643,9 @@ def initialize_journal_object(title=None, bundle_id=None,
         settings = Gio.Settings('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
+    if not activity_id:
+        activity_id = activityfactory.create_activity_id()
+
     if bundle_id == PROJECT_BUNDLE_ID:
         logging.debug('[GSoC]initializing journal object for project %r' %[title, invited])
         
@@ -644,8 +653,6 @@ def initialize_journal_object(title=None, bundle_id=None,
         jobject.metadata['title'] = title
         jobject.metadata['title_set_by_user'] = '0'
         jobject.metadata['activity'] = PROJECT_BUNDLE_ID
-        if not activity_id:
-            activity_id = activityfactory.create_activity_id()
         jobject.metadata['activity_id'] = activity_id
         jobject.metadata['keep'] = '0'
         jobject.metadata['preview'] = ''
@@ -702,7 +709,7 @@ def initialize_journal_object(title=None, bundle_id=None,
         # then call async the actual create.
         # http://bugs.sugarlabs.org/ticket/2169
         datastore.write(jobject)
-        logging.debug('Show me the project_metadata before %r' %(project_metadata['objects']))
+        logging.debug('Show me the project_metadata before %r' %(project_metadata))
         id_str = json.loads(project_metadata['objects']).values()
         logging.debug('id_str is %r'%id_str)
         activity_id = activity_id 

@@ -55,9 +55,7 @@ class ActivitiesTreeView(Gtk.TreeView):
     def __init__(self):
         Gtk.TreeView.__init__(self)
         self.set_can_focus(False)
-        self.props.activate_on_single_click = True
 
-        self.hid = self.connect('row-activated', self.__on_row_activated)
         self._query = ''
 
         self.set_headers_visible(False)
@@ -140,14 +138,19 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._invoker = TreeViewInvoker()
         self._invoker.attach_treeview(self)
 
+        self.button_press_handler = None
+        self.button_reslease_handler = None
+        self.icon_clicked_handler = None
+        self.row_activated_handler = None
         if hasattr(self.props, 'activate_on_single_click'):
             # Gtk+ 3.8 and later
+            logging.debug('hasattr(self.props)')
             self.props.activate_on_single_click = True
-            self.connect('row-activated', self.__row_activated_cb)
+            self.row_activated_handler = self.connect('row-activated', self.__row_activated_cb)
         else:
-            self.cell_icon.connect('clicked', self.__icon_clicked_cb)
-            self.connect('button-press-event', self.__button_press_cb)
-            self.connect('button-release-event', self.__button_release_cb)
+            self.icon_clicked_handler = self.cell_icon.connect('clicked', self.__icon_clicked_cb)
+            self.button_press_handler = self.connect('button-press-event', self.__button_press_cb)
+            self.button_reslease_handler = self.connect('button-release-event', self.__button_release_cb)
             self._row_activated_armed_path = None
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
@@ -171,6 +174,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         """
         A click on activity icon cell is to start an activity.
         """
+        logging.debug('__icon_clicked_cb')
         self._start_activity(path)
 
     def __row_activated_cb(self, treeview, path, col):
@@ -178,6 +182,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         A click on cells other than the favorite toggle is to start an
         activity.  Gtk+ 3.8 and later.
         """
+        logging.debug('__row_activated_cb')
         if col is not treeview.get_column(0):
             self._start_activity(path)
 
@@ -201,6 +206,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         return path
 
     def __button_press_cb(self, widget, event):
+        logging.debug('__button_press_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
         if path is None:
             return
@@ -208,6 +214,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._row_activated_armed_path = path
 
     def __button_release_cb(self, widget, event):
+        logging.debug('__button_release_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
         if path is None:
             return
