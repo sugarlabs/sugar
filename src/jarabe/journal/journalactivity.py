@@ -273,6 +273,9 @@ class JournalActivity(JournalWindow):
         self._entry.show()
         return self._add_new_box
 
+    def get_add_new_box(self):
+        return self._add_new_box
+
     def _create_add_new_entry_project(self):
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         add_new_button = ToolButton('list-add') # suggest icon for this
@@ -335,7 +338,7 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
 
         add_new_box = self._create_add_new_entry()
-        add_new_box.show_all()
+        #add_new_box.show_all()
         self._main_view.pack_start(add_new_box, False, True, 0)
         self._main_view.set_can_focus(True)
 

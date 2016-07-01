@@ -417,10 +417,12 @@ class BaseListView(Gtk.Bin):
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
             
-        if 'activity' in query_dict:
-            if query_dict['activity'] == PROJECT_BUNDLE_ID:
-                logging.debug('[GSoC] projectsview set in listview')
-                self.set_projects_view_active(True)
+        if 'activity' in query_dict and query_dict['activity'] == PROJECT_BUNDLE_ID:
+            logging.debug('[GSoC] projectsview set in listview')
+            self.set_projects_view_active(True)
+        elif self._projects_view_active:
+            self.set_projects_view_active(False)
+        
         if 'order_by' not in query_dict:
             query_dict['order_by'] = ['+timestamp']
         if query_dict['order_by'] != self._query.get('order_by'):
@@ -733,12 +735,15 @@ class ListView(BaseListView):
     def set_projects_view_active(self, projects_view_active):
         self._projects_view_active = projects_view_active
         text = 'Add new entry'
+        logging.debug('set_projects_view_active %r'%projects_view_active)
         if self._projects_view_active:
+            logging.debug('set_projects_view_active')
             text = 'Add new project'
+            self._journalactivity.get_entry().set_placeholder_text(text)
+            self._journalactivity.get_add_new_box().show_all()
         else:
-            text = 'Add new entry'
-
-        self._journalactivity.get_entry().set_placeholder_text(text)
+            logging.debug('set_projects_view_active false')
+            self._journalactivity.get_add_new_box().hide()
 
     def get_projects_view_active(self):
         return self._projects_view_active

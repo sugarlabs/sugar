@@ -55,7 +55,7 @@ class Project(GObject.GObject):
         self.metadata = project_metadata
         self._id = self.metadata['activity_id']
         self._bundle_id = 'org.sugarlabs.Project'
-        logging.debug('Project.__init__ activities %r' %project_metadata['objects'])
+        logging.debug('Project.__init__ activities %r' %project_metadata)
         self.shared_activity = None
         self._invites_queue = []
 
