@@ -432,7 +432,12 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def __detail_clicked_cb(self, list_view, object_id):
-        self._show_secondary_view(object_id)
+        metadata = model.get(object_id)
+        activity = metadata.get('activity', None)
+        if activity == PROJECT_BUNDLE_ID:
+            self.__project_view_activated_cb(list_view, metadata)
+        else:
+            self._show_secondary_view(object_id)
 
     def __clear_clicked_cb(self, list_view):
         self._main_toolbox.clear_query()
