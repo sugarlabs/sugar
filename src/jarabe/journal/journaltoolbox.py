@@ -106,7 +106,7 @@ class MainToolbox(ToolbarBox):
         self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
-        self._proj_list_button = ToolButton('emblem-question') # suggest icon for this
+        self._proj_list_button = ToolButton('project-box')
         self._proj_list_button.set_tooltip(_('Projects'))
         self._proj_list_button.connect('clicked', self._proj_list_button_clicked_cb)
         self.toolbar.insert(self._proj_list_button, -1)

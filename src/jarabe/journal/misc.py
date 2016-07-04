@@ -45,6 +45,7 @@ from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
 from jarabe.journal import journalwindow
 
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 def _get_icon_for_mime(mime_type):
     generic_types = mime.get_all_generic_types()
@@ -87,6 +88,12 @@ def get_icon_name(metadata):
         bundle_id = metadata.get('bundle_id', '')
 
     if bundle_id:
+        if bundle_id == PROJECT_BUNDLE_ID:
+            file_name = \
+            '/home/broot/sugar-build/build' + \
+            '/out/install/share/icons/sugar/scalable/mimetypes/project-box.svg'
+            return file_name
+
         activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
         if activity_info:
             file_name = activity_info.get_icon()
