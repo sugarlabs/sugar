@@ -372,8 +372,7 @@ class JournalActivity(JournalWindow):
 
     def __project_view_activated_cb(self, list_view, metadata):
         self.project_metadata = metadata
-        project  = Project(self.project_metadata)
-        self._project_view.set_project(project)
+        self._project_view.set_project_metadata(self.project_metadata)
 
         self._project_view.connect('go-back-clicked', self.__go_back_clicked_cb)
         self._main_view_active = False

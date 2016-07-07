@@ -16,7 +16,6 @@ sugar_PYTHON =			\
 	neighborhood.py		\
         network.py              \
         notifications.py        \
-	project.py		\
 	shell.py		\
 	screen.py		\
 	screenshot.py		\

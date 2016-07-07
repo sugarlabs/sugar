@@ -71,19 +71,17 @@ class ProjectView(Gtk.VBox):
         self.emit('go-back-clicked')
         return False
 
-    def set_project(self, project):
-        self._project = project
-        self.project_metadata = project.metadata
+    def set_project_metadata(self, project_metadata):
+        self.project_metadata = project_metadata
 
-        description = project.metadata.get('description', '')
+        description = project_metadata.get('description', '')
         self._description.get_buffer().set_text(description)
-        self._title.set_text(project.metadata.get('title', ''))
+        self._title.set_text(project_metadata.get('title', ''))
 
 
     def _add_buddy_button_clicked_cb(self, button):
-        logging.debug('[GSoC]_add_buddy_button_clicked_cb')
-        pop_up = FriendListPopup()
-        pop_up.connect('friend-selected', self.__friend_selected_cb)
+        #TODO: TO be implemented
+        pass
 
     def _create_title(self):
         vbox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
@@ -133,9 +131,7 @@ class ProjectView(Gtk.VBox):
         logging.debug('[GSoC]friend finally selected')
 
     def invite_buddy(self, selected):
-        logging.debug('[GSoC]ProjectView.invite_buddy')
-        self._project.invite(selected[0].props.account,selected[0].props.contact_id)
-
+        pass
 
     def _project_buddies(self, metadata):
         logging.debug('[GSoC]_project_buddies')

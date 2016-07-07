@@ -17,7 +17,6 @@ sugar_PYTHON =				\
 	modalalert.py			\
 	model.py			\
 	objectchooser.py		\
-	projectwrapper.py		\
 	projectview.py			\
 	palettes.py			\
 	volumestoolbar.py
