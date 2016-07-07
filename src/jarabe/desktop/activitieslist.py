@@ -71,15 +71,15 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self._favorite_columns = []
         for i in range(desktop.get_number_of_views()):
-            column = Gtk.TreeViewColumn()
+            self.fav_column = Gtk.TreeViewColumn()
             self.cell_favorite = CellRendererFavorite(i)
             self.cell_favorite.connect('clicked', self.__favorite_clicked_cb)
-            column.pack_start(self.cell_favorite, True)
-            column.set_cell_data_func(self.cell_favorite,
+            self.fav_column.pack_start(self.cell_favorite, True)
+            self.fav_column.set_cell_data_func(self.cell_favorite,
                                       self.__favorite_set_data_cb)
-            self.append_column(column)
+            self.append_column(self.fav_column)
 
-            self._favorite_columns.append(column)
+            self._favorite_columns.append(self.fav_column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -106,31 +106,31 @@ class ActivitiesTreeView(Gtk.TreeView):
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_version)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text',
+        self.version_column = Gtk.TreeViewColumn()
+        self.version_column.set_alignment(1)
+        self.version_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.version_column.props.resizable = True
+        self.version_column.props.reorderable = True
+        self.version_column.props.expand = True
+        self.version_column.set_sort_column_id(self._model.column_version)
+        self.version_column.pack_start(cell_text, True)
+        self.version_column.add_attribute(cell_text, 'text',
                              self._model.column_version_text)
-        self.append_column(column)
+        self.append_column(self.version_column)
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_date)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text', self._model.column_date_text)
-        self.append_column(column)
+        self.date_column = Gtk.TreeViewColumn()
+        self.date_column.set_alignment(1)
+        self.date_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.date_column.props.resizable = True
+        self.date_column.props.reorderable = True
+        self.date_column.props.expand = True
+        self.date_column.set_sort_column_id(self._model.column_date)
+        self.date_column.pack_start(cell_text, True)
+        self.date_column.add_attribute(cell_text, 'text', self._model.column_date_text)
+        self.append_column(self.date_column)
 
         self.set_search_column(self._model.column_title)
         self.set_enable_search(False)

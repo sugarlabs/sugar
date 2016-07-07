@@ -35,7 +35,7 @@ import sugar3.activity.activityfactory
 from sugar3 import env
 from sugar3.datastore import datastore
 from sugar3.activity import activityfactory
-from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.icon import CanvasIcon, EventIcon
 from gi.repository import SugarExt
 
 from jarabe.model.project import Project
@@ -258,9 +258,9 @@ class JournalActivity(JournalWindow):
 
     def _create_add_new_entry(self):
         self._add_new_box = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        add_new_button = ToolButton('list-add') # suggest icon for this
+        add_new_button = EventIcon(icon_name='list-add') # suggest icon for this
         add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('clicked', self._add_new_button_clicked_cb)
+        add_new_button.connect('button-press-event', self._add_new_button_clicked_cb)
         self._add_new_box.pack_start(add_new_button, False, True, 0)
         add_new_button.show()
 
@@ -280,9 +280,9 @@ class JournalActivity(JournalWindow):
 
     def _create_add_new_entry_project(self):
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        add_new_button = ToolButton('list-add') # suggest icon for this
+        add_new_button = EventIcon(icon_name='list-add') # suggest icon for this
         add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('clicked', self._add_new_button_clicked_cb)
+        add_new_button.connect('button-press-event', self._add_new_button_clicked_cb)
         hbox.pack_start(add_new_button, False, True, 0)
         add_new_button.show()
 
@@ -407,11 +407,11 @@ class JournalActivity(JournalWindow):
     def _key_press_add_new_entry_cb(self, window, event):
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Return':
-            self._add_new_button_clicked_cb(None)
+            self._add_new_button_clicked_cb(None, None)
 
         return False
 
-    def _add_new_button_clicked_cb(self, button):
+    def _add_new_button_clicked_cb(self, button, event):
         if self.get_list_view().get_projects_view_active():
             logging.debug('[GSoC]for project title %r' %self.get_entry().props.text)
             initialize_journal_object(title= self.get_entry().props.text,
@@ -420,6 +420,8 @@ class JournalActivity(JournalWindow):
                                       project_metadata=None)
         elif self.project_metadata is not None:
             chooser = ActivityChooser()
+            text = _("Choose an activity to start '%s' with" %self._entry_project.props.text)
+            chooser.set_title(text)
             chooser.connect('activity-selected',self.__activity_selected_cb)
             chooser.show_all()
 

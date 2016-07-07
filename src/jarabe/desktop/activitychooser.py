@@ -28,13 +28,17 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.popwindow import PopWindow
 from sugar3.activity import activityfactory
+from sugar3.graphics import iconentry
 
 from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.model import bundleregistry, shell
+from jarabe.util.normalize import normalize_string
+
+_AUTOSEARCH_TIMEOUT = 1000
 
 class ActivityChooser(PopWindow):
 
-    #__gtype_name__ = 'ObjectChooser'
+    __gtype_name__ = 'ActivityChooser'
 
     __gsignals__ = {
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
@@ -44,8 +48,15 @@ class ActivityChooser(PopWindow):
     def __init__(self):
         logging.debug('In the Object Chooser class init hehehe')
         PopWindow.__init__(self)
+        width, height = self.HALF_WIDTH
 
+        self.set_size((width*3/2, height*2/3))
         self._list_view = ActivitiesList()
+
+        self.search_bar = SearchBar()
+        self.get_vbox().pack_start(self.search_bar, False, False    , 0)
+        self.search_bar.connect('query-changed', self.__toolbar_query_changed_cb)
+
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                          Gtk.PolicyType.AUTOMATIC)
@@ -53,9 +64,18 @@ class ActivityChooser(PopWindow):
         self._scrolled_window.add(self._list_view)
 
         self.get_vbox().pack_start(self._scrolled_window, True, True, 0)
+
         self._list_view.show()
-        
+        self._list_view.connect('clear-clicked',
+                                self.__activitylist_clear_clicked_cb, self.search_bar)
+
+
         self.tree_view = self._list_view._tree_view
+
+        self.tree_view.date_column.set_visible(False)
+        self.tree_view.fav_column.set_visible(False)
+        self.tree_view.version_column.set_visible(False)
+
         if self.tree_view.row_activated_handler:
             self.tree_view.disconnect(self.tree_view.row_activated_handler)
         if self.tree_view.button_press_handler:
@@ -68,7 +88,35 @@ class ActivityChooser(PopWindow):
         self.tree_view.connect('row-activated',self.__row_activated_cb)
 
         self.show()
-        logging.debug('In the Object Chooser class init ended hehehe')
+
+    def __toolbar_query_changed_cb(self, toolbar, query):
+        self._query = normalize_string(query.decode('utf-8'))
+        self._list_view.set_filter(self._query)
+
+        toolbar.search_entry._icon_selected = \
+            self._list_view.get_activities_selected()
+
+        # verify if one off the selected names is a perfect match
+        # this is needed by th case of activities with names contained
+        # in other activities like 'Paint' and 'MusicPainter'
+        for activity in self._list_view.get_activities_selected():
+            if activity['name'].upper() == query.upper():
+                toolbar.search_entry._icon_selected = [activity]
+                break
+
+        # Don't change the selection if the entry has been autocompleted
+        if len(toolbar.search_entry._icon_selected) == 1 \
+           and not toolbar.search_entry.get_text() == activity['name']:
+            pos = toolbar.search_entry.get_position()
+            toolbar.search_entry.set_text(
+                toolbar.search_entry._icon_selected[0]['name'])
+            toolbar.search_entry.select_region(pos, -1)
+
+    def __activitylist_clear_clicked_cb(self, list_view, toolbar):
+        toolbar.clear_query()
+
+    def set_title(self, text):
+        self.get_title_box().set_title(text)
 
     def __row_activated_cb(self, treeview, path, col):
         logging.debug('[GSoC]__on_row_activated overwritten in ObjectChooser')
@@ -83,5 +131,82 @@ class ActivityChooser(PopWindow):
         #title=row[self.tree_view._model.column_title]
 
         self.emit('activity-selected', bundle_id, activity_id)
+        self.destroy()
         #self._initialize_journal_object(title=row[self.tree_view._model.column_title], bundle_id=bundle_id, activity_id=activity_id)
-        return True           
+        return True
+
+
+class SearchBar(Gtk.Toolbar):
+    '''
+    New Toolbar below the Titlebox of sugar3.graphics PopWindow.
+    This toolbar contains textentry for search.
+    '''
+
+    __gtype_name__ = 'ActivityChooserSearchBar'
+
+    __gsignals__ = {
+        'query-changed': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([str])),
+    }
+
+    def __init__(self):
+        Gtk.Toolbar.__init__(self)
+
+        self._query = None
+        self._autosearch_timer = None
+        #self.set_border_width(10)
+
+        tool_item = Gtk.ToolItem()
+        self.insert(tool_item, -1)
+        tool_item.set_expand(False)
+        tool_item.show()
+
+        self.search_entry = iconentry.IconEntry()
+        self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
+                                             'entry-search')
+        self.search_entry.add_clear_button()
+        self.search_entry.set_width_chars(20)
+        self.search_entry.connect('activate', self._entry_activated_cb)
+        self.search_entry.connect('changed', self._entry_changed_cb)
+        tool_item.add(self.search_entry)
+        self.search_entry.show()
+        self._add_separator()
+
+    def clear_query(self):
+        self.search_entry.props.text = ''
+
+    def _add_separator(self, expand=False):
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        if expand:
+            separator.set_expand(True)
+        else:
+            separator.set_size_request(style.GRID_CELL_SIZE,
+                                       style.GRID_CELL_SIZE)
+        self.insert(separator, -1)
+        separator.show()
+
+    def _entry_activated_cb(self, entry):
+        if self._autosearch_timer:
+            GObject.source_remove(self._autosearch_timer)
+            self._autosearch_timer = None
+        new_query = entry.props.text
+        if self._query != new_query:
+            self._query = new_query
+            self.emit('query-changed', self._query)
+
+    def _entry_changed_cb(self, entry):
+        if not entry.props.text:
+            entry.activate()
+            return
+
+        if self._autosearch_timer:
+            GObject.source_remove(self._autosearch_timer)
+        self._autosearch_timer = GObject.timeout_add(_AUTOSEARCH_TIMEOUT,
+                                                     self._autosearch_timer_cb)
+
+    def _autosearch_timer_cb(self):
+        logging.debug('_autosearch_timer_cb')
+        self._autosearch_timer = None
+        self.search_entry.activate()
+        return False
