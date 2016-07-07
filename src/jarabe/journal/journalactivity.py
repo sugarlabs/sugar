@@ -309,7 +309,7 @@ class JournalActivity(JournalWindow):
         self._list_view.connect('selection-changed',
                                 self.__selection_changed_cb)
         self._list_view.connect('project-view-activate',
-                                self.__project_view_activated_cb)
+                                self.project_view_activated_cb)
         return self._list_view
 
 
@@ -325,7 +325,7 @@ class JournalActivity(JournalWindow):
         self._list_view_project.connect('selection-changed',
                                 self.__selection_changed_cb)
         self._list_view_project.connect('project-view-activate',
-                                self.__project_view_activated_cb)
+                                self.project_view_activated_cb)
         return self._list_view_project
 
     def _create_volumes_toolbar(self):
@@ -372,7 +372,7 @@ class JournalActivity(JournalWindow):
     def get_entry(self):
         return self._entry
 
-    def __project_view_activated_cb(self, list_view, metadata):
+    def project_view_activated_cb(self, list_view, metadata):
         self.project_metadata = metadata
         self._project_view.set_project_metadata(self.project_metadata)
 
@@ -389,7 +389,6 @@ class JournalActivity(JournalWindow):
         query = {}
         query['project_id'] = self.project_metadata['uid']
         #query['mountpoints'] = ['/']
-        logging.debug('[GSoC]__project_view_activated_cb %r' %query)
         self._list_view_project.update_with_query(query)
         self._project_view.show_all()
 
@@ -446,7 +445,7 @@ class JournalActivity(JournalWindow):
         metadata = model.get(object_id)
         activity = metadata.get('activity', None)
         if activity == PROJECT_BUNDLE_ID:
-            self.__project_view_activated_cb(list_view, metadata)
+            self.project_view_activated_cb(list_view, metadata)
         else:
             self._show_secondary_view(object_id)
 

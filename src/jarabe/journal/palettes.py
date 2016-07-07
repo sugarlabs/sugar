@@ -43,6 +43,7 @@ from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 from jarabe.journal.misc import get_mount_color
 
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 class ObjectPalette(Palette):
 
@@ -95,6 +96,13 @@ class ObjectPalette(Palette):
             start_with_menu = StartWithMenu(self._metadata)
             menu_item.set_submenu(start_with_menu)
 
+        elif metadata.get('activity',None) == PROJECT_BUNDLE_ID:
+            open_label = _('Open')
+            menu_item = MenuItem(open_label, 'project-box')
+            menu_item.connect('activate', self.__open_project_activate_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
         else:
             menu_item = MenuItem(_('No activity to start entry'))
             menu_item.set_sensitive(False)
@@ -141,6 +149,9 @@ class ObjectPalette(Palette):
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
+
+    def __open_project_activate_cb(self, menu_item):
+        self._journalactivity.project_view_activated_cb(list_view=None, metadata=self._metadata)
 
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata,
