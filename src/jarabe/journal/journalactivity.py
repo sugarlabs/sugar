@@ -59,6 +59,7 @@ from jarabe.journal.bundlelauncher import launch_bundle, get_bundle
 
 from jarabe.model import session
 
+from sugar3.graphics import style
 
 J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
@@ -266,6 +267,7 @@ class JournalActivity(JournalWindow):
         self._entry = iconentry.IconEntry()
         self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'activity-journal')
+        self._entry.connect('key-press-event',self._key_press_add_new_entry_cb)
         text = _('Add new entry')
         self._entry.set_placeholder_text(text)
         self._entry.add_clear_button()
@@ -288,6 +290,7 @@ class JournalActivity(JournalWindow):
         self._entry_project.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'activity-journal')
         text = _('Add new entry')
+        self._entry_project.connect('key-press-event',self._key_press_add_new_entry_cb)
         self._entry_project.set_placeholder_text(text)
         self._entry_project.add_clear_button()
         hbox.pack_start(self._entry_project, True, True, 0)
@@ -338,8 +341,7 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
 
         add_new_box = self._create_add_new_entry()
-        #add_new_box.show_all()
-        self._main_view.pack_start(add_new_box, False, True, 0)
+        self._main_view.pack_start(add_new_box, False, True, style.DEFAULT_SPACING)
         self._main_view.set_can_focus(True)
 
         list_view = self._create_list_view()
@@ -359,7 +361,7 @@ class JournalActivity(JournalWindow):
         self._project_view = ProjectView()
         add_new_box = self._create_add_new_entry_project()
         add_new_box.show_all()
-        self._project_view.pack_start(add_new_box, False, True, 0)
+        self._project_view.pack_start(add_new_box, False, True, style.DEFAULT_SPACING/3)
         list_view = self._create_list_view_project()
         self._project_view.pack_start(list_view, True, True, 0)
         list_view.show()
@@ -402,9 +404,14 @@ class JournalActivity(JournalWindow):
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
+    def _key_press_add_new_entry_cb(self, window, event):
+        keyname = Gdk.keyval_name(event.keyval)
+        if keyname == 'Return':
+            self._add_new_button_clicked_cb(None)
+
+        return False
+
     def _add_new_button_clicked_cb(self, button):
-        # This method only implements Add-New-Project
-        # TODO: Add-New-Entry for other activities
         if self.get_list_view().get_projects_view_active():
             logging.debug('[GSoC]for project title %r' %self.get_entry().props.text)
             initialize_journal_object(title= self.get_entry().props.text,

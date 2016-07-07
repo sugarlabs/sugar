@@ -47,6 +47,7 @@ class ProjectView(Gtk.VBox):
         self._service = None
         self._activity_id = None
         self._project = None
+        self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         Gtk.VBox.__init__(self)
 
@@ -58,13 +59,15 @@ class ProjectView(Gtk.VBox):
         description_box, self._description = self._create_description()
         title_box, self._title = self._create_title()
         
-        self.pack_start(title_box, False, True , 0)
-        self.pack_start(description_box, False, True, 0)
+        self.pack_start(title_box, False, True , style.DEFAULT_SPACING/3)
+        self.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
 
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         self._buddy_list = Gtk.VBox()
+        self._buddy_list.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color()) 
         hbox.pack_start(self._buddy_list, True, False, 0)
-        self.pack_start(hbox, False, True, 0)
+        self.pack_start(hbox, False, True, style.DEFAULT_SPACING/3)
+        hbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
         hbox.show()
 
     def __back_bar_release_event_cb(self, back_bar, event):
@@ -86,6 +89,7 @@ class ProjectView(Gtk.VBox):
     def _create_title(self):
         vbox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
         vbox.props.spacing = style.DEFAULT_SPACING
+        vbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         text = Gtk.Label()
         text.set_markup('<span foreground="%s">%s</span>' % (
@@ -147,6 +151,7 @@ class ProjectView(Gtk.VBox):
         self.project_metadata = metadata
         vbox = Gtk.VBox()
         vbox.props.spacing = style.DEFAULT_SPACING
+        vbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         add_buddy_button = ToolButton('list-add') # suggest icon for this
         add_buddy_button.set_tooltip(_('Add Buddy'))
