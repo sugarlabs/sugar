@@ -51,7 +51,6 @@ from jarabe.frame.notification import NotificationButton
 from jarabe.frame.notification import NotificationPulsingIcon
 import jarabe.frame
 
-PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 class ActivityButton(RadioToolButton):
 
@@ -145,9 +144,6 @@ class InviteButton(ToolButton):
         self._icon.props.xo_color = invite.get_color()
         if bundle is not None:
             self._icon.props.file = bundle.get_icon()
-        elif invite.get_bundle_id() == PROJECT_BUNDLE_ID:
-            #TODO: icon to be implemented!
-            self._icon.props.icon_name = 'application-octet-stream'
         else:
             self._icon.props.icon_name = 'image-missing'
         self.set_icon_widget(self._icon)
@@ -164,12 +160,8 @@ class InviteButton(ToolButton):
                                  self.__button_release_event_cb)
 
         self._notif_icon.props.xo_color = invite.get_color()
-        logging.debug('[GSoC]invite instance %r' %invite)
         if bundle is not None:
             self._notif_icon.props.icon_filename = bundle.get_icon()
-        elif invite.get_bundle_id() == PROJECT_BUNDLE_ID:
-            #TODO: icon to be implemented!
-            self._notif_icon.props.icon_name = 'application-octet-stream'
         else:
             self._notif_icon.props.icon_name = 'image-missing'
 
@@ -229,9 +221,6 @@ class InvitePalette(Palette):
         self._bundle = registry.get_bundle(bundle_id)
         if self._bundle:
             activity_name = self._bundle.get_name()
-        elif invite.get_bundle_id() == PROJECT_BUNDLE_ID:
-            #TODO: icon to be implemented!
-            activity_name = 'Project'
         else:
             activity_name = bundle_id
         self.set_primary_text(activity_name)
