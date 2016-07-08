@@ -50,6 +50,8 @@ class TreeView(Gtk.TreeView):
                            ([object])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'choose-project': (GObject.SignalFlags.RUN_FIRST,None,
+                          ([object])),
     }
 
     def __init__(self, journalactivity):
@@ -95,6 +97,7 @@ class TreeView(Gtk.TreeView):
                                     detail=True)
             palette.connect('detail-clicked', self.__detail_clicked_cb)
             palette.connect('volume-error', self.__volume_error_cb)
+            palette.connect('choose-project', self.__choose_project_cb)
 
         elif column in self.buddies_columns:
             tree_model = self.get_model()
@@ -122,6 +125,9 @@ class TreeView(Gtk.TreeView):
 
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
+
+    def __choose_project_cb(self, palette, metadata_to_copy):
+        self.emit('choose-project', metadata_to_copy)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can
@@ -159,6 +165,7 @@ class BaseListView(Gtk.Bin):
         self._progress_bar = None
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
+        self._projects_view_active = False
 
         Gtk.Bin.__init__(self)
 
@@ -692,6 +699,24 @@ class BaseListView(Gtk.Bin):
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
 
+    def set_projects_view_active(self, projects_view_active):
+        self._projects_view_active = projects_view_active
+        text = 'Add new entry'
+        logging.debug('set_projects_view_active %r'%projects_view_active)
+        if self._journalactivity:
+            if self._projects_view_active:
+                logging.debug('set_projects_view_active')
+                text = 'Add new project'
+                self._journalactivity.get_entry().set_placeholder_text(text)
+                self._journalactivity.get_add_new_box().show_all()
+            else:
+                logging.debug('set_projects_view_active false')
+                self._journalactivity.get_add_new_box().hide()
+
+    def get_projects_view_active(self):
+        return self._projects_view_active
+
+
 
 class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
@@ -708,8 +733,7 @@ class ListView(BaseListView):
     def __init__(self, journalactivity, enable_multi_operations=False):
         BaseListView.__init__(self, journalactivity, enable_multi_operations)
         self._is_dragging = False
-        self._projects_view_active = False
-
+        
         self.tree_view.connect('drag-begin', self.__drag_begin_cb)
         self.tree_view.connect('drag-data-get', self.__drag_data_get_cb)
         self.tree_view.connect('button-release-event',
@@ -731,22 +755,6 @@ class ListView(BaseListView):
 
     def is_dragging(self):
         return self._is_dragging
-
-    def set_projects_view_active(self, projects_view_active):
-        self._projects_view_active = projects_view_active
-        text = 'Add new entry'
-        logging.debug('set_projects_view_active %r'%projects_view_active)
-        if self._projects_view_active:
-            logging.debug('set_projects_view_active')
-            text = 'Add new project'
-            self._journalactivity.get_entry().set_placeholder_text(text)
-            self._journalactivity.get_add_new_box().show_all()
-        else:
-            logging.debug('set_projects_view_active false')
-            self._journalactivity.get_add_new_box().hide()
-
-    def get_projects_view_active(self):
-        return self._projects_view_active
 
     def __drag_begin_cb(self, widget, drag_context):
         path, _column = self.tree_view.get_cursor()

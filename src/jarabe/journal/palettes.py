@@ -54,6 +54,8 @@ class ObjectPalette(Palette):
                            ([str])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'choose-project': (GObject.SignalFlags.RUN_FIRST,None,
+                          ([object])),
     }
 
     def __init__(self, journalactivity, metadata, detail=False):
@@ -119,6 +121,12 @@ class ObjectPalette(Palette):
         copy_menu.connect('volume-error', self.__volume_error_cb)
         menu_item.set_submenu(copy_menu)
 
+        if not metadata.get('activity',None) == PROJECT_BUNDLE_ID:
+            menu_item = MenuItem(_('Copy to project..'), 'project-box')
+            menu_item.connect('activate', self.__copy_to_project_activated_cb)
+            self.menu.append(menu_item)
+            menu_item.show()
+
         if self._metadata['mountpoint'] == '/':
             menu_item = MenuItem(_('Duplicate'))
             icon = Icon(icon_name='edit-duplicate', xo_color=color,
@@ -149,6 +157,11 @@ class ObjectPalette(Palette):
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
+
+    def __copy_to_project_activated_cb(self, menu_item):
+        self.emit('choose-project', self._metadata)
+        self.destroy()
+                                       
 
     def __open_project_activate_cb(self, menu_item):
         self._journalactivity.project_view_activated_cb(list_view=None, metadata=self._metadata)
@@ -305,19 +318,6 @@ class CopyMenuBuilder():
                         self._menu.append(entry.get_share_menu(
                                           self._get_uid_list_cb))
 
-        result_set = model.find({'activity': 'org.sugarlabs.Project'},100)
-        for i in range(0,result_set.length):
-            result_set.seek(i)
-            metadata = result_set.read()
-            project_title = metadata['title']
-            logging.debug('list at %r is %r' %(i, metadata))
-            project_menu = VolumeMenu(self._journalactivity,
-                                      self._get_uid_list_cb,
-                                      project_title, '/',
-                                      metadata)
-            self._menu.append(project_menu)
-            project_menu.show()
-
     def update_mount_point(self):
         for menu_item in self._menu.get_children():
             if isinstance(menu_item, MenuItem):
@@ -366,13 +366,11 @@ class VolumeMenu(MenuItem):
                          ([str, str])),
     }
 
-    def __init__(self, journalactivity, get_uid_list_cb, label, mount_point,
-                project_metadata=None):
+    def __init__(self, journalactivity, get_uid_list_cb, label, mount_point):
         MenuItem.__init__(self, label)
         self._get_uid_list_cb = get_uid_list_cb
         self._journalactivity = journalactivity
         self._mount_point = mount_point
-        self._project_metadata = project_metadata
         self.connect('activate', self.__copy_to_volume_cb)
 
     def __copy_to_volume_cb(self, menu_item):
@@ -391,14 +389,6 @@ class VolumeMenu(MenuItem):
             try:
                 metadata = model.get(uid)
                 model.copy(metadata, self._mount_point)
-                if self._project_metadata:
-                    logging.debug('Copying to project')
-                    title = metadata['title'].decode().encode()
-                    bundle_id = metadata['activity'].decode().encode()
-                    self._journalactivity.initialize_journal_object(title=title,
-                        bundle_id=bundle_id,
-                        project_metadata=self._project_metadata)
-
             except IOError as e:
                 logging.exception('Error while copying the entry. %s',
                                   e.strerror)

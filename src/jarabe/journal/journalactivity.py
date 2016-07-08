@@ -45,7 +45,6 @@ from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
 from jarabe.journal.projectview import ProjectView
 
-
 from jarabe.journal.listview import ListView
 from jarabe.journal.detailview import DetailView
 from jarabe.journal.volumestoolbar import VolumesToolbar
@@ -310,6 +309,8 @@ class JournalActivity(JournalWindow):
                                 self.__selection_changed_cb)
         self._list_view.connect('project-view-activate',
                                 self.project_view_activated_cb)
+        self._list_view.tree_view.connect('choose-project',
+                                self.__choose_project_cb)
         return self._list_view
 
 
@@ -440,6 +441,27 @@ class JournalActivity(JournalWindow):
         if keyname == 'Escape':
             self._main_toolbox.clear_query()
             self.show_main_view()
+
+    def __choose_project_cb(self, tree_view, metadata_to_copy):
+        project_chooser = ObjectChooser()
+        project_chooser.show_all()
+        project_chooser.connect('response', self.__project_chooser_response_cb,
+                                metadata_to_copy)
+        project_chooser._toolbar._proj_list_button_clicked_cb(None)
+        logging.debug('__choose_project_cb')
+
+    def __project_chooser_response_cb(self, project_chooser, reponse_value,
+                                    metadata_to_copy):
+        object_id = project_chooser.get_selected_object_id()
+        metadata = model.get(object_id)
+        title = metadata_to_copy.get('title', None)
+        activity = metadata_to_copy.get('activity', None)
+        activity_id = metadata_to_copy.get('activity_id', None)
+        logging.debug('metadata_to_copy %r'%metadata_to_copy)
+        initialize_journal_object(title=title, bundle_id=activity, 
+                                activity_id=activity_id, project_metadata=metadata,
+                                icon_color=None,invited=False)
+        project_chooser.destroy()
 
     def __detail_clicked_cb(self, list_view, object_id):
         metadata = model.get(object_id)
