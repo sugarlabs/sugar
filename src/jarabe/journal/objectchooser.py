@@ -24,6 +24,7 @@ from gi.repository import Wnck
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.objectchooser import FILTER_TYPE_MIME_BY_ACTIVITY
+from sugar3.graphics.popwindow import PopWindow
 
 from jarabe.journal.listview import BaseListView
 from jarabe.journal.listmodel import ListModel
@@ -34,7 +35,7 @@ from jarabe.model import bundleregistry
 from jarabe.journal.iconview import IconView
 
 
-class ObjectChooser(Gtk.Window):
+class ObjectChooser(PopWindow):
 
     __gtype_name__ = 'ObjectChooser'
 
@@ -44,12 +45,7 @@ class ObjectChooser(Gtk.Window):
 
     def __init__(self, parent=None, what_filter='', filter_type=None,
                  show_preview=False):
-        Gtk.Window.__init__(self)
-        self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
-        self.set_decorated(False)
-        self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
-        self.set_border_width(style.LINE_WIDTH)
-        self.set_has_resize_grip(False)
+        PopWindow.__init__(self, window_xid=parent.get_xid())
 
         self._selected_object_id = None
         self._show_preview = show_preview
@@ -60,20 +56,27 @@ class ObjectChooser(Gtk.Window):
         self.connect('delete-event', self.__delete_event_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        if parent is None:
-            logging.warning('ObjectChooser: No parent window specified')
-        else:
-            self.connect('realize', self.__realize_cb, parent)
+        vbox = self.get_vbox()
 
-            screen = Wnck.Screen.get_default()
-            screen.connect('window-closed', self.__window_closed_cb, parent)
+        title_box = self.get_title_box()
 
-        vbox = Gtk.VBox()
-        self.add(vbox)
-        vbox.show()
+        volumes_toolbar = VolumesToolbar()
+        tool_item = Gtk.ToolItem()
+        tool_item.set_expand(True)
+        tool_item.add(volumes_toolbar)
+        title_box.insert(tool_item, 0)
+        tool_item.show()
 
-        title_box = TitleBox(what_filter, filter_type)
-        title_box.connect('volume-changed', self.__volume_changed_cb)
+        title = _('Choose an object')
+        if filter_type == FILTER_TYPE_MIME_BY_ACTIVITY:
+            registry = bundleregistry.get_registry()
+            bundle = registry.get_bundle(what_filter)
+            if bundle is not None:
+                title = _('Choose an object to open with %s activity') % \
+                    bundle.get_name()
+        title_box.set_title(title)
+
+        volumes_toolbar.connect('volume-changed', self.__volume_changed_cb)
         title_box.close_button.connect('clicked',
                                        self.__close_button_clicked_cb)
         title_box.set_size_request(-1, style.GRID_CELL_SIZE)
@@ -111,14 +114,6 @@ class ObjectChooser(Gtk.Window):
         self.set_size_request(width, height)
 
         self._toolbar.update_filters('/', what_filter, filter_type)
-
-    def __realize_cb(self, chooser, parent):
-        self.get_window().set_transient_for(parent)
-        # TODO: Should we disconnect the signal here?
-
-    def __window_closed_cb(self, screen, window, parent):
-        if window.get_xid() == parent.get_xid():
-            self.destroy()
 
     def __entry_activated_cb(self, list_view, uid):
         self._selected_object_id = uid
@@ -158,41 +153,6 @@ class ObjectChooser(Gtk.Window):
 
     def __clear_clicked_cb(self, list_view):
         self._toolbar.clear_query()
-
-
-class TitleBox(VolumesToolbar):
-    __gtype_name__ = 'TitleBox'
-
-    def __init__(self, what_filter='', filter_type=None):
-        VolumesToolbar.__init__(self)
-
-        label = Gtk.Label()
-        title = _('Choose an object')
-        if filter_type == FILTER_TYPE_MIME_BY_ACTIVITY:
-            registry = bundleregistry.get_registry()
-            bundle = registry.get_bundle(what_filter)
-            if bundle is not None:
-                title = _('Choose an object to open with %s activity') % \
-                    bundle.get_name()
-
-        label.set_markup('<b>%s</b>' % title)
-        label.set_alignment(0, 0.5)
-        self._add_widget(label, expand=True)
-
-        self.close_button = ToolButton(icon_name='dialog-cancel')
-        self.close_button.set_tooltip(_('Close'))
-        self.insert(self.close_button, -1)
-        self.close_button.show()
-
-    def _add_widget(self, widget, expand=False):
-        tool_item = Gtk.ToolItem()
-        tool_item.set_expand(expand)
-
-        tool_item.add(widget)
-        widget.show()
-
-        self.insert(tool_item, -1)
-        tool_item.show()
 
 
 class ChooserListView(BaseListView):
