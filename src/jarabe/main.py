@@ -393,6 +393,7 @@ def setup_theme():
     settings.set_property('gtk-theme-name', sugar_theme)
     settings.set_property('gtk-icon-theme-name', 'sugar')
     settings.set_property('gtk-cursor-blink-timeout', 3)
+    settings.set_property('gtk-button-images', True)
 
     icons_path = os.path.join(config.data_path, 'icons')
     Gtk.IconTheme.get_default().append_search_path(icons_path)
