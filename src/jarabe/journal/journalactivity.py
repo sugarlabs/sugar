@@ -380,7 +380,6 @@ class JournalActivity(JournalWindow):
         self._project_view.connect('go-back-clicked', self.__go_back_clicked_cb)
         self._main_view_active = False
         self.get_list_view().set_projects_view_active(False)
-        self._project_view._project_buddies(metadata)
         logging.debug('project_view_activate signal handler')
         self.set_canvas(self._project_view)
         self._toolbox = self._main_toolbox

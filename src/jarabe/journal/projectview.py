@@ -62,14 +62,6 @@ class ProjectView(Gtk.VBox):
         self.pack_start(title_box, False, True , style.DEFAULT_SPACING/3)
         self.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
 
-        hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        self._buddy_list = Gtk.VBox()
-        self._buddy_list.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color()) 
-        hbox.pack_start(self._buddy_list, True, False, 0)
-        self.pack_start(hbox, False, True, style.DEFAULT_SPACING/3)
-        hbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-        hbox.show()
-
     def __back_bar_release_event_cb(self, back_bar, event):
         self.emit('go-back-clicked')
         return False
@@ -104,82 +96,6 @@ class ProjectView(Gtk.VBox):
 
     def _title_focus_out_event_cb(self,entry, event):
         self._update_entry()
-
-    def __friend_selected_cb(self, xyz, selected):
-        logging.debug('[GSoC]__friend_selected_cb %r' %selected)
-        buddies = []
-        if not self.project_metadata.get('buddies'):
-            self.project_metadata['buddies'] = []
-        for buddy in selected:
-            self.project_metadata['buddies'].append((buddy.props.nick, buddy.props.color))
-
-        #service = self.get_service()
-
-        #if service:
-            #try:
-        self.invite_buddy(selected)
-        '''    except dbus.DBusException, e:
-                expected_exceptions = [
-                    'org.freedesktop.DBus.Error.UnknownMethod',
-                    'org.freedesktop.DBus.Python.NotImplementedError']
-                if e.get_dbus_name() in expected_exceptions:
-                    logging.warning('Trying deprecated Activity.Invite')
-                    service.Invite(selected[0].props.key)
-                else:
-                    raise
-        else:
-            logging.error('Invite failed, activity service not ')
-        #datastore._update_ds_entry(self.project_metadata['uid'])
-        #model.write(self.project_metadata['uid'])'''
-        self._project_buddies(self.project_metadata)
-        logging.debug('[GSoC]friend finally selected')
-
-    def invite_buddy(self, selected):
-        pass
-
-    def _project_buddies(self, metadata):
-        logging.debug('[GSoC]_project_buddies')
-        for child in self._buddy_list.get_children():
-            self._buddy_list.remove(child)
-            # FIXME: self._buddy_list.foreach(self._buddy_list.remove)
-        self._buddy_list.pack_start(self._create_buddy_list(metadata), False, False,
-                                    style.DEFAULT_SPACING)
-        self._buddy_list.show_all()
-        logging.debug('[GSoC]project_buddies ended')                
-
-    def _create_buddy_list(self, metadata):
-        self.project_metadata = metadata
-        vbox = Gtk.VBox()
-        vbox.props.spacing = style.DEFAULT_SPACING
-        vbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-
-        add_buddy_button = ToolButton('list-add') # suggest icon for this
-        add_buddy_button.set_tooltip(_('Add Buddy'))
-        add_buddy_button.connect('clicked',self._add_buddy_button_clicked_cb)
-        vbox.pack_start(add_buddy_button, False, False, style.DEFAULT_SPACING)
-        add_buddy_button.show()
-
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-            style.COLOR_BUTTON_GREY.get_html(), _('Participants:')))
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
-
-        if metadata.get('buddies'):
-            #buddies = json.loads(metadata['buddies']).values()
-            buddies = metadata['buddies']
-            logging.debug('[GSoC]buddies are %r' %buddies)
-            #for buddy in metadata['buddies']:
-            #    buddies.append((buddy.nick, buddy.color))
-            vbox.pack_start(BuddyList(buddies), False, False, 0)
-            logging.debug('[GSoC]created_buddy_list ')
-            vbox.show_all()
-            return vbox
-        else:
-            vbox.show()
-            return vbox
-
     
     def _create_description(self):
         widget = TextView()
