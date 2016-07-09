@@ -264,8 +264,6 @@ class JournalActivity(JournalWindow):
         add_new_button.show()
 
         self._entry = iconentry.IconEntry()
-        self._entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'activity-journal')
         self._entry.connect('key-press-event',self._key_press_add_new_entry_cb)
         text = _('Add new entry')
         self._entry.set_placeholder_text(text)
@@ -286,8 +284,7 @@ class JournalActivity(JournalWindow):
         add_new_button.show()
 
         self._entry_project = iconentry.IconEntry()
-        self._entry_project.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
-                                             'activity-journal')
+        
         text = _('Add new entry')
         self._entry_project.connect('key-press-event',self._key_press_add_new_entry_cb)
         self._entry_project.set_placeholder_text(text)
@@ -425,8 +422,6 @@ class JournalActivity(JournalWindow):
             chooser.show_all()
 
     def __activity_selected_cb(self, widget, bundle_id, activity_id):
-        logging.debug('[GSoC]__activity_selectetd_cb')
-        logging.debug('[GSoC]for project title %r' %self._entry_project.props.text)
         initialize_journal_object(title = _(self._entry_project.props.text),
                                         bundle_id=bundle_id, 
                                         activity_id=activity_id,

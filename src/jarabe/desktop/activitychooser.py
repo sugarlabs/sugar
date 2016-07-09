@@ -51,12 +51,14 @@ class ActivityChooser(PopWindow):
         width, height = self.HALF_WIDTH
 
         self.set_size((width*3/2, height*2/3))
+        self.connect('key-press-event', self.__key_press_event_cb)
         self._list_view = ActivitiesList()
 
         self.search_bar = SearchBar()
         self.get_vbox().pack_start(self.search_bar, False, False    , 0)
         self.search_bar.connect('query-changed', self.__toolbar_query_changed_cb)
-
+        self.search_bar.search_entry.connect('key-press-event',
+                                             self.__key_press_event_cb)
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                          Gtk.PolicyType.AUTOMATIC)
@@ -112,6 +114,24 @@ class ActivityChooser(PopWindow):
                 toolbar.search_entry._icon_selected[0]['name'])
             toolbar.search_entry.select_region(pos, -1)
 
+    def __key_press_event_cb(self, widget, event):
+        if not self.search_bar.search_entry.has_focus():
+            self.search_bar.search_entry.grab_focus()
+
+        if widget == self.search_bar.search_entry:
+            if event.keyval == Gdk.KEY_Return and len(widget._icon_selected) == 1:
+                model = self.tree_view.get_model()
+                row = model[0]
+
+                registry = bundleregistry.get_registry()
+                bundle_id = row[self.tree_view._model.column_bundle_id]
+                bundle = registry.get_bundle(bundle_id)
+                activity_id = activityfactory.create_activity_id()
+            
+                self.emit('activity-selected', bundle_id, activity_id)
+                self.destroy()
+                return True
+
     def __activitylist_clear_clicked_cb(self, list_view, toolbar):
         toolbar.clear_query()
 
@@ -119,7 +139,6 @@ class ActivityChooser(PopWindow):
         self.get_title_box().set_title(text)
 
     def __row_activated_cb(self, treeview, path, col):
-        logging.debug('[GSoC]__on_row_activated overwritten in ObjectChooser')
         if col is not treeview.get_column(0):
             model = treeview.get_model()
         row = model[path]
@@ -155,19 +174,20 @@ class SearchBar(Gtk.Toolbar):
         self._query = None
         self._autosearch_timer = None
         #self.set_border_width(10)
-
         tool_item = Gtk.ToolItem()
         self.insert(tool_item, -1)
-        tool_item.set_expand(False)
+        tool_item.set_expand(True)
         tool_item.show()
 
         self.search_entry = iconentry.IconEntry()
         self.search_entry.set_icon_from_name(iconentry.ICON_ENTRY_PRIMARY,
                                              'entry-search')
+        self.search_entry.set_can_focus(True)
         self.search_entry.add_clear_button()
         self.search_entry.set_width_chars(20)
         self.search_entry.connect('activate', self._entry_activated_cb)
         self.search_entry.connect('changed', self._entry_changed_cb)
+
         tool_item.add(self.search_entry)
         self.search_entry.show()
         self._add_separator()
