@@ -214,7 +214,7 @@ class JournalActivity(JournalWindow):
         self.add_events(Gdk.EventMask.ALL_EVENTS_MASK)
         self._realized_sid = self.connect('realize', self.__realize_cb)
         self.connect('window-state-event', self.__window_state_event_cb)
-        self.connect('key-press-event', self._key_press_event_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
         self.connect('focus-in-event', self._focus_in_event_cb)
         self.connect('focus-out-event', self._focus_out_event_cb)
 
@@ -259,12 +259,12 @@ class JournalActivity(JournalWindow):
         self._add_new_box = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         add_new_button = EventIcon(icon_name='list-add') # suggest icon for this
         add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('button-press-event', self._add_new_button_clicked_cb)
+        add_new_button.connect('button-press-event', self.__add_new_button_clicked_cb)
         self._add_new_box.pack_start(add_new_button, False, True, 0)
         add_new_button.show()
 
         self._entry = iconentry.IconEntry()
-        self._entry.connect('key-press-event',self._key_press_add_new_entry_cb)
+        self._entry.connect('key-press-event',self.__key_press_add_new_entry_cb)
         text = _('Add new entry')
         self._entry.set_placeholder_text(text)
         self._entry.add_clear_button()
@@ -279,52 +279,33 @@ class JournalActivity(JournalWindow):
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
         add_new_button = EventIcon(icon_name='list-add') # suggest icon for this
         add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('button-press-event', self._add_new_button_clicked_cb)
+        add_new_button.connect('button-press-event', self.__add_new_button_clicked_cb)
         hbox.pack_start(add_new_button, False, True, 0)
         add_new_button.show()
 
         self._entry_project = iconentry.IconEntry()
         
         text = _('Add new entry')
-        self._entry_project.connect('key-press-event',self._key_press_add_new_entry_cb)
+        self._entry_project.connect('key-press-event',self.__key_press_add_new_entry_cb)
         self._entry_project.set_placeholder_text(text)
         self._entry_project.add_clear_button()
         hbox.pack_start(self._entry_project, True, True, 0)
         self._entry_project.show()
         return hbox
 
-    def _create_list_view(self):
-        self._list_view = ListView(self, enable_multi_operations=True)
-        self._list_view.connect('detail-clicked', self.__detail_clicked_cb)
-        self._list_view.connect('clear-clicked', self.__clear_clicked_cb)
-        self._list_view.connect('volume-error', self.volume_error_cb)
-        self._list_view.connect('title-edit-started',
+    def list_view_signal_connect(self, list_view):
+        list_view.connect('detail-clicked', self.__detail_clicked_cb)
+        list_view.connect('clear-clicked', self.__clear_clicked_cb)
+        list_view.connect('volume-error', self.volume_error_cb)
+        list_view.connect('title-edit-started',
                                 self.__title_edit_started_cb)
-        self._list_view.connect('title-edit-finished',
+        list_view.connect('title-edit-finished',
                                 self.__title_edit_finished_cb)
-        self._list_view.connect('selection-changed',
+        list_view.connect('selection-changed',
                                 self.__selection_changed_cb)
-        self._list_view.connect('project-view-activate',
+        list_view.connect('project-view-activate',
                                 self.project_view_activated_cb)
-        self._list_view.tree_view.connect('choose-project',
-                                self.__choose_project_cb)
-        return self._list_view
-
-
-    def _create_list_view_project(self):
-        self._list_view_project = ListView(self, enable_multi_operations=True)
-        self._list_view_project.connect('detail-clicked', self.__detail_clicked_cb)
-        self._list_view_project.connect('clear-clicked', self.__clear_clicked_cb)
-        self._list_view_project.connect('volume-error', self.volume_error_cb)
-        self._list_view_project.connect('title-edit-started',
-                                self.__title_edit_started_cb)
-        self._list_view_project.connect('title-edit-finished',
-                                self.__title_edit_finished_cb)
-        self._list_view_project.connect('selection-changed',
-                                self.__selection_changed_cb)
-        self._list_view_project.connect('project-view-activate',
-                                self.project_view_activated_cb)
-        return self._list_view_project
+        
 
     def _create_volumes_toolbar(self):
         self._volumes_toolbar = VolumesToolbar()
@@ -342,9 +323,10 @@ class JournalActivity(JournalWindow):
         self._main_view.pack_start(add_new_box, False, True, style.DEFAULT_SPACING)
         self._main_view.set_can_focus(True)
 
-        list_view = self._create_list_view()
-        self._main_view.pack_start(list_view, True, True, 0)
-        list_view.show_all()
+        self._list_view = ListView(self, enable_multi_operations=True)
+        self.list_view_signal_connect(self._list_view)
+        self._main_view.pack_start(self._list_view, True, True, 0)
+        self._list_view.show_all()
 
         volumes_toolbar = self._create_volumes_toolbar()
         self._main_view.pack_start(volumes_toolbar, False, True, 0)
@@ -360,9 +342,10 @@ class JournalActivity(JournalWindow):
         add_new_box = self._create_add_new_entry_project()
         add_new_box.show_all()
         self._project_view.pack_start(add_new_box, False, True, style.DEFAULT_SPACING/3)
-        list_view = self._create_list_view_project()
-        self._project_view.pack_start(list_view, True, True, 0)
-        list_view.show()
+        self._list_view_project = self._project_view.create_list_view_project()
+        self.list_view_signal_connect(self._list_view_project)
+        self._project_view.pack_start(self._list_view_project, True, True, 0)
+        self._list_view_project.show()
         
     def get_list_view(self):
         return self._list_view
@@ -400,16 +383,15 @@ class JournalActivity(JournalWindow):
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
-    def _key_press_add_new_entry_cb(self, window, event):
+    def __key_press_add_new_entry_cb(self, window, event):
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Return':
-            self._add_new_button_clicked_cb(None, None)
+            self.__add_new_button_clicked_cb(None, None)
 
         return False
 
-    def _add_new_button_clicked_cb(self, button, event):
+    def __add_new_button_clicked_cb(self, button, event):
         if self.get_list_view().get_projects_view_active():
-            logging.debug('[GSoC]for project title %r' %self.get_entry().props.text)
             initialize_journal_object(title= self.get_entry().props.text,
                                       bundle_id=PROJECT_BUNDLE_ID,
                                       activity_id=None,
@@ -427,7 +409,7 @@ class JournalActivity(JournalWindow):
                                         activity_id=activity_id,
                                         project_metadata=self.project_metadata)
 
-    def _key_press_event_cb(self, widget, event):
+    def __key_press_event_cb(self, widget, event):
         #if not self._main_toolbox.search_entry.has_focus():
         #self._main_toolbox.search_entry.grab_focus()
 
@@ -490,10 +472,10 @@ class JournalActivity(JournalWindow):
         self._main_view.grab_focus()
 
     def __title_edit_started_cb(self, list_view):
-        self.disconnect_by_func(self._key_press_event_cb)
+        self.disconnect_by_func(self.__key_press_event_cb)
 
     def __title_edit_finished_cb(self, list_view):
-        self.connect('key-press-event', self._key_press_event_cb)
+        self.connect('key-press-event', self.__key_press_event_cb)
 
     def show_main_view(self):
         self._main_view_active = True
@@ -678,8 +660,6 @@ def initialize_journal_object(title=None, bundle_id=None,
         activity_id = activityfactory.create_activity_id()
 
     if bundle_id == PROJECT_BUNDLE_ID:
-        logging.debug('[GSoC]initializing journal object for project %r' %[title, invited])
-        
         jobject = datastore.create()
         jobject.metadata['title'] = title
         jobject.metadata['title_set_by_user'] = '0'
@@ -697,8 +677,6 @@ def initialize_journal_object(title=None, bundle_id=None,
         return jobject
 
     elif project_metadata is not None:
-        logging.debug('[GSoC]_initialize_journal_object')
-        
         jobject = datastore.create()
         jobject.metadata['title'] = title
         jobject.metadata['mountpoints'] = ['/']

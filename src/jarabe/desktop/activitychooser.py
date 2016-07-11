@@ -119,7 +119,7 @@ class ActivityChooser(PopWindow):
             self.search_bar.search_entry.grab_focus()
 
         if widget == self.search_bar.search_entry:
-            if event.keyval == Gdk.KEY_Return and len(widget._icon_selected) == 1:
+            if event.keyval == Gdk.KEY_Return:
                 model = self.tree_view.get_model()
                 row = model[0]
 
@@ -141,16 +141,16 @@ class ActivityChooser(PopWindow):
     def __row_activated_cb(self, treeview, path, col):
         if col is not treeview.get_column(0):
             model = treeview.get_model()
-        row = model[path]
+            row = model[path]
 
-        registry = bundleregistry.get_registry()
-        bundle_id = row[self.tree_view._model.column_bundle_id]
-        bundle = registry.get_bundle(bundle_id)
-        activity_id = activityfactory.create_activity_id()
-        #title=row[self.tree_view._model.column_title]
+            registry = bundleregistry.get_registry()
+            bundle_id = row[self.tree_view._model.column_bundle_id]
+            bundle = registry.get_bundle(bundle_id)
+            activity_id = activityfactory.create_activity_id()
+            #title=row[self.tree_view._model.column_title]
 
-        self.emit('activity-selected', bundle_id, activity_id)
-        self.destroy()
+            self.emit('activity-selected', bundle_id, activity_id)
+            self.destroy()
         #self._initialize_journal_object(title=row[self.tree_view._model.column_title], bundle_id=bundle_id, activity_id=activity_id)
         return True
 

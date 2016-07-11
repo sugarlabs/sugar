@@ -284,7 +284,6 @@ class MainToolbox(ToolbarBox):
             sign = '-'
         query['order_by'] = [sign + property_]
 
-        logging.debug('[GSoC]query is %r' %query)
         return query
 
     def _get_date_range(self):
@@ -473,9 +472,6 @@ class MainToolbox(ToolbarBox):
             self._what_widget_contents.show()
 
     def _proj_list_button_clicked_cb(self, proj_list_button):
-        #logging.debug('[GSoC]proj_list_button clicked')
-        #is_active = proj_list_button.props.active
-        #self._proj_list_button.props.active = not is_active
         if self._proj_list_button.props.active:
             self._what_widget.hide()
             self._what_search_button.hide()

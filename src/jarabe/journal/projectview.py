@@ -62,6 +62,10 @@ class ProjectView(Gtk.VBox):
         self.pack_start(title_box, False, True , style.DEFAULT_SPACING/3)
         self.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
 
+    def create_list_view_project(self):
+        self._list_view_project = ListView(self, enable_multi_operations=True)
+        return self._list_view_project
+
     def __back_bar_release_event_cb(self, back_bar, event):
         self.emit('go-back-clicked')
         return False
@@ -129,7 +133,6 @@ class ProjectView(Gtk.VBox):
         vbox.props.spacing = style.DEFAULT_SPACING
 
         if label is not None:
-            logging.debug('[GSoC]create_scrollable')
             text = Gtk.Label()
             text.set_markup('<span foreground="%s">%s</span>' % (
                 style.COLOR_BUTTON_GREY.get_html(), label))

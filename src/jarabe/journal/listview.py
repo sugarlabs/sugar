@@ -425,7 +425,6 @@ class BaseListView(Gtk.Bin):
         logging.debug('ListView.update_with_query')
             
         if 'activity' in query_dict and query_dict['activity'] == PROJECT_BUNDLE_ID:
-            logging.debug('[GSoC] projectsview set in listview')
             self.set_projects_view_active(True)
         elif self._projects_view_active:
             self.set_projects_view_active(False)
@@ -804,11 +803,9 @@ class ListView(BaseListView):
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
-        logging.debug('[GSoC]__icon_clicked_cb metadata activity is %r' %metadata['activity'])
         if metadata['activity'] == PROJECT_BUNDLE_ID:
-             logging.debug('[GSoC]__icon_clicked_cb Project icon clicked!!')
-             self.emit('project-view-activate',metadata)
-             return
+            self.emit('project-view-activate',metadata)
+            return
         misc.resume(metadata,
                     alert_window=journalwindow.get_journal_window())
 
