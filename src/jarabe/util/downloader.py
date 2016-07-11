@@ -19,6 +19,8 @@ import os
 from urlparse import urlparse
 import tempfile
 
+import gi
+gi.require_version('Soup', '2.4')
 from gi.repository import GObject
 from gi.repository import Soup
 from gi.repository import Gio

@@ -19,6 +19,8 @@ import logging
 import os
 import json
 
+import gi
+gi.require_version('SoupGNOME', '2.4')
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk

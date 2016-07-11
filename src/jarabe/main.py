@@ -51,6 +51,15 @@ os.environ['SUGAR_VERSION'] = config.version
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
+# define the versions of used libraries that are required
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gst', '1.0')
+gi.require_version('Wnck', '3.0')
+gi.require_version('SugarExt', '1.0')
+gi.require_version('GdkX11', '3.0')
+gi.require_version('WebKit', '3.0')
+
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
