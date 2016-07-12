@@ -50,6 +50,7 @@ class Language(SectionView):
 
         self._model = model
         self.restart_alerts = alerts
+        self.props.is_deferrable = False
         self._lang_sid = 0
         self._selected_lang_count = 0
         self._labels = []
