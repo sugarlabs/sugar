@@ -131,7 +131,11 @@ def get_hardware_model():
         model = _read_device_tree('mfg-data/MN')
         sku = _read_device_tree('mfg-data/sk')
         if sku:
-            model = '%s (SKU%s)' % (model, sku)
+            if sku.startswith('SKU'):
+                model = '%s, %s' % (model, sku)
+            else:
+                model = '%s, SKU%s' % (model, sku)
+    return model
 
 
 def get_secondary_licenses():
