@@ -133,6 +133,10 @@ class Language(SectionView):
                 if code == locale_code:
                     locale_language = language
                     locale_country = country
+            for language, country, code in self._available_locales:
+                if code == '.'.join([locale_code, 'utf8']):
+                    locale_language = language
+                    locale_country = country
 
         language_palette = []
         key_list = self._language_dict.keys()
