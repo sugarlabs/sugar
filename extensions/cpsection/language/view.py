@@ -265,6 +265,9 @@ class Language(SectionView):
 
         self._table.resize(self._selected_lang_count * 2, 3)
 
+        if self._selected_lang_count < 1:
+            return
+
         self._add_remove_boxes[-1].show_all()
 
         # Hide or show the Remove button in the new last row,
@@ -280,9 +283,14 @@ class Language(SectionView):
         for locale in self._selected_locales:
             self._add_row(locale_code=locale)
 
+    def _delete_all_rows(self):
+        while self._selected_lang_count > 0:
+            self._delete_last_row()
+
     def undo(self):
         self._model.undo()
         self._lang_alert.hide()
+        self._delete_all_rows()
 
     def _create_add_remove_box(self):
         """Creates Gtk.Hbox with add/remove buttons"""
