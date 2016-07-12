@@ -173,6 +173,7 @@ class AboutComputer(SectionView):
                       ' certain conditions described therein.')
         label_info = Gtk.Label(label=info_text)
         label_info.set_alignment(0, 0)
+        label_info.set_max_width_chars(80)
         label_info.set_line_wrap(True)
         label_info.set_size_request(Gdk.Screen.width() / 2, -1)
         label_info.show()
