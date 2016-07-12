@@ -274,7 +274,6 @@ class Language(SectionView):
 
     def setup(self):
         for locale in self._selected_locales:
-            logging.debug('locale_code=%s' % (locale))
             self._add_row(locale_code=locale)
 
     def undo(self):
