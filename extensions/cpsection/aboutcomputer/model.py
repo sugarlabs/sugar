@@ -113,6 +113,7 @@ def get_firmware_number():
             firmware_no = firmware_no[6:13].strip()
         ec_name = _read_device_tree('ec-name')
         if ec_name:
+            ec_name = ec_name.replace('Ver:', '')
             firmware_no = '%(firmware)s with %(ec)s' % {
                 'firmware': firmware_no, 'ec': ec_name}
 
