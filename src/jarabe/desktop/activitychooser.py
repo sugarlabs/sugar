@@ -87,7 +87,15 @@ class ActivityChooser(PopWindow):
         if self.tree_view.icon_clicked_handler:
             self.tree_view.disconnect(self.tree_view.icon_clicked_handler)
 
-        self.tree_view.connect('row-activated',self.__row_activated_cb)
+        if hasattr(self.tree_view.props, 'activate_on_single_click'):
+            # Gtk+ 3.8 and later
+            self.tree_view.props.activate_on_single_click = True
+            self.tree_view.connect('row-activated', self.__row_activated_cb)
+        else:
+            self.tree_view.cell_icon.connect('clicked', self.__icon_clicked_cb)
+            self.tree_view.connect('button-press-event', self.__button_press_cb)
+            self.tree_view.connect('button-release-event', self.__button_release_cb)
+            self._row_activated_armed_path = None
 
         self.show()
 
@@ -138,20 +146,45 @@ class ActivityChooser(PopWindow):
     def set_title(self, text):
         self.get_title_box().set_title(text)
 
+    def _got_row_tree_view(self, row):
+        registry = bundleregistry.get_registry()
+        bundle_id = row[self.tree_view._model.column_bundle_id]
+        bundle = registry.get_bundle(bundle_id)
+        activity_id = activityfactory.create_activity_id()
+        self.emit('activity-selected', bundle_id, activity_id)
+        self.destroy()
+
+    def __button_press_cb(self, widget, event):
+        path = self.tree_view.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        if path is None:
+            return
+
+        self._row_activated_armed_path = path
+
+    def __button_release_cb(self, widget, event):
+        path = self.tree_view.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        if path is None:
+            return
+
+        if self._row_activated_armed_path != path:
+            return
+
+        model = treeview.get_model()
+        row = model[path]
+        self._got_row_tree_view(row)
+        self._row_activated_armed_path = None
+
+    def __icon_clicked_cb(self, tree_view, path):
+        model = treeview.get_model()
+        row = model[path]
+        self._got_row_tree_view(row)
+        return True
+
     def __row_activated_cb(self, treeview, path, col):
         if col is not treeview.get_column(0):
             model = treeview.get_model()
             row = model[path]
-
-            registry = bundleregistry.get_registry()
-            bundle_id = row[self.tree_view._model.column_bundle_id]
-            bundle = registry.get_bundle(bundle_id)
-            activity_id = activityfactory.create_activity_id()
-            #title=row[self.tree_view._model.column_title]
-
-            self.emit('activity-selected', bundle_id, activity_id)
-            self.destroy()
-        #self._initialize_journal_object(title=row[self.tree_view._model.column_title], bundle_id=bundle_id, activity_id=activity_id)
+            self._got_row_tree_view(row)
         return True
 
 

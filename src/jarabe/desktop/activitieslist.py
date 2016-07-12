@@ -144,7 +144,6 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.row_activated_handler = None
         if hasattr(self.props, 'activate_on_single_click'):
             # Gtk+ 3.8 and later
-            logging.debug('hasattr(self.props)')
             self.props.activate_on_single_click = True
             self.row_activated_handler = self.connect('row-activated', self.__row_activated_cb)
         else:
