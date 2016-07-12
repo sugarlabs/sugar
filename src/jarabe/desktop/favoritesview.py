@@ -149,7 +149,8 @@ class FavoritesView(ViewContainer):
         self._last_clicked_icon = None
 
         self._alert = None
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
         GLib.idle_add(self.__connect_to_bundle_registry_cb)
 
@@ -417,7 +418,8 @@ class ActivityIcon(CanvasIcon):
 
         self._activity_info = activity_info
         self._journal_entries = []
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
         self.connect_after('activate', self.__button_activate_cb)
 

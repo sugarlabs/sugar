@@ -17,6 +17,7 @@ import logging
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 
 from jarabe.desktop import favoritesview
 from jarabe.desktop.activitieslist import ActivitiesList
@@ -58,7 +59,8 @@ class HomeBox(Gtk.VBox):
 
         self._set_view(self._favorites_views_indicies[0])
         self._query = ''
-        self._resume_mode = True
+        self._resume_mode = Gio.Settings(
+            'org.sugarlabs.user').get_boolean('resume-activity')
 
     def __desktop_view_icons_changed_cb(self, model):
         number_of_views = desktop.get_number_of_views()
@@ -116,7 +118,7 @@ class HomeBox(Gtk.VBox):
             self._list_view.run_activity(entry._icon_selected[0]['bundle_id'],
                                          self._resume_mode)
             entry._icon_selected = []
-            self.set_resume_mode(True)
+            self.set_resume_mode(self._resume_mode)
 
     def __activitylist_clear_clicked_cb(self, widget, toolbar):
         toolbar.clear_query()

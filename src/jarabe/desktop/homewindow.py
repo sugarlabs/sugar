@@ -19,6 +19,7 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import Gio
 from gi.repository import GdkX11
 
 from sugar3.graphics import style
@@ -90,6 +91,11 @@ class HomeWindow(Gtk.Window):
         self._home_box.show()
         self._toolbar.show_view_buttons()
 
+        # Loads the Gsettings value for activity 'resume-mode'
+        setting = Gio.Settings('org.sugarlabs.user')
+        self._resume_mode = setting.get_boolean('resume-activity')
+        self._home_box.set_resume_mode(self._resume_mode)
+
         self._group_box = GroupBox(self._toolbar)
         self._mesh_box = MeshBox(self._toolbar)
         self._transition_box = TransitionBox()
@@ -160,7 +166,7 @@ class HomeWindow(Gtk.Window):
 
     def __key_press_event_cb(self, window, event):
         if self.__is_alt(event) and not self._alt_timeout_sid:
-            self._home_box.set_resume_mode(False)
+            self._home_box.set_resume_mode(not self._resume_mode)
             self._alt_timeout_sid = GObject.timeout_add(100,
                                                         self.__alt_timeout_cb)
 
@@ -171,7 +177,7 @@ class HomeWindow(Gtk.Window):
 
     def __key_release_event_cb(self, window, event):
         if self.__is_alt(event) and self._alt_timeout_sid:
-            self._home_box.set_resume_mode(True)
+            self._home_box.set_resume_mode(self._resume_mode)
             GObject.source_remove(self._alt_timeout_sid)
             self._alt_timeout_sid = None
 
@@ -183,7 +189,7 @@ class HomeWindow(Gtk.Window):
         if modmask & Gdk.ModifierType.MOD1_MASK:
             return True
 
-        self._home_box.set_resume_mode(True)
+        self._home_box.set_resume_mode(self._resume_mode)
 
         if self._alt_timeout_sid:
             GObject.source_remove(self._alt_timeout_sid)

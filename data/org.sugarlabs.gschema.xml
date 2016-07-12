@@ -87,6 +87,13 @@
             <summary>Group Label</summary>
             <description>Label associated with age, e.g., '2nd Grade'</description>
         </key>
+        <key name="resume-activity" type="b">
+            <default>true</default>
+            <summary>Resume Activity</summary>
+            <description>If TRUE, Sugar will set default launch of activities in home view to 'resumable' mode.
+                         If FALSE, Sugar will set default launch of activities in home view to 'start-new' mode.
+            </description>
+        </key>
         <child name="background" schema="org.sugarlabs.user.background" />
     </schema>
     <schema id="org.sugarlabs.user.background" path="/org/sugarlabs/user/background/">
