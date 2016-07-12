@@ -470,7 +470,6 @@ def _get_file_metadata(path, stat, fetch_preview=True):
     metadata based on the file properties.
 
     """
-    logging.debug('_get_file_metadata')
     metadata = _get_file_metadata_from_json(path, fetch_preview)
     if metadata:
         if 'filesize' not in metadata:
@@ -497,7 +496,6 @@ def _get_file_metadata_from_json(path, fetch_preview):
     If the metadata is corrupted we do remove it and the preview as well.
 
     """
-    logging.debug('_get_file_metadata_from_json')
     filename = os.path.basename(path)
     dir_path = os.path.dirname(path)
 
@@ -600,12 +598,10 @@ def get(object_id):
     """Returns the metadata for an object
     """
     if os.path.exists(object_id):
-        logging.debug('get os.path')
         stat = os.stat(object_id)
         metadata = _get_file_metadata(object_id, stat)
         metadata['mountpoint'] = _get_mount_point(object_id)
     else:
-        logging.debug('get no os.path')
         metadata = _get_datastore().get_properties(object_id, byte_arrays=True)
         metadata['mountpoint'] = '/'
     return metadata

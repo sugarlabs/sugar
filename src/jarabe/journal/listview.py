@@ -700,13 +700,13 @@ class BaseListView(Gtk.Bin):
 
     def set_projects_view_active(self, projects_view_active):
         self._projects_view_active = projects_view_active
-        text = 'Add new entry'
+        text = _('Add new entry')
         logging.debug('set_projects_view_active %r'%projects_view_active)
         if self._journalactivity:
             if self._projects_view_active:
                 logging.debug('set_projects_view_active')
-                text = 'Add new project'
-                self._journalactivity.get_entry().set_placeholder_text(text)
+                text = _('Add new project')
+                self._journalactivity.get_add_proj_entry().set_placeholder_text(text)
                 self._journalactivity.get_add_new_box().show_all()
             else:
                 logging.debug('set_projects_view_active false')

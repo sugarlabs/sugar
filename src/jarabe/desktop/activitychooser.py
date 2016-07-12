@@ -59,6 +59,7 @@ class ActivityChooser(PopWindow):
         self.search_bar.connect('query-changed', self.__toolbar_query_changed_cb)
         self.search_bar.search_entry.connect('key-press-event',
                                              self.__key_press_event_cb)
+        self.search_bar.search_entry.grab_focus()
         self._scrolled_window = Gtk.ScrolledWindow()
         self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
                                          Gtk.PolicyType.AUTOMATIC)

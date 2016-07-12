@@ -350,7 +350,7 @@ class JournalActivity(JournalWindow):
     def get_list_view(self):
         return self._list_view
 
-    def get_entry(self):
+    def get_add_proj_entry(self):
         return self._entry
 
     def project_view_activated_cb(self, list_view, metadata):
@@ -392,7 +392,7 @@ class JournalActivity(JournalWindow):
 
     def __add_new_button_clicked_cb(self, button, event):
         if self.get_list_view().get_projects_view_active():
-            initialize_journal_object(title= self.get_entry().props.text,
+            initialize_journal_object(title= self.get_add_proj_entry().props.text,
                                       bundle_id=PROJECT_BUNDLE_ID,
                                       activity_id=None,
                                       project_metadata=None)
@@ -404,7 +404,7 @@ class JournalActivity(JournalWindow):
             chooser.show_all()
 
     def __activity_selected_cb(self, widget, bundle_id, activity_id):
-        initialize_journal_object(title = _(self._entry_project.props.text),
+        initialize_journal_object(title = self._entry_project.props.text,
                                         bundle_id=bundle_id, 
                                         activity_id=activity_id,
                                         project_metadata=self.project_metadata)
@@ -633,12 +633,6 @@ class JournalActivity(JournalWindow):
     def unfreeze_ui(self):
         self._set_widgets_sensitive_state(True)
 
-    def initialize_journal_object(self, title=None, bundle_id=None, 
-                                activity_id=None, project_metadata=None,
-                                icon_color=None,invited=False):
-        initialize_journal_object(title=title, bundle_id=bundle_id, 
-                                activity_id=activity_id, project_metadata=project_metadata,
-                                icon_color=icon_color,invited=invited)
 
 def get_journal():
     global _journal
@@ -659,43 +653,30 @@ def initialize_journal_object(title=None, bundle_id=None,
     if not activity_id:
         activity_id = activityfactory.create_activity_id()
 
-    if bundle_id == PROJECT_BUNDLE_ID:
-        jobject = datastore.create()
-        jobject.metadata['title'] = title
-        jobject.metadata['title_set_by_user'] = '0'
-        jobject.metadata['activity'] = PROJECT_BUNDLE_ID
-        jobject.metadata['activity_id'] = activity_id
-        jobject.metadata['keep'] = '0'
-        jobject.metadata['preview'] = ''
-        jobject.metadata['icon-color'] = icon_color
-        jobject.file_path = ''
+    jobject = datastore.create()
+    jobject.metadata['title'] = title
+    jobject.metadata['title_set_by_user'] = '0'
+    jobject.metadata['activity_id'] = activity_id
+    jobject.metadata['keep'] = '0'
+    jobject.metadata['preview'] = ''
+    jobject.metadata['icon-color'] = icon_color
+    jobject.file_path = ''
 
-        # FIXME: We should be able to get an ID synchronously from the DS,
-        # then call async the actual create.
-        # http://bugs.sugarlabs.org/ticket/2169
-        datastore.write(jobject)
-        return jobject
+    if bundle_id == PROJECT_BUNDLE_ID:
+        jobject.metadata['activity'] = PROJECT_BUNDLE_ID
 
     elif project_metadata is not None:
-        jobject = datastore.create()
-        jobject.metadata['title'] = title
         jobject.metadata['mountpoints'] = ['/']
-        jobject.metadata['title_set_by_user'] = '0'
         jobject.metadata['activity'] = bundle_id
-        jobject.metadata['activity_id'] = activity_id
-        jobject.metadata['keep'] = '0'
-        jobject.metadata['preview'] = ''
         jobject.metadata['share-scope'] = SCOPE_PRIVATE
-        jobject.metadata['icon-color'] = icon_color
         jobject.metadata['launch-times'] = str(int(time.time()))
         jobject.metadata['spent-times'] = '0'
-        jobject.file_path = ''
         jobject.metadata['project_id'] = project_metadata['uid']
-        # FIXME: We should be able to get an ID synchronously from the DS,
-        # then call async the actual create.
-        # http://bugs.sugarlabs.org/ticket/2169
-        datastore.write(jobject)
-        return jobject
+    # FIXME: We should be able to get an ID synchronously from the DS,
+    # then call async the actual create.
+    # http://bugs.sugarlabs.org/ticket/2169
+    datastore.write(jobject)
+    return jobject
 
 
 def start():
