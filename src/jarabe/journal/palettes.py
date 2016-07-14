@@ -33,8 +33,9 @@ from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.alert import Alert
 from sugar3 import mime
 from sugar3 import profile
+from sugar3.graphics.popwindow import PopWindow
+from sugar3.graphics.toolbutton import ToolButton
 
-from jarabe.model import friends
 from jarabe.model import filetransfer
 from jarabe.model import mimeregistry
 from jarabe.journal import misc
@@ -42,6 +43,7 @@ from jarabe.journal import model
 from jarabe.journal import journalwindow
 from jarabe.webservice import accountsmanager
 from jarabe.journal.misc import get_mount_color
+from jarabe.view.friendlistview import FriendListView
 
 
 class ObjectPalette(Palette):
@@ -124,9 +126,7 @@ class ObjectPalette(Palette):
         self.menu.append(menu_item)
         menu_item.show()
 
-        friends_menu = FriendsMenu()
-        friends_menu.connect('friend-selected', self.__friend_selected_cb)
-        menu_item.set_submenu(friends_menu)
+        menu_item.connect('activate', self.__friendlist_popup_cb)
 
         if detail is True:
             menu_item = MenuItem(_('View Details'), 'go-right')
@@ -141,6 +141,9 @@ class ObjectPalette(Palette):
 
     def __get_uid_list_cb(self):
         return [self._metadata['uid']]
+
+    def __friend_activate_cb(self, menu_item):
+        FriendListView()
 
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata,
@@ -182,7 +185,7 @@ class ObjectPalette(Palette):
     def __volume_error_cb(self, menu_item, message, severity):
         self.emit('volume-error', message, severity)
 
-    def __friend_selected_cb(self, menu_item, buddy):
+    def __friend_selected_cb(self, menu_item, buddies):
         logging.debug('__friend_selected_cb')
         file_name = model.get_file(self._metadata['uid'])
 
@@ -200,14 +203,57 @@ class ObjectPalette(Palette):
         if not mime_type:
             mime_type = mime.get_for_file(file_name)
 
-        filetransfer.start_transfer(buddy, file_name, title, description,
-                                    mime_type)
+        for buddy in buddies:
+            filetransfer.start_transfer(buddy, file_name, title, description,
+                                        mime_type)
 
     def popup(self, immediate=False, state=None):
         if self._journalactivity.get_list_view().is_dragging():
             return
 
         Palette.popup(self, immediate)
+
+    def __friendlist_popup_cb(self, menu_item):
+        pop_up = FriendListPopup()
+        pop_up.connect('friend-selected', self.__friend_selected_cb)
+
+
+class FriendListPopup(PopWindow):
+    __gtype_name__ = 'FriendListPopup'
+
+    __gsignals__ = {
+        'friend-selected': (GObject.SignalFlags.RUN_FIRST, None,
+                            ([object])),
+    }
+
+    def __init__(self):
+        PopWindow.__init__(self, True)
+        self.view = FriendListView()
+        self._scrolled_window = Gtk.ScrolledWindow()
+        self._scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC,
+                                         Gtk.PolicyType.AUTOMATIC)
+
+        self._scrolled_window.add(self.view)
+        width, height = PopWindow.FULLSCREEN
+        self.set_size_request(width*1/3, height*2/3)
+        self.modify_fg(Gtk.StateType.NORMAL,
+                       style.COLOR_BLACK.get_gdk_color())
+        self.get_vbox().pack_start(self._scrolled_window, True, True, 0)
+        self.get_title_box().props.title = 'Send to'
+        self._scrolled_window.show()
+        self.view.show()
+        self.show()
+
+        ok_button = ToolButton(icon_name='document-send')
+        self.get_title_box().add_widget(ok_button, False, -1)
+        ok_button.connect('clicked', self.__send_clicked_cb)
+        ok_button.show()
+
+    def __send_clicked_cb(self, button):
+        model = self.view.get_model()
+        selected = model.get_selected()
+        self.emit('friend-selected', selected)
+        self.destroy()
 
 
 class CopyMenu(Gtk.Menu):
@@ -448,44 +494,6 @@ class ClipboardMenu(MenuItem):
     def __clipboard_clear_func_cb(self, clipboard, data):
         # Release and delete the temp file
         self._temp_file_path = None
-
-
-class FriendsMenu(Gtk.Menu):
-    __gtype_name__ = 'JournalFriendsMenu'
-
-    __gsignals__ = {
-        'friend-selected': (GObject.SignalFlags.RUN_FIRST, None,
-                            ([object])),
-    }
-
-    def __init__(self):
-        Gtk.Menu.__init__(self)
-
-        if filetransfer.file_transfer_available():
-            friends_model = friends.get_model()
-            for friend in friends_model:
-                if friend.is_present():
-                    menu_item = MenuItem(text_label=friend.get_nick(),
-                                         icon_name='computer-xo',
-                                         xo_color=friend.get_color())
-                    menu_item.connect('activate', self.__item_activate_cb,
-                                      friend)
-                    self.append(menu_item)
-                    menu_item.show()
-
-            if not self.get_children():
-                menu_item = MenuItem(_('No friends present'))
-                menu_item.set_sensitive(False)
-                self.append(menu_item)
-                menu_item.show()
-        else:
-            menu_item = MenuItem(_('No valid connection found'))
-            menu_item.set_sensitive(False)
-            self.append(menu_item)
-            menu_item.show()
-
-    def __item_activate_cb(self, menu_item, friend):
-        self.emit('friend-selected', friend)
 
 
 class StartWithMenu(Gtk.Menu):
