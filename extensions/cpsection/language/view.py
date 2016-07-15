@@ -50,6 +50,7 @@ class Language(SectionView):
 
         self._model = model
         self.restart_alerts = alerts
+        self.props.is_deferrable = False
         self._lang_sid = 0
         self._selected_lang_count = 0
         self._labels = []
@@ -131,6 +132,10 @@ class Language(SectionView):
         if locale_code is not None:
             for language, country, code in self._available_locales:
                 if code == locale_code:
+                    locale_language = language
+                    locale_country = country
+            for language, country, code in self._available_locales:
+                if code == '.'.join([locale_code, 'utf8']):
                     locale_language = language
                     locale_country = country
 
@@ -261,6 +266,9 @@ class Language(SectionView):
 
         self._table.resize(self._selected_lang_count * 2, 3)
 
+        if self._selected_lang_count < 1:
+            return
+
         self._add_remove_boxes[-1].show_all()
 
         # Hide or show the Remove button in the new last row,
@@ -274,12 +282,16 @@ class Language(SectionView):
 
     def setup(self):
         for locale in self._selected_locales:
-            logging.debug('locale_code=%s' % (locale))
             self._add_row(locale_code=locale)
+
+    def _delete_all_rows(self):
+        while self._selected_lang_count > 0:
+            self._delete_last_row()
 
     def undo(self):
         self._model.undo()
         self._lang_alert.hide()
+        self._delete_all_rows()
 
     def _create_add_remove_box(self):
         """Creates Gtk.Hbox with add/remove buttons"""
