@@ -414,6 +414,12 @@ class JournalActivity(JournalWindow):
                                         activity_id=activity_id,
                                         project_metadata=self.project_metadata)
 
+        self._entry_project.props.text = ""
+        query = {}
+        query['project_id'] = self.project_metadata['uid']
+        #query['mountpoints'] = ['/']
+        self._list_view_project.update_with_query(query)
+
     def __key_press_event_cb(self, widget, event):
         #if not self._main_toolbox.search_entry.has_focus():
         #self._main_toolbox.search_entry.grab_focus()
