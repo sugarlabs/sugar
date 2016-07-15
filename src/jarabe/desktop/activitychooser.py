@@ -130,8 +130,10 @@ class ActivityChooser(PopWindow):
         if widget == self.search_bar.search_entry:
             if event.keyval == Gdk.KEY_Return:
                 model = self.tree_view.get_model()
-                row = model[0]
+                if len(model) > 1:
+                    return True
 
+                row = model[0]
                 registry = bundleregistry.get_registry()
                 bundle_id = row[self.tree_view._model.column_bundle_id]
                 bundle = registry.get_bundle(bundle_id)

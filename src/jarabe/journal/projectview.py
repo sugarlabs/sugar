@@ -85,6 +85,12 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._list_view_project = ListView(self, enable_multi_operations=True)
         return self._list_view_project
 
+    def get_list_view(self):
+        return self._list_view_project
+
+    def get_mount_point(self):
+        return '/'
+
     def __back_bar_release_event_cb(self, back_bar, event):
         self.emit('go-back-clicked')
         return False
