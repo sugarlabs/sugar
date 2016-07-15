@@ -277,7 +277,9 @@ class JournalActivity(JournalWindow):
 
     def _create_add_new_entry_project(self):
         hbox = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
-        add_new_button = EventIcon(icon_name='list-add') # suggest icon for this
+
+        add_new_button = CanvasIcon(icon_name='list-add')
+        add_new_button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
         add_new_button.set_tooltip(_('Add New'))
         add_new_button.connect('button-press-event', self.__add_new_button_clicked_cb)
         hbox.pack_start(add_new_button, False, True, 0)
@@ -339,12 +341,15 @@ class JournalActivity(JournalWindow):
 
     def _setup_project_view(self):
         self._project_view = ProjectView()
+        project_vbox = self._project_view.get_vbox()
+
         add_new_box = self._create_add_new_entry_project()
         add_new_box.show_all()
-        self._project_view.pack_start(add_new_box, False, True, style.DEFAULT_SPACING/3)
+        project_vbox.pack_start(add_new_box, False, True, style.DEFAULT_SPACING/3)
+
         self._list_view_project = self._project_view.create_list_view_project()
         self.list_view_signal_connect(self._list_view_project)
-        self._project_view.pack_start(self._list_view_project, True, True, 0)
+        project_vbox.pack_start(self._list_view_project, True, True, 0)
         self._list_view_project.show()
         
     def get_list_view(self):

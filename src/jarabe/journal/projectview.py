@@ -21,46 +21,65 @@ from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import Gio
 
 from jarabe.view.friendlistpopup import FriendListPopup
 from jarabe.journal.expandedentry import TextView, BuddyList
+from jarabe.journal.expandedentry import BaseExpandedEntry
 from jarabe.journal.detailview import BackBar
 from jarabe.journal.listview import ListView
 from jarabe.journal import model
 
+from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import style
 from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.icon import Icon
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'
 _SERVICE_INTERFACE = 'org.laptop.Activity'
 
-class ProjectView(Gtk.VBox):
+class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
     __gsignals__ = {
         'go-back-clicked': (GObject.SignalFlags.RUN_FIRST, None, ([])),
     }
 
     def __init__(self, **kwargs):
-
+        Gtk.EventBox.__init__(self)
+        BaseExpandedEntry.__init__(self)
         self.project_metadata = None
         self._service = None
         self._activity_id = None
         self._project = None
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        Gtk.VBox.__init__(self)
+        self._vbox = Gtk.VBox()
+        self.add(self._vbox)
 
         back_bar = BackBar()
         back_bar.connect('button-release-event',
                          self.__back_bar_release_event_cb)
-        self.pack_start(back_bar, False, True, 0)
-        titlebox, self._title = self._create_title()
+        self._vbox.pack_start(back_bar, False, True, 0)
+
+        header = self.create_header()
+        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
+        header.show()
+
         description_box, self._description = self._create_description()
-        title_box, self._title = self._create_title()
-        
-        self.pack_start(title_box, False, True , style.DEFAULT_SPACING/3)
-        self.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
+        self._vbox.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
+
+        self._title.connect('focus-out-event', self._title_focus_out_event_cb)
+
+        settings = Gio.Settings('org.sugarlabs.user')
+        icon_color = settings.get_string('color')
+
+        self._icon = Icon(icon_name='project-box', pixel_size=style.MEDIUM_ICON_SIZE)
+        self._icon.xo_color = XoColor(icon_color)
+        self._icon_box.pack_start(self._icon, False, False, 0)
+
+    def get_vbox(self):
+        return self._vbox
 
     def create_list_view_project(self):
         self._list_view_project = ListView(self, enable_multi_operations=True)
@@ -81,22 +100,6 @@ class ProjectView(Gtk.VBox):
     def _add_buddy_button_clicked_cb(self, button):
         #TODO: TO be implemented
         pass
-
-    def _create_title(self):
-        vbox = Gtk.Box(orientation = Gtk.Orientation.VERTICAL)
-        vbox.props.spacing = style.DEFAULT_SPACING
-        vbox.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-
-        text = Gtk.Label()
-        text.set_markup('<span foreground="%s">%s</span>' % (
-            style.COLOR_BUTTON_GREY.get_html(), _('Title')))
-        halign = Gtk.Alignment.new(0, 0, 0, 0)
-        halign.add(text)
-        vbox.pack_start(halign, False, False, 0)
-        entry = Gtk.Entry()
-        entry.connect('focus-out-event', self._title_focus_out_event_cb)
-        vbox.pack_start(entry, True, True, 0)
-        return vbox, entry
 
     def _title_focus_out_event_cb(self,entry, event):
         self._update_entry()

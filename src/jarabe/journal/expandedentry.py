@@ -201,9 +201,52 @@ class CellRendererCommentIcon(CellRendererIcon):
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
 
-class ExpandedEntry(Gtk.EventBox):
+class BaseExpandedEntry(GObject.GObject):
+
+    def __init__(self):
+        # Create a header
+        self._keep_icon = None
+        self._keep_sid = None
+        self._icon = None
+        self._icon_box = None
+        self._title = None
+        self._date = None
+
+    def create_header(self):
+        header = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+
+        self._keep_icon = self._create_keep_icon()
+        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
+
+        self._icon_box = Gtk.HBox()
+        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
+
+        self._title = self._create_title()
+        header.pack_start(self._title, True, True, 0)
+
+        # TODO: create a version list popup instead of a date label
+        self._date = self._create_date()
+        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
+
+        return header
+
+    def _create_keep_icon(self):
+        keep_icon = KeepIcon()
+        return keep_icon
+
+    def _create_title(self):
+        entry = Gtk.Entry()
+        return entry
+
+    def _create_date(self):
+        date = Gtk.Label()
+        return date
+
+
+class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
 
     def __init__(self, journalactivity):
+        BaseExpandedEntry.__init__(self)
         self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)
         self._vbox = Gtk.VBox()
@@ -214,9 +257,15 @@ class ExpandedEntry(Gtk.EventBox):
 
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        # Create a header
-        header = Gtk.HBox()
-        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
+        self._header = self.create_header()
+        self._vbox.pack_start(self._header, False, False, style.DEFAULT_SPACING * 2)
+        self._keep_sid = self._keep_icon.connect('toggled', self._keep_icon_toggled_cb)
+        self._title.connect('focus-out-event', self._title_focus_out_event_cb)
+
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
+            # Reverse header children.
+            for child in self._header.get_children():
+                self._header.reorder_child(child, 0)
 
         # Create a two-column body
         body_box = Gtk.EventBox()
@@ -232,26 +281,6 @@ class ExpandedEntry(Gtk.EventBox):
 
         second_column = Gtk.VBox()
         body.pack_start(second_column, True, True, 0)
-
-        # Header
-        self._keep_icon, self._keep_sid = self._create_keep_icon()
-        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
-
-        self._icon = None
-        self._icon_box = Gtk.HBox()
-        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
-
-        self._title = self._create_title()
-        header.pack_start(self._title, True, True, 0)
-
-        # TODO: create a version list popup instead of a date label
-        self._date = self._create_date()
-        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
-
-        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            # Reverse header children.
-            for child in header.get_children():
-                header.reorder_child(child, 0)
 
         # First body column
         self._preview_box = Gtk.Frame()
@@ -277,7 +306,6 @@ class ExpandedEntry(Gtk.EventBox):
 
         self._buddy_list = Gtk.VBox()
         second_column.pack_start(self._buddy_list, True, False, 0)
-
         self.show_all()
 
     def set_metadata(self, metadata):
@@ -322,11 +350,6 @@ class ExpandedEntry(Gtk.EventBox):
         comments = metadata.get('comments', '')
         self._comments.update_comments(comments)
 
-    def _create_keep_icon(self):
-        keep_icon = KeepIcon()
-        keep_sid = keep_icon.connect('toggled', self._keep_icon_toggled_cb)
-        return keep_icon, keep_sid
-
     def _create_icon(self):
         icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
         icon.connect_after('activate', self.__icon_activate_cb)
@@ -341,15 +364,6 @@ class ExpandedEntry(Gtk.EventBox):
         icon.set_palette(ObjectPalette(self._journalactivity, self._metadata))
 
         return icon
-
-    def _create_title(self):
-        entry = Gtk.Entry()
-        entry.connect('focus-out-event', self._title_focus_out_event_cb)
-        return entry
-
-    def _create_date(self):
-        date = Gtk.Label()
-        return date
 
     def _create_preview(self):
 
