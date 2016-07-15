@@ -496,19 +496,23 @@ class BaseListView(Gtk.Bin):
             self.tree_view.get_bin_window().show()
 
         if len(tree_model) == 0:
-            documents_path = model.get_documents_path()
-            if self._is_query_empty():
-                if self._query['mountpoints'] == ['/']:
-                    self._show_message(_('Your Journal is empty'))
-                elif documents_path and self._query['mountpoints'] == \
-                        [documents_path]:
-                    self._show_message(_('Your documents folder is empty'))
-                else:
-                    self._show_message(_('The device is empty'))
+            logging.debug('Buraah!!')
+            if self._query.get('project_id',None):
+                self._show_message(_('Your project is empty'))
             else:
-                show_message_text = 'No matching entries'
-                if self.get_projects_view_active():
-                    show_message_text = 'No Projects'
+                documents_path = model.get_documents_path()
+                if self._is_query_empty():
+                    if self._query['mountpoints'] == ['/']:
+                        self._show_message(_('Your Journal is empty'))
+                    elif documents_path and self._query['mountpoints'] == \
+                        [documents_path]:
+                        self._show_message(_('Your documents folder is empty'))
+                    else:
+                        self._show_message(_('The device is empty'))
+                else:
+                    show_message_text = 'No matching entries'
+                    if self.get_projects_view_active():
+                        show_message_text = 'No Projects'
                 
                 self._show_message(_(show_message_text),
                                    show_clear_query=self._can_clear_query())
