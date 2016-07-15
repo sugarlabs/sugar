@@ -235,6 +235,8 @@ class BaseListView(Gtk.Bin):
 
     def _is_new_item_visible(self, object_id):
         """Check if the created item is part of the currently selected view"""
+        if not self._query.get('mountpoints',None):
+            return None
         if self._query['mountpoints'] == ['/']:
             return not object_id.startswith('/')
         else:
