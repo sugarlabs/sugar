@@ -213,7 +213,7 @@ class BaseExpandedEntry(GObject.GObject):
         self._date = None
 
     def create_header(self):
-        header = Gtk.Box(orientation = Gtk.Orientation.HORIZONTAL)
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         self._keep_icon = self._create_keep_icon()
         header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
@@ -258,9 +258,12 @@ class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
         self._header = self.create_header()
-        self._vbox.pack_start(self._header, False, False, style.DEFAULT_SPACING * 2)
-        self._keep_sid = self._keep_icon.connect('toggled', self._keep_icon_toggled_cb)
-        self._title.connect('focus-out-event', self._title_focus_out_event_cb)
+        self._vbox.pack_start(self._header, False, False,
+                              style.DEFAULT_SPACING * 2)
+        self._keep_sid = self._keep_icon.connect(
+            'toggled', self._keep_icon_toggled_cb)
+        self._title.connect(
+            'focus-out-event', self._title_focus_out_event_cb)
 
         if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
             # Reverse header children.

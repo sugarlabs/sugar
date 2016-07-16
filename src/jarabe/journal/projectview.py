@@ -14,17 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import logging
-import dbus
-
 from gettext import gettext as _
 
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gio
 
-from jarabe.view.friendlistpopup import FriendListPopup
-from jarabe.journal.expandedentry import TextView, BuddyList
+from jarabe.journal.expandedentry import TextView
 from jarabe.journal.expandedentry import BaseExpandedEntry
 from jarabe.journal.detailview import BackBar
 from jarabe.journal.listview import ListView
@@ -32,12 +28,12 @@ from jarabe.journal import model
 
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import style
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.icon import Icon
 
 _SERVICE_NAME = 'org.laptop.Activity'
 _SERVICE_PATH = '/org/laptop/Activity'
 _SERVICE_INTERFACE = 'org.laptop.Activity'
+
 
 class ProjectView(Gtk.EventBox, BaseExpandedEntry):
 
@@ -67,14 +63,16 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         header.show()
 
         description_box, self._description = self._create_description()
-        self._vbox.pack_start(description_box, False, True, style.DEFAULT_SPACING/3)
+        self._vbox.pack_start(description_box, False, True,
+                              style.DEFAULT_SPACING/3)
 
         self._title.connect('focus-out-event', self._title_focus_out_event_cb)
 
         settings = Gio.Settings('org.sugarlabs.user')
         icon_color = settings.get_string('color')
 
-        self._icon = Icon(icon_name='project-box', pixel_size=style.MEDIUM_ICON_SIZE)
+        self._icon = Icon(icon_name='project-box',
+                          pixel_size=style.MEDIUM_ICON_SIZE)
         self._icon.xo_color = XoColor(icon_color)
         self._icon_box.pack_start(self._icon, False, False, 0)
 
@@ -102,14 +100,13 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         self._description.get_buffer().set_text(description)
         self._title.set_text(project_metadata.get('title', ''))
 
-
     def _add_buddy_button_clicked_cb(self, button):
         #TODO: TO be implemented
         pass
 
-    def _title_focus_out_event_cb(self,entry, event):
+    def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()
-    
+
     def _create_description(self):
         widget = TextView()
         widget.connect('focus-out-event',
@@ -131,7 +128,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
             model.write(self.project_metadata)
 
         new_title = self._title.get_text()
-        old_title = self.project_metadata.get('title','')
+        old_title = self.project_metadata.get('title', '')
 
         if old_title != new_title:
             self.project_metadata['title'] = new_title
@@ -158,5 +155,3 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         vbox.pack_start(scrolled_window, True, True, 0)
 
         return vbox
-         
-

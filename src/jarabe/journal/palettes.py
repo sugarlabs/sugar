@@ -45,6 +45,7 @@ from jarabe.journal.misc import get_mount_color
 
 PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
+
 class ObjectPalette(Palette):
 
     __gtype_name__ = 'ObjectPalette'
@@ -54,7 +55,7 @@ class ObjectPalette(Palette):
                            ([str])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
-        'choose-project': (GObject.SignalFlags.RUN_FIRST,None,
+        'choose-project': (GObject.SignalFlags.RUN_FIRST, None,
                           ([object])),
     }
 
@@ -98,7 +99,7 @@ class ObjectPalette(Palette):
             start_with_menu = StartWithMenu(self._metadata)
             menu_item.set_submenu(start_with_menu)
 
-        elif metadata.get('activity',None) == PROJECT_BUNDLE_ID:
+        elif metadata.get('activity', None) == PROJECT_BUNDLE_ID:
             open_label = _('Open')
             menu_item = MenuItem(open_label, 'project-box')
             menu_item.connect('activate', self.__open_project_activate_cb)
@@ -121,7 +122,7 @@ class ObjectPalette(Palette):
         copy_menu.connect('volume-error', self.__volume_error_cb)
         menu_item.set_submenu(copy_menu)
 
-        if not metadata.get('activity',None) == PROJECT_BUNDLE_ID:
+        if not metadata.get('activity', None) == PROJECT_BUNDLE_ID:
             menu_item = MenuItem(_('Copy to project...'), 'project-box')
             menu_item.connect('activate', self.__copy_to_project_activated_cb)
             self.menu.append(menu_item)
@@ -161,10 +162,11 @@ class ObjectPalette(Palette):
     def __copy_to_project_activated_cb(self, menu_item):
         self.emit('choose-project', self._metadata)
         self.destroy()
-                                       
 
     def __open_project_activate_cb(self, menu_item):
-        self._journalactivity.project_view_activated_cb(list_view=None, metadata=self._metadata)
+        self._journalactivity.project_view_activated_cb(
+            list_view=None,
+            metadata=self._metadata)
 
     def __start_activate_cb(self, menu_item):
         misc.resume(self._metadata,

@@ -14,27 +14,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from gettext import gettext as _
 import logging
 
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import Wnck
 
 from sugar3.graphics import style
-from sugar3.graphics.toolbutton import ToolButton
-from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.popwindow import PopWindow
 from sugar3.activity import activityfactory
 from sugar3.graphics import iconentry
 
 from jarabe.desktop.activitieslist import ActivitiesList
-from jarabe.model import bundleregistry, shell
 from jarabe.util.normalize import normalize_string
 
 _AUTOSEARCH_TIMEOUT = 1000
+
 
 class ActivityChooser(PopWindow):
 
@@ -42,7 +37,8 @@ class ActivityChooser(PopWindow):
 
     __gsignals__ = {
         'response': (GObject.SignalFlags.RUN_FIRST, None, ([int])),
-        'activity-selected': (GObject.SignalFlags.RUN_FIRST, None, ([object, object])),
+        'activity-selected': (GObject.SignalFlags.RUN_FIRST, None,
+                             ([object, object])),
     }
 
     def __init__(self):
@@ -55,8 +51,9 @@ class ActivityChooser(PopWindow):
         self._list_view = ActivitiesList()
 
         self.search_bar = SearchBar()
-        self.get_vbox().pack_start(self.search_bar, False, False    , 0)
-        self.search_bar.connect('query-changed', self.__toolbar_query_changed_cb)
+        self.get_vbox().pack_start(self.search_bar, False, False, 0)
+        self.search_bar.connect('query-changed',
+                                self.__toolbar_query_changed_cb)
         self.search_bar.search_entry.connect('key-press-event',
                                              self.__key_press_event_cb)
         self.search_bar.search_entry.grab_focus()
@@ -70,8 +67,8 @@ class ActivityChooser(PopWindow):
 
         self._list_view.show()
         self._list_view.connect('clear-clicked',
-                                self.__activitylist_clear_clicked_cb, self.search_bar)
-
+                                self.__activitylist_clear_clicked_cb,
+                                self.search_bar)
 
         self.tree_view = self._list_view._tree_view
 
@@ -93,9 +90,12 @@ class ActivityChooser(PopWindow):
             self.tree_view.props.activate_on_single_click = True
             self.tree_view.connect('row-activated', self.__row_activated_cb)
         else:
-            self.tree_view.cell_icon.connect('clicked', self.__icon_clicked_cb)
-            self.tree_view.connect('button-press-event', self.__button_press_cb)
-            self.tree_view.connect('button-release-event', self.__button_release_cb)
+            self.tree_view.cell_icon.connect('clicked',
+                                             self.__icon_clicked_cb)
+            self.tree_view.connect('button-press-event',
+                                   self.__button_press_cb)
+            self.tree_view.connect('button-release-event',
+                                   self.__button_release_cb)
             self._row_activated_armed_path = None
 
         self.show()
@@ -134,11 +134,9 @@ class ActivityChooser(PopWindow):
                     return True
 
                 row = model[0]
-                registry = bundleregistry.get_registry()
                 bundle_id = row[self.tree_view._model.column_bundle_id]
-                bundle = registry.get_bundle(bundle_id)
                 activity_id = activityfactory.create_activity_id()
-            
+
                 self.emit('activity-selected', bundle_id, activity_id)
                 self.destroy()
                 return True
@@ -150,35 +148,35 @@ class ActivityChooser(PopWindow):
         self.get_title_box().set_title(text)
 
     def _got_row_tree_view(self, row):
-        registry = bundleregistry.get_registry()
         bundle_id = row[self.tree_view._model.column_bundle_id]
-        bundle = registry.get_bundle(bundle_id)
         activity_id = activityfactory.create_activity_id()
         self.emit('activity-selected', bundle_id, activity_id)
         self.destroy()
 
     def __button_press_cb(self, widget, event):
-        path = self.tree_view.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        path = self.tree_view.__button_to_path(event,
+                                               Gdk.EventType.BUTTON_PRESS)
         if path is None:
             return
 
         self._row_activated_armed_path = path
 
     def __button_release_cb(self, widget, event):
-        path = self.tree_view.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
+        path = self.tree_view.__button_to_path(event,
+                                               Gdk.EventType.BUTTON_PRESS)
         if path is None:
             return
 
         if self._row_activated_armed_path != path:
             return
 
-        model = treeview.get_model()
+        model = self.tree_view.get_model()
         row = model[path]
         self._got_row_tree_view(row)
         self._row_activated_armed_path = None
 
     def __icon_clicked_cb(self, tree_view, path):
-        model = treeview.get_model()
+        model = tree_view.get_model()
         row = model[path]
         self._got_row_tree_view(row)
         return True

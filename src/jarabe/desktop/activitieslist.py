@@ -76,7 +76,7 @@ class ActivitiesTreeView(Gtk.TreeView):
             self.cell_favorite.connect('clicked', self.__favorite_clicked_cb)
             self.fav_column.pack_start(self.cell_favorite, True)
             self.fav_column.set_cell_data_func(self.cell_favorite,
-                                      self.__favorite_set_data_cb)
+                                               self.__favorite_set_data_cb)
             self.append_column(self.fav_column)
 
             self._favorite_columns.append(self.fav_column)
@@ -115,7 +115,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.version_column.set_sort_column_id(self._model.column_version)
         self.version_column.pack_start(cell_text, True)
         self.version_column.add_attribute(cell_text, 'text',
-                             self._model.column_version_text)
+                                          self._model.column_version_text)
         self.append_column(self.version_column)
 
         cell_text = Gtk.CellRendererText()
@@ -129,7 +129,8 @@ class ActivitiesTreeView(Gtk.TreeView):
         self.date_column.props.expand = True
         self.date_column.set_sort_column_id(self._model.column_date)
         self.date_column.pack_start(cell_text, True)
-        self.date_column.add_attribute(cell_text, 'text', self._model.column_date_text)
+        self.date_column.add_attribute(cell_text, 'text',
+                                       self._model.column_date_text)
         self.append_column(self.date_column)
 
         self.set_search_column(self._model.column_title)
@@ -145,11 +146,15 @@ class ActivitiesTreeView(Gtk.TreeView):
         if hasattr(self.props, 'activate_on_single_click'):
             # Gtk+ 3.8 and later
             self.props.activate_on_single_click = True
-            self.row_activated_handler = self.connect('row-activated', self.__row_activated_cb)
+            self.row_activated_handler = self.connect('row-activated',
+                                                      self.__row_activated_cb)
         else:
-            self.icon_clicked_handler = self.cell_icon.connect('clicked', self.__icon_clicked_cb)
-            self.button_press_handler = self.connect('button-press-event', self.__button_press_cb)
-            self.button_reslease_handler = self.connect('button-release-event', self.__button_release_cb)
+            self.icon_clicked_handler = self.cell_icon.connect(
+                'clicked', self.__icon_clicked_cb)
+            self.button_press_handler = self.connect(
+                'button-press-event', self.__button_press_cb)
+            self.button_reslease_handler = self.connect(
+                'button-release-event', self.__button_release_cb)
             self._row_activated_armed_path = None
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):

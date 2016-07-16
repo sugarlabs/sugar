@@ -84,7 +84,7 @@ class MainToolbox(ToolbarBox):
         self._filter_type = default_filter_type
         self._what_filter = default_what_filter
         self._when_filter = None
-        
+
         self._default_what_filter = default_what_filter
         self._default_filter_type = default_filter_type
 
@@ -108,7 +108,8 @@ class MainToolbox(ToolbarBox):
 
         self._proj_list_button = ToggleToolButton('project-box')
         self._proj_list_button.set_tooltip(_('Projects'))
-        self._proj_list_button.connect('toggled', self._proj_list_button_clicked_cb)
+        self._proj_list_button.connect('toggled',
+                                       self._proj_list_button_clicked_cb)
         self.toolbar.insert(self._proj_list_button, -1)
         self._proj_list_button.show()
 
