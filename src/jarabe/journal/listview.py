@@ -39,6 +39,7 @@ from jarabe.journal import journalwindow
 
 
 UPDATE_INTERVAL = 300
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 
 class TreeView(Gtk.TreeView):
@@ -49,6 +50,8 @@ class TreeView(Gtk.TreeView):
                            ([object])),
         'volume-error': (GObject.SignalFlags.RUN_FIRST, None,
                          ([str, str])),
+        'choose-project': (GObject.SignalFlags.RUN_FIRST, None,
+                          ([object])),
     }
 
     def __init__(self, journalactivity):
@@ -94,6 +97,7 @@ class TreeView(Gtk.TreeView):
                                     detail=True)
             palette.connect('detail-clicked', self.__detail_clicked_cb)
             palette.connect('volume-error', self.__volume_error_cb)
+            palette.connect('choose-project', self.__choose_project_cb)
 
         elif column in self.buddies_columns:
             tree_model = self.get_model()
@@ -121,6 +125,9 @@ class TreeView(Gtk.TreeView):
 
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
+
+    def __choose_project_cb(self, palette, metadata_to_copy):
+        self.emit('choose-project', metadata_to_copy)
 
     def do_size_request(self, requisition):
         # HACK: We tell the model that the view is just resizing so it can
@@ -158,6 +165,7 @@ class BaseListView(Gtk.Bin):
         self._progress_bar = None
         self._last_progress_bar_pulse = None
         self._scroll_position = 0.
+        self._projects_view_active = False
 
         Gtk.Bin.__init__(self)
 
@@ -227,6 +235,8 @@ class BaseListView(Gtk.Bin):
 
     def _is_new_item_visible(self, object_id):
         """Check if the created item is part of the currently selected view"""
+        if not self._query.get('mountpoints', None):
+            return None
         if self._query['mountpoints'] == ['/']:
             return not object_id.startswith('/')
         else:
@@ -415,6 +425,13 @@ class BaseListView(Gtk.Bin):
 
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
+
+        if 'activity' in query_dict \
+                and query_dict['activity'] == PROJECT_BUNDLE_ID:
+            self.set_projects_view_active(True)
+        elif self._projects_view_active:
+            self.set_projects_view_active(False)
+
         if 'order_by' not in query_dict:
             query_dict['order_by'] = ['+timestamp']
         if query_dict['order_by'] != self._query.get('order_by'):
@@ -482,17 +499,25 @@ class BaseListView(Gtk.Bin):
             self.tree_view.get_bin_window().show()
 
         if len(tree_model) == 0:
-            documents_path = model.get_documents_path()
-            if self._is_query_empty():
-                if self._query['mountpoints'] == ['/']:
-                    self._show_message(_('Your Journal is empty'))
-                elif documents_path and self._query['mountpoints'] == \
-                        [documents_path]:
-                    self._show_message(_('Your documents folder is empty'))
-                else:
-                    self._show_message(_('The device is empty'))
+            logging.debug('Buraah!!')
+            if self._query.get('project_id', None):
+                self._show_message(_('Your project is empty'))
             else:
-                self._show_message(_('No matching entries'),
+                documents_path = model.get_documents_path()
+                if self._is_query_empty():
+                    if self._query['mountpoints'] == ['/']:
+                        self._show_message(_('Your Journal is empty'))
+                    elif documents_path and self._query['mountpoints'] == \
+                            [documents_path]:
+                        self._show_message(_('Your documents folder is empty'))
+                    else:
+                        self._show_message(_('The device is empty'))
+                else:
+                    show_message_text = 'No matching entries'
+                    if self.get_projects_view_active():
+                        show_message_text = 'No Projects'
+
+                self._show_message(_(show_message_text),
                                    show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
@@ -572,17 +597,19 @@ class BaseListView(Gtk.Bin):
             color, GLib.markup_escape_text(message)))
         box.pack_start(label, expand=True, fill=False, padding=0)
 
-        if show_clear_query:
-            button_box = Gtk.HButtonBox()
-            button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
-            box.pack_start(button_box, False, True, 0)
-            button_box.show()
+        if not self.get_projects_view_active():
+            if show_clear_query:
+                button_box = Gtk.HButtonBox()
+                button_box.set_layout(Gtk.ButtonBoxStyle.CENTER)
+                box.pack_start(button_box, False, True, 0)
+                button_box.show()
 
-            button = Gtk.Button(label=_('Clear search'))
-            button.connect('clicked', self.__clear_button_clicked_cb)
-            button.props.image = Icon(icon_name='dialog-cancel',
-                                      pixel_size=style.SMALL_ICON_SIZE)
-            button_box.pack_start(button, expand=True, fill=False, padding=0)
+                button = Gtk.Button(label=_('Clear search'))
+                button.connect('clicked', self.__clear_button_clicked_cb)
+                button.props.image = Icon(icon_name='dialog-cancel',
+                                          pixel_size=style.SMALL_ICON_SIZE)
+                button_box.pack_start(button, expand=True, fill=False,
+                                      padding=0)
 
         background_box.show_all()
 
@@ -679,6 +706,23 @@ class BaseListView(Gtk.Bin):
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
 
+    def set_projects_view_active(self, projects_view_active):
+        self._projects_view_active = projects_view_active
+        text = _('Add new entry')
+        if self._journalactivity:
+            if self._projects_view_active:
+                logging.debug('set_projects_view_active')
+                text = _('Add new project')
+                entry = self._journalactivity.get_add_proj_entry()
+                entry.set_placeholder_text(text)
+                self._journalactivity.get_add_new_box().show_all()
+            else:
+                logging.debug('set_projects_view_active false')
+                self._journalactivity.get_add_new_box().hide()
+
+    def get_projects_view_active(self):
+        return self._projects_view_active
+
 
 class ListView(BaseListView):
     __gtype_name__ = 'JournalListView'
@@ -688,6 +732,8 @@ class ListView(BaseListView):
                                ([])),
         'title-edit-finished': (GObject.SignalFlags.RUN_FIRST, None,
                                 ([])),
+        'project-view-activate': (GObject.SignalFlags.RUN_FIRST, None,
+                                 ([object])),
     }
 
     def __init__(self, journalactivity, enable_multi_operations=False):
@@ -764,6 +810,9 @@ class ListView(BaseListView):
     def __icon_clicked_cb(self, cell, path):
         row = self.tree_view.get_model()[path]
         metadata = model.get(row[ListModel.COLUMN_UID])
+        if metadata['activity'] == PROJECT_BUNDLE_ID:
+            self.emit('project-view-activate', metadata)
+            return
         misc.resume(metadata,
                     alert_window=journalwindow.get_journal_window())
 

@@ -33,7 +33,7 @@ from sugar3.graphics.palette import ToolInvoker
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import Icon, EventIcon
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import iconentry
@@ -84,6 +84,7 @@ class MainToolbox(ToolbarBox):
         self._filter_type = default_filter_type
         self._what_filter = default_what_filter
         self._when_filter = None
+
         self._default_what_filter = default_what_filter
         self._default_filter_type = default_filter_type
 
@@ -105,13 +106,21 @@ class MainToolbox(ToolbarBox):
         self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
-        self._what_widget_contents = None
-        self._what_widget = Gtk.ToolItem()
-        self._what_search_button = FilterToolItem(
-            'view-type', _('Anything'), self._what_widget)
-        self._what_widget.show()
-        self.toolbar.insert(self._what_search_button, -1)
-        self._what_search_button.show()
+        self._proj_list_button = ToggleToolButton('project-box')
+        self._proj_list_button.set_tooltip(_('Projects'))
+        self._proj_list_button.connect('toggled',
+                                       self._proj_list_button_clicked_cb)
+        self.toolbar.insert(self._proj_list_button, -1)
+        self._proj_list_button.show()
+
+        if not self._proj_list_button.props.active:
+            self._what_widget_contents = None
+            self._what_widget = Gtk.ToolItem()
+            self._what_search_button = FilterToolItem(
+                'view-type', _('Anything'), self._what_widget)
+            self._what_widget.show()
+            self.toolbar.insert(self._what_search_button, -1)
+            self._what_search_button.show()
 
         self._when_search_button = FilterToolItem(
             'view-created', _('Anytime'), self._get_when_search_items())
@@ -230,7 +239,10 @@ class MainToolbox(ToolbarBox):
         if self._favorite_button.props.active:
             query['keep'] = 1
 
-        if self._what_filter:
+        if self._proj_list_button.props.active:
+            query['activity'] = 'org.sugarlabs.Project'
+
+        elif self._what_filter:
             filter_type = self._filter_type
             value = self._what_filter
 
@@ -460,6 +472,15 @@ class MainToolbox(ToolbarBox):
             self._what_widget.add(self._what_widget_contents)
             self._what_widget_contents.show()
 
+    def _proj_list_button_clicked_cb(self, proj_list_button):
+        if self._proj_list_button.props.active:
+            self._what_widget.hide()
+            self._what_search_button.hide()
+        else:
+            self._what_widget.show()
+            self._what_search_button.show()
+        self._update_if_needed()
+
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
 
@@ -489,6 +510,11 @@ class MainToolbox(ToolbarBox):
         '''
 
         self._favorite_button.props.active = False
+
+        if self._proj_list_button.props.active:
+            self._what_widget.show()
+            self._what_search_button.show()
+            self._proj_list_button.props.active = False
 
         self._update_if_needed()
 
@@ -1062,3 +1088,28 @@ def set_palette_list(palette_list):
         return scrolled_window
     else:
         return grid
+
+
+class AddNewBar(Gtk.Box):
+
+    def __init__(self):
+        Gtk.Box.__init__(self)
+        self.props.orientation = Gtk.Orientation.HORIZONTAL
+        self._button = EventIcon(icon_name='list-add')
+        self._button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
+        self._button.set_tooltip(_('Add New'))
+        self.pack_start(self._button, False, True, 0)
+        self._button.show()
+
+        self._entry = iconentry.IconEntry()
+        text = _('Add new entry')
+        self._entry.set_placeholder_text(text)
+        self._entry.add_clear_button()
+        self.pack_start(self._entry, True, True, 0)
+        self._entry.show()
+
+    def get_entry(self):
+        return self._entry
+
+    def get_button(self):
+        return self._button

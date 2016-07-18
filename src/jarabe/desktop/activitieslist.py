@@ -71,15 +71,15 @@ class ActivitiesTreeView(Gtk.TreeView):
 
         self._favorite_columns = []
         for i in range(desktop.get_number_of_views()):
-            column = Gtk.TreeViewColumn()
+            self.fav_column = Gtk.TreeViewColumn()
             self.cell_favorite = CellRendererFavorite(i)
             self.cell_favorite.connect('clicked', self.__favorite_clicked_cb)
-            column.pack_start(self.cell_favorite, True)
-            column.set_cell_data_func(self.cell_favorite,
-                                      self.__favorite_set_data_cb)
-            self.append_column(column)
+            self.fav_column.pack_start(self.cell_favorite, True)
+            self.fav_column.set_cell_data_func(self.cell_favorite,
+                                               self.__favorite_set_data_cb)
+            self.append_column(self.fav_column)
 
-            self._favorite_columns.append(column)
+            self._favorite_columns.append(self.fav_column)
 
         self.cell_icon = CellRendererActivityIcon()
 
@@ -106,31 +106,32 @@ class ActivitiesTreeView(Gtk.TreeView):
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_version)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text',
-                             self._model.column_version_text)
-        self.append_column(column)
+        self.version_column = Gtk.TreeViewColumn()
+        self.version_column.set_alignment(1)
+        self.version_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.version_column.props.resizable = True
+        self.version_column.props.reorderable = True
+        self.version_column.props.expand = True
+        self.version_column.set_sort_column_id(self._model.column_version)
+        self.version_column.pack_start(cell_text, True)
+        self.version_column.add_attribute(cell_text, 'text',
+                                          self._model.column_version_text)
+        self.append_column(self.version_column)
 
         cell_text = Gtk.CellRendererText()
         cell_text.props.xalign = 1
 
-        column = Gtk.TreeViewColumn()
-        column.set_alignment(1)
-        column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
-        column.props.resizable = True
-        column.props.reorderable = True
-        column.props.expand = True
-        column.set_sort_column_id(self._model.column_date)
-        column.pack_start(cell_text, True)
-        column.add_attribute(cell_text, 'text', self._model.column_date_text)
-        self.append_column(column)
+        self.date_column = Gtk.TreeViewColumn()
+        self.date_column.set_alignment(1)
+        self.date_column.props.sizing = Gtk.TreeViewColumnSizing.GROW_ONLY
+        self.date_column.props.resizable = True
+        self.date_column.props.reorderable = True
+        self.date_column.props.expand = True
+        self.date_column.set_sort_column_id(self._model.column_date)
+        self.date_column.pack_start(cell_text, True)
+        self.date_column.add_attribute(cell_text, 'text',
+                                       self._model.column_date_text)
+        self.append_column(self.date_column)
 
         self.set_search_column(self._model.column_title)
         self.set_enable_search(False)
@@ -138,14 +139,22 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._invoker = TreeViewInvoker()
         self._invoker.attach_treeview(self)
 
+        self.button_press_handler = None
+        self.button_reslease_handler = None
+        self.icon_clicked_handler = None
+        self.row_activated_handler = None
         if hasattr(self.props, 'activate_on_single_click'):
             # Gtk+ 3.8 and later
             self.props.activate_on_single_click = True
-            self.connect('row-activated', self.__row_activated_cb)
+            self.row_activated_handler = self.connect('row-activated',
+                                                      self.__row_activated_cb)
         else:
-            self.cell_icon.connect('clicked', self.__icon_clicked_cb)
-            self.connect('button-press-event', self.__button_press_cb)
-            self.connect('button-release-event', self.__button_release_cb)
+            self.icon_clicked_handler = self.cell_icon.connect(
+                'clicked', self.__icon_clicked_cb)
+            self.button_press_handler = self.connect(
+                'button-press-event', self.__button_press_cb)
+            self.button_reslease_handler = self.connect(
+                'button-release-event', self.__button_release_cb)
             self._row_activated_armed_path = None
 
     def __favorite_set_data_cb(self, column, cell, model, tree_iter, data):
@@ -169,6 +178,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         """
         A click on activity icon cell is to start an activity.
         """
+        logging.debug('__icon_clicked_cb')
         self._start_activity(path)
 
     def __row_activated_cb(self, treeview, path, col):
@@ -176,6 +186,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         A click on cells other than the favorite toggle is to start an
         activity.  Gtk+ 3.8 and later.
         """
+        logging.debug('__row_activated_cb')
         if col is not treeview.get_column(0):
             self._start_activity(path)
 
@@ -199,6 +210,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         return path
 
     def __button_press_cb(self, widget, event):
+        logging.debug('__button_press_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_PRESS)
         if path is None:
             return
@@ -206,6 +218,7 @@ class ActivitiesTreeView(Gtk.TreeView):
         self._row_activated_armed_path = path
 
     def __button_release_cb(self, widget, event):
+        logging.debug('__button_release_cb')
         path = self.__button_to_path(event, Gdk.EventType.BUTTON_RELEASE)
         if path is None:
             return
