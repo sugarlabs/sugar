@@ -289,6 +289,8 @@ class JournalActivity(JournalWindow):
 
         self._list_view = ListView(self, enable_multi_operations=True)
         self.list_view_signal_connect(self._list_view)
+        tree_view = self._list_view.tree_view
+        tree_view.connect('choose-project', self.__choose_project_cb)
         self._main_view.pack_start(self._list_view, True, True, 0)
         self._list_view.show_all()
 
@@ -405,26 +407,26 @@ class JournalActivity(JournalWindow):
             self._main_toolbox.clear_query()
             self.show_main_view()
 
-    def __choose_project_cb(self, tree_view, metadata_to_copy):
+    def __choose_project_cb(self, tree_view, metadata_to_send):
         project_chooser = ObjectChooser()
         project_chooser.show_all()
         project_chooser.connect('response', self.__project_chooser_response_cb,
-                                metadata_to_copy)
+                                metadata_to_send)
         project_chooser._toolbar._proj_list_button_clicked_cb(None)
         logging.debug('__choose_project_cb')
 
-    def __project_chooser_response_cb(self, project_chooser, reponse_value,
-                                      metadata_to_copy):
+    def __project_chooser_response_cb(self, project_chooser, response_value,
+                                      metadata_to_send):
+        if response_value == Gtk.ResponseType.DELETE_EVENT:
+            project_chooser.destroy()
+            return
+
         object_id = project_chooser.get_selected_object_id()
         metadata = model.get(object_id)
-        title = metadata_to_copy.get('title', None)
-        activity = metadata_to_copy.get('activity', None)
-        activity_id = metadata_to_copy.get('activity_id', None)
-        logging.debug('metadata_to_copy %r' % metadata_to_copy)
-        initialize_journal_object(title=title, bundle_id=activity,
-                                  activity_id=activity_id,
-                                  project_metadata=metadata,
-                                  icon_color=None, invited=False)
+        jobject_to_send = datastore.get(metadata_to_send['uid'])
+        datastore.delete(metadata_to_send['uid'])
+        jobject_to_send.metadata['project_id'] = metadata['uid']
+        datastore.write(jobject_to_send)
         project_chooser.destroy()
 
     def __detail_clicked_cb(self, list_view, object_id):

@@ -123,7 +123,7 @@ class ObjectPalette(Palette):
         menu_item.set_submenu(copy_menu)
 
         if not metadata.get('activity', None) == PROJECT_BUNDLE_ID:
-            menu_item = MenuItem(_('Copy to project...'), 'project-box')
+            menu_item = MenuItem(_('Send to project...'), 'project-box')
             menu_item.connect('activate', self.__copy_to_project_activated_cb)
             self.menu.append(menu_item)
             menu_item.show()
