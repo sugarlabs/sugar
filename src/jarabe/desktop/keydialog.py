@@ -106,7 +106,7 @@ class KeyDialog(Gtk.Dialog):
         self.vbox.pack_start(self._entry, True, True, 0)
         self.vbox.set_spacing(6)
 
-        self._show_pass_toggle = Gtk.CheckButton("Show Password")
+        self._show_pass_toggle = Gtk.CheckButton(_("Show Password"))
         self._show_pass_toggle.props.draw_indicator = True
         self._show_pass_toggle.props.active = False
         self._show_pass_toggle.connect("toggled", self._toggle_visibility_cb)
