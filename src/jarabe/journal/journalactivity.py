@@ -408,7 +408,7 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def __choose_project_cb(self, tree_view, metadata_to_send):
-        project_chooser = ObjectChooser()
+        project_chooser = ObjectChooser(self.get_window())
         project_chooser.show_all()
         project_chooser.connect('response', self.__project_chooser_response_cb,
                                 metadata_to_send)
