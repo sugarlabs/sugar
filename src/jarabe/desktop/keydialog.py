@@ -127,7 +127,7 @@ class KeyDialog(Gtk.Dialog):
     def get_response_object(self):
         return self._response
 
-    def __toggle_visibility_cb(self, entry):
+    def _toggle_visibility_cb(self, entry):
         self._entry.set_visibility(self._show_pass_toggle.get_active())
 
 
