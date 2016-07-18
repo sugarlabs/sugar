@@ -110,7 +110,6 @@ class KeyDialog(Gtk.Dialog):
         button.props.draw_indicator = True
         button.props.active = self._entry.get_visibility()
         button.connect("toggled", self._button_toggled_cb)
-        button.show()
         self.vbox.pack_start(button, True, True, 0)
 
         self.vbox.show_all()
