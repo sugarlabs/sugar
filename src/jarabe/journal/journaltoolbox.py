@@ -33,7 +33,7 @@ from sugar3.graphics.palette import ToolInvoker
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import Icon, EventIcon
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import iconentry
@@ -1088,3 +1088,28 @@ def set_palette_list(palette_list):
         return scrolled_window
     else:
         return grid
+
+
+class AddNewBar(Gtk.Box):
+
+    def __init__(self):
+        Gtk.Box.__init__(self)
+        self.props.orientation = Gtk.Orientation.HORIZONTAL
+        self._button = EventIcon(icon_name='list-add')
+        self._button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
+        self._button.set_tooltip(_('Add New'))
+        self.pack_start(self._button, False, True, 0)
+        self._button.show()
+
+        self._entry = iconentry.IconEntry()
+        text = _('Add new entry')
+        self._entry.set_placeholder_text(text)
+        self._entry.add_clear_button()
+        self.pack_start(self._entry, True, True, 0)
+        self._entry.show()
+
+    def get_entry(self):
+        return self._entry
+
+    def get_button(self):
+        return self._button

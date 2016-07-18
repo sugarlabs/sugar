@@ -29,14 +29,13 @@ import statvfs
 import os
 
 from sugar3.graphics.alert import ErrorAlert
-from sugar3.graphics import iconentry
 from sugar3 import env
 from sugar3.datastore import datastore
 from sugar3.activity import activityfactory
-from sugar3.graphics.icon import CanvasIcon, EventIcon
 from gi.repository import SugarExt
 
 from jarabe.journal.journaltoolbox import MainToolbox
+from jarabe.journal.journaltoolbox import AddNewBar
 from jarabe.journal.journaltoolbox import DetailToolbox
 from jarabe.journal.journaltoolbox import EditToolbox
 from jarabe.journal.projectview import ProjectView
@@ -252,50 +251,6 @@ class JournalActivity(JournalWindow):
     def can_close(self):
         return False
 
-    def _create_add_new_entry(self):
-        self._add_new_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        add_new_button = EventIcon(icon_name='list-add')
-        add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('button-press-event',
-                               self.__add_new_button_clicked_cb)
-        self._add_new_box.pack_start(add_new_button, False, True, 0)
-        add_new_button.show()
-
-        self._entry = iconentry.IconEntry()
-        self._entry.connect('key-press-event',
-                            self.__key_press_add_new_entry_cb)
-        text = _('Add new entry')
-        self._entry.set_placeholder_text(text)
-        self._entry.add_clear_button()
-        self._add_new_box.pack_start(self._entry, True, True, 0)
-        self._entry.show()
-        return self._add_new_box
-
-    def get_add_new_box(self):
-        return self._add_new_box
-
-    def _create_add_new_entry_project(self):
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-
-        add_new_button = CanvasIcon(icon_name='list-add')
-        add_new_button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
-        add_new_button.set_tooltip(_('Add New'))
-        add_new_button.connect('button-press-event',
-                               self.__add_new_button_clicked_cb)
-        hbox.pack_start(add_new_button, False, True, 0)
-        add_new_button.show()
-
-        self._entry_project = iconentry.IconEntry()
-
-        text = _('Add new entry')
-        self._entry_project.connect('key-press-event',
-                                    self.__key_press_add_new_entry_cb)
-        self._entry_project.set_placeholder_text(text)
-        self._entry_project.add_clear_button()
-        hbox.pack_start(self._entry_project, True, True, 0)
-        self._entry_project.show()
-        return hbox
-
     def list_view_signal_connect(self, list_view):
         list_view.connect('detail-clicked', self.__detail_clicked_cb)
         list_view.connect('clear-clicked', self.__clear_clicked_cb)
@@ -321,8 +276,14 @@ class JournalActivity(JournalWindow):
         self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
 
-        add_new_box = self._create_add_new_entry()
-        self._main_view.pack_start(add_new_box, False, True,
+        self._add_new_box = AddNewBar()
+        add_new_button = self._add_new_box.get_button()
+        add_new_button.connect('button-press-event',
+                               self.__add_new_button_clicked_cb)
+        self._entry = self._add_new_box.get_entry()
+        self._entry.connect('key-press-event',
+                            self.__key_press_add_new_entry_cb)
+        self._main_view.pack_start(self._add_new_box, False, True,
                                    style.DEFAULT_SPACING)
         self._main_view.set_can_focus(True)
 
@@ -344,15 +305,24 @@ class JournalActivity(JournalWindow):
         self._project_view = ProjectView()
         project_vbox = self._project_view.get_vbox()
 
-        add_new_box = self._create_add_new_entry_project()
+        add_new_box = AddNewBar()
         add_new_box.show_all()
         project_vbox.pack_start(add_new_box, False, True,
                                 style.DEFAULT_SPACING/3)
 
+        add_new_button = add_new_box.get_button()
+        add_new_button.connect('button-press-event',
+                               self.__add_new_button_clicked_cb)
+        self._entry_project = add_new_box.get_entry()
+        self._entry_project.connect('key-press-event',
+                                    self.__key_press_add_new_entry_cb)
         self._list_view_project = self._project_view.create_list_view_project()
         self.list_view_signal_connect(self._list_view_project)
         project_vbox.pack_start(self._list_view_project, True, True, 0)
         self._list_view_project.show()
+
+    def get_add_new_box(self):
+        return self._add_new_box
 
     def get_list_view(self):
         return self._list_view
