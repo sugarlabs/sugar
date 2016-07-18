@@ -106,12 +106,12 @@ class KeyDialog(Gtk.Dialog):
         self.vbox.pack_start(self._entry, True, True, 0)
         self.vbox.set_spacing(6)
 
-        self._show_pass_toggle = Gtk.CheckButton(_("Show Password"))
-        self._show_pass_toggle.props.draw_indicator = True
-        self._show_pass_toggle.props.active = self._entry.get_visibility()
-        self._show_pass_toggle.connect("toggled", self._toggle_visibility_cb)
-        self._show_pass_toggle.show()
-        self.vbox.pack_start(self._show_pass_toggle, True, True, 0)
+        button = Gtk.CheckButton(_("Show Password"))
+        button.props.draw_indicator = True
+        button.props.active = self._entry.get_visibility()
+        button.connect("toggled", self._button_toggled_cb)
+        button.show()
+        self.vbox.pack_start(button, True, True, 0)
 
         self.vbox.show_all()
 
@@ -127,8 +127,8 @@ class KeyDialog(Gtk.Dialog):
     def get_response_object(self):
         return self._response
 
-    def _toggle_visibility_cb(self, entry):
-        self._entry.set_visibility(self._show_pass_toggle.get_active())
+    def _button_toggled_cb(self, button):
+        self._entry.set_visibility(button.get_active())
 
 
 class WEPKeyDialog(KeyDialog):
