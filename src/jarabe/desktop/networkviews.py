@@ -72,6 +72,7 @@ class WirelessNetworkView(EventPulsingIcon):
         self._device_caps = 0
         self._device_state = None
         self._color = None
+        self._removed_hid = None
 
         if self._mode == network.NM_802_11_MODE_ADHOC and \
                 network.is_sugar_adhoc_network(self._ssid):
@@ -225,6 +226,7 @@ class WirelessNetworkView(EventPulsingIcon):
             locked = (self._flags == network.NM_802_11_AP_FLAGS_PRIVACY)
             connection = network.find_connection_by_ssid(self._ssid)
             if connection is not None:
+                self._connect_removed(connection)
                 if locked:
                     badge = 'emblem-favorite-locked'
                 else:
@@ -232,6 +234,21 @@ class WirelessNetworkView(EventPulsingIcon):
             elif locked:
                 badge = 'emblem-locked'
         self.props.badge_name = self._palette_icon.props.badge_name = badge
+
+    def _connect_removed(self, connection):
+        if self._removed_hid is not None:
+            return
+
+        self._removed_hid = connection.connect('removed',
+                                               self._connection_removed_cb)
+
+    def _disconnect_removed(self, connection):
+        connection.disconnect(self._removed_hid)
+        self._removed_hid = None
+
+    def _connection_removed_cb(self, connection):
+        self._update_badge()
+        self._disconnect_removed(connection)
 
     def _update_state(self):
         if self._active_ap is not None:
