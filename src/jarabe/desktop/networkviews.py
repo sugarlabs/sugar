@@ -220,19 +220,18 @@ class WirelessNetworkView(EventPulsingIcon):
                 icon.props.icon_name = icon_name
 
     def _update_badge(self):
+        badge = None
         if self._mode != network.NM_802_11_MODE_ADHOC:
-            if network.find_connection_by_ssid(self._ssid) is not None:
-                self.props.badge_name = 'emblem-favorite'
-                self._palette_icon.props.badge_name = 'emblem-favorite'
-            elif self._flags == network.NM_802_11_AP_FLAGS_PRIVACY:
-                self.props.badge_name = 'emblem-locked'
-                self._palette_icon.props.badge_name = 'emblem-locked'
-            else:
-                self.props.badge_name = None
-                self._palette_icon.props.badge_name = None
-        else:
-            self.props.badge_name = None
-            self._palette_icon.props.badge_name = None
+            locked = (self._flags == network.NM_802_11_AP_FLAGS_PRIVACY)
+            connection = network.find_connection_by_ssid(self._ssid)
+            if connection is not None:
+                if locked:
+                    badge = 'emblem-favorite-locked'
+                else:
+                    badge = 'emblem-favorite'
+            elif locked:
+                badge = 'emblem-locked'
+        self.props.badge_name = self._palette_icon.props.badge_name = badge
 
     def _update_state(self):
         if self._active_ap is not None:
