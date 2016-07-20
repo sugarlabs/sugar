@@ -602,11 +602,11 @@ class BaseTransferPalette(Palette):
 
     def _format_size(self, size):
         if size < 1024:
-            return _('%dB') % size
+            return _('%d B') % size
         elif size < 1048576:
-            return _('%dKB') % (size / 1024)
+            return _('%d KiB') % (size / 1024)
         else:
-            return _('%dMB') % (size / 1048576)
+            return _('%d MiB') % (size / 1048576)
 
     def update_progress(self):
         logging.debug('update_progress: %r',

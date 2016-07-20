@@ -343,10 +343,8 @@ class GsmPalette(Palette):
         self.props.secondary_text = _('Connected for %s') % (formatted_time, )
 
     def update_stats(self, in_bytes, out_bytes):
-        in_KBytes = in_bytes / 1024
-        out_KBytes = out_bytes / 1024
-        self._data_label_up.set_text(_('%d KB') % (out_KBytes))
-        self._data_label_down.set_text(_('%d KB') % (in_KBytes))
+        self._data_label_up.set_text(_('%d KiB') % (out_bytes / 1024))
+        self._data_label_down.set_text(_('%d KiB') % (in_bytes / 1024))
 
     def _get_error_by_nm_reason(self, reason):
         if reason in [network.NM_DEVICE_STATE_REASON_NO_SECRETS,
