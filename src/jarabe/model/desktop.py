@@ -71,7 +71,7 @@ class DesktopViewModel(GObject.GObject):
 
         homeviews = self._settings.get_value(_HOMEVIEWS_KEY).unpack()
         if not homeviews:
-            # there should always be atleast one homeview
+            # there will always be at least one homeview
             self._settings.reset(_HOMEVIEWS_KEY)
             homeviews = self._settings.get_value(_HOMEVIEWS_KEY).unpack()
 
@@ -81,8 +81,11 @@ class DesktopViewModel(GObject.GObject):
         self._view_labels = []
         for view in homeviews:
             if 'view-label' not in view:
-                view['view-label'] = _('Favorites view %d' % (
-                    len(self._view_labels) + 1))
+                default = _('Favorites view %d')
+                if len(homeviews) > 1:
+                    view['view-label'] = default % (len(self._view_labels) + 1)
+                else:
+                    view['view-label'] = default.replace(' %d', '')
             self._view_labels.append(view['view-label'])
 
         self.emit('desktop-view-icons-changed')
