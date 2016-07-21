@@ -1085,6 +1085,12 @@ def disconnect_access_points(ap_paths):
             dev.Disconnect()
 
 
+def forget_wireless_network(ssid):
+    connection = find_connection_by_ssid(ssid)
+    if connection:
+        connection.delete()
+
+
 def _is_non_printable(char):
     """
     Return True if char is a non-printable unicode character, False otherwise

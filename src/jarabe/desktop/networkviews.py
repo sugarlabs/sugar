@@ -139,6 +139,12 @@ class WirelessNetworkView(EventPulsingIcon):
             'activate', self.__disconnect_activate_cb)
         self.menu_box.add(self._disconnect_item)
 
+        self._forget_item = PaletteMenuItem(_('Forget'))
+        icon = Icon(pixel_size=style.SMALL_ICON_SIZE, icon_name='list-remove')
+        self._forget_item.set_image(icon)
+        self._forget_item.connect('activate', self.__forget_activate_cb)
+        self.menu_box.add(self._forget_item)
+
         p.set_content(self.menu_box)
         self.menu_box.show_all()
 
@@ -222,10 +228,12 @@ class WirelessNetworkView(EventPulsingIcon):
 
     def _update_badge(self):
         badge = None
+        favorite = False
         if self._mode != network.NM_802_11_MODE_ADHOC:
             locked = (self._flags == network.NM_802_11_AP_FLAGS_PRIVACY)
             connection = network.find_connection_by_ssid(self._ssid)
             if connection is not None:
+                favorite = True
                 self._connect_removed(connection)
                 if locked:
                     badge = 'emblem-favorite-locked'
@@ -234,6 +242,7 @@ class WirelessNetworkView(EventPulsingIcon):
             elif locked:
                 badge = 'emblem-locked'
         self.props.badge_name = self._palette_icon.props.badge_name = badge
+        self._forget_item.set_visible(favorite)
 
     def _connect_removed(self, connection):
         if self._removed_hid is not None:
@@ -290,6 +299,9 @@ class WirelessNetworkView(EventPulsingIcon):
     def __disconnect_activate_cb(self, item):
         ap_paths = self._access_points.keys()
         network.disconnect_access_points(ap_paths)
+
+    def __forget_activate_cb(self, item):
+        network.forget_wireless_network(self._ssid)
 
     def _add_ciphers_from_flags(self, flags, pairwise):
         ciphers = []
