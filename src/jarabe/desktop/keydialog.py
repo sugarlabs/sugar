@@ -102,14 +102,14 @@ class KeyDialog(Gtk.Dialog):
     def add_key_entry(self):
         self._entry = Gtk.Entry(visibility=True)
         self._entry.connect('changed', self._update_response_sensitivity)
-        self._entry.connect('activate', self._entry_activate_cb)
+        self._entry.connect('activate', self.__entry_activate_cb)
         self.vbox.pack_start(self._entry, True, True, 0)
         self.vbox.set_spacing(6)
 
         button = Gtk.CheckButton(_("Show Password"))
         button.props.draw_indicator = True
         button.props.active = self._entry.get_visibility()
-        button.connect("toggled", self._button_toggled_cb)
+        button.connect("toggled", self.__button_toggled_cb)
         self.vbox.pack_start(button, True, True, 0)
 
         self.vbox.show_all()
@@ -117,7 +117,7 @@ class KeyDialog(Gtk.Dialog):
         self._update_response_sensitivity()
         self._entry.grab_focus()
 
-    def _entry_activate_cb(self, entry):
+    def __entry_activate_cb(self, entry):
         self.response(Gtk.ResponseType.OK)
 
     def create_security(self):
@@ -126,7 +126,7 @@ class KeyDialog(Gtk.Dialog):
     def get_response_object(self):
         return self._response
 
-    def _button_toggled_cb(self, button):
+    def __button_toggled_cb(self, button):
         self._entry.set_visibility(button.get_active())
 
 
@@ -147,7 +147,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_combo.pack_start(cell, True)
         self.key_combo.add_attribute(cell, 'text', 0)
         self.key_combo.set_active(0)
-        self.key_combo.connect('changed', self._key_combo_changed_cb)
+        self.key_combo.connect('changed', self.__key_combo_changed_cb)
 
         hbox = Gtk.HBox()
         hbox.pack_start(Gtk.Label(_('Key Type:')), True, True, 0)
@@ -176,7 +176,7 @@ class WEPKeyDialog(KeyDialog):
 
         self.vbox.pack_start(hbox, True, True, 0)
 
-    def _key_combo_changed_cb(self, widget):
+    def __key_combo_changed_cb(self, widget):
         self._update_response_sensitivity()
 
     def _get_security(self):
