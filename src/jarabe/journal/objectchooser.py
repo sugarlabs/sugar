@@ -45,7 +45,14 @@ class ObjectChooser(PopWindow):
 
     def __init__(self, parent=None, what_filter='', filter_type=None,
                  show_preview=False):
-        PopWindow.__init__(self, window_xid=parent.get_xid())
+        if parent is None:
+            parent_xid = 0
+        elif hasattr(parent, 'get_window') and hasattr(parent.get_window(),
+                                                       'get_xid'):
+            parent_xid = parent.get_window().get_xid()
+        else:
+            parent_xid = parent
+        PopWindow.__init__(self, window_xid=parent_xid)
 
         self._selected_object_id = None
         self._show_preview = show_preview
