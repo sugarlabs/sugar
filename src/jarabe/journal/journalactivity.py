@@ -59,7 +59,7 @@ J_DBUS_SERVICE = 'org.laptop.Journal'
 J_DBUS_INTERFACE = 'org.laptop.Journal'
 J_DBUS_PATH = '/org/laptop/Journal'
 
-_SPACE_TRESHOLD = 52428800
+_SPACE_THRESHOLD = 50  # MiB
 _BUNDLE_ID = 'org.laptop.JournalActivity'
 SCOPE_PRIVATE = 'private'
 _journal = None
@@ -558,15 +558,15 @@ class JournalActivity(JournalWindow):
     def _check_available_space(self):
         """Check available space on device
 
-            If the available space is below 50MB an alert will be
-            shown which encourages to delete old journal entries.
+            If the available space is below threshold an alert will be
+            shown which suggests deleting old journal entries.
         """
 
         if self._critical_space_alert:
             return
         stat = os.statvfs(env.get_profile_path())
         free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
-        if free_space < _SPACE_TRESHOLD:
+        if free_space < (_SPACE_THRESHOLD * 1024 * 1024):
             self._critical_space_alert = ModalAlert()
             self._critical_space_alert.connect('destroy',
                                                self.__alert_closed_cb)

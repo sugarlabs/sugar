@@ -373,7 +373,7 @@ class JournalButtonPalette(Palette):
 
         fraction = (total_space - free_space) / float(total_space)
         self._progress_bar.props.fraction = fraction
-        self._free_space_label.props.label = _('%(free_space)d MB Free') % \
+        self._free_space_label.props.label = _('%(free_space)d MiB Free') % \
             {'free_space': free_space / (1024 * 1024)}
 
 
