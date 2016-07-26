@@ -1,5 +1,5 @@
 # Copyright (C) 2013 Kalpa Welivitigoda
-# Copyright (C) 2015 Sam Parkinson
+# Copyright (C) 2015-2016 Sam Parkinson
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import json
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
-from gi.repository import WebKit
+from gi.repository import WebKit as WebKit2
 from gi.repository import GdkX11
 from gi.repository import SoupGNOME
 from gi.repository import Gio
@@ -174,14 +174,14 @@ class ViewHelp(Gtk.Window):
         self._toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         self._toolbar.connect('mode-changed', self.__mode_changed_cb)
 
-        session = WebKit.get_default_session()
+        session = WebKit2.get_default_session()
         cookie_jar = SoupGNOME.CookieJarSqlite(
             filename=os.path.join(env.get_profile_path(),
                                   'social-help.cookies'),
             read_only=False)
         session.add_feature(cookie_jar)
 
-        self._webview = WebKit.WebView()
+        self._webview = WebKit2.WebView()
         self._webview.set_full_content_zoom(True)
         self._webview.connect('resource-request-starting',
                               self._resource_request_starting_cb)
@@ -267,7 +267,7 @@ class ViewHelp(Gtk.Window):
         back_forward_list = self._webview.get_back_forward_list()
         back_forward_list.clear()
         for i, uri in enumerate(history):
-            history_item = WebKit.WebHistoryItem.new_with_data(uri, '')
+            history_item = WebKit2.WebHistoryItem.new_with_data(uri, '')
             back_forward_list.add_item(history_item)
             if i == index:
                 self._webview.go_to_back_forward_item(history_item)
@@ -291,7 +291,7 @@ class ViewHelp(Gtk.Window):
         return all_items
 
     def __load_status_changed_cb(self, *args):
-        if self._webview.props.load_status == WebKit.LoadStatus.FINISHED \
+        if self._webview.props.load_status == WebKit2.LoadStatus.FINISHED \
            and _LOADING_ICON in self._webview.props.uri:
                 self._load_state(self._social_help_state)
 
