@@ -17,7 +17,6 @@
 
 import logging
 
-import dbus
 from gettext import gettext as _
 from gi.repository import Gio
 from gi.repository import NMClient
@@ -116,63 +115,12 @@ def clear_registration():
     return 1
 
 
-wifi_whitelist = ('Sugar Ad-hoc Network 1',
-                  'Sugar Ad-hoc Network 6',
-                  'Sugar Ad-hoc Network 11')
-mesh_whitelist = ('OLPC Mesh Network 1',
-                  'OLPC Mesh Network 6',
-                  'OLPC Mesh Network 11',
-                  'OLPC XS Mesh Network 1',
-                  'OLPC XS Mesh Network 6',
-                  'OLPC XS Mesh Network 11')
-
-
-def is_wireless(connection):
-    """Check for wireless connection not whitelisted by Sugar.
-    """
-    wifi_settings = connection.get_settings(
-        network.NM_CONNECTION_TYPE_802_11_WIRELESS)
-    if wifi_settings:
-        return not (wifi_settings['mode'] == 'adhoc' and
-                    connection.get_id() in wifi_whitelist)
-
-    mesh_settings = connection.get_settings(
-        network.NM_CONNECTION_TYPE_802_11_OLPC_MESH)
-    if mesh_settings:
-        return not connection.get_id() in mesh_whitelist
-
-
 def clear_wireless_networks():
-    """Remove all wireless connections except Sugar-internal ones.
-    """
-    try:
-        connections = network.get_connections()
-    except dbus.DBusException:
-        logging.debug('NetworkManager not available')
-    else:
-        wireless_connections = \
-            (connection for connection in
-             connections.get_list() if is_wireless(connection))
-
-        for connection in wireless_connections:
-            try:
-                connection.delete()
-            except dbus.DBusException:
-                logging.debug("Could not remove connection %s",
-                              connection.get_id())
+    network.clear_wireless_networks()
 
 
 def have_wireless_networks():
-    """Check that there are non-Sugar-internal wireless connections.
-    """
-    try:
-        connections = network.get_connections()
-    except dbus.DBusException:
-        logging.debug('NetworkManager not available')
-        return False
-    else:
-        return any(is_wireless(connection)
-                   for connection in connections.get_list())
+    return network.have_wireless_networks()
 
 
 def get_publish_information():
