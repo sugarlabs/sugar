@@ -377,6 +377,7 @@ class JournalActivity(JournalWindow):
                                       bundle_id=PROJECT_BUNDLE_ID,
                                       activity_id=None,
                                       project_metadata=None)
+            entry.props.text = ''
         elif self.project_metadata is not None:
             chooser = ActivityChooser()
             text = _("Choose an activity to start '%s' with"
