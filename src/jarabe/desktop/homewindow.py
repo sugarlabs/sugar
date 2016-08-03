@@ -62,6 +62,8 @@ class HomeWindow(Gtk.Window):
         self.set_default_size(screen.get_width(),
                               screen.get_height())
 
+        self.__screen_size_change_cb(None)
+
         self.realize()
         self._busy_count = 0
         self.busy()
@@ -138,7 +140,21 @@ class HomeWindow(Gtk.Window):
             self._mesh_box.suspend()
 
     def __screen_size_change_cb(self, screen):
-        self.resize(screen.get_width(), screen.get_height())
+        screen = Gdk.Screen.get_default()
+        workarea = screen.get_monitor_workarea(screen.get_number())
+        geometry = Gdk.Geometry()
+        geometry.max_width = geometry.base_width = geometry.min_width = \
+            workarea.width
+        geometry.max_height = geometry.base_height = geometry.min_height = \
+            workarea.height
+        geometry.width_inc = geometry.height_inc = geometry.min_aspect = \
+            geometry.max_aspect = 1
+        hints = Gdk.WindowHints(Gdk.WindowHints.ASPECT |
+                                Gdk.WindowHints.BASE_SIZE |
+                                Gdk.WindowHints.MAX_SIZE |
+                                Gdk.WindowHints.MIN_SIZE)
+        self.move(workarea.x, workarea.y)
+        self.set_geometry_hints(None, geometry, hints)
 
     def _activate_view(self, level):
         if level == ShellModel.ZOOM_HOME:
