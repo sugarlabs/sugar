@@ -31,6 +31,9 @@ class JournalWindow(Window):
         self.set_icon_name('activity-journal')
         self.set_title(_('Journal'))
 
+        # Stop the user from closing the journal window.
+        self.connect('delete-event', lambda widget, event: True)
+
 
 def get_journal_window():
     return _journal_window
