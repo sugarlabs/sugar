@@ -277,12 +277,7 @@ class JournalActivity(JournalWindow):
         self._main_view = Gtk.VBox()
 
         self._add_new_box = AddNewBar(_('Add new project'))
-        add_new_button = self._add_new_box.get_button()
-        add_new_button.connect('button-press-event',
-                               self.__add_new_button_clicked_cb)
-        self._entry = self._add_new_box.get_entry()
-        self._entry.connect('key-press-event',
-                            self.__key_press_add_new_entry_cb)
+        self._add_new_box.activate.connect(self.__add_project_activate_cb)
         self._main_view.pack_start(self._add_new_box, False, True,
                                    style.DEFAULT_SPACING)
         self._main_view.set_can_focus(True)
@@ -308,16 +303,12 @@ class JournalActivity(JournalWindow):
         project_vbox = self._project_view.get_vbox()
 
         add_new_box = AddNewBar()
+        add_new_box.activate.connect(self.__add_new_activate_cb)
         add_new_box.show_all()
         project_vbox.pack_start(add_new_box, False, True,
                                 style.DEFAULT_SPACING/3)
 
-        add_new_button = add_new_box.get_button()
-        add_new_button.connect('button-press-event',
-                               self.__add_new_button_clicked_cb)
         self._entry_project = add_new_box.get_entry()
-        self._entry_project.connect('key-press-event',
-                                    self.__key_press_add_new_entry_cb)
         self._list_view_project = self._project_view.create_list_view_project()
         self.list_view_signal_connect(self._list_view_project)
         project_vbox.pack_start(self._list_view_project, True, True, 0)
@@ -328,9 +319,6 @@ class JournalActivity(JournalWindow):
 
     def get_list_view(self):
         return self._list_view
-
-    def get_add_proj_entry(self):
-        return self._entry
 
     def project_view_activated_cb(self, list_view, metadata):
         self.project_metadata = metadata
@@ -362,40 +350,27 @@ class JournalActivity(JournalWindow):
         self._secondary_view.pack_end(self._detail_view, True, True, 0)
         self._detail_view.show()
 
-    def __key_press_add_new_entry_cb(self, window, event):
-        keyname = Gdk.keyval_name(event.keyval)
-        if keyname == 'Return':
-            self.__add_new_button_clicked_cb(None, None)
+    def __add_project_activate_cb(self, bar, title):
+        initialize_journal_object(
+            title=title, bundle_id=PROJECT_BUNDLE_ID,
+            activity_id=None, project_metadata=None)
 
-        return False
+    def __add_new_activate_cb(self, bar, title):
+        chooser = ActivityChooser()
+        text = _("Choose an activity to start '%s' with") % title
+        chooser.set_title(text)
+        chooser.connect('activity-selected',
+                        self.__activity_selected_cb,
+                        title)
+        chooser.show_all()
 
-    def __add_new_button_clicked_cb(self, button, event):
-        if self.get_list_view().get_projects_view_active():
-            entry = self.get_add_proj_entry()
-            initialize_journal_object(title=entry.props.text,
-                                      bundle_id=PROJECT_BUNDLE_ID,
-                                      activity_id=None,
-                                      project_metadata=None)
-            entry.props.text = ''
-        elif self.project_metadata is not None:
-            chooser = ActivityChooser()
-            text = _("Choose an activity to start '%s' with"
-                     % self._entry_project.props.text)
-            chooser.set_title(text)
-            chooser.connect('activity-selected',
-                            self.__activity_selected_cb)
-            chooser.show_all()
-
-    def __activity_selected_cb(self, widget, bundle_id, activity_id):
-        initialize_journal_object(title=self._entry_project.props.text,
+    def __activity_selected_cb(self, widget, bundle_id, activity_id, title):
+        initialize_journal_object(title=title,
                                   bundle_id=bundle_id,
                                   activity_id=activity_id,
                                   project_metadata=self.project_metadata)
-
-        self._entry_project.props.text = ""
         query = {}
         query['project_id'] = self.project_metadata['uid']
-        #query['mountpoints'] = ['/']
         self._list_view_project.update_with_query(query)
 
     def __key_press_event_cb(self, widget, event):

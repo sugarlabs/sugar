@@ -1092,16 +1092,21 @@ def set_palette_list(palette_list):
 
 class AddNewBar(Gtk.Box):
 
+    activate = GObject.Signal('activate', arg_types=[str])
+
     def __init__(self, placeholder=None):
-        Gtk.Box.__init__(self)
-        self.props.orientation = Gtk.Orientation.HORIZONTAL
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL)
+
         self._button = EventIcon(icon_name='list-add')
+        self._button.connect('button-release-event',
+                             self.__button_release_event_cb)
         self._button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
         self._button.set_tooltip(_('Add New'))
         self.pack_start(self._button, False, True, 0)
         self._button.show()
 
         self._entry = iconentry.IconEntry()
+        self._entry.connect('key-press-event', self.__key_press_cb)
         if placeholder is None:
             placeholder = _('Add new entry')
         self._entry.set_placeholder_text(placeholder)
@@ -1114,3 +1119,15 @@ class AddNewBar(Gtk.Box):
 
     def get_button(self):
         return self._button
+
+    def __key_press_cb(self, window, event):
+        if event.keyval == Gdk.KEY_Return:
+            return self._maybe_activate()
+
+    def __button_release_event_cb(self, button, event):
+        self._maybe_activate()
+
+    def _maybe_activate(self):
+        self.activate.emit(self._entry.props.text)
+        self._entry.props.text = ''
+        return True

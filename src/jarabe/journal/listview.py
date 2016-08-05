@@ -493,7 +493,6 @@ class BaseListView(Gtk.Bin):
             self.tree_view.get_bin_window().show()
 
         if len(tree_model) == 0:
-            logging.debug('Buraah!!')
             if self._query.get('project_id', None):
                 self._show_message(_('Your project is empty'))
             else:
