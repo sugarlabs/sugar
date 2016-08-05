@@ -426,12 +426,6 @@ class BaseListView(Gtk.Bin):
     def update_with_query(self, query_dict):
         logging.debug('ListView.update_with_query')
 
-        if 'activity' in query_dict \
-                and query_dict['activity'] == PROJECT_BUNDLE_ID:
-            self.set_projects_view_active(True)
-        elif self._projects_view_active:
-            self.set_projects_view_active(False)
-
         if 'order_by' not in query_dict:
             query_dict['order_by'] = ['+timestamp']
         if query_dict['order_by'] != self._query.get('order_by'):
@@ -706,22 +700,8 @@ class BaseListView(Gtk.Bin):
     def __volume_error_cb(self, palette, message, severity):
         self.emit('volume-error', message, severity)
 
-    def set_projects_view_active(self, projects_view_active):
-        self._projects_view_active = projects_view_active
-        text = _('Add new entry')
-        if self._journalactivity:
-            if self._projects_view_active:
-                logging.debug('set_projects_view_active')
-                text = _('Add new project')
-                entry = self._journalactivity.get_add_proj_entry()
-                entry.set_placeholder_text(text)
-                self._journalactivity.get_add_new_box().show_all()
-            else:
-                logging.debug('set_projects_view_active false')
-                self._journalactivity.get_add_new_box().hide()
-
     def get_projects_view_active(self):
-        return self._projects_view_active
+        return self._query.get('activity') == PROJECT_BUNDLE_ID
 
 
 class ListView(BaseListView):

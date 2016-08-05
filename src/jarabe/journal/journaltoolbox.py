@@ -1092,7 +1092,7 @@ def set_palette_list(palette_list):
 
 class AddNewBar(Gtk.Box):
 
-    def __init__(self):
+    def __init__(self, placeholder=None):
         Gtk.Box.__init__(self)
         self.props.orientation = Gtk.Orientation.HORIZONTAL
         self._button = EventIcon(icon_name='list-add')
@@ -1102,8 +1102,9 @@ class AddNewBar(Gtk.Box):
         self._button.show()
 
         self._entry = iconentry.IconEntry()
-        text = _('Add new entry')
-        self._entry.set_placeholder_text(text)
+        if placeholder is None:
+            placeholder = _('Add new entry')
+        self._entry.set_placeholder_text(placeholder)
         self._entry.add_clear_button()
         self.pack_start(self._entry, True, True, 0)
         self._entry.show()

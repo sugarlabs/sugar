@@ -276,7 +276,7 @@ class JournalActivity(JournalWindow):
         self._edit_toolbox = EditToolbox(self)
         self._main_view = Gtk.VBox()
 
-        self._add_new_box = AddNewBar()
+        self._add_new_box = AddNewBar(_('Add new project'))
         add_new_button = self._add_new_box.get_button()
         add_new_button.connect('button-press-event',
                                self.__add_new_button_clicked_cb)
@@ -339,7 +339,6 @@ class JournalActivity(JournalWindow):
         self._project_view.connect('go-back-clicked',
                                    self.__go_back_clicked_cb)
         self._main_view_active = False
-        self.get_list_view().set_projects_view_active(False)
         logging.debug('project_view_activate signal handler')
         self.set_canvas(self._project_view)
         self._toolbox = self._main_toolbox
@@ -458,6 +457,8 @@ class JournalActivity(JournalWindow):
     def _query_changed_cb(self, toolbar, query):
         self._list_view.update_with_query(query)
         self.show_main_view()
+        self._add_new_box.props.visible = \
+            query.get('activity') == PROJECT_BUNDLE_ID
 
     def __search_icon_pressed_cb(self, entry, icon_pos, event):
         self._main_view.grab_focus()
