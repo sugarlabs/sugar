@@ -1128,6 +1128,7 @@ class AddNewBar(Gtk.Box):
         self._maybe_activate()
 
     def _maybe_activate(self):
-        self.activate.emit(self._entry.props.text)
-        self._entry.props.text = ''
-        return True
+        if self._entry.props.text:
+            self.activate.emit(self._entry.props.text)
+            self._entry.props.text = ''
+            return True
