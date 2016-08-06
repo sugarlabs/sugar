@@ -182,6 +182,12 @@ class JournalActivityDBusService(dbus.service.Object):
         pass
 
 
+class JournalViews(object):
+    MAIN = 1
+    DETAIL = 2
+    PROJECT = 3
+
+
 class JournalActivity(JournalWindow):
 
     def __init__(self):
@@ -199,7 +205,7 @@ class JournalActivity(JournalWindow):
         self._detail_toolbox = None
         self._volumes_toolbar = None
         self._mount_point = '/'
-        self._main_view_active = True
+        self._active_view = JournalViews.MAIN
         self.project_metadata = None
         self._editing_mode = False
 
@@ -326,8 +332,7 @@ class JournalActivity(JournalWindow):
 
         self._project_view.connect('go-back-clicked',
                                    self.__go_back_clicked_cb)
-        self._main_view_active = False
-        logging.debug('project_view_activate signal handler')
+        self._active_view = JournalViews.PROJECT
         self.set_canvas(self._project_view)
         self._toolbox = self._main_toolbox
         self.set_toolbar_box(self._toolbox)
@@ -335,7 +340,6 @@ class JournalActivity(JournalWindow):
 
         query = {}
         query['project_id'] = self.project_metadata['uid']
-        #query['mountpoints'] = ['/']
         self._list_view_project.update_with_query(query)
         self._project_view.show_all()
 
@@ -365,13 +369,9 @@ class JournalActivity(JournalWindow):
         chooser.show_all()
 
     def __activity_selected_cb(self, widget, bundle_id, activity_id, title):
-        initialize_journal_object(title=title,
-                                  bundle_id=bundle_id,
-                                  activity_id=activity_id,
-                                  project_metadata=self.project_metadata)
-        query = {}
-        query['project_id'] = self.project_metadata['uid']
-        self._list_view_project.update_with_query(query)
+        initialize_journal_object(
+            title=title, bundle_id=bundle_id,
+            activity_id=activity_id, project_metadata=self.project_metadata)
 
     def __key_press_event_cb(self, widget, event):
         #if not self._main_toolbox.search_entry.has_focus():
@@ -388,7 +388,6 @@ class JournalActivity(JournalWindow):
         project_chooser.connect('response', self.__project_chooser_response_cb,
                                 metadata_to_send)
         project_chooser._toolbar._proj_list_button_clicked_cb(None)
-        logging.debug('__choose_project_cb')
 
     def __project_chooser_response_cb(self, project_chooser, response_value,
                                       metadata_to_send):
@@ -419,7 +418,6 @@ class JournalActivity(JournalWindow):
         self._editing_mode = selected_items != 0
         self._edit_toolbox.set_selected_entries(selected_items)
         self._edit_toolbox.display_selected_entries_status()
-        self.show_main_view()
 
     def update_selected_items_ui(self):
         selected_items = \
@@ -445,7 +443,7 @@ class JournalActivity(JournalWindow):
         self.connect('key-press-event', self.__key_press_event_cb)
 
     def show_main_view(self):
-        self._main_view_active = True
+        self._active_view = JournalViews.MAIN
         self.project_metadata = None
         if self._editing_mode:
             self._toolbox = self._edit_toolbox
@@ -462,7 +460,7 @@ class JournalActivity(JournalWindow):
             self._main_view.show()
 
     def _show_secondary_view(self, object_id):
-        self._main_view_active = False
+        self._active_view = JournalViews.DETAIL
         metadata = model.get(object_id)
         try:
             self._detail_toolbox.set_metadata(metadata)
@@ -515,22 +513,23 @@ class JournalActivity(JournalWindow):
             self.show_main_view()
 
     def _focus_in_event_cb(self, window, event):
-        if not self._main_view_active:
-            return
-        self._list_view.set_is_visible(True)
+        self._set_is_visible(True)
 
     def _focus_out_event_cb(self, window, event):
-        self._list_view.set_is_visible(False)
+        self._set_is_visible(False)
 
     def __window_state_event_cb(self, window, event):
         logging.debug('window_state_event_cb %r', self)
-        if not self._main_view_active:
-            return
-
         if event.changed_mask & Gdk.WindowState.ICONIFIED:
             state = event.new_window_state
             visible = not state & Gdk.WindowState.ICONIFIED
+            self._set_is_visible(visible)
+
+    def _set_is_visible(self, visible):
+        if self._active_view == JournalViews.MAIN:
             self._list_view.set_is_visible(visible)
+        elif self._active_view == JournalViews.PROJECT:
+            self._list_view_project.set_is_visible(visible)
 
     def _check_available_space(self):
         """Check available space on device

@@ -80,7 +80,7 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         return self._vbox
 
     def create_list_view_project(self):
-        self._list_view_project = ListView(self, enable_multi_operations=True)
+        self._list_view_project = ListView(self)
         return self._list_view_project
 
     def get_list_view(self):
@@ -99,10 +99,6 @@ class ProjectView(Gtk.EventBox, BaseExpandedEntry):
         description = project_metadata.get('description', '')
         self._description.get_buffer().set_text(description)
         self._title.set_text(project_metadata.get('title', ''))
-
-    def _add_buddy_button_clicked_cb(self, button):
-        #TODO: TO be implemented
-        pass
 
     def _title_focus_out_event_cb(self, entry, event):
         self._update_entry()

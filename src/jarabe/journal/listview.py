@@ -235,6 +235,11 @@ class BaseListView(Gtk.Bin):
 
     def _is_new_item_visible(self, object_id):
         """Check if the created item is part of the currently selected view"""
+        if 'project_id' in self._query:
+            # TODO:  Would be best to check if the object_id is in the project.
+            #        But there is only ever 1 project listview, so it should
+            #        not be very costly.
+            return True
         if not self._query.get('mountpoints', None):
             return None
         if self._query['mountpoints'] == ['/']:
