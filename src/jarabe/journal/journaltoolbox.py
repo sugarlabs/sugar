@@ -588,10 +588,10 @@ class DetailToolbox(ToolbarBox):
                     alert_window=journalwindow.get_journal_window())
 
     def _copy_clicked_cb(self, button):
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def _refresh_clicked_cb(self, button):
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def _duplicate_clicked_cb(self, button):
         try:
@@ -878,7 +878,7 @@ class BatchCopyButton(ToolButton):
 
     def __clicked_cb(self, button):
         self._refresh_menu_options()
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def __get_uid_list_cb(self):
         model = self._journalactivity.get_list_view().get_model()

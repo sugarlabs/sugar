@@ -189,7 +189,7 @@ class NotificationButton(ToolButton):
 
     def __clicked_cb(self, button):
         self.create_palette()
-        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self.palette.popup(immediate=True)
 
 
 class NotificationPulsingIcon(PulsingIcon):
