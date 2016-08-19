@@ -158,7 +158,8 @@ class Picker(Gtk.Grid):
         self.attach(self._button, 0, 0, 1, 1)
         self._button.hide()
 
-        self._label = Gtk.Label(label)
+        self._label = Gtk.Label(label.replace(' ', '\n'))
+        self._label.props.justify = Gtk.Justification.CENTER
         self.attach(self._label, 0, 1, 1, 1)
         self._label.hide()
 
