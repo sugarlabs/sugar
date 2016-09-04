@@ -50,6 +50,6 @@ window.add(toolbox)
 window.show()
 
 toolbox.set_metadata({'mountpoint': '/', 'uid': '', 'title': 'mock'})
-toolbox._copy.palette.popup(immediate=True, state=Palette.SECONDARY)
+toolbox._copy.palette.popup(immediate=True)
 
 Gtk.main()

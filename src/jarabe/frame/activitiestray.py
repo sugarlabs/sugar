@@ -177,7 +177,7 @@ class InviteButton(ToolButton):
             self.emit('remove-invite')
 
     def __clicked_cb(self, button):
-        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self.palette.popup(immediate=True)
 
     def __remove_invite_cb(self, palette):
         self.emit('remove-invite')
@@ -430,7 +430,7 @@ class BaseTransferButton(ToolButton):
             self.notif_icon = None
 
     def __button_clicked_cb(self, button):
-        self.palette.popup(immediate=True, state=Palette.SECONDARY)
+        self.palette.popup(immediate=True)
 
     def remove(self):
         frame = jarabe.frame.get_view()
