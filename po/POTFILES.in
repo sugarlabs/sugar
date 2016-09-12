@@ -76,6 +76,7 @@ src/jarabe/journal/palettes.py
 src/jarabe/journal/volumestoolbar.py
 src/jarabe/journal/iconmodel.py
 src/jarabe/journal/iconview.py
+src/jarabe/journal/projectview.py
 src/jarabe/model/desktop.py
 src/jarabe/model/network.py
 src/jarabe/model/screenshot.py
