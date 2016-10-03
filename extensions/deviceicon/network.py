@@ -17,11 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from functools import partial
 from gettext import gettext as _
 import logging
 import hashlib
-import socket
-import struct
 import datetime
 import time
 from gi.repository import Gtk
@@ -51,6 +50,23 @@ _GSM_STATE_DISCONNECTED = 1
 _GSM_STATE_CONNECTING = 2
 _GSM_STATE_CONNECTED = 3
 _GSM_STATE_FAILED = 4
+
+
+def _get_address_data_cb(ip_cb, address):
+    ip_cb(address[0]['address'])
+
+def _get_ip4_config_cb(bus, ip_cb, ip4_config):
+    obj = bus.get_object(network.NM_SERVICE, ip4_config)
+    props = dbus.Interface(obj, dbus.PROPERTIES_IFACE)
+    props.Get('org.freedesktop.NetworkManager.IP4Config',
+              'AddressData',
+              reply_handler=partial(_get_address_data_cb, ip_cb),
+              error_handler=logging.error)
+
+def _get_ip(bus, props, ip_cb):
+    props.Get(network.NM_DEVICE_IFACE, 'Ip4Config',
+              reply_handler=partial(_get_ip4_config_cb, bus, ip_cb),
+              error_handler=logging.error)
 
 
 class WirelessPalette(Palette):
@@ -141,8 +157,7 @@ class WirelessPalette(Palette):
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
-            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % \
-                socket.inet_ntoa(struct.pack('I', ip_address))
+            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % ip_address
         else:
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
@@ -189,8 +204,7 @@ class WiredPalette(Palette):
 
     def _set_ip_address(self, ip_address):
         if ip_address is not None:
-            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % \
-                socket.inet_ntoa(struct.pack('I', ip_address))
+            ip_address_text = IP_ADDRESS_TEXT_TEMPLATE % ip_address
         else:
             ip_address_text = ""
         self._ip_address_label.set_text(ip_address_text)
@@ -561,11 +575,13 @@ class WirelessDeviceView(ToolButton):
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(
-                network.NM_DEVICE_IFACE, 'Ip4Address')
-            self._palette.set_connected_with_frequency(self._frequency,
-                                                       address)
-            self._icon.props.pulsing = False
+
+            def _ip_cb(ip):
+                self._palette.set_connected_with_frequency(self._frequency,
+                                                           ip)
+                self._icon.props.pulsing = False
+
+            _get_ip(self._bus, self._device_props, _ip_cb)
         else:
             self._icon.props.badge_name = None
             self._icon.props.pulsing = False
@@ -671,11 +687,14 @@ class OlpcMeshDeviceView(ToolButton):
             self._palette.set_connecting()
             self._icon.props.pulsing = True
         elif state == network.NM_DEVICE_STATE_ACTIVATED:
-            address = self._device_props.Get(
-                network.NM_DEVICE_IFACE, 'Ip4Address')
-            self._palette.set_connected_with_channel(self._channel, address)
-            self._icon.props.base_color = profile.get_color()
-            self._icon.props.pulsing = False
+
+            def _ip_cb(ip):
+                self._icon.props.pulsing = False
+                self._palette.set_connected_with_channel(self._channel, ip)
+                self._icon.props.base_color = profile.get_color()
+                self._icon.props.pulsing = False
+
+            _get_ip(self._bus, self._device_props, _ip_cb)
         self._update_text()
 
     def update_state(self, state):
@@ -988,10 +1007,13 @@ class WiredDeviceObserver(object):
     def _update_state(self, state):
         if state == network.NM_DEVICE_STATE_ACTIVATED:
             props = dbus.Interface(self._device, dbus.PROPERTIES_IFACE)
-            address = props.Get(network.NM_DEVICE_IFACE, 'Ip4Address')
             speed = props.Get(network.NM_WIRED_IFACE, 'Speed')
-            self._device_view = WiredDeviceView(speed, address)
-            self._tray.add_device(self._device_view)
+
+            def _ip_cb(ip):
+                self._device_view = WiredDeviceView(speed, ip)
+                self._tray.add_device(self._device_view)
+
+            _get_ip(self._bus, props, _ip_cb)
         else:
             if self._device_view is not None:
                 self._tray.remove_device(self._device_view)
