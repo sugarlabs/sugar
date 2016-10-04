@@ -30,9 +30,8 @@ import gi
 try:
     gi.require_version('Maliit', '1.0')
     from gi.repository import Maliit
-except ImportError:
+except (ValueError, ImportError):
     logging.debug('Frame: can not create OSK icon: Maliit is not installed.')
-    _HAS_MALIIT = False
 else:
     _HAS_MALIIT = True
 
