@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-30 14:24+0000\n"
-"PO-Revision-Date: 2012-03-29 06:10+0200\n"
-"Last-Translator: Chris <cjl@laptop.org>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: pa\n"
+"Language: tvll\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.0.5\n"
+"X-Generator: Translate Toolkit 1.11.0\n"
 
 #: ../data/org.sugarlabs.gschema.xml.h:1
 msgid "Migrated to GSettings"
@@ -929,7 +929,7 @@ msgstr ""
 #. TRANS: download size is 0
 #: ../extensions/cpsection/updater/view.py:423
 msgid "None"
-msgstr "ਕੋਈ ਨਹੀਂ"
+msgstr ""
 
 #. TRANS: download size of very small updates
 #: ../extensions/cpsection/updater/view.py:426
@@ -1300,9 +1300,8 @@ msgid "Settings"
 msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:65 ../src/jarabe/intro/window.py:349
-#, fuzzy
 msgid "Done"
-msgstr "ਕੋਈ ਨਹੀਂ"
+msgstr ""
 
 #: ../src/jarabe/controlpanel/toolbar.py:127
 msgid "Ok"
