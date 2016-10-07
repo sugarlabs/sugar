@@ -48,6 +48,7 @@ from jarabe.model import shell
 from jarabe.model import bundleregistry
 from jarabe.model import desktop
 from jarabe.journal import misc
+from jarabe.journal import journalactivity
 
 from jarabe.desktop import schoolserver
 from jarabe.desktop.schoolserver import RegisterError
@@ -604,6 +605,8 @@ class CurrentActivityIcon(CanvasIcon):
 
         if self._home_activity is not None:
             self._update()
+        else:
+            self._home_activity = journalactivity.get_journal()
 
         self._home_model.connect('active-activity-changed',
                                  self.__active_activity_changed_cb)

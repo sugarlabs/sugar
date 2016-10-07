@@ -16,6 +16,8 @@
 
 from sugar3.graphics.window import Window
 
+from gettext import gettext as _
+
 _journal_window = None
 
 
@@ -26,6 +28,11 @@ class JournalWindow(Window):
         global _journal_window
         Window.__init__(self)
         _journal_window = self
+        self.set_icon_name('activity-journal')
+        self.set_title(_('Journal'))
+
+        # Stop the user from closing the journal window.
+        self.connect('delete-event', lambda widget, event: True)
 
 
 def get_journal_window():
