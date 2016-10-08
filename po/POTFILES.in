@@ -66,6 +66,7 @@ src/jarabe/journal/detailview.py
 src/jarabe/journal/expandedentry.py
 src/jarabe/journal/journalactivity.py
 src/jarabe/journal/journaltoolbox.py
+src/jarabe/journal/journalwindow.py
 src/jarabe/journal/listmodel.py
 src/jarabe/journal/listview.py
 src/jarabe/journal/misc.py
