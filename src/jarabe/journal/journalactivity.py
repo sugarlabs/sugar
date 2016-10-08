@@ -418,6 +418,7 @@ class JournalActivity(JournalWindow):
         self._editing_mode = selected_items != 0
         self._edit_toolbox.set_selected_entries(selected_items)
         self._edit_toolbox.display_selected_entries_status()
+        self.show_main_view()
 
     def update_selected_items_ui(self):
         selected_items = \
