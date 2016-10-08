@@ -17,6 +17,8 @@
 
 import logging
 
+import gi
+gi.require_version('NMClient', '1.0')
 from gettext import gettext as _
 from gi.repository import Gio
 from gi.repository import NMClient
