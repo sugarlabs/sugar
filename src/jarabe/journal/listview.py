@@ -511,12 +511,12 @@ class BaseListView(Gtk.Bin):
                     else:
                         self._show_message(_('The device is empty'))
                 else:
-                    show_message_text = 'No matching entries'
+                    show_message_text = _('No matching entries')
                     if self.get_projects_view_active():
-                        show_message_text = 'No Projects'
+                        show_message_text = _('No Projects')
 
-                self._show_message(_(show_message_text),
-                                   show_clear_query=self._can_clear_query())
+                    self._show_message(show_message_text,
+                        show_clear_query=self._can_clear_query())
         else:
             self._clear_message()
 
