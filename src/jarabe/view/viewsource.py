@@ -686,6 +686,8 @@ class FileViewer(Gtk.ScrolledWindow):
 
     def __cursor_changed_cb(self, treeview):
         selection = treeview.get_selection()
+        if selection is None:
+            return
         store, iter_ = selection.get_selected()
         if iter_ is None:
             # Nothing selected. This happens at startup
