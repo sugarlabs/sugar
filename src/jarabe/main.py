@@ -58,7 +58,6 @@ gi.require_version('Gst', '1.0')
 gi.require_version('Wnck', '3.0')
 gi.require_version('SugarExt', '1.0')
 gi.require_version('GdkX11', '3.0')
-gi.require_version('WebKit', '3.0')
 
 from gi.repository import GObject
 from gi.repository import Gio
