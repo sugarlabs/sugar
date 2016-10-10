@@ -25,7 +25,7 @@ from sugar3.datastore import datastore
 from sugar3.env import get_user_activities_path
 
 import logging
-_logger = logging.getLogger('ViewSource')
+_logger = logging.getLogger('CustomizeBundle')
 
 
 BADGE_SUBPATH = 'emblems/emblem-view-source.svg'
