@@ -281,11 +281,11 @@ msgstr "State is unknown."
 
 #: ../extensions/cpsection/network/model.py:101
 msgid "Error in specified radio argument use on/off."
-msgstr "Error in specified radio argument use on/off."
+msgstr "Error in specified radio argument, use on/off."
 
 #: ../extensions/cpsection/network/model.py:152
 msgid "Error in specified argument use 0/1."
-msgstr "Error in specified argument use 0/1."
+msgstr "Error in specified argument, use 0/1."
 
 #: ../extensions/cpsection/network/view.py:68
 msgid "Wireless"
