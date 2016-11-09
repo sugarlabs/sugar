@@ -58,11 +58,11 @@ class HomeWindow(Gtk.Window):
         self._fully_obscured = True
 
         screen = self.get_screen()
-        screen.connect('size-changed', self.__screen_size_change_cb)
+        screen.connect('size-changed', self.__screen_size_changed_cb)
         self.set_default_size(screen.get_width(),
                               screen.get_height())
 
-        self.__screen_size_change_cb(None)
+        self.__screen_size_changed_cb(None)
 
         self.realize()
         self._busy_count = 0
@@ -139,7 +139,7 @@ class HomeWindow(Gtk.Window):
         elif level == ShellModel.ZOOM_MESH:
             self._mesh_box.suspend()
 
-    def __screen_size_change_cb(self, screen):
+    def __screen_size_changed_cb(self, screen):
         screen = Gdk.Screen.get_default()
         workarea = screen.get_monitor_workarea(screen.get_number())
         geometry = Gdk.Geometry()
