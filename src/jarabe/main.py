@@ -60,6 +60,7 @@ gi.require_version('SugarExt', '1.0')
 gi.require_version('GdkX11', '3.0')
 gi.require_version('WebKit', '3.0')
 
+from gi.repository import GObject
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -183,14 +184,29 @@ def _check_for_window_manager(screen):
         _complete_desktop_startup()
 
 
-def _start_window_manager():
-    global _metacity_process
+def __window_manager_failed_cb(fd, condition):
+    logging.error('window manager did fail, restarting')
+    GObject.source_remove(_metacity_sid)
+    GObject.timeout_add(1000, _restart_window_manager)
+    return False
 
+
+def _restart_window_manager():
+    global _metacity_process, _metacity_sid
+
+    _metacity_process = subprocess.Popen(
+        ['metacity', '--no-force-fullscreen', '--no-composite'],
+        stdout=subprocess.PIPE)
+    _metacity_sid = GObject.io_add_watch(_metacity_process.stdout, GLib.IO_HUP,
+                                         __window_manager_failed_cb)
+    return False
+
+
+def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(
-        ['metacity', '--no-force-fullscreen', '--no-composite'])
+    _restart_window_manager()
 
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
@@ -199,7 +215,6 @@ def _start_window_manager():
 
 
 def _stop_window_manager():
-    global _metacity_process
     _metacity_process.terminate()
 
 
