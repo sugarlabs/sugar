@@ -141,18 +141,20 @@ class HomeWindow(Gtk.Window):
 
     def __screen_size_changed_cb(self, screen):
         screen = Gdk.Screen.get_default()
-        workarea = screen.get_monitor_workarea(screen.get_number())
+        n = screen.get_number()
+        rect = screen.get_monitor_geometry(n)
         geometry = Gdk.Geometry()
         geometry.max_width = geometry.base_width = geometry.min_width = \
-            workarea.width
+            rect.width
         geometry.max_height = geometry.base_height = geometry.min_height = \
-            workarea.height
+            rect.height
         geometry.width_inc = geometry.height_inc = geometry.min_aspect = \
             geometry.max_aspect = 1
         hints = Gdk.WindowHints(Gdk.WindowHints.ASPECT |
                                 Gdk.WindowHints.BASE_SIZE |
                                 Gdk.WindowHints.MAX_SIZE |
                                 Gdk.WindowHints.MIN_SIZE)
+        workarea = screen.get_monitor_workarea(n)
         self.move(workarea.x, workarea.y)
         self.set_geometry_hints(None, geometry, hints)
 
