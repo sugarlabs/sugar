@@ -285,8 +285,6 @@ class RandomLayout(SpreadLayout):
 
 
 _MINIMUM_RADIUS = style.XLARGE_ICON_SIZE / 2 + style.DEFAULT_SPACING
-_MAXIMUM_RADIUS = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
-    style.DEFAULT_SPACING
 _RING_SPACING_FACTOR = 0.95
 _SPIRAL_SPACING_FACTOR = 0.75
 _RADIUS_GROWTH_FACTOR = 1.25
@@ -369,7 +367,9 @@ class RingLayout(ViewLayout):
 
     def _calculate_maximum_radius(self, icon_size):
         """ Return the maximum radius including encroachment. """
-        return _MAXIMUM_RADIUS - (icon_size * _MAXIMUM_RADIUS_PADDING_FACTOR)
+        r = (Gdk.Screen.height() - style.GRID_CELL_SIZE) / 2 - \
+                         style.DEFAULT_SPACING
+        return r - (icon_size * _MAXIMUM_RADIUS_PADDING_FACTOR)
 
     def _calculate_angle_and_radius(self, icon_count, icon_size):
         """ Based on icon_count and icon_size, calculate radius and angle. """
