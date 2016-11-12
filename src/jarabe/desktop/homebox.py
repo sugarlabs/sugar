@@ -19,7 +19,7 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import Gio
 
-from jarabe.desktop import favoritesview
+from jarabe.desktop.favoritesview import FavoritesBox
 from jarabe.desktop.activitieslist import ActivitiesList
 from jarabe.util.normalize import normalize_string
 from jarabe.model import desktop
@@ -40,7 +40,7 @@ class HomeBox(Gtk.VBox):
 
         self._favorites_boxes = []
         for i in range(desktop.get_number_of_views()):
-            self._favorites_boxes.append(favoritesview.FavoritesBox(i))
+            self._favorites_boxes.append(FavoritesBox(i))
         self._list_view = ActivitiesList()
 
         self._desktop_model = desktop.get_model()
@@ -71,8 +71,7 @@ class HomeBox(Gtk.VBox):
                 self._favorites_views_indicies.append(
                     len(self._favorites_views_indicies) + i)
                 self._favorites_boxes.append(
-                    favoritesview.FavoritesBox(
-                        len(self._favorites_views_indicies) - 1))
+                    FavoritesBox(len(self._favorites_views_indicies) - 1))
         elif number_of_views < len(self._favorites_views_indicies):
             for i in range(len(self._favorites_views_indicies) -
                            number_of_views):
