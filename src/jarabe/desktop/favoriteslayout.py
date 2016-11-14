@@ -61,7 +61,7 @@ class ViewLayout(Layout):
         self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
-        self._grid.connect('child-changed', self.__grid_child_changed_cb)
+        self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
         self._allocate_owner_icon(allocation, owner_icon, activity_icon)
 
     def _allocate_owner_icon(self, allocation, owner_icon, activity_icon):
@@ -145,12 +145,12 @@ class ViewLayout(Layout):
         height = math.ceil(request.height / _CELL_SIZE)
         return int(width), int(height)
 
-    def __grid_child_changed_cb(self, grid, child):
+    def __grid_child_changed_cb(self, grid, child, allocation):
         request = child.size_request()
         rect = self._grid.get_child_rect(child)
         child_allocation = Gdk.Rectangle()
         child_allocation.x = int(round(rect.x * _CELL_SIZE))
-        child_allocation.y = int(round(rect.y * _CELL_SIZE))
+        child_allocation.y = int(round(rect.y * _CELL_SIZE)) + allocation.y
         child_allocation.width = request.width
         child_allocation.height = request.height
         child.size_allocate(child_allocation)
