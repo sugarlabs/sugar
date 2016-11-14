@@ -82,7 +82,6 @@ def set_jabber(server):
 
 def get_radio():
     try:
-        nm_client = NMClient.Client()
         return nm_client.wireless_get_enabled()
     except:
         raise ReadError(_('State is unknown.'))
@@ -98,7 +97,6 @@ def set_radio(state):
     """
     try:
         state = state or state == 'on' or state == 1
-        nm_client = NMClient.Client()
         nm_client.wireless_set_enabled(state)
     except:
         raise ValueError(_('Error in specified radio argument use on/off.'))
@@ -148,3 +146,5 @@ def set_publish_information(value):
     settings = Gio.Settings('org.sugarlabs.collaboration')
     settings.set_boolean('publish-gadget', value)
     return 0
+
+nm_client = NMClient.Client()
