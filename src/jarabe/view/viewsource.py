@@ -104,7 +104,7 @@ def _get_toolkit_path(bundle_path, bundle_id):
         sugar_module = 'sugar'
 
     for path in sys.path:
-        if path.endswith('site-packages'):
+        if path.endswith(('site-packages', 'dist-packages')):
             sugar_toolkit_path = os.path.join(path, sugar_module)
             if os.path.exists(sugar_toolkit_path):
                 return sugar_toolkit_path
