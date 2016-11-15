@@ -156,6 +156,7 @@ class ViewHelp(Gtk.Window):
         self.add(box)
         box.show()
 
+        self.set_modal(True)
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)

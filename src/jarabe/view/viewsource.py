@@ -179,6 +179,7 @@ class ViewSource(Gtk.Window):
         _logger.debug('ViewSource paths: %r %r %r', bundle_path,
                       document_path, sugar_toolkit_path)
 
+        self.set_modal(True)
         self.set_decorated(False)
         self.set_position(Gtk.WindowPosition.CENTER_ALWAYS)
         self.set_border_width(style.LINE_WIDTH)

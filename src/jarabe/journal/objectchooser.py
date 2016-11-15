@@ -47,6 +47,8 @@ class ObjectChooser(PopWindow):
                  show_preview=False):
         if parent is None:
             parent_xid = 0
+        elif hasattr(parent, 'get_xid'):
+            parent_xid = parent.get_xid()
         elif hasattr(parent, 'get_window') and hasattr(parent.get_window(),
                                                        'get_xid'):
             parent_xid = parent.get_window().get_xid()
