@@ -791,8 +791,7 @@ class SourceDisplay(Gtk.ScrolledWindow):
     file_path = property(_get_file_path, _set_file_path)
 
     def _show_image_viewer(self, icon=None, image=False):
-        media_box = Gtk.EventBox()
-        media_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
+        media_box = ImageBox()
 
         if image:
             image = Gtk.Image()
@@ -818,3 +817,10 @@ class SourceDisplay(Gtk.ScrolledWindow):
         nofile_box.add(nofile_label)
         nofile_box.show_all()
         self._replace_with_viewport(nofile_box)
+
+
+class ImageBox(Gtk.EventBox):
+    __gtype_name__ = 'SugarViewSourceImageBox'
+
+    def __init__(self):
+        Gtk.EventBox.__init__(self)
