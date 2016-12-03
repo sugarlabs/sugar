@@ -231,7 +231,9 @@ class DatastoreResultSet(BaseResultSet):
         return entries, total_count
 
     def find_ids(self, query):
-        return _get_datastore().find_ids(query)
+        copy = query.copy()
+        copy.pop('mountpoints', '/')
+        return _get_datastore().find_ids(copy)
 
 
 class InplaceResultSet(BaseResultSet):
