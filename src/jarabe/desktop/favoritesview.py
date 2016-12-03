@@ -60,11 +60,11 @@ _logger = logging.getLogger('FavoritesView')
 _ICON_DND_TARGET = ('activity-icon', Gtk.TargetFlags.SAME_WIDGET, 0)
 
 LAYOUT_MAP = {favoriteslayout.RingLayout.key: favoriteslayout.RingLayout,
-              # favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
-              # favoriteslayout.TriangleLayout.key:
-              # favoriteslayout.TriangleLayout,
-              # favoriteslayout.SunflowerLayout.key:
-              # favoriteslayout.SunflowerLayout,
+              favoriteslayout.BoxLayout.key: favoriteslayout.BoxLayout,
+              favoriteslayout.TriangleLayout.key:
+              favoriteslayout.TriangleLayout,
+              favoriteslayout.SunflowerLayout.key:
+              favoriteslayout.SunflowerLayout,
               favoriteslayout.RandomLayout.key: favoriteslayout.RandomLayout}
 """Map numeric layout identifiers to uninstantiated subclasses of
 `FavoritesLayout` which implement the layouts.  Additional information
