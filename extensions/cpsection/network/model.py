@@ -101,7 +101,7 @@ def set_radio(state):
         nm_client = NMClient.Client()
         nm_client.wireless_set_enabled(state)
     except:
-        raise ValueError(_('Error in specified radio argument use on/off.'))
+        raise ValueError(_('Error in specified radio argument. Use on/off.'))
 
 
 def clear_registration():
@@ -143,7 +143,7 @@ def set_publish_information(value):
     try:
         value = (False, True)[int(value)]
     except:
-        raise ValueError(_('Error in specified argument use 0/1.'))
+        raise ValueError(_('Error in specified argument. Use 0/1.'))
 
     settings = Gio.Settings('org.sugarlabs.collaboration')
     settings.set_boolean('publish-gadget', value)
