@@ -665,7 +665,7 @@ class CornerLayout(ViewLayout):
         self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
-        #self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
+        self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
         self._allocate_owner_icon(allocation, owner_icon, activity_icon)
 
         self._owner_icon_size = owner_icon.size_request()
@@ -706,8 +706,10 @@ class CornerLayout(ViewLayout):
         owner_icon_allocation = Gdk.Rectangle()
         owner_icon_allocation.width = self._owner_icon_size.width
         owner_icon_allocation.height = self._owner_icon_size.height
-        owner_icon_allocation.x = allocation.width / 2 - owner_icon_allocation.width / 2
-        owner_icon_allocation.y = allocation.height / 2 - owner_icon_allocation.height / 2
+        owner_icon_allocation.x = allocation.width / 2 - \
+            owner_icon_allocation.width / 2
+        owner_icon_allocation.y = allocation.height / 2 - \
+            owner_icon_allocation.height / 2
 
         for n in range(len(children)):
             child = children[n]
@@ -718,9 +720,9 @@ class CornerLayout(ViewLayout):
             x, y = self._coords_to_pixels(_x, _y, new_width, new_height)
 
             while x + new_width > owner_icon_allocation.x and \
-                  x < owner_icon_allocation.x + owner_icon_allocation.width and \
-                  y + new_height > owner_icon_allocation.y and \
-                  y < owner_icon_allocation.y + owner_icon_allocation.height:
+                x < owner_icon_allocation.x + owner_icon_allocation.width and \
+                y + new_height > owner_icon_allocation.y and \
+                    y < owner_icon_allocation.y + owner_icon_allocation.height:
 
                 _x, _y, next_x = self._get_next_icon_coords(_x, _y, next_x)
                 x, y = self._coords_to_pixels(_x, _y, new_width, new_height)
