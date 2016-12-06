@@ -653,8 +653,7 @@ class CornerLayout(ViewLayout):
         self._grid = None
         self._width = 0
         self._height = 0
-
-        self._owner_icon_size = [400, 400]
+        self._owner_allocation = None
 
     def setup(self, allocation, owner_icon, activity_icon=None):
         if self._grid is not None:
@@ -665,10 +664,17 @@ class CornerLayout(ViewLayout):
         self._height = allocation.height
         self._grid = Grid(int(allocation.width / _CELL_SIZE),
                           int(allocation.height / _CELL_SIZE))
-        self._grid.connect('child-changed', self.__grid_child_changed_cb, allocation)
+        self._grid.connect(
+            'child-changed', self.__grid_child_changed_cb, allocation)
+
         self._allocate_owner_icon(allocation, owner_icon, activity_icon)
 
-        self._owner_icon_size = owner_icon.size_request()
+        owner_request = owner_icon.size_request()
+        owner_width, owner_height = owner_request.width, owner_request.height
+        self._owner_allocation = self._make_rect(
+            (allocation.width / 2) - owner_width / 2,
+            (allocation.height / 2) - owner_height / 2,
+            owner_width, owner_height)
 
     def __grid_child_changed_cb(self, grid, child, allocation):
         request = child.size_request()
@@ -679,6 +685,16 @@ class CornerLayout(ViewLayout):
         child_allocation.width = request.width
         child_allocation.height = request.height
         child.size_allocate(child_allocation)
+
+    def _calculate_icon_size(self, icons_count):
+        if icons_count > 400:
+            return 32
+        if icons_count > 300:
+            return 36
+        elif icons_count > 200:
+            return 48
+        else:
+            return 54
 
     def _get_next_icon_coords(self, x, y, next_x):
         x -= 1
@@ -692,46 +708,61 @@ class CornerLayout(ViewLayout):
         return (x, y, next_x)
 
     def _coords_to_pixels(self, x, y, width, height):
-        space = 26
+        space = 5
         border = 10
 
         return (x * (width + space) + border, y * (height + space) + border)
 
+    def _make_rect(self, x, y, width, height):
+        rect = Gdk.Rectangle()
+        rect.x = x
+        rect.y = y
+        rect.width = width
+        rect.height = height
+
+        return rect
+
     def allocate_children(self, allocation, children):
         x, y = 0, 0
         next_x = 0
+        last_x = 0
+        last_y = 0
 
         _x, _y = 0, 0
 
-        owner_icon_allocation = Gdk.Rectangle()
-        owner_icon_allocation.width = self._owner_icon_size.width
-        owner_icon_allocation.height = self._owner_icon_size.height
-        owner_icon_allocation.x = allocation.width / 2 - \
-            owner_icon_allocation.width / 2
-        owner_icon_allocation.y = allocation.height / 2 - \
-            owner_icon_allocation.height / 2
+        icon_size = self._calculate_icon_size(len(children))
 
         for n in range(len(children)):
             child = children[n]
 
-            new_width = child.get_preferred_width()[0]
-            new_height = child.get_preferred_height()[0]
+            x, y = self._coords_to_pixels(_x, _y, icon_size, icon_size)
 
-            x, y = self._coords_to_pixels(_x, _y, new_width, new_height)
+            if x + icon_size > allocation.width:
+                _x = next_x - 1
+                _y += 1
 
-            while x + new_width > owner_icon_allocation.x and \
-                x < owner_icon_allocation.x + owner_icon_allocation.width and \
-                y + new_height > owner_icon_allocation.y and \
-                    y < owner_icon_allocation.y + owner_icon_allocation.height:
+            if y + icon_size > allocation.height:
+                _x = next_x
+                next_x += 1
+                _y = 0
+
+            x, y = self._coords_to_pixels(_x, _y, icon_size, icon_size)
+            rect = self._make_rect(x, y, icon_size, icon_size)
+
+            while Gdk.rectangle_intersect(rect, self._owner_allocation)[0] or \
+                (x + icon_size > allocation.width) or \
+                    (y + icon_size > allocation.height):
 
                 _x, _y, next_x = self._get_next_icon_coords(_x, _y, next_x)
-                x, y = self._coords_to_pixels(_x, _y, new_width, new_height)
+                x, y = self._coords_to_pixels(_x, _y, icon_size, icon_size)
+                rect = self._make_rect(x, y, icon_size, icon_size)
 
+            child.set_size(icon_size)
             child_allocation = Gdk.Rectangle()
             child_allocation.x = allocation.x + x
             child_allocation.y = allocation.y + y
-            child_allocation.width = new_width
-            child_allocation.height = new_height
+            child_allocation.width = icon_size
+            child_allocation.height = icon_size
             child.size_allocate(child_allocation)
 
             _x, _y, next_x = self._get_next_icon_coords(_x, _y, next_x)
