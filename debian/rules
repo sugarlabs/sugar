@@ -86,7 +86,7 @@ pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,\
 #  * network-manager (NM_SERVICE) used in extensions and jarabe
 #    + modemmanager (NM_DEVICE_TYPE_MODEM) used in extensions and jarabe
 #    + avahi-autoipd (NM_802_11_MODE_ADHOC) used in jarabe
-#  * dbus-x11 (bus.get_object) used in bin/sugar-launch, exensions and jarabe
+#  * dbus-session-bus (bus.get_object) used in bin/sugar-launch, exensions and jarabe
 #    + python-carquinyol (org.laptop.sugar.DataStore) used in jarabe
 #    + upower (org.freedesktop.UPower) used in extensions
 #    + consolekit (org.freedesktop.ConsoleKit)
@@ -106,7 +106,8 @@ pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,\
 #  * fonts-dejavu-core (Sans Serif) used in data/sugar.schemas
 #  * mobile-broadband-provider-info used in extensions
 #  * policykit-1 (pkexec) used in jarabe.model.brightness
-#  * TODO: Tighten to recommend / depend on Maliit when mature
+#  TODO: Tighten to recommend / depend on Maliit when mature
+#  TODO: Drop dbus-x11 fallback after stretch+1
 python-depends-session = sugar3 jarabe dbus cairo
 gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
 gir-depends-session += nmgtk-1.0 gudev-1.0
@@ -121,7 +122,8 @@ depends-jarabe = $(patsubst %,$(comma) python-%,$(python-depends-jarabe))
 depends-jarabe +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-jarabe))
 depends-jarabe +=, metacity, policykit-1
 recommends-session = lsb-release, network-manager, modemmanager, ethtool
-recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core, dbus-x11
+recommends-session +=, upower, gvfs, tzdata, fonts-dejavu-core
+recommends-session +=, default-dbus-session-bus | dbus-session-bus | dbus-x11
 recommends-session +=, mobile-broadband-provider-info
 recommends-session +=, $(pkg-fructose)
 recommends-jarabe = python-carquinyol (>= $(pkgbranch))
