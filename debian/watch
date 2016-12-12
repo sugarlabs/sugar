@@ -1,3 +1,3 @@
 # run the "uscan" command to check for upstream updates and more.
 version=3
-http://download.sugarlabs.org/sources/sucrose/glucose/sugar/sugar-(.*)\.tar\.\S*
+http://download.sugarlabs.org/sources/sucrose/glucose/sugar/sugar-(0.106\..*)\.tar\.\S*
