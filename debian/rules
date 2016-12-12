@@ -122,7 +122,7 @@ recommends-session +=, $(pkg-fructose)
 recommends-jarabe = python-carquinyol (>= $(pkgbranch))
 recommends-jarabe +=, dbus-x11, network-manager, modemmanager, gconf2
 recommends-jarabe +=, avahi-autoipd, openssh-client, xdg-user-dirs
-recommends-jarabe +=, consolekit | systemd
+recommends-jarabe +=, libpam-systemd | consolekit
 suggests-session = gdb, olpc-powerd
 suggests-toolkit = git, ipython, fonts-dejavu-extra
 suggests-fructose = python-elements, csound, gstreamer1.0-plugins-bad
