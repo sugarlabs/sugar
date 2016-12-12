@@ -35,12 +35,8 @@ pkg-sucrose = sucrose
 #  * Switch git packaging branch
 #  * Track any release (else only current branch)
 ifneq (,$(DEB_MAINTAINER_MODE))
-experimental := $(strip $(if \
-	$(shell dpkg-parsechangelog \
-		| grep -x 'Distribution: \(experimental\|UNRELEASED\)'),\
-	yes))
-watch-limit = $(if $(experimental),,$(pkgbranch)\\.)
-debian-branch = $(if $(experimental),master,master-$(pkgbranch))
+watch-limit = $(if $(DEB_SUITE_EXP),,$(pkgbranch)\\.)
+debian-branch = $(if $(DEB_SUITE_EXP),master,master-$(pkgbranch))
 clean::
 	perl -i -pe 's/\([\d.\\]*\.\*\)/($(watch-limit).*)/' \
 		debian/watch
