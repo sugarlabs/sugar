@@ -103,7 +103,7 @@ pkg-fructose-deprecated = $(patsubst %,$(comma) sugar-%-activity,\
 #  TODO: Drop dbus-x11 fallback after stretch+1
 python-depends-session = sugar3 jarabe dbus cairo
 gir-depends-session = glib-2.0 gtk-3.0 pango-1.0 gconf-2.0 xkl-1.0
-gir-depends-session += nmgtk-1.0 gudev-1.0
+gir-depends-session += nmgtk-1.0 gudev-1.0 upowerglib-1.0
 depends-session = $(patsubst %,$(comma) python-%,$(python-depends-session))
 depends-session +=, $(patsubst %,$(comma) gir1.2-%,$(gir-depends-session))
 depends-session +=, sugar-themes (>= $(pkgbranch))
