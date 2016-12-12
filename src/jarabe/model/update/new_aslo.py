@@ -1,8 +1,8 @@
 # Copyright (C) 2014 Sam Parkinson
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import json
 import logging
@@ -69,7 +69,7 @@ class NewAsloUpdater(object):
         updates = []
 
         for i, bundle in enumerate(self._bundles):
-            self._progress_cb(bundle.get_name(), i/len(self._bundles))
+            self._progress_cb(bundle.get_name(), i / len(self._bundles))
 
             if bundle.get_bundle_id() not in activities:
                 logging.debug('%s not in activities' % bundle.get_bundle_id())

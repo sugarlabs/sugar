@@ -1,9 +1,9 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 from functools import partial
@@ -46,6 +45,7 @@ _instance = None
 
 class BaseInvite(object):
     """Invitation to shared activity or private 1-1 Telepathy channel"""
+
     def __init__(self, dispatch_operation_path, handle, handler):
         self.dispatch_operation_path = dispatch_operation_path
         self._handle = handle
@@ -56,6 +56,9 @@ class BaseInvite(object):
             return self._handler[len(CLIENT + '.'):]
         else:
             return None
+
+    def get_activity_title(self):
+        return None
 
     def _call_handle_with(self):
         bus = dbus.Bus()
@@ -80,6 +83,7 @@ class BaseInvite(object):
 
 class ActivityInvite(BaseInvite):
     """Invitation to a shared activity."""
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  activity_properties):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)
@@ -95,6 +99,9 @@ class ActivityInvite(BaseInvite):
         if color is not None:
             color = str(color)
         return XoColor(color)
+
+    def get_activity_title(self):
+        return self._activity_properties.get('name')
 
     def join(self):
         logging.error('ActivityInvite.join handler %r', self._handler)
@@ -119,6 +126,7 @@ class ActivityInvite(BaseInvite):
 
 
 class PrivateInvite(BaseInvite):
+
     def __init__(self, dispatch_operation_path, handle, handler,
                  private_channel):
         BaseInvite.__init__(self, dispatch_operation_path, handle, handler)

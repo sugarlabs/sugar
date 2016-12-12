@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import logging
@@ -24,7 +23,7 @@ from gi.repository import Gdk
 
 from sugar3.graphics.icon import Icon
 from sugar3.graphics import style
-from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import Alert, TimeoutAlert
 
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.toolbar import MainToolbar
@@ -84,6 +83,9 @@ class ControlPanel(Gtk.Window):
         Gdk.Screen.get_default().connect(
             'size-changed', self.__size_changed_cb)
 
+        self._busy_count = 0
+        self._selected = []
+
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
         self.get_window().set_accept_focus(True)
@@ -92,6 +94,28 @@ class ControlPanel(Gtk.Window):
 
     def __size_changed_cb(self, event):
         self._calculate_max_columns()
+
+    def busy(self):
+        if self._busy_count == 0:
+            self._old_cursor = self.get_window().get_cursor()
+            self._set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+        self._busy_count += 1
+
+    def unbusy(self):
+        self._busy_count -= 1
+        if self._busy_count == 0:
+            self._set_cursor(self._old_cursor)
+
+    def _set_cursor(self, cursor):
+        self.get_window().set_cursor(cursor)
+        Gdk.flush()
+
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 2)
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
 
     def grab_focus(self):
         # overwrite grab focus in order to grab focus on the view
@@ -110,7 +134,7 @@ class ControlPanel(Gtk.Window):
             self._setup_options()
 
     def _set_canvas(self, canvas):
-        if self._canvas:
+        if self._canvas in self._main_view:
             self._main_view.remove(self._canvas)
         if canvas:
             self._main_view.add(canvas)
@@ -137,6 +161,7 @@ class ControlPanel(Gtk.Window):
         self._table.set_border_width(style.GRID_CELL_SIZE)
 
         self._scrolledwindow = Gtk.ScrolledWindow()
+        self._scrolledwindow.set_can_focus(False)
         self._scrolledwindow.set_policy(Gtk.PolicyType.AUTOMATIC,
                                         Gtk.PolicyType.AUTOMATIC)
         self._scrolledwindow.add_with_viewport(self._table)
@@ -207,6 +232,11 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def __key_press_event_cb(self, window, event):
+        if event.keyval == Gdk.KEY_Return:
+            if len(self._selected) == 1:
+                self.show_section_view(self._selected[0])
+                return True
+
         if event.keyval == Gdk.KEY_Escape:
             if self._toolbar == self._main_toolbar:
                 self.__stop_clicked_cb(None)
@@ -228,11 +258,13 @@ class ControlPanel(Gtk.Window):
         self.grab_focus()
 
     def _update(self, query):
+        self._selected = []
         for option in self._options:
             found = False
             for key in self._options[option]['keywords']:
                 if query.lower() in key.lower():
                     self._options[option]['button'].set_sensitive(True)
+                    self._selected.append(option)
                     found = True
                     break
             if not found:
@@ -267,14 +299,14 @@ class ControlPanel(Gtk.Window):
         model = ModelWrapper(mod)
 
         try:
-            self.get_window().set_cursor(Gdk.Cursor.new(Gdk.CursorType.WATCH))
+            self.busy()
             self._section_view = view_class(model,
                                             self._options[option]['alerts'])
 
             self._set_canvas(self._section_view)
             self._section_view.show()
         finally:
-            self.get_window().set_cursor(None)
+            self.unbusy()
 
         self._section_view.connect('notify::is-valid',
                                    self.__valid_section_cb)
@@ -282,6 +314,10 @@ class ControlPanel(Gtk.Window):
                                    self.__cancellable_section_cb)
         self._section_view.connect('request-close',
                                    self.__close_request_cb)
+        self._section_view.connect('add-alert',
+                                   self.__create_restart_alert_cb)
+        self._section_view.connect('set-toolbar-sensitivity',
+                                   self.__set_toolbar_sensitivity_cb)
         self._main_view.modify_bg(Gtk.StateType.NORMAL,
                                   style.COLOR_WHITE.get_gdk_color())
 
@@ -335,36 +371,43 @@ class ControlPanel(Gtk.Window):
             self._section_view.apply()
 
         if self._section_view.needs_restart:
-            self._section_toolbar.accept_button.set_sensitive(False)
-            self._section_toolbar.cancel_button.set_sensitive(False)
-            alert = Alert()
-            alert.props.title = _('Warning')
-            alert.props.msg = _('Changes require restart')
-
-            if self._section_view.props.is_cancellable:
-                icon = Icon(icon_name='dialog-cancel')
-                alert.add_button(Gtk.ResponseType.CANCEL,
-                                 _('Cancel changes'), icon)
-                icon.show()
-
-            if self._current_option not in ('aboutme', 'backup'):
-                icon = Icon(icon_name='dialog-ok')
-                alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
-                icon.show()
-
-            icon = Icon(icon_name='system-restart')
-            alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
-            icon.show()
-
-            self._vbox.pack_start(alert, False, False, 0)
-            self._vbox.reorder_child(alert, 2)
-            alert.connect('response', self.__response_cb)
-            alert.show()
+            self.__set_toolbar_sensitivity_cb(False)
+            if self._section_view.show_restart_alert:
+                self.__create_restart_alert_cb()
         else:
             self._show_main_view()
 
+    def __set_toolbar_sensitivity_cb(self, value=True,
+                                     widget=None, event=None):
+        self._section_toolbar.accept_button.set_sensitive(value)
+        self._section_toolbar.cancel_button.set_sensitive(value)
+
+    def __create_restart_alert_cb(self, widget=None, event=None):
+        alert = Alert()
+        alert.props.title = _('Warning')
+        alert.props.msg = self._section_view.restart_msg
+
+        if self._section_view.props.is_cancellable:
+            icon = Icon(icon_name='dialog-cancel')
+            alert.add_button(Gtk.ResponseType.CANCEL,
+                             _('Cancel changes'), icon)
+            icon.show()
+
+        if self._section_view.props.is_deferrable:
+            icon = Icon(icon_name='dialog-ok')
+            alert.add_button(Gtk.ResponseType.ACCEPT, _('Later'), icon)
+            icon.show()
+
+        icon = Icon(icon_name='system-restart')
+        alert.add_button(Gtk.ResponseType.APPLY, _('Restart now'), icon)
+        icon.show()
+
+        self.add_alert(alert)
+        alert.connect('response', self.__response_cb)
+        alert.show()
+
     def __response_cb(self, alert, response_id):
-        self._vbox.remove(alert)
+        self.remove_alert(alert)
         self._section_toolbar.accept_button.set_sensitive(True)
         self._section_toolbar.cancel_button.set_sensitive(True)
         if response_id is Gtk.ResponseType.CANCEL:
@@ -376,8 +419,31 @@ class ControlPanel(Gtk.Window):
                 self._section_view.restart_alerts
             self._show_main_view()
         elif response_id is Gtk.ResponseType.APPLY:
-            session_manager = get_session_manager()
-            session_manager.logout()
+            self.busy()
+            self._section_toolbar.accept_button.set_sensitive(False)
+            self._section_toolbar.cancel_button.set_sensitive(False)
+            get_session_manager().logout()
+            GObject.timeout_add_seconds(4, self.__quit_timeout_cb)
+
+    def __quit_timeout_cb(self):
+        self.unbusy()
+        alert = TimeoutAlert(30)
+        alert.props.title = _('An activity is not responding.')
+        alert.props.msg = _('You may lose unsaved work if you continue.')
+        alert.connect('response', self.__quit_accept_cb)
+
+        self.add_alert(alert)
+        alert.show()
+
+    def __quit_accept_cb(self, alert, response_id):
+        self.remove_alert(alert)
+        if response_id is Gtk.ResponseType.CANCEL:
+            get_session_manager().cancel_shutdown()
+            self._section_toolbar.accept_button.set_sensitive(True)
+            self._section_toolbar.cancel_button.set_sensitive(True)
+        else:
+            self.busy()
+            get_session_manager().shutdown_completed()
 
     def __select_option_cb(self, button, event, option):
         self.show_section_view(option)
@@ -402,6 +468,7 @@ class ControlPanel(Gtk.Window):
 
 
 class ModelWrapper(object):
+
     def __init__(self, module):
         self._module = module
         self._options = {}
@@ -425,8 +492,10 @@ class ModelWrapper(object):
             if method and self._options[key] is not None:
                 try:
                     method(self._options[key])
-                except Exception, detail:
+                except Exception as detail:
                     _logger.debug('Error undo option: %s', detail)
+if hasattr(ControlPanel, 'set_css_name'):
+    ControlPanel.set_css_name('controlpanel')
 
 
 class _SectionIcon(Gtk.EventBox):

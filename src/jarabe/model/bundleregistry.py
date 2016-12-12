@@ -1,9 +1,9 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 Aleksey Lim
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import logging
@@ -101,11 +100,9 @@ class BundleRegistry(GObject.GObject):
             monitor.connect('changed', self.__file_monitor_changed_cb)
             self._gio_monitors.append(monitor)
 
-        self._last_defaults_mtime = []
         self._favorite_bundles = []
         for i in range(desktop.get_number_of_views()):
             self._favorite_bundles.append({})
-            self._last_defaults_mtime.append(-1)
 
         settings = Gio.Settings('org.sugarlabs')
         self._protected_activities = settings.get_strv('protected-activities')
@@ -115,7 +112,11 @@ class BundleRegistry(GObject.GObject):
         except Exception:
             logging.exception('Error while loading favorite_activities.')
 
-        self._merge_default_favorites()
+        self._hidden_activities = []
+        self._load_hidden_activities()
+
+        self._convert_old_favorites()
+        self._scan_new_favorites()
 
         self._desktop_model = desktop.get_model()
         self._desktop_model.connect('desktop-view-icons-changed',
@@ -123,9 +124,6 @@ class BundleRegistry(GObject.GObject):
 
     def __desktop_view_icons_changed_cb(self, model):
         number_of_views = desktop.get_number_of_views()
-        if len(self._last_defaults_mtime) < number_of_views:
-            for i in range(number_of_views - len(self._last_defaults_mtime)):
-                self._last_defaults_mtime.append(-1)
         if len(self._favorite_bundles) < number_of_views:
             for i in range(number_of_views - len(self._favorite_bundles)):
                 self._favorite_bundles.append({})
@@ -136,10 +134,29 @@ class BundleRegistry(GObject.GObject):
 
     def __file_monitor_changed_cb(self, monitor, one_file, other_file,
                                   event_type):
-        if event_type == Gio.FileMonitorEvent.CREATED:
+        if event_type == Gio.FileMonitorEvent.CREATED or \
+           event_type == Gio.FileMonitorEvent.ATTRIBUTE_CHANGED:
             self.add_bundle(one_file.get_path(), set_favorite=True)
         elif event_type == Gio.FileMonitorEvent.DELETED:
             self.remove_bundle(one_file.get_path())
+            for root in GLib.get_system_data_dirs():
+                root = os.path.join(root, 'sugar', 'activities')
+
+                try:
+                    os.listdir(root)
+                except OSError:
+                    logging.debug('Can not find GLib system dir %s', root)
+                    continue
+                activity_dir = os.path.basename(one_file.get_path())
+                try:
+                    bundle = bundle_from_dir(os.path.join(root, activity_dir))
+                except MalformedBundleException:
+                    continue
+
+                if bundle is not None:
+                    path = bundle.get_path()
+                    if path is not None:
+                        self.add_bundle(path)
 
     def _load_mime_defaults(self):
         defaults = {}
@@ -190,44 +207,38 @@ class BundleRegistry(GObject.GObject):
                         raise ValueError('Invalid format in %s.' %
                                          favorites_path)
 
-                self._last_defaults_mtime[i] = \
-                    float(favorites_data['defaults-mtime'])
                 self._favorite_bundles[i] = favorite_bundles
 
-    def _merge_default_favorites(self):
-        # Only merge defaults to _DEFAULT_VIEW
-        default_activities = []
-        defaults_path = os.environ["SUGAR_ACTIVITIES_DEFAULTS"]
-        if os.path.exists(defaults_path):
-            file_mtime = os.stat(defaults_path).st_mtime
-            if file_mtime > self._last_defaults_mtime[_DEFAULT_VIEW]:
-                f = open(defaults_path, 'r')
-                for line in f.readlines():
-                    line = line.strip()
-                    if line and not line.startswith('#'):
-                        default_activities.append(line)
-                f.close()
-                self._last_defaults_mtime[_DEFAULT_VIEW] = file_mtime
+    def _load_hidden_activities(self):
+        path = os.environ.get('SUGAR_ACTIVITIES_HIDDEN', None)
+        try:
+            with open(path) as file:
+                for line in file.readlines():
+                    bundle_id = line.strip()
+                    if bundle_id:
+                        self._hidden_activities.append(bundle_id)
+        except IOError:
+            logging.error('Error when loading hidden activities %s', path)
 
-        if not default_activities:
-            return
+    def _convert_old_favorites(self):
+        for i in range(desktop.get_number_of_views()):
+            for key in self._favorite_bundles[i].keys():
+                data = self._favorite_bundles[i][key]
+                if data is None:
+                    data = {}
+                if 'favorite' not in data:
+                    data['favorite'] = True
+                self._favorite_bundles[i][key] = data
+            self._write_favorites_file(i)
 
-        for bundle_id in default_activities:
-            max_version = '0'
-            for bundle in self:
-                if bundle.get_bundle_id() == bundle_id and \
-                        NormalizedVersion(max_version) < \
-                        NormalizedVersion(bundle.get_activity_version()):
-                    max_version = bundle.get_activity_version()
-
-            key = self._get_favorite_key(bundle_id, max_version)
-            if NormalizedVersion(max_version) > NormalizedVersion('0') and \
-                    key not in self._favorite_bundles[_DEFAULT_VIEW]:
-                self._favorite_bundles[_DEFAULT_VIEW][key] = None
-
-        logging.debug('After merging: %r',
-                      self._favorite_bundles[_DEFAULT_VIEW])
-
+    def _scan_new_favorites(self):
+        for bundle in self:
+            bundle_id = bundle.get_bundle_id()
+            key = self._get_favorite_key(
+                bundle_id, bundle.get_activity_version())
+            if key not in self._favorite_bundles[_DEFAULT_VIEW]:
+                self._favorite_bundles[_DEFAULT_VIEW][key] = \
+                    {'favorite': bundle_id not in self._hidden_activities}
         self._write_favorites_file(_DEFAULT_VIEW)
 
     def get_bundle(self, bundle_id):
@@ -311,9 +322,11 @@ class BundleRegistry(GObject.GObject):
                 self.remove_bundle(installed.get_path(), emit_signals)
 
         if set_favorite:
+            favorite = not self.is_bundle_hidden(
+                bundle.get_bundle_id(), bundle.get_activity_version())
             self._set_bundle_favorite(bundle.get_bundle_id(),
                                       bundle.get_activity_version(),
-                                      True)
+                                      favorite)
 
         with self._lock:
             self._bundles.append(bundle)
@@ -382,19 +395,28 @@ class BundleRegistry(GObject.GObject):
     def _set_bundle_favorite(self, bundle_id, version, favorite,
                              favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        if favorite and key not in self._favorite_bundles[favorite_view]:
-            self._favorite_bundles[favorite_view][key] = None
-        elif not favorite and key in self._favorite_bundles[favorite_view]:
-            del self._favorite_bundles[favorite_view][key]
-        else:
+        if key not in self._favorite_bundles[favorite_view]:
+            self._favorite_bundles[favorite_view][key] = {}
+        elif favorite == \
+                self._favorite_bundles[favorite_view][key]['favorite']:
             return False
-
+        self._favorite_bundles[favorite_view][key]['favorite'] = favorite
         self._write_favorites_file(favorite_view)
         return True
 
     def is_bundle_favorite(self, bundle_id, version, favorite_view=0):
         key = self._get_favorite_key(bundle_id, version)
-        return key in self._favorite_bundles[favorite_view]
+        if key not in self._favorite_bundles[favorite_view]:
+            return False
+        return self._favorite_bundles[favorite_view][key]['favorite']
+
+    def is_bundle_hidden(self, bundle_id, version):
+        key = self._get_favorite_key(bundle_id, version)
+        if key in self._favorite_bundles[_DEFAULT_VIEW]:
+            data = self._favorite_bundles[_DEFAULT_VIEW][key]
+            return data['favorite'] is False
+        else:
+            return bundle_id in self._hidden_activities
 
     def is_activity_protected(self, bundle_id):
         return bundle_id in self._protected_activities
@@ -405,8 +427,6 @@ class BundleRegistry(GObject.GObject):
             raise ValueError('Bundle %s %s not favorite' %
                              (bundle_id, version))
 
-        if self._favorite_bundles[favorite_view][key] is None:
-            self._favorite_bundles[favorite_view][key] = {}
         if 'position' not in self._favorite_bundles[favorite_view][key] or \
                 [x, y] != \
                 self._favorite_bundles[favorite_view][key]['position']:
@@ -424,7 +444,6 @@ class BundleRegistry(GObject.GObject):
         """
         key = self._get_favorite_key(bundle_id, version)
         if key not in self._favorite_bundles[favorite_view] or \
-                self._favorite_bundles[favorite_view][key] is None or \
                 'position' not in self._favorite_bundles[favorite_view][key]:
             return (-1, -1)
         else:
@@ -438,7 +457,6 @@ class BundleRegistry(GObject.GObject):
             path = env.get_profile_path('favorite_activities_%d' %
                                         (favorite_view))
         favorites_data = {
-            'defaults-mtime': self._last_defaults_mtime[favorite_view],
             'favorites': self._favorite_bundles[favorite_view]}
         json.dump(favorites_data, open(path, 'w'), indent=1)
 
@@ -607,6 +625,7 @@ class _InstallQueue(object):
     done, the thread enqueues a callback in the main thread (via the GLib
     main loop).
     """
+
     def __init__(self, registry):
         self._lock = Lock()
         self._queue = []
@@ -670,7 +689,7 @@ class _InstallQueue(object):
 
         try:
             task.queue_callback(bundle.install())
-        except Exception, e:
+        except Exception as e:
             logging.debug("InstallThread install failed: %r", e)
             task.queue_callback(e)
 
@@ -680,6 +699,7 @@ class _InstallTask(object):
     Simple class to represent a bundle installation/upgrade task.
     Only for use internal to InstallQueue.
     """
+
     def __init__(self, bundle, force_downgrade, callback, user_data):
         self.bundle = bundle
         self.callback = callback

@@ -1,8 +1,8 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -138,7 +137,7 @@ class FrameWindow(Gtk.Window):
     def _update_size(self):
         if self._position == Gtk.PositionType.TOP \
                 or self._position == Gtk.PositionType.BOTTOM:
-                self.resize(Gdk.Screen.width(), self.size)
+            self.resize(Gdk.Screen.width(), self.size)
         else:
             self.resize(self.size, Gdk.Screen.height())
 
@@ -156,3 +155,5 @@ class FrameWindow(Gtk.Window):
 
     def _size_changed_cb(self, screen):
         self._update_size()
+if hasattr(FrameWindow, 'set_css_name'):
+    FrameWindow.set_css_name('framewindow')

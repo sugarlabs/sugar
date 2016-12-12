@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
 import logging
@@ -32,6 +31,7 @@ _instance = None
 
 
 class NotificationService(dbus.service.Object):
+
     def __init__(self):
         bus = dbus.SessionBus()
         bus_name = dbus.service.BusName(_DBUS_SERVICE, bus=bus)
@@ -67,7 +67,7 @@ class NotificationService(dbus.service.Object):
         if replaces_id > 0:
             notification_id = replaces_id
         else:
-            if self._notification_counter == sys.maxint:
+            if self._notification_counter == sys.maxsize:
                 self._notification_counter = 1
             else:
                 self._notification_counter += 1

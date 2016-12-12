@@ -1,9 +1,9 @@
 # Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2014, Ignacio Rodriguez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import time
@@ -45,6 +44,8 @@ from jarabe.model import bundleregistry, shell
 from jarabe.journal.journalentrybundle import JournalEntryBundle
 from jarabe.journal import model
 from jarabe.journal import journalwindow
+
+PROJECT_BUNDLE_ID = 'org.sugarlabs.Project'
 
 
 def _get_icon_for_mime(mime_type):
@@ -88,6 +89,13 @@ def get_icon_name(metadata):
         bundle_id = metadata.get('bundle_id', '')
 
     if bundle_id:
+        if bundle_id == PROJECT_BUNDLE_ID:
+            file_name = \
+                '/home/broot/sugar-build/build' + \
+                '/out/install/share/icons/sugar/' + \
+                'scalable/mimetypes/project-box.svg'
+            return file_name
+
         activity_info = bundleregistry.get_registry().get_bundle(bundle_id)
         if activity_info:
             file_name = activity_info.get_icon()

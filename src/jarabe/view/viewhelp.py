@@ -1,9 +1,9 @@
 # Copyright (C) 2013 Kalpa Welivitigoda
-# Copyright (C) 2015 Sam Parkinson
+# Copyright (C) 2015-2016 Sam Parkinson
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,20 +12,20 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 import logging
 import os
 import json
 
+import gi
+gi.require_version('SoupGNOME', '2.4')
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
-from gi.repository import WebKit
+from gi.repository import WebKit2
 from gi.repository import GdkX11
-from gi.repository import SoupGNOME
 from gi.repository import Gio
 
 from sugar3 import env
@@ -169,52 +169,51 @@ class ViewHelp(Gtk.Window):
         self.connect('hide', self.__hide_cb)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        toolbar = Toolbar(title, has_local_help)
-        box.pack_start(toolbar, False, False, 0)
-        toolbar.show()
-        toolbar.connect('stop-clicked', self.__stop_clicked_cb)
-        toolbar.connect('mode-changed', self.__mode_changed_cb)
+        self._toolbar = Toolbar(title, has_local_help)
+        box.pack_start(self._toolbar, False, False, 0)
+        self._toolbar.show()
+        self._toolbar.connect('stop-clicked', self.__stop_clicked_cb)
+        self._toolbar.connect('mode-changed', self.__mode_changed_cb)
 
-        session = WebKit.get_default_session()
-        cookie_jar = SoupGNOME.CookieJarSqlite(
-            filename=os.path.join(env.get_profile_path(),
-                                  'social-help.cookies'),
-            read_only=False)
-        session.add_feature(cookie_jar)
+        context = WebKit2.WebContext.get_default()
+        cookie_manager = context.get_cookie_manager()
+        cookie_manager.set_persistent_storage(
+            os.path.join(env.get_profile_path(), 'social-help.cookies'),
+            WebKit2.CookiePersistentStorage.SQLITE)
 
-        self._webview = WebKit.WebView()
-        self._webview.set_full_content_zoom(True)
-        self._webview.connect('resource-request-starting',
-                              self._resource_request_starting_cb)
+        self._webview = WebKit2.WebView()
+        self._webview.get_context().register_uri_scheme(
+            'help', self.__app_scheme_cb, None)
+        self._toolbar.bind_webview(self._webview)
 
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.add(self._webview)
-        scrolled_window.show()
-
-        box.pack_start(scrolled_window, True, True, 0)
+        box.pack_start(self._webview, True, True, 0)
         self._webview.show()
 
         language = self._get_current_language()
+        self._help_state = None
         if has_local_help:
-            self._help_url = 'file://' + self._get_help_file(language, url)
-        self._social_help_url = '{}/goto/{}'.format(
+            self._help_url = 'help://' + self._get_help_file(language, url)
+
+        self._social_help_uri = '{}/goto/{}'.format(
             get_social_help_server(), activity.get_bundle_id())
+        self._social_help_state = None
 
         self._webview.connect(
-            'notify::load-status', self.__load_status_changed_cb)
+            'load-changed', self.__load_changed_cb)
         self._load_mode(self._mode)
 
-    def _resource_request_starting_cb(self, webview, web_frame, web_resource,
-                                      request, response):
-        uri = web_resource.get_uri()
-        if uri.startswith('file://') and uri.find('_images') > -1:
-            if uri.find('/%s/_images/' % self._get_current_language()) > -1:
-                new_uri = uri.replace('/html/%s/_images/' %
-                                      self._get_current_language(),
-                                      '/images/')
+    def __app_scheme_cb(self, request, user_data):
+        path = request.get_path()
+        if path.find('_images') > -1:
+            if path.find('/%s/_images/' % self._get_current_language()) > -1:
+                path = path.replace('/html/%s/_images/' %
+                                    self._get_current_language(),
+                                    '/images/')
             else:
-                new_uri = uri.replace('/html/_images/', '/images/')
-            request.set_uri(new_uri)
+                path = path.replace('/html/_images/', '/images/')
+
+        request.finish(Gio.File.new_for_path(path).read(None),
+                       -1, Gio.content_type_guess(path, None)[0])
 
     def __stop_clicked_cb(self, widget):
         self.destroy()
@@ -224,17 +223,21 @@ class ViewHelp(Gtk.Window):
             self.__stop_clicked_cb(None)
 
     def __mode_changed_cb(self, toolbar, mode):
-        if self._mode == _MODE_HELP:
-            self._help_url = self._webview.props.uri
+        if mode == _MODE_HELP:
+            self._social_help_state = self._webview.get_session_state()
         else:
-            self._social_help_url = self._webview.props.uri
+            self._help_state = self._webview.get_session_state()
 
         self._mode = mode
         self._load_mode(self._mode)
 
     def _load_mode(self, mode):
         if mode == _MODE_HELP:
-            self._webview.load_uri(self._help_url)
+            if self._help_state is None:
+                self._webview.load_uri(self._help_url)
+            else:
+                self._webview.restore_session_state(self._help_state)
+                self._after_restore_session()
         else:
             # Loading any content for the social help page can take a
             # very long time (eg. the site is behind a redirector).
@@ -246,12 +249,31 @@ class ViewHelp(Gtk.Window):
                 self._webview.load_uri('file://' + path)
                 # Social help is loaded after the icon is loaded
             else:
-                self._webview.load_uri(self._social_help_url)
+                if self._social_help_state is None:
+                    self._webview.load_uri(self._social_help_uri)
+                else:
+                    self._webview.restore_session_state(
+                        self._social_help_state)
+                    self._after_restore_session()
 
-    def __load_status_changed_cb(self, *args):
-        if self._webview.props.load_status == WebKit.LoadStatus.FINISHED \
+    def _after_restore_session(self):
+        # this is what epiphany does:
+        # https://github.com/GNOME/epiphany/blob/
+        # 04e7811c32ba8a2c980a77aac1316b77f0969057/src/ephy-session.c#L280
+        bf_list = self._webview.get_back_forward_list()
+        item = bf_list.get_current_item()
+        if item is not None:
+            self._webview.go_to_back_forward_list_item(item)
+
+    def __load_changed_cb(self, webview, event):
+        if event == WebKit2.LoadEvent.FINISHED \
            and _LOADING_ICON in self._webview.props.uri:
-            self._webview.load_uri(self._social_help_url)
+                if self._social_help_state is None:
+                    self._webview.load_uri(self._social_help_uri)
+                else:
+                    self._webview.restore_session_state(
+                        self._social_help_state)
+                    self._after_restore_session()
 
     def __realize_cb(self, widget):
         self.set_type_hint(Gdk.WindowTypeHint.DIALOG)
@@ -290,6 +312,7 @@ class Toolbar(Gtk.Toolbar):
 
     def __init__(self, activity_name, has_local_help):
         Gtk.Toolbar.__init__(self)
+        self._webview = None
 
         self._add_separator(False)
 
@@ -317,11 +340,22 @@ class Toolbar(Gtk.Toolbar):
             icon.show()
             social_help_button.props.tooltip = _('Social Help')
             social_help_button.props.group = help_button
-            social_help_button.connect('toggled', self.__button_toggled_cb,
-                                       _MODE_SOCIAL_HELP)
+            social_help_button.connect(
+                'toggled', self.__button_toggled_cb, _MODE_SOCIAL_HELP)
             self.insert(social_help_button, -1)
             social_help_button.show()
             self._add_separator(False)
+
+        self._back_button = ToolButton(icon_name='go-previous-paired')
+        self._back_button.props.tooltip = _('Back')
+        self._back_button.connect('clicked', self.__back_clicked_cb)
+        self.insert(self._back_button, -1)
+        self._back_button.show()
+        self._forward_button = ToolButton(icon_name='go-next-paired')
+        self._forward_button.props.tooltip = _('Forward')
+        self._forward_button.connect('clicked', self.__forward_clicked_cb)
+        self.insert(self._forward_button, -1)
+        self._forward_button.show()
 
         title = _('Help: %s') % activity_name
         self._label = Gtk.Label()
@@ -360,3 +394,21 @@ class Toolbar(Gtk.Toolbar):
             separator.set_size_request(style.DEFAULT_SPACING, -1)
         self.insert(separator, -1)
         separator.show()
+
+    def bind_webview(self, webview):
+        self._webview = webview
+        self._webview.connect('load-changed', self.__load_changed_cb)
+        self.update_back_forward()
+
+    def __load_changed_cb(self, widget, event):
+        self.update_back_forward()
+
+    def update_back_forward(self):
+        self._back_button.props.sensitive = self._webview.can_go_back()
+        self._forward_button.props.sensitive = self._webview.can_go_forward()
+
+    def __back_clicked_cb(self, button):
+        self._webview.go_back()
+
+    def __forward_clicked_cb(self, button):
+        self._webview.go_forward()

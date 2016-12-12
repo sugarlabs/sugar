@@ -4,9 +4,9 @@
 # Copyright (C) 2009 Paraguay Educa, Martin Abente
 # Copyright (C) 2010 Plan Ceibal, Daniel Castelo
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -15,8 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 import logging
@@ -369,6 +368,7 @@ def is_sugar_adhoc_network(ssid):
 
 
 class WirelessSecurity(object):
+
     def __init__(self):
         self.key_mgmt = None
         self.proto = None
@@ -439,6 +439,7 @@ class OlpcMesh(object):
 
 
 class ConnectionSettings(object):
+
     def __init__(self):
         self.id = None
         self.uuid = None
@@ -457,6 +458,7 @@ class ConnectionSettings(object):
 
 
 class IP4Config(object):
+
     def __init__(self):
         self.method = None
 
@@ -468,6 +470,7 @@ class IP4Config(object):
 
 
 class Serial(object):
+
     def __init__(self):
         self.baud = None
 
@@ -481,6 +484,7 @@ class Serial(object):
 
 
 class Ppp(object):
+
     def __init__(self):
         pass
 
@@ -490,6 +494,7 @@ class Ppp(object):
 
 
 class Gsm(object):
+
     def __init__(self):
         self.apn = None
         self.number = None
@@ -515,6 +520,7 @@ class Gsm(object):
 
 
 class Settings(object):
+
     def __init__(self, wireless_cfg=None):
         self.connection = ConnectionSettings()
         self.ip4_config = None
@@ -538,6 +544,7 @@ class Settings(object):
 
 
 class SettingsGsm(object):
+
     def __init__(self):
         self.connection = ConnectionSettings()
         self.ip4_config = IP4Config()
@@ -561,6 +568,7 @@ class SecretsResponse(object):
     """Intermediate object to report the secrets from the dialog
     back to the connection object and which will inform NM
     """
+
     def __init__(self, reply_cb, error_cb):
         self._reply_cb = reply_cb
         self._error_cb = error_cb
@@ -588,6 +596,7 @@ def set_connected():
 
 
 class SecretAgent(dbus.service.Object):
+
     def __init__(self):
         self._bus = dbus.SystemBus()
         dbus.service.Object.__init__(self, self._bus, NM_SECRET_AGENT_PATH)
@@ -836,6 +845,7 @@ class Connection(GObject.GObject):
 
 
 class Connections(object):
+
     def __init__(self):
         self._bus = dbus.SystemBus()
         self._connections = []
@@ -1075,6 +1085,12 @@ def disconnect_access_points(ap_paths):
             dev.Disconnect()
 
 
+def forget_wireless_network(ssid):
+    connection = find_connection_by_ssid(ssid)
+    if connection:
+        connection.delete()
+
+
 def _is_non_printable(char):
     """
     Return True if char is a non-printable unicode character, False otherwise
@@ -1116,3 +1132,62 @@ def ssid_to_display_name(ssid):
             return display_name
 
     return ':'.join(['%02x' % (ord(byte), ) for byte in ssid])
+
+
+wifi_whitelist = ('Sugar Ad-hoc Network 1',
+                  'Sugar Ad-hoc Network 6',
+                  'Sugar Ad-hoc Network 11')
+mesh_whitelist = ('OLPC Mesh Network 1',
+                  'OLPC Mesh Network 6',
+                  'OLPC Mesh Network 11',
+                  'OLPC XS Mesh Network 1',
+                  'OLPC XS Mesh Network 6',
+                  'OLPC XS Mesh Network 11')
+
+
+def is_wireless(connection):
+    """Check for wireless connection not whitelisted by Sugar.
+    """
+    wifi_settings = connection.get_settings(
+        NM_CONNECTION_TYPE_802_11_WIRELESS)
+    if wifi_settings:
+        return not (wifi_settings['mode'] == 'adhoc' and
+                    connection.get_id() in wifi_whitelist)
+
+    mesh_settings = connection.get_settings(
+        NM_CONNECTION_TYPE_802_11_OLPC_MESH)
+    if mesh_settings:
+        return not connection.get_id() in mesh_whitelist
+
+
+def clear_wireless_networks():
+    """Remove all wireless connections except Sugar-internal ones.
+    """
+    try:
+        connections = get_connections()
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+    else:
+        wireless_connections = \
+            (connection for connection in
+             connections.get_list() if is_wireless(connection))
+
+        for connection in wireless_connections:
+            try:
+                connection.delete()
+            except dbus.DBusException:
+                logging.debug("Could not remove connection %s",
+                              connection.get_id())
+
+
+def have_wireless_networks():
+    """Check that there are non-Sugar-internal wireless connections.
+    """
+    try:
+        connections = get_connections()
+    except dbus.DBusException:
+        logging.debug('NetworkManager not available')
+        return False
+    else:
+        return any(is_wireless(connection)
+                   for connection in connections.get_list())

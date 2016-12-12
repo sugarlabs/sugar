@@ -2,9 +2,9 @@
 # Copyright (C) 2010-14, Sugar Labs
 # Copyright (C) 2010-14, Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -13,8 +13,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 from gettext import gettext as _
@@ -80,14 +79,14 @@ def print_color():
                 fill_tuple = (color, hue)
 
     if stroke_tuple is not None:
-        print _('stroke:   color=%s hue=%s') % (stroke_tuple[0],
-                                                stroke_tuple[1])
+        print ('stroke:   color=%s hue=%s') % (stroke_tuple[0],
+                                               stroke_tuple[1])
     else:
-        print _('stroke:   %s') % (tmp[0])
+        print ('stroke:   %s') % (tmp[0])
     if fill_tuple is not None:
-        print _('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
+        print ('fill:     color=%s hue=%s') % (fill_tuple[0], fill_tuple[1])
     else:
-        print _('fill:     %s') % (tmp[1])
+        print ('fill:     %s') % (tmp[1])
 
 
 def set_color(stroke, fill, stroke_modifier='medium', fill_modifier='medium'):

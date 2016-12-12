@@ -1,8 +1,8 @@
 # Copyright (C) 2006-2007, Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,15 +11,17 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import logging
 from gettext import gettext as _
+
+import gi
+gi.require_version('UPowerGlib', '1.0')
 
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
+from gi.repository import UPowerGlib
 import dbus
 
 from sugar3 import profile
@@ -28,7 +30,6 @@ from sugar3.graphics.icon import get_icon_state
 from sugar3.graphics.tray import TrayIcon
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuBox
-from sugar3.graphics.xocolor import XoColor
 
 from jarabe.frame.frameinvoker import FrameWidgetInvoker
 
@@ -43,14 +44,6 @@ _STATUS_NOT_PRESENT = 3
 _UP_DEVICE_IFACE = 'org.freedesktop.UPower.Device'
 
 _UP_TYPE_BATTERY = 2
-
-_UP_STATE_UNKNOWN = 0
-_UP_STATE_CHARGING = 1
-_UP_STATE_DISCHARGING = 2
-_UP_STATE_EMPTY = 3
-_UP_STATE_FULL = 4
-_UP_STATE_CHARGE_PENDING = 5
-_UP_STATE_DISCHARGE_PENDING = 6
 
 _WARN_MIN_PERCENTAGE = 15
 
@@ -79,12 +72,12 @@ class DeviceView(TrayIcon):
         current_level = self._model.props.level
         xo_color = self._color
         badge_name = None
+        self.show()
 
         if not self._model.props.present:
+            self.hide()
             status = _STATUS_NOT_PRESENT
-            badge_name = None
-            xo_color = XoColor('%s,%s' % (style.COLOR_WHITE.get_svg(),
-                                          style.COLOR_WHITE.get_svg()))
+
         elif self._model.props.charging:
             status = _STATUS_CHARGING
             name += '-charging'
@@ -96,10 +89,11 @@ class DeviceView(TrayIcon):
         else:
             status = _STATUS_FULLY_CHARGED
 
-        self.icon.props.icon_name = get_icon_state(name, current_level,
-                                                   step=-5)
-        self.icon.props.xo_color = xo_color
-        self.icon.props.badge_name = badge_name
+        if self._model.props.present:
+            self.icon.props.icon_name = get_icon_state(name, current_level,
+                                                       step=-5)
+            self.icon.props.xo_color = xo_color
+            self.icon.props.badge_name = badge_name
 
         self.palette.set_info(current_level, self._model.props.time_remaining,
                               status)
@@ -188,50 +182,64 @@ class DeviceModel(GObject.GObject):
 
     def __init__(self, battery):
         GObject.GObject.__init__(self)
-        self._battery = battery
-        self._battery_props_iface = dbus.Interface(self._battery,
-                                                   dbus.PROPERTIES_IFACE)
-        self._battery.connect_to_signal('Changed',
-                                        self.__battery_properties_changed_cb,
-                                        dbus_interface=_UP_DEVICE_IFACE)
+        self._battery = UPowerGlib.Device()
+        self._battery.set_object_path_sync(battery, None)
+        self._connect_battery()
         self._fetch_properties_from_upower()
+        self._timeout_sid = False
+
+    def _connect_battery(self):
+        """Connect to battery signals so we are told of changes."""
+
+        if 'changed' not in GObject.signal_list_names(UPowerGlib.Device):
+            # For UPower 0.99.4 and later
+            self._battery.connect('notify::percentage', self.__notify_cb)
+            self._battery.connect('notify::state', self.__notify_cb)
+            self._battery.connect('notify::is-present', self.__notify_cb)
+            self._battery.connect('notify::time-to-empty', self.__notify_cb)
+            self._battery.connect('notify::time-to-full', self.__notify_cb)
+        else:
+            # For UPower 0.19.9
+            self._battery.connect('changed', self.__notify_cb, None)
 
     def _fetch_properties_from_upower(self):
         """Get current values from UPower."""
-        # pylint: disable=W0201
-        try:
-            dbus_props = self._battery_props_iface.GetAll(_UP_DEVICE_IFACE)
-        except dbus.DBusException:
-            logging.error('Cannot access battery properties')
-            dbus_props = {}
 
-        self._level = dbus_props.get('Percentage', 0)
-        self._state = dbus_props.get('State', _UP_STATE_UNKNOWN)
-        self._present = dbus_props.get('IsPresent', False)
-        self._time_to_empty = dbus_props.get('TimeToEmpty', 0)
-        self._time_to_full = dbus_props.get('TimeToFull', 0)
+        self._level = self._battery.props.percentage
+        self._state = self._battery.props.state
+        self._present = self._battery.props.is_present
+        self._time_to_empty = self._battery.props.time_to_empty
+        self._time_to_full = self._battery.props.time_to_full
 
     def do_get_property(self, pspec):
         """Return current value of given GObject property."""
         if pspec.name == 'level':
             return self._level
         if pspec.name == 'charging':
-            return self._state == _UP_STATE_CHARGING
+            return self._state == UPowerGlib.DeviceState.CHARGING
         if pspec.name == 'discharging':
-            return self._state == _UP_STATE_DISCHARGING
+            return self._state == UPowerGlib.DeviceState.DISCHARGING
         if pspec.name == 'present':
             return self._present
         if pspec.name == 'time-remaining':
-            if self._state == _UP_STATE_CHARGING:
+            if self._state == UPowerGlib.DeviceState.CHARGING:
                 return self._time_to_full
-            if self._state == _UP_STATE_DISCHARGING:
+            if self._state == UPowerGlib.DeviceState.DISCHARGING:
                 return self._time_to_empty
             return 0
 
     def get_type(self):
         return 'battery'
 
-    def __battery_properties_changed_cb(self):
+    def __notify_cb(self, device, name):
+        """Defer response to notifications; they arrive in a burst,
+        but without any indication that the burst is complete, so we
+        use a timeout to respond."""
+        if self._timeout_sid:
+            GObject.source_remove(self._timeout_sid)
+        self._timeout_sid = GObject.timeout_add(100, self.__timeout_cb)
+
+    def __timeout_cb(self):
         old_level = self._level
         old_state = self._state
         old_present = self._present
@@ -248,6 +256,8 @@ class DeviceModel(GObject.GObject):
             self.notify('time-remaining')
 
         self.emit('updated')
+        self._timeout_sid = None
+        return False
 
 
 def setup(tray):
@@ -261,4 +271,4 @@ def setup(tray):
         device_prop_iface = dbus.Interface(device, dbus.PROPERTIES_IFACE)
         device_type = device_prop_iface.Get(_UP_DEVICE_IFACE, 'Type')
         if device_type == _UP_TYPE_BATTERY:
-            tray.add_device(DeviceView(device))
+            tray.add_device(DeviceView(device_path))

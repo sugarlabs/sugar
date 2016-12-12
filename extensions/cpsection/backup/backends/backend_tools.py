@@ -1,8 +1,8 @@
 # Copyright (C) 2013, Martin Abente Lahaye - tch@sugarlabs.org
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 
@@ -62,9 +61,9 @@ class PreConditionsChoose(Exception):
 class Backend(GObject.GObject):
 
     __gsignals__ = {
-        'started':   (GObject.SignalFlags.RUN_FIRST, None, ([])),
-        'progress':  (GObject.SignalFlags.RUN_FIRST, None, ([float])),
-        'finished':  (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'started': (GObject.SignalFlags.RUN_FIRST, None, ([])),
+        'progress': (GObject.SignalFlags.RUN_FIRST, None, ([float])),
+        'finished': (GObject.SignalFlags.RUN_FIRST, None, ([])),
         'cancelled': (GObject.SignalFlags.RUN_FIRST, None, ([]))}
 
     def verify_preconditions(self):

@@ -1,9 +1,9 @@
 # Copyright (C) 2006, Red Hat, Inc.
 # Copyright (C) 2009, One Laptop Per Child Association Inc
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sugar3 import logger
 
@@ -46,8 +45,20 @@ gettext.bindtextdomain('sugar', config.locale_path)
 gettext.bindtextdomain('sugar-toolkit-gtk3', config.locale_path)
 gettext.textdomain('sugar')
 
+# publish sugar version in the environment
+os.environ['SUGAR_VERSION'] = config.version
+
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
+
+# define the versions of used libraries that are required
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gst', '1.0')
+gi.require_version('Wnck', '3.0')
+gi.require_version('SugarExt', '1.0')
+gi.require_version('GdkX11', '3.0')
+gi.require_version('WebKit', '3.0')
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -178,7 +189,8 @@ def _start_window_manager():
     settings = Gio.Settings.new('org.gnome.desktop.interface')
     settings.set_string('cursor-theme', 'sugar')
 
-    _metacity_process = subprocess.Popen(['metacity', '--no-force-fullscreen'])
+    _metacity_process = subprocess.Popen(
+        ['metacity', '--no-force-fullscreen', '--no-composite'])
 
     screen = Wnck.Screen.get_default()
     screen.connect('window-manager-changed', __window_manager_changed_cb)
@@ -219,7 +231,7 @@ def cleanup_temporary_files():
         data_dir = os.path.join(env.get_profile_path(), 'data')
         shutil.rmtree(data_dir, ignore_errors=True)
         os.makedirs(data_dir)
-    except OSError, e:
+    except OSError as e:
         # temporary files cleanup is not critical; it should not prevent
         # sugar from starting if (for example) the disk is full or read-only.
         print 'temporary files cleanup failed: %s' % e
@@ -344,6 +356,43 @@ def setup_fonts():
     settings.set_property("gtk-font-name", "%s %f" % (face, size))
 
 
+def setup_proxy():
+    protos = ['http', 'https', 'ftp', 'socks']
+    env_variables = ['{}_proxy'.format(proto) for proto in protos]
+    schemas = ['org.sugarlabs.system.proxy.{}'.format(
+        proto) for proto in protos]
+
+    g_mode = Gio.Settings('org.sugarlabs.system.proxy').get_string('mode')
+    if g_mode == 'manual':
+        counter = 0
+        for schema in schemas:
+            setting_schema = Gio.Settings(schema)
+
+            if ((env_variables[counter] == 'http_proxy') and
+                    setting_schema.get_boolean('use-authentication')):
+                text_to_set = "%s://%s:%s@%s:%s/" % (
+                    protos[counter],
+                    setting_schema.get_string('authentication-user'),
+                    setting_schema.get_string('authentication-password'),
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+            else:
+                text_to_set = "%s://%s:%s/" % (
+                    protos[counter],
+                    setting_schema.get_string('host'),
+                    str(setting_schema.get_int('port')))
+
+            os.environ[env_variables[counter]] = text_to_set
+            os.environ[env_variables[counter].upper()] = text_to_set
+            counter += 1
+        os.environ['no_proxy'] = ",".join(Gio.Settings(
+            'org.sugarlabs.system.proxy').get_strv('ignore-hosts'))
+
+    elif g_mode == 'none':
+        for each_env_variable in env_variables:
+            os.environ[each_env_variable] = ''
+
+
 def setup_theme():
     settings = Gtk.Settings.get_default()
     sugar_theme = 'sugar-72'
@@ -352,6 +401,8 @@ def setup_theme():
             sugar_theme = 'sugar-100'
     settings.set_property('gtk-theme-name', sugar_theme)
     settings.set_property('gtk-icon-theme-name', 'sugar')
+    settings.set_property('gtk-cursor-blink-timeout', 3)
+    settings.set_property('gtk-button-images', True)
 
     icons_path = os.path.join(config.data_path, 'icons')
     Gtk.IconTheme.get_default().append_search_path(icons_path)
@@ -395,6 +446,7 @@ def main():
     setup_timezone()
     setup_fonts()
     setup_theme()
+    setup_proxy()
 
     # this must be added early, so that it executes and unfreezes the screen
     # even when we initially get blocked on the intro screen

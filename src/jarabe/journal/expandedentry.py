@@ -1,9 +1,9 @@
 # Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2008-2013, Sugar Labs
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 from gettext import gettext as _
@@ -41,12 +40,14 @@ from jarabe.journal import journalwindow
 
 
 class Separator(Gtk.VBox):
+
     def __init__(self, orientation):
         Gtk.VBox.__init__(
             self, background_color=style.COLOR_PANEL_GREY.get_gdk_color())
 
 
 class BuddyList(Gtk.Alignment):
+
     def __init__(self, buddies):
         Gtk.Alignment.__init__(self)
         self.set(0, 0, 0, 0)
@@ -63,6 +64,7 @@ class BuddyList(Gtk.Alignment):
 
 
 class TextView(Gtk.TextView):
+
     def __init__(self):
         Gtk.TextView.__init__(self)
         text_buffer = Gtk.TextBuffer()
@@ -187,6 +189,7 @@ class CommentsView(Gtk.TreeView):
 
 
 class CellRendererCommentIcon(CellRendererIcon):
+
     def __init__(self):
         CellRendererIcon.__init__(self)
 
@@ -198,8 +201,52 @@ class CellRendererCommentIcon(CellRendererIcon):
         self.props.mode = Gtk.CellRendererMode.ACTIVATABLE
 
 
-class ExpandedEntry(Gtk.EventBox):
+class BaseExpandedEntry(GObject.GObject):
+
+    def __init__(self):
+        # Create a header
+        self._keep_icon = None
+        self._keep_sid = None
+        self._icon = None
+        self._icon_box = None
+        self._title = None
+        self._date = None
+
+    def create_header(self):
+        header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+
+        self._keep_icon = self._create_keep_icon()
+        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
+
+        self._icon_box = Gtk.HBox()
+        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
+
+        self._title = self._create_title()
+        header.pack_start(self._title, True, True, 0)
+
+        # TODO: create a version list popup instead of a date label
+        self._date = self._create_date()
+        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
+
+        return header
+
+    def _create_keep_icon(self):
+        keep_icon = KeepIcon()
+        return keep_icon
+
+    def _create_title(self):
+        entry = Gtk.Entry()
+        return entry
+
+    def _create_date(self):
+        date = Gtk.Label()
+        return date
+
+
+class ExpandedEntry(Gtk.EventBox, BaseExpandedEntry):
+
     def __init__(self, journalactivity):
+        BaseExpandedEntry.__init__(self)
         self._journalactivity = journalactivity
         Gtk.EventBox.__init__(self)
         self._vbox = Gtk.VBox()
@@ -210,9 +257,18 @@ class ExpandedEntry(Gtk.EventBox):
 
         self.modify_bg(Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
 
-        # Create a header
-        header = Gtk.HBox()
-        self._vbox.pack_start(header, False, False, style.DEFAULT_SPACING * 2)
+        self._header = self.create_header()
+        self._vbox.pack_start(self._header, False, False,
+                              style.DEFAULT_SPACING * 2)
+        self._keep_sid = self._keep_icon.connect(
+            'toggled', self._keep_icon_toggled_cb)
+        self._title.connect(
+            'focus-out-event', self._title_focus_out_event_cb)
+
+        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
+            # Reverse header children.
+            for child in self._header.get_children():
+                self._header.reorder_child(child, 0)
 
         # Create a two-column body
         body_box = Gtk.EventBox()
@@ -228,26 +284,6 @@ class ExpandedEntry(Gtk.EventBox):
 
         second_column = Gtk.VBox()
         body.pack_start(second_column, True, True, 0)
-
-        # Header
-        self._keep_icon, self._keep_sid = self._create_keep_icon()
-        header.pack_start(self._keep_icon, False, False, style.DEFAULT_SPACING)
-
-        self._icon = None
-        self._icon_box = Gtk.HBox()
-        header.pack_start(self._icon_box, False, False, style.DEFAULT_SPACING)
-
-        self._title = self._create_title()
-        header.pack_start(self._title, True, True, 0)
-
-        # TODO: create a version list popup instead of a date label
-        self._date = self._create_date()
-        header.pack_start(self._date, False, False, style.DEFAULT_SPACING)
-
-        if Gtk.Widget.get_default_direction() == Gtk.TextDirection.RTL:
-            # Reverse header children.
-            for child in header.get_children():
-                header.reorder_child(child, 0)
 
         # First body column
         self._preview_box = Gtk.Frame()
@@ -273,7 +309,6 @@ class ExpandedEntry(Gtk.EventBox):
 
         self._buddy_list = Gtk.VBox()
         second_column.pack_start(self._buddy_list, True, False, 0)
-
         self.show_all()
 
     def set_metadata(self, metadata):
@@ -318,15 +353,9 @@ class ExpandedEntry(Gtk.EventBox):
         comments = metadata.get('comments', '')
         self._comments.update_comments(comments)
 
-    def _create_keep_icon(self):
-        keep_icon = KeepIcon()
-        keep_sid = keep_icon.connect('toggled', self._keep_icon_toggled_cb)
-        return keep_icon, keep_sid
-
     def _create_icon(self):
         icon = CanvasIcon(file_name=misc.get_icon_name(self._metadata))
-        icon.connect_after('button-release-event',
-                           self._icon_button_release_event_cb)
+        icon.connect_after('activate', self.__icon_activate_cb)
 
         if misc.is_activity_bundle(self._metadata):
             xo_color = XoColor('%s,%s' % (style.COLOR_BUTTON_GREY.get_svg(),
@@ -338,15 +367,6 @@ class ExpandedEntry(Gtk.EventBox):
         icon.set_palette(ObjectPalette(self._journalactivity, self._metadata))
 
         return icon
-
-    def _create_title(self):
-        entry = Gtk.Entry()
-        entry.connect('focus-out-event', self._title_focus_out_event_cb)
-        return entry
-
-    def _create_date(self):
-        date = Gtk.Label()
-        return date
 
     def _create_preview(self):
 
@@ -538,8 +558,7 @@ class ExpandedEntry(Gtk.EventBox):
             self._metadata['keep'] = '0'
         self._update_entry(needs_update=True)
 
-    def _icon_button_release_event_cb(self, button, event):
-        logging.debug('_icon_button_release_event_cb')
+    def __icon_activate_cb(self, button):
         misc.resume(self._metadata,
                     alert_window=journalwindow.get_journal_window())
         return True

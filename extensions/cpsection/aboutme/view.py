@@ -3,9 +3,9 @@
 # Copyright (C) 2010-14, Walter Bender
 # Copyright (C) 2014, Ignacio Rodriguez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -14,8 +14,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from gi.repository import Gtk
 from gi.repository import GObject
@@ -128,7 +128,7 @@ class ColorPicker(EventIcon):
         self._picker = picker
         self._color = None
 
-        self.connect('button_press_event', self.__pressed_cb, picker)
+        self.connect('activate', self.__activate_cb, picker)
 
     def set_color(self, color):
         if self._picker == _PREVIOUS_FILL_COLOR:
@@ -145,7 +145,7 @@ class ColorPicker(EventIcon):
 
     color = GObject.property(type=object, setter=set_color)
 
-    def __pressed_cb(self, button, event, picker):
+    def __activate_cb(self, button, picker):
         if picker != _CURRENT_COLOR:
             self.color_changed_signal.emit(self._color)
 
@@ -160,6 +160,7 @@ class AboutMe(SectionView):
 
         self._model = model
         self.restart_alerts = alerts if alerts else set()
+        self.props.is_deferrable = False
         self._nick_sid = 0
         self._color_valid = True
         self._nick_valid = True

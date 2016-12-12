@@ -1,8 +1,8 @@
 # Copyright (C) 2009, Tomeu Vizoso
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import time
@@ -79,6 +78,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         GObject.GObject.__init__(self)
 
         self._last_requested_index = None
+        self._temp_drag_file_uid = None
         self._cached_row = None
         self._query = query
         self._all_ids = []
@@ -91,6 +91,10 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         # HACK: The view will tell us that it is resizing so the model can
         # avoid hitting D-Bus and disk.
         self.view_is_resizing = False
+
+        # Store the changes originated in the treeview so we do not need
+        # to regenerate the model and stuff up the scroll position
+        self._updated_entries = {}
 
         self._result_set.ready.connect(self.__result_set_ready_cb)
         self._result_set.progress.connect(self.__result_set_progress_cb)
@@ -107,8 +111,9 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
     def __result_set_progress_cb(self, **kwargs):
         self.emit('progress')
 
-    def setup(self):
+    def setup(self, updated_callback=None):
         self._result_set.setup()
+        self._updated_callback = updated_callback
 
     def stop(self):
         self._result_set.stop()
@@ -128,6 +133,25 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         else:
             return 0
 
+    def set_value(self, iterator, column, value):
+        index = iterator.user_data
+        self._result_set.seek(index)
+        metadata = self._result_set.read()
+        if column == ListModel.COLUMN_FAVORITE:
+            metadata['keep'] = value
+        if column == ListModel.COLUMN_TITLE:
+            metadata['title'] = value
+        self._updated_entries[metadata['uid']] = metadata
+        if self._updated_callback is not None:
+            model.updated.disconnect(self._updated_callback)
+        model.write(metadata, update_mtime=False,
+                    ready_callback=self.__reconnect_updates_cb)
+
+    def __reconnect_updates_cb(self, metadata, filepath, uid):
+        logging.error('__reconnect_updates_cb')
+        if self._updated_callback is not None:
+            model.updated.connect(self._updated_callback)
+
     def do_get_value(self, iterator, column):
         if self.view_is_resizing:
             return None
@@ -141,6 +165,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
 
         self._result_set.seek(index)
         metadata = self._result_set.read()
+        metadata.update(self._updated_entries.get(metadata['uid'], {}))
 
         self._last_requested_index = index
         self._cached_row = []
@@ -156,7 +181,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         self._cached_row.append(xo_color)
 
         title = GObject.markup_escape_text(metadata.get('title',
-                                           _('Untitled')))
+                                                        _('Untitled')))
         self._cached_row.append('<b>%s</b>' % (title, ))
 
         try:
@@ -191,7 +216,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         if metadata.get('buddies'):
             try:
                 buddies = json.loads(metadata['buddies']).values()
-            except json.decoder.JSONDecodeError, exception:
+            except json.decoder.JSONDecodeError as exception:
                 logging.warning('Cannot decode buddies for %r: %s',
                                 metadata['uid'], exception)
 
@@ -204,7 +229,7 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
             if buddies:
                 try:
                     nick, color = buddies.pop(0)
-                except (AttributeError, ValueError), exception:
+                except (AttributeError, ValueError) as exception:
                     logging.warning('Malformed buddies for %r: %s',
                                     metadata['uid'], exception)
                 else:
@@ -254,8 +279,13 @@ class ListModel(GObject.GObject, Gtk.TreeModel, Gtk.TreeDragSource):
         target_atom = selection.get_target()
         target_name = target_atom.name()
         if target_name == 'text/uri-list':
-            # Get hold of a reference so the temp file doesn't get deleted
-            self._temp_drag_file_path = model.get_file(uid)
+            # Only get a new temp path if we have a new file, the frame
+            # requests a path many times and if we give it a new path it
+            # ends up with a broken path
+            if uid != self._temp_drag_file_uid:
+                # Get hold of a reference so the temp file doesn't get deleted
+                self._temp_drag_file_path = model.get_file(uid)
+                self._temp_drag_file_uid = uid
             logging.debug('putting %r in selection', self._temp_drag_file_path)
             selection.set(target_atom, 8, self._temp_drag_file_path)
             return True

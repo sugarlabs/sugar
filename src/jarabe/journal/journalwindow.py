@@ -1,9 +1,9 @@
 # Copyright (C) 2010 Software for Education, Entertainment and Training
 # Activities
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,10 +12,11 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sugar3.graphics.window import Window
+
+from gettext import gettext as _
 
 _journal_window = None
 
@@ -27,6 +28,11 @@ class JournalWindow(Window):
         global _journal_window
         Window.__init__(self)
         _journal_window = self
+        self.set_icon_name('activity-journal')
+        self.set_title(_('Journal'))
+
+        # Stop the user from closing the journal window.
+        self.connect('delete-event', lambda widget, event: True)
 
 
 def get_journal_window():

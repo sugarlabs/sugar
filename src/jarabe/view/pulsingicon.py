@@ -1,8 +1,8 @@
 # Copyright (C) 2008 One Laptop Per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
 
@@ -29,9 +28,11 @@ _MINIMAL_ALPHA_VALUE = 0.33
 
 
 class Pulser(object):
-    def __init__(self, icon):
+
+    def __init__(self, icon, interval=_INTERVAL):
         self._pulse_hid = None
         self._icon = icon
+        self._interval = interval
         self._phase = 0
         self._start_scale = 1.0
         self._end_scale = 1.0
@@ -52,7 +53,8 @@ class Pulser(object):
         if restart:
             self._phase = 0
         if self._pulse_hid is None:
-            self._pulse_hid = GObject.timeout_add(_INTERVAL, self.__pulse_cb)
+            self._pulse_hid = GObject.timeout_add(self._interval,
+                                                  self.__pulse_cb)
         if self._start_scale != self._end_scale:
             self._icon.scale = self._start_scale + \
                 self._current_scale_step * self._current_zoom_step
@@ -84,8 +86,8 @@ class Pulser(object):
 class PulsingIcon(Icon):
     __gtype_name__ = 'SugarPulsingIcon'
 
-    def __init__(self, **kwargs):
-        self._pulser = Pulser(self)
+    def __init__(self, interval=_INTERVAL, **kwargs):
+        self._pulser = Pulser(self, interval)
         self._base_color = None
         self._pulse_color = None
         self._paused = False
@@ -174,8 +176,8 @@ class PulsingIcon(Icon):
 class EventPulsingIcon(CanvasIcon):
     __gtype_name__ = 'SugarEventPulsingIcon'
 
-    def __init__(self, **kwargs):
-        self._pulser = Pulser(self)
+    def __init__(self, interval=_INTERVAL, **kwargs):
+        self._pulser = Pulser(self, interval)
         self._base_color = None
         self._pulse_color = None
         self._paused = False

@@ -1,9 +1,9 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import logging
@@ -21,20 +20,25 @@ from gettext import gettext as _
 
 from gi.repository import Gtk
 from gi.repository import Gio
+from gi.repository import GObject
 import dbus
 
 from sugar3.graphics.palette import Palette
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.icon import Icon
+from sugar3.graphics.alert import TimeoutAlert
 from sugar3.graphics import style
+from sugar3.bundle.activitybundle import ActivityBundle
 
 from jarabe.model import shell
 from jarabe.model import friends
 from jarabe.model.session import get_session_manager
 from jarabe.controlpanel.gui import ControlPanel
+import jarabe.desktop.homewindow
 
 
 class BuddyMenu(Palette):
+
     def __init__(self, buddy):
         self._buddy = buddy
 
@@ -124,10 +128,27 @@ class BuddyMenu(Palette):
         item.show()
 
     def _quit(self, action):
-        import jarabe.desktop.homewindow
+        jarabe.desktop.homewindow.get_instance().busy()
+        action()
+        GObject.timeout_add_seconds(3, self.__quit_timeout_cb)
 
-        home_window = jarabe.desktop.homewindow.get_instance()
-        home_window.busy_during_delayed_action(action)
+    def __quit_timeout_cb(self):
+        jarabe.desktop.homewindow.get_instance().unbusy()
+        alert = TimeoutAlert(30)
+        alert.props.title = _('An activity is not responding.')
+        alert.props.msg = _('You may lose unsaved work if you continue.')
+        alert.connect('response', self.__quit_accept_cb)
+
+        jarabe.desktop.homewindow.get_instance().add_alert(alert)
+        alert.show()
+
+    def __quit_accept_cb(self, alert, response_id):
+        jarabe.desktop.homewindow.get_instance().remove_alert(alert)
+        if response_id is Gtk.ResponseType.CANCEL:
+            get_session_manager().cancel_shutdown()
+        else:
+            jarabe.desktop.homewindow.get_instance().busy()
+            get_session_manager().shutdown_completed()
 
     def __logout_activate_cb(self, menu_item):
         self._quit(get_session_manager().logout)
@@ -155,10 +176,14 @@ class BuddyMenu(Palette):
         else:
             buddy_activity_id = None
 
-        if activity is None or activity.is_journal() or \
+        self._invite_menu.hide()
+        if activity is None or \
+           activity.is_journal() or \
            activity.get_activity_id() == buddy_activity_id:
-            self._invite_menu.hide()
-        else:
+            return
+
+        bundle_activity = ActivityBundle(activity.get_bundle_path())
+        if bundle_activity.get_max_participants() > 1:
             title = activity.get_title()
             self._invite_menu.set_label(_('Invite to %s') % title)
 
@@ -189,7 +214,7 @@ class BuddyMenu(Palette):
             try:
                 service.InviteContact(self._buddy.props.account,
                                       self._buddy.props.contact_id)
-            except dbus.DBusException, e:
+            except dbus.DBusException as e:
                 expected_exceptions = [
                     'org.freedesktop.DBus.Error.UnknownMethod',
                     'org.freedesktop.DBus.Python.NotImplementedError']

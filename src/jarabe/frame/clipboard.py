@@ -1,8 +1,8 @@
 # Copyright (C) 2006, Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 import os
@@ -88,8 +87,8 @@ class Clipboard(GObject.GObject):
         if on_disk and cb_object.get_percent() == 100:
             new_uri = self._copy_file(data)
             cb_object.add_format(Format(format_type, new_uri, on_disk))
-            logging.debug('Added format of type ' + format_type
-                          + ' with path at ' + new_uri)
+            logging.debug('Added format of type ' + format_type +
+                          ' with path at ' + new_uri)
         else:
             cb_object.add_format(Format(format_type, data, on_disk))
             logging.debug('Added in-memory format of type %s.', format_type)
@@ -163,7 +162,7 @@ class Clipboard(GObject.GObject):
         f_, new_file_path = tempfile.mkstemp(ext, root)
         del f_
         shutil.copyfile(path, new_file_path)
-        os.chmod(new_file_path, 0644)
+        os.chmod(new_file_path, 0o644)
 
         return 'file://' + new_file_path
 

@@ -1,9 +1,9 @@
 # Copyright (C) 2008, One Laptop Per Child
 # Copyright (C) 2009, Tomeu Vizoso
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from gettext import gettext as _
 from gettext import ngettext
@@ -423,10 +423,10 @@ def _format_size(size):
         return _('None')
     elif size < 1024:
         # TRANS: download size of very small updates
-        return _('1 KB')
+        return _('1 KiB')
     elif size < 1024 * 1024:
-        # TRANS: download size of small updates, e.g. '250 KB'
-        return locale.format_string(_('%.0f KB'), size / 1024.0)
+        # TRANS: download size of small updates, e.g. '250 KiB'
+        return locale.format_string(_('%.0f KiB'), size / 1024.0)
     else:
-        # TRANS: download size of updates, e.g. '2.3 MB'
-        return locale.format_string(_('%.1f MB'), size / 1024.0 / 1024)
+        # TRANS: download size of updates, e.g. '2.3 MiB'
+        return locale.format_string(_('%.1f MiB'), size / 1024.0 / 1024)

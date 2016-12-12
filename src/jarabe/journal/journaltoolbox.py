@@ -1,9 +1,9 @@
 # Copyright (C) 2007, One Laptop Per Child
 # Copyright (C) 2009,14 Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gettext import gettext as _
 from gettext import ngettext
@@ -34,7 +33,7 @@ from sugar3.graphics.palette import ToolInvoker
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.palettemenu import PaletteMenuItemSeparator
-from sugar3.graphics.icon import Icon
+from sugar3.graphics.icon import Icon, EventIcon
 from sugar3.graphics.alert import Alert
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics import iconentry
@@ -85,6 +84,7 @@ class MainToolbox(ToolbarBox):
         self._filter_type = default_filter_type
         self._what_filter = default_what_filter
         self._when_filter = None
+
         self._default_what_filter = default_what_filter
         self._default_filter_type = default_filter_type
 
@@ -106,13 +106,21 @@ class MainToolbox(ToolbarBox):
         self.toolbar.insert(self._favorite_button, -1)
         self._favorite_button.show()
 
-        self._what_widget_contents = None
-        self._what_widget = Gtk.ToolItem()
-        self._what_search_button = FilterToolItem(
-            'view-type', _('Anything'), self._what_widget)
-        self._what_widget.show()
-        self.toolbar.insert(self._what_search_button, -1)
-        self._what_search_button.show()
+        self._proj_list_button = ToggleToolButton('project-box')
+        self._proj_list_button.set_tooltip(_('Projects'))
+        self._proj_list_button.connect('toggled',
+                                       self._proj_list_button_clicked_cb)
+        self.toolbar.insert(self._proj_list_button, -1)
+        self._proj_list_button.show()
+
+        if not self._proj_list_button.props.active:
+            self._what_widget_contents = None
+            self._what_widget = Gtk.ToolItem()
+            self._what_search_button = FilterToolItem(
+                'view-type', _('Anything'), self._what_widget)
+            self._what_widget.show()
+            self.toolbar.insert(self._what_search_button, -1)
+            self._what_search_button.show()
 
         self._when_search_button = FilterToolItem(
             'view-created', _('Anytime'), self._get_when_search_items())
@@ -231,7 +239,10 @@ class MainToolbox(ToolbarBox):
         if self._favorite_button.props.active:
             query['keep'] = 1
 
-        if self._what_filter:
+        if self._proj_list_button.props.active:
+            query['activity'] = 'org.sugarlabs.Project'
+
+        elif self._what_filter:
             filter_type = self._filter_type
             value = self._what_filter
 
@@ -433,7 +444,7 @@ class MainToolbox(ToolbarBox):
                              'file': activity_info.get_icon(),
                              'callback': self._what_palette_cb,
                              'id': bundle_id})
-                    except GObject.GError, exception:
+                    except GObject.GError as exception:
                         # fall back to generic icon
                         logging.warning('Falling back to default icon for'
                                         ' "what" filter because %r (%r) has an'
@@ -460,6 +471,15 @@ class MainToolbox(ToolbarBox):
             self._what_widget_contents = set_palette_list(self._what_list)
             self._what_widget.add(self._what_widget_contents)
             self._what_widget_contents.show()
+
+    def _proj_list_button_clicked_cb(self, proj_list_button):
+        if self._proj_list_button.props.active:
+            self._what_widget.hide()
+            self._what_search_button.hide()
+        else:
+            self._what_widget.show()
+            self._what_search_button.show()
+        self._update_if_needed()
 
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
@@ -490,6 +510,11 @@ class MainToolbox(ToolbarBox):
         '''
 
         self._favorite_button.props.active = False
+
+        if self._proj_list_button.props.active:
+            self._what_widget.show()
+            self._what_search_button.show()
+            self._proj_list_button.props.active = False
 
         self._update_if_needed()
 
@@ -563,15 +588,15 @@ class DetailToolbox(ToolbarBox):
                     alert_window=journalwindow.get_journal_window())
 
     def _copy_clicked_cb(self, button):
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def _refresh_clicked_cb(self, button):
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def _duplicate_clicked_cb(self, button):
         try:
             model.copy(self._metadata, '/')
-        except IOError, e:
+        except IOError as e:
             logging.exception('Error while copying the entry.')
             self.emit('volume-error',
                       _('Error while copying the entry. %s') % (e.strerror, ),
@@ -727,9 +752,15 @@ class SortingButton(ToolButton):
             menu_box.append_item(button)
 
     def __sort_type_changed_cb(self, widget, property_, icon_name):
+        if self._property == property_:
+            if self._order == Gtk.SortType.ASCENDING:
+                self._order = Gtk.SortType.DESCENDING
+            else:
+                self._order = Gtk.SortType.ASCENDING
+        else:
+            self._order = Gtk.SortType.ASCENDING
+
         self._property = property_
-        # FIXME: Implement sorting order
-        self._order = Gtk.SortType.ASCENDING
         self.emit('sort-property-changed')
 
         self.props.icon_name = icon_name
@@ -847,7 +878,7 @@ class BatchCopyButton(ToolButton):
 
     def __clicked_cb(self, button):
         self._refresh_menu_options()
-        button.palette.popup(immediate=True, state=Palette.SECONDARY)
+        button.palette.popup(immediate=True)
 
     def __get_uid_list_cb(self):
         model = self._journalactivity.get_list_view().get_model()
@@ -922,11 +953,11 @@ class FilterToolItem(Gtk.ToolButton):
     def set_widget_icon(self, icon_name=None, file_name=None):
         if file_name is not None:
             icon = Icon(file=file_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         else:
             icon = Icon(icon_name=icon_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         self.set_icon_widget(icon)
         icon.show()
@@ -981,6 +1012,8 @@ class FilterToolItem(Gtk.ToolButton):
             invoker.draw_rectangle(cr, self.palette)
 
         return False
+if hasattr(FilterToolItem, 'set_css_name'):
+    FilterToolItem.set_css_name('filtertoolbutton')
 
 
 def set_palette_list(palette_list):
@@ -1055,3 +1088,47 @@ def set_palette_list(palette_list):
         return scrolled_window
     else:
         return grid
+
+
+class AddNewBar(Gtk.Box):
+
+    activate = GObject.Signal('activate', arg_types=[str])
+
+    def __init__(self, placeholder=None):
+        Gtk.Box.__init__(self, orientation=Gtk.Orientation.HORIZONTAL)
+
+        self._button = EventIcon(icon_name='list-add')
+        self._button.connect('button-release-event',
+                             self.__button_release_event_cb)
+        self._button.fill_color = style.COLOR_TOOLBAR_GREY.get_svg()
+        self._button.set_tooltip(_('Add New'))
+        self.pack_start(self._button, False, True, 0)
+        self._button.show()
+
+        self._entry = iconentry.IconEntry()
+        self._entry.connect('key-press-event', self.__key_press_cb)
+        if placeholder is None:
+            placeholder = _('Add new entry')
+        self._entry.set_placeholder_text(placeholder)
+        self._entry.add_clear_button()
+        self.pack_start(self._entry, True, True, 0)
+        self._entry.show()
+
+    def get_entry(self):
+        return self._entry
+
+    def get_button(self):
+        return self._button
+
+    def __key_press_cb(self, window, event):
+        if event.keyval == Gdk.KEY_Return:
+            return self._maybe_activate()
+
+    def __button_release_event_cb(self, button, event):
+        self._maybe_activate()
+
+    def _maybe_activate(self):
+        if self._entry.props.text:
+            self.activate.emit(self._entry.props.text)
+            self._entry.props.text = ''
+            return True

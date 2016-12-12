@@ -2,9 +2,9 @@
 # Copyright (C) 2008, OLPC
 # Copyright (C) 2009 Simon Schampijer
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -13,8 +13,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from gettext import gettext as _
 
@@ -155,7 +155,7 @@ class AboutComputer(SectionView):
         vbox_copyright.set_border_width(style.DEFAULT_SPACING * 2)
         vbox_copyright.set_spacing(style.DEFAULT_SPACING)
 
-        copyright_text = '© 2006-2015 One Laptop per Child Association Inc,' \
+        copyright_text = '© 2006-2016 One Laptop per Child Association Inc,' \
                          ' Sugar Labs Inc, Red Hat Inc, Collabora Ltd and' \
                          ' Contributors.'
         label_copyright = Gtk.Label(label=copyright_text)
@@ -173,6 +173,7 @@ class AboutComputer(SectionView):
                       ' certain conditions described therein.')
         label_info = Gtk.Label(label=info_text)
         label_info.set_alignment(0, 0)
+        label_info.set_max_width_chars(80)
         label_info.set_line_wrap(True)
         label_info.set_size_request(Gdk.Screen.width() / 2, -1)
         label_info.show()

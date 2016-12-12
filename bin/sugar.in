@@ -2,7 +2,7 @@
 
 sugardatadir=@prefix@/share/sugar/data
 
-if [ "$(id -u)" -eq 0 -o "$(id -ru)" -eq 0 ] ; then
+if [ "$(id -u)" -eq 0 ] || [ "$(id -ru)" -eq 0 ] ; then
 	echo Refusing to run as root.
 	exit 3
 fi
@@ -28,8 +28,8 @@ if test -z "$SUGAR_MIME_DEFAULTS"; then
     export SUGAR_MIME_DEFAULTS="$sugardatadir/mime.defaults"
 fi
 
-if test -z "$SUGAR_ACTIVITIES_DEFAULTS"; then
-    export SUGAR_ACTIVITIES_DEFAULTS="$sugardatadir/activities.defaults"
+if test -z "$SUGAR_ACTIVITIES_HIDDEN"; then
+    export SUGAR_ACTIVITIES_HIDDEN="$sugardatadir/activities.hidden"
 fi
 
 export GTK2_RC_FILES="@prefix@/share/sugar/data/sugar-$SUGAR_SCALING.gtkrc"
@@ -44,7 +44,7 @@ export LANG="${LANG:-en_US.utf8}"
 export LANGUAGE="${LANGUAGE:-${LANG}}"
 
 # Set Sugar's telepathy accounts directory
-export MC_ACCOUNT_DIR=$HOME/.sugar/$SUGAR_PROFILE/accounts
+export MC_ACCOUNT_DIR="$HOME/.sugar/$SUGAR_PROFILE/accounts"
 
 # Source language settings and debug definitions
 if [ -f ~/.i18n ]; then
@@ -54,11 +54,11 @@ fi
 profile_dir=$SUGAR_HOME/$SUGAR_PROFILE
 debug_file_path=$profile_dir/debug
 
-if [ -f $debug_file_path ]; then
-    . $debug_file_path
+if [ -f "$debug_file_path" ]; then
+    . "$debug_file_path"
 else
-mkdir -p $profile_dir
-cat > $debug_file_path << EOF
+mkdir -p "$profile_dir"
+cat > "$debug_file_path" << EOF
 # Uncomment the following lines to turn on many sugar debugging
 # log files and features.
 
@@ -69,12 +69,12 @@ cat > $debug_file_path << EOF
 #export SALUT_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/telepathy-salut.log
 #export GIBBER_DEBUG=all
 #export WOCKY_DEBUG=all
-#export MC_LOGFILE='$HOME/.sugar/$SUGAR_PROFILE/logs/mission-control.log
+#export MC_LOGFILE=$HOME/.sugar/$SUGAR_PROFILE/logs/mission-control.log
 #export MC_DEBUG=all
 #export PRESENCESERVICE_DEBUG=1
 #export SUGAR_LOGGER_LEVEL=debug
 
-# Uncomment the following line to enable core dumps
+# Uncomment the following line to enable core dumps.
 
 #ulimit -c unlimited
 EOF

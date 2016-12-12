@@ -1,8 +1,8 @@
 # Copyright (C) 2013, Daniel Narvaez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import os
@@ -34,12 +33,14 @@ from jarabe.journal.objectchooser import ObjectChooser
 
 
 class StreamMonitor(object):
+
     def __init__(self):
         self.on_data = None
         self.on_close = None
 
 
 class API(object):
+
     def __init__(self, client):
         self._client = client
 
@@ -50,6 +51,7 @@ class API(object):
 
 
 class ActivityAPI(API):
+
     def __init__(self, client):
         API.__init__(self, client)
         self._activity.connect('pause', self._pause_cb)
@@ -103,6 +105,7 @@ class ActivityAPI(API):
 
 
 class DatastoreAPI(API):
+
     def __init__(self, client):
         API.__init__(self, client)
 
@@ -242,6 +245,7 @@ class DatastoreAPI(API):
 
 
 class APIClient(object):
+
     def __init__(self, session):
         self._session = session
 
@@ -276,6 +280,7 @@ class APIClient(object):
 
 
 class APIServer(object):
+
     def __init__(self):
         self._stream_monitors = {}
 

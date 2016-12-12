@@ -1,9 +1,9 @@
 # Copyright (C) 2014, Sugar Labs
 # Copyright (C) 2014, Walter Bender
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,11 +12,10 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from gi.repository import Gtk
-from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GObject
 
@@ -64,29 +63,28 @@ class GenderPicker(Gtk.Grid):
         for i, gender in enumerate(GENDERS):
             self._buttons.append(EventIcon(pixel_size=style.XLARGE_ICON_SIZE,
                                            icon_name='%s-6' % (gender)))
-            self._buttons[-1].connect('button-press-event',
-                                      self._button_press_cb, i)
+            self._buttons[-1].connect('activate',
+                                      self._button_activate_cb, i)
             self.attach(self._buttons[-1], i * 2, 0, 1, 1)
             self._buttons[-1].show()
 
         self.reset_button = EventIcon(pixel_size=style.SMALL_ICON_SIZE,
                                       icon_name='entry-cancel')
-        self.reset_button.connect('button-press-event',
-                                  self._reset_button_press_cb)
+        self.reset_button.connect('activate',
+                                  self._reset_button_activate_cb)
         self.attach(self.reset_button, 1, 0, 1, 1)
         self.reset_button.xo_color = XoColor('#010101,#a0a0a0')
         self.reset_button.show()
 
-    def _reset_button_press_cb(self, widget, event):
+    def _reset_button_activate_cb(self, widget):
         self._set_gender('')
         for i in range(len(GENDERS)):
             self._buttons[i].xo_color = self._nocolor
 
-    def _button_press_cb(self, widget, event, gender_index):
-        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:
-            self._set_gender(GENDERS[gender_index])
-            self._buttons[gender_index].xo_color = self._color
-            self._buttons[1 - gender_index].xo_color = self._nocolor
+    def _button_activate_cb(self, widget, gender_index):
+        self._set_gender(GENDERS[gender_index])
+        self._buttons[gender_index].xo_color = self._color
+        self._buttons[1 - gender_index].xo_color = self._nocolor
 
     def get_gender(self):
         return self._gender

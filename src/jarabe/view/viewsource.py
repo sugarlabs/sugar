@@ -1,11 +1,11 @@
 # Copyright (C) 2008 One Laptop Per Child
 # Copyright (C) 2009 Tomeu Vizoso, Simon Schampijer
 # Copyright (C) 2011 Walter Bender
-# Copyright (C) 2014 Ignacio Rodriguez
+# Copyright (C) 2014-15 Ignacio Rodriguez
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -14,8 +14,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import shutil
@@ -23,6 +22,8 @@ import sys
 import logging
 from gettext import gettext as _
 
+import gi
+gi.require_version('GtkSource', '3.0')
 from gi.repository import GObject
 from gi.repository import Pango
 from gi.repository import Gtk
@@ -36,8 +37,12 @@ from gi.repository import Gio
 from sugar3.graphics import style
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
-from sugar3.graphics.menuitem import MenuItem
+from sugar3.graphics.alert import Alert
+from sugar3.graphics.alert import ConfirmationAlert
+from sugar3.graphics.alert import NotifyAlert
 from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.palettemenu import PaletteMenuBox
+from sugar3.graphics.palettemenu import PaletteMenuItem
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.bundle.activitybundle import get_bundle_instance
 from sugar3.datastore import datastore
@@ -185,24 +190,25 @@ class ViewSource(Gtk.Window):
 
         self._parent_window_xid = window_xid
         self._sugar_toolkit_path = sugar_toolkit_path
+        self._gdk_window = self.get_root_window()
 
         self.connect('realize', self.__realize_cb)
         self.connect('destroy', self.__destroy_cb, document_path)
         self.connect('key-press-event', self.__key_press_event_cb)
 
-        vbox = Gtk.VBox()
-        self.add(vbox)
-        vbox.show()
+        self._vbox = Gtk.VBox()
+        self.add(self._vbox)
+        self._vbox.show()
 
         toolbar = Toolbar(title, bundle_path, document_path,
                           sugar_toolkit_path)
-        vbox.pack_start(toolbar, False, True, 0)
+        self._vbox.pack_start(toolbar, False, True, 0)
         toolbar.connect('stop-clicked', self.__stop_clicked_cb)
         toolbar.connect('source-selected', self.__source_selected_cb)
         toolbar.show()
 
         pane = Gtk.HPaned()
-        vbox.pack_start(pane, True, True, 0)
+        self._vbox.pack_start(pane, True, True, 0)
         pane.show()
 
         self._selected_bundle_file = None
@@ -266,6 +272,14 @@ class ViewSource(Gtk.Window):
         if document_path is not None:
             self._select_source(document_path)
 
+    def add_alert(self, alert):
+        self._vbox.pack_start(alert, False, False, 0)
+        self._vbox.reorder_child(alert, 1)
+        alert.show()
+
+    def remove_alert(self, alert):
+        self._vbox.remove(alert)
+
     def _calculate_char_width(self, char_count):
         widget = Gtk.Label(label='')
         context = widget.get_pango_context()
@@ -318,6 +332,8 @@ class ViewSource(Gtk.Window):
         if document_path is not None and os.path.exists(document_path):
             os.unlink(document_path)
 
+        self._gdk_window.set_cursor(Gdk.Cursor(Gdk.CursorType.LEFT_PTR))
+
     def __key_press_event_cb(self, window, event):
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Escape':
@@ -337,12 +353,14 @@ class ViewSource(Gtk.Window):
 class DocumentButton(RadioToolButton):
     __gtype_name__ = 'SugarDocumentButton'
 
-    def __init__(self, file_name, document_path, title, bundle=False):
+    def __init__(self, file_name, document_path, activity_name, title,
+                 bundle=False):
         RadioToolButton.__init__(self)
 
         self._document_path = document_path
         self._title = title
         self._jobject = None
+        self._activity_name = activity_name
 
         self.props.tooltip = _('Instance Source')
 
@@ -354,25 +372,57 @@ class DocumentButton(RadioToolButton):
         self.set_icon_widget(icon)
         icon.show()
 
+        box = PaletteMenuBox()
+        self.props.palette.set_content(box)
+        box.show()
+
         if bundle:
-            menu_item = MenuItem(_('Duplicate'))
-            icon = Icon(icon_name='edit-duplicate',
-                        pixel_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor(self._color))
-            menu_item.connect('activate', self.__copy_to_home_cb)
+            menu_item = PaletteMenuItem(_('Duplicate'), 'edit-duplicate',
+                                        xo_color=XoColor(self._color))
+            menu_item.connect('activate', self.__show_duplicate_alert)
         else:
-            menu_item = MenuItem(_('Keep'))
-            icon = Icon(icon_name='document-save',
-                        pixel_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor(self._color))
+            menu_item = PaletteMenuItem(_('Keep'), 'document-save',
+                                        xo_color=XoColor(self._color))
             menu_item.connect('activate', self.__keep_in_journal_cb)
 
-        menu_item.set_image(icon)
-
-        self.props.palette.menu.append(menu_item)
+        box.append_item(menu_item)
         menu_item.show()
 
-    def __copy_to_home_cb(self, menu_item):
+    def __show_duplicate_alert(self, menu_item):
+        alert = ConfirmationAlert()
+        alert.props.title = _('Do you want to duplicate %s Activity?') % \
+            self._activity_name
+        alert.props.msg = _('This may take a few minutes')
+        alert.connect('response', self.__duplicate_alert_response_cb)
+        self.get_toplevel().add_alert(alert)
+
+    def __duplicate_alert_response_cb(self, alert, response_id):
+        self.get_toplevel().remove_alert(alert)
+
+        if response_id == Gtk.ResponseType.OK:
+            self.__set_busy_cursor(True)
+
+            def internal_callback(new_alert):
+                self.__copy_to_home_cb(None, new_alert)
+
+            new_alert = Alert()
+            new_alert.props.title = _("Duplicating activity...")
+
+            self.get_toplevel().add_alert(new_alert)
+            GObject.idle_add(internal_callback, new_alert)
+
+    def __set_busy_cursor(self, busy):
+        cursor = None
+
+        if busy:
+            cursor = Gdk.Cursor(Gdk.CursorType.WATCH)
+        else:
+            cursor = Gdk.Cursor(Gdk.CursorType.LEFT_PTR)
+
+        gdk_window = self.get_root_window()
+        gdk_window.set_cursor(cursor)
+
+    def __copy_to_home_cb(self, menu_item, copy_alert=None):
         """Make a local copy of the activity bundle in user_activities_path"""
         user_activities_path = get_user_activities_path()
         nick = customizebundle.generate_unique_id()
@@ -380,12 +430,45 @@ class DocumentButton(RadioToolButton):
             nick, os.path.basename(self._document_path))
         if not os.path.exists(os.path.join(user_activities_path,
                                            new_basename)):
-            shutil.copytree(self._document_path,
-                            os.path.join(user_activities_path, new_basename),
-                            symlinks=True)
-            customizebundle.generate_bundle(nick, new_basename)
+            self.__set_busy_cursor(True)
+
+            def async_copy_activity_tree():
+                try:
+                    shutil.copytree(self._document_path,
+                                    os.path.join(
+                                        user_activities_path,
+                                        new_basename),
+                                    symlinks=True)
+                    customizebundle.generate_bundle(nick, new_basename)
+
+                    if copy_alert:
+                        self.get_toplevel().remove_alert(copy_alert)
+
+                    alert = NotifyAlert(10)
+                    alert.props.title = _('Duplicated')
+                    alert.props.msg = _('The activity has been duplicated')
+                    alert.connect('response', self.__alert_response_cb)
+                    self.get_toplevel().add_alert(alert)
+                finally:
+                    self.__set_busy_cursor(False)
+
+            GObject.idle_add(async_copy_activity_tree)
         else:
-            _logger.debug('%s already exists', new_basename)
+            if copy_alert:
+                self.get_toplevel().remove_alert(copy_alert)
+
+            self.__set_busy_cursor(False)
+
+            alert = NotifyAlert(10)
+            alert.props.title = _('Duplicated activity already exists')
+            alert.props.msg = _('Delete your copy before trying to duplicate'
+                                ' the activity again')
+
+            alert.connect('response', self.__alert_response_cb)
+            self.get_toplevel().add_alert(alert)
+
+    def __alert_response_cb(self, alert, response_id):
+        self.get_toplevel().remove_alert(alert)
 
     def __keep_in_journal_cb(self, menu_item):
         mime_type = mime.get_from_file_name(self._document_path)
@@ -435,9 +518,11 @@ class Toolbar(Gtk.Toolbar):
 
         activity_bundle = get_bundle_instance(bundle_path)
         file_name = activity_bundle.get_icon()
+        activity_name = activity_bundle.get_name()
 
         if document_path is not None and os.path.exists(document_path):
-            document_button = DocumentButton(file_name, document_path, title)
+            document_button = DocumentButton(file_name, document_path,
+                                             activity_name, title)
             document_button.connect('toggled', self.__button_toggled_cb,
                                     document_path)
             self.insert(document_button, -1)
@@ -445,8 +530,8 @@ class Toolbar(Gtk.Toolbar):
             self._add_separator()
 
         if bundle_path is not None and os.path.exists(bundle_path):
-            activity_button = DocumentButton(file_name, bundle_path, title,
-                                             bundle=True)
+            activity_button = DocumentButton(file_name, bundle_path,
+                                             activity_name, title, bundle=True)
             icon = Icon(file=file_name,
                         pixel_size=style.STANDARD_ICON_SIZE,
                         fill_color=style.COLOR_TRANSPARENT.get_svg(),
@@ -622,17 +707,22 @@ class SourceDisplay(Gtk.ScrolledWindow):
         self.props.hscrollbar_policy = Gtk.PolicyType.AUTOMATIC
         self.props.vscrollbar_policy = Gtk.PolicyType.AUTOMATIC
 
-        self._box = Gtk.Box()
-        self.add(self._box)
-        self._box.show()
-
         self._file_path = None
+
+    def _replace(self, child):
+        self._remove_children()
+        self.add(child)
+
+    def _replace_with_viewport(self, child):
+        self._remove_children()
+        self.add_with_viewport(child)
+
+    def _remove_children(self):
+        for child in self.get_children():
+            self.remove(child)
 
     def _set_file_path(self, file_path):
         self._file_path = file_path
-
-        for child in self._box.get_children():
-            self._box.remove(child)
 
         if self._file_path is None:
             self._show_no_file()
@@ -681,16 +771,16 @@ class SourceDisplay(Gtk.ScrolledWindow):
 
         source_buffer.set_language(detected_language)
         text = open(self._file_path, 'r').read()
-        works = True
         try:
             text.encode()
             source_buffer.set_text(text)
-            self._box.pack_start(source_view, True, True, 0)
-            self._box.show_all()
         except UnicodeDecodeError:
-            works = False
+            return False
 
-        return works
+        source_view.show()
+        self._replace(source_view)
+
+        return True
 
     def _get_file_path(self):
         return self._file_path
@@ -706,16 +796,14 @@ class SourceDisplay(Gtk.ScrolledWindow):
             pixbuf = GdkPixbuf.Pixbuf.new_from_file(self._file_path)
             image.set_from_pixbuf(pixbuf)
             media_box.add(image)
-            image.show()
 
         if icon:
             h = Gdk.Screen.width() / 3
             icon = Icon(icon_name=icon, pixel_size=h)
             media_box.add(icon)
-            icon.show()
 
-        self._box.pack_start(media_box, True, True, 0)
-        self._box.show_all()
+        media_box.show_all()
+        self._replace_with_viewport(media_box)
 
     def _show_no_file(self):
         nofile_label = Gtk.Label()
@@ -725,5 +813,5 @@ class SourceDisplay(Gtk.ScrolledWindow):
         nofile_box.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse('white'))
 
         nofile_box.add(nofile_label)
-        self._box.pack_start(nofile_box, True, True, 0)
-        self._box.show_all()
+        nofile_box.show_all()
+        self._replace_with_viewport(nofile_box)

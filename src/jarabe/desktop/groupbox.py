@@ -1,8 +1,8 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -11,8 +11,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
 
@@ -39,6 +38,7 @@ class GroupBox(ViewContainer):
         owner_icon = BuddyIcon(get_owner_instance(),
                                style.LARGE_ICON_SIZE & ~1)
         ViewContainer.__init__(self, layout, owner_icon)
+        self.set_can_focus(False)
 
         self._query = ''
         toolbar.connect('query-changed', self._toolbar_query_changed_cb)

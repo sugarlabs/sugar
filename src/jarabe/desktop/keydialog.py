@@ -1,9 +1,9 @@
 # Copyright (C) 2006-2007 Red Hat, Inc.
 # Copyright (C) 2009 One Laptop per Child
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import hashlib
 from gettext import gettext as _
@@ -70,12 +69,14 @@ def hash_passphrase(passphrase):
 
 
 class CanceledKeyRequestError(dbus.DBusException):
+
     def __init__(self):
         dbus.DBusException.__init__(self)
         self._dbus_error_name = network.NM_SETTINGS_IFACE + '.CanceledError'
 
 
 class KeyDialog(Gtk.Dialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         Gtk.Dialog.__init__(self, flags=Gtk.DialogFlags.MODAL)
         self.set_title('Wireless Key Required')
@@ -99,17 +100,24 @@ class KeyDialog(Gtk.Dialog):
         self.set_default_response(Gtk.ResponseType.OK)
 
     def add_key_entry(self):
-        self._entry = Gtk.Entry()
+        self._entry = Gtk.Entry(visibility=True)
         self._entry.connect('changed', self._update_response_sensitivity)
-        self._entry.connect('activate', self._entry_activate_cb)
+        self._entry.connect('activate', self.__entry_activate_cb)
         self.vbox.pack_start(self._entry, True, True, 0)
         self.vbox.set_spacing(6)
+
+        button = Gtk.CheckButton(_("Show Password"))
+        button.props.draw_indicator = True
+        button.props.active = self._entry.get_visibility()
+        button.connect("toggled", self.__button_toggled_cb)
+        self.vbox.pack_start(button, True, True, 0)
+
         self.vbox.show_all()
 
         self._update_response_sensitivity()
         self._entry.grab_focus()
 
-    def _entry_activate_cb(self, entry):
+    def __entry_activate_cb(self, entry):
         self.response(Gtk.ResponseType.OK)
 
     def create_security(self):
@@ -118,8 +126,12 @@ class KeyDialog(Gtk.Dialog):
     def get_response_object(self):
         return self._response
 
+    def __button_toggled_cb(self, button):
+        self._entry.set_visibility(button.get_active())
+
 
 class WEPKeyDialog(KeyDialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
                            dev_caps, response)
@@ -135,7 +147,7 @@ class WEPKeyDialog(KeyDialog):
         self.key_combo.pack_start(cell, True)
         self.key_combo.add_attribute(cell, 'text', 0)
         self.key_combo.set_active(0)
-        self.key_combo.connect('changed', self._key_combo_changed_cb)
+        self.key_combo.connect('changed', self.__key_combo_changed_cb)
 
         hbox = Gtk.HBox()
         hbox.pack_start(Gtk.Label(_('Key Type:')), True, True, 0)
@@ -164,7 +176,7 @@ class WEPKeyDialog(KeyDialog):
 
         self.vbox.pack_start(hbox, True, True, 0)
 
-    def _key_combo_changed_cb(self, widget):
+    def __key_combo_changed_cb(self, widget):
         self._update_response_sensitivity()
 
     def _get_security(self):
@@ -215,6 +227,7 @@ class WEPKeyDialog(KeyDialog):
 
 
 class WPAKeyDialog(KeyDialog):
+
     def __init__(self, ssid, flags, wpa_flags, rsn_flags, dev_caps, response):
         KeyDialog.__init__(self, ssid, flags, wpa_flags, rsn_flags,
                            dev_caps, response)

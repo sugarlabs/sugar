@@ -1,9 +1,9 @@
 # Copyright (C) 2012 Agustin Zubiaga <aguz@sugarlabs.org>
 # Copyright (C) 2013 Sugar Labs
 #
-# This program is free software; you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -12,8 +12,8 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import os
 
@@ -36,6 +36,7 @@ class Background(SectionView):
 
         self._model = model
         self._images_loaded = False
+        self._append_to_store_sid = None
 
         self.connect('realize', self.__realize_cb)
         self.connect('unrealize', self.__unrealize_cb)
@@ -79,19 +80,26 @@ class Background(SectionView):
 
         alpha_box = Gtk.HBox()
         alpha_buttons = []
-        for i in ['000', '020', '040', '060', '080']:
+        alpha_icons = [
+            [1.0, 'network-wireless-000'],
+            [0.8, 'network-wireless-020'],
+            [0.6, 'network-wireless-040'],
+            [0.4, 'network-wireless-060'],
+            [0.2, 'network-wireless-080']]
+        for value, icon_name in alpha_icons:
             if len(alpha_buttons) > 0:
-                alpha_buttons.append(RadioToolButton(group=alpha_buttons[0]))
+                button = RadioToolButton(group=alpha_buttons[0])
             else:
-                alpha_buttons.append(RadioToolButton(group=None))
-            alpha_buttons[-1].set_icon_name('network-wireless-' + i)
-            button_alpha_level = 1.0 - float(i) / 100.
-            alpha_buttons[-1].connect('clicked', self._set_alpha_cb,
-                                      button_alpha_level)
-            alpha_box.pack_start(alpha_buttons[-1], False, True, 0)
-            alpha_buttons[-1].show()
-            if alpha < button_alpha_level + 0.1:
-                alpha_buttons[-1].set_active(True)
+                button = RadioToolButton(group=None)
+            button.set_icon_name(icon_name)
+            button.value = value
+            button.props.active = value == alpha
+            button.show()
+            alpha_box.pack_start(button, False, True, 0)
+            alpha_buttons.append(button)
+
+        for button in alpha_buttons:
+            button.connect('toggled', self._set_alpha_cb)
 
         alpha_alignment = Gtk.Alignment()
         alpha_alignment.set(0.5, 0, 0, 0)
@@ -127,13 +135,20 @@ class Background(SectionView):
                 self._store.append([pixbuf, file_path])
                 self._paths_list.append(file_path)
 
-            GObject.idle_add(self._append_to_store, file_paths)
+            self._append_to_store_sid = GObject.idle_add(self._append_to_store,
+                                                         file_paths)
         else:
             self._select_background()
             self._images_loaded = True
             window = self.get_window()
             if window is not None:
                 window.set_cursor(None)
+            self._append_to_store_sid = None
+
+    def _cancel_append_to_store(self):
+        if self._append_to_store_sid is not None:
+            GObject.source_remove(self._append_to_store_sid)
+            self._append_to_store_sid = None
 
     def __realize_cb(self, widget):
         if self._images_loaded:
@@ -144,8 +159,9 @@ class Background(SectionView):
     def __unrealize_cb(self, widget):
         self.get_window().set_cursor(None)
 
-    def _set_alpha_cb(self, widget, value):
-        self._model.set_background_alpha_level(value)
+    def _set_alpha_cb(self, widget):
+        if widget.get_active():
+            self._model.set_background_alpha_level(widget.value)
 
     def _get_selected_path(self, widget):
         try:
@@ -180,5 +196,9 @@ class Background(SectionView):
     def setup(self):
         self.show_all()
 
+    def apply(self):
+        self._cancel_append_to_store()
+
     def undo(self):
         self._model.undo()
+        self._cancel_append_to_store()
